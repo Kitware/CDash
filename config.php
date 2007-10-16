@@ -25,4 +25,6 @@ $CDASH_DB_PASS = '';
 $CDASH_DB_NAME = 'cdash';
 // Dashboard time frame
 $CDASH_DASHBOARD_TIMEFRAME = 24; //24 hours
+// CSS file 
+$CDASH_CSS_FILE = 'cdash.css'; 
 ?>

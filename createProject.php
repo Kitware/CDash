@@ -4,6 +4,7 @@ include("config.php");
 @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 $xml = "<cdash>";
+$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 // If we should create the tables
 @$Submit = $_POST["Submit"];

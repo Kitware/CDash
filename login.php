@@ -88,8 +88,10 @@ function auth()
 /** Login Form function */
 function LoginForm($loginerror)
 {  
+  include("config.php");
 		$xml = "<cdash>";
 		$xml .= "<title>Login</title>";
+		$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 		$xml .= "</cdash>";
 		
 		

@@ -3,6 +3,7 @@
 include("config.php");
 
 $xml = "<cdash>";
+$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 $xml .= "<connectiondb_host>".$CDASH_DB_HOST."</connectiondb_host>";
 $xml .= "<connectiondb_login>".$CDASH_DB_LOGIN."</connectiondb_login>";

@@ -25,6 +25,7 @@ function generate_main_dasboard_XML($projectid,$date)
 				
 	 $xml = '<?xml version="1.0"?><cdash>';
 		$xml .= "<title>CDash : ".$projectname."</title>";
+		$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 		
 		if(!isset($date) || strlen($date)==0)
 	  	{ 

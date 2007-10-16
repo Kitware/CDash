@@ -9,6 +9,7 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 
   
 $xml = "<cdash>";
+$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 $project = mysql_query("SELECT name,id FROM project ORDER BY id");
 while($project_array = mysql_fetch_array($project))
