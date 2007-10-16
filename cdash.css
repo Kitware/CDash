@@ -1,0 +1,141 @@
+.btip { text-decoration:none; onmouseout=hidetip(); }
+	.normal { background-color : #00aa00; }
+	.warning { background-color : #ffcc66; }
+	.error { background-color : #ff6666; }
+	.pass { background-color : #00aa00; }
+	.fail { background-color : #ffcc66; }
+	.nr { background-color : #ff6666; }
+	.na { background-color : #cccccc; }
+	.tr-even { background-color : #b0c4de; }
+	.tr-odd { background-color : #ffffff; }
+	.measurement { background-color : #b0c4de; }
+	.table-heading { background-color : #b0c4de; }
+
+#navigator {
+	   // background-color: #6699cc;
+background-color: #ffffff;
+border: 0px #0000aa solid;
+width: auto;
+}
+
+.smalldarthoverbutton {
+font-weight: bold;
+text-align: center;
+margin-bottom: 0px;
+margin-top: 0px;
+}
+
+.smalldarthoverbutton a {
+padding: 0px;
+text-decoration: none;
+width: 100%;
+display: block;
+color: #000000;
+background-color: #b5c9e2;
+border-top: 2px #cce3ff solid;
+border-left: 2px #cce3ff solid;
+border-bottom: 2px #31557f solid;
+border-right: 2px #31557f solid;
+}
+
+.smalldarthoverbutton a:hover {
+background-color: #cccc00;
+border-top: 2px #31557f solid;
+border-left: 2px #31557f solid;
+border-bottom: 2px #cccccc solid;
+border-right: 2px #cccccc solid;
+}
+
+.darthoverbutton {
+font-weight: bold;
+text-align: center;
+margin-bottom: 0px;
+margin-top: 0px;
+	   width: 5em;
+}
+
+.darthoverbutton a {
+padding: 0px;
+text-decoration: none;
+width: 100%;
+display: block;
+color: #000000;
+background-color: #b5c9e2;
+border-top: 2px #cce3ff solid;
+border-left: 2px #cce3ff solid;
+border-bottom: 2px #31557f solid;
+border-right: 2px #31557f solid;
+}
+
+.darthoverbutton a:hover {
+background-color: #cccc00;
+border-top: 2px #31557f solid;
+border-left: 2px #31557f solid;
+border-bottom: 2px #cccccc solid;
+border-right: 2px #cccccc solid;
+}
+
+.hoverbutton {
+font-weight: bold;
+text-align: center;
+margin-bottom: 0px;
+margin-top: 0px;
+	   width: 4em;
+}
+
+.hoverbutton a {
+padding: 0px;
+text-decoration: none;
+width: 100%;
+display: block;
+color: #000000;
+background-color: #bbbbbb;
+border-top: 2px #cccccc solid;
+border-left: 2px #cccccc solid;
+border-bottom: 2px #555555 solid;
+border-right: 2px #555555 solid;
+}
+
+.hoverbutton a:hover {
+background-color: #cccc00;
+border-top: 2px #555555 solid;
+border-left: 2px #555555 solid;
+border-bottom: 2px #cccccc solid;
+border-right: 2px #cccccc solid;
+}
+
+	Body  {
+	  font-family : arial, helvetica, sans-serif;
+	  color : black;
+}
+
+Table  {
+	  font-family : arial, helvetica, sans-serif;
+	  color : black;
+}
+
+Table, TD  {
+font-family : arial, helvetica, sans-serif;
+color : black; 
+background-repeat : no-repeat;
+}
+
+Table, TH  {
+font-family : arial, helvetica, sans-serif;
+color : black; 
+background-repeat : no-repeat;
+}
+
+P {font-family : arial, helvetica, sans-serif; color: black; }
+
+a {
+	  Font-Family : arial, helvetica, sans-serif;
+	  Font-Style : normal;
+	  color : blue;
+}
+
+a:hover  {
+	 color : black;
+Font-Style : bold;
+}
+
