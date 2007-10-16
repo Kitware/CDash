@@ -15,7 +15,15 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
+if (PHP_VERSION >= 5) 
+  {
+  // Emulate the old xslt library functions
+   function xslt_create() 
+			 {
+    return new XsltProcessor();
+    }
+		}
+		
 /** Do the XSLT translation and look in the local directory if the file
  *  doesn't exist */
 function generate_XSLT($xml,$pageName)
