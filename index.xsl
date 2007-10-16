@@ -193,21 +193,85 @@
 
       <td align="center" bgcolor="#ffffff"><b><xsl:value-of select = "count(cdash/builds/nightly)+count(cdash/builds/continuous)+count(cdash/builds/experimental)" /> Builds</b></td>
       <td bgcolor="#ffffff"></td>
-      <td align="right" class="normal"><b><xsl:value-of select = "cdash/builds/totalConfigure"/></b>
-         
+      <td align="right">
+							<xsl:attribute name="class">
+						 <xsl:choose>
+          <xsl:when test="cdash/builds/totalConfigure > 0">
+            error
+												</xsl:when>
+          <xsl:otherwise>
+           normal
+											</xsl:otherwise>
+        </xsl:choose>
+						</xsl:attribute>
+						<b><xsl:value-of select = "cdash/builds/totalConfigure"/></b>  
       </td>
-      <td align="right" class="normal"><b><xsl:value-of select = "cdash/builds/totalError"/></b>
+      <td align="right">
+							<xsl:attribute name="class">
+						  <xsl:choose>
+          <xsl:when test="cdash/builds/totalError > 0">
+            error
+												</xsl:when>
+          <xsl:otherwise>
+           normal
+											</xsl:otherwise>
+        </xsl:choose>
+						</xsl:attribute>
+						<b><xsl:value-of select = "cdash/builds/totalError"/></b>
       </td>
-      <td align="right" class="normal"><b><xsl:value-of select = "cdash/builds/totalWarning"/></b>
+      <td align="right">
+							<xsl:attribute name="class">
+						  <xsl:choose>
+          <xsl:when test="cdash/builds/totalWarning > 0">
+            warning
+												</xsl:when>
+          <xsl:otherwise>
+           normal
+											</xsl:otherwise>
+        </xsl:choose>
+						</xsl:attribute>		
+						<b><xsl:value-of select = "cdash/builds/totalWarning"/></b>
 
       </td>
       <td bgcolor="#ffffff"></td>
-      <td align="right" class="normal"><b><xsl:value-of select = "cdash/builds/totalNotRun"/></b>
+      <td align="right">
+						<xsl:attribute name="class">
+						  <xsl:choose>
+          <xsl:when test="cdash/builds/totalNotRun > 0">
+            error
+												</xsl:when>
+          <xsl:otherwise>
+           normal
+											</xsl:otherwise>
+        </xsl:choose>
+						</xsl:attribute>
+						<b><xsl:value-of select = "cdash/builds/totalNotRun"/></b>
       </td>
-      <td align="right" class="warning"><b><xsl:value-of select = "cdash/builds/totalFail"/></b>
+      <td align="right">
+						<xsl:attribute name="class">
+						  <xsl:choose>
+          <xsl:when test="cdash/builds/totalFail > 0">
+            warning
+												</xsl:when>
+          <xsl:otherwise>
+           normal
+											</xsl:otherwise>
+        </xsl:choose>
+						</xsl:attribute>			
+						<b><xsl:value-of select = "cdash/builds/totalFail"/></b>		
       </td>
-      <td align="right" class="warning"><b><xsl:value-of select = "cdash/builds/totalPass"/></b>
-
+      <td align="right">
+							<xsl:attribute name="class">
+						  <xsl:choose>
+          <xsl:when test="cdash/builds/totalFail > 0">
+            warning
+												</xsl:when>
+          <xsl:otherwise>
+           normal
+											</xsl:otherwise>
+        </xsl:choose>
+						</xsl:attribute>			
+						<b><xsl:value-of select = "cdash/builds/totalPass"/></b>
       </td>
       <td bgcolor="#ffffff"></td>
       <td bgcolor="#ffffff"></td>
