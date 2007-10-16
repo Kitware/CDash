@@ -19,6 +19,7 @@
 CREATE TABLE `build` (
   `id` int(11) NOT NULL auto_increment,
   `siteid` int(11) NOT NULL default '0',
+  `projectid` int(11) NOT NULL default '0',
   `stamp` varchar(255) NOT NULL default '',
   `name` varchar(255) NOT NULL default '',
   `type` varchar(255) NOT NULL default '',
