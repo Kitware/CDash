@@ -1,6 +1,7 @@
 <?php
 // This is the installation script for the InsightJournalManager
 include("config.php");
+include("common.php");	
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -110,17 +111,5 @@ if($Submit)
 $xml .= "</cdash>";
 
 // Now doing the xslt transition
-$xh = xslt_create();
-$filebase = 'file://' . getcwd () . '/';
-xslt_set_base($xh,$filebase);
-
-$arguments = array (
-  '/_xml' => $xml
-);
-
-$html = xslt_process($xh, 'arg:/_xml', 'install.xsl', NULL, $arguments);
-
-echo $html;
-
-xslt_free($xh);
+generate_XSLT($xml,"install");
 ?>

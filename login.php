@@ -89,23 +89,14 @@ function auth()
 function LoginForm($loginerror)
 {  
   include("config.php");
+	 include("common.php");	
+		
 		$xml = "<cdash>";
 		$xml .= "<title>Login</title>";
 		$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 		$xml .= "</cdash>";
 		
-		
-		// Now doing the xslt translation
-		$xh = xslt_create();
-		$filebase = 'file://' . getcwd () . '/';
-		xslt_set_base($xh,$filebase);
-		
-		$arguments = array (
-				'/_xml' => $xml
-		);
-		$html = xslt_process($xh, 'arg:/_xml', 'login.xsl', NULL, $arguments);
-		echo $html;
-		xslt_free($xh);
+		generate_XSLT($xml,"login");
 }
 
 // -------------------------------------------------------------------------------------- 

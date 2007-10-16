@@ -15,6 +15,35 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
+/** Do the XSLT translation and look in the local directory if the file
+ *  doesn't exist */
+function generate_XSLT($xml,$pageName)
+{
+		$xh = xslt_create();
+		$filebase = 'file://' . getcwd () . '/';
+		xslt_set_base($xh,$filebase);
+		
+		$arguments = array (
+				'/_xml' => $xml
+		);
+
+		$xslpage = $pageName.".xsl";
+		
+		// Check if the page exists in the local directory
+		if(file_exists("local/".$xslpage))
+		  {
+				$xslpage = "local/".$xslpage;
+		  }
+		
+		$html = xslt_process($xh, 'arg:/_xml', $xslpage, NULL, $arguments);
+		
+		echo $html;
+		
+		xslt_free($xh);
+}
+
+/** Add an XML tag to a string */
 function add_XML_value($tag,$value)
 {
   return "<".$tag.">".$value."</".$tag.">";

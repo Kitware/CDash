@@ -49,17 +49,5 @@ if($Submit)
 }
 
 // Now doing the xslt transition
-$xh = xslt_create();
-$filebase = 'file://' . getcwd () . '/';
-xslt_set_base($xh,$filebase);
-
-$arguments = array (
-  '/_xml' => $xml
-);
-
-$html = xslt_process($xh, 'arg:/_xml', 'import.xsl', NULL, $arguments);
-
-echo $html;
-
-xslt_free($xh);
+generate_XSLT($xml,"import");
 ?>

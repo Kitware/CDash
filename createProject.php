@@ -1,6 +1,8 @@
 <?php
 // This is the installation script for the InsightJournalManager
 include("config.php");
+include("common.php");	
+
 @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 $xml = "<cdash>";
@@ -34,17 +36,5 @@ if($Submit)
 $xml .= "</cdash>";
 
 // Now doing the xslt transition
-$xh = xslt_create();
-$filebase = 'file://' . getcwd () . '/';
-xslt_set_base($xh,$filebase);
-
-$arguments = array (
-  '/_xml' => $xml
-);
-
-$html = xslt_process($xh, 'arg:/_xml', 'createProject.xsl', NULL, $arguments);
-
-echo $html;
-
-xslt_free($xh);
+generate_XSLT($xml,"createProject");
 ?>
