@@ -100,6 +100,4 @@ function CreateRSSFeed($projectid)
 		fclose($fp);
 }
 
-CreateRSSFeed(1);
-
 ?>

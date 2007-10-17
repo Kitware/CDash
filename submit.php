@@ -17,6 +17,7 @@
 =========================================================================*/
 include("ctestparser.php");
 include_once("common.php");
+include_once("createRSS.php");
 
 $putdata = fopen("php://input", "r");
 $contents = "";
@@ -31,4 +32,5 @@ $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
 
 ctest_parse($contents,$projectid);
+CreateRSSFeed($projectid);
 ?>
