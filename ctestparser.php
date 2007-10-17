@@ -185,7 +185,7 @@ function parse_build($xmlarray,$projectid)
 		  {
 			 if(array_key_exists("logline",$error))
 				  {
-				  add_error($projectid,$error["type"],$error["logline"],$error["text"],$error["sourcefile"],$error["sourceline"],
+				  add_error($buildid,$error["type"],$error["logline"],$error["text"],$error["sourcefile"],$error["sourceline"],
 				          $error["precontext"],$error["postcontext"],$error["repeatcount"]);
 						}
 		  }
