@@ -168,11 +168,11 @@ function add_site($name,$description="",$processor="",$numprocessors="1",$ip="")
 }
 
 /** Add a new build */
-function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$endtime,$command,$log)
+function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$endtime,$submittime,$command,$log)
 {
-  mysql_query ("INSERT INTO build (projectid,siteid,name,stamp,type,generator,starttime,endtime,command,log) 
+  mysql_query ("INSERT INTO build (projectid,siteid,name,stamp,type,generator,starttime,endtime,submittime,command,log) 
                           VALUES ('$projectid','$siteid','$name','$stamp','$type','$generator',
-                                  '$starttime','$endtime','$command','$log')");
+                                  '$starttime','$endtime','$submittime','$command','$log')");
   echo mysql_error();  
   return mysql_insert_id();
 }
