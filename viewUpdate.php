@@ -81,7 +81,8 @@ $xml .="<dashboard>
 		
 		$xml .= "<updates>";
 		
-		$updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid' ORDER BY filename");
+		// Regretfully this is not correct and need to be fixes
+		$updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid' ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
 		
 		
 		$xml .= "dbAdd (true, \"Updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
