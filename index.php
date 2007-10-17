@@ -157,7 +157,7 @@ function generate_main_dasboard_XML($projectid,$date)
 				  $xml .= "</test>";
 					 }
 				$xml .= add_XML_value("builddate",$build_array["starttime"]);
-				$xml .= add_XML_value("submitdate",$build_array["endtime"]);
+				$xml .= add_XML_value("submitdate",$build_array["submittime"]);
   $xml .= "</".strtolower($build_array["type"]).">";
   } // end looping through builds
  

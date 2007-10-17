@@ -125,8 +125,9 @@ function parse_build($xmlarray,$projectid)
 						
 		$start_time = date("Y-m-d H:i:s",$starttimestamp);
 		$end_time = date("Y-m-d H:i:s",$endtimestamp);
+		$submit_time = date("Y-m-d H:i:s");
 		
-		$buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$command,$log);
+		$buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,$command,$log);
 
   // Add the warnings
 		$error_array = array();
