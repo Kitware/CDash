@@ -60,9 +60,9 @@
 						</xsl:if> 
 						
 						</td>
-      <td align="right" bgcolor="#ffffff"><b><a><xsl:attribute name="href">view_update.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
+      <td align="right" bgcolor="#ffffff"><b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
       </td>
-      <td align="right" class="normal"><b><a><xsl:attribute name="href">view_configure.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="configure"/> </a></b>
+      <td align="right" class="normal"><b><a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="configure"/> </a></b>
       </td>
 						<td>
       <xsl:attribute name="align">right</xsl:attribute>
@@ -76,10 +76,10 @@
 											</xsl:otherwise>
         </xsl:choose>
 						</xsl:attribute>
-						<b><a><xsl:attribute name="href">view_build_error.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="build/error"/> </a></b>
+						<b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="build/error"/> </a></b>
       </td>
 
-      <td align="right" class="normal"><b><a><xsl:attribute name="href">view_build_warning.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="build/warning"/></a></b>
+      <td align="right" class="normal"><b><a><xsl:attribute name="href">viewBuildWarning.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="build/warning"/></a></b>
       </td>
       <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="build/time"/></td>
       <td align="right">
@@ -93,7 +93,7 @@
 											</xsl:otherwise>
         </xsl:choose>
 						</xsl:attribute>
-						<b><a><xsl:attribute name="href">view_test.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/notrun"/></a></b>
+						<b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/notrun"/></a></b>
       </td>
       <td align="right">
 						<xsl:attribute name="class">
@@ -106,7 +106,7 @@
 											</xsl:otherwise>
         </xsl:choose>
 						</xsl:attribute>
-						<b><a><xsl:attribute name="href">view_test.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/fail"/></a></b>
+						<b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/fail"/></a></b>
       </td>
 
       <td align="right">
@@ -120,9 +120,9 @@
 											</xsl:otherwise>
         </xsl:choose>
 						</xsl:attribute>
-						<b><a><xsl:attribute name="href">view_test.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>
+						<b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>
       </td>
-      <td align="right" class="na"><b><a><xsl:attribute name="href">view_test.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/na"/></a></b>
+      <td align="right" class="na"><b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/na"/></a></b>
       </td>
       <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="test/time"/></td>
       <td bgcolor="#ffffff"><xsl:value-of select="builddate"/></td>
