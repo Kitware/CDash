@@ -20,10 +20,17 @@
 </img>
 </a>
 </td>
-<td bgcolor="#6699cc" valign="top" width="100%">
+<td bgcolor="#6699cc" valign="bottom" width="100%">
 <font color="#ffffff"><h2>Dashboard - <xsl:value-of select="cdash/dashboard/datetime"/></h2>
 <h3><xsl:value-of select="cdash/dashboard/date"/></h3></font>
-</td></tr><tr><td></td><td>
+<div align="right"><a> 
+	<xsl:attribute name="href">rss/SubmissionRSS<xsl:value-of select="cdash/dashboard/projectname"/>.xml</xsl:attribute>
+<img src="images/feed-icon16x16.png" border="0"/></a></div>
+</td>
+</tr>
+<tr>
+<td></td>
+<td>
 <div id="navigator">
 <table border="0" cellpadding="0" cellspacing="0">
 <tr>
