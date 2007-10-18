@@ -84,28 +84,74 @@ $xml .="<dashboard>
 		// Regretfully this is not correct and need to be fixes
 		$updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid' ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
 		
+		function sort_array_by_directory($a,$b)
+		  { 
+				return $a>$b ? 1:0;
+	  	}
+				
+		function sort_array_by_filename($a,$b)
+		  {
+				// Extract directory
+				$filenamea = $a['filename'];
+				$filenameb = $b['filename'];		
+				return $filenamea>$filenameb ? 1:0;
+	  	}
+				
+		$directoryarray = array();
+		$updatearray1 = array();
+		// Create an array so we can sort it
+		while($file_array = mysql_fetch_array($updatedfiles))
+		  {
+				$file = array();
+				$file['filename'] = $file_array["filename"];
+				$file['author'] = $file_array["author"];
+				$file['email'] = $file_array["email"];
+				$file['log'] = $file_array["log"];
+				$file['revision'] = $file_array["revision"];
+				$updatearray1[] = $file;
+				$directoryarray[] = substr($file_array["filename"],0,strrpos($file_array["filename"],"/"));
+		  }
+		
+		$directoryarray = array_unique($directoryarray);
+		usort($directoryarray, "sort_array_by_directory");
+		usort($updatearray1, "sort_array_by_filename");
+		
+		$updatearray = array();
+		
+		foreach($directoryarray as $directory)
+		  {
+				foreach($updatearray1 as $update)
+		  		{
+						$filename = $update['filename'];
+						if(substr($filename,0,strrpos($filename,"/")) == $directory)
+						  {
+								$updatearray[] = $update;
+						  }
+						}
+		  }
+		
 		
 		$xml .= "dbAdd (true, \"Updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
 		$previousdir = "";
-		while($file_array = mysql_fetch_array($updatedfiles))
+		foreach($updatearray as $file)
 		  {
-				$filename = $file_array["filename"];
+				$filename = $file['filename'];
 				$directory = substr($filename,0,strrpos($filename,"/"));
-				$file = substr($filename,strrpos($filename,"/")+1);
+				$filename = substr($filename,strrpos($filename,"/")+1);
 				
 				if($directory != $previousdir)
 				  {
 						$xml .= " dbAdd (true, \"&lt;b&gt;".$directory."&lt;/b&gt;\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
 						$previousdir = $directory;
       }
-				
-				$author = $file_array["author"];
-				$email = $file_array["email"];
-				$log = $file_array["log"];
-				$revision = $file_array["revision"];
+						
+				$author = $file['author'];
+				$email = $file['email'];
+				$log = $file['log'];
+				$revision = $file['revision'];
 				$log = str_replace("\n"," ",$log);
 				$log = str_replace("\r"," ",$log);
-				$xml .= " dbAdd ( false, \"".$file." Revision: ".$revision."\",\"http://test\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$log."\")\n";
+				$xml .= " dbAdd ( false, \"".$filename." Revision: ".$revision."\",\"http://test\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$log."\")\n";
 		  }
 		$xml .= "dbAdd (true, \"Modified files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   $xml .= "dbAdd (true, \"Conflicting files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
