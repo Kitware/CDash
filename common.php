@@ -173,7 +173,10 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
   mysql_query ("INSERT INTO build (projectid,siteid,name,stamp,type,generator,starttime,endtime,submittime,command,log) 
                           VALUES ('$projectid','$siteid','$name','$stamp','$type','$generator',
                                   '$starttime','$endtime','$submittime','$command','$log')");
-  echo mysql_error();  
+  
+		//$handle = fopen("log.txt","a");
+  //fwrite($handle,"buildid = ".mysql_error());
+  //fclose($handle);
   return mysql_insert_id();
 }
 

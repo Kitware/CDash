@@ -22,7 +22,7 @@ function ctest_parse($xml,$projectid)
   $p = xml_parser_create();
   xml_parse_into_struct($p, $xml, $vals, $index);
   xml_parser_free($p);
-  
+
 		if($vals[1]["tag"] == "BUILD")
 		  {
     parse_build($vals,$projectid);
@@ -99,7 +99,7 @@ function str_to_time($str,$stamp)
 
 /** Parse the build xml */
 function parse_build($xmlarray,$projectid)
-{
+{			
   $sitename = $xmlarray[0]["attributes"]["NAME"]; 
   $name = $xmlarray[0]["attributes"]["BUILDNAME"];
 		// Extract the type from the buildstamp
@@ -128,7 +128,7 @@ function parse_build($xmlarray,$projectid)
 		$submit_time = date("Y-m-d H:i:s");
 		
 		$buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,$command,$log);
-
+  
   // Add the warnings
 		$error_array = array();
 		$index = 0;
