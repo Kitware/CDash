@@ -27,7 +27,7 @@ function CreateRSSFeed($projectid)
 		$project_array = mysql_fetch_array($project);
 		$projectname = $project_array["name"];
 		
-		$serverbase = substr($_SERVER['PATH_TRANSLATED'],0,strrpos($_SERVER['PATH_TRANSLATED'],"/"));
+		$serverbase = substr($_SERVER['SCRIPT_FILENAME'],0,strrpos($_SERVER['SCRIPT_FILENAME'],"/"));
   $filename = $serverbase."/rss/SubmissionRSS".$projectname.".xml";
 
   if (!($fp = fopen($filename, 'w')))
