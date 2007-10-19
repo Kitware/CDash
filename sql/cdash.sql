@@ -1,11 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 2.6.1
+-- version 2.10.1
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Oct 14, 2007 at 03:41 PM
--- Server version: 4.1.9
--- PHP Version: 4.3.10
+-- Generation Time: Oct 19, 2007 at 11:18 AM
+-- Server version: 4.1.15
+-- PHP Version: 5.2.3-1+b1
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
 -- 
 -- Database: `cdash`
 -- 
@@ -30,8 +33,9 @@ CREATE TABLE `build` (
   `command` text NOT NULL,
   `log` text NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `siteid` (`siteid`,`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+  KEY `siteid` (`siteid`,`name`),
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -48,7 +52,8 @@ CREATE TABLE `builderror` (
   `sourceline` int(11) NOT NULL default '0',
   `precontext` text NOT NULL,
   `postcontext` text NOT NULL,
-  `repeatcount` int(11) NOT NULL default '0'
+  `repeatcount` int(11) NOT NULL default '0',
+  KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -62,7 +67,8 @@ CREATE TABLE `buildupdate` (
   `starttime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `endtime` timestamp NOT NULL default '0000-00-00 00:00:00',
   `command` text NOT NULL,
-  `type` varchar(4) NOT NULL default ''
+  `type` varchar(4) NOT NULL default '',
+  KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -78,7 +84,8 @@ CREATE TABLE `configure` (
   `command` text NOT NULL,
   `log` text NOT NULL,
   `status` tinyint(4) NOT NULL default '0',
-  UNIQUE KEY `buildid` (`buildid`)
+  UNIQUE KEY `buildid` (`buildid`),
+  KEY `buildid_2` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -89,7 +96,8 @@ CREATE TABLE `configure` (
 
 CREATE TABLE `note` (
   `buildid` int(11) NOT NULL default '0',
-  `text` text NOT NULL
+  `text` text NOT NULL,
+  KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -107,7 +115,7 @@ CREATE TABLE `project` (
   `bugtrackerurl` varchar(255) NOT NULL default '',
   `logo` mediumblob,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -125,7 +133,7 @@ CREATE TABLE `site` (
   `latitude` varchar(10) NOT NULL default '',
   `longitude` varchar(10) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -153,7 +161,8 @@ CREATE TABLE `test` (
   `status` varchar(10) NOT NULL default '0',
   `path` varchar(255) NOT NULL default '',
   `fullname` varchar(255) NOT NULL default '',
-  `command` text NOT NULL
+  `command` text NOT NULL,
+  KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -187,7 +196,7 @@ CREATE TABLE `user` (
   `lastname` varchar(40) NOT NULL default '',
   `admin` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
