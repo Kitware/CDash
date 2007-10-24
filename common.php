@@ -118,15 +118,25 @@ function get_projects()
     {
     $project = array();
     $project['id'] = $project_array["id"];  
-    $project['name'] = $project_array["name"];  
-    $project['last_build'] = $project_array["name"];  
-    $project['nbuilds'] = 10;  
-    $project['ntests'] = 20;  
+    $project['name'] = $project_array["name"];
+    $projectid = $project['id'];
+    
+    $project['last_build'] = "NA";
+    $lastbuildquery = mysql_query("SELECT submittime FROM build WHERE projectid='$projectid' ORDER BY submittime DESC LIMIT 1");
+    if(mysql_num_rows($lastbuildquery)>0)
+      {
+      $lastbuild_array = mysql_fetch_array($lastbuildquery);
+      $project['last_build'] = $lastbuild_array["submittime"];
+      }
+
+    $buildquery = mysql_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
+    $buildquery_array = mysql_fetch_array($buildquery); 
+    $project['nbuilds'] = $buildquery_array[0];
+    $testquery = mysql_query("SELECT count(t.id) FROM test t,build b WHERE t.buildid=b.id AND b.projectid='$projectid'");
+    $testquery_array = mysql_fetch_array($testquery); 
+    $project['ntests'] = $testquery_array[0];
      
     $projects[] = $project; 
-    //$xml .= "<lastbuild>".$project['last_build']."</lastbuild>";
-    //$xml .= "<nsubmissions>".$project['nsubmissions']."</nsubmissions>";
-    //$xml .= "<ntests>".$project['ntests']."</ntests>";
     }
     
   return $projects;

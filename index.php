@@ -115,7 +115,7 @@ function generate_main_dasboard_XML($projectid,$date)
   // Check the builds
   $beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
   $end_timestamp = $currenttime;
-  $builds = mysql_query("SELECT * FROM build 
+  $builds = mysql_query("SELECT id,siteid,name,type,generator,starttime,endtime,submittime FROM build 
                          WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
                          AND projectid='$projectid'
                          ");
@@ -141,12 +141,14 @@ function generate_main_dasboard_XML($projectid,$date)
     $xml .= "<build>";
     
     // Find the number of errors and warnings
-    $builderror = mysql_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='0'");
-    $nerrors = mysql_num_rows($builderror);
+    $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+    $builderror_array = mysql_fetch_array($builderror);
+				$nerrors = $builderror_array[0];
     $totalerrors += $nerrors;
     $xml .= add_XML_value("error",$nerrors);
-    $buildwarning = mysql_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='1'");
-    $nwarnings = mysql_num_rows($buildwarning);
+    $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+    $buildwarning_array = mysql_fetch_array($buildwarning);
+				$nwarnings = $buildwarning_array[0];
     $totalwarnings += $nwarnings;
     $xml .= add_XML_value("warning",$nwarnings);
     $diff = (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;
@@ -168,11 +170,16 @@ function generate_main_dasboard_XML($projectid,$date)
       {
       $test_array = mysql_fetch_array($test);
       $xml .= "<test>";
-      $nnotrun = mysql_num_rows(mysql_query("SELECT * FROM test WHERE buildid='$buildid' AND status='notrun'"));
-      $nfail = mysql_num_rows(mysql_query("SELECT * FROM test WHERE buildid='$buildid' AND status='failed'"));
-      $npass = mysql_num_rows(mysql_query("SELECT * FROM test WHERE buildid='$buildid' AND status='passed'"));
-      $nna = mysql_num_rows(mysql_query("SELECT * FROM test WHERE buildid='$buildid' AND status='na'"));
-      
+						// We might be able to do this in one request
+      $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='notrun'"));
+      $nnotrun = $nnotrun_array[0];
+						$nfail_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='failed'"));
+						$nfail = $nfail_array[0];
+      $npass_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='passed'"));
+						$npass = $npass_array[0];
+      $nna_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='na'"));
+      $nna = $nna_array[0];
+						
       $totalnotrun += $nnotrun;
       $totalfail += $nfail;
       $totalpass += $npass;
