@@ -65,8 +65,6 @@ if (PHP_VERSION >= 5) {
         unset($xsltproc);
     }
 }
-
-
   
 /** Do the XSLT translation and look in the local directory if the file
  *  doesn't exist */
@@ -103,6 +101,35 @@ function generate_XSLT($xml,$pageName)
 function add_XML_value($tag,$value)
 {
   return "<".$tag.">".$value."</".$tag.">";
+}
+
+/** return an array of projects */
+function get_projects()
+{
+  $projects = array();
+  
+  include("config.php");
+
+  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  mysql_select_db("$CDASH_DB_NAME",$db);
+
+  $projectres = mysql_query("SELECT id,name FROM project ORDER BY name");
+  while($project_array = mysql_fetch_array($projectres))
+    {
+    $project = array();
+    $project['id'] = $project_array["id"];  
+    $project['name'] = $project_array["name"];  
+    $project['last_build'] = $project_array["name"];  
+    $project['nbuilds'] = 10;  
+    $project['ntests'] = 20;  
+     
+    $projects[] = $project; 
+    //$xml .= "<lastbuild>".$project['last_build']."</lastbuild>";
+    //$xml .= "<nsubmissions>".$project['nsubmissions']."</nsubmissions>";
+    //$xml .= "<ntests>".$project['ntests']."</ntests>";
+    }
+    
+  return $projects;
 }
 
 /** Get the build id from stamp, name and buildname */
@@ -174,7 +201,7 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
                           VALUES ('$projectid','$siteid','$name','$stamp','$type','$generator',
                                   '$starttime','$endtime','$submittime','$command','$log')");
   
-		//$handle = fopen("log.txt","a");
+  //$handle = fopen("log.txt","a");
   //fwrite($handle,"buildid = ".mysql_error());
   //fclose($handle);
   return mysql_insert_id();
