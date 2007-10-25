@@ -39,6 +39,10 @@ function ctest_parse($xml,$projectid)
 		  {
     parse_update($vals);
 		  }		
+		else	if($vals[1]["tag"] == "COVERAGE")
+		  {
+    parse_coverage($vals,$projectid);
+		  }	
 		else	if($vals[1]["tag"] == "NOTES")
 		  {
     parse_note($vals);
@@ -272,6 +276,88 @@ function parse_testing($xmlarray)
 		  }
 }
 
+/** Parse the coverage xml */
+function parse_coverage($xmlarray,$projectid)
+{
+		include_once("common.php");
+  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
+		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+		
+		// Find the build id
+		$buildid = get_build_id($name,$stamp);
+		if($buildid<0)
+		  {
+		  $sitename = $xmlarray[0]["attributes"]["NAME"]; 
+
+				// Extract the type from the buildstamp
+				$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+				$type = substr($stamp,strrpos($stamp,"-")+1);
+				$generator = $xmlarray[0]["attributes"]["GENERATOR"];
+				$starttime = getXMLValue($xmlarray,"STARTDATETIME","COVERAGE");
+				
+				// Convert the starttime to a timestamp
+				$starttimestamp = str_to_time($starttime,$stamp);
+				$elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","COVERAGE");
+				$endtimestamp = $starttimestamp+$elapsedminutes*60;
+				
+				include("config.php");
+				include_once("common.php");
+				$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+				mysql_select_db("$CDASH_DB_NAME",$db);
+		
+				// First we look at the site and add it if not in the list
+				$siteid = add_site($sitename);
+								
+				$start_time = date("Y-m-d H:i:s",$starttimestamp);
+				$end_time = date("Y-m-d H:i:s",$endtimestamp);
+				$submit_time = date("Y-m-d H:i:s");
+				
+				$buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
+				}
+				
+		//print_r($xmlarray);
+		
+		$LOCTested = getXMLValue($xmlarray,"LOCTESTED","COVERAGE");
+		$LOCUntested = getXMLValue($xmlarray,"LOCUNTESTED","COVERAGE");
+		$LOC = getXMLValue($xmlarray,"LOC","COVERAGE");
+		$PercentCoverage = getXMLValue($xmlarray,"PERCENTCOVERAGE","COVERAGE");
+						
+		add_coverage($buildid,$LOCTested,$LOCUntested,$LOC,$PercentCoverage);
+		
+		/*$coverage_array = array();
+		$index = 0;
+		
+		foreach($xmlarray as $tagarray)
+			{
+			if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]["STATUS"]))
+			  {
+					$index++;
+					$test_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
+					}
+			else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
+			  {
+					$test_array[$index]["name"]=$tagarray["value"];
+			  }
+			else if(($tagarray["tag"] == "PATH") && ($tagarray["level"] == 4))
+			  {
+					$test_array[$index]["path"]=$tagarray["value"];
+			  }
+			else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
+			  {
+					$test_array[$index]["fullname"]=$tagarray["value"];
+			  }
+			else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
+			  {
+					$test_array[$index]["fullcommandline"]=$tagarray["value"];
+			  }	
+   }
+			
+		foreach($test_array as $test)
+		  {
+				add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"]);
+		  }*/
+}
+
 /** Parse the update xml */
 function parse_update($xmlarray)
 {
@@ -298,8 +384,6 @@ function parse_update($xmlarray)
 		$end_time = date("Y-m-d H:i:s",$endtimestamp);
 
 		//add_update($buildid,$start_time,$end_time,$command,$type);
-
-		//print_r($xmlarray);
 		
 		$files_array = array();
 		$index = 0;
