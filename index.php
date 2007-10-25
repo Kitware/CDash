@@ -121,12 +121,18 @@ function generate_main_dasboard_XML($projectid,$date)
                          ");
   echo mysql_error();
   while($build_array = mysql_fetch_array($builds))
-    {  
+    {  		
+				$buildid = $build_array["id"];
+				$configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
+    $nconfigure = mysql_num_rows($configure);
+    $siteid = $build_array["siteid"];
+    $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+    
+				// IF NO CONFIGURE WE DON'T DISPLAY
+				if($nconfigure > 0)
+				{
     // Get the site name
     $xml .= "<".strtolower($build_array["type"]).">";
-    $siteid = $build_array["siteid"];
-    $buildid = $build_array["id"];
-    $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
     
     $xml .= add_XML_value("site",$site_array["name"]);
     $xml .= add_XML_value("siteid",$siteid);
@@ -135,7 +141,8 @@ function generate_main_dasboard_XML($projectid,$date)
     $xml .= add_XML_value("generator",$build_array["generator"]);
     //<notes>note</notes>
     
-    $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
+				
+				$update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
     $xml .= add_XML_value("update",mysql_num_rows($update));
     
     $xml .= "<build>";
@@ -157,7 +164,7 @@ function generate_main_dasboard_XML($projectid,$date)
     
     // Get the Configure options
     $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
-    if(mysql_num_rows($configure)>0)
+    if($nconfigure)
       {
       $configure_array = mysql_fetch_array($configure);
       $xml .= add_XML_value("configure",$configure_array["status"]);
@@ -194,8 +201,23 @@ function generate_main_dasboard_XML($projectid,$date)
       }
     $xml .= add_XML_value("builddate",$build_array["starttime"]);
     $xml .= add_XML_value("submitdate",$build_array["submittime"]);
-  $xml .= "</".strtolower($build_array["type"]).">";
-  } // end looping through builds
+    $xml .= "</".strtolower($build_array["type"]).">";
+				} // END IF CONFIGURE
+				
+				$coverages = mysql_query("SELECT * FROM coverage WHERE buildid='$buildid'");
+    while($coverage_array = mysql_fetch_array($coverages))
+      {
+				  $xml .= "<coverage>";
+				  $xml .= "		<site>".$site_array["name"]."</site>";
+						$xml .= "		<buildname>".$build_array["name"]."</buildname>";
+						$xml .= "		<percentage>".$coverage_array["percentcoverage"]."</percentage>";
+						$xml .= "		<fail>".$coverage_array["locuntested"]."</fail>";
+						$xml .= "		<pass>".$coverage_array["loctested"]."</pass>";
+						$xml .= "		<date>".$build_array["starttime"]."</date>";
+						$xml .= "		<submitdate>".$build_array["submittime"]."</submitdate>";
+				  $xml .= "</coverage>";
+      }		
+				} // end looping through builds
  
   $xml .= add_XML_value("totalConfigure",$totalconfigure);
   $xml .= add_XML_value("totalError",$totalerrors);
@@ -207,20 +229,6 @@ function generate_main_dasboard_XML($projectid,$date)
   $xml .= add_XML_value("totalNA",$totalna);
    
   $xml .= "</builds>";
-  
-  /*
-<coverage>
-    <site>gaia.kitware</site>
-    <siteid>1</siteid>
-    <buildname>Win32-vs8-Debug-Coverage</buildname>
-    <percentage>57.62</percentage>
-    <fail>2</fail>
-    <pass>3</pass>
-    <date>Oct 09 23:09 Eastern Daylight Time</date>
-    <submitdate>Oct 09 23:09 Eastern Daylight Time</submitdate>
-</coverage>
-*/
-
   $xml .= "</cdash>";
 
   return $xml;

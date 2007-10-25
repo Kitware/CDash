@@ -295,7 +295,7 @@
 
 <!-- COVERAGE -->
 <table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">			
-			 <xsl:if test="count(cdash/coverage)=0">
+			 <xsl:if test="count(cdash/builds/coverage)=0">
    <tr class="table-heading">
       <td colspan="14">
 									 <h3>No Coverage</h3>
@@ -303,7 +303,7 @@
    </tr>
 			</xsl:if>
 			
-				<xsl:if test="count(cdash/coverage)>0">
+				<xsl:if test="count(cdash/builds/coverage)>0">
 							 <tr class="table-heading">
       <td colspan="14">
 									 <h3>Coverage</h3>
@@ -320,12 +320,12 @@
       <th align="center">Date</th>
       <th align="center">Submission Date</th>
    </tr>
-		<xsl:for-each select="cdash/coverage">
+		<xsl:for-each select="cdash/builds/coverage">
    
    <tr>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/></td>
-      <td align="center" class="warning"><a><xsl:attribute name="href">view_coverage.php?site=<xsl:value-of select="siteid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
+      <td align="center" class="warning"><a><xsl:attribute name="href">view_coverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
       <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="pass"/></b></td>
       <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="fail"/></b></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
