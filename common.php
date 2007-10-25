@@ -153,7 +153,7 @@ function backup_xml_file($contents)
 		  }
 		else
 		 	{
-				return;
+				$file = "Other.xml";
 				}
 	
 	 $sitename = $vals[0]["attributes"]["NAME"]; 
