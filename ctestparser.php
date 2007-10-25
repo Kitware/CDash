@@ -324,38 +324,47 @@ function parse_coverage($xmlarray,$projectid)
 						
 		add_coverage($buildid,$LOCTested,$LOCUntested,$LOC,$PercentCoverage);
 		
-		/*$coverage_array = array();
+		$coverage_array = array();
 		$index = 0;
 		
 		foreach($xmlarray as $tagarray)
 			{
-			if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]["STATUS"]))
+			if(($tagarray["tag"] == "FILE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
 			  {
 					$index++;
-					$test_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
-					}
-			else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
-			  {
-					$test_array[$index]["name"]=$tagarray["value"];
+					$coverage_array[$index]["fullpath"]=$tagarray["attributes"]["FULLPATH"];
+					$coverage_array[$index]["filename"]=$tagarray["attributes"]["NAME"];
+					$coverage_array[$index]["covered"]=1;
+					if($tagarray["attributes"]["COVERED"] == "false")
+					  {
+					  $coverage_array[$index]["covered"]=0;
+			    }
 			  }
-			else if(($tagarray["tag"] == "PATH") && ($tagarray["level"] == 4))
+			else if(($tagarray["tag"] == "LOCTESTED") && ($tagarray["level"] == 4))
 			  {
-					$test_array[$index]["path"]=$tagarray["value"];
+					$coverage_array[$index]["loctested"]=$tagarray["value"];
 			  }
-			else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
+			else if(($tagarray["tag"] == "LOCUNTESTED") && ($tagarray["level"] == 4))
 			  {
-					$test_array[$index]["fullname"]=$tagarray["value"];
+					$coverage_array[$index]["locuntested"]=$tagarray["value"];
 			  }
-			else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
+			else if(($tagarray["tag"] == "PERCENTCOVERAGE") && ($tagarray["level"] == 4))
 			  {
-					$test_array[$index]["fullcommandline"]=$tagarray["value"];
+					$coverage_array[$index]["percentcoverage"]=$tagarray["value"];
 			  }	
+			else if(($tagarray["tag"] == "COVERAGEMETRIC") && ($tagarray["level"] == 4))
+			  {
+					$coverage_array[$index]["coveragemetric"]=$tagarray["value"];
+			  }					
    }
 			
-		foreach($test_array as $test)
+		foreach($coverage_array as $coverage)
 		  {
-				add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"]);
-		  }*/
+				add_coveragefile($buildid,$coverage["filename"],$coverage["fullpath"],
+				                          $coverage["covered"],$coverage["loctested"],$coverage["locuntested"],
+																														$coverage["percentcoverage"],$coverage["coveragemetric"]									
+																														);
+		  }
 }
 
 /** Parse the update xml */

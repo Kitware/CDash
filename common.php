@@ -253,6 +253,18 @@ function get_project_id($projectname)
   return -1;
 }
 
+/** Create a coverage file */
+function 	add_coveragefile($buildid,$filename,$fullpath,$covered,$loctested,$locuntested,
+        																			$percentcoverage,$coveragemetric)
+{
+																											
+		mysql_query ("INSERT INTO coveragefile (buildid,filename,fullpath,covered,loctested,locuntested,percentcoverage,coveragemetric) 
+                VALUES ('$buildid','$filename','$fullpath','$covered','$loctested','$locuntested','$percentcoverage','$coveragemetric')");
+  echo mysql_error();  
+}
+
+
+
 /** Create a site */
 function add_site($name,$description="",$processor="",$numprocessors="1",$ip="")
 {
