@@ -210,6 +210,7 @@ function generate_main_dasboard_XML($projectid,$date)
 				  $xml .= "<coverage>";
 				  $xml .= "		<site>".$site_array["name"]."</site>";
 						$xml .= "		<buildname>".$build_array["name"]."</buildname>";
+						$xml .= "		<buildid>".$build_array["id"]."</buildid>";
 						$xml .= "		<percentage>".$coverage_array["percentcoverage"]."</percentage>";
 						$xml .= "		<fail>".$coverage_array["locuntested"]."</fail>";
 						$xml .= "		<pass>".$coverage_array["loctested"]."</pass>";
