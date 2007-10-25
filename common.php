@@ -103,6 +103,81 @@ function add_XML_value($tag,$value)
   return "<".$tag.">".$value."</".$tag.">";
 }
 
+/** Clean the backup directory */
+function clean_backup_directory()
+{   
+  include("config.php");
+		foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename) 
+			 {
+				if(time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600)
+				  {
+						unlink($filename);
+				  }
+    }
+}
+
+/** Backup an XML file */
+function backup_xml_file($contents)
+{
+  include("config.php");
+		
+		clean_backup_directory(); // shoudl probably be run as a cronjob
+		
+	 $p = xml_parser_create();
+  xml_parse_into_struct($p, $contents, $vals, $index);
+  xml_parser_free($p);
+
+		if($vals[1]["tag"] == "BUILD")
+		  {
+				$file = "Build.xml";
+		  }
+		else	if($vals[1]["tag"] == "CONFIGURE")
+		  {
+    $file = "Configure.xml";
+		  }
+		else	if($vals[1]["tag"] == "TESTING")
+		  {
+    $file = "Test.xml";
+		  }
+		else	if($vals[0]["tag"] == "UPDATE")
+		  {
+    $file = "Update.xml";
+		  }		
+		else	if($vals[1]["tag"] == "COVERAGE")
+		  {
+    $file = "Coverage.xml";
+		  }	
+		else	if($vals[1]["tag"] == "NOTES")
+		  {
+    $file = "Notes.xml";
+		  }
+		else
+		 	{
+				return;
+				}
+	
+	 $sitename = $vals[0]["attributes"]["NAME"]; 
+  $name = $vals[0]["attributes"]["BUILDNAME"];
+		$stamp = $vals[0]["attributes"]["BUILDSTAMP"];
+	
+	 $filename = $CDASH_BACKUP_DIRECTORY."/".$sitename."_".$name."_".$stamp."_".$file;
+				
+		if (!$handle = fopen($filename, 'w')) 
+		  {
+				echo "Cannot open file ($filename)";
+				exit;
+				}
+		
+		// Write $somecontent to our opened file.
+		if (fwrite($handle, $contents) === FALSE)  
+		  {
+				echo "Cannot write to file ($contents)";
+				exit;
+				}
+				
+		fclose($handle);
+}
+
 /** return an array of projects */
 function get_projects()
 {
