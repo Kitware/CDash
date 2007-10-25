@@ -48,7 +48,7 @@
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/>
 						  <xsl:text>&#x20;</xsl:text>
 						<xsl:if test="string-length(notes)>0">
-      <a><xsl:attribute name="href">view_notes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img SRC="images/Document.gif" ALT="Notes" border="0"/></a>
+      <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img SRC="images/Document.gif" ALT="Notes" border="0"/></a>
 					 </xsl:if> 
 					
 						<xsl:if test="string-length(generator)>0">
@@ -325,7 +325,7 @@
    <tr>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/></td>
-      <td align="center" class="warning"><a><xsl:attribute name="href">view_coverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
+      <td align="center" class="warning"><a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
       <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="pass"/></b></td>
       <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="fail"/></b></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
