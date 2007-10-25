@@ -217,6 +217,13 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
   return mysql_insert_id();
 }
 
+/** Add a new coverage */
+function add_coverage($buildid,$loctested,$locuntested,$loc,$percentcoverage)
+{
+  mysql_query ("INSERT INTO coverage (buildid,loctested,locuntested,loc,percentcoverage) 
+                            VALUES ('$buildid','$loctested','$locuntested','$loc','$percentcoverage')");
+}
+
 /** Add a new configure */
 function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 {
