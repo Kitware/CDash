@@ -20,6 +20,7 @@ include_once("common.php");
 include_once("createRSS.php");
 
 $putdata = fopen("php://input", "r");
+//$putdata = fopen("Coverage.xml", "r");
 $contents = "";
 $content = fread($putdata,1000);
 while($content)
@@ -31,6 +32,12 @@ while($content)
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
 
+// Backup the XML file
+backup_xml_file($contents);
+
+// Parse the XML file
 ctest_parse($contents,$projectid);
+
+// Create the RSS fee
 CreateRSSFeed($projectid);
 ?>
