@@ -1,14 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 2.10.1
+-- version 2.6.1
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Oct 19, 2007 at 11:18 AM
--- Server version: 4.1.15
--- PHP Version: 5.2.3-1+b1
-
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
+-- Generation Time: Oct 25, 2007 at 05:29 PM
+-- Server version: 4.1.9
+-- PHP Version: 4.3.10
 -- 
 -- Database: `cdash`
 -- 
@@ -33,6 +30,7 @@ CREATE TABLE `build` (
   `command` text NOT NULL,
   `log` text NOT NULL,
   PRIMARY KEY  (`id`),
+  UNIQUE KEY `id_2` (`id`),
   KEY `siteid` (`siteid`,`name`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -86,6 +84,40 @@ CREATE TABLE `configure` (
   `status` tinyint(4) NOT NULL default '0',
   UNIQUE KEY `buildid` (`buildid`),
   KEY `buildid_2` (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `coverage`
+-- 
+
+CREATE TABLE `coverage` (
+  `buildid` int(11) NOT NULL default '0',
+  `loctested` int(11) NOT NULL default '0',
+  `locuntested` int(11) NOT NULL default '0',
+  `loc` int(11) NOT NULL default '0',
+  `percentcoverage` float NOT NULL default '0',
+  UNIQUE KEY `buildid_2` (`buildid`),
+  KEY `buildid` (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `coveragefile`
+-- 
+
+CREATE TABLE `coveragefile` (
+  `buildid` int(11) NOT NULL default '0',
+  `filename` varchar(255) NOT NULL default '',
+  `fullpath` varchar(255) NOT NULL default '',
+  `covered` tinyint(4) NOT NULL default '0',
+  `loctested` int(11) NOT NULL default '0',
+  `locuntested` int(11) NOT NULL default '0',
+  `percentcoverage` float NOT NULL default '0',
+  `coveragemetric` float NOT NULL default '0',
+  KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
