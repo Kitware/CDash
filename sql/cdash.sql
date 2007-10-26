@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Oct 26, 2007 at 03:57 PM
+-- Generation Time: Oct 26, 2007 at 07:01 PM
 -- Server version: 4.1.15
 -- PHP Version: 5.2.3-1+b1
 
@@ -121,6 +121,20 @@ CREATE TABLE `coveragefile` (
   `percentcoverage` float NOT NULL default '0',
   `coveragemetric` float NOT NULL default '0',
   KEY `buildid` (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `expectedbuild`
+-- 
+
+CREATE TABLE `expectedbuild` (
+  `siteid` int(11) NOT NULL default '0',
+  `buildname` varchar(255) NOT NULL default '',
+  `buildtype` varchar(15) NOT NULL default '',
+  `frequencyinhours` int(11) NOT NULL default '0',
+  `projectid` int(11) NOT NULL default '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
