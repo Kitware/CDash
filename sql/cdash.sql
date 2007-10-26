@@ -1,11 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 2.6.1
+-- version 2.10.1
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Oct 25, 2007 at 05:29 PM
--- Server version: 4.1.9
--- PHP Version: 4.3.10
+-- Generation Time: Oct 26, 2007 at 03:57 PM
+-- Server version: 4.1.15
+-- PHP Version: 5.2.3-1+b1
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
 -- 
 -- Database: `cdash`
 -- 
@@ -30,9 +33,9 @@ CREATE TABLE `build` (
   `command` text NOT NULL,
   `log` text NOT NULL,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `id_2` (`id`),
   KEY `siteid` (`siteid`,`name`),
-  KEY `id` (`id`)
+  KEY `id` (`id`),
+  KEY `projectid` (`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -146,6 +149,7 @@ CREATE TABLE `project` (
   `cvsurl` varchar(255) NOT NULL default '',
   `bugtrackerurl` varchar(255) NOT NULL default '',
   `logo` mediumblob,
+  `public` tinyint(4) NOT NULL default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -226,6 +230,7 @@ CREATE TABLE `user` (
   `password` varchar(40) NOT NULL default '',
   `firstname` varchar(40) NOT NULL default '',
   `lastname` varchar(40) NOT NULL default '',
+  `institution` varchar(255) NOT NULL default '',
   `admin` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
