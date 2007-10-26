@@ -141,6 +141,9 @@ function generate_main_dasboard_XML($projectid,$date)
     $xml .= add_XML_value("generator",$build_array["generator"]);
     //<notes>note</notes>
     
+				$note = mysql_query("SELECT count(buildid) FROM note WHERE buildid='$buildid'");
+				$note_array = mysql_fetch_row($note)
+    $xml .= add_XML_value("update",$note_array[0]);
     
     $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
     $xml .= add_XML_value("update",mysql_num_rows($update));

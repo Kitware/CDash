@@ -49,7 +49,7 @@
       </td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/>
         <xsl:text>&#x20;</xsl:text>
-      <xsl:if test="string-length(notes)>0">
+      <xsl:if test="string-length(note)>0">
       <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img SRC="images/Document.gif" ALT="Notes" border="0"/></a>
       </xsl:if> 
      
