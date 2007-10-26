@@ -117,7 +117,7 @@ function generate_main_dasboard_XML($projectid,$date)
   $end_timestamp = $currenttime;
   $builds = mysql_query("SELECT id,siteid,name,type,generator,starttime,endtime,submittime FROM build 
                          WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
-                         AND projectid='$projectid'
+                         AND projectid='$projectid' ORDER BY starttime DESC
                          ");
   echo mysql_error();
   while($build_array = mysql_fetch_array($builds))

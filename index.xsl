@@ -44,7 +44,9 @@
 			
 					 <xsl:for-each select="$type">
    <tr valign="top">
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
+      <td align="left" bgcolor="#ffffff">
+						<a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/></xsl:attribute><xsl:value-of select="site"/></a>
+						</td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/>
 						  <xsl:text>&#x20;</xsl:text>
 						<xsl:if test="string-length(notes)>0">
