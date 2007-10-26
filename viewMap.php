@@ -19,6 +19,7 @@ include("config.php");
 include("common.php");
 
 @$projectname = $_GET["project"];
+@$date = $_GET["date"];
 
 $projectid = get_project_id($projectname);
 
@@ -31,6 +32,7 @@ $xml .= "<title>CDash : Sites map for ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<dashboard>";
 $xml .= "<title>CDash</title>";
+$xml .= "<date>".$date."</date>";
 
 // Find the correct google map key
 foreach($CDASH_GOOGLE_MAP_API_KEY as $key=>$value)
@@ -59,7 +61,7 @@ $end_timestamp = $currenttime;
   
 $build = mysql_query("SELECT siteid FROM build 
                      WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
-                     AND projectid='$projectid' GROUP BY siteid ");
+                     AND projectid='$projectid' GROUP BY siteid");
 
 while($buildarray  = mysql_fetch_array($build))
   {

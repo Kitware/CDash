@@ -35,7 +35,7 @@
 
 <td align="center">
 <p class="hoverbutton">
-<a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>Back</a>
+<a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Back</a>
 </p>
 </td>
 
@@ -54,7 +54,7 @@
 
 <!-- Display the map --> 
   <script type="text/javascript">
-      <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/site/googlemapkey"/></xsl:attribute>
+      <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
    </script>
     <script type="text/javascript">
       // Creates a marker whose info window displays the letter corresponding
@@ -72,11 +72,13 @@
     function load() {
       if (GBrowserIsCompatible()) {
         var map = new GMap2(document.getElementById("map"));
-        map.setCenter(new GLatLng(37.4419, -122.1419), 3);
+        map.setCenter(new GLatLng(37.4419, -30.00), 2);
         map.addControl(new GLargeMapControl());
         <xsl:for-each select="cdash/site">
+								<xsl:if test="string-length(latitude)>0">
         var point = new GLatLng(<xsl:value-of select="latitude"/>,<xsl:value-of select="longitude"/>);
         map.addOverlay(createMarker(point,'<xsl:value-of select="name"/>'));
+								</xsl:if>
         </xsl:for-each>
       }
     }

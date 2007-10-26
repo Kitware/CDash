@@ -55,7 +55,7 @@
   <b>IP address:</b><xsl:value-of select="cdash/site/ip"/><br/>
   <b>Map:</b><br/>
   <script type="text/javascript">
-      <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/site/googlemapkey"/></xsl:attribute>
+      <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
    </script>
     <script type="text/javascript">
       // Creates a marker whose info window displays the letter corresponding
