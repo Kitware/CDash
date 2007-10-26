@@ -15,7 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-// Hostname of the MySQL database	
+// Hostname of the MySQL database 
 $CDASH_DB_HOST = 'localhost';
 // Login for MySQL database access
 $CDASH_DB_LOGIN = 'root';
@@ -31,4 +31,7 @@ $CDASH_CSS_FILE = 'cdash.css';
 $CDASH_BACKUP_DIRECTORY = 'backup';
 // Backup timeframe
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
+// Google Map API
+$CDASH_GOOGLE_MAP_API_KEY = array();
+$CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
 ?>

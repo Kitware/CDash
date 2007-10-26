@@ -87,8 +87,8 @@ function generate_main_dasboard_XML($projectid,$date)
   // Main dashboard section 
   $xml .=
   "<dashboard>
-  <datetime>".date("D, d M Y H:i:s",$currenttime)."</datetime>
-  <date>".date("l, F d Y",$currenttime)."</date>
+  <datetime>".date("l, F d Y H:i:s",$currenttime)."</datetime>
+  <date>".$date."</date>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
   <home>".$homeurl."</home>
@@ -121,16 +121,16 @@ function generate_main_dasboard_XML($projectid,$date)
                          ");
   echo mysql_error();
   while($build_array = mysql_fetch_array($builds))
-    {  		
-				$buildid = $build_array["id"];
-				$configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
+    {    
+    $buildid = $build_array["id"];
+    $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
     $nconfigure = mysql_num_rows($configure);
     $siteid = $build_array["siteid"];
     $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
     
-				// IF NO CONFIGURE WE DON'T DISPLAY
-				if($nconfigure > 0)
-				{
+    // IF NO CONFIGURE WE DON'T DISPLAY
+    if($nconfigure > 0)
+    {
     // Get the site name
     $xml .= "<".strtolower($build_array["type"]).">";
     
@@ -141,8 +141,8 @@ function generate_main_dasboard_XML($projectid,$date)
     $xml .= add_XML_value("generator",$build_array["generator"]);
     //<notes>note</notes>
     
-				
-				$update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
+    
+    $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
     $xml .= add_XML_value("update",mysql_num_rows($update));
     
     $xml .= "<build>";
@@ -150,12 +150,12 @@ function generate_main_dasboard_XML($projectid,$date)
     // Find the number of errors and warnings
     $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
     $builderror_array = mysql_fetch_array($builderror);
-				$nerrors = $builderror_array[0];
+    $nerrors = $builderror_array[0];
     $totalerrors += $nerrors;
     $xml .= add_XML_value("error",$nerrors);
     $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
     $buildwarning_array = mysql_fetch_array($buildwarning);
-				$nwarnings = $buildwarning_array[0];
+    $nwarnings = $buildwarning_array[0];
     $totalwarnings += $nwarnings;
     $xml .= add_XML_value("warning",$nwarnings);
     $diff = (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;
@@ -177,16 +177,16 @@ function generate_main_dasboard_XML($projectid,$date)
       {
       $test_array = mysql_fetch_array($test);
       $xml .= "<test>";
-						// We might be able to do this in one request
+      // We might be able to do this in one request
       $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
-						$nfail_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='failed'"));
-						$nfail = $nfail_array[0];
+      $nfail_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='failed'"));
+      $nfail = $nfail_array[0];
       $npass_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='passed'"));
-						$npass = $npass_array[0];
+      $npass = $npass_array[0];
       $nna_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='na'"));
       $nna = $nna_array[0];
-						
+      
       $totalnotrun += $nnotrun;
       $totalfail += $nfail;
       $totalpass += $npass;
@@ -202,23 +202,23 @@ function generate_main_dasboard_XML($projectid,$date)
     $xml .= add_XML_value("builddate",$build_array["starttime"]);
     $xml .= add_XML_value("submitdate",$build_array["submittime"]);
     $xml .= "</".strtolower($build_array["type"]).">";
-				} // END IF CONFIGURE
-				
-				$coverages = mysql_query("SELECT * FROM coverage WHERE buildid='$buildid'");
+    } // END IF CONFIGURE
+    
+    $coverages = mysql_query("SELECT * FROM coverage WHERE buildid='$buildid'");
     while($coverage_array = mysql_fetch_array($coverages))
       {
-				  $xml .= "<coverage>";
-				  $xml .= "		<site>".$site_array["name"]."</site>";
-						$xml .= "		<buildname>".$build_array["name"]."</buildname>";
-						$xml .= "		<buildid>".$build_array["id"]."</buildid>";
-						$xml .= "		<percentage>".$coverage_array["percentcoverage"]."</percentage>";
-						$xml .= "		<fail>".$coverage_array["locuntested"]."</fail>";
-						$xml .= "		<pass>".$coverage_array["loctested"]."</pass>";
-						$xml .= "		<date>".$build_array["starttime"]."</date>";
-						$xml .= "		<submitdate>".$build_array["submittime"]."</submitdate>";
-				  $xml .= "</coverage>";
-      }		
-				} // end looping through builds
+      $xml .= "<coverage>";
+      $xml .= "  <site>".$site_array["name"]."</site>";
+      $xml .= "  <buildname>".$build_array["name"]."</buildname>";
+      $xml .= "  <buildid>".$build_array["id"]."</buildid>";
+      $xml .= "  <percentage>".$coverage_array["percentcoverage"]."</percentage>";
+      $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
+      $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
+      $xml .= "  <date>".$build_array["starttime"]."</date>";
+      $xml .= "  <submitdate>".$build_array["submittime"]."</submitdate>";
+      $xml .= "</coverage>";
+      }  
+    } // end looping through builds
  
   $xml .= add_XML_value("totalConfigure",$totalconfigure);
   $xml .= add_XML_value("totalError",$totalerrors);

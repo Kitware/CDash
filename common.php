@@ -107,12 +107,12 @@ function add_XML_value($tag,$value)
 function clean_backup_directory()
 {   
   include("config.php");
-		foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename) 
-			 {
-				if(time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600)
-				  {
-						unlink($filename);
-				  }
+  foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename) 
+    {
+    if(time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600)
+      {
+      unlink($filename);
+      }
     }
 }
 
@@ -120,62 +120,66 @@ function clean_backup_directory()
 function backup_xml_file($contents)
 {
   include("config.php");
-		
-		clean_backup_directory(); // shoudl probably be run as a cronjob
-		
-	 $p = xml_parser_create();
+  
+  clean_backup_directory(); // shoudl probably be run as a cronjob
+  
+  $p = xml_parser_create();
   xml_parse_into_struct($p, $contents, $vals, $index);
   xml_parser_free($p);
 
-		if($vals[1]["tag"] == "BUILD")
-		  {
-				$file = "Build.xml";
-		  }
-		else	if($vals[1]["tag"] == "CONFIGURE")
-		  {
+  if($vals[1]["tag"] == "BUILD")
+    {
+    $file = "Build.xml";
+    }
+  else if($vals[1]["tag"] == "CONFIGURE")
+    {
     $file = "Configure.xml";
-		  }
-		else	if($vals[1]["tag"] == "TESTING")
-		  {
+    }
+  else if($vals[1]["tag"] == "TESTING")
+    {
     $file = "Test.xml";
-		  }
-		else	if($vals[0]["tag"] == "UPDATE")
-		  {
+    }
+  else if($vals[0]["tag"] == "UPDATE")
+    {
     $file = "Update.xml";
-		  }		
-		else	if($vals[1]["tag"] == "COVERAGE")
-		  {
+    }  
+  else if($vals[1]["tag"] == "COVERAGE")
+    {
     $file = "Coverage.xml";
-		  }	
-		else	if($vals[1]["tag"] == "NOTES")
-		  {
+    } 
+  else if($vals[1]["tag"] == "NOTES")
+    {
     $file = "Notes.xml";
-		  }
-		else
-		 	{
-				$file = "Other.xml";
-				}
-	
-	 $sitename = $vals[0]["attributes"]["NAME"]; 
+    }
+  else if($vals[1]["tag"] == "DynamicAnalysis")
+    {
+    $file = "DynamicAnalysis.xml";
+    } 
+  else
+    {
+    $file = "Other.xml";
+    }
+ 
+  $sitename = $vals[0]["attributes"]["NAME"]; 
   $name = $vals[0]["attributes"]["BUILDNAME"];
-		$stamp = $vals[0]["attributes"]["BUILDSTAMP"];
-	
-	 $filename = $CDASH_BACKUP_DIRECTORY."/".$sitename."_".$name."_".$stamp."_".$file;
-				
-		if (!$handle = fopen($filename, 'w')) 
-		  {
-				echo "Cannot open file ($filename)";
-				exit;
-				}
-		
-		// Write $somecontent to our opened file.
-		if (fwrite($handle, $contents) === FALSE)  
-		  {
-				echo "Cannot write to file ($contents)";
-				exit;
-				}
-				
-		fclose($handle);
+  $stamp = $vals[0]["attributes"]["BUILDSTAMP"];
+ 
+  $filename = $CDASH_BACKUP_DIRECTORY."/".$sitename."_".$name."_".$stamp."_".$file;
+    
+  if (!$handle = fopen($filename, 'w')) 
+    {
+    echo "Cannot open file ($filename)";
+    exit;
+    }
+  
+  // Write $somecontent to our opened file.
+  if (fwrite($handle, $contents) === FALSE)  
+    {
+    echo "Cannot write to file ($contents)";
+    exit;
+    }
+    
+  fclose($handle);
 }
 
 /** return an array of projects */
@@ -254,11 +258,11 @@ function get_project_id($projectname)
 }
 
 /** Create a coverage file */
-function 	add_coveragefile($buildid,$filename,$fullpath,$covered,$loctested,$locuntested,
-        																			$percentcoverage,$coveragemetric)
+function  add_coveragefile($buildid,$filename,$fullpath,$covered,$loctested,$locuntested,
+                           $percentcoverage,$coveragemetric)
 {
-																											
-		mysql_query ("INSERT INTO coveragefile (buildid,filename,fullpath,covered,loctested,locuntested,percentcoverage,coveragemetric) 
+                           
+  mysql_query ("INSERT INTO coveragefile (buildid,filename,fullpath,covered,loctested,locuntested,percentcoverage,coveragemetric) 
                 VALUES ('$buildid','$filename','$fullpath','$covered','$loctested','$locuntested','$percentcoverage','$coveragemetric')");
   echo mysql_error();  
 }
