@@ -142,9 +142,12 @@ function generate_main_dasboard_XML($projectid,$date)
     //<notes>note</notes>
     
 				$note = mysql_query("SELECT count(buildid) FROM note WHERE buildid='$buildid'");
-				$note_array = mysql_fetch_row($note)
-    $xml .= add_XML_value("update",$note_array[0]);
-    
+				$note_array = mysql_fetch_row($note);
+				if($note_array[0]>0)
+				  {
+      $xml .= add_XML_value("note","1");
+      }
+						
     $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
     $xml .= add_XML_value("update",mysql_num_rows($update));
     
