@@ -29,15 +29,15 @@ function ctest_parse($xml,$projectid)
 		  }
 		else	if($vals[1]["tag"] == "CONFIGURE")
 		  {
-    parse_configure($vals);
+    parse_configure($vals,$projectid);
 		  }
 		else	if($vals[1]["tag"] == "TESTING")
 		  {
-    parse_testing($vals);
+    parse_testing($vals,$projectid);
 		  }
 		else	if($vals[0]["tag"] == "UPDATE")
 		  {
-    parse_update($vals);
+    parse_update($vals,$projectid);
 		  }		
 		else	if($vals[1]["tag"] == "COVERAGE")
 		  {
@@ -45,7 +45,7 @@ function ctest_parse($xml,$projectid)
 		  }	
 		else	if($vals[1]["tag"] == "NOTES")
 		  {
-    parse_note($vals);
+    parse_note($vals,$projectid);
 		  }
 }
 
@@ -197,14 +197,14 @@ function parse_build($xmlarray,$projectid)
 
 
 /** Parse the configure xml */
-function parse_configure($xmlarray)
+function parse_configure($xmlarray,$projectid)
 {
 		include_once("common.php");
   $name = $xmlarray[0]["attributes"]["BUILDNAME"];
 		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
 		
 		// Find the build id
-		$buildid = get_build_id($name,$stamp);
+		$buildid = get_build_id($name,$stamp,$projectid);
 		if($buildid<0)
 		  {
 				return;
@@ -227,14 +227,14 @@ function parse_configure($xmlarray)
 }
 
 /** Parse the testing xml */
-function parse_testing($xmlarray)
+function parse_testing($xmlarray,$projectid)
 {
 		include_once("common.php");
   $name = $xmlarray[0]["attributes"]["BUILDNAME"];
 		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
 		
 		// Find the build id
-		$buildid = get_build_id($name,$stamp);
+		$buildid = get_build_id($name,$stamp,$projectid);
 		if($buildid<0)
 		  {
 				return;
@@ -284,7 +284,7 @@ function parse_coverage($xmlarray,$projectid)
 		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
 		
 		// Find the build id
-		$buildid = get_build_id($name,$stamp);
+		$buildid = get_build_id($name,$stamp,$projectid);
 		if($buildid<0)
 		  {
 		  $sitename = $xmlarray[0]["attributes"]["NAME"]; 
@@ -368,7 +368,7 @@ function parse_coverage($xmlarray,$projectid)
 }
 
 /** Parse the update xml */
-function parse_update($xmlarray)
+function parse_update($xmlarray,$projectid)
 {
 		include_once("common.php");
   
@@ -376,7 +376,7 @@ function parse_update($xmlarray)
 		$stamp = getXMLValue($xmlarray,"BUILDSTAMP","UPDATE");
 			
 		// Find the build id
-		$buildid = get_build_id($buildname,$stamp);
+		$buildid = get_build_id($buildname,$stamp,$projectid);
 		if($buildid<0)
 		  {
 				return;
@@ -447,14 +447,14 @@ function parse_update($xmlarray)
 }
 
 /** Parse the notes xml */
-function parse_note($xmlarray)
+function parse_note($xmlarray,$projectid)
 {
 		include_once("common.php");
   $name = $xmlarray[0]["attributes"]["BUILDNAME"];
 		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
 		
 		// Find the build id
-		$buildid = get_build_id($name,$stamp);
+		$buildid = get_build_id($name,$stamp,$projectid);
 		/*if($buildid<0)
 		  {
 				return;

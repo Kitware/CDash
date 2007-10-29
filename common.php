@@ -222,14 +222,18 @@ function get_projects()
 }
 
 /** Get the build id from stamp, name and buildname */
-function get_build_id($buildname,$stamp)
+function get_build_id($buildname,$stamp,$projectid)
 {
   include("config.php");
 
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
+		
+		$sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
+		$sql .= " AND projectid='$projectid'"; 
+		$sql .= " ORDER BY buildid DESC";
 
-  $build = mysql_query("SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'");
+  $build = mysql_query($sql);
   if(mysql_num_rows($build)>0)
     {
     $build_array = mysql_fetch_array($build);
