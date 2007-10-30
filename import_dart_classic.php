@@ -97,5 +97,5 @@ if($Submit)
   }
 
 // Now doing the xslt transition
-generate_XSLT($xml,"import");
+generate_XSLT($xml,"import_dart_classic");
 ?>
