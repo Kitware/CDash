@@ -195,6 +195,37 @@ function parse_build($xmlarray,$projectid)
 		  }
 }
 
+function create_build($xmlarray,$projectid)
+{
+  $sitename = $xmlarray[0]["attributes"]["NAME"]; 
+
+ 	// Extract the type from the buildstamp
+		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+		$type = substr($stamp,strrpos($stamp,"-")+1);
+		$generator = $xmlarray[0]["attributes"]["GENERATOR"];
+		$starttime = getXMLValue($xmlarray,"STARTDATETIME","COVERAGE");
+				
+		// Convert the starttime to a timestamp
+		$starttimestamp = str_to_time($starttime,$stamp);
+		$elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","COVERAGE");
+		$endtimestamp = $starttimestamp+$elapsedminutes*60;
+				
+		include("config.php");
+		include_once("common.php");
+		$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+		mysql_select_db("$CDASH_DB_NAME",$db);
+		
+		// First we look at the site and add it if not in the list
+		$siteid = add_site($sitename);
+							
+		$start_time = date("Y-m-d H:i:s",$starttimestamp);
+		$end_time = date("Y-m-d H:i:s",$endtimestamp);
+		$submit_time = date("Y-m-d H:i:s");
+		
+		$buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
+		
+		return $buildid;
+}
 
 /** Parse the configure xml */
 function parse_configure($xmlarray,$projectid)
@@ -207,9 +238,9 @@ function parse_configure($xmlarray,$projectid)
 		$buildid = get_build_id($name,$stamp,$projectid);
 		if($buildid<0)
 		  {
-				return;
-		  }
-
+				$buildid = create_build($xmlarray,$projectid);
+				}
+				
 		$starttime = getXMLValue($xmlarray,"STARTDATETIME","CONFIGURE");
 		$starttimestamp = str_to_time($starttime,$stamp);
 		$elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","CONFIGURE");
