@@ -227,12 +227,15 @@ function get_build_id($buildname,$stamp,$projectid)
   include("config.php");
 
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  if(!$db)
+    {
+    echo("Problem with mysql_connect<br>\n");
+    }
   mysql_select_db("$CDASH_DB_NAME",$db);
 		
 		$sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
 		$sql .= " AND projectid='$projectid'"; 
-		$sql .= " ORDER BY buildid DESC";
-
+		$sql .= " ORDER BY siteid DESC";
   $build = mysql_query($sql);
   if(mysql_num_rows($build)>0)
     {
