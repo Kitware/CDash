@@ -260,51 +260,73 @@ function parse_configure($xmlarray,$projectid)
 /** Parse the testing xml */
 function parse_testing($xmlarray,$projectid)
 {
-		include_once("common.php");
+  include_once("common.php");
   $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
-		
-		// Find the build id
-		$buildid = get_build_id($name,$stamp,$projectid);
-		if($buildid<0)
-		  {
-				return;
-		  }
-				
-		//print_r($xmlarray);
-		
-		$test_array = array();
-		$index = 0;
-		
-		foreach($xmlarray as $tagarray)
-			{
-			if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]["STATUS"]))
-			  {
-					$index++;
-					$test_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
-					}
-			else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
-			  {
-					$test_array[$index]["name"]=$tagarray["value"];
-			  }
-			else if(($tagarray["tag"] == "PATH") && ($tagarray["level"] == 4))
-			  {
-					$test_array[$index]["path"]=$tagarray["value"];
-			  }
-			else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
-			  {
-					$test_array[$index]["fullname"]=$tagarray["value"];
-			  }
-			else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
-			  {
-					$test_array[$index]["fullcommandline"]=$tagarray["value"];
-			  }	
-   }
-			
-		foreach($test_array as $test)
-		  {
-				add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"]);
-		  }
+  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+
+  // Find the build id
+  $buildid = get_build_id($name,$stamp,$projectid);
+  if($buildid<0)
+    {
+    return;
+    }
+		  
+  //print_r($xmlarray);
+
+  $test_array = array();
+  $index = 0;
+    $array_text = print_r($xmlarray, TRUE);
+  $getTimeNext = FALSE;
+  $getDetailsNext = FALSE;
+  foreach($xmlarray as $tagarray)
+    {
+    $key = $tagarray["tag"];
+    $val = $tagarray["value"];
+    if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]["STATUS"]))
+      {
+      $index++;
+      $test_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
+      }
+    else if( ($tagarray["level"] == 5) && ($tagarray["attributes"]["NAME"] == "Execution Time") )
+      {
+      $getTimeNext = TRUE;
+      }
+    else if( ($tagarray["level"] == 5) && ($tagarray["attributes"]["NAME"] == "Completion Status") )
+      {
+      $getDetailsNext = TRUE;
+      }
+    else if( ($tagarray["level"] == 6) && $getTimeNext)
+      {
+      $test_array[$index]["executiontime"]=$tagarray["value"];
+      $getTimeNext = FALSE;
+      }
+    else if( ($tagarray["level"] == 6) && $getDetailsNext)
+      {
+      $test_array[$index]["details"]=$tagarray["value"];
+      $getDetailsNext = FALSE;
+      }
+    else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
+      {
+      $test_array[$index]["name"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "PATH") && ($tagarray["level"] == 4))
+      {
+      $test_array[$index]["path"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
+      {
+      $test_array[$index]["fullname"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
+      {
+      $test_array[$index]["fullcommandline"]=$tagarray["value"];
+      }	
+    }
+	  
+  foreach($test_array as $test)
+    {
+    add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], $test["executiontime"], $test["details"]);
+    }
 }
 
 /** Parse the coverage xml */

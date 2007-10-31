@@ -31,6 +31,7 @@ $projectid = $build_array["projectid"];
 if(!isset($date) || strlen($date)==0)
   { 
   $currenttime = time();
+  $date = date("Ymd",$currenttime);	
   }
 else
   {
@@ -50,7 +51,7 @@ if(mysql_num_rows($project)>0)
 $previousdate = date("Ymd",$currenttime-24*3600);	
 $nextdate = date("Ymd",$currenttime+24*3600);
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .="<dashboard>
@@ -85,22 +86,37 @@ $result = mysql_query("SELECT * FROM test WHERE buildid='$buildid'");
 $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;
+$color = FALSE;
 while($row = mysql_fetch_array($result))
   {
   $xml .= "<test>\n";
-  $xml .= add_XML_value("name", $row["name"]) . "\n";
-  $xml .= add_XML_value("status", $row["status"]) . "\n";
-  $xml .= add_XML_value("time", "time") . "\n";
-  $xml .= add_XML_value("detail", "detail") . "\n";
+  $testName = $row["name"];
+  $xml .= add_XML_value("name", $testName) . "\n";
+  $xml .= add_XML_value("execTime", $row["time"]) . "\n";
+  $xml .= add_XML_value("details", $row["details"]) . "\n"; 
+  $summaryLink = "testSummary.php?project=$projectid&amp;name=$testName&amp;date=$date";
+  $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
+  if($color)
+    {
+    $xml .= add_XML_value("class", "tr-even") . "\n";
+    }
+  else
+    {
+    $xml .= add_XML_value("class", "tr-odd") . "\n";
+    }
+  $color = !$color;
   switch($row["status"])
     {
     case "passed":
+      $xml .= add_XML_value("status", "Passed") . "\n";
       $numPassed++;
       break; 
     case "failed":
+      $xml .= add_XML_value("status", "Failed") . "\n";
       $numFailed++;
       break;
     case "notrun":
+      $xml .= add_XML_value("status", "Not Run") . "\n";
       $numNotRun++;
       break;
     }
@@ -113,8 +129,5 @@ $xml .= add_XML_value("numNotRun", $numNotRun) . "\n";
 $xml .= "</cdash>\n";
 
 // Now doing the xslt transition
-$handle = fopen("/tmp/zackdebug.txt", "w");
-fwrite($handle, $xml);
-fclose($handle);
 generate_XSLT($xml,"viewTest");
 ?>

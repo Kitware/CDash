@@ -2,9 +2,9 @@
 	.normal { background-color : #00aa00; }
 	.warning { background-color : #ffcc66; }
 	.error { background-color : #ff6666; }
-	.pass { background-color : #00aa00; }
-	.fail { background-color : #ffcc66; }
-	.nr { background-color : #ff6666; }
+	.Passed { background-color : #00aa00; }
+	.Failed { background-color : #ffcc66; }
+	.Not Run { background-color : #ff6666; }
 	.na { background-color : #cccccc; }
 	.tr-even { background-color : #b0c4de; }
 	.tr-odd { background-color : #ffffff; }

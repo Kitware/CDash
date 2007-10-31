@@ -17,46 +17,48 @@
 <body bgcolor="#ffffff">
 <xsl:call-template name="header"/>
 <br/><br/>
-<h2>Testing started on <xsl:value-of select="cdash/build/testtime"/></h2>
-<p><b>Site Name: </b><xsl:value-of select="cdash/build/site"/></p>
-<p><b>Build Name: </b><xsl:value-of select="cdash/build/buildname"/></p><br/>
-<h3>
-  <xsl:value-of select="cdash/numPassed"/> passed, 
-  <xsl:value-of select="cdash/numFailed"/> failed, 
-  <xsl:value-of select="cdash/numNotRun"/> not run
-</h3><br/>
-
-<table cellspacing="0">
+<table cellspacing="0" cellpadding="3">
   <tr>
-    <th>Name</th>
+    <th>Site</th>
+    <th>Build Name</th>
+    <th>Build Stamp</th>
     <th>Status</th>
     <th>Time</th>
-    <th>Details</th>
+    <th>Detail</th>
   </tr>
-<xsl:for-each select="cdash/tests/test">
+<xsl:for-each select="cdash/builds/build">
   <tr>
     <xsl:attribute name="class">
       <xsl:value-of select="class"/>
     </xsl:attribute>
+    <td>
+      <xsl:value-of select="site"/>
+    </td>
+
     <td><a>
       <xsl:attribute name="href">
-        <xsl:value-of select="summaryLink"/>
+        <xsl:value-of select="buildLink"/>
       </xsl:attribute>
-      <xsl:value-of select="name"/>
+      <xsl:value-of select="buildName"/>
     </a></td>
     <td>
-      <xsl:attribute name="align">center</xsl:attribute>
+      <xsl:value-of select="buildStamp"/>
+    </td>
+    <td>
       <xsl:attribute name="class">
         <xsl:value-of select="status"/>
       </xsl:attribute>
-      <a href="#">
-        <xsl:value-of select="status"/>
+      <a>
+      <xsl:attribute name="href">
+        <xsl:value-of select="testLink"/>
+      </xsl:attribute>
+      <xsl:value-of select="status"/>
       </a>
     </td>
-    <td align="right">
-      <xsl:value-of select="execTime"/>
+    <td>
+      <xsl:value-of select="time"/>
     </td>
-    <td align="right">
+    <td>
       <xsl:value-of select="details"/>
     </td>
   </tr>

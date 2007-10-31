@@ -205,13 +205,16 @@ CREATE TABLE `site2user` (
 -- 
 
 CREATE TABLE `test` (
-  `id` int(11) NOT NULL default '0',
+  `id` int(11) NOT NULL auto_increment,
   `buildid` int(11) NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `status` varchar(10) NOT NULL default '0',
   `path` varchar(255) NOT NULL default '',
   `fullname` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
+  `time` float(5,2) NOT NULL default '-1.00',
+  `details` text NOT NULL,
+  PRIMARY KEY  (`id`),
   KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
