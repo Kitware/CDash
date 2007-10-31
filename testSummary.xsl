@@ -17,6 +17,10 @@
 <body bgcolor="#ffffff">
 <xsl:call-template name="header"/>
 <br/><br/>
+<h3>Testing summary for 
+<xsl:value-of select="cdash/dashboard/testName"/>
+ performed on <xsl:value-of select="cdash/dashboard/date"/>
+</h3>
 <table cellspacing="0" cellpadding="3">
   <tr>
     <th>Site</th>

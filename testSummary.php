@@ -69,6 +69,7 @@ $xml .="<dashboard>
   <projectname>".$projectname."</projectname>	
   <previousdate>".$previousdate."</previousdate>	
   <nextdate>".$nextdate."</nextdate>	
+  <testName>".$testName."</testName>
   </dashboard>
   ";
 		
