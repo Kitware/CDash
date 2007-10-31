@@ -79,7 +79,6 @@ $dateEnd = mktime("23","59","59",substr($date,4,2),substr($date,6,2),substr($dat
 */
 $xml .= "<builds>\n";
 $buildQuery = "SELECT * FROM build WHERE starttime >  '$date' AND starttime < '$nextdate' AND projectid = '$projectid'";
-echo $buildQuery;
 $buildResult = mysql_query($buildQuery);
 $color = FALSE;
 while($buildRow = mysql_fetch_array($buildResult))
