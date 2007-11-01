@@ -214,6 +214,7 @@ CREATE TABLE `test` (
   `command` text NOT NULL,
   `time` float(5,2) NOT NULL default '-1.00',
   `details` text NOT NULL,
+  `output` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;

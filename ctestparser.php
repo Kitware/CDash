@@ -275,9 +275,9 @@ function parse_testing($xmlarray,$projectid)
 
   $test_array = array();
   $index = 0;
-    $array_text = print_r($xmlarray, TRUE);
   $getTimeNext = FALSE;
   $getDetailsNext = FALSE;
+  $getSummaryNext = FALSE;
   foreach($xmlarray as $tagarray)
     {
     $key = $tagarray["tag"];
@@ -295,6 +295,10 @@ function parse_testing($xmlarray,$projectid)
       {
       $getDetailsNext = TRUE;
       }
+    else if( ($tagarray["level"] == 5) && ($tagarray["tag"] == "MEASUREMENT") )
+      {
+      $getSummaryNext = TRUE;
+      }
     else if( ($tagarray["level"] == 6) && $getTimeNext)
       {
       $test_array[$index]["executiontime"]=$tagarray["value"];
@@ -304,6 +308,11 @@ function parse_testing($xmlarray,$projectid)
       {
       $test_array[$index]["details"]=$tagarray["value"];
       $getDetailsNext = FALSE;
+      }
+    else if( ($tagarray["level"] == 6) && $getSummaryNext)
+      {
+      $test_array[$index]["output"]=$tagarray["value"];
+      $getSummaryNext = FALSE;
       }
     else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
       {
@@ -325,7 +334,7 @@ function parse_testing($xmlarray,$projectid)
 	  
   foreach($test_array as $test)
     {
-    add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], $test["executiontime"], $test["details"]);
+    add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], $test["executiontime"], $test["details"], $test["output"]);
     }
 }
 

@@ -36,7 +36,7 @@ if(!isset($projectid))
   die('Error: no project supplied in query string');
   }
 $testName = $_GET["name"];
-if(!isset($projectid))
+if(!isset($testName))
   {
   die('Error: no test name supplied in query string');
   }
@@ -103,7 +103,7 @@ while($buildRow = mysql_fetch_array($buildResult))
   $buildLink = "viewTest.php?buildid=$buildid";
   $xml .= add_XML_value("buildLink", $buildLink) . "\n";
   $testid = $testRow["id"];
-  $testLink = "testDetails.php?testid=$testid";
+  $testLink = "testDetails.php?test=$testid";
   $xml .= add_XML_value("testLink", $testLink) . "\n";
   if($color)
     {

@@ -334,12 +334,12 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 }
 
 /** Add a new test */
-function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details)
+function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output)
 {
   $command = addslashes($command);
     
-  mysql_query ("INSERT INTO test (buildid,name,status,path,fullname,command,time,details) 
-               VALUES ('$buildid','$name','$status','$path','$fullname','$command','$time', '$details')");
+  mysql_query ("INSERT INTO test (buildid,name,status,path,fullname,command,time,details, output) 
+               VALUES ('$buildid','$name','$status','$path','$fullname','$command','$time', '$details', '$output')");
   echo mysql_error();
 }
 

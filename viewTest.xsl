@@ -49,7 +49,10 @@
       <xsl:attribute name="class">
         <xsl:value-of select="status"/>
       </xsl:attribute>
-      <a href="#">
+      <a>
+	<xsl:attribute name="href">
+	  <xsl:value-of select="detailsLink"/>
+	</xsl:attribute>
         <xsl:value-of select="status"/>
       </a>
     </td>
