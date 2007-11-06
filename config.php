@@ -20,7 +20,7 @@ $CDASH_DB_HOST = 'localhost';
 // Login for MySQL database access
 $CDASH_DB_LOGIN = 'root';
 // Password for MySQL database access
-$CDASH_DB_PASS = '';
+$CDASH_DB_PASS = 'sand7$worm';
 // Name of the MySQL database
 $CDASH_DB_NAME = 'cdash';
 // Dashboard time frame
