@@ -32,10 +32,6 @@ if(!isset($date) || strlen($date)==0)
   { 
   $date = date("Ymd", strtotime($build_array["starttime"]));
   }
-else
-  {
-  $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
-  }
 				
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
@@ -47,8 +43,8 @@ if(mysql_num_rows($project)>0)
   $projectname	= $project_array["name"];		
   }
 
-$previousdate = date("Ymd",$currenttime-24*3600);	
-$nextdate = date("Ymd",$currenttime+24*3600);
+list ($previousdate, $date, $nextdate) = get_dates($date);
+$currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";

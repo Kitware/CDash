@@ -62,9 +62,8 @@ $siteRow = mysql_fetch_array(mysql_query(
   "SELECT name FROM site WHERE id = '$siteid'"));
 
 $date = date("Ymd", strtotime($buildRow["starttime"]));
+list ($previousdate, $date, $nextdate) = get_dates($date);
 $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
-$previousdate = date("Ymd",$currenttime-24*3600);	
-$nextdate = date("Ymd",$currenttime+24*3600);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";

@@ -48,7 +48,7 @@ function generate_index_table()
 }
 
 /** Generate the main dashboard XML */
-function generate_main_dasboard_XML($projectid,$date)
+function generate_main_dashboard_XML($projectid,$date)
 {
   include("config.php");
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
@@ -72,17 +72,9 @@ function generate_main_dasboard_XML($projectid,$date)
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   
-  if(!isset($date) || strlen($date)==0)
-    { 
-    $currenttime = time();
-    }
-  else
-    {
-    $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
-    }
-  
-  $previousdate = date("Ymd",$currenttime-24*3600); 
-  $nextdate = date("Ymd",$currenttime+24*3600);
+  list ($previousdate, $date, $nextdate) = get_dates($date);
+
+  $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
   
   // Main dashboard section 
   $xml .=
@@ -267,7 +259,7 @@ else
   {
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
-  $xml = generate_main_dasboard_XML($projectid,$date);
+  $xml = generate_main_dashboard_XML($projectid,$date);
   // Now doing the xslt transition
   generate_XSLT($xml,"index");
   }

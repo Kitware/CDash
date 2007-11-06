@@ -419,4 +419,15 @@ function globr($sDir, $sPattern, $nFlags = NULL)
   return $aFiles;
 } 
 
+function get_dates($date)
+{
+  if(!isset($date) || strlen($date)==0)
+    { 
+    $date = date("Ymd");
+    }
+  $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+  $previousdate = date("Ymd", mktime("23","59","0",substr($date,4,2),substr($date,6,2)-1,substr($date,0,4)));
+  $nextdate = date("Ymd", mktime("23","59","0",substr($date,4,2),substr($date,6,2)+1,substr($date,0,4)));
+  return array($previousdate, $date, $nextdate);
+}
 ?>
