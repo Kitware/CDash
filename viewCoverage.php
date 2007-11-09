@@ -47,6 +47,7 @@ if(mysql_num_rows($project)>0)
 list ($previousdate, $date, $nextdate) = get_dates($date);
 
 $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+$logoid = getLogoID($projectid);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
@@ -54,14 +55,15 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .="<dashboard>
   <datetime>".date("D, d M Y H:i:s",$currenttime)."</datetime>
   <date>".date("l, F d Y",$currenttime)."</date>
-		<svn>".$svnurl."</svn>
-		<bugtracker>".$bugurl."</bugtracker>	
-		<home>".$homeurl."</home>
-		<projectid>".$projectid."</projectid>	
+  <svn>".$svnurl."</svn>
+  <bugtracker>".$bugurl."</bugtracker>	
+  <home>".$homeurl."</home>
+  <projectid>".$projectid."</projectid>	
+  <logoid>".$logoid."</logoid>	
   <projectname>".$projectname."</projectname>	
-		<previousdate>".$previousdate."</previousdate>	
-		<nextdate>".$nextdate."</nextdate>	
-		</dashboard>
+  <previousdate>".$previousdate."</previousdate>	
+  <nextdate>".$nextdate."</nextdate>	
+  </dashboard>
   ";
 		
 		// coverage

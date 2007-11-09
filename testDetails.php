@@ -64,6 +64,7 @@ $siteRow = mysql_fetch_array(mysql_query(
 $date = date("Ymd", strtotime($buildRow["starttime"]));
 list ($previousdate, $date, $nextdate) = get_dates($date);
 $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+$logoid = getLogoID($projectid);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
@@ -75,6 +76,7 @@ $xml .="<dashboard>
   <bugtracker>".$bugurl."</bugtracker>	
   <home>".$homeurl."</home>
   <projectid>".$projectid."</projectid>	
+  <logoid>".$logoid."</logoid>	
   <projectname>".$projectname."</projectname>	
   <previousdate>".$previousdate."</previousdate>	
   <nextdate>".$nextdate."</nextdate>	
@@ -112,7 +114,23 @@ switch($testRow["status"])
     $numNotRun++;
     break;
   }
+
+//get any images associated with this test
+$xml .= "<images>\n";
+$query = "SELECT * FROM image2test WHERE testid = '$testid'";
+$result = mysql_query($query);
+while($row = mysql_fetch_array($result))
+  {
+  $xml .= "<image>\n";
+  $xml .= add_XML_value("imgid", $row["imgid"]) . "\n";
+  $xml .= add_XML_value("role", $row["role"]) . "\n";
+  
+  $xml .= "</image>\n";
+  }
+$xml .= "</images>\n";
 $xml .= "</test>\n";
+
+
 $xml .= "</cdash>\n";
 
 // Now doing the xslt transition

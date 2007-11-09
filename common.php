@@ -334,13 +334,34 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 }
 
 /** Add a new test */
-function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output)
+function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images)
 {
   $command = addslashes($command);
+  $output = addslashes($output);
     
-  mysql_query ("INSERT INTO test (buildid,name,status,path,fullname,command,time,details, output) 
-               VALUES ('$buildid','$name','$status','$path','$fullname','$command','$time', '$details', '$output')");
-  echo mysql_error();
+  $query = "INSERT INTO test
+            (buildid,name,status,path,fullname,command,time,details, output) 
+            VALUES ('$buildid','$name','$status','$path','$fullname',
+                    '$command','$time', '$details', '$output')";
+  if(mysql_query("$query"))
+    {
+    $testid = mysql_insert_id();
+    foreach($images as $image)
+      {
+      $imgid = $image["id"];
+      $role = $image["role"];
+      $query = "INSERT INTO image2test(imgid, testid, role)
+                VALUES('$imgid', '$testid', '$role')";
+      if(!mysql_query("$query"))
+        {
+        echo mysql_error();
+        }
+      }
+    }
+  else
+    {
+    echo mysql_error();
+    }
 }
 
 /** Add a new error/warning */
@@ -430,4 +451,20 @@ function get_dates($date)
   $nextdate = date("Ymd", mktime("23","59","0",substr($date,4,2),substr($date,6,2)+1,substr($date,0,4)));
   return array($previousdate, $date, $nextdate);
 }
+
+function getLogoID($projectid)
+{
+  //asume the caller already connected to the database
+  //$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  //mysql_select_db("$CDASH_DB_NAME",$db);
+  $query = "SELECT imgid FROM image2project WHERE projectid='$projectid'";
+  $result = mysql_query($query);
+  if(!$result)
+    {
+    return 0;
+    }
+  $row = mysql_fetch_array($result);
+  return $row["imgid"];
+}
+
 ?>

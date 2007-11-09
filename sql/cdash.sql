@@ -140,6 +140,43 @@ CREATE TABLE `expectedbuild` (
 -- --------------------------------------------------------
 
 -- 
+-- Table structure for table `image`
+-- 
+
+CREATE TABLE `image` (
+  `id` int(11) NOT NULL auto_increment,
+  `img` longblob NOT NULL,
+  `extension` tinytext NOT NULL,
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `image2project`
+-- 
+
+CREATE TABLE `image2project` (
+  `imgid` int(11) NOT NULL default '0',
+  `projectid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`imgid`,`projectid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `image2test`
+-- 
+
+CREATE TABLE `image2test` (
+  `imgid` int(11) NOT NULL default '0',
+  `testid` int(11) NOT NULL default '0',
+  `role` tinytext NOT NULL,
+  PRIMARY KEY  (`imgid`,`testid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+-- 
 -- Table structure for table `note`
 -- 
 

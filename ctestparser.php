@@ -270,14 +270,15 @@ function parse_testing($xmlarray,$projectid)
     {
     return;
     }
-		  
-  //print_r($xmlarray);
 
   $test_array = array();
   $index = 0;
   $getTimeNext = FALSE;
   $getDetailsNext = FALSE;
   $getSummaryNext = FALSE;
+  $getImageNext = FALSE;
+  $imageType = "";
+  $imageRole = "";
   foreach($xmlarray as $tagarray)
     {
     $key = $tagarray["tag"];
@@ -286,6 +287,7 @@ function parse_testing($xmlarray,$projectid)
       {
       $index++;
       $test_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
+      $test_array[$index]["images"] = array();
       }
     else if( ($tagarray["level"] == 5) && ($tagarray["attributes"]["NAME"] == "Execution Time") )
       {
@@ -298,6 +300,12 @@ function parse_testing($xmlarray,$projectid)
     else if( ($tagarray["level"] == 5) && ($tagarray["tag"] == "MEASUREMENT") )
       {
       $getSummaryNext = TRUE;
+      }
+    else if( ($tagarray["level"] == 5) && (strpos($tagarray["attributes"]["TYPE"], "image") !== FALSE) )
+      {
+      $getImageNext = TRUE;
+      $imageType = $tagarray["attributes"]["TYPE"];
+      $imageRole = $tagarray["attributes"]["NAME"];
       }
     else if( ($tagarray["level"] == 6) && $getTimeNext)
       {
@@ -313,6 +321,15 @@ function parse_testing($xmlarray,$projectid)
       {
       $test_array[$index]["output"]=$tagarray["value"];
       $getSummaryNext = FALSE;
+      }
+    else if( ($tagarray["level"] == 6) && $getImageNext)
+      {
+      $imgid = store_test_image($tagarray["value"], $imageType);
+      $test_array[$index]["images"][] =
+        array("id" => $imgid, "role" => $imageRole);
+      $getImageNext = FALSE;
+      $imageType = "";
+      $imageRole = "";
       }
     else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
       {
@@ -334,7 +351,7 @@ function parse_testing($xmlarray,$projectid)
 	  
   foreach($test_array as $test)
     {
-    add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], $test["executiontime"], $test["details"], $test["output"]);
+    add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], $test["executiontime"], $test["details"], $test["output"], $test["images"]);
     }
 }
 
@@ -432,98 +449,142 @@ function parse_coverage($xmlarray,$projectid)
 /** Parse the update xml */
 function parse_update($xmlarray,$projectid)
 {
-		include_once("common.php");
-  
-		$buildname = getXMLValue($xmlarray,"BUILDNAME","UPDATE");
-		$stamp = getXMLValue($xmlarray,"BUILDSTAMP","UPDATE");
-			
-		// Find the build id
-		$buildid = get_build_id($buildname,$stamp,$projectid);
-		if($buildid<0)
-		  {
-				return;
-		  }
-		
-		$starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
-		$starttimestamp = str_to_time($starttime,$stamp);
-		$elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","UPDATE");
-		$endtimestamp = $starttimestamp+$elapsedminutes*60;
-		$command = getXMLValue($xmlarray,"UPDATECOMMAND","UPDATE");
-		$type = getXMLValue($xmlarray,"UPDATETYPE","UPDATE");
-		
-		$start_time = date("Y-m-d H:i:s",$starttimestamp);
-		$end_time = date("Y-m-d H:i:s",$endtimestamp);
+    include_once("common.php");
 
-		//add_update($buildid,$start_time,$end_time,$command,$type);
-		
-		$files_array = array();
-		$index = 0;
-		$inupdate = 0;
-		
-		foreach($xmlarray as $tagarray)
-			{
-			if(!$inupdate && ($tagarray["tag"] == "UPDATED") && ($tagarray["level"] == 3))
-			  {
-					$index++;
-					$inupdate = 1;
-					}
-			else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
-			  {
-					$files_array[$index]["filename"]=$tagarray["value"];
-			  }
-			else if(($tagarray["tag"] == "CHECKINDATE") && ($tagarray["level"] == 4))
-			  {
-					$files_array[$index]["checkindate"]=$tagarray["value"];
-			  }
-			else if(($tagarray["tag"] == "AUTHOR") && ($tagarray["level"] == 4))
-			  {
-					$files_array[$index]["author"]=$tagarray["value"];
-			  }		
-			else if(($tagarray["tag"] == "EMAIL") && ($tagarray["level"] == 4))
-			  {
-					$files_array[$index]["email"]=$tagarray["value"];
-			  }	
-			else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
-			  {
-					$files_array[$index]["log"]=$tagarray["value"];
-			  }				
-		 else if(($tagarray["tag"] == "REVISION") && ($tagarray["level"] == 4))
-			  {
-					$files_array[$index]["revision"]=$tagarray["value"];
-			  }
-			else if(($tagarray["tag"] == "PRIORREVISION") && ($tagarray["level"] == 4))
-			  {
-					$files_array[$index]["priorrevision"]=$tagarray["value"];
-			  }		
-			else if(($tagarray["tag"] == "REVISIONS") && ($tagarray["level"] == 4))
-			  {
-					$inupdate = 0;
-			  }													
-   }
-			
-		foreach($files_array as $file)
-		  {
-				add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
-				                        $file["email"],$file["log"],$file["revision"],$file["priorrevision"]);
-		  }
+    $buildname = getXMLValue($xmlarray,"BUILDNAME","UPDATE");
+    $stamp = getXMLValue($xmlarray,"BUILDSTAMP","UPDATE");
+	    
+    // Find the build id
+    $buildid = get_build_id($buildname,$stamp,$projectid);
+    if($buildid<0)
+      {
+      return;
+      }
+    
+    $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
+    $starttimestamp = str_to_time($starttime,$stamp);
+    $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","UPDATE");
+    $endtimestamp = $starttimestamp+$elapsedminutes*60;
+    $command = getXMLValue($xmlarray,"UPDATECOMMAND","UPDATE");
+    $type = getXMLValue($xmlarray,"UPDATETYPE","UPDATE");
+    
+    $start_time = date("Y-m-d H:i:s",$starttimestamp);
+    $end_time = date("Y-m-d H:i:s",$endtimestamp);
+
+    //add_update($buildid,$start_time,$end_time,$command,$type);
+    
+    $files_array = array();
+    $index = 0;
+    $inupdate = 0;
+    
+    foreach($xmlarray as $tagarray)
+      {
+      if(!$inupdate && ($tagarray["tag"] == "UPDATED") && ($tagarray["level"] == 3))
+	{
+	$index++;
+	$inupdate = 1;
+	}
+      else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
+	{
+	$files_array[$index]["filename"]=$tagarray["value"];
+	}
+      else if(($tagarray["tag"] == "CHECKINDATE") && ($tagarray["level"] == 4))
+	{
+	$files_array[$index]["checkindate"]=$tagarray["value"];
+	}
+      else if(($tagarray["tag"] == "AUTHOR") && ($tagarray["level"] == 4))
+	{
+	$files_array[$index]["author"]=$tagarray["value"];
+	}		
+      else if(($tagarray["tag"] == "EMAIL") && ($tagarray["level"] == 4))
+	{
+	$files_array[$index]["email"]=$tagarray["value"];
+	}	
+      else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
+	{
+	$files_array[$index]["log"]=$tagarray["value"];
+	}				
+      else if(($tagarray["tag"] == "REVISION") && ($tagarray["level"] == 4))
+	{
+	$files_array[$index]["revision"]=$tagarray["value"];
+	}
+      else if(($tagarray["tag"] == "PRIORREVISION") && ($tagarray["level"] == 4))
+	{
+	$files_array[$index]["priorrevision"]=$tagarray["value"];
+	}		
+      else if(($tagarray["tag"] == "REVISIONS") && ($tagarray["level"] == 4))
+	{
+	$inupdate = 0;
+	}
+      }
+	    
+      foreach($files_array as $file)
+	{
+	add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
+	$file["email"],$file["log"],$file["revision"],$file["priorrevision"]);
+	}
 }
 
 /** Parse the notes xml */
 function parse_note($xmlarray,$projectid)
 {
-		include_once("common.php");
+  include_once("common.php");
   $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
-		
-		// Find the build id
-		$buildid = get_build_id($name,$stamp,$projectid);
-		/*if($buildid<0)
-		  {
-				return;
-		  }*/
-		$text = getXMLValue($xmlarray,"TEXT","NOTE");
+  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
   
-		add_note($buildid,$text);
-		
+  // Find the build id
+  $buildid = get_build_id($name,$stamp,$projectid);
+  /*if($buildid<0)
+    {
+		  return;
+    }*/
+  $text = getXMLValue($xmlarray,"TEXT","NOTE");
+
+  add_note($buildid,$text);
 }
+      
+      
+function store_test_image($encodedImg, $type)
+{
+  include("config.php");
+  include_once("common.php");
+  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  mysql_select_db("$CDASH_DB_NAME",$db);
+  $imgStr = base64_decode($encodedImg);
+  $img = imagecreatefromstring($imgStr);
+ 
+  ob_start();
+  switch($type)
+    {
+    case "image/jpg":
+      imagejpeg($img);
+      break;
+    case "image/jpeg":
+      imagejpeg($img);
+      break;
+    case "image/gif":
+      imagegif($img);
+      break;
+    case "image/png":
+      imagepng($img);
+      break;
+    default:
+      echo "Unknown image type: $type";
+      return;
+    }
+  $imageVariable = addslashes(ob_get_contents());
+  ob_end_clean();
+
+  $query = "INSERT INTO image(img,extension) VALUES('$imageVariable','$type')";
+  if(mysql_query("$query"))
+    {
+    return mysql_insert_id();
+    }
+  else
+    {
+    echo mysql_error();
+    }
+  return 0;
+}
+
 ?>

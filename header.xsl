@@ -16,7 +16,7 @@
 <td align="center"><a href="index.php">
 <img  border="0">
 <xsl:attribute name="alt"><xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
-<xsl:attribute name="src">displayLogo.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>
+<xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
 </img>
 </a>
 </td>

@@ -46,6 +46,17 @@
 </table>
 <br/><br/><br/>
 <table>
+<xsl:for-each select="cdash/test/images/image">
+  <tr>
+    <th class="measurement"><xsl:value-of select="role"/></th>
+    <td>
+      <img>
+	<xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="imgid"/>
+	</xsl:attribute>
+      </img>
+    </td>
+  </tr>
+</xsl:for-each>
    <tr>
       <th class="measurement">Execution Time</th>
       <td>

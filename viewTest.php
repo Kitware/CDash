@@ -45,6 +45,7 @@ if(mysql_num_rows($project)>0)
 
 list ($previousdate, $date, $nextdate) = get_dates($date);
 $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+$logoid = getLogoID($projectid);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
@@ -56,6 +57,7 @@ $xml .="<dashboard>
   <bugtracker>".$bugurl."</bugtracker>	
   <home>".$homeurl."</home>
   <projectid>".$projectid."</projectid>	
+  <logoid>".$logoid."</logoid>
   <projectname>".$projectname."</projectname>	
   <previousdate>".$previousdate."</previousdate>	
   <nextdate>".$nextdate."</nextdate>	
@@ -77,7 +79,7 @@ $xml .= "</build>\n";
 
 // Gather test info
 $xml .= "<tests>\n";
-$result = mysql_query("SELECT * FROM test WHERE buildid='$buildid'");
+$result = mysql_query("SELECT * FROM test WHERE buildid='$buildid' ORDER BY status,name");
 $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;

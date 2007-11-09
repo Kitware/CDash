@@ -17,16 +17,37 @@
 =========================================================================*/
 include "config.php";
 
-$projectid = $_GET["projectid"];
+$imgid = $_GET["imgid"];
 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
-$project = mysql_query("SELECT logo FROM project WHERE id='$projectid '");
-$project_array = mysql_fetch_array($project);
+$result = mysql_query("SELECT * FROM image WHERE id='$imgid '");
+$img_array = mysql_fetch_array($result);
 
-header("Content-type: image/jpeg");
-print $project_array["logo"];
-exit ();
-
+switch($img_array["extension"])
+  {
+  case "image/jpg":
+    header("Content-type: image/jpeg");
+//    imagejpeg($img_array["img"]);
+    break;
+  case "image/jpeg":
+    header("Content-type: image/jpeg");
+//    imagejpeg($img_array["img"]);
+    break;
+  case "image/gif":
+    header("Content-type: image/gif");
+//    imagegif($img_array["img"]);
+    break;
+  case "image/png":
+    header("Content-type: image/png");
+//    imagepng($img_array["img"]);
+    break;
+  default:
+    echo "Unknown image type: ";
+    echo $img_array["extension"];
+    exit();
+  }
+echo $img_array["img"];
+exit();
 ?>

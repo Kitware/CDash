@@ -29,23 +29,45 @@ if($Submit)
 {
   $Name = $_POST["name"];
   $Description = addslashes($_POST["description"]);
-		$HomeURL = $_POST["homeURL"];
-		$CVSURL = $_POST["cvsURL"];
-		$BugURL = $_POST["bugURL"];
-				
-		$handle = fopen($_FILES['logo']['tmp_name'],"r");
-		$contents = addslashes(fread($handle,$_FILES['logo']['size']));
-		fclose($handle);
-		
-		$sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo) 
-	    				VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents')"; 
+  $HomeURL = $_POST["homeURL"];
+  $CVSURL = $_POST["cvsURL"];
+  $BugURL = $_POST["bugURL"];
+		  
+  $handle = fopen($_FILES['logo']['tmp_name'],"r");
+  $contents = addslashes(fread($handle,$_FILES['logo']['size']));
+  $filetype = $_FILES['logo']['type'];
+  $projectid = -1;
+  fclose($handle);
+  //we should probably check the type of the image here to make sure the user
+  //isn't trying anything fruity
+  
+  $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo) 
+	  VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents')"; 
   if(mysql_query("$sql"))
-		  {
-				$xml .= "<project_name>$Name</project_name>";
-				$xml .= "<project_created>1</project_created>";
-		  }
-		
-		echo mysql_error();
+    {
+    $projectid = mysql_insert_id();
+    $xml .= "<project_name>$Name</project_name>";
+    $xml .= "<project_created>1</project_created>";
+    }
+  else
+    {
+    echo mysql_error();
+    }
+  $sql = "INSERT INTO image(img, extension) VALUES ('$contents', '$filetype')";
+  if(mysql_query("$sql"))
+    {
+    $imgid = mysql_insert_id();
+    $sql = "INSERT INTO image2project(imgid, projectid)
+            VALUES ('$imgid', '$projectid')";
+    if(!mysql_query("$sql"))
+      {
+      echo mysql_error();
+      }
+    }
+  else
+    {
+    echo mysql_error();
+    }
 } // end submit
 
 $xml .= "</cdash>";

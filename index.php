@@ -52,7 +52,16 @@ function generate_main_dashboard_XML($projectid,$date)
 {
   include("config.php");
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  if(!$db)
+    {
+    echo "Error connecting to CDash database server<br>\n";
+    exit(0);
+    }
+  if(!mysql_select_db("$CDASH_DB_NAME",$db))
+    {
+    echo "Error selecting CDash database<br>\n";
+    exit(0);
+    }
   
   $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
   if(mysql_num_rows($project)>0)
@@ -73,9 +82,9 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   
   list ($previousdate, $date, $nextdate) = get_dates($date);
-
   $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
-  
+  $logoid = getLogoID($projectid); 
+
   // Main dashboard section 
   $xml .=
   "<dashboard>
@@ -84,6 +93,7 @@ function generate_main_dashboard_XML($projectid,$date)
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
   <home>".$homeurl."</home>
+  <logoid>".$logoid."</logoid> 
   <projectid>".$projectid."</projectid> 
   <projectname>".$projectname."</projectname> 
   <previousdate>".$previousdate."</previousdate> 
