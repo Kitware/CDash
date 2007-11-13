@@ -235,7 +235,7 @@ function get_build_id($buildname,$stamp,$projectid)
 		
 		$sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
 		$sql .= " AND projectid='$projectid'"; 
-		$sql .= " ORDER BY siteid DESC";
+		$sql .= " ORDER BY id DESC";
   $build = mysql_query($sql);
   if(mysql_num_rows($build)>0)
     {
@@ -397,11 +397,11 @@ function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$rev
 }
 
 /** Add a new note */
-function add_note($buildid,$text)
+function add_note($buildid,$text,$timestamp,$name)
 {
   $text = addslashes($text);
     
-  mysql_query ("INSERT INTO note (buildid,text) VALUES ('$buildid','$text')");
+  mysql_query ("INSERT INTO note (buildid,text,time,name) VALUES ('$buildid','$text','$timestamp','$name')");
   echo mysql_error();
 }
 
