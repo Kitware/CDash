@@ -530,17 +530,30 @@ function parse_note($xmlarray,$projectid)
 {
   include_once("common.php");
   $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+		
+		// Find the build id
+		$buildid = get_build_id($name,$stamp,$projectid);
+		if($buildid<0)
+		  {
+				return;
+		  }
+	
+	 foreach($xmlarray as $tagarray)
+		 	{
+		  if(($tagarray["tag"] == "NOTE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]["NAME"]))
+			   {
+						$name=$tagarray["attributes"]["NAME"];
+					 }
+				}
+				
+  $date = getXMLValue($xmlarray,"DATETIME","NOTE");
+  $timestamp = str_to_time($date,$stamp);
+		$time = date("Y-m-d H:i:s",$timestamp);
+		
+		$text = getXMLValue($xmlarray,"TEXT","NOTE");
   
-  // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid);
-  /*if($buildid<0)
-    {
-		  return;
-    }*/
-  $text = getXMLValue($xmlarray,"TEXT","NOTE");
-
-  add_note($buildid,$text);
+		add_note($buildid,$text,$time,$name);
 }
       
       
