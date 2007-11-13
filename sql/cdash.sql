@@ -183,8 +183,11 @@ CREATE TABLE `image2test` (
 CREATE TABLE `note` (
   `buildid` int(11) NOT NULL default '0',
   `text` text NOT NULL,
+  `time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `name` varchar(255) NOT NULL default '',
   KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
