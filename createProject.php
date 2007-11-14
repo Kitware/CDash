@@ -23,22 +23,38 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
+/** Strip the HTTP */
+function stripHTTP($url)
+  {
+		$pos = strpos($url,"http://");
+		if($pos !== FALSE)
+		  {
+				return substr($url,7);
+		  }
+		return $url;
+  }
+
 // If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
 {
   $Name = $_POST["name"];
   $Description = addslashes($_POST["description"]);
-  $HomeURL = $_POST["homeURL"];
-  $CVSURL = $_POST["cvsURL"];
-  $BugURL = $_POST["bugURL"];
+  $HomeURL = stripHTTP($_POST["homeURL"]);
+  $CVSURL = stripHTTP($_POST["cvsURL"]);
+  $BugURL = stripHTTP($_POST["bugURL"]);
 		$Public = $_POST["public"];
-		  
+		 
   $handle = fopen($_FILES['logo']['tmp_name'],"r");
-  $contents = addslashes(fread($handle,$_FILES['logo']['size']));
-  $filetype = $_FILES['logo']['type'];
-  $projectid = -1;
-  fclose($handle);
+		$contents = 0;
+  if($handle)
+		  {
+		  $contents = addslashes(fread($handle,$_FILES['logo']['size']));
+    $filetype = $_FILES['logo']['type'];
+    fclose($handle);
+				}
+		
+		$projectid = -1;		
   //we should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
   
@@ -54,21 +70,26 @@ if($Submit)
     {
     echo mysql_error();
     }
-  $sql = "INSERT INTO image(img, extension) VALUES ('$contents', '$filetype')";
-  if(mysql_query("$sql"))
-    {
-    $imgid = mysql_insert_id();
-    $sql = "INSERT INTO image2project(imgid, projectid)
-            VALUES ('$imgid', '$projectid')";
-    if(!mysql_query("$sql"))
-      {
-      echo mysql_error();
-      }
-    }
-  else
-    {
-    echo mysql_error();
-    }
+		
+		/** Add the logo if any */
+		if($contents)
+			 {		
+			 $sql = "INSERT INTO image(img, extension) VALUES ('$contents', '$filetype')";
+			 if(mysql_query("$sql"))
+						{
+						$imgid = mysql_insert_id();
+						$sql = "INSERT INTO image2project(imgid, projectid)
+														VALUES ('$imgid', '$projectid')";
+						if(!mysql_query("$sql"))
+								{
+								echo mysql_error();
+								}
+						}
+				else
+						{
+						echo mysql_error();
+						}
+				}
 } // end submit
 
 $xml .= "</cdash>";
