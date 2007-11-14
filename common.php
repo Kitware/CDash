@@ -208,12 +208,14 @@ function get_projects()
       $project['last_build'] = $lastbuild_array["submittime"];
       }
 
-    $buildquery = mysql_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
+				$buildquery = mysql_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
     $buildquery_array = mysql_fetch_array($buildquery); 
     $project['nbuilds'] = $buildquery_array[0];
-    $testquery = mysql_query("SELECT count(t.id) FROM test t,build b WHERE t.buildid=b.id AND b.projectid='$projectid'");
-    $testquery_array = mysql_fetch_array($testquery); 
-    $project['ntests'] = $testquery_array[0];
+				
+    /*$testquery = mysql_query("SELECT count(t.id) FROM test AS t,build AS b WHERE b.projectid='$projectid' AND t.buildid=b.id");
+    //$testquery = mysql_query("SELECT count(id) FROM test WHERE buildid IN (SELECT id FROM build WHERE projectid='$projectid')");
+				$testquery_array = mysql_fetch_array($testquery); 
+    $project['ntests'] = $testquery_array[0];*/
      
     $projects[] = $project; 
     }
@@ -445,11 +447,16 @@ function get_dates($date)
   if(!isset($date) || strlen($date)==0)
     { 
     $date = date("Ymd");
+				$currenttime = time();
     }
-  $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+	 	else
+				{
+				$currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+				}
+  
   $previousdate = date("Ymd", mktime("23","59","0",substr($date,4,2),substr($date,6,2)-1,substr($date,0,4)));
   $nextdate = date("Ymd", mktime("23","59","0",substr($date,4,2),substr($date,6,2)+1,substr($date,0,4)));
-  return array($previousdate, $date, $nextdate);
+  return array($previousdate, $currenttime, $nextdate);
 }
 
 function getLogoID($projectid)
