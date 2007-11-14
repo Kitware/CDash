@@ -52,16 +52,15 @@ if(mysql_num_rows($project)>0)
   $bugurl = $project_array["bugtrackerurl"];			
   $projectname	= $project_array["name"];		
   }
-list ($previousdate, $date, $nextdate) = get_dates($date);
-$currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+list ($previousdate, $currenttime, $nextdate) = get_dates($date);
 $logoid = getLogoID($projectid);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .="<dashboard>
-  <datetime>".date("D, d M Y H:i:s",$currenttime)."</datetime>
-  <date>".date("l, F d Y",$currenttime)."</date>
+  <datetime>".date("D, d M Y",$currenttime)."</datetime>
+  <date>".$date."</date>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker>	
   <home>".$homeurl."</home>
