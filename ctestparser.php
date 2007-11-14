@@ -588,7 +588,18 @@ function store_test_image($encodedImg, $type)
   $imageVariable = addslashes(ob_get_contents());
   ob_end_clean();
 
-  $query = "INSERT INTO image(img,extension) VALUES('$imageVariable','$type')";
+  //don't store the image if there's already a copy of it in the database
+  $checksum = crc32($imageVariable);
+  $query = "SELECT id FROM image WHERE checksum = '$checksum'";
+  $result = mysql_query("$query");
+  if($row = mysql_fetch_array($result))
+    {
+    return $row["id"];
+    }
+
+  //if we get this far this is a new image
+  $query = "INSERT INTO image(img,extension,checksum)
+            VALUES('$imageVariable','$type', '$checksum')";
   if(mysql_query("$query"))
     {
     return mysql_insert_id();

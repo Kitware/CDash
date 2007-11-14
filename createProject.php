@@ -37,24 +37,24 @@ function stripHTTP($url)
 // If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
-{
+  {
   $Name = $_POST["name"];
   $Description = addslashes($_POST["description"]);
   $HomeURL = stripHTTP($_POST["homeURL"]);
   $CVSURL = stripHTTP($_POST["cvsURL"]);
   $BugURL = stripHTTP($_POST["bugURL"]);
-		$Public = $_POST["public"];
+  $Public = $_POST["public"];
 		 
   $handle = fopen($_FILES['logo']['tmp_name'],"r");
-		$contents = 0;
+  $contents = 0;
   if($handle)
-		  {
-		  $contents = addslashes(fread($handle,$_FILES['logo']['size']));
+    {
+    $contents = addslashes(fread($handle,$_FILES['logo']['size']));
     $filetype = $_FILES['logo']['type'];
     fclose($handle);
-				}
+    }
 		
-		$projectid = -1;		
+  $projectid = -1;		
   //we should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
   
@@ -71,26 +71,38 @@ if($Submit)
     echo mysql_error();
     }
 		
-		/** Add the logo if any */
-		if($contents)
-			 {		
-			 $sql = "INSERT INTO image(img, extension) VALUES ('$contents', '$filetype')";
-			 if(mysql_query("$sql"))
-						{
-						$imgid = mysql_insert_id();
-						$sql = "INSERT INTO image2project(imgid, projectid)
-														VALUES ('$imgid', '$projectid')";
-						if(!mysql_query("$sql"))
-								{
-								echo mysql_error();
-								}
-						}
-				else
-						{
-						echo mysql_error();
-						}
-				}
-} // end submit
+  /** Add the logo if any */
+  if($contents)
+    {		
+    $imgid = 0;
+    $checksum = crc32($contents);
+    //check if we already have a copy of this file in the database
+    $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
+    $result = mysql_query("$sql");
+    if($row = mysql_fetch_array($result))
+      {
+      $imgid = $row["id"];
+      }
+    else
+      {
+      $sql = "INSERT INTO image(img, extension, checksum)
+	      VALUES ('$contents', '$filetype', '$checksum')";
+      if(mysql_query("$sql"))
+	{
+	$imgid = mysql_insert_id();
+        }
+      }
+    if($imgid)
+      {
+      $sql = "INSERT INTO image2project(imgid, projectid)
+	      VALUES ('$imgid', '$projectid')";
+      if(!mysql_query("$sql"))
+	{
+	echo mysql_error();
+	}
+      }
+    } // end if contents
+  } // end submit
 
 $xml .= "</cdash>";
 

@@ -147,6 +147,7 @@ CREATE TABLE `image` (
   `id` int(11) NOT NULL auto_increment,
   `img` longblob NOT NULL,
   `extension` tinytext NOT NULL,
+  `checksum` int NOT NULL,
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
