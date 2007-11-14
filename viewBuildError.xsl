@@ -29,10 +29,12 @@ Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:te
 <xsl:for-each select="cdash/errors/error">
 <hr/>
 <h3><A Name="650">Build Log line <xsl:value-of select="logline"/></A></h3>
-<br/>
-File: <b><xsl:value-of select="sourcefile"/></b>
-Line: <b><xsl:value-of select="sourceline"/></b>
-<a href="http://www.itk.org/cgi-bin/viewcvs.cgi/Code/BasicFilters/itkGradientRecursiveGaussianImageFilter.txx?cvsroot=Insight&amp;annotate=HEAD#84">CVS</a>
+<xsl:if test="sourceline>0">
+  <br/>
+  File: <b><xsl:value-of select="sourcefile"/></b>
+  Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
+  <a href="http://www.itk.org/cgi-bin/viewcvs.cgi/Code/BasicFilters/itkGradientRecursiveGaussianImageFilter.txx?cvsroot=Insight&amp;annotate=HEAD#84">CVS</a>
+</xsl:if>
 <pre><xsl:value-of select="precontext"/></pre>
 <pre><xsl:value-of select="text"/></pre>
 <pre><xsl:value-of select="postcontext"/></pre>
