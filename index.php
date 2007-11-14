@@ -37,7 +37,6 @@ function generate_index_table()
     $xml .= "<name>".$project['name']."</name>";
     $xml .= "<lastbuild>".$project['last_build']."</lastbuild>";
     $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
-    $xml .= "<ntests>".$project['ntests']."</ntests>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
     $row = !$row;
@@ -192,6 +191,9 @@ function generate_main_dashboard_XML($projectid,$date)
       $nna_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='na'"));
       $nna = $nna_array[0];
       
+						$time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM test WHERE buildid='$buildid'"));
+      $time = $time_array[0];
+      
       $totalnotrun += $nnotrun;
       $totalfail += $nfail;
       $totalpass += $npass;
@@ -201,7 +203,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("fail",$nfail);
       $xml .= add_XML_value("pass",$npass);
       $xml .= add_XML_value("na",$nna);
-      $xml .= add_XML_value("time","NA");
+      $xml .= add_XML_value("time",$time);
       $xml .= "</test>";
       }
     $xml .= add_XML_value("builddate",$build_array["starttime"]);
@@ -209,14 +211,17 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "</".strtolower($build_array["type"]).">";
     } // END IF CONFIGURE
     
-    $coverages = mysql_query("SELECT * FROM coverage WHERE buildid='$buildid'");
+    $coverages = mysql_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = mysql_fetch_array($coverages))
       {
       $xml .= "<coverage>";
       $xml .= "  <site>".$site_array["name"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
-      $xml .= "  <percentage>".$coverage_array["percentcoverage"]."</percentage>";
+						
+						$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
+						
+      $xml .= "  <percentage>".$percent."</percentage>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
       $xml .= "  <date>".$build_array["starttime"]."</date>";

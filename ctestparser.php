@@ -43,6 +43,10 @@ function ctest_parse($xml,$projectid)
 		  {
     parse_coverage($vals,$projectid);
 		  }	
+		else	if($vals[1]["tag"] == "COVERAGELOG")
+		  {
+    parse_coveragelog($vals,$projectid);
+		  }
 		else	if($vals[1]["tag"] == "NOTES")
 		  {
     parse_note($vals,$projectid);
@@ -397,11 +401,8 @@ function parse_coverage($xmlarray,$projectid)
 		//print_r($xmlarray);
 		
 		$LOCTested = getXMLValue($xmlarray,"LOCTESTED","COVERAGE");
-		$LOCUntested = getXMLValue($xmlarray,"LOCUNTESTED","COVERAGE");
-		$LOC = getXMLValue($xmlarray,"LOC","COVERAGE");
-		$PercentCoverage = getXMLValue($xmlarray,"PERCENTCOVERAGE","COVERAGE");
-						
-		add_coverage($buildid,$LOCTested,$LOCUntested,$LOC,$PercentCoverage);
+		$LOCUntested = getXMLValue($xmlarray,"LOCUNTESTED","COVERAGE");					
+		add_coveragesummary($buildid,$LOCTested,$LOCUntested);
 		
 		$coverage_array = array();
 		$index = 0;
@@ -427,22 +428,73 @@ function parse_coverage($xmlarray,$projectid)
 			  {
 					$coverage_array[$index]["locuntested"]=$tagarray["value"];
 			  }
-			else if(($tagarray["tag"] == "PERCENTCOVERAGE") && ($tagarray["level"] == 4))
+			else if(($tagarray["tag"] == "BRANCHSTESTED") && ($tagarray["level"] == 4))
 			  {
-					$coverage_array[$index]["percentcoverage"]=$tagarray["value"];
+					$coverage_array[$index]["branchstested"]=$tagarray["value"];
 			  }	
-			else if(($tagarray["tag"] == "COVERAGEMETRIC") && ($tagarray["level"] == 4))
+			else if(($tagarray["tag"] == "BRANCHSUNTESTED") && ($tagarray["level"] == 4))
 			  {
-					$coverage_array[$index]["coveragemetric"]=$tagarray["value"];
-			  }					
+					$coverage_array[$index]["branchsuntested"]=$tagarray["value"];
+			  }				
+			else if(($tagarray["tag"] == "FUNCTIONSTESTED") && ($tagarray["level"] == 4))
+			  {
+					$coverage_array[$index]["functionstested"]=$tagarray["value"];
+			  }	
+			else if(($tagarray["tag"] == "FUNCTIONSUNTESTED") && ($tagarray["level"] == 4))
+			  {
+					$coverage_array[$index]["functionsuntested"]=$tagarray["value"];
+			  }									
    }
 			
 		foreach($coverage_array as $coverage)
 		  {
-				add_coveragefile($buildid,$coverage["filename"],$coverage["fullpath"],
-				                          $coverage["covered"],$coverage["loctested"],$coverage["locuntested"],
-																														$coverage["percentcoverage"],$coverage["coveragemetric"]									
-																														);
+				@add_coverage($buildid,$coverage["filename"],$coverage["fullpath"],
+				              $coverage["covered"],$coverage["loctested"],$coverage["locuntested"],
+																		$coverage["branchstested"],$coverage["branchsuntested"],						
+																		$coverage["functionstested"],$coverage["functionsuntested"]);
+		  }
+}
+
+/** Parse the coveragelog xml */
+function parse_coveragelog($xmlarray,$projectid)
+{
+		include_once("common.php");
+  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
+		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+		
+		// Find the build id
+		$buildid = get_build_id($name,$stamp,$projectid);
+		if($buildid<0)
+		  {
+		  return; // we really need a build id
+				}
+				
+		$coveragelog_array = array();
+		$index = 0;
+		
+		foreach($xmlarray as $tagarray)
+			{
+			if(($tagarray["tag"] == "FILE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
+			  {
+					$index++;
+					$coveragelog_array[$index]["fullpath"] = $tagarray["attributes"]["FULLPATH"];
+					$coveragelog_array[$index]["filename"] = $tagarray["attributes"]["NAME"];
+					$coveragelog_array[$index]["file"] = "";
+			  }
+			else if(($tagarray["tag"] == "LINE") && ($tagarray["level"] == 5) && isset($tagarray["value"]))
+					{
+					if($tagarray["attributes"]["COUNT"]>=0)
+					  {
+							$coveragelog_array[$index]["lines"][$tagarray["attributes"]["NUMBER"]] = $tagarray["attributes"]["COUNT"];
+				  	}			
+					$coveragelog_array[$index]["file"] .= $tagarray["value"]."<br>";
+					}
+   }
+		
+		foreach($coveragelog_array as $coverage)
+		  {
+				$filecontent = addslashes($coverage["file"]);
+				$fileid = add_coveragefile($buildid,$coverage["fullpath"],$filecontent);
 		  }
 }
 
