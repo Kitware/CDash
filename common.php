@@ -442,6 +442,7 @@ function globr($sDir, $sPattern, $nFlags = NULL)
   return $aFiles;
 } 
 
+/** Get dates */
 function get_dates($date)
 {
   if(!isset($date) || strlen($date)==0)
@@ -459,6 +460,7 @@ function get_dates($date)
   return array($previousdate, $currenttime, $nextdate);
 }
 
+/** Get the logo id */
 function getLogoID($projectid)
 {
   //asume the caller already connected to the database

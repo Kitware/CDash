@@ -63,9 +63,13 @@
   </tr>
   <tr>
     <td><div align="right"><strong>Logo:</strong></div></td>
-    <td><input type="file" name="logo"/></td>
+    <td><input type="file" name="logo" size="40"/></td>
   </tr>
-  <tr>
+		<tr>
+		  <td><div align="right"><strong>Public:</strong></div></td>
+    <td><input type="checkbox" name="public" value="1" checked="true"/></td>
+  </tr>
+		<tr>
     <td><div align="right"></div></td>
     <td><input type="submit" name="Submit" value="Create Project"/></td>
   </tr>

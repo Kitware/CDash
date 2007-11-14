@@ -32,6 +32,7 @@ if($Submit)
   $HomeURL = $_POST["homeURL"];
   $CVSURL = $_POST["cvsURL"];
   $BugURL = $_POST["bugURL"];
+		$Public = $_POST["public"];
 		  
   $handle = fopen($_FILES['logo']['tmp_name'],"r");
   $contents = addslashes(fread($handle,$_FILES['logo']['size']));
@@ -41,8 +42,8 @@ if($Submit)
   //we should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
   
-  $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo) 
-	  VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents')"; 
+  $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo,public) 
+	  VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents','$Public')"; 
   if(mysql_query("$sql"))
     {
     $projectid = mysql_insert_id();

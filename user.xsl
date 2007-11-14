@@ -53,8 +53,10 @@
 <br/>
 
 <!-- Main -->
-Hello!
-
+<xsl:if test="cdash/user_admin=1">
+  <a href="createProject.php">[Create project]</a>
+</xsl:if>
+<br/>
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>

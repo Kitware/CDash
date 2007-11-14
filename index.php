@@ -24,7 +24,7 @@ function generate_index_table()
   include("config.php");
   
   $xml = '<?xml version="1.0"?><cdash>';
-  $xml .= "<title>"."</title>";
+  $xml .= add_XML_value("title","CDash");
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
