@@ -127,31 +127,35 @@ function backup_xml_file($contents)
   xml_parse_into_struct($p, $contents, $vals, $index);
   xml_parser_free($p);
 
-  if($vals[1]["tag"] == "BUILD")
+  if(@$vals[1]["tag"] == "BUILD")
     {
     $file = "Build.xml";
     }
-  else if($vals[1]["tag"] == "CONFIGURE")
+  else if(@$vals[1]["tag"] == "CONFIGURE")
     {
     $file = "Configure.xml";
     }
-  else if($vals[1]["tag"] == "TESTING")
+  else if(@$vals[1]["tag"] == "TESTING")
     {
     $file = "Test.xml";
     }
-  else if($vals[0]["tag"] == "UPDATE")
+  else if(@$vals[0]["tag"] == "UPDATE")
     {
     $file = "Update.xml";
     }  
   else if($vals[1]["tag"] == "COVERAGE")
     {
     $file = "Coverage.xml";
-    } 
-  else if($vals[1]["tag"] == "NOTES")
+    }
+		else if(@$vals[1]["tag"] == "COVERAGELOG")
+    {
+    $file = "CoverageLog.xml";
+    } 		
+  else if(@$vals[1]["tag"] == "NOTES")
     {
     $file = "Notes.xml";
     }
-  else if($vals[1]["tag"] == "DynamicAnalysis")
+  else if(@$vals[1]["tag"] == "DynamicAnalysis")
     {
     $file = "DynamicAnalysis.xml";
     } 
@@ -192,7 +196,7 @@ function get_projects()
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
 
-  $projectres = mysql_query("SELECT id,name FROM project ORDER BY name");
+  $projectres = mysql_query("SELECT id,name FROM project WHERE public='1' ORDER BY name");
   while($project_array = mysql_fetch_array($projectres))
     {
     $project = array();
@@ -266,16 +270,42 @@ function get_project_id($projectname)
   return -1;
 }
 
-/** Create a coverage file */
-function  add_coveragefile($buildid,$filename,$fullpath,$covered,$loctested,$locuntested,
-                           $percentcoverage,$coveragemetric)
+/** Add a new coverage */
+function add_coveragesummary($buildid,$loctested,$locuntested)
 {
-                           
-  mysql_query ("INSERT INTO coveragefile (buildid,filename,fullpath,covered,loctested,locuntested,percentcoverage,coveragemetric) 
-                VALUES ('$buildid','$filename','$fullpath','$covered','$loctested','$locuntested','$percentcoverage','$coveragemetric')");
-  echo mysql_error();  
+  mysql_query ("INSERT INTO coveragesummary (buildid,loctested,locuntested) 
+                VALUES ('$buildid','$loctested','$locuntested')");
 }
 
+
+/** Create a coverage */
+function add_coverage($buildid,$filename,$fullpath,$covered,$loctested,$locuntested,
+                      $branchstested=0,$branchsuntested=0,$functionstested=0,$functionsuntested=0)
+{
+  // Create a file
+  mysql_query ("INSERT INTO coveragefile (filename,fullpath) VALUES ('$filename','$fullpath')");
+		$fileid = mysql_insert_id();
+
+  // Insert into coverage
+  mysql_query ("INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) 
+                VALUES ('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')");
+  echo mysql_error();
+}
+
+/** Create a coverage file */
+function add_coveragefile($buildid,$fullpath,$filecontent)
+{
+  // Check if we have the file
+		$coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+		$coveragefile_array = mysql_fetch_array($coveragefile);
+  $fileid = $coveragefile_array["id"];
+		
+		if($fileid && (crc32($filecontent) != crc32($coveragefile_array["file"])))
+		  {
+				mysql_query ("UPDATE coveragefile SET file='$filecontent' WHERE id='$fileid'");
+				echo mysql_error();
+		  }
+}
 
 
 /** Create a site */
@@ -315,13 +345,6 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
   //fwrite($handle,"buildid = ".mysql_error());
   //fclose($handle);
   return mysql_insert_id();
-}
-
-/** Add a new coverage */
-function add_coverage($buildid,$loctested,$locuntested,$loc,$percentcoverage)
-{
-  mysql_query ("INSERT INTO coverage (buildid,loctested,locuntested,loc,percentcoverage) 
-                            VALUES ('$buildid','$loctested','$locuntested','$loc','$percentcoverage')");
 }
 
 /** Add a new configure */
