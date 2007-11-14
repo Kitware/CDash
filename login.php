@@ -111,16 +111,15 @@ function LoginForm($loginerror)
 		$xml .= "<title>Login</title>";
 		$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
     
-    if($_GET['note'] == "register")
-      {
-        $xml .= "<message>Registration Complete. Please login with your email and password.</message>";
-      }
-    else
-      {
-        $xml .= "<message></message>";
-      }
+  if(@$_GET['note'] == "register")
+    {
+    $xml .= "<message>Registration Complete. Please login with your email and password.</message>";
+    }
+  else
+    {
+    $xml .= "<message></message>";
+    }
 		$xml .= "</cdash>";
-		
 		generate_XSLT($xml,"login");
 }
 
