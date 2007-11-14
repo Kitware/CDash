@@ -42,8 +42,7 @@ function generate_index_table()
     $xml .= "</project>";
     $row = !$row;
     }
-
-  $xml .= "</cdash>";  
+  $xml .= "</cdash>";
   return $xml;
 }
 
@@ -81,8 +80,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   
-  list ($previousdate, $date, $nextdate) = get_dates($date);
-  $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+  list ($previousdate, $currenttime, $nextdate) = get_dates($date);
   $logoid = getLogoID($projectid); 
 
   // Main dashboard section 
@@ -104,7 +102,6 @@ function generate_main_dashboard_XML($projectid,$date)
   
   // builds
   $xml .= "<builds>";
- 
 
   $totalerrors = 0;
   $totalwarnings = 0;
