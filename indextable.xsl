@@ -40,7 +40,7 @@
   <tr class="table-heading">
      <th align="center">Project</th>
      <th align="center">Submissions</th>
-     <th align="center">Tests</th>
+    <!-- <th align="center">Tests</th> -->
      <th align="center">Last activity</th>
   </tr>
 
@@ -60,7 +60,7 @@
      <xsl:value-of select="name"/>
      </a></td>
     <td align="right"><xsl:value-of select="nbuilds"/></td>
-    <td align="right"><xsl:value-of select="ntests"/></td>
+    <!-- <th align="center">Tests</th> <td align="right"><xsl:value-of select="ntests"/></td>-->
     <td align="right"><xsl:value-of select="lastbuild"/></td>
     </tr>
    </xsl:for-each>
