@@ -66,19 +66,22 @@ $xml .="<dashboard>
 		
 		// coverage
 		$xml .= "<coverage>";
-		$coverage = mysql_query("SELECT * FROM coverage WHERE buildid='$buildid'");
+		$coverage = mysql_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
 		$coverage_array = mysql_fetch_array($coverage);
 		$xml .= add_XML_value("starttime",date("l, F d Y",strtotime($build_array["starttime"])));
 		$xml .= add_XML_value("loctested",$coverage_array["loctested"]);
 		$xml .= add_XML_value("locuntested",$coverage_array["locuntested"]);
-		$xml .= add_XML_value("loc",$coverage_array["loc"]);
-		$xml .= add_XML_value("percentcoverage",$coverage_array["percentcoverage"]);
 		
-		$coveredfiles = mysql_query("SELECT count(covered) FROM coveragefile WHERE buildid='$buildid' AND covered='1'");
+		$loc = $coverage_array["loctested"]+$coverage_array["locuntested"];
+		$percentcoverage = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
+		$xml .= add_XML_value("loc",$loc);
+		$xml .= add_XML_value("percentcoverage",$percentcoverage);
+		
+		$coveredfiles = mysql_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
   $coveredfiles_array = mysql_fetch_array($coveredfiles);
 		$ncoveredfiles = $coveredfiles_array[0];
 		
-		$files = mysql_query("SELECT count(covered) FROM coveragefile WHERE buildid='$buildid'");
+		$files = mysql_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid'");
   $files_array = mysql_fetch_array($files);
 		$nfiles = $files_array[0];
 		
@@ -90,36 +93,57 @@ $xml .="<dashboard>
 		$xml .= add_XML_value("sortby",$sortby);
   $xml .= "</coverage>";
 		
-		// Translate the sort by to an SQL orderby
-		if($sortby == "filename")
-		  {
-		  $orderby = "filename ASC";
-		  }
-		else if($sortby == "status")
-		  {
-		  $orderby = "coveragemetric";
-		  }
-		else if($sortby == "percentage")
-		  {
-		  $orderby = "percentcoverage";
-		  }
-		else if($sortby == "lines")
-		  {
-		  $orderby = "locuntested DESC";
-		  }		
+		
 				
 		// Coverage files
-		$files = mysql_query("SELECT * FROM coveragefile WHERE buildid='$buildid' ORDER BY $orderby");
-  while($files_array = mysql_fetch_array($files))
+		$coveragefile = mysql_query("SELECT cf.filename,cf.fullpath,c.fileid,c.locuntested,c.loctested 
+		                             FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid");
+		
+		$covfile_array = array();
+  while($coveragefile_array = mysql_fetch_array($coveragefile))
+		  {
+				$covfile["filename"] = $coveragefile_array["filename"];
+				$covfile["fullpath"] = $coveragefile_array["fullpath"];
+				$covfile["locuntested"] = $coveragefile_array["locuntested"];
+				$covfile["loctested"] = $coveragefile_array["loctested"];		
+		  $covfile_array[] = $covfile;
+		  }
+		
+		// Do the sorting
+		function sort_array($a,$b)
+		  { 
+			 global $sortby;	
+				if($sortby == "filename")
+						{
+						return $a["filename"]>$b["filename"] ? 1:0;
+						}
+				else if($sortby == "status")
+						{
+						return $a["filename"]>$b["filename"] ? 1:0;
+						}
+				else if($sortby == "percentage")
+						{
+						return $a["loctested"]/($a["loctested"]+$a["locuntested"])>$b["loctested"]/($b["loctested"]+$b["locuntested"]) ? 1:0;
+						}
+				else if($sortby == "lines")
+						{
+						return $a["locuntested"]<$b["locuntested"] ? 1:0;
+						}				
+				}
+				
+		usort($covfile_array,"sort_array");
+		
+		foreach($covfile_array as $covfile)
 		  {	
-				$xml .= "<coveragefile>";
-		  $xml .= add_XML_value("filename",$files_array["filename"]);
-	  	$xml .= add_XML_value("fullpath",$files_array["fullpath"]);
-				$xml .= add_XML_value("locuntested",$files_array["locuntested"]);
-				$xml .= add_XML_value("percentcoverage",$files_array["percentcoverage"]);
-				$xml .= add_XML_value("coveragemetric",$files_array["coveragemetric"]);
+				$xml .= "<coveragefile>";				
+		  $xml .= add_XML_value("filename",$covfile["filename"]);
+	  	$xml .= add_XML_value("fullpath",$covfile["fullpath"]);
+				$xml .= add_XML_value("locuntested",$covfile["locuntested"]);
+				$percentcoverage = round($covfile["loctested"]/($covfile["loctested"]+$covfile["locuntested"])*100,2);
+				$xml .= add_XML_value("percentcoverage",$percentcoverage);
 				$xml .= "</coveragefile>";
 				}
+				
   $xml .= "</cdash>";
 
 // Now doing the xslt transition
