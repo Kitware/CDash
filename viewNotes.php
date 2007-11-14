@@ -62,7 +62,8 @@ $xml .="<dashboard>
 		<projectid>".$projectid."</projectid>	
   <projectname>".$projectname."</projectname>	
 		<previousdate>".$previousdate."</previousdate>	
-		<nextdate>".$nextdate."</nextdate>	
+		<nextdate>".$nextdate."</nextdate>
+		<logoid>".getLogoID($projectid)."</logoid>
 		</dashboard>
   ";
 		
