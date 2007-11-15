@@ -96,14 +96,15 @@ $xml .="<dashboard>
 		
 				
 		// Coverage files
-		$coveragefile = mysql_query("SELECT cf.filename,cf.fullpath,c.fileid,c.locuntested,c.loctested 
+		$coveragefile = mysql_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested 
 		                             FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid");
 		
 		$covfile_array = array();
   while($coveragefile_array = mysql_fetch_array($coveragefile))
 		  {
-				$covfile["filename"] = $coveragefile_array["filename"];
+				$covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
 				$covfile["fullpath"] = $coveragefile_array["fullpath"];
+				$covfile["fileid"] = $coveragefile_array["fileid"];
 				$covfile["locuntested"] = $coveragefile_array["locuntested"];
 				$covfile["loctested"] = $coveragefile_array["loctested"];		
 		  $covfile_array[] = $covfile;
@@ -139,6 +140,7 @@ $xml .="<dashboard>
 		  $xml .= add_XML_value("filename",$covfile["filename"]);
 	  	$xml .= add_XML_value("fullpath",$covfile["fullpath"]);
 				$xml .= add_XML_value("locuntested",$covfile["locuntested"]);
+				$xml .= add_XML_value("fileid",$covfile["fileid"]);
 				$percentcoverage = round($covfile["loctested"]/($covfile["loctested"]+$covfile["locuntested"])*100,2);
 				$xml .= add_XML_value("percentcoverage",$percentcoverage);
 				$xml .= "</coveragefile>";

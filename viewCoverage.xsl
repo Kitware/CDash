@@ -130,7 +130,7 @@
 			<xsl:for-each select="cdash/coveragefile">
    <tr>
       <td align="left"><a>
-						<xsl:attribute name="href">../Coverage/__Code_Algorithms_itkAnisotropicFourthOrderLevelSetImageFilter_h.html</xsl:attribute>
+						<xsl:attribute name="href">viewCoverageFile.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;fileid=<xsl:value-of select="fileid"/></xsl:attribute>
 						<xsl:value-of select="filename"/>
 						</a></td>
       <td align="center">
