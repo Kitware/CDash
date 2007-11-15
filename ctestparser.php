@@ -91,7 +91,8 @@ function getXMLValue($xmlarray,$tag,$parenttag)
 function str_to_time($str,$stamp)
 {
   $str = str_replace("Eastern","",$str);
-  $str = str_replace("Daylight","",$str);
+  $str = str_replace("Standard","",$str);
+		$str = str_replace("Daylight","",$str);
 	 $str = str_replace("Time","",$str);
 		$str = str_replace("CEST","",$str);	
 			
