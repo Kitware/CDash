@@ -93,7 +93,7 @@ function str_to_time($str,$stamp)
   $str = str_replace("Eastern","",$str);
   $str = str_replace("Daylight","",$str);
 	 $str = str_replace("Time","",$str);
-		//$str = str_replace("EDT","",$str);	
+		$str = str_replace("CEST","",$str);	
 			
   if(strtotime($str) == -1) // should be FALSE for php 5
 		  {
@@ -627,6 +627,7 @@ function parse_dynamicanalysis($xmlarray,$projectid)
 		include_once("common.php");
   $name = $xmlarray[0]["attributes"]["BUILDNAME"];
 		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+		$checker = $xmlarray[1]["attributes"]["CHECKER"];
 		
 		// Find the build id
 		$buildid = get_build_id($name,$stamp,$projectid);
@@ -667,6 +668,7 @@ function parse_dynamicanalysis($xmlarray,$projectid)
 			if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
 			  {
 					$index++;
+					$memleak_array[$index]["checker"]=$checker;
 					$memleak_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
 					}
 			else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
@@ -693,12 +695,12 @@ function parse_dynamicanalysis($xmlarray,$projectid)
 					$defect["type"] = $tagarray["attributes"]["TYPE"];
 					$defect["value"] = $tagarray["value"];
 					$memleak_array[$index]["defects"][]=$defect;
-			  }									
+			  }
    }
 			
 		foreach($memleak_array as $memleak)
 		  {
-				$dynid = add_dynamic_analysis($buildid,$memleak["status"],$memleak["name"],$memleak["path"],
+				$dynid = add_dynamic_analysis($buildid,$memleak["status"],$memleak["checker"],$memleak["name"],$memleak["path"],
 				                     $memleak["fullcommandline"],$memleak["log"]);
 				
 				if(isset($memleak["defects"]))

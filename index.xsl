@@ -343,12 +343,46 @@
 <br/>
 
 <!-- Dynamic analysis -->
-<table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
+<table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">   
+    <xsl:if test="count(cdash/builds/dynamicanalysis)=0">
    <tr class="table-heading">
-      <td>
-         <h3>No DynamicAnalysis information</h3>
+      <td colspan="14">
+          <h3>No Coverage</h3>
       </td>
    </tr>
+   </xsl:if>
+   
+    <xsl:if test="count(cdash/builds/dynamicanalysis)>0">
+        <tr class="table-heading">
+      <td colspan="14">
+          <h3>Coverage</h3>
+      </td>
+   </tr>
+
+   <tr class="table-heading">
+      <th align="center">Site</th>
+      <th align="center">Build Name</th>
+      <th align="center" width="80">Checker</th>
+
+      <th align="center">Defect Count</th>
+      <th align="center">Date</th>
+      <th align="center">Submission Date</th>
+   </tr>
+  <xsl:for-each select="cdash/builds/dynamicanalysis">
+   
+   <tr>
+      <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
+      <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/></td>
+      <td align="left" bgcolor="#ffffff"><xsl:value-of select="checker"/></td>
+      <td align="center" class="warning"><a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a></td>
+      <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
+      <td align="left" bgcolor="#ffffff"><xsl:value-of select="submitdate"/></td>
+
+   </tr>
+  </xsl:for-each>
+
+</xsl:if>
+
 </table>
 
 <!-- FOOTER -->

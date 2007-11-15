@@ -211,6 +211,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "</".strtolower($build_array["type"]).">";
     } // END IF CONFIGURE
     
+				// Coverage
     $coverages = mysql_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = mysql_fetch_array($coverages))
       {
@@ -227,7 +228,28 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <date>".$build_array["starttime"]."</date>";
       $xml .= "  <submitdate>".$build_array["submittime"]."</submitdate>";
       $xml .= "</coverage>";
-      }  
+      }  // end coverage
+				
+				// Dynamic Analysis
+				$dynanalysis = mysql_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
+    while($dynanalysis_array = mysql_fetch_array($dynanalysis))
+      {
+					$xml .= "<dynamicanalysis>";
+      $xml .= "  <site>".$site_array["name"]."</site>";
+      $xml .= "  <buildname>".$build_array["name"]."</buildname>";
+      $xml .= "  <buildid>".$build_array["id"]."</buildid>";
+						
+      $xml .= "  <checker>".$dynanalysis_array["checker"]."</checker>";
+      $defect = mysql_query("SELECT count(id) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
+						                                        WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
+    		$defectcount = mysql_fetch_array($defect);
+						$xml .= "  <defectcount>".$defectcount[0]."</defectcount>";
+      $xml .= "  <date>".$build_array["starttime"]."</date>";
+      $xml .= "  <submitdate>".$build_array["submittime"]."</submitdate>";
+      $xml .= "</dynamicanalysis>";
+      }  // end coverage
+						
+						
     } // end looping through builds
  
   $xml .= add_XML_value("totalConfigure",$totalconfigure);

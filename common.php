@@ -437,11 +437,11 @@ function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$rev
 }
 
 /** Add dynamic analysis */
-function add_dynamic_analysis($buildid,$status,$name,$path,$fullcommandline,$log)
+function add_dynamic_analysis($buildid,$status,$checker,$name,$path,$fullcommandline,$log)
 {		
   $log = addslashes($log);
-  mysql_query ("INSERT INTO dynamicanalysis (buildid,status,name,path,fullcommandline,log) 
-               VALUES ('$buildid','$status','$name','$path','$fullcommandline','$log')");
+  mysql_query ("INSERT INTO dynamicanalysis (buildid,status,checker,name,path,fullcommandline,log) 
+               VALUES ('$buildid','$status','$checker','$name','$path','$fullcommandline','$log')");
   return mysql_insert_id();
 }
 					
