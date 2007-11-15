@@ -265,6 +265,7 @@ CREATE TABLE `project` (
   `bugtrackerurl` varchar(255) NOT NULL default '',
   `logo` mediumblob,
   `public` tinyint(4) NOT NULL default '1',
+  `coveragethreshold` smallint(6) NOT NULL default '70',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
