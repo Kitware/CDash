@@ -358,7 +358,7 @@
     <xsl:if test="count(cdash/builds/dynamicanalysis)=0">
    <tr class="table-heading">
       <td colspan="14">
-          <h3>No Coverage</h3>
+          <h3>No Dynamic Analysis</h3>
       </td>
    </tr>
    </xsl:if>
@@ -366,7 +366,7 @@
     <xsl:if test="count(cdash/builds/dynamicanalysis)>0">
         <tr class="table-heading">
       <td colspan="14">
-          <h3>Coverage</h3>
+          <h3>Dynamic Analysis</h3>
       </td>
    </tr>
 
