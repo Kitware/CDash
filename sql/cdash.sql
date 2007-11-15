@@ -117,7 +117,7 @@ CREATE TABLE `coverage` (
 CREATE TABLE `coveragefile` (
   `id` int(11) NOT NULL auto_increment,
   `fullpath` varchar(255) NOT NULL default '',
-  `file` tinyblob,
+  `file` blob,
   PRIMARY KEY  (`id`),
   KEY `fullpath` (`fullpath`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
