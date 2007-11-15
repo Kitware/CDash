@@ -203,7 +203,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("fail",$nfail);
       $xml .= add_XML_value("pass",$npass);
       $xml .= add_XML_value("na",$nna);
-      $xml .= add_XML_value("time",$time);
+      $xml .= add_XML_value("time",round($time/60,1));
       $xml .= "</test>";
       }
     $xml .= add_XML_value("builddate",$build_array["starttime"]);
@@ -223,6 +223,7 @@ function generate_main_dashboard_XML($projectid,$date)
 						$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
 						
       $xml .= "  <percentage>".$percent."</percentage>";
+						$xml .= "  <percentagegreen>70</percentagegreen>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
       $xml .= "  <date>".$build_array["starttime"]."</date>";

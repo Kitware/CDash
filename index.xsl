@@ -330,7 +330,7 @@
       <td align="center">
 						  <xsl:attribute name="class">
 								<xsl:choose>
-          <xsl:when test="percentage > 80">
+          <xsl:when test="percentage > percentagegreen">
             normal
             </xsl:when>
           <xsl:otherwise>
