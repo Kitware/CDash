@@ -91,13 +91,11 @@ $xml .="<dashboard>
 		$xml .= add_XML_value("totalunsatisfactorilycovered",$nfiles-$ncoveredfiles);
 		$xml .= add_XML_value("buildid",$buildid);
 		$xml .= add_XML_value("sortby",$sortby);
-  $xml .= "</coverage>";
-		
 		
 				
 		// Coverage files
-		$coveragefile = mysql_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested 
-		                             FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid");
+		$coveragefile = mysql_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested,c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested
+		                             FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=1");
 		
 		$covfile_array = array();
   while($coveragefile_array = mysql_fetch_array($coveragefile))
@@ -106,9 +104,43 @@ $xml .="<dashboard>
 				$covfile["fullpath"] = $coveragefile_array["fullpath"];
 				$covfile["fileid"] = $coveragefile_array["fileid"];
 				$covfile["locuntested"] = $coveragefile_array["locuntested"];
-				$covfile["loctested"] = $coveragefile_array["loctested"];		
-		  $covfile_array[] = $covfile;
+				$covfile["loctested"] = $coveragefile_array["loctested"];				
+		  $covfile["covered"] = 1;	
+			
+				// Compute the coverage metric for bullseye
+				if($coveragefile_array["branchstested"]>0 || $coveragefile_array["branchsuntested"]>0 || $coveragefile_array["functionstested"]>0 || $coveragefile_array["functionsuntested"]>0)
+				  {	
+						// Metric coverage
+						$metric = 0;
+						if($coveragefile_array["functionstested"]+$coveragefile_array["functionsuntested"]>0)
+						  {
+						  $metric += $coveragefile_array["functionstested"]/($coveragefile_array["functionstested"]+$coveragefile_array["functionsuntested"]);
+						  }
+						if($coveragefile_array["branchstested"]+$coveragefile_array["branchsuntested"]>0)
+						  {
+								$metric += $coveragefile_array["branchstested"]/($coveragefile_array["branchstested"]+$coveragefile_array["branchsuntested"]);
+								$metric /= 2.0;
+						  }
+						$covfile["branchesuntested"] = $coveragefile_array["branchsuntested"];
+						$covfile["functionsuntested"] = $coveragefile_array["functionsuntested"];
+								
+						$covfile["percentcoverage"] = sprintf("%3.2f",$metric*100);
+						$covfile["coveragemetric"] = $metric;
+						$coveragetype = "bullseye";
+				  }
+				else // coverage metric for gcov
+				  {
+						$covfile["percentcoverage"] = sprintf("%3.2f",$covfile["loctested"]/($covfile["loctested"]+$covfile["locuntested"])*100);
+				  $covfile["coveragemetric"] = ($covfile["loctested"]+10)/($covfile["loctested"]+$covfile["locuntested"]+10);
+						$coveragetype = "gcov";
+		    }
+						
+				$covfile_array[] = $covfile;
 		  }
+				
+	  // Add the coverage type
+		$xml .= add_XML_value("coveragetype",$coveragetype);
+  $xml .= "</coverage>";		
 		
 		// Do the sorting
 		function sort_array($a,$b)
@@ -120,30 +152,60 @@ $xml .="<dashboard>
 						}
 				else if($sortby == "status")
 						{
-						return $a["filename"]>$b["filename"] ? 1:0;
+						return $a["coveragemetric"]>$b["coveragemetric"] ? 1:0;
 						}
 				else if($sortby == "percentage")
 						{
-						return $a["loctested"]/($a["loctested"]+$a["locuntested"])>$b["loctested"]/($b["loctested"]+$b["locuntested"]) ? 1:0;
+						return $a["percentcoverage"]>$b["percentcoverage"] ? 1:0;
 						}
 				else if($sortby == "lines")
 						{
 						return $a["locuntested"]<$b["locuntested"] ? 1:0;
-						}				
+						}
+				else if($sortby == "branches")
+						{
+						return $a["branchesuntested"]<$b["branchesuntested"] ? 1:0;
+						}	
+				else if($sortby == "functions")
+						{
+						return $a["functionsuntested"]<$b["functionsuntested"] ? 1:0;
+						}	
+									
 				}
 				
 		usort($covfile_array,"sort_array");
 		
+		// Add the untested files
+		$coveragefile = mysql_query("SELECT cf.fullpath FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=0");
+  while($coveragefile_array = mysql_fetch_array($coveragefile))
+		  {
+				$covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
+				$covfile["fullpath"] = $coveragefile_array["fullpath"];
+				$covfile["fileid"] = 0;
+				$covfile["covered"] = 0;							
+				$covfile_array[] = $covfile;
+		  }
+		
+		$i=0;
 		foreach($covfile_array as $covfile)
-		  {	
-				$xml .= "<coveragefile>";				
+		  {			
+				$xml .= "<coveragefile>";			
+				// Backgroung color of the lines
+				if($i%2==0)
+				  {
+				  $xml .= add_XML_value("bgcolor","#b0c4de");
+				  }	
 		  $xml .= add_XML_value("filename",$covfile["filename"]);
 	  	$xml .= add_XML_value("fullpath",$covfile["fullpath"]);
 				$xml .= add_XML_value("locuntested",$covfile["locuntested"]);
+				$xml .= add_XML_value("covered",$covfile["covered"]);
 				$xml .= add_XML_value("fileid",$covfile["fileid"]);
-				$percentcoverage = round($covfile["loctested"]/($covfile["loctested"]+$covfile["locuntested"])*100,2);
-				$xml .= add_XML_value("percentcoverage",$percentcoverage);
+				$xml .= add_XML_value("percentcoverage",$covfile["percentcoverage"]);
+				$xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
+				$xml .= add_XML_value("functionsuntested",$covfile["functionsuntested"]);
+				$xml .= add_XML_value("branchesuntested",$covfile["branchesuntested"]);				
 				$xml .= "</coveragefile>";
+				$i++;
 				}
 				
   $xml .= "</cdash>";
