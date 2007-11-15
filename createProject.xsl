@@ -66,8 +66,12 @@
     <td><input type="file" name="logo" size="40"/></td>
   </tr>
 		<tr>
-		  <td><div align="right"><strong>Public:</strong></div></td>
+		  <td><div align="right"><strong>Public Dashboard:</strong></div></td>
     <td><input type="checkbox" name="public" value="1" checked="true"/></td>
+  </tr>
+		<tr>
+    <td><div align="right"><strong>Coverage Threshold:</strong></div></td>
+    <td><input name="coverageThreshold" type="text" id="coverageThreshold" size="2" value="70"/></td>
   </tr>
 		<tr>
     <td><div align="right"></div></td>

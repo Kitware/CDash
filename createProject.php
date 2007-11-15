@@ -44,6 +44,7 @@ if($Submit)
   $CVSURL = stripHTTP($_POST["cvsURL"]);
   $BugURL = stripHTTP($_POST["bugURL"]);
   $Public = $_POST["public"];
+		$CoverageThreshold = $_POST["coverageThreshold"];
 		 
   $handle = fopen($_FILES['logo']['tmp_name'],"r");
   $contents = 0;
@@ -58,8 +59,8 @@ if($Submit)
   //we should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
   
-  $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo,public) 
-	  VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents','$Public')"; 
+  $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo,public,coveragethreshold) 
+	  VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents','$Public','$CoverageThreshold')"; 
   if(mysql_query("$sql"))
     {
     $projectid = mysql_insert_id();
