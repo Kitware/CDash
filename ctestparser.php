@@ -433,11 +433,11 @@ function parse_coverage($xmlarray,$projectid)
 			  {
 					$coverage_array[$index]["locuntested"]=$tagarray["value"];
 			  }
-			else if(($tagarray["tag"] == "BRANCHSTESTED") && ($tagarray["level"] == 4))
+			else if(($tagarray["tag"] == "BRANCHESTESTED") && ($tagarray["level"] == 4))
 			  {
 					$coverage_array[$index]["branchstested"]=$tagarray["value"];
 			  }	
-			else if(($tagarray["tag"] == "BRANCHSUNTESTED") && ($tagarray["level"] == 4))
+			else if(($tagarray["tag"] == "BRANCHESUNTESTED") && ($tagarray["level"] == 4))
 			  {
 					$coverage_array[$index]["branchsuntested"]=$tagarray["value"];
 			  }				
