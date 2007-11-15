@@ -97,11 +97,14 @@ CREATE TABLE `configure` (
 
 CREATE TABLE `coverage` (
   `buildid` int(11) NOT NULL default '0',
+  `fileid` int(11) NOT NULL default '0',
+  `covered` tinyint(4) NOT NULL default '0',
   `loctested` int(11) NOT NULL default '0',
   `locuntested` int(11) NOT NULL default '0',
-  `loc` int(11) NOT NULL default '0',
-  `percentcoverage` float NOT NULL default '0',
-  UNIQUE KEY `buildid_2` (`buildid`),
+  `branchstested` int(11) NOT NULL default '0',
+  `branchsuntested` int(11) NOT NULL default '0',
+  `functionstested` int(11) NOT NULL default '0',
+  `functionsuntested` int(11) NOT NULL default '0',
   KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -112,17 +115,74 @@ CREATE TABLE `coverage` (
 -- 
 
 CREATE TABLE `coveragefile` (
-  `buildid` int(11) NOT NULL default '0',
-  `filename` varchar(255) NOT NULL default '',
+  `id` int(11) NOT NULL auto_increment,
   `fullpath` varchar(255) NOT NULL default '',
-  `covered` tinyint(4) NOT NULL default '0',
-  `loctested` int(11) NOT NULL default '0',
-  `locuntested` int(11) NOT NULL default '0',
-  `percentcoverage` float NOT NULL default '0',
-  `coveragemetric` float NOT NULL default '0',
+  `file` tinyblob,
+  PRIMARY KEY  (`id`),
+  KEY `fullpath` (`fullpath`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `coveragefilelog`
+-- 
+
+CREATE TABLE `coveragefilelog` (
+  `buildid` int(11) NOT NULL default '0',
+  `fileid` int(11) NOT NULL default '0',
+  `line` int(11) NOT NULL default '0',
+  `code` varchar(10) NOT NULL default '',
+  KEY `fileid` (`fileid`),
   KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `coveragesummary`
+-- 
+
+CREATE TABLE `coveragesummary` (
+  `buildid` int(11) NOT NULL default '0',
+  `loctested` int(11) NOT NULL default '0',
+  `locuntested` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `dynamicanalysis`
+-- 
+
+CREATE TABLE `dynamicanalysis` (
+  `id` int(11) NOT NULL auto_increment,
+  `buildid` int(11) NOT NULL default '0',
+  `status` varchar(10) NOT NULL default '',
+  `checker` varchar(60) NOT NULL default '',
+  `name` varchar(255) NOT NULL default '',
+  `path` varchar(255) NOT NULL default '',
+  `fullcommandline` varchar(255) NOT NULL default '',
+  `log` text NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `buildid` (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `dynamicanalysisdefect`
+-- 
+
+CREATE TABLE `dynamicanalysisdefect` (
+  `dynamicanalysisid` int(11) NOT NULL default '0',
+  `type` varchar(50) NOT NULL default '',
+  `value` varchar(50) NOT NULL default '',
+  KEY `buildid` (`dynamicanalysisid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+  
 -- --------------------------------------------------------
 
 -- 
