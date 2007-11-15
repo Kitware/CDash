@@ -77,6 +77,27 @@ $xml .="<dashboard>
 		$xml .= "<coverage>";
 		$xml .= add_XML_value("fullpath",$coveragefile_array["fullpath"]);
 		$file = $coveragefile_array["file"];
+		
+	 // Generating the html file
+	 $file_array = explode("<br>",$file);
+		$i = 0;
+		foreach($file_array as $line)
+		  {
+				$coveragefilelog = mysql_query("SELECT line,code FROM coveragefilelog WHERE fileid='$fileid' AND buildid='$buildid' AND line='$i'");
+				if(mysql_num_rows($coveragefilelog)>0)
+				  {
+				  $coveragefilelog_array = mysql_fetch_array($coveragefilelog);
+						$file_array[$i] = str_pad($coveragefilelog_array["code"],8, "0", STR_PAD_LEFT)."&nbsp;&nbsp;&nbsp;".$line;
+						}
+				else
+				  {
+						$file_array[$i] = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$line;
+				  }
+				$i++;
+		  }
+		
+		$file = implode("<br>",$file_array);
+		
 		$xml .= "<file>".htmlspecialchars($file)."</file>";
 		$xml .= "</coverage>";
   $xml .= "</cdash>";

@@ -486,13 +486,13 @@ function parse_coveragelog($xmlarray,$projectid)
 					$coveragelog_array[$index]["filename"] = $tagarray["attributes"]["NAME"];
 					$coveragelog_array[$index]["file"] = "";
 			  }
-			else if(($tagarray["tag"] == "LINE") && ($tagarray["level"] == 5) && isset($tagarray["value"]))
+			else if(($tagarray["tag"] == "LINE") && ($tagarray["level"] == 5))
 					{
 					if($tagarray["attributes"]["COUNT"]>=0)
 					  {
 							$coveragelog_array[$index]["lines"][$tagarray["attributes"]["NUMBER"]] = $tagarray["attributes"]["COUNT"];
 				  	}			
-					$coveragelog_array[$index]["file"] .= $tagarray["value"]."<br>";
+					$coveragelog_array[$index]["file"] .= @$tagarray["value"]."<br>";
 					}
    }
 		

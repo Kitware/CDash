@@ -116,7 +116,7 @@ $xml .="<dashboard>
 			 global $sortby;	
 				if($sortby == "filename")
 						{
-						return $a["filename"]>$b["filename"] ? 1:0;
+						return $a["fullpath"]>$b["fullpath"] ? 1:0;
 						}
 				else if($sortby == "status")
 						{

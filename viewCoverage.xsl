@@ -131,7 +131,7 @@
    <tr>
       <td align="left"><a>
 						<xsl:attribute name="href">viewCoverageFile.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;fileid=<xsl:value-of select="fileid"/></xsl:attribute>
-						<xsl:value-of select="filename"/>
+						<xsl:value-of select="fullpath"/>
 						</a></td>
       <td align="center">
 							<xsl:attribute name="class">
