@@ -223,7 +223,7 @@ function generate_main_dashboard_XML($projectid,$date)
 						$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
 						
       $xml .= "  <percentage>".$percent."</percentage>";
-						$xml .= "  <percentagegreen>70</percentagegreen>";
+						$xml .= "  <percentagegreen>".$project_array["coveragethreshold"]."</percentagegreen>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
       $xml .= "  <date>".$build_array["starttime"]."</date>";
