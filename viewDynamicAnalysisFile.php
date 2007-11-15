@@ -79,6 +79,16 @@ $xml .="<dashboard>
 		$xml .= add_XML_value("status",ucfirst($dyn_array["status"]));
 		$xml .= add_XML_value("filename",$dyn_array["name"]);
 		$xml .= add_XML_value("log",$dyn_array["log"]);
+		$href = "testSummary.php?project=".$projectid."&#38;name=".$dyn_array["name"];
+		if($date)
+		  {
+				$href .= "&#38;date=".$date;
+		  }
+		else
+		  {
+				$href .= "&#38;date=".date("Ymd");
+		  }
+		$xml .= add_XML_value("href",$href);
 		$xml .= "</dynamicanalysis>";
 				
   $xml .= "</cdash>";

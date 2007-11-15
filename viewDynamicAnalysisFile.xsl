@@ -26,7 +26,8 @@
 </p>
 <p><b>Build Name:</b><xsl:value-of select="cdash/build/buildname"/> 
 </p>
-<a href="../../../../../Dashboard/20071115-0100-Nightly/TestDetail/__Examples_Segmentation_CellularSegmentation1Test.html">
+<a>
+<xsl:attribute name="href"><xsl:value-of select="cdash/dynamicanalysis/href"/></xsl:attribute>
 <xsl:value-of select="cdash/dynamicanalysis/filename"/></a>
 
 <font>
