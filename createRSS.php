@@ -63,8 +63,9 @@ function CreateRSSFeed($projectid)
 																									AND projectid='$projectid'
 																									");
 		while($build_array = mysql_fetch_array($builds))
-		  {  
-				
+		  {
+				$siteid = $build_array["siteid"];
+				$buildid = $build_array["id"];
 				$site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
 	
 				// Find the number of errors and warnings
@@ -76,13 +77,13 @@ function CreateRSSFeed($projectid)
 				$nfail = mysql_num_rows(mysql_query("SELECT * FROM test WHERE buildid='$buildid' AND status='failed'"));
 						
     $title = "CDash(".$projectname.") - ".$site_array["name"]." - ".$build_array["name"]." - ".$build_array["type"];
-				$title .= " - ".$build_array["submittime"]." - ".$nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfailed." failed.";
+				$title .= " - ".$build_array["submittime"]." - ".$nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
  			
 				// Should link to the errors...
 				$link = $urlbase."/index.php?project=".$projectname;
 	
 				$description = "A new ".$build_array["type"]." submission from ".$site_array["name"]." - ".$build_array["name"]." is available: ";
-				$description .= $nerrors."errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfailed."failed.";
+				$description .= $nerrors."errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail."failed.";
 	
     $pubDate = date('m/d/y h:i:s A');
 				$date = date('m/d/y');
