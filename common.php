@@ -279,11 +279,11 @@ function add_coveragesummary($buildid,$loctested,$locuntested)
 
 
 /** Create a coverage */
-function add_coverage($buildid,$filename,$fullpath,$covered,$loctested,$locuntested,
+function add_coverage($buildid,$fullpath,$covered,$loctested,$locuntested,
                       $branchstested=0,$branchsuntested=0,$functionstested=0,$functionsuntested=0)
 {
   // Create a file
-  mysql_query ("INSERT INTO coveragefile (filename,fullpath) VALUES ('$filename','$fullpath')");
+  mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
 		$fileid = mysql_insert_id();
 
   // Insert into coverage
@@ -298,15 +298,30 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
   // Check if we have the file
 		$coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
 		$coveragefile_array = mysql_fetch_array($coveragefile);
-  $fileid = $coveragefile_array["id"];
+		$fileid = $coveragefile_array["id"];
 		
-		if($fileid && (crc32($filecontent) != crc32($coveragefile_array["file"])))
+		if($fileid)
 		  {
-				mysql_query ("UPDATE coveragefile SET file='$filecontent' WHERE id='$fileid'");
-				echo mysql_error();
-		  }
+				if(strlen($coveragefile_array["file"])==0)
+				  {
+				  mysql_query ("UPDATE coveragefile SET file='$filecontent' WHERE id='$fileid'");
+						}
+				else if(crc32($filecontent) != crc32($coveragefile_array["file"]))
+				  {
+						mysql_query ("INSERT INTO coveragefile(fullpath,file) VALUES ('$fullpath','$filecontent')");
+					 echo mysql_error();
+						$fileid = mysql_insert_id();
+						}		
+				}
+		return $fileid;
 }
 
+/** Add the coverage log */
+function add_coveragelogfile($buildid,$fileid,$line,$code)
+{
+  mysql_query ("INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ('$buildid','$fileid','$line','$code')");
+  echo mysql_error();				
+}
 
 /** Create a site */
 function add_site($name,$description="",$processor="",$numprocessors="1",$ip="")
@@ -420,6 +435,24 @@ function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$rev
                VALUES ('$buildid','$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
   echo mysql_error();
 }
+
+/** Add dynamic analysis */
+function add_dynamic_analysis($buildid,$status,$name,$path,$fullcommandline,$log)
+{		
+  $log = addslashes($log);
+  mysql_query ("INSERT INTO dynamicanalysis (buildid,status,name,path,fullcommandline,log) 
+               VALUES ('$buildid','$status','$name','$path','$fullcommandline','$log')");
+  return mysql_insert_id();
+}
+					
+/** Add dynamic analysis defect */
+function add_dynamic_analysis_defect($dynid,$type,$value)
+{
+  mysql_query ("INSERT INTO dynamicanalysisdefect (dynamicanalysisid,type,value) 
+                VALUES ('$dynid','$type','$value')");
+  echo mysql_error();
+}
+
 
 /** Add a new note */
 function add_note($buildid,$text,$timestamp,$name)

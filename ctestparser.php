@@ -51,6 +51,10 @@ function ctest_parse($xml,$projectid)
 		  {
     parse_note($vals,$projectid);
 		  }
+		else	if($vals[1]["tag"] == "DYNAMICANALYSIS")
+		  {
+    parse_dynamicanalysis($vals,$projectid);
+		  }
 }
 
 /** Return the value given a tag or the parent tag */
@@ -448,7 +452,7 @@ function parse_coverage($xmlarray,$projectid)
 			
 		foreach($coverage_array as $coverage)
 		  {
-				@add_coverage($buildid,$coverage["filename"],$coverage["fullpath"],
+				@add_coverage($buildid,$coverage["fullpath"],
 				              $coverage["covered"],$coverage["loctested"],$coverage["locuntested"],
 																		$coverage["branchstested"],$coverage["branchsuntested"],						
 																		$coverage["functionstested"],$coverage["functionsuntested"]);
@@ -495,7 +499,16 @@ function parse_coveragelog($xmlarray,$projectid)
 		  {
 				$filecontent = addslashes($coverage["file"]);
 				$fileid = add_coveragefile($buildid,$coverage["fullpath"],$filecontent);
-		  }
+		  
+				// Add the line
+				if($fileid)
+				  {
+				  foreach($coverage["lines"] as $key=>$value)
+		      {
+						  add_coveragelogfile($buildid,$fileid,$key,$value);
+				    }
+				  }
+				}
 }
 
 /** Parse the update xml */
@@ -606,6 +619,96 @@ function parse_note($xmlarray,$projectid)
 		$text = getXMLValue($xmlarray,"TEXT","NOTE");
   
 		add_note($buildid,$text,$time,$name);
+}
+
+/** Parse the Dynamic Analysis xml */
+function parse_dynamicanalysis($xmlarray,$projectid)
+{
+		include_once("common.php");
+  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
+		$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+		
+		// Find the build id
+		$buildid = get_build_id($name,$stamp,$projectid);
+		if($buildid<0)
+		  {
+		  $sitename = $xmlarray[0]["attributes"]["NAME"]; 
+
+				// Extract the type from the buildstamp
+				$stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+				$type = substr($stamp,strrpos($stamp,"-")+1);
+				$generator = $xmlarray[0]["attributes"]["GENERATOR"];
+				$starttime = getXMLValue($xmlarray,"STARTDATETIME","DYNAMICANALYSIS");
+				
+				// Convert the starttime to a timestamp
+				$starttimestamp = str_to_time($starttime,$stamp);
+				$elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","DYNAMICANALYSIS");
+				$endtimestamp = $starttimestamp+$elapsedminutes*60;
+				
+				include("config.php");
+				include_once("common.php");
+				$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+				mysql_select_db("$CDASH_DB_NAME",$db);
+		
+				// First we look at the site and add it if not in the list
+				$siteid = add_site($sitename);
+								
+				$start_time = date("Y-m-d H:i:s",$starttimestamp);
+				$end_time = date("Y-m-d H:i:s",$endtimestamp);
+				$submit_time = date("Y-m-d H:i:s");
+				
+				$buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
+				}
+						
+		$memleak_array = array();
+		$index = 0;
+		foreach($xmlarray as $tagarray)
+			{
+			if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
+			  {
+					$index++;
+					$memleak_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
+					}
+			else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
+			  {
+					$memleak_array[$index]["name"]=$tagarray["value"];
+			  }
+			else if(($tagarray["tag"] == "PATH") && ($tagarray["level"] == 4))
+			  {
+					$memleak_array[$index]["path"]=$tagarray["value"];
+			  }	
+			else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
+			  {
+					$memleak_array[$index]["fullcommandline"]=$tagarray["value"];
+			  }				
+			else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
+			  {
+					if(isset($tagarray["value"])>0)
+					  {
+					  $memleak_array[$index]["log"]=$tagarray["value"];
+			    }
+					}	
+			else if(($tagarray["tag"] == "DEFECT") && ($tagarray["level"] == 5)  && isset($tagarray["attributes"]))
+			  {
+					$defect["type"] = $tagarray["attributes"]["TYPE"];
+					$defect["value"] = $tagarray["value"];
+					$memleak_array[$index]["defects"][]=$defect;
+			  }									
+   }
+			
+		foreach($memleak_array as $memleak)
+		  {
+				$dynid = add_dynamic_analysis($buildid,$memleak["status"],$memleak["name"],$memleak["path"],
+				                     $memleak["fullcommandline"],$memleak["log"]);
+				
+				if(isset($memleak["defects"]))
+				  {
+				  foreach($memleak["defects"] as $defect)
+				    {
+						  add_dynamic_analysis_defect($dynid,$defect["type"],$defect["value"]);
+				    }
+						}
+				}
 }
       
       
