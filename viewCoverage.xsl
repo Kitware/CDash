@@ -156,10 +156,17 @@
    <tr>
 			<xsl:attribute name="bgcolor"><xsl:value-of select="bgcolor"/></xsl:attribute>
 			
-      <td align="left"><a>
+      <td align="left">
+						<xsl:if test="covered=0">
+						<xsl:value-of select="fullpath"/>
+						</xsl:if>
+						<xsl:if test="covered=1">
+						<a>
 						<xsl:attribute name="href">viewCoverageFile.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;fileid=<xsl:value-of select="fileid"/></xsl:attribute>
 						<xsl:value-of select="fullpath"/>
-						</a></td>
+						</a>
+						</xsl:if>
+						</td>
       <td align="center">
 						<xsl:if test="covered>0">
 							<xsl:attribute name="class">
