@@ -19,9 +19,8 @@ include("ctestparser.php");
 include_once("common.php");
 include_once("createRSS.php");
 
-//$putdata = fopen("php://input", "r");
-
-$putdata = fopen("CoverageLog.xml", "r");
+$putdata = fopen("php://input", "r");
+//$putdata = fopen("DynamicAnalysis.xml", "r");
 
 $contents = "";
 $content = fread($putdata,1000);
