@@ -97,10 +97,30 @@ function generate_XSLT($xml,$pageName)
   xslt_free($xh);
 }
 
+/**used to escape special XML characters*/
+$asc2uni = Array();
+for($i=128;$i<256;$i++){
+  $asc2uni[chr($i)] = "&#x".dechex($i).";";   
+}
+
+/**used to escape special XML characters*/
+function XMLStrFormat($str){
+  global $asc2uni;
+  $str = str_replace("&", "&amp;", $str);
+  $str = str_replace("<", "&lt;", $str); 
+  $str = str_replace(">", "&gt;", $str); 
+  $str = str_replace("'", "&apos;", $str);  
+  $str = str_replace("\"", "&quot;", $str); 
+  $str = str_replace("\r", "", $str);
+  $str = strtr($str,$asc2uni);
+  return $str;
+}
+
+
 /** Add an XML tag to a string */
 function add_XML_value($tag,$value)
 {
-  return "<".$tag.">".$value."</".$tag.">";
+  return "<".$tag.">".XMLStrFormat($value)."</".$tag.">";
 }
 
 /** Clean the backup directory */
