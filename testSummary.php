@@ -52,7 +52,7 @@ if(mysql_num_rows($project)>0)
   $bugurl = $project_array["bugtrackerurl"];			
   $projectname	= $project_array["name"];		
   }
-list ($previousdate, $currenttime, $nextdate) = get_dates($date);
+list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
