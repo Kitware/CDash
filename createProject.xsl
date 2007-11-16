@@ -74,6 +74,12 @@
     <td><input name="coverageThreshold" type="text" id="coverageThreshold" size="2" value="70"/></td>
   </tr>
 		<tr>
+    <td><div align="right"><strong>Nightly Start Time:</strong></div></td>
+    <td><input name="nightlyHour" type="text" id="nightlyHour" size="2" value="00"/>
+				:<input name="nightlyMinute" type="text" id="nightlyMinute" size="2" value="00"/>
+				:<input name="nightlySecond" type="text" id="nightlySecond" size="2" value="00"/></td>
+  </tr>
+		<tr>
     <td><div align="right"></div></td>
     <td><input type="submit" name="Submit" value="Create Project"/></td>
   </tr>

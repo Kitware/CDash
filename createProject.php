@@ -45,7 +45,10 @@ if($Submit)
   $BugURL = stripHTTP($_POST["bugURL"]);
   $Public = $_POST["public"];
 		$CoverageThreshold = $_POST["coverageThreshold"];
-		 
+		$NightlyHour = $_POST["nightlyHour"];
+		$NightlyMinute = $_POST["nightlyMinute"];
+		$NightlySecond = $_POST["nightlySecond"];
+				
   $handle = fopen($_FILES['logo']['tmp_name'],"r");
   $contents = 0;
   if($handle)
@@ -55,12 +58,14 @@ if($Submit)
     fclose($handle);
     }
 		
-  $projectid = -1;		
+  $projectid = -1;
+		
+		$NightlyTime = $NightlyHour.":".$NightlyMinute.":".$NightlySecond;
+		
   //we should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
-  
-  $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo,public,coveragethreshold) 
-	  VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents','$Public','$CoverageThreshold')"; 
+  $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo,public,coveragethreshold,nightlytime) 
+	  VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents','$Public','$CoverageThreshold','$NightlyTime')"; 
   if(mysql_query("$sql"))
     {
     $projectid = mysql_insert_id();
