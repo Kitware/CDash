@@ -62,7 +62,7 @@ $siteRow = mysql_fetch_array(mysql_query(
   "SELECT name FROM site WHERE id = '$siteid'"));
 
 $date = date("Ymd", strtotime($buildRow["starttime"]));
-list ($previousdate, $currenttime, $nextdate) = get_dates($date);
+list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
@@ -133,5 +133,8 @@ $xml .= "</test>\n";
 $xml .= "</cdash>\n";
 
 // Now doing the xslt transition
+$handle = fopen("/tmp/zackdebug.txt", "w");
+fwrite($handle, $xml);
+fclose($handle);
 generate_XSLT($xml,"testDetails");
 ?>
