@@ -22,36 +22,36 @@ function auth()
 {  
   include "config.php";
   $loginid= 1231564132;
-  $m_error = 0;	
+  $m_error = 0; 
   if (@$_GET["logout"]) 
-				{                             // user requested logout            
-				@session_start(); 
-				unset($_SESSION['cdash']);  
-				session_destroy(); 
-				echo "<script language=\"javascript\">window.location='index.php'</script>";             
-				return 0; 
-				}
+    {                             // user requested logout            
+    @session_start(); 
+    unset($_SESSION['cdash']);  
+    session_destroy(); 
+    echo "<script language=\"javascript\">window.location='index.php'</script>";             
+    return 0; 
+    }
   if(isset($_POST["sent"])) // arrive from login form 
-	  {
+   {
     $login_ok = 0; 
     $login = $_POST["login"];
     $passwd = $_POST["passwd"];
     if ($login and $passwd)
       {
       $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-	    mysql_select_db("$CDASH_DB_NAME",$db);
-    	$sql="SELECT * FROM user WHERE email='$login'";
-	    $result = mysql_query("$sql"); 
-	    while ($user_array = mysql_fetch_array($result)) 
+     mysql_select_db("$CDASH_DB_NAME",$db);
+     $sql="SELECT * FROM user WHERE email='$login'";
+     $result = mysql_query("$sql"); 
+     while ($user_array = mysql_fetch_array($result)) 
         {
-								$pass = $user_array["password"];
-								if (md5($passwd)==$pass)
+        $pass = $user_array["password"];
+        if (md5($passwd)==$pass)
           {
-										session_start();  
+          session_start();  
           // create the session array 
           $mysession2 = array ("login" => $login, "password" => $passwd, "passwd" => $pass, "ID" => session_id(), "valid" => 1, "loginid" => $user_array["id"]);  
           // Use $HTTP_SESSION_VARS with PHP 4.0.6 or less
-    			if (!isset($_SESSION['cdash'])) 
+       if (!isset($_SESSION['cdash'])) 
             {
             $_SESSION['cdash'] = $mysession2;
             } 
@@ -66,7 +66,7 @@ function auth()
       }
     if(!$login_ok)
       { 
-	    $m_error = 1;
+     $m_error = 1;
       return 0;                                   // access denied 
       }  
     }
@@ -77,15 +77,15 @@ function auth()
     $login_ok = 0;  
     $login = @$_SESSION['cdash']["login"];                         // added by jds 
     $passwd = @$_SESSION['cdash']["passwd"];                      // added by jds 
-				$password = @$_SESSION['cdash']["password"];
+    $password = @$_SESSION['cdash']["password"];
     $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-	   mysql_select_db("$CDASH_DB_NAME",$db);
+    mysql_select_db("$CDASH_DB_NAME",$db);
     $sql="SELECT * FROM user WHERE email='$login'";
     $result = mysql_query("$sql");
-	   while ($user_array = mysql_fetch_array($result)) 
+    while ($user_array = mysql_fetch_array($result)) 
       {   
-		    $pass = $user_array["password"];
-	     if ($passwd==$pass)
+      $pass = $user_array["password"];
+      if ($passwd==$pass)
         {
         $mysession2 = array ("login" => $login, "password" => $password,"passwd" => $pass, "ID" => session_id(), "valid" => 1, "loginid" => $user_array["id"]);  
         $_SESSION['cdash'] = $mysession2;        
@@ -93,23 +93,23 @@ function auth()
         $login_ok = 1;  
         break;  
         }  
-		  }
+    }
     if(!$login_ok)
       { 
       return 0;                                   // access denied 
       }  
     }
   }  
-		
+  
 /** Login Form function */
 function LoginForm($loginerror)
 {  
   include("config.php");
-	 include("common.php");	
-		
-		$xml = "<cdash>";
-		$xml .= "<title>Login</title>";
-		$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  include("common.php"); 
+  
+  $xml = "<cdash>";
+  $xml .= "<title>Login</title>";
+  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
     
   if(@$_GET['note'] == "register")
     {
@@ -119,8 +119,8 @@ function LoginForm($loginerror)
     {
     $xml .= "<message></message>";
     }
-		$xml .= "</cdash>";
-		generate_XSLT($xml,"login");
+  $xml .= "</cdash>";
+  generate_XSLT($xml,"login");
 }
 
 // -------------------------------------------------------------------------------------- 

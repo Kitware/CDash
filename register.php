@@ -23,10 +23,10 @@ $reg = "";
 function register()
 { 
   global $reg; 
-  include "config.php";	
+  include "config.php"; 
 
   if(isset($_POST["sent"])) // arrive from register form 
-	  {
+   {
     $url   = $_POST["url"];
     if($url != "catchbot")
       {
@@ -47,9 +47,9 @@ function register()
     if ($email and $passwd and $passwd2 and $fname and $lname and $institution)
       {
       $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-	    mysql_select_db("$CDASH_DB_NAME",$db);
+     mysql_select_db("$CDASH_DB_NAME",$db);
       $passwd = md5($passwd);
-    	$sql="INSERT INTO user (email,password,firstname,lastname,institution) VALUES ('$email','$passwd','$fname','$lname','$institution')";
+     $sql="INSERT INTO user (email,password,firstname,lastname,institution) VALUES ('$email','$passwd','$fname','$lname','$institution')";
       if(mysql_query($sql))
         {
         return 1;
@@ -66,25 +66,25 @@ function register()
       return 0;
       }
     }
-	else
+ else
     {
     return 0;
     }
 } 
-		
+  
 /** Login Form function */
 function RegisterForm($regerror)
 {  
   include("config.php");
-	 include("common.php");	
-		
-		$xml = "<cdash>";
-		$xml .= "<title>Registration</title>";
-		$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  include("common.php"); 
+  
+  $xml = "<cdash>";
+  $xml .= "<title>Registration</title>";
+  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
     $xml .= "<error>" . $regerror . "</error>";
-		$xml .= "</cdash>";
-		
-		generate_XSLT($xml,"register");
+  $xml .= "</cdash>";
+  
+  generate_XSLT($xml,"register");
 }
 
 // -------------------------------------------------------------------------------------- 

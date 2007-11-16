@@ -167,10 +167,10 @@ function backup_xml_file($contents)
     {
     $file = "Coverage.xml";
     }
-		else if(@$vals[1]["tag"] == "COVERAGELOG")
+  else if(@$vals[1]["tag"] == "COVERAGELOG")
     {
     $file = "CoverageLog.xml";
-    } 		
+    }   
   else if(@$vals[1]["tag"] == "NOTES")
     {
     $file = "Notes.xml";
@@ -232,13 +232,13 @@ function get_projects()
       $project['last_build'] = $lastbuild_array["submittime"];
       }
 
-				$buildquery = mysql_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
+    $buildquery = mysql_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
     $buildquery_array = mysql_fetch_array($buildquery); 
     $project['nbuilds'] = $buildquery_array[0];
-				
+    
     /*$testquery = mysql_query("SELECT count(t.id) FROM test AS t,build AS b WHERE b.projectid='$projectid' AND t.buildid=b.id");
     //$testquery = mysql_query("SELECT count(id) FROM test WHERE buildid IN (SELECT id FROM build WHERE projectid='$projectid')");
-				$testquery_array = mysql_fetch_array($testquery); 
+    $testquery_array = mysql_fetch_array($testquery); 
     $project['ntests'] = $testquery_array[0];*/
      
     $projects[] = $project; 
@@ -258,10 +258,10 @@ function get_build_id($buildname,$stamp,$projectid)
     echo("Problem with mysql_connect<br>\n");
     }
   mysql_select_db("$CDASH_DB_NAME",$db);
-		
-		$sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
-		$sql .= " AND projectid='$projectid'"; 
-		$sql .= " ORDER BY id DESC";
+  
+  $sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
+  $sql .= " AND projectid='$projectid'"; 
+  $sql .= " ORDER BY id DESC";
   $build = mysql_query($sql);
   if(mysql_num_rows($build)>0)
     {
@@ -303,18 +303,18 @@ function add_coverage($buildid,$fullpath,$covered,$loctested,$locuntested,
                       $branchstested=0,$branchsuntested=0,$functionstested=0,$functionsuntested=0)
 {
   // Create an empty file if doesn't exists
-		$coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
-		if(mysql_num_rows($coveragefile)==0)
-		  {
+  $coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+  if(mysql_num_rows($coveragefile)==0)
+    {
     mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-		  $fileid = mysql_insert_id();
+    $fileid = mysql_insert_id();
     }
-		else
-				{
-				$coveragefile_array = mysql_fetch_array($coveragefile);
-				$fileid = $coveragefile_array["id"];
-				}
-				
+  else
+    {
+    $coveragefile_array = mysql_fetch_array($coveragefile);
+    $fileid = $coveragefile_array["id"];
+    }
+    
   // Insert into coverage
   mysql_query ("INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) 
                 VALUES ('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')");
@@ -325,34 +325,34 @@ function add_coverage($buildid,$fullpath,$covered,$loctested,$locuntested,
 function add_coveragefile($buildid,$fullpath,$filecontent)
 {
   // Check if we have the file
-		$coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
-		$coveragefile_array = mysql_fetch_array($coveragefile);
-		$fileid = $coveragefile_array["id"];
-		
-		if($fileid)
-		  {
-				if(strlen($coveragefile_array["file"])==0)
-				  {
-				  mysql_query ("UPDATE coveragefile SET file='$filecontent' WHERE id='$fileid'");
-						}
-				else if(crc32($filecontent) != crc32($coveragefile_array["file"]))
-				  {
-						$previousfileid = $fileid;
-						mysql_query ("INSERT INTO coveragefile(fullpath,file) VALUES ('$fullpath','$filecontent')");
-					 echo mysql_error();
-						$fileid = mysql_insert_id();
-						mysql_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$previousfileid'");
-						echo mysql_error();
-						}		
-				}
-		return $fileid;
+  $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+  $coveragefile_array = mysql_fetch_array($coveragefile);
+  $fileid = $coveragefile_array["id"];
+  
+  if($fileid)
+    {
+    if(strlen($coveragefile_array["file"])==0)
+      {
+      mysql_query ("UPDATE coveragefile SET file='$filecontent' WHERE id='$fileid'");
+      }
+    else if(crc32($filecontent) != crc32($coveragefile_array["file"]))
+      {
+      $previousfileid = $fileid;
+      mysql_query ("INSERT INTO coveragefile(fullpath,file) VALUES ('$fullpath','$filecontent')");
+      echo mysql_error();
+      $fileid = mysql_insert_id();
+      mysql_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$previousfileid'");
+      echo mysql_error();
+      }  
+    }
+  return $fileid;
 }
 
 /** Add the coverage log */
 function add_coveragelogfile($buildid,$fileid,$line,$code)
 {
   mysql_query ("INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ('$buildid','$fileid','$line','$code')");
-  echo mysql_error();				
+  echo mysql_error();    
 }
 
 /** Create a site */
@@ -470,13 +470,13 @@ function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$rev
 
 /** Add dynamic analysis */
 function add_dynamic_analysis($buildid,$status,$checker,$name,$path,$fullcommandline,$log)
-{		
+{  
   $log = addslashes($log);
   mysql_query ("INSERT INTO dynamicanalysis (buildid,status,checker,name,path,fullcommandline,log) 
                VALUES ('$buildid','$status','$checker','$name','$path','$fullcommandline','$log')");
   return mysql_insert_id();
 }
-					
+     
 /** Add dynamic analysis defect */
 function add_dynamic_analysis_defect($dynid,$type,$value)
 {
@@ -534,20 +534,20 @@ function globr($sDir, $sPattern, $nFlags = NULL)
 function get_dates($date,$nightlytime)
 {
   $nightlyhour = substr($nightlytime,0,2);
-		$nightlyminute = substr($nightlytime,3,2);
-		$nightlysecond = substr($nightlytime,6,2);
-		
+  $nightlyminute = substr($nightlytime,3,2);
+  $nightlysecond = substr($nightlytime,6,2);
+  
   if(!isset($date) || strlen($date)==0)
     { 
     $date = date("Ymd");
-				$currenttime = time();
-				$today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
+    $currenttime = time();
+    $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
     }
-	 	else
-				{
-				$today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
-				$currenttime = $today-1; // minus one second
-				}
+   else
+    {
+    $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
+    $currenttime = $today-1; // minus one second
+    }
   
   $previousdate = date("Ymd",$today-3600*24-1);
   $nextdate = date("Ymd",$today+3600*24-1);

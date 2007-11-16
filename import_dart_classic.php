@@ -85,8 +85,8 @@ if($Submit)
         {
         if(strlen($file)==0)
           {
-	  continue;
-	  }
+   continue;
+   }
         $handle = fopen($file,"r");
         $contents = fread($handle,filesize($file));
         ctest_parse($contents,$projectid);

@@ -24,20 +24,20 @@ include("common.php");
 include("config.php");
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
-		
-$build_array = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id='$buildid'"));		
+  
+$build_array = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 $date = date("Ymd", strtotime($build_array["starttime"]));
 
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
-		{
-		$project_array = mysql_fetch_array($project);
-		$svnurl = $project_array["cvsurl"];
-		$homeurl = $project_array["homeurl"];
-		$bugurl = $project_array["bugtrackerurl"];			
-		$projectname	= $project_array["name"];		
-		}
+  {
+  $project_array = mysql_fetch_array($project);
+  $svnurl = $project_array["cvsurl"];
+  $homeurl = $project_array["homeurl"];
+  $bugurl = $project_array["bugtrackerurl"];   
+  $projectname = $project_array["name"];  
+  }
 
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
@@ -49,37 +49,37 @@ $xml .="<dashboard>
   <datetime>".date("D, d M Y H:i:s",strtotime($build_array["starttime"]))."</datetime>
   <date>".$date."</date>
   <svn>".$svnurl."</svn>
-  <bugtracker>".$bugurl."</bugtracker>	
+  <bugtracker>".$bugurl."</bugtracker> 
   <home>".$homeurl."</home>
-  <projectid>".$projectid."</projectid>	
+  <projectid>".$projectid."</projectid> 
   <logoid>".$logoid."</logoid>
-  <projectname>".$projectname."</projectname>	
-  <previousdate>".$previousdate."</previousdate>	
-  <nextdate>".$nextdate."</nextdate>	
+  <projectname>".$projectname."</projectname> 
+  <previousdate>".$previousdate."</previousdate> 
+  <nextdate>".$nextdate."</nextdate> 
   </dashboard>
   ";
-		
-		// Build
-		$xml .= "<build>";
-		$build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
-		$build_array = mysql_fetch_array($build); 
-		$siteid = $build_array["siteid"];
-		$site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
-		$xml .= add_XML_value("site",$site_array["name"]);
-		$xml .= add_XML_value("buildname",$build_array["name"]);
-		$xml .= add_XML_value("buildid",$build_array["id"]);
+  
+  // Build
+  $xml .= "<build>";
+  $build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
+  $build_array = mysql_fetch_array($build); 
+  $siteid = $build_array["siteid"];
+  $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+  $xml .= add_XML_value("site",$site_array["name"]);
+  $xml .= add_XML_value("buildname",$build_array["name"]);
+  $xml .= add_XML_value("buildid",$build_array["id"]);
   $xml .= "</build>";
-		
-		$xml .= "<configure>";
-		
-	 $configure = mysql_query("SELECT * FROM configure WHERE buildid='$buildid'");
-		$configure_array = mysql_fetch_array($configure);
-	 
-		$xml .= add_XML_value("status",$configure_array["status"]);
-		$xml .= add_XML_value("command",$configure_array["command"]);
-		$xml .= add_XML_value("output",$configure_array["log"]);
+  
+  $xml .= "<configure>";
+  
+  $configure = mysql_query("SELECT * FROM configure WHERE buildid='$buildid'");
+  $configure_array = mysql_fetch_array($configure);
+  
+  $xml .= add_XML_value("status",$configure_array["status"]);
+  $xml .= add_XML_value("command",$configure_array["command"]);
+  $xml .= add_XML_value("output",$configure_array["log"]);
 
-		$xml .= "</configure>";
+  $xml .= "</configure>";
   $xml .= "</cdash>";
 
 // Now doing the xslt transition

@@ -111,19 +111,19 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalna = 0; 
     
   // Check the builds
-		// Beginning timestamp is the previous nightly
-		//$beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
-		$nightlyhour = substr($project_array["nightlytime"],0,2);
-		$nightlyminute = substr($project_array["nightlytime"],3,2);
-		$nightlysecond = substr($project_array["nightlytime"],6,2);
-		$end_timestamp = $currenttime;
-		
-		$beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp),date("d",$end_timestamp),date("Y",$end_timestamp));
-		if($end_timestamp<$beginning_timestamp)
-		  {
-				$beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp-24*3600),date("d",$end_timestamp-24*3600),date("Y",$end_timestamp-24*3600));
-		  }
-				
+  // Beginning timestamp is the previous nightly
+  //$beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
+  $nightlyhour = substr($project_array["nightlytime"],0,2);
+  $nightlyminute = substr($project_array["nightlytime"],3,2);
+  $nightlysecond = substr($project_array["nightlytime"],6,2);
+  $end_timestamp = $currenttime;
+  
+  $beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp),date("d",$end_timestamp),date("Y",$end_timestamp));
+  if($end_timestamp<$beginning_timestamp)
+    {
+    $beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp-24*3600),date("d",$end_timestamp-24*3600),date("Y",$end_timestamp-24*3600));
+    }
+    
   $builds = mysql_query("SELECT id,siteid,name,type,generator,starttime,endtime,submittime FROM build 
                          WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
                          AND projectid='$projectid' ORDER BY starttime DESC
@@ -150,13 +150,13 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("generator",$build_array["generator"]);
     //<notes>note</notes>
     
-				$note = mysql_query("SELECT count(buildid) FROM note WHERE buildid='$buildid'");
-				$note_array = mysql_fetch_row($note);
-				if($note_array[0]>0)
-				  {
+    $note = mysql_query("SELECT count(buildid) FROM note WHERE buildid='$buildid'");
+    $note_array = mysql_fetch_row($note);
+    if($note_array[0]>0)
+      {
       $xml .= add_XML_value("note","1");
       }
-						
+      
     $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
     $xml .= add_XML_value("update",mysql_num_rows($update));
     
@@ -202,7 +202,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $nna_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='na'"));
       $nna = $nna_array[0];
       
-						$time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM test WHERE buildid='$buildid'"));
+      $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM test WHERE buildid='$buildid'"));
       $time = $time_array[0];
       
       $totalnotrun += $nnotrun;
@@ -222,7 +222,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "</".strtolower($build_array["type"]).">";
     } // END IF CONFIGURE
     
-				// Coverage
+    // Coverage
     $coverages = mysql_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = mysql_fetch_array($coverages))
       {
@@ -230,38 +230,38 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <site>".$site_array["name"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
-						
-						$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
-						
+      
+      $percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
+      
       $xml .= "  <percentage>".$percent."</percentage>";
-						$xml .= "  <percentagegreen>".$project_array["coveragethreshold"]."</percentagegreen>";
+      $xml .= "  <percentagegreen>".$project_array["coveragethreshold"]."</percentagegreen>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
       $xml .= "  <date>".$build_array["starttime"]."</date>";
       $xml .= "  <submitdate>".$build_array["submittime"]."</submitdate>";
       $xml .= "</coverage>";
       }  // end coverage
-				
-				// Dynamic Analysis
-				$dynanalysis = mysql_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
+    
+    // Dynamic Analysis
+    $dynanalysis = mysql_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
     while($dynanalysis_array = mysql_fetch_array($dynanalysis))
       {
-					$xml .= "<dynamicanalysis>";
+     $xml .= "<dynamicanalysis>";
       $xml .= "  <site>".$site_array["name"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
-						
+      
       $xml .= "  <checker>".$dynanalysis_array["checker"]."</checker>";
       $defect = mysql_query("SELECT count(id) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
-						                                        WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
-    		$defectcount = mysql_fetch_array($defect);
-						$xml .= "  <defectcount>".$defectcount[0]."</defectcount>";
+                                              WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
+      $defectcount = mysql_fetch_array($defect);
+      $xml .= "  <defectcount>".$defectcount[0]."</defectcount>";
       $xml .= "  <date>".$build_array["starttime"]."</date>";
       $xml .= "  <submitdate>".$build_array["submittime"]."</submitdate>";
       $xml .= "</dynamicanalysis>";
       }  // end coverage
-						
-						
+      
+      
     } // end looping through builds
  
   $xml .= add_XML_value("totalConfigure",$totalconfigure);

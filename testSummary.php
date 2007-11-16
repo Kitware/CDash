@@ -49,8 +49,8 @@ if(mysql_num_rows($project)>0)
   $project_array = mysql_fetch_array($project);
   $svnurl = $project_array["cvsurl"];
   $homeurl = $project_array["homeurl"];
-  $bugurl = $project_array["bugtrackerurl"];			
-  $projectname	= $project_array["name"];		
+  $bugurl = $project_array["bugtrackerurl"];   
+  $projectname = $project_array["name"];  
   }
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
@@ -62,17 +62,17 @@ $xml .="<dashboard>
   <datetime>".date("D, d M Y",$currenttime)."</datetime>
   <date>".$date."</date>
   <svn>".$svnurl."</svn>
-  <bugtracker>".$bugurl."</bugtracker>	
+  <bugtracker>".$bugurl."</bugtracker> 
   <home>".$homeurl."</home>
-  <projectid>".$projectid."</projectid>	
+  <projectid>".$projectid."</projectid> 
   <logoid>".$logoid."</logoid>
-  <projectname>".$projectname."</projectname>	
-  <previousdate>".$previousdate."</previousdate>	
-  <nextdate>".$nextdate."</nextdate>	
+  <projectname>".$projectname."</projectname> 
+  <previousdate>".$previousdate."</previousdate> 
+  <nextdate>".$nextdate."</nextdate> 
   <testName>".$testName."</testName>
   </dashboard>
   ";
-		
+  
 // Here's where we start gathering information relevant to the task at hand
 /*
 $dateStart = mktime("0","0","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));

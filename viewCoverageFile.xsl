@@ -1,22 +1,22 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     
-			<xsl:include href="header.xsl"/>
-			<xsl:include href="footer.xsl"/>
-				
+   <xsl:include href="header.xsl"/>
+   <xsl:include href="footer.xsl"/>
+    
     <xsl:output method="html"/>
     <xsl:template match="/">
       <html>
-	      <head>
-							<title><xsl:value-of select="cdash/title"/></title>
-		      <meta name="robots" content="noindex,nofollow" />
+       <head>
+       <title><xsl:value-of select="cdash/title"/></title>
+        <meta name="robots" content="noindex,nofollow" />
          <link rel="StyleSheet" type="text/css">
-									<xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-									</link>
-	      </head>
+         <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
+         </link>
+       </head>
        <body bgcolor="#ffffff">
-			
-							<xsl:call-template name="header"/>
+   
+       <xsl:call-template name="header"/>
 <br/>
 
 <!-- Main -->
@@ -31,12 +31,12 @@
 <hr/>
 
 <pre><xsl:value-of select="cdash/coverage/file" disable-output-escaping="yes"/></pre>
-	<br/>
+ <br/>
 
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>
-					   </body>
+        </body>
       </html>
     </xsl:template>
 </xsl:stylesheet>

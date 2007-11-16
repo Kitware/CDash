@@ -75,10 +75,10 @@
         map.setCenter(new GLatLng(37.4419, -30.00), 2);
         map.addControl(new GLargeMapControl());
         <xsl:for-each select="cdash/site">
-								<xsl:if test="string-length(latitude)>0">
+        <xsl:if test="string-length(latitude)>0">
         var point = new GLatLng(<xsl:value-of select="latitude"/>,<xsl:value-of select="longitude"/>);
         map.addOverlay(createMarker(point,'<xsl:value-of select="name"/>'));
-								</xsl:if>
+        </xsl:if>
         </xsl:for-each>
       }
     }

@@ -29,9 +29,9 @@
     <td>
       <a>
         <xsl:attribute name="href">
-	  <xsl:value-of select="cdash/test/summaryLink"/> 
+   <xsl:value-of select="cdash/test/summaryLink"/> 
         </xsl:attribute>
-	<xsl:value-of select="cdash/test/test"/> 
+ <xsl:value-of select="cdash/test/test"/> 
       </a>
     </td>
     <td>
@@ -39,7 +39,7 @@
         <xsl:attribute name="color">
           <xsl:value-of select="cdash/test/statusColor"/>
         </xsl:attribute>
-	<xsl:value-of select="cdash/test/status"/>
+ <xsl:value-of select="cdash/test/status"/>
       </font>
     </td>
   </tr>
@@ -51,8 +51,8 @@
     <th class="measurement"><xsl:value-of select="role"/></th>
     <td>
       <img>
-	<xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="imgid"/>
-	</xsl:attribute>
+ <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="imgid"/>
+ </xsl:attribute>
       </img>
     </td>
   </tr>

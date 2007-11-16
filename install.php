@@ -17,7 +17,7 @@
 =========================================================================*/
 // This is the installation script for CDash
 include("config.php");
-include("common.php");	
+include("common.php"); 
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -30,95 +30,95 @@ $xml .= "<connectiondb_name>".$CDASH_DB_NAME."</connectiondb_name>";
 @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 if(!$db)
   {
-		$xml .= "<connectiondb>0</connectiondb>";
+  $xml .= "<connectiondb>0</connectiondb>";
   }
 else
   {
-		$xml .= "<connectiondb>1</connectiondb>";
-  }  		
-		
+  $xml .= "<connectiondb>1</connectiondb>";
+  }    
+  
 if(xslt_create() === FALSE)
   {
-		$xml .= "<xslt>0</xslt>";
+  $xml .= "<xslt>0</xslt>";
   }
 else
   {
-		$xml .= "<xslt>1</xslt>";
+  $xml .= "<xslt>1</xslt>";
   }
-		
-		
+  
+  
 // If the database already exists we quit
 if(@mysql_select_db("$CDASH_DB_NAME",$db) === TRUE)
   {
-		$xml .= "<database>1</database>";
+  $xml .= "<database>1</database>";
   }
 else
   {
-		$xml .= "<database>0</database>";
-		$xml .= "<dashboard_timeframe>24</dashboard_timeframe>";
-		
+  $xml .= "<database>0</database>";
+  $xml .= "<dashboard_timeframe>24</dashboard_timeframe>";
+  
 
 // If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
 {
   if(!mysql_query("CREATE DATABASE IF NOT EXISTS $CDASH_DB_NAME"))
-		  {
-				$xml .= "<db_created>0</db_created>";
-				$xml .= "<alert>".mysql_error()."</alert>";
-				}
-		else
-		{
-		mysql_select_db("$CDASH_DB_NAME",$db);
+    {
+    $xml .= "<db_created>0</db_created>";
+    $xml .= "<alert>".mysql_error()."</alert>";
+    }
+  else
+  {
+  mysql_select_db("$CDASH_DB_NAME",$db);
   $sqlfile = "sql/cdash.sql";
-		$file_content = file($sqlfile);
+  $file_content = file($sqlfile);
   //print_r($file_content);
   $query = "";
   foreach($file_content as $sql_line)
-		  {
+    {
     $tsl = trim($sql_line);
      if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) 
-					  {
+       {
        $query .= $sql_line;
        if(preg_match("/;\s*$/", $sql_line)) 
-							  {
+         {
          $query = str_replace(";", "", "$query");
          $result = mysql_query($query);
          if (!$result)
-									  { 
-											$xml .= "<db_created>0</db_created>";
-											die(mysql_error());
+           { 
+           $xml .= "<db_created>0</db_created>";
+           die(mysql_error());
            }
-									$query = "";
+         $query = "";
          }
        }
      } // end for each line
-		
-		$sqlfile = "sql/cdashdata.sql";
-		$file_content = file($sqlfile);
+  
+  $sqlfile = "sql/cdashdata.sql";
+  $file_content = file($sqlfile);
   //print_r($file_content);
   $query = "";
   foreach($file_content as $sql_line)
-		  {
+    {
     $tsl = trim($sql_line);
      if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) 
-					  {
+       {
        $query .= $sql_line;
        if(preg_match("/;\s*$/", $sql_line)) 
-							  {
+         {
          $query = str_replace(";", "", "$query");
          $result = mysql_query($query);
          if (!$result)
-									  { 
-											$xml .= "<db_created>0</db_created>";
-											die(mysql_error());
+           { 
+           $xml .= "<db_created>0</db_created>";
+           die(mysql_error());
            }
-									$query = "";
+         $query = "";
          }
        }
      } // end for each line*/
-			$xml .= "<db_created>1</db_created>";
-			} // end database created
+   $xml .= "<db_created>1</db_created>";
+   } // end database created
 } // end submit
 
 } // end database doesn't exists

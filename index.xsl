@@ -328,8 +328,8 @@
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/></td>
       <td align="center">
-						  <xsl:attribute name="class">
-								<xsl:choose>
+        <xsl:attribute name="class">
+        <xsl:choose>
           <xsl:when test="percentage > percentagegreen">
             normal
             </xsl:when>
@@ -337,8 +337,8 @@
             warning
            </xsl:otherwise>
         </xsl:choose>
-								</xsl:attribute>
-						<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
+        </xsl:attribute>
+      <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
       <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="pass"/></b></td>
       <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="fail"/></b></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
@@ -386,8 +386,8 @@
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="checker"/></td>
       <td align="center">
-						  <xsl:attribute name="class">
-								<xsl:choose>
+        <xsl:attribute name="class">
+        <xsl:choose>
           <xsl:when test="defectcount > 0">
             warning
             </xsl:when>
@@ -395,9 +395,9 @@
            normal
            </xsl:otherwise>
         </xsl:choose>
-								</xsl:attribute>
- 							<a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
-						</td>
+        </xsl:attribute>
+        <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
+      </td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="submitdate"/></td>
 

@@ -1,17 +1,17 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-			<xsl:include href="footer.xsl"/>
-				
+   <xsl:include href="footer.xsl"/>
+    
     <xsl:output method="html"/>
     <xsl:template match="/">
       <html>
-	      <head>
-							<title><xsl:value-of select="cdash/title"/></title>
-		      <meta name="robots" content="noindex,nofollow" />
+       <head>
+       <title><xsl:value-of select="cdash/title"/></title>
+        <meta name="robots" content="noindex,nofollow" />
          <link rel="StyleSheet" type="text/css">
-									<xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-									</link>
+         <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
+         </link>
          <script>
           
           function doSubmit()
@@ -20,9 +20,9 @@
           }
           
          </script>
-	      </head>
+       </head>
        <body bgcolor="#ffffff">
-			
+   
 <table border="0" cellpadding="0" cellspacing="2" width="100%">
 <tr>
 <td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
@@ -57,7 +57,7 @@
 </td>
 </tr>
 </table>
-	
+ 
 <br/>
 
 <div style="color: red;"><xsl:value-of select="cdash/error" /></div>
@@ -106,7 +106,7 @@
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>
-					   </body>
+        </body>
       </html>
     </xsl:template>
 </xsl:stylesheet>
