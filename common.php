@@ -531,20 +531,26 @@ function globr($sDir, $sPattern, $nFlags = NULL)
 } 
 
 /** Get dates */
-function get_dates($date)
+function get_dates($date,$nightlytime)
 {
+  $nightlyhour = substr($nightlytime,0,2);
+		$nightlyminute = substr($nightlytime,3,2);
+		$nightlysecond = substr($nightlytime,6,2);
+		
   if(!isset($date) || strlen($date)==0)
     { 
     $date = date("Ymd");
 				$currenttime = time();
+				$today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
     }
 	 	else
 				{
-				$currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+				$today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
+				$currenttime = $today-1; // minus one second
 				}
   
-  $previousdate = date("Ymd", mktime("23","59","0",substr($date,4,2),substr($date,6,2)-1,substr($date,0,4)));
-  $nextdate = date("Ymd", mktime("23","59","0",substr($date,4,2),substr($date,6,2)+1,substr($date,0,4)));
+  $previousdate = date("Ymd",$today-3600*24-1);
+  $nextdate = date("Ymd",$today+3600*24-1);
   return array($previousdate, $currenttime, $nextdate);
 }
 

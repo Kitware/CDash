@@ -79,7 +79,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   
-  list ($previousdate, $currenttime, $nextdate) = get_dates($date);
+  list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid); 
 
   // Main dashboard section 
@@ -111,8 +111,19 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalna = 0; 
     
   // Check the builds
-  $beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
-  $end_timestamp = $currenttime;
+		// Beginning timestamp is the previous nightly
+		//$beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
+		$nightlyhour = substr($project_array["nightlytime"],0,2);
+		$nightlyminute = substr($project_array["nightlytime"],3,2);
+		$nightlysecond = substr($project_array["nightlytime"],6,2);
+		$end_timestamp = $currenttime;
+		
+		$beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp),date("d",$end_timestamp),date("Y",$end_timestamp));
+		if($end_timestamp<$beginning_timestamp)
+		  {
+				$beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp-24*3600),date("d",$end_timestamp-24*3600),date("Y",$end_timestamp-24*3600));
+		  }
+				
   $builds = mysql_query("SELECT id,siteid,name,type,generator,starttime,endtime,submittime FROM build 
                          WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
                          AND projectid='$projectid' ORDER BY starttime DESC
