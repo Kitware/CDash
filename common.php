@@ -302,10 +302,19 @@ function add_coveragesummary($buildid,$loctested,$locuntested)
 function add_coverage($buildid,$fullpath,$covered,$loctested,$locuntested,
                       $branchstested=0,$branchsuntested=0,$functionstested=0,$functionsuntested=0)
 {
-  // Create a file
-  mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-		$fileid = mysql_insert_id();
-
+  // Create an empty file if doesn't exists
+		$coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+		if(mysql_num_rows($coveragefile)==0)
+		  {
+    mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+		  $fileid = mysql_insert_id();
+    }
+		else
+				{
+				$coveragefile_array = mysql_fetch_array($coveragefile);
+				$fileid = $coveragefile_array["id"];
+				}
+				
   // Insert into coverage
   mysql_query ("INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) 
                 VALUES ('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')");
@@ -328,9 +337,12 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
 						}
 				else if(crc32($filecontent) != crc32($coveragefile_array["file"]))
 				  {
+						$previousfileid = $fileid;
 						mysql_query ("INSERT INTO coveragefile(fullpath,file) VALUES ('$fullpath','$filecontent')");
 					 echo mysql_error();
 						$fileid = mysql_insert_id();
+						mysql_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$previousfileid'");
+						echo mysql_error();
 						}		
 				}
 		return $fileid;
