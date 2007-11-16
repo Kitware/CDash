@@ -133,8 +133,5 @@ $xml .= "</test>\n";
 $xml .= "</cdash>\n";
 
 // Now doing the xslt transition
-$handle = fopen("/tmp/zackdebug.txt", "w");
-fwrite($handle, $xml);
-fclose($handle);
 generate_XSLT($xml,"testDetails");
 ?>
