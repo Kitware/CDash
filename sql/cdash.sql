@@ -266,6 +266,7 @@ CREATE TABLE `project` (
   `logo` mediumblob,
   `public` tinyint(4) NOT NULL default '1',
   `coveragethreshold` smallint(6) NOT NULL default '70',
+  `nightlytime` time NOT NULL default '00:00:00',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
