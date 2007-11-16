@@ -38,9 +38,6 @@ if(isset($submit))
   {
   $command = "mysqldump -u $CDASH_DB_LOGIN --password=$CDASH_DB_PASS --extended-insert=0 $CDASH_DB_NAME";
   $output = shell_exec($command);
-  $handle = fopen("cdash_backup.sql", "w");
-  fwrite($handle, $output);
-  fclose($handle);
 
   header("Content-type: application/octet-stream");
   header("Content-length: ".strlen($output));
