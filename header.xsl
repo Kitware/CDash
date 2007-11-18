@@ -2,15 +2,31 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
         
     <xsl:output method="html"/>
-    <xsl:template name="header" match="/">
-   <script type="text/javascript" SRC="javascript/calendar.js"></script>
-   <div id="calendar" style="visibility:hidden">
+    <xsl:template name="headerhead" match="/">
+  		
+		<!-- Include JQuery -->
+		<script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>	
+	
+	 <!-- Include Menu JavaScript -->
+	 <script src='javascript/menu.js' type='text/javascript'></script>
+			
+			<!-- Include Core Datepicker JavaScript -->
+		<script src="javascript/ui.datepicker.js" type="text/javascript" charset="utf-8"></script>	
+		
+		<!-- Include Calendar JavaScript -->
+		<script src="javascript/cdashmenu.js" type="text/javascript" charset="utf-8"></script>
+		
+			<!-- Include Core Datepicker Stylesheet -->		
+		<link rel="stylesheet" href="javascript/ui.datepicker.css" type="text/css" media="screen" title="core css file" charset="utf-8" />
+		 <!-- Include CDash Menu Stylesheet -->		
+		<link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+		
+		<!-- Include the rounding css -->
+		<script src="javascript/rounded.js"></script>
+</xsl:template>
 
-    <form name="dartForm">
-    <input type="hidden" name="dartDateField"/>
-    </form>
-    <script type="text/javascript" SRC="javascript/DashboardMap.js"></script>
-    </div>
+<xsl:template name="header" match="/">
+
 <table border="0" cellpadding="0" cellspacing="2" width="100%">
 <tr>
 <td align="center"><a href="index.php">
@@ -20,17 +36,68 @@
 </img>
 </a>
 </td>
-<td bgcolor="#6699cc" valign="bottom" width="100%">
+<td id="myid" valign="bottom" width="100%" class="rounded">
+<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">		
 <font color="#ffffff"><h2>Dashboard - <xsl:value-of select="cdash/dashboard/projectname"/></h2>
 <h3><xsl:value-of select="cdash/dashboard/datetime"/></h3></font>
 <div align="right"><a> 
  <xsl:attribute name="href">rss/SubmissionRSS<xsl:value-of select="cdash/dashboard/projectname"/>.xml</xsl:attribute>
 <img src="images/feed-icon16x16.png" border="0"/></a></div>
+</div>
 </td>
+
 </tr>
 <tr>
 <td></td>
 <td>
+<ul id="Nav" class="nav">
+			<li id="Dartboard">
+				<a href="index.php">Dartboard</a>
+				<ul>
+					<li><a href="#Updates">Updates</a></li>
+					<li><a href="#Tests">Tests</a></li>
+					<li><a href="#Build">Build</a></li>
+     <li><a><xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Map</a></li>
+				</ul>
+			</li>
+				<li>
+				<a id="cal" href="#">Calendar</a> 
+		</li>
+			<li>
+				 <a>
+  <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/previousdate"/></xsl:attribute>  
+  Previous
+  </a>
+		</li>
+			<li>
+				<a>
+    <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
+    Today
+    </a>
+		</li>
+					<li>
+				 <a vertical-align="middle">
+						<xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/></xsl:attribute>
+      Next
+      </a>
+		</li>
+			<li>
+				<a href="#">Project</a>
+				<ul>
+				 <li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
+					<li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>CVS</a></li>
+					<li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/bugtracker"/> </xsl:attribute>Bugs</a></li>
+				</ul>
+			</li>
+		<li>
+				<a><xsl:attribute name="href">user.php</xsl:attribute>Login</a>
+			</li>
+		</ul>
+		<span id="calendar" class="cal"></span>
+		
+		
+		
+	<!--	
 <div id="navigator">
 <table border="0" cellpadding="0" cellspacing="0">
 <tr>
@@ -129,8 +196,14 @@ BORDER="0" ALIGN="ABSMIDDLE" src="images/Calendar.gif"/></a>
 </tr>
 </table>
 </div>
+-->
 </td>
 </tr>
 </table>
+
+		<script type="text/javascript">
+Rounded('rounded', 15, 15,0,0);
+</script>
+
     </xsl:template>
 </xsl:stylesheet>

@@ -157,6 +157,8 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+									
+							<xsl:call-template name="headerhead"/>
        </head>
        <body bgcolor="#ffffff">
    
@@ -407,6 +409,9 @@
 </xsl:if>
 
 </table>
+
+
+
 
 <!-- FOOTER -->
 <br/>
