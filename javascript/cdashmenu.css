@@ -1,0 +1,104 @@
+/* Navigation */
+.nav {
+  list-style: none;
+	 margin: 0;
+	 padding: 0;
+	
+  font-family: Arial, Helvetica, sans-serif;
+  z-index: 100;
+  position: relative;
+		top: -2;
+	 /* border-top: 1px solid #000; */
+}
+
+.nav ul { 
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav li {
+  border-left: 1px solid #000;
+  float: left;
+  margin: 0;
+  padding: 0;
+  position: relative;
+		/*opacity: 1.0;*/
+}
+
+.nav li a, .nav li a:link, .nav li a:active, .nav li a:visited {
+  font: bold 1.00em/25px Arial, Helvetica, sans-serif;
+  background: #6699cc;
+  color: #FFFFFF;
+  display: block;
+  padding: 0 9px;
+  text-decoration: none;
+		border-top: 1px solid #000;
+}
+
+.nav li a:hover {
+  background: #ccc;
+  color: #000;	
+
+}
+
+#nav-one li:hover a, 
+#nav-one li.sfHover a {
+  background: #ccc;
+  color: #000;
+}
+#nav-one li:hover ul a, 
+#nav-one li.sfHover ul a {
+  background: #FFFFFF;
+  color: #959595;	
+}
+#nav-one li:hover ul a:hover, 
+#nav-one li.sfHover ul a:hover {
+  background: #ccc;
+  color: #000;	
+}
+
+
+.nav ul {
+  background: #FFFFFF;
+  border-bottom: 1px solid #000;
+  list-style: none;
+  margin: 0;
+  width: 100px;
+  position: absolute;
+  top: -999em;
+  left: -1px;
+}
+
+.nav li:hover ul,
+.nav li.sfHover ul {
+  top: 25px;
+}
+
+.nav ul li {
+  border: 0;
+  float: none;
+}
+.nav ul li div {
+
+}
+
+.nav ul a {
+  border: 1px solid #000;
+  border-bottom: 0;
+  padding-right: 20px;
+  width: 80px;
+  white-space: nowrap;
+}
+
+.nav ul a:hover {
+  background: #ccc;
+  color: #000;
+}
+
+
+.cal {
+	 position: absolute; 
+		top: -999px; /* we hide it from safari */
+		left: 140px; 
+}
