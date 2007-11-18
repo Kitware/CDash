@@ -158,7 +158,6 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
 									
-							<xsl:call-template name="headerhead"/>
        </head>
        <body bgcolor="#ffffff">
    
