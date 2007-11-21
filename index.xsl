@@ -60,14 +60,14 @@
       </img>
       </a>
       </xsl:if> 
-						
-						<!-- If user is admin of the project propose to group this build -->
+            
+            <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1">
       <a alt="build group"><xsl:attribute name="href">javascript:alert("<xsl:value-of select="generator"/>");</xsl:attribute>
       <img SRC="images/folder.gif" border="0"></img>
       </a>
       </xsl:if>
-						
+            
       </td>
       <td align="right" bgcolor="#ffffff"><b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
       </td>
@@ -164,7 +164,7 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-									
+                  
        </head>
        <body bgcolor="#ffffff">
    

@@ -3,26 +3,26 @@
         
     <xsl:output method="html"/>
     <xsl:template name="header" match="/">
-  		
-		<!-- Include JQuery -->
-		<script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>	
-	
-	 <!-- Include Menu JavaScript -->
-	 <script src='javascript/menu.js' type='text/javascript'></script>
-			
-			<!-- Include Core Datepicker JavaScript -->
-		<script src="javascript/ui.datepicker.js" type="text/javascript" charset="utf-8"></script>	
-		
-		<!-- Include Calendar JavaScript -->
-		<script src="javascript/cdashmenu.js" type="text/javascript" charset="utf-8"></script>
-		
-			<!-- Include Core Datepicker Stylesheet -->		
-		<link rel="stylesheet" href="javascript/ui.datepicker.css" type="text/css" media="screen" title="core css file" charset="utf-8" />
-		 <!-- Include CDash Menu Stylesheet -->		
-		<link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
-		
-		<!-- Include the rounding css -->
-		<script src="javascript/rounded.js"></script>
+      
+    <!-- Include JQuery -->
+    <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
+  
+   <!-- Include Menu JavaScript -->
+   <script src='javascript/menu.js' type='text/javascript'></script>
+      
+      <!-- Include Core Datepicker JavaScript -->
+    <script src="javascript/ui.datepicker.js" type="text/javascript" charset="utf-8"></script>  
+    
+    <!-- Include Calendar JavaScript -->
+    <script src="javascript/cdashmenu.js" type="text/javascript" charset="utf-8"></script>
+    
+      <!-- Include Core Datepicker Stylesheet -->    
+    <link rel="stylesheet" href="javascript/ui.datepicker.css" type="text/css" media="screen" title="core css file" charset="utf-8" />
+     <!-- Include CDash Menu Stylesheet -->    
+    <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+    
+    <!-- Include the rounding css -->
+    <script src="javascript/rounded.js"></script>
 
 <table border="0" cellpadding="0" cellspacing="2" width="100%">
 <tr>
@@ -34,7 +34,7 @@
 </a>
 </td>
 <td valign="bottom" width="100%">
-<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">		
+<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">    
 <font color="#ffffff"><h2>Dashboard - <xsl:value-of select="cdash/dashboard/projectname"/></h2>
 <h3><xsl:value-of select="cdash/dashboard/datetime"/></h3></font>
 <div align="right"><a> 
@@ -48,62 +48,62 @@
 <td></td>
 <td>
 <ul id="Nav" class="nav">
-			<li id="Dartboard">
-				<a href="index.php">Dartboard</a>
-				<ul>
-					<li><a href="#Updates">Updates</a></li>
-					<li><a href="#Tests">Tests</a></li>
-					<li><a href="#Build">Build</a></li>
+      <li id="Dartboard">
+        <a href="index.php">Dartboard</a>
+        <ul>
+          <li><a href="#Updates">Updates</a></li>
+          <li><a href="#Tests">Tests</a></li>
+          <li><a href="#Build">Build</a></li>
      <li><a><xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Map</a></li>
-				</ul>
-			</li>
-				<li>
-				<a id="cal" href="#">Calendar</a> 
-		</li>
-			<li>
-				 <a>
+        </ul>
+      </li>
+        <li>
+        <a id="cal" href="#">Calendar</a> 
+    </li>
+      <li>
+         <a>
   <xsl:attribute name="href">?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/previousdate"/></xsl:attribute>
   Previous
   </a>
-		</li>
-			<li>
-				<a>
+    </li>
+      <li>
+        <a>
     <xsl:attribute name="href">?project=<xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
     Today
     </a>
-		</li>
-					<li>
-				 <a vertical-align="middle">
-						<xsl:attribute name="href">?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/></xsl:attribute>
+    </li>
+          <li>
+         <a vertical-align="middle">
+            <xsl:attribute name="href">?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/></xsl:attribute>
       Next
       </a>
-		</li>
-			<li>
-				<a href="#">Project</a>
-				<ul>
-				 <li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
-					<li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>CVS</a></li>
-					<li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/bugtracker"/> </xsl:attribute>Bugs</a></li>
-				</ul>
-			</li>
-		<li>
-				<a><xsl:attribute name="href">user.php</xsl:attribute>
-				 <xsl:choose>
+    </li>
+      <li>
+        <a href="#">Project</a>
+        <ul>
+         <li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
+          <li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>CVS</a></li>
+          <li><a><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/bugtracker"/> </xsl:attribute>Bugs</a></li>
+        </ul>
+      </li>
+    <li>
+        <a><xsl:attribute name="href">user.php</xsl:attribute>
+         <xsl:choose>
           <xsl:when test="cdash/user/id>0">
-            My CDash  	
+            My CDash    
           </xsl:when>
           <xsl:otherwise>
              Login
            </xsl:otherwise>
-        </xsl:choose>	
-				</a>
-			</li>
-		</ul>
-		<span id="calendar" class="cal"></span>
-		
-		
-		
-	<!--	
+        </xsl:choose>  
+        </a>
+      </li>
+    </ul>
+    <span id="calendar" class="cal"></span>
+    
+    
+    
+  <!--  
 <div id="navigator">
 <table border="0" cellpadding="0" cellspacing="0">
 <tr>

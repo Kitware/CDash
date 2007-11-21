@@ -37,7 +37,7 @@
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>
-					   </body>
+             </body>
       </html>
     </xsl:template>
 </xsl:stylesheet>

@@ -51,7 +51,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $noforcelogin = 1;
   include("config.php");
   include('login.php');
-		
+    
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)
     {
@@ -115,20 +115,20 @@ function generate_main_dashboard_XML($projectid,$date)
   //echo htmlspecialchars($xml, ENT_QUOTES);
   //echo "</pre>";
 
-		// User
-		if(isset($_SESSION['cdash']))
-		  {
-				$xml .= "<user>";
-				$userid = $_SESSION['cdash']['loginid'];
-				$user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
-				$user2project_array = mysql_fetch_array($user2project);
-				$user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
-				$user_array = mysql_fetch_array($user);
-				$xml .= add_XML_value("id",$userid);
-				$xml .= add_XML_value("admin",$user_array["admin"]);
-				$xml .= "</user>";
-				}
-		
+    // User
+    if(isset($_SESSION['cdash']))
+      {
+        $xml .= "<user>";
+        $userid = $_SESSION['cdash']['loginid'];
+        $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
+        $user2project_array = mysql_fetch_array($user2project);
+        $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
+        $user_array = mysql_fetch_array($user);
+        $xml .= add_XML_value("id",$userid);
+        $xml .= add_XML_value("admin",$user_array["admin"]);
+        $xml .= "</user>";
+        }
+    
   // builds
   $xml .= "<builds>";
 
