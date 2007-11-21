@@ -33,7 +33,7 @@
 </img>
 </a>
 </td>
-<td id="myid" valign="bottom" width="100%" class="rounded">
+<td valign="bottom" width="100%">
 <div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">		
 <font color="#ffffff"><h2>Dashboard - <xsl:value-of select="cdash/dashboard/projectname"/></h2>
 <h3><xsl:value-of select="cdash/dashboard/datetime"/></h3></font>
@@ -207,8 +207,8 @@ BORDER="0" ALIGN="ABSMIDDLE" src="images/Calendar.gif"/></a>
 </tr>
 </table>
 
-		<script type="text/javascript">
-Rounded('rounded', 15, 15,0,0);
+<script type="text/javascript">
+  Rounded('rounded', 15, 15,0,0);
 </script>
 
     </xsl:template>
