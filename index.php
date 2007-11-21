@@ -22,6 +22,7 @@ include("common.php");
 function generate_index_table()
 { 
   include("config.php");
+
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= add_XML_value("title","CDash");
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -80,7 +81,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  
+
   list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid); 
 
@@ -100,7 +101,20 @@ function generate_main_dashboard_XML($projectid,$date)
   
   </dashboard>
   ";
-  
+
+  // updates
+  $dates = get_related_dates($projectname, $date);
+  $xml .= "<updates>";
+  $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .
+    gmdate("Ymd", $dates['nightly-0']) . "</url>";
+  $xml .= "<timestamp>" . gmdate("Y-m-d H:i:s", $dates['nightly-0']) . " GMT" .
+    "</timestamp>";
+  $xml .= "</updates>";
+
+  //echo "<pre>";
+  //echo htmlspecialchars($xml, ENT_QUOTES);
+  //echo "</pre>";
+
 		// User
 		if(isset($_SESSION['cdash']))
 		  {
@@ -308,7 +322,7 @@ if(mysql_select_db("$CDASH_DB_NAME",$db) === FALSE)
   echo "<script language=\"javascript\">window.location='install.php'</script>";
   return;
   }
-  
+
 @$projectname = $_GET["project"];
 if(!isset($projectname )) // if the project name is not set we display the table of projects
   {

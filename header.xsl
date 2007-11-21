@@ -27,7 +27,7 @@
 <table border="0" cellpadding="0" cellspacing="2" width="100%">
 <tr>
 <td align="center"><a href="index.php">
-<img  border="0">
+<img  border="0" height="100">
 <xsl:attribute name="alt"><xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
 <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
 </img>
@@ -62,19 +62,19 @@
 		</li>
 			<li>
 				 <a>
-  <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/previousdate"/></xsl:attribute>  
+  <xsl:attribute name="href">?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/previousdate"/></xsl:attribute>
   Previous
   </a>
 		</li>
 			<li>
 				<a>
-    <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
+    <xsl:attribute name="href">?project=<xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
     Today
     </a>
 		</li>
 					<li>
 				 <a vertical-align="middle">
-						<xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/></xsl:attribute>
+						<xsl:attribute name="href">?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/></xsl:attribute>
       Next
       </a>
 		</li>

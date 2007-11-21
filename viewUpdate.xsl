@@ -21,7 +21,12 @@
 <br/>
 
 <h3>
+<xsl:if test="cdash/build/site">
 Files changed <xsl:value-of select="cdash/build/site"/> -- <xsl:value-of select="cdash/build/buildname"/> as of <xsl:value-of select="cdash/build/buildtime"/>
+</xsl:if>
+<xsl:if test="cdash/updates/timestamp">
+Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
+</xsl:if>
 </h3>
 <script type="text/javascript">var Icons = "images/";</script>
 <script type="text/javascript" SRC="javascript/tree.js"></script>
@@ -31,8 +36,8 @@ Files changed <xsl:value-of select="cdash/build/site"/> -- <xsl:value-of select=
 <p></p>
 <script LANGUAGE="JavaScript">
 
-    <xsl:value-of select="cdash/updates"/>
-     
+    <xsl:value-of select="cdash/updates/javascript"/>
+
 </script>
 
 <script type="text/javascript" SRC="javascript/tree_init.js"></script>

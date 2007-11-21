@@ -171,14 +171,14 @@
        <xsl:call-template name="header"/>
 <br/>
 
-<xsl:if test="cdash/builds/updates">
+<xsl:if test="cdash/updates">
 <table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
    <tr class="table-heading">
       <td>
-         <h3><a href="Update.html">1 Files Changed
-               </a>
-            by 1 Authors
-            as of 2007-10-10 01:00 GMT
+         <h3>
+         <a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
+         Nightly Changes</a> as of
+         <xsl:value-of select="cdash/updates/timestamp"/>
          </h3>
       </td>
    </tr>

@@ -71,8 +71,9 @@ $xml .="<dashboard>
   $xml .= add_XML_value("buildtime",$build_array["starttime"]);  
    
   $xml .= "</build>";
-  
+
   $xml .= "<updates>";
+  $xml .= "<javascript>";
   
   // Regretfully this is not correct and need to be fixes
   $updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid' ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
@@ -149,6 +150,7 @@ $xml .="<dashboard>
   $xml .= "dbAdd (true, \"Modified files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   $xml .= "dbAdd (true, \"Conflicting files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
 
+  $xml .= "</javascript>";
   $xml .= "</updates>";
   $xml .= "</cdash>";
  
