@@ -17,12 +17,11 @@
 =========================================================================*/
 include("config.php");
 include("common.php");
-  
+
 /** Generate the index table */
 function generate_index_table()
-{
+{ 
   include("config.php");
-  
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= add_XML_value("title","CDash");
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -48,7 +47,10 @@ function generate_index_table()
 /** Generate the main dashboard XML */
 function generate_main_dashboard_XML($projectid,$date)
 {
+  $noforcelogin = 1;
   include("config.php");
+  include('login.php');
+		
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)
     {
@@ -99,6 +101,20 @@ function generate_main_dashboard_XML($projectid,$date)
   </dashboard>
   ";
   
+		// User
+		if(isset($_SESSION['cdash']))
+		  {
+				$xml .= "<user>";
+				$userid = $_SESSION['cdash']['loginid'];
+				$user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
+				$user2project_array = mysql_fetch_array($user2project);
+				$user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
+				$user_array = mysql_fetch_array($user);
+				$xml .= add_XML_value("id",$userid);
+				$xml .= add_XML_value("admin",$user_array["admin"]);
+				$xml .= "</user>";
+				}
+		
   // builds
   $xml .= "<builds>";
 
@@ -116,7 +132,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $nightlyhour = substr($project_array["nightlytime"],0,2);
   $nightlyminute = substr($project_array["nightlytime"],3,2);
   $nightlysecond = substr($project_array["nightlytime"],6,2);
-  $end_timestamp = $currenttime;
+  $end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
   
   $beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp),date("d",$end_timestamp),date("Y",$end_timestamp));
   if($end_timestamp<$beginning_timestamp)
@@ -278,7 +294,6 @@ function generate_main_dashboard_XML($projectid,$date)
 
   return $xml;
 } 
-
 
 // Check if we can connect to the database
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");

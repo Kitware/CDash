@@ -15,7 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
+include_once("config.php");
 
 /** Authentication function */
 function auth()
@@ -105,7 +105,7 @@ function auth()
 function LoginForm($loginerror)
 {  
   include("config.php");
-  include("common.php"); 
+  include_once("common.php"); 
   
   $xml = "<cdash>";
   $xml .= "<title>Login</title>";
@@ -131,7 +131,7 @@ $uri = basename($_SERVER['PHP_SELF']);
 $stamp = md5(srand(5));  
 $session_OK = 0;
 @$loginerror = $GLOBALS["loginerror"];
-if(!auth()):                 // authentication failed 
+if(!auth()  && !@$noforcelogin):                 // authentication failed 
   LoginForm(@$loginerror); // display login form 
   $session_OK=0;
 else:                        // authentication was successful 

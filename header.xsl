@@ -87,7 +87,16 @@
 				</ul>
 			</li>
 		<li>
-				<a><xsl:attribute name="href">user.php</xsl:attribute>Login</a>
+				<a><xsl:attribute name="href">user.php</xsl:attribute>
+				 <xsl:choose>
+          <xsl:when test="cdash/user/id>0">
+            My CDash  	
+          </xsl:when>
+          <xsl:otherwise>
+             Login
+           </xsl:otherwise>
+        </xsl:choose>	
+				</a>
 			</li>
 		</ul>
 		<span id="calendar" class="cal"></span>
