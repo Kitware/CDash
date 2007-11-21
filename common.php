@@ -546,11 +546,11 @@ function get_dates($date,$nightlytime)
    else
     {
     $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
-    $currenttime = $today-1; // minus one second
+    $currenttime = $today; // minus one second
     }
   
-  $previousdate = date("Ymd",$today-3600*24-1);
-  $nextdate = date("Ymd",$today+3600*24-1);
+  $previousdate = date("Ymd",$today-3600*24);
+  $nextdate = date("Ymd",$today+3600*24);
   return array($previousdate, $currenttime, $nextdate);
 }
 
