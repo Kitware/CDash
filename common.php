@@ -290,6 +290,24 @@ function get_project_id($projectname)
   return -1;
 }
 
+/** Get the project name from the project id */
+function get_project_name($projectid)
+{
+  include("config.php");
+
+  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  mysql_select_db("$CDASH_DB_NAME",$db);
+
+  $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
+  if(mysql_num_rows($project)>0)
+    {
+    $project_array = mysql_fetch_array($project);
+    return $project_array["name"];
+    }
+    
+  return "NA";
+}
+
 /** Add a new coverage */
 function add_coveragesummary($buildid,$loctested,$locuntested)
 {
