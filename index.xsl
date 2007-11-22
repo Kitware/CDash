@@ -63,10 +63,14 @@
             
             <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1">
-      <a alt="build group"><xsl:attribute name="href">javascript:alert("<xsl:value-of select="generator"/>");</xsl:attribute>
-      <img SRC="images/folder.gif" border="0"></img>
-      </a>
-      </xsl:if>
+      <a>
+						<xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
+						<img name="buildgroup" SRC="images/folder.png" border="0"></img>
+						</a>
+      <div>
+						<xsl:attribute name="id">buildgroup_<xsl:value-of select="buildid"/></xsl:attribute>
+						</div>
+						</xsl:if>
             
       </td>
       <td align="right" bgcolor="#ffffff"><b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
@@ -165,6 +169,10 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
                   
+									<!-- Include BuildGroup JavaScript -->
+		       <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>	
+
+
        </head>
        <body bgcolor="#ffffff">
    
