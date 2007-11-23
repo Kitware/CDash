@@ -37,6 +37,7 @@ $projectid = $build_array["projectid"];
 
 @$groupid = $_POST["groupid"];
 @$expected = $_POST["expected"];
+@$definerule = $_POST["definerule"];
 if($submit)
 {
 // Remove the group
@@ -44,10 +45,22 @@ $prevgroup = mysql_fetch_array(mysql_query("SELECT groupid as id FROM build2grou
 $prevgroupid = $prevgroup["id"];	
 																				
 mysql_query("DELETE FROM build2group WHERE groupid='$prevgroupid' AND buildid='$buildid'");
-echo mysql_error();
+
 // Insert into the group
 mysql_query("INSERT INTO build2group(groupid,buildid,expected) VALUES ('$groupid','$buildid','$expected')");
-echo mysql_error();		
+
+if($definerule)
+  {
+  // Delete any previous rule
+   mysql_query("DELETE FROM build2grouprule 
+		             WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
+															AND buildname='$buildname' AND siteid='$siteid'");
+
+  // Add the new rule
+  mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected) 
+		             VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected')");
+  }
+
 return;
 }
 
@@ -73,17 +86,20 @@ $group = mysql_query("SELECT name,id FROM buildgroup WHERE id NOT IN
 </head>
 
 <script type="text/javascript" charset="utf-8">
-var expectedbuild = 0;
-function addexpectedbuild_click(value)
+function addbuildgroup_click(buildid,groupid,definerule)
 {
-  expectedbuild = value;
-}
+  var expected = "expected_"+buildid+"_"+groupid;
+		var t = document.getElementById(expected);
+		
+		var expectedbuild = 0;
+  if(t.checked)
+		  {
+				expectedbuild = 1;
+		  }
 
-function addbuildgroup_click(buildid,groupid)
-{
   var group = "#buildgroup_"+buildid;
 		$(group).html("addinggroup");
-		$.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild});
+		$.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild,definerule:definerule});
 		$(group).html("added to group!");
 	 $(group).fadeOut('slow');
 		window.location = "";
@@ -98,8 +114,11 @@ while($group_array = mysql_fetch_array($group))
 ?>
 	 <tr>
     <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array["name"] ?></b>:		</font></td>
-    <td bgcolor="#DDDDDD" width="20%"><font size="2"><input onclick="javascript:addexpectedbuild_click(this.value)" name="expected" type="checkbox" value=\"1\"/> expected</font></td>
-    <td bgcolor="#DDDDDD" width="45%"><font size="2"><a href="#" onclick="javascript:addbuildgroup_click(<?php echo $buildid ?>,<?php echo $group_array["id"]?>)">[move to group]</a></font></td>
+    <td bgcolor="#DDDDDD" width="20%"><font size="2"><input id="expected_<?php echo $buildid."_".$group_array["id"] ?>" type="checkbox"/> expected</font></td>
+    <td bgcolor="#DDDDDD" width="45%"><font size="2"><a href="#" onclick="javascript:addbuildgroup_click(<?php echo $buildid ?>,<?php echo $group_array["id"]?>,0)">[move to group]</a><br/>
+				<a href="#" onclick="javascript:addbuildgroup_click(<?php echo $buildid ?>,<?php echo $group_array["id"]?>,1)">[move and redefine rule]</a>
+				</font></td>
+				
   </tr>
 <?php
 		}
