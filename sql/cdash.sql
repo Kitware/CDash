@@ -38,6 +38,51 @@ CREATE TABLE `build` (
   KEY `projectid` (`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `build2group`
+-- 
+
+CREATE TABLE `build2group` (
+  `groupid` int(11) NOT NULL default '0',
+  `buildid` int(11) NOT NULL default '0',
+  `expected` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (`buildid`),
+  KEY `groupid` (`groupid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `build2grouprule`
+-- 
+
+CREATE TABLE `build2grouprule` (
+  `groupid` int(11) NOT NULL default '0',
+  `buildtype` varchar(20) NOT NULL default '',
+  `buildname` varchar(255) NOT NULL default '',
+  `siteid` int(11) NOT NULL default '0',
+  `expected` tinyint(4) NOT NULL default '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `buildgroup`
+-- 
+
+CREATE TABLE `buildgroup` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `position` tinyint(4) NOT NULL default '0',
+  `projectid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `projectid` (`projectid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
 -- --------------------------------------------------------
 
 -- 
