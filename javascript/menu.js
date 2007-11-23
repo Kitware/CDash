@@ -6,6 +6,7 @@ function checkHover() {
 	if (obj) {
 		obj.find('ul').fadeOut('fast');
 		calhover = null;
+		//obj2 = null;
 	} //if
 } //checkHover
 
@@ -63,15 +64,15 @@ function findCalendarXPos(obj)
 // Main function
 $(document).ready(function() {		
 
-		$('#cal').hover(function() {
+		$('#cal').click(function() {
 		if (obj2) {
 			$('#calendar').fadeOut('fast');
 			obj2 = null;
+			return;
 		} //if
 		
 		//var posX = findPosX(document.getElementById("cal"));
 		var posX = findCalendarXPos(document.getElementById("cal"));
-		
 		var posY = findPosY(document.getElementById("cal"));
 		
 		
@@ -79,12 +80,13 @@ $(document).ready(function() {
 		$('#calendar').css({ top:posY+height });
 		$('#calendar').css({ left:posX-50 });
 		$('#calendar').fadeIn('fast');
-		calhover = 1;
-	}, function() {
 		obj2 = $(this);
-		setTimeout(
+		//calhover = 1;
+	}, function() {
+		//obj2 = $(this);
+		/*setTimeout(
 			"checkHoverCal()",
-			400);
+			400);*/
 	});
 		
 	// If we are hover the calendar
