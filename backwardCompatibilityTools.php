@@ -51,14 +51,15 @@ if($CreateDefaultGroups)
 else if($AssignBuildToDefaultGroups)
   {
 		// Loop throught the builds
-		$builds = mysql_query("SELECT id,type FROM build WHERE id NOT IN (SELECT buildid as id FROM build2group)");
+		$builds = mysql_query("SELECT id,type,projectid FROM build WHERE id NOT IN (SELECT buildid as id FROM build2group)");
 	
 		while($build_array = mysql_fetch_array($builds))
 					{
 					$buildid = $build_array["id"];
 					$buildtype = $build_array["type"];
+					$projectid = $build_array["projectid"];
 					
-					$buildgroup_array = mysql_fetch_array(mysql_query("SELECT id FROM buildgroup WHERE name='$buildtype'"));
+					$buildgroup_array = mysql_fetch_array(mysql_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'"));
      
 					$groupid = $buildgroup_array["id"];
 				 mysql_query("INSERT INTO build2group(buildid,groupid,expected) VALUES ('$buildid','$groupid','0')"); 
