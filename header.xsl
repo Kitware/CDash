@@ -27,7 +27,7 @@
 <table border="0" cellpadding="0" cellspacing="2" width="100%">
 <tr>
 <td align="center"><a href="index.php">
-<img  border="0" height="100">
+<img  border="0">
 <xsl:attribute name="alt"><xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
 <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
 </img>
