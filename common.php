@@ -410,7 +410,6 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
 
   // Insert the build into the proper group
   // 1) Check if we have any build2grouprules for this build
-		
 		$build2grouprule = mysql_query("SELECT b2g.groupid,b2g.expected FROM build2grouprule AS b2g, buildgroup as bg
 		                                WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
 																																		AND (b2g.groupid=bg.id AND bg.projectid='$projectid'");
