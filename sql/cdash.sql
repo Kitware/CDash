@@ -64,7 +64,8 @@ CREATE TABLE `build2grouprule` (
   `buildtype` varchar(20) NOT NULL default '',
   `buildname` varchar(255) NOT NULL default '',
   `siteid` int(11) NOT NULL default '0',
-  `expected` tinyint(4) NOT NULL default '0'
+  `expected` tinyint(4) NOT NULL default '0',
+  KEY `groupid` (`groupid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
