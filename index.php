@@ -177,8 +177,8 @@ function generate_main_dashboard_XML($projectid,$date)
 						
 						// We assume that the group position are continuous in N
 						// So we fill in the gap if we are jumping
-						$prevpos = $previousgroupposition;
-						if($prevpos == -1)
+						$prevpos = $previousgroupposition+1;
+						if($prevpos == 0)
 						  {
 								$prevpos = 1;
 						  }
@@ -338,8 +338,8 @@ function generate_main_dashboard_XML($projectid,$date)
    	}
 				
 		// Fill in the rest of the info
-		$prevpos = $previousgroupposition;
-		if($prevpos == -1)
+		$prevpos = $previousgroupposition+1;
+		if($prevpos == 0)
 		  {
 				$prevpos = 1;
 		  }
