@@ -41,9 +41,9 @@
 <a href="user.php">[back]</a>
 <br/><br/>
 
-<xsl:when test="cdash/alert">
+<xsl:if test="string-length(cdash/alert)>0">
 <b><xsl:value-of select="cdash/alert"/></b>
-</xsl:when>
+</xsl:if>
 <br/><br/>
 
 <form name="form1" enctype="multipart/form-data" method="post" action="">
