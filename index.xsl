@@ -3,19 +3,18 @@
     
     <xsl:template name="builds">
     <xsl:param name="type"/>
-    <xsl:param name="type_name"/>
-   <xsl:if test="count($type)=0">
+   <xsl:if test="count($type/build)=0">
    <tr class="table-heading">
       <td colspan="14">
-          <h3>No <xsl:value-of select="$type_name"/> Builds</h3>
+          <h3>No <xsl:value-of select="name"/> Builds</h3>
       </td>
    </tr>
    </xsl:if>
    
-    <xsl:if test="count($type)>0">
+    <xsl:if test="count($type/build)>0">
         <tr class="table-heading">
       <td colspan="14">
-          <h3><xsl:value-of select="$type_name" /> Builds</h3>
+          <h3><xsl:value-of select="$type/name"/></h3>
       </td>
    </tr>
    <tr class="table-heading">
@@ -42,7 +41,7 @@
       <th align="center">Min</th>
    </tr>
    
-      <xsl:for-each select="$type">
+      <xsl:for-each select="$type/build">
    <tr valign="top">
       <td align="left" bgcolor="#ffffff">
       <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/></xsl:attribute><xsl:value-of select="site"/></a>
@@ -81,7 +80,7 @@
       <xsl:attribute name="align">right</xsl:attribute>
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="build/error > 0">
+          <xsl:when test="compilation/error > 0">
             error
             </xsl:when>
           <xsl:otherwise>
@@ -89,12 +88,12 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="build/error"/> </a></b>
+      <b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/error"/> </a></b>
       </td>
       <td align="right">
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="build/warning > 0">
+          <xsl:when test="compilation/warning > 0">
             warning
             </xsl:when>
           <xsl:otherwise>
@@ -102,9 +101,9 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <b><a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="build/warning"/></a></b>
+      <b><a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/warning"/></a></b>
       </td>
-      <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="build/time"/></td>
+      <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="compilation/time"/></td>
       <td align="right">
       <xsl:attribute name="class">
         <xsl:choose>
@@ -197,11 +196,14 @@
 <table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
 
 
-<xsl:call-template name="builds">
-<xsl:with-param name="type" select="cdash/builds/nightly"/>
-<xsl:with-param name="type_name">Nightly</xsl:with-param>
-</xsl:call-template>
+<xsl:for-each select="cdash/buildgroup">
+  <xsl:call-template name="builds">
+  <xsl:with-param name="type" select="."/>
+  <!-- <xsl:with-param name="type_name">Nightly</xsl:with-param> -->
+  </xsl:call-template>
+</xsl:for-each>
 
+<!-- 
 <xsl:call-template name="builds">
 <xsl:with-param name="type" select="cdash/builds/continuous"/>
 <xsl:with-param name="type_name">Continuous</xsl:with-param>
@@ -211,6 +213,7 @@
 <xsl:with-param name="type" select="cdash/builds/experimental"/>
 <xsl:with-param name="type_name">Experimental</xsl:with-param>
 </xsl:call-template>
+-->
 
 <xsl:if test="count(cdash/builds/nightly)+count(cdash/builds/continuous)+count(cdash/builds/experimental)>0">
    <tr>

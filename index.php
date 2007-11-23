@@ -130,8 +130,8 @@ function generate_main_dashboard_XML($projectid,$date)
         }
     
   // builds
-  $xml .= "<builds>";
-
+  //$xml .= "<builds>";
+		
   $totalerrors = 0;
   $totalwarnings = 0;
   $totalconfigure = 0;
@@ -154,13 +154,47 @@ function generate_main_dashboard_XML($projectid,$date)
     $beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp-24*3600),date("d",$end_timestamp-24*3600),date("Y",$end_timestamp-24*3600));
     }
     
-  $builds = mysql_query("SELECT id,siteid,name,type,generator,starttime,endtime,submittime FROM build 
-                         WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
-                         AND projectid='$projectid' ORDER BY starttime DESC
+  $builds = mysql_query("SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,g.position FROM build AS b, build2group AS b2g,buildgroup AS g
+                         WHERE UNIX_TIMESTAMP(b.starttime)<$end_timestamp AND UNIX_TIMESTAMP(b.starttime)>$beginning_timestamp
+                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND b2g.groupid=g.id ORDER BY g.position ASC,b.starttime DESC
                          ");
   echo mysql_error();
+		
+		// The SQL results are ordered by group so this should work
+		// Group position have to be continuous
+		$previousgroupposition = -1;
+		
   while($build_array = mysql_fetch_array($builds))
-    {    
+    {	
+				$groupposition = $build_array["position"];
+				if($previousgroupposition != $groupposition)
+				  {		
+						$groupname = $build_array["groupname"];
+						if($previousgroupposition != -1)
+						  {
+						  $xml .= "</buildgroup>";
+						  }
+						
+						// We assume that the group position are continuous in N
+						// So we fill in the gap if we are jumping
+						$prevpos = $previousgroupposition;
+						if($prevpos == -1)
+						  {
+								$prevpos = 1;
+						  }
+						for($i=$prevpos;$i<$groupposition;$i++)
+					  	{
+								$group = mysql_fetch_array(mysql_query("SELECT name FROM buildgroup WHERE position='$i' AND projectid='$projectid'"));
+								$xml .= "<buildgroup>";		
+								$xml .= add_XML_value("name",$group["name"]);
+								$xml .= "</buildgroup>";		
+						  }
+								
+						$xml .= "<buildgroup>";		
+						$xml .= add_XML_value("name",$groupname);
+						$previousgroupposition = $groupposition;
+				  }
+				
     $buildid = $build_array["id"];
     $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
     $nconfigure = mysql_num_rows($configure);
@@ -171,8 +205,9 @@ function generate_main_dashboard_XML($projectid,$date)
     if($nconfigure > 0)
     {
     // Get the site name
-    $xml .= "<".strtolower($build_array["type"]).">";
-    
+				
+    $xml .= "<build>";
+    $xml .= add_XML_value("type",strtolower($build_array["type"]));
     $xml .= add_XML_value("site",$site_array["name"]);
     $xml .= add_XML_value("siteid",$siteid);
     $xml .= add_XML_value("buildname",$build_array["name"]);
@@ -190,7 +225,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
     $xml .= add_XML_value("update",mysql_num_rows($update));
     
-    $xml .= "<build>";
+    $xml .= "<compilation>";
     
     // Find the number of errors and warnings
     $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
@@ -205,7 +240,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("warning",$nwarnings);
     $diff = (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;
     $xml .= "<time>".$diff."</time>";
-    $xml .= "</build>";
+    $xml .= "</compilation>";
     
     // Get the Configure options
     $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
@@ -249,7 +284,10 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $xml .= add_XML_value("builddate",$build_array["starttime"]);
     $xml .= add_XML_value("submitdate",$build_array["submittime"]);
-    $xml .= "</".strtolower($build_array["type"]).">";
+    //$xml .= "</".strtolower($build_array["type"]).">";
+			$xml .= "</build>";
+				
+				
     } // END IF CONFIGURE
     
     // Coverage
@@ -293,7 +331,29 @@ function generate_main_dashboard_XML($projectid,$date)
       
       
     } // end looping through builds
- 
+				
+		if(mysql_num_rows($builds)>0)
+		  {
+ 	  $xml .= "</buildgroup>";
+   	}
+				
+		// Fill in the rest of the info
+		$prevpos = $previousgroupposition;
+		if($prevpos == -1)
+		  {
+				$prevpos = 1;
+		  }
+				
+		$groupposition_array = mysql_fetch_array(mysql_query("SELECT position FROM buildgroup WHERE projectid='$projectid' ORDER BY position DESC LIMIT 1"));
+		$finalpos = $groupposition_array["position"];
+		for($i=$prevpos;$i<=$finalpos;$i++)
+		 	{
+				$group = mysql_fetch_array(mysql_query("SELECT name FROM buildgroup WHERE position='$i' AND projectid='$projectid'"));
+				$xml .= "<buildgroup>";		
+				$xml .= add_XML_value("name",$group["name"]);
+				$xml .= "</buildgroup>";		
+			 }
+	
   $xml .= add_XML_value("totalConfigure",$totalconfigure);
   $xml .= add_XML_value("totalError",$totalerrors);
   $xml .= add_XML_value("totalWarning",$totalwarnings);
@@ -303,7 +363,9 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= add_XML_value("totalPass",$totalpass); 
   $xml .= add_XML_value("totalNA",$totalna);
    
-  $xml .= "</builds>";
+  //$xml .= "</builds>";
+		
+		
   $xml .= "</cdash>";
 
   return $xml;

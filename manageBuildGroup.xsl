@@ -18,7 +18,7 @@
 
        </head>
        <body bgcolor="#ffffff">
-   
+
 <table border="0" cellpadding="0" cellspacing="2" width="100%">
 <tr>
 <td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
@@ -35,8 +35,10 @@
 </td>
 </tr>
 </table>
-
 <br/>
+
+<a href="user.php">[back]</a>
+<br/><br/>
 
 <xsl:choose>
  <xsl:when test="cdash/group_created=1">

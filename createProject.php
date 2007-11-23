@@ -62,7 +62,7 @@ if($Submit)
   
   $NightlyTime = $NightlyHour.":".$NightlyMinute.":".$NightlySecond;
   
-  //we should probably check the type of the image here to make sure the user
+  //We should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
   $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,logo,public,coveragethreshold,nightlytime) 
    VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$contents','$Public','$CoverageThreshold','$NightlyTime')"; 
@@ -75,8 +75,14 @@ if($Submit)
   else
     {
     echo mysql_error();
+				return;
     }
-  
+		
+		// Add the default groups
+		mysql_query("INSERT INTO buildgroup(name,position,projectid) VALUES ('Nightly','1','$projectid')"); 
+		mysql_query("INSERT INTO buildgroup(name,position,projectid) VALUES ('Continuous','2','$projectid')"); 
+		mysql_query("INSERT INTO buildgroup(name,position,projectid) VALUES ('Experimental','3','$projectid')"); 	
+		
   /** Add the logo if any */
   if($contents)
     {  
@@ -94,18 +100,19 @@ if($Submit)
       $sql = "INSERT INTO image(img, extension, checksum)
        VALUES ('$contents', '$filetype', '$checksum')";
       if(mysql_query("$sql"))
- {
- $imgid = mysql_insert_id();
-        }
-      }
-    if($imgid)
-      {
-      $sql = "INSERT INTO image2project(imgid, projectid)
-       VALUES ('$imgid', '$projectid')";
-      if(!mysql_query("$sql"))
- {
- echo mysql_error();
- }
+								{
+								$imgid = mysql_insert_id();
+															}
+													}
+											if($imgid)
+													{
+													$sql = "INSERT INTO image2project(imgid, projectid)
+														VALUES ('$imgid', '$projectid')";
+													if(!mysql_query("$sql"))
+								{
+								echo mysql_error();
+								return;
+								}
       }
     } // end if contents
   } // end submit

@@ -56,6 +56,7 @@
 <xsl:if test="cdash/user_admin=1">
   <a href="createProject.php">[Create project]</a><br/>
 		<a href="manageBuildGroup.php">[Manage build groups]</a><br/>
+		<a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a><br/>
 </xsl:if>
 <br/>
 <!-- FOOTER -->

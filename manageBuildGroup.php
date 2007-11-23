@@ -31,19 +31,6 @@ while($project_array = mysql_fetch_array($projects))
 			$xml .= "</project>";
 			}
 
-
-
-/** Strip the HTTP */
-function stripHTTP($url)
-  {
-  $pos = strpos($url,"http://");
-  if($pos !== FALSE)
-    {
-    return substr($url,7);
-    }
-  return $url;
-  }
-
 // If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
@@ -51,9 +38,10 @@ if($Submit)
   $Name = $_POST["name"];
   $Projectid = $_POST["projectSelection"];
  
-  //we should probably check the type of the image here to make sure the user
-  //isn't trying anything fruity
-  $sql = "INSERT INTO buildgroup (name,position,projectid) VALUES ('$Name','0','$Projectid')"; 
+  $groupposition_array = mysql_fetch_array(mysql_query("SELECT position FROM buildgroup WHERE projectid='$Projectid' ORDER BY position DESC LIMIT 1"));
+		$position = $groupposition_array["position"]+1;
+		
+  $sql = "INSERT INTO buildgroup (name,position,projectid) VALUES ('$Name','$position','$Projectid')"; 
 		if(mysql_query("$sql"))
     {
     $xml .= "<group_name>$Name</group_name>";
