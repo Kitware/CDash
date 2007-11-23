@@ -1,3 +1,4 @@
+<html>
 <?php
 /*=========================================================================
 
@@ -33,26 +34,44 @@ $siteid = $build_array["siteid"];
 $projectid = $build_array["projectid"];
 
 @$submit = $_POST["submit"];
+
 @$groupid = $_POST["groupid"];
 @$expected = $_POST["expected"];
 if($submit)
 {
+// Remove the group
+$prevgroup = mysql_fetch_array(mysql_query("SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
+$prevgroupid = $prevgroup["id"];	
+																				
+mysql_query("DELETE FROM build2group WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+echo mysql_error();
 // Insert into the group
-mysql_query("INSERT INTO build2group(groupid,buildtype,buildname,buildsiteid,expected) VALUES
-             ('$groupid','$buildtype','$buildname','$siteid','$expected')");
+mysql_query("INSERT INTO build2group(groupid,buildid,expected) VALUES ('$groupid','$buildid','$expected')");
+echo mysql_error();		
 return;
 }
 
-
-
-
 // Find the groups available for this project
 $group = mysql_query("SELECT name,id FROM buildgroup WHERE id NOT IN 
-                     (SELECT groupid as id FROM build2group WHERE buildname='$buildname' AND buildsiteid='$siteid') 
-																					AND projectid='$projectid'");
+                     (SELECT groupid as id FROM build2group WHERE buildid='$buildid') 
+																					 AND projectid='$projectid'");
 		
 	// AND b2g.groupid=bg.id  AND (b2g.buildname!='$buildname' AND b2g.buildsiteid!='$siteid')																							
 ?>
+
+<head>
+<style type="text/css">
+  .submitLink {
+   color: #00f;
+   background-color: transparent;
+   text-decoration: underline;
+   border: none;
+   cursor: pointer;
+   cursor: hand;
+  }
+</style>
+</head>
+
 <script type="text/javascript" charset="utf-8">
 var expectedbuild = 0;
 function addexpectedbuild_click(value)
@@ -62,19 +81,29 @@ function addexpectedbuild_click(value)
 
 function addbuildgroup_click(buildid,groupid)
 {
-		var group = "#buildgroup_"+buildid;
+  var group = "#buildgroup_"+buildid;
 		$(group).html("addinggroup");
 		$.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild});
 		$(group).html("added to group!");
 	 $(group).fadeOut('slow');
+		window.location = "";
 }
 </script>
+	<form method="post" action="">
+
+		<table width="100%"  border="0">
 <?php
 while($group_array = mysql_fetch_array($group))
   {
-		echo "<td bgcolor=#DDDDDD> Add build to group <b>".$group_array["name"]."</b>: 
-		<input onclick=\"javascript:addexpectedbuild_click(this.value)\" name=\"expected\" type=\"checkbox\" value=\"1\"> expected
-		<input onclick=\"javascript:addbuildgroup_click(".$buildid.",".$group_array["id"].")\" type=\"button\" value=\"add to group\"><br></td>
-		";
+?>
+	 <tr>
+    <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array["name"] ?></b>:		</font></td>
+    <td bgcolor="#DDDDDD" width="20%"><font size="2"><input onclick="javascript:addexpectedbuild_click(this.value)" name="expected" type="checkbox" value=\"1\"/> expected</font></td>
+    <td bgcolor="#DDDDDD" width="45%"><font size="2"><a href="#" onclick="javascript:addbuildgroup_click(<?php echo $buildid ?>,<?php echo $group_array["id"]?>)">[move to group]</a></font></td>
+  </tr>
+<?php
 		}
 ?>
+</table>
+		</form>
+</html>
