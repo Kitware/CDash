@@ -47,18 +47,19 @@ $prevgroupid = $prevgroup["id"];
 mysql_query("DELETE FROM build2group WHERE groupid='$prevgroupid' AND buildid='$buildid'");
 
 // Insert into the group
-mysql_query("INSERT INTO build2group(groupid,buildid,expected) VALUES ('$groupid','$buildid','$expected')");
+mysql_query("INSERT INTO build2group(groupid,buildid) VALUES ('$groupid','$buildid')");
 
 if($definerule)
   {
-  // Delete any previous rule
-   mysql_query("DELETE FROM build2grouprule 
+  // Mark any previous rule as done
+		$now = date("Y-m-d H:i:s");
+  mysql_query("UPDATE build2grouprule SET endtime='$now'
 		             WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
-															AND buildname='$buildname' AND siteid='$siteid'");
+															AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
 
-  // Add the new rule
-  mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected) 
-		             VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected')");
+  // Add the new rule (begin time is set by default by mysql
+  mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,begintime) 
+		             VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
   }
 
 return;
