@@ -60,7 +60,7 @@
       </a>
       </xsl:if> 
             
-            <!-- If user is admin of the project propose to group this build -->
+      <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1">
       <a>
 						<xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
@@ -74,7 +74,23 @@
       </td>
       <td align="right" bgcolor="#ffffff"><b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
       </td>
-      <td align="right" class="normal"><b><a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="configure"/> </a></b>
+      <td align="right" class="normal">
+						 <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="configure > 0">
+            error
+            </xsl:when>
+										 <xsl:when test="string-length(configure)=0">
+            tr-odd
+            </xsl:when>					
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+						<b>
+						<a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/>
+						</xsl:attribute><xsl:value-of select="configure"/></a></b>
       </td>
       <td>
       <xsl:attribute name="align">right</xsl:attribute>
@@ -83,6 +99,9 @@
           <xsl:when test="compilation/error > 0">
             error
             </xsl:when>
+										 <xsl:when test="string-length(compilation/error)=0">
+            tr-odd
+            </xsl:when>					
           <xsl:otherwise>
            normal
            </xsl:otherwise>
@@ -96,6 +115,9 @@
           <xsl:when test="compilation/warning > 0">
             warning
             </xsl:when>
+										 <xsl:when test="string-length(compilation/warning)=0">
+            tr-odd
+            </xsl:when>			
           <xsl:otherwise>
            normal
            </xsl:otherwise>
@@ -110,6 +132,9 @@
           <xsl:when test="test/notrun > 0">
             error
             </xsl:when>
+										<xsl:when test="string-length(test/notrun)=0">
+            tr-odd
+            </xsl:when>				
           <xsl:otherwise>
            normal
            </xsl:otherwise>
@@ -123,6 +148,9 @@
           <xsl:when test="test/fail > 0">
             warning
             </xsl:when>
+										<xsl:when test="string-length(test/fail)=0">
+            tr-odd
+            </xsl:when>		
           <xsl:otherwise>
            normal
            </xsl:otherwise>
@@ -137,6 +165,9 @@
           <xsl:when test="test/fail > 0">
             warning
             </xsl:when>
+													<xsl:when test="string-length(test/fail)=0">
+            tr-odd
+            </xsl:when>							
           <xsl:otherwise>
            normal
            </xsl:otherwise>
@@ -144,11 +175,40 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>
       </td>
-      <td align="right" class="na"><b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/na"/></a></b>
+      <td align="right">
+						 <xsl:attribute name="class">
+        <xsl:choose>
+													<xsl:when test="string-length(test/na)=0">
+            tr-odd
+            </xsl:when>							
+          <xsl:otherwise>
+           na
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+						<b>
+						<a>
+						<xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/>
+						</xsl:attribute><xsl:value-of select="test/na"/>
+						
+						</a></b>
       </td>
       <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="test/time"/></td>
       <td bgcolor="#ffffff"><xsl:value-of select="builddate"/></td>
-      <td bgcolor="#ffffff"><xsl:value-of select="submitdate"/></td>
+      <td>
+						<xsl:attribute name="class">
+						 <xsl:choose>
+          <xsl:when test="expected=1">
+            warning
+            </xsl:when>
+          <xsl:otherwise>
+										   tr-odd
+           </xsl:otherwise>
+        </xsl:choose>
+						</xsl:attribute>
+						<xsl:value-of select="submitdate"/></td>
+						
+						
    </tr>
   </xsl:for-each>
   </xsl:if>

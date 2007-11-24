@@ -410,18 +410,17 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
 
   // Insert the build into the proper group
   // 1) Check if we have any build2grouprules for this build
-		$build2grouprule = mysql_query("SELECT b2g.groupid,b2g.expected FROM build2grouprule AS b2g, buildgroup as bg
+		$build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
 		                                WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
-																																		AND (b2g.groupid=bg.id AND bg.projectid='$projectid'");
+																																		AND (b2g.groupid=bg.id AND bg.projectid='$projectid') AND $submittime>b2g.begintime AND $submittime<b2g.endtime");
 																																		
 		if(mysql_num_rows($build2grouprule)>0)
 		  {
 				$build2grouprule_array = mysql_fetch_array($build2grouprule);
     $groupid = $build2grouprule_array["groupid"];
-				$expected = $build2grouprule_array["expected"];
 				
-				mysql_query ("INSERT INTO build2group (groupid,buildid,expected) 
-                  VALUES ('$groupid','$buildid','$expected')");
+				mysql_query ("INSERT INTO build2group (groupid,buildid) 
+                  VALUES ('$groupid','$buildid')");
 		  }
 		else // we don't have any rules we use the type 
 		  {
@@ -429,8 +428,8 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
 				$buildgroup_array = mysql_fetch_array($buildgroup);
     $groupid = $buildgroup_array["id"];
 				
- 			mysql_query ("INSERT INTO build2group (groupid,buildid,expected) 
-                  VALUES ('$groupid','$buildid','0')");
+ 			mysql_query ("INSERT INTO build2group (groupid,buildid) 
+                  VALUES ('$groupid','$buildid')");
 		  }
   return $buildid;
 }

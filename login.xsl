@@ -59,7 +59,7 @@
 <form method="post" action="" name="loginform">
 <tr>
   <td width="10%" height="2"><div align="right"> Email: </div></td>
-  <td  width="90%" height="2"><input class="textbox" name="login" size="20"/></td>
+  <td  width="90%" height="2"><input class="textbox" name="login" size="40"/></td>
 </tr>
 <tr>
     <td width="10%" height="2"><div align="right">Password: </div></td>
