@@ -48,7 +48,6 @@ CREATE TABLE `build` (
 CREATE TABLE `build2group` (
   `groupid` int(11) NOT NULL default '0',
   `buildid` int(11) NOT NULL default '0',
-  `expected` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`buildid`),
   KEY `groupid` (`groupid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -65,8 +64,12 @@ CREATE TABLE `build2grouprule` (
   `buildname` varchar(255) NOT NULL default '',
   `siteid` int(11) NOT NULL default '0',
   `expected` tinyint(4) NOT NULL default '0',
+  `starttime` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `endtime` timestamp NOT NULL default '0000-00-00 00:00:00',
   KEY `groupid` (`groupid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+        
+
 
 -- --------------------------------------------------------
 
@@ -229,19 +232,6 @@ CREATE TABLE `dynamicanalysisdefect` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
   
--- --------------------------------------------------------
-
--- 
--- Table structure for table `expectedbuild`
--- 
-
-CREATE TABLE `expectedbuild` (
-  `siteid` int(11) NOT NULL default '0',
-  `buildname` varchar(255) NOT NULL default '',
-  `buildtype` varchar(15) NOT NULL default '',
-  `frequencyinhours` int(11) NOT NULL default '0',
-  `projectid` int(11) NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
