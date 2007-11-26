@@ -307,7 +307,7 @@ function buildBottomCalFrame() {
     for (i = 0; i < startingPos; i++) {
 
         calDoc += blankCell;
-	columnCount++;
+ columnCount++;
     }
 
     // SET VALUES FOR DAYS OF THE MONTH
@@ -317,7 +317,7 @@ function buildBottomCalFrame() {
     // DATE CELLS CONTAIN A NUMBER
     for (i = startingPos; i < days; i++) {
 
-	var paddingChar = "&nbsp;";
+ var paddingChar = "&nbsp;";
 
         // ADJUST SPACING SO THAT ALL LINKS HAVE RELATIVELY EQUAL WIDTHS
         if (i-startingPos+1 < 10) {
@@ -402,7 +402,7 @@ function buildBottomCalFrame() {
     for (i=days; i<42; i++)  {
 
         calDoc += blankCell;
-	columnCount++;
+ columnCount++;
 
         // START A NEW ROW WHEN NECESSARY
         if (columnCount % 7 == 0) {
@@ -964,39 +964,39 @@ function returnDate(inDay)
 
     // If this date is not on the server, do nothing
     /*if (typeof(dashboardStartTimes[outDate]) == "undefined")
-				  {
+      {
       return;
-						}*/
+      }*/
     // SET THE VALUE OF THE FIELD THAT WAS PASSED TO THE CALENDAR
     calDateField.value = outDate;
 
     // Build a url and redirect. Path must be an absolute URL.
     //
     // pull off the current page's datestamp
-				
-				j = originalURL.indexOf("&date");
-				urlPrefix = originalURL;
-				if( j != -1)
-				  {
-						urlPrefix =	originalURL.substring(0,j);
-						urlPrefix += originalURL.substring(j+14);
-						}
-				j = originalURL.indexOf("?date");
-				urlPrefix = originalURL;
-				if( j != -1)
-				  {
-						urlPrefix =	originalURL.substring(0,j);
-						urlPrefix += originalURL.substring(j+14);
-						}
-						
-				i = urlPrefix.indexOf("?");
+    
+    j = originalURL.indexOf("&date");
+    urlPrefix = originalURL;
+    if( j != -1)
+      {
+      urlPrefix = originalURL.substring(0,j);
+      urlPrefix += originalURL.substring(j+14);
+      }
+    j = originalURL.indexOf("?date");
+    urlPrefix = originalURL;
+    if( j != -1)
+      {
+      urlPrefix = originalURL.substring(0,j);
+      urlPrefix += originalURL.substring(j+14);
+      }
+      
+    i = urlPrefix.indexOf("?");
     if (i != -1)
-      	url = urlPrefix+"&date="+outDate;
+       url = urlPrefix+"&date="+outDate;
     else
-      	url = urlPrefix+"?date="+outDate;
-								
-			
-				/*
+       url = urlPrefix+"?date="+outDate;
+        
+   
+    /*
     i = originalURL.indexOf(dateStamp);
     if (i != -1)
         urlPrefix = originalURL.substring(0, i);

@@ -16,20 +16,20 @@ function NiftyCheck() {
 }
 
 function Rounded(className, sizex, sizey, sizex_b, sizey_b) {
-	var bk;
-	if (!NiftyCheck()) return;
-	if (typeof(sizex_b) == 'undefined')
-		sizex_b = sizex;
-	if (typeof(sizey_b) == 'undefined')
-		sizey_b = sizey;
-	var v = getElements(className);
-	var l = v.length;
-	for (var i = 0; i < l; i++) {
-		color = get_current_style(v[i],"background-color","transparent");
-		bk = get_current_style(v[i].parentNode,"background-color","transparent");
-		AddRounded(v[i], bk, color, sizex, sizey, true);
-		AddRounded(v[i], bk, color, sizex_b, sizey_b, false);
-	}
+ var bk;
+ if (!NiftyCheck()) return;
+ if (typeof(sizex_b) == 'undefined')
+  sizex_b = sizex;
+ if (typeof(sizey_b) == 'undefined')
+  sizey_b = sizey;
+ var v = getElements(className);
+ var l = v.length;
+ for (var i = 0; i < l; i++) {
+  color = get_current_style(v[i],"background-color","transparent");
+  bk = get_current_style(v[i].parentNode,"background-color","transparent");
+  AddRounded(v[i], bk, color, sizex, sizey, true);
+  AddRounded(v[i], bk, color, sizex_b, sizey_b, false);
+ }
 }
 
 Math.sqr = function (x) {
@@ -59,7 +59,7 @@ function Blend(a, b, alpha) {
 
 function AddRounded(el, bk, color, sizex, sizey, top) {
   if (!sizex && !sizey)
-	return;
+ return;
   var i, j;
   var d = document.createElement("div");
   d.style.backgroundColor = bk;
@@ -76,8 +76,8 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
     var x = document.createElement("div");
     var y = d;
     x.style.margin = "0px " + n_bg + "px";
-	x.style.height='1px';
-	x.style.overflow='hidden';
+ x.style.height='1px';
+ x.style.overflow='hidden';
     // Make a wrapper per anti-aliased pixel (at least one)
     for (j = 1; j <= n_aa; j++) {
       // Calculate coverage per pixel
@@ -108,39 +108,39 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
       }
       
       x.style.backgroundColor = Blend(bk, color, coverage);
-	  if (top)
-	      y.appendChild(x);
+   if (top)
+       y.appendChild(x);
       else
-	      y.insertBefore(x, y.firstChild);
+       y.insertBefore(x, y.firstChild);
       y = x;
       var x = document.createElement("div");
-		x.style.height='1px';
-		x.style.overflow='hidden';
+  x.style.height='1px';
+  x.style.overflow='hidden';
       x.style.margin = "0px 1px";
     }
     x.style.backgroundColor = color;
     if (top)
-	    y.appendChild(x);
+     y.appendChild(x);
     else
-		y.insertBefore(x, y.firstChild);
+  y.insertBefore(x, y.firstChild);
     lastarc = arc;
   }
   if (top)
-	  el.insertBefore(d, el.firstChild);
+   el.insertBefore(d, el.firstChild);
   else
-	  el.appendChild(d);
+   el.appendChild(d);
 }
 
 function getElements(className) {
-	var elements = [];
-	var el = document.getElementsByTagName('DIV');  
-	var regexp=new RegExp("\\b"+className+"\\b");
-	for (var i = 0; i < el.length; i++) 
-	{
-		if (regexp.test(el[i].className)) 
-			elements.push(el[i]);
-	}
-	return elements;
+ var elements = [];
+ var el = document.getElementsByTagName('DIV');  
+ var regexp=new RegExp("\\b"+className+"\\b");
+ for (var i = 0; i < el.length; i++) 
+ {
+  if (regexp.test(el[i].className)) 
+   elements.push(el[i]);
+ }
+ return elements;
 }
 
 function get_current_style(element,property,not_accepted)
@@ -154,34 +154,34 @@ function get_current_style(element,property,not_accepted)
   catch(ee)
   {
     if(element.currentStyle)
-  	{
-	    apr=property.split("-");
-	    for(i=1;i<apr.length;i++) apr[i]=apr[i].toUpperCase();
-	    apr=apr.join("");
-	    val=element.currentStyle.getAttribute(apr);
+   {
+     apr=property.split("-");
+     for(i=1;i<apr.length;i++) apr[i]=apr[i].toUpperCase();
+     apr=apr.join("");
+     val=element.currentStyle.getAttribute(apr);
    }
   }
   if((val.indexOf("rgba") > -1 || val==not_accepted) && element.parentNode)
   {
-	 if(element.parentNode != document) 
-		 val=get_current_style(element.parentNode,property,not_accepted);
-	 else
-		 val = '#FFFFFF';
+  if(element.parentNode != document) 
+   val=get_current_style(element.parentNode,property,not_accepted);
+  else
+   val = '#FFFFFF';
   }
   if (val.indexOf("rgb") > -1 && val.indexOf("rgba") == -1)
-	  val = rgb2hex(val);
+   val = rgb2hex(val);
   if (val.length == 4)
-	  val = '#'+val.substring(1,1)+val.substring(1,1)+val.substring(2,1)+val.substring(2,1)+val.substring(3,1)+val.substring(3,1);
+   val = '#'+val.substring(1,1)+val.substring(1,1)+val.substring(2,1)+val.substring(2,1)+val.substring(3,1)+val.substring(3,1);
   return val;
 }
 
 function rgb2hex(value)
 {
-	var x = 255;
-	var hex = '';
-	var i;
-	var regexp=/([0-9]+)[, ]+([0-9]+)[, ]+([0-9]+)/;
-	var array=regexp.exec(value);
-	for(i=1;i<4;i++) hex += ('0'+parseInt(array[i]).toString(16)).slice(-2);
-	return '#'+hex;
+ var x = 255;
+ var hex = '';
+ var i;
+ var regexp=/([0-9]+)[, ]+([0-9]+)[, ]+([0-9]+)/;
+ var array=regexp.exec(value);
+ for(i=1;i<4;i++) hex += ('0'+parseInt(array[i]).toString(16)).slice(-2);
+ return '#'+hex;
 }
