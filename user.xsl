@@ -38,10 +38,10 @@
 <!-- Menu -->
 <ul id="Nav" class="nav">
   <li>
-     <a href="index.php">Back</a>
+     <a href="index.php">Home</a>
    </li>
    <li>
-     <a href="index.php">Home</a> 
+     <a href="user.php?logout=1">Logout</a> 
   </li>
 </ul>
 </td>
