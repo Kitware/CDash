@@ -38,6 +38,28 @@ $projectid = $build_array["projectid"];
 @$groupid = $_POST["groupid"];
 @$expected = $_POST["expected"];
 @$definerule = $_POST["definerule"];
+@$markexpected = $_POST["markexpected"];
+
+if($markexpected)
+{
+  // If a rule already exists we update it
+		$build2groupexpected = mysql_query("SELECT groupid FROM build2grouprule WHERE groupid='$groupid' AND buildtype='$buildtype'
+															                       AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
+  if(mysql_num_rows($build2groupexpected) > 0 )
+		  {
+				mysql_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
+															                         AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
+				
+		  }
+  else if($expected) // we add the grouprule
+		  {
+				$now = date("Y-m-d H:i:s");
+				mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
+		               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
+				}
+}
+
+
 if($submit)
 {
 // Remove the group
@@ -58,7 +80,7 @@ if($definerule)
 															AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
 
   // Add the new rule (begin time is set by default by mysql
-  mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,begintime) 
+  mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
 		             VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
   }
 
@@ -68,9 +90,7 @@ return;
 // Find the groups available for this project
 $group = mysql_query("SELECT name,id FROM buildgroup WHERE id NOT IN 
                      (SELECT groupid as id FROM build2group WHERE buildid='$buildid') 
-																					 AND projectid='$projectid'");
-		
-	// AND b2g.groupid=bg.id  AND (b2g.buildname!='$buildname' AND b2g.buildsiteid!='$siteid')																							
+																					 AND projectid='$projectid'");																				
 ?>
 
 <head>
@@ -87,6 +107,17 @@ $group = mysql_query("SELECT name,id FROM buildgroup WHERE id NOT IN
 </head>
 
 <script type="text/javascript" charset="utf-8">
+
+function markasexpected_click(buildid,groupid,expected)
+{
+  var group = "#buildgroup_"+buildid;
+		$(group).html("updating...");
+		$.post("ajax/addbuildgroup.php?buildid="+buildid,{markexpected:"1",groupid:groupid,expected:expected});
+		$(group).html("updated!");
+	 $(group).fadeOut('slow');
+		window.location = "";
+}
+
 function addbuildgroup_click(buildid,groupid,definerule)
 {
   var expected = "expected_"+buildid+"_"+groupid;
@@ -109,6 +140,39 @@ function addbuildgroup_click(buildid,groupid,definerule)
 	<form method="post" action="">
 
 		<table width="100%"  border="0">
+		<tr>
+		<?php
+		// If expected
+		// Find the groups available for this project
+  $currentgroup = mysql_query("SELECT g.name,g.id FROM buildgroup AS g,build2group as bg WHERE g.id=bg.groupid  AND bg.buildid='$buildid'");
+		$currentgroup_array = mysql_fetch_array($currentgroup);
+		$isexpected = 0;
+		$currentgroupid = $currentgroup_array ["id"];
+		
+	 // This works only for the most recent dashboard (and future)	 
+	 $build2groupexpected = mysql_query("SELECT groupid FROM build2grouprule WHERE groupid='$currentgroupid' AND buildtype='$buildtype'
+															                       AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00' AND expected='1'");
+  if(mysql_num_rows($build2groupexpected) > 0 )
+		  {
+				$isexpected = 1;
+		  }
+				
+		?>
+		<td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $currentgroup_array["name"] ?></b>:		</font></td>
+		<td bgcolor="#DDDDDD" width="65%" colspan="2"><font size="2"><a href="#" onclick="javascript:markasexpected_click(<?php echo $buildid ?>,<?php echo $currentgroup_array["id"]?>,
+		<?php if($isexpected) {echo "0";} else {echo "1";} ?>)">
+	 [<?php 
+		if($isexpected)
+		  {
+				echo "mark as non expected";
+		  }
+		else
+		  {
+				echo "mark as expected";
+		  }
+		
+		?>]</a>	</font></td>
+		</tr>
 <?php
 while($group_array = mysql_fetch_array($group))
   {
