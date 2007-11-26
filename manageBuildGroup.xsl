@@ -64,8 +64,8 @@ project page</a>
 <form name="form1" enctype="multipart/form-data" method="post" action="">
 <table width="100%"  border="0">
   <tr>
-    <td width="14%"><div align="right"><strong>Project:</strong></div></td>
-    <td width="86%"><select onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
+    <td width="10%"><div align="right"><strong>Project:</strong></div></td>
+    <td width="90%" ><select onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
         <option>
         <xsl:attribute name="value">0</xsl:attribute>
         Choose...
@@ -145,20 +145,63 @@ project page</a>
   </tr>
   <tr>
     <td><div align="right"></div></td>
-    <td><input type="submit" name="createGroup" value="Create Group"/></td>
+    <td><input type="submit" name="createGroup" value="Create Group"/><br/><br/></td>
   </tr>
+		  <tr>
+    <td><div align="right"></div></td>
+    <td  bgcolor="#DDDDDD"><strong>Global Move</strong></td>
+  </tr>
+		  <tr>
+    <td><div align="right"></div></td>
+    <td>
+			  <select name="movebuilds[]" size="15" multiple="true" id="movebuilds">
+        <xsl:for-each select="cdash/currentbuild">
+        <option>
+        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+        <xsl:value-of select="name"/>
+        </option>
+        </xsl:for-each>
+					</select>
+				<br/>
+				Move to group: 
+				<select name="groupSelection">
+        <option>
+        <xsl:attribute name="value">0</xsl:attribute>
+        Choose...
+        </option>
+        
+        <xsl:for-each select="cdash/project/group">
+        <option>
+        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+        <xsl:value-of select="name"/>
+        </option>
+        </xsl:for-each>
+        </select>
+				<br/>
+				<input name="expectedMove" type="checkbox" value="1"/> expected
+				<br/>
+    <input type="submit" name="globalMove" value="Move selected build to group"/>
+				</td>
+		</tr>
   </xsl:if>
   
 </table>
+
+
 </form>
+
+<br/>
+
 </xsl:otherwise>
 </xsl:choose>
-        
+
+<br/>
+
+<!-- Rounding script -->
 <script type="text/javascript">
   Rounded('rounded', 15, 15,0,0);
 </script>
 
-<br/>
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>

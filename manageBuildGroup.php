@@ -37,7 +37,7 @@ while($project_array = mysql_fetch_array($projects))
       }
    $xml .= "</availableproject>";
    }
-
+		
 // If we should change the position
 @$up= $_GET["up"];
 if($up)
@@ -242,6 +242,67 @@ if($DeleteGroup)
   } // end DeleteGroup
 
 
+@$GlobalMove = $_POST["globalMove"];
+@$ExpectedMove = $_POST["expectedMove"];
+@$Movebuilds = $_POST["movebuilds"];
+@$GroupSelection = $_POST["groupSelection"];
+
+if($GlobalMove)
+{
+  foreach($Movebuilds as $buildid)
+		  {		
+				// Find information about the build
+				$build_array = mysql_fetch_array(mysql_query("SELECT type,name,siteid FROM build WHERE id='$buildid'"));
+				$buildtype = $build_array['type'];
+				$buildname = $build_array['name'];		
+				$siteid = $build_array['siteid'];	
+				
+				// Remove the group
+				$prevgroup = mysql_fetch_array(mysql_query("SELECT groupid FROM build2group WHERE buildid='$buildid'"));
+				$prevgroupid = $prevgroup["groupid"]; 
+																								
+				mysql_query("DELETE FROM build2group WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+				
+				// Insert into the group
+				mysql_query("INSERT INTO build2group(groupid,buildid) VALUES ('$GroupSelection','$buildid')");
+  
+				// Define a new rule
+				// Mark any previous rule as done
+				$now = date("Y-m-d H:i:s");
+				mysql_query("UPDATE build2grouprule SET endtime='$now'
+																	WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
+																	AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
+		
+				// Add the new rule (begin time is set by default by mysql
+				mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
+																	VALUES ('$GroupSelection','$buildtype','$buildname','$siteid','$ExpectedMove','$now')");
+		  }
+} // end GlobalMove
+
+// Find the recent builds for this project
+if($projectid>0)
+  {
+		$end_timestamp = time();
+		$beginning_timestamp = $end_timestamp-3600*240;
+		
+	 $builds = mysql_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,gp.position,g.id as groupid 
+                         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp, site as s
+                         WHERE UNIX_TIMESTAMP(b.starttime)<$end_timestamp AND UNIX_TIMESTAMP(b.starttime)>$beginning_timestamp
+                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
+																									AND s.id = b.siteid
+                         AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
+                         ORDER BY gp.position ASC,b.starttime DESC");
+		
+		while($build_array = mysql_fetch_array($builds))
+    {
+
+				$xml .= "<currentbuild>";
+				$xml .= add_XML_value("id",$build_array['id']);
+				$xml .= add_XML_value("name",$build_array['sitename']." ".$build_array['name']." [".$build_array['type']."] ".$build_array['groupname']);
+				$xml .= "</currentbuild>";
+				}
+  }
+
 // If we have a project id
 // WARNING: We should check for security here
 if($projectid>0)
@@ -273,3 +334,4 @@ $xml .= "</cdash>";
 // Now doing the xslt transition
 generate_XSLT($xml,"manageBuildGroup");
 ?>
+
