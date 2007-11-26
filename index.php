@@ -200,7 +200,6 @@ function generate_main_dashboard_XML($projectid,$date)
   while($build_array = mysql_fetch_array($builds))
     {
 				$groupposition = $build_array["position"];
-				$groupid = $build_array["groupid"];
 				if($previousgroupposition != $groupposition)
 				  {
 						$groupname = $build_array["groupname"];		
@@ -234,7 +233,7 @@ function generate_main_dashboard_XML($projectid,$date)
 						$xml .= add_XML_value("name",$groupname);
 						$previousgroupposition = $groupposition;
 				  }
-				
+				$groupid = $build_array["groupid"];
     $buildid = $build_array["id"];
     $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
     $nconfigure = mysql_num_rows($configure);
