@@ -79,9 +79,15 @@ if($Submit)
     }
 		
 		// Add the default groups
-		mysql_query("INSERT INTO buildgroup(name,position,projectid) VALUES ('Nightly','1','$projectid')"); 
-		mysql_query("INSERT INTO buildgroup(name,position,projectid) VALUES ('Continuous','2','$projectid')"); 
-		mysql_query("INSERT INTO buildgroup(name,position,projectid) VALUES ('Experimental','3','$projectid')"); 	
+		mysql_query("INSERT INTO buildgroup(name,projectid) ('Nightly','$projectid')");
+		$id = mysql_insert_id();
+		mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
+		mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");
+		$id = mysql_insert_id();
+		mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','2')");
+		mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
+		$id = mysql_insert_id();
+		mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
 		
   /** Add the logo if any */
   if($contents)

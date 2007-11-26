@@ -13,6 +13,9 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
 								
+									<!-- Include CDash Menu Stylesheet -->    
+        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+		
 								<!-- Include the rounding css -->
 		      <script src="javascript/rounded.js"></script>
 
@@ -32,14 +35,18 @@
 </tr>
 <tr>
 <td></td><td>
+<!-- Menu -->
+<ul id="Nav" class="nav">
+  <li>
+     <a href="user.php">Back</a>
+  </li>
+</ul>
 </td>
 </tr>
 </table>
 <br/>
 
-
-<a href="user.php">[back]</a>
-<br/><br/>
+<br/>
 
 <xsl:if test="string-length(cdash/alert)>0">
 <b><xsl:value-of select="cdash/alert"/></b>

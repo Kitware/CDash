@@ -180,9 +180,13 @@ function generate_main_dashboard_XML($projectid,$date)
     $beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp-24*3600),date("d",$end_timestamp-24*3600),date("Y",$end_timestamp-24*3600));
     }
     
-  $builds = mysql_query("SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,g.position,g.id as groupid FROM build AS b, build2group AS b2g,buildgroup AS g
+		// We shoudln't get any builds for group that have been deleted (otherwise something is wrong
+  $builds = mysql_query("SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
+		                       FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
                          WHERE UNIX_TIMESTAMP(b.starttime)<$end_timestamp AND UNIX_TIMESTAMP(b.starttime)>$beginning_timestamp
-                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND b2g.groupid=g.id ORDER BY g.position ASC,b.starttime DESC");
+                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id 	
+																									AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
+																									ORDER BY gp.position ASC,b.starttime DESC");
   echo mysql_error();
 		
 		// The SQL results are ordered by group so this should work
@@ -213,7 +217,10 @@ function generate_main_dashboard_XML($projectid,$date)
 						  }
 						for($i=$prevpos;$i<$groupposition;$i++)
 					  	{
-								$group = mysql_fetch_array(mysql_query("SELECT name,id FROM buildgroup WHERE position='$i' AND projectid='$projectid'"));
+								$group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
+								                                        AND gp.position='$i' AND g.projectid='$projectid'
+																																																AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp  OR gp.endtime='0000-00-00 00:00:00')
+																																																"));
 								$xml .= "<buildgroup>";		
 								$xml .= add_XML_value("name",$group["name"]);
 								$xml .= add_expected_builds($group["id"],$currenttime,$received_builds);
@@ -377,11 +384,17 @@ function generate_main_dashboard_XML($projectid,$date)
 				$prevpos = 1;
 		  }
 				
-		$groupposition_array = mysql_fetch_array(mysql_query("SELECT position FROM buildgroup WHERE projectid='$projectid' ORDER BY position DESC LIMIT 1"));
+		$groupposition_array = mysql_fetch_array(mysql_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
+																																																								WHERE g.projectid='$projectid' AND g.id=gp.buildgroupid 
+																																																								AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
+																																																								ORDER BY gp.position DESC LIMIT 1"));
+	
 		$finalpos = $groupposition_array["position"];
 		for($i=$prevpos;$i<=$finalpos;$i++)
 		 	{
-				$group = mysql_fetch_array(mysql_query("SELECT name,id FROM buildgroup WHERE position='$i' AND projectid='$projectid'"));
+				$group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
+																																																																																					AND gp.position='$i' AND g.projectid='$projectid'
+																																																																																					AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp  OR gp.endtime='0000-00-00 00:00:00')"));
 				$xml .= "<buildgroup>";		
 				$xml .= add_XML_value("name",$group["name"]);
 				$xml .= add_expected_builds($group["id"],$currenttime,$received_builds);

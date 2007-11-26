@@ -59,18 +59,29 @@
       </img>
       </a>
       </xsl:if> 
-            
+      
+						<!-- If the build has errors or test failing -->
+						 <xsl:if test="compilation/error > 0 or test/fail > 0">
+						<a>
+						<xsl:attribute name="href">javascript:buildinfo_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
+						<img name="buildgroup" SRC="images/Info.png" border="0"></img>
+						</a>
+						</xsl:if>
+						  
       <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1">
-      <a>
+      <xsl:if test="string-length(buildid)>0">
+						<a>
 						<xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
 						<img name="buildgroup" SRC="images/folder.png" border="0"></img>
 						</a>
-      <div>
+      </xsl:if>
+        </xsl:if>
+								
+						<div>
 						<xsl:attribute name="id">buildgroup_<xsl:value-of select="buildid"/></xsl:attribute>
 						</div>
-						</xsl:if>
-            
+						
       </td>
       <td align="right" bgcolor="#ffffff"><b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
       </td>

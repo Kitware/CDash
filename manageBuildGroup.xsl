@@ -13,6 +13,9 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
 								
+								<!-- Include CDash Menu Stylesheet -->    
+        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+  
 								<!-- Include the rounding css -->
 		      <script src="javascript/rounded.js"></script>
 
@@ -32,12 +35,17 @@
 </tr>
 <tr>
 <td></td><td>
+<!-- Menu -->
+<ul id="Nav" class="nav">
+  <li>
+     <a href="user.php">Back</a>
+  </li>
+</ul>
 </td>
 </tr>
 </table>
-<br/>
 
-<a href="user.php">[back]</a>
+
 <br/><br/>
 
 <xsl:choose>
@@ -52,23 +60,86 @@ project page</a>
 <table width="100%"  border="0">
   <tr>
     <td width="14%"><div align="right"><strong>Project:</strong></div></td>
-    <td width="86%"><select name="projectSelection">
-				    <xsl:for-each select="cdash/project">
+    <td width="86%"><select onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
+				    <option>
+								<xsl:attribute name="value">0</xsl:attribute>
+								Choose...
+								</option>
+								
+				    <xsl:for-each select="cdash/availableproject">
         <option>
 								<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+								<xsl:if test="selected=1">
+								<xsl:attribute name="selected"></xsl:attribute>
+								</xsl:if>
 								<xsl:value-of select="name"/>
 								</option>
 								</xsl:for-each>
 								</select></td>
   </tr>
+		
+		<!-- If a project has been selected -->
+		<xsl:if test="count(cdash/project)>0">
+		<tr>
+    <td></td>
+    <td></td>
+  </tr>
+		<tr>
+    <td ><div align="right"></div></td>
+    <td bgcolor="#DDDDDD"><strong>Current groups</strong></td>
+  </tr>
+		
+		<!-- List the current groups -->
+		 <tr>
+					<td><div align="right"></div></td>
+					<td>
+					<table>
+					<xsl:for-each select="cdash/project/group">
+					<form method="post" action="">
+					<xsl:attribute name="form"><xsl:value-of select="id"/></xsl:attribute>
+					
+					<tr>
+					<td><xsl:value-of select="name"/></td>
+					<td>
+					<a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;groupid=<xsl:value-of select="id"/>&amp;up=1</xsl:attribute> [up]</a>
+					<a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;groupid=<xsl:value-of select="id"/>&amp;down=1</xsl:attribute> [down]</a>
+					</td>
+					<td>
+					<xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'">  <!-- cannot delete Nightly/Continuous/Experimental -->
+					<input type="hidden" name="groupid">
+					<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+					</input>
+					<input name="newname" type="text" id="newname" size="40"/><input type="submit" name="rename" value="Rename"/>
+					</xsl:if>
+					</td><td>
+					<xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
+					<input type="submit" name="deleteGroup" value="Delete Group"/>
+					</xsl:if>
+					</td>
+					</tr>
+					</form>
+					</xsl:for-each>
+					</table>
+					</td>
+		   </tr>
+		<tr>
+    <td></td>
+    <td></td>
+  </tr>
+		<tr>
+    <td><div align="right"></div></td>
+    <td  bgcolor="#DDDDDD"><strong>Create new group</strong></td>
+  </tr>
   <tr>
-    <td><div align="right"><strong>Name:</strong></div></td>
-    <td><input name="name" type="text" id="name" size="50"/></td>
+    <td><div align="right">Name:</div></td>
+    <td><input name="name" type="text" id="name" size="40"/></td>
   </tr>
   <tr>
     <td><div align="right"></div></td>
-    <td><input type="submit" name="Submit" value="Create Group"/></td>
+    <td><input type="submit" name="createGroup" value="Create Group"/></td>
   </tr>
+		</xsl:if>
+		
 </table>
 </form>
 </xsl:otherwise>
