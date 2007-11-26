@@ -12,6 +12,13 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+									
+									     <!-- Include CDash Menu Stylesheet -->    
+    <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+    
+    <!-- Include the rounding css -->
+    <script src="javascript/rounded.js"></script>
+				
        </head>
        <body bgcolor="#ffffff">
    
@@ -19,44 +26,42 @@
 <tr>
 <td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
 </td>
-<td bgcolor="#6699cc" valign="top" width="100%">
+<td valign="bottom" width="100%">
+<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">    
 <font color="#ffffff"><h2>CDash - My Profile</h2>
-<h3>Welcome <xsl:value-of select="cdash/user_name"/></h3></font>
-</td></tr><tr><td></td><td>
-<div id="navigator">
-<table border="0" cellpadding="0" cellspacing="0">
-<tr>
-
-<td align="center">
-<p class="hoverbutton">
-<a><xsl:attribute name="href">index.php</xsl:attribute>Home</a>
-</p>
-</td>
-
-<td align="center" width="5">
-<p></p>
-</td>
-
-<td align="center">
-<p class="hoverbutton">
-<a><xsl:attribute name="href">login.php?logout=1</xsl:attribute>Logout</a>
-</p>
-</td>
-
-</tr>
-</table>
+<h3>Welcome <xsl:value-of select="cdash/user_name"/></h3></font><br/>
 </div>
+</td>
+</tr>
+<tr><td></td><td>
+
+<!-- Menu -->
+<ul id="Nav" class="nav">
+  <li>
+     <a href="index.php">Back</a>
+   </li>
+   <li>
+     <a href="index.php">Home</a> 
+  </li>
+</ul>
 </td>
 </tr>
 </table>
  
 <br/>
 
+<script type="text/javascript">
+  Rounded('rounded', 15, 15,0,0);
+</script>
+
+
 <!-- Main -->
 <xsl:if test="cdash/user_admin=1">
-  <a href="createProject.php">[Create project]</a><br/>
-		<a href="manageBuildGroup.php">[Manage build groups]</a><br/>
-		<a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a><br/>
+<table>
+  <tr><td width="95"><div align="right"></div></td><td bgcolor="#DDDDDD"><a href="createProject.php">[Create project]</a></td></tr>
+		<tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="manageBuildGroup.php">[Manage build groups]</a></td></tr>
+		<tr><td width="95"><div align="right"></div></td><td bgcolor="#DDDDDD"><a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a></td></tr>
+</table>
 </xsl:if>
 <br/>
 <!-- FOOTER -->

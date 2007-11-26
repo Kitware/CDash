@@ -95,12 +95,12 @@ $xml .="<dashboard>
   while($error_array = mysql_fetch_array($errors))
     {
     $xml .= "<error>";
-    $xml .= add_XML_value("logline",htmlspecialchars($error_array["logline"]));
-    $xml .= add_XML_value("text",htmlspecialchars($error_array["text"]));
+    $xml .= add_XML_value("logline",$error_array["logline"]);
+    $xml .= add_XML_value("text",$error_array["text"]);
     $xml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
     $xml .= add_XML_value("sourceline",$error_array["sourceline"]);
-    $xml .= add_XML_value("precontext",htmlspecialchars($error_array["precontext"]));
-    $xml .= add_XML_value("postcontext",htmlspecialchars($error_array["postcontext"]));
+    $xml .= add_XML_value("precontext",$error_array["precontext"]);
+    $xml .= add_XML_value("postcontext",$error_array["postcontext"]);
     $xml .= "</error>";
     }
 
