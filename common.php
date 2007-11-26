@@ -374,7 +374,7 @@ function add_coveragelogfile($buildid,$fileid,$line,$code)
 }
 
 /** Create a site */
-function add_site($name,$description="",$processor="",$numprocessors="1",$ip="")
+function add_site($name,$description="",$processor="",$numprocessors="1")
 {
   include("config.php");
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
@@ -389,10 +389,47 @@ function add_site($name,$description="",$processor="",$numprocessors="1",$ip="")
     }
   
   // If not found we create the site
-  // Should compute the location from IP
-  $latitude = "";
-  $longitude = "";
+		// We retrieve the geolocation from the IP address
+		$lat = "";
+		$long = "";
+  $ip = $_SERVER['REMOTE_ADDR'];
+		
+		// Ask hostip.info for geolocation
+		$curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
+      
+  ob_start();
+  curl_exec($curl);
+  $httpReply = ob_get_contents();
+  ob_end_clean();
     
+  $pos = strpos($httpReply,"Latitude: ");
+  if($pos !== FALSE)
+    {
+    $pos2 = strpos($httpReply,"\n",$pos);
+    $lat = substr($httpReply,$pos+10,$pos2-$pos-10);
+    }
+    
+  $pos = strpos($httpReply,"Longitude: ");
+  if($pos !== FALSE)
+    {
+    $pos2 = strlen($httpReply);
+    $long = substr($httpReply,$pos+11,$pos2-$pos-11);
+    } 
+  curl_close($curl);
+		
+		$latitude = "";
+		$longitude = "";
+		
+		// Sanity check
+	 if(strlen($lat) > 0 && strlen($long)>0
+     && $lat[0] != ' ' && $long[0] != ' '
+    )
+				{
+				$latitude = $lat;
+				$longitude = $long;
+				}
+
   mysql_query ("INSERT INTO site (name,description,processor,numprocessors,ip,latitude,longitude) 
                           VALUES ('$name','$description','$processor','$numprocessors','$ip','$latitude','$longitude')");
   echo mysql_error();  
