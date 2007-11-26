@@ -400,7 +400,7 @@
 
 <!-- COVERAGE -->
 <table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">   
-    <xsl:if test="count(cdash/builds/coverage)=0">
+    <xsl:if test="count(cdash/buildgroup/coverage)=0">
    <tr class="table-heading">
       <td colspan="14">
           <h3>No Coverage</h3>
@@ -408,7 +408,7 @@
    </tr>
    </xsl:if>
    
-    <xsl:if test="count(cdash/builds/coverage)>0">
+    <xsl:if test="count(cdash/buildgroup/coverage)>0">
         <tr class="table-heading">
       <td colspan="14">
           <h3>Coverage</h3>
@@ -425,7 +425,7 @@
       <th align="center">Date</th>
       <th align="center">Submission Date</th>
    </tr>
-  <xsl:for-each select="cdash/builds/coverage">
+  <xsl:for-each select="cdash/buildgroup/coverage">
    
    <tr>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
@@ -458,7 +458,7 @@
 
 <!-- Dynamic analysis -->
 <table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">   
-    <xsl:if test="count(cdash/builds/dynamicanalysis)=0">
+    <xsl:if test="count(cdash/buildgroup/dynamicanalysis)=0">
    <tr class="table-heading">
       <td colspan="14">
           <h3>No Dynamic Analysis</h3>
@@ -466,7 +466,7 @@
    </tr>
    </xsl:if>
    
-    <xsl:if test="count(cdash/builds/dynamicanalysis)>0">
+    <xsl:if test="count(cdash/buildgroup/dynamicanalysis)>0">
         <tr class="table-heading">
       <td colspan="14">
           <h3>Dynamic Analysis</h3>
@@ -482,7 +482,7 @@
       <th align="center">Date</th>
       <th align="center">Submission Date</th>
    </tr>
-  <xsl:for-each select="cdash/builds/dynamicanalysis">
+  <xsl:for-each select="cdash/buildgroup/dynamicanalysis">
    
    <tr>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
