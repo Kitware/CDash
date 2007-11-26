@@ -109,7 +109,7 @@ else
   <?php 
   if($buildfailingdays>1)
     {
-				$date = substr($datefirstbuildfailing,0,4).substr($datefirstbuildfailing,5,2).substr($datefirstbuildfailing,8,2);
+    $date = substr($datefirstbuildfailing,0,4).substr($datefirstbuildfailing,5,2).substr($datefirstbuildfailing,8,2);
     echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." days)";
     }
   else if($buildfailingdays==1)
@@ -133,7 +133,7 @@ else
   <?php
   if($testfailingdays>1)
     {
-				$date = substr($datefirsttestfailing,0,4).substr($datefirsttestfailing,5,2).substr($datefirsttestfailing,8,2);
+    $date = substr($datefirsttestfailing,0,4).substr($datefirsttestfailing,5,2).substr($datefirsttestfailing,8,2);
     echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirsttestfailing."</a> (".$testfailingdays." days)";
     }
   else if($testfailingdays==1)
