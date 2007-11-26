@@ -12,9 +12,9 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-								
-								<!-- Include the rounding css -->
-		      <script src="javascript/rounded.js"></script>
+        
+        <!-- Include the rounding css -->
+        <script src="javascript/rounded.js"></script>
 
        </head>
        <body bgcolor="#ffffff">
@@ -24,7 +24,7 @@
 <td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
 </td>
 <td valign="bottom" width="100%">
-<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">		
+<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">  
 <font color="#ffffff"><h2>CDash - New Project</h2>
 <h3>Creating new project</h3></font>
 <br/></div>

@@ -26,54 +26,54 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 @$CreateDefaultGroups = $_POST["CreateDefaultGroups"];
 @$AssignBuildToDefaultGroups = $_POST["AssignBuildToDefaultGroups"];
-				
+    
 if($CreateDefaultGroups)
   {
-		// Loop throught the projects
-		$n = 0;
-		$projects = mysql_query("SELECT id FROM project");
-		while($project_array = mysql_fetch_array($projects))
-					{
-					$projectid = $project_array["id"];
-					
-					if(mysql_num_rows(mysql_query("SELECT projectid FROM buildgroup WHERE projectid='$projectid'"))==0)
-					  {
-							// Add the default groups
-							mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Nightly','$projectid')");
-							$id = mysql_insert_id();
-							mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
-							echo mysql_error();
-							mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");
-							$id = mysql_insert_id();
-							mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','2')");
-							mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
-							$id = mysql_insert_id();
-							mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
-					  $n++;
-							}
-					}
-					
-		$xml .= add_XML_value("alert",$n." projects have now default groups.");
-		
+  // Loop throught the projects
+  $n = 0;
+  $projects = mysql_query("SELECT id FROM project");
+  while($project_array = mysql_fetch_array($projects))
+     {
+     $projectid = $project_array["id"];
+     
+     if(mysql_num_rows(mysql_query("SELECT projectid FROM buildgroup WHERE projectid='$projectid'"))==0)
+       {
+       // Add the default groups
+       mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Nightly','$projectid')");
+       $id = mysql_insert_id();
+       mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
+       echo mysql_error();
+       mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");
+       $id = mysql_insert_id();
+       mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','2')");
+       mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
+       $id = mysql_insert_id();
+       mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
+       $n++;
+       }
+     }
+     
+  $xml .= add_XML_value("alert",$n." projects have now default groups.");
+  
   } // end CreateDefaultGroups
 else if($AssignBuildToDefaultGroups)
   {
-		// Loop throught the builds
-		$builds = mysql_query("SELECT id,type,projectid FROM build WHERE id NOT IN (SELECT buildid as id FROM build2group)");
-	
-		while($build_array = mysql_fetch_array($builds))
-					{
-					$buildid = $build_array["id"];
-					$buildtype = $build_array["type"];
-					$projectid = $build_array["projectid"];
-					
-					$buildgroup_array = mysql_fetch_array(mysql_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'"));
+  // Loop throught the builds
+  $builds = mysql_query("SELECT id,type,projectid FROM build WHERE id NOT IN (SELECT buildid as id FROM build2group)");
+ 
+  while($build_array = mysql_fetch_array($builds))
+     {
+     $buildid = $build_array["id"];
+     $buildtype = $build_array["type"];
+     $projectid = $build_array["projectid"];
      
-					$groupid = $buildgroup_array["id"];
-				 mysql_query("INSERT INTO build2group(buildid,groupid) VALUES ('$buildid','$groupid')"); 
-					}
-					
-		$xml .= add_XML_value("alert","Builds have been added to default groups successfully.");
+     $buildgroup_array = mysql_fetch_array(mysql_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'"));
+     
+     $groupid = $buildgroup_array["id"];
+     mysql_query("INSERT INTO build2group(buildid,groupid) VALUES ('$buildid','$groupid')"); 
+     }
+     
+  $xml .= add_XML_value("alert","Builds have been added to default groups successfully.");
 
   } // end AssignBuildToDefaultGroups
 

@@ -1,18 +1,18 @@
 .btip { text-decoration:none; onmouseout=hidetip(); }
-	.normal { background-color : #00aa00; }
-	.warning { background-color : #ffcc66; }
-	.error { background-color : #ff6666; }
-	.Passed { background-color : #00aa00; }
-	.Failed { background-color : #ffcc66; }
-	.Not Run { background-color : #ff6666; }
-	.na { background-color : #cccccc; }
-	.tr-even { background-color : #b0c4de; }
-	.tr-odd { background-color : #ffffff; }
-	.measurement { background-color : #b0c4de; }
-	.table-heading { background-color : #b0c4de; }
+ .normal { background-color : #00aa00; }
+ .warning { background-color : #ffcc66; }
+ .error { background-color : #ff6666; }
+ .Passed { background-color : #00aa00; }
+ .Failed { background-color : #ffcc66; }
+ .Not Run { background-color : #ff6666; }
+ .na { background-color : #cccccc; }
+ .tr-even { background-color : #b0c4de; }
+ .tr-odd { background-color : #ffffff; }
+ .measurement { background-color : #b0c4de; }
+ .table-heading { background-color : #b0c4de; }
 
 #navigator {
-	   // background-color: #6699cc;
+    // background-color: #6699cc;
 background-color: #ffffff;
 border: 0px #0000aa solid;
 width: auto;
@@ -51,7 +51,7 @@ font-weight: bold;
 text-align: center;
 margin-bottom: 0px;
 margin-top: 0px;
-	   width: 5em;
+    width: 5em;
 }
 
 .darthoverbutton a {
@@ -80,7 +80,7 @@ font-weight: bold;
 text-align: center;
 margin-bottom: 0px;
 margin-top: 0px;
-	   width: 4em;
+    width: 4em;
 }
 
 .hoverbutton a {
@@ -104,14 +104,14 @@ border-bottom: 2px #cccccc solid;
 border-right: 2px #cccccc solid;
 }
 
-	Body  {
-	  font-family : arial, helvetica, sans-serif;
-	  color : black;
+ Body  {
+   font-family : arial, helvetica, sans-serif;
+   color : black;
 }
 
 Table  {
-	  font-family : arial, helvetica, sans-serif;
-	  color : black;
+   font-family : arial, helvetica, sans-serif;
+   color : black;
 }
 
 Table, TD  {
@@ -129,13 +129,13 @@ background-repeat : no-repeat;
 P {font-family : arial, helvetica, sans-serif; color: black; }
 
 a {
-	  Font-Family : arial, helvetica, sans-serif;
-	  Font-Style : normal;
-	  color : blue;
+   Font-Family : arial, helvetica, sans-serif;
+   Font-Style : normal;
+   color : blue;
 }
 
 a:hover  {
-	 color : black;
+  color : black;
 Font-Style : bold;
 }
 

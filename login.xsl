@@ -12,11 +12,11 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-									<!-- Include CDash Menu Stylesheet -->    
-								<link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
-								
-								<!-- Include the rounding css -->
-								<script src="javascript/rounded.js"></script>
+         <!-- Include CDash Menu Stylesheet -->    
+        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+        
+        <!-- Include the rounding css -->
+        <script src="javascript/rounded.js"></script>
        </head>
        <body bgcolor="#ffffff">
    
@@ -42,7 +42,7 @@
 </td>
 </tr>
 </table>
-	
+ 
 <script type="text/javascript">
   Rounded('rounded', 15, 15,0,0);
 </script>

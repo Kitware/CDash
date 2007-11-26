@@ -75,20 +75,20 @@ if($Submit)
   else
     {
     echo mysql_error();
-				return;
+    return;
     }
-		
-		// Add the default groups
-		mysql_query("INSERT INTO buildgroup(name,projectid) ('Nightly','$projectid')");
-		$id = mysql_insert_id();
-		mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
-		mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");
-		$id = mysql_insert_id();
-		mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','2')");
-		mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
-		$id = mysql_insert_id();
-		mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
-		
+  
+  // Add the default groups
+  mysql_query("INSERT INTO buildgroup(name,projectid) ('Nightly','$projectid')");
+  $id = mysql_insert_id();
+  mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
+  mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");
+  $id = mysql_insert_id();
+  mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','2')");
+  mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
+  $id = mysql_insert_id();
+  mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
+  
   /** Add the logo if any */
   if($contents)
     {  
@@ -106,19 +106,19 @@ if($Submit)
       $sql = "INSERT INTO image(img, extension, checksum)
        VALUES ('$contents', '$filetype', '$checksum')";
       if(mysql_query("$sql"))
-								{
-								$imgid = mysql_insert_id();
-															}
-													}
-											if($imgid)
-													{
-													$sql = "INSERT INTO image2project(imgid, projectid)
-														VALUES ('$imgid', '$projectid')";
-													if(!mysql_query("$sql"))
-								{
-								echo mysql_error();
-								return;
-								}
+        {
+        $imgid = mysql_insert_id();
+               }
+             }
+           if($imgid)
+             {
+             $sql = "INSERT INTO image2project(imgid, projectid)
+              VALUES ('$imgid', '$projectid')";
+             if(!mysql_query("$sql"))
+        {
+        echo mysql_error();
+        return;
+        }
       }
     } // end if contents
   } // end submit

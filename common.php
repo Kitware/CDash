@@ -389,13 +389,13 @@ function add_site($name,$description="",$processor="",$numprocessors="1")
     }
   
   // If not found we create the site
-		// We retrieve the geolocation from the IP address
-		$lat = "";
-		$long = "";
+  // We retrieve the geolocation from the IP address
+  $lat = "";
+  $long = "";
   $ip = $_SERVER['REMOTE_ADDR'];
-		
-		// Ask hostip.info for geolocation
-		$curl = curl_init();
+  
+  // Ask hostip.info for geolocation
+  $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
       
   ob_start();
@@ -417,18 +417,18 @@ function add_site($name,$description="",$processor="",$numprocessors="1")
     $long = substr($httpReply,$pos+11,$pos2-$pos-11);
     } 
   curl_close($curl);
-		
-		$latitude = "";
-		$longitude = "";
-		
-		// Sanity check
-	 if(strlen($lat) > 0 && strlen($long)>0
+  
+  $latitude = "";
+  $longitude = "";
+  
+  // Sanity check
+  if(strlen($lat) > 0 && strlen($long)>0
      && $lat[0] != ' ' && $long[0] != ' '
     )
-				{
-				$latitude = $lat;
-				$longitude = $long;
-				}
+    {
+    $latitude = $lat;
+    $longitude = $long;
+    }
 
   mysql_query ("INSERT INTO site (name,description,processor,numprocessors,ip,latitude,longitude) 
                           VALUES ('$name','$description','$processor','$numprocessors','$ip','$latitude','$longitude')");
@@ -443,31 +443,31 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
                            VALUES ('$projectid','$siteid','$name','$stamp','$type','$generator',
                                   '$starttime','$endtime','$submittime','$command','$log')");
   
-		$buildid = mysql_insert_id();
+  $buildid = mysql_insert_id();
 
   // Insert the build into the proper group
   // 1) Check if we have any build2grouprules for this build
-		$build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
-		                                WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
-																																		AND (b2g.groupid=bg.id AND bg.projectid='$projectid') AND $submittime>b2g.begintime AND $submittime<b2g.endtime");
-																																		
-		if(mysql_num_rows($build2grouprule)>0)
-		  {
-				$build2grouprule_array = mysql_fetch_array($build2grouprule);
+  $build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
+                                  WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
+                                  AND (b2g.groupid=bg.id AND bg.projectid='$projectid') AND $submittime>b2g.begintime AND $submittime<b2g.endtime");
+                                  
+  if(mysql_num_rows($build2grouprule)>0)
+    {
+    $build2grouprule_array = mysql_fetch_array($build2grouprule);
     $groupid = $build2grouprule_array["groupid"];
-				
-				mysql_query ("INSERT INTO build2group (groupid,buildid) 
+    
+    mysql_query ("INSERT INTO build2group (groupid,buildid) 
                   VALUES ('$groupid','$buildid')");
-		  }
-		else // we don't have any rules we use the type 
-		  {
-	   $buildgroup = mysql_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
-				$buildgroup_array = mysql_fetch_array($buildgroup);
+    }
+  else // we don't have any rules we use the type 
+    {
+    $buildgroup = mysql_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
+    $buildgroup_array = mysql_fetch_array($buildgroup);
     $groupid = $buildgroup_array["id"];
-				
- 			mysql_query ("INSERT INTO build2group (groupid,buildid) 
+    
+    mysql_query ("INSERT INTO build2group (groupid,buildid) 
                   VALUES ('$groupid','$buildid')");
-		  }
+    }
   return $buildid;
 }
 

@@ -12,13 +12,13 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-									
-									     <!-- Include CDash Menu Stylesheet -->    
+         
+              <!-- Include CDash Menu Stylesheet -->    
     <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
     
     <!-- Include the rounding css -->
     <script src="javascript/rounded.js"></script>
-				
+    
        </head>
        <body bgcolor="#ffffff">
    
@@ -59,8 +59,8 @@
 <xsl:if test="cdash/user_admin=1">
 <table>
   <tr><td width="95"><div align="right"></div></td><td bgcolor="#DDDDDD"><a href="createProject.php">[Create project]</a></td></tr>
-		<tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="manageBuildGroup.php">[Manage build groups]</a></td></tr>
-		<tr><td width="95"><div align="right"></div></td><td bgcolor="#DDDDDD"><a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a></td></tr>
+  <tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="manageBuildGroup.php">[Manage build groups]</a></td></tr>
+  <tr><td width="95"><div align="right"></div></td><td bgcolor="#DDDDDD"><a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a></td></tr>
 </table>
 </xsl:if>
 <br/>
