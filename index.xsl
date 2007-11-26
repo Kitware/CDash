@@ -71,7 +71,7 @@
       <!-- If the build is expected -->
       <xsl:if test="expected=1">
       <a>
-      <xsl:attribute name="href">javascript:expectedinfo_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="/cdash/dashboard/projectid"/>','<xsl:value-of select="buildtype"/>','<xsl:value-of select="/cdash/dashboard/unixtimestamp"/>')</xsl:attribute>
+      <xsl:attribute name="href">javascript:expectedinfo_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="expecteddivname"/>','<xsl:value-of select="/cdash/dashboard/projectid"/>','<xsl:value-of select="buildtype"/>','<xsl:value-of select="/cdash/dashboard/unixtimestamp"/>')</xsl:attribute>
       <img name="buildgroup" SRC="images/Info.png" border="0"></img>
       </a>
       </xsl:if>
@@ -92,7 +92,7 @@
       </div>
       
       <div>
-      <xsl:attribute name="id">infoexpected_<xsl:value-of select="siteid"/>_<xsl:value-of select="buildname"/></xsl:attribute>
+      <xsl:attribute name="id">infoexpected_<xsl:value-of select="expecteddivname"/></xsl:attribute>
       </div>
       
       </td>

@@ -91,7 +91,7 @@ function generate_main_dashboard_XML($projectid,$date)
   <datetime>".date("l, F d Y H:i:s",$currenttime)."</datetime>
   <date>".$date."</date>
   <unixtimestamp>".$currenttime."</unixtimestamp>
-		<svn>".$svnurl."</svn>
+  <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
   <home>".$homeurl."</home>
   <logoid>".$logoid."</logoid> 
@@ -132,7 +132,7 @@ function generate_main_dashboard_XML($projectid,$date)
     
   // builds
   //$xml .= "<builds>";
-		
+  
   $totalerrors = 0;
   $totalwarnings = 0;
   $totalconfigure = 0;
@@ -140,34 +140,40 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalfail= 0;
   $totalpass = 0; 
   $totalna = 0; 
-		    
-		// Local function to add expected builds
-		function add_expected_builds($groupid,$currenttime,$received_builds)
-		  {
-				$xml = "";
-				$build2grouprule = mysql_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
-				                                WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
-																																				AND UNIX_TIMESTAMP(g.starttime)<$currenttime AND (UNIX_TIMESTAMP(g.endtime)>$currenttime OR g.endtime='0000-00-00 00:00:00')
-																																				");
+      
+  // Local function to add expected builds
+  function add_expected_builds($groupid,$currenttime,$received_builds)
+    {
+    $xml = "";
+    $build2grouprule = mysql_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
+                                    WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
+                                    AND UNIX_TIMESTAMP(g.starttime)<$currenttime AND (UNIX_TIMESTAMP(g.endtime)>$currenttime OR g.endtime='0000-00-00 00:00:00')
+                                    ");
     while($build2grouprule_array = mysql_fetch_array($build2grouprule))
-				  {
-						$key = $build2grouprule_array["name"]."_".$build2grouprule_array["buildname"];
-						if(array_search($key,$received_builds) === FALSE) // add only if not found
-						  {						
-								$xml .= "<build>";
-								$xml .= add_XML_value("site",$build2grouprule_array["name"]);
-								$xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
-								$xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
-								$xml .= add_XML_value("buildtype",$build2grouprule_array["buildtype"]);
-								$xml .= add_XML_value("expected","1");
-								$xml .= add_XML_value("submitdate","No Submission");
-								$xml  .= "</build>";
-								}
-						}
-				return $xml;
-		  }		
-				
-				
+      {
+      $key = $build2grouprule_array["name"]."_".$build2grouprule_array["buildname"];
+      if(array_search($key,$received_builds) === FALSE) // add only if not found
+        {      
+        $xml .= "<build>";
+        $xml .= add_XML_value("site",$build2grouprule_array["name"]);
+        $xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
+        $xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
+        $xml .= add_XML_value("buildtype",$build2grouprule_array["buildtype"]);
+        $xml .= add_XML_value("expected","1");
+
+        $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"]; 
+        $divname = str_replace("+","_",$divname);
+        $divname = str_replace(".","_",$divname);
+
+        $xml .= add_XML_value("expecteddivname",$divname);
+        $xml .= add_XML_value("submitdate","No Submission");
+        $xml  .= "</build>";
+        }
+      }
+    return $xml;
+    }  
+    
+    
   // Check the builds
   // Beginning timestamp is the previous nightly
   //$beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
@@ -182,58 +188,58 @@ function generate_main_dashboard_XML($projectid,$date)
     $beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp-24*3600),date("d",$end_timestamp-24*3600),date("Y",$end_timestamp-24*3600));
     }
     
-		// We shoudln't get any builds for group that have been deleted (otherwise something is wrong
+  // We shoudln't get any builds for group that have been deleted (otherwise something is wrong
   $builds = mysql_query("SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
-		                       FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
+                         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
                          WHERE UNIX_TIMESTAMP(b.starttime)<$end_timestamp AND UNIX_TIMESTAMP(b.starttime)>$beginning_timestamp
-                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id 	
-																									AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
-																									ORDER BY gp.position ASC,b.starttime DESC");
+                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
+                         AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
+                         ORDER BY gp.position ASC,b.starttime DESC");
   echo mysql_error();
-		
-		// The SQL results are ordered by group so this should work
-		// Group position have to be continuous
-		$previousgroupposition = -1;
-		
-		$received_builds = array();
-		
+  
+  // The SQL results are ordered by group so this should work
+  // Group position have to be continuous
+  $previousgroupposition = -1;
+  
+  $received_builds = array();
+  
   while($build_array = mysql_fetch_array($builds))
     {
-				$groupposition = $build_array["position"];
-				if($previousgroupposition != $groupposition)
-				  {
-						$groupname = $build_array["groupname"];		
-						if($previousgroupposition != -1)
-						  {
-								$xml .= add_expected_builds($groupid,$currenttime,$received_builds);
-						  $xml .= "</buildgroup>";
-						  }
-						
-						// We assume that the group position are continuous in N
-						// So we fill in the gap if we are jumping
-						$prevpos = $previousgroupposition+1;
-						if($prevpos == 0)
-						  {
-								$prevpos = 1;
-						  }
-						for($i=$prevpos;$i<$groupposition;$i++)
-					  	{
-								$group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
-								                                        AND gp.position='$i' AND g.projectid='$projectid'
-																																																AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp  OR gp.endtime='0000-00-00 00:00:00')
-																																																"));
-								$xml .= "<buildgroup>";		
-								$xml .= add_XML_value("name",$group["name"]);
-								$xml .= add_expected_builds($group["id"],$currenttime,$received_builds);
-								$xml .= "</buildgroup>";		
-						  }		
-													
-						$xml .= "<buildgroup>";
-						$received_builds = array();
-						$xml .= add_XML_value("name",$groupname);
-						$previousgroupposition = $groupposition;
-				  }
-				$groupid = $build_array["groupid"];
+    $groupposition = $build_array["position"];
+    if($previousgroupposition != $groupposition)
+      {
+      $groupname = $build_array["groupname"];  
+      if($previousgroupposition != -1)
+        {
+        $xml .= add_expected_builds($groupid,$currenttime,$received_builds);
+        $xml .= "</buildgroup>";
+        }
+      
+      // We assume that the group position are continuous in N
+      // So we fill in the gap if we are jumping
+      $prevpos = $previousgroupposition+1;
+      if($prevpos == 0)
+        {
+        $prevpos = 1;
+        }
+      for($i=$prevpos;$i<$groupposition;$i++)
+        {
+        $group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
+                                                AND gp.position='$i' AND g.projectid='$projectid'
+                                                AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp  OR gp.endtime='0000-00-00 00:00:00')
+                                                "));
+        $xml .= "<buildgroup>";  
+        $xml .= add_XML_value("name",$group["name"]);
+        $xml .= add_expected_builds($group["id"],$currenttime,$received_builds);
+        $xml .= "</buildgroup>";  
+        }  
+             
+      $xml .= "<buildgroup>";
+      $received_builds = array();
+      $xml .= add_XML_value("name",$groupname);
+      $previousgroupposition = $groupposition;
+      }
+    $groupid = $build_array["groupid"];
     $buildid = $build_array["id"];
     $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
     $nconfigure = mysql_num_rows($configure);
@@ -244,7 +250,7 @@ function generate_main_dashboard_XML($projectid,$date)
     if($nconfigure > 0)
     {
     // Get the site name
-				
+    
     $xml .= "<build>";
     $xml .= add_XML_value("type",strtolower($build_array["type"]));
     $xml .= add_XML_value("site",$site_array["name"]);
@@ -252,9 +258,9 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("buildname",$build_array["name"]);
     $xml .= add_XML_value("buildid",$build_array["id"]);
     $xml .= add_XML_value("generator",$build_array["generator"]);
-				
-				$received_builds[] = $site_array["name"]."_".$build_array["name"];
-				
+    
+    $received_builds[] = $site_array["name"]."_".$build_array["name"];
+    
     $note = mysql_query("SELECT count(buildid) FROM note WHERE buildid='$buildid'");
     $note_array = mysql_fetch_row($note);
     if($note_array[0]>0)
@@ -325,9 +331,9 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("builddate",$build_array["starttime"]);
     $xml .= add_XML_value("submitdate",$build_array["submittime"]);
     //$xml .= "</".strtolower($build_array["type"]).">";
-			$xml .= "</build>";
-				
-				
+   $xml .= "</build>";
+    
+    
     } // END IF CONFIGURE
     
     // Coverage
@@ -371,37 +377,37 @@ function generate_main_dashboard_XML($projectid,$date)
       
       
     } // end looping through builds
-				
-		if(mysql_num_rows($builds)>0)
-		  {
-				$xml .= add_expected_builds($groupid,$currenttime,$received_builds);
- 	  $xml .= "</buildgroup>";
-   	}
-				
-		// Fill in the rest of the info
-		$prevpos = $previousgroupposition+1;
-		if($prevpos == 0)
-		  {
-				$prevpos = 1;
-		  }
-				
-		$groupposition_array = mysql_fetch_array(mysql_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
-																																																								WHERE g.projectid='$projectid' AND g.id=gp.buildgroupid 
-																																																								AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
-																																																								ORDER BY gp.position DESC LIMIT 1"));
-	
-		$finalpos = $groupposition_array["position"];
-		for($i=$prevpos;$i<=$finalpos;$i++)
-		 	{
-				$group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
-																																																																																					AND gp.position='$i' AND g.projectid='$projectid'
-																																																																																					AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp  OR gp.endtime='0000-00-00 00:00:00')"));
-				$xml .= "<buildgroup>";		
-				$xml .= add_XML_value("name",$group["name"]);
-				$xml .= add_expected_builds($group["id"],$currenttime,$received_builds);
-				$xml .= "</buildgroup>";		
-			 }
-	
+    
+  if(mysql_num_rows($builds)>0)
+    {
+    $xml .= add_expected_builds($groupid,$currenttime,$received_builds);
+    $xml .= "</buildgroup>";
+    }
+    
+  // Fill in the rest of the info
+  $prevpos = $previousgroupposition+1;
+  if($prevpos == 0)
+    {
+    $prevpos = 1;
+    }
+    
+  $groupposition_array = mysql_fetch_array(mysql_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
+                                                        WHERE g.projectid='$projectid' AND g.id=gp.buildgroupid 
+                                                        AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
+                                                        ORDER BY gp.position DESC LIMIT 1"));
+ 
+  $finalpos = $groupposition_array["position"];
+  for($i=$prevpos;$i<=$finalpos;$i++)
+    {
+    $group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
+                                                                                     AND gp.position='$i' AND g.projectid='$projectid'
+                                                                                     AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp  OR gp.endtime='0000-00-00 00:00:00')"));
+    $xml .= "<buildgroup>";  
+    $xml .= add_XML_value("name",$group["name"]);
+    $xml .= add_expected_builds($group["id"],$currenttime,$received_builds);
+    $xml .= "</buildgroup>";  
+    }
+ 
   $xml .= add_XML_value("totalConfigure",$totalconfigure);
   $xml .= add_XML_value("totalError",$totalerrors);
   $xml .= add_XML_value("totalWarning",$totalwarnings);
@@ -412,8 +418,8 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= add_XML_value("totalNA",$totalna);
    
   //$xml .= "</builds>";
-		
-		
+  
+  
   $xml .= "</cdash>";
 
   return $xml;
