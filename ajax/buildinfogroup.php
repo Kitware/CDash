@@ -33,6 +33,10 @@ $buildname = $build_array["name"];
 $siteid = $build_array["siteid"];
 $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
+
+$project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
+$project_array = mysql_fetch_array($project);
+
 $buildfailing = mysql_num_rows(mysql_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='0'"));
 $testfailing = mysql_num_rows(mysql_query("SELECT buildid FROM test WHERE buildid='$buildid' AND status='failed'"));
 
@@ -103,18 +107,18 @@ else
   <tr>
   <td bgcolor="#DDDDDD"><font size="2">Build has been failing since <b>
   <?php 
-  echo $datefirstbuildfailing;
   if($buildfailingdays>1)
     {
-    echo " (".$buildfailingdays." days)";
+				$date = substr($datefirstbuildfailing,0,4).substr($datefirstbuildfailing,5,2).substr($datefirstbuildfailing,8,2);
+    echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." days)";
     }
   else if($buildfailingdays==1)
     {
-    echo " (".$buildfailingdays." day)";
+    echo $datefirstbuildfailing." (".$buildfailingdays." day)";
     }
   else 
-    {
-    echo " (today)";
+    {   
+    echo $datefirstbuildfailing." (today)";
     }
   ?>
   </b></font></td>
@@ -126,19 +130,19 @@ else
   ?>
   <tr>
   <td bgcolor="#DDDDDD"><font size="2">Tests have been failing since <b>
-  <?php 
-  echo $datefirsttestfailing;
+  <?php
   if($testfailingdays>1)
     {
-    echo " (".$testfailingdays." days)";
+				$date = substr($datefirsttestfailing,0,4).substr($datefirsttestfailing,5,2).substr($datefirsttestfailing,8,2);
+    echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirsttestfailing."</a> (".$testfailingdays." days)";
     }
   else if($testfailingdays==1)
     {
-    echo " (".$testfailingdays." day)";
+    echo  $datefirsttestfailing." (".$testfailingdays." day)";
     }
   else 
     {
-    echo " (today)";
+    echo  $datefirsttestfailing." (today)";
     }
   ?>
   </b></font></td>
