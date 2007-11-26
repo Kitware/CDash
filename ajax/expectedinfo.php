@@ -40,24 +40,24 @@ if(mysql_num_rows($lastbuild)>0)
   {
   $lastbuild_array = mysql_fetch_array($lastbuild);              
   $datelastbuild = $lastbuild_array["starttime"];
-		$lastsbuilddays = round(($currenttime-strtotime($datelastbuild))/(3600*24));
+  $lastsbuilddays = round(($currenttime-strtotime($datelastbuild))/(3600*24));
   }
 else
   {
-		$lastsbuilddays = "never";
+  $lastsbuilddays = "never";
   }
 ?>
   <table width="100%"  border="0">
   <tr>
   <td bgcolor="#DDDDDD"><font size="2">
   <?php 
-		if($lastsbuilddays == "never")
-		  {
-				echo "This build has never submitted.";
-		  }
-  else if($lastsbuilddays>1)
+  if($lastsbuilddays == "never")
     {
-				$date = substr($datelastbuild,0,4).substr($datelastbuild,5,2).substr($datelastbuild,8,2);
+    echo "This build has never submitted.";
+    }
+  else if($lastsbuilddays>0)
+    {
+    $date = substr($datelastbuild,0,4).substr($datelastbuild,5,2).substr($datelastbuild,8,2);
     echo "This build has not been submitting since <b><a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datelastbuild."</a> (".$lastsbuilddays." days)</b>";
     }
   ?>
@@ -66,3 +66,4 @@ else
 </table>
   </form>
 </html>
+
