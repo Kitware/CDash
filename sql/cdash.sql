@@ -367,7 +367,8 @@ CREATE TABLE `test` (
   `details` text NOT NULL,
   `output` text NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `buildid` (`buildid`)
+  KEY `buildid` (`buildid`),
+  KEY `status` (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
