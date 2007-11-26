@@ -130,6 +130,10 @@ project page</a>
     <td><div align="right"></div></td>
     <td  bgcolor="#DDDDDD"><strong>Create new group</strong></td>
   </tr>
+		<tr>
+    <td><div align="right"></div></td>
+    <td><i>Note: created groups will be kept in the history.</i></td>
+  </tr>
   <tr>
     <td><div align="right">Name:</div></td>
     <td><input name="name" type="text" id="name" size="40"/></td>

@@ -67,6 +67,15 @@
 						<img name="buildgroup" SRC="images/Info.png" border="0"></img>
 						</a>
 						</xsl:if>
+						
+						<!-- If the build is expected -->
+						<xsl:if test="expected=1">
+						<a>
+						<xsl:attribute name="href">javascript:expectedinfo_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="/cdash/dashboard/projectid"/>','<xsl:value-of select="buildtype"/>','<xsl:value-of select="/cdash/dashboard/unixtimestamp"/>')</xsl:attribute>
+						<img name="buildgroup" SRC="images/Info.png" border="0"></img>
+						</a>
+						</xsl:if>
+						
 						  
       <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1">
@@ -80,6 +89,10 @@
 								
 						<div>
 						<xsl:attribute name="id">buildgroup_<xsl:value-of select="buildid"/></xsl:attribute>
+						</div>
+						
+						<div>
+						<xsl:attribute name="id">infoexpected_<xsl:value-of select="siteid"/>_<xsl:value-of select="buildname"/></xsl:attribute>
 						</div>
 						
       </td>

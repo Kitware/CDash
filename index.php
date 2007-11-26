@@ -90,7 +90,8 @@ function generate_main_dashboard_XML($projectid,$date)
   "<dashboard>
   <datetime>".date("l, F d Y H:i:s",$currenttime)."</datetime>
   <date>".$date."</date>
-  <svn>".$svnurl."</svn>
+  <unixtimestamp>".$currenttime."</unixtimestamp>
+		<svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
   <home>".$homeurl."</home>
   <logoid>".$logoid."</logoid> 
@@ -139,12 +140,12 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalfail= 0;
   $totalpass = 0; 
   $totalna = 0; 
-    
+		    
 		// Local function to add expected builds
 		function add_expected_builds($groupid,$currenttime,$received_builds)
 		  {
 				$xml = "";
-				$build2grouprule = mysql_query("SELECT g.siteid,g.buildname,s.name FROM build2grouprule AS g,site as s
+				$build2grouprule = mysql_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
 				                                WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
 																																				AND UNIX_TIMESTAMP(g.starttime)<$currenttime AND (UNIX_TIMESTAMP(g.endtime)>$currenttime OR g.endtime='0000-00-00 00:00:00')
 																																				");
@@ -157,6 +158,7 @@ function generate_main_dashboard_XML($projectid,$date)
 								$xml .= add_XML_value("site",$build2grouprule_array["name"]);
 								$xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
 								$xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
+								$xml .= add_XML_value("buildtype",$build2grouprule_array["buildtype"]);
 								$xml .= add_XML_value("expected","1");
 								$xml .= add_XML_value("submitdate","No Submission");
 								$xml  .= "</build>";
