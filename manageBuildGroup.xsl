@@ -56,6 +56,11 @@
 project page</a>
  </xsl:when>
 <xsl:otherwise>
+
+<xsl:if test="string-length(cdash/warning)>0">
+<xsl:value-of select="cdash/warning"/>
+</xsl:if>
+
 <form name="form1" enctype="multipart/form-data" method="post" action="">
 <table width="100%"  border="0">
   <tr>
