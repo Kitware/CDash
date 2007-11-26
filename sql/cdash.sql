@@ -39,6 +39,32 @@ CREATE TABLE `build` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
+REATE TABLE `buildgroup` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `projectid` int(11) NOT NULL default '0',
+  `starttime` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `endtime` timestamp NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`),
+  KEY `projectid` (`projectid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `buildgroupposition`
+-- 
+
+CREATE TABLE `buildgroupposition` (
+  `buildgroupid` int(11) NOT NULL default '0',
+  `position` int(11) NOT NULL default '0',
+  `starttime` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `endtime` timestamp NOT NULL default '0000-00-00 00:00:00',
+  KEY `buildgroupid` (`buildgroupid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+        
+
+
 -- --------------------------------------------------------
 
 -- 
@@ -71,20 +97,6 @@ CREATE TABLE `build2grouprule` (
         
 
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `buildgroup`
--- 
-
-CREATE TABLE `buildgroup` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL default '',
-  `position` tinyint(4) NOT NULL default '0',
-  `projectid` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `projectid` (`projectid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
 -- --------------------------------------------------------
