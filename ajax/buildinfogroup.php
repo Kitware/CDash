@@ -61,7 +61,7 @@ else
   $datefirstbuildfailing = $firstbuild_array["starttime"];
   }
 
-  $buildfailingdays = (strtotime($starttime)-strtotime($datefirstbuildfailing))/(3600*24);
+  $buildfailingdays = round((strtotime($starttime)-strtotime($datefirstbuildfailing))/(3600*24));
 } // end build failing
 
 if($testfailing)
@@ -91,7 +91,7 @@ else
   $datefirsttestfailing = $firstbuild_array["starttime"];
   }
 
-  $testfailingdays = (strtotime($starttime)-strtotime($datefirsttestfailing))/(3600*24);
+  $testfailingdays = round((strtotime($starttime)-strtotime($datefirsttestfailing))/(3600*24));
 } // end build failing					
 
 									
