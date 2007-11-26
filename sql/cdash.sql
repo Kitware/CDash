@@ -39,7 +39,7 @@ CREATE TABLE `build` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
-REATE TABLE `buildgroup` (
+CREATE TABLE `buildgroup` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `projectid` int(11) NOT NULL default '0',
