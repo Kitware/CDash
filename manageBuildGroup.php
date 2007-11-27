@@ -24,7 +24,8 @@ $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 @$projectid = $_GET["projectid"];
-  
+@$show = $_GET["show"];
+		
 $projects = mysql_query("SELECT id,name FROM project"); // we should check if we are admin on the project
 while($project_array = mysql_fetch_array($projects))
    {
@@ -284,6 +285,12 @@ if($projectid>0)
   {
   $end_timestamp = time()+1; // otherwise it doesn't refresh
   $beginning_timestamp = $end_timestamp-3600*240;
+		
+		$sql = "";
+		if($show>0)
+		  {
+				$sql = "AND g.id='$show'";
+		  }
   
   $builds = mysql_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp, site as s
@@ -291,7 +298,7 @@ if($projectid>0)
                          AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND s.id = b.siteid
                          AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
-                         ORDER BY b.name ASC");
+                         ".$sql."ORDER BY b.name ASC");
   
   $names = array();
   
@@ -326,6 +333,10 @@ if($projectid>0)
   while($group_array = mysql_fetch_array($groups))
     {
     $xml .= "<group>";
+				if($show == $group_array['id'])
+				  {
+						$xml .= add_XML_value("selected","1");
+				  }
     $xml .= add_XML_value("id",$group_array['id']);
     $xml .= add_XML_value("name",$group_array['name']);
     $xml .= add_XML_value("position",$group_array['position']);

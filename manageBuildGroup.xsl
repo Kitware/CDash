@@ -151,6 +151,22 @@ project page</a>
     <td><div align="right"></div></td>
     <td  bgcolor="#DDDDDD"><strong>Global Move</strong></td>
   </tr>
+		<tr>
+    <td width="10%"><div align="right">Show:</div></td>
+    <td width="90%" ><select onchange="location = 'manageBuildGroup.php?projectid='+projectSelection.value+'&amp;show='+this.options[this.selectedIndex].value;"  name="globalMoveSelectionType">
+        <option><xsl:attribute name="value">0</xsl:attribute>All</option>
+       <xsl:for-each select="cdash/project/group">
+        <option>
+        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+								<xsl:if test="selected=1">
+        <xsl:attribute name="selected"></xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="name"/>
+        </option>
+        </xsl:for-each>
+							 </select>
+				</td>
+  </tr>
 		  <tr>
     <td><div align="right"></div></td>
     <td>
@@ -163,7 +179,7 @@ project page</a>
         </xsl:for-each>
 					</select>
 				<br/>
-				Move to group: 
+				Move to group: (select a group even if you want only expected)
 				<select name="groupSelection">
         <option>
         <xsl:attribute name="value">0</xsl:attribute>
