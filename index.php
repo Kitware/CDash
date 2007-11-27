@@ -333,8 +333,8 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("time",round($time/60,1));
       $xml .= "</test>";
       }
-    $xml .= add_XML_value("builddate",date("Y-m-d H:i:s",strtotime($build_array["starttime"]." UTC"))); // use the default timezone
-    $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s",strtotime($build_array["submittime"]." UTC")));// use the default timezone
+    $xml .= add_XML_value("builddate",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC"))); // use the default timezone
+    $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",strtotime($build_array["submittime"]." UTC")));// use the default timezone
    $xml .= "</build>";
     } // END IF CONFIGURE
     
