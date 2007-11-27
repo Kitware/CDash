@@ -611,19 +611,21 @@ function globr($sDir, $sPattern, $nFlags = NULL)
 /** Get dates */
 function get_dates($date,$nightlytime)
 {
-  $nightlyhour = substr($nightlytime,0,2);
-  $nightlyminute = substr($nightlytime,3,2);
-  $nightlysecond = substr($nightlytime,6,2);
+  $nightlytime = strtotime($nightlytime);
+		
+  $nightlyhour = gmdate("H",$nightlytime);
+  $nightlyminute = gmdate("i",$nightlytime);
+  $nightlysecond = gmdate("s",$nightlytime);
   
   if(!isset($date) || strlen($date)==0)
     { 
-    $date = date("Ymd");
+    $date = gmdate("Ymd");
     $currenttime = time();
-    $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
+    $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
     }
    else
     {
-    $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
+    $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
     $currenttime = $today; // minus one second
     }
   
@@ -631,14 +633,14 @@ function get_dates($date,$nightlytime)
 		// the previous date is actually today.
 		if($currenttime > $today)
 		  {
-				$previousdate = date("Ymd",$today);
+				$previousdate = gmdate("Ymd",$today);
 		  }
 		else
 		  {
-				$previousdate = date("Ymd",$today-3600*24);
+				$previousdate = gmdate("Ymd",$today-3600*24);
 		  }
 		
-		$nextdate = date("Ymd",$today+3600*24);
+		$nextdate = gmdate("Ymd",$today+3600*24);
   return array($previousdate, $currenttime, $nextdate);
 }
 
@@ -802,11 +804,10 @@ function get_cdash_dashboard_xml($projectname, $dates)
   return $xml;
 }
 
-
+/** */
 function get_cdash_dashboard_xml_by_name($projectname, $dates)
 {
   return get_cdash_dashboard_xml($projectname, $dates);
-} 
-
+}
 
 ?>
