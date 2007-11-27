@@ -79,13 +79,19 @@
         
       <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1">
-      <xsl:if test="string-length(buildid)>0">
-      <a>
-      <xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
-      <img name="buildgroup" SRC="images/folder.png" border="0"></img>
-      </a>
-      </xsl:if>
+        <xsl:if test="string-length(buildid)>0">
+        <a>
+        <xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
+        <img name="buildgroup" SRC="images/folder.png" border="0"></img>
+        </a>
         </xsl:if>
+					  	<xsl:if test="string-length(buildid)=0">
+        <a>
+        <xsl:attribute name="href">javascript:buildnosubmission_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="expecteddivname"/>','<xsl:value-of select="buildgroupid"/>','<xsl:value-of select="buildtype"/>')</xsl:attribute>
+        <img name="buildgroup" SRC="images/folder.png" border="0"></img>
+        </a>
+        </xsl:if>
+						</xsl:if> <!-- end admin -->
         
       <div>
       <xsl:attribute name="id">buildgroup_<xsl:value-of select="buildid"/></xsl:attribute>
