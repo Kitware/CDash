@@ -112,7 +112,7 @@ if($CreateGroup)
   $groupstarttime = $groupposition_array["starttime"];
   $now = date("Y-m-d H:i:s");
   $newstarttime = $now;
- 
+		
   // If we are adding several groups in a short period of time then
   // we don't create a new set
   /*if(abs(strtotime($now)-strtotime($groupstarttime))<3600) // 1 hour
@@ -282,7 +282,7 @@ if($GlobalMove)
 // Find the recent builds for this project
 if($projectid>0)
   {
-		$end_timestamp = time();
+		$end_timestamp = time()+1; // otherwise it doesn't refresh
 		$beginning_timestamp = $end_timestamp-3600*240;
 		
 	 $builds = mysql_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,gp.position,g.id as groupid 
@@ -291,15 +291,20 @@ if($projectid>0)
                          AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
 																									AND s.id = b.siteid
                          AND UNIX_TIMESTAMP(gp.starttime)<$end_timestamp AND (UNIX_TIMESTAMP(gp.endtime)>$end_timestamp OR gp.endtime='0000-00-00 00:00:00')
-                         ORDER BY gp.position ASC,b.starttime DESC");
+                         ORDER BY s.name ASC");
+		
+		$names = array();
 		
 		while($build_array = mysql_fetch_array($builds))
     {
-
-				$xml .= "<currentbuild>";
-				$xml .= add_XML_value("id",$build_array['id']);
-				$xml .= add_XML_value("name",$build_array['sitename']." ".$build_array['name']." [".$build_array['type']."] ".$build_array['groupname']);
-				$xml .= "</currentbuild>";
+				if(array_search($build_array['sitename'].$build_array['name'],$names) === FALSE)
+				  {
+						$xml .= "<currentbuild>";
+						$xml .= add_XML_value("id",$build_array['id']);
+						$xml .= add_XML_value("name",$build_array['sitename']." ".$build_array['name']." [".$build_array['type']."] ".$build_array['groupname']);
+						$xml .= "</currentbuild>";
+						$names[] = $build_array['sitename'].$build_array['name'];
+						}
 				}
   }
 
