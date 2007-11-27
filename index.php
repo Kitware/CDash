@@ -88,7 +88,7 @@ function generate_main_dashboard_XML($projectid,$date)
   // Main dashboard section 
   $xml .=
   "<dashboard>
-  <datetime>".date("l, F d Y H:i:s",$currenttime)."</datetime>
+  <datetime>".date("l, F d Y H:i:s T",$currenttime)."</datetime>
   <date>".$date."</date>
   <unixtimestamp>".$currenttime."</unixtimestamp>
   <svn>".$svnurl."</svn>
@@ -159,6 +159,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
         $xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
         $xml .= add_XML_value("buildtype",$build2grouprule_array["buildtype"]);
+								$xml .= add_XML_value("buildgroupid",$groupid);
         $xml .= add_XML_value("expected","1");
 
         $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"]; 
@@ -171,21 +172,22 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       }
     return $xml;
-    }  
-    
+    }
     
   // Check the builds
   // Beginning timestamp is the previous nightly
-  //$beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
-  $nightlyhour = substr($project_array["nightlytime"],0,2);
-  $nightlyminute = substr($project_array["nightlytime"],3,2);
-  $nightlysecond = substr($project_array["nightlytime"],6,2);
+		$nightlytime = strtotime($project_array["nightlytime"]);
+		
+  $nightlyhour = gmdate("H",$nightlytime);//substr($project_array["nightlytime"],0,2);
+  $nightlyminute = gmdate("i",$nightlytime);//substr($project_array["nightlytime"],3,2);
+  $nightlysecond = gmdate("s",$nightlytime);//substr($project_array["nightlytime"],6,2);
+		
   $end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
   
-  $beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp),date("d",$end_timestamp),date("Y",$end_timestamp));
+  $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp),gmdate("d",$end_timestamp),gmdate("Y",$end_timestamp));
   if($end_timestamp<$beginning_timestamp)
     {
-    $beginning_timestamp = mktime($nightlyhour,$nightlyminute,$nightlysecond,date("m",$end_timestamp-24*3600),date("d",$end_timestamp-24*3600),date("Y",$end_timestamp-24*3600));
+    $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp-24*3600),gmdate("d",$end_timestamp-24*3600),gmdate("Y",$end_timestamp-24*3600));
     }
     
   // We shoudln't get any builds for group that have been deleted (otherwise something is wrong
