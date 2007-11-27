@@ -314,7 +314,7 @@ CREATE TABLE `project` (
   `logo` mediumblob,
   `public` tinyint(4) NOT NULL default '1',
   `coveragethreshold` smallint(6) NOT NULL default '70',
-  `nightlytime` time NOT NULL default '00:00:00',
+  `nightlytime` varchar(50) NOT NULL default '00:00:00',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -415,5 +415,6 @@ CREATE TABLE `user2project` (
   `userid` int(11) NOT NULL default '0',
   `projectid` int(11) NOT NULL default '0',
   `role` int(11) NOT NULL default '0',
+  `cvslogin` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`userid`,`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
