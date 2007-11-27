@@ -26,7 +26,38 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 @$CreateDefaultGroups = $_POST["CreateDefaultGroups"];
 @$AssignBuildToDefaultGroups = $_POST["AssignBuildToDefaultGroups"];
-    
+@$FixBuildBasedOnRule = $_POST["FixBuildBasedOnRule"];
+
+if($FixBuildBasedOnRule)
+  {
+		// loop through the list of build2group
+		$buildgroups = mysql_query("SELECT * from build2group");
+		while($buildgroup_array = mysql_fetch_array($buildgroups))
+		  {
+				$buildid = $buildgroup_array["buildid"];
+				
+				$build = mysql_query("SELECT * from build WHERE id='$buildid'");
+    $build_array = mysql_fetch_array($build);
+	   $type = $build_array["type"];
+				$name = $build_array["name"];
+				$siteid = $build_array["siteid"];
+				$projectid = $build_array["projectid"];
+				$submittime = $build_array["submittime"];
+								
+				$build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
+                                    WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
+                                    AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
+																																	  	AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
+    echo mysql_error();                              
+			 if(mysql_num_rows($build2grouprule)>0)
+				 	{
+					 $build2grouprule_array = mysql_fetch_array($build2grouprule);
+				 	$groupid = $build2grouprule_array["groupid"];
+				 	mysql_query ("UPDATE build2group SET groupid='$groupid' WHERE buildid='$buildid'");
+				 	}
+			 }
+		} // end FixBuildBasedOnRule
+
 if($CreateDefaultGroups)
   {
   // Loop throught the projects

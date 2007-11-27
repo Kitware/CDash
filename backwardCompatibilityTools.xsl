@@ -63,6 +63,10 @@
     <td><div align="right">Assign unknown builds to group based on type:</div></td>
     <td><div align="left"><input type="submit" name="AssignBuildToDefaultGroups" value="Assign builds to default groups"/></div></td>
   </tr>
+		<tr>
+    <td><div align="right">Fix build group based on build rules:</div></td>
+    <td><div align="left"><input type="submit" name="FixBuildBasedOnRule" value="Fix build groups"/></div></td>
+  </tr>
 </table>
 </form>
         
