@@ -626,8 +626,18 @@ function get_dates($date,$nightlytime)
     $currenttime = $today; // minus one second
     }
   
-  $previousdate = date("Ymd",$today-3600*24);
-  $nextdate = date("Ymd",$today+3600*24);
+		// If we are the same day and the time is more than the current dashboard
+		// the previous date is actually today.
+		if($currenttime > $today)
+		  {
+				$previousdate = date("Ymd",$today);
+		  }
+		else
+		  {
+				$previousdate = date("Ymd",$today-3600*24);
+		  }
+		
+		$nextdate = date("Ymd",$today+3600*24);
   return array($previousdate, $currenttime, $nextdate);
 }
 
