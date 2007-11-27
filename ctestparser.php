@@ -133,9 +133,9 @@ function parse_build($xmlarray,$projectid)
   // First we look at the site and add it if not in the list
   $siteid = add_site($sitename);
       
-  $start_time = date("Y-m-d H:i:s",$starttimestamp);
-  $end_time = date("Y-m-d H:i:s",$endtimestamp);
-  $submit_time = date("Y-m-d H:i:s");
+  $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
+  $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
+  $submit_time = gmdate("Y-m-d H:i:s");
   
   $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,$command,$log);
   
@@ -224,9 +224,9 @@ function create_build($xmlarray,$projectid)
   // First we look at the site and add it if not in the list
   $siteid = add_site($sitename);
        
-  $start_time = date("Y-m-d H:i:s",$starttimestamp);
-  $end_time = date("Y-m-d H:i:s",$endtimestamp);
-  $submit_time = date("Y-m-d H:i:s");
+  $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
+  $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
+  $submit_time = gmdate("Y-m-d H:i:s");
   
   $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
   
@@ -257,8 +257,8 @@ function parse_configure($xmlarray,$projectid)
   $status = getXMLValue($xmlarray,"CONFIGURESTATUS","CONFIGURE");
   
 
-  $start_time = date("Y-m-d H:i:s",$starttimestamp);
-  $end_time = date("Y-m-d H:i:s",$endtimestamp);
+  $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
+  $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
   
   add_configure($buildid,$start_time,$end_time,$command,$log,$status);
 }
@@ -393,9 +393,9 @@ function parse_coverage($xmlarray,$projectid)
     // First we look at the site and add it if not in the list
     $siteid = add_site($sitename);
         
-    $start_time = date("Y-m-d H:i:s",$starttimestamp);
-    $end_time = date("Y-m-d H:i:s",$endtimestamp);
-    $submit_time = date("Y-m-d H:i:s");
+    $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
+    $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
+    $submit_time = gmdate("Y-m-d H:i:s");
     
     $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
     }
@@ -531,8 +531,8 @@ function parse_update($xmlarray,$projectid)
     $command = getXMLValue($xmlarray,"UPDATECOMMAND","UPDATE");
     $type = getXMLValue($xmlarray,"UPDATETYPE","UPDATE");
     
-    $start_time = date("Y-m-d H:i:s",$starttimestamp);
-    $end_time = date("Y-m-d H:i:s",$endtimestamp);
+    $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
+    $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
 
     //add_update($buildid,$start_time,$end_time,$command,$type);
     
@@ -612,7 +612,7 @@ function parse_note($xmlarray,$projectid)
     
   $date = getXMLValue($xmlarray,"DATETIME","NOTE");
   $timestamp = str_to_time($date,$stamp);
-  $time = date("Y-m-d H:i:s",$timestamp);
+  $time = gmdate("Y-m-d H:i:s",$timestamp);
   
   $text = getXMLValue($xmlarray,"TEXT","NOTE");
   
@@ -652,9 +652,9 @@ function parse_dynamicanalysis($xmlarray,$projectid)
     // First we look at the site and add it if not in the list
     $siteid = add_site($sitename);
         
-    $start_time = date("Y-m-d H:i:s",$starttimestamp);
-    $end_time = date("Y-m-d H:i:s",$endtimestamp);
-    $submit_time = date("Y-m-d H:i:s");
+    $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
+    $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
+    $submit_time = gmdate("Y-m-d H:i:s");
     
     $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
     }
