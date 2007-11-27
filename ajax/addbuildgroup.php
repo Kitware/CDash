@@ -53,7 +53,7 @@ if($markexpected)
     }
   else if($expected) // we add the grouprule
     {
-    $now = date("Y-m-d H:i:s");
+    $now = gmdate("Y-m-d H:i:s");
     mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
                  VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
     }
@@ -74,7 +74,7 @@ mysql_query("INSERT INTO build2group(groupid,buildid) VALUES ('$groupid','$build
 if($definerule)
   {
   // Mark any previous rule as done
-  $now = date("Y-m-d H:i:s");
+  $now = gmdate("Y-m-d H:i:s");
   mysql_query("UPDATE build2grouprule SET endtime='$now'
                WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
                AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
