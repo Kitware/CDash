@@ -90,13 +90,10 @@ function getXMLValue($xmlarray,$tag,$parenttag)
  *  \WARNING this function needs improvement */
 function str_to_time($str,$stamp)
 {
-  $str = str_replace("Eastern","",$str);
-  $str = str_replace("Standard","",$str);
-  $str = str_replace("Daylight","",$str);
-  $str = str_replace("Time","",$str);
-  $str = str_replace("CEST","",$str); 
+  $str = str_replace("Eastern Standard Time","EST",$str);
+  $str = str_replace("Eastern Daylight Time","EDT",$str);
    
-  if(strtotime($str) == -1) // should be FALSE for php 5
+  if(strlen($stamp)>0 && strtotime($str) == -1) // should be FALSE for php 5
     {
     // find the hours
     $pos = strpos($str,":");
