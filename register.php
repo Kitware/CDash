@@ -93,6 +93,6 @@ function RegisterForm($regerror)
 if(!register())                 // registration failed 
   RegisterForm($reg);    // display register form 
 else
-  header( 'location: login.php?note=register' );
+  header( 'location: user.php?note=register' );
 
 ?>

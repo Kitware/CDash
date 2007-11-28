@@ -12,13 +12,11 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-         <script>
-          
+         <script>    
           function doSubmit()
-          {
+            {
             document.getElementById('url').value = 'catchbot';
-          }
-          
+            }
          </script>
        </head>
        <body bgcolor="#ffffff">
