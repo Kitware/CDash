@@ -12,7 +12,9 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-        
+        <!-- Include CDash Menu Stylesheet -->    
+        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+  
         <!-- Include the rounding css -->
         <script src="javascript/rounded.js"></script>
 
@@ -46,6 +48,13 @@ Creating new project
 </tr>
 <tr>
 <td></td><td>
+<!-- Menu -->
+<ul id="Nav" class="nav">
+  <li>
+     <a href="user.php">Back</a>
+  </li>
+</ul>
+<!-- end menu -->
 </td>
 </tr>
 </table>
@@ -62,6 +71,7 @@ Creating new project
 <xsl:otherwise>
 <form name="form1" enctype="multipart/form-data" method="post" action="">
 <table>
+  <xsl:if test="cdash/edit=1">
   <tr>
 		  <td width="99"></td>
     <td><div align="right"><strong>Project:</strong></div></td>
@@ -82,8 +92,9 @@ Creating new project
         </xsl:for-each>
         </select></td>
   </tr>
+		</xsl:if>
   <!-- If a project has been selected -->
-  <xsl:if test="count(cdash/project)>0">
+  <xsl:if test="count(cdash/project)>0 or cdash/edit=0">
 		<xsl:if test="cdash/edit=0">
 				<tr>
 				  <td></td>
@@ -162,9 +173,7 @@ Creating new project
     <td><div align="right"><strong>Coverage Threshold:</strong></div></td>
     <td><input name="coverageThreshold" type="text" id="coverageThreshold" size="2" value="70">
 				<xsl:attribute name="value">
-				<xsl:if test="string-length(cdash/project/coveragethreshold)=0">
-				  70
-				</xsl:if>
+				<xsl:if test="string-length(cdash/project/coveragethreshold)=0">70</xsl:if>
 				<xsl:value-of select="cdash/project/coveragethreshold"/>
 				</xsl:attribute>
 				</input>
@@ -176,9 +185,7 @@ Creating new project
     <td>
 				<input name="nightlyTime" type="text" id="nightlyTime" size="20">
 				<xsl:attribute name="value">
-				<xsl:if test="string-length(cdash/project/nightlytime)=0">
-				  00:00:00 EST
-				</xsl:if>
+				<xsl:if test="string-length(cdash/project/nightlytime)=0">00:00:00 EST</xsl:if>
 				  <xsl:value-of select="cdash/project/nightlytime"/>
 				</xsl:attribute>
 				</input></td>

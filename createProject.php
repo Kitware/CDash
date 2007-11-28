@@ -51,6 +51,10 @@ if($edit || isset($projectid))
   {
 		$xml .= add_XML_value("edit","1");
   }
+else
+		{
+		$xml .= add_XML_value("edit","0");
+		}
 
 
 /** Strip the HTTP */
@@ -87,11 +91,11 @@ if($Submit)
     }
   
   $projectid = -1;
-  
+  $imgid = 0;
+		
 		/** Add the logo if any */
   if($contents)
-    {  
-    $imgid = 0;
+    {
     $checksum = crc32($contents);
     //check if we already have a copy of this file in the database
     $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
@@ -114,7 +118,7 @@ if($Submit)
   //We should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
   $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,public,imageid,coveragethreshold,nightlytime) 
-   VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$Public','$imgid','$CoverageThreshold','$NightlyTime')"; 
+          VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$Public','$imgid','$CoverageThreshold','$NightlyTime')"; 
   if(mysql_query("$sql"))
     {
     $projectid = mysql_insert_id();

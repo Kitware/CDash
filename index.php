@@ -83,7 +83,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
   list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
-  $logoid = getLogoID($projectid); 
+  $logoid = getLogoID($projectid);
 
   // Main dashboard section 
   $xml .=

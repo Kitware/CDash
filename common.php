@@ -736,16 +736,15 @@ function get_related_dates($projectname, $basedate)
 function getLogoID($projectid)
 {
   //asume the caller already connected to the database
-  //$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  //mysql_select_db("$CDASH_DB_NAME",$db);
-  $query = "SELECT imgid FROM image2project WHERE projectid='$projectid'";
+  $query = "SELECT imageid FROM project WHERE id='$projectid'";
   $result = mysql_query($query);
-  if(!$result)
+		if(!$result)
     {
     return 0;
     }
+
   $row = mysql_fetch_array($result);
-  return $row["imgid"];
+  return $row["imageid"];
 }
 
 

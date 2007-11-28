@@ -41,6 +41,7 @@
      <a href="user.php">Back</a>
   </li>
 </ul>
+<!-- end menu -->
 </td>
 </tr>
 </table>
