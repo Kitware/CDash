@@ -259,17 +259,6 @@ CREATE TABLE `image` (
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `image2project`
--- 
-
-CREATE TABLE `image2project` (
-  `imgid` int(11) NOT NULL default '0',
-  `projectid` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`imgid`,`projectid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -311,7 +300,7 @@ CREATE TABLE `project` (
   `homeurl` varchar(255) NOT NULL default '',
   `cvsurl` varchar(255) NOT NULL default '',
   `bugtrackerurl` varchar(255) NOT NULL default '',
-  `logo` mediumblob,
+  `imageid` int(11) NOT NULL default '0',
   `public` tinyint(4) NOT NULL default '1',
   `coveragethreshold` smallint(6) NOT NULL default '70',
   `nightlytime` varchar(50) NOT NULL default '00:00:00',
