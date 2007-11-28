@@ -25,8 +25,22 @@
 </td>
 <td valign="bottom" width="100%">
 <div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">  
-<font color="#ffffff"><h2>CDash - New Project</h2>
-<h3>Creating new project</h3></font>
+<font color="#ffffff"><h2>
+<xsl:if test="cdash/edit=1">
+CDash - Edit Project
+</xsl:if>
+<xsl:if test="cdash/edit=0">
+CDash - New Project
+</xsl:if>
+</h2>
+<h3>
+<xsl:if test="cdash/edit=1">
+Editing a project
+</xsl:if>
+<xsl:if test="cdash/edit=0">
+Creating new project
+</xsl:if>
+</h3></font>
 <br/></div>
 </td>
 </tr>
@@ -47,49 +61,139 @@
  </xsl:when>
 <xsl:otherwise>
 <form name="form1" enctype="multipart/form-data" method="post" action="">
-<table width="100%"  border="0">
+<table>
   <tr>
-    <td width="14%"><div align="right"><strong>Name:</strong></div></td>
-    <td width="86%"><input name="name" type="text" id="name"/></td>
+		  <td width="99"></td>
+    <td><div align="right"><strong>Project:</strong></div></td>
+    <td><select onchange="location = 'createProject.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
+        <option>
+        <xsl:attribute name="value">0</xsl:attribute>
+        Choose...
+        </option>
+        
+        <xsl:for-each select="cdash/availableproject">
+        <option>
+        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+        <xsl:if test="selected=1">
+        <xsl:attribute name="selected"></xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="name"/>
+        </option>
+        </xsl:for-each>
+        </select></td>
   </tr>
+  <!-- If a project has been selected -->
+  <xsl:if test="count(cdash/project)>0">
+		<xsl:if test="cdash/edit=0">
+				<tr>
+				  <td></td>
+						<td><div align="right"><strong>Name:</strong></div></td>
+						<td><input name="name" type="text" id="name"/></td>
+				</tr>
+		</xsl:if>	
   <tr>
+		  <td></td>
     <td><div align="right"><strong>Description:</strong></div></td>
-    <td><textarea name="description" id="description" cols="40" rows="5"></textarea></td>
+    <td><textarea name="description" id="description" cols="40" rows="5">
+				<xsl:value-of select="cdash/project/description"/>
+				</textarea></td>
   </tr>
   <tr>
+		  <td></td>
     <td><div align="right"><strong>Home URL :</strong></div></td>
-    <td><input name="homeURL" type="text" id="homeURL" size="50"/></td>
+    <td><input name="homeURL" type="text" id="homeURL" size="50">
+				<xsl:attribute name="value">
+				<xsl:value-of select="cdash/project/homeurl"/>
+				</xsl:attribute>
+				</input>
+				</td>
   </tr>
   <tr>
+		  <td></td>
     <td><div align="right"><strong>CVS URL :</strong></div></td>
-    <td><input name="cvsURL" type="text" id="cvsURL" size="50"/></td>
+    <td><input name="cvsURL" type="text" id="cvsURL" size="50">
+					<xsl:attribute name="value">
+				<xsl:value-of select="cdash/project/cvsurl"/>
+				</xsl:attribute>
+				</input>
+				</td>
   </tr>
   <tr>
+		  <td></td>
     <td><div align="right"><strong>Bug Tracker URL:</strong></div></td>
-    <td><input name="bugURL" type="text" id="bugURL" size="50"/></td>
+    <td><input name="bugURL" type="text" id="bugURL" size="50">	
+				<xsl:attribute name="value">
+				<xsl:value-of select="cdash/project/bugurl"/>
+				</xsl:attribute>
+				</input></td>
   </tr>
   <tr>
+		  <td></td>
     <td><div align="right"><strong>Logo:</strong></div></td>
     <td><input type="file" name="logo" size="40"/></td>
   </tr>
+		<xsl:if test="cdash/edit=1">
+		<tr>
+		  <td></td>
+				<td><div align="right"><strong>Current logo:</strong></div></td>
+				<td>
+				<xsl:if test="cdash/project/imageid=0">
+				[none]
+				</xsl:if>
+				<img border="0">
+				<xsl:attribute name="alt"><xsl:value-of select="cdash/dashboard/project/name"/></xsl:attribute>
+				<xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/project/imageid"/></xsl:attribute>
+				</img>
+				</td>
+		</tr>
+		</xsl:if>
   <tr>
+		  <td></td>
     <td><div align="right"><strong>Public Dashboard:</strong></div></td>
-    <td><input type="checkbox" name="public" value="1" checked="true"/></td>
+    <td><input type="checkbox" name="public" value="1">
+				<xsl:if test="cdash/project/public=1">
+				<xsl:attribute name="checked"></xsl:attribute>
+				</xsl:if>
+				</input>
+				</td>
   </tr>
   <tr>
+		  <td></td>
     <td><div align="right"><strong>Coverage Threshold:</strong></div></td>
-    <td><input name="coverageThreshold" type="text" id="coverageThreshold" size="2" value="70"/></td>
+    <td><input name="coverageThreshold" type="text" id="coverageThreshold" size="2" value="70">
+				<xsl:attribute name="value">
+				<xsl:if test="string-length(cdash/project/coveragethreshold)=0">
+				  70
+				</xsl:if>
+				<xsl:value-of select="cdash/project/coveragethreshold"/>
+				</xsl:attribute>
+				</input>
+				</td>
   </tr>
   <tr>
+		  <td></td>
     <td><div align="right"><strong>Nightly Start Time:</strong></div></td>
-    <td><input name="nightlyHour" type="text" id="nightlyHour" size="2" value="00"/>
-    :<input name="nightlyMinute" type="text" id="nightlyMinute" size="2" value="00"/>
-    :<input name="nightlySecond" type="text" id="nightlySecond" size="2" value="00"/></td>
+    <td>
+				<input name="nightlyTime" type="text" id="nightlyTime" size="20">
+				<xsl:attribute name="value">
+				<xsl:if test="string-length(cdash/project/nightlytime)=0">
+				  00:00:00 EST
+				</xsl:if>
+				  <xsl:value-of select="cdash/project/nightlytime"/>
+				</xsl:attribute>
+				</input></td>
   </tr>
   <tr>
+		  <td></td>
     <td><div align="right"></div></td>
-    <td><input type="submit" name="Submit" value="Create Project"/></td>
+				<xsl:if test="cdash/edit=0">
+      <td><input type="submit" name="Submit" value="Create Project"/></td>
+				</xsl:if>
+				<xsl:if test="cdash/edit=1">
+			  	<td><input type="submit" name="Update" value="Update Project"/><input type="submit" name="Delete" value="Delete Project"/></td>
+				</xsl:if>
   </tr>
+		</xsl:if>
 </table>
 </form>
 </xsl:otherwise>

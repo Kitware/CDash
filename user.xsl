@@ -28,7 +28,7 @@
 </td>
 <td valign="bottom" width="100%">
 <div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">    
-<font color="#ffffff"><h2>CDash - My Profile</h2>
+<font color="#ffffff"><h2>My CDash</h2>
 <h3>Welcome <xsl:value-of select="cdash/user_name"/></h3></font><br/>
 </div>
 </td>
@@ -54,13 +54,66 @@
   Rounded('rounded', 15, 15,0,0);
 </script>
 
-
-<!-- Main -->
-<xsl:if test="cdash/user_admin=1">
+<!-- Message -->
 <table>
-  <tr><td width="95"><div align="right"></div></td><td bgcolor="#DDDDDD"><a href="createProject.php">[Create project]</a></td></tr>
-  <tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="manageBuildGroup.php">[Manage build groups]</a></td></tr>
-  <tr><td width="95"><div align="right"></div></td><td bgcolor="#DDDDDD"><a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a></td></tr>
+ <tr>
+		  <td width="95"><div align="right"></div></td>
+		  <td><div style="color: green;"><xsl:value-of select="cdash/message" /></div></td>
+		</tr>
+</table>
+
+
+
+
+<!-- Project Administration -->
+<xsl:if test="count(cdash/project)>0">
+<table>
+ <tr>
+		  <td><div align="right"></div></td>
+		  <td bgcolor="#CCCCCC" colspan="3"><b>My Projects</b></td>
+		</tr>
+
+<xsl:for-each select="cdash/project">
+  <tr>
+		  <td width="95"><div align="right"></div></td>
+		  <td bgcolor="#DDDDDD" align="right"><xsl:value-of select="name"/> </td>
+    <td><div align="left"></div></td><td bgcolor="#DDDDDD"><a>
+				<xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>[Edit subscription]</a></td>
+		</tr>
+</xsl:for-each>
+</table>
+<br/>
+</xsl:if>
+
+<!-- Public Project -->
+<xsl:if test="count(cdash/publicproject)>0">
+<table>
+ <tr>
+		  <td><div align="right"></div></td>
+		  <td bgcolor="#CCCCCC" colspan="3"><b>Public projects</b></td>
+		</tr>
+
+<xsl:for-each select="cdash/publicproject">
+  <tr>
+		  <td width="95"><div align="right"></div></td>
+		  <td bgcolor="#DDDDDD" align="right"><xsl:value-of select="name"/> </td>
+    <td><div align="left"></div></td><td bgcolor="#DDDDDD"><a>
+				<xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Subscribe to this project]</a></td>
+		</tr>
+</xsl:for-each>
+</table>
+<br/>
+</xsl:if>
+
+<!-- Global Administration -->
+<xsl:if test="cdash/user_is_admin=1">
+<table>
+  <tr><td width="95"><div align="right"></div></td><td bgcolor="#CCCCCC"><b>Administration</b></td></tr>
+		<tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="createProject.php">[Create new project]</a></td></tr>
+		<tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="createProject.php?edit=1">[Edit project]</a></td></tr>
+		<tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="manageProjectRoles.php">[Manage project roles]</a></td></tr>	
+	 <tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr>	
+  <tr><td width="95"><div align="right"></div></td><td bgcolor="#EEEEEE"><a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a></td></tr>
 </table>
 </xsl:if>
 <br/>
