@@ -18,6 +18,29 @@
 include("config.php");
 include("common.php");
 
+function cleanup($filename)
+{
+  unlink($filename);
+}
+
+function readfile_chunked ($filename)
+{
+  $chunksize = 1*(1024*1024); // how many bytes per chunk
+  $buffer = '';
+  $handle = fopen($filename, 'rb');
+  if ($handle === false)
+    {
+    return false;
+    }
+  while (!feof($handle))
+    {
+    $buffer = fread($handle, $chunksize);
+    print $buffer;
+    flush();
+    }
+  return fclose($handle);
+}
+
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 if(!$db)
   {
@@ -36,15 +59,23 @@ $xml .= "</cdash>";
 
 if(isset($submit))
   {
-  $filename = "cdash_dump" . time() . ".sql";
+  $filename = getcwd() ."/cdash_dump" . time() . ".sql";
+  //delete the dump file when we're done executing
+  register_shutdown_function(cleanup, $filename);
   $command = "mysqldump -u $CDASH_DB_LOGIN --password=$CDASH_DB_PASS --extended-insert=0 $CDASH_DB_NAME > $filename";
+  shell_exec($command);
+
+  //hack to get the size of a large file in php
+  $command = "du -b $filename";
   $output = shell_exec($command);
+  $strings = explode("\t", $output);
+  $filesize = $strings[0];
 
   header("Content-type: application/octet-stream");
-  header("Content-length: ".strlen($output));
+  header("Content-length: $filesize");
   header("Content-disposition: attachment; filename=cdash_backup.sql");
-  readfile($filename);
-  #unlink($filename);
+  readfile_chunked($filename);
+  unlink($filename);
   exit(1);
   }
 else
