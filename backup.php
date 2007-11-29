@@ -36,13 +36,15 @@ $xml .= "</cdash>";
 
 if(isset($submit))
   {
-  $command = "mysqldump -u $CDASH_DB_LOGIN --password=$CDASH_DB_PASS --extended-insert=0 $CDASH_DB_NAME";
+  $filename = "cdash_dump" . time() . ".sql";
+  $command = "mysqldump -u $CDASH_DB_LOGIN --password=$CDASH_DB_PASS --extended-insert=0 $CDASH_DB_NAME > $filename";
   $output = shell_exec($command);
 
   header("Content-type: application/octet-stream");
   header("Content-length: ".strlen($output));
   header("Content-disposition: attachment; filename=cdash_backup.sql");
-  echo $output;
+  readfile($filename);
+  #unlink($filename);
   exit(1);
   }
 else
