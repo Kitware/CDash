@@ -63,9 +63,7 @@
 </table>
 
 
-
-
-<!-- Project Administration -->
+<!-- My Projects -->
 <xsl:if test="count(cdash/project)>0">
 <table>
  <tr>
@@ -78,7 +76,15 @@
 		  <td width="95"><div align="right"></div></td>
 		  <td bgcolor="#DDDDDD" align="right"><xsl:value-of select="name"/> </td>
     <td><div align="left"></div></td><td bgcolor="#DDDDDD"><a>
-				<xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>[Edit subscription]</a></td>
+				<xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>[Edit subscription]</a>
+				<xsl:if test="role>1">
+				<a><xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>[Edit project]</a>
+		  <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage project groups]</a>
+				<xsl:if test="role>2">
+				<a><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage project roles]</a>
+				</xsl:if>
+				</xsl:if>
+				</td>
 		</tr>
 </xsl:for-each>
 </table>

@@ -65,7 +65,7 @@
     <td></td>
     <td bgcolor="#EEEEEE"><input type="radio" name="role" value="0" checked="true">
 				<xsl:if test="/cdash/role=0">
-				<xsl:attribute name="checked">true</xsl:attribute>
+				<xsl:attribute name="checked"></xsl:attribute>
 				</xsl:if>
 				</input>
 				 Normal user <i>(you are working on or using this toolkit)</i></td>
@@ -74,11 +74,37 @@
     <td></td>
     <td bgcolor="#EEEEEE"><input type="radio" name="role" value="1">
 					<xsl:if test="/cdash/role=1">
-				<xsl:attribute name="checked">true</xsl:attribute>
+				<xsl:attribute name="checked"></xsl:attribute>
 				</xsl:if>
 				</input>
 				 Dashboard maintainer <i>(you are responsable of machines that are submitting builds for this project)</i></td>
   </tr>
+		<xsl:if test="/cdash/role>1">
+			<tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><b>Warning: if you change to a normal or maintainer role you won't be able to go back.</b> </td>
+				</tr>
+		<tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="radio" name="role" value="2" checked="true">
+				<xsl:if test="/cdash/role=2">
+				<xsl:attribute name="checked"></xsl:attribute>
+				</xsl:if>
+				</input>
+				 Project Administrator <i>(You are administering the project)</i></td>
+  </tr>
+		</xsl:if>
+		<xsl:if test="/cdash/role>2">
+		 <tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="radio" name="role" value="3">
+					<xsl:if test="/cdash/role=3">
+				<xsl:attribute name="checked"></xsl:attribute>
+				</xsl:if>
+				</input>
+				  Project Super Administrator<i>(You have full control of this project)</i></td>
+  </tr>
+		</xsl:if>
 		 <tr>
     <td></td>
     <td bgcolor="#FFFFFF"></td>

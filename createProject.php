@@ -35,9 +35,11 @@ if ($session_OK)
 		  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND $projectid='$projectid'");
     if(mysql_num_rows($user2project)>0)
 				  {
-						$role = $user2project["role"];
+					 $user2project_array = mysql_fetch_array($user2project);
+						$role = $user2project_array["role"];
 						}		
 				}
+				
 		if($user_array["admin"]!=1 && $role<=1)
 		  {
 				echo "You don't have the permissions to access this page";

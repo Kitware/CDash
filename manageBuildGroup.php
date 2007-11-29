@@ -17,16 +17,42 @@
 =========================================================================*/
 include("config.php");
 include("common.php"); 
+include("config.php");
+include('login.php');
+include_once('common.php');
 
-@$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
-$xml = "<cdash>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+if ($session_OK) 
+  {
+		@$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  mysql_select_db("$CDASH_DB_NAME",$db);
+
+		$userid = $_SESSION['cdash']['loginid'];
+		
+		$xml = "<cdash>";
+  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 @$projectid = $_GET["projectid"];
 @$show = $_GET["show"];
+
+
+		$user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
+		if($projectid)
+		  {
+		  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND $projectid='$projectid'");
+    if(mysql_num_rows($user2project)>0)
+				  {
+					 $user2project_array = mysql_fetch_array($user2project);
+						$role = $user2project_array["role"];
+						}		
+				}
+				
+		if($user_array["admin"]!=1 && $role<=1)
+		  {
+				echo "You don't have the permissions to access this page";
+			 return;
+		  }
 		
-$projects = mysql_query("SELECT id,name FROM project"); // we should check if we are admin on the project
+$projects = mysql_query("SELECT id,name FROM project");
 while($project_array = mysql_fetch_array($projects))
    {
    $xml .= "<availableproject>";
@@ -126,11 +152,6 @@ if($CreateGroup)
   if(mysql_query("$sql"))
     {
     $newgroupid = mysql_insert_id();
-    
-    //$xml .= "<group_name>$Name</group_name>";
-    //$xml .= "<group_created>1</group_created>";
-    //$xml .= "<project_name>".get_project_name($projectid)."</project_name>";
-
     if($newstarttime != $groupstarttime)
       {
       // Create a new set of positions
@@ -349,5 +370,7 @@ $xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml,"manageBuildGroup");
+
+} // end session OK
 ?>
 
