@@ -90,7 +90,7 @@ while($row = mysql_fetch_array($result))
   $xml .= add_XML_value("name", $testName) . "\n";
   $xml .= add_XML_value("execTime", $row["time"]) . "\n";
   $xml .= add_XML_value("details", $row["details"]) . "\n"; 
-  $summaryLink = "testSummary.php?project=$projectid&amp;name=$testName&amp;date=$date";
+  $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
   $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
   $testid = $row["id"]; 
   $detailsLink = "testDetails.php?test=$testid";

@@ -52,7 +52,7 @@
         <a href="index.php">Dartboard</a>
         <ul>
           <li><a href="#Updates">Updates</a></li>
-          <li><a href="#Tests">Tests</a></li>
+     <li><a><xsl:attribute name="href">testOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Tests</a></li>
           <li><a href="#Build">Build</a></li>
      <li><a><xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Map</a></li>
         </ul>
