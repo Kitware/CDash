@@ -136,17 +136,22 @@ function clean_backup_directory()
     }
 }
 
+/** Parse the XML file and returns an array */
+function parse_XML($contents)
+{
+  $p = xml_parser_create();
+  xml_parse_into_struct($p, $contents, $vals, $index);
+  xml_parser_free($p);
+		return $vals;
+}
+
 /** Backup an XML file */
-function backup_xml_file($contents)
+function backup_xml_file($vals,$contents)
 {
   include("config.php");
   
   clean_backup_directory(); // shoudl probably be run as a cronjob
-  
-  $p = xml_parser_create();
-  xml_parse_into_struct($p, $contents, $vals, $index);
-  xml_parser_free($p);
-
+ 
   if(@$vals[1]["tag"] == "BUILD")
     {
     $file = "Build.xml";
@@ -367,9 +372,27 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
 }
 
 /** Add the coverage log */
-function add_coveragelogfile($buildid,$fileid,$line,$code)
+function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
 {
-  mysql_query ("INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ('$buildid','$fileid','$line','$code')");
+  $sql = "INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ";
+  
+		$i=0;
+		foreach($coveragelogarray as $key=>$value)
+     {
+					if($i>0)
+					  {
+							$sql .= ",";
+							}		
+						
+					$sql.= "('$buildid','$fileid','$key','$value')";
+					
+					if($i==0)
+					  {
+							$i++;
+				  	}
+					}
+ 
+  mysql_query ($sql);
   echo mysql_error();    
 }
 

@@ -19,25 +19,20 @@ include("ctestparser.php");
 include_once("common.php");
 include_once("createRSS.php");
 
-$putdata = fopen("php://input", "r");
-//$putdata = fopen("DynamicAnalysis.xml", "r");
-
-$contents = "";
-$content = fread($putdata,1000);
-while($content)
-  {
-  $contents .= $content;
-  $content = fread($putdata,1000);
-  }
+//$putdata = fopen("Tests.xml", "r");
+$contents = file_get_contents("php://input");
 
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
 
+// Parse the XML
+$xml_array = parse_XML($contents);
 // Backup the XML file
-backup_xml_file($contents);
+backup_xml_file($xml_array,$contents);
+unset($contents);
 
 // Parse the XML file
-ctest_parse($contents,$projectid);
+ctest_parse($xml_array,$projectid);
 
 // Create the RSS fee
 CreateRSSFeed($projectid);

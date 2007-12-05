@@ -17,12 +17,8 @@
 =========================================================================*/
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($xml,$projectid)
+function ctest_parse($vals,$projectid)
 {
-  $p = xml_parser_create();
-  xml_parse_into_struct($p, $xml, $vals, $index);
-  xml_parser_free($p);
-
   if($vals[1]["tag"] == "BUILD")
     {
     parse_build($vals,$projectid);
@@ -175,7 +171,7 @@ function parse_build($xmlarray,$projectid)
      {
      $error_array[$index]["sourceline"]=$tagarray["value"];
      }
-   else if(($tagarray["tag"] == "PRECONTEXT") && ($tagarray["level"] == 4))
+   else if(($tagarray["tag"] == "PRECONTEXT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
      {
      $error_array[$index]["precontext"]=$tagarray["value"];
      }
@@ -501,10 +497,7 @@ function parse_coveragelog($xmlarray,$projectid)
     // Add the line
     if($fileid)
       {
-      foreach($coverage["lines"] as $key=>$value)
-        {
-        add_coveragelogfile($buildid,$fileid,$key,$value);
-        }
+      add_coveragelogfile($buildid,$fileid,$coverage["lines"]);
       }
     }
 }
