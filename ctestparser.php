@@ -351,9 +351,12 @@ function parse_testing($xmlarray,$projectid)
       } 
     }
    
+		// We cannot really do a bloc submission since we are having images
   foreach($test_array as $test)
     {
-    add_test($buildid,$test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], $test["executiontime"], $test["details"], $test["output"], $test["images"]);
+    add_test($buildid,
+				        $test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], 
+												$test["executiontime"], $test["details"], $test["output"], $test["images"]);
     }
 }
 
@@ -395,8 +398,6 @@ function parse_coverage($xmlarray,$projectid)
     
     $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
     }
-    
-  //print_r($xmlarray);
   
   $LOCTested = getXMLValue($xmlarray,"LOCTESTED","COVERAGE");
   $LOCUntested = getXMLValue($xmlarray,"LOCUNTESTED","COVERAGE");     
@@ -446,14 +447,6 @@ function parse_coverage($xmlarray,$projectid)
   
 		// We add the coverage as an array
 		add_coverage($buildid,$coverage_array);
- 
-  /*foreach($coverage_array as $coverage)
-    {
-    @add_coverage($buildid,$coverage["fullpath"],
-                  $coverage["covered"],$coverage["loctested"],$coverage["locuntested"],
-                  $coverage["branchstested"],$coverage["branchsuntested"],      
-                  $coverage["functionstested"],$coverage["functionsuntested"]);
-    }*/
 }
 
 /** Parse the coveragelog xml */
@@ -539,49 +532,49 @@ function parse_update($xmlarray,$projectid)
     foreach($xmlarray as $tagarray)
       {
       if(!$inupdate && ($tagarray["tag"] == "UPDATED") && ($tagarray["level"] == 3))
- {
- $index++;
- $inupdate = 1;
- }
+								{
+								$index++;
+								$inupdate = 1;
+								}
       else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
- {
- $files_array[$index]["filename"]=$tagarray["value"];
- }
+							{
+							$files_array[$index]["filename"]=$tagarray["value"];
+							}
       else if(($tagarray["tag"] == "CHECKINDATE") && ($tagarray["level"] == 4))
- {
- $files_array[$index]["checkindate"]=$tagarray["value"];
- }
+								{
+								$files_array[$index]["checkindate"]=$tagarray["value"];
+								}
       else if(($tagarray["tag"] == "AUTHOR") && ($tagarray["level"] == 4))
- {
- $files_array[$index]["author"]=$tagarray["value"];
- }  
+								{
+								$files_array[$index]["author"]=$tagarray["value"];
+								}  
       else if(($tagarray["tag"] == "EMAIL") && ($tagarray["level"] == 4))
- {
- $files_array[$index]["email"]=$tagarray["value"];
- } 
+								{
+								$files_array[$index]["email"]=$tagarray["value"];
+								} 
       else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
- {
- $files_array[$index]["log"]=$tagarray["value"];
- }    
+								{
+								$files_array[$index]["log"]=$tagarray["value"];
+								}    
       else if(($tagarray["tag"] == "REVISION") && ($tagarray["level"] == 4))
- {
- $files_array[$index]["revision"]=$tagarray["value"];
- }
+								{
+								$files_array[$index]["revision"]=$tagarray["value"];
+								}
       else if(($tagarray["tag"] == "PRIORREVISION") && ($tagarray["level"] == 4))
- {
- $files_array[$index]["priorrevision"]=$tagarray["value"];
- }  
+								{
+								$files_array[$index]["priorrevision"]=$tagarray["value"];
+								}  
       else if(($tagarray["tag"] == "REVISIONS") && ($tagarray["level"] == 4))
- {
- $inupdate = 0;
- }
+								{
+								$inupdate = 0;
+								}
       }
      
-      foreach($files_array as $file)
- {
- add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
- $file["email"],$file["log"],$file["revision"],$file["priorrevision"]);
- }
+    foreach($files_array as $file)
+						{
+						add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
+						$file["email"],$file["log"],$file["revision"],$file["priorrevision"]);
+						}
 }
 
 /** Parse the notes xml */

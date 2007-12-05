@@ -30,9 +30,16 @@ if(!isset($testid))
   die('Error: no test id supplied in query string');
   }
 
-
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
+
+$testRow = mysql_fetch_array(mysql_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.testid=test.id"));
+$buildid = $testRow["buildid"];
+
+$buildRow = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id = '$buildid'"));
+$projectid = $buildRow["projectid"];
+$siteid = $buildRow["siteid"];
+
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
   {
@@ -43,23 +50,12 @@ if(mysql_num_rows($project)>0)
   $projectname = $project_array["name"];  
   }
 
-$testRow = mysql_fetch_array(mysql_query(
-  "SELECT * FROM test WHERE id = '$testid'"));
-$buildid = $testRow["buildid"];
-
-$buildRow = mysql_fetch_array(mysql_query(
-  "SELECT * FROM build WHERE id = '$buildid'"));
-$projectid = $buildRow["projectid"];
-$siteid = $buildRow["siteid"];
-
-$projectRow = mysql_fetch_array(mysql_query(
-  "SELECT name FROM project WHERE id = '$projectid'"));
+$projectRow = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id = '$projectid'"));
 $projectname = $projectRow["name"];
 
 $siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
 $siteResult = mysql_query($siteQuery);
-$siteRow = mysql_fetch_array(mysql_query(
-  "SELECT name FROM site WHERE id = '$siteid'"));
+$siteRow = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id = '$siteid'"));
 
 $date = date("Ymd", strtotime($buildRow["starttime"]));
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
@@ -83,7 +79,7 @@ $xml .="<dashboard>
   ";
   
 $testName = $testRow["name"];
-$summaryLink = "testSummary.php?project=$projectid&amp;name=$testName&amp;date=$date";
+$summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 
 
 $xml .= "<test>\n";
@@ -100,17 +96,14 @@ switch($testRow["status"])
   case "passed":
     $xml .= add_XML_value("status", "Passed") . "\n";
     $xml .= add_XML_value("statusColor", "#00aa00") . "\n";
-    $numPassed++;
     break;
   case "failed":
     $xml .= add_XML_value("status", "Failed") . "\n";
     $xml .= add_XML_value("statusColor", "#aa0000") . "\n";
-    $numFailed++;
     break;
   case "notrun":
     $xml .= add_XML_value("status", "Not Run") . "\n";
     $xml .= add_XML_value("statusColor", "#ffcc66") . "\n";
-    $numNotRun++;
     break;
   }
 

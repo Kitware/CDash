@@ -23,8 +23,6 @@ $CDASH_DB_LOGIN = 'root';
 $CDASH_DB_PASS = '';
 // Name of the MySQL database
 $CDASH_DB_NAME = 'cdash';
-// Dashboard time frame
-$CDASH_DASHBOARD_TIMEFRAME = 24; //24 hours
 // CSS file 
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory

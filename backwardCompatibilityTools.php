@@ -27,6 +27,110 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 @$CreateDefaultGroups = $_POST["CreateDefaultGroups"];
 @$AssignBuildToDefaultGroups = $_POST["AssignBuildToDefaultGroups"];
 @$FixBuildBasedOnRule = $_POST["FixBuildBasedOnRule"];
+@$FixNewTableTest = $_POST["FixNewTableTest"];
+
+if($FixNewTableTest)
+  {
+		$oldtest = mysql_query("SELECT * from test ORDER BY id ASC");
+  while($oldtest_array = mysql_fetch_array($oldtest))
+		  {
+				
+				// Create the variables
+				$oldtestid = $oldtest_array["buildid"];
+				$buildid = $oldtest_array["buildid"];
+				$name = $oldtest_array["name"];
+				$status = $oldtest_array["status"];
+				$path = $oldtest_array["path"];
+				$fullname = $oldtest_array["fullname"];
+			 $command = stripslashes($oldtest_array["command"]);
+				$time = $oldtest_array["time"];
+				$details = $oldtest_array["details"];
+				$output = stripslashes($oldtest_array["output"]);
+				
+				// Add the images
+				$images = array();
+				
+				$oldimages = mysql_query("SELECT * from image2test WHERE testid='$oldtestid'");
+    while($oldimages_array = mysql_fetch_array($oldimages))
+				  {
+						$image["id"]=$oldimages_array["imgid"];
+						$image["role"]=$oldimages_array["role"];
+						$images[] = $image;
+			  	}
+
+				// Do the processing
+		
+				$command = addslashes($command);
+				$output = addslashes($output);
+				
+				// Check if the test doesn't exist
+				$sql = "SELECT t.id,it.imgid FROM test2 AS t, image2test2 AS it
+												WHERE name='$name' AND path='$path'
+												AND fullname='$fullname' AND command='$command' AND output='$output'
+												AND it.testid=t.id ";
+																				
+				// need to double check that the images are the same as well
+				$i=0;
+				foreach($images as $image)
+						{
+						$imgid = $image["id"];
+						if($i==0)
+								{
+								$sql = "AND (";
+								}
+						
+						if($i>0)
+								{
+								$sql = " OR";
+								}
+								
+						$sql	.= "imgid='$imagid'";
+									
+						$i++;
+						if($i==count($images))
+								{
+								$sql .= ")";
+								}						
+						}
+											
+				$test = mysql_query($sql);
+				if((count($images)>0 && mysql_num_rows($test)!=count($images)) || mysql_num_rows($test)==0)
+						{
+						// Need to create a new test
+						$query = "INSERT INTO test2 (name,path,fullname,command,details, output) 
+																VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
+						if(mysql_query("$query"))
+								{
+								$testid = mysql_insert_id();
+								foreach($images as $image)
+										{
+										$imgid = $image["id"];
+										$role = $image["role"];
+										$query = "INSERT INTO image2test2(imgid, testid, role)
+																				VALUES('$imgid', '$testid', '$role')";
+										if(!mysql_query("$query"))
+												{
+												echo mysql_error();
+												}
+										}
+								}
+						else
+								{
+								echo mysql_error();
+								}
+						}
+				else // we just return the id of the test
+						{
+						$test_array = mysql_fetch_array($test);
+						$testid = $test_array["id"];
+						}
+				
+				// Add into build2test
+				mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
+																	VALUES ('$buildid','$testid','$status','$time')");
+		  }
+  }
+
 
 if($FixBuildBasedOnRule)
   {

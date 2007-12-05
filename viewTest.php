@@ -78,7 +78,7 @@ $xml .= "</build>\n";
 
 // Gather test info
 $xml .= "<tests>\n";
-$result = mysql_query("SELECT * FROM test WHERE buildid='$buildid' ORDER BY status,name");
+$result = mysql_query("SELECT * FROM test as t,build2test as bt WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,t.name");
 $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;

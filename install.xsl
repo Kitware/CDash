@@ -57,7 +57,8 @@ Please review the settings of your config.php file below and click install to in
 Database Hostname: <b><xsl:value-of select="cdash/connectiondb_host"/></b><br/>
 Database Login: <b><xsl:value-of select="cdash/connectiondb_login"/></b><br/>
 Database Name: <b><xsl:value-of select="cdash/connectiondb_name"/></b><br/>
-Dashboard timeframe: <b><xsl:value-of select="cdash/dashboard_timeframe"/></b><br/>
+Admin username: <b>admin@cdash.org</b><br/>
+Admin password: <b>administrator</b><br/>
 <br/>
 <form name="form1" method="post" action="">
 <input type="submit" name="Submit" value="Install"/>

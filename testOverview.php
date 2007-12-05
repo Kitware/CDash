@@ -64,15 +64,15 @@ foreach($builds as $id)
 if($firstTime)
   {
   $testQuery =
-    "SELECT DISTINCT name FROM test WHERE (buildid='$id'";
+    "SELECT DISTINCT test.name FROM test,build2test WHERE (build2test.buildid='$id'";
   $firstTime = FALSE;
   }
 else
   {
-  $testQuery .= " OR buildid='$id'";
+  $testQuery .= " OR build2test.buildid='$id'";
   }
 }
-$testQuery .= ") AND status NOT LIKE 'passed'";
+$testQuery .= ") AND build2test.testid=test.id AND build2test.status NOT LIKE 'passed'";
 $testResult = mysql_query($testQuery);
 if($testResult === FALSE)
   {
@@ -112,8 +112,13 @@ foreach($tests as $testName)
   $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
   $xml .= "</test>\n";
   }
-$xml .= "</section>\n";
+		
+if(count($tests)>0)
+  {
+  $xml .= "</section>\n";
+  }
 $xml .= "</tests>\n";
 $xml .= "</cdash>";
+
 generate_XSLT($xml, "testOverview");
 ?>

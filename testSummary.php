@@ -96,12 +96,13 @@ foreach($builds as $buildid => $buildData)
   if($firstTime)
     {
     $query =
-      "SELECT test.id,test.buildid,test.status,test.time,test.details,site.name FROM test,site WHERE (test.buildid='$buildid'";
+      "SELECT test.id,build2test.buildid,build2test.status,build2test.time,test.details,site.name 
+						 FROM test,site,build2test WHERE ( (build2test.buildid='$buildid' AND test.id=build2test.testid)";
     $firstTime = FALSE;
     }
   else
     {
-    $query .= " OR test.buildid='$buildid'";
+    $query .= " OR (build2test.buildid='$buildid' AND test.id=build2test.testid)";
     }
   }
 $query .= ") AND test.name = '$testName' AND site.id = '".$buildData["siteid"]."' AND status != '' ORDER BY status";
@@ -136,15 +137,15 @@ while($row = mysql_fetch_array($result))
     {
     case "passed":
       $xml .= add_XML_value("status", "Passed") . "\n";
-      $numPassed++;
+      //$numPassed++;
       break; 
     case "failed":
       $xml .= add_XML_value("status", "Failed") . "\n";
-      $numFailed++;
+      //$numFailed++;
       break;
     case "notrun":
       $xml .= add_XML_value("status", "Not Run") . "\n";
-      $numNotRun++;
+      //$numNotRun++;
       break;
     }
   $xml .= "</build>\n";

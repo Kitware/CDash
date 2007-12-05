@@ -79,7 +79,7 @@ if($Submit)
   $HomeURL = stripHTTP($_POST["homeURL"]);
   $CVSURL = stripHTTP($_POST["cvsURL"]);
   $BugURL = stripHTTP($_POST["bugURL"]);
-  $Public = $_POST["public"];
+  @$Public = $_POST["public"];
   $CoverageThreshold = $_POST["coverageThreshold"];
   $NightlyTime = $_POST["nightlyTime"];
     
@@ -134,7 +134,7 @@ if($Submit)
     }
   
   // Add the default groups
-  mysql_query("INSERT INTO buildgroup(name,projectid) ('Nightly','$projectid')");
+  mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Nightly','$projectid')");
   $id = mysql_insert_id();
   mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
   mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");

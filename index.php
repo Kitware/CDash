@@ -303,22 +303,22 @@ function generate_main_dashboard_XML($projectid,$date)
       }
   
     // Get the tests
-    $test = mysql_query("SELECT * FROM test WHERE buildid='$buildid'");
+    $test = mysql_query("SELECT * FROM build2test WHERE buildid='$buildid'");
     if(mysql_num_rows($test)>0)
       {
       $test_array = mysql_fetch_array($test);
       $xml .= "<test>";
       // We might be able to do this in one request
-      $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='notrun'"));
+      $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
-      $nfail_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='failed'"));
+      $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
       $nfail = $nfail_array[0];
-      $npass_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='passed'"));
+      $npass_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
       $npass = $npass_array[0];
-      $nna_array = mysql_fetch_array(mysql_query("SELECT count(id) FROM test WHERE buildid='$buildid' AND status='na'"));
+      $nna_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='na'"));
       $nna = $nna_array[0];
       
-      $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM test WHERE buildid='$buildid'"));
+      $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
       $time = $time_array[0];
       
       $totalnotrun += $nnotrun;

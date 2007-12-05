@@ -505,6 +505,10 @@ function remove_build($buildid)
 		mysql_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
 		mysql_query("DELETE FROM note WHERE buildid='$buildid'");		
 		mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");			
+		
+		// Delete the test if not shared
+		
+		
 }
 
 /** Add a new build */
@@ -568,30 +572,73 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 {
   $command = addslashes($command);
   $output = addslashes($output);
-    
-  $query = "INSERT INTO test
-            (buildid,name,status,path,fullname,command,time,details, output) 
-            VALUES ('$buildid','$name','$status','$path','$fullname',
-                    '$command','$time', '$details', '$output')";
-  if(mysql_query("$query"))
+  
+		// Check if the test doesn't exist
+		$sql = "SELECT t.id,it.imgid FROM test AS t, image2test AS it
+		        WHERE name='$name' AND path='$path'
+									 AND fullname='$fullname' AND command='$command' AND output='$output'
+								 	AND it.testid=t.id ";
+																		
+	 // need to double check that the images are the same as well
+		$i=0;
+	 foreach($images as $image)
     {
-    $testid = mysql_insert_id();
-    foreach($images as $image)
-      {
-      $imgid = $image["id"];
-      $role = $image["role"];
-      $query = "INSERT INTO image2test(imgid, testid, role)
-                VALUES('$imgid', '$testid', '$role')";
-      if(!mysql_query("$query"))
-        {
-        echo mysql_error();
-        }
-      }
-    }
-  else
-    {
-    echo mysql_error();
-    }
+    $imgid = $image["id"];
+				if($i==0)
+				  {
+						$sql = "AND (";
+				  }
+				
+				if($i>0)
+				  {
+						$sql = " OR";
+				  }
+						
+				$sql	.= "imgid='$imagid'";
+							
+				$i++;
+				if($i==count($images))
+				  {
+						$sql .= ")";
+				  }						
+				}
+									
+		$test = mysql_query($sql);
+		if((count($images)>0 && mysql_num_rows($test)!=count($images)) || mysql_num_rows($test)==0)
+		  {
+				// Need to create a new test
+  		$query = "INSERT INTO test (name,path,fullname,command,details, output) 
+              VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
+				if(mysql_query("$query"))
+						{
+						$testid = mysql_insert_id();
+						foreach($images as $image)
+								{
+								$imgid = $image["id"];
+								$role = $image["role"];
+								$query = "INSERT INTO image2test(imgid, testid, role)
+																		VALUES('$imgid', '$testid', '$role')";
+								if(!mysql_query("$query"))
+										{
+										echo mysql_error();
+										}
+								}
+						}
+				else
+						{
+						echo mysql_error();
+						}
+				}
+		else // we just return the id of the test
+		  {
+				$test_array = mysql_fetch_array($test);
+			 $testid = $test_array["id"];
+		  }
+		
+		// Add into build2test
+		mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
+               VALUES ('$buildid','$testid','$status','$time')");
+	
 }
 
 /** Add a new error/warning */
