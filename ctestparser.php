@@ -56,7 +56,7 @@ function ctest_parse($vals,$projectid)
 /** Return the value given a tag or the parent tag */
 function getXMLValue($xmlarray,$tag,$parenttag)
 {
-  if(strlen($parenttag) == 0)
+  if($parenttag=="")
     {
     $parentlevel = 0;
     }

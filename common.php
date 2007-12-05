@@ -254,16 +254,7 @@ function get_projects()
 
 /** Get the build id from stamp, name and buildname */
 function get_build_id($buildname,$stamp,$projectid)
-{
-  include("config.php");
-
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  if(!$db)
-    {
-    echo("Problem with mysql_connect<br>\n");
-    }
-  mysql_select_db("$CDASH_DB_NAME",$db);
-  
+{  
   $sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
   $sql .= " AND projectid='$projectid'"; 
   $sql .= " ORDER BY id DESC";
@@ -273,18 +264,12 @@ function get_build_id($buildname,$stamp,$projectid)
     $build_array = mysql_fetch_array($build);
     return $build_array["id"];
     }
-    
   return -1;
 }
 
 /** Get the project id from the project name */
 function get_project_id($projectname)
 {
-  include("config.php");
-
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
-
   $project = mysql_query("SELECT id FROM project WHERE name='$projectname'");
   if(mysql_num_rows($project)>0)
     {
@@ -298,11 +283,6 @@ function get_project_id($projectname)
 /** Get the project name from the project id */
 function get_project_name($projectid)
 {
-  include("config.php");
-
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
-
   $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
   if(mysql_num_rows($project)>0)
     {
