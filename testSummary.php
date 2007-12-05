@@ -79,25 +79,45 @@ $dateStart = mktime("0","0","0",substr($date,4,2),substr($date,6,2),substr($date
 $dateEnd = mktime("23","59","59",substr($date,4,2),substr($date,6,2),substr($date,0,4));
 */
 $xml .= "<builds>\n";
-$buildQuery = "SELECT * FROM build WHERE starttime >  '$date' AND starttime < '$nextdate' AND projectid = '$projectid'";
+$buildQuery = "SELECT * FROM build WHERE stamp RLIKE '^$date-' AND projectid = '$projectid'";
 $buildResult = mysql_query($buildQuery);
 $color = FALSE;
+
+
+$builds = array();
 while($buildRow = mysql_fetch_array($buildResult))
   {
-  $buildid = $buildRow["id"];
-  $siteid = $buildRow["siteid"];
-  //I bet there's a smarter way to do all these queries using an sql join or
-  //some such thing...
-  $testQuery = "SELECT id,status,time,details FROM test WHERE buildid = '$buildid' AND name = '$testName'";
-  $testResult = mysql_query($testQuery);
-  $testRow = mysql_fetch_array($testResult);
-  $siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
-  $siteResult = mysql_query($siteQuery);
-  $siteRow = mysql_fetch_array($siteResult);
+  $builds[$buildRow["id"]] =
+    array("name" => $buildRow["name"],
+          "stamp" => $buildRow["stamp"],
+          "siteid" => $buildRow["siteid"]);
+  }
+
+$firstTime = TRUE;
+foreach(array_keys($builds) as $buildid)
+  {
+  if($firstTime)
+    {
+    $testQuery =
+      "SELECT id,buildid,status,time,details FROM test WHERE (buildid='$buildid'";
+    $firstTime = FALSE;
+    }
+  else
+    {
+    $testQuery .= " OR buildid='$buildid'";
+    }
+  }
+$testQuery .= ") AND name = '$testName' AND status != '' ORDER BY status";
+$testResult = mysql_query($testQuery);
+
+while($testRow = mysql_fetch_array($testResult))
+  {
+  $buildid = $testRow["buildid"];
+  $siteid = $builds[$buildid]["siteid"];
   $xml .= "<build>\n";
   $xml .= add_XML_value("site", $siteRow["name"]) . "\n";
-  $xml .= add_XML_value("buildName", $buildRow["name"]) . "\n";
-  $xml .= add_XML_value("buildStamp", $buildRow["stamp"]) . "\n";
+  $xml .= add_XML_value("buildName", $builds[$buildid]["name"]) . "\n";
+  $xml .= add_XML_value("buildStamp", $builds[$buildid]["stamp"]) . "\n";
   $xml .= add_XML_value("time", $testRow["time"]) . "\n";
   $xml .= add_XML_value("details", $testRow["details"]) . "\n";
   $buildLink = "viewTest.php?buildid=$buildid";
