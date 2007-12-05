@@ -73,16 +73,10 @@ $xml .="<dashboard>
   </dashboard>
   ";
   
-// Here's where we start gathering information relevant to the task at hand
-/*
-$dateStart = mktime("0","0","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
-$dateEnd = mktime("23","59","59",substr($date,4,2),substr($date,6,2),substr($date,0,4));
-*/
+//get information about all the builds for the given date and project
 $xml .= "<builds>\n";
-$buildQuery = "SELECT * FROM build WHERE stamp RLIKE '^$date-' AND projectid = '$projectid'";
+$buildQuery = "SELECT id,name,stamp,siteid FROM build WHERE stamp RLIKE '^$date-' AND projectid = '$projectid'";
 $buildResult = mysql_query($buildQuery);
-$color = FALSE;
-
 
 $builds = array();
 while($buildRow = mysql_fetch_array($buildResult))
@@ -93,36 +87,40 @@ while($buildRow = mysql_fetch_array($buildResult))
           "siteid" => $buildRow["siteid"]);
   }
 
+//generate a big ugly SQL select statement and execute it
+//this statement will give us information about each test that didn't pass
+//for the given date and time
 $firstTime = TRUE;
-foreach(array_keys($builds) as $buildid)
+foreach($builds as $buildid => $buildData)
   {
   if($firstTime)
     {
-    $testQuery =
-      "SELECT id,buildid,status,time,details FROM test WHERE (buildid='$buildid'";
+    $query =
+      "SELECT test.id,test.buildid,test.status,test.time,test.details,site.name FROM test,site WHERE (test.buildid='$buildid'";
     $firstTime = FALSE;
     }
   else
     {
-    $testQuery .= " OR buildid='$buildid'";
+    $query .= " OR test.buildid='$buildid'";
     }
   }
-$testQuery .= ") AND name = '$testName' AND status != '' ORDER BY status";
-$testResult = mysql_query($testQuery);
+$query .= ") AND test.name = '$testName' AND site.id = '".$buildData["siteid"]."' AND status != '' ORDER BY status";
+$result = mysql_query($query);
 
-while($testRow = mysql_fetch_array($testResult))
+$color = FALSE;
+//now that we have the data we need, generate some XML
+while($row = mysql_fetch_array($result))
   {
-  $buildid = $testRow["buildid"];
-  $siteid = $builds[$buildid]["siteid"];
+  $buildid = $row["buildid"];
   $xml .= "<build>\n";
-  $xml .= add_XML_value("site", $siteRow["name"]) . "\n";
+  $xml .= add_XML_value("site", $row["name"]) . "\n";
   $xml .= add_XML_value("buildName", $builds[$buildid]["name"]) . "\n";
   $xml .= add_XML_value("buildStamp", $builds[$buildid]["stamp"]) . "\n";
-  $xml .= add_XML_value("time", $testRow["time"]) . "\n";
-  $xml .= add_XML_value("details", $testRow["details"]) . "\n";
+  $xml .= add_XML_value("time", $row["time"]) . "\n";
+  $xml .= add_XML_value("details", $row["details"]) . "\n";
   $buildLink = "viewTest.php?buildid=$buildid";
   $xml .= add_XML_value("buildLink", $buildLink) . "\n";
-  $testid = $testRow["id"];
+  $testid = $row["id"];
   $testLink = "testDetails.php?test=$testid";
   $xml .= add_XML_value("testLink", $testLink) . "\n";
   if($color)
@@ -134,7 +132,7 @@ while($testRow = mysql_fetch_array($testResult))
     $xml .= add_XML_value("class", "tr-odd") . "\n";
     }
   $color = !$color;
-  switch($testRow["status"])
+  switch($row["status"])
     {
     case "passed":
       $xml .= add_XML_value("status", "Passed") . "\n";
