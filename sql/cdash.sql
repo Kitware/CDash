@@ -166,7 +166,8 @@ CREATE TABLE `coverage` (
   `branchsuntested` int(11) NOT NULL default '0',
   `functionstested` int(11) NOT NULL default '0',
   `functionsuntested` int(11) NOT NULL default '0',
-  KEY `buildid` (`buildid`)
+  KEY `buildid` (`buildid`),
+  KEY `fileid` (`fileid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -407,3 +408,15 @@ CREATE TABLE `user2project` (
   `cvslogin` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`userid`,`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+--
+-- Change the table maximum size to be more than 4GB
+-- 
+alter table test max_rows = 200000000000 avg_row_length = 3458;
+alter table builderror max_rows = 200000000000 avg_row_length = 3458;
+alter table coverage max_rows = 200000000000 avg_row_length = 3458;
+alter table coveragefilelog max_rows = 200000000000 avg_row_length = 3458;
+alter table coveragefile max_rows = 200000000000 avg_row_length = 3458;
+alter table image max_rows = 200000000000 avg_row_length = 3458;
+alter table note max_rows = 200000000000 avg_row_length = 3458;
