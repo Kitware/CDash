@@ -363,7 +363,7 @@ CREATE TABLE `build2test` (
   `testid` int(11) NOT NULL default '0',
   `status` varchar(10) NOT NULL default '',
   `time` float(5,2) NOT NULL default '0.00',
-  PRIMARY KEY  (`buildid`),
+  KEY `buildid` (`buildid`),
   KEY `testid` (`testid`),
   KEY `status` (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
