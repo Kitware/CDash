@@ -31,10 +31,17 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 if($FixNewTableTest)
   {
-		$oldtest = mysql_query("SELECT * from test ORDER BY id ASC");
+		$num = mysql_fetch_array(mysql_query("SELECT COUNT(id) FROM test"));
+  $n = $num[0];
+  echo $n;
+
+  $step = 10000;
+
+  for($j=0;$j<=$n;$j+=$step)
+    {
+  $oldtest = mysql_query("SELECT * from test ORDER BY id ASC LIMIT $j,$step");
   while($oldtest_array = mysql_fetch_array($oldtest))
 		  {
-				
 				// Create the variables
 				$oldtestid = $oldtest_array["buildid"];
 				$buildid = $oldtest_array["buildid"];
@@ -64,38 +71,53 @@ if($FixNewTableTest)
 				$output = addslashes($output);
 				
 				// Check if the test doesn't exist
-				$sql = "SELECT t.id,it.imgid FROM test2 AS t, image2test2 AS it
-												WHERE name='$name' AND path='$path'
-												AND fullname='$fullname' AND command='$command' AND output='$output'
-												AND it.testid=t.id ";
-																				
-				// need to double check that the images are the same as well
-				$i=0;
-				foreach($images as $image)
-						{
-						$imgid = $image["id"];
-						if($i==0)
-								{
-								$sql = "AND (";
-								}
-						
-						if($i>0)
-								{
-								$sql = " OR";
-								}
+				$test = mysql_query("SELECT id FROM test2	WHERE name='$name' AND path='$path' AND fullname='$fullname' AND command='$command' AND output='$output'");
+				
+				$testexists = false;
+				
+				if(mysql_num_rows($test) > 0) // test exists
+				  {			
+						while($test_array = mysql_fetch_array($test))
+						  {
+								$currentid = $test_array["id"];
+								$sql = "SELECT imgid FROM image2test2 WHERE testid='$currentid' ";
 								
-						$sql	.= "imgid='$imagid'";
-									
-						$i++;
-						if($i==count($images))
-								{
-								$sql .= ")";
-								}						
-						}
-											
-				$test = mysql_query($sql);
-				if((count($images)>0 && mysql_num_rows($test)!=count($images)) || mysql_num_rows($test)==0)
-						{
+				    // need to double check that the images are the same as well
+								$i=0;
+								foreach($images as $image)
+										{
+										$imgid = $image["id"];
+										if($i==0)
+												{
+												$sql .= "AND (";
+												}
+										
+										if($i>0)
+												{
+												$sql .= " OR";
+												}
+												
+										$sql	.= "imgid='$imagid'";
+													
+										$i++;
+										if($i==count($images))
+												{
+												$sql .= ")";
+												}			
+										} // end for each image
+								
+								 $nimages = mysql_num_rows(mysql_query($sql));
+								
+								 if($nimages == count($images))
+									  {
+											$testexists = true;
+											break;
+								  	}	
+							  } // end while test_array		
+							}			
+				
+				if(!$testexists)
+				  {
 						// Need to create a new test
 						$query = "INSERT INTO test2 (name,path,fullname,command,details, output) 
 																VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
@@ -117,8 +139,8 @@ if($FixNewTableTest)
 						else
 								{
 								echo mysql_error();
-								}
-						}
+								}	
+				  }		
 				else // we just return the id of the test
 						{
 						$test_array = mysql_fetch_array($test);
@@ -128,8 +150,9 @@ if($FixNewTableTest)
 				// Add into build2test
 				mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
 																	VALUES ('$buildid','$testid','$status','$time')");
-		  }
-  }
+		  } // end loop test
+				} // end loop $j
+  } // end submit
 
 
 if($FixBuildBasedOnRule)
