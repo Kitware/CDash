@@ -360,7 +360,6 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
       }
     else if(crc32($filecontent) != crc32($coveragefile_array["file"]))
       {
-      $previousfileid = $fileid;
       mysql_query ("INSERT INTO coveragefile(fullpath,file) VALUES ('$fullpath','$filecontent')");
       echo mysql_error();
       $fileid = mysql_insert_id();

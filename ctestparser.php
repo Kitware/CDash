@@ -493,9 +493,9 @@ function parse_coveragelog($xmlarray,$projectid)
     {
     $filecontent = addslashes($coverage["file"]);
     $fileid = add_coveragefile($buildid,$coverage["fullpath"],$filecontent);
-    
+				
     // Add the line
-    if($fileid)
+    if($fileid && array_key_exists("lines",$coverage))
       {
       add_coveragelogfile($buildid,$fileid,$coverage["lines"]);
       }
