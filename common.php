@@ -348,7 +348,7 @@ function add_coverage($buildid,$fullpath,$covered,$loctested,$locuntested,
 function add_coveragefile($buildid,$fullpath,$filecontent)
 {
   // Check if we have the file
-  $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+  $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.fileid=cf.id AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
   $coveragefile_array = mysql_fetch_array($coveragefile);
   $fileid = $coveragefile_array["id"];
   
