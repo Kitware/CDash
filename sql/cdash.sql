@@ -344,22 +344,30 @@ CREATE TABLE `site2user` (
 -- 
 -- Table structure for table `test`
 -- 
-
 CREATE TABLE `test` (
   `id` int(11) NOT NULL auto_increment,
-  `buildid` int(11) NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
-  `status` varchar(10) NOT NULL default '0',
   `path` varchar(255) NOT NULL default '',
   `fullname` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
-  `time` float(5,2) NOT NULL default '-1.00',
   `details` text NOT NULL,
   `output` text NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `buildid` (`buildid`),
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- 
+-- Table structure for table `build2test`
+--
+CREATE TABLE `build2test` (
+  `buildid` int(11) NOT NULL default '0',
+  `testid` int(11) NOT NULL default '0',
+  `status` varchar(10) NOT NULL default '',
+  `time` float(5,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`buildid`),
+  KEY `testid` (`testid`),
   KEY `status` (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
