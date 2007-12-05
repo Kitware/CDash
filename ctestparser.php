@@ -175,11 +175,11 @@ function parse_build($xmlarray,$projectid)
      {
      $error_array[$index]["precontext"]=$tagarray["value"];
      }
-   else if(($tagarray["tag"] == "POSTCONTEXT") && ($tagarray["level"] == 4))
+   else if(($tagarray["tag"] == "POSTCONTEXT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
      {
      $error_array[$index]["postcontext"]=$tagarray["value"];
      }
-   else if(($tagarray["tag"] == "REPEATCOUNT") && ($tagarray["level"] == 4))
+   else if(($tagarray["tag"] == "REPEATCOUNT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
      {
      $error_array[$index]["repeatcount"]=$tagarray["value"];
      $inerror = false;
@@ -192,7 +192,7 @@ function parse_build($xmlarray,$projectid)
     if(array_key_exists("logline",$error))
       {
       add_error($buildid,$error["type"],$error["logline"],$error["text"],$error["sourcefile"],$error["sourceline"],
-              $error["precontext"],$error["postcontext"],$error["repeatcount"]);
+                @$error["precontext"],@$error["postcontext"],$error["repeatcount"]);
       }
     }
 }

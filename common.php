@@ -467,9 +467,58 @@ function add_site($name,$description="",$processor="",$numprocessors="1")
   return mysql_insert_id();
 }
 
+/** Remove all related inserts for a given build */
+function remove_build($buildid)
+{
+  mysql_query("DELETE FROM build WHERE id='$buildid'");
+		mysql_query("DELETE FROM build2group WHERE buildid='$buildid'");
+		mysql_query("DELETE FROM builderror WHERE buildid='$buildid'");
+		mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
+		mysql_query("DELETE FROM configure WHERE buildid='$buildid'");
+				
+		// coverage file are kept unless they are shared
+		$coverage = mysql_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
+		while($coverage_array = mysql_fetch_array($coverage))
+		  {
+				$fileid = $coverage_array["fileid"];
+				// Make sur the file is not shared
+				$numfiles = mysql_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
+				if($numfiles[0]==1)
+				  {
+						mysql_query("DELETE FROM coveragefile WHERE id='$fileid'");	
+						}
+				}
+		
+		mysql_query("DELETE FROM coverage WHERE buildid='$buildid'");
+
+		mysql_query("DELETE FROM coveragefilelog WHERE buildid='$buildid'");
+		mysql_query("DELETE FROM coveragesummary WHERE buildid='$buildid'");
+
+  // dynamicanalysisdefect
+		$dynamicanalysis = mysql_query("SELECT id FROM dynamicanalysis WHERE buildid='$buildid'");
+		while($dynamicanalysis_array = mysql_fetch_array($dynamicanalysis))
+		  {
+				$dynid = $dynamicanalysis_array["id"];
+				mysql_query("DELETE FROM dynamicanalysisdefect WHERE id='$dynid'");	
+				}
+			
+		mysql_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
+		mysql_query("DELETE FROM note WHERE buildid='$buildid'");		
+		mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");			
+}
+
 /** Add a new build */
 function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$endtime,$submittime,$command,$log)
 {
+  // First we check if the build already exists if this is the case we delete all related information regarding
+		// The previous build 
+  $build = mysql_query("SELECT id FROM build WHERE projectid='$projectid' AND siteid='$siteid' AND name='$name' AND stamp='$stamp' AND type='$type'");
+		if(mysql_num_rows($build)>0)
+		  {
+				$build_array = mysql_fetch_array($build);
+				remove_build($build_array["id"]);
+		  }
+
   mysql_query ("INSERT INTO build (projectid,siteid,name,stamp,type,generator,starttime,endtime,submittime,command,log) 
                            VALUES ('$projectid','$siteid','$name','$stamp','$type','$generator',
                                   '$starttime','$endtime','$submittime','$command','$log')");
