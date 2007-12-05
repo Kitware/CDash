@@ -443,14 +443,17 @@ function parse_coverage($xmlarray,$projectid)
      $coverage_array[$index]["functionsuntested"]=$tagarray["value"];
      }         
    }
-   
-  foreach($coverage_array as $coverage)
+  
+		// We add the coverage as an array
+		add_coverage($buildid,$coverage_array);
+ 
+  /*foreach($coverage_array as $coverage)
     {
     @add_coverage($buildid,$coverage["fullpath"],
                   $coverage["covered"],$coverage["loctested"],$coverage["locuntested"],
                   $coverage["branchstested"],$coverage["branchsuntested"],      
                   $coverage["functionstested"],$coverage["functionsuntested"]);
-    }
+    }*/
 }
 
 /** Parse the coveragelog xml */

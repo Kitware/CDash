@@ -322,25 +322,53 @@ function add_coveragesummary($buildid,$loctested,$locuntested)
 
 
 /** Create a coverage */
-function add_coverage($buildid,$fullpath,$covered,$loctested,$locuntested,
-                      $branchstested=0,$branchsuntested=0,$functionstested=0,$functionsuntested=0)
+function add_coverage($buildid,$coverage_array)
+
 {
-  // Create an empty file if doesn't exists
-  $coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.fullpath='$fullpath'");
-  if(mysql_num_rows($coveragefile)==0)
-    {
-    mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-    $fileid = mysql_insert_id();
-    }
-  else
-    {
-    $coveragefile_array = mysql_fetch_array($coveragefile);
-    $fileid = $coveragefile_array["id"];
-    }
+  // Construct the SQL query
+		$sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) VALUES ";
+		
+		$i=0;
+		foreach($coverage_array as $coverage)
+		  {				
+				$fullpath = $coverage["fullpath"];
+
+    // Create an empty file if doesn't exists
+    $coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
+		                               WHERE cf.id=c.fileid AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+				if(mysql_num_rows($coveragefile)==0)
+						{
+						mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+						$fileid = mysql_insert_id();
+						}
+				else
+						{
+						$coveragefile_array = mysql_fetch_array($coveragefile);
+						$fileid = $coveragefile_array["id"];
+						}
+				
+				$covered = $coverage["covered"];
+				$loctested = $coverage["loctested"];
+				$locuntested = $coverage["locuntested"];
+    @$branchstested = $coverage["branchstested"];
+				@$branchsuntested = $coverage["branchsuntested"];
+				@$functionstested = $coverage["functionstested"];
+				@$functionsuntested = $coverage["functionsuntested"];
     
+				if($i>0)
+				  {
+						$sql .= ", ";
+				  }
+				else
+						{
+						$i=1;
+						}
+							
+				$sql .= "('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')";				
+				}
+
   // Insert into coverage
-  mysql_query ("INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) 
-                VALUES ('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')");
+  mysql_query($sql);
   echo mysql_error();
 }
 
