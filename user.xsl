@@ -95,31 +95,66 @@
 </xsl:if>
 
 <!-- My Sites -->
-<xsl:if test="count(cdash/site)>0">
+<xsl:if test="count(cdash/claimedsite)>0">
 <table>
  <tr>
 		  <td><div align="right"></div></td>
-		  <td bgcolor="#CCCCCC" colspan="5"><b>My Sites</b></td>
+		  <td bgcolor="#CCCCCC" colspan="10"><b>My Sites</b></td>
 		</tr>
 
-<xsl:for-each select="cdash/project">
-  <tr>
+<!-- header of the matrix -->
+<tr>
 		  <td width="95"><div align="right"></div></td>
-		  <td bgcolor="#DDDDDD" align="right"><xsl:value-of select="name"/> </td>
-    <td><div align="left"></div></td><td bgcolor="#DDDDDD"><a>
-				<xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>[Edit subscription]</a>
-				<xsl:if test="role>0">
-				  <a><xsl:attribute name="href">editSite.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Claim sites]</a>
-				</xsl:if>
-				<xsl:if test="role>1">
-				<a><xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>[Edit project]</a>
-		  <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage project groups]</a>
-				<xsl:if test="role>2">
-				<a><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage project roles]</a>
-				</xsl:if>
-				</xsl:if>
+		  <td bgcolor="#DDDDDD" align="right"><b><i>Site\Project</i></b></td>
+				
+				<xsl:for-each select="cdash/claimedsiteproject">
+    <td bgcolor="#DDDDDD" align="center"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute><xsl:value-of select="name"/></a></td>
+   </xsl:for-each>
+</tr>
+		
+<!-- Fill in the information -->
+<xsl:for-each select="cdash/claimedsite">
+  <td width="95"><div align="right"></div></td>
+		  <td bgcolor="#EEEEEE" align="middle">
+				<a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute><xsl:value-of select="name"/></a>
 				</td>
-		</tr>
+				
+				<xsl:for-each select="project">
+    <td bgcolor="#EEEEEE" align="middle">
+				<table>
+				<xsl:if test="nightly/NA=0">
+				<tr bgcolor="#FFFFFF">
+				<td><b>N</b></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="nightly/updateclass"/></xsl:attribute><xsl:value-of select="nightly/update"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="nightly/configureclass"/></xsl:attribute><xsl:value-of select="nightly/configure"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="nightly/errorclass"/></xsl:attribute><xsl:value-of select="nightly/error"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="nightly/testfailclass"/></xsl:attribute><xsl:value-of select="nightly/testfail"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="nightly/dateclass"/></xsl:attribute><xsl:value-of select="nightly/date"/></td>
+				</tr>
+				</xsl:if>
+				<xsl:if test="continuous/NA=0">
+				<tr bgcolor="#FFFFFF">
+				<td><b>C</b></td>
+				<td><xsl:value-of select="continuous/update"/></td>
+				<td><xsl:value-of select="continuous/configure"/></td>
+				<td><xsl:value-of select="continuous/error"/></td>
+				<td><xsl:value-of select="continuous/testfail"/></td>	
+				<td><xsl:value-of select="continuous/date"/></td>
+				</tr>
+				</xsl:if>
+				<xsl:if test="experimental/NA=0">
+				<tr bgcolor="#FFFFFF">
+				<td><b>E</b></td>
+				<td><xsl:value-of select="experimental/update"/></td>
+				<td><xsl:value-of select="experimental/configure"/></td>
+				<td><xsl:value-of select="experimental/error"/></td>
+				<td><xsl:value-of select="experimental/testfail"/></td>		
+				<td><xsl:value-of select="experimental/date"/></td>
+				</tr>
+				</xsl:if>	
+				</table>
+				</td>
+   </xsl:for-each>
 </xsl:for-each>
 </table>
 <br/>

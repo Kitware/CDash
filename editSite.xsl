@@ -144,6 +144,7 @@
     <td bgcolor="#EEEEEE"><strong>Name:</strong> <input name="site_name" type="text" size="20">
 				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/name"/></xsl:attribute>
 				</input>
+				<strong> (Make sure the name of the build matches CTest buildname otherwise a new site will be created)</strong>
 				</td>
   </tr>
 		<tr>

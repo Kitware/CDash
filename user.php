@@ -55,6 +55,202 @@ if ($session_OK)
 				$xml .= add_XML_value("name",$project_array["name"]);
 				$xml .= "</publicproject>";
 		  }
+		
+		//Go through the claimed sites		
+		$claimedsiteprojects = array();
+		$siteidwheresql = "";
+		$claimedsites = array();
+		$site2user = mysql_query("SELECT siteid FROM site2user WHERE userid='$userid'");
+		while($site2user_array = mysql_fetch_array($site2user))
+		  {
+				$siteid = $site2user_array["siteid"];
+				$site["id"] = $siteid;
+				$site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+				$site["name"] = $site_array["name"];	
+				$claimedsites[] = $site;
+				
+				if(strlen($siteidwheresql)>0)
+				  {
+						$siteidwheresql .= " OR ";
+				  }
+				$siteidwheresql .= " siteid='$siteid' ";
+		  }
+		
+		 // Look for all the projects
+		 if(mysql_num_rows($site2user)>0)
+			  {
+				 $site2project = mysql_query("SELECT projectid FROM build WHERE $siteidwheresql GROUP BY projectid");
+				 while($site2project_array = mysql_fetch_array($site2project))
+						 {
+						 $projectid = $site2project_array["projectid"];
+						 $project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
+							$claimedproject = array();
+							$claimedproject["id"] = $projectid;
+							$claimedproject["name"] = $project_array["name"];
+						 $claimedsiteprojects[] = $claimedproject;
+						 }
+					}
+		
+		/** Report statistics about the last build */
+		function ReportLastBuild($type,$projectid,$siteid)
+		  {
+				$xml = "<".strtolower($type).">";
+				
+		  // Find the last build 
+				$build = mysql_query("SELECT submittime,id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$type' ORDER BY submittime DESC LIMIT 1");
+				if(mysql_num_rows($build) > 0)
+						{
+						$build_array = mysql_fetch_array($build);
+						$buildid = $build_array["id"];
+						
+						// Express the date in terms of days (makes more sens)
+						$builddate = strtotime($build_array["submittime"]." UTC");
+						$days = round((time()-$builddate)/(3600*24));
+						
+						if($days<1)
+						  {
+								$day = "today";
+						  }
+						else if($days==1)
+						  {
+								$day = "yesterday";
+						  }
+						else
+						  {
+								$day = $days." days";
+								}		
+						$xml .= add_XML_value("date",$day);
+	
+						// Configure
+						$configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
+						if(mysql_num_rows($configure)>0)
+								{
+								$configure_array = mysql_fetch_array($configure);
+								$xml .= add_XML_value("configure",$configure_array["status"]);
+								if($configure_array["status"] != 0)
+								  {
+										$xml .= add_XML_value("configureclass","error");
+								  }
+								else
+								  {
+										$xml .= add_XML_value("configureclass","normal");
+								  }
+								}	
+						else 
+						  {
+								$xml .= add_XML_value("configureclass","normal");
+						  }
+									
+						// Update
+						$update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
+						$nupdates = mysql_num_rows($update);
+      $xml .= add_XML_value("update",	$nupdates);
+  
+		    // Set the color
+						if($nupdates>0)
+						  {
+								$xml .= add_XML_value("updateclass","error");
+						  }
+				  else
+						  {
+								$xml .= add_XML_value("updateclass","normal");
+						  }
+								
+						// Find the number of errors and warnings
+						$builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+						$builderror_array = mysql_fetch_array($builderror);
+						$nerrors = $builderror_array[0];
+						$xml .= add_XML_value("error",$nerrors);
+						$buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+						$buildwarning_array = mysql_fetch_array($buildwarning);
+						$nwarnings = $buildwarning_array[0];
+						$xml .= add_XML_value("warning",$nwarnings);
+						
+						// Set the color
+						if($nerrors>0)
+						  {
+								$xml .= add_XML_value("errorclass","error");
+						  }
+						else if($nwarnings>0)
+						  {
+								$xml .= add_XML_value("errorclass","warning");
+						  }
+				  else
+						  {
+								$xml .= add_XML_value("errorclass","normal");
+						  }
+								
+						// Find the test
+      $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+      $nnotrun = $nnotrun_array[0];
+      $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
+      $nfail = $nfail_array[0];
+      
+						// Display the failing tests then the not run 
+						if($nfail>0)
+						  {
+								$xml .= add_XML_value("testfail",$nfail);
+								$xml .= add_XML_value("testfailclass","error");
+						  }
+						else if($nnotrun>0)
+						  {
+								$xml .= add_XML_value("testfail",$nnotrun);
+								$xml .= add_XML_value("testfailclass","warning");
+						  }
+						else
+								{
+								$xml .= add_XML_value("testfail","0");
+								$xml .= add_XML_value("testfailclass","normal");
+								}
+					$xml .= add_XML_value("NA","0");			
+     }
+				else
+						{
+						$xml .= add_XML_value("NA","1");
+						}
+						
+				$xml .= "</".strtolower($type).">";
+				
+				return $xml;
+		  }
+		
+		
+		// List the claimed sites
+		foreach($claimedsites as $site)
+		  {
+		  $xml .= "<claimedsite>";
+				$xml .= add_XML_value("id",$site["id"]);
+				$xml .= add_XML_value("name",$site["name"]);
+			 
+				$siteid = $site["id"];
+				
+				foreach($claimedsiteprojects as $project)
+		    {
+						$xml .= "<project>";
+						
+						$projectid = $project["id"];
+						
+						$xml .= ReportLastBuild("Nightly",$projectid,$siteid);
+						$xml .= ReportLastBuild("Continuous",$projectid,$siteid);
+						$xml .= ReportLastBuild("Experimental",$projectid,$siteid);
+					
+						
+						$xml .= "</project>";
+						}
+				
+				
+				$xml .= "</claimedsite>";
+		  }
+				
+		// Use to build the site/project matrix		
+		foreach($claimedsiteprojects as $project)
+		  {
+				$xml .= "<claimedsiteproject>";
+				$xml .= add_XML_value("id",$project["id"]);
+				$xml .= add_XML_value("name",$project["name"]);
+				$xml .= "</claimedsiteproject>";
+	  	}
+		
 				
 		if(@$_GET['note'] == "subscribedtoproject")
     {
