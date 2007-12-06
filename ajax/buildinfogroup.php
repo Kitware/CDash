@@ -38,7 +38,7 @@ $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = mysql_fetch_array($project);
 
 $buildfailing = mysql_num_rows(mysql_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='0'"));
-$testfailing = mysql_num_rows(mysql_query("SELECT buildid FROM test WHERE buildid='$buildid' AND status='failed'"));
+$testfailing = mysql_num_rows(mysql_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='failed'"));
 
 if($buildfailing)
 {
