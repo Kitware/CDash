@@ -148,8 +148,11 @@ if ($session_OK)
 						$nupdates = mysql_num_rows($update);
       $xml .= add_XML_value("update",	$nupdates);
   
+		    // Find locally modified files
+						$updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");
+						
 		    // Set the color
-						if($nupdates>0)
+						if(mysql_num_rows($updatelocal)>0)
 						  {
 								$xml .= add_XML_value("updateclass","error");
 						  }
