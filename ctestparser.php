@@ -523,7 +523,7 @@ function parse_update($xmlarray,$projectid)
     $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
     $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
 
-    //add_update($buildid,$start_time,$end_time,$command,$type);
+    add_update($buildid,$start_time,$end_time,$command,$type);
     
     $files_array = array();
     $index = 0;
