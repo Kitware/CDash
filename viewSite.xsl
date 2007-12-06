@@ -51,9 +51,9 @@
 <br/>
 
 <!-- Main -->
-<b>Description:</b><xsl:value-of select="cdash/site/description"/><br/>       
-<b>Processor type:</b><xsl:value-of select="cdash/site/processor"/><br/>    
-<b>Number of processor:</b><xsl:value-of select="cdash/site/numprocessors"/><br/>    
+<b>Description:</b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if><xsl:value-of select="cdash/site/description"/><br/>       
+<b>Processor type:</b><xsl:if test="string-length(cdash/site/processor)=0"> NA</xsl:if><xsl:value-of select="cdash/site/processor"/><br/>    
+<b>Number of processor:</b><xsl:if test="string-length(cdash/site/numprocessors)=0"> NA</xsl:if><xsl:value-of select="cdash/site/numprocessors"/><br/>    
 <!-- Display the map -->
 <xsl:if test="string-length(cdash/site/ip)>0">  
   <b>IP address:</b><xsl:value-of select="cdash/site/ip"/><br/>
@@ -88,6 +88,26 @@
   <center><div id="map" style="width: 700px; height: 400px"></div></center>
   </body>
 </xsl:if>
+<br/>
+
+<!-- Site manager -->
+<xsl:if test="cdash/user/sitemanager=1">
+<a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="cdash/site/id"/></xsl:attribute>
+<xsl:if test="cdash/user/siteclaimed=0">[claim this site]</xsl:if><xsl:if test="cdash/user/siteclaimed=1">[edit site description]</xsl:if></a>
+<br/>
+<br/>
+</xsl:if>
+
+<!-- Projects -->
+<b>This site belongs to the following projects:</b><br/>
+<xsl:for-each select="cdash/project">
+<a>
+<xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute>
+<xsl:value-of select="name"/>
+</a>
+(<xsl:value-of select="submittime"/>)<br/>
+</xsl:for-each>
+<br/>
 
 <!-- FOOTER -->
 <br/>

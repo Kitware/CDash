@@ -15,8 +15,10 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+$noforcelogin = 1;
 include("config.php");
-include("common.php");
+include('login.php');
+include('common.php');
 
 @$siteid = $_GET["siteid"];
 
@@ -46,6 +48,7 @@ foreach($CDASH_GOOGLE_MAP_API_KEY as $key=>$value)
 $xml .=  add_XML_value("googlemapkey",$apikey);
 $xml .= "</dashboard>";
 $xml .= "<site>";
+$xml .= add_XML_value("id",$site_array["id"]);
 $xml .= add_XML_value("name",$site_array["name"]);
 $xml .= add_XML_value("description",$site_array["description"]);
 $xml .= add_XML_value("processor",$site_array["processor"]);
@@ -54,6 +57,55 @@ $xml .= add_XML_value("ip",$site_array["ip"]);
 $xml .= add_XML_value("latitude",$site_array["latitude"]);
 $xml .= add_XML_value("longitude",$site_array["longitude"]);
 $xml .= "</site>";
+
+// Select projects that belong to this site
+$projects = array();
+$site2project = mysql_query("SELECT projectid,submittime FROM build WHERE siteid='$siteid' GROUP BY projectid");
+while($site2project_array = mysql_fetch_array($site2project))
+			{
+			$projectid = $site2project_array["projectid"];
+			$project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
+			$xml .= "<project>";
+			$xml .= add_XML_value("id",$projectid);
+			$xml .= add_XML_value("submittime",$site2project_array["submittime"]);
+			$xml .= add_XML_value("name",$project_array["name"]);
+	 	$xml .= "</project>";
+   $projects[] = $projectid;
+		 }
+
+ if(isset($_SESSION['cdash']))
+   {
+   $xml .= "<user>";
+   $userid = $_SESSION['cdash']['loginid'];
+			
+			// Check if the current user as a role in this project
+   foreach($projects as $projectid)
+		  {
+				$user2project = mysql_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
+    if(mysql_num_rows($user2project)>0)
+				  {
+						$xml .= add_XML_value("sitemanager","1");
+						
+						$user2site = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
+						if(mysql_num_rows($user2site) == 0)
+						  {
+								$xml .= add_XML_value("siteclaimed","0");
+						  }
+						else
+						  {
+								$xml .= add_XML_value("siteclaimed","1");
+						  }	
+						break;
+				  }
+			 }
+  
+			$user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
+   $user_array = mysql_fetch_array($user);
+   $xml .= add_XML_value("id",$userid);
+   $xml .= add_XML_value("admin",$user_array["admin"]);
+   $xml .= "</user>";
+   }
+
 $xml .= "</cdash>";
 
 // Now doing the xslt transition

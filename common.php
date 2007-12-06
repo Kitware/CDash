@@ -404,28 +404,46 @@ function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
   echo mysql_error();    
 }
 
-/** Create a site */
-function add_site($name,$description="",$processor="",$numprocessors="1")
+/** add a user to a site */
+function add_site2user($siteid,$userid)
 {
-  include("config.php");
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
-
-  // Check if we already have the site registered
-  $site = mysql_query("SELECT id FROM site WHERE name='$name'");
-  if(mysql_num_rows($site)>0)
-    {
-    $site_array = mysql_fetch_array($site);
-    return $site_array["id"];
+  $site2user = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
+	 if(mysql_num_rows($site2user) == 0)
+		  {
+	   mysql_query("INSERT INTO site2user (siteid,userid) VALUES ('$siteid','$userid')");
+		  echo mysql_error();
     }
-  
-  // If not found we create the site
-  // We retrieve the geolocation from the IP address
-  $lat = "";
+}
+
+/** remove a user to a site */
+function remove_site2user($siteid,$userid)
+{
+  mysql_query("DELETE FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
+		echo mysql_error();
+}
+
+/** Update a site */
+function update_site($siteid, $name,$description,$processor,$numprocessors,$ip,$latitude,$longitude)
+{  
+  mysql_query ("UPDATE site SET name='$name',
+		                              description='$description',
+																																processor='$processor',
+																																numprocessors='$numprocessors',
+																																ip='$ip',
+																																latitude='$latitude',
+																																longitude='$longitude' WHERE id='$siteid'");
+  echo mysql_error();  
+}						
+
+/** Get the geolocation from IP address */
+function get_geolocation($ip)
+{  
+  $location = array();
+		
+		// Ask hostip.info for geolocation
+		$lat = "";
   $long = "";
-  $ip = $_SERVER['REMOTE_ADDR'];
-  
-  // Ask hostip.info for geolocation
+ 
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
       
@@ -449,17 +467,43 @@ function add_site($name,$description="",$processor="",$numprocessors="1")
     } 
   curl_close($curl);
   
-  $latitude = "";
-  $longitude = "";
+  $location['latitude'] = "";
+  $location['longitude'] = "";
   
   // Sanity check
   if(strlen($lat) > 0 && strlen($long)>0
      && $lat[0] != ' ' && $long[0] != ' '
     )
     {
-    $latitude = $lat;
-    $longitude = $long;
+    $location['latitude'] = $lat;
+    $location['longitude'] = $long;
     }
+
+  return $location;
+}	
+
+/** Create a site */
+function add_site($name,$description="",$processor="",$numprocessors="1")
+{
+  include("config.php");
+  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  mysql_select_db("$CDASH_DB_NAME",$db);
+
+  // Check if we already have the site registered
+  $site = mysql_query("SELECT id FROM site WHERE name='$name'");
+  if(mysql_num_rows($site)>0)
+    {
+    $site_array = mysql_fetch_array($site);
+    return $site_array["id"];
+    }
+  
+  // If not found we create the site
+  // We retrieve the geolocation from the IP address
+  $ip = $_SERVER['REMOTE_ADDR'];
+	 $location = get_geolocation($ip);
+		
+		$latitude = $location['latitude'];
+		$longitude = $location['longitude'];		
 
   mysql_query ("INSERT INTO site (name,description,processor,numprocessors,ip,latitude,longitude) 
                           VALUES ('$name','$description','$processor','$numprocessors','$ip','$latitude','$longitude')");
@@ -573,42 +617,59 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   $command = addslashes($command);
   $output = addslashes($output);
   
-		// Check if the test doesn't exist
-		$sql = "SELECT t.id,it.imgid FROM test AS t, image2test AS it
-		        WHERE name='$name' AND path='$path'
-									 AND fullname='$fullname' AND command='$command' AND output='$output'
-								 	AND it.testid=t.id ";
-																		
-	 // need to double check that the images are the same as well
-		$i=0;
-	 foreach($images as $image)
-    {
-    $imgid = $image["id"];
-				if($i==0)
-				  {
-						$sql = "AND (";
-				  }
+	 // Check if the test doesn't exist
+		$test = mysql_query("SELECT id FROM test	WHERE name='$name' AND path='$path' 
+		                     AND fullname='$fullname' AND command='$command' 
+																							AND output='$output'");
 				
-				if($i>0)
+		$testexists = false;
+				
+		if(mysql_num_rows($test) > 0) // test exists
+		  {			
+				while($test_array = mysql_fetch_array($test))
 				  {
-						$sql = " OR";
-				  }
-						
-				$sql	.= "imgid='$imagid'";
-							
-				$i++;
-				if($i==count($images))
-				  {
-						$sql .= ")";
-				  }						
-				}
+						$currentid = $test_array["id"];
+						$sql = "SELECT imgid FROM image2test WHERE testid='$currentid' ";
+								
+				  // need to double check that the images are the same as well
+						$i=0;
+						foreach($images as $image)
+								{
+								$imgid = $image["id"];
+								if($i==0)
+										{
+										$sql .= "AND (";
+										}
 									
-		$test = mysql_query($sql);
-		if((count($images)>0 && mysql_num_rows($test)!=count($images)) || mysql_num_rows($test)==0)
-		  {
+								if($i>0)
+										{
+										$sql .= " OR";
+										}
+												
+								$sql	.= "imgid='$imagid'";
+													
+								$i++;
+								if($i==count($images))
+										{
+										$sql .= ")";
+										}			
+								} // end for each image
+								
+						$nimages = mysql_num_rows(mysql_query($sql));
+								
+						if($nimages == count($images))
+						  {
+								$testexists = true;
+								break;
+						 	}	
+					} // end while test_array		
+			}		// end num rows	
+				
+		if(!$testexists)
+			 {
 				// Need to create a new test
-  		$query = "INSERT INTO test (name,path,fullname,command,details, output) 
-              VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
+				$query = "INSERT INTO test (name,path,fullname,command,details, output) 
+														VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
 				if(mysql_query("$query"))
 						{
 						$testid = mysql_insert_id();
@@ -627,17 +688,17 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 				else
 						{
 						echo mysql_error();
-						}
-				}
+						}	
+		  }		
 		else // we just return the id of the test
-		  {
+				{
 				$test_array = mysql_fetch_array($test);
-			 $testid = $test_array["id"];
-		  }
-		
-		// Add into build2test
-		mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
-               VALUES ('$buildid','$testid','$status','$time')");
+				$testid = $test_array["id"];
+				}
+				
+			// Add into build2test
+			mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
+																	VALUES ('$buildid','$testid','$status','$time')");
 	
 }
 
