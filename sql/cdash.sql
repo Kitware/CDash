@@ -1,9 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 2.10.1
--- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Oct 26, 2007 at 07:01 PM
 -- Server version: 4.1.15
 -- PHP Version: 5.2.3-1+b1
 
@@ -414,6 +410,7 @@ CREATE TABLE `user2project` (
   `projectid` int(11) NOT NULL default '0',
   `role` int(11) NOT NULL default '0',
   `cvslogin` varchar(50) NOT NULL default '',
+  `emailtype` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`userid`,`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
