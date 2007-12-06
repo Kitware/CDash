@@ -137,22 +137,24 @@
 				<xsl:if test="continuous/NA=0">
 				<tr bgcolor="#FFFFFF">
 				<td><b>C</b></td>
-				<td><xsl:value-of select="continuous/update"/></td>
-				<td><xsl:value-of select="continuous/configure"/></td>
-				<td><xsl:value-of select="continuous/error"/></td>
-				<td><xsl:value-of select="continuous/testfail"/></td>	
-				<td><xsl:value-of select="continuous/date"/></td>
-				</tr>
+				<td><xsl:attribute name="class"><xsl:value-of select="continuous/updateclass"/></xsl:attribute><xsl:value-of select="continuous/update"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="continuous/configureclass"/></xsl:attribute><xsl:value-of select="continuous/configure"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="continuous/errorclass"/></xsl:attribute><xsl:value-of select="continuous/error"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="continuous/testfailclass"/></xsl:attribute><xsl:value-of select="continuous/testfail"/></td>	
+				<td><xsl:attribute name="class"><xsl:value-of select="continuous/dateclass"/></xsl:attribute>
+				<a><xsl:attribute name="href"><xsl:value-of select="continuous/datelink"/></xsl:attribute><xsl:value-of select="continuous/date"/></a>		
+				</td></tr>
 				</xsl:if>
 				<xsl:if test="experimental/NA=0">
 				<tr bgcolor="#FFFFFF">
 				<td><b>E</b></td>
-				<td><xsl:value-of select="experimental/update"/></td>
-				<td><xsl:value-of select="experimental/configure"/></td>
-				<td><xsl:value-of select="experimental/error"/></td>
-				<td><xsl:value-of select="experimental/testfail"/></td>		
-				<td><xsl:value-of select="experimental/date"/></td>
-				</tr>
+				<td><xsl:attribute name="class"><xsl:value-of select="experimental/updateclass"/></xsl:attribute><xsl:value-of select="experimental/update"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="experimental/configureclass"/></xsl:attribute><xsl:value-of select="experimental/configure"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="experimental/errorclass"/></xsl:attribute><xsl:value-of select="experimental/error"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="experimental/testfailclass"/></xsl:attribute><xsl:value-of select="experimental/testfail"/></td>		
+				<td><xsl:attribute name="class"><xsl:value-of select="experimental/dateclass"/></xsl:attribute>
+				<a><xsl:attribute name="href"><xsl:value-of select="experimental/datelink"/></xsl:attribute><xsl:value-of select="experimental/date"/></a>		
+				</td></tr>
 				</xsl:if>	
 				</table>
 				</td>
