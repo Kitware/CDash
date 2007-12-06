@@ -21,7 +21,9 @@ include("common.php");
 /** Generate the index table */
 function generate_index_table()
 { 
+  $noforcelogin = 1;
   include("config.php");
+  include('login.php');
 
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= add_XML_value("title","CDash");
@@ -29,6 +31,18 @@ function generate_index_table()
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
   
+		// User
+  if(isset($_SESSION['cdash']))
+    {
+    $xml .= "<user>";
+    $userid = $_SESSION['cdash']['loginid'];
+    $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
+    $user_array = mysql_fetch_array($user);
+    $xml .= add_XML_value("id",$userid);
+    $xml .= add_XML_value("admin",$user_array["admin"]);
+    $xml .= "</user>";
+    }
+				
   $projects = get_projects();
   $row=0;
   foreach($projects as $project)
@@ -112,26 +126,20 @@ function generate_main_dashboard_XML($projectid,$date)
           "</timestamp>";
   $xml .= "</updates>";
 
-  //echo "<pre>";
-  //echo htmlspecialchars($xml, ENT_QUOTES);
-  //echo "</pre>";
 
-    // User
-    if(isset($_SESSION['cdash']))
-      {
-        $xml .= "<user>";
-        $userid = $_SESSION['cdash']['loginid'];
-        $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
-        $user2project_array = mysql_fetch_array($user2project);
-        $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
-        $user_array = mysql_fetch_array($user);
-        $xml .= add_XML_value("id",$userid);
-        $xml .= add_XML_value("admin",$user_array["admin"]);
-        $xml .= "</user>";
-        }
-    
-  // builds
-  //$xml .= "<builds>";
+  // User
+  if(isset($_SESSION['cdash']))
+    {
+    $xml .= "<user>";
+    $userid = $_SESSION['cdash']['loginid'];
+    $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
+    $user2project_array = mysql_fetch_array($user2project);
+    $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
+    $user_array = mysql_fetch_array($user);
+    $xml .= add_XML_value("id",$userid);
+    $xml .= add_XML_value("admin",$user_array["admin"]);
+    $xml .= "</user>";
+    }
   
   $totalerrors = 0;
   $totalwarnings = 0;

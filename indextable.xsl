@@ -12,8 +12,12 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-            <!-- Include the rounding css -->
-    <script src="javascript/rounded.js"></script>
+									
+								 <!-- Include CDash Menu Stylesheet -->    
+        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+
+          <!-- Include the rounding css -->
+          <script src="javascript/rounded.js"></script>
 
        </head>
        <body bgcolor="#ffffff">
@@ -28,6 +32,21 @@
 <h3><xsl:value-of select="cdash/date"/></h3></font><br/>
 </div>
 </td></tr><tr><td></td><td>
+<!-- Menu -->
+<ul id="Nav" class="nav">
+   <li>
+        <a><xsl:attribute name="href">user.php</xsl:attribute>
+         <xsl:choose>
+          <xsl:when test="cdash/user/id>0">
+            My CDash    
+          </xsl:when>
+          <xsl:otherwise>
+             Login
+           </xsl:otherwise>
+        </xsl:choose>  
+        </a>
+      </li>
+</ul>
 </td>
 </tr>
 </table>
