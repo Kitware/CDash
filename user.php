@@ -92,7 +92,7 @@ if ($session_OK)
 					}
 		
 		/** Report statistics about the last build */
-		function ReportLastBuild($type,$projectid,$siteid)
+		function ReportLastBuild($type,$projectid,$siteid,$projectname)
 		  {
 				$xml = "<".strtolower($type).">";
 				
@@ -120,7 +120,9 @@ if ($session_OK)
 								$day = $days." days";
 								}		
 						$xml .= add_XML_value("date",$day);
-	
+      $xml .= add_XML_value("datelink","index.php?project=".$projectname."&date=".date("Ymd",$builddate+3600*24));
+				
+					
 						// Configure
 						$configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
 						if(mysql_num_rows($configure)>0)
@@ -229,15 +231,14 @@ if ($session_OK)
 						$xml .= "<project>";
 						
 						$projectid = $project["id"];
+						$projectname = $project["name"];
 						
-						$xml .= ReportLastBuild("Nightly",$projectid,$siteid);
-						$xml .= ReportLastBuild("Continuous",$projectid,$siteid);
-						$xml .= ReportLastBuild("Experimental",$projectid,$siteid);
+						$xml .= ReportLastBuild("Nightly",$projectid,$siteid,$projectname);
+						$xml .= ReportLastBuild("Continuous",$projectid,$siteid,$projectname);
+						$xml .= ReportLastBuild("Experimental",$projectid,$siteid,$projectname);
 					
-						
 						$xml .= "</project>";
 						}
-				
 				
 				$xml .= "</claimedsite>";
 		  }

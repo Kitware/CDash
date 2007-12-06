@@ -129,7 +129,9 @@
 				<td><xsl:attribute name="class"><xsl:value-of select="nightly/configureclass"/></xsl:attribute><xsl:value-of select="nightly/configure"/></td>
 				<td><xsl:attribute name="class"><xsl:value-of select="nightly/errorclass"/></xsl:attribute><xsl:value-of select="nightly/error"/></td>
 				<td><xsl:attribute name="class"><xsl:value-of select="nightly/testfailclass"/></xsl:attribute><xsl:value-of select="nightly/testfail"/></td>
-				<td><xsl:attribute name="class"><xsl:value-of select="nightly/dateclass"/></xsl:attribute><xsl:value-of select="nightly/date"/></td>
+				<td><xsl:attribute name="class"><xsl:value-of select="nightly/dateclass"/></xsl:attribute>
+				<a><xsl:attribute name="href"><xsl:value-of select="nightly/datelink"/></xsl:attribute><xsl:value-of select="nightly/date"/></a>		
+				</td>
 				</tr>
 				</xsl:if>
 				<xsl:if test="continuous/NA=0">
