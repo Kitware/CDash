@@ -659,6 +659,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 								
 						if($nimages == count($images))
 						  {
+								$testid = $test_array["id"];
 								$testexists = true;
 								break;
 						 	}	
@@ -689,12 +690,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 						{
 						echo mysql_error();
 						}	
-		  }		
-		else // we just return the id of the test
-				{
-				$test_array = mysql_fetch_array($test);
-				$testid = $test_array["id"];
-				}
+		  }	
 				
 			// Add into build2test
 			mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
