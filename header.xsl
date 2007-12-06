@@ -3,7 +3,7 @@
         
     <xsl:output method="html"/>
     <xsl:template name="header" match="/">
-      
+    
     <!-- Include JQuery -->
     <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
   
@@ -23,6 +23,10 @@
     
     <!-- Include the rounding css -->
     <script src="javascript/rounded.js"></script>
+
+<input type="hidden" id="projectname">
+<xsl:attribute name="value"><xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
+</input>
 
 <table border="0" cellpadding="0" cellspacing="2" width="100%">
 <tr>
