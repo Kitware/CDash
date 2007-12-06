@@ -46,12 +46,13 @@ if ($session_OK)
 		$project_array = mysql_fetch_array($project);
 		
 		// Check if the user is not already in the database
-		$user2project = mysql_query("SELECT cvslogin,role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+		$user2project = mysql_query("SELECT cvslogin,role,emailtype FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
 		if(mysql_num_rows($user2project)>0)
 		  {
 				$user2project_array = mysql_fetch_array($user2project);
 				$xml .= add_XML_value("cvslogin",$user2project_array["cvslogin"]);
 				$xml .= add_XML_value("role",$user2project_array["role"]);
+				$xml .= add_XML_value("emailtype",$user2project_array["emailtype"]);
 				}
 			 
 		
@@ -61,6 +62,7 @@ if ($session_OK)
 	 @$Unsubscribe = $_POST["unsubscribe"];	
 		@$Role = $_POST["role"];
 		@$CVSLogin = $_POST["cvslogin"];
+		@$EmailType = $_POST["emailtype"];
 		
 		if($Unsubscribe)
 		  {
@@ -71,11 +73,11 @@ if ($session_OK)
 		  {
 				if(mysql_num_rows($user2project)>0)
 		    {
-						mysql_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin' WHERE userid='$userid' AND projectid='$projectid'");
+						mysql_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType' WHERE userid='$userid' AND projectid='$projectid'");
 						}
 				else
 						{
-						mysql_query("INSERT INTO user2project (role,cvslogin,userid,projectid) VALUES ('$Role','$CVSLogin','$userid','$projectid')");
+						mysql_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype) VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType')");
 						}		
 		  header( 'location: user.php?note=subscribedtoproject' );
 		  }

@@ -125,7 +125,48 @@
 		<tr>
     <td></td>
     <td bgcolor="#FFFFFF"></td>
-  </tr>	
+  </tr>
+		<tr>
+    <td width="98"></td>
+    <td bgcolor="#CCCCCC"><strong>Email Preference</strong></td>
+  </tr>
+		<xsl:if test="/cdash/edit=1">
+   <tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="radio" name="emailtype" value="0">
+				 <xsl:if test="/cdash/emailtype=0">
+				 <xsl:attribute name="checked"></xsl:attribute>
+					</xsl:if>
+					</input> No email
+			</td>
+  </tr>
+				</xsl:if>
+		 <tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="radio" name="emailtype" value="1">
+				 <xsl:if test="/cdash/emailtype=1 or /cdash/edit=0">
+				 <xsl:attribute name="checked"></xsl:attribute>
+					</xsl:if>
+					</input> Email me when <b>my checkins</b> are breaking the dashboard
+			</td>
+  </tr>
+		<tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="radio" name="emailtype" value="2">
+				 <xsl:if test="/cdash/emailtype=2">
+				 <xsl:attribute name="checked">
+					</xsl:attribute>
+					</xsl:if>					</input> Email me when checkins are breaking <b>nightly</b> dashboard
+			</td>
+  </tr>
+		<tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="radio" name="emailtype" value="3">
+				 <xsl:if test="/cdash/emailtype=3"><xsl:attribute name="checked"></xsl:attribute></xsl:if>
+					</input> Email me when <b>any builds</b> are breaking the dashboard
+			</td>
+  </tr>
+		
 		<tr>
     <td></td>
 				<td bgcolor="#FFFFFF">
