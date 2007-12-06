@@ -10,6 +10,16 @@
  .tr-odd { background-color : #ffffff; }
  .measurement { background-color : #b0c4de; }
  .table-heading { background-color : #b0c4de; }
+.title-divider { background-color: #b0c4de; text-align: center; font-weight: bold; }
+
+.tracknav { 
+font-family: Arial, Helvetica, sans-serif;
+font-weight: bold;
+font-size: 80%;
+text-align: right;
+}
+
+.tracknav a:link, .tracknav a:visited { text-decoration: none; }
 
 #navigator {
     // background-color: #6699cc;
@@ -138,4 +148,5 @@ a:hover  {
   color : black;
 Font-Style : bold;
 }
+
 

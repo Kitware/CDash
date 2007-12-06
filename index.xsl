@@ -46,7 +46,8 @@
       <td align="left" bgcolor="#ffffff">
       <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/></xsl:attribute><xsl:value-of select="site"/></a>
       </td>
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/>
+      <td align="left" bgcolor="#ffffff">
+						<a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="buildname"/></a>
         <xsl:text>&#x20;</xsl:text>
       <xsl:if test="string-length(note)>0">
       <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img SRC="images/Document.gif" ALT="Notes" border="0"/></a>

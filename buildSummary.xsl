@@ -153,9 +153,7 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 <pre><xsl:value-of select="text"/></pre>
 <pre><xsl:value-of select="postcontext"/></pre>
 </xsl:for-each>						
-											
-											
-											
+																			
 <br/>
 
 

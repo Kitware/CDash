@@ -15,9 +15,13 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
-include("common.php");
 
+
+$noforcelogin = 1;
+include("config.php");
+include('login.php');
+include("common.php");
+				
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
 
@@ -45,6 +49,21 @@ $logoid = getLogoID($projectid);
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+
+
+// User
+ if(isset($_SESSION['cdash']))
+   {
+   $xml .= "<user>";
+   $userid = $_SESSION['cdash']['loginid'];
+   $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
+   $user_array = mysql_fetch_array($user);
+   $xml .= add_XML_value("id",$userid);
+   $xml .= add_XML_value("admin",$user_array["admin"]);
+   $xml .= "</user>";
+   }
+
+
 $xml .="<dashboard>
   <datetime>".date("D, d M Y H:i:s",strtotime($build_array["starttime"]))."</datetime>
   <date>".$date."</date>
@@ -208,16 +227,8 @@ $xml .="<dashboard>
 		$xml .= add_XML_value("nnotrun",$nnotrun);  
 		$xml .= add_XML_value("nfailed",$nfail); 
 		
-		
-		
-		
-		
 		$xml .= "</test>";
-		
-		
-
-		
-		
+	
   $xml .= "</cdash>";
  
 
