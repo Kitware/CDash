@@ -53,7 +53,7 @@ $cleanbuild = mysql_query("SELECT starttime FROM build
 if(mysql_num_rows($cleanbuild)>0)
   {
   $cleanbuild_array = mysql_fetch_array($cleanbuild);
-		$gmtdate = strtotime($cleanbuild_array["starttime"]." UTC");
+  $gmtdate = strtotime($cleanbuild_array["starttime"]." UTC");
   $datefirstbuildfailing = date("Y-m-d H:i:s T",$gmtdate);
   }
 else
@@ -64,7 +64,7 @@ else
                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC LIMIT 1");
   $firstbuild_array = mysql_fetch_array($firstbuild);              
   $gmtdate = strtotime($firstbuild_array["starttime"]." UTC");
-		$datefirstbuildfailing = date("Y-m-d H:i:s T",$gmtdate);
+  $datefirstbuildfailing = date("Y-m-d H:i:s T",$gmtdate);
   }
 
   $buildfailingdays = round((strtotime($starttime)-$gmtdate)/(3600*24));
@@ -75,7 +75,7 @@ if($testfailing)
 // Find the last test that have no error
 $cleanbuild = mysql_query("SELECT starttime FROM build
                            WHERE id NOT IN 
-                                 (SELECT b.id FROM build AS b, test2build AS t WHERE b.siteid='$siteid' AND b.type='$buildtype' AND b.name='$buildname' AND
+                                 (SELECT b.id FROM build AS b, build2test AS t WHERE b.siteid='$siteid' AND b.type='$buildtype' AND b.name='$buildname' AND
                                   t.buildid=b.id AND b.projectid='$projectid' AND b.starttime<='$starttime' AND t.status='failed')
                            AND siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                            AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime DESC LIMIT 1");
@@ -85,7 +85,7 @@ echo mysql_error();
 if(mysql_num_rows($cleanbuild)>0)
   {
   $cleanbuild_array = mysql_fetch_array($cleanbuild);
-	 $gmtdate = strtotime($cleanbuild_array["starttime"]." UTC");		
+  $gmtdate = strtotime($cleanbuild_array["starttime"]." UTC");  
   $datefirsttestfailing = date("Y-m-d H:i:s T",$gmtdate);
   }
 else
@@ -95,7 +95,7 @@ else
                             WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC LIMIT 1");
   $firstbuild_array = mysql_fetch_array($firstbuild);
-		$gmtdate = strtotime($firstbuild_array["starttime"]." UTC");	              
+  $gmtdate = strtotime($firstbuild_array["starttime"]." UTC");               
   $datefirsttestfailing = date("Y-m-d H:i:s T",$gmtdate);
   }
 
@@ -118,8 +118,8 @@ else
     }
   else if($buildfailingdays==1)
     {
-				$date = substr($datefirstbuildfailing,0,4).substr($datefirstbuildfailing,5,2).substr($datefirstbuildfailing,8,2);
-				echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." day)";
+    $date = substr($datefirstbuildfailing,0,4).substr($datefirstbuildfailing,5,2).substr($datefirstbuildfailing,8,2);
+    echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." day)";
     }
   else 
     {   
