@@ -41,7 +41,7 @@ unset($contents);
 ctest_parse($xml_array,$projectid);
 
 // Send the emails if necessary
-send_email($xml_array,$projectid);
+sendemail($xml_array,$projectid);
 
 // Create the RSS fee
 CreateRSSFeed($projectid);
