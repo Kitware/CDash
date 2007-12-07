@@ -23,6 +23,8 @@ $CDASH_DB_LOGIN = 'root';
 $CDASH_DB_PASS = '';
 // Name of the MySQL database
 $CDASH_DB_NAME = 'cdash';
+// Default from email
+$CDASH_EMAILADMIN = 'admin@cdash.org';
 // CSS file 
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory

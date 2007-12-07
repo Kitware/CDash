@@ -18,6 +18,7 @@
 include("ctestparser.php");
 include_once("common.php");
 include_once("createRSS.php");
+include("sendemail.php");
 
 // Open the database connection
 include("config.php");
@@ -38,6 +39,9 @@ unset($contents);
 
 // Parse the XML file
 ctest_parse($xml_array,$projectid);
+
+// Send the emails if necessary
+send_email($xml_array,$projectid);
 
 // Create the RSS fee
 CreateRSSFeed($projectid);
