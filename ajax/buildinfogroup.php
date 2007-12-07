@@ -75,7 +75,7 @@ if($testfailing)
 // Find the last test that have no error
 $cleanbuild = mysql_query("SELECT starttime FROM build
                            WHERE id NOT IN 
-                                 (SELECT b.id FROM build AS b, test AS t WHERE b.siteid='$siteid' AND b.type='$buildtype' AND b.name='$buildname' AND
+                                 (SELECT b.id FROM build AS b, test2build AS t WHERE b.siteid='$siteid' AND b.type='$buildtype' AND b.name='$buildname' AND
                                   t.buildid=b.id AND b.projectid='$projectid' AND b.starttime<='$starttime' AND t.status='failed')
                            AND siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                            AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime DESC LIMIT 1");
