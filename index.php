@@ -341,8 +341,18 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("time",round($time/60,1));
       $xml .= "</test>";
       }
-    $xml .= add_XML_value("builddate",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC"))); // use the default timezone
-    $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",strtotime($build_array["submittime"]." UTC")));// use the default timezone
+				$starttimestamp = strtotime($build_array["starttime"]." UTC");
+				$submittimestamp = strtotime($build_array["submittime"]." UTC");
+    $xml .= add_XML_value("builddate",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
+    if($starttimestamp > $submittimestamp)
+				  {
+						$xml .= add_XML_value("clockskew","1");
+				  }
+				else
+				  {
+						$xml .= add_XML_value("clockskew","0");
+				  }
+				$xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
    $xml .= "</build>";
     } // END IF CONFIGURE
     
@@ -361,8 +371,19 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <percentagegreen>".$project_array["coveragethreshold"]."</percentagegreen>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
-      $xml .= "  <date>".$build_array["starttime"]."</date>";
-      $xml .= "  <submitdate>".$build_array["submittime"]."</submitdate>";
+      
+						$starttimestamp = strtotime($build_array["starttime"]." UTC");
+						$submittimestamp = strtotime($build_array["submittime"]." UTC");
+						$xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
+						if($starttimestamp > $submittimestamp)
+								{
+								$xml .= add_XML_value("clockskew","1");
+								}
+						else
+								{
+								$xml .= add_XML_value("clockskew","0");
+								}
+						$xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
       $xml .= "</coverage>";
       }  // end coverage
     
@@ -380,8 +401,18 @@ function generate_main_dashboard_XML($projectid,$date)
                                               WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
       $defectcount = mysql_fetch_array($defect);
       $xml .= "  <defectcount>".$defectcount[0]."</defectcount>";
-      $xml .= "  <date>".$build_array["starttime"]."</date>";
-      $xml .= "  <submitdate>".$build_array["submittime"]."</submitdate>";
+      $starttimestamp = strtotime($build_array["starttime"]." UTC");
+						$submittimestamp = strtotime($build_array["submittime"]." UTC");
+						$xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
+						if($starttimestamp > $submittimestamp)
+								{
+								$xml .= add_XML_value("clockskew","1");
+								}
+						else
+								{
+								$xml .= add_XML_value("clockskew","0");
+								}
+						$xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
       $xml .= "</dynamicanalysis>";
       }  // end coverage   
     } // end looping through builds
