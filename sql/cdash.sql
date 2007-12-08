@@ -30,7 +30,6 @@ CREATE TABLE `build` (
   `log` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `siteid` (`siteid`,`name`),
-  KEY `id` (`id`),
   KEY `projectid` (`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
