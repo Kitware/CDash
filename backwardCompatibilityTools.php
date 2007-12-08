@@ -36,7 +36,7 @@ if($FixNewTableTest)
   echo $n;
 
   $step = 5000;
-  for($j=92242;$j<=$n;$j+=$step)
+  for($j=280682;$j<=$n;$j+=$step)
     {
   $oldtest = mysql_query("SELECT * from test ORDER BY id ASC LIMIT $j,$step");
   while($oldtest_array = mysql_fetch_array($oldtest))
@@ -71,7 +71,7 @@ if($FixNewTableTest)
     $output = addslashes($output);
     
     // Check if the test doesn't exist
-    $test = mysql_query("SELECT id FROM test2 WHERE name='$name' AND path='$path' AND fullname='$fullname' AND command='$command' AND output='$output'");
+    $test = mysql_query("SELECT id FROM test2 WHERE name='$name' AND path='$path' AND fullname='$fullname' AND command='$command' AND output='$output' LIMIT 1");
     
     $testexists = false;
     
@@ -80,7 +80,7 @@ if($FixNewTableTest)
       while($test_array = mysql_fetch_array($test))
         {
         $currentid = $test_array["id"];
-        $sql = "SELECT imgid FROM image2test2 WHERE testid='$currentid' ";
+        $sql = "SELECT count(imgid) FROM image2test2 WHERE testid='$currentid' ";
         
         // need to double check that the images are the same as well
         $i=0;
@@ -106,8 +106,9 @@ if($FixNewTableTest)
             }   
           } // end for each image
         
-         $nimages = mysql_num_rows(mysql_query($sql));
-        
+         $nimage_array = mysql_fetch_array(mysql_query($sql));		
+						   $nimages = $nimage_array[0];
+						
          if($nimages == count($images))
            {
            $testid = $test_array["id"];
