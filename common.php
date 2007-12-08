@@ -620,7 +620,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 	 // Check if the test doesn't exist
 		$test = mysql_query("SELECT id FROM test	WHERE name='$name' AND path='$path' 
 		                     AND fullname='$fullname' AND command='$command' 
-																							AND output='$output'");
+																							AND output='$output' LIMIT 1");
 				
 		$testexists = false;
 				
@@ -629,7 +629,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 				while($test_array = mysql_fetch_array($test))
 				  {
 						$currentid = $test_array["id"];
-						$sql = "SELECT imgid FROM image2test WHERE testid='$currentid' ";
+						$sql = "SELECT count(imgid) FROM image2test WHERE testid='$currentid' ";
 								
 				  // need to double check that the images are the same as well
 						$i=0;
@@ -655,7 +655,8 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 										}			
 								} // end for each image
 								
-						$nimages = mysql_num_rows(mysql_query($sql));
+						$nimage_array = mysql_fetch_array(mysql_query($sql));		
+						$nimages = $nimage_array[0];
 								
 						if($nimages == count($images))
 						  {
