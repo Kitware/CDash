@@ -295,21 +295,8 @@
 <xsl:for-each select="cdash/buildgroup">
   <xsl:call-template name="builds">
   <xsl:with-param name="type" select="."/>
-  <!-- <xsl:with-param name="type_name">Nightly</xsl:with-param> -->
   </xsl:call-template>
 </xsl:for-each>
-
-<!-- 
-<xsl:call-template name="builds">
-<xsl:with-param name="type" select="cdash/builds/continuous"/>
-<xsl:with-param name="type_name">Continuous</xsl:with-param>
-</xsl:call-template>
-
-<xsl:call-template name="builds">
-<xsl:with-param name="type" select="cdash/builds/experimental"/>
-<xsl:with-param name="type_name">Experimental</xsl:with-param>
-</xsl:call-template>
--->
 
 <xsl:if test="count(cdash/buildgroup/build/buildid)>0">
    <tr>

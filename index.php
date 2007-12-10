@@ -49,7 +49,7 @@ function generate_index_table()
     {
     $xml .= "<project>";
     $xml .= "<name>".$project['name']."</name>";
-    $xml .= "<lastbuild>".$project['last_build']."</lastbuild>";
+    $xml .= "<lastbuild>".date("Y-m-h H:i:s T",strtotime($project['last_build']))."</lastbuild>";
     $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
@@ -476,6 +476,13 @@ if(mysql_select_db("$CDASH_DB_NAME",$db) === FALSE)
   }
 
 @$projectname = $_GET["project"];
+
+// If we should not generate any XSL
+if(isset($NoXSLGenerate))
+  {
+  return;
+  }
+
 if(!isset($projectname )) // if the project name is not set we display the table of projects
   {
   $xml = generate_index_table();
