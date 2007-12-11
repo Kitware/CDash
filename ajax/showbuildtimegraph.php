@@ -46,17 +46,35 @@ $previousbuilds = mysql_query("SELECT id,starttime,endtime FROM build WHERE site
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var d1 = [];
-				
+				var tx = [];
+				var ty = [];
 				<?php
 				$i=0;
 				while($build_array = mysql_fetch_array($previousbuilds))
 						{
 				?>
 						d1.push([<?php echo $build_array["id"]; ?>,<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>]);
+				  tx.push([<?php echo $build_array["id"]; ?>,"<?php echo $build_array["starttime"]; ?>"]);
+						ty.push([<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>,"<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>"]);
 				<?php
 				$i++;
 					 }
 				?>
-		$.plot($("#grapholder"), [ d1 ]);
+		$.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],
+		      {
+        lines: { show: true },
+        points: { show: true },
+        xaxis: {
+         ticks: tx
+        },
+        yaxis: {
+         ticks: ty
+								},
+        grid: {
+            backgroundColor: "#fffaff"
+        },
+								colors: ["#0000FF", "#dba255", "#919733"]					
+								}
+		);
 });
 </script>
