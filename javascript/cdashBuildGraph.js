@@ -7,7 +7,7 @@ function showgraph_click(buildid)
     }
   
   $("#graph").show();
-		$("#grapholder").attr("style","width:600px;height:400px;");
+		$("#grapholder").attr("style","width:800px;height:400px;");
 		$("#grapholder").show();
   $("#graph").load("ajax/showbuildtimegraph.php?buildid="+buildid,{},function(){$("#grapholder").fadeIn('slow');});
 }
