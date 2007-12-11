@@ -18,7 +18,8 @@ function buildgroup_click(buildid)
     return;
     }
   
-  $(group).hide();
+		$(group).fadeIn('slow');
+		$(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/addbuildgroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
 }
 
@@ -33,7 +34,8 @@ function buildnosubmission_click(siteid,buildname,divname,buildgroupid,buildtype
     return;
     }
 
-  $(group).hide();
+		$(group).fadeIn('slow');
+		$(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/expectedbuildgroup.php?siteid="+siteid+"&buildname="+buildname+"&buildtype="+buildtype+"&buildgroup="+buildgroupid+"&divname="+divname,{},function(){$(this).fadeIn('slow');});
 }
 
@@ -45,8 +47,9 @@ function buildinfo_click(buildid)
     $(group).fadeOut('medium');
     return;
     }
-  
-  $(group).hide();
+ 
+		$(group).fadeIn('slow');
+		$(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/buildinfogroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
 }
 
@@ -62,6 +65,7 @@ function expectedinfo_click(siteid,buildname,divname,projectid,buildtype,current
     $(group).fadeOut('medium');
     return;
     }
-  $(group).hide();
+		$(group).fadeIn('slow');
+		$(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/expectedinfo.php?siteid="+siteid+"&buildname="+buildname+"&projectid="+projectid+"&buildtype="+buildtype+"&currenttime="+currentime,{},function(){$(this).fadeIn('slow');});
 }
