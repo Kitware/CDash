@@ -14,6 +14,9 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+									
+									<!-- Include JavaScript -->
+         <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script> 
        </head>
        <body bgcolor="#ffffff">
    
@@ -59,7 +62,14 @@
        </tr>
       </table>
       <br/>
-
+<!-- Graph -->
+<a>
+<xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
+[Show Build Time Graph]
+</a>
+<div name="graph" id="graph"></div>
+<div id="grapholder"></div>
+<br/>
 <!-- Update -->
 <div class="title-divider" id="Stage0">
 <div class="tracknav">
@@ -79,6 +89,7 @@ Stage: Update (<xsl:value-of select="cdash/update/nerrors"/> errors, <xsl:value-
 <a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
 <xsl:value-of select="cdash/update/nupdates"/></a>
 <br/><br/>
+
 
 <!-- Configure -->
 <div class="title-divider" id="Stage1">

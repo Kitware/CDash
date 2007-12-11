@@ -6,13 +6,15 @@
     
     <!-- Include JQuery -->
     <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
-  
+				<script src="javascript/jquery.flot.js" type="text/javascript" charset="utf-8"></script>  	
+					
    <!-- Include Menu JavaScript -->
    <script src='javascript/menu.js' type='text/javascript'></script>
       
-      <!-- Include Core Datepicker JavaScript -->
+    <!-- Include Core Datepicker JavaScript -->
     <script src="javascript/ui.datepicker.js" type="text/javascript" charset="utf-8"></script>  
-    
+
+
     <!-- Include Calendar JavaScript -->
     <script src="javascript/cdashmenu.js" type="text/javascript" charset="utf-8"></script>
     

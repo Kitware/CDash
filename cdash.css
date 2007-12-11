@@ -22,7 +22,6 @@ text-align: right;
 .tracknav a:link, .tracknav a:visited { text-decoration: none; }
 
 #navigator {
-    // background-color: #6699cc;
 background-color: #ffffff;
 border: 0px #0000aa solid;
 width: auto;
@@ -140,7 +139,6 @@ P {font-family : arial, helvetica, sans-serif; color: black; }
 
 a {
    Font-Family : arial, helvetica, sans-serif;
-   Font-Style : normal;
    color : blue;
 }
 
