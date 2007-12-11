@@ -63,12 +63,15 @@
       </table>
       <br/>
 <!-- Graph -->
+
 <a>
 <xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
 [Show Build Time Graph]
 </a>
 <div name="graph" id="graph"></div>
+<center>
 <div id="grapholder"></div>
+</center>
 <br/>
 <!-- Update -->
 <div class="title-divider" id="Stage0">
