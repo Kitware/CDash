@@ -102,10 +102,10 @@ function sendemail($vals,$projectid)
 		$email = "";
 		
 		// Find the users
-		$users = mysql_query("SELECT author FROM updatefile WHERE buildid='$buildid'");
-		while($users_array = mysql_fetch_array($users))
+		$authors = mysql_query("SELECT author FROM updatefile WHERE buildid='$buildid'");
+		while($authors_array = mysql_fetch_array($authors))
 		  {
-				$author = $user_array["author"];
+				$author = $authors_array["author"];
 			
 				if($author=="Local User")
 				  {
@@ -115,7 +115,7 @@ function sendemail($vals,$projectid)
 				// Find a matching name in the database
 				$user = mysql_query("SELECT user.email FROM user,user2project WHERE user2project.projectid='$projectid' 
 				                             AND user2project.userid=user.id AND user2project.cvslogin='$author'");
-		  if(mysql_num_rows($users)==0)
+		  if(mysql_num_rows($user)==0)
 				  {
 						// Should send an email to the project admin to let him know that this user is not registered
 				  continue;
