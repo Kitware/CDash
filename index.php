@@ -365,7 +365,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
       
-      $percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
+      @$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
       
       $xml .= "  <percentage>".$percent."</percentage>";
       $xml .= "  <percentagegreen>".$project_array["coveragethreshold"]."</percentagegreen>";
