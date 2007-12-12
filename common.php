@@ -116,11 +116,18 @@ function XMLStrFormat($str){
   return $str;
 }
 
-
 /** Add an XML tag to a string */
 function add_XML_value($tag,$value)
 {
   return "<".$tag.">".XMLStrFormat($value)."</".$tag.">";
+}
+
+/** add information to the log file */
+function add_log($text,$function)
+{
+  $logfile = "/var/tmp/cdash.org";
+		$error = ."[".date("Y-m-d H:i:s")."] (".$function."): ".$text."\n";		
+		error_log($error,3,$logfile);
 }
 
 /** Clean the backup directory */
@@ -614,6 +621,8 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 /** Add a new test */
 function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images)
 {
+  add_log("Begin","add_test");
+		
   $command = addslashes($command);
   $output = addslashes($output);
   
@@ -621,7 +630,9 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 		$test = mysql_query("SELECT id FROM test	WHERE name='$name' AND path='$path' 
 		                     AND fullname='$fullname' AND command='$command' 
 																							AND output='$output' LIMIT 1");
-				
+		
+		add_log("AfterQuery","add_test");
+		
 		$testexists = false;
 				
 		if(mysql_num_rows($test) > 0) // test exists
@@ -693,10 +704,13 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 						}	
 		  }	
 				
+		add_log("End","add_test");
+
 			// Add into build2test
 			mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
 																	VALUES ('$buildid','$testid','$status','$time')");
-	
+																	
+		add_log("Finished","add_test");
 }
 
 /** Add a new error/warning */

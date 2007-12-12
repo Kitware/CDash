@@ -351,7 +351,7 @@ function parse_testing($xmlarray,$projectid)
       } 
     }
    
-		// We cannot really do a bloc submission since we are having images
+		// We cannot really do a block submission since we are having images
   foreach($test_array as $test)
     {
     add_test($buildid,
