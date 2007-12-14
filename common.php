@@ -125,9 +125,9 @@ function add_XML_value($tag,$value)
 /** add information to the log file */
 function add_log($text,$function)
 {
-  $logfile = "/var/tmp/cdash.org";
-		$error = ."[".date("Y-m-d H:i:s")."] (".$function."): ".$text."\n";		
-		error_log($error,3,$logfile);
+  $logfile = "/var/tmp/cdash.log";
+  $error = "[".date("Y-m-d H:i:s")."] (".$function."): ".$text."\n";  
+  error_log($error,3,$logfile);
 }
 
 /** Clean the backup directory */
@@ -149,7 +149,7 @@ function parse_XML($contents)
   $p = xml_parser_create();
   xml_parse_into_struct($p, $contents, $vals, $index);
   xml_parser_free($p);
-		return $vals;
+  return $vals;
 }
 
 /** Backup an XML file */
@@ -313,46 +313,46 @@ function add_coverage($buildid,$coverage_array)
 
 {
   // Construct the SQL query
-		$sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) VALUES ";
-		
-		$i=0;
-		foreach($coverage_array as $coverage)
-		  {				
-				$fullpath = $coverage["fullpath"];
+  $sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) VALUES ";
+  
+  $i=0;
+  foreach($coverage_array as $coverage)
+    {    
+    $fullpath = $coverage["fullpath"];
 
     // Create an empty file if doesn't exists
     $coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
-		                               WHERE cf.id=c.fileid AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
-				if(mysql_num_rows($coveragefile)==0)
-						{
-						mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-						$fileid = mysql_insert_id();
-						}
-				else
-						{
-						$coveragefile_array = mysql_fetch_array($coveragefile);
-						$fileid = $coveragefile_array["id"];
-						}
-				
-				$covered = $coverage["covered"];
-				$loctested = $coverage["loctested"];
-				$locuntested = $coverage["locuntested"];
-    @$branchstested = $coverage["branchstested"];
-				@$branchsuntested = $coverage["branchsuntested"];
-				@$functionstested = $coverage["functionstested"];
-				@$functionsuntested = $coverage["functionsuntested"];
+                                 WHERE cf.id=c.fileid AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+    if(mysql_num_rows($coveragefile)==0)
+      {
+      mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+      $fileid = mysql_insert_id();
+      }
+    else
+      {
+      $coveragefile_array = mysql_fetch_array($coveragefile);
+      $fileid = $coveragefile_array["id"];
+      }
     
-				if($i>0)
-				  {
-						$sql .= ", ";
-				  }
-				else
-						{
-						$i=1;
-						}
-							
-				$sql .= "('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')";				
-				}
+    $covered = $coverage["covered"];
+    $loctested = $coverage["loctested"];
+    $locuntested = $coverage["locuntested"];
+    @$branchstested = $coverage["branchstested"];
+    @$branchsuntested = $coverage["branchsuntested"];
+    @$functionstested = $coverage["functionstested"];
+    @$functionsuntested = $coverage["functionsuntested"];
+    
+    if($i>0)
+      {
+      $sql .= ", ";
+      }
+    else
+      {
+      $i=1;
+      }
+       
+    $sql .= "('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')";    
+    }
 
   // Insert into coverage
   mysql_query($sql);
@@ -391,21 +391,21 @@ function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
 {
   $sql = "INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ";
   
-		$i=0;
-		foreach($coveragelogarray as $key=>$value)
+  $i=0;
+  foreach($coveragelogarray as $key=>$value)
      {
-					if($i>0)
-					  {
-							$sql .= ",";
-							}		
-						
-					$sql.= "('$buildid','$fileid','$key','$value')";
-					
-					if($i==0)
-					  {
-							$i++;
-				  	}
-					}
+     if($i>0)
+       {
+       $sql .= ",";
+       }  
+      
+     $sql.= "('$buildid','$fileid','$key','$value')";
+     
+     if($i==0)
+       {
+       $i++;
+       }
+     }
  
   mysql_query ($sql);
   echo mysql_error();    
@@ -415,10 +415,10 @@ function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
 function add_site2user($siteid,$userid)
 {
   $site2user = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
-	 if(mysql_num_rows($site2user) == 0)
-		  {
-	   mysql_query("INSERT INTO site2user (siteid,userid) VALUES ('$siteid','$userid')");
-		  echo mysql_error();
+  if(mysql_num_rows($site2user) == 0)
+    {
+    mysql_query("INSERT INTO site2user (siteid,userid) VALUES ('$siteid','$userid')");
+    echo mysql_error();
     }
 }
 
@@ -426,29 +426,29 @@ function add_site2user($siteid,$userid)
 function remove_site2user($siteid,$userid)
 {
   mysql_query("DELETE FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
-		echo mysql_error();
+  echo mysql_error();
 }
 
 /** Update a site */
 function update_site($siteid, $name,$description,$processor,$numprocessors,$ip,$latitude,$longitude)
 {  
   mysql_query ("UPDATE site SET name='$name',
-		                              description='$description',
-																																processor='$processor',
-																																numprocessors='$numprocessors',
-																																ip='$ip',
-																																latitude='$latitude',
-																																longitude='$longitude' WHERE id='$siteid'");
+                                description='$description',
+                                processor='$processor',
+                                numprocessors='$numprocessors',
+                                ip='$ip',
+                                latitude='$latitude',
+                                longitude='$longitude' WHERE id='$siteid'");
   echo mysql_error();  
-}						
+}      
 
 /** Get the geolocation from IP address */
 function get_geolocation($ip)
 {  
   $location = array();
-		
-		// Ask hostip.info for geolocation
-		$lat = "";
+  
+  // Ask hostip.info for geolocation
+  $lat = "";
   $long = "";
  
   $curl = curl_init();
@@ -487,7 +487,7 @@ function get_geolocation($ip)
     }
 
   return $location;
-}	
+} 
 
 /** Create a site */
 function add_site($name,$description="",$processor="",$numprocessors="1")
@@ -507,10 +507,10 @@ function add_site($name,$description="",$processor="",$numprocessors="1")
   // If not found we create the site
   // We retrieve the geolocation from the IP address
   $ip = $_SERVER['REMOTE_ADDR'];
-	 $location = get_geolocation($ip);
-		
-		$latitude = $location['latitude'];
-		$longitude = $location['longitude'];		
+  $location = get_geolocation($ip);
+  
+  $latitude = $location['latitude'];
+  $longitude = $location['longitude'];  
 
   mysql_query ("INSERT INTO site (name,description,processor,numprocessors,ip,latitude,longitude) 
                           VALUES ('$name','$description','$processor','$numprocessors','$ip','$latitude','$longitude')");
@@ -522,57 +522,57 @@ function add_site($name,$description="",$processor="",$numprocessors="1")
 function remove_build($buildid)
 {
   mysql_query("DELETE FROM build WHERE id='$buildid'");
-		mysql_query("DELETE FROM build2group WHERE buildid='$buildid'");
-		mysql_query("DELETE FROM builderror WHERE buildid='$buildid'");
-		mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
-		mysql_query("DELETE FROM configure WHERE buildid='$buildid'");
-				
-		// coverage file are kept unless they are shared
-		$coverage = mysql_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
-		while($coverage_array = mysql_fetch_array($coverage))
-		  {
-				$fileid = $coverage_array["fileid"];
-				// Make sur the file is not shared
-				$numfiles = mysql_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
-				if($numfiles[0]==1)
-				  {
-						mysql_query("DELETE FROM coveragefile WHERE id='$fileid'");	
-						}
-				}
-		
-		mysql_query("DELETE FROM coverage WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM build2group WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM builderror WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM configure WHERE buildid='$buildid'");
+    
+  // coverage file are kept unless they are shared
+  $coverage = mysql_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
+  while($coverage_array = mysql_fetch_array($coverage))
+    {
+    $fileid = $coverage_array["fileid"];
+    // Make sur the file is not shared
+    $numfiles = mysql_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
+    if($numfiles[0]==1)
+      {
+      mysql_query("DELETE FROM coveragefile WHERE id='$fileid'"); 
+      }
+    }
+  
+  mysql_query("DELETE FROM coverage WHERE buildid='$buildid'");
 
-		mysql_query("DELETE FROM coveragefilelog WHERE buildid='$buildid'");
-		mysql_query("DELETE FROM coveragesummary WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM coveragefilelog WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM coveragesummary WHERE buildid='$buildid'");
 
   // dynamicanalysisdefect
-		$dynamicanalysis = mysql_query("SELECT id FROM dynamicanalysis WHERE buildid='$buildid'");
-		while($dynamicanalysis_array = mysql_fetch_array($dynamicanalysis))
-		  {
-				$dynid = $dynamicanalysis_array["id"];
-				mysql_query("DELETE FROM dynamicanalysisdefect WHERE id='$dynid'");	
-				}
-			
-		mysql_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
-		mysql_query("DELETE FROM note WHERE buildid='$buildid'");		
-		mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");			
-		
-		// Delete the test if not shared
-		
-		
+  $dynamicanalysis = mysql_query("SELECT id FROM dynamicanalysis WHERE buildid='$buildid'");
+  while($dynamicanalysis_array = mysql_fetch_array($dynamicanalysis))
+    {
+    $dynid = $dynamicanalysis_array["id"];
+    mysql_query("DELETE FROM dynamicanalysisdefect WHERE id='$dynid'"); 
+    }
+   
+  mysql_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM note WHERE buildid='$buildid'");  
+  mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");   
+  
+  // Delete the test if not shared
+  
+  
 }
 
 /** Add a new build */
 function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$endtime,$submittime,$command,$log)
 {
   // First we check if the build already exists if this is the case we delete all related information regarding
-		// The previous build 
+  // The previous build 
   $build = mysql_query("SELECT id FROM build WHERE projectid='$projectid' AND siteid='$siteid' AND name='$name' AND stamp='$stamp' AND type='$type'");
-		if(mysql_num_rows($build)>0)
-		  {
-				$build_array = mysql_fetch_array($build);
-				remove_build($build_array["id"]);
-		  }
+  if(mysql_num_rows($build)>0)
+    {
+    $build_array = mysql_fetch_array($build);
+    remove_build($build_array["id"]);
+    }
 
   mysql_query ("INSERT INTO build (projectid,siteid,name,stamp,type,generator,starttime,endtime,submittime,command,log) 
                            VALUES ('$projectid','$siteid','$name','$stamp','$type','$generator',
@@ -585,7 +585,7 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
   $build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
                                   WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
                                   AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
-																																		AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
+                                  AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
                                   
   if(mysql_num_rows($build2grouprule)>0)
     {
@@ -622,95 +622,95 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images)
 {
   add_log("Begin","add_test");
-		
+  
   $command = addslashes($command);
   $output = addslashes($output);
   
-	 // Check if the test doesn't exist
-		$test = mysql_query("SELECT id FROM test	WHERE name='$name' AND path='$path' 
-		                     AND fullname='$fullname' AND command='$command' 
-																							AND output='$output' LIMIT 1");
-		
-		add_log("AfterQuery","add_test");
-		
-		$testexists = false;
-				
-		if(mysql_num_rows($test) > 0) // test exists
-		  {			
-				while($test_array = mysql_fetch_array($test))
-				  {
-						$currentid = $test_array["id"];
-						$sql = "SELECT count(imgid) FROM image2test WHERE testid='$currentid' ";
-								
-				  // need to double check that the images are the same as well
-						$i=0;
-						foreach($images as $image)
-								{
-								$imgid = $image["id"];
-								if($i==0)
-										{
-										$sql .= "AND (";
-										}
-									
-								if($i>0)
-										{
-										$sql .= " OR";
-										}
-												
-								$sql	.= "imgid='$imagid'";
-													
-								$i++;
-								if($i==count($images))
-										{
-										$sql .= ")";
-										}			
-								} // end for each image
-								
-						$nimage_array = mysql_fetch_array(mysql_query($sql));		
-						$nimages = $nimage_array[0];
-								
-						if($nimages == count($images))
-						  {
-								$testid = $test_array["id"];
-								$testexists = true;
-								break;
-						 	}	
-					} // end while test_array		
-			}		// end num rows	
-				
-		if(!$testexists)
-			 {
-				// Need to create a new test
-				$query = "INSERT INTO test (name,path,fullname,command,details, output) 
-														VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
-				if(mysql_query("$query"))
-						{
-						$testid = mysql_insert_id();
-						foreach($images as $image)
-								{
-								$imgid = $image["id"];
-								$role = $image["role"];
-								$query = "INSERT INTO image2test(imgid, testid, role)
-																		VALUES('$imgid', '$testid', '$role')";
-								if(!mysql_query("$query"))
-										{
-										echo mysql_error();
-										}
-								}
-						}
-				else
-						{
-						echo mysql_error();
-						}	
-		  }	
-				
-		add_log("End","add_test");
+  // Check if the test doesn't exist
+  $test = mysql_query("SELECT id FROM test WHERE name='$name' AND path='$path' 
+                       AND fullname='$fullname' AND command='$command' 
+                       AND output='$output' LIMIT 1");
+  
+  add_log("AfterQuery","add_test");
+  
+  $testexists = false;
+    
+  if(mysql_num_rows($test) > 0) // test exists
+    {   
+    while($test_array = mysql_fetch_array($test))
+      {
+      $currentid = $test_array["id"];
+      $sql = "SELECT count(imgid) FROM image2test WHERE testid='$currentid' ";
+        
+      // need to double check that the images are the same as well
+      $i=0;
+      foreach($images as $image)
+        {
+        $imgid = $image["id"];
+        if($i==0)
+          {
+          $sql .= "AND (";
+          }
+         
+        if($i>0)
+          {
+          $sql .= " OR";
+          }
+            
+        $sql .= "imgid='$imagid'";
+             
+        $i++;
+        if($i==count($images))
+          {
+          $sql .= ")";
+          }   
+        } // end for each image
+        
+      $nimage_array = mysql_fetch_array(mysql_query($sql));  
+      $nimages = $nimage_array[0];
+        
+      if($nimages == count($images))
+        {
+        $testid = $test_array["id"];
+        $testexists = true;
+        break;
+        } 
+     } // end while test_array  
+   }  // end num rows 
+    
+  if(!$testexists)
+    {
+    // Need to create a new test
+    $query = "INSERT INTO test (name,path,fullname,command,details, output) 
+              VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
+    if(mysql_query("$query"))
+      {
+      $testid = mysql_insert_id();
+      foreach($images as $image)
+        {
+        $imgid = $image["id"];
+        $role = $image["role"];
+        $query = "INSERT INTO image2test(imgid, testid, role)
+                  VALUES('$imgid', '$testid', '$role')";
+        if(!mysql_query("$query"))
+          {
+          echo mysql_error();
+          }
+        }
+      }
+    else
+      {
+      echo mysql_error();
+      } 
+    } 
+    
+  add_log("End","add_test");
 
-			// Add into build2test
-			mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
-																	VALUES ('$buildid','$testid','$status','$time')");
-																	
-		add_log("Finished","add_test");
+   // Add into build2test
+   mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
+                 VALUES ('$buildid','$testid','$status','$time')");
+                 
+  add_log("Finished","add_test");
 }
 
 /** Add a new error/warning */
@@ -811,7 +811,7 @@ function globr($sDir, $sPattern, $nFlags = NULL)
 function get_dates($date,$nightlytime)
 {
   $nightlytime = strtotime($nightlytime);
-		
+  
   $nightlyhour = gmdate("H",$nightlytime);
   $nightlyminute = gmdate("i",$nightlytime);
   $nightlysecond = gmdate("s",$nightlytime);
@@ -828,18 +828,18 @@ function get_dates($date,$nightlytime)
     $currenttime = $today; // minus one second
     }
   
-		// If we are the same day and the time is more than the current dashboard
-		// the previous date is actually today.
-		if($currenttime > $today)
-		  {
-				$previousdate = gmdate("Ymd",$today);
-		  }
-		else
-		  {
-				$previousdate = gmdate("Ymd",$today-3600*24);
-		  }
-		
-		$nextdate = gmdate("Ymd",$today+3600*24);
+  // If we are the same day and the time is more than the current dashboard
+  // the previous date is actually today.
+  if($currenttime > $today)
+    {
+    $previousdate = gmdate("Ymd",$today);
+    }
+  else
+    {
+    $previousdate = gmdate("Ymd",$today-3600*24);
+    }
+  
+  $nextdate = gmdate("Ymd",$today+3600*24);
   return array($previousdate, $currenttime, $nextdate);
 }
 
@@ -937,7 +937,7 @@ function getLogoID($projectid)
   //asume the caller already connected to the database
   $query = "SELECT imageid FROM project WHERE id='$projectid'";
   $result = mysql_query($query);
-		if(!$result)
+  if(!$result)
     {
     return 0;
     }
