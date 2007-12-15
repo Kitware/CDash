@@ -343,11 +343,14 @@ CREATE TABLE `test` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `path` varchar(255) NOT NULL default '',
-  `fullname` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
+  `commandcrc32` int(11) NOT NULL,
   `details` text NOT NULL,
   `output` text NOT NULL,
-  PRIMARY KEY  (`id`)
+  `outputcrc32` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+		KEY `name` (`name`),
+  KEY `path` (`path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
