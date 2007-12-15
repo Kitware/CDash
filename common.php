@@ -621,7 +621,7 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 /** Add a new test */
 function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images)
 {
-  add_log("Begin","add_test");
+  add_log("Start buildid=".$buildid,"add_test");
   
   $command = addslashes($command);
   $output = addslashes($output);
@@ -632,8 +632,6 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   // Check if the test doesn't exist
   $test = mysql_query("SELECT id FROM test WHERE name='$name' AND path='$path' 
                        AND commandcrc32='$command_crc32' AND output_crc32='$output_crc32' LIMIT 1");
-  
-  add_log("AfterQuery","add_test");
   
   $testexists = false;
     
@@ -706,13 +704,12 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
       } 
     } 
     
-  add_log("End","add_test");
 
    // Add into build2test
    mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
                  VALUES ('$buildid','$testid','$status','$time')");
                  
-  add_log("Finished","add_test");
+  add_log("End buildid=".$buildid,"add_test");
 }
 
 /** Add a new error/warning */

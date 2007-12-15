@@ -37,6 +37,8 @@ function sendemail($vals,$projectid)
     return;
     }
 		
+		add_log("Start buildid=".$buildid,"sendemail");
+		
 		// Find if the build has any errors
 		$builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
 		$builderror_array = mysql_fetch_array($builderror);
@@ -56,7 +58,9 @@ function sendemail($vals,$projectid)
 				{
 				return;
 				}
-				
+		
+		add_log("Stage1 buildid=".$buildid,"sendemail");
+
 		// Find the previous build
 		$build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
   $build_array = mysql_fetch_array($build);
@@ -98,7 +102,8 @@ function sendemail($vals,$projectid)
 				}
 		
 		// We have a test failing so we send emails
-		
+		add_log("Stage2 buildid=".$buildid,"sendemail");
+
 		$email = "";
 		
 		// Find the users
@@ -139,7 +144,8 @@ function sendemail($vals,$projectid)
 		$site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
 		$site_array = mysql_fetch_array($site);
 
-	
+		add_log("Stage3 buildid=".$buildid,"sendemail");
+
 	 if($email != "")
 		  {
     $title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
@@ -207,11 +213,14 @@ function sendemail($vals,$projectid)
 					
     $messagePlainText .= "\n- CDash on ".$_SERVER['SERVER_NAME']."\n";
 				
+				add_log("Stage4 buildid=".$buildid,"sendemail");
+				
 			 // Send the email
 				$email = "jomier@unc.edu";
 		  mail("$email", $title, $messagePlainText,
          "From: $From\nReply-To: $CDASH_EMAILADMIN\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
 				} // end $email!=""
-				
+		
+			add_log("End buildid=".$buildid,"sendemail");
 }
 ?>
