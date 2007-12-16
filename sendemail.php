@@ -68,7 +68,7 @@ function sendemail($vals,$projectid)
   $build_array = mysql_fetch_array($build);
   $buildtype = $build_array["type"];
   $siteid = $build_array["siteid"];
-  $buildname = $build_array["buildname"];
+  $buildname = $build_array["name"];
   $starttime = $build_array["starttime"];
   
   $previousbuild = mysql_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$buildtype' 
@@ -153,12 +153,12 @@ function sendemail($vals,$projectid)
     $title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
     $title .= " - ".$buildname." - ".$buildtype." - ".date("Y-m-d H:i:s T",strtotime($starttime." UTC"));
     
-    $messagePlainText = "A submission to CDash for project ".$project_array["name"]." ";
+    $messagePlainText = "A submission to CDash for the  project ".$project_array["name"]." has ";
     
     $i=0;
     if($nbuilderrors>0)
       {
-      $messagePlainText .= "has build errors";
+      $messagePlainText .= "build errors";
       $i++;
       }
     
@@ -183,9 +183,9 @@ function sendemail($vals,$projectid)
       } 
      
     $messagePlainText .= ".\n";  
-    $messagePlainText .= "You have been identified as one of the authors who have checked in
-                          changes that are part of this submission or you are listed in the
-                          default contact list.  Details on the submission can be found at";
+    $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
+				$messagePlainText .= "or you are listed in the default contact list.\n";  
+				$messagePlainText .= "Details on the submission can be found at ";
 
     $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
@@ -219,6 +219,7 @@ function sendemail($vals,$projectid)
     
     // Send the email
     $email = "jomier@unc.edu";
+				// $From=...
     mail("$email", $title, $messagePlainText,
          "From: $From\nReply-To: $CDASH_EMAILADMIN\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
     } // end $email!=""
