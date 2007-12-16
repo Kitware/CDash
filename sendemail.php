@@ -20,17 +20,18 @@
 function sendemail($vals,$projectid)
 {
   include_once("common.php");
-   
-  add_log("","sendemail");
+ 	
+		add_log("Start projectid=".$projectid,"sendemail");
+		
   // We send email at the end of the testing
   if($vals[1]["tag"] != "TESTING")
     {
-    return;
-    }
+				return;
+				}
 
-  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
-
+  $name = $vals[0]["attributes"]["BUILDNAME"];
+  $stamp = $vals[0]["attributes"]["BUILDSTAMP"];
+		
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
