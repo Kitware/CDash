@@ -56,7 +56,7 @@ function CreateRSSFeed($projectid)
 
   // Get the last 24hrs submissions
   $currenttime = time();
-  $beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
+  $beginning_timestamp = $currenttime-(24*3600);
   $end_timestamp = $currenttime;
   $builds = mysql_query("SELECT * FROM build 
                          WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
