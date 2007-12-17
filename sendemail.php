@@ -69,7 +69,7 @@ function sendemail($vals,$projectid)
   $starttime = $build_array["starttime"];
   
   $previousbuild = mysql_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$buildtype' 
-                                  ORDER BY starttime DESC WHERE starttime<'$starttime' LIMIT 1");
+                               AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
   if(mysql_num_rows($previousbuild) > 0)
     {
     $previousbuild_array = mysql_fetch_array($previousbuild);
