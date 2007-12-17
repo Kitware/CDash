@@ -42,6 +42,19 @@ if(mysql_num_rows($project)>0)
   $bugurl = $project_array["bugtrackerurl"];   
   $projectname = $project_array["name"];  
   }
+		
+// Format the text to fit the iPhone
+function format_for_iphone($text)
+{
+  global $FormatTextForIphone;
+  if(!isset($FormatTextForIphone))
+	  	{
+	  	return $text;
+	  	}
+		$text = str_replace("\n","<br/>",$text);
+		return $text;
+}		
+		
 
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
@@ -137,11 +150,11 @@ $xml .="<dashboard>
     {
     $xml .= "<error>";
     $xml .= add_XML_value("logline",$error_array["logline"]);
-    $xml .= add_XML_value("text",$error_array["text"]);
+    $xml .= add_XML_value("text",format_for_iphone($error_array["text"]));
     $xml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
     $xml .= add_XML_value("sourceline",$error_array["sourceline"]);
-    $xml .= add_XML_value("precontext",$error_array["precontext"]);
-    $xml .= add_XML_value("postcontext",$error_array["postcontext"]);
+    $xml .= add_XML_value("precontext",format_for_iphone($error_array["precontext"]));
+    $xml .= add_XML_value("postcontext",format_for_iphone($error_array["postcontext"]));
     $xml .= "</error>";
     }
 		
@@ -152,11 +165,11 @@ $xml .="<dashboard>
     {
     $xml .= "<warning>";
     $xml .= add_XML_value("logline",$error_array["logline"]);
-    $xml .= add_XML_value("text",$error_array["text"]);
+    $xml .= add_XML_value("text",format_for_iphone($error_array["text"]));
     $xml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
     $xml .= add_XML_value("sourceline",$error_array["sourceline"]);
-    $xml .= add_XML_value("precontext",$error_array["precontext"]);
-    $xml .= add_XML_value("postcontext",$error_array["postcontext"]);
+    $xml .= add_XML_value("precontext",format_for_iphone($error_array["precontext"]));
+    $xml .= add_XML_value("postcontext",format_for_iphone($error_array["postcontext"]));
     $xml .= "</warning>";
     }
 		
@@ -204,7 +217,7 @@ $xml .="<dashboard>
 
   $xml .= add_XML_value("status",$configure_array["status"]);
   $xml .= add_XML_value("command",$configure_array["command"]);
-  $xml .= add_XML_value("output",$configure_array["log"]);
+  $xml .= add_XML_value("output",format_for_iphone($configure_array["log"]));
   $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($configure_array["starttime"]." UTC")));
 		$xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($configure_array["endtime"]." UTC")));
   $xml .= "</configure>";
