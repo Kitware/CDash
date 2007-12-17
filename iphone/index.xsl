@@ -21,7 +21,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
     <ul id="projects" title="Project" selection="true">
        <xsl:for-each select="cdash/project">	
-								<li>
+								<li style="background: url(iPhoneArrow.png) no-repeat right center;">
            <a class="link">
 											<xsl:attribute name="href">project.php?project=<xsl:value-of select="name"/></xsl:attribute>
            <xsl:value-of select="name"/>
