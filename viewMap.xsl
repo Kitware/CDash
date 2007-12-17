@@ -12,6 +12,12 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+														 <!-- Include CDash Menu Stylesheet -->    
+        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
+
+          <!-- Include the rounding css -->
+          <script src="javascript/rounded.js"></script>
+
        </head>
        <body bgcolor="#ffffff">
    
@@ -23,6 +29,17 @@
 <font color="#ffffff"><h2>CDash - Sites Map for <xsl:value-of select="cdash/dashboard/projectname"/></h2>
 <h3>Where are the builds located?</h3></font>
 </td></tr><tr><td></td><td>
+<!-- Menu -->
+<ul id="Nav" class="nav">
+   <li>
+        <a><xsl:attribute name="href">index.php</xsl:attribute>Home</a>
+      </li>
+			   <li>
+        <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Project</a>
+      </li>		
+</ul>
+
+<!--
 <div id="navigator">
 <table border="0" cellpadding="0" cellspacing="0">
 <tr>
@@ -46,6 +63,7 @@
 </tr>
 </table>
 </div>
+-->
 </td>
 </tr>
 </table>
@@ -86,6 +104,10 @@
    <body onload="load()" onunload="GUnload()">
   <center><div id="map" style="width: 700px; height: 400px"></div></center>
   </body>
+
+<script type="text/javascript">
+  Rounded('rounded', 15, 15,0,0);
+</script>
 
 <!-- FOOTER -->
 <br/>
