@@ -20,6 +20,7 @@
 function sendemail($vals,$projectid)
 {
   include_once("common.php");
+  include_once("config.php");
  			
   // We send email at the end of the testing
   if($vals[1]["tag"] != "TESTING")
