@@ -20,9 +20,7 @@
 function sendemail($vals,$projectid)
 {
   include_once("common.php");
- 	
-		add_log("Start projectid=".$projectid,"sendemail");
-		
+ 			
   // We send email at the end of the testing
   if($vals[1]["tag"] != "TESTING")
     {
@@ -61,8 +59,6 @@ function sendemail($vals,$projectid)
     return;
     }
   
-  add_log("Stage1 buildid=".$buildid,"sendemail");
-
   // Find the previous build
   $build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
   $build_array = mysql_fetch_array($build);
@@ -104,8 +100,6 @@ function sendemail($vals,$projectid)
     }
   
   // We have a test failing so we send emails
-  add_log("Stage2 buildid=".$buildid,"sendemail");
-
   $email = "";
   
   // Find the users
@@ -137,7 +131,7 @@ function sendemail($vals,$projectid)
     $email .= $user_array["email"];
     } 
  
-  $email = "jomier@unc.edu"; // to test
+  $email = "jomier@unc.edu"; // TO TEST
  
   // Some variables we need for the email
   $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
@@ -145,8 +139,6 @@ function sendemail($vals,$projectid)
   
   $site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
   $site_array = mysql_fetch_array($site);
-
-  add_log("Stage3 buildid=".$buildid,"sendemail");
 
   if($email != "")
     {
@@ -184,14 +176,14 @@ function sendemail($vals,$projectid)
      
     $messagePlainText .= ".\n";  
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
-				$messagePlainText .= "or you are listed in the default contact list.\n";  
+				$messagePlainText .= "or you are listed in the default contact list.\n\n";  
 				$messagePlainText .= "Details on the submission can be found at ";
 
     $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $messagePlainText .= $currentURI;
     $messagePlainText .= "/buildSummary.php?buildid=".$buildid;
-    $messagePlainText .= "\n";
+    $messagePlainText .= "\n\n";
     
     $messagePlainText .= "Project: ".$project_array["name"]."\n";
     $messagePlainText .= "Site: ".$site_array["name"]."\n";
@@ -213,15 +205,12 @@ function sendemail($vals,$projectid)
       $messagePlainText .= "Tests failing: ".$nfailingtests."\n";
       }
      
-    $messagePlainText .= "\n- CDash on ".$_SERVER['SERVER_NAME']."\n";
-    
-    add_log("Stage4 buildid=".$buildid,"sendemail");
+    $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
     
     // Send the email
     $email = "jomier@unc.edu";
-				// $From=...
     mail("$email", $title, $messagePlainText,
-         "From: $From\nReply-To: $CDASH_EMAILADMIN\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+         "From: $CDASH_EMAIL_FROM\nReply-To: $CDASH_EMAIL_REPLY\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
     } // end $email!=""
   
    add_log("End buildid=".$buildid,"sendemail");
