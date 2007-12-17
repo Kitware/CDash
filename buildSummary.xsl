@@ -57,8 +57,8 @@
        </tr>
 							<tr class="tr-even">
         <td><a href="#Stage3"><b>Test</b></a></td>
-        <td align="right"><b><xsl:value-of select="cdash/test/nerrors"/></b></td>
-        <td align="right"><b><xsl:value-of select="cdash/test/nwarnings"/></b></td>
+        <td align="right"><b><xsl:value-of select="cdash/test/nfailed"/></b></td>
+        <td align="right"><b><xsl:value-of select="cdash/test/nnotrun"/></b></td>
        </tr>
       </table>
       <br/>
