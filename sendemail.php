@@ -211,7 +211,7 @@ function sendemail($vals,$projectid)
     // Send the email
     $email = "jomier@unc.edu";
     mail("$email", $title, $messagePlainText,
-         "From: $CDASH_EMAIL_FROM\nReply-To: $CDASH_EMAIL_REPLY\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
     } // end $email!=""
   
    add_log("End buildid=".$buildid,"sendemail");
