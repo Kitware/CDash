@@ -288,5 +288,8 @@ $xml .="<dashboard>
  
 
 // Now doing the xslt transition
-generate_XSLT($xml,"buildSummary");
+if(!isset($NoXSLGenerate))
+  {
+  generate_XSLT($xml,"buildSummary");
+  }
 ?>
