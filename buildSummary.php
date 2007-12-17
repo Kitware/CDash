@@ -52,6 +52,32 @@ function format_for_iphone($text)
 	  	return $text;
 	  	}
 		$text = str_replace("\n","<br/>",$text);
+		
+		/*
+		$previouspos = 0;
+		$pos = strpos($text,"<br/>");
+		$l=50;
+		while($pos !== FALSE)
+		  {
+				if($pos-$previouspos>$l)
+				  {
+						// Search the space before
+						$length = $l;
+						$posspace = strrpos($text,substr($text,0,$previouspos+$l));
+						if($posspace != FALSE)
+						  {
+								$length = $posspace-$previouspos;
+				  		}
+						$text = substr($text,0,$previouspos+$length)."<br/>".substr($text,$previouspos+$length);
+						$previouspos = $previouspos+$l;
+						}
+				else
+						{
+						$previouspos = $pos;
+						}
+				$pos = strpos($text,"<br/>",$previouspos+1);
+		  }
+  */
 		return $text;
 }		
 		
