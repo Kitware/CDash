@@ -41,39 +41,52 @@ $previousbuilds = mysql_query("SELECT id,starttime,endtime FROM build WHERE site
                                AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC");
 ?>
 
-				
+    
 <br>
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var d1 = [];
-				var tx = [];
-				var ty = [];
-				<?php
-				$i=0;
-				while($build_array = mysql_fetch_array($previousbuilds))
-						{
-				?>
-						d1.push([<?php echo $build_array["id"]; ?>,<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>]);
-				  tx.push([<?php echo $build_array["id"]; ?>,"<?php echo $build_array["starttime"]; ?>"]);
-						ty.push([<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>,"<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>"]);
-				<?php
-				$i++;
-					 }
-				?>
-				
-				$("#grapholder").bind("selected", function (event, area) {
-        $("#selection").text(area.x1.toFixed(1) + " to " + area.x2.toFixed(1));
+    var tx = [];
+    var ty = [];
+    <?php
+    $i=0;
+    while($build_array = mysql_fetch_array($previousbuilds))
+      {
+    ?>
+      d1.push([<?php echo $build_array["id"]; ?>,<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>]);
+      tx.push([<?php echo $build_array["id"]; ?>,"<?php echo $build_array["starttime"]; ?>"]);
+      ty.push([<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>,"<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>"]);
+    <?php
+    $i++;
+      }
+    ?>
+    
+    $("#grapholder").bind("selected", function (event, area) {
+    $.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],
+           {
+           lines: { show: true },
+           points: { show: true },
+           xaxis: {
+             ticks: tx,
+             min: area.x1,
+	     max: area.x2
+	     },
+           yaxis: {
+             ticks: ty
+             },
+           grid: {
+            backgroundColor: "#fffaff"
+             },
+           colors: ["#0000FF", "#dba255", "#919733"],
+           selection: { mode: "x" }
+    }
 
-        var zoom = $("#zoom").attr("checked");
-        if (zoom)
-            plot = $.plot($("#grapholder"), data,
-                          $.extend(true, {}, options, {
-                              xaxis: { min: area.x1, max: area.x2 }
-                          }));
-    });
-				
-		$.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],
-		      {
+   );
+
+  });
+   
+  $.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],
+        {
         lines: { show: true },
         points: { show: true },
         xaxis: {
@@ -81,14 +94,14 @@ $(function () {
         },
         yaxis: {
          ticks: ty
-								},
+        },
         grid: {
             backgroundColor: "#fffaff"
         },
-								colors: ["#0000FF", "#dba255", "#919733"],
-								selection: { mode: "x" }					
-					   
-								}
-		);
+        colors: ["#0000FF", "#dba255", "#919733"],
+        selection: { mode: "x" }     
+        
+        }
+  );
 });
 </script>
