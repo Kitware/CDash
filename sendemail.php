@@ -89,10 +89,10 @@ function sendemail($vals,$projectid)
     $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
 
-    // If we have exactly the same number of test failing, errors and warnings has the previous build
+    // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
     // we don't send any emails
-    if($npreviousfailingtests==$nfailingtests
-       && $npreviousbuildwarnings==$nbuildwarnings
+    if($npreviousfailingtests>=$nfailingtests
+       && $npreviousbuildwarnings>=$nbuildwarnings
        && $npreviousbuilderrors==$nbuilderrors
       ) 
       {
