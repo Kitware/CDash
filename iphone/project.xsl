@@ -33,7 +33,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 			   <xsl:for-each select="$type/build">														
 																							
 											<a class="buildlink">
-											    <xsl:attribute name="href">buildsummary.php?buildid=<xsl:value-of select="id"/></xsl:attribute>
+											    <xsl:attribute name="href">buildsummary.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute>
 
 			          <table width="95%" height="32" cellpadding="0" cellspacing="0">
 													<tr class="sectionbuildodd">
