@@ -25,6 +25,8 @@ $CDASH_DB_PASS = '';
 $CDASH_DB_NAME = 'cdash';
 // Default from email
 $CDASH_EMAILADMIN = 'admin@cdash.org';
+$CDASH_EMAIL_FROM = 'admin@cdash.org';
+$CDASH_EMAIL_REPLY = 'noreply@cdash.org';
 // CSS file 
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory
