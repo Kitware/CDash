@@ -21,11 +21,10 @@ include("common.php");
 @$projectname = $_GET["project"];
 @$date = $_GET["date"];
 
-$projectid = get_project_id($projectname);
-
-include("config.php");
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
+
+$projectid = get_project_id($projectname);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : Sites map for ".$projectname."</title>";
