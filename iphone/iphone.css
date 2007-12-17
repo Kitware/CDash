@@ -458,4 +458,9 @@ BuildError{
 		border-bottom: 1px solid #C0C0C0;
 }
 
+.CodeText{
+  font-size:12;
+  font-style: italic;
+}
+
 

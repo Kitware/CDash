@@ -1,5 +1,6 @@
 <?php
 $NoXSLGenerate = 1;
+$FormatTextForIphone = 1;
 
 @$buildid = $_GET["project"];
 @$date = $_GET["date"];

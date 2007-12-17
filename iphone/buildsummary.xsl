@@ -12,7 +12,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 									<script type="application/x-javascript" src="jquery-1.1.4.js"></script>
 									<script type="application/x-javascript" src="jquery-iphone.js"></script>
 									<script type="application/x-javascript" src="iphone.js"></script>
-									<script type="application/x-javascript" src="cdashBuildGraph.js"></script>
 									</head><body orient="landscape">
 
     <h1 id="pageTitle">CDash</h1>
@@ -47,7 +46,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 				 </xsl:if>	
 				
 				<div id="buildtable">
-				<table>
+				<table cellspacing="0" cellpadding="0">
 						<tr><td>
       <table>
 						<tr class="table-heading">
@@ -156,7 +155,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 						<table class="dart">
 						<tr class="table-heading">
         <th colspan="3"><a>
-							 <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+							 <xsl:attribute name="href">buildsummary.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
 								Previous Build
 								</a>
 								</th>
@@ -296,7 +295,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 <br/><b>Configure Command: </b> <xsl:value-of select="cdash/configure/command"/>    
 <br/><b>Configure Return Value: </b> <xsl:value-of select="cdash/configure/status"/> 
 <br/><b>Configure Output: </b>
-<br/><tt><xsl:value-of select="cdash/configure/output"/></tt>
+<br/><div class="CodeText"><xsl:value-of select="cdash/configure/output" disable-output-escaping="yes"/></div>
 </div>
 
 <!-- Build -->
@@ -308,7 +307,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 [<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
 [<a href="#Stage3">Test</a>]
 </div><b>Build (<xsl:value-of select="cdash/build/nerrors"/> errors, <xsl:value-of select="cdash/build/nwarnings"/> warnings)</b>
-        <br/><b>Build command: </b><tt><xsl:value-of select="cdash/build/command"/></tt>
+        <br/><b>Build command: </b><div class="CodeText"><xsl:value-of select="cdash/build/command" disable-output-escaping="yes"/></div>
         <br/><b>Start Time: </b><xsl:value-of select="cdash/build/starttime"/>
         <br/><b>End Time: </b><xsl:value-of select="cdash/build/endtime"/>
 								<br/>
@@ -322,9 +321,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
   File: <b><xsl:value-of select="sourcefile"/></b>
   Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
 </xsl:if>
-<tt><xsl:value-of select="precontext"/></tt>
-<tt><xsl:value-of select="text"/></tt>
-<tt><xsl:value-of select="postcontext"/></tt>
+<div class="CodeText"><xsl:value-of select="precontext" disable-output-escaping="yes"/>
+<br/><xsl:value-of select="text" disable-output-escaping="yes"/>
+<br/><xsl:value-of select="postcontext" disable-output-escaping="yes"/>
+</div>
 </div>
 </xsl:for-each>
 </div> <!-- Stage 2 -->
@@ -347,9 +347,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
   File: <b><xsl:value-of select="sourcefile"/></b>
   Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
 </xsl:if>
-<tt><xsl:value-of select="precontext"/></tt>
-<tt><xsl:value-of select="text"/></tt>
-<tt>xsl:value-of select="postcontext"/></tt>
+<div class="CodeText"><xsl:value-of select="precontext" disable-output-escaping="yes"/>
+<xsl:value-of select="text" disable-output-escaping="yes"/>
+<xsl:value-of select="postcontext" disable-output-escaping="yes"/>
+</div>
 </div>
 </xsl:for-each>						
 </div> <!-- Stage 2 -->
