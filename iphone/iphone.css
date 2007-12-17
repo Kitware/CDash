@@ -123,6 +123,11 @@ h4 {
 	color: #666;
 }
 
+h4 a {
+	text-decoration: none;
+	color: #666;
+}
+
 .news-details div {
 	font-size: 14px;
 	color: #666;

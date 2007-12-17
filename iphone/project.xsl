@@ -5,42 +5,46 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     <xsl:param name="type"/>
 				
 							 <div class="section">
-    
-				 
+    <xsl:attribute name="id">group<xsl:value-of select="id"/></xsl:attribute>
+					
    <xsl:if test="count($type/build)=0">
-              <h4>No <xsl:value-of select="name"/> Builds</h4>
+              <h4><a href="#gotop">No <xsl:value-of select="name"/> Builds</a></h4>
    </xsl:if>
    
     <xsl:if test="count($type/build)>0">
-          <h4><xsl:value-of select="$type/name"/></h4>
+          <h4><a href="#gotop"><xsl:value-of select="$type/name"/></a></h4>
    
 			<ul>
             <li>
 												  <h5>
-												  <table width="97%" cellpadding="0" cellspacing="0">
+												  <table width="95%" cellpadding="0" cellspacing="0">
 														<tr class="sectionheader">
-														<td width="8%">U</td>
-														<td width="8%">C</td>
-														<td width="8%">E</td>
-														<td width="8%">W</td>
-														<td width="8%">TP</td>
-														<td width="8%">TF</td>
-														<td width="8%">TNR</td>
+														<td width="15%">U</td>
+														<td width="15%">C</td>
+														<td width="14%">E</td>
+														<td width="14%">W</td>
+														<td width="14%">TP</td>
+														<td width="14%">TF</td>
+														<td width="14%">TNR</td>
 														</tr>
 														</table>
 					         </h5>
 			
 			   <xsl:for-each select="$type/build">														
 																							
-											<a href="test2" class="buildlink">
-			          <table width="97%" height="32" cellpadding="0" cellspacing="0">
+											<a class="buildlink">
+											    <xsl:attribute name="href">buildsummary.php?buildid=<xsl:value-of select="id"/></xsl:attribute>
+
+			          <table width="95%" height="32" cellpadding="0" cellspacing="0">
 													<tr class="sectionbuildodd">
 														<td width="100%" style="text-align: left;" colspan="7" >
-														<xsl:value-of select="site"/>-<b><xsl:value-of select="buildname"/></b>-<xsl:value-of select="builddate"/></td>
+														<xsl:value-of select="site"/>
+														<xsl:if test="string-length(builddate)>0">-<xsl:value-of select="builddate"/></xsl:if><br/>
+														<b><xsl:value-of select="buildname"/></b></td>
 														</tr>
 												<tr  class="sectionbuildeven" valign="middle">
-														<td width="8%"><xsl:value-of select="update"/></td>
-														<td width="8%">
+														<td width="15%"><xsl:value-of select="update"/></td>
+														<td width="15%">
 														 <xsl:attribute name="class">
 															<xsl:choose>
 																	<xsl:when test="configure > 0">
@@ -55,7 +59,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 															</xsl:choose>
 													</xsl:attribute>
 														<xsl:value-of select="configure"/></td>
-														<td width="8%">
+														<td width="14%">
 														 <xsl:attribute name="class">
 																<xsl:choose>
 																		<xsl:when test="compilation/error > 0">
@@ -70,7 +74,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 																</xsl:choose>
 														</xsl:attribute>
 														<xsl:value-of select="compilation/error"/></td>
-														<td width="8%">
+														<td width="14%">
 														 <xsl:attribute name="class">
 															<xsl:choose>
 																	<xsl:when test="compilation/warning > 0">
@@ -85,7 +89,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 															</xsl:choose>
 													</xsl:attribute>
 														<xsl:value-of select="compilation/warning"/></td>
-														<td width="8%">
+														<td width="14%">
 														<xsl:attribute name="class">
         						<xsl:choose>
 																<xsl:when test="test/fail > 0">
@@ -101,7 +105,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 												</xsl:attribute>
 														<xsl:value-of select="test/pass"/>
 														</td>
-														<td width="8%">
+														<td width="14%">
 														 <xsl:attribute name="class">
 														<xsl:choose>
 																<xsl:when test="test/fail > 0">
@@ -117,7 +121,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 												</xsl:attribute>
 										<xsl:value-of select="test/fail"/>							
 														</td>
-														<td width="8%">
+														<td width="14%">
 														<xsl:attribute name="class">
 																<xsl:choose>
 																		<xsl:when test="test/notrun > 0">
@@ -159,27 +163,44 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 									
 									</head><body orient="landscape">
 
+
+         
     <h1 id="pageTitle">CDash</h1>
     <a href="http://cdash.org/iphone" class="home"></a>
 			 <a class="showPage button" href="#loginForm">Login</a>
 				<a class="showPage title">CDash by Kitware Inc.</a>
-     
+    
    	 <ul id="projects" title="Project" selection="true" class="nobg">
-        <li>        
-          <h3><a href="http://www.itk.org"><xsl:value-of select="cdash/dashboard/projectname"/></a></h3>
+        <li>   
+								<div id="gotop"></div>      
+									 <h3><a href="http://www.itk.org"><xsl:value-of select="cdash/dashboard/projectname"/></a></h3>
 										
                 <div class="news-details">
 																<div><xsl:value-of select="cdash/dashboard/datetime"/></div>
-                <div><a>
-																<xsl:attribute name="href">project.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&amp;date=<xsl:value-of select="cdash/dashboard/previousdate"/>
-																</xsl:attribute>[Previous]</a>
+                <div>
+																
+																<table width="100%">
+																<tr>
+																<td style="text-align: left;font-size: 14;">
 																<a>
+																<xsl:attribute name="href">project.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&amp;date=<xsl:value-of select="cdash/dashboard/previousdate"/>
+																</xsl:attribute><b>[Previous]</b></a>
+																</td>
+																	<td  style="text-align: right;font-size: 14;">
+																	<a>
 																<xsl:attribute name="href">project.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&amp;date=<xsl:value-of select="cdash/dashboard/nextdate"/>
-																</xsl:attribute>[Next]</a>
-																</div>
+																</xsl:attribute><b>[Next]</b></a>
+																</td>
+																</tr>
+																</table>
+																<!--  Show the buildgroups -->
+																<xsl:for-each select="cdash/buildgroup">
+																<a><xsl:attribute name="href">#group<xsl:value-of select="id"/></xsl:attribute>[<xsl:value-of select="name"/>]</a><br/>	
+																</xsl:for-each>
+																	</div>
 																</div>
        
-							
+
 <xsl:for-each select="cdash/buildgroup">
   <xsl:call-template name="builds">
   <xsl:with-param name="type" select="."/>
