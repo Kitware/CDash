@@ -228,7 +228,62 @@ $xml .="<dashboard>
 		$xml .= add_XML_value("nfailed",$nfail); 
 		
 		$xml .= "</test>";
-	
+		
+		// Previous build
+		// Find the previous build
+  $previousbuild = mysql_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$buildtype' 
+                               AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
+  if(mysql_num_rows($previousbuild) > 0)
+		  {
+				$xml .= "<previousbuild>";
+				$previousbuild_array = mysql_fetch_array($previousbuild);
+    $previousbuildid = $previousbuild_array["id"];
+    $xml .= add_XML_value("buildid",$previousbuildid);
+				
+    // Find if the build has any errors
+    $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
+    $builderror_array = mysql_fetch_array($builderror);
+    $npreviousbuilderrors = $builderror_array[0];
+       
+    // Find if the build has any warnings
+    $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
+    $buildwarning_array = mysql_fetch_array($buildwarning);
+    $npreviousbuildwarnings = $buildwarning_array[0];
+  
+    // Find if the build has any test failings
+    $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
+    $npreviousfailingtests = $nfail_array[0];
+				$nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='notrun'"));
+    $npreviousnotruntests = $nfail_array[0];
+		
+				$updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$previousbuildid' AND author='Local User'");						
+				$nupdateerrors = mysql_num_rows($updatelocal);
+				$nupdatewarnings = 0;
+				$xml .= add_XML_value("nupdateerrors",$nupdateerrors);
+				$xml .= add_XML_value("nupdatewarnings",$nupdatewarnings);
+
+    $configure = mysql_query("SELECT * FROM configure WHERE buildid='$previousbuildid'");
+  	 $configure_array = mysql_fetch_array($configure);
+  
+			 $nconfigureerrors = 0;
+		  if($configure_array["status"]!=0)
+	    	{
+				 	$nconfigureerrors = 1;
+	  	  }
+			 $nconfigurewarnings = 0;
+				$xml .= add_XML_value("nconfigureerrors",$nconfigureerrors);
+				$xml .= add_XML_value("nconfigurewarnings",$nconfigurewarnings);
+
+				$xml .= add_XML_value("nerrors",$npreviousbuilderrors);
+				$xml .= add_XML_value("nwarnings",$npreviousbuildwarnings);
+
+				$xml .= add_XML_value("ntestfailed",$npreviousfailingtests);
+				$xml .= add_XML_value("ntestnotrun",$npreviousnotruntests);
+					
+			 $xml .= "</previousbuild>";
+    }
+
+		
   $xml .= "</cdash>";
  
 
