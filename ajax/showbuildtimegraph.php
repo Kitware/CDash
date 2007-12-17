@@ -60,6 +60,18 @@ $(function () {
 				$i++;
 					 }
 				?>
+				
+				$("#grapholder").bind("selected", function (event, area) {
+        $("#selection").text(area.x1.toFixed(1) + " to " + area.x2.toFixed(1));
+
+        var zoom = $("#zoom").attr("checked");
+        if (zoom)
+            plot = $.plot($("#grapholder"), data,
+                          $.extend(true, {}, options, {
+                              xaxis: { min: area.x1, max: area.x2 }
+                          }));
+    });
+				
 		$.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],
 		      {
         lines: { show: true },
@@ -73,7 +85,9 @@ $(function () {
         grid: {
             backgroundColor: "#fffaff"
         },
-								colors: ["#0000FF", "#dba255", "#919733"]					
+								colors: ["#0000FF", "#dba255", "#919733"],
+								selection: { mode: "x" }					
+					   
 								}
 		);
 });
