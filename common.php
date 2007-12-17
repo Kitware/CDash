@@ -631,7 +631,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   
   // Check if the test doesn't exist
   $test = mysql_query("SELECT id FROM test WHERE name='$name' AND path='$path' 
-                       AND commandcrc32='$command_crc32' AND output_crc32='$output_crc32' LIMIT 1");
+                       AND commandcrc32='$command_crc32' AND outputcrc32='$output_crc32' LIMIT 1");
   
   $testexists = false;
     
