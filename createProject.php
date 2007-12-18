@@ -32,7 +32,7 @@ if ($session_OK)
 		$user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
 		if($projectid)
 		  {
-		  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND $projectid='$projectid'");
+		  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
     if(mysql_num_rows($user2project)>0)
 				  {
 					 $user2project_array = mysql_fetch_array($user2project);
