@@ -80,6 +80,11 @@ if($Submit)
   $CVSURL = stripHTTP($_POST["cvsURL"]);
   $BugURL = stripHTTP($_POST["bugURL"]);
   @$Public = $_POST["public"];
+		if(!isset($Public))
+		  {
+				$Public = 0;
+				}
+		
   $CoverageThreshold = $_POST["coverageThreshold"];
   $NightlyTime = $_POST["nightlyTime"];
     

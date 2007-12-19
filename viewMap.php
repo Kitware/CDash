@@ -46,20 +46,30 @@ $xml .=  add_XML_value("googlemapkey",$apikey);
 $xml .=  add_XML_value("projectname",$projectname);
 $xml .= "</dashboard>";
 
-if(!isset($date) || strlen($date)==0)
-   { 
-   $currenttime = time();
-   }
-else
-  {
-  $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
-  }
+$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
+$project_array = mysql_fetch_array($project);
+
+list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
     
-$beginning_timestamp = $currenttime-($CDASH_DASHBOARD_TIMEFRAME*3600);
-$end_timestamp = $currenttime;
+$nightlytime = strtotime($project_array["nightlytime"]);
+		
+$nightlyhour = gmdate("H",$nightlytime);
+$nightlyminute = gmdate("i",$nightlytime);
+$nightlysecond = gmdate("s",$nightlytime);
+		
+$end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
   
+$beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp),gmdate("d",$end_timestamp),gmdate("Y",$end_timestamp));
+if($end_timestamp<$beginning_timestamp)
+  {
+  $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp-24*3600),gmdate("d",$end_timestamp-24*3600),gmdate("Y",$end_timestamp-24*3600));
+  }
+  
+$beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
+$end_UTCDate = gmdate("YmdHis",$end_timestamp);												
+		
 $build = mysql_query("SELECT siteid FROM build 
-                     WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
+                     WHERE starttime<$end_UTCDate AND starttime>$beginning_UTCDate
                      AND projectid='$projectid' GROUP BY siteid");
 
 while($buildarray  = mysql_fetch_array($build))
