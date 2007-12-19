@@ -2,7 +2,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $RCSfile: queryRepo.php,v $
+  Module:    $RCSfile: viewChanges.php,v $
   Language:  PHP
   Date:      $Date: 2007-10-29 15:37:28 -0400 (Mon, 29 Oct 2007) $
   Version:   $Revision: 67 $
@@ -693,6 +693,8 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
 
   usort($commits, "sort_by_directory_file_time");
 
+  $projecturl = get_project_property($projectname, "cvsurl");
+
   foreach($commits as $commit)
   {
     $directory = $commit['directory'];
@@ -713,9 +715,10 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     $comment = str_replace("\n", "<br/>", $comment);
     $comment = XMLStrFormat($comment);
 
-    // "  Time: ".$time.
+    $diff_url = get_diff_url($projecturl, $directory, $filename, $revision);
+    $diff_url = XMLStrFormat($diff_url);
 
-    $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"http://test\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\")\n";
+    $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\")\n";
   }
 
   $xml .= "</javascript>\n";

@@ -946,6 +946,45 @@ function getLogoID($projectid)
 }
 
 
+function get_project_properties($projectname)
+{
+  include("config.php");
+
+  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  if(!$db)
+    {
+    echo "Error connecting to CDash database server<br>\n";
+    exit(0);
+    }
+
+  if(!mysql_select_db("$CDASH_DB_NAME",$db))
+    {
+    echo "Error selecting CDash database<br>\n";
+    exit(0);
+    }
+
+  $project = mysql_query("SELECT * FROM project WHERE name='$projectname'");
+  if(mysql_num_rows($project)>0)
+    {
+    $project_props = mysql_fetch_array($project);
+    }
+  else
+    {
+    $project_props = array();
+    }
+
+  return $project_props;
+}
+
+
+function get_project_property($projectname, $prop)
+{
+  $project_props = get_project_properties($projectname);
+
+  return $project_props[$prop];
+}
+
+
 function get_cdash_dashboard_xml($projectname, $dates)
 {
   include("config.php");
@@ -1006,5 +1045,140 @@ function get_cdash_dashboard_xml_by_name($projectname, $dates)
 {
   return get_cdash_dashboard_xml($projectname, $dates);
 }
+
+function get_previous_revision($revision)
+{
+  // Split revision into components based on any "." separators:
+  //
+  $revcmps = split("\.", $revision);
+  $n = count($revcmps);
+
+  // svn style "single-component" revision number, just subtract one:
+  //
+  if ($n === 1)
+  {
+    return $revcmps[0] - 1;
+  }
+
+  // cvs style "multi-component" revision number, subtract one from last
+  // component -- if result is 0, chop off last two components -- finally,
+  // re-assemble $n components for previous_revision:
+  //
+  $revcmps[$n-1] = $revcmps[$n-1] - 1;
+  if ($revcmps[$n-1] === 0)
+  {
+    $n = $n - 2;
+  }
+
+  if ($n < 2)
+  {
+    // Can't reassemble less than 2 components; use original revision
+    // as previous...
+    //
+    $previous_revision = $revision;
+  }
+  else
+  {
+    // Reassemble components into previous_revision:
+    //
+    $previous_revision = $revcmps[0];
+    $i = 1;
+    while ($i<$n)
+    {
+      $previous_revision = $previous_revision . "." . $revcmps[$i];
+      $i = $i + 1;
+    }
+  }
+
+  return $previous_revision;
+}
+
+
+function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
+{
+  // The project's viewcvs URL is expected to contain "?root=projectname"
+  // Split it at the "?"
+  //
+  $cmps = split("\?", $projecturl);
+
+  // If $cmps[1] starts with "root=" and the $directory value starts
+  // with "whatever comes after that" then remove that bit from directory:
+  //
+  $npos = strpos($cmps[1], "root=");
+  if ($npos !== FALSE && $npos === 0)
+  {
+    $rootdir = substr($cmps[1], 5);
+//  echo "rootdir: '" . $rootdir . "'<br/>";
+
+    $npos = strpos($directory, $rootdir);
+    if ($npos !== FALSE && $npos === 0)
+    {
+      $directory = substr($directory, strlen($rootdir));
+//  echo "directory: '" . $directory . "'<br/>";
+
+      $npos = strpos($directory, "/");
+      if ($npos !== FALSE && $npos === 0)
+      {
+        if (1 === strlen($directory))
+        {
+          $directory = "";
+//  echo "empty directory! '" . $directory . "'<br/>";
+        }
+        else
+        {
+          $directory = substr($directory, 1);
+//  echo "non-empty directory! '" . $directory . "'<br/>";
+        }
+      }
+    }
+  }
+
+  $prev_revision = get_previous_revision($revision);
+
+  if (strlen($directory)>0)
+  {
+    $dircmp = $directory . "/";
+  }
+  else
+  {
+    $dircmp = "";
+  }
+
+  if (0 === strcmp($revision, $prev_revision))
+  {
+    // same : just view whole file:
+    $revcmp = "&rev=" . $revision . "&view=markup";
+  }
+  else
+  {
+    // different : view the diff of r1 and r2:
+    $revcmp = "&r1=" . $prev_revision . "&r2=" . $revision;
+  }
+
+//  echo "dircmp: '" . $dircmp . "'<br/>";
+//  echo "revcmp: '" . $revcmp . "'<br/>";
+
+  $diff_url = $cmps[0] . $dircmp . $file . "?" . $cmps[1] . $revcmp;
+
+//  echo "diff_url: '" . $diff_url . "'<br/>";
+//  echo "0: '" . $cmps[0] . "'<br/>";
+//  echo "1: '" . $cmps[1] . "'<br/>";
+//  echo "<br/>";
+
+  $npos = strpos($diff_url, "http://");
+  if ($npos === FALSE)
+  {
+    $diff_url = "http://" . $diff_url;
+  }
+
+  return $diff_url;
+}
+
+
+function get_diff_url($projecturl, $directory, $file, $revision)
+{
+  return get_viewcvs_diff_url($projecturl, $directory, $file, $revision);
+}
+
 
 ?>

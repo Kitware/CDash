@@ -2,7 +2,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $RCSfile: common.php,v $
+  Module:    $RCSfile: viewUpdate.php,v $
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
@@ -127,6 +127,10 @@ $xml .="<dashboard>
   
   $xml .= "dbAdd (true, \"Updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   $previousdir = "";
+
+  $projecturl = $svnurl;
+    // locally cached query result same as get_project_property($projectname, "cvsurl");
+
   foreach($updatearray as $file)
     {
     $filename = $file['filename'];
@@ -145,7 +149,11 @@ $xml .="<dashboard>
     $revision = $file['revision'];
     $log = str_replace("\n"," ",$log);
     $log = str_replace("\r"," ",$log);
-    $xml .= " dbAdd ( false, \"".$filename." Revision: ".$revision."\",\"http://test\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$log."\")\n";
+
+    $diff_url = get_diff_url($projecturl, $directory, $filename, $revision);
+    $diff_url = XMLStrFormat($diff_url);
+
+    $xml .= " dbAdd ( false, \"".$filename." Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$log."\")\n";
     }
   $xml .= "dbAdd (true, \"Modified files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   $xml .= "dbAdd (true, \"Conflicting files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
