@@ -29,12 +29,16 @@ if(!isset($testid))
   {
   die('Error: no test id supplied in query string');
   }
+$buildid = $_GET["build"];
+if(!isset($buildid))
+  {
+  die('Error: no build id supplied in query string');
+  }
 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
-$testRow = mysql_fetch_array(mysql_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.testid=test.id"));
-$buildid = $testRow["buildid"];
+$testRow = mysql_fetch_array(mysql_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$buildid' AND build2test.testid=test.id"));
 
 $buildRow = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id = '$buildid'"));
 $projectid = $buildRow["projectid"];

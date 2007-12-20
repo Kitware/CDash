@@ -93,7 +93,7 @@ while($row = mysql_fetch_array($result))
   $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
   $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
   $testid = $row["id"]; 
-  $detailsLink = "testDetails.php?test=$testid";
+  $detailsLink = "testDetails.php?test=$testid&build=$buildid";
   $xml .= add_XML_value("detailsLink", $detailsLink) . "\n";
   if($color)
     {

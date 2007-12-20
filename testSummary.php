@@ -97,15 +97,15 @@ foreach($builds as $buildid => $buildData)
     {
     $query =
       "SELECT test.id,build2test.buildid,build2test.status,build2test.time,test.details,site.name 
-						 FROM test,site,build2test WHERE ( (build2test.buildid='$buildid' AND test.id=build2test.testid)";
+						 FROM test,site,build2test WHERE ( (build2test.buildid='$buildid' AND test.id=build2test.testid AND site.id = '".$buildData["siteid"]."')";
     $firstTime = FALSE;
     }
   else
     {
-    $query .= " OR (build2test.buildid='$buildid' AND test.id=build2test.testid)";
+    $query .= " OR (build2test.buildid='$buildid' AND test.id=build2test.testid AND site.id = '".$buildData["siteid"]."')";
     }
   }
-$query .= ") AND test.name = '$testName' AND site.id = '".$buildData["siteid"]."' AND status != '' ORDER BY status";
+$query .= ") AND test.name = '$testName' AND status != '' ORDER BY status";
 $result = mysql_query($query);
 
 $color = FALSE;
@@ -122,7 +122,7 @@ while($row = mysql_fetch_array($result))
   $buildLink = "viewTest.php?buildid=$buildid";
   $xml .= add_XML_value("buildLink", $buildLink) . "\n";
   $testid = $row["id"];
-  $testLink = "testDetails.php?test=$testid";
+  $testLink = "testDetails.php?test=$testid&build=$buildid";
   $xml .= add_XML_value("testLink", $testLink) . "\n";
   if($color)
     {
