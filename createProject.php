@@ -75,79 +75,90 @@ function stripHTTP($url)
 if($Submit)
   {
   $Name = $_POST["name"];
-  $Description = addslashes($_POST["description"]);
-  $HomeURL = stripHTTP($_POST["homeURL"]);
-  $CVSURL = stripHTTP($_POST["cvsURL"]);
-  $BugURL = stripHTTP($_POST["bugURL"]);
-  @$Public = $_POST["public"];
-		if(!isset($Public))
-		  {
-				$Public = 0;
-				}
 		
-  $CoverageThreshold = $_POST["coverageThreshold"];
-  $NightlyTime = $_POST["nightlyTime"];
-    
-  $handle = fopen($_FILES['logo']['tmp_name'],"r");
-  $contents = 0;
-  if($handle)
-    {
-    $contents = addslashes(fread($handle,$_FILES['logo']['size']));
-    $filetype = $_FILES['logo']['type'];
-    fclose($handle);
-    }
-  
-  $projectid = -1;
-  $imgid = 0;
+		// Check that the name are different
+		$project = mysql_query("SELECT id FROM project WHERE name='$Name'");
 		
-		/** Add the logo if any */
-  if($contents)
-    {
-    $checksum = crc32($contents);
-    //check if we already have a copy of this file in the database
-    $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
-    $result = mysql_query("$sql");
-    if($row = mysql_fetch_array($result))
-      {
-      $imgid = $row["id"];
-      }
-    else
-      {
-      $sql = "INSERT INTO image(img, extension, checksum)
-       VALUES ('$contents', '$filetype', '$checksum')";
-      if(mysql_query("$sql"))
-        {
-        $imgid = mysql_insert_id();
-        }
-       }
-    } // end if contents
+		if(mysql_num_rows($project)==0)
+				{
+				$Description = addslashes($_POST["description"]);
+				$HomeURL = stripHTTP($_POST["homeURL"]);
+				$CVSURL = stripHTTP($_POST["cvsURL"]);
+				$BugURL = stripHTTP($_POST["bugURL"]);
+				@$Public = $_POST["public"];
+				if(!isset($Public))
+						{
+						$Public = 0;
+						}
 				
-  //We should probably check the type of the image here to make sure the user
-  //isn't trying anything fruity
-  $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,public,imageid,coveragethreshold,nightlytime) 
-          VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$Public','$imgid','$CoverageThreshold','$NightlyTime')"; 
-  if(mysql_query("$sql"))
-    {
-    $projectid = mysql_insert_id();
-    $xml .= "<project_name>$Name</project_name>";
-    $xml .= "<project_created>1</project_created>";
-    }
-  else
-    {
-    echo mysql_error();
-    return;
-    }
-  
-  // Add the default groups
-  mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Nightly','$projectid')");
-  $id = mysql_insert_id();
-  mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
-  mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");
-  $id = mysql_insert_id();
-  mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','2')");
-  mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
-  $id = mysql_insert_id();
-  mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
+				$CoverageThreshold = $_POST["coverageThreshold"];
+				$NightlyTime = $_POST["nightlyTime"];
+						
+				$handle = fopen($_FILES['logo']['tmp_name'],"r");
+				$contents = 0;
+				if($handle)
+						{
+						$contents = addslashes(fread($handle,$_FILES['logo']['size']));
+						$filetype = $_FILES['logo']['type'];
+						fclose($handle);
+						}
+				
+				$projectid = -1;
+				$imgid = 0;
+				
+				/** Add the logo if any */
+				if($contents)
+						{
+						$checksum = crc32($contents);
+						//check if we already have a copy of this file in the database
+						$sql = "SELECT id FROM image WHERE checksum = '$checksum'";
+						$result = mysql_query("$sql");
+						if($row = mysql_fetch_array($result))
+								{
+								$imgid = $row["id"];
+								}
+						else
+								{
+								$sql = "INSERT INTO image(img, extension, checksum)
+									VALUES ('$contents', '$filetype', '$checksum')";
+								if(mysql_query("$sql"))
+										{
+										$imgid = mysql_insert_id();
+										}
+									}
+						} // end if contents
+						
+				//We should probably check the type of the image here to make sure the user
+				//isn't trying anything fruity
+				$sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,public,imageid,coveragethreshold,nightlytime) 
+												VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$Public','$imgid','$CoverageThreshold','$NightlyTime')"; 
+				if(mysql_query("$sql"))
+						{
+						$projectid = mysql_insert_id();
+						$xml .= "<project_name>$Name</project_name>";
+						$xml .= "<project_created>1</project_created>";
+						}
+				else
+						{
+						echo mysql_error();
+						return;
+						}
+				
+				// Add the default groups
+				mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Nightly','$projectid')");
+				$id = mysql_insert_id();
+				mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
+				mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");
+				$id = mysql_insert_id();
+				mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','2')");
+				mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
+				$id = mysql_insert_id();
+				mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
+				}
+		else
+		  {
+				$xml .= "<alert>Project's name already exists.</alert>";
+		  }
   
   } // end submit
 
@@ -156,6 +167,7 @@ if($Submit)
 @$Delete = $_POST["Delete"];
 if($Delete)
   {
+		mysql_query("DELETE FROM project WHERE id='$projectid'");
 		}
 
 if($projectid>0)

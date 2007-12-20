@@ -18,6 +18,15 @@
         <!-- Include the rounding css -->
         <script src="javascript/rounded.js"></script>
 
+								<!-- Functions to confirm the remove -->
+								<script language="JavaScript">
+								function confirmDelete() {
+											if (window.confirm("Are you sure you want to delete this project?")){
+														return true;
+											}
+											return false;
+								}
+								</script>
        </head>
        <body bgcolor="#ffffff">
    
@@ -60,6 +69,7 @@ Creating new project
 </table>
 
 <br/>
+<xsl:value-of select="cdash/alert"/>
 
 <xsl:choose>
  <xsl:when test="cdash/project_created=1">
@@ -197,7 +207,7 @@ Creating new project
       <td><input type="submit" name="Submit" value="Create Project"/></td>
 				</xsl:if>
 				<xsl:if test="cdash/edit=1">
-			  	<td><input type="submit" name="Update" value="Update Project"/><input type="submit" name="Delete" value="Delete Project"/></td>
+			  	<td><input type="submit" name="Update" value="Update Project"/><input type="submit" name="Delete" value="Delete Project" onclick="return confirmDelete()"/></td>
 				</xsl:if>
   </tr>
 		</xsl:if>
