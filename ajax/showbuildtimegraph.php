@@ -52,9 +52,10 @@ $(function () {
     $i=0;
     while($build_array = mysql_fetch_array($previousbuilds))
       {
+      $t = strtotime($build_array["starttime"]);
     ?>
-      d1.push([<?php echo $build_array["id"]; ?>,<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>]);
-      tx.push([<?php echo $build_array["id"]; ?>,"<?php echo $build_array["starttime"]; ?>"]);
+      d1.push([<?php echo $t; ?>,<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>]);
+      tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
       ty.push([<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>,"<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>"]);
     <?php
     $i++;
