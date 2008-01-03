@@ -88,8 +88,25 @@ function str_to_time($str,$stamp)
 {
   $str = str_replace("Eastern Standard Time","EST",$str);
   $str = str_replace("Eastern Daylight Time","EDT",$str);
-   
-  if(strlen($stamp)>0 && strtotime($str) == -1) // should be FALSE for php 5
+  
+		$strtotimefailed = 0;
+		
+		if(PHP_VERSION>=5.1)
+		  {
+				if(strtotime($str) === FALSE)
+				  {
+						$strtotimefailed = 1;
+				  }
+		  }
+		else
+		  {
+				if(strtotime($str) == -1)
+				  {
+						$strtotimefailed = 1;
+				  }
+		  }
+			
+  if($strtotimefailed && strlen($stamp)>0)
     {
     // find the hours
     $pos = strpos($str,":");
@@ -99,7 +116,6 @@ function str_to_time($str,$stamp)
       $str = substr($stamp,0,8).$str;
       }
     }
-    
   return strtotime($str);
 }
 
