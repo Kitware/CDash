@@ -28,22 +28,22 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 //get date info here
 @$dayFrom = $_POST["dayFrom"];
 if(!isset($dayFrom))
-  {
+{
   $dayFrom = date('d', strtotime("yesterday"));
   $monthFrom = date('m', strtotime("yesterday"));
   $yearFrom =  date('Y', strtotime("yesterday"));
   $dayTo = date('d');
   $yearTo = date('Y');
   $monthTo = date('m');
-  }
+}
 else
-  {
+{
   $monthFrom = $_POST["monthFrom"];
   $yearFrom = $_POST["yearFrom"];
   $dayTo = $_POST["dayTo"];
   $monthTo = $_POST["monthTo"];
   $yearTo = $_POST["yearTo"];
-  }
+}
   
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -51,13 +51,13 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $project = mysql_query("SELECT name,id FROM project ORDER BY id");
 $projName = "";
 while($project_array = mysql_fetch_array($project))
-  {
+{
   $projName = $project_array["name"];
   $xml .= "<project>";
   $xml .= "<name>".$projName."</name>";
   $xml .= "<id>".$project_array["id"]."</id>";
   $xml .= "</project>";
-  }
+}
 
 $xml .= "<dayFrom>".$dayFrom."</dayFrom>";
 $xml .= "<monthFrom>".$monthFrom."</monthFrom>";
@@ -70,12 +70,12 @@ $xml .= "</cdash>";
 // If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
-  {
+{
   $directory = $_POST["directory"];
   $projectid = $_POST["project"];
   if(strlen($directory)>0 )
     {
-    $directory = str_replace('\\\\','/',$directory);
+    $directory = str_replace('\\\\','/',$directory);  
     if(!file_exists($directory) || strpos($directory, "Sites") === FALSE)
       {
       echo("Error: $directory is not a valid path to Dart XML data on the server.<br>\n");
@@ -88,7 +88,7 @@ if($Submit)
     for($i=0;$i<$numDays;$i++)
       {
       $currentDay = date("Ymd", mktime(0,0,0,$monthFrom,$dayFrom+$i,$yearFrom));
-      echo("Gathering XML files for $currentDay...<br>\n");
+      echo("Gathering XML files for $currentDay...  $directory/*/*/$currentDay-*/XML/*.xml <br>\n");
       $files = glob($directory."/*/*/$currentDay-*/XML/*.xml");
       $numFiles = count($files);
       echo("$numFiles found<br>\n");
@@ -108,15 +108,16 @@ if($Submit)
           echo "<br>\n";
           $numDots = 0;
           }
-        ctest_parse($contents,$projectid);
+        $xml_array = parse_XML($contents);
+        ctest_parse($xml_array,$projectid);
         fclose($handle);
         }
       echo "<br>\n";
       }
     } // end strlen(directory)>0
-    echo("<a href=index.php?project=$projName>Back to $projName dashboard</a>\n");
-    exit(0);
-  }
+  echo("<a href=index.php?project=$projName>Back to $projName dashboard</a>\n");
+  exit(0);
+}
 
 // Now doing the xslt transition
 generate_XSLT($xml,"import");
