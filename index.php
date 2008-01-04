@@ -49,8 +49,16 @@ function generate_index_table()
     {
     $xml .= "<project>";
     $xml .= "<name>".$project['name']."</name>";
-    $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
-    $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
+			
+			 if($project['last_build'] == "NA")
+			   {
+						$xml .= "<lastbuild>NA</lastbuild>";
+			   }
+			 else
+		  	 {
+      $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
+      }
+				$xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
     $row = !$row;
