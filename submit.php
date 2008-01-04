@@ -25,7 +25,7 @@ include("config.php");
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
-//$putdata = fopen("Tests.xml", "r");
+//$contents = file_get_contents("DISCWORLD_Win32-make_20080103-1857-Experimental_Configure.xml");
 $contents = file_get_contents("php://input");
 
 $projectname = $_GET["project"];

@@ -447,10 +447,18 @@ function get_geolocation($ip)
 {  
   $location = array();
   
-  // Ask hostip.info for geolocation
+		// Test if curl exists
+	 if(function_exists("curl_init") == FALSE)
+		  {
+				$location['latitude'] = "";
+    $location['longitude'] = "";
+				return $location;
+		  }
+	
+	 // Ask hostip.info for geolocation
   $lat = "";
   $long = "";
- 
+		
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
       
@@ -507,7 +515,7 @@ function add_site($name,$description="",$processor="",$numprocessors="1")
   // If not found we create the site
   // We retrieve the geolocation from the IP address
   $ip = $_SERVER['REMOTE_ADDR'];
-  $location = get_geolocation($ip);
+		$location = get_geolocation($ip);
   
   $latitude = $location['latitude'];
   $longitude = $location['longitude'];  

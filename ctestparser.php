@@ -92,7 +92,7 @@ function str_to_time($str,$stamp)
 		$strtotimefailed = 0;
 		
 		if(PHP_VERSION>=5.1)
-		  {
+		  {		
 				if(strtotime($str) === FALSE)
 				  {
 						$strtotimefailed = 1;
@@ -118,6 +118,7 @@ function str_to_time($str,$stamp)
     }
   return strtotime($str);
 }
+
 
 /** Parse the build xml */
 function parse_build($xmlarray,$projectid)

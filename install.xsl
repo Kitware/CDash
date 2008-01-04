@@ -42,9 +42,12 @@ Click here to access the <a href="index.php">main CDash page</a>
 </xsl:if>
 
 <xsl:if test="cdash/xslt=0">
-Your PHP installation doesn't support XSLT please install the PHP_XSLT package.
+<font color="#FF0000">Your PHP installation doesn't support XSLT please install the PHP_XSLT package.</font><br/>
 </xsl:if>
-
+<xsl:if test="cdash/phpcurl=0">
+<font color="#FF0000">Your PHP installation doesn't support Curl please install the PHP_CURL package if you want to support geolocation.</font><br/>
+</xsl:if>
+<br/>
 <xsl:choose>
 <xsl:when test="cdash/db_created=1">
 <b>The CDash database has been sucessfully created!</b><br/>

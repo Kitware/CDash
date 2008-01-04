@@ -45,7 +45,15 @@ else
   {
   $xml .= "<xslt>1</xslt>";
   }
-  
+
+if(function_exists("curl_init") == FALSE)
+		{  
+		$xml .= "<phpcurl>0</phpcurl>";
+  }
+else
+  {
+  $xml .= "<phpcurl>1</phpcurl>";
+  }
   
 // If the database already exists we quit
 if(@mysql_select_db("$CDASH_DB_NAME",$db) === TRUE)

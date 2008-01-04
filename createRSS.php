@@ -73,8 +73,8 @@ function CreateRSSFeed($projectid)
     $nerrors = mysql_num_rows($builderror);
     $buildwarning = mysql_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='1'");
     $nwarnings = mysql_num_rows($buildwarning);
-    $nnotrun = mysql_num_rows(mysql_query("SELECT * FROM test WHERE buildid='$buildid' AND status='notrun'"));
-    $nfail = mysql_num_rows(mysql_query("SELECT * FROM test WHERE buildid='$buildid' AND status='failed'"));
+    $nnotrun = mysql_num_rows(mysql_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+    $nfail = mysql_num_rows(mysql_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='failed'"));
       
     $title = "CDash(".$projectname.") - ".$site_array["name"]." - ".$build_array["name"]." - ".$build_array["type"];
     $title .= " - ".$build_array["submittime"]." - ".$nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
