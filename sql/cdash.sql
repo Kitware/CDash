@@ -341,16 +341,14 @@ CREATE TABLE `site2user` (
 -- 
 CREATE TABLE `test` (
   `id` int(11) NOT NULL auto_increment,
+  `crc32` int(11) NOT NULL,
   `name` varchar(255) NOT NULL default '',
   `path` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
-  `commandcrc32` int(11) NOT NULL,
   `details` text NOT NULL,
   `output` text NOT NULL,
-  `outputcrc32` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
-		KEY `name` (`name`),
-  KEY `path` (`path`)
+  KEY `crc32` (`crc32`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
