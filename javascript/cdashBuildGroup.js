@@ -18,15 +18,15 @@ function buildgroup_click(buildid)
     return;
     }
   
-		$(group).fadeIn('slow');
-		$(group).html("fetching...<img src=images/loading.gif></img>");
+  $(group).fadeIn('slow');
+  $(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/addbuildgroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
-		return;
+  return;
 }
 
 function buildnosubmission_click(siteid,buildname,divname,buildgroupid,buildtype)
 {
-	 buildname = URLencode(buildname);
+  buildname = URLencode(buildname);
 
   var group = "#infoexpected_"+divname;
   if($(group).html() != "" && $(group).is(":visible"))
@@ -35,10 +35,10 @@ function buildnosubmission_click(siteid,buildname,divname,buildgroupid,buildtype
     return;
     }
 
-		$(group).fadeIn('slow');
-		$(group).html("fetching...<img src=images/loading.gif></img>");
+  $(group).fadeIn('slow');
+  $(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/expectedbuildgroup.php?siteid="+siteid+"&buildname="+buildname+"&buildtype="+buildtype+"&buildgroup="+buildgroupid+"&divname="+divname,{},function(){$(this).fadeIn('slow');});
-		return;
+  return;
 }
 
 function buildinfo_click(buildid)
@@ -50,10 +50,10 @@ function buildinfo_click(buildid)
     return;
     }
  
-		$(group).fadeIn('slow');
-		$(group).html("fetching...<img src=images/loading.gif></img>");
+  $(group).fadeIn('slow');
+  $(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/buildinfogroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
-		return;
+  return;
 }
 
 
@@ -68,8 +68,8 @@ function expectedinfo_click(siteid,buildname,divname,projectid,buildtype,current
     $(group).fadeOut('medium');
     return;
     }
-		$(group).fadeIn('slow');
-		$(group).html("fetching...<img src=images/loading.gif></img>");
+  $(group).fadeIn('slow');
+  $(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/expectedinfo.php?siteid="+siteid+"&buildname="+buildname+"&projectid="+projectid+"&buildtype="+buildtype+"&currenttime="+currentime,{},function(){$(this).fadeIn('slow');});
-		return;
+  return;
 }
