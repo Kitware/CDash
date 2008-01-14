@@ -147,8 +147,9 @@ $xml .="<dashboard>
     $email = $file['email'];
     $log = $file['log'];
     $revision = $file['revision'];
-    $log = str_replace("\n"," ",$log);
     $log = str_replace("\r"," ",$log);
+    $log = str_replace("\n", "<br/>", $log);
+    $log = XMLStrFormat($log);
 
     $diff_url = get_diff_url($projecturl, $directory, $filename, $revision);
     $diff_url = XMLStrFormat($diff_url);
