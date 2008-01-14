@@ -634,12 +634,12 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   $command = addslashes($command);
   $output = addslashes($output);
 		
-		$command_crc32 = crc32($command);
-		$output_crc32 = crc32($output);
+		$buffer = $name.$path.$command.$output.details;
+		
+		$crc32 = crc32($buffer);
   
   // Check if the test doesn't exist
-  $test = mysql_query("SELECT id FROM test WHERE name='$name' AND path='$path' 
-                       AND commandcrc32='$command_crc32' AND outputcrc32='$output_crc32' LIMIT 1");
+  $test = mysql_query("SELECT id FROM test WHERE crc32='$crc32' LIMIT 1");
   
   $testexists = false;
     
@@ -689,8 +689,8 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   if(!$testexists)
     {
     // Need to create a new test
-    $query = "INSERT INTO test (name,path,command,commandcrc32,details, output,outputcrc32) 
-              VALUES ('$name','$path','$command','$command_crc32', '$details', '$output', '$output_crc32')";
+    $query = "INSERT INTO test (crc32,name,path,command,details,output) 
+              VALUES ('$crc32','$name','$path','$command', '$details', '$output')";
     if(mysql_query("$query"))
       {
       $testid = mysql_insert_id();
