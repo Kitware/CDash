@@ -63,8 +63,8 @@
       
       <!-- If the build has errors or test failing -->
        <xsl:if test="compilation/error > 0 or test/fail > 0">
-      <a>
-      <xsl:attribute name="href">javascript:buildinfo_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
+      <a href="javascript:;">
+      <xsl:attribute name="onclick">javascript:buildinfo_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
       <img name="buildgroup" SRC="images/Info.png" border="0"></img>
       </a>
       </xsl:if>
