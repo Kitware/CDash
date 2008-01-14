@@ -712,7 +712,11 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     $email = get_author_email($projectname, $author);
 
     $comment = $commit['comment'];
-    $comment = str_replace("\n", "<br/>", $comment);
+    $comment = str_replace("\n", " ", $comment); 
+    // Do this twice so that <something> ends up as
+    // &amp;lt;something&amp;gt; because it gets sent to a 
+    // java script function not just displayed as html
+    $comment = XMLStrFormat($comment);
     $comment = XMLStrFormat($comment);
 
     $diff_url = get_diff_url($projecturl, $directory, $filename, $revision);

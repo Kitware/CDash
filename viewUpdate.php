@@ -148,7 +148,11 @@ $xml .="<dashboard>
     $log = $file['log'];
     $revision = $file['revision'];
     $log = str_replace("\r"," ",$log);
-    $log = str_replace("\n", "<br/>", $log);
+    $log = str_replace("\n", " ", $log);
+    // Do this twice so that <something> ends up as
+    // &amp;lt;something&amp;gt; because it gets sent to a 
+    // java script function not just displayed as html
+    $log = XMLStrFormat($log);
     $log = XMLStrFormat($log);
 
     $diff_url = get_diff_url($projecturl, $directory, $filename, $revision);
