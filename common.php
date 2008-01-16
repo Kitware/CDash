@@ -7,7 +7,7 @@
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
+  Copyright (c) 2002 Kitware, Inc.  All rights reserved. 
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
      This software is distributed WITHOUT ANY WARRANTY; without even 
@@ -103,7 +103,7 @@ for($i=128;$i<256;$i++){
   $asc2uni[chr($i)] = "&#x".dechex($i).";";   
 }
 
-/**used to escape special XML characters*/
+/** used to escape special XML characters */
 function XMLStrFormat($str){
   global $asc2uni;
   $str = str_replace("&", "&amp;", $str);
@@ -153,10 +153,10 @@ function parse_XML($contents)
 }
 
 /** Backup an XML file */
-function backup_xml_file($vals,$contents)
+function backup_xml_file($vals,$contents,$projectid)
 {
   include("config.php");
-  
+ 		
   clean_backup_directory(); // should probably be run as a cronjob
  
   if(@$vals[1]["tag"] == "BUILD")
@@ -210,7 +210,7 @@ function backup_xml_file($vals,$contents)
     $stamp = $vals[0]["attributes"]["BUILDSTAMP"];
 				}
  
-  $filename = $CDASH_BACKUP_DIRECTORY."/".$sitename."_".$name."_".$stamp."_".$file;
+  $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_".$file;
     
   if (!$handle = fopen($filename, 'w')) 
     {

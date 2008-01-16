@@ -25,7 +25,7 @@ include("config.php");
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
-//$contents = file_get_contents("DISCWORLD_Win32-make_20080103-1857-Experimental_Configure.xml");
+//$contents = file_get_contents("XMLTest/build2.xml");
 $contents = file_get_contents("php://input");
 
 $projectname = $_GET["project"];
@@ -34,7 +34,7 @@ $projectid = get_project_id($projectname);
 // Parse the XML
 $xml_array = parse_XML($contents);
 // Backup the XML file
-backup_xml_file($xml_array,$contents);
+backup_xml_file($xml_array,$contents,$projectid);
 unset($contents);
 
 // Parse the XML file
