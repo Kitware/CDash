@@ -26,7 +26,7 @@
       <th align="center" colspan="3">Build</th>
       <th align="center" colspan="5">Test</th>
       <th align="center" rowspan="2">Build Date</th>
-      <th align="center" rowspan="2">Submit Date</th>
+      <!-- <th align="center" rowspan="2">Submit Date</th> -->
 
    </tr>
    <tr class="table-heading">
@@ -226,7 +226,8 @@
       </td>
       <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="test/time"/></td>
       <td bgcolor="#ffffff"><xsl:value-of select="builddate"/></td>
-      <td>
+						<!--
+						<td>
       <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="expected=1">
@@ -243,7 +244,7 @@
         </xsl:choose>
       </xsl:attribute>
       <xsl:value-of select="submitdate"/></td>
-      
+      -->
       
    </tr>
   </xsl:for-each>
@@ -390,7 +391,7 @@
       <td bgcolor="#ffffff"></td>
       <td bgcolor="#ffffff"></td>
       <td bgcolor="#ffffff"></td>
-      <td bgcolor="#ffffff"></td>
+      <!-- <td bgcolor="#ffffff"></td> -->
    </tr>
 </xsl:if>  
 </table>
