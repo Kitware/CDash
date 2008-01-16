@@ -157,7 +157,7 @@ function backup_xml_file($vals,$contents)
 {
   include("config.php");
   
-  clean_backup_directory(); // shoudl probably be run as a cronjob
+  clean_backup_directory(); // should probably be run as a cronjob
  
   if(@$vals[1]["tag"] == "BUILD")
     {
@@ -195,10 +195,20 @@ function backup_xml_file($vals,$contents)
     {
     $file = "Other.xml";
     }
- 
-  $sitename = $vals[0]["attributes"]["NAME"]; 
-  $name = $vals[0]["attributes"]["BUILDNAME"];
-  $stamp = $vals[0]["attributes"]["BUILDSTAMP"];
+		
+		// For some reasons the update.xml has a different format
+		if(@$vals[0]["tag"] == "UPDATE")
+		  {
+				$sitename = getXMLValue($vals,"SITE","UPDATE");
+				$name = getXMLValue($vals,"BUILDNAME","UPDATE");
+    $stamp = getXMLValue($vals,"BUILDSTAMP","UPDATE");
+		  }
+  else
+	 		{
+    $sitename = $vals[0]["attributes"]["NAME"]; 
+    $name = $vals[0]["attributes"]["BUILDNAME"];
+    $stamp = $vals[0]["attributes"]["BUILDSTAMP"];
+				}
  
   $filename = $CDASH_BACKUP_DIRECTORY."/".$sitename."_".$name."_".$stamp."_".$file;
     
