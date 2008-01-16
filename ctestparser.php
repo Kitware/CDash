@@ -547,7 +547,7 @@ function parse_update($xmlarray,$projectid)
     $files_array = array();
     $index = 0;
     $inupdate = 0;
-    
+				
     foreach($xmlarray as $tagarray)
       {
       if(!$inupdate && ($tagarray["tag"] == "UPDATED") && ($tagarray["level"] == 3))
@@ -583,12 +583,12 @@ function parse_update($xmlarray,$projectid)
 								{
 								$files_array[$index]["priorrevision"]=$tagarray["value"];
 								}  
-      else if(($tagarray["tag"] == "REVISIONS") && ($tagarray["level"] == 4))
+      else if(($tagarray["tag"] == "UPDATED") && ($tagarray["type"] == "close"))
 								{
 								$inupdate = 0;
 								}
       }
-     
+						
     foreach($files_array as $file)
 						{
 						add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
