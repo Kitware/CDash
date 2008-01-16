@@ -423,7 +423,7 @@
       <th align="center">Passed</th>
       <th align="center">Failed</th>
       <th align="center">Date</th>
-      <th align="center">Submission Date</th>
+     <!-- <th align="center">Submission Date</th> -->
    </tr>
   <xsl:for-each select="cdash/buildgroup/coverage">
    
@@ -445,7 +445,8 @@
       <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="pass"/></b></td>
       <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="fail"/></b></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
-      <td align="left">
+      <!--
+						<td align="left">
 						<xsl:attribute name="class">
 						<xsl:if test="clockskew=1">
 													error
@@ -455,7 +456,7 @@
 													</xsl:if>
       </xsl:attribute>    	
 						<xsl:value-of select="submitdate"/></td>
-
+      -->
    </tr>
   </xsl:for-each>
 
@@ -489,7 +490,7 @@
 
       <th align="center">Defect Count</th>
       <th align="center">Date</th>
-      <th align="center">Submission Date</th>
+    <!--  <th align="center">Submission Date</th> -->
    </tr>
   <xsl:for-each select="cdash/buildgroup/dynamicanalysis">
    
@@ -511,7 +512,8 @@
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
       </td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
-      <td align="left">
+      <!--
+						<td align="left">
 						<xsl:attribute name="class">
 						<xsl:if test="clockskew=1">
 													error
@@ -520,8 +522,7 @@
 													tr-odd
 													</xsl:if>
       </xsl:attribute>
-						<xsl:value-of select="submitdate"/></td>
-
+						<xsl:value-of select="submitdate"/></td> -->
    </tr>
   </xsl:for-each>
 
