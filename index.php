@@ -490,6 +490,13 @@ if(isset($NoXSLGenerate))
   {
   return;
   }
+		
+function microtime_float()
+  {
+  list($usec, $sec) = explode(" ", microtime());
+  return ((float)$usec + (float)$sec);
+  }
+
 
 if(!isset($projectname )) // if the project name is not set we display the table of projects
   {
@@ -499,10 +506,14 @@ if(!isset($projectname )) // if the project name is not set we display the table
   }
 else
   {
+		$start = microtime_float();
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
   $xml = generate_main_dashboard_XML($projectid,$date);
   // Now doing the xslt transition
   generate_XSLT($xml,"index");
+		$end = microtime_float();
+		$t = round($end-$start,4);
+		echo "<br><br><font size=\"1\">Generated in ".$t." seconds.</font>";
   }
 ?>
