@@ -379,7 +379,8 @@ CREATE TABLE `updatefile` (
   `email` varchar(255) NOT NULL default '',
   `log` text NOT NULL,
   `revision` float NOT NULL default '0',
-  `priorrevision` float NOT NULL default '0'
+  `priorrevision` float NOT NULL default '0',
+  KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
