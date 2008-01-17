@@ -282,7 +282,7 @@ function generate_main_dashboard_XML($projectid,$date)
     
     $received_builds[] = $site_array["name"]."_".$build_array["name"];
     
-    $note = mysql_query("SELECT count(buildid) FROM note WHERE buildid='$buildid'");
+    $note = mysql_query("SELECT count(*) FROM note WHERE buildid='$buildid'");
     $note_array = mysql_fetch_row($note);
     if($note_array[0]>0)
       {
@@ -295,12 +295,12 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "<compilation>";
     
     // Find the number of errors and warnings
-    $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+    $builderror = mysql_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
     $builderror_array = mysql_fetch_array($builderror);
     $nerrors = $builderror_array[0];
     $totalerrors += $nerrors;
     $xml .= add_XML_value("error",$nerrors);
-    $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+    $buildwarning = mysql_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
     $buildwarning_array = mysql_fetch_array($buildwarning);
     $nwarnings = $buildwarning_array[0];
     $totalwarnings += $nwarnings;
@@ -325,13 +325,13 @@ function generate_main_dashboard_XML($projectid,$date)
       $test_array = mysql_fetch_array($test);
       $xml .= "<test>";
       // We might be able to do this in one request
-      $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+      $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
-      $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
+      $nfail_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
       $nfail = $nfail_array[0];
-      $npass_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
+      $npass_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
       $npass = $npass_array[0];
-      $nna_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='na'"));
+      $nna_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='na'"));
       $nna = $nna_array[0];
       
       $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
@@ -405,7 +405,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
       
       $xml .= "  <checker>".$dynanalysis_array["checker"]."</checker>";
-      $defect = mysql_query("SELECT count(id) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
+      $defect = mysql_query("SELECT count(*) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
                                               WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
       $defectcount = mysql_fetch_array($defect);
       $xml .= "  <defectcount>".$defectcount[0]."</defectcount>";
