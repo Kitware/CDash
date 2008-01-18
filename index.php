@@ -383,14 +383,14 @@ function generate_main_dashboard_XML($projectid,$date)
 						$starttimestamp = strtotime($build_array["starttime"]." UTC");
 						$submittimestamp = strtotime($build_array["submittime"]." UTC");
 						$xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
-						if($starttimestamp > $submittimestamp)
+						/*if($starttimestamp > $submittimestamp)
 								{
 								$xml .= add_XML_value("clockskew","1");
 								}
 						else
 								{
 								$xml .= add_XML_value("clockskew","0");
-								}
+								}*/
 						$xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
       $xml .= "</coverage>";
       }  // end coverage
@@ -412,14 +412,14 @@ function generate_main_dashboard_XML($projectid,$date)
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
 						$submittimestamp = strtotime($build_array["submittime"]." UTC");
 						$xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
-						if($starttimestamp > $submittimestamp)
+						/*if($starttimestamp > $submittimestamp)
 								{
 								$xml .= add_XML_value("clockskew","1");
 								}
 						else
 								{
 								$xml .= add_XML_value("clockskew","0");
-								}
+								}*/
 						$xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
       $xml .= "</dynamicanalysis>";
       }  // end coverage   
