@@ -75,8 +75,11 @@ $xml .="<dashboard>
   
 //get information about all the builds for the given date and project
 $xml .= "<builds>\n";
+
+/*
 $buildQuery = "SELECT id,name,stamp,siteid FROM build WHERE stamp RLIKE '^$date-' AND projectid = '$projectid'";
 $buildResult = mysql_query($buildQuery);
+
 
 $builds = array();
 while($buildRow = mysql_fetch_array($buildResult))
@@ -107,16 +110,23 @@ foreach($builds as $buildid => $buildData)
   }
 $query .= ") AND test.name = '$testName' AND status != '' ORDER BY status";
 $result = mysql_query($query);
+*/
+
+$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time FROM build,build2test,test WHERE build.stamp RLIKE '^$date-'           
+          AND build.projectid = '$projectid' AND build2test.buildid=build.id AND test.id=build2test.testid AND test.name='$testName' ORDER BY build2test.status";
+
+$result = mysql_query($query);
+
 
 $color = FALSE;
 //now that we have the data we need, generate some XML
 while($row = mysql_fetch_array($result))
   {
-  $buildid = $row["buildid"];
+  $buildid = $row["id"];
   $xml .= "<build>\n";
   $xml .= add_XML_value("site", $row["name"]) . "\n";
-  $xml .= add_XML_value("buildName", $builds[$buildid]["name"]) . "\n";
-  $xml .= add_XML_value("buildStamp", $builds[$buildid]["stamp"]) . "\n";
+  $xml .= add_XML_value("buildName", $row["name"]) . "\n";
+  $xml .= add_XML_value("buildStamp", $row["stamp"]) . "\n";
   $xml .= add_XML_value("time", $row["time"]) . "\n";
   $xml .= add_XML_value("details", $row["details"]) . "\n";
   $buildLink = "viewTest.php?buildid=$buildid";
