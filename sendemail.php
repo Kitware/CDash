@@ -151,7 +151,7 @@ function sendemail($vals,$projectid)
     $title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
     $title .= " - ".$buildname." - ".$buildtype." - ".date("Y-m-d H:i:s T",strtotime($starttime." UTC"));
     
-    $messagePlainText = "A submission to CDash for the  project ".$project_array["name"]." has ";
+    $messagePlainText = "A submission to CDash for the project ".$project_array["name"]." has ";
     
     $i=0;
     if($nbuilderrors>0)
