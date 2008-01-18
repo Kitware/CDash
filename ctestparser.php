@@ -717,6 +717,13 @@ function parse_dynamicanalysis($xmlarray,$projectid)
         }
       }
     }
+		
+		// If we have no memory leaks then we add at leas a row in the dynamic analysis
+		// table so that it shows up on the main dashboard
+		if(count($memleak_array) == 0)
+		  {
+				add_dynamic_analysis($buildid,"passed",$checker,"","","","");
+		  }
 }
       
       

@@ -187,7 +187,7 @@ function backup_xml_file($vals,$contents,$projectid)
     {
     $file = "Notes.xml";
     }
-  else if(@$vals[1]["tag"] == "DynamicAnalysis")
+  else if(@$vals[1]["tag"] == "DYNAMICANALYSIS")
     {
     $file = "DynamicAnalysis.xml";
     } 
