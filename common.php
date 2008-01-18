@@ -317,10 +317,94 @@ function add_coveragesummary($buildid,$loctested,$locuntested)
                 VALUES ('$buildid','$loctested','$locuntested')");
 }
 
+/** Send a coverage email */
+function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,$branchstested,$branchsuntested,
+                             $functionstested,$functionsuntested)
+{
+  include("config.php");
+			
+		$build = mysql_query("SELECT projectid,name from build WHERE id='$buildid'");
+		$build_array = mysql_fetch_array($build);
+  $projectid = $build_array["projectid"];
+			
+		$project = mysql_query("SELECT name,coveragethreshold from project WHERE id='$projectid'");
+		$project_array = mysql_fetch_array($project);
+  $coveragethreshold = $project_array["coveragethreshold"];
+			
+		$coveragemetric = 1;
+			
+		// Compute the coverage metric for bullseye
+  if($branchstested>0 || $branchsuntested>0 || $functionstested>0 || $functionsuntested>0)
+    { 
+    // Metric coverage
+    $metric = 0;
+    if($functionstested+$functionsuntested>0)
+      {
+      $metric += $functionstested/($functionstested+$functionsuntested);
+      }
+    if($branchsuntested+$branchsuntested>0)
+      {
+      $metric += $branchsuntested/($branchstested+$branchsuntested);
+      $metric /= 2.0;
+      }
+    $coveragemetric = $metric;
+    }
+  else // coverage metric for gcov
+    {
+    $coveragemetric = ($loctested+10)/($loctested+$locuntested+10);
+    }
+		
+		// If the coveragemetric is below the coverage threshold we send the email
+		if($coveragemetric < ($coveragethreshold/100.0))
+		  {
+				// Find the cvs user
+				$filename = $fullpath;
+				if(substr($filename,0,2) == "./")
+				  {
+						$filename = substr($filename,2);
+						}
+				$sql = "SELECT updatefile.author from updatefile,build
+				                           WHERE updatefile.buildid=build.id AND build.projectid='$projectid'
+																															 AND updatefile.filename='$filename' ORDER BY revision DESC LIMIT 1";
+				$updatefile = mysql_query($sql);
+																																			
+				$updatefile_array = mysql_fetch_array($updatefile);
+				$author = $updatefile_array["author"];
+				
+				// Writing the message
+			 $messagePlainText = "The file <b>".$filename."</b> of the project ".$project_array["name"];
+				$messagePlainText .= " submitted to CDash has a low coverage.\n"; 
+    $messagePlainText .= "You have been identified as one of the authors who have checked in changes to that file.\n";
+				$messagePlainText .= "Details on the submission can be found at ";
+
+    $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
+    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+    $messagePlainText .= $currentURI;
+    $messagePlainText .= "/viewCoverageFile.php?buildid=".$buildid;
+				$messagePlainText .= "&fileid=".$fileid;
+    $messagePlainText .= "\n\n";
+    
+    $messagePlainText .= "Project: ".$project_array["name"]."\n";
+    $messagePlainText .= "BuildName: ".$build_array["name"]."\n";
+    $messagePlainText .= "Filename: ".$fullpath."\n";
+				$threshold = round($coveragemetric*100,1);
+				$messagePlainText .= "Coverage: ".$threshold."%\n";
+				$messagePlainText .= "CVS User: ".$author."\n";
+				
+    $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
+    
+    // Send the email
+				$title = "CDash [".$project_array["name"]."] - ".$fullpath." - Low Coverage";
+   
+    $email = "jomier@unc.edu";
+				mail("$email", $title, $messagePlainText,
+         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+		  }
+					
+}
 
 /** Create a coverage */
 function add_coverage($buildid,$coverage_array)
-
 {
   // Construct the SQL query
   $sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) VALUES ";
@@ -352,6 +436,10 @@ function add_coverage($buildid,$coverage_array)
     @$functionstested = $coverage["functionstested"];
     @$functionsuntested = $coverage["functionsuntested"];
     
+				// Send an email if the coverage is below the project threshold
+				send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,$branchstested,
+				                    $branchsuntested,$functionstested,$functionsuntested);
+			
     if($i>0)
       {
       $sql .= ", ";
@@ -363,7 +451,6 @@ function add_coverage($buildid,$coverage_array)
        
     $sql .= "('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')";    
     }
-
   // Insert into coverage
   mysql_query($sql);
   echo mysql_error();
