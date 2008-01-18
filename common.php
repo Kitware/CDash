@@ -348,10 +348,12 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
       $metric /= 2.0;
       }
     $coveragemetric = $metric;
+				$percentcoverage = $metric*100;
     }
   else // coverage metric for gcov
     {
     $coveragemetric = ($loctested+10)/($loctested+$locuntested+10);
+				$percentcoverage = ($loctested/($loctested+$locuntested))*100;    
     }
 		
 		// If the coveragemetric is below the coverage threshold we send the email
@@ -367,40 +369,44 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
 				                           WHERE updatefile.buildid=build.id AND build.projectid='$projectid'
 																															 AND updatefile.filename='$filename' ORDER BY revision DESC LIMIT 1";
 				$updatefile = mysql_query($sql);
-																																			
-				$updatefile_array = mysql_fetch_array($updatefile);
-				$author = $updatefile_array["author"];
 				
-				// Writing the message
-			 $messagePlainText = "The file <b>".$filename."</b> of the project ".$project_array["name"];
-				$messagePlainText .= " submitted to CDash has a low coverage.\n"; 
-    $messagePlainText .= "You have been identified as one of the authors who have checked in changes to that file.\n";
-				$messagePlainText .= "Details on the submission can be found at ";
-
-    $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
-    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-    $messagePlainText .= $currentURI;
-    $messagePlainText .= "/viewCoverageFile.php?buildid=".$buildid;
-				$messagePlainText .= "&fileid=".$fileid;
-    $messagePlainText .= "\n\n";
-    
-    $messagePlainText .= "Project: ".$project_array["name"]."\n";
-    $messagePlainText .= "BuildName: ".$build_array["name"]."\n";
-    $messagePlainText .= "Filename: ".$fullpath."\n";
-				$threshold = round($coveragemetric*100,1);
-				$messagePlainText .= "Coverage: ".$threshold."%\n";
-				$messagePlainText .= "CVS User: ".$author."\n";
-				
-    $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
-    
-    // Send the email
-				$title = "CDash [".$project_array["name"]."] - ".$fullpath." - Low Coverage";
-   
-    $email = "jomier@unc.edu";
-				mail("$email", $title, $messagePlainText,
-         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
-		  }
+				// If we have a user in the database
+				if(mysql_num_rows($updatefile)>0)
+				  {																													
+						$updatefile_array = mysql_fetch_array($updatefile);
+						$author = $updatefile_array["author"];
+						
+						// Writing the message
+						$messagePlainText = "The file *".$filename."* of the project ".$project_array["name"];
+						$messagePlainText .= " submitted to CDash has a low coverage.\n"; 
+						$messagePlainText .= "You have been identified as one of the authors who have checked in changes to that file.\n";
+						$messagePlainText .= "Details on the submission can be found at ";
+		
+						$currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
+						$currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+						$messagePlainText .= $currentURI;
+						$messagePlainText .= "/viewCoverageFile.php?buildid=".$buildid;
+						$messagePlainText .= "&fileid=".$fileid;
+						$messagePlainText .= "\n\n";
+						
+						$messagePlainText .= "Project: ".$project_array["name"]."\n";
+						$messagePlainText .= "BuildName: ".$build_array["name"]."\n";
+						$messagePlainText .= "Filename: ".$fullpath."\n";
+						$threshold = round($coveragemetric*100,1);
+						$messagePlainText .= "Coverage metric: ".$threshold."%\n";
+						$messagePlainText .= "Coverage percentage: ".$percentcoverage."%\n";
+						$messagePlainText .= "CVS User: ".$author."\n";
+						
+						$messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
+						
+						// Send the email
+						$title = "CDash [".$project_array["name"]."] - ".$fullpath." - Low Coverage";
 					
+						$email = "jomier@unc.edu";
+						mail("$email", $title, $messagePlainText,
+											"From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+						}
+				}
 }
 
 /** Create a coverage */
