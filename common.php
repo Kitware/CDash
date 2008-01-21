@@ -403,8 +403,8 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
 						$title = "CDash [".$project_array["name"]."] - ".$fullpath." - Low Coverage";
 					
 						$email = "jomier@unc.edu";
-						mail("$email", $title, $messagePlainText,
-											"From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+						//mail("$email", $title, $messagePlainText,
+					//						"From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
 						}
 				}
 }
@@ -751,7 +751,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
     while($test_array = mysql_fetch_array($test))
       {
       $currentid = $test_array["id"];
-      $sql = "SELECT count(imgid) FROM image2test WHERE testid='$currentid' ";
+      $sql = "SELECT count(imgid) FROM test2image WHERE testid='$currentid' ";
         
       // need to double check that the images are the same as well
       $i=0;
@@ -801,7 +801,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
         {
         $imgid = $image["id"];
         $role = $image["role"];
-        $query = "INSERT INTO image2test(imgid, testid, role)
+        $query = "INSERT INTO test2image(imgid, testid, role)
                   VALUES('$imgid', '$testid', '$role')";
         if(!mysql_query("$query"))
           {
