@@ -113,7 +113,7 @@ switch($testRow["status"])
 
 //get any images associated with this test
 $xml .= "<images>\n";
-$query = "SELECT * FROM image2test WHERE testid = '$testid'";
+$query = "SELECT * FROM test2image WHERE testid = '$testid'";
 $result = mysql_query($query);
 while($row = mysql_fetch_array($result))
   {
