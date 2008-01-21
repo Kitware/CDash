@@ -56,7 +56,7 @@ if($FixNewTableTest)
     // Add the images
     $images = array();
     
-    $oldimages = mysql_query("SELECT * from image2test WHERE testid='$oldtestid'");
+    $oldimages = mysql_query("SELECT * from test2image WHERE testid='$oldtestid'");
     while($oldimages_array = mysql_fetch_array($oldimages))
       {
       $image["id"]=$oldimages_array["imgid"];
@@ -80,7 +80,7 @@ if($FixNewTableTest)
       while($test_array = mysql_fetch_array($test))
         {
         $currentid = $test_array["id"];
-        $sql = "SELECT count(imgid) FROM image2test2 WHERE testid='$currentid' ";
+        $sql = "SELECT count(imgid) FROM test2image2 WHERE testid='$currentid' ";
         
         // need to double check that the images are the same as well
         $i=0;
@@ -130,7 +130,7 @@ if($FixNewTableTest)
           {
           $imgid = $image["id"];
           $role = $image["role"];
-          $query = "INSERT INTO image2test2(imgid, testid, role)
+          $query = "INSERT INTO test2image2(imgid, testid, role)
                     VALUES('$imgid', '$testid', '$role')";
           if(!mysql_query("$query"))
             {

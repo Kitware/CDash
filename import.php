@@ -19,7 +19,7 @@ include_once("config.php");
 include_once("common.php");
 include_once("ctestparser.php");
 
-set_time_limit(60);
+set_time_limit(0);
 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);

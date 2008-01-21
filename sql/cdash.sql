@@ -259,10 +259,10 @@ CREATE TABLE `image` (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `image2test`
+-- Table structure for table `test2image`
 -- 
 
-CREATE TABLE `image2test` (
+CREATE TABLE `test2image` (
   `imgid` int(11) NOT NULL default '0',
   `testid` int(11) NOT NULL default '0',
   `role` tinytext NOT NULL,
