@@ -300,6 +300,11 @@ CREATE TABLE `project` (
   `public` tinyint(4) NOT NULL default '1',
   `coveragethreshold` smallint(6) NOT NULL default '70',
   `nightlytime` varchar(50) NOT NULL default '00:00:00',
+  `googletracker` varchar(50) NOT NULL default '',
+  `emailbuildmissing` tinyint(4) NOT NULL default '0',
+  `emaillowcoverage` tinyint(4) NOT NULL default '0',
+  `emailtesttimingchanged` tinyint(4) NOT NULL default '0',
+  `emailbrokensubmission` tinyint(4) NOT NULL default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
