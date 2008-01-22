@@ -112,7 +112,7 @@ $query .= ") AND test.name = '$testName' AND status != '' ORDER BY status";
 $result = mysql_query($query);
 */
 
-$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time FROM build,build2test,test WHERE build.stamp RLIKE '^$date-'           
+$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,test.id AS testid FROM build,build2test,test WHERE build.stamp RLIKE '^$date-'           
           AND build.projectid = '$projectid' AND build2test.buildid=build.id AND test.id=build2test.testid AND test.name='$testName' ORDER BY build2test.status";
 
 $result = mysql_query($query);
@@ -128,10 +128,10 @@ while($row = mysql_fetch_array($result))
   $xml .= add_XML_value("buildName", $row["name"]) . "\n";
   $xml .= add_XML_value("buildStamp", $row["stamp"]) . "\n";
   $xml .= add_XML_value("time", $row["time"]) . "\n";
-  $xml .= add_XML_value("details", $row["details"]) . "\n";
+  //$xml .= add_XML_value("details", $row["details"]) . "\n";
   $buildLink = "viewTest.php?buildid=$buildid";
   $xml .= add_XML_value("buildLink", $buildLink) . "\n";
-  $testid = $row["id"];
+  $testid = $row["testid"];
   $testLink = "testDetails.php?test=$testid&build=$buildid";
   $xml .= add_XML_value("testLink", $testLink) . "\n";
   if($color)

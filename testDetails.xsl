@@ -13,6 +13,10 @@
       <xsl:value-of select="cdash/cssfile"/>
     </xsl:attribute>
   </link>
+		
+		<!-- Include JavaScript -->
+  <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script> 
+
 </head>
 <body bgcolor="#ffffff">
 <xsl:call-template name="header"/>
@@ -75,9 +79,29 @@
         <xsl:value-of select="cdash/test/details"/>
       </td>
    </tr>
-
 </table>
-<br/><br/><br/>
+<br/>
+<!-- Timing Graph -->
+<a>
+<xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
+[Show Test Time Graph]
+</a>
+<div name="timegraph" id="timegraph"></div>
+<center>
+<div id="timegrapholder"></div>
+</center>
+<!-- Pass/Fail Graph -->
+<a>
+<xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
+[Show Failing/Passing Graph]
+</a>
+<div name="passinggraph" id="passinggraph"></div>
+<center>
+<div id="passinggrapholder"></div>
+</center>
+<br/>
+
+<br/>
 <b>Test output</b>
 <pre>
   <xsl:value-of select="cdash/test/output"/>
