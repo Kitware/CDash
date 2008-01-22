@@ -21,12 +21,21 @@ function sendemail($vals,$projectid)
 {
   include_once("common.php");
   include_once("config.php");
- 			
+
+					
   // We send email at the end of the testing
   if($vals[1]["tag"] != "TESTING")
     {
 				return;
 				}
+		
+		// Check if we should send the email
+  $project = mysql_query("SELECT name,emailbrokensubmission  FROM project WHERE id='$projectid'");
+  $project_array = mysql_fetch_array($project);
+  if($project_array["emailbrokensubmission"] == 0)
+		  {
+				return;
+		  }
 
   $name = $vals[0]["attributes"]["BUILDNAME"];
   $stamp = $vals[0]["attributes"]["BUILDSTAMP"];
@@ -138,11 +147,8 @@ function sendemail($vals,$projectid)
     } 
  
   $email = "jomier@unc.edu"; // TO TEST
- 
+
   // Some variables we need for the email
-  $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
-  
   $site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
   $site_array = mysql_fetch_array($site);
 

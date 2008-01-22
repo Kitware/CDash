@@ -200,6 +200,56 @@ Creating new project
 				</xsl:attribute>
 				</input></td>
   </tr>
+		<tr>
+		  <td></td>
+    <td><div align="right"><strong>Google Analytics Tracker:</strong></div></td>
+    <td>
+				<input name="googleTracker" type="text" id="googleTracker" size="50">
+				<xsl:attribute name="value">
+				  <xsl:value-of select="cdash/project/googletracker"/>
+				</xsl:attribute>
+				</input></td>
+  </tr>
+		<tr>
+		  <td></td>
+    <td><div align="right"><strong>Email broken submission:</strong></div></td>
+    <td><input type="checkbox" name="emailBrokenSubmission" value="1">
+				<xsl:if test="cdash/project/emailbrokensubmission=1">
+				<xsl:attribute name="checked"></xsl:attribute>
+				</xsl:if>
+				</input>
+				</td>
+  </tr>
+		<tr>
+		  <td></td>
+    <td><div align="right"><strong>Email build missing:</strong></div></td>
+    <td><input type="checkbox" name="emailBuildMissing" value="1">
+				<xsl:if test="cdash/project/emailbuildmissing=1">
+				<xsl:attribute name="checked"></xsl:attribute>
+				</xsl:if>
+				</input>
+				</td>
+  </tr>
+		<tr>
+		  <td></td>
+    <td><div align="right"><strong>Email low coverage:</strong></div></td>
+    <td><input type="checkbox" name="emailLowCoverage" value="1">
+				<xsl:if test="cdash/project/emaillowcoverage=1">
+				<xsl:attribute name="checked"></xsl:attribute>
+				</xsl:if>
+				</input>
+				</td>
+  </tr>
+		<tr>
+		  <td></td>
+    <td><div align="right"><strong>Email test timing changed:</strong></div></td>
+    <td><input type="checkbox" name="emailTestTimingChanged" value="1">
+				<xsl:if test="cdash/project/emailtesttimingchanged=1">
+				<xsl:attribute name="checked"></xsl:attribute>
+				</xsl:if>
+				</input>
+				</td>
+  </tr>	
   <tr>
 		  <td></td>
     <td><div align="right"></div></td>

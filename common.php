@@ -326,10 +326,16 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
 		$build = mysql_query("SELECT projectid,name from build WHERE id='$buildid'");
 		$build_array = mysql_fetch_array($build);
   $projectid = $build_array["projectid"];
-			
-		$project = mysql_query("SELECT name,coveragethreshold from project WHERE id='$projectid'");
+		
+		// Check if we should send the email
+ 	$project = mysql_query("SELECT name,coveragethreshold,emaillowcoverage FROM project WHERE id='$projectid'");
 		$project_array = mysql_fetch_array($project);
-  $coveragethreshold = $project_array["coveragethreshold"];
+  if($project_array["emaillowcoverage"] == 0)
+		  {
+				return;
+		  }
+				
+ $coveragethreshold = $project_array["coveragethreshold"];
 			
 		$coveragemetric = 1;
 			
