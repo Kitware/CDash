@@ -88,8 +88,6 @@ function str_to_time($str,$stamp)
 {
   $str = str_replace("Eastern Standard Time","EST",$str);
   $str = str_replace("Eastern Daylight Time","EDT",$str);
-  
-		$str = "Jan 15 23:40 Mitteleurop<-28>ische Sommerzeit";
 		
 		// The year is always at the end of the string if it exists (from CTest)
 		$stampyear = substr($stamp,0,4);
