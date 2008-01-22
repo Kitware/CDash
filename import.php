@@ -112,7 +112,7 @@ if($Submit)
         ctest_parse($xml_array,$projectid);
         fclose($handle);
         }
-      echo "<br>\n";
+      echo "<br>Done for the day".$currentDay."<br>\n";
       }
     } // end strlen(directory)>0
   echo("<a href=index.php?project=$projName>Back to $projName dashboard</a>\n");
