@@ -89,8 +89,26 @@ function str_to_time($str,$stamp)
   $str = str_replace("Eastern Standard Time","EST",$str);
   $str = str_replace("Eastern Daylight Time","EDT",$str);
   
-		$strtotimefailed = 0;
+		$str = "Jan 15 23:40 Mitteleurop<-28>ische Sommerzeit";
 		
+		// The year is always at the end of the string if it exists (from CTest)
+		$stampyear = substr($stamp,0,4);
+		$year = substr($str,strlen($str)-4,2);
+		
+		if($year!="19" && $year!="20")
+		  {
+				// No year is defined we add it
+			// find the hours
+    $pos = strpos($str,":");
+    if($pos !== FALSE)
+      {
+						$tempstr = $str;
+      $str = substr($tempstr,0,$pos-2);
+      $str .= $stampyear." ".substr($tempstr,$pos-2);
+      }
+		  }
+		
+		$strtotimefailed = 0;
 		if(PHP_VERSION>=5.1)
 		  {		
 				if(strtotime($str) === FALSE)
@@ -106,8 +124,8 @@ function str_to_time($str,$stamp)
 				  }
 		  }
 				
-		// If we have a timestamp we add the year
-  if($strtotimefailed && strlen($stamp)>0)
+		// If it's still failing we assume GMT and put the year at the end
+  if($strtotimefailed)
     {
     // find the hours
     $pos = strpos($str,":");
@@ -115,9 +133,10 @@ function str_to_time($str,$stamp)
       {
 						$tempstr = $str;
       $str = substr($tempstr,0,$pos-2);
-      $str .= substr($stamp,0,4)." ".substr($tempstr,$pos-2);
+      $str .= substr($tempstr,$pos-2,5);			
       }
-    }
+    }	
+		
   return strtotime($str);
 }
 
