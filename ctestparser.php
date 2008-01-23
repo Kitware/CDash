@@ -567,7 +567,7 @@ function parse_update($xmlarray,$projectid)
 				
     foreach($xmlarray as $tagarray)
       {
-      if(!$inupdate && ($tagarray["tag"] == "UPDATED") && ($tagarray["level"] == 3))
+      if(!$inupdate && (($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING"))&& ($tagarray["level"] == 3))
 								{
 								$index++;
 								$inupdate = 1;
@@ -594,13 +594,23 @@ function parse_update($xmlarray,$projectid)
 								}    
       else if(($tagarray["tag"] == "REVISION") && ($tagarray["level"] == 4))
 								{
-								$files_array[$index]["revision"]=$tagarray["value"];
+								$value = $tagarray["value"];
+								if(	$value == "Unknown")
+								  {
+										$value = -1; // storing unknown revision as -1
+										}
+								$files_array[$index]["revision"]=$value;
 								}
       else if(($tagarray["tag"] == "PRIORREVISION") && ($tagarray["level"] == 4))
 								{
-								$files_array[$index]["priorrevision"]=$tagarray["value"];
+								$value = $tagarray["value"];
+								if(	$value == "Unknown")
+								  {
+										$value = -1;  // storing unknown revision as -1
+										}
+								$files_array[$index]["priorrevision"]=$value;
 								}  
-      else if(($tagarray["tag"] == "UPDATED") && ($tagarray["type"] == "close"))
+      else if((($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING")) && ($tagarray["type"] == "close"))
 								{
 								$inupdate = 0;
 								}
