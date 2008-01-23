@@ -990,6 +990,9 @@ function get_related_dates($projectname, $basedate)
     $basedate = gmdate("Ymd");
     }
 
+  // Convert the nightly time into GMT
+  $nightlytime = gmdate("H:i:s",strtotime($nightlytime)); 
+
   $nightlyhour = substr($nightlytime,0,2);
   $nightlyminute = substr($nightlytime,3,2);
   $nightlysecond = substr($nightlytime,6,2);
