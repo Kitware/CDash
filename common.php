@@ -1275,7 +1275,7 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
 //  echo "dircmp: '" . $dircmp . "'<br/>";
 //  echo "revcmp: '" . $revcmp . "'<br/>";
 
-  $diff_url = $cmps[0] . $dircmp . $file . "?" . $cmps[1] . $revcmp;
+  $diff_url = $cmps[0] . $dircmp . $file . ".diff?" . $cmps[1] . $revcmp;
 
 //  echo "diff_url: '" . $diff_url . "'<br/>";
 //  echo "0: '" . $cmps[0] . "'<br/>";
