@@ -213,6 +213,15 @@ function get_cvs_repository_commits($cvsroot, $dates)
         $npos2 = strlen($vv) - 2; // 2 == strlen(",v") at the end of the "RCS file:" line
 
         $current_filename = substr($vv, $npos, $npos2 - $npos);
+       
+        // We need to remove the current directory
+        // which is the directory of the project
+        $p = strpos($current_filename,"/");
+        if($p !== FALSE)
+          {
+          $current_filename = substr($current_filename,$p+1);
+          } 
+
         $current_directory = remove_directory_from_filename($current_filename);
       }
     }
@@ -680,7 +689,7 @@ function get_repository_commits($projectname, $dates)
 function get_updates_xml_from_commits($projectname, $dates, $commits)
 {
   $xml = "<updates>\n";
-  $xml .= "<timestamp>" . gmdate("Y-m-d H:i:s", $dates['nightly-0']) . " GMT" .
+  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $dates['nightly-0']." GMT") .
     "</timestamp>";
   //$xml .= "<timestamp> " . $dates['basedate'] . "</timestamp>\n";
   $xml .= "<javascript>\n";
