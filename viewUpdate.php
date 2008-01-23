@@ -46,7 +46,7 @@ $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .="<dashboard>
-  <datetime>".date("D, d M Y H:i:s",strtotime($build_array["starttime"]))."</datetime>
+  <datetime>".date("D, d M Y H:i:s T",strtotime($build_array["starttime"]." UTC"))."</datetime>
   <date>".$date."</date>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
@@ -68,7 +68,7 @@ $xml .="<dashboard>
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("buildname",$build_array["name"]);
   $xml .= add_XML_value("buildid",$build_array["id"]);
-  $xml .= add_XML_value("buildtime",$build_array["starttime"]);  
+  $xml .= add_XML_value("buildtime",date("D, d M Y H:i:s T",strtotime($build_array["starttime"]." UTC")));  
    
   $xml .= "</build>";
 

@@ -130,7 +130,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<updates>";
   $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .
     gmdate("Ymd", $dates['nightly-0']) . "</url>";
-  $xml .= "<timestamp>" . gmdate("Y-m-d H:i:s", $dates['nightly-0']) . " GMT" .
+  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $dates['nightly-0']).
           "</timestamp>";
   $xml .= "</updates>";
 
