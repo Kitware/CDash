@@ -103,7 +103,18 @@
       </div>
       
       </td>
-      <td align="right" bgcolor="#ffffff"><b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
+      <td align="right">
+						<xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="updateerrors > 0">
+            error
+            </xsl:when>
+           <xsl:when test="updateerrors=0">
+            tr-odd
+            </xsl:when>
+        </xsl:choose>
+      </xsl:attribute>
+						<b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
       </td>
       <td align="right">
        <xsl:attribute name="class">

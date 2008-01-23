@@ -289,8 +289,13 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("note","1");
       }
       
-    $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
-    $xml .= add_XML_value("update",mysql_num_rows($update));
+    $update = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
+				$update_array = mysql_fetch_row($update);
+    $xml .= add_XML_value("update",$update_array[0]);
+				
+				$updateerrors = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND revision='-1'");
+				$updateerrors_array = mysql_fetch_row($updateerrors);
+    $xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
     
     $xml .= "<compilation>";
     
