@@ -675,7 +675,7 @@ function remove_build($buildid)
   mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");   
   
   // Delete the test if not shared
-  
+  mysql_query("DELETE FROM build2test WHERE buildid='$buildid'");  
   
 }
 
