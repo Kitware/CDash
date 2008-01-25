@@ -43,7 +43,7 @@
    </tr>
 
       <xsl:for-each select="$type/build">
-   <tr valign="middle" class="trodd">
+   <tr valign="middle">
 			<xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
 			
 			
@@ -210,7 +210,7 @@
             warning
             </xsl:when>
              <xsl:when test="string-length(test/fail)=0">
-            tr-odd
+            <xsl:value-of select="rowparity"/>
             </xsl:when>       
           <xsl:otherwise>
            normal
@@ -223,7 +223,7 @@
        <xsl:attribute name="class">
         <xsl:choose>
              <xsl:when test="string-length(test/na)=0">
-            tr-odd
+            <xsl:value-of select="rowparity"/>
             </xsl:when>       
           <xsl:otherwise>
            na
@@ -237,8 +237,8 @@
       
       </a></b>
       </td>
-      <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="test/time"/></td>
-      <td bgcolor="#ffffff" id="nob"><xsl:value-of select="builddate"/></td>
+      <td align="right"><xsl:value-of select="test/time"/></td>
+      <td id="nob"><xsl:value-of select="builddate"/></td>
 						<!--
 						<td>
       <xsl:attribute name="class">
@@ -437,8 +437,10 @@
   <xsl:for-each select="cdash/buildgroup/coverage">
    
    <tr>
-      <td align="left" bgcolor="#ffffff" class="paddt"><xsl:value-of select="site"/></td>
-      <td align="left" bgcolor="#ffffff" class="paddt"><xsl:value-of select="buildname"/></td>
+						<xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
+
+      <td align="left" class="paddt"><xsl:value-of select="site"/></td>
+      <td align="left" class="paddt"><xsl:value-of select="buildname"/></td>
       <td align="center">
         <xsl:attribute name="class">
         <xsl:choose>
@@ -451,9 +453,9 @@
         </xsl:choose>
         </xsl:attribute>
       <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
-      <td align="center" bgcolor="#ffffff"><b><xsl:value-of select="pass"/></b></td>
-      <td align="center" bgcolor="#ffffff"><b><xsl:value-of select="fail"/></b></td>
-      <td align="left" bgcolor="#ffffff" id="nob"><xsl:value-of select="date"/></td>
+      <td align="center" ><b><xsl:value-of select="pass"/></b></td>
+      <td align="center" ><b><xsl:value-of select="fail"/></b></td>
+      <td align="left"  id="nob"><xsl:value-of select="date"/></td>
    </tr>
   </xsl:for-each>
 <table width="100%" cellspacing="0" cellpadding="0">
@@ -500,9 +502,11 @@
   <xsl:for-each select="cdash/buildgroup/dynamicanalysis">
    
    <tr>
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/></td>
-      <td align="center" bgcolor="#ffffff"><xsl:value-of select="checker"/></td>
+					<xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
+
+      <td align="left"><xsl:value-of select="site"/></td>
+      <td align="left"><xsl:value-of select="buildname"/></td>
+      <td align="center"><xsl:value-of select="checker"/></td>
       <td align="center">
         <xsl:attribute name="class">
         <xsl:choose>
