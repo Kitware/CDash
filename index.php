@@ -395,10 +395,21 @@ function generate_main_dashboard_XML($projectid,$date)
     } // END IF CONFIGURE
     
     // Coverage
+				$rowparity = 0;
     $coverages = mysql_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = mysql_fetch_array($coverages))
       {
       $xml .= "<coverage>";
+						if($rowparity%2==0)
+        {
+        $xml .= add_XML_value("rowparity","trodd");
+        }
+      else
+        {
+        $xml .= add_XML_value("rowparity","treven");
+        }
+       $rowparity++;
+																
       $xml .= "  <site>".$site_array["name"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
@@ -426,10 +437,20 @@ function generate_main_dashboard_XML($projectid,$date)
       }  // end coverage
     
     // Dynamic Analysis
+				$rowparity = 0;
     $dynanalysis = mysql_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
     while($dynanalysis_array = mysql_fetch_array($dynanalysis))
       {
-     $xml .= "<dynamicanalysis>";
+      $xml .= "<dynamicanalysis>";
+						if($rowparity%2==0)
+        {
+        $xml .= add_XML_value("rowparity","trodd");
+        }
+      else
+        {
+        $xml .= add_XML_value("rowparity","treven");
+        }
+       $rowparity++;
       $xml .= "  <site>".$site_array["name"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";

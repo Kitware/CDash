@@ -113,7 +113,7 @@
             error
             </xsl:when>
            <xsl:when test="updateerrors=0">
-            tr-odd
+            <xsl:value-of select="rowparity"/>
             </xsl:when>
         </xsl:choose>
       </xsl:attribute>
@@ -126,7 +126,7 @@
             error
             </xsl:when>
            <xsl:when test="string-length(configure)=0">
-            tr-odd
+           <xsl:value-of select="rowparity"/>
             </xsl:when>     
           <xsl:otherwise>
            normal
@@ -144,7 +144,7 @@
             error
             </xsl:when>
            <xsl:when test="string-length(compilation/error)=0">
-            tr-odd
+           <xsl:value-of select="rowparity"/>
             </xsl:when>     
           <xsl:otherwise>
            normal
@@ -160,7 +160,7 @@
             warning
             </xsl:when>
            <xsl:when test="string-length(compilation/warning)=0">
-            tr-odd
+            <xsl:value-of select="rowparity"/>
             </xsl:when>   
           <xsl:otherwise>
            normal
@@ -177,7 +177,7 @@
             error
             </xsl:when>
           <xsl:when test="string-length(test/notrun)=0">
-            tr-odd
+           <xsl:value-of select="rowparity"/>
             </xsl:when>    
           <xsl:otherwise>
            normal
@@ -193,7 +193,7 @@
             warning
             </xsl:when>
           <xsl:when test="string-length(test/fail)=0">
-            tr-odd
+            <xsl:value-of select="rowparity"/>
             </xsl:when>  
           <xsl:otherwise>
            normal
