@@ -31,7 +31,7 @@ function generate_index_table()
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
   
-		// User
+    // User
   if(isset($_SESSION['cdash']))
     {
     $xml .= "<user>";
@@ -42,23 +42,23 @@ function generate_index_table()
     $xml .= add_XML_value("admin",$user_array["admin"]);
     $xml .= "</user>";
     }
-				
+        
   $projects = get_projects();
   $row=0;
   foreach($projects as $project)
     {
     $xml .= "<project>";
     $xml .= "<name>".$project['name']."</name>";
-			
-			 if($project['last_build'] == "NA")
-			   {
-						$xml .= "<lastbuild>NA</lastbuild>";
-			   }
-			 else
-		  	 {
+      
+       if($project['last_build'] == "NA")
+         {
+            $xml .= "<lastbuild>NA</lastbuild>";
+         }
+       else
+         {
       $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
       }
-				$xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
+        $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
     $row = !$row;
@@ -160,7 +160,7 @@ function generate_main_dashboard_XML($projectid,$date)
   // Local function to add expected builds
   function add_expected_builds($groupid,$currenttime,$received_builds,$rowparity)
     {
-				$currentUTCTime =  gmdate("YmdHis",$currenttime);
+        $currentUTCTime =  gmdate("YmdHis",$currenttime);
     $xml = "";
     $build2grouprule = mysql_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
                                     WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
@@ -172,22 +172,22 @@ function generate_main_dashboard_XML($projectid,$date)
       if(array_search($key,$received_builds) === FALSE) // add only if not found
         {      
         $xml .= "<build>";
-							
-							 if($rowparity%2==0)
-										{
-										$xml .= add_XML_value("rowparity","trodd");
-										}
-								else
-										{
-										$xml .= add_XML_value("rowparity","even");
-										}
-								$rowparity++;
-								
+              
+               if($rowparity%2==0)
+                    {
+                    $xml .= add_XML_value("rowparity","trodd");
+                    }
+                else
+                    {
+                    $xml .= add_XML_value("rowparity","treven");
+                    }
+                $rowparity++;
+                
         $xml .= add_XML_value("site",$build2grouprule_array["name"]);
         $xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
         $xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
         $xml .= add_XML_value("buildtype",$build2grouprule_array["buildtype"]);
-								$xml .= add_XML_value("buildgroupid",$groupid);
+                $xml .= add_XML_value("buildgroupid",$groupid);
         $xml .= add_XML_value("expected","1");
 
         $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"]; 
@@ -204,12 +204,12 @@ function generate_main_dashboard_XML($projectid,$date)
     
   // Check the builds
   // Beginning timestamp is the previous nightly
-		$nightlytime = strtotime($project_array["nightlytime"]);
-		
+    $nightlytime = strtotime($project_array["nightlytime"]);
+    
   $nightlyhour = gmdate("H",$nightlytime);
   $nightlyminute = gmdate("i",$nightlytime);
   $nightlysecond = gmdate("s",$nightlytime);
-		
+    
   $end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
   
   $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp),gmdate("d",$end_timestamp),gmdate("Y",$end_timestamp));
@@ -218,9 +218,9 @@ function generate_main_dashboard_XML($projectid,$date)
     $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp-24*3600),gmdate("d",$end_timestamp-24*3600),gmdate("Y",$end_timestamp-24*3600));
     }
   
-		$beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
-		$end_UTCDate = gmdate("YmdHis",$end_timestamp);																											
-				
+    $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
+    $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
+        
   // We shoudln't get any builds for group that have been deleted (otherwise something is wrong
   $builds = mysql_query("SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
@@ -235,7 +235,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $previousgroupposition = -1;
   
   $received_builds = array();
-		$rowparity = 0;
+    $rowparity = 0;
   
   while($build_array = mysql_fetch_array($builds))
     {
@@ -263,14 +263,14 @@ function generate_main_dashboard_XML($projectid,$date)
                                                 AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate  OR gp.endtime='0000-00-00 00:00:00')
                                                 "));
         $xml .= "<buildgroup>";
-								$rowparity = 0;
+                $rowparity = 0;
         $xml .= add_XML_value("name",$group["name"]);
         $xml .= add_expected_builds($group["id"],$currenttime,$received_builds,$rowparity);
         $xml .= "</buildgroup>";  
         }  
              
       $xml .= "<buildgroup>";
-						$rowparity = 0;
+            $rowparity = 0;
       $received_builds = array();
       $xml .= add_XML_value("name",$groupname);
       $previousgroupposition = $groupposition;
@@ -287,17 +287,17 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     // Get the site name
     $xml .= "<build>";
-				
-				if($rowparity%2==0)
-				  {
-						$xml .= add_XML_value("rowparity","trodd");
-				  }
-				else
-				  {
-						$xml .= add_XML_value("rowparity","even");
-						}
-				$rowparity++;
-				
+        
+        if($rowparity%2==0)
+          {
+            $xml .= add_XML_value("rowparity","trodd");
+          }
+        else
+          {
+            $xml .= add_XML_value("rowparity","treven");
+            }
+        $rowparity++;
+        
     $xml .= add_XML_value("type",strtolower($build_array["type"]));
     $xml .= add_XML_value("site",$site_array["name"]);
     $xml .= add_XML_value("siteid",$siteid);
@@ -315,11 +315,11 @@ function generate_main_dashboard_XML($projectid,$date)
       }
       
     $update = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
-				$update_array = mysql_fetch_row($update);
+        $update_array = mysql_fetch_row($update);
     $xml .= add_XML_value("update",$update_array[0]);
-				
-				$updateerrors = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND revision='-1'");
-				$updateerrors_array = mysql_fetch_row($updateerrors);
+        
+        $updateerrors = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND revision='-1'");
+        $updateerrors_array = mysql_fetch_row($updateerrors);
     $xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
     
     $xml .= "<compilation>";
@@ -379,18 +379,18 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("time",round($time/60,1));
       $xml .= "</test>";
       }
-				$starttimestamp = strtotime($build_array["starttime"]." UTC");
-				$submittimestamp = strtotime($build_array["submittime"]." UTC");
+        $starttimestamp = strtotime($build_array["starttime"]." UTC");
+        $submittimestamp = strtotime($build_array["submittime"]." UTC");
     $xml .= add_XML_value("builddate",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
     /*if($starttimestamp > $submittimestamp)
-				  {
-						$xml .= add_XML_value("clockskew","1");
-				  }
-				else
-				  {
-						$xml .= add_XML_value("clockskew","0");
-				  }*/
-				$xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
+          {
+            $xml .= add_XML_value("clockskew","1");
+          }
+        else
+          {
+            $xml .= add_XML_value("clockskew","0");
+          }*/
+        $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
    $xml .= "</build>";
     } // END IF CONFIGURE
     
@@ -410,18 +410,18 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
       
-						$starttimestamp = strtotime($build_array["starttime"]." UTC");
-						$submittimestamp = strtotime($build_array["submittime"]." UTC");
-						$xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
-						/*if($starttimestamp > $submittimestamp)
-								{
-								$xml .= add_XML_value("clockskew","1");
-								}
-						else
-								{
-								$xml .= add_XML_value("clockskew","0");
-								}*/
-						$xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
+            $starttimestamp = strtotime($build_array["starttime"]." UTC");
+            $submittimestamp = strtotime($build_array["submittime"]." UTC");
+            $xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
+            /*if($starttimestamp > $submittimestamp)
+                {
+                $xml .= add_XML_value("clockskew","1");
+                }
+            else
+                {
+                $xml .= add_XML_value("clockskew","0");
+                }*/
+            $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
       $xml .= "</coverage>";
       }  // end coverage
     
@@ -440,17 +440,17 @@ function generate_main_dashboard_XML($projectid,$date)
       $defectcount = mysql_fetch_array($defect);
       $xml .= "  <defectcount>".$defectcount[0]."</defectcount>";
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
-						$submittimestamp = strtotime($build_array["submittime"]." UTC");
-						$xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
-						/*if($starttimestamp > $submittimestamp)
-								{
-								$xml .= add_XML_value("clockskew","1");
-								}
-						else
-								{
-								$xml .= add_XML_value("clockskew","0");
-								}*/
-						$xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
+            $submittimestamp = strtotime($build_array["submittime"]." UTC");
+            $xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
+            /*if($starttimestamp > $submittimestamp)
+                {
+                $xml .= add_XML_value("clockskew","1");
+                }
+            else
+                {
+                $xml .= add_XML_value("clockskew","0");
+                }*/
+            $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
       $xml .= "</dynamicanalysis>";
       }  // end coverage   
     } // end looping through builds
@@ -520,7 +520,7 @@ if(isset($NoXSLGenerate))
   {
   return;
   }
-		
+    
 function microtime_float()
   {
   list($usec, $sec) = explode(" ", microtime());
@@ -536,14 +536,14 @@ if(!isset($projectname )) // if the project name is not set we display the table
   }
 else
   {
-		$start = microtime_float();
+    $start = microtime_float();
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
   $xml = generate_main_dashboard_XML($projectid,$date);
   // Now doing the xslt transition
   generate_XSLT($xml,"index");
-		$end = microtime_float();
-		$t = round($end-$start,4);
-		echo "<font size=\"1\">Generated in ".$t." seconds.</font>";
+    $end = microtime_float();
+    $t = round($end-$start,4);
+    echo "<font size=\"1\">Generated in ".$t." seconds.</font>";
   }
 ?>
