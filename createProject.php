@@ -48,13 +48,20 @@ if ($session_OK)
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<backurl>user.php</backurl>";
 
 if($edit || isset($projectid))
   {
+		$xml .= "<title>CDash - Edit Project</title>";
+		$xml .= "<menutitle>CDash</menutitle>";
+		$xml .= "<menusubtitle>Edit Project</menusubtitle>";
 		$xml .= add_XML_value("edit","1");
   }
 else
 		{
+		$xml .= "<title>CDash - New Project</title>";
+		$xml .= "<menutitle>CDash</menutitle>";
+		$xml .= "<menusubtitle>New Project</menusubtitle>";
 		$xml .= add_XML_value("edit","0");
 		}
 

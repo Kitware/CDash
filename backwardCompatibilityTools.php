@@ -22,7 +22,10 @@ include("common.php");
 mysql_select_db("$CDASH_DB_NAME",$db);
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-
+$xml .= "<backurl>user.php</backurl>";
+$xml .= "<title>CDash - Backward Compatibility</title>";
+$xml .= "<menutitle>CDash</menutitle>";
+$xml .= "<menusubtitle>Tools</menusubtitle>";
 
 @$CreateDefaultGroups = $_POST["CreateDefaultGroups"];
 @$AssignBuildToDefaultGroups = $_POST["AssignBuildToDefaultGroups"];

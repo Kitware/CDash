@@ -78,10 +78,10 @@ function RegisterForm($regerror)
   include("config.php");
   include("common.php"); 
   
-  $xml = "<cdash>";
-  $xml .= "<title>Registration</title>";
+  $xml = '<?xml version="1.0"?><cdash>';
+  $xml .= "<title>CDash - Registration</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-    $xml .= "<error>" . $regerror . "</error>";
+  $xml .= "<error>" . $regerror . "</error>";
   $xml .= "</cdash>";
   
   generate_XSLT($xml,"register");

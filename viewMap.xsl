@@ -2,8 +2,10 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     
        <xsl:include href="footer.xsl"/>
- <!-- HEADER -->   
-   <xsl:output method="html"/>
+							
+ <!-- HEADER -->  
+  <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+			 <xsl:output method="html"/>  
     <xsl:template match="/">
       <html>
        <head>
@@ -12,15 +14,84 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-														 <!-- Include CDash Menu Stylesheet -->    
-        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
-
-          <!-- Include the rounding css -->
-          <script src="javascript/rounded.js"></script>
-
        </head>
-       <body bgcolor="#ffffff">
-   
+       <body>
+														
+							<table width="100%" class="toptable" cellpadding="1" cellspacing="0">
+  <tr>
+    <td>
+		<table width="100%" align="center" cellpadding="0" cellspacing="0" >
+  <tr>
+    <td height="30" valign="middle">
+				<table width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="66%" class="paddl">
+								<a><xsl:attribute name="href">user.php</xsl:attribute>
+								<xsl:choose>
+          <xsl:when test="cdash/user/id>0">
+            My CDash 	
+          </xsl:when>
+          <xsl:otherwise>
+             Login
+           </xsl:otherwise>
+        </xsl:choose>  
+								</a>
+								
+								<xsl:if test="cdash/user/id>0">
+								  <xsl:text>&#160;</xsl:text>|<xsl:text>&#160;</xsl:text><a href="user.php?logout=1">Log Out</a>  
+								</xsl:if>
+								
+								</td>
+        <td width="34%" class="topdate">
+								  <span style="float:right">
+									<xsl:text>&#160;</xsl:text>
+	        </span>
+									<xsl:value-of select="cdash/dashboard/datetime"/>
+	     </td>
+      </tr>
+    </table>    
+				</td>
+  </tr>
+  <tr>
+    <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
+  </tr>
+  <tr>
+    <td width="100%" align="left" class="topbg">
+
+		  <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
+	   <tr>
+		  <td width="195" height="121" class="topbgleft">
+				</td>
+				<td width="425" valign="top" class="insd">
+				<div class="insdd">
+						<span class="inn1">CDash</span><br />
+						<span class="inn2">Build location</span>
+						</div>
+				</td>
+				<td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
+			</tr>
+		</table>
+		</td>
+				</tr>
+  <tr>
+    <td align="left" class="topbg2"><table width="100%" height="28" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
+<li id="Dartboard">
+<a href="index.php">HOME</a>
+</li>
+<li><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>PROJECT</a></li>
+</ul>
+</td>
+		<td height="28" class="insd3"><xsl:text>&#160;</xsl:text></td>
+	</tr>
+</table></td>
+  </tr>
+</table></td>
+  </tr>
+</table>
+
+<!--
 <table border="0" cellpadding="0" cellspacing="2" width="100%">
 <tr>
 <td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
@@ -29,7 +100,6 @@
 <font color="#ffffff"><h2>CDash - Sites Map for <xsl:value-of select="cdash/dashboard/projectname"/></h2>
 <h3>Where are the builds located?</h3></font>
 </td></tr><tr><td></td><td>
-<!-- Menu -->
 <ul id="Nav" class="nav">
    <li>
         <a><xsl:attribute name="href">index.php</xsl:attribute>Home</a>
@@ -38,36 +108,11 @@
         <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Project</a>
       </li>		
 </ul>
-
-<!--
-<div id="navigator">
-<table border="0" cellpadding="0" cellspacing="0">
-<tr>
-
-<td align="center">
-<p class="hoverbutton">
-<a><xsl:attribute name="href">index.php</xsl:attribute>Home</a>
-</p>
 </td>
-
-<td align="center">
-<p class="hoverbutton">
-<a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Back</a>
-</p>
-</td>
-
-<td align="center" width="5">
-<p></p>
-</td>
-
 </tr>
 </table>
-</div>
 -->
-</td>
-</tr>
-</table>
- 
+
 <br/>
 
 <!-- Display the map --> 

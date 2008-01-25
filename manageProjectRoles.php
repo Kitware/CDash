@@ -80,6 +80,10 @@ if($updateuser)
 
 		$xml = "<cdash>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  $xml .= "<backurl>user.php</backurl>";
+		$xml .= "<title>CDash - Project Roles</title>";
+		$xml .= "<menutitle>CDash</menutitle>";
+		$xml .= "<menusubtitle>Project Roles</menusubtitle>";
 
 				
 $projects = mysql_query("SELECT id,name FROM project"); // we should check if we are admin on the project

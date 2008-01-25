@@ -47,6 +47,10 @@ else
   
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<backurl>user.php</backurl>";
+$xml .= "<title>CDash - Import</title>";
+$xml .= "<menutitle>CDash</menutitle>";
+$xml .= "<menusubtitle>Import Dart1</menusubtitle>";
 
 $project = mysql_query("SELECT name,id FROM project ORDER BY id");
 $projName = "";

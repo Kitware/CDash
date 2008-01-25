@@ -48,12 +48,22 @@ if ($session_OK)
 		
 		// Go through the public projects
 		$project = mysql_query("SELECT name,id FROM project WHERE id NOT IN (SELECT projectid as id FROM user2project WHERE userid='$userid' AND public='1')");
+		$j = 0;
 		while($project_array = mysql_fetch_array($project))
 		  {
 				$xml .= "<publicproject>";
+				if($j%2==0)
+				  {
+				  $xml .= add_XML_value("trparity","trodd");
+				  }
+				else
+						{
+						$xml .= add_XML_value("trparity","treven");
+						}
 				$xml .= add_XML_value("id",$project_array["id"]);
 				$xml .= add_XML_value("name",$project_array["name"]);
 				$xml .= "</publicproject>";
+				$j++;
 		  }
 		
 		//Go through the claimed sites		

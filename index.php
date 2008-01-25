@@ -158,7 +158,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalna = 0; 
       
   // Local function to add expected builds
-  function add_expected_builds($groupid,$currenttime,$received_builds)
+  function add_expected_builds($groupid,$currenttime,$received_builds,$rowparity)
     {
 				$currentUTCTime =  gmdate("YmdHis",$currenttime);
     $xml = "";
@@ -172,6 +172,17 @@ function generate_main_dashboard_XML($projectid,$date)
       if(array_search($key,$received_builds) === FALSE) // add only if not found
         {      
         $xml .= "<build>";
+							
+							 if($rowparity%2==0)
+										{
+										$xml .= add_XML_value("rowparity","trodd");
+										}
+								else
+										{
+										$xml .= add_XML_value("rowparity","even");
+										}
+								$rowparity++;
+								
         $xml .= add_XML_value("site",$build2grouprule_array["name"]);
         $xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
         $xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
@@ -224,6 +235,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $previousgroupposition = -1;
   
   $received_builds = array();
+		$rowparity = 0;
   
   while($build_array = mysql_fetch_array($builds))
     {
@@ -233,7 +245,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $groupname = $build_array["groupname"];  
       if($previousgroupposition != -1)
         {
-        $xml .= add_expected_builds($groupid,$currenttime,$received_builds);
+        $xml .= add_expected_builds($groupid,$currenttime,$received_builds,$rowparity);
         $xml .= "</buildgroup>";
         }
       
@@ -250,13 +262,15 @@ function generate_main_dashboard_XML($projectid,$date)
                                                 AND gp.position='$i' AND g.projectid='$projectid'
                                                 AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate  OR gp.endtime='0000-00-00 00:00:00')
                                                 "));
-        $xml .= "<buildgroup>";  
+        $xml .= "<buildgroup>";
+								$rowparity = 0;
         $xml .= add_XML_value("name",$group["name"]);
-        $xml .= add_expected_builds($group["id"],$currenttime,$received_builds);
+        $xml .= add_expected_builds($group["id"],$currenttime,$received_builds,$rowparity);
         $xml .= "</buildgroup>";  
         }  
              
       $xml .= "<buildgroup>";
+						$rowparity = 0;
       $received_builds = array();
       $xml .= add_XML_value("name",$groupname);
       $previousgroupposition = $groupposition;
@@ -273,6 +287,17 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     // Get the site name
     $xml .= "<build>";
+				
+				if($rowparity%2==0)
+				  {
+						$xml .= add_XML_value("rowparity","trodd");
+				  }
+				else
+				  {
+						$xml .= add_XML_value("rowparity","even");
+						}
+				$rowparity++;
+				
     $xml .= add_XML_value("type",strtolower($build_array["type"]));
     $xml .= add_XML_value("site",$site_array["name"]);
     $xml .= add_XML_value("siteid",$siteid);
@@ -432,7 +457,7 @@ function generate_main_dashboard_XML($projectid,$date)
     
   if(mysql_num_rows($builds)>0)
     {
-    $xml .= add_expected_builds($groupid,$currenttime,$received_builds);
+    $xml .= add_expected_builds($groupid,$currenttime,$received_builds,$rowparity);
     $xml .= "</buildgroup>";
     }
     
@@ -456,7 +481,7 @@ function generate_main_dashboard_XML($projectid,$date)
                                                                                      AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate  OR gp.endtime='0000-00-00 00:00:00')"));
     $xml .= "<buildgroup>";  
     $xml .= add_XML_value("name",$group["name"]);
-    $xml .= add_expected_builds($group["id"],$currenttime,$received_builds);
+    $xml .= add_expected_builds($group["id"],$currenttime,$received_builds,$rowparity);
     $xml .= "</buildgroup>";  
     }
  
@@ -519,6 +544,6 @@ else
   generate_XSLT($xml,"index");
 		$end = microtime_float();
 		$t = round($end-$start,4);
-		echo "<br><br><font size=\"1\">Generated in ".$t." seconds.</font>";
+		echo "<font size=\"1\">Generated in ".$t." seconds.</font>";
   }
 ?>

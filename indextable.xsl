@@ -3,7 +3,9 @@
 
    <xsl:include href="footer.xsl"/>
     
-    <xsl:output method="html"/>
+   <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+		<xsl:output method="html"/>
+ 
     <xsl:template match="/">
       <html>
        <head>
@@ -12,95 +14,118 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-									
-								 <!-- Include CDash Menu Stylesheet -->    
-        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
-
-          <!-- Include the rounding css -->
-          <script src="javascript/rounded.js"></script>
-
        </head>
        <body bgcolor="#ffffff">
-   
-<table border="0" cellpadding="0" cellspacing="2" width="100%">
-<tr>
-<td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
-</td>
-<td valign="bottom" width="100%">
-<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">    
-<font color="#ffffff"><h2>CDash on <xsl:value-of select="cdash/hostname"/></h2>
-<h3><xsl:value-of select="cdash/date"/></h3></font><br/>
-</div>
-</td></tr><tr><td></td><td>
-<!-- Menu -->
-<ul id="Nav" class="nav">
-   <li>
-        <a><xsl:attribute name="href">user.php</xsl:attribute>
-         <xsl:choose>
+ 
+	<table width="100%" class="toptable" cellpadding="1" cellspacing="0">
+  <tr>
+    <td>
+		<table width="100%" align="center" cellpadding="0" cellspacing="0" >
+  <tr>
+    <td height="30" valign="middle">
+				<table width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="66%" class="paddl">
+								<a><xsl:attribute name="href">user.php</xsl:attribute>
+								<xsl:choose>
           <xsl:when test="cdash/user/id>0">
-            My CDash    
+            My CDash 	
           </xsl:when>
           <xsl:otherwise>
              Login
            </xsl:otherwise>
         </xsl:choose>  
-        </a>
-      </li>
-</ul>
-</td>
-</tr>
+								</a>
+								
+								<xsl:if test="cdash/user/id>0">
+								  <xsl:text>&#160;</xsl:text>|<xsl:text>&#160;</xsl:text><a href="user.php?logout=1">Log Out</a>  
+								</xsl:if>
+								
+								</td>
+        <td width="34%" class="topdate">
+								  <span style="float:right">
+									<xsl:text>&#160;</xsl:text>
+	        </span>
+									<xsl:value-of select="cdash/dashboard/datetime"/>
+	     </td>
+      </tr>
+    </table>    
+				</td>
+  </tr>
+  <tr>
+    <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
+  </tr>
+  <tr>
+    <td width="100%" align="left" class="topbg">
+
+		  <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
+	   <tr>
+		  <td width="195" height="121" class="topbgleft">
+				<xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
+				</td>
+				<td width="425" valign="top" class="insd">
+				<div class="insdd">
+						<span class="inn1">CDash</span><br />
+						<span class="inn2">Projects</span>
+						</div>
+				</td>
+				<td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
+			</tr>
+		</table>
+		</td>
+				</tr>
+  <tr>
+   
+  </tr>
+</table></td>
+  </tr>
 </table>
 
+<!-- Main table -->
 <br/>
 
-<table>
-<tr>
-<td width="95"></td>
-<td>
-<table class="dart">
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
-<tr class="table-heading">
-  <th colspan="4" align="left">Available Dashboards</th>
+<tr class="table-heading1">
+  <td colspan="3" align="left" id="nob"><h3>Available Dashboards</h3></td>
 </tr>
 
   <tr class="table-heading">
-     <th align="center">Project</th>
-     <th align="center">Submissions</th>
-    <!-- <th align="center">Tests</th> -->
-     <th align="center">Last activity</th>
+     <td align="center"><b>Project</b></td>
+     <td align="center"><b>Submissions</b></td>
+    <!-- <td align="center">Tests</td> -->
+     <td align="center" id="nob"><b>Last activity</b></td>
   </tr>
 
    <xsl:for-each select="cdash/project">
    <tr>
      <xsl:choose>
           <xsl:when test="row=0">
-            <xsl:attribute name="class">tr-odd</xsl:attribute>
+            <xsl:attribute name="class">trodd</xsl:attribute>
            </xsl:when>
           <xsl:otherwise>
-           <xsl:attribute name="class">tr-even</xsl:attribute>
+           <xsl:attribute name="class">treven</xsl:attribute>
            </xsl:otherwise>
         </xsl:choose>
-   <td>
+   <td align="center" >
      <a>
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute>
      <xsl:value-of select="name"/>
      </a></td>
-    <td align="right"><xsl:value-of select="nbuilds"/></td>
+    <td align="center"><xsl:value-of select="nbuilds"/></td>
     <!-- <th align="center">Tests</th> <td align="right"><xsl:value-of select="ntests"/></td>-->
-    <td align="right"><xsl:value-of select="lastbuild"/></td>
+    <td align="center" id="nob"><xsl:value-of select="lastbuild"/></td>
     </tr>
    </xsl:for-each>
-  
+			
+			<table width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td height="1" colspan="14" align="left" bgcolor="#888888"></td>
+</tr>
+</table>
+
 </tbody>
 </table>
-</td>
-</tr>  
-</table>
-
-
-<script type="text/javascript">
-  Rounded('rounded', 15, 15,0,0);
-</script>
 
 <br/>
 <!-- FOOTER -->

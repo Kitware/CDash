@@ -4,16 +4,17 @@
     <xsl:template name="builds">
     <xsl:param name="type"/>
    <xsl:if test="count($type/build)=0">
-   <tr class="table-heading">
-      <td colspan="14">
+			
+   <tr class="table-heading1" >
+      <td colspan="14" id="nob">
           <h3>No <xsl:value-of select="name"/> Builds</h3>
       </td>
    </tr>
    </xsl:if>
    
     <xsl:if test="count($type/build)>0">
-        <tr class="table-heading">
-      <td colspan="14">
+        <tr class="table-heading1" >
+      <td colspan="14" id="nob">
           <h3><xsl:value-of select="$type/name"/></h3>
       </td>
    </tr>
@@ -23,8 +24,8 @@
 
       <th align="center" rowspan="2">Update</th>
       <th align="center" rowspan="2">Cfg</th>
-      <th align="center" colspan="3">Build</th>
-      <th align="center" colspan="5">Test</th>
+      <th align="center" colspan="3" class="botl">Build</th>
+      <th align="center" colspan="5" class="botl">Test</th>
       <th align="center" rowspan="2">Build Date</th>
       <!-- <th align="center" rowspan="2">Submit Date</th> -->
 
@@ -40,13 +41,16 @@
       <th align="center">NA</th>
       <th align="center">Min</th>
    </tr>
-   
+
       <xsl:for-each select="$type/build">
-   <tr valign="top">
-      <td align="left" bgcolor="#ffffff">
+   <tr valign="middle" class="trodd">
+			<xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
+			
+			
+      <td align="left" class="paddt">
       <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/></xsl:attribute><xsl:value-of select="site"/></a>
       </td>
-      <td align="left" bgcolor="#ffffff">
+      <td align="center">
 						<a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="buildname"/></a>
         <xsl:text>&#x20;</xsl:text>
       <xsl:if test="string-length(note)>0">
@@ -77,7 +81,6 @@
       </a>
       </xsl:if>
       
-        
       <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1">
         <xsl:if test="string-length(buildid)>0">
@@ -103,7 +106,7 @@
       </div>
       
       </td>
-      <td align="right">
+      <td align="center">
 						<xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="updateerrors > 0">
@@ -116,7 +119,7 @@
       </xsl:attribute>
 						<b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
       </td>
-      <td align="right">
+      <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="configure > 0">
@@ -134,8 +137,7 @@
       <a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/>
       </xsl:attribute><xsl:value-of select="configure"/></a></b>
       </td>
-      <td>
-      <xsl:attribute name="align">right</xsl:attribute>
+      <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="compilation/error > 0">
@@ -151,7 +153,7 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/error"/> </a></b>
       </td>
-      <td align="right">
+      <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="compilation/warning > 0">
@@ -167,8 +169,8 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/warning"/></a></b>
       </td>
-      <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="compilation/time"/></td>
-      <td align="right">
+      <td align="right"><xsl:value-of select="compilation/time"/></td>
+      <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="test/notrun > 0">
@@ -184,7 +186,7 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/notrun"/></a></b>
       </td>
-      <td align="right">
+      <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="test/fail > 0">
@@ -201,7 +203,7 @@
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/fail"/></a></b>
       </td>
 
-      <td align="right">
+      <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="test/fail > 0">
@@ -217,7 +219,7 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>
       </td>
-      <td align="right">
+      <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
              <xsl:when test="string-length(test/na)=0">
@@ -236,7 +238,7 @@
       </a></b>
       </td>
       <td align="right" bgcolor="#FFFFFF"><xsl:value-of select="test/time"/></td>
-      <td bgcolor="#ffffff"><xsl:value-of select="builddate"/></td>
+      <td bgcolor="#ffffff" id="nob"><xsl:value-of select="builddate"/></td>
 						<!--
 						<td>
       <xsl:attribute name="class">
@@ -278,48 +280,36 @@
                   
          <!-- Include BuildGroup JavaScript -->
          <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script> 
-
-
        </head>
        <body bgcolor="#ffffff">
-   
        <xsl:call-template name="header"/>
-<br/>
 
 <xsl:if test="cdash/updates">
-<table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
-   <tr class="table-heading">
-      <td>
-         <h3>
-         <a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
+<table width="100%" cellpadding="11" cellspacing="0">
+  <tr>
+    <td height="25" align="left" valign="bottom">
+				<a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
          Nightly Changes</a> as of
-         <xsl:value-of select="cdash/updates/timestamp"/>
-         </h3>
-      </td>
-   </tr>
+         <xsl:value-of select="cdash/updates/timestamp"/></td>
+  </tr>
 </table>
-<br/>
 </xsl:if>
 
-<table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
-
-
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+<tbody>
 <xsl:for-each select="cdash/buildgroup">
   <xsl:call-template name="builds">
   <xsl:with-param name="type" select="."/>
   </xsl:call-template>
 </xsl:for-each>
 
+<!-- Row displaying the totals -->
 <xsl:if test="count(cdash/buildgroup/build/buildid)>0">
-   <tr>
-      <td align="left" bgcolor="#ffffff">
-         Totals
-         
-      </td>
-
-      <td align="center" bgcolor="#ffffff"><b><xsl:value-of select = "count(cdash/buildgroup/build/buildid)" /> Builds</b></td>
-      <td bgcolor="#ffffff"></td>
-      <td align="right">
+   <tr class="total">
+      <td align="left">Totals</td>
+      <td align="center"><b><xsl:value-of select = "count(cdash/buildgroup/build/buildid)" /> Builds</b></td>
+      <td ></td>
+      <td align="center">
        <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="cdash/totalConfigure > 0">
@@ -332,7 +322,7 @@
       </xsl:attribute>
       <b><xsl:value-of select = "cdash/totalConfigure"/></b>  
       </td>
-      <td align="right">
+      <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="cdash/totalError > 0">
@@ -345,7 +335,7 @@
       </xsl:attribute>
       <b><xsl:value-of select = "cdash/totalError"/></b>
       </td>
-      <td align="right">
+      <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="cdash/totalWarning > 0">
@@ -357,10 +347,9 @@
         </xsl:choose>
       </xsl:attribute>  
       <b><xsl:value-of select = "cdash/totalWarning"/></b>
-
       </td>
-      <td bgcolor="#ffffff"></td>
-      <td align="right">
+      <td></td>
+      <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="cdash/totalNotRun > 0">
@@ -373,7 +362,7 @@
       </xsl:attribute>
       <b><xsl:value-of select = "cdash/totalNotRun"/></b>
       </td>
-      <td align="right">
+      <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="cdash/totalFail > 0">
@@ -386,7 +375,7 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "cdash/totalFail"/></b>  
       </td>
-      <td align="right">
+      <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="cdash/totalFail > 0">
@@ -399,29 +388,38 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "cdash/totalPass"/></b>
       </td>
-      <td bgcolor="#ffffff"></td>
-      <td bgcolor="#ffffff"></td>
-      <td bgcolor="#ffffff"></td>
+      <td></td>
+      <td></td>
+      <td id="nob"></td>
       <!-- <td bgcolor="#ffffff"></td> -->
    </tr>
-</xsl:if>  
+</xsl:if>
+</tbody>
+</table>
+
+
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td height="1" colspan="13" align="left" bgcolor="#888888"></td>
+</tr>
 </table>
 
 <br/>
 
 <!-- COVERAGE -->
-<table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">   
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+<tbody>
     <xsl:if test="count(cdash/buildgroup/coverage)=0">
-   <tr class="table-heading">
-      <td colspan="14">
+   <tr class="table-heading2">
+      <td colspan="14" id="nob">
           <h3>No Coverage</h3>
       </td>
    </tr>
    </xsl:if>
    
     <xsl:if test="count(cdash/buildgroup/coverage)>0">
-        <tr class="table-heading">
-      <td colspan="14">
+        <tr class="table-heading2">
+      <td colspan="14" id="nob">
           <h3>Coverage</h3>
       </td>
    </tr>
@@ -433,14 +431,14 @@
 
       <th align="center">Passed</th>
       <th align="center">Failed</th>
-      <th align="center">Date</th>
+      <th align="center" id="nob">Date</th>
      <!-- <th align="center">Submission Date</th> -->
    </tr>
   <xsl:for-each select="cdash/buildgroup/coverage">
    
    <tr>
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/></td>
+      <td align="left" bgcolor="#ffffff" class="paddt"><xsl:value-of select="site"/></td>
+      <td align="left" bgcolor="#ffffff" class="paddt"><xsl:value-of select="buildname"/></td>
       <td align="center">
         <xsl:attribute name="class">
         <xsl:choose>
@@ -453,42 +451,38 @@
         </xsl:choose>
         </xsl:attribute>
       <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
-      <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="pass"/></b></td>
-      <td align="right" bgcolor="#ffffff"><b><xsl:value-of select="fail"/></b></td>
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
-      <!--
-						<td align="left">
-						<xsl:attribute name="class">
-						<xsl:if test="clockskew=1">
-													error
-													</xsl:if>
-													<xsl:if test="clockskew=0">
-													tr-odd
-													</xsl:if>
-      </xsl:attribute>    	
-						<xsl:value-of select="submitdate"/></td>
-      -->
+      <td align="center" bgcolor="#ffffff"><b><xsl:value-of select="pass"/></b></td>
+      <td align="center" bgcolor="#ffffff"><b><xsl:value-of select="fail"/></b></td>
+      <td align="left" bgcolor="#ffffff" id="nob"><xsl:value-of select="date"/></td>
    </tr>
   </xsl:for-each>
-
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td height="1" colspan="14" align="left" bgcolor="#888888"></td>
+</tr>
+</table>
 </xsl:if>
 
+</tbody>
 </table>
+
+
 
 <br/>
 
 <!-- Dynamic analysis -->
-<table xmlns:lxslt="http://xml.apache.org/xslt" border="0" width="100%" cellpadding="3" cellspacing="1" bgcolor="#0000aa">   
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb"> 
+<tbody>
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)=0">
-   <tr class="table-heading">
-      <td colspan="14">
+   <tr class="table-heading3" >
+      <td colspan="14" id="nob">
           <h3>No Dynamic Analysis</h3>
       </td>
    </tr>
    </xsl:if>
    
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)>0">
-        <tr class="table-heading">
+        <tr class="table-heading3" id="nob">
       <td colspan="14">
           <h3>Dynamic Analysis</h3>
       </td>
@@ -508,7 +502,7 @@
    <tr>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="site"/></td>
       <td align="left" bgcolor="#ffffff"><xsl:value-of select="buildname"/></td>
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="checker"/></td>
+      <td align="center" bgcolor="#ffffff"><xsl:value-of select="checker"/></td>
       <td align="center">
         <xsl:attribute name="class">
         <xsl:choose>
@@ -522,7 +516,7 @@
         </xsl:attribute>
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
       </td>
-      <td align="left" bgcolor="#ffffff"><xsl:value-of select="date"/></td>
+      <td align="left" id="nob"><xsl:value-of select="date"/></td>
       <!--
 						<td align="left">
 						<xsl:attribute name="class">
@@ -537,8 +531,14 @@
    </tr>
   </xsl:for-each>
 
-</xsl:if>
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td height="1" colspan="14" align="left" bgcolor="#888888"></td>
+</tr>
+</table>
 
+</xsl:if>
+</tbody>
 </table>
 
 

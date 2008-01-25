@@ -3,9 +3,18 @@
         
     <xsl:output method="html"/>
     <xsl:template name="footer" match="/">
-     <a href="http://public.kitware.com/CDash/"><img alt="Cdash" width="50" src="images/cdash-60.gif" border="0"/></a>   
-     <font color="#666666" face="Verdana, Arial, Helvetica, sans-serif" size="2">
-    CDash 1.0 <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text>  2007 by <a href="http://kitware.com" target="_blank"> Kitware Inc. </a>
-   </font>
+				<table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td height="66" align="left" valign="middle" class="footer">
+						<span style="float:right">
+					 <img src="images/logo2.gif" width="48" height="66"/> CDash 1.0 <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text> 2008 
+					 	<a href="http://www.kitware.com">Kitware Inc.</a>
+							<xsl:text>&#160;&#160;&#160;&#160;</xsl:text>
+						</span>
+						<xsl:text>&#160;&#160;&#160;</xsl:text>
+						<img src="images/blogo.gif" width="177" height="66" />
+						</td>
+    </tr>
+    </table>
    </xsl:template>
 </xsl:stylesheet>
