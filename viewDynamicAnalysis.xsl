@@ -33,7 +33,8 @@
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Memory Leak<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Uninitialized Memory Read<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Potential Memory Leak<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
-   </tr>
+      <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Uninitialized Memory Conditional<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+  </tr>
    
    <xsl:for-each select="cdash/dynamicanalysis">
    <tr align="center">
@@ -88,7 +89,17 @@
       </xsl:attribute>
       <xsl:value-of select="Potential_Memory_Leak"/>
       </td>
-      
+      <!--UMC -->
+      <td>
+      <xsl:attribute name="bgcolor">
+       <xsl:choose>
+          <xsl:when test="count(Uninitialized_Memory_Conditional)>0">
+            #ffcc66
+          </xsl:when>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:value-of select="Uninitialized_Memory_Conditional"/>
+      </td>
       
    </tr>
    </xsl:for-each>
