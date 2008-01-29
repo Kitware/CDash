@@ -101,10 +101,10 @@ if($Submit)
 				$CoverageThreshold = $_POST["coverageThreshold"];
 				$NightlyTime = $_POST["nightlyTime"];
 				$GoogleTracker = $_POST["googleTracker"];	
-				$EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
-				$EmailBuildMissing = $_POST["emailBuildMissing"];	
-				$EmailLowCoverage = $_POST["emailLowCoverage"];	
-				$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];								
+				@$EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
+				@$EmailBuildMissing = $_POST["emailBuildMissing"];	
+				@$EmailLowCoverage = $_POST["emailLowCoverage"];	
+				@$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];								
 										
 				$handle = fopen($_FILES['logo']['tmp_name'],"r");
 				$contents = 0;
