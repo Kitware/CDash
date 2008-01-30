@@ -6,12 +6,12 @@
    <xsl:if test="count($type/build)=0">
 			
    <tr class="table-heading1" >
-      <td colspan="4" id="nob">
+      <td colspan="1" id="nob">
           <h3>No <xsl:value-of select="name"/> Builds</h3>
       </td>
 		
 		<!-- quick links -->
-		<td colspan="9" align="right" id="nob">
+		<td colspan="12" align="right" id="nob">
 			<div>
 			<xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
 			<xsl:for-each select="/cdash/buildgroup">
@@ -31,11 +31,11 @@
    
     <xsl:if test="count($type/build)>0">
         <tr class="table-heading1" >
-      <td colspan="4" id="nob">
+      <td colspan="1" id="nob">
           <h3><xsl:value-of select="$type/name"/></h3>
       </td>
 		<!-- quick links -->
-		<td colspan="9" align="right" id="nob">
+		<td colspan="12" align="right" id="nob">
 			<div>
 			<xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
 			<xsl:for-each select="/cdash/buildgroup">
@@ -443,11 +443,11 @@
 <tbody>
     <xsl:if test="count(cdash/buildgroup/coverage)=0">
    <tr class="table-heading2">
-      <td colspan="4" id="nob">
+      <td colspan="1" id="nob">
           <h3>No Coverage</h3>
       </td>
 			<!-- quick links -->
-		<td colspan="9" align="right" id="nob">
+		<td colspan="12" align="right" id="nob">
 			<div>
 			<xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
 			<xsl:for-each select="/cdash/buildgroup">
@@ -463,11 +463,11 @@
    
     <xsl:if test="count(cdash/buildgroup/coverage)>0">
         <tr class="table-heading2">
-      <td colspan="4" id="nob">
+      <td colspan="1" id="nob">
           <h3>Coverage</h3>
       </td>
 			<!-- quick links -->
-		<td colspan="9" align="right" id="nob">
+		<td colspan="12" align="right" id="nob">
 			<div id="Coverage">
 			<xsl:for-each select="/cdash/buildgroup">
          [<a>
@@ -530,11 +530,11 @@
 <tbody>
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)=0">
    <tr class="table-heading3" >
-      <td colspan="4" id="nob">
+      <td colspan="1" id="nob">
           <h3>No Dynamic Analysis</h3>
       </td>
 			<!-- quick links -->
-		<td colspan="9" align="right" id="nob">
+		<td colspan="12" align="right" id="nob">
 			<div>
 			<xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
 			<xsl:for-each select="/cdash/buildgroup">
@@ -550,11 +550,11 @@
    
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)>0">
         <tr class="table-heading3" id="nob">
-      <td colspan="4" id="nob">
+      <td colspan="1" id="nob">
           <h3>Dynamic Analysis</h3>
       </td>
 						<!-- quick links -->
-		<td colspan="9" align="right" id="nob">
+		<td colspan="12" align="right" id="nob">
 			<div id="DynamicAnalysis">
 			<xsl:for-each select="/cdash/buildgroup">
          [<a>
