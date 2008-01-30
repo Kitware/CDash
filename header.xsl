@@ -97,11 +97,11 @@
 		<td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
 <li id="Dartboard">
 <a href="index.php">DASHBOARD</a><ul>
-<li><a href="#Updates" id="submm">Updates</a></li>
+<li><a id="submm">
+<xsl:attribute name="href">viewChanges.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Updates</a></li>
 <li><a id="submm">
 <xsl:attribute name="href">testOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
 Tests</a></li>
-<li><a href="#Build" id="submm">Build</a></li>
 <li><a id="submm">
 <xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
 Map</a></li>
