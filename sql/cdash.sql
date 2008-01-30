@@ -383,8 +383,8 @@ CREATE TABLE `updatefile` (
   `author` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `log` text NOT NULL,
-  `revision` varchar(10) NOT NULL default '0',
-  `priorrevision` varchar(10) NOT NULL default '0',
+  `revision` varchar(20) NOT NULL default '0',
+  `priorrevision` varchar(20) NOT NULL default '0',
   KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
