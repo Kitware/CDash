@@ -107,6 +107,20 @@ a:active{
 	font-family: Arial, Helvetica, sans-serif;
 	color: #FFFFFF;
 }
+.table-heading1 a:link{
+	font-size:10px;
+	color:#FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	text-decoration: none;
+}
+.table-heading1 a:visited{
+	font-size:10px;
+	color:#FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	text-decoration: none;
+}
 .table-heading1 h3{
 	font-family: Arial, Helvetica, sans-serif;
 	color: #FFFFFF;
@@ -163,6 +177,20 @@ a:active{
 	font-family: Arial, Helvetica, sans-serif;
 	color: #FFFFFF;
 }
+.table-heading2 a:link{
+	font-size:10px;
+	color:#FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	text-decoration: none;
+}
+.table-heading2 a:visited{
+	font-size:10px;
+	color:#FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	text-decoration: none;
+}
 .table-heading2 h3{
 	font-family: Arial, Helvetica, sans-serif;
 	color: #FFFFFF;
@@ -173,6 +201,20 @@ a:active{
 	padding-right: 0px;
 	padding-bottom: 1px;
 	padding-left: 7px;
+}
+.table-heading3 a:link{
+	font-size:10px;
+	color:#FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	text-decoration: none;
+}
+.table-heading3 a:visited{
+	font-size:10px;
+	color:#FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	text-decoration: none;
 }
 .table-heading3 {
 	background-color : #845924;
