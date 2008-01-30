@@ -77,15 +77,13 @@
  <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
     <tr class="table-heading1">
-      <td><div align="right"></div></td>
-      <td bgcolor="#CCCCCC" colspan="5"><h3>My Projects</h3></td>
+      <td colspan="5" id="nob"><h3>My Projects</h3></td>
     </tr>
 
     <xsl:for-each select="cdash/project">
       <tr class="table-heading">
-        <td width="95"><div align="right"></div></td>
-        <td bgcolor="#DDDDDD" align="right"><xsl:value-of select="name"/> </td>
-        <td><div align="left"></div></td><td bgcolor="#DDDDDD"><a>
+        <td align="center" ><xsl:value-of select="name"/> </td>
+        <td bgcolor="#DDDDDD" id="nob"><a>
         <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>[Edit subscription]</a>
         <xsl:if test="role>0">
           <a><xsl:attribute name="href">editSite.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Claim sites]</a>
@@ -110,28 +108,27 @@
  <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
     <tr class="table-heading1">
-      <td colspan="10"><h3>My Sites</h3></td>
+      <td colspan="10" id="nob"><h3>My Sites</h3></td>
     </tr>
 
     <!-- header of the matrix -->
     <tr class="table-heading">
-      <td  align="right"><b><i>Site\Project</i></b></td>
+      <td align="center"><b><i>Site\Project</i></b></td>
       
       <xsl:for-each select="cdash/claimedsiteproject">
-        <td align="center"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute><xsl:value-of select="name"/></a></td>
+        <td align="center" id="nob"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute><xsl:value-of select="name"/></a></td>
       </xsl:for-each>
     </tr>
     
     <!-- Fill in the information -->
     <xsl:for-each select="cdash/claimedsite">
-      <td width="95"><div align="right"></div></td>
-      <td align="middle">
+      <td  bgcolor="#EEEEEE" align="center" >
         <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute><xsl:value-of select="name"/></a>
       </td>
       
       <xsl:for-each select="project">
-        <td bgcolor="#EEEEEE" align="middle">
-          <table>
+        <td bgcolor="#EEEEEE" align="center" id="nob"> 
+          <table width="100%">
             <xsl:if test="nightly/NA=0">
               <tr class="table-heading">
                 <td><b>N</b></td>

@@ -32,6 +32,12 @@ $sitename = $site_array["name"];
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$sitename."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<backurl>index.php</backurl>";
+$xml .= "<title>CDash - $sitename</title>";
+$xml .= "<menutitle>CDash</menutitle>";
+$xml .= "<menusubtitle>$sitename</menusubtitle>";
+
+
 $xml .= "<dashboard>";
 $xml .= "<title>CDash</title>";
 
@@ -51,8 +57,22 @@ $xml .= "<site>";
 $xml .= add_XML_value("id",$site_array["id"]);
 $xml .= add_XML_value("name",$site_array["name"]);
 $xml .= add_XML_value("description",$site_array["description"]);
-$xml .= add_XML_value("processor",$site_array["processor"]);
-$xml .= add_XML_value("numprocessors",$site_array["numprocessors"]);
+$xml .= add_XML_value("osname",$site_array["osname"]);
+$xml .= add_XML_value("osrelease",$site_array["osrelease"]);
+$xml .= add_XML_value("osversion",$site_array["osversion"]);
+$xml .= add_XML_value("osplatform",$site_array["osplatform"]);
+$xml .= add_XML_value("processoris64bits",$site_array["processoris64bits"]);
+$xml .= add_XML_value("processorvendor",$site_array["processorvendor"]);
+$xml .= add_XML_value("processorvendorid",$site_array["processorvendorid"]);
+$xml .= add_XML_value("processorfamilyid",$site_array["processorfamilyid"]);
+$xml .= add_XML_value("processormodelid",$site_array["processormodelid"]);
+$xml .= add_XML_value("processorcachesize",$site_array["processorcachesize"]);
+$xml .= add_XML_value("numberlogicalcpus",$site_array["numberlogicalcpus"]);
+$xml .= add_XML_value("numberphysicalcpus",$site_array["numberphysicalcpus"]);
+$xml .= add_XML_value("totalvirtualmemory",$site_array["totalvirtualmemory"]);
+$xml .= add_XML_value("totalphysicalmemory",$site_array["totalphysicalmemory"]);
+$xml .= add_XML_value("logicalprocessorsperphysical",$site_array["logicalprocessorsperphysical"]);
+$xml .= add_XML_value("processorclockfrequency",$site_array["processorclockfrequency"]);
 $xml .= add_XML_value("ip",$site_array["ip"]);
 $xml .= add_XML_value("latitude",$site_array["latitude"]);
 $xml .= add_XML_value("longitude",$site_array["longitude"]);

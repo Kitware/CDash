@@ -17,28 +17,30 @@
 =========================================================================*/
 
 /** Main function to send email if necessary */
-function sendemail($vals,$projectid)
+function sendemail($parser,$projectid)
 {
   include_once("common.php");
   include_once("config.php");
-
 					
   // We send email at the end of the testing
-  if($vals[1]["tag"] != "TESTING")
+	$testing = @$parser->index["TESTING"];
+  if($testing == "")
     {
-				return;
-				}
-		
-		// Check if we should send the email
+	  return;
+	  }
+			
+	// Check if we should send the email
   $project = mysql_query("SELECT name,emailbrokensubmission  FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
   if($project_array["emailbrokensubmission"] == 0)
-		  {
-				return;
-		  }
+		{
+		return;
+	  }
 
-  $name = $vals[0]["attributes"]["BUILDNAME"];
-  $stamp = $vals[0]["attributes"]["BUILDSTAMP"];
+  $site = $parse->index["SITE"];
+  $i = $site[0];
+  $name = $parse->vals[$i]["attributes"]["BUILDNAME"];
+  $stamp = $parse->vals[$i]["attributes"]["BUILDSTAMP"];
 		
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
@@ -98,10 +100,10 @@ function sendemail($vals,$projectid)
     $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
 				
-				add_log("previousbuildid=".$previousbuildid,"sendemail");
+		add_log("previousbuildid=".$previousbuildid,"sendemail");
     add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail");
-				add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
-				add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
+		add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
+		add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
 
     // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
     // we don't send any emails

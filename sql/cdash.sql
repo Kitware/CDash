@@ -141,8 +141,7 @@ CREATE TABLE `configure` (
   `command` text NOT NULL,
   `log` text NOT NULL,
   `status` tinyint(4) NOT NULL default '0',
-  UNIQUE KEY `buildid` (`buildid`),
-  KEY `buildid_2` (`buildid`)
+  KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -317,9 +316,23 @@ CREATE TABLE `project` (
 CREATE TABLE `site` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
+  `osname` varchar(255) NOT NULL,
+  `osrelease` varchar(255) NOT NULL,
+  `osversion` varchar(255) NOT NULL,
+  `osplatform` varchar(255) NOT NULL,
+  `processoris64bits` tinyint(4) NOT NULL default '0',
+  `processorvendor` varchar(255) NOT NULL,
+  `processorvendorid` varchar(255) NOT NULL,
+  `processorfamilyid` int(11) NOT NULL,
+  `processormodelid` int(11) NOT NULL,
+  `processorcachesize` int(11) NOT NULL,
+  `numberlogicalcpus` tinyint(4) NOT NULL,
+  `numberphysicalcpus` tinyint(4) NOT NULL,
+  `totalvirtualmemory` int(11) NOT NULL,
+  `totalphysicalmemory` int(11) NOT NULL,
+  `logicalprocessorsperphysical` int(11) NOT NULL default '1',
+  `processorclockfrequency` int(11) NOT NULL,
   `description` text NOT NULL,
-  `processor` varchar(255) NOT NULL default '',
-  `numprocessors` tinyint(4) NOT NULL default '0',
   `ip` varchar(255) NOT NULL default '',
   `latitude` varchar(10) NOT NULL default '',
   `longitude` varchar(10) NOT NULL default '',

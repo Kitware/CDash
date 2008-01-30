@@ -25,7 +25,7 @@ include("config.php");
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
-//$contents = file_get_contents("XMLTest/build2.xml");
+//$contents = file_get_contents("backup/test.xml");
 $contents = file_get_contents("php://input");
 
 $projectname = $_GET["project"];

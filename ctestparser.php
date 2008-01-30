@@ -17,39 +17,39 @@
 =========================================================================*/
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($vals,$projectid)
-{
-  if($vals[1]["tag"] == "BUILD")
+function ctest_parse($parser,$projectid)
+{ 
+  if($parser->index["BUILD"] != "")
     {
-    parse_build($vals,$projectid);
+    parse_build($parser,$projectid);
     }
-  else if($vals[1]["tag"] == "CONFIGURE")
+  else if($parser->index["CONFIGURE"] != "")
     {
-    parse_configure($vals,$projectid);
+    parse_configure($parser,$projectid);
     }
-  else if($vals[1]["tag"] == "TESTING")
+  else if($parser->index["TESTING"] != "")
     {
-    parse_testing($vals,$projectid);
+    parse_testing($parser,$projectid);
     }
-  else if($vals[0]["tag"] == "UPDATE")
+  else if($parser->index["UPDATE"] != "")
     {
-    parse_update($vals,$projectid);
+    parse_update($parser,$projectid);
     }  
-  else if($vals[1]["tag"] == "COVERAGE")
+  else if($parser->index["COVERAGE"] != "")
     {
-    parse_coverage($vals,$projectid);
+    parse_coverage($parser,$projectid);
     } 
-  else if($vals[1]["tag"] == "COVERAGELOG")
+  else if($parser->index["COVERAGELOG"] != "")
     {
-    parse_coveragelog($vals,$projectid);
+    parse_coveragelog($parser,$projectid);
     }
-  else if($vals[1]["tag"] == "NOTES")
+  else if($parser->index["NOTES"] != "")
     {
-    parse_note($vals,$projectid);
+    parse_note($parser,$projectid);
     }
-  else if($vals[1]["tag"] == "DYNAMICANALYSIS")
+  else if($parser->index["DYNAMICANALYSIS"] != "")
     {
-    parse_dynamicanalysis($vals,$projectid);
+    parse_dynamicanalysis($parser,$projectid);
     }
 }
 
@@ -143,14 +143,17 @@ function str_to_time($str,$stamp)
 
 
 /** Parse the build xml */
-function parse_build($xmlarray,$projectid)
+function parse_build($parser,$projectid)
 {   
-  $sitename = $xmlarray[0]["attributes"]["NAME"]; 
-  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
+  $xmlarray = $parser->vals;
+	
+	$site = $parser->index["SITE"];
+  $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
+  $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   // Extract the type from the buildstamp
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+  $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   $type = substr($stamp,strrpos($stamp,"-")+1);
-  $generator = $xmlarray[0]["attributes"]["GENERATOR"];
+  $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
   $starttime = getXMLValue($xmlarray,"STARTDATETIME","BUILD");
   
   // Convert the starttime to a timestamp
@@ -166,7 +169,7 @@ function parse_build($xmlarray,$projectid)
   mysql_select_db("$CDASH_DB_NAME",$db);
 
   // First we look at the site and add it if not in the list
-  $siteid = add_site($sitename);
+  $siteid = add_site($sitename,$parser);
       
   $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
   $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
@@ -230,20 +233,22 @@ function parse_build($xmlarray,$projectid)
     {
     if(array_key_exists("logline",$error))
       {
-      add_error($buildid,$error["type"],$error["logline"],$error["text"],$error["sourcefile"],$error["sourceline"],
+      add_error($buildid,$error["type"],$error["logline"],$error["text"],@$error["sourcefile"],@$error["sourceline"],
                 @$error["precontext"],@$error["postcontext"],$error["repeatcount"]);
       }
     }
 }
 
-function create_build($xmlarray,$projectid)
+function create_build($parser,$projectid)
 {
-  $sitename = $xmlarray[0]["attributes"]["NAME"]; 
-
+  $xmlarray = $parser->vals;
+	$site = $parser->index["SITE"];
+  $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
+ 
   // Extract the type from the buildstamp
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+  $stamp = $parser->vals[$site[0]]["BUILDSTAMP"];
   $type = substr($stamp,strrpos($stamp,"-")+1);
-  $generator = $xmlarray[0]["attributes"]["GENERATOR"];
+  $generator = $parser->vals[$site[0]]["GENERATOR"];
   $starttime = getXMLValue($xmlarray,"STARTDATETIME","COVERAGE");
     
   // Convert the starttime to a timestamp
@@ -257,7 +262,7 @@ function create_build($xmlarray,$projectid)
   mysql_select_db("$CDASH_DB_NAME",$db);
   
   // First we look at the site and add it if not in the list
-  $siteid = add_site($sitename);
+  $siteid = add_site($sitename,$parser);
        
   $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
   $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
@@ -269,11 +274,14 @@ function create_build($xmlarray,$projectid)
 }
 
 /** Parse the configure xml */
-function parse_configure($xmlarray,$projectid)
+function parse_configure($parser,$projectid)
 {
   include_once("common.php");
-  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+	
+	$xmlarray = $parser->vals;
+	$site = $parser->index["SITE"];	
+  $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+  $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
@@ -299,11 +307,14 @@ function parse_configure($xmlarray,$projectid)
 }
 
 /** Parse the testing xml */
-function parse_testing($xmlarray,$projectid)
+function parse_testing($parser,$projectid)
 {
   include_once("common.php");
-  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+
+  $xmlarray = $parser->vals;
+	$site = $parser->index["SITE"];	
+  $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+  $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
 
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
@@ -400,22 +411,23 @@ function parse_testing($xmlarray,$projectid)
 }
 
 /** Parse the coverage xml */
-function parse_coverage($xmlarray,$projectid)
+function parse_coverage($parser,$projectid)
 {
   include_once("common.php");
-  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+  $xmlarray = $parser->vals;
+	$site = $parser->index["SITE"];	
+  $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+  $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
-    $sitename = $xmlarray[0]["attributes"]["NAME"]; 
+    $sitename = $parser->vals[$site[0]]["attributes"]["attributes"]["NAME"]; 
 
     // Extract the type from the buildstamp
-    $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
     $type = substr($stamp,strrpos($stamp,"-")+1);
-    $generator = $xmlarray[0]["attributes"]["GENERATOR"];
+    $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
     $starttime = getXMLValue($xmlarray,"STARTDATETIME","COVERAGE");
     
     // Convert the starttime to a timestamp
@@ -429,7 +441,7 @@ function parse_coverage($xmlarray,$projectid)
     mysql_select_db("$CDASH_DB_NAME",$db);
   
     // First we look at the site and add it if not in the list
-    $siteid = add_site($sitename);
+    $siteid = add_site($sitename,$parser);
         
     $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
     $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
@@ -489,11 +501,13 @@ function parse_coverage($xmlarray,$projectid)
 }
 
 /** Parse the coveragelog xml */
-function parse_coveragelog($xmlarray,$projectid)
+function parse_coveragelog($parser,$projectid)
 {
   include_once("common.php");
-  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+  $xmlarray = $parser->vals;
+	$site = $parser->index["SITE"];	
+  $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+  $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
@@ -627,11 +641,13 @@ function parse_update($xmlarray,$projectid)
 }
 
 /** Parse the notes xml */
-function parse_note($xmlarray,$projectid)
+function parse_note($parser,$projectid)
 {
   include_once("common.php");
-  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
+  $xmlarray = $parser->vals;
+	$site = $parser->index["SITE"];	
+  $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+  $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
@@ -658,23 +674,26 @@ function parse_note($xmlarray,$projectid)
 }
 
 /** Parse the Dynamic Analysis xml */
-function parse_dynamicanalysis($xmlarray,$projectid)
+function parse_dynamicanalysis($parser,$projectid)
 {
   include_once("common.php");
-  $name = $xmlarray[0]["attributes"]["BUILDNAME"];
-  $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
-  $checker = $xmlarray[1]["attributes"]["CHECKER"];
+	
+	$xmlarray = $parser->vals;
+	$site = $parser->index["SITE"];	
+  $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+  $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
+	$dynamicanalysis  = $parser->index["DYNAMICANALYSIS"];	
+  $checker = $parser->vals[$dynamicanalysis[0]]["attributes"]["CHECKER"];
   
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
-    $sitename = $xmlarray[0]["attributes"]["NAME"]; 
+    $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
 
     // Extract the type from the buildstamp
-    $stamp = $xmlarray[0]["attributes"]["BUILDSTAMP"];
     $type = substr($stamp,strrpos($stamp,"-")+1);
-    $generator = $xmlarray[0]["attributes"]["GENERATOR"];
+    $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
     $starttime = getXMLValue($xmlarray,"STARTDATETIME","DYNAMICANALYSIS");
     
     // Convert the starttime to a timestamp
@@ -688,7 +707,7 @@ function parse_dynamicanalysis($xmlarray,$projectid)
     mysql_select_db("$CDASH_DB_NAME",$db);
   
     // First we look at the site and add it if not in the list
-    $siteid = add_site($sitename);
+    $siteid = add_site($sitename,$parser);
         
     $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
     $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);

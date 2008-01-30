@@ -2,6 +2,8 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     
        <xsl:include href="footer.xsl"/>
+			 <xsl:include href="headerback.xsl"/> 
+
  <!-- HEADER -->   
    <xsl:output method="html"/>
     <xsl:template match="/">
@@ -12,48 +14,29 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-        
-        <!-- Include CDash Menu Stylesheet -->    
-        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
-        
-        <!-- Include the rounding css -->
-        <script src="javascript/rounded.js"></script>
-        
        </head>
        <body bgcolor="#ffffff">
-   
-<table border="0" cellpadding="0" cellspacing="2" width="100%">
-<tr>
-<td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
-</td>
-<td valign="bottom" width="100%">
-<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">    
-<font color="#ffffff"><h2>CDash - Site Description </h2>
-<h3><xsl:value-of select="cdash/site/name"/></h3></font><br/>
-</div>
-</td></tr><tr><td></td><td>
-
-<!-- Menu -->
-<ul id="Nav" class="nav">
-  <li>
-     <a href="index.php">Home</a>
-   </li>
-</ul>
-
-</td>
-</tr>
-</table>
-
-<script type="text/javascript">
-  Rounded('rounded', 15, 15,0,0);
-</script>
-
+   		<xsl:call-template name="headerback"/>
 <br/>
 
-<!-- Main -->
-<b>Description:</b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if><xsl:value-of select="cdash/site/description"/><br/>       
-<b>Processor type:</b><xsl:if test="string-length(cdash/site/processor)=0"> NA</xsl:if><xsl:value-of select="cdash/site/processor"/><br/>    
-<b>Number of processor:</b><xsl:if test="string-length(cdash/site/numprocessors)=0"> NA</xsl:if><xsl:value-of select="cdash/site/numprocessors"/><br/>    
+<!-- Main -->									
+<b>OS Name:</b><xsl:if test="string-length(cdash/site/osname)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/osname"/><br/>   
+<b>OS Release:</b><xsl:if test="string-length(cdash/site/osrelease)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/osrelease"/><br/>     
+<b>OS Version:</b><xsl:if test="string-length(cdash/site/osversion)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/osversion"/><br/>    
+<b>OS Platform:</b><xsl:if test="string-length(cdash/site/osplatform)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/osplatform"/><br/>    
+<b>Processor Speed:</b><xsl:if test="string-length(cdash/site/processorclockfrequency)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>   
+<b>64 Bits:</b><xsl:if test="string-length(cdash/site/processoris64bits)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processoris64bits"/><br/>    
+<b>Processor Vendor:</b><xsl:if test="string-length(cdash/site/processorvendor)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendor"/><br/>    
+<b>Processor Vendor ID:</b><xsl:if test="string-length(cdash/site/processorvendorid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendorid"/><br/>    
+<b>Processor Family ID:</b><xsl:if test="string-length(cdash/site/processorfamilyid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorfamilyid"/><br/>    
+<b>Processor Cache Size:</b><xsl:if test="string-length(cdash/site/processorcachesize)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorcachesize"/><br/>    
+<b>Number of logical CPUs:</b><xsl:if test="string-length(cdash/site/numberlogicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberlogicalcpus"/><br/>    
+<b>Number of physical CPUs:</b><xsl:if test="string-length(cdash/site/numberphysicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberphysicalcpus"/><br/>    
+<b>Number of logical CPU per Physical CPUs:</b><xsl:if test="string-length(cdash/site/logicalprocessorsperphysical)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/logicalprocessorsperphysical"/><br/>   
+<b>Total Virtual Memory:</b><xsl:if test="string-length(cdash/site/totalvirtualmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalvirtualmemory"/><br/>    
+<b>Total Physical Memory:</b><xsl:if test="string-length(cdash/site/totalphysicalmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalphysicalmemory"/><br/>    
+<b>Description:</b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/description"/><br/>    
+
 <!-- Display the map -->
 <xsl:if test="string-length(cdash/site/ip)>0">  
   <b>IP address:</b><xsl:value-of select="cdash/site/ip"/><br/>

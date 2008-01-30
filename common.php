@@ -125,9 +125,9 @@ function add_XML_value($tag,$value)
 /** add information to the log file */
 function add_log($text,$function)
 {
-  $logfile = "/var/tmp/cdash.log";
+  include("config.php");
   $error = "[".date("Y-m-d H:i:s")."] (".$function."): ".$text."\n";  
-  error_log($error,3,$logfile);
+  error_log($error,3,$CDASH_LOG_FILE);
 }
 
 /** Clean the backup directory */
@@ -148,46 +148,51 @@ function parse_XML($contents)
 {
   $p = xml_parser_create();
   xml_parse_into_struct($p, $contents, $vals, $index);
+  
+  // create a parse struct with vals and index in it
+  $parse->vals = $vals;
+  $parse->index = $index;
+  
   xml_parser_free($p);
-  return $vals;
+  return $parse;
 }
 
 /** Backup an XML file */
-function backup_xml_file($vals,$contents,$projectid)
+function backup_xml_file($parser,$contents,$projectid)
 {
   include("config.php");
  		
   clean_backup_directory(); // should probably be run as a cronjob
  
-  if(@$vals[1]["tag"] == "BUILD")
+  if($parser->index["BUILD"] != "")
     {
     $file = "Build.xml";
     }
-  else if(@$vals[1]["tag"] == "CONFIGURE")
+  else if($parser->index["CONFIGURE"] != "")
     {
     $file = "Configure.xml";
     }
-  else if(@$vals[1]["tag"] == "TESTING")
+  else if($parser->index["TESTING"] != "")
     {
     $file = "Test.xml";
     }
-  else if(@$vals[0]["tag"] == "UPDATE")
+  else if($parser->index["UPDATE"] != "")
     {
     $file = "Update.xml";
     }  
-  else if($vals[1]["tag"] == "COVERAGE")
+  else if($parser->index["COVERAGE"] != "")
     {
     $file = "Coverage.xml";
-    }
-  else if(@$vals[1]["tag"] == "COVERAGELOG")
+    } 
+  else if($parser->index["COVERAGELOG"] != "")
     {
     $file = "CoverageLog.xml";
-    }   
-  else if(@$vals[1]["tag"] == "NOTES")
+    }
+  else if($parser->index["NOTES"] != "")
     {
     $file = "Notes.xml";
     }
-  else if(@$vals[1]["tag"] == "DYNAMICANALYSIS")
+  else if($parser->index["DYNAMICANALYSIS"] != "")
     {
     $file = "DynamicAnalysis.xml";
     } 
@@ -196,19 +201,21 @@ function backup_xml_file($vals,$contents,$projectid)
     $file = "Other.xml";
     }
 		
-		// For some reasons the update.xml has a different format
-		if(@$vals[0]["tag"] == "UPDATE")
-		  {
-				$sitename = getXMLValue($vals,"SITE","UPDATE");
-				$name = getXMLValue($vals,"BUILDNAME","UPDATE");
+  // For some reasons the update.xml has a different format
+	if(@$parser->index["UPDATE"] != "")
+		{
+		$vals = $parser->vals;
+		$sitename = getXMLValue($vals,"SITE","UPDATE");
+		$name = getXMLValue($vals,"BUILDNAME","UPDATE");
     $stamp = getXMLValue($vals,"BUILDSTAMP","UPDATE");
-		  }
+		}
   else
-	 		{
-    $sitename = $vals[0]["attributes"]["NAME"]; 
-    $name = $vals[0]["attributes"]["BUILDNAME"];
-    $stamp = $vals[0]["attributes"]["BUILDSTAMP"];
-				}
+	 	 {
+		 $site = $parser->index["SITE"];
+     $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
+     $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+     $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
+		 }
  
   $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_".$file;
     
@@ -258,11 +265,6 @@ function get_projects()
     $buildquery_array = mysql_fetch_array($buildquery); 
     $project['nbuilds'] = $buildquery_array[0];
     
-    /*$testquery = mysql_query("SELECT count(t.id) FROM test AS t,build AS b WHERE b.projectid='$projectid' AND t.buildid=b.id");
-    //$testquery = mysql_query("SELECT count(id) FROM test WHERE buildid IN (SELECT id FROM build WHERE projectid='$projectid')");
-    $testquery_array = mysql_fetch_array($testquery); 
-    $project['ntests'] = $testquery_array[0];*/
-     
     $projects[] = $project; 
     }
     
@@ -539,15 +541,46 @@ function remove_site2user($siteid,$userid)
 }
 
 /** Update a site */
-function update_site($siteid, $name,$description,$processor,$numprocessors,$ip,$latitude,$longitude)
+function update_site($siteid,$name,
+										 $osname,
+										 $osrelease,
+										 $osversion,
+										 $osplatform,
+										 $processoris64bits,
+										 $processorvendor,
+										 $processorvendorid,
+										 $processorfamilyid,
+										 $processormodelid,
+										 $processorcachesize,
+										 $numberlogicalcpus,
+										 $numberphysicalcpus,
+										 $totalvirtualmemory,
+										 $totalphysicalmemory,
+										 $logicalprocessorsperphysical,
+										 $processorclockfrequency,
+										 $description,$ip,$latitude,$longitude)
 {  
   mysql_query ("UPDATE site SET name='$name',
-                                description='$description',
-                                processor='$processor',
-                                numprocessors='$numprocessors',
-                                ip='$ip',
-                                latitude='$latitude',
-                                longitude='$longitude' WHERE id='$siteid'");
+										 osname='$osname',
+										 osrelease='$osrelease',
+										 osversion='$osversion',
+										 osplatform='$osplatform',
+										 processoris64bits='$processoris64bits',
+										 processorvendor='$processorvendor',
+										 processorvendorid='$processorvendorid',
+										 processorfamilyid='$processorfamilyid',
+										 processormodelid='$processormodelid',
+										 processorcachesize='$processorcachesize',
+										 numberlogicalcpus='$numberlogicalcpus',
+										 numberphysicalcpus='$numberphysicalcpus',
+										 totalvirtualmemory='$totalvirtualmemory',
+										 totalphysicalmemory='$totalphysicalmemory',
+										 logicalprocessorsperphysical='$logicalprocessorsperphysical',
+										 processorclockfrequency='$processorclockfrequency',
+	                   description='$description',
+                     ip='$ip',
+                     latitude='$latitude',
+                     longitude='$longitude' WHERE id='$siteid'");
   echo mysql_error();  
 }      
 
@@ -607,7 +640,7 @@ function get_geolocation($ip)
 } 
 
 /** Create a site */
-function add_site($name,$description="",$processor="",$numprocessors="1")
+function add_site($name,$parser)
 {
   include("config.php");
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
@@ -620,18 +653,74 @@ function add_site($name,$description="",$processor="",$numprocessors="1")
     $site_array = mysql_fetch_array($site);
     return $site_array["id"];
     }
-  
+	
   // If not found we create the site
   // We retrieve the geolocation from the IP address
   $ip = $_SERVER['REMOTE_ADDR'];
-		$location = get_geolocation($ip);
+	$location = get_geolocation($ip);
   
   $latitude = $location['latitude'];
   $longitude = $location['longitude'];  
 
-  mysql_query ("INSERT INTO site (name,description,processor,numprocessors,ip,latitude,longitude) 
-                          VALUES ('$name','$description','$processor','$numprocessors','$ip','$latitude','$longitude')");
-  echo mysql_error();  
+  // Find other information from the parser
+  $site = $parser->index["SITE"];
+	@$osname=$parser->vals[$site[0]]["attributes"]["OSNAME"]; 
+	@$osrelease=$parser->vals[$site[0]]["attributes"]["OSRELEASE"]; 
+	@$osversion=$parser->vals[$site[0]]["attributes"]["OSVERSION"]; 
+	@$osplatform=$parser->vals[$site[0]]["attributes"]["OSPLATFORM"]; 
+	@$processoris64bits=$parser->vals[$site[0]]["attributes"]["IS64BITS"]; 
+	@$processorvendor=$parser->vals[$site[0]]["attributes"]["VENDORSTRING"]; 
+	@$processorvendorid=$parser->vals[$site[0]]["attributes"]["VENDORID"]; 
+	@$processorfamilyid=$parser->vals[$site[0]]["attributes"]["FAMILYID"]; 
+	@$processormodelid=$parser->vals[$site[0]]["attributes"]["MODELID"]; 
+	@$processorcachesize=$parser->vals[$site[0]]["attributes"]["PROCESSORCACHESIZE"]; 
+	@$numberlogicalcpus=$parser->vals[$site[0]]["attributes"]["NUMBEROFLOGICALCPU"]; 
+	@$numberphysicalcpus=$parser->vals[$site[0]]["attributes"]["NUMBEROFPHYSICALCPU"]; 
+	@$totalvirtualmemory=$parser->vals[$site[0]]["attributes"]["TOTALVIRTUALMEMORY"]; 
+	@$totalphysicalmemory=$parser->vals[$site[0]]["attributes"]["TOTALPHYSICALMEMORY"]; 
+	@$logicalprocessorsperphysical=$parser->vals[$site[0]]["attributes"]["LOGICALPROCESSORSPERPHYSICAL"]; 
+	@$processorclockfrequency=$parser->vals[$site[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
+  $description="";
+
+  if(!mysql_query ("INSERT INTO site (name,
+	 									 osname,
+										 osrelease,
+										 osversion,
+										 osplatform,
+										 processoris64bits,
+										 processorvendor,
+										 processorvendorid,
+										 processorfamilyid,
+										 processormodelid,
+										 processorcachesize,
+										 numberlogicalcpus,
+										 numberphysicalcpus,
+										 totalvirtualmemory,
+										 totalphysicalmemory,
+										 logicalprocessorsperphysical,
+										 processorclockfrequency,
+	                   description,ip,latitude,longitude) 
+                 VALUES ('$name',
+								 				'$osname',
+												'$osrelease',
+												'$osversion',
+												'$osplatform',
+												'$processoris64bits',
+												'$processorvendor',
+												'$processorvendorid',
+												'$processorfamilyid',
+												'$processormodelid',
+												'$processorcachesize',
+												'$numberlogicalcpus',
+												'$numberphysicalcpus',
+												'$totalvirtualmemory',
+												'$totalphysicalmemory',
+												'$logicalprocessorsperphysical',
+												'$processorclockfrequency',
+								        '$description','$ip','$latitude','$longitude')"))
+		{
+    echo "add_site = ".mysql_error();  
+	  }
   return mysql_insert_id();
 }
 
@@ -937,7 +1026,7 @@ function get_dates($date,$nightlytime)
     $date = gmdate("Ymd");
     $currenttime = time();
     $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
-    }
+	}
    else
     {
     $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));

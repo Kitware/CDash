@@ -2,7 +2,8 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-    
+   			 <xsl:include href="headerback.xsl"/> 
+ 
     <xsl:output method="html"/>
     <xsl:template match="/">
       <html>
@@ -12,39 +13,9 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-        
-        <!-- Include CDash Menu Stylesheet -->    
-        <link rel="stylesheet" href="javascript/cdashmenu.css" type="text/css" media="screen" charset="utf-8" />
-  
-        <!-- Include the rounding css -->
-        <script src="javascript/rounded.js"></script>
-
-       </head>
+            </head>
        <body bgcolor="#ffffff">
-
-<table border="0" cellpadding="0" cellspacing="2" width="100%">
-<tr>
-<td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
-</td>
-<td valign="bottom" width="100%">
-<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">  
-<font color="#ffffff"><h2>CDash - Site Management</h2>
-<h3>Managing sites you maintain</h3></font>
-<br/></div>
-</td>
-</tr>
-<tr>
-<td></td><td>
-<!-- Menu -->
-<ul id="Nav" class="nav">
-  <li>
-     <a href="user.php">Back</a>
-  </li>
-</ul>
-</td>
-</tr>
-</table>
-
+   		<xsl:call-template name="headerback"/>
 <br/>
 
 <xsl:if test="string-length(cdash/warning)>0">
@@ -62,7 +33,7 @@
   </tr>
   <tr>
     <td width="98"></td>
-    <td bgcolor="#CCCCCC"><strong>List of claimed sites for <xsl:value-of select="cdash/project/name"/></strong></td>
+    <td bgcolor="#CCCCCC"><strong>List of current sites for <xsl:value-of select="cdash/project/name"/></strong></td>
   </tr>
 		<xsl:for-each select="cdash/site">
    <tr>
@@ -128,11 +99,6 @@
 <form name="form1" enctype="multipart/form-data" method="post" action="">
 <table width="100%" border="0">
   <tr>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td width="98"></td>
     <td bgcolor="#CCCCCC"><strong>Site specifications for <xsl:value-of select="cdash/user/site/name"/></strong></td>
   </tr>
 		 <tr>
@@ -140,36 +106,119 @@
     <td bgcolor="#FFFFFF"></td>
   </tr>	
 		<tr>
-    <td></td>
     <td bgcolor="#EEEEEE"><strong>Name:</strong> <input name="site_name" type="text" size="20">
 				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/name"/></xsl:attribute>
 				</input>
 				<strong> (Make sure the name of the build matches CTest buildname otherwise a new site will be created)</strong>
 				</td>
   </tr>
+		
+	<tr>
+    <td bgcolor="#EEEEEE"><strong>OS Name:</strong> <input name="site_osname" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/osname"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+	
+	<tr>
+    <td bgcolor="#EEEEEE"><strong>OS Release:</strong> <input name="site_osrelease" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/osrelease"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+	
+	<tr>
+    <td bgcolor="#EEEEEE"><strong>OS Version:</strong> <input name="site_osversion" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/osversion"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+	<tr>
+    <td bgcolor="#EEEEEE"><strong>OS Platform:</strong> <input name="site_osplatform" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/osplatform"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+	<tr>
+    <td bgcolor="#EEEEEE"><strong>64 bits:</strong> <input name="site_processoris64bits" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processoris64bits"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
 		<tr>
-    <td></td>
+    <td bgcolor="#EEEEEE"><strong>Processor vendor:</strong> <input name="site_processorvendor" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processorvendor"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+		<tr>
+    <td bgcolor="#EEEEEE"><strong>Processor vendor ID:</strong> <input name="site_processorvendorid" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processorvendorid"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+		<tr>
+    <td bgcolor="#EEEEEE"><strong>Processor family ID:</strong> <input name="site_processorfamilyid" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processorfamilyid"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+		<tr>
+    <td bgcolor="#EEEEEE"><strong>Processor model ID:</strong> <input name="site_processormodelid" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processormodelid"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+
+		<tr>
+    <td bgcolor="#EEEEEE"><strong>Processor cache size:</strong> <input name="site_processorcachesize" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processorcachesize"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+				<tr>
+    <td bgcolor="#EEEEEE"><strong>CPU Speed (MHz):</strong> <input name="site_processorclockfrequency" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processorclockfrequency"/></xsl:attribute>
+				</input>
+				</td>
+   </tr>
+		<tr>
+    <td bgcolor="#EEEEEE"><strong>Number of logical CPUs:</strong> <input name="site_numberlogicalcpus" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/numberlogicalcpus"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+		<tr>
+    <td bgcolor="#EEEEEE"><strong>Number of physical CPUs:</strong> <input name="site_numberphysicalcpus" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/numberphysicalcpus"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+	<tr>
+    <td bgcolor="#EEEEEE"><strong>Logical Processor per Physical:</strong> <input name="site_logicalprocessorsperphysical" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/logicalprocessorsperphysical"/></xsl:attribute>
+				</input>
+				</td>
+   </tr>
+			<tr>
+    <td bgcolor="#EEEEEE"><strong>Total virtual memory (MB):</strong> <input name="site_totalvirtualmemory" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/totalvirtualmemory"/></xsl:attribute>
+				</input>
+				</td>
+  </tr>
+				<tr>
+    <td bgcolor="#EEEEEE"><strong>Total physical memory (MB):</strong> <input name="site_totalphysicalmemory" type="text" size="50">
+				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/totalphysicalmemory"/></xsl:attribute>
+				</input>
+				</td>
+   </tr>
+	<tr>
     <td bgcolor="#EEEEEE"><strong>Description:</strong> <input name="site_description" type="text" size="50">
 				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/description"/></xsl:attribute>
 				</input>
 				</td>
   </tr>
 	 <tr>
-    <td></td>
-    <td bgcolor="#EEEEEE"><strong>Processor Type:</strong> <input name="site_processor" type="text" size="30">
-				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processor"/></xsl:attribute>
-				</input>
-				</td>
-  </tr>
-		 <tr>
-    <td></td>
-    <td bgcolor="#EEEEEE"><strong>Number of processors:</strong> <input name="site_nprocessors" type="text" size="2">
-				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/nprocessors"/></xsl:attribute>
-				</input>
-				</td>
-  </tr>
-	 <tr>
-    <td></td>
     <td bgcolor="#EEEEEE"><strong>IP address:</strong> <input name="site_ip" type="text" size="30">
 				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/ip"/></xsl:attribute>
 				<input type="submit" name="geolocation" value="Retrieve geolocation"/>
@@ -177,21 +226,18 @@
 				</td>
   </tr>	
 		 <tr>
-    <td></td>
     <td bgcolor="#EEEEEE"><strong>Latitude:</strong> <input name="site_latitude" type="text" size="30">
 				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/latitude"/></xsl:attribute>
 				</input>
 				</td>
   </tr>
 			 <tr>
-    <td></td>
     <td bgcolor="#EEEEEE"><strong>Longitude:</strong> <input name="site_longitude" type="text" size="30">
 				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/longitude"/></xsl:attribute>
 				</input>
 				</td>
   </tr>	
 		<tr>
-    <td></td>
 				<td bgcolor="#FFFFFF">
 				 <input type="hidden" name="claimsiteid"><xsl:attribute name="value"><xsl:value-of select="cdash/user/site/id"/></xsl:attribute></input>
 				 <input type="submit" name="updatesite" value="Update Site"/>
@@ -201,14 +247,8 @@
 </form>
 </xsl:if>
 
-
-
 <br/>
 
-<!-- Rounding script -->
-<script type="text/javascript">
-  Rounded('rounded', 15, 15,0,0);
-</script>
 
 <!-- FOOTER -->
 <br/>

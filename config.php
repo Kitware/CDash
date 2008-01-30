@@ -31,6 +31,8 @@ $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory
 $CDASH_BACKUP_DIRECTORY = 'backup';
+// LOG FILE
+$CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
 // Backup timeframe
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Google Map API

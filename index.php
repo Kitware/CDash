@@ -160,7 +160,7 @@ function generate_main_dashboard_XML($projectid,$date)
   // Local function to add expected builds
   function add_expected_builds($groupid,$currenttime,$received_builds,$rowparity)
     {
-        $currentUTCTime =  gmdate("YmdHis",$currenttime);
+    $currentUTCTime =  gmdate("YmdHis",$currenttime);
     $xml = "";
     $build2grouprule = mysql_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
                                     WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
@@ -204,7 +204,7 @@ function generate_main_dashboard_XML($projectid,$date)
     
   // Check the builds
   // Beginning timestamp is the previous nightly
-    $nightlytime = strtotime($project_array["nightlytime"]);
+  $nightlytime = strtotime($project_array["nightlytime"]);
     
   $nightlyhour = gmdate("H",$nightlytime);
   $nightlyminute = gmdate("i",$nightlytime);
@@ -236,8 +236,8 @@ function generate_main_dashboard_XML($projectid,$date)
   
   $received_builds = array();
   $rowparity = 0;
-	 $dynanalysisrowparity = 0;
-		$coveragerowparity = 0;
+  $dynanalysisrowparity = 0;
+  $coveragerowparity = 0;
   
   while($build_array = mysql_fetch_array($builds))
     {
