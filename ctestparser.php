@@ -89,8 +89,14 @@ function str_to_time($str,$stamp)
   $str = str_replace("Eastern Standard Time","EST",$str);
   $str = str_replace("Eastern Daylight Time","EDT",$str);
   
-  // For some reasons the Australian time is not recognized by php
-    $str = str_replace("AEDT","EAST",$str);
+	// For some reasons the Australian time is not recognized by php
+  // Actually an open bug in PHP 5.
+	$offset = 0; // no offset by default
+  if(strpos($str,"AEDT") !== FALSE)
+	  {
+	  $str = str_replace("AEDT","UTC",$str);
+		$offset = 3600*11;
+		}
 		
 		// The year is always at the end of the string if it exists (from CTest)
 		$stampyear = substr($stamp,0,4);
@@ -138,7 +144,7 @@ function str_to_time($str,$stamp)
       }
     }	
 		
-  return strtotime($str);
+  return strtotime($str)-$offset;
 }
 
 
