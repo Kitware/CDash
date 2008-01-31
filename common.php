@@ -218,7 +218,15 @@ function backup_xml_file($parser,$contents,$projectid)
 		 }
  
   $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_".$file;
-    
+  
+	// If the file is other we append a number until we get a non existing file
+	$i=1;
+	while($file=="Other.xml" && file_exists($filename))
+		{
+		$filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_Other.".$i.".xml";
+		$i++;
+		}
+		
   if (!$handle = fopen($filename, 'w')) 
     {
     echo "Cannot open file ($filename)";
