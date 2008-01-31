@@ -558,40 +558,42 @@ function parse_coveragelog($parser,$projectid)
 }
 
 /** Parse the update xml */
-function parse_update($xmlarray,$projectid)
+function parse_update($parser,$projectid)
 {
-    include_once("common.php");
+  include_once("common.php");
 
-    $buildname = getXMLValue($xmlarray,"BUILDNAME","UPDATE");
-    $stamp = getXMLValue($xmlarray,"BUILDSTAMP","UPDATE");
+	$xmlarray = $parser->vals;
+
+  $buildname = getXMLValue($xmlarray,"BUILDNAME","UPDATE");
+  $stamp = getXMLValue($xmlarray,"BUILDSTAMP","UPDATE");
      
-    // Find the build id
-    $buildid = get_build_id($buildname,$stamp,$projectid);
-    if($buildid<0)
-      {
-      return;
-      }
+  // Find the build id
+  $buildid = get_build_id($buildname,$stamp,$projectid);
+  if($buildid<0)
+    {
+    return;
+    }
     
-    $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
-    $starttimestamp = str_to_time($starttime,$stamp);
-    $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","UPDATE");
-    $endtimestamp = $starttimestamp+$elapsedminutes*60;
-    $command = getXMLValue($xmlarray,"UPDATECOMMAND","UPDATE");
-    $type = getXMLValue($xmlarray,"UPDATETYPE","UPDATE");
+  $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
+  $starttimestamp = str_to_time($starttime,$stamp);
+  $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","UPDATE");
+  $endtimestamp = $starttimestamp+$elapsedminutes*60;
+  $command = getXMLValue($xmlarray,"UPDATECOMMAND","UPDATE");
+  $type = getXMLValue($xmlarray,"UPDATETYPE","UPDATE");
     
-    $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
-    $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
+  $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
+  $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
 
-    add_update($buildid,$start_time,$end_time,$command,$type);
+  add_update($buildid,$start_time,$end_time,$command,$type);
     
-    $files_array = array();
-    $index = 0;
-    $inupdate = 0;
+  $files_array = array();
+  $index = 0;
+  $inupdate = 0;
 				
-    foreach($xmlarray as $tagarray)
-      {
-      if(!$inupdate && (($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING"))&& ($tagarray["level"] == 3))
-								{
+  foreach($xmlarray as $tagarray)
+    {
+    if(!$inupdate && (($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING"))&& ($tagarray["level"] == 3))
+				{
 								$index++;
 								$inupdate = 1;
 								}
