@@ -147,7 +147,10 @@ function clean_backup_directory()
 function parse_XML($contents)
 {
   $p = xml_parser_create();
-  xml_parse_into_struct($p, $contents, $vals, $index);
+  if(!xml_parse_into_struct($p, $contents, $vals, $index))
+	  {
+		add_log("Cannot parse XML".xml_error_string(xml_get_error_code($p)),"parse_XML");
+	  }
   
   // create a parse struct with vals and index in it
   $parse->vals = $vals;
@@ -164,35 +167,35 @@ function backup_xml_file($parser,$contents,$projectid)
  		
   clean_backup_directory(); // should probably be run as a cronjob
  
-  if($parser->index["BUILD"] != "")
+  if(@$parser->index["BUILD"] != "")
     {
     $file = "Build.xml";
     }
-  else if($parser->index["CONFIGURE"] != "")
+  else if(@$parser->index["CONFIGURE"] != "")
     {
     $file = "Configure.xml";
     }
-  else if($parser->index["TESTING"] != "")
+  else if(@$parser->index["TESTING"] != "")
     {
     $file = "Test.xml";
     }
-  else if($parser->index["UPDATE"] != "")
+  else if(@$parser->index["UPDATE"] != "")
     {
     $file = "Update.xml";
     }  
-  else if($parser->index["COVERAGE"] != "")
+  else if(@$parser->index["COVERAGE"] != "")
     {
     $file = "Coverage.xml";
     } 
-  else if($parser->index["COVERAGELOG"] != "")
+  else if(@$parser->index["COVERAGELOG"] != "")
     {
     $file = "CoverageLog.xml";
     }
-  else if($parser->index["NOTES"] != "")
+  else if(@$parser->index["NOTES"] != "")
     {
     $file = "Notes.xml";
     }
-  else if($parser->index["DYNAMICANALYSIS"] != "")
+  else if(@$parser->index["DYNAMICANALYSIS"] != "")
     {
     $file = "DynamicAnalysis.xml";
     } 

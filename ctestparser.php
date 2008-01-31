@@ -19,35 +19,35 @@
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($parser,$projectid)
 { 
-  if($parser->index["BUILD"] != "")
+  if(@$parser->index["BUILD"] != "")
     {
     parse_build($parser,$projectid);
     }
-  else if($parser->index["CONFIGURE"] != "")
+  else if(@$parser->index["CONFIGURE"] != "")
     {
     parse_configure($parser,$projectid);
     }
-  else if($parser->index["TESTING"] != "")
+  else if(@$parser->index["TESTING"] != "")
     {
     parse_testing($parser,$projectid);
     }
-  else if($parser->index["UPDATE"] != "")
+  else if(@$parser->index["UPDATE"] != "")
     {
     parse_update($parser,$projectid);
     }  
-  else if($parser->index["COVERAGE"] != "")
+  else if(@$parser->index["COVERAGE"] != "")
     {
     parse_coverage($parser,$projectid);
     } 
-  else if($parser->index["COVERAGELOG"] != "")
+  else if(@$parser->index["COVERAGELOG"] != "")
     {
     parse_coveragelog($parser,$projectid);
     }
-  else if($parser->index["NOTES"] != "")
+  else if(@$parser->index["NOTES"] != "")
     {
     parse_note($parser,$projectid);
     }
-  else if($parser->index["DYNAMICANALYSIS"] != "")
+  else if(@$parser->index["DYNAMICANALYSIS"] != "")
     {
     parse_dynamicanalysis($parser,$projectid);
     }
