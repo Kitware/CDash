@@ -206,7 +206,8 @@
     <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">[Manage project roles]</a></td></tr>	
     <tr class="treven"><td id="nob"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr>	
     <tr class="trodd"><td id="nob"><a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="import.php">[Import Dart1 Files]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a></td></tr>
+		<tr class="trodd"><td id="nob"><a href="import.php">[Import Dart1 Files]</a></td></tr>
   </tbody>
 		</table>
 </xsl:if>
