@@ -592,16 +592,22 @@ function update_site($siteid,$name,
 	$query = mysql_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
 	if(mysql_num_rows($query)==0)
 	  {
+		$noinformation = 1;
 	  foreach($names as $name)
 		  {
   	  if($$name!="NA" && strlen($$name)>0)
 		    {
 			  $nonewrevision = false;
 				$newrevision2 = true;
-			  break;
+			  $noinformation = 0;
+				break;
 		    }
-		 }
-	 }
+		  }
+		if($noinformation)
+		  {
+		  return; // we have nothing to add
+			}
+	  }
 	else
 	  {
 		$query_array = mysql_fetch_array($query);
@@ -728,18 +734,20 @@ function add_site($name,$parser)
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
 
-	@$processoris64bits=$parser->vals[$site[0]]["attributes"]["IS64BITS"];
-	@$processorvendor=$parser->vals[$site[0]]["attributes"]["VENDORSTRING"]; 
-	@$processorvendorid=$parser->vals[$site[0]]["attributes"]["VENDORID"]; 
-	@$processorfamilyid=$parser->vals[$site[0]]["attributes"]["FAMILYID"]; 
-	@$processormodelid=$parser->vals[$site[0]]["attributes"]["MODELID"]; 
-	@$processorcachesize=$parser->vals[$site[0]]["attributes"]["PROCESSORCACHESIZE"]; 
-	@$numberlogicalcpus=$parser->vals[$site[0]]["attributes"]["NUMBEROFLOGICALCPU"]; 
-	@$numberphysicalcpus=$parser->vals[$site[0]]["attributes"]["NUMBEROFPHYSICALCPU"]; 
-	@$totalvirtualmemory=$parser->vals[$site[0]]["attributes"]["TOTALVIRTUALMEMORY"]; 
-	@$totalphysicalmemory=$parser->vals[$site[0]]["attributes"]["TOTALPHYSICALMEMORY"]; 
-	@$logicalprocessorsperphysical=$parser->vals[$site[0]]["attributes"]["LOGICALPROCESSORSPERPHYSICAL"]; 
-	@$processorclockfrequency=$parser->vals[$site[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
+	$siteindex = $parser->index["SITE"];
+	@$processoris64bits=$parser->vals[$siteindex[0]]["attributes"]["IS64BITS"];
+	@$processorvendor=$parser->vals[$siteindex[0]]["attributes"]["VENDORSTRING"]; 
+	@$processorvendorid=$parser->vals[$siteindex[0]]["attributes"]["VENDORID"]; 
+	@$processorfamilyid=$parser->vals[$siteindex[0]]["attributes"]["FAMILYID"]; 
+	@$processormodelid=$parser->vals[$siteindex[0]]["attributes"]["MODELID"]; 
+	@$processorcachesize=$parser->vals[$siteindex[0]]["attributes"]["PROCESSORCACHESIZE"]; 
+	@$numberlogicalcpus=$parser->vals[$siteindex[0]]["attributes"]["NUMBEROFLOGICALCPU"]; 
+	@$numberphysicalcpus=$parser->vals[$siteindex[0]]["attributes"]["NUMBEROFPHYSICALCPU"]; 
+	@$totalvirtualmemory=$parser->vals[$siteindex[0]]["attributes"]["TOTALVIRTUALMEMORY"]; 
+	@$totalphysicalmemory=$parser->vals[$siteindex[0]]["attributes"]["TOTALPHYSICALMEMORY"]; 
+	@$logicalprocessorsperphysical=$parser->vals[$siteindex[0]]["attributes"]["LOGICALPROCESSORSPERPHYSICAL"]; 
+	@$processorclockfrequency=$parser->vals[$siteindex[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
+	$description="";
 	$ip = $_SERVER['REMOTE_ADDR'];
 	
   // Check if we already have the site registered
@@ -766,7 +774,7 @@ function add_site($name,$parser)
 								$totalphysicalmemory,
 								$logicalprocessorsperphysical,
 								$processorclockfrequency,
-								"",$ip,$latitude,$longitude,false);
+								$description,$ip,$latitude,$longitude,false);
 
     return $siteid;
     }
@@ -777,21 +785,6 @@ function add_site($name,$parser)
   
   $latitude = $location['latitude'];
   $longitude = $location['longitude'];  
-
-  // Find other information from the parser
-	@$processoris64bits=$parser->vals[$site[0]]["attributes"]["IS64BITS"]; 
-	@$processorvendor=$parser->vals[$site[0]]["attributes"]["VENDORSTRING"]; 
-	@$processorvendorid=$parser->vals[$site[0]]["attributes"]["VENDORID"]; 
-	@$processorfamilyid=$parser->vals[$site[0]]["attributes"]["FAMILYID"]; 
-	@$processormodelid=$parser->vals[$site[0]]["attributes"]["MODELID"]; 
-	@$processorcachesize=$parser->vals[$site[0]]["attributes"]["PROCESSORCACHESIZE"]; 
-	@$numberlogicalcpus=$parser->vals[$site[0]]["attributes"]["NUMBEROFLOGICALCPU"]; 
-	@$numberphysicalcpus=$parser->vals[$site[0]]["attributes"]["NUMBEROFPHYSICALCPU"]; 
-	@$totalvirtualmemory=$parser->vals[$site[0]]["attributes"]["TOTALVIRTUALMEMORY"]; 
-	@$totalphysicalmemory=$parser->vals[$site[0]]["attributes"]["TOTALPHYSICALMEMORY"]; 
-	@$logicalprocessorsperphysical=$parser->vals[$site[0]]["attributes"]["LOGICALPROCESSORSPERPHYSICAL"]; 
-	@$processorclockfrequency=$parser->vals[$site[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
-  $description="";
 
   if(!mysql_query ("INSERT INTO site (name,ip,latitude,longitude) 
                     VALUES ('$name','$ip','$latitude','$longitude')"))

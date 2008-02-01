@@ -181,7 +181,8 @@ function parse_build($parser,$projectid)
   $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
   $submit_time = gmdate("Y-m-d H:i:s");
   
-  $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,$command,$log);
+  $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,
+	                     $start_time,$end_time,$submit_time,$command,$log,$parser);
   
   // Add the warnings
   $error_array = array();
