@@ -56,10 +56,16 @@
     function load() {
       if (GBrowserIsCompatible()) {
         var map = new GMap2(document.getElementById("map"));
+				<xsl:if test="string-length(cdash/site/latitude)>0">
         map.setCenter(new GLatLng(<xsl:value-of select="cdash/site/latitude"/>,<xsl:value-of select="cdash/site/longitude"/>),5);
         map.addControl(new GLargeMapControl());
         var point = new GLatLng(<xsl:value-of select="cdash/site/latitude"/>,<xsl:value-of select="cdash/site/longitude"/>);
         map.addOverlay(createMarker(point,'<xsl:value-of select="cdash/site/name"/>'));
+				</xsl:if>
+				<!-- if no geolocation found -->
+				<xsl:if test="string-length(cdash/site/latitude)=0">
+			  map.setCenter(new GLatLng(0,0),1);
+				</xsl:if>
       }
     }
     </script>
