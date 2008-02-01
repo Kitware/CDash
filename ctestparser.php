@@ -341,7 +341,7 @@ function parse_testing($parser,$projectid)
   foreach($xmlarray as $tagarray)
     {
     $key = $tagarray["tag"];
-    $val = $tagarray["value"];
+    @$val = $tagarray["value"];
     if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]["STATUS"]))
       {
       $index++;

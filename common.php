@@ -951,9 +951,8 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   $command = addslashes($command);
   $output = addslashes($output);
 		
-		$buffer = $name.$path.$command.$output.details;
-		
-		$crc32 = crc32($buffer);
+  $buffer = $name.$path.$command.$output.$details;	
+  $crc32 = crc32($buffer);
   
   // Check if the test doesn't exist
   $test = mysql_query("SELECT id FROM test WHERE crc32='$crc32' LIMIT 1");
