@@ -20,10 +20,6 @@
 <br/>
 
 <!-- Main -->									
-<b>OS Name:</b><xsl:if test="string-length(cdash/site/osname)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/osname"/><br/>   
-<b>OS Release:</b><xsl:if test="string-length(cdash/site/osrelease)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/osrelease"/><br/>     
-<b>OS Version:</b><xsl:if test="string-length(cdash/site/osversion)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/osversion"/><br/>    
-<b>OS Platform:</b><xsl:if test="string-length(cdash/site/osplatform)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/osplatform"/><br/>    
 <b>Processor Speed:</b><xsl:if test="string-length(cdash/site/processorclockfrequency)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>   
 <b>64 Bits:</b><xsl:if test="string-length(cdash/site/processoris64bits)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processoris64bits"/><br/>    
 <b>Processor Vendor:</b><xsl:if test="string-length(cdash/site/processorvendor)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendor"/><br/>    

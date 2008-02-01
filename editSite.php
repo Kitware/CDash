@@ -56,7 +56,7 @@ if ($session_OK)
 		@$claimsiteid = $_POST["claimsiteid"];
 		if($claimsite)
 		  {
-				add_site2user($claimsiteid,$userid);
+		  add_site2user($claimsiteid,$userid);
 		  }
 				
 		@$updatesite = $_POST["updatesite"];
@@ -66,10 +66,6 @@ if ($session_OK)
 		  {
 			$site_name = $_POST["site_name"];
 			$site_description = $_POST["site_description"];
-			$site_osname = $_POST["site_osname"];
-			$site_osrelease = $_POST["site_osrelease"];
-			$site_osversion = $_POST["site_osversion"];
-			$site_osplatform = $_POST["site_osplatform"];
 			$site_processoris64bits = $_POST["site_processoris64bits"];
 			$site_processorvendor = $_POST["site_processorvendor"];
 			$site_processorvendorid = $_POST["site_processorvendorid"];
@@ -84,15 +80,20 @@ if ($session_OK)
 		  $site_processorclockfrequency = $_POST["site_processorclockfrequency"];		
 		  $site_ip = $_POST["site_ip"];
 		  $site_longitude = $_POST["site_longitude"];			
-		  $site_latitude = $_POST["site_latitude"];										
-	  	}
+		  $site_latitude = $_POST["site_latitude"];
+			if(isset($_POST["newdescription_revision"]))
+			  {
+			  $newdescription_revision=1;
+				}
+		  else
+		    {
+				$newdescription_revision=0;
+		    }
+		  }
 	
 		if($updatesite)
 		  {
 			update_site($claimsiteid,$site_name,
-			            $site_osname, $site_osrelease, 
-									$site_osversion,
-									$site_osplatform,
 									$site_processoris64bits,
 									$site_processorvendor,
 									$site_processorvendorid,
@@ -105,15 +106,27 @@ if ($session_OK)
 									$site_totalphysicalmemory,
 									$site_logicalprocessorsperphysical,
 									$site_processorclockfrequency,
-			            $site_description,$site_ip,$site_latitude,$site_longitude);
+			            $site_description,$site_ip,$site_latitude,$site_longitude,!$newdescription_revision);
 		  }
 			
 		// If we should retrieve the geolocation
-
 		if($geolocation)
 		  {
-				$location = get_geolocation($site_ip);
-			 update_site($claimsiteid,$site_name,$site_description,$site_processor,$site_nprocessors,$site_ip,$location['latitude'],$location['longitude']);
+			$location = get_geolocation($site_ip);
+			update_site($claimsiteid,$site_name,
+									$site_processoris64bits,
+									$site_processorvendor,
+									$site_processorvendorid,
+									$site_processorfamilyid,
+									$site_processormodelid,
+									$site_processorcachesize,
+									$site_numberlogicalcpus,
+									$site_numberphysicalcpus,
+									$site_totalvirtualmemory,
+									$site_totalphysicalmemory,
+									$site_logicalprocessorsperphysical,
+									$site_processorclockfrequency,
+			            $site_description,$site_ip,$location['latitude'],$location['longitude'],false);
 		  }
 				
 		// If we have a projectid that means we should list all the sites
@@ -155,25 +168,84 @@ if ($session_OK)
 				$xml .= "<user>";
 				$xml .= "<site>";
 				$site_array = mysql_fetch_array(mysql_query("SELECT * FROM site WHERE id='$siteid'"));
+				
+				$siteinformation_array = array();
+				$siteinformation_array["description"] = "NA";
+				$siteinformation_array["processoris64bits"] = "NA";
+				$siteinformation_array["processorvendor"] = "NA";
+				$siteinformation_array["processorvendorid"] = "NA";
+				$siteinformation_array["processorfamilyid"] = "NA";
+				$siteinformation_array["processormodelid"] = "NA";
+				$siteinformation_array["processorcachesize"] = "NA";
+				$siteinformation_array["numberlogicalcpus"] = "NA";
+				$siteinformation_array["numberphysicalcpus"] = "NA";
+				$siteinformation_array["totalvirtualmemory"] = "NA";
+				$siteinformation_array["totalphysicalmemory"] = "NA";
+				$siteinformation_array["logicalprocessorsperphysical"] = "NA";
+				$siteinformation_array["processorclockfrequency"] = "NA";
+				
+				// Get the last information about the size
+				$query = mysql_query("SELECT * FROM siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
+				if(mysql_num_rows($query) > 0)
+					{
+					$siteinformation_array = mysql_fetch_array($query);
+					if($siteinformation_array["processoris64bits"] == -1)
+					  {
+					  $siteinformation_array["processoris64bits"] = "NA";
+						}
+					if($siteinformation_array["processorfamilyid"] == -1)
+					  {
+					  $siteinformation_array["processorfamilyid"] = "NA";
+						}
+				  if($siteinformation_array["processormodelid"] == -1)
+					  {
+					  $siteinformation_array["processormodelid"] = "NA";
+						}
+					if($siteinformation_array["processorcachesize"] == -1)
+					  {
+					  $siteinformation_array["processorcachesize"] = "NA";
+						}
+				  if($siteinformation_array["numberlogicalcpus"] == -1)
+					  {
+					  $siteinformation_array["numberlogicalcpus"] = "NA";
+						}
+				  if($siteinformation_array["numberphysicalcpus"] == -1)
+					  {
+					  $siteinformation_array["numberphysicalcpus"] = "NA";
+						}
+				  if($siteinformation_array["totalvirtualmemory"] == -1)
+					  {
+					  $siteinformation_array["totalvirtualmemory"] = "NA";
+						}
+					if($siteinformation_array["totalphysicalmemory"] == -1)
+					  {
+					  $siteinformation_array["totalphysicalmemory"] = "NA";
+						}
+				  if($siteinformation_array["logicalprocessorsperphysical"] == -1)
+					  {
+					  $siteinformation_array["logicalprocessorsperphysical"] = "NA";
+						}
+				  if($siteinformation_array["processorclockfrequency"] == -1)
+					  {
+					  $siteinformation_array["processorclockfrequency"] = "NA";
+						}
+					}
+
 				$xml .= add_XML_value("id",$siteid);
 				$xml .= add_XML_value("name",$site_array["name"]);
-				$xml .= add_XML_value("description",$site_array["description"]);
-				$xml .= add_XML_value("osname",$site_array["osname"]);
-				$xml .= add_XML_value("osrelease",$site_array["osrelease"]);
-				$xml .= add_XML_value("osversion",$site_array["osversion"]);
-				$xml .= add_XML_value("osplatform",$site_array["osplatform"]);
-				$xml .= add_XML_value("processoris64bits",$site_array["processoris64bits"]);
-				$xml .= add_XML_value("processorvendor",$site_array["processorvendor"]);
-				$xml .= add_XML_value("processorvendorid",$site_array["processorvendorid"]);
-				$xml .= add_XML_value("processorfamilyid",$site_array["processorfamilyid"]);
-				$xml .= add_XML_value("processormodelid",$site_array["processormodelid"]);
-				$xml .= add_XML_value("processorcachesize",$site_array["processorcachesize"]);
-				$xml .= add_XML_value("numberlogicalcpus",$site_array["numberlogicalcpus"]);
-				$xml .= add_XML_value("numberphysicalcpus",$site_array["numberphysicalcpus"]);
-				$xml .= add_XML_value("totalvirtualmemory",$site_array["totalvirtualmemory"]);
-				$xml .= add_XML_value("totalphysicalmemory",$site_array["totalphysicalmemory"]);
-				$xml .= add_XML_value("logicalprocessorsperphysical",$site_array["logicalprocessorsperphysical"]);
-				$xml .= add_XML_value("processorclockfrequency",$site_array["processorclockfrequency"]);
+				$xml .= add_XML_value("description",$siteinformation_array["description"]);
+				$xml .= add_XML_value("processoris64bits",$siteinformation_array["processoris64bits"]);
+				$xml .= add_XML_value("processorvendor",$siteinformation_array["processorvendor"]);
+				$xml .= add_XML_value("processorvendorid",$siteinformation_array["processorvendorid"]);
+				$xml .= add_XML_value("processorfamilyid",$siteinformation_array["processorfamilyid"]);
+				$xml .= add_XML_value("processormodelid",$siteinformation_array["processormodelid"]);
+				$xml .= add_XML_value("processorcachesize",$siteinformation_array["processorcachesize"]);
+				$xml .= add_XML_value("numberlogicalcpus",$siteinformation_array["numberlogicalcpus"]);
+				$xml .= add_XML_value("numberphysicalcpus",$siteinformation_array["numberphysicalcpus"]);
+				$xml .= add_XML_value("totalvirtualmemory",$siteinformation_array["totalvirtualmemory"]);
+				$xml .= add_XML_value("totalphysicalmemory",$siteinformation_array["totalphysicalmemory"]);
+				$xml .= add_XML_value("logicalprocessorsperphysical",$siteinformation_array["logicalprocessorsperphysical"]);
+				$xml .= add_XML_value("processorclockfrequency",$siteinformation_array["processorclockfrequency"]);
 				$xml .= add_XML_value("ip",$site_array["ip"]);		
 				$xml .= add_XML_value("latitude",$site_array["latitude"]);
 				$xml .= add_XML_value("longitude",$site_array["longitude"]);	

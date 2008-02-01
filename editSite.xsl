@@ -112,33 +112,6 @@
 				<strong> (Make sure the name of the build matches CTest buildname otherwise a new site will be created)</strong>
 				</td>
   </tr>
-		
-	<tr>
-    <td bgcolor="#EEEEEE"><strong>OS Name:</strong> <input name="site_osname" type="text" size="50">
-				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/osname"/></xsl:attribute>
-				</input>
-				</td>
-  </tr>
-	
-	<tr>
-    <td bgcolor="#EEEEEE"><strong>OS Release:</strong> <input name="site_osrelease" type="text" size="50">
-				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/osrelease"/></xsl:attribute>
-				</input>
-				</td>
-  </tr>
-	
-	<tr>
-    <td bgcolor="#EEEEEE"><strong>OS Version:</strong> <input name="site_osversion" type="text" size="50">
-				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/osversion"/></xsl:attribute>
-				</input>
-				</td>
-  </tr>
-	<tr>
-    <td bgcolor="#EEEEEE"><strong>OS Platform:</strong> <input name="site_osplatform" type="text" size="50">
-				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/osplatform"/></xsl:attribute>
-				</input>
-				</td>
-  </tr>
 	<tr>
     <td bgcolor="#EEEEEE"><strong>64 bits:</strong> <input name="site_processoris64bits" type="text" size="50">
 				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/processoris64bits"/></xsl:attribute>
@@ -221,8 +194,8 @@
 	 <tr>
     <td bgcolor="#EEEEEE"><strong>IP address:</strong> <input name="site_ip" type="text" size="30">
 				<xsl:attribute name="value"><xsl:value-of select="cdash/user/site/ip"/></xsl:attribute>
-				<input type="submit" name="geolocation" value="Retrieve geolocation"/>
 				</input>
+				<input type="submit" name="geolocation" value="Retrieve geolocation"/>
 				</td>
   </tr>	
 		 <tr>
@@ -237,6 +210,15 @@
 				</input>
 				</td>
   </tr>	
+	 <tr>
+    <td bgcolor="#EEEEEE"><strong>Force new description revision:</strong> 
+		<input name="newdescription_revision" type="checkbox"/>
+				 (check this box only if the system has been upgraded, i.e memory upgrade,...)
+				</td>
+  </tr>	
+	
+	
+	
 		<tr>
 				<td bgcolor="#FFFFFF">
 				 <input type="hidden" name="claimsiteid"><xsl:attribute name="value"><xsl:value-of select="cdash/user/site/id"/></xsl:attribute></input>

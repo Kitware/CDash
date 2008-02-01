@@ -553,10 +553,6 @@ function remove_site2user($siteid,$userid)
 
 /** Update a site */
 function update_site($siteid,$name,
-										 $osname,
-										 $osrelease,
-										 $osversion,
-										 $osplatform,
 										 $processoris64bits,
 										 $processorvendor,
 										 $processorvendorid,
@@ -569,30 +565,105 @@ function update_site($siteid,$name,
 										 $totalphysicalmemory,
 										 $logicalprocessorsperphysical,
 										 $processorclockfrequency,
-										 $description,$ip,$latitude,$longitude)
+										 $description,$ip,$latitude,$longitude,$nonewrevision=false)
 {  
-  mysql_query ("UPDATE site SET name='$name',
-										 osname='$osname',
-										 osrelease='$osrelease',
-										 osversion='$osversion',
-										 osplatform='$osplatform',
-										 processoris64bits='$processoris64bits',
-										 processorvendor='$processorvendor',
-										 processorvendorid='$processorvendorid',
-										 processorfamilyid='$processorfamilyid',
-										 processormodelid='$processormodelid',
-										 processorcachesize='$processorcachesize',
-										 numberlogicalcpus='$numberlogicalcpus',
-										 numberphysicalcpus='$numberphysicalcpus',
-										 totalvirtualmemory='$totalvirtualmemory',
-										 totalphysicalmemory='$totalphysicalmemory',
-										 logicalprocessorsperphysical='$logicalprocessorsperphysical',
-										 processorclockfrequency='$processorclockfrequency',
-	                   description='$description',
-                     ip='$ip',
-                     latitude='$latitude',
-                     longitude='$longitude' WHERE id='$siteid'");
-  echo mysql_error();  
+  // Update the basic information first
+	mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'");	
+	echo mysql_error(); 
+	
+	$names = array();
+	$names[] = "processoris64bits";
+  $names[] = "processorvendor";
+	$names[] = "processorvendorid";
+	$names[] = "processorfamilyid";
+	$names[] = "processormodelid";
+	$names[] = "processorcachesize";
+	$names[] = "numberlogicalcpus";					
+	$names[] = "numberphysicalcpus";				
+	$names[] = "totalvirtualmemory";		
+	$names[] = "totalphysicalmemory";		
+	$names[] = "logicalprocessorsperphysical";		
+	$names[] = "processorclockfrequency";		
+	$names[] = "description";						
+		 
+	// Check if we have valuable information and the siteinformation doesn't exist
+	$hasvalidinfo = false;
+	$newrevision2 = false;
+	$query = mysql_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
+	if(mysql_num_rows($query)==0)
+	  {
+	  foreach($names as $name)
+		  {
+  	  if($$name!="NA" && strlen($$name)>0)
+		    {
+			  $nonewrevision = false;
+				$newrevision2 = true;
+			  break;
+		    }
+		 }
+	 }
+	else
+	  {
+		$query_array = mysql_fetch_array($query);
+		// Check if the information are different from what we have in the database, then that means
+	  // the system has been upgraded and we need to create a new revision
+	  foreach($names as $name)
+		  {
+  	  if($$name!="NA" && $query_array[$name]!=$$name && strlen($$name)>0)
+		    {
+			  $newrevision2 = true;
+			  break;
+		    }
+		  }
+	  }
+		
+  if($newrevision2 && !$nonewrevision)
+	  {
+		$now = date("Y-m-d H:i:s");
+		$sql = "INSERT INTO siteinformation(siteid,timestamp";
+		foreach($names as $name)
+		  {
+			if($$name != "NA" && strlen($$name)>0)
+			  {
+			  $sql .= " ,$name";
+				}
+		  }
+	  
+		$sql .= ") VALUES($siteid,'$now'";
+		foreach($names as $name)
+		  {
+			if($$name != "NA"  && strlen($$name)>0)
+			  {
+			  $sql .= ",'".$$name."'";
+				}
+		  }
+	  $sql .= ")";	
+		mysql_query ($sql);
+		echo mysql_error();
+	  }
+	else
+	  {
+		$sql = "UPDATE siteinformation SET ";
+		$i=0;
+		foreach($names as $name)
+		  {
+		 if($$name != "NA" && strlen($$name)>0)
+			  {	
+				if($i>0)
+					{
+					$sql .= " ,";
+					}
+			  $sql .= " $name='".$$name."'";
+        $i++;
+				}
+		  }
+	  
+		$timestamp = $query_array["timestamp"];
+	  $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
+		
+ 	  mysql_query ($sql);
+	  echo mysql_error();
+    }
 }      
 
 /** Get the geolocation from IP address */
@@ -603,9 +674,9 @@ function get_geolocation($ip)
 		// Test if curl exists
 	 if(function_exists("curl_init") == FALSE)
 		  {
-				$location['latitude'] = "";
-    $location['longitude'] = "";
-				return $location;
+		  $location['latitude'] = "";
+      $location['longitude'] = "";
+		  return $location;
 		  }
 	
 	 // Ask hostip.info for geolocation
@@ -657,28 +728,57 @@ function add_site($name,$parser)
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
 
+	@$processoris64bits=$parser->vals[$site[0]]["attributes"]["IS64BITS"];
+	@$processorvendor=$parser->vals[$site[0]]["attributes"]["VENDORSTRING"]; 
+	@$processorvendorid=$parser->vals[$site[0]]["attributes"]["VENDORID"]; 
+	@$processorfamilyid=$parser->vals[$site[0]]["attributes"]["FAMILYID"]; 
+	@$processormodelid=$parser->vals[$site[0]]["attributes"]["MODELID"]; 
+	@$processorcachesize=$parser->vals[$site[0]]["attributes"]["PROCESSORCACHESIZE"]; 
+	@$numberlogicalcpus=$parser->vals[$site[0]]["attributes"]["NUMBEROFLOGICALCPU"]; 
+	@$numberphysicalcpus=$parser->vals[$site[0]]["attributes"]["NUMBEROFPHYSICALCPU"]; 
+	@$totalvirtualmemory=$parser->vals[$site[0]]["attributes"]["TOTALVIRTUALMEMORY"]; 
+	@$totalphysicalmemory=$parser->vals[$site[0]]["attributes"]["TOTALPHYSICALMEMORY"]; 
+	@$logicalprocessorsperphysical=$parser->vals[$site[0]]["attributes"]["LOGICALPROCESSORSPERPHYSICAL"]; 
+	@$processorclockfrequency=$parser->vals[$site[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
+	$ip = $_SERVER['REMOTE_ADDR'];
+	
   // Check if we already have the site registered
-  $site = mysql_query("SELECT id FROM site WHERE name='$name'");
+  $site = mysql_query("SELECT id,name,latitude,longitude FROM site WHERE name='$name'");
   if(mysql_num_rows($site)>0)
     {
     $site_array = mysql_fetch_array($site);
-    return $site_array["id"];
+		$siteid = $site_array["id"];
+		$sitename = $site_array["name"];
+		$latitude = $site_array["name"];
+		$longitude = $site_array["name"];
+		
+		// We update the site information if needed
+		update_site($siteid,$sitename,
+								$processoris64bits,
+								$processorvendor,
+								$processorvendorid,
+								$processorfamilyid,
+								$processormodelid,
+								$processorcachesize,
+								$numberlogicalcpus,
+								$numberphysicalcpus,
+								$totalvirtualmemory,
+								$totalphysicalmemory,
+								$logicalprocessorsperphysical,
+								$processorclockfrequency,
+								"",$ip,$latitude,$longitude,false);
+
+    return $siteid;
     }
-	
-  // If not found we create the site
+	 
+	// If not found we create the site
   // We retrieve the geolocation from the IP address
-  $ip = $_SERVER['REMOTE_ADDR'];
 	$location = get_geolocation($ip);
   
   $latitude = $location['latitude'];
   $longitude = $location['longitude'];  
 
   // Find other information from the parser
-  $site = $parser->index["SITE"];
-	@$osname=$parser->vals[$site[0]]["attributes"]["OSNAME"]; 
-	@$osrelease=$parser->vals[$site[0]]["attributes"]["OSRELEASE"]; 
-	@$osversion=$parser->vals[$site[0]]["attributes"]["OSVERSION"]; 
-	@$osplatform=$parser->vals[$site[0]]["attributes"]["OSPLATFORM"]; 
 	@$processoris64bits=$parser->vals[$site[0]]["attributes"]["IS64BITS"]; 
 	@$processorvendor=$parser->vals[$site[0]]["attributes"]["VENDORSTRING"]; 
 	@$processorvendorid=$parser->vals[$site[0]]["attributes"]["VENDORID"]; 
@@ -693,11 +793,18 @@ function add_site($name,$parser)
 	@$processorclockfrequency=$parser->vals[$site[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
   $description="";
 
-  if(!mysql_query ("INSERT INTO site (name,
-	 									 osname,
-										 osrelease,
-										 osversion,
-										 osplatform,
+  if(!mysql_query ("INSERT INTO site (name,ip,latitude,longitude) 
+                    VALUES ('$name','$ip','$latitude','$longitude')"))
+		{
+    echo "add_site = ".mysql_error();  
+	  }
+		
+	$siteid = mysql_insert_id();
+	
+	// Insert the site information
+  $now = date("Y-m-d H:i:s");
+	mysql_query ("INSERT INTO siteinformation (siteid,
+	 									 timestamp,
 										 processoris64bits,
 										 processorvendor,
 										 processorvendorid,
@@ -710,12 +817,9 @@ function add_site($name,$parser)
 										 totalphysicalmemory,
 										 logicalprocessorsperphysical,
 										 processorclockfrequency,
-	                   description,ip,latitude,longitude) 
-                 VALUES ('$name',
-								 				'$osname',
-												'$osrelease',
-												'$osversion',
-												'$osplatform',
+	                   description) 
+                 VALUES ('$siteid',
+								 				'$now',
 												'$processoris64bits',
 												'$processorvendor',
 												'$processorvendorid',
@@ -728,11 +832,9 @@ function add_site($name,$parser)
 												'$totalphysicalmemory',
 												'$logicalprocessorsperphysical',
 												'$processorclockfrequency',
-								        '$description','$ip','$latitude','$longitude')"))
-		{
-    echo "add_site = ".mysql_error();  
-	  }
-  return mysql_insert_id();
+								        '$description')");
+		
+  return $siteid;
 }
 
 /** Remove all related inserts for a given build */
@@ -780,7 +882,7 @@ function remove_build($buildid)
 }
 
 /** Add a new build */
-function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$endtime,$submittime,$command,$log)
+function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$endtime,$submittime,$command,$log,$parser)
 {
   // First we check if the build already exists if this is the case we delete all related information regarding
   // The previous build 
@@ -796,6 +898,19 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
                                   '$starttime','$endtime','$submittime','$command','$log')");
   
   $buildid = mysql_insert_id();
+
+  // Insert information about the parser
+	$site = $parser->index["SITE"];
+	@$osname=$parser->vals[$site[0]]["attributes"]["OSNAME"]; 
+	@$osrelease=$parser->vals[$site[0]]["attributes"]["OSRELEASE"]; 
+	@$osversion=$parser->vals[$site[0]]["attributes"]["OSVERSION"]; 
+	@$osplatform=$parser->vals[$site[0]]["attributes"]["OSPLATFORM"];
+	
+	if($osname!="" || $osrelease!="" || $osversion!="" || $osplatform!="")
+  	{
+    mysql_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform) 
+                  VALUES ('$buildid','$osname','$osrelease','$osversion','$osplatform')");
+    }
 
   // Insert the build into the proper group
   // 1) Check if we have any build2grouprules for this build
@@ -1037,8 +1152,8 @@ function get_dates($date,$nightlytime)
     $date = gmdate("Ymd");
     $currenttime = time();
     $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
-	}
-   else
+	  }
+  else
     {
     $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
     $currenttime = $today; // minus one second

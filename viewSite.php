@@ -29,6 +29,68 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 $site_array = mysql_fetch_array(mysql_query("SELECT * FROM site WHERE id='$siteid'"));  
 $sitename = $site_array["name"];
 
+@$currenttime = $_GET["currenttime"];
+$siteinformation_array = array();
+$siteinformation_array["description"] = "NA";
+$siteinformation_array["processoris64bits"] = "NA";
+$siteinformation_array["processorvendor"] = "NA";
+$siteinformation_array["processorvendorid"] = "NA";
+$siteinformation_array["processorfamilyid"] = "NA";
+$siteinformation_array["processormodelid"] = "NA";
+$siteinformation_array["processorcachesize"] = "NA";
+$siteinformation_array["numberlogicalcpus"] = "NA";
+$siteinformation_array["numberphysicalcpus"] = "NA";
+$siteinformation_array["totalvirtualmemory"] = "NA";
+$siteinformation_array["totalphysicalmemory"] = "NA";
+$siteinformation_array["logicalprocessorsperphysical"] = "NA";
+$siteinformation_array["processorclockfrequency"] = "NA";
+
+$query = mysql_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttime' ORDER BY timestamp ASC LIMIT 1");
+if(mysql_num_rows($query) > 0)
+  {
+	$siteinformation_array = mysql_fetch_array();
+	if($siteinformation_array["processoris64bits"] == -1)
+		{
+		$siteinformation_array["processoris64bits"] = "NA";
+		}
+	if($siteinformation_array["processorfamilyid"] == -1)
+	  {
+	  $siteinformation_array["processorfamilyid"] = "NA";
+		}
+  if($siteinformation_array["processormodelid"] == -1)
+	  {
+	  $siteinformation_array["processormodelid"] = "NA";
+		}
+	if($siteinformation_array["processorcachesize"] == -1)
+	  {
+	  $siteinformation_array["processorcachesize"] = "NA";
+		}
+  if($siteinformation_array["numberlogicalcpus"] == -1)
+	  {
+	  $siteinformation_array["numberlogicalcpus"] = "NA";
+		}
+  if($siteinformation_array["numberphysicalcpus"] == -1)
+	  {
+	  $siteinformation_array["numberphysicalcpus"] = "NA";
+   	}
+  if($siteinformation_array["totalvirtualmemory"] == -1)
+	  {
+	  $siteinformation_array["totalvirtualmemory"] = "NA";
+		}
+	if($siteinformation_array["totalphysicalmemory"] == -1)
+	  {
+	  $siteinformation_array["totalphysicalmemory"] = "NA";
+  	}
+  if($siteinformation_array["logicalprocessorsperphysical"] == -1)
+	  {
+	  $siteinformation_array["logicalprocessorsperphysical"] = "NA";
+		}
+  if($siteinformation_array["processorclockfrequency"] == -1)
+	  {
+	  $siteinformation_array["processorclockfrequency"] = "NA";
+		}
+	}
+
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$sitename."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -56,23 +118,19 @@ $xml .= "</dashboard>";
 $xml .= "<site>";
 $xml .= add_XML_value("id",$site_array["id"]);
 $xml .= add_XML_value("name",$site_array["name"]);
-$xml .= add_XML_value("description",$site_array["description"]);
-$xml .= add_XML_value("osname",$site_array["osname"]);
-$xml .= add_XML_value("osrelease",$site_array["osrelease"]);
-$xml .= add_XML_value("osversion",$site_array["osversion"]);
-$xml .= add_XML_value("osplatform",$site_array["osplatform"]);
-$xml .= add_XML_value("processoris64bits",$site_array["processoris64bits"]);
-$xml .= add_XML_value("processorvendor",$site_array["processorvendor"]);
-$xml .= add_XML_value("processorvendorid",$site_array["processorvendorid"]);
-$xml .= add_XML_value("processorfamilyid",$site_array["processorfamilyid"]);
-$xml .= add_XML_value("processormodelid",$site_array["processormodelid"]);
-$xml .= add_XML_value("processorcachesize",$site_array["processorcachesize"]);
-$xml .= add_XML_value("numberlogicalcpus",$site_array["numberlogicalcpus"]);
-$xml .= add_XML_value("numberphysicalcpus",$site_array["numberphysicalcpus"]);
-$xml .= add_XML_value("totalvirtualmemory",$site_array["totalvirtualmemory"]);
-$xml .= add_XML_value("totalphysicalmemory",$site_array["totalphysicalmemory"]);
-$xml .= add_XML_value("logicalprocessorsperphysical",$site_array["logicalprocessorsperphysical"]);
-$xml .= add_XML_value("processorclockfrequency",$site_array["processorclockfrequency"]);
+$xml .= add_XML_value("description",$siteinformation_array["description"]);
+$xml .= add_XML_value("processoris64bits",$siteinformation_array["processoris64bits"]);
+$xml .= add_XML_value("processorvendor",$siteinformation_array["processorvendor"]);
+$xml .= add_XML_value("processorvendorid",$siteinformation_array["processorvendorid"]);
+$xml .= add_XML_value("processorfamilyid",$siteinformation_array["processorfamilyid"]);
+$xml .= add_XML_value("processormodelid",$siteinformation_array["processormodelid"]);
+$xml .= add_XML_value("processorcachesize",$siteinformation_array["processorcachesize"]);
+$xml .= add_XML_value("numberlogicalcpus",$siteinformation_array["numberlogicalcpus"]);
+$xml .= add_XML_value("numberphysicalcpus",$siteinformation_array["numberphysicalcpus"]);
+$xml .= add_XML_value("totalvirtualmemory",$siteinformation_array["totalvirtualmemory"]);
+$xml .= add_XML_value("totalphysicalmemory",$siteinformation_array["totalphysicalmemory"]);
+$xml .= add_XML_value("logicalprocessorsperphysical",$siteinformation_array["logicalprocessorsperphysical"]);
+$xml .= add_XML_value("processorclockfrequency",$siteinformation_array["processorclockfrequency"]);
 $xml .= add_XML_value("ip",$site_array["ip"]);
 $xml .= add_XML_value("latitude",$site_array["latitude"]);
 $xml .= add_XML_value("longitude",$site_array["longitude"]);

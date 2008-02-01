@@ -80,7 +80,7 @@
 			
 			
       <td align="left" class="paddt">
-      <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/></xsl:attribute><xsl:value-of select="site"/></a>
+      <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/>&#38;currenttime=<xsl:value-of select="/cdash/dashboard/unixtimestamp"/></xsl:attribute><xsl:value-of select="site"/></a>
       </td>
       <td align="center">
 						<a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="buildname"/></a>
