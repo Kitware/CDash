@@ -122,50 +122,52 @@
     
     <!-- Fill in the information -->
     <xsl:for-each select="cdash/claimedsite">
-      <td  bgcolor="#EEEEEE" align="center" >
+		<tr class="trodd">
+      <td align="center" >
         <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute><xsl:value-of select="name"/></a>
       </td>
       
       <xsl:for-each select="project">
-        <td bgcolor="#EEEEEE" align="center" id="nob"> 
+        <td align="center" id="nob"> 
           <table width="100%">
             <xsl:if test="nightly/NA=0">
               <tr class="table-heading">
-                <td><b>N</b></td>
-                <td id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/updateclass"/></xsl:attribute><xsl:value-of select="nightly/update"/></td>
-                <td id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/configureclass"/></xsl:attribute><xsl:value-of select="nightly/configure"/></td>
-                <td id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/errorclass"/></xsl:attribute><xsl:value-of select="nightly/error"/></td>
-                <td id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/testfailclass"/></xsl:attribute><xsl:value-of select="nightly/testfail"/></td>
-                <td id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/dateclass"/></xsl:attribute>
+                <td align="center"><b>N</b></td>
+                <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/updateclass"/></xsl:attribute><xsl:value-of select="nightly/update"/></td>
+                <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/configureclass"/></xsl:attribute><xsl:value-of select="nightly/configure"/></td>
+                <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/errorclass"/></xsl:attribute><xsl:value-of select="nightly/error"/></td>
+                <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/testfailclass"/></xsl:attribute><xsl:value-of select="nightly/testfail"/></td>
+                <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/dateclass"/></xsl:attribute>
                 <a><xsl:attribute name="href"><xsl:value-of select="nightly/datelink"/></xsl:attribute><xsl:value-of select="nightly/date"/></a>		
               </td>
             </tr>
           </xsl:if>
           <xsl:if test="continuous/NA=0">
             <tr class="table-heading">
-              <td><b>C</b></td>
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/updateclass"/></xsl:attribute><xsl:value-of select="continuous/update"/></td>
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/configureclass"/></xsl:attribute><xsl:value-of select="continuous/configure"/></td>
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/errorclass"/></xsl:attribute><xsl:value-of select="continuous/error"/></td>
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/testfailclass"/></xsl:attribute><xsl:value-of select="continuous/testfail"/></td>	
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/dateclass"/></xsl:attribute>
+              <td align="center"><b>C</b></td>
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/updateclass"/></xsl:attribute><xsl:value-of select="continuous/update"/></td>
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/configureclass"/></xsl:attribute><xsl:value-of select="continuous/configure"/></td>
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/errorclass"/></xsl:attribute><xsl:value-of select="continuous/error"/></td>
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/testfailclass"/></xsl:attribute><xsl:value-of select="continuous/testfail"/></td>	
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/dateclass"/></xsl:attribute>
               <a><xsl:attribute name="href"><xsl:value-of select="continuous/datelink"/></xsl:attribute><xsl:value-of select="continuous/date"/></a>		
             </td></tr>
           </xsl:if>
           <xsl:if test="experimental/NA=0">
             <tr class="table-heading">
-              <td><b>E</b></td>
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/updateclass"/></xsl:attribute><xsl:value-of select="experimental/update"/></td>
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/configureclass"/></xsl:attribute><xsl:value-of select="experimental/configure"/></td>
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/errorclass"/></xsl:attribute><xsl:value-of select="experimental/error"/></td>
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/testfailclass"/></xsl:attribute><xsl:value-of select="experimental/testfail"/></td>		
-              <td id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/dateclass"/></xsl:attribute>
+              <td align="center"><b>E</b></td>
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/updateclass"/></xsl:attribute><xsl:value-of select="experimental/update"/></td>
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/configureclass"/></xsl:attribute><xsl:value-of select="experimental/configure"/></td>
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/errorclass"/></xsl:attribute><xsl:value-of select="experimental/error"/></td>
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/testfailclass"/></xsl:attribute><xsl:value-of select="experimental/testfail"/></td>		
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/dateclass"/></xsl:attribute>
               <a><xsl:attribute name="href"><xsl:value-of select="experimental/datelink"/></xsl:attribute><xsl:value-of select="experimental/date"/></a>		
             </td></tr>
           </xsl:if>	
         </table>
       </td>
     </xsl:for-each>
+		</tr>
   </xsl:for-each>
 		</tbody>
 </table>

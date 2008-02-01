@@ -150,6 +150,7 @@ if ($session_OK)
 								}	
 						else 
 						  {
+							  $xml .= add_XML_value("configure","-");
 								$xml .= add_XML_value("configureclass","normal");
 						  }
 									
