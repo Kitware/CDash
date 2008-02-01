@@ -749,8 +749,8 @@ function add_site($name,$parser)
     $site_array = mysql_fetch_array($site);
 		$siteid = $site_array["id"];
 		$sitename = $site_array["name"];
-		$latitude = $site_array["name"];
-		$longitude = $site_array["name"];
+		$latitude = $site_array["latitude"];
+		$longitude = $site_array["longitude"];
 		
 		// We update the site information if needed
 		update_site($siteid,$sitename,
