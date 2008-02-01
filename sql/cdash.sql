@@ -316,28 +316,47 @@ CREATE TABLE `project` (
 CREATE TABLE `site` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
-  `osname` varchar(255) NOT NULL,
-  `osrelease` varchar(255) NOT NULL,
-  `osversion` varchar(255) NOT NULL,
-  `osplatform` varchar(255) NOT NULL,
-  `processoris64bits` tinyint(4) NOT NULL default '0',
-  `processorvendor` varchar(255) NOT NULL,
-  `processorvendorid` varchar(255) NOT NULL,
-  `processorfamilyid` int(11) NOT NULL,
-  `processormodelid` int(11) NOT NULL,
-  `processorcachesize` int(11) NOT NULL,
-  `numberlogicalcpus` tinyint(4) NOT NULL,
-  `numberphysicalcpus` tinyint(4) NOT NULL,
-  `totalvirtualmemory` int(11) NOT NULL,
-  `totalphysicalmemory` int(11) NOT NULL,
-  `logicalprocessorsperphysical` int(11) NOT NULL default '1',
-  `processorclockfrequency` int(11) NOT NULL,
-  `description` text NOT NULL,
   `ip` varchar(255) NOT NULL default '',
   `latitude` varchar(10) NOT NULL default '',
   `longitude` varchar(10) NOT NULL default '',
   PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+-- 
+-- Table structure for table `siteinformation`
+-- 
+
+CREATE TABLE `siteinformation` (
+  `siteid` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `processoris64bits` tinyint(4) NOT NULL default '-1',
+  `processorvendor` varchar(255) NOT NULL default 'NA',
+  `processorvendorid` varchar(255) NOT NULL default 'NA',
+  `processorfamilyid` int(11) NOT NULL default '-1',
+  `processormodelid` int(11) NOT NULL default '-1',
+  `processorcachesize` int(11) NOT NULL default '-1',
+  `numberlogicalcpus` tinyint(4) NOT NULL default '-1',
+  `numberphysicalcpus` tinyint(4) NOT NULL default '-1',
+  `totalvirtualmemory` int(11) NOT NULL default '-1',
+  `totalphysicalmemory` int(11) NOT NULL default '-1',
+  `logicalprocessorsperphysical` int(11) NOT NULL default '-1',
+  `processorclockfrequency` int(11) NOT NULL default '-1',
+  `description` varchar(255) NOT NULL default 'NA',
+  KEY `siteid` (`siteid`,`timestamp`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `buildinformation` (
+  `buildid` int(11) NOT NULL,
+  `osname` varchar(255) NOT NULL,
+  `osplatform` varchar(255) NOT NULL,
+  `osrelease` varchar(255) NOT NULL,
+  `osversion` varchar(255) NOT NULL,
+  `compilername` varchar(255) NOT NULL,
+  `compilerversion` varchar(20) NOT NULL,
+  PRIMARY KEY  (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
