@@ -30,7 +30,7 @@ project page</a>
 <xsl:otherwise>
 
 <xsl:if test="string-length(cdash/warning)>0">
-<xsl:value-of select="cdash/warning"/>
+<b>Warning: <xsl:value-of select="cdash/warning"/></b><br/><br/>
 </xsl:if>
 
 <form name="form1" enctype="multipart/form-data" method="post" action="">
@@ -86,11 +86,15 @@ project page</a>
      <input type="hidden" name="groupid">
      <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
      </input>
-     <input name="newname" type="text" id="newname" size="40"/><input type="submit" name="rename" value="Rename"/>
+     <input name="newname" type="text" id="newname" size="20"/><input type="submit" name="rename" value="Rename"/>
      </xsl:if>
      </td><td>
      <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
      <input type="submit" name="deleteGroup" value="Delete Group"/>
+		 <input name="newstartdate" type="text" id="newstartdate" size="20">
+		 <xsl:attribute name="value"><xsl:value-of select="startdate"/></xsl:attribute>
+		 </input>
+		 <input type="submit" name="newDate" value="Change Start Date"/>
      </xsl:if>
      </td>
      </tr>

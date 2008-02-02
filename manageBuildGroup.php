@@ -22,40 +22,53 @@ include('login.php');
 include_once('common.php');
 
 if ($session_OK) 
-  {
-		@$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+{
+@$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+mysql_select_db("$CDASH_DB_NAME",$db);
 
-		$userid = $_SESSION['cdash']['loginid'];
-		
-		$xml = "<cdash>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<backurl>user.php</backurl>";
-		$xml .= "<title>CDash - Build Groups</title>";
-		$xml .= "<menutitle>CDash</menutitle>";
-		$xml .= "<menusubtitle>Build Groups</menusubtitle>";
-		
+$userid = $_SESSION['cdash']['loginid'];
+  
+$xml = "<cdash>";
+$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<backurl>user.php</backurl>";
+$xml .= "<title>CDash - Build Groups</title>";
+$xml .= "<menutitle>CDash</menutitle>";
+$xml .= "<menusubtitle>Build Groups</menusubtitle>";
+  
 @$projectid = $_GET["projectid"];
+
+// If the projectid is not set and there is only one project we go directly to the page
+if(!isset($projectid))
+{
+  $project = mysql_query("SELECT id FROM project LIMIT 1");
+	if(mysql_num_rows($project)>0)
+	  {
+	  $project_array = mysql_fetch_array($project);
+	  $projectid = $project_array["id"];
+	  }
+}
+
+
 @$show = $_GET["show"];
 
 
-		$user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
-		if($projectid)
-		  {
-		  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND $projectid='$projectid'");
-    if(mysql_num_rows($user2project)>0)
-				  {
-					 $user2project_array = mysql_fetch_array($user2project);
-						$role = $user2project_array["role"];
-						}		
-				}
-				
-		if($user_array["admin"]!=1 && $role<=1)
-		  {
-				echo "You don't have the permissions to access this page";
-			 return;
-		  }
-		
+$user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
+if($projectid)
+  {
+  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND $projectid='$projectid'");
+  if(mysql_num_rows($user2project)>0)
+    {
+    $user2project_array = mysql_fetch_array($user2project);
+    $role = $user2project_array["role"];
+    }  
+  }
+    
+if($user_array["admin"]!=1 && $role<=1)
+  {
+  echo "You don't have the permissions to access this page";
+  return;
+  }
+  
 $projects = mysql_query("SELECT id,name FROM project");
 while($project_array = mysql_fetch_array($projects))
    {
@@ -68,6 +81,94 @@ while($project_array = mysql_fetch_array($projects))
       }
    $xml .= "</availableproject>";
    }
+
+function swap_array_element($array,$currentgroupid,$wantedposition)
+{
+  // Find the current position of the $currentgroupid
+	if($wantedposition > count($array))
+	  {
+		$wantedposition = count($array);
+	  }
+	
+	$i=1;
+	foreach($array as $val)
+	  {
+		if($val['buildgroupid'] == $currentgroupid)
+		  {
+			// does the swapping
+			$tempval = $array[$wantedposition];
+			$array[$wantedposition] = $val;
+			$array[$i] = $tempval;
+			return $array;
+		  }
+		$i++;
+	  }
+  return $array;
+}	 
+	 
+	 
+/** Function which consolidates the group position.
+ *  Based on the current position we have. 
+ *  This makes sure each time segment has a continuous groupposition number and no duplicates nor gaps. */
+function ConsolidateGroupPosition($projectid)
+{
+  $query = mysql_query("SELECT bg.buildgroupid,bg.position,bg.starttime FROM buildgroup AS g, buildgroupposition as bg
+                                 WHERE g.id=bg.buildgroupid AND g.projectid='$projectid' ORDER BY starttime DESC, position ASC");
+	 
+	$segments = array();
+	// Put the result in an array
+	$starttime = -1;
+	$j=1;
+	$i=1;
+	while($query_array = mysql_fetch_array($query))
+	  {
+		if($query_array["starttime"] != $starttime)
+		  {
+			if($starttime != -1)
+			  {
+			  $segments[$j] = $segment;
+			  $segment = array();
+				$j++;
+				}
+			$i=1;
+			$starttime = $query_array["starttime"];   
+		  } 
+		$segment[$i]['starttime'] = $query_array["starttime"];
+		$segment[$i]['buildgroupid'] = $query_array["buildgroupid"];
+		$segment[$i]['position'] = $query_array["position"];
+		$i++;
+		}
+  $segments[$j] = $segment;
+	
+	if(count($segment) == 1) // if we only have one segment no need to consolidate
+	  {
+		return;
+	  }
+	
+	// Take the current segment and put the other segements in the same order
+	foreach($segments[1] as $last)
+	  {
+		$currentid = $last['buildgroupid'];
+		$currentposition = $last['position'];
+  	for($j=2;$j<=count($segments);$j++)
+	  	{
+			$segments[$j] = swap_array_element($segments[$j],$currentid,$currentposition);
+			}
+		}
+		 
+  // Update the database with the new array
+	foreach($segments as $segment)
+	  {
+		$i=1;
+		foreach($segment as $p)
+		  {
+			$time = $p['starttime'];
+			$groupid = $p['buildgroupid'];
+			mysql_query("UPDATE buildgroupposition SET position='$i' WHERE buildgroupid='$groupid' AND starttime='$time'");
+			$i++;
+		  }
+		}
+}	 
   
 // If we should change the position
 @$up= $_GET["up"];
@@ -84,12 +185,20 @@ if($up)
     
     // Update the group occupying the position
     $occupyinggroup_array = mysql_fetch_array(mysql_query("SELECT g.id FROM buildgroup AS g, buildgroupposition as bg
-                                                           WHERE g.id=bg.buildgroupid AND bg.position='$newpos' AND g.projectid='$projectid'"));
+                                                           WHERE g.id=bg.buildgroupid AND bg.position='$newpos' AND g.projectid='$projectid'
+																													 AND bg.endtime='0000-00-00 00:00:00'
+																													 "));
     $occupyinggroupid = $occupyinggroup_array["id"];
     mysql_query("UPDATE buildgroupposition SET position='$position' WHERE buildgroupid='$occupyinggroupid' AND endtime='0000-00-00 00:00:00'");
 
     // Update the group
     mysql_query("UPDATE buildgroupposition SET position='$newpos' WHERE buildgroupid='$Groupid' AND endtime='0000-00-00 00:00:00'");
+		
+		// Update the previous positions for that group (up and down have a global effect)
+		mysql_query("UPDATE buildgroupposition SET position=position+1 WHERE buildgroupid='$Groupid' AND endtime!='0000-00-00 00:00:00'");
+		
+		// Consolidate the group positions
+		ConsolidateGroupPosition($projectid);
     }
 }
 
@@ -105,14 +214,22 @@ if($down)
     {
     // Compute the new position
     $newpos = $position + 1;  
-   // Update the group occupying the position
+    // Update the group occupying the position
     $occupyinggroup_array = mysql_fetch_array(mysql_query("SELECT g.id FROM buildgroup AS g, buildgroupposition as bg
-                                                           WHERE g.id=bg.buildgroupid AND bg.position='$newpos' AND g.projectid='$projectid'"));
+                                                           WHERE g.id=bg.buildgroupid AND bg.position='$newpos' AND g.projectid='$projectid'
+																													 AND bg.endtime='0000-00-00 00:00:00'
+																													 "));
     $occupyinggroupid = $occupyinggroup_array["id"];
     mysql_query("UPDATE buildgroupposition SET position='$position' WHERE buildgroupid='$occupyinggroupid' AND endtime='0000-00-00 00:00:00'");
 
     // Update the group
     mysql_query("UPDATE buildgroupposition SET position='$newpos' WHERE buildgroupid='$Groupid' AND endtime='0000-00-00 00:00:00'");
+		
+	  // Update the previous positions for that group (up and down have a global effect)
+		mysql_query("UPDATE buildgroupposition SET position=position-1 WHERE buildgroupid='$Groupid' AND endtime!='0000-00-00 00:00:00'");
+		
+		// Consolidate the group positions
+		ConsolidateGroupPosition($projectid);
     }
 }
   
@@ -305,17 +422,208 @@ if($GlobalMove)
     }
 } // end GlobalMove
 
+@$newDate = $_POST["newDate"];
+@$newstartdate = $_POST["newstartdate"];
+
+// If change starting date of a group
+if($newDate)
+{
+  $newstartdatestamp = strtotime($newstartdate);
+  if(strlen($newstartdatestamp) == 0 || $newstartdatestamp>time())
+	  {
+		if($newstartdatestamp>time())
+		  {
+			$xml .= "<warning>New time cannot be in the future</warning>";
+			}
+	  else
+		  {
+			$xml .= "<warning>Wrong date/time format</warning>";
+			}
+		}
+  else
+	  {
+		$Groupid = $_POST["groupid"];
+		// Change the starttime of the group
+		$newdatetime = date("Y-m-d H:i:s",$newstartdatestamp);
+		mysql_query("UPDATE buildgroup SET starttime='$newdatetime' WHERE id='$Groupid'"); 
+		
+		// Change the starttime of the build2group rules
+	  mysql_query("UPDATE build2grouprule SET starttime='$newdatetime' WHERE endtime='0000-00-00 00:00:00' AND groupid='$Groupid'"); 
+		mysql_query("DELETE FROM build2grouprule WHERE starttime>'$newdatetime' AND groupid='$Groupid'"); 
+    echo mysql_error();
+		
+		// Move new builds				
+		$newbuilds = mysql_query("SELECT build.id FROM build,build2grouprule WHERE build.starttime>'$newdatetime'
+		                          AND id NOT IN (SELECT buildid AS id FROM build2group WHERE groupid='$Groupid')
+															AND build2grouprule.groupid='$Groupid' AND build2grouprule.buildtype=build.type
+															AND build2grouprule.buildname=build.name AND build.projectid='$projectid'"); 
+		echo mysql_error();
+		while($newbuilds_array = mysql_fetch_array($newbuilds))
+		  {
+			// Move the builds
+			$buildid = $newbuilds_array["id"];
+			mysql_query("UPDATE build2group SET groupid='$Groupid' WHERE buildid='$buildid'"); 
+		  echo mysql_error();			
+		  }
+		
+		// Delete extra builds ones in their respective sections
+	  $oldbuilds = mysql_query("SELECT id,type FROM build WHERE starttime<'$newdatetime'
+		                          AND id IN (SELECT buildid AS id FROM build2group WHERE groupid='$Groupid')"); 
+		echo mysql_error();
+	  while($oldbuilds_array = mysql_fetch_array($oldbuilds))
+		  {
+			// Move the builds
+			$buildid = $oldbuilds_array["id"];
+			$buildtype = $oldbuilds_array["type"];
+			
+			// Find the group corresponding to the build type
+			$grouptype_array = mysql_fetch_array(mysql_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'")); 
+		  echo mysql_error();			
+			$grouptype = $grouptype_array["id"];
+			
+			mysql_query("UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'"); 
+		  echo mysql_error();			
+		  }
+		
+		// Merge segments with the current startdate
+		$currentgroupstarttime_array = mysql_fetch_array(mysql_query("SELECT starttime FROM buildgroupposition WHERE buildgroupid='$Groupid' 
+		                                                              ORDER BY starttime ASC LIMIT 1"));
+		$currentgroupstarttime = $currentgroupstarttime_array["starttime"];
+		
+		$groups = mysql_query("SELECT buildgroupposition.buildgroupid,buildgroupposition.starttime FROM buildgroupposition,buildgroup
+													 WHERE buildgroup.id=buildgroupposition.buildgroupid AND buildgroup.projectid='$projectid'
+		                       AND buildgroupposition.buildgroupid!='$Groupid' AND buildgroupposition.endtime='$currentgroupstarttime'");
+		echo mysql_error();
+													 
+		while($groups_array = mysql_fetch_array($groups))
+		  {
+			$buildgroupid = $groups_array["buildgroupid"];
+			$starttime = $groups_array["starttime"];
+			
+			// Find the next endtime
+			$nextgroup = mysql_query("SELECT endtime FROM buildgroupposition WHERE buildgroupid='$buildgroupid' AND starttime>'$starttime' ORDER BY starttime ASC LIMIT 1"); 
+		  $nextgroup_array = mysql_fetch_array($nextgroup);
+			$nextendtime = $nextgroup_array["endtime"];
+			
+			mysql_query("UPDATE buildgroupposition SET endtime='$nextendtime' WHERE buildgroupid='$buildgroupid' AND starttime='$starttime'"); 
+		  echo mysql_error();
+		  
+		  echo mysql_error();
+			}
+		
+		// Finish the merging by deleting extra segments
+    mysql_query("DELETE FROM buildgroupposition WHERE starttime='$currentgroupstarttime' AND buildgroupid!='$Groupid'"); 
+
+		// Add the group position to each segment
+	  $groups = mysql_query("SELECT buildgroupposition.buildgroupid,
+																  buildgroupposition.starttime,
+																	buildgroupposition.endtime,buildgroupposition.position
+		                       FROM buildgroupposition,buildgroup
+													 WHERE buildgroup.id=buildgroupposition.buildgroupid AND buildgroup.projectid='$projectid'
+	                         AND buildgroupposition.buildgroupid!='$Groupid' 
+													 AND ('$newdatetime'<buildgroupposition.endtime OR buildgroupposition.endtime='0000-00-00 00:00:00')
+													 AND (buildgroupposition.starttime<'$newdatetime' OR buildgroupposition.starttime='0000-00-00 00:00:00')");
+		while($groups_array = mysql_fetch_array($groups))
+		  {
+			$buildgroupid = $groups_array["buildgroupid"];
+			$starttime = $groups_array["starttime"];
+			$endtime = $groups_array["endtime"];
+			$position = $groups_array["position"];
+			
+		  // Set the current end time of the group to the newdatetime
+			mysql_query("UPDATE buildgroupposition SET endtime='$newdatetime' WHERE buildgroupid='$buildgroupid ' AND starttime='$starttime'"); 
+		  echo mysql_error();
+
+			// Create a new segment after it						
+			mysql_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime) 
+			                                     VALUES ('$buildgroupid','$position','$newdatetime','$endtime')"); 
+      echo mysql_error();
+		  }
+	
+		// If the date is before the current date we add segments
+		if($newdatetime < $currentgroupstarttime)
+		  {
+			// Move the current starttime for the current group to the previous startsegment
+			// Find the previous starttime
+			$previousgroup = mysql_query("SELECT buildgroupposition.starttime FROM buildgroupposition,buildgroup
+			                              WHERE buildgroup.id=buildgroupposition.buildgroupid AND buildgroup.projectid='$projectid'
+																		AND buildgroupposition.starttime<'$currentgroupstarttime' GROUP BY buildgroupposition.starttime 
+																		ORDER BY buildgroupposition.starttime DESC LIMIT 1"); 
+			echo mysql_error();													
+		  $previousgroup_array = mysql_fetch_array($previousgroup);
+			$nextendtime = $previousgroup_array["starttime"];
+			
+			mysql_query("UPDATE buildgroupposition SET starttime='$nextendtime' WHERE buildgroupid='$Groupid' AND starttime='$currentgroupstarttime'");   
+			echo mysql_error();	
+			// Add Segments															
+			$grouptime = mysql_query("SELECT buildgroupposition.starttime FROM buildgroupposition,buildgroup
+			                          WHERE buildgroup.id=buildgroupposition.buildgroupid AND buildgroup.projectid='$projectid'
+																AND buildgroupposition.starttime>'$newdatetime' 
+			                          AND buildgroupposition.starttime<'$currentgroupstarttime' GROUP BY buildgroupposition.starttime 
+																ORDER BY buildgroupposition.starttime DESC");
+			echo mysql_error();
+			$segmentstarttime = 0;												
+			while($grouptime_array = mysql_fetch_array($grouptime))
+			  {
+				$newsgmentendtime = $grouptime_array["starttime"];
+				if($segmentstarttime!=0)
+				  {
+					mysql_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime) 
+			                                     VALUES ('$Groupid','0','$segmentstarttime','$newsgmentendtime')"); 
+          echo mysql_error();
+ 				  }
+				$segmentstarttime = $newsgmentendtime;
+				}
+		  
+			// Insert the first segment
+			if(isset($newsgmentendtime))
+			  {
+				mysql_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime) 
+			                                     VALUES ('$Groupid','0','$newdatetime','$newsgmentendtime')"); 
+        echo mysql_error();
+			  }
+		  }
+			
+		
+		// If the date is after the current date. we need to remove some segments
+  	if($newdatetime > $currentgroupstarttime)
+			{
+			// Find the segment that has the new time in it
+			$nextgroup = mysql_query("SELECT buildgroupposition.endtime FROM buildgroupposition,buildgroup
+			                              WHERE buildgroup.id=buildgroupposition.buildgroupid AND buildgroup.projectid='$projectid'
+																		AND (buildgroupposition.starttime<'$newdatetime' OR buildgroupposition.starttime='0000-00-00 00:00:00')
+																		AND ('$newdatetime'<buildgroupposition.endtime OR buildgroupposition.endtime='0000-00-00 00:00:00')
+																		"); 
+			echo mysql_error();													
+		  $nextgroup_array = mysql_fetch_array($nextgroup);
+			$endtime = $nextgroup_array["endtime"];
+			
+			mysql_query("UPDATE buildgroupposition SET starttime='$newdatetime' WHERE buildgroupid='$Groupid' AND endtime='$endtime'");   
+			echo mysql_error();	
+			
+			// Remove segment that are before this one
+		  mysql_query("DELETE FROM buildgroupposition WHERE starttime<'$newdatetime' AND buildgroupid='$Groupid'"); 
+      echo mysql_error();
+			}
+
+		// Consolidate the group positions
+		ConsolidateGroupPosition($projectid);
+	  }
+} // end change starting date of a group
+
+
+
 // Find the recent builds for this project
 if($projectid>0)
   {
   $end_timestamp = time()+1; // otherwise it doesn't refresh
   $beginning_timestamp = $end_timestamp-3600*240;
-		
-		$sql = "";
-		if($show>0)
-		  {
-				$sql = "AND g.id='$show'";
-		  }
+  
+  $sql = "";
+  if($show>0)
+    {
+    $sql = "AND g.id='$show'";
+    }
   
   $builds = mysql_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp, site as s
@@ -351,20 +659,21 @@ if($projectid>0)
   $xml .= add_XML_value("name",$project_array['name']);
   
   // Display the current groups
-  $groups = mysql_query("SELECT g.id,g.name,gp.position FROM buildgroup AS g, buildgroupposition AS gp 
+  $groups = mysql_query("SELECT g.id,g.name,gp.position,g.starttime FROM buildgroup AS g, buildgroupposition AS gp 
                          WHERE g.id=gp.buildgroupid AND g.projectid='$projectid' 
                          AND g.endtime='0000-00-00 00:00:00' AND gp.endtime='0000-00-00 00:00:00'
                          ORDER BY gp.position ASC");
   while($group_array = mysql_fetch_array($groups))
     {
     $xml .= "<group>";
-				if($show == $group_array['id'])
-				  {
-						$xml .= add_XML_value("selected","1");
-				  }
+    if($show == $group_array['id'])
+      {
+      $xml .= add_XML_value("selected","1");
+      }
     $xml .= add_XML_value("id",$group_array['id']);
     $xml .= add_XML_value("name",$group_array['name']);
     $xml .= add_XML_value("position",$group_array['position']);
+  $xml .= add_XML_value("startdate",$group_array['starttime']);
     $xml .= "</group>";
     }
   $xml .= "</project>";
