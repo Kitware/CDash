@@ -27,15 +27,15 @@ if(!isset($date) or $date == "")
   {
   $date = date("Ymd",time());
   }
+	
+	
+$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+mysql_select_db("$CDASH_DB_NAME",$db);
 
-$dates = get_related_dates($projectname, $date);
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>".$projectname." : Test Overview</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= get_cdash_dashboard_xml_by_name($projectname, $dates);
-
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 //get some information about the specified project
 $projectQuery = "SELECT id, nightlytime FROM project WHERE name = '$projectname'";
@@ -59,6 +59,7 @@ while($buildRow = mysql_fetch_array($buildResult))
 //find all the tests that were performed for this project on this date
 //skip tests that passed on all builds
 $firstTime = TRUE;
+$testQuery = "";
 foreach($builds as $id)
 {
 if($firstTime)
@@ -73,7 +74,8 @@ else
   }
 }
 $testQuery .= ") AND build2test.testid=test.id AND build2test.status NOT LIKE 'passed'";
-$testResult = mysql_query($testQuery);
+
+@$testResult = mysql_query($testQuery);
 if($testResult === FALSE)
   {
   die("No tests found for $projectname on $date");

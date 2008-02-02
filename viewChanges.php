@@ -18,6 +18,96 @@
 include("config.php");
 include("common.php");
 
+// get_related_dates takes a projectname and basedate as input
+// and produces an array of related dates and times based on:
+// the input, the project's nightly start time, now
+//
+function get_related_dates($projectname, $basedate)
+{
+  include("config.php");
+
+  $dates = array();
+
+  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  mysql_select_db("$CDASH_DB_NAME", $db);
+
+  $dbQuery = mysql_query("SELECT nightlytime FROM project WHERE name='$projectname'");
+  if(mysql_num_rows($dbQuery)>0)
+    {
+    $project = mysql_fetch_array($dbQuery);
+    $nightlytime = $project['nightlytime'];
+    //echo "query result nightlytime: " . $nightlytime . "<br/>";
+    }
+  else
+    {
+    $nightlytime = "00:00:00";
+    //echo "default nightlytime: " . $nightlytime . "<br/>";
+    }
+
+  if(!isset($basedate) || strlen($basedate)==0)
+    {
+    $basedate = gmdate("Ymd");
+    }
+
+  // Convert the nightly time into GMT
+  $nightlytime = gmdate("H:i:s",strtotime($nightlytime)); 
+
+  $nightlyhour = substr($nightlytime,0,2);
+  $nightlyminute = substr($nightlytime,3,2);
+  $nightlysecond = substr($nightlytime,6,2);
+  $basemonth = substr($basedate,4,2);
+  $baseday = substr($basedate,6,2);
+  $baseyear = substr($basedate,0,4);
+
+  $dates['nightly+2'] = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
+    $basemonth, $baseday+2, $baseyear);
+  $dates['nightly+1'] = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
+    $basemonth, $baseday+1, $baseyear);
+  $dates['nightly-0'] = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
+    $basemonth, $baseday, $baseyear);
+  $dates['nightly-1'] = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
+    $basemonth, $baseday-1, $baseyear);
+  $dates['nightly-2'] = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
+    $basemonth, $baseday-2, $baseyear);
+
+  // Snapshot of "now"
+  //
+  $currentgmtime = time();
+  $currentgmdate = gmdate("Ymd", $currentgmtime);
+
+  // Find the most recently past nightly time:
+  //
+  $todaymonth = substr($currentgmdate,4,2);
+  $todayday = substr($currentgmdate,6,2);
+  $todayyear = substr($currentgmdate,0,4);
+  $currentnightly = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
+    $todaymonth, $todayday, $todayyear);
+  while ($currentnightly>$currentgmtime)
+  {
+    $todayday = $todayday - 1;
+    $currentnightly = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
+      $todaymonth, $todayday, $todayyear);
+  }
+
+  $dates['now'] = $currentgmtime;
+  $dates['most-recent-nightly'] = $currentnightly;
+  $dates['today_utc'] = $currentgmdate;
+  $dates['basedate'] = gmdate("Ymd", $dates['nightly-0']);
+
+  // CDash equivalent of DART1's "last rollup time"
+  if ($dates['basedate'] === $dates['today_utc'])
+  {
+    // If it's today, it's now:
+    $dates['last-rollup-time'] = $dates['now'];
+  }
+  else
+  {
+    // If it's not today, it's the nightly time on the basedate:
+    $dates['last-rollup-time'] = $dates['nightly-0'];
+  }
+
+  return $dates;
+}
 
 function echo_array($a, $aname)
 {
@@ -29,7 +119,6 @@ function echo_array($a, $aname)
     echo '&nbsp;&nbsp;' . $item . '<br/>';
   }
 }
-
 
 function echo_dates($projectname, $dates)
 {
@@ -70,7 +159,6 @@ function echo_dates($projectname, $dates)
   $k = "nightly-2";
   $d = $dates[$k];
   echo $k . ": " . gmdate("Y-m-d H:i:s", $d) . " GMT<br/>";
-
 
   echo "<br/>";
   echo "<br/>";

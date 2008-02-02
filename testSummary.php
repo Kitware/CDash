@@ -46,77 +46,23 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
   {
-  $project_array = mysql_fetch_array($project);
-  $svnurl = $project_array["cvsurl"];
-  $homeurl = $project_array["homeurl"];
-  $bugurl = $project_array["bugtrackerurl"];   
+  $project_array = mysql_fetch_array($project);   
   $projectname = $project_array["name"];  
   }
-list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
-$logoid = getLogoID($projectid);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .="<dashboard>
-  <datetime>".date("D, d M Y",$currenttime)."</datetime>
-  <date>".$date."</date>
-  <svn>".$svnurl."</svn>
-  <bugtracker>".$bugurl."</bugtracker> 
-  <home>".$homeurl."</home>
-  <projectid>".$projectid."</projectid> 
-  <logoid>".$logoid."</logoid>
-  <projectname>".$projectname."</projectname> 
-  <previousdate>".$previousdate."</previousdate> 
-  <nextdate>".$nextdate."</nextdate> 
-  <testName>".$testName."</testName>
-  </dashboard>
-  ";
+$xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
+$xml .="<testName>".$testName."</testName>";
   
 //get information about all the builds for the given date and project
 $xml .= "<builds>\n";
-
-/*
-$buildQuery = "SELECT id,name,stamp,siteid FROM build WHERE stamp RLIKE '^$date-' AND projectid = '$projectid'";
-$buildResult = mysql_query($buildQuery);
-
-
-$builds = array();
-while($buildRow = mysql_fetch_array($buildResult))
-  {
-  $builds[$buildRow["id"]] =
-    array("name" => $buildRow["name"],
-          "stamp" => $buildRow["stamp"],
-          "siteid" => $buildRow["siteid"]);
-  }
-
-//generate a big ugly SQL select statement and execute it
-//this statement will give us information about each test that didn't pass
-//for the given date and time
-$firstTime = TRUE;
-foreach($builds as $buildid => $buildData)
-  {
-  if($firstTime)
-    {
-    $query =
-      "SELECT test.id,build2test.buildid,build2test.status,build2test.time,test.details,site.name 
-						 FROM test,site,build2test WHERE ( (build2test.buildid='$buildid' AND test.id=build2test.testid AND site.id = '".$buildData["siteid"]."')";
-    $firstTime = FALSE;
-    }
-  else
-    {
-    $query .= " OR (build2test.buildid='$buildid' AND test.id=build2test.testid AND site.id = '".$buildData["siteid"]."')";
-    }
-  }
-$query .= ") AND test.name = '$testName' AND status != '' ORDER BY status";
-$result = mysql_query($query);
-*/
 
 $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,test.id AS testid FROM build,build2test,test WHERE build.stamp RLIKE '^$date-'           
           AND build.projectid = '$projectid' AND build2test.buildid=build.id AND test.id=build2test.testid AND test.name='$testName' ORDER BY build2test.status";
 
 $result = mysql_query($query);
-
 
 $color = FALSE;
 //now that we have the data we need, generate some XML

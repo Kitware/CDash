@@ -104,15 +104,15 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
-  list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
+  list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid);
 
   // Main dashboard section 
   $xml .=
   "<dashboard>
-  <datetime>".date("l, F d Y H:i:s T",$currenttime)."</datetime>
+  <datetime>".date("l, F d Y H:i:s T",time())."</datetime>
   <date>".$date."</date>
-  <unixtimestamp>".$currenttime."</unixtimestamp>
+  <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
   <home>".$homeurl."</home>
@@ -126,11 +126,9 @@ function generate_main_dashboard_XML($projectid,$date)
   ";
 
   // updates
-  $dates = get_related_dates($projectname, $date);
   $xml .= "<updates>";
-  $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .
-    gmdate("Ymd", $dates['nightly-0']) . "</url>";
-  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $dates['nightly-0']).
+  $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .gmdate("Ymd", $currentstarttime) . "</url>";
+  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $currentstarttime).
           "</timestamp>";
   $xml .= "</updates>";
 
@@ -158,9 +156,9 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalna = 0; 
       
   // Local function to add expected builds
-  function add_expected_builds($groupid,$currenttime,$received_builds,$rowparity)
+  function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
     {
-    $currentUTCTime =  gmdate("YmdHis",$currenttime);
+    $currentUTCTime =  gmdate("YmdHis",$currentstarttime+3600*24);
     $xml = "";
     $build2grouprule = mysql_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
                                     WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
@@ -203,25 +201,13 @@ function generate_main_dashboard_XML($projectid,$date)
     }
     
   // Check the builds
-  // Beginning timestamp is the previous nightly
-  $nightlytime = strtotime($project_array["nightlytime"]);
-    
-  $nightlyhour = gmdate("H",$nightlytime);
-  $nightlyminute = gmdate("i",$nightlytime);
-  $nightlysecond = gmdate("s",$nightlytime);
-    
-  $end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
-  
-  $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp),gmdate("d",$end_timestamp),gmdate("Y",$end_timestamp));
-  if($end_timestamp<$beginning_timestamp)
-    {
-    $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp-24*3600),gmdate("d",$end_timestamp-24*3600),gmdate("Y",$end_timestamp-24*3600));
-    }
-  
-    $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
-    $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
+ 	$beginning_timestamp = $currentstarttime;
+	$end_timestamp = $currentstarttime+3600*24;
+
+  $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
+  $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
         
-  // We shoudln't get any builds for group that have been deleted (otherwise something is wrong
+  // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = mysql_query("SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
                          WHERE b.starttime<$end_UTCDate AND b.starttime>$beginning_UTCDate
@@ -247,7 +233,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $groupname = $build_array["groupname"];  
       if($previousgroupposition != -1)
         {
-        $xml .= add_expected_builds($groupid,$currenttime,$received_builds,$rowparity);
+        $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
         $xml .= "</buildgroup>";
         }
       
@@ -267,7 +253,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= "<buildgroup>";
                 $rowparity = 0;
         $xml .= add_XML_value("name",$group["name"]);
-        $xml .= add_expected_builds($group["id"],$currenttime,$received_builds,$rowparity);
+        $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
         $xml .= "</buildgroup>";  
         }  
              
@@ -462,7 +448,7 @@ function generate_main_dashboard_XML($projectid,$date)
     
   if(mysql_num_rows($builds)>0)
     {
-    $xml .= add_expected_builds($groupid,$currenttime,$received_builds,$rowparity);
+    $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
     $xml .= "</buildgroup>";
     }
     
@@ -486,7 +472,7 @@ function generate_main_dashboard_XML($projectid,$date)
                                                                                      AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate  OR gp.endtime='0000-00-00 00:00:00')"));
     $xml .= "<buildgroup>";  
     $xml .= add_XML_value("name",$group["name"]);
-    $xml .= add_expected_builds($group["id"],$currenttime,$received_builds,$rowparity);
+    $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
     $xml .= "</buildgroup>";  
     }
  

@@ -17,9 +17,9 @@
     <xsl:call-template name="header"/>
     <br/>
 <h3>List of 
-<xsl:value-of select="cdash/dashboard/projectname"/>
- tests that didn't run cleanly on 
-<xsl:value-of select="cdash/dashboard/date"/>
+<u><xsl:value-of select="cdash/dashboard/projectname"/></u>
+ tests that did not run cleanly on 
+<xsl:value-of select="cdash/dashboard/startdate"/>
 </h3>
 
 <p>
@@ -34,29 +34,9 @@
 </xsl:for-each>
 </xsl:for-each>
 </p>
-<!--
-<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-<xsl:for-each select="cdash/builds/build">
-  <tr>
-    <xsl:attribute name="class">
-      <xsl:value-of select="class"/>
-    </xsl:attribute>
-    <td>
-      <xsl:value-of select="number"/>
-    </td>
 
-    <td>
-      <xsl:value-of select="site"/>
-    </td>
-    <td>
-      <xsl:value-of select="buildName"/>
-    </td>
-    <td>
-      <xsl:value-of select="buildStamp"/>
-    </td>
-  </tr>
--->
-
+<br/>
+<br/>
     <xsl:call-template name="footer"/>
   </body>
   </html>

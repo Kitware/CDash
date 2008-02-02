@@ -52,32 +52,6 @@ function format_for_iphone($text)
 	  	return $text;
 	  	}
 		$text = str_replace("\n","<br/>",$text);
-		
-		/*
-		$previouspos = 0;
-		$pos = strpos($text,"<br/>");
-		$l=50;
-		while($pos !== FALSE)
-		  {
-				if($pos-$previouspos>$l)
-				  {
-						// Search the space before
-						$length = $l;
-						$posspace = strrpos($text,substr($text,0,$previouspos+$l));
-						if($posspace != FALSE)
-						  {
-								$length = $posspace-$previouspos;
-				  		}
-						$text = substr($text,0,$previouspos+$length)."<br/>".substr($text,$previouspos+$length);
-						$previouspos = $previouspos+$l;
-						}
-				else
-						{
-						$previouspos = $pos;
-						}
-				$pos = strpos($text,"<br/>",$previouspos+1);
-		  }
-  */
 		return $text;
 }		
 		
@@ -88,7 +62,6 @@ $logoid = getLogoID($projectid);
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-
 
 // User
  if(isset($_SESSION['cdash']))
@@ -104,7 +77,7 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 
 
 $xml .="<dashboard>
-  <datetime>".date("D, d M Y H:i:s",strtotime($build_array["starttime"]))."</datetime>
+  <datetime>".date("l, F d Y H:i:s T",time())."</datetime>
   <date>".$date."</date>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
