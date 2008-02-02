@@ -26,6 +26,18 @@ if ($session_OK)
 
 		$userid = $_SESSION['cdash']['loginid'];
 		@$projectid = $_GET["projectid"];
+		
+		// If the projectid is not set and there is only one project we go directly to the page
+		if(!isset($projectid))
+		{
+			$project = mysql_query("SELECT id FROM project LIMIT 1");
+			if(mysql_num_rows($project)>0)
+				{
+				$project_array = mysql_fetch_array($project);
+				$projectid = $project_array["id"];
+				}
+		}
+		
   @$edit = $_GET["edit"];
 	 $role = 0;
 	
@@ -203,10 +215,10 @@ if($Update)
   $CoverageThreshold = $_POST["coverageThreshold"];
   $NightlyTime = $_POST["nightlyTime"];
   $GoogleTracker = $_POST["googleTracker"];	
-		$EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
-		$EmailBuildMissing = $_POST["emailBuildMissing"];	
-		$EmailLowCoverage = $_POST["emailLowCoverage"];	
-		$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
+	@$EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
+	@$EmailBuildMissing = $_POST["emailBuildMissing"];	
+	@$EmailLowCoverage = $_POST["emailLowCoverage"];	
+	@$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
 
 	 $imgid = $project_array["imageid"];
 		
