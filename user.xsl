@@ -122,14 +122,14 @@
     
     <!-- Fill in the information -->
     <xsl:for-each select="cdash/claimedsite">
-		<tr class="trodd">
+		<tr class="treven">
       <td align="center" >
         <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute><xsl:value-of select="name"/></a>
       </td>
       
       <xsl:for-each select="project">
         <td align="center" id="nob"> 
-          <table width="100%">
+					<table width="100%" border="0">
             <xsl:if test="nightly/NA=0">
               <tr class="table-heading">
                 <td align="center"><b>N</b></td>
