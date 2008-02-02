@@ -45,51 +45,53 @@ $siteinformation_array["totalphysicalmemory"] = "NA";
 $siteinformation_array["logicalprocessorsperphysical"] = "NA";
 $siteinformation_array["processorclockfrequency"] = "NA";
 
-$query = mysql_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttime' ORDER BY timestamp ASC LIMIT 1");
+$currenttimestamp = gmdate("Y-m-d H:i:s",$currenttime);
+
+$query = mysql_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttimestamp' ORDER BY timestamp ASC LIMIT 1");
 if(mysql_num_rows($query) > 0)
   {
-	$siteinformation_array = mysql_fetch_array();
-	if($siteinformation_array["processoris64bits"] == -1)
-		{
-		$siteinformation_array["processoris64bits"] = "NA";
-		}
-	if($siteinformation_array["processorfamilyid"] == -1)
-	  {
-	  $siteinformation_array["processorfamilyid"] = "NA";
-		}
+ $siteinformation_array = mysql_fetch_array($query);
+ if($siteinformation_array["processoris64bits"] == -1)
+  {
+  $siteinformation_array["processoris64bits"] = "NA";
+  }
+ if($siteinformation_array["processorfamilyid"] == -1)
+   {
+   $siteinformation_array["processorfamilyid"] = "NA";
+  }
   if($siteinformation_array["processormodelid"] == -1)
-	  {
-	  $siteinformation_array["processormodelid"] = "NA";
-		}
-	if($siteinformation_array["processorcachesize"] == -1)
-	  {
-	  $siteinformation_array["processorcachesize"] = "NA";
-		}
+   {
+   $siteinformation_array["processormodelid"] = "NA";
+  }
+ if($siteinformation_array["processorcachesize"] == -1)
+   {
+   $siteinformation_array["processorcachesize"] = "NA";
+  }
   if($siteinformation_array["numberlogicalcpus"] == -1)
-	  {
-	  $siteinformation_array["numberlogicalcpus"] = "NA";
-		}
+   {
+   $siteinformation_array["numberlogicalcpus"] = "NA";
+  }
   if($siteinformation_array["numberphysicalcpus"] == -1)
-	  {
-	  $siteinformation_array["numberphysicalcpus"] = "NA";
-   	}
+   {
+   $siteinformation_array["numberphysicalcpus"] = "NA";
+    }
   if($siteinformation_array["totalvirtualmemory"] == -1)
-	  {
-	  $siteinformation_array["totalvirtualmemory"] = "NA";
-		}
-	if($siteinformation_array["totalphysicalmemory"] == -1)
-	  {
-	  $siteinformation_array["totalphysicalmemory"] = "NA";
-  	}
+   {
+   $siteinformation_array["totalvirtualmemory"] = "NA";
+  }
+ if($siteinformation_array["totalphysicalmemory"] == -1)
+   {
+   $siteinformation_array["totalphysicalmemory"] = "NA";
+   }
   if($siteinformation_array["logicalprocessorsperphysical"] == -1)
-	  {
-	  $siteinformation_array["logicalprocessorsperphysical"] = "NA";
-		}
+   {
+   $siteinformation_array["logicalprocessorsperphysical"] = "NA";
+  }
   if($siteinformation_array["processorclockfrequency"] == -1)
-	  {
-	  $siteinformation_array["processorclockfrequency"] = "NA";
-		}
-	}
+   {
+   $siteinformation_array["processorclockfrequency"] = "NA";
+  }
+ }
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$sitename."</title>";
@@ -140,44 +142,44 @@ $xml .= "</site>";
 $projects = array();
 $site2project = mysql_query("SELECT projectid,submittime FROM build WHERE siteid='$siteid' GROUP BY projectid");
 while($site2project_array = mysql_fetch_array($site2project))
-			{
-			$projectid = $site2project_array["projectid"];
-			$project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
-			$xml .= "<project>";
-			$xml .= add_XML_value("id",$projectid);
-			$xml .= add_XML_value("submittime",$site2project_array["submittime"]);
-			$xml .= add_XML_value("name",$project_array["name"]);
-	 	$xml .= "</project>";
+   {
+   $projectid = $site2project_array["projectid"];
+   $project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
+   $xml .= "<project>";
+   $xml .= add_XML_value("id",$projectid);
+   $xml .= add_XML_value("submittime",$site2project_array["submittime"]);
+   $xml .= add_XML_value("name",$project_array["name"]);
+   $xml .= "</project>";
    $projects[] = $projectid;
-		 }
+   }
 
  if(isset($_SESSION['cdash']))
    {
    $xml .= "<user>";
    $userid = $_SESSION['cdash']['loginid'];
-			
-			// Check if the current user as a role in this project
+   
+   // Check if the current user as a role in this project
    foreach($projects as $projectid)
-		  {
-				$user2project = mysql_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
+    {
+    $user2project = mysql_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
     if(mysql_num_rows($user2project)>0)
-				  {
-						$xml .= add_XML_value("sitemanager","1");
-						
-						$user2site = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-						if(mysql_num_rows($user2site) == 0)
-						  {
-								$xml .= add_XML_value("siteclaimed","0");
-						  }
-						else
-						  {
-								$xml .= add_XML_value("siteclaimed","1");
-						  }	
-						break;
-				  }
-			 }
+      {
+      $xml .= add_XML_value("sitemanager","1");
+      
+      $user2site = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
+      if(mysql_num_rows($user2site) == 0)
+        {
+        $xml .= add_XML_value("siteclaimed","0");
+        }
+      else
+        {
+        $xml .= add_XML_value("siteclaimed","1");
+        } 
+      break;
+      }
+    }
   
-			$user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
+   $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
    $user_array = mysql_fetch_array($user);
    $xml .= add_XML_value("id",$userid);
    $xml .= add_XML_value("admin",$user_array["admin"]);
