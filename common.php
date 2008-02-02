@@ -148,9 +148,9 @@ function parse_XML($contents)
 {
   $p = xml_parser_create();
   if(!xml_parse_into_struct($p, $contents, $vals, $index))
-	  {
-		add_log("Cannot parse XML".xml_error_string(xml_get_error_code($p)),"parse_XML");
-	  }
+   {
+  add_log("Cannot parse XML".xml_error_string(xml_get_error_code($p)),"parse_XML");
+   }
   
   // create a parse struct with vals and index in it
   $parse->vals = $vals;
@@ -164,7 +164,7 @@ function parse_XML($contents)
 function backup_xml_file($parser,$contents,$projectid)
 {
   include("config.php");
- 		
+   
   clean_backup_directory(); // should probably be run as a cronjob
  
   if(@$parser->index["BUILD"] != "")
@@ -203,33 +203,33 @@ function backup_xml_file($parser,$contents,$projectid)
     {
     $file = "Other.xml";
     }
-		
+  
   // For some reasons the update.xml has a different format
-	if(@$parser->index["UPDATE"] != "")
-		{
-		$vals = $parser->vals;
-		$sitename = getXMLValue($vals,"SITE","UPDATE");
-		$name = getXMLValue($vals,"BUILDNAME","UPDATE");
+ if(@$parser->index["UPDATE"] != "")
+  {
+  $vals = $parser->vals;
+  $sitename = getXMLValue($vals,"SITE","UPDATE");
+  $name = getXMLValue($vals,"BUILDNAME","UPDATE");
     $stamp = getXMLValue($vals,"BUILDSTAMP","UPDATE");
-		}
+  }
   else
-	 	 {
-		 $site = $parser->index["SITE"];
+    {
+   $site = $parser->index["SITE"];
      $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
      $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
      $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
-		 }
+   }
  
   $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_".$file;
   
-	// If the file is other we append a number until we get a non existing file
-	$i=1;
-	while($file=="Other.xml" && file_exists($filename))
-		{
-		$filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_Other.".$i.".xml";
-		$i++;
-		}
-		
+ // If the file is other we append a number until we get a non existing file
+ $i=1;
+ while($file=="Other.xml" && file_exists($filename))
+  {
+  $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_Other.".$i.".xml";
+  $i++;
+  }
+  
   if (!$handle = fopen($filename, 'w')) 
     {
     echo "Cannot open file ($filename)";
@@ -335,24 +335,24 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
                              $functionstested,$functionsuntested)
 {
   include("config.php");
-			
-		$build = mysql_query("SELECT projectid,name from build WHERE id='$buildid'");
-		$build_array = mysql_fetch_array($build);
+   
+  $build = mysql_query("SELECT projectid,name from build WHERE id='$buildid'");
+  $build_array = mysql_fetch_array($build);
   $projectid = $build_array["projectid"];
-		
-		// Check if we should send the email
- 	$project = mysql_query("SELECT name,coveragethreshold,emaillowcoverage FROM project WHERE id='$projectid'");
-		$project_array = mysql_fetch_array($project);
+  
+  // Check if we should send the email
+  $project = mysql_query("SELECT name,coveragethreshold,emaillowcoverage FROM project WHERE id='$projectid'");
+  $project_array = mysql_fetch_array($project);
   if($project_array["emaillowcoverage"] == 0)
-		  {
-				return;
-		  }
-				
+    {
+    return;
+    }
+    
  $coveragethreshold = $project_array["coveragethreshold"];
-			
-		$coveragemetric = 1;
-			
-		// Compute the coverage metric for bullseye
+   
+  $coveragemetric = 1;
+   
+  // Compute the coverage metric for bullseye
   if($branchstested>0 || $branchsuntested>0 || $functionstested>0 || $functionsuntested>0)
     { 
     // Metric coverage
@@ -367,65 +367,65 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
       $metric /= 2.0;
       }
     $coveragemetric = $metric;
-				$percentcoverage = $metric*100;
+    $percentcoverage = $metric*100;
     }
   else // coverage metric for gcov
     {
     $coveragemetric = ($loctested+10)/($loctested+$locuntested+10);
-				$percentcoverage = ($loctested/($loctested+$locuntested))*100;    
+    $percentcoverage = ($loctested/($loctested+$locuntested))*100;    
     }
-		
-		// If the coveragemetric is below the coverage threshold we send the email
-		if($coveragemetric < ($coveragethreshold/100.0))
-		  {
-				// Find the cvs user
-				$filename = $fullpath;
-				if(substr($filename,0,2) == "./")
-				  {
-						$filename = substr($filename,2);
-						}
-				$sql = "SELECT updatefile.author from updatefile,build
-				                           WHERE updatefile.buildid=build.id AND build.projectid='$projectid'
-																															 AND updatefile.filename='$filename' ORDER BY revision DESC LIMIT 1";
-				$updatefile = mysql_query($sql);
-				
-				// If we have a user in the database
-				if(mysql_num_rows($updatefile)>0)
-				  {																													
-						$updatefile_array = mysql_fetch_array($updatefile);
-						$author = $updatefile_array["author"];
-						
-						// Writing the message
-						$messagePlainText = "The file *".$filename."* of the project ".$project_array["name"];
-						$messagePlainText .= " submitted to CDash has a low coverage.\n"; 
-						$messagePlainText .= "You have been identified as one of the authors who have checked in changes to that file.\n";
-						$messagePlainText .= "Details on the submission can be found at ";
-		
-						$currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
-						$currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-						$messagePlainText .= $currentURI;
-						$messagePlainText .= "/viewCoverageFile.php?buildid=".$buildid;
-						$messagePlainText .= "&fileid=".$fileid;
-						$messagePlainText .= "\n\n";
-						
-						$messagePlainText .= "Project: ".$project_array["name"]."\n";
-						$messagePlainText .= "BuildName: ".$build_array["name"]."\n";
-						$messagePlainText .= "Filename: ".$fullpath."\n";
-						$threshold = round($coveragemetric*100,1);
-						$messagePlainText .= "Coverage metric: ".$threshold."%\n";
-						$messagePlainText .= "Coverage percentage: ".$percentcoverage."%\n";
-						$messagePlainText .= "CVS User: ".$author."\n";
-						
-						$messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
-						
-						// Send the email
-						$title = "CDash [".$project_array["name"]."] - ".$fullpath." - Low Coverage";
-					
-						$email = "jomier@unc.edu";
-						//mail("$email", $title, $messagePlainText,
-					//						"From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
-						}
-				}
+  
+  // If the coveragemetric is below the coverage threshold we send the email
+  if($coveragemetric < ($coveragethreshold/100.0))
+    {
+    // Find the cvs user
+    $filename = $fullpath;
+    if(substr($filename,0,2) == "./")
+      {
+      $filename = substr($filename,2);
+      }
+    $sql = "SELECT updatefile.author from updatefile,build
+                               WHERE updatefile.buildid=build.id AND build.projectid='$projectid'
+                                AND updatefile.filename='$filename' ORDER BY revision DESC LIMIT 1";
+    $updatefile = mysql_query($sql);
+    
+    // If we have a user in the database
+    if(mysql_num_rows($updatefile)>0)
+      {                             
+      $updatefile_array = mysql_fetch_array($updatefile);
+      $author = $updatefile_array["author"];
+      
+      // Writing the message
+      $messagePlainText = "The file *".$filename."* of the project ".$project_array["name"];
+      $messagePlainText .= " submitted to CDash has a low coverage.\n"; 
+      $messagePlainText .= "You have been identified as one of the authors who have checked in changes to that file.\n";
+      $messagePlainText .= "Details on the submission can be found at ";
+  
+      $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
+      $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+      $messagePlainText .= $currentURI;
+      $messagePlainText .= "/viewCoverageFile.php?buildid=".$buildid;
+      $messagePlainText .= "&fileid=".$fileid;
+      $messagePlainText .= "\n\n";
+      
+      $messagePlainText .= "Project: ".$project_array["name"]."\n";
+      $messagePlainText .= "BuildName: ".$build_array["name"]."\n";
+      $messagePlainText .= "Filename: ".$fullpath."\n";
+      $threshold = round($coveragemetric*100,1);
+      $messagePlainText .= "Coverage metric: ".$threshold."%\n";
+      $messagePlainText .= "Coverage percentage: ".$percentcoverage."%\n";
+      $messagePlainText .= "CVS User: ".$author."\n";
+      
+      $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
+      
+      // Send the email
+      $title = "CDash [".$project_array["name"]."] - ".$fullpath." - Low Coverage";
+     
+      $email = "jomier@unc.edu";
+      //mail("$email", $title, $messagePlainText,
+     //      "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+      }
+    }
 }
 
 /** Create a coverage */
@@ -461,10 +461,10 @@ function add_coverage($buildid,$coverage_array)
     @$functionstested = $coverage["functionstested"];
     @$functionsuntested = $coverage["functionsuntested"];
     
-				// Send an email if the coverage is below the project threshold
-				send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,$branchstested,
-				                    $branchsuntested,$functionstested,$functionsuntested);
-			
+    // Send an email if the coverage is below the project threshold
+    send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,$branchstested,
+                        $branchsuntested,$functionstested,$functionsuntested);
+   
     if($i>0)
       {
       $sql .= ", ";
@@ -553,122 +553,122 @@ function remove_site2user($siteid,$userid)
 
 /** Update a site */
 function update_site($siteid,$name,
-										 $processoris64bits,
-										 $processorvendor,
-										 $processorvendorid,
-										 $processorfamilyid,
-										 $processormodelid,
-										 $processorcachesize,
-										 $numberlogicalcpus,
-										 $numberphysicalcpus,
-										 $totalvirtualmemory,
-										 $totalphysicalmemory,
-										 $logicalprocessorsperphysical,
-										 $processorclockfrequency,
-										 $description,$ip,$latitude,$longitude,$nonewrevision=false)
+           $processoris64bits,
+           $processorvendor,
+           $processorvendorid,
+           $processorfamilyid,
+           $processormodelid,
+           $processorcachesize,
+           $numberlogicalcpus,
+           $numberphysicalcpus,
+           $totalvirtualmemory,
+           $totalphysicalmemory,
+           $logicalprocessorsperphysical,
+           $processorclockfrequency,
+           $description,$ip,$latitude,$longitude,$nonewrevision=false)
 {  
   // Update the basic information first
-	mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'");	
-	echo mysql_error(); 
-	
-	$names = array();
-	$names[] = "processoris64bits";
+ mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
+ echo mysql_error(); 
+ 
+ $names = array();
+ $names[] = "processoris64bits";
   $names[] = "processorvendor";
-	$names[] = "processorvendorid";
-	$names[] = "processorfamilyid";
-	$names[] = "processormodelid";
-	$names[] = "processorcachesize";
-	$names[] = "numberlogicalcpus";					
-	$names[] = "numberphysicalcpus";				
-	$names[] = "totalvirtualmemory";		
-	$names[] = "totalphysicalmemory";		
-	$names[] = "logicalprocessorsperphysical";		
-	$names[] = "processorclockfrequency";		
-	$names[] = "description";						
-		 
-	// Check if we have valuable information and the siteinformation doesn't exist
-	$hasvalidinfo = false;
-	$newrevision2 = false;
-	$query = mysql_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
-	if(mysql_num_rows($query)==0)
-	  {
-		$noinformation = 1;
-	  foreach($names as $name)
-		  {
-  	  if($$name!="NA" && strlen($$name)>0)
-		    {
-			  $nonewrevision = false;
-				$newrevision2 = true;
-			  $noinformation = 0;
-				break;
-		    }
-		  }
-		if($noinformation)
-		  {
-		  return; // we have nothing to add
-			}
-	  }
-	else
-	  {
-		$query_array = mysql_fetch_array($query);
-		// Check if the information are different from what we have in the database, then that means
-	  // the system has been upgraded and we need to create a new revision
-	  foreach($names as $name)
-		  {
-  	  if($$name!="NA" && $query_array[$name]!=$$name && strlen($$name)>0)
-		    {
-			  $newrevision2 = true;
-			  break;
-		    }
-		  }
-	  }
-		
+ $names[] = "processorvendorid";
+ $names[] = "processorfamilyid";
+ $names[] = "processormodelid";
+ $names[] = "processorcachesize";
+ $names[] = "numberlogicalcpus";     
+ $names[] = "numberphysicalcpus";    
+ $names[] = "totalvirtualmemory";  
+ $names[] = "totalphysicalmemory";  
+ $names[] = "logicalprocessorsperphysical";  
+ $names[] = "processorclockfrequency";  
+ $names[] = "description";      
+   
+ // Check if we have valuable information and the siteinformation doesn't exist
+ $hasvalidinfo = false;
+ $newrevision2 = false;
+ $query = mysql_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
+ if(mysql_num_rows($query)==0)
+   {
+  $noinformation = 1;
+   foreach($names as $name)
+    {
+     if($$name!="NA" && strlen($$name)>0)
+      {
+     $nonewrevision = false;
+    $newrevision2 = true;
+     $noinformation = 0;
+    break;
+      }
+    }
+  if($noinformation)
+    {
+    return; // we have nothing to add
+   }
+   }
+ else
+   {
+  $query_array = mysql_fetch_array($query);
+  // Check if the information are different from what we have in the database, then that means
+   // the system has been upgraded and we need to create a new revision
+   foreach($names as $name)
+    {
+     if($$name!="NA" && $query_array[$name]!=$$name && strlen($$name)>0)
+      {
+     $newrevision2 = true;
+     break;
+      }
+    }
+   }
+  
   if($newrevision2 && !$nonewrevision)
-	  {
-		$now = date("Y-m-d H:i:s");
-		$sql = "INSERT INTO siteinformation(siteid,timestamp";
-		foreach($names as $name)
-		  {
-			if($$name != "NA" && strlen($$name)>0)
-			  {
-			  $sql .= " ,$name";
-				}
-		  }
-	  
-		$sql .= ") VALUES($siteid,'$now'";
-		foreach($names as $name)
-		  {
-			if($$name != "NA"  && strlen($$name)>0)
-			  {
-			  $sql .= ",'".$$name."'";
-				}
-		  }
-	  $sql .= ")";	
-		mysql_query ($sql);
-		echo mysql_error();
-	  }
-	else
-	  {
-		$sql = "UPDATE siteinformation SET ";
-		$i=0;
-		foreach($names as $name)
-		  {
-		 if($$name != "NA" && strlen($$name)>0)
-			  {	
-				if($i>0)
-					{
-					$sql .= " ,";
-					}
-			  $sql .= " $name='".$$name."'";
+   {
+  $now = date("Y-m-d H:i:s");
+  $sql = "INSERT INTO siteinformation(siteid,timestamp";
+  foreach($names as $name)
+    {
+   if($$name != "NA" && strlen($$name)>0)
+     {
+     $sql .= " ,$name";
+    }
+    }
+   
+  $sql .= ") VALUES($siteid,'$now'";
+  foreach($names as $name)
+    {
+   if($$name != "NA"  && strlen($$name)>0)
+     {
+     $sql .= ",'".$$name."'";
+    }
+    }
+   $sql .= ")"; 
+  mysql_query ($sql);
+  echo mysql_error();
+   }
+ else
+   {
+  $sql = "UPDATE siteinformation SET ";
+  $i=0;
+  foreach($names as $name)
+    {
+   if($$name != "NA" && strlen($$name)>0)
+     { 
+    if($i>0)
+     {
+     $sql .= " ,";
+     }
+     $sql .= " $name='".$$name."'";
         $i++;
-				}
-		  }
-	  
-		$timestamp = $query_array["timestamp"];
-	  $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
-		
- 	  mysql_query ($sql);
-	  echo mysql_error();
+    }
+    }
+   
+  $timestamp = $query_array["timestamp"];
+   $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
+  
+    mysql_query ($sql);
+   echo mysql_error();
     }
 }      
 
@@ -677,18 +677,18 @@ function get_geolocation($ip)
 {  
   $location = array();
   
-		// Test if curl exists
-	 if(function_exists("curl_init") == FALSE)
-		  {
-		  $location['latitude'] = "";
+  // Test if curl exists
+  if(function_exists("curl_init") == FALSE)
+    {
+    $location['latitude'] = "";
       $location['longitude'] = "";
-		  return $location;
-		  }
-	
-	 // Ask hostip.info for geolocation
+    return $location;
+    }
+ 
+  // Ask hostip.info for geolocation
   $lat = "";
   $long = "";
-		
+  
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
       
@@ -734,99 +734,99 @@ function add_site($name,$parser)
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
 
-	$siteindex = $parser->index["SITE"];
-	@$processoris64bits=$parser->vals[$siteindex[0]]["attributes"]["IS64BITS"];
-	@$processorvendor=$parser->vals[$siteindex[0]]["attributes"]["VENDORSTRING"]; 
-	@$processorvendorid=$parser->vals[$siteindex[0]]["attributes"]["VENDORID"]; 
-	@$processorfamilyid=$parser->vals[$siteindex[0]]["attributes"]["FAMILYID"]; 
-	@$processormodelid=$parser->vals[$siteindex[0]]["attributes"]["MODELID"]; 
-	@$processorcachesize=$parser->vals[$siteindex[0]]["attributes"]["PROCESSORCACHESIZE"]; 
-	@$numberlogicalcpus=$parser->vals[$siteindex[0]]["attributes"]["NUMBEROFLOGICALCPU"]; 
-	@$numberphysicalcpus=$parser->vals[$siteindex[0]]["attributes"]["NUMBEROFPHYSICALCPU"]; 
-	@$totalvirtualmemory=$parser->vals[$siteindex[0]]["attributes"]["TOTALVIRTUALMEMORY"]; 
-	@$totalphysicalmemory=$parser->vals[$siteindex[0]]["attributes"]["TOTALPHYSICALMEMORY"]; 
-	@$logicalprocessorsperphysical=$parser->vals[$siteindex[0]]["attributes"]["LOGICALPROCESSORSPERPHYSICAL"]; 
-	@$processorclockfrequency=$parser->vals[$siteindex[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
-	$description="";
-	$ip = $_SERVER['REMOTE_ADDR'];
-	
+ $siteindex = $parser->index["SITE"];
+ @$processoris64bits=$parser->vals[$siteindex[0]]["attributes"]["IS64BITS"];
+ @$processorvendor=$parser->vals[$siteindex[0]]["attributes"]["VENDORSTRING"]; 
+ @$processorvendorid=$parser->vals[$siteindex[0]]["attributes"]["VENDORID"]; 
+ @$processorfamilyid=$parser->vals[$siteindex[0]]["attributes"]["FAMILYID"]; 
+ @$processormodelid=$parser->vals[$siteindex[0]]["attributes"]["MODELID"]; 
+ @$processorcachesize=$parser->vals[$siteindex[0]]["attributes"]["PROCESSORCACHESIZE"]; 
+ @$numberlogicalcpus=$parser->vals[$siteindex[0]]["attributes"]["NUMBEROFLOGICALCPU"]; 
+ @$numberphysicalcpus=$parser->vals[$siteindex[0]]["attributes"]["NUMBEROFPHYSICALCPU"]; 
+ @$totalvirtualmemory=$parser->vals[$siteindex[0]]["attributes"]["TOTALVIRTUALMEMORY"]; 
+ @$totalphysicalmemory=$parser->vals[$siteindex[0]]["attributes"]["TOTALPHYSICALMEMORY"]; 
+ @$logicalprocessorsperphysical=$parser->vals[$siteindex[0]]["attributes"]["LOGICALPROCESSORSPERPHYSICAL"]; 
+ @$processorclockfrequency=$parser->vals[$siteindex[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
+ $description="";
+ $ip = $_SERVER['REMOTE_ADDR'];
+ 
   // Check if we already have the site registered
   $site = mysql_query("SELECT id,name,latitude,longitude FROM site WHERE name='$name'");
   if(mysql_num_rows($site)>0)
     {
     $site_array = mysql_fetch_array($site);
-		$siteid = $site_array["id"];
-		$sitename = $site_array["name"];
-		$latitude = $site_array["latitude"];
-		$longitude = $site_array["longitude"];
-		
-		// We update the site information if needed
-		update_site($siteid,$sitename,
-								$processoris64bits,
-								$processorvendor,
-								$processorvendorid,
-								$processorfamilyid,
-								$processormodelid,
-								$processorcachesize,
-								$numberlogicalcpus,
-								$numberphysicalcpus,
-								$totalvirtualmemory,
-								$totalphysicalmemory,
-								$logicalprocessorsperphysical,
-								$processorclockfrequency,
-								$description,$ip,$latitude,$longitude,false);
+  $siteid = $site_array["id"];
+  $sitename = $site_array["name"];
+  $latitude = $site_array["latitude"];
+  $longitude = $site_array["longitude"];
+  
+  // We update the site information if needed
+  update_site($siteid,$sitename,
+        $processoris64bits,
+        $processorvendor,
+        $processorvendorid,
+        $processorfamilyid,
+        $processormodelid,
+        $processorcachesize,
+        $numberlogicalcpus,
+        $numberphysicalcpus,
+        $totalvirtualmemory,
+        $totalphysicalmemory,
+        $logicalprocessorsperphysical,
+        $processorclockfrequency,
+        $description,$ip,$latitude,$longitude,false);
 
     return $siteid;
     }
-	 
-	// If not found we create the site
+  
+ // If not found we create the site
   // We retrieve the geolocation from the IP address
-	$location = get_geolocation($ip);
+ $location = get_geolocation($ip);
   
   $latitude = $location['latitude'];
   $longitude = $location['longitude'];  
 
   if(!mysql_query ("INSERT INTO site (name,ip,latitude,longitude) 
                     VALUES ('$name','$ip','$latitude','$longitude')"))
-		{
+  {
     echo "add_site = ".mysql_error();  
-	  }
-		
-	$siteid = mysql_insert_id();
-	
-	// Insert the site information
+   }
+  
+ $siteid = mysql_insert_id();
+ 
+ // Insert the site information
   $now = date("Y-m-d H:i:s");
-	mysql_query ("INSERT INTO siteinformation (siteid,
-	 									 timestamp,
-										 processoris64bits,
-										 processorvendor,
-										 processorvendorid,
-										 processorfamilyid,
-										 processormodelid,
-										 processorcachesize,
-										 numberlogicalcpus,
-										 numberphysicalcpus,
-										 totalvirtualmemory,
-										 totalphysicalmemory,
-										 logicalprocessorsperphysical,
-										 processorclockfrequency,
-	                   description) 
+ mysql_query ("INSERT INTO siteinformation (siteid,
+            timestamp,
+           processoris64bits,
+           processorvendor,
+           processorvendorid,
+           processorfamilyid,
+           processormodelid,
+           processorcachesize,
+           numberlogicalcpus,
+           numberphysicalcpus,
+           totalvirtualmemory,
+           totalphysicalmemory,
+           logicalprocessorsperphysical,
+           processorclockfrequency,
+                    description) 
                  VALUES ('$siteid',
-								 				'$now',
-												'$processoris64bits',
-												'$processorvendor',
-												'$processorvendorid',
-												'$processorfamilyid',
-												'$processormodelid',
-												'$processorcachesize',
-												'$numberlogicalcpus',
-												'$numberphysicalcpus',
-												'$totalvirtualmemory',
-												'$totalphysicalmemory',
-												'$logicalprocessorsperphysical',
-												'$processorclockfrequency',
-								        '$description')");
-		
+             '$now',
+            '$processoris64bits',
+            '$processorvendor',
+            '$processorvendorid',
+            '$processorfamilyid',
+            '$processormodelid',
+            '$processorcachesize',
+            '$numberlogicalcpus',
+            '$numberphysicalcpus',
+            '$totalvirtualmemory',
+            '$totalphysicalmemory',
+            '$logicalprocessorsperphysical',
+            '$processorclockfrequency',
+                '$description')");
+  
   return $siteid;
 }
 
@@ -893,14 +893,14 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
   $buildid = mysql_insert_id();
 
   // Insert information about the parser
-	$site = $parser->index["SITE"];
-	@$osname=$parser->vals[$site[0]]["attributes"]["OSNAME"]; 
-	@$osrelease=$parser->vals[$site[0]]["attributes"]["OSRELEASE"]; 
-	@$osversion=$parser->vals[$site[0]]["attributes"]["OSVERSION"]; 
-	@$osplatform=$parser->vals[$site[0]]["attributes"]["OSPLATFORM"];
-	
-	if($osname!="" || $osrelease!="" || $osversion!="" || $osplatform!="")
-  	{
+ $site = $parser->index["SITE"];
+ @$osname=$parser->vals[$site[0]]["attributes"]["OSNAME"]; 
+ @$osrelease=$parser->vals[$site[0]]["attributes"]["OSRELEASE"]; 
+ @$osversion=$parser->vals[$site[0]]["attributes"]["OSVERSION"]; 
+ @$osplatform=$parser->vals[$site[0]]["attributes"]["OSPLATFORM"];
+ 
+ if($osname!="" || $osrelease!="" || $osversion!="" || $osplatform!="")
+   {
     mysql_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform) 
                   VALUES ('$buildid','$osname','$osrelease','$osversion','$osplatform')");
     }
@@ -950,8 +950,8 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   
   $command = addslashes($command);
   $output = addslashes($output);
-		
-  $buffer = $name.$path.$command.$output.$details;	
+  
+  $buffer = $name.$path.$command.$output.$details; 
   $crc32 = crc32($buffer);
   
   // Check if the test doesn't exist
@@ -1147,16 +1147,16 @@ function get_dates($date,$nightlytime)
     { 
     $date = gmdate("Ymd");
     $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
-		}
+  }
   else
     {
     $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
     }
   
   //$currenttime = $today;
-	
-	//echo date("Y-m-d H:i:s",$currenttime);
-	// If we are the same day and the time is more than the current dashboard
+ 
+ //echo date("Y-m-d H:i:s",$currenttime);
+ // If we are the same day and the time is more than the current dashboard
   // the previous date is actually today.
   /*if($currenttime > $today)
     {
@@ -1167,9 +1167,9 @@ function get_dates($date,$nightlytime)
     $previousdate = gmdate("Ymd",$today-3600*24);
     }*/
   
-	$previousdate = gmdate("Ymd",$today-3600*24);
+ $previousdate = gmdate("Ymd",$today-3600*24);
   $nextdate = gmdate("Ymd",$today+3600*24);
-	
+ 
   return array($previousdate, $today, $nextdate);
 }
 
@@ -1260,13 +1260,13 @@ function get_cdash_dashboard_xml($projectname, $date)
     $project_array["name"] = $projectname;
     $project_array["nightlytime"] = "00:00:00";
     }
-		
+  
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 
   $xml = "<dashboard>
   <datetime>".date("l, F d Y H:i:s",time())."</datetime>
   <date>".$date."</date>
-	<unixtimestamp>".$currentstarttime."</unixtimestamp>
+ <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <startdate>".date("l, F d Y H:i:s",$currentstarttime)."</startdate>
   <svn>".$project_array["cvsurl"]."</svn>
   <bugtracker>".$project_array["bugtrackerurl"]."</bugtracker>
