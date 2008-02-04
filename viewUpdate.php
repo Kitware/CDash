@@ -56,10 +56,17 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= "</build>";
 
   $xml .= "<updates>";
-  $xml .= "<javascript>";
+
   
-  // Regretfully this is not correct and need to be fixes
-  $updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid' ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
+	// Return the status
+	
+  $status_array = mysql_fetch_array(mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'"));
+  $xml .= add_XML_value("status",$status_array["status"]);
+
+  $xml .= "<javascript>";
+  // Regretfully this is not correct and need to be fixed
+  $updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid'
+	                             ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
   
   function sort_array_by_directory($a,$b)
     { 

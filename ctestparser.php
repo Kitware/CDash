@@ -618,11 +618,7 @@ function parse_update($parser,$projectid)
 
   $status = 0;
 	$returnstatus = getXMLValue($xmlarray,"UPDATERETURNSTATUS","UPDATE");
-  if(strpos($returnstatus,"error") !== FALSE)
-	  {
-		$status = 1;
-	  }
-  add_update($buildid,$start_time,$end_time,$command,$type,$status);
+  add_update($buildid,$start_time,$end_time,$command,$type,$returnstatus);
     
   $files_array = array();
   $index = 0;

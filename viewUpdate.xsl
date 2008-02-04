@@ -28,6 +28,13 @@ Files changed <xsl:value-of select="cdash/build/site"/> -- <xsl:value-of select=
 Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 </xsl:if>
 </h3>
+
+<h3>
+<xsl:value-of select="cdash/updates/status"/>
+<xsl:if test="string-length(cdash/updates/status)>0">
+</xsl:if>
+</h3>
+
 <script type="text/javascript">var Icons = "images/";</script>
 <script type="text/javascript" SRC="javascript/tree.js"></script>
 
