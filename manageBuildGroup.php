@@ -309,7 +309,7 @@ if($DeleteGroup)
   $Groupid = $_POST["groupid"];
   $now = date("Y-m-d H:i:s");
     
-  // WARNING: So we restore the state of the previous groups if we meet the following conditions
+  // WARNING: We restore the state of the previous groups if we meet the following conditions
   // 1) No builds have been defined for this group (the table group2build is empty)
   // 2) No rules with expected builds are defined (build2grouprule doesn't include groupid and expected) 
   $nbuilds = mysql_num_rows(mysql_query("SELECT * FROM build2group WHERE groupid='$Groupid'"));
@@ -322,35 +322,91 @@ if($DeleteGroup)
   
   $nposition = mysql_num_rows(mysql_query("SELECT * FROM buildgroupposition WHERE buildgroupid='$Groupid'")); 
   
+	// If this is not the last group we put it at the last position
   if($nposition>1)
     {
-    $xml .= "<warning>";
-    $xml .= "Are you sure you want to delete this group? can you just delete the last group and rename newly created group?";
-    $xml .= "</warning>";
-    }
-  else if($nbuilds == 0 && $nrules==0)
+		$newpos = mysql_num_rows(mysql_query("SELECT * FROM buildgroupposition WHERE endtime='0000-00-00 00:00:00'"));
+		
+    // Update the groups below
+    $groupbelow = mysql_query("SELECT g.id FROM buildgroup AS g, buildgroupposition as bg
+                        WHERE g.id=bg.buildgroupid AND bg.position>'$groupposition' AND g.projectid='$projectid'
+											  AND bg.endtime='0000-00-00 00:00:00'");
+		
+		while($groupbelow_array = mysql_fetch_array($groupbelow))
+		  {									
+      $groupbelowid = $groupbelow_array["id"];      
+			mysql_query("UPDATE buildgroupposition SET position=position-1 WHERE buildgroupid='$groupbelowid'");
+      }
+    // Update the group
+    mysql_query("UPDATE buildgroupposition SET position='$newpos' WHERE buildgroupid='$Groupid' AND endtime='0000-00-00 00:00:00'");
+	
+		// Consolidate the group positions
+		ConsolidateGroupPosition($projectid);
+		}
+	
+	// If the group is totally empty we remove it
+  if($nbuilds == 0 && $nrules==0) 
     {
-    // Find the start time for this group
-    $group_array = mysql_fetch_array(mysql_query("SELECT starttime FROM buildgroup WHERE id='$Groupid'"));
-    $groupstarttime = $group_array["starttime"];
-    
-    // Delete all the groupposition that have this starttime
-    // Loop through the group for this project
-    $group = mysql_query("SELECT id FROM buildgroup WHERE projectid='$projectid' AND endtime='0000-00-00 00:00:00'");
-    while($group_array = mysql_fetch_array($group))
-      {
-      $groupid = $group_array["id"];
-      mysql_query("DELETE FROM buildgroupposition WHERE starttime='$groupstarttime' AND endtime='0000-00-00 00:00:00' AND buildgroupid='$groupid'"); 
+		if($nposition>1) // this is not the last created group we delete all the group positions (as to be last group)
+		  {
+			$currentgroupstarttime_array = mysql_fetch_array(mysql_query("SELECT starttime FROM buildgroupposition WHERE buildgroupid='$Groupid' 
+		                                                              ORDER BY starttime ASC LIMIT 1"));
+			$currentgroupstarttime = $currentgroupstarttime_array["starttime"];
+			
+			$groups = mysql_query("SELECT buildgroupposition.buildgroupid,buildgroupposition.starttime FROM buildgroupposition,buildgroup
+														 WHERE buildgroup.id=buildgroupposition.buildgroupid AND buildgroup.projectid='$projectid'
+														 AND buildgroupposition.buildgroupid!='$Groupid' AND buildgroupposition.endtime='$currentgroupstarttime'");
+			echo mysql_error();
+														 
+			while($groups_array = mysql_fetch_array($groups))
+				{
+				$buildgroupid = $groups_array["buildgroupid"];
+				$starttime = $groups_array["starttime"];
+				
+				// Find the next endtime
+				$nextgroup = mysql_query("SELECT endtime FROM buildgroupposition WHERE buildgroupid='$buildgroupid' AND starttime>'$starttime' ORDER BY starttime ASC LIMIT 1"); 
+				$nextgroup_array = mysql_fetch_array($nextgroup);
+				$nextendtime = $nextgroup_array["endtime"];
+				
+				mysql_query("UPDATE buildgroupposition SET endtime='$nextendtime' WHERE buildgroupid='$buildgroupid' AND starttime='$starttime'"); 
+				echo mysql_error();
+				
+				echo mysql_error();
+				}
+			
+			// Finish the merging by deleting extra segments
+			mysql_query("DELETE FROM buildgroupposition WHERE starttime='$currentgroupstarttime' AND buildgroupid!='$Groupid'"); 
+
+      // Delete all the group positions for the current group
+  		mysql_query("DELETE FROM buildgroupposition WHERE buildgroupid='$Groupid'");
+			
+  		// Consolidate the group positions
+	  	ConsolidateGroupPosition($projectid);
+		  }
+	  else // this is the last added group we restore the previous step
+		  {
+			// Find the start time for this group
+			$group_array = mysql_fetch_array(mysql_query("SELECT starttime FROM buildgroup WHERE id='$Groupid'"));
+			$groupstarttime = $group_array["starttime"];
+			
+			// Delete all the groupposition that have this starttime
+			// Loop through the group for this project
+			$group = mysql_query("SELECT id FROM buildgroup WHERE projectid='$projectid' AND endtime='0000-00-00 00:00:00'");
+			while($group_array = mysql_fetch_array($group))
+				{
+				$groupid = $group_array["id"];
+				mysql_query("DELETE FROM buildgroupposition WHERE starttime='$groupstarttime' AND endtime='0000-00-00 00:00:00' AND buildgroupid='$groupid'"); 
+				}
+				
+			// Restore the old endtime
+			$group = mysql_query("SELECT id FROM buildgroup WHERE projectid='$projectid'"); // just to make sure this is for the right project
+			while($group_array = mysql_fetch_array($group))
+				{
+				$groupid = $group_array["id"];
+				mysql_query("UPDATE buildgroupposition SET endtime='0000-00-00 00:00:00' WHERE endtime='$groupstarttime' AND buildgroupid='$groupid'"); 
+				}
       }
-      
-    // Restore the old endtime
-    $group = mysql_query("SELECT id FROM buildgroup WHERE projectid='$projectid'"); // just to make sure this is for the right project
-    while($group_array = mysql_fetch_array($group))
-      {
-      $groupid = $group_array["id"];
-      mysql_query("UPDATE buildgroupposition SET endtime='0000-00-00 00:00:00' WHERE endtime='$groupstarttime' AND buildgroupid='$groupid'"); 
-      }
-      
+							
     // Finally delete the group itself
     mysql_query("DELETE FROM buildgroup WHERE id='$Groupid'"); 
     }
@@ -416,7 +472,7 @@ if($GlobalMove)
                  WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
                  AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
   
-    // Add the new rule (begin time is set by default by mysql
+    // Add the new rule (end time is set by default by mysql)
     mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
                  VALUES ('$GroupSelection','$buildtype','$buildname','$siteid','$ExpectedMove','$now')");
     }

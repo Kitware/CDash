@@ -14,6 +14,15 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
       
+			<!-- Functions to confirm the remove -->
+								<script language="JavaScript">
+								function confirmDelete() {
+											if (window.confirm("Are you sure you want to delete this group?")){
+														return true;
+											}
+											return false;
+								}
+								</script>
        </head>
        <body bgcolor="#ffffff">
 <xsl:call-template name="headerback"/>
@@ -33,7 +42,7 @@ project page</a>
 <b>Warning: <xsl:value-of select="cdash/warning"/></b><br/><br/>
 </xsl:if>
 
-<form name="form1" enctype="multipart/form-data" method="post" action="">
+<form name="form1" enctype="multipart/form-data" method="post" action="manageBuildGroup.php">
 <table width="100%"  border="0">
   <tr>
     <td width="10%"><div align="right"><strong>Project:</strong></div></td>
@@ -72,7 +81,7 @@ project page</a>
      <td>
      <table>
      <xsl:for-each select="cdash/project/group">
-     <form method="post" action="">
+     <form method="post" action="manageBuildGroup.php">
      <xsl:attribute name="form"><xsl:value-of select="id"/></xsl:attribute>
      
      <tr>
@@ -90,7 +99,7 @@ project page</a>
      </xsl:if>
      </td><td>
      <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
-     <input type="submit" name="deleteGroup" value="Delete Group"/>
+     <input type="submit" name="deleteGroup" value="Delete Group" onclick="return confirmDelete()"/>
 		 <input name="newstartdate" type="text" id="newstartdate" size="20">
 		 <xsl:attribute name="value"><xsl:value-of select="startdate"/></xsl:attribute>
 		 </input>
