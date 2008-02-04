@@ -250,12 +250,13 @@ function create_build($parser,$projectid)
 {
   $xmlarray = $parser->vals;
 	$site = $parser->index["SITE"];
+		
   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
  
   // Extract the type from the buildstamp
-  $stamp = $parser->vals[$site[0]]["BUILDSTAMP"];
+  $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   $type = substr($stamp,strrpos($stamp,"-")+1);
-  $generator = $parser->vals[$site[0]]["GENERATOR"];
+  $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
   $starttime = getXMLValue($xmlarray,"STARTDATETIME","COVERAGE");
     
   // Convert the starttime to a timestamp
@@ -275,7 +276,7 @@ function create_build($parser,$projectid)
   $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
   $submit_time = gmdate("Y-m-d H:i:s");
   
-  $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
+  $buildid = add_build($projectid,$siteid,$sitename,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
   
   return $buildid;
 }
@@ -294,7 +295,7 @@ function parse_configure($parser,$projectid)
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
-    $buildid = create_build($xmlarray,$projectid);
+    $buildid = create_build($parser,$projectid);
     }
     
   $starttime = getXMLValue($xmlarray,"STARTDATETIME","CONFIGURE");

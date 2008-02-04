@@ -573,7 +573,7 @@ function update_site($siteid,$name,
  
  $names = array();
  $names[] = "processoris64bits";
-  $names[] = "processorvendor";
+ $names[] = "processorvendor";
  $names[] = "processorvendorid";
  $names[] = "processorfamilyid";
  $names[] = "processormodelid";
@@ -595,12 +595,12 @@ function update_site($siteid,$name,
   $noinformation = 1;
    foreach($names as $name)
     {
-     if($$name!="NA" && strlen($$name)>0)
+    if($$name!="NA" && strlen($$name)>0)
       {
-     $nonewrevision = false;
-    $newrevision2 = true;
-     $noinformation = 0;
-    break;
+      $nonewrevision = false;
+      $newrevision2 = true;
+      $noinformation = 0;
+      break;
       }
     }
   if($noinformation)
@@ -664,12 +664,17 @@ function update_site($siteid,$name,
     }
     }
    
-  $timestamp = $query_array["timestamp"];
+   $timestamp = $query_array["timestamp"];
    $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
-  
-    mysql_query ($sql);
-   echo mysql_error();
-    }
+	 echo $sql;
+   mysql_query ($sql);
+	 
+	 
+	 if(strlen(mysql_error())>0)
+	   {
+     echo "update_site(): ".mysql_error();
+		 }
+  }
 }      
 
 /** Get the geolocation from IP address */
