@@ -664,15 +664,18 @@ function update_site($siteid,$name,
     }
     }
    
-   $timestamp = $query_array["timestamp"];
-   $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
-	 
-   mysql_query ($sql); 
-	 if(strlen(mysql_error())>0)
+	 if(count($names)>0)
 	   {
-		 echo $sql;
-     echo "update_site(): ".mysql_error();
-		 }
+     $timestamp = $query_array["timestamp"];
+     $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
+	 
+     mysql_query ($sql); 
+   	if(strlen(mysql_error())>0)
+	    {
+		  echo $sql;
+      echo "update_site(): ".mysql_error();
+		  }
+	  }
   }
 }      
 
