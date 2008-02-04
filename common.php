@@ -130,6 +130,18 @@ function add_log($text,$function)
   error_log($error,3,$CDASH_LOG_FILE);
 }
 
+/** Report last my SQL error */
+function add_last_sql_error($functionname)
+{
+  $mysql_error = mysql_error();
+	if(strlen($mysql_error)>0)
+	  {
+	  add_log("SQL error: ".$mysql_error."\n",$functionname);
+    $text = "SQL error in $functionname():".$mysql_error."<br>";
+    echo $text;
+		}
+}
+
 /** Clean the backup directory */
 function clean_backup_directory()
 {   
@@ -478,7 +490,7 @@ function add_coverage($buildid,$coverage_array)
     }
   // Insert into coverage
   mysql_query($sql);
-  echo mysql_error();
+	add_last_sql_error("add_coverage");
 }
 
 /** Create a coverage file */
@@ -499,10 +511,10 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
       {
       $previousfileid = $fileid;
       mysql_query ("INSERT INTO coveragefile(fullpath,file) VALUES ('$fullpath','$filecontent')");
-      echo mysql_error();
+      add_last_sql_error("add_coveragefile");
       $fileid = mysql_insert_id();
       mysql_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$previousfileid'");
-      echo mysql_error();
+      add_last_sql_error("add_coveragefile");
       }  
     }
   return $fileid;
@@ -530,7 +542,7 @@ function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
      }
  
   mysql_query ($sql);
-  echo mysql_error();    
+  add_last_sql_error("add_coveragelogfile");
 }
 
 /** add a user to a site */
@@ -540,7 +552,7 @@ function add_site2user($siteid,$userid)
   if(mysql_num_rows($site2user) == 0)
     {
     mysql_query("INSERT INTO site2user (siteid,userid) VALUES ('$siteid','$userid')");
-    echo mysql_error();
+    add_last_sql_error("add_site2user");
     }
 }
 
@@ -548,7 +560,7 @@ function add_site2user($siteid,$userid)
 function remove_site2user($siteid,$userid)
 {
   mysql_query("DELETE FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
-  echo mysql_error();
+  add_last_sql_error("remove_site2user");
 }
 
 /** Update a site */
@@ -569,7 +581,7 @@ function update_site($siteid,$name,
 {  
   // Update the basic information first
  mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
- echo mysql_error(); 
+ add_last_sql_error("update_site");
  
  $names = array();
  $names[] = "processoris64bits";
@@ -608,21 +620,21 @@ function update_site($siteid,$name,
  $query = mysql_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
  if(mysql_num_rows($query)==0)
    {
-  $noinformation = 1;
-   foreach($names as $name)
-    {
-    if($$name!="NA" && strlen($$name)>0)
-      {
-      $nonewrevision = false;
-      $newrevision2 = true;
-      $noinformation = 0;
-      break;
-      }
-    }
-  if($noinformation)
-    {
-    return; // we have nothing to add
-   }
+	 $noinformation = 1;
+	 foreach($names as $name)
+		 {
+		 if($$name!="NA" && strlen($$name)>0)
+			 {
+		   $nonewrevision = false;
+			 $newrevision2 = true;
+			 $noinformation = 0;
+			 break;
+			 }
+		 }
+	 if($noinformation)
+		 {
+		 return; // we have nothing to add
+		 }
    }
  else
    {
@@ -630,11 +642,23 @@ function update_site($siteid,$name,
   // Check if the information are different from what we have in the database, then that means
    // the system has been upgraded and we need to create a new revision
    foreach($names as $name)
-    {
-     if($$name!="NA" && $query_array[$name]!=$$name && strlen($$name)>0)
+    {		
+    if($$name!="NA" && $query_array[$name]!=$$name && strlen($$name)>0)
       {
-     $newrevision2 = true;
-     break;
+			// Take care of rounding issues
+			if(is_numeric($$name))
+			  {
+				if(round($$name)!=$query_array[$name])
+				  {
+					$newrevision2 = true;
+					break;
+				  }
+		  	}
+		  else
+        {
+				$newrevision2 = true;
+				break;
+        }
       }
     }
    }
@@ -660,8 +684,9 @@ function update_site($siteid,$name,
     }
     }
    $sql .= ")"; 
+	 echo $sql;
   mysql_query ($sql);
-  echo mysql_error();
+  add_last_sql_error("update_site",$sql);
    }
  else
    {
@@ -684,12 +709,7 @@ function update_site($siteid,$name,
      $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
 	 
      mysql_query ($sql); 
-   	if(strlen(mysql_error())>0)
-	    {
-		  echo $sql;
-      echo "update_site(): ".mysql_error();
-		  }
-
+		 add_last_sql_error("update_site",$sql);
   }
 }      
 
@@ -922,9 +942,9 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
  
  if($osname!="" || $osrelease!="" || $osversion!="" || $osplatform!="")
    {
-    mysql_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform) 
+   mysql_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform) 
                   VALUES ('$buildid','$osname','$osrelease','$osversion','$osplatform')");
-    }
+   }
 
   // Insert the build into the proper group
   // 1) Check if we have any build2grouprules for this build
@@ -961,7 +981,7 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
     
   mysql_query ("INSERT INTO configure (buildid,starttime,endtime,command,log,status) 
                VALUES ('$buildid','$starttime','$endtime','$command','$log','$status')");
-  echo mysql_error();
+  add_last_sql_error("add_configure");
 }
 
 /** Add a new test */
@@ -1039,13 +1059,13 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
                   VALUES('$imgid', '$testid', '$role')";
         if(!mysql_query("$query"))
           {
-          echo mysql_error();
+          add_last_sql_error("add_test");
           }
         }
       }
     else
       {
-      echo mysql_error();
+      add_last_sql_error("add_test");
       } 
     } 
     
@@ -1053,8 +1073,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
    // Add into build2test
    mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
                  VALUES ('$buildid','$testid','$status','$time')");
-                 
-  //add_log("End buildid=".$buildid,"add_test");
+   add_last_sql_error("add_test");              
 }
 
 /** Add a new error/warning */
@@ -1066,7 +1085,7 @@ function  add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$preco
     
   mysql_query ("INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount) 
                VALUES ('$buildid','$type','$logline','$text','$sourcefile','$sourceline','$precontext','$postcontext','$repeatcount')");
-  echo mysql_error();
+  add_last_sql_error("add_error");
 }
 
 /** Add a new update */
@@ -1076,7 +1095,7 @@ function  add_update($buildid,$start_time,$end_time,$command,$type,$status)
     
   mysql_query ("INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status) 
                VALUES ('$buildid','$start_time','$end_time','$command','$type','$status')");
-  echo mysql_error();
+  add_last_sql_error("add_update");
 }
 
 /** Add a new update file */
@@ -1086,7 +1105,7 @@ function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$rev
     
   mysql_query ("INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision) 
                VALUES ('$buildid','$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
-  echo mysql_error();
+  add_last_sql_error("add_updatefile");
 }
 
 /** Add dynamic analysis */
@@ -1103,7 +1122,7 @@ function add_dynamic_analysis_defect($dynid,$type,$value)
 {
   mysql_query ("INSERT INTO dynamicanalysisdefect (dynamicanalysisid,type,value) 
                 VALUES ('$dynid','$type','$value')");
-  echo mysql_error();
+  add_last_sql_error("add_dynamic_analysis_defect");
 }
 
 
@@ -1113,7 +1132,7 @@ function add_note($buildid,$text,$timestamp,$name)
   $text = addslashes($text);
     
   mysql_query ("INSERT INTO note (buildid,text,time,name) VALUES ('$buildid','$text','$timestamp','$name')");
-  echo mysql_error();
+  add_last_sql_error("add_note");
 }
 
 /**
