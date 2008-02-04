@@ -26,9 +26,11 @@ if ($session_OK)
 
 		$userid = $_SESSION['cdash']['loginid'];
 		@$projectid = $_GET["projectid"];
-		
+		 
+		 @$edit = $_GET["edit"];
+		 
 		// If the projectid is not set and there is only one project we go directly to the page
-		if(!isset($projectid))
+		if(!isset($edit) && !isset($projectid))
 		{
 			$project = mysql_query("SELECT id FROM project LIMIT 1");
 			if(mysql_num_rows($project)>0)
@@ -38,7 +40,7 @@ if ($session_OK)
 				}
 		}
 		
-  @$edit = $_GET["edit"];
+ 
 	 $role = 0;
 	
 		$user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
