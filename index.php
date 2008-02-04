@@ -271,7 +271,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
     
     // IF NO CONFIGURE WE DON'T DISPLAY
-    if($nconfigure > 0)
+    //if($nconfigure > 0)
     {
     // Get the site name
     $xml .= "<build>";
