@@ -665,7 +665,7 @@ function update_site($siteid,$name,
   
   if($newrevision2 && !$nonewrevision)
    {
-  $now = date("Y-m-d H:i:s");
+  $now = gmdate("Y-m-d H:i:s");
   $sql = "INSERT INTO siteinformation(siteid,timestamp";
   foreach($names as $name)
     {
@@ -836,7 +836,7 @@ function add_site($name,$parser)
  $siteid = mysql_insert_id();
  
  // Insert the site information
-  $now = date("Y-m-d H:i:s");
+ $now = gmdate("Y-m-d H:i:s");
  mysql_query ("INSERT INTO siteinformation (siteid,
             timestamp,
            processoris64bits,
