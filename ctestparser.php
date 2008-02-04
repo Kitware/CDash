@@ -328,7 +328,7 @@ function parse_testing($parser,$projectid)
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
-    return;
+    $buildid = create_build($parser,$projectid);
     }
 
   $test_array = array();
@@ -455,7 +455,7 @@ function parse_coverage($parser,$projectid)
     $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
     $submit_time = gmdate("Y-m-d H:i:s");
     
-    $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
+    $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
     }
   
   $LOCTested = getXMLValue($xmlarray,"LOCTESTED","COVERAGE");
@@ -521,7 +521,7 @@ function parse_coveragelog($parser,$projectid)
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
-    return; // we really need a build id
+    $buildid = create_build($parser,$projectid);
     }
     
   $coveragelog_array = array();
@@ -573,7 +573,32 @@ function parse_update($parser,$projectid)
   $buildid = get_build_id($buildname,$stamp,$projectid);
   if($buildid<0)
     {
-    return;
+	  $update = $parser->index["UPDATE"];	
+    $sitename = getXMLValue($xmlarray,"SITE","UPDATE");
+
+    // Extract the type from the buildstamp
+    $type = substr($stamp,strrpos($stamp,"-")+1);
+    $generator = $parser->vals[$update[0]]["attributes"]["GENERATOR"];
+    $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
+    
+    // Convert the starttime to a timestamp
+    $starttimestamp = str_to_time($starttime,$stamp);
+    $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","UPDATE");
+    $endtimestamp = $starttimestamp+$elapsedminutes*60;
+    
+    include("config.php");
+    include_once("common.php");
+    $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+    mysql_select_db("$CDASH_DB_NAME",$db);
+  
+    // First we look at the site and add it if not in the list
+    $siteid = add_site($sitename,$parser);
+        
+    $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
+    $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
+    $submit_time = gmdate("Y-m-d H:i:s");
+    
+    $buildid = add_build($projectid,$siteid,$sitename,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
     }
     
   $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
@@ -663,7 +688,7 @@ function parse_note($parser,$projectid)
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
-    return;
+    $buildid = create_build($parser,$projectid);
     }
  
   foreach($xmlarray as $tagarray)
@@ -723,7 +748,7 @@ function parse_dynamicanalysis($parser,$projectid)
     $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
     $submit_time = gmdate("Y-m-d H:i:s");
     
-    $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","");
+    $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
     }
       
   $memleak_array = array();
