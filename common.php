@@ -585,7 +585,23 @@ function update_site($siteid,$name,
  $names[] = "logicalprocessorsperphysical";  
  $names[] = "processorclockfrequency";  
  $names[] = "description";      
-   
+ 
+ // Check that we have a valid input
+ $isinputvalid = 0;
+ foreach($names as $name)
+  {
+   if($$name != "NA" && strlen($$name)>0)
+     { 
+     $isinputvalid = 1;
+		 break;
+     }
+	}  
+
+ if(!$isinputvalid)
+   {
+	 return;
+   }  
+	 
  // Check if we have valuable information and the siteinformation doesn't exist
  $hasvalidinfo = false;
  $newrevision2 = false;
@@ -664,8 +680,6 @@ function update_site($siteid,$name,
     }
     }
    
-	 if(count($names)>0)
-	   {
      $timestamp = $query_array["timestamp"];
      $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
 	 
@@ -675,7 +689,7 @@ function update_site($siteid,$name,
 		  echo $sql;
       echo "update_site(): ".mysql_error();
 		  }
-	  }
+
   }
 }      
 
