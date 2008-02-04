@@ -252,7 +252,8 @@ function create_build($parser,$projectid)
 	$site = $parser->index["SITE"];
 		
   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
- 
+  $buildname = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+
   // Extract the type from the buildstamp
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   $type = substr($stamp,strrpos($stamp,"-")+1);
@@ -276,7 +277,7 @@ function create_build($parser,$projectid)
   $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
   $submit_time = gmdate("Y-m-d H:i:s");
   
-  $buildid = add_build($projectid,$siteid,$sitename,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
+  $buildid = add_build($projectid,$siteid,$buildname,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
   
   return $buildid;
 }
@@ -598,9 +599,13 @@ function parse_update($parser,$projectid)
     $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
     $submit_time = gmdate("Y-m-d H:i:s");
     
-    $buildid = add_build($projectid,$siteid,$sitename,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
+    $buildid = add_build($projectid,$siteid,$buildname,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
     }
-    
+  
+	// Remove any previous update
+	mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");
+  
   $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
   $starttimestamp = str_to_time($starttime,$stamp);
   $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","UPDATE");
@@ -611,7 +616,13 @@ function parse_update($parser,$projectid)
   $start_time = gmdate("Y-m-d H:i:s",$starttimestamp);
   $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
 
-  add_update($buildid,$start_time,$end_time,$command,$type);
+  $status = 0;
+	$returnstatus = getXMLValue($xmlarray,"UPDATERETURNSTATUS","UPDATE");
+  if(strpos($returnstatus,"error") !== FALSE)
+	  {
+		$status = 1;
+	  }
+  add_update($buildid,$start_time,$end_time,$command,$type,$status);
     
   $files_array = array();
   $index = 0;

@@ -666,12 +666,11 @@ function update_site($siteid,$name,
    
    $timestamp = $query_array["timestamp"];
    $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
-	 echo $sql;
-   mysql_query ($sql);
 	 
-	 
+   mysql_query ($sql); 
 	 if(strlen(mysql_error())>0)
 	   {
+		 echo $sql;
      echo "update_site(): ".mysql_error();
 		 }
   }
@@ -1054,12 +1053,12 @@ function  add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$preco
 }
 
 /** Add a new update */
-function  add_update($buildid,$start_time,$end_time,$command,$type)
+function  add_update($buildid,$start_time,$end_time,$command,$type,$status)
 {
   $command = addslashes($command);
     
-  mysql_query ("INSERT INTO buildupdate (buildid,starttime,endtime,command,type) 
-               VALUES ('$buildid','$start_time','$end_time','$command','$type')");
+  mysql_query ("INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status) 
+               VALUES ('$buildid','$start_time','$end_time','$command','$type','$status')");
   echo mysql_error();
 }
 
