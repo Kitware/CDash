@@ -125,6 +125,7 @@ CREATE TABLE `buildupdate` (
   `endtime` timestamp NOT NULL default '0000-00-00 00:00:00',
   `command` text NOT NULL,
   `type` varchar(4) NOT NULL default '',
+  `status` tinyint(4) NOT NULL default '0',
   KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
