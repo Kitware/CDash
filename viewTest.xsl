@@ -26,12 +26,12 @@
   <xsl:value-of select="cdash/numNotRun"/> not run
 </h3><br/>
 
-<table cellspacing="0">
-  <tr>
+<table cellspacing="0" class="tabb">
+  <tr class="table-heading1">
     <th>Name</th>
     <th>Status</th>
     <th>Time</th>
-    <th>Details</th>
+    <th id="nob">Details</th>
   </tr>
 <xsl:for-each select="cdash/tests/test">
   <tr>
@@ -47,7 +47,7 @@
     <td>
       <xsl:attribute name="align">center</xsl:attribute>
       <xsl:attribute name="class">
-        <xsl:value-of select="status"/>
+        <xsl:value-of select="statusclass"/>
       </xsl:attribute>
       <a>
  <xsl:attribute name="href">
@@ -59,7 +59,7 @@
     <td align="right">
       <xsl:value-of select="execTime"/>
     </td>
-    <td align="right">
+    <td align="right" id="nob">
       <xsl:value-of select="details"/>
     </td>
   </tr>

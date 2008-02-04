@@ -79,21 +79,23 @@ while($row = mysql_fetch_array($result))
   $xml .= add_XML_value("detailsLink", $detailsLink) . "\n";
   if($color)
     {
-    $xml .= add_XML_value("class", "tr-even") . "\n";
+    $xml .= add_XML_value("class", "treven") . "\n";
     }
   else
     {
-    $xml .= add_XML_value("class", "tr-odd") . "\n";
+    $xml .= add_XML_value("class", "trodd") . "\n";
     }
   $color = !$color;
   switch($row["status"])
     {
     case "passed":
       $xml .= add_XML_value("status", "Passed") . "\n";
+      $xml .= add_XML_value("statusclass", "normal") . "\n";
       $numPassed++;
       break; 
     case "failed":
       $xml .= add_XML_value("status", "Failed") . "\n";
+      $xml .= add_XML_value("statusclass", "warning") . "\n";
       $numFailed++;
       break;
     case "notrun":
