@@ -21,14 +21,14 @@
 <u><xsl:value-of select="cdash/testName"/></u>
  performed on <xsl:value-of select="cdash/dashboard/date"/>
 </h3>
-<table cellspacing="0" cellpadding="3">
-  <tr>
+<table cellspacing="0" cellpadding="3" class="tabb">
+  <tr class="table-heading1">
     <th>Site</th>
     <th>Build Name</th>
     <th>Build Stamp</th>
     <th>Status</th>
     <th>Time</th>
-    <th>Detail</th>
+    <th id="nob">Detail</th>
   </tr>
 <xsl:for-each select="cdash/builds/build">
   <tr>
@@ -50,7 +50,7 @@
     </td>
     <td>
       <xsl:attribute name="class">
-        <xsl:value-of select="status"/>
+        <xsl:value-of select="statusclass"/>
       </xsl:attribute>
       <a>
       <xsl:attribute name="href">
@@ -62,7 +62,7 @@
     <td>
       <xsl:value-of select="time"/>
     </td>
-    <td>
+    <td id="nob">
       <xsl:value-of select="details"/>
     </td>
   </tr>

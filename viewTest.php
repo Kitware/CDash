@@ -100,7 +100,8 @@ while($row = mysql_fetch_array($result))
       break;
     case "notrun":
       $xml .= add_XML_value("status", "Not Run") . "\n";
-      $numNotRun++;
+      $xml .= add_XML_value("statusclass", "error") . "\n";
+			$numNotRun++;
       break;
     }
   $xml .= "</test>\n";
