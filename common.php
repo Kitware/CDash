@@ -149,7 +149,7 @@ function parse_XML($contents)
   $p = xml_parser_create();
   if(!xml_parse_into_struct($p, $contents, $vals, $index))
    {
-  add_log("Cannot parse XML".xml_error_string(xml_get_error_code($p)),"parse_XML");
+   add_log("Cannot parse XML".xml_error_string(xml_get_error_code($p)),"parse_XML");
    }
   
   // create a parse struct with vals and index in it
@@ -953,7 +953,7 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 /** Add a new test */
 function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images)
 {
-  add_log("Start buildid=".$buildid,"add_test");
+  //add_log("Start buildid=".$buildid,"add_test");
   
   $command = addslashes($command);
   $output = addslashes($output);
@@ -1040,7 +1040,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
    mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
                  VALUES ('$buildid','$testid','$status','$time')");
                  
-  add_log("End buildid=".$buildid,"add_test");
+  //add_log("End buildid=".$buildid,"add_test");
 }
 
 /** Add a new error/warning */
