@@ -6,9 +6,11 @@ function showtesttimegraph_click(testid)
     return;
     }
   
-  $("#timegraph").show();
-		$("#timegrapholder").attr("style","width:800px;height:400px;");
-		$("#timegrapholder").show();
+	
+	$("#timegraph").fadeIn('slow');
+  $("#timegraph").html("fetching...<img src=images/loading.gif></img>");
+	$("#timegrapholder").attr("style","width:800px;height:400px;");
+	$("#timegrapholder").show();
   $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid,{},function(){$("#timegrapholder").fadeIn('slow');});
 }
 
@@ -18,10 +20,11 @@ function showtestpassinggraph_click(testid)
     {
 				$("#passinggrapholder").hide(); //fadeOut('medium');
     return;
-    }
-  
-  $("#passinggraph").show();
-		$("#passinggrapholder").attr("style","width:800px;height:400px;");
-		$("#passinggrapholder").show();
+    } 
+
+	$("#passinggraph").fadeIn('slow');
+  $("#passinggraph").html("fetching...<img src=images/loading.gif></img>");
+  $("#passinggrapholder").attr("style","width:800px;height:400px;");
+	$("#passinggrapholder").show();
   $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid,{},function(){$("#passinggrapholder").fadeIn('slow');});
 }
