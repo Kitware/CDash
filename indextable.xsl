@@ -4,7 +4,7 @@
    <xsl:include href="footer.xsl"/>
     
    <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-		<xsl:output method="html"/>
+		<xsl:output method="html" encoding="iso-8859-1"/>
  
     <xsl:template match="/">
       <html>

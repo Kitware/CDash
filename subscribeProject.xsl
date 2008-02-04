@@ -3,7 +3,7 @@
 
    <xsl:include href="footer.xsl"/>
     
-    <xsl:output method="html"/>
+    <xsl:output method="html" encoding="iso-8859-1"/>
     <xsl:template match="/">
       <html>
        <head>

@@ -5,7 +5,7 @@
 			 <xsl:include href="headerback.xsl"/> 
 
  <!-- HEADER -->   
-   <xsl:output method="html"/>
+   <xsl:output method="html" encoding="iso-8859-1"/>
     <xsl:template match="/">
       <html>
        <head>
