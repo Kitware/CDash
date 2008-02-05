@@ -24,9 +24,13 @@ $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
 // Find the project variables
-$test = mysql_query("SELECT buildid FROM build2test WHERE testid='$testid'");
+$build2test = mysql_query("SELECT buildid FROM build2test WHERE testid='$testid'");
+$build2test_array = mysql_fetch_array($build2test);
+$buildid = $build2test_array["buildid"];
+
+$test = mysql_query("SELECT name FROM test WHERE id='$testid'");
 $test_array = mysql_fetch_array($test);
-$buildid = $test_array["buildid"];
+$testname = $test_array["name"];
 
 $build = mysql_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
 $build_array = mysql_fetch_array($build);
@@ -42,7 +46,9 @@ $project_array = mysql_fetch_array($project);
 
 // Find the other builds
 $previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.status FROM build,build2test WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                               AND projectid='$projectid' AND starttime<='$starttime' AND build2test.buildid=build.id ORDER BY starttime ASC");
+                               AND projectid='$projectid' AND starttime<='$starttime' AND build2test.buildid=build.id
+															 AND test.id=build2test.testid AND test.name='$testname'
+															 ORDER BY starttime ASC");
 																																																			
 ?>
 
