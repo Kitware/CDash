@@ -31,7 +31,7 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = mysql_fetch_array($project);
 
-$currentUTCTime =  gmdate("YmdHis",$currenttime);
+$currentUTCtime =  gmdate("YmdHis",$currenttime);
     
 // Find the last build corresponding to thie siteid and buildid
 $lastbuild = mysql_query("SELECT starttime FROM build
@@ -46,18 +46,18 @@ if(mysql_num_rows($lastbuild)>0)
   }
 else
   {
-  $lastsbuilddays = "never";
+  $lastsbuilddays = -1;
   }
 ?>
   <table width="100%"  border="0">
   <tr>
   <td bgcolor="#DDDDDD" id="nob"><font size="2">
   <?php 
-  if($lastsbuilddays == "never")
+  if($lastsbuilddays == -1)
     {
     echo "This build has never submitted.";
     }
-  else if($lastsbuilddays>0)
+  else if($lastsbuilddays>=0)
     {
     $date = substr($datelastbuild,0,4).substr($datelastbuild,5,2).substr($datelastbuild,8,2);
     echo "This build has not been submitting since <b><a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datelastbuild."</a> (".$lastsbuilddays." days)</b>";
