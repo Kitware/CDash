@@ -4,28 +4,28 @@
     <xsl:template name="builds">
     <xsl:param name="type"/>
    <xsl:if test="count($type/build)=0">
-			
+   
    <tr class="table-heading1" >
       <td colspan="1" id="nob">
           <h3>No <xsl:value-of select="name"/> Builds</h3>
       </td>
-		
-		<!-- quick links -->
-		<td colspan="12" align="right" id="nob">
-			<div>
-			<xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
-			<xsl:for-each select="/cdash/buildgroup">
-			    <xsl:if test="name!=$type/name">
+  
+  <!-- quick links -->
+  <td colspan="12" align="right" id="nob">
+   <div>
+   <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
+   <xsl:for-each select="/cdash/buildgroup">
+       <xsl:if test="name!=$type/name">
          [<a>
-				 <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-				 <xsl:value-of select="name"/></a>]
-				  </xsl:if>
-		  </xsl:for-each>	
-			[<a href="#Coverage">Coverage</a>]
-			[<a href="#DynamicAnalysis">Dynamic Analysis</a>]
+     <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:value-of select="name"/></a>]
+      </xsl:if>
+    </xsl:for-each> 
+   [<a href="#Coverage">Coverage</a>]
+   [<a href="#DynamicAnalysis">Dynamic Analysis</a>]
     </div> 
     </td>
-		
+  
    </tr>
    </xsl:if>
    
@@ -34,19 +34,19 @@
       <td colspan="1" id="nob">
           <h3><xsl:value-of select="$type/name"/></h3>
       </td>
-		<!-- quick links -->
-		<td colspan="12" align="right" id="nob">
-			<div>
-			<xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
-			<xsl:for-each select="/cdash/buildgroup">
-			    <xsl:if test="name!=$type/name">
+  <!-- quick links -->
+  <td colspan="12" align="right" id="nob">
+   <div>
+   <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
+   <xsl:for-each select="/cdash/buildgroup">
+       <xsl:if test="name!=$type/name">
          [<a>
-				 <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-				 <xsl:value-of select="name"/></a>]
-				  </xsl:if>
-		  </xsl:for-each>
-			[<a href="#Coverage">Coverage</a>]
-			[<a href="#DynamicAnalysis">Dynamic Analysis</a>]
+     <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:value-of select="name"/></a>]
+      </xsl:if>
+    </xsl:for-each>
+   [<a href="#Coverage">Coverage</a>]
+   [<a href="#DynamicAnalysis">Dynamic Analysis</a>]
     </div> 
     </td>
    </tr>
@@ -76,14 +76,19 @@
 
       <xsl:for-each select="$type/build">
    <tr valign="middle">
-			<xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
-			
-			
+   <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
+   
+   
       <td align="left" class="paddt">
       <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/>&#38;currenttime=<xsl:value-of select="/cdash/dashboard/unixtimestamp"/></xsl:attribute><xsl:value-of select="site"/></a>
       </td>
       <td align="center">
-						<a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="buildname"/></a>
+      <xsl:if test="string-length(buildid)>0">
+      <a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="buildname"/></a>
+     </xsl:if>
+      <xsl:if test="string-length(buildid)=0">
+     <xsl:value-of select="buildname"/>
+     </xsl:if>
         <xsl:text>&#x20;</xsl:text>
       <xsl:if test="string-length(note)>0">
       <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img SRC="images/Document.gif" ALT="Notes" border="0"/></a>
@@ -121,13 +126,13 @@
         <img name="buildgroup" SRC="images/folder.png" border="0"></img>
         </a>
         </xsl:if>
-					  	<xsl:if test="string-length(buildid)=0">
+        <xsl:if test="string-length(buildid)=0">
         <a>
         <xsl:attribute name="href">javascript:buildnosubmission_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="expecteddivname"/>','<xsl:value-of select="buildgroupid"/>','<xsl:value-of select="buildtype"/>')</xsl:attribute>
         <img name="buildgroup" SRC="images/folder.png" border="0"></img>
         </a>
         </xsl:if>
-						</xsl:if> <!-- end admin -->
+      </xsl:if> <!-- end admin -->
         
       <div>
       <xsl:attribute name="id">buildgroup_<xsl:value-of select="buildid"/></xsl:attribute>
@@ -139,7 +144,7 @@
       
       </td>
       <td align="center">
-						<xsl:attribute name="class">
+      <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="updateerrors > 0">
             error
@@ -149,7 +154,7 @@
             </xsl:when>
         </xsl:choose>
       </xsl:attribute>
-						<b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
+      <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
       </td>
       <td align="center">
        <xsl:attribute name="class">
@@ -271,8 +276,8 @@
       </td>
       <td align="right"><xsl:value-of select="test/time"/></td>
       <td id="nob"><xsl:value-of select="builddate"/></td>
-						<!--
-						<td>
+      <!--
+      <td>
       <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="expected=1">
@@ -280,11 +285,11 @@
             </xsl:when>
           <xsl:otherwise>
              <xsl:if test="clockskew=1">
-													error
-													</xsl:if>
-													<xsl:if test="clockskew=0">
-													tr-odd
-													</xsl:if>
+             error
+             </xsl:if>
+             <xsl:if test="clockskew=0">
+             tr-odd
+             </xsl:if>
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
@@ -320,7 +325,7 @@
 <table width="100%" cellpadding="11" cellspacing="0">
   <tr>
     <td height="25" align="left" valign="bottom">
-				<a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
+    <a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
          Nightly Changes</a> as of
          <xsl:value-of select="cdash/updates/timestamp"/></td>
   </tr>
@@ -446,16 +451,16 @@
       <td colspan="1" id="nob">
           <h3>No Coverage</h3>
       </td>
-			<!-- quick links -->
-		<td colspan="12" align="right" id="nob">
-			<div>
-			<xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
-			<xsl:for-each select="/cdash/buildgroup">
+   <!-- quick links -->
+  <td colspan="12" align="right" id="nob">
+   <div>
+   <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
+   <xsl:for-each select="/cdash/buildgroup">
          [<a>
-				 <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-				 <xsl:value-of select="name"/></a>]
-		  </xsl:for-each>
-			[<a href="#DynamicAnalysis">Dynamic Analysis</a>]
+     <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:value-of select="name"/></a>]
+    </xsl:for-each>
+   [<a href="#DynamicAnalysis">Dynamic Analysis</a>]
     </div> 
     </td>
    </tr>
@@ -466,15 +471,15 @@
       <td colspan="1" id="nob">
           <h3>Coverage</h3>
       </td>
-			<!-- quick links -->
-		<td colspan="12" align="right" id="nob">
-			<div id="Coverage">
-			<xsl:for-each select="/cdash/buildgroup">
+   <!-- quick links -->
+  <td colspan="12" align="right" id="nob">
+   <div id="Coverage">
+   <xsl:for-each select="/cdash/buildgroup">
          [<a>
-				 <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-				 <xsl:value-of select="name"/></a>]
-		  </xsl:for-each>
-			[<a href="#DynamicAnalysis">Dynamic Analysis</a>]
+     <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:value-of select="name"/></a>]
+    </xsl:for-each>
+   [<a href="#DynamicAnalysis">Dynamic Analysis</a>]
     </div> 
     </td>
    </tr>
@@ -492,7 +497,7 @@
   <xsl:for-each select="cdash/buildgroup/coverage">
    
    <tr>
-						<xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
+      <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
 
       <td align="left" class="paddt"><xsl:value-of select="site"/></td>
       <td align="left" class="paddt"><xsl:value-of select="buildname"/></td>
@@ -533,16 +538,16 @@
       <td colspan="1" id="nob">
           <h3>No Dynamic Analysis</h3>
       </td>
-			<!-- quick links -->
-		<td colspan="12" align="right" id="nob">
-			<div>
-			<xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
-			<xsl:for-each select="/cdash/buildgroup">
+   <!-- quick links -->
+  <td colspan="12" align="right" id="nob">
+   <div>
+   <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
+   <xsl:for-each select="/cdash/buildgroup">
          [<a>
-				 <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-				 <xsl:value-of select="name"/></a>]
-		  </xsl:for-each>
-			[<a href="#Coverage">Coverage</a>]
+     <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:value-of select="name"/></a>]
+    </xsl:for-each>
+   [<a href="#Coverage">Coverage</a>]
     </div> 
     </td>
    </tr>
@@ -553,15 +558,15 @@
       <td colspan="1" id="nob">
           <h3>Dynamic Analysis</h3>
       </td>
-						<!-- quick links -->
-		<td colspan="12" align="right" id="nob">
-			<div id="DynamicAnalysis">
-			<xsl:for-each select="/cdash/buildgroup">
+      <!-- quick links -->
+  <td colspan="12" align="right" id="nob">
+   <div id="DynamicAnalysis">
+   <xsl:for-each select="/cdash/buildgroup">
          [<a>
-				 <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-				 <xsl:value-of select="name"/></a>]
-		  </xsl:for-each>
-			[<a href="#Coverage">Coverage</a>]
+     <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:value-of select="name"/></a>]
+    </xsl:for-each>
+   [<a href="#Coverage">Coverage</a>]
     </div> 
     </td>
    </tr>
@@ -578,7 +583,7 @@
   <xsl:for-each select="cdash/buildgroup/dynamicanalysis">
    
    <tr>
-					<xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
+     <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
 
       <td align="left"><xsl:value-of select="site"/></td>
       <td align="left"><xsl:value-of select="buildname"/></td>
@@ -598,16 +603,16 @@
       </td>
       <td align="left" id="nob"><xsl:value-of select="date"/></td>
       <!--
-						<td align="left">
-						<xsl:attribute name="class">
-						<xsl:if test="clockskew=1">
-													error
-													</xsl:if>
-													<xsl:if test="clockskew=0">
-													tr-odd
-													</xsl:if>
+      <td align="left">
+      <xsl:attribute name="class">
+      <xsl:if test="clockskew=1">
+             error
+             </xsl:if>
+             <xsl:if test="clockskew=0">
+             tr-odd
+             </xsl:if>
       </xsl:attribute>
-						<xsl:value-of select="submitdate"/></td> -->
+      <xsl:value-of select="submitdate"/></td> -->
    </tr>
   </xsl:for-each>
 
