@@ -587,7 +587,7 @@ function update_site($siteid,$name,
     mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
     }
   else
-    {
+    {	
 		if(!$CDASH_USE_IP_FROM_ACCESS_LOG) // if we don't use the IP script
       {
 			mysql_query ("UPDATE site SET name='$name',ip='$ip' WHERE id='$siteid'");
@@ -728,6 +728,7 @@ function update_site($siteid,$name,
 /** Get the geolocation from IP address */
 function get_geolocation($ip)
 {  
+  include("config.php");
   $location = array();
   
   // Test if curl exists
@@ -737,11 +738,11 @@ function get_geolocation($ip)
     $location['longitude'] = "";
     return $location;
     }
- 
+
   // Ask hostip.info for geolocation
   $lat = "";
   $long = "";
-  
+	
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
       
@@ -764,7 +765,7 @@ function get_geolocation($ip)
     $long = substr($httpReply,$pos+11,$pos2-$pos-11);
     } 
   curl_close($curl);
-  
+	
   $location['latitude'] = "";
   $location['longitude'] = "";
   
@@ -776,7 +777,21 @@ function get_geolocation($ip)
     $location['latitude'] = $lat;
     $location['longitude'] = $long;
     }
-
+	else// Check if we have a list of default locations
+	  {
+		foreach($CDASH_DEFAULT_IP_LOCATIONS as $defaultlocation)
+		  {
+		  $defaultip = $defaultlocation["IP"];
+			$defaultlatitude = $defaultlocation["latitude"];
+			$defaultlongitude = $defaultlocation["longitude"];
+			if(preg_match("#^".strtr(preg_quote($defaultip, '#'), array('\*' => '.*', '\?' => '.'))."$#i", $ip))
+			  {
+				$location['latitude'] =  $defaultlocation["latitude"];
+        $location['longitude'] = $defaultlocation["longitude"];
+				}
+		  }
+	  }
+		
   return $location;
 } 
 
