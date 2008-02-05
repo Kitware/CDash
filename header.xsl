@@ -4,7 +4,8 @@
    <!--  <xsl:output method="html"/> -->
     <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 				<xsl:template name="header" match="/">
-    
+
+     <link rel="shortcut icon" href="favicon.ico">	
     <!-- Include JQuery -->
     <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
 				<script src="javascript/jquery.flot.js" type="text/javascript" charset="utf-8"></script>  	
