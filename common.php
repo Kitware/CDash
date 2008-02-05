@@ -1031,7 +1031,8 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
         } // end for each image
         
       $nimage_array = mysql_fetch_array(mysql_query($sql));  
-      $nimages = $nimage_array[0];
+      add_last_sql_error("add_test");
+			$nimages = $nimage_array[0];
         
       if($nimages == count($images))
         {
