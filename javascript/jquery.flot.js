@@ -1,4 +1,4 @@
-/* Javascript plotting library for jQuery, v. 0.2.
+/* Javascript plotting library for jQuery, v. 0.3.
  *
  * Released under the MIT license by iola, December 2007.
  *
@@ -67,7 +67,8 @@
                 color: "#545454", // primary color used for outline and labels
                 backgroundColor: null, // null for transparent, else color
                 tickColor: "#dddddd", // color used for the ticks
-                labelMargin: 3 // in pixels
+                labelMargin: 3, // in pixels
+                clickable: null
             },
             selection: {
                 mode: null, // one of null, "x", "y" or "xy"
@@ -164,8 +165,11 @@
                 // FIXME: temp. work-around until jQuery bug 1871 is fixed
                 target.get(0).onmousemove = onMouseMove;
             }
+
+            if (options.grid.clickable)
+                $(overlay).click(onClick);
         }
-        
+
         function findDataRanges() {
             yaxis.datamin = xaxis.datamin = 0;
             xaxis.datamax = yaxis.datamax = 1;
@@ -232,51 +236,49 @@
         function calculateRange(axis, axisOptions) {
             var min = axisOptions.min != null ? axisOptions.min : axis.datamin;
             var max = axisOptions.max != null ? axisOptions.max : axis.datamax;
-            var delta = max - min;
 
             // check degenerate case
-            if (delta == 0.0) {
+            if (max - min == 0.0) {
                 var widen;
                 if (max == 0.0)
                     widen = 1.0;
                 else
                     widen = 0.01;
 
-                axis.min = max - widen;
-                axis.max = max + widen;
+                min -= widen;
+                max += widen;
             }
-            else {
-                axis.tickSize = getTickSize(axisOptions.noTicks, min, max, axisOptions.tickDecimals);
+            
+            axis.tickSize = getTickSize(axisOptions.noTicks, min, max, axisOptions.tickDecimals);
                 
-                // consider autoscaling
-                var margin;
-                if (axisOptions.min == null) {
-                    // first add in a little margin
-                    margin = axisOptions.autoscaleMargin;
-                    if (margin != 0) {
-                        min -= axis.tickSize * margin;
-                        // make sure we don't go below zero if all
-                        // values are positive
-                        if (min < 0 && axis.datamin >= 0)
-                            min = 0;
-
-                        min = axis.tickSize * Math.floor(min / axis.tickSize);
-                    }
+            // consider autoscaling
+            var margin;
+            if (axisOptions.min == null) {
+                // first add in a little margin
+                margin = axisOptions.autoscaleMargin;
+                if (margin != 0) {
+                    min -= axis.tickSize * margin;
+                    // make sure we don't go below zero if all
+                    // values are positive
+                    if (min < 0 && axis.datamin >= 0)
+                        min = 0;
+                    
+                    min = axis.tickSize * Math.floor(min / axis.tickSize);
                 }
-                if (axisOptions.max == null) {
-                    margin = axisOptions.autoscaleMargin;
-                    if (margin != 0) {
-                        max += axis.tickSize * margin;
-                        if (max > 0 && axis.datamax <= 0)
-                            max = 0;
-
-                        max = axis.tickSize * Math.ceil(max / axis.tickSize);
-                    }
-                }
-                
-                axis.min = min;
-                axis.max = max;
             }
+            if (axisOptions.max == null) {
+                margin = axisOptions.autoscaleMargin;
+                if (margin != 0) {
+                    max += axis.tickSize * margin;
+                    if (max > 0 && axis.datamax <= 0)
+                        max = 0;
+                    
+                    max = axis.tickSize * Math.ceil(max / axis.tickSize);
+                }
+            }
+            
+            axis.min = min;
+            axis.max = max;
         }
 
         function extendXRangeIfNeededByBar() {
@@ -383,7 +385,7 @@
         function draw() {
             drawGrid();
             drawLabels();
-	    for (var i = 0; i < series.length; i++) {
+            for (var i = 0; i < series.length; i++) {
                 drawSeries(series[i]);
             }
         }
@@ -567,7 +569,7 @@
 
                 ctx.beginPath();
                 ctx.moveTo(prevx, prevy);
-	        for (var i = 0; i < data.length - 1; ++i) {
+                for (var i = 0; i < data.length - 1; ++i) {
                     var x1 = data[i][0], y1 = data[i][1],
                         x2 = data[i+1][0], y2 = data[i+1][1];
 
@@ -643,12 +645,12 @@
                     return;
 
                 var bottom = Math.min(Math.max(0, yaxis.min), yaxis.max);
-		var top, lastX = 0;
+                var top, lastX = 0;
 
                 var first = true;
                 
                 ctx.beginPath();
-	        for (var i = 0; i < data.length - 1; ++i) {
+                for (var i = 0; i < data.length - 1; ++i) {
                     var x1 = data[i][0], y1 = data[i][1],
                         x2 = data[i+1][0], y2 = data[i+1][1];
 
@@ -738,12 +740,12 @@
                         ctx.lineTo(tHoz(x1old), tVert(top));
                         ctx.lineTo(tHoz(x1), tVert(top));
                     }
-		    
+                    
                     // fill the triangles
                     ctx.lineTo(tHoz(x1), tVert(y1));
                     ctx.lineTo(tHoz(x2), tVert(y2));
 
-		    // fill the other rectangle if it's there
+                    // fill the other rectangle if it's there
                     if (x2 != x2old) {
                         if (y2 <= yaxis.min)
                             top = yaxis.min;
@@ -759,7 +761,7 @@
                 /*
                 ctx.beginPath();
                 ctx.moveTo(tHoz(data[0][0]), tVert(0));
-	        for (var i = 0; i < data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     ctx.lineTo(tHoz(data[i][0]), tVert(data[i][1]));
                 }
                 ctx.lineTo(tHoz(data[data.length - 1][0]), tVert(0));*/
@@ -798,7 +800,7 @@
 
         function drawSeriesPoints(series) {
             function plotPoints(data, radius, fill) {
-	        for (var i = 0; i < data.length; ++i) {
+                for (var i = 0; i < data.length; ++i) {
                     var x = data[i][0], y = data[i][1];
                     if (x < xaxis.min || x > xaxis.max || y < yaxis.min || y > yaxis.max)
                         continue;
@@ -812,7 +814,7 @@
             }
 
             function plotPointShadows(data, offset, radius) {
-	        for (var i = 0; i < data.length; ++i) {
+                for (var i = 0; i < data.length; ++i) {
                     var x = data[i][0], y = data[i][1];
                     if (x < xaxis.min || x > xaxis.max || y < yaxis.min || y > yaxis.max)
                         continue;
@@ -850,7 +852,7 @@
                 if (data.length < 2)
                     return;
 
-	        for (var i = 0; i < data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     var x = data[i][0], y = data[i][1];
                     var drawLeft = true, drawTop = true, drawRight = true;
                     var left = x, right = x + barWidth, bottom = 0, top = y;
@@ -1007,15 +1009,16 @@
         var selection = { first: { x: -1, y: -1}, second: { x: -1, y: -1} };
         var prevSelection = null;
         var selectionInterval = null;
+        var ignoreClick = false;
         
         function onMouseMove(ev) {
             // FIXME: temp. work-around until jQuery bug 1871 is fixed
             var e = ev || window.event;
-	    if (e.pageX == null && e.clientX != null) {
-		var de = document.documentElement, b = document.body;
-		lastMousePos.pageX = e.clientX + (de && de.scrollLeft || b.scrollLeft || 0);
-		lastMousePos.pageY = e.clientY + (de && de.scrollTop || b.scrollTop || 0);
-	    }
+            if (e.pageX == null && e.clientX != null) {
+                var de = document.documentElement, b = document.body;
+                lastMousePos.pageX = e.clientX + (de && de.scrollLeft || b.scrollLeft || 0);
+                lastMousePos.pageY = e.clientY + (de && de.scrollTop || b.scrollTop || 0);
+            }
             else {
                 lastMousePos.pageX = e.pageX;
                 lastMousePos.pageY = e.pageY;
@@ -1035,6 +1038,22 @@
             $(document).one("mouseup", onSelectionMouseUp);
         }
 
+        function onClick(e) {
+            if (ignoreClick) {
+                ignoreClick = false;
+                return;
+            }
+            
+            var offset = $(overlay).offset();
+            var pos = {};
+            pos.x = e.pageX - offset.left - plotOffset.left;
+            pos.x = xaxis.min + pos.x / hozScale;
+            pos.y = e.pageY - offset.top - plotOffset.top;
+            pos.y = yaxis.max - pos.y / vertScale;
+
+            target.trigger("plotclick", [ pos ]);
+        }
+        
         function triggerSelectedEvent() {
             var x1, x2, y1, y2;
             if (selection.first.x <= selection.second.x) {
@@ -1077,6 +1096,7 @@
             
             drawSelection();
             triggerSelectedEvent();
+            ignoreClick = true;
 
             return false;
         }
