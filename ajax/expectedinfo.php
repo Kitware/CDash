@@ -31,10 +31,12 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = mysql_fetch_array($project);
 
+$currentUTCTime =  gmdate("YmdHis",$currenttime);
+    
 // Find the last build corresponding to thie siteid and buildid
 $lastbuild = mysql_query("SELECT starttime FROM build
                           WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                          AND projectid='$projectid' AND UNIX_TIMESTAMP(starttime)<='$currenttime' ORDER BY starttime DESC LIMIT 1");
+                          AND projectid='$projectid' AND starttime<='$currenttime' ORDER BY starttime DESC LIMIT 1");
 
 if(mysql_num_rows($lastbuild)>0)
   {
@@ -49,7 +51,7 @@ else
 ?>
   <table width="100%"  border="0">
   <tr>
-  <td bgcolor="#DDDDDD"><font size="2">
+  <td bgcolor="#DDDDDD" id="nob"><font size="2">
   <?php 
   if($lastsbuilddays == "never")
     {
