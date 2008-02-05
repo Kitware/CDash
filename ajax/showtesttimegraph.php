@@ -41,8 +41,8 @@ $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = mysql_fetch_array($project);
 
 // Find the other builds
-$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.time FROM build,build2test WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                               AND projectid='$projectid' AND starttime<='$starttime' AND build2test.buildid=build.id ORDER BY starttime ASC");
+$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.time FROM build,build2test WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
+                               AND build.projectid='$projectid' AND build.starttime<='$starttime' AND build2test.buildid=build.id ORDER BY build.starttime ASC");
 																																																			
 ?>
 
