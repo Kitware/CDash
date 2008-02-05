@@ -1071,8 +1071,16 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
     
 
    // Add into build2test
-   mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
+	 // Make sure that the test is not already added
+	 $query = mysql_query("SELECT buildid FROM build2test 
+	                       WHERE buildid='$buildid' AND testid='$testid' AND status='$status'
+												 AND time='$time'");
+	 add_last_sql_error("add_test"); 
+	 if(mysql_num_rows($query)==0)
+	  {										 				
+    mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
                  VALUES ('$buildid','$testid','$status','$time')");
+		}
    add_last_sql_error("add_test");              
 }
 
