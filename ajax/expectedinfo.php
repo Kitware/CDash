@@ -36,7 +36,7 @@ $currentUTCTime =  gmdate("YmdHis",$currenttime);
 // Find the last build corresponding to thie siteid and buildid
 $lastbuild = mysql_query("SELECT starttime FROM build
                           WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                          AND projectid='$projectid' AND starttime<='$currenttime' ORDER BY starttime DESC LIMIT 1");
+                          AND projectid='$projectid' AND starttime<='$currentUTCtime' ORDER BY starttime DESC LIMIT 1");
 
 if(mysql_num_rows($lastbuild)>0)
   {
