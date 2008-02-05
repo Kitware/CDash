@@ -1179,37 +1179,25 @@ function get_dates($date,$nightlytime)
 {
   $nightlytime = strtotime($nightlytime);
   
-  $nightlyhour = gmdate("H",$nightlytime);
-  $nightlyminute = gmdate("i",$nightlytime);
-  $nightlysecond = gmdate("s",$nightlytime);
-  
+  $nightlyhour = date("H",$nightlytime);
+  $nightlyminute = date("i",$nightlytime);
+  $nightlysecond = date("s",$nightlytime);
+ 
   if(!isset($date) || strlen($date)==0)
     { 
     $date = date("Ymd"); // the date is always the date of the server
-    $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
-  }
-  else
-    {
-    $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
+    
+    if(date("His")>date("HiS",$nightlytime))
+      {
+      $date = date("Ymd",time()+3600*24); //next day
+      } 
     }
-  
  
-  // If we are the same day and the time is more than the current dashboard
-  // the previous date is actually today.
-  $nexttime = $today+3600*24;
-
-
-  if(time() > $nexttime)
-    {
-    $today += 3600*24; 
-    $previousdate = date("Ymd",$today-3600*24);
-    }
-  else
-    { 
-    $previousdate = gmdate("Ymd",$today-3600*24);
-    }
-
-  $nextdate = gmdate("Ymd",$today+3600*24);
+  $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4))-3600*24; // starting time
+  
+  $todaydate = mktime(0,0,0,substr($date,4,2),substr($date,6,2),substr($date,0,4)); 
+  $previousdate = date("Ymd",$todaydate-3600*24);
+  $nextdate = date("Ymd",$todaydate+3600*24);
  
   return array($previousdate, $today, $nextdate);
 }
