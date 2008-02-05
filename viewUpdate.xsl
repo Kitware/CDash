@@ -30,9 +30,10 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 </h3>
 
 <h3>
+<font style="background-color: #C22b25">
 <xsl:value-of select="cdash/updates/status"/>
 <xsl:if test="string-length(cdash/updates/status)>0">
-</xsl:if>
+</xsl:if></font>
 </h3>
 
 <script type="text/javascript">var Icons = "images/";</script>
