@@ -45,9 +45,8 @@ $projectid = $build_array["projectid"];
 // Find the other builds
 $previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.time FROM build,build2test,test WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
                                AND build.projectid='$projectid' AND build.starttime<='$starttime' AND build2test.buildid=build.id 
-															 AND test.id=build2test.id AND test.name='$testname'
+															 AND test.id=build2test.testid AND test.name='$testname'
 															 ORDER BY build.starttime ASC");
-																																																			
 ?>
 
     
