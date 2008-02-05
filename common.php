@@ -1193,21 +1193,22 @@ function get_dates($date,$nightlytime)
     $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
     }
   
-  //$currenttime = $today;
  
- //echo date("Y-m-d H:i:s",$currenttime);
- // If we are the same day and the time is more than the current dashboard
+  // If we are the same day and the time is more than the current dashboard
   // the previous date is actually today.
-  /*if($currenttime > $today)
+  $nexttime = $today+3600*24;
+
+
+  if(time() > $nexttime)
     {
-    $previousdate = gmdate("Ymd",$today);
+    $today += 3600*24; 
+    $previousdate = date("Ymd",$today-3600*24);
     }
   else
-    {
+    { 
     $previousdate = gmdate("Ymd",$today-3600*24);
-    }*/
-  
- $previousdate = gmdate("Ymd",$today-3600*24);
+    }
+
   $nextdate = gmdate("Ymd",$today+3600*24);
  
   return array($previousdate, $today, $nextdate);
