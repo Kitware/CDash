@@ -2,7 +2,8 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-    
+    <xsl:include href="headerback.xsl"/> 
+
     <xsl:output method="html" encoding="iso-8859-1"/>
     <xsl:template match="/">
       <html>
@@ -21,29 +22,7 @@
 
        </head>
        <body bgcolor="#ffffff">
-
-<table border="0" cellpadding="0" cellspacing="2" width="100%">
-<tr>
-<td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
-</td>
-<td valign="bottom" width="100%">
-<div style="margin: 0pt auto; background-color: #6699cc;"  class="rounded">  
-<font color="#ffffff"><h2>CDash - Subscribe to project <xsl:value-of select="cdash/project/name"/></h2>
-<h3>Subscribing to a project</h3></font>
-<br/></div>
-</td>
-</tr>
-<tr>
-<td></td><td>
-<!-- Menu -->
-<ul id="Nav" class="nav">
-  <li>
-     <a href="user.php">Back</a>
-  </li>
-</ul>
-</td>
-</tr>
-</table>
+	 <xsl:call-template name="headerback"/>
 
 <br/>
 

@@ -5,9 +5,8 @@
     <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 				<xsl:template name="headerback" match="/">
     
+     <link rel="shortcut icon" href="favicon.ico"/>	
 
-
-      
 <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
     <td>

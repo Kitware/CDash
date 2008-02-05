@@ -10,6 +10,7 @@
 						<head>
         <title><xsl:value-of select="cdash/title"/></title>
         <meta name="robots" content="noindex,nofollow" />
+				<link rel="shortcut icon" href="favicon.ico"/>	
         <link rel="StyleSheet" type="text/css">
           <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
         </link>
