@@ -33,7 +33,7 @@ if ($session_OK)
 		$xml .= "<backurl>user.php</backurl>";
 		$xml .= "<title>CDash - Subscribe to a project</title>";
 		$xml .= "<menutitle>CDash</menutitle>";
-		$xml .= "<menusubtitle>Project Subscription</menusubtitle>";
+		$xml .= "<menusubtitle>Subscription</menusubtitle>";
 	
 		@$projectid = $_GET["projectid"];
 		@$edit = $_GET["edit"];
