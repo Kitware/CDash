@@ -26,23 +26,24 @@ $apacheaccesslog = "/var/log/apache/access.log";
 $contents = file_get_contents($apacheaccesslog);
 
 // Loop through the sites
-$site = mysql_query("SELECT name FROM site WHERE latitude='' AND longitude=''");
+//$site = mysql_query("SELECT name FROM site WHERE latitude='' AND longitude=''");
+$site = mysql_query("SELECT name FROM site");
 while($site_array = mysql_fetch_array($site))
 {
   $sitename = $site_array["name"];
-  $pos = strpos($contents,$sitename);
+  $pos = strpos($contents,$sitename."__");
   if($pos !== FALSE)
     {  
     // Find the IP in the log
     $beginip = strrpos(substr($contents,$pos-500,500),"\n")+$pos-500+1;
     $endip = strpos($contents," ",$beginip);
     $ip = substr($contents,$beginip,$endip-$beginip);
-    echo "IP=".$ip."*\n";
+    echo $ip."\n"; 
     $location = get_geolocation($ip);
     $latitude = $location['latitude'];
     $longitude = $location['longitude'];
   
-    $sql = "UPDATE site SET latitude='$latitude',longitude='$longitude' WHERE name='$sitename'";
+    $sql = "UPDATE site SET ip='$ip',latitude='$latitude',longitude='$longitude' WHERE name='$sitename'";
     mysql_query($sql);
     echo mysql_error();
     }
