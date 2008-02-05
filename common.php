@@ -134,12 +134,12 @@ function add_log($text,$function)
 function add_last_sql_error($functionname)
 {
   $mysql_error = mysql_error();
-	if(strlen($mysql_error)>0)
-	  {
-	  add_log("SQL error: ".$mysql_error."\n",$functionname);
+ if(strlen($mysql_error)>0)
+   {
+   add_log("SQL error: ".$mysql_error."\n",$functionname);
     $text = "SQL error in $functionname():".$mysql_error."<br>";
     echo $text;
-		}
+  }
 }
 
 /** Clean the backup directory */
@@ -490,7 +490,7 @@ function add_coverage($buildid,$coverage_array)
     }
   // Insert into coverage
   mysql_query($sql);
-	add_last_sql_error("add_coverage");
+ add_last_sql_error("add_coverage");
 }
 
 /** Create a coverage file */
@@ -605,36 +605,36 @@ function update_site($siteid,$name,
    if($$name != "NA" && strlen($$name)>0)
      { 
      $isinputvalid = 1;
-		 break;
+   break;
      }
-	}  
+ }  
 
  if(!$isinputvalid)
    {
-	 return;
+  return;
    }  
-	 
+  
  // Check if we have valuable information and the siteinformation doesn't exist
  $hasvalidinfo = false;
  $newrevision2 = false;
  $query = mysql_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
  if(mysql_num_rows($query)==0)
    {
-	 $noinformation = 1;
-	 foreach($names as $name)
-		 {
-		 if($$name!="NA" && strlen($$name)>0)
-			 {
-		   $nonewrevision = false;
-			 $newrevision2 = true;
-			 $noinformation = 0;
-			 break;
-			 }
-		 }
-	 if($noinformation)
-		 {
-		 return; // we have nothing to add
-		 }
+  $noinformation = 1;
+  foreach($names as $name)
+   {
+   if($$name!="NA" && strlen($$name)>0)
+    {
+     $nonewrevision = false;
+    $newrevision2 = true;
+    $noinformation = 0;
+    break;
+    }
+   }
+  if($noinformation)
+   {
+   return; // we have nothing to add
+   }
    }
  else
    {
@@ -642,22 +642,22 @@ function update_site($siteid,$name,
   // Check if the information are different from what we have in the database, then that means
    // the system has been upgraded and we need to create a new revision
    foreach($names as $name)
-    {		
+    {  
     if($$name!="NA" && $query_array[$name]!=$$name && strlen($$name)>0)
       {
-			// Take care of rounding issues
-			if(is_numeric($$name))
-			  {
-				if(round($$name)!=$query_array[$name])
-				  {
-					$newrevision2 = true;
-					break;
-				  }
-		  	}
-		  else
+   // Take care of rounding issues
+   if(is_numeric($$name))
+     {
+    if(round($$name)!=$query_array[$name])
+      {
+     $newrevision2 = true;
+     break;
+      }
+     }
+    else
         {
-				$newrevision2 = true;
-				break;
+    $newrevision2 = true;
+    break;
         }
       }
     }
@@ -684,7 +684,7 @@ function update_site($siteid,$name,
     }
     }
    $sql .= ")"; 
-	 echo $sql;
+  echo $sql;
   mysql_query ($sql);
   add_last_sql_error("update_site",$sql);
    }
@@ -707,9 +707,9 @@ function update_site($siteid,$name,
    
      $timestamp = $query_array["timestamp"];
      $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
-	 
+  
      mysql_query ($sql); 
-		 add_last_sql_error("update_site",$sql);
+   add_last_sql_error("update_site",$sql);
   }
 }      
 
@@ -1185,7 +1185,7 @@ function get_dates($date,$nightlytime)
   
   if(!isset($date) || strlen($date)==0)
     { 
-    $date = gmdate("Ymd");
+    $date = date("Ymd"); // the date is always the date of the server
     $today = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4));
   }
   else
