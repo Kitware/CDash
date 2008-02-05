@@ -64,7 +64,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= add_XML_value("status",$status_array["status"]);
 
   $xml .= "<javascript>";
-  // Regretfully this is not correct and need to be fixed
+  
+	// This should work hopefully
   $updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid'
 	                             ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
   
@@ -114,8 +115,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       }
     }
   
-  
-  $xml .= "dbAdd (true, \"Updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+  $xml .= "dbAdd (true, \"".$projectname." updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   $previousdir = "";
 
   $projecturl = $svnurl;
@@ -150,6 +150,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
     $xml .= " dbAdd ( false, \"".$filename." Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$log."\")\n";
 		}
+		
  // $xml .= "dbAdd (true, \"Modified files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
  // $xml .= "dbAdd (true, \"Conflicting files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
 
