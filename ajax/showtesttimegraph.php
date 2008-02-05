@@ -68,47 +68,22 @@ $(function () {
       }
     ?>
     
+		var options = {
+        lines: { show: true },
+        points: { show: true },
+        xaxis: { ticks: tx },
+        yaxis: { ticks: ty },
+				grid: {backgroundColor: "#fffaff"},
+        selection: { mode: "x" },
+				colors: ["#0000FF", "#dba255", "#919733"]
+    };
+		
     $("#timegrapholder").bind("selected", function (event, area) {
-    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}],
-           {
-           lines: { show: true },
-           points: { show: true },
-           xaxis: {
-             ticks: tx,
-             min: area.x1,
-	     max: area.x2
-	     },
-           yaxis: {
-             ticks: ty
-             },
-           grid: {
-            backgroundColor: "#fffaff"
-             },
-           colors: ["#0000FF", "#dba255", "#919733"],
-           selection: { mode: "x" }
-    }
-
-   );
+    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], options, {xaxis: { min: area.x1, max: area.x2 });
 
   });
    
-  $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}],
-        {
-        lines: { show: true },
-        points: { show: true },
-        xaxis: {
-         ticks: tx
-        },
-        yaxis: {
-         ticks: ty
-        },
-        grid: {
-            backgroundColor: "#fffaff"
-        },
-        colors: ["#0000FF", "#dba255", "#919733"],
-        selection: { mode: "x" }     
-        
-        }
-  );
+  $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}],options);
+	
 });
 </script>
