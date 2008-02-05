@@ -579,8 +579,21 @@ function update_site($siteid,$name,
            $processorclockfrequency,
            $description,$ip,$latitude,$longitude,$nonewrevision=false)
 {  
+  include_once("config.php");
+	
   // Update the basic information first
- mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
+	if(strlen($latitude)>0 && strlen($longitude>0))
+	  {
+    mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
+    }
+  else
+    {
+		if(!$CDASH_USE_IP_FROM_ACCESS_LOG) // if we don't use the IP script
+      {
+			mysql_query ("UPDATE site SET name='$name',ip='$ip' WHERE id='$siteid'");
+			}
+    }
+ 
  add_last_sql_error("update_site");
  
  $names = array();
@@ -721,7 +734,7 @@ function get_geolocation($ip)
   if(function_exists("curl_init") == FALSE)
     {
     $location['latitude'] = "";
-      $location['longitude'] = "";
+    $location['longitude'] = "";
     return $location;
     }
  
@@ -819,9 +832,9 @@ function add_site($name,$parser)
     return $siteid;
     }
   
- // If not found we create the site
+   // If not found we create the site
   // We retrieve the geolocation from the IP address
- $location = get_geolocation($ip);
+  $location = get_geolocation($ip);
   
   $latitude = $location['latitude'];
   $longitude = $location['longitude'];  
