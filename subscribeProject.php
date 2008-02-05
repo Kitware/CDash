@@ -30,7 +30,11 @@ if ($session_OK)
 		
 		$xml = "<cdash>";
 		$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-		
+		$xml .= "<backurl>user.php</backurl>";
+		$xml .= "<title>CDash - Subscribe to a project</title>";
+		$xml .= "<menutitle>CDash</menutitle>";
+		$xml .= "<menusubtitle>Project Subscription</menusubtitle>";
+	
 		@$projectid = $_GET["projectid"];
 		@$edit = $_GET["edit"];
 		
