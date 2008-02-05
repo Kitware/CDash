@@ -100,7 +100,7 @@
       <li>
         <a>
     <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
-    Today
+    Current 
     </a>
     </li>
           <li>
