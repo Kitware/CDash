@@ -109,7 +109,7 @@ else
   {
   ?>
   <tr>
-  <td bgcolor="#DDDDDD"><font size="2">Build has been failing since <b>
+  <td bgcolor="#DDDDDD" id="nob"><font size="2">Build has been failing since <b>
   <?php 
   if($buildfailingdays>1)
     {
@@ -134,7 +134,7 @@ else
   {
   ?>
   <tr>
-  <td bgcolor="#DDDDDD"><font size="2">Tests have been failing since <b>
+  <td bgcolor="#DDDDDD" id="nob"><font size="2">Tests have been failing since <b>
   <?php
   if($testfailingdays>1)
     {
