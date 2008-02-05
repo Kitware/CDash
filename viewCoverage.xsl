@@ -27,57 +27,57 @@
          <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" width="300">
             <tr>
 
-               <th colspan="2" class="table-heading">Coverage Summary</th>
+               <th colspan="2" class="table-heading1">Coverage Summary</th>
             </tr>
-            <tr>
-               <td bgcolor="#ffffff" align="left" width="60%"> Total Coverage</td>
-               <td align="center" bgcolor="#00aa00"><xsl:value-of select="cdash/coverage/percentcoverage"/>
+            <tr class="treven">
+               <td align="left" width="60%"> Total Coverage</td>
+               <td class="normal" align="center"><xsl:value-of select="cdash/coverage/percentcoverage"/>
                   
                </td>
             </tr>
-            <tr>
+            <tr class="trodd">
 
-               <td bgcolor="#ffffff" align="left"> Tested lines</td>
-               <td bgcolor="#ffffff" align="right"><xsl:value-of select="cdash/coverage/loctested"/></td>
+               <td align="left"> Tested lines</td>
+               <td align="right"><xsl:value-of select="cdash/coverage/loctested"/></td>
             </tr>
-            <tr>
-               <td bgcolor="#ffffff" align="left">Untested lines</td>
-               <td bgcolor="#ffffff" align="right"><xsl:value-of select="cdash/coverage/locuntested"/></td>
+            <tr class="treven">
+               <td align="left">Untested lines</td>
+               <td align="right"><xsl:value-of select="cdash/coverage/locuntested"/></td>
 
             </tr>
-            <tr>
-               <td bgcolor="#ffffff" align="left">Files Covered</td>
-               <td bgcolor="#ffffff" align="center"><xsl:value-of select="cdash/coverage/totalcovered"/> of <xsl:value-of select="cdash/coverage/totalfiles"/></td>
+            <tr class="trodd">
+               <td align="left">Files Covered</td>
+               <td align="center"><xsl:value-of select="cdash/coverage/totalcovered"/> of <xsl:value-of select="cdash/coverage/totalfiles"/></td>
             </tr>
-            <tr>
-               <td bgcolor="#ffffff" align="left">Files Satisfactorily Covered</td>
+            <tr class="treven">
+               <td align="left">Files Satisfactorily Covered</td>
 
-               <td bgcolor="#ffffff" align="right"><xsl:value-of select="cdash/coverage/totalsatisfactorilycovered"/></td>
+               <td align="right"><xsl:value-of select="cdash/coverage/totalsatisfactorilycovered"/></td>
             </tr>
-            <tr>
-               <td bgcolor="#ffffff" align="left">Files Unsatisfactorily Covered</td>
-               <td bgcolor="#ffffff" align="right"><xsl:value-of select="cdash/coverage/totalunsatisfactorilycovered"/></td>
+            <tr class="trodd">
+               <td align="left">Files Unsatisfactorily Covered</td>
+               <td align="right"><xsl:value-of select="cdash/coverage/totalunsatisfactorilycovered"/></td>
             </tr>
          </table>
 
       </td>
       <td valign="Top">
          <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" width="350">
-            <tr class="table-heading">
+            <tr class="table-heading1">
                <th>Coverage Legend</th>
             </tr>
             <tr>
-               <td align="center" bgcolor="#00aa00">
+               <td class="normal" align="center">
                   Satisfactory coverage            
                </td>
             </tr>
             <tr>
-               <td align="center" bgcolor="#ffcc66">
+               <td class="warning" align="center">
                   Unstatisfactory coverage           
                </td>
             </tr>
             <tr>
-               <td align="center" bgcolor="#ff6666">
+               <td class="error" align="center"> 
                   Dangerously low coverage
                </td>
             </tr>
@@ -89,7 +89,7 @@
 <br/>
 
 <table>
-   <tr>
+   <tr> 
       <th></th>
       <th colspan="2">Coverage status  <xsl:choose>
         <xsl:when test="cdash/coverage/sortby='status'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
