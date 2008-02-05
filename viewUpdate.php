@@ -60,7 +60,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
 	// Return the status
   $status_array = mysql_fetch_array(mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'"));
-	if(strlen($updatestatus_array["status"]) > 0 && $updatestatus_array["status"]!="0")
+	if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
 		{
     $xml .= add_XML_value("status",$status_array["status"]);
 		}
