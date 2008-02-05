@@ -26,8 +26,8 @@ $apacheaccesslog = "/var/log/apache/access.log";
 $contents = file_get_contents($apacheaccesslog);
 
 // Loop through the sites
-//$site = mysql_query("SELECT name FROM site WHERE latitude='' AND longitude=''");
-$site = mysql_query("SELECT name FROM site");
+$site = mysql_query("SELECT name FROM site WHERE latitude='' AND longitude=''");
+//$site = mysql_query("SELECT name FROM site");
 while($site_array = mysql_fetch_array($site))
 {
   $sitename = $site_array["name"];
