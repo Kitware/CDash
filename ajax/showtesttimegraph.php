@@ -79,7 +79,7 @@ $(function () {
     };
 		
     $("#timegrapholder").bind("selected", function (event, area) {
-    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], options, {xaxis: { min: area.x1, max: area.x2 });
+    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], options, {xaxis: { min: area.x1, max: area.x2 }});
 
   });
    
