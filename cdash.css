@@ -90,10 +90,10 @@ a:active{
 	background-color : #fdba76;
 }
  .error {
-	background-color : #C22b25;
+	background-color : #ff6666;
 }
- .Passed { background-color : #00aa00; }
- .Failed { background-color : #ffcc66; }
+ .Passed { background-color : #92ca89; }
+ .Failed { background-color : #fdba76; }
  .Not Run { background-color : #ff6666; }
  .na { background-color : #cccccc; }
  .measurement { background-color : #b0c4de; }
