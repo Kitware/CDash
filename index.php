@@ -309,7 +309,7 @@ function generate_main_dashboard_XML($projectid,$date)
 		$updatestatus = mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'");
 		$updatestatus_array = mysql_fetch_array($updatestatus);
 		
-		if(strlen($updatestatus_array["status"]) > 0)
+		if(strlen($updatestatus_array["status"]) > 0 && $updatestatus_array["status"]!="0")
 		  {
 			$xml .= add_XML_value("updateerrors",1);
 		  }
