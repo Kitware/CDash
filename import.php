@@ -110,10 +110,14 @@ if($Submit)
         $handle = fopen($file,"r");
         $contents = fread($handle,filesize($file));
         echo ".";
+        flush();
+        ob_flush();
         $numDots++;
         if($numDots > 79)
           {
           echo "<br>\n";
+          flush();
+          ob_flush();
           $numDots = 0;
           }
         $xml_array = parse_XML($contents);
