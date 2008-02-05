@@ -684,7 +684,6 @@ function update_site($siteid,$name,
     }
     }
    $sql .= ")"; 
-  echo $sql;
   mysql_query ($sql);
   add_last_sql_error("update_site",$sql);
    }
