@@ -93,9 +93,13 @@ if($Submit)
       {
       $currentDay = date("Ymd", mktime(0,0,0,$monthFrom,$dayFrom+$i,$yearFrom));
       echo("Gathering XML files for $currentDay...  $directory/*/*/$currentDay-*/XML/*.xml <br>\n");
+      flush();
+      ob_flush();
       $files = glob($directory."/*/*/$currentDay-*/XML/*.xml");
       $numFiles = count($files);
       echo("$numFiles found<br>\n");
+      flush();
+      ob_flush();
       $numDots = 0;
       foreach($files as $file)
         {
@@ -117,6 +121,8 @@ if($Submit)
         fclose($handle);
         }
       echo "<br>Done for the day".$currentDay."<br>\n";
+      flush();
+      ob_flush();
       }
     } // end strlen(directory)>0
   echo("<a href=index.php?project=$projName>Back to $projName dashboard</a>\n");
