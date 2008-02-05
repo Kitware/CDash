@@ -115,7 +115,7 @@ Map</a></li>
   PREVIOUS
   </a></li>
 <li><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
-    TODAY
+    CURRENT 
     </a></li>
 <li><a vertical-align="middle">
 <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/></xsl:attribute>
