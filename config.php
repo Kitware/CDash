@@ -35,6 +35,9 @@ $CDASH_BACKUP_DIRECTORY = 'backup';
 $CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
 // Backup timeframe
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
+// Use getIPfromApache script to get IP addresses
+// when using forwarding script
+$CDASH_USE_IP_FROM_ACCESS_LOG='0';
 // Google Map API
 $CDASH_GOOGLE_MAP_API_KEY = array();
 $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
