@@ -81,9 +81,9 @@ $(function () {
 		
 		 var options = {
         lines: { show: true },
-    //    points: { show: true },
+        points: { show: true },
     //    xaxis: { ticks: tx },
-    //    yaxis: { ticks: ty },
+        yaxis: { ticks: ty },
     grid: {backgroundColor: "#fffaff"},
         selection: { mode: "x" },
     colors: ["#0000FF", "#dba255", "#919733"]

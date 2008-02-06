@@ -70,7 +70,7 @@ $(function () {
     
   var options = {
         lines: { show: true },
-    //    points: { show: true },
+        points: { show: true },
     //    xaxis: { ticks: tx },
     //    yaxis: { ticks: ty },
     grid: {backgroundColor: "#fffaff"},
