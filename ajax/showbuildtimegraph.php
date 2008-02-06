@@ -52,57 +52,31 @@ $(function () {
     $i=0;
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t = strtotime($build_array["starttime"]);
+      $t = date("Ymd",strtotime($build_array["starttime"]));
     ?>
       d1.push([<?php echo $t; ?>,<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>]);
-      tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
-      ty.push([<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>,"<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>"]);
+      //tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
+      //ty.push([<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>,"<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>"]);
     <?php
     $i++;
       }
     ?>
     
+		var options = {
+        lines: { show: true },
+        points: { show: true },
+    //    xaxis: { ticks: tx },
+    //    yaxis: { ticks: ty },
+    grid: {backgroundColor: "#fffaff"},
+        selection: { mode: "x" },
+    colors: ["#0000FF", "#dba255", "#919733"]
+    };
+  
     $("#grapholder").bind("selected", function (event, area) {
-    $.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],
-           {
-           lines: { show: true },
-           points: { show: true },
-           xaxis: {
-             ticks: tx,
-             min: area.x1,
-	     max: area.x2
-	     },
-           yaxis: {
-             ticks: ty
-             },
-           grid: {
-            backgroundColor: "#fffaff"
-             },
-           colors: ["#0000FF", "#dba255", "#919733"],
-           selection: { mode: "x" }
-    }
-
-   );
+    $.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
 
   });
    
-  $.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],
-        {
-        lines: { show: true },
-        points: { show: true },
-        xaxis: {
-         ticks: tx
-        },
-        yaxis: {
-         ticks: ty
-        },
-        grid: {
-            backgroundColor: "#fffaff"
-        },
-        colors: ["#0000FF", "#dba255", "#919733"],
-        selection: { mode: "x" }     
-        
-        }
-  );
+  $.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],options);
 });
 </script>
