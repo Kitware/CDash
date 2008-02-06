@@ -978,7 +978,8 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
   $build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
                                   WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
                                   AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
-                                  AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
+                                  AND '$starttime'>b2g.starttime 
+																	AND ('$starttime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
                                   
   if(mysql_num_rows($build2grouprule)>0)
     {
