@@ -54,7 +54,7 @@ $(function () {
       {
       $t = date("Ymd",strtotime($build_array["starttime"]));
     ?>
-      d1.push([<?php echo $t; ?>,<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>]);
+      d1.push([<?php echo $t; ?>,<?php echo (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60; ?>]);
       //tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
       //ty.push([<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>,"<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>"]);
     <?php
@@ -73,10 +73,10 @@ $(function () {
     };
   
     $("#grapholder").bind("selected", function (event, area) {
-    $.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
+    $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
 
   });
    
-  $.plot($("#grapholder"), [{label: "Build Time (seconds)",  data: d1}],options);
+  $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}],options);
 });
 </script>
