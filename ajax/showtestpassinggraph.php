@@ -62,8 +62,8 @@ $(function () {
     <?php
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t = strtotime($build_array["starttime"]);
-						if(strtolower($build_array["status"]) == "passed")
+			$t = date("Ymd",strtotime($build_array["starttime"]));
+      if(strtolower($build_array["status"]) == "passed")
 						  {
 								$status = 1;
 						  }
@@ -78,48 +78,23 @@ $(function () {
     <?php
       }
     ?>
-    
-    $("#passinggrapholder").bind("selected", function (event, area) {
-    $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],
-           {
-           lines: { show: true },
-           points: { show: true },
-           xaxis: {
-             ticks: tx,
-             min: area.x1,
-	     max: area.x2
-	     },
-           yaxis: {
-             ticks: ty
-             },
-           grid: {
-            backgroundColor: "#fffaff"
-             },
-           colors: ["#0000FF", "#dba255", "#919733"],
-           selection: { mode: "x" }
-    }
-
-   );
-
-  });
-   
-  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],
-        {
+		
+		 var options = {
         lines: { show: true },
-        points: { show: true },
-        xaxis: {
-         ticks: tx
-        },
-        yaxis: {
-         ticks: ty
-        },
-        grid: {
-            backgroundColor: "#fffaff"
-        },
-        colors: ["#0000FF", "#dba255", "#919733"],
-        selection: { mode: "x" }     
-        
-        }
-  );
+    //    points: { show: true },
+    //    xaxis: { ticks: tx },
+    //    yaxis: { ticks: ty },
+    grid: {backgroundColor: "#fffaff"},
+        selection: { mode: "x" },
+    colors: ["#0000FF", "#dba255", "#919733"]
+    };
+  
+    $("#passinggrapholder").bind("selected", function (event, area) {
+    $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
+    });
+   
+  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],options);
+	
+   
 });
 </script>
