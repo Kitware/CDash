@@ -45,8 +45,8 @@ $projectid = $build_array["projectid"];
 // Find the other builds
 $previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.time FROM build,build2test,test WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
                                AND build.projectid='$projectid' AND build.starttime<='$starttime' AND build2test.buildid=build.id 
-															 AND test.id=build2test.testid AND test.name='$testname'
-															 ORDER BY build.starttime ASC");
+                AND test.id=build2test.testid AND test.name='$testname'
+                ORDER BY build.starttime ASC");
 ?>
 
     
@@ -59,7 +59,7 @@ $(function () {
     <?php
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t = strtotime($build_array["starttime"]);
+      $t = date("Ymd",strtotime($build_array["starttime"]));
     ?>
       d1.push([<?php echo $t; ?>,<?php echo $build_array["time"]; ?>]);
       tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
@@ -68,22 +68,22 @@ $(function () {
       }
     ?>
     
-		var options = {
+  var options = {
         lines: { show: true },
-        points: { show: true },
-        xaxis: { ticks: tx },
-        yaxis: { ticks: ty },
-				grid: {backgroundColor: "#fffaff"},
+    //    points: { show: true },
+    //    xaxis: { ticks: tx },
+    //    yaxis: { ticks: ty },
+    grid: {backgroundColor: "#fffaff"},
         selection: { mode: "x" },
-				colors: ["#0000FF", "#dba255", "#919733"]
+    colors: ["#0000FF", "#dba255", "#919733"]
     };
-		
+  
     $("#timegrapholder").bind("selected", function (event, area) {
-    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], options, {xaxis: { min: area.x1, max: area.x2 }});
+    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
 
   });
    
   $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}],options);
-	
+ 
 });
 </script>
