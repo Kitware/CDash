@@ -582,17 +582,7 @@ function update_site($siteid,$name,
   include_once("config.php");
 	
   // Update the basic information first
-	if(strlen($latitude)>0 && strlen($longitude>0))
-	  {
-    mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
-    }
-  else
-    {	
-		if(!$CDASH_USE_IP_FROM_ACCESS_LOG) // if we don't use the IP script
-      {
-			mysql_query ("UPDATE site SET name='$name',ip='$ip' WHERE id='$siteid'");
-			}
-    }
+  mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
  
  add_last_sql_error("update_site");
  

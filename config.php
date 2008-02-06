@@ -37,7 +37,7 @@ $CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
-$CDASH_USE_IP_FROM_ACCESS_LOG='0';
+$CDASH_FORWARDING_IP='192.%'; // should be an SQL format 
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 $CDASH_DEFAULT_IP_LOCATIONS[] = array("IP" => "192.*","latitude" => "42.6612","longitude" => "-73.7689");
 $CDASH_DEFAULT_IP_LOCATIONS[] = array("IP" => "76.65.240.*","latitude" => "43.667","longitude" => "-79.417");
