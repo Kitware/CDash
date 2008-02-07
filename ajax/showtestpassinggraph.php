@@ -54,47 +54,51 @@ $previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.status
 <br>
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
-    var d1 = [];
-    var tx = [];
-    var ty = [];
-		 ty.push([0,"Failed"]);
-		 ty.push([1,"Passed"]);
-    <?php
-    while($build_array = mysql_fetch_array($previousbuilds))
-      {
-			$t = date("Ymd",strtotime($build_array["starttime"]));
-      if(strtolower($build_array["status"]) == "passed")
-						  {
-								$status = 1;
-						  }
-						else
-						  {
-								$status = 0;
-								}
-    ?>
+  var d1 = [];
+  var tx = [];
+  var ty = [];
+  ty.push([0,"Failed"]);
+  ty.push([1,"Passed"]);
+  <?php
+  while($build_array = mysql_fetch_array($previousbuilds))
+  {
+  $t = strtotime($build_array["starttime"]);
+  if(strtolower($build_array["status"]) == "passed")
+    {
+    $status = 1;
+    }
+  else
+    {
+    $status = 0;
+    }
+      ?>
       d1.push([<?php echo $t; ?>,<?php echo $status; ?>]);
       tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
-
-    <?php
-      }
-    ?>
-		
-		 var options = {
-        lines: { show: true },
-        points: { show: true },
-    //    xaxis: { ticks: tx },
-        yaxis: { ticks: ty },
-    grid: {backgroundColor: "#fffaff"},
-        selection: { mode: "x" },
-    colors: ["#0000FF", "#dba255", "#919733"]
-    };
+      
+      <?php
+          }
+  ?>
   
-    $("#passinggrapholder").bind("selected", function (event, area) {
-    $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
-    });
-   
+  var options = {
+    lines: { show: true },
+    points: { show: true },
+    yaxis: { ticks: ty }, 
+    xaxis: { noTicks: 10, 
+             tickFormatter: function(val) {
+               var datetime = new Date( val* 1000 );
+               return datetime.toLocaleString();
+             }},
+    grid: {backgroundColor: "#fffaff"},
+    selection: { mode: "x" },
+    colors: ["#0000FF", "#dba255", "#919733"]
+  };
+  
+  $("#passinggrapholder").bind("selected", function (event, area) {
+  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
+  });
+  
   $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],options);
-	
-   
+  
+  
 });
 </script>

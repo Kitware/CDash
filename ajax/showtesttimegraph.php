@@ -59,31 +59,33 @@ $(function () {
     <?php
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t = date("Ymd",strtotime($build_array["starttime"]));
+      $t = strtotime($build_array["starttime"]);
     ?>
       d1.push([<?php echo $t; ?>,<?php echo $build_array["time"]; ?>]);
-      tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
-      ty.push([<?php echo $build_array["time"]; ?>,"<?php echo $build_array["time"]; ?>"]);
     <?php
       }
     ?>
     
   var options = {
-        lines: { show: true },
-        points: { show: true },
-    //    xaxis: { ticks: tx },
-    //    yaxis: { ticks: ty },
+    lines: { show: true },
+    points: { show: true },
+    xaxis: { noTicks: 10, 
+             tickFormatter: function(val) {
+               var datetime = new Date( val* 1000 );
+               return datetime.toLocaleString();
+             }},
+    
     grid: {backgroundColor: "#fffaff"},
-        selection: { mode: "x" },
+    selection: { mode: "x" },
     colors: ["#0000FF", "#dba255", "#919733"]
-    };
-  
+  };
+    
     $("#timegrapholder").bind("selected", function (event, area) {
     $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
-
-  });
-   
-  $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}],options);
- 
+    
+    });
+    
+    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}],options);
+    
 });
 </script>

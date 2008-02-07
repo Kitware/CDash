@@ -52,24 +52,26 @@ $(function () {
     $i=0;
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t = date("Ymd",strtotime($build_array["starttime"]));
+      $t = strtotime($build_array["starttime"]);
     ?>
       d1.push([<?php echo $t; ?>,<?php echo (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60; ?>]);
-      //tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
-      //ty.push([<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>,"<?php echo strtotime($build_array["endtime"])-strtotime($build_array["starttime"]); ?>"]);
     <?php
     $i++;
       }
     ?>
     
-		var options = {
-        lines: { show: true },
-        points: { show: true },
-    //    xaxis: { ticks: tx },
-    //    yaxis: { ticks: ty },
-    grid: {backgroundColor: "#fffaff"},
-        selection: { mode: "x" },
-    colors: ["#0000FF", "#dba255", "#919733"]
+    var options = {
+      lines: { show: true },
+      points: { show: true },
+      xaxis: { noTicks: 10, 
+               tickFormatter: function(val) {
+                 var datetime = new Date( val* 1000 );
+                 return datetime.toLocaleString();
+               }},
+
+      grid: {backgroundColor: "#fffaff"},
+      selection: { mode: "x" },
+      colors: ["#0000FF", "#dba255", "#919733"]
     };
   
     $("#grapholder").bind("selected", function (event, area) {
