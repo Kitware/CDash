@@ -195,6 +195,7 @@ if($Submit)
 @$Delete = $_POST["Delete"];
 if($Delete)
   {
+  remove_project_builds($projectid);
   mysql_query("DELETE FROM project WHERE id='$projectid'");
   }
 

@@ -888,6 +888,18 @@ function add_site($name,$parser)
   return $siteid;
 }
 
+/* remove all builds for a project */
+function remove_project_builds($projectid)
+{
+  $build = mysql_query("SELECT id FROM build WHERE projectid='$projectid'");
+  while($build_array = mysql_fetch_array($build))
+    {
+    $buildid = $$build_array["buildid"];
+    remove_build($buildid);
+    }
+}
+
+
 /** Remove all related inserts for a given build */
 function remove_build($buildid)
 {
@@ -928,28 +940,28 @@ function remove_build($buildid)
   mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");   
   
   // Delete the test if not shared
-	$build2test = mysql_query("SELECT * FROM build2test WHERE buildid='$buildid'");
-	while($build2test_array = mysql_fetch_array($build2test))
-	  {
-		$testid = $build2test_array["testid"];
-		if(mysql_num_rows(mysql_query("SELECT * FROM build2test WHERE testid='$testid'"))==1)
-		  {
-			// Check if the images for the test are not shared
-			$test2image = mysql_query("SELECT imgid FROM test2image WHERE testid='$testid'");
-			while($test2image_array = mysql_fetch_array($test2image))
-				{
-				$imgid = $test2image_array["imgid"];
-				// Check if the test images are shared
-				if(mysql_num_rows(mysql_query("SELECT * FROM test2image WHERE imgid='$imgid'"))==1)
-					{
-					mysql_query("DELETE FROM image WHERE id='$imgid'");
-					}
-				}
-			// Tests are not shared we delete
-			mysql_query("DELETE FROM test WHERE testid='$testid'");
-		  mysql_query("DELETE FROM test2image WHERE testid='$testid'");
-			}
-	  }
+  $build2test = mysql_query("SELECT * FROM build2test WHERE buildid='$buildid'");
+  while($build2test_array = mysql_fetch_array($build2test))
+    {
+    $testid = $build2test_array["testid"];
+    if(mysql_num_rows(mysql_query("SELECT * FROM build2test WHERE testid='$testid'"))==1)
+      {
+      // Check if the images for the test are not shared
+      $test2image = mysql_query("SELECT imgid FROM test2image WHERE testid='$testid'");
+      while($test2image_array = mysql_fetch_array($test2image))
+        {
+        $imgid = $test2image_array["imgid"];
+        // Check if the test images are shared
+        if(mysql_num_rows(mysql_query("SELECT * FROM test2image WHERE imgid='$imgid'"))==1)
+          {
+          mysql_query("DELETE FROM image WHERE id='$imgid'");
+          }
+        }
+      // Tests are not shared we delete
+      mysql_query("DELETE FROM test WHERE testid='$testid'");
+      mysql_query("DELETE FROM test2image WHERE testid='$testid'");
+      }
+    }
   mysql_query("DELETE FROM build2test WHERE buildid='$buildid'");	
 }
 
