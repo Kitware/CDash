@@ -1037,7 +1037,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
          
         if($i>0)
           {
-          $sql .= " OR";
+          $sql .= " OR ";
           }
             
         $sql .= "imgid='$imagid'";
