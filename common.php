@@ -894,7 +894,7 @@ function remove_project_builds($projectid)
   $build = mysql_query("SELECT id FROM build WHERE projectid='$projectid'");
   while($build_array = mysql_fetch_array($build))
     {
-    $buildid = $$build_array["buildid"];
+    $buildid = $build_array["buildid"];
     remove_build($buildid);
     }
 }
