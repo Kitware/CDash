@@ -63,7 +63,7 @@ $(function () {
     var options = {
       lines: { show: true },
       points: { show: true },
-      xaxis: { noTicks: 10, 
+      xaxis: { noTicks: 5, 
                tickFormatter: function(val) {
                  var datetime = new Date( val* 1000 );
                  return datetime.toLocaleString();

@@ -43,11 +43,13 @@ $projectid = $build_array["projectid"];
 
 
 // Find the other builds
-$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.status FROM build,build2test,test WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                               AND build.projectid='$projectid' AND build.starttime<='$starttime' AND build2test.buildid=build.id
-															 AND test.id=build2test.testid AND test.name='$testname'
-															 ORDER BY starttime ASC");
-
+$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.status 
+FROM build,build2test,test WHERE build.siteid='$siteid' 
+AND build.type='$buildtype' AND build.name='$buildname'
+AND build.projectid='$projectid' AND build.starttime<='$starttime' 
+AND build2test.buildid=build.id
+AND test.id=build2test.testid AND test.name='$testname'
+ORDER BY starttime ASC");
 ?>
 
     
@@ -83,7 +85,7 @@ $(function () {
     lines: { show: true },
     points: { show: true },
     yaxis: { ticks: ty }, 
-    xaxis: { noTicks: 10, 
+    xaxis: { noTicks: 5, 
              tickFormatter: function(val) {
                var datetime = new Date( val* 1000 );
                return datetime.toLocaleString();
@@ -94,11 +96,9 @@ $(function () {
   };
   
   $("#passinggrapholder").bind("selected", function (event, area) {
-  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
+  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],
+         $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
   });
-  
   $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],options);
-  
-  
 });
 </script>

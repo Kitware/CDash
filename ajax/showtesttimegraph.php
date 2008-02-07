@@ -33,7 +33,8 @@ $test_array = mysql_fetch_array($test);
 $testname = $test_array["name"];
 
 
-$build = mysql_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
+$build = mysql_query("SELECT name,type,siteid,projectid,starttime 
+FROM build WHERE id='$buildid'");
 $build_array = mysql_fetch_array($build);
 
 $buildname = $build_array["name"];
@@ -43,10 +44,15 @@ $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
 // Find the other builds
-$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.time FROM build,build2test,test WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                               AND build.projectid='$projectid' AND build.starttime<='$starttime' AND build2test.buildid=build.id 
-                AND test.id=build2test.testid AND test.name='$testname'
-                ORDER BY build.starttime ASC");
+$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.time 
+FROM build,build2test,test WHERE build.siteid='$siteid' 
+AND build.type='$buildtype' 
+AND build.name='$buildname'
+AND build.projectid='$projectid' 
+AND build.starttime<='$starttime' 
+AND build2test.buildid=build.id 
+AND test.id=build2test.testid AND test.name='$testname'
+ORDER BY build.starttime ASC");
 ?>
 
     
@@ -69,7 +75,7 @@ $(function () {
   var options = {
     lines: { show: true },
     points: { show: true },
-    xaxis: { noTicks: 10, 
+    xaxis: { noTicks: 5, 
              tickFormatter: function(val) {
                var datetime = new Date( val* 1000 );
                return datetime.toLocaleString();
@@ -81,11 +87,13 @@ $(function () {
   };
     
     $("#timegrapholder").bind("selected", function (event, area) {
-    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
+    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], 
+           $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
     
     });
     
-    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}],options);
+    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  
+                                            data: d1}],options);
     
 });
 </script>
