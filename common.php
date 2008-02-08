@@ -245,14 +245,17 @@ function backup_xml_file($parser,$contents,$projectid)
   if (!$handle = fopen($filename, 'w')) 
     {
     echo "Cannot open file ($filename)";
-    exit;
+    add_log("Cannot open file ($filename)", "backup_xml_file");
+    return;
     }
   
   // Write $somecontent to our opened file.
   if (fwrite($handle, $contents) === FALSE)  
     {
     echo "Cannot write to file ($contents)";
-    exit;
+    add_log("Cannot write to file ($$contents)", "backup_xml_file");
+    fclose($handle);
+    return;
     }
     
   fclose($handle);

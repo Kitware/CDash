@@ -306,15 +306,15 @@ function generate_main_dashboard_XML($projectid,$date)
     $update_array = mysql_fetch_row($update);
     $xml .= add_XML_value("update",$update_array[0]);
 		
-		$updatestatus = mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'");
-		$updatestatus_array = mysql_fetch_array($updatestatus);
-		
-		if(strlen($updatestatus_array["status"]) > 0 && $updatestatus_array["status"]!="0")
-		  {
-			$xml .= add_XML_value("updateerrors",1);
-		  }
-		else
-		  {
+    $updatestatus = mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'");
+    $updatestatus_array = mysql_fetch_array($updatestatus);
+    
+    if(strlen($updatestatus_array["status"]) > 0 && $updatestatus_array["status"]!="0")
+      {
+      $xml .= add_XML_value("updateerrors",1);
+      }
+    else
+      {
       $updateerrors = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
       $updateerrors_array = mysql_fetch_row($updateerrors);
       $xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
