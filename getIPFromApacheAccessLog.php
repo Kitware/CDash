@@ -27,7 +27,7 @@ $contents = file_get_contents($apacheaccesslog);
 
 // Loop through the sites
 // Select all the ips that have been forwarded
-$site = mysql_query("SELECT name FROM site WHERE ip LIKE $CDASH_FORWARDING_IP");
+$site = mysql_query("SELECT name FROM site WHERE ip LIKE '$CDASH_FORWARDING_IP'");
 while($site_array = mysql_fetch_array($site))
 {
   $sitename = $site_array["name"];
