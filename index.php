@@ -61,7 +61,14 @@ function generate_index_table()
         $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
-    $row = !$row;
+    if($row == 0)
+      {
+      $row = 1;
+      }
+    else
+      {
+      $row = 0;
+      }
     }
   $xml .= "</cdash>";
   return $xml;
