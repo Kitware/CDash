@@ -1,4 +1,4 @@
-function showtesttimegraph_click(testid)
+function showtesttimegraph_click(buildid,testid)
 {   
   if($("#timegraph").html() != "" && $("#timegrapholder").is(":visible"))
     {
@@ -11,10 +11,10 @@ function showtesttimegraph_click(testid)
   $("#timegraph").html("fetching...<img src=images/loading.gif></img>");
 	$("#timegrapholder").attr("style","width:800px;height:400px;");
 	$("#timegrapholder").show();
-  $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid,{},function(){$("#timegrapholder").fadeIn('slow');});
+  $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"buildid="+buildid,{},function(){$("#timegrapholder").fadeIn('slow');});
 }
 
-function showtestpassinggraph_click(testid)
+function showtestpassinggraph_click(buildid,testid)
 {   
   if($("#passinggraph").html() != "" && $("#passinggrapholder").is(":visible"))
     {
@@ -26,5 +26,5 @@ function showtestpassinggraph_click(testid)
   $("#passinggraph").html("fetching...<img src=images/loading.gif></img>");
   $("#passinggrapholder").attr("style","width:800px;height:400px;");
 	$("#passinggrapholder").show();
-  $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid,{},function(){$("#passinggrapholder").fadeIn('slow');});
+  $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"buildid="+buildid,{},function(){$("#passinggrapholder").fadeIn('slow');});
 }

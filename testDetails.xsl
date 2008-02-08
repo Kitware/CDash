@@ -83,7 +83,7 @@
 <br/>
 <!-- Timing Graph -->
 <a>
-<xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
+<xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
 [Show Test Time Graph]
 </a>
 <div name="timegraph" id="timegraph"></div>
@@ -92,7 +92,7 @@
 </center>
 <!-- Pass/Fail Graph -->
 <a>
-<xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
+<xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
 [Show Failing/Passing Graph]
 </a>
 <div name="passinggraph" id="passinggraph"></div>

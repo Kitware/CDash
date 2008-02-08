@@ -19,15 +19,12 @@ include("../config.php");
 include("../common.php");
 
 $testid = $_GET["testid"];
+$buildid = $_GET["buildid"];
 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
 // Find the project variables
-$build2test = mysql_query("SELECT buildid FROM build2test WHERE testid='$testid'");
-$build2test_array = mysql_fetch_array($build2test);
-$buildid = $build2test_array["buildid"];
-
 $test = mysql_query("SELECT name FROM test WHERE id='$testid'");
 $test_array = mysql_fetch_array($test);
 $testname = $test_array["name"];

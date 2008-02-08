@@ -73,6 +73,7 @@ $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 
 $xml .= "<test>\n";
 $xml .= add_XML_value("id",$testid) . "\n";
+$xml .= add_XML_value("buildid", $buildid) . "\n";
 $xml .= add_XML_value("build", $buildRow["name"]) . "\n";
 $xml .= add_XML_value("site", $siteRow["name"]) . "\n";
 $xml .= add_XML_value("test", $testName) . "\n";
