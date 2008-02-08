@@ -56,19 +56,19 @@ $(function () {
   var d1 = [];
   var tx = [];
   var ty = [];
-  ty.push([0,"Failed"]);
-  ty.push([1,"Passed"]);
+  ty.push([1,"Failed"]);
+  ty.push([2,"Passed"]);
   <?php
   while($build_array = mysql_fetch_array($previousbuilds))
   {
   $t = strtotime($build_array["starttime"]);
   if(strtolower($build_array["status"]) == "passed")
     {
-    $status = 1;
+    $status = 2;
     }
   else
     {
-    $status = 0;
+    $status = 1;
     }
       ?>
       d1.push([<?php echo $t; ?>,<?php echo $status; ?>]);

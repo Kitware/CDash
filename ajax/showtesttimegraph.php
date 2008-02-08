@@ -52,8 +52,6 @@ AND test.id=build2test.testid AND test.name='$testname'
 ORDER BY build.starttime ASC");
 ?>
 
-    
-<br>
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var d1 = [];
