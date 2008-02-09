@@ -89,56 +89,56 @@ function str_to_time($str,$stamp)
   $str = str_replace("Eastern Standard Time","EST",$str);
   $str = str_replace("Eastern Daylight Time","EDT",$str);
   
-	// For some reasons the Australian time is not recognized by php
+  // For some reasons the Australian time is not recognized by php
   // Actually an open bug in PHP 5.
-	$offset = 0; // no offset by default
+  $offset = 0; // no offset by default
   if(strpos($str,"AEDT") !== FALSE)
-	  {
-	  $str = str_replace("AEDT","UTC",$str);
-		$offset = 3600*11;
-		}
-		
-		// The year is always at the end of the string if it exists (from CTest)
-		$stampyear = substr($stamp,0,4);
-		$year = substr($str,strlen($str)-4,2);
-		
-		if($year!="19" && $year!="20")
-		  {
-				// No year is defined we add it
-			// find the hours
+    {
+    $str = str_replace("AEDT","UTC",$str);
+    $offset = 3600*11;
+    }
+  
+  // The year is always at the end of the string if it exists (from CTest)
+  $stampyear = substr($stamp,0,4);
+  $year = substr($str,strlen($str)-4,2);
+  
+  if($year!="19" && $year!="20")
+    {
+    // No year is defined we add it
+    // find the hours
     $pos = strpos($str,":");
     if($pos !== FALSE)
       {
-						$tempstr = $str;
+      $tempstr = $str;
       $str = substr($tempstr,0,$pos-2);
       $str .= $stampyear." ".substr($tempstr,$pos-2);
       }
-		  }
+    }
 		
-		$strtotimefailed = 0;
-		if(PHP_VERSION>=5.1)
-		  {		
-				if(strtotime($str) === FALSE)
-				  {
-						$strtotimefailed = 1;
-				  }
-		  }
-		else
-		  {
-				if(strtotime($str) == -1)
-				  {
-						$strtotimefailed = 1;
-				  }
-		  }
+  $strtotimefailed = 0;
+  if(PHP_VERSION>=5.1)
+    {		
+    if(strtotime($str) === FALSE)
+      {
+      $strtotimefailed = 1;
+      }
+    }
+  else
+    {
+    if(strtotime($str) == -1)
+      {
+      $strtotimefailed = 1;
+      }
+    }
 				
-		// If it's still failing we assume GMT and put the year at the end
+  // If it's still failing we assume GMT and put the year at the end
   if($strtotimefailed)
     {
     // find the hours
     $pos = strpos($str,":");
     if($pos !== FALSE)
       {
-						$tempstr = $str;
+      $tempstr = $str;
       $str = substr($tempstr,0,$pos-2);
       $str .= substr($tempstr,$pos-2,5);			
       }
@@ -153,7 +153,7 @@ function parse_build($parser,$projectid)
 {   
   $xmlarray = $parser->vals;
 	
-	$site = $parser->index["SITE"];
+  $site = $parser->index["SITE"];
   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   // Extract the type from the buildstamp
@@ -182,7 +182,7 @@ function parse_build($parser,$projectid)
   $submit_time = gmdate("Y-m-d H:i:s");
   
   $buildid = add_build($projectid,$siteid,$name,$stamp,$type,$generator,
-	                     $start_time,$end_time,$submit_time,$command,$log,$parser);
+                       $start_time,$end_time,$submit_time,$command,$log,$parser);
   
   // Add the warnings
   $error_array = array();
@@ -190,50 +190,50 @@ function parse_build($parser,$projectid)
   $inerror = false;
   
   foreach($xmlarray as $tagarray)
-   {
-   if(!$inerror && (($tagarray["tag"] == "WARNING") || ($tagarray["tag"] == "ERROR") ) && ($tagarray["level"] == 3))
-     {
-     $inerror = true;
-     $index++;
-     if($tagarray["tag"] == "WARNING")
-       {
-       $error_array[$index]["type"]=1; // warning are type 1
-       }
-     else
-       {
-       $error_array[$index]["type"]=0;
-       }
-     }
-   else if(($tagarray["tag"] == "BUILDLOGLINE") && ($tagarray["level"] == 4))
-     {
-     $error_array[$index]["logline"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "TEXT") && ($tagarray["level"] == 4))
-     {
-     $error_array[$index]["text"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "SOURCEFILE") && ($tagarray["level"] == 4))
-     {
-     $error_array[$index]["sourcefile"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "SOURCELINENUMBER") && ($tagarray["level"] == 4))
-     {
-     $error_array[$index]["sourceline"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "PRECONTEXT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
-     {
-     $error_array[$index]["precontext"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "POSTCONTEXT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
-     {
-     $error_array[$index]["postcontext"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "REPEATCOUNT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
-     {
-     $error_array[$index]["repeatcount"]=$tagarray["value"];
-     $inerror = false;
-     }
-   }
+    {
+    if(!$inerror && (($tagarray["tag"] == "WARNING") || ($tagarray["tag"] == "ERROR") ) && ($tagarray["level"] == 3))
+      {
+      $inerror = true;
+      $index++;
+      if($tagarray["tag"] == "WARNING")
+        {
+        $error_array[$index]["type"]=1; // warning are type 1
+        }
+      else
+        {
+        $error_array[$index]["type"]=0;
+        }
+      }
+    else if(($tagarray["tag"] == "BUILDLOGLINE") && ($tagarray["level"] == 4))
+      {
+      $error_array[$index]["logline"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "TEXT") && ($tagarray["level"] == 4))
+      {
+      $error_array[$index]["text"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "SOURCEFILE") && ($tagarray["level"] == 4))
+      {
+      $error_array[$index]["sourcefile"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "SOURCELINENUMBER") && ($tagarray["level"] == 4))
+      {
+      $error_array[$index]["sourceline"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "PRECONTEXT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
+      {
+      $error_array[$index]["precontext"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "POSTCONTEXT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
+      {
+      $error_array[$index]["postcontext"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "REPEATCOUNT") && ($tagarray["level"] == 4) && array_key_exists("value",$tagarray))
+      {
+      $error_array[$index]["repeatcount"]=$tagarray["value"];
+      $inerror = false;
+      }
+    }
    
 
   foreach($error_array as $error)
@@ -249,7 +249,7 @@ function parse_build($parser,$projectid)
 function create_build($parser,$projectid)
 {
   $xmlarray = $parser->vals;
-	$site = $parser->index["SITE"];
+  $site = $parser->index["SITE"];
 		
   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
   $buildname = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
@@ -287,8 +287,8 @@ function parse_configure($parser,$projectid)
 {
   include_once("common.php");
 	
-	$xmlarray = $parser->vals;
-	$site = $parser->index["SITE"];	
+  $xmlarray = $parser->vals;
+  $site = $parser->index["SITE"];	
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
@@ -321,7 +321,7 @@ function parse_testing($parser,$projectid)
   include_once("common.php");
 
   $xmlarray = $parser->vals;
-	$site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"];	
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
 
@@ -410,12 +410,12 @@ function parse_testing($parser,$projectid)
       } 
     }
    
-		// We cannot really do a block submission since we are having images
+  // We cannot really do a block submission since we are having images
   foreach($test_array as $test)
     {
     add_test($buildid,
-				        $test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], 
-												$test["executiontime"], $test["details"], $test["output"], $test["images"]);
+             $test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], 
+             $test["executiontime"], $test["details"], $test["output"], $test["images"]);
     }
 }
 
@@ -424,7 +424,7 @@ function parse_coverage($parser,$projectid)
 {
   include_once("common.php");
   $xmlarray = $parser->vals;
-	$site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"];	
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
@@ -467,46 +467,46 @@ function parse_coverage($parser,$projectid)
   $index = 0;
   
   foreach($xmlarray as $tagarray)
-   {
-   if(($tagarray["tag"] == "FILE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
-     {
-     $index++;
-     $coverage_array[$index]["fullpath"]=$tagarray["attributes"]["FULLPATH"];
-     $coverage_array[$index]["filename"]=$tagarray["attributes"]["NAME"];
-     $coverage_array[$index]["covered"]=1;
-     if($tagarray["attributes"]["COVERED"] == "false")
-       {
-       $coverage_array[$index]["covered"]=0;
-       }
-     }
-   else if(($tagarray["tag"] == "LOCTESTED") && ($tagarray["level"] == 4))
-     {
-     $coverage_array[$index]["loctested"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "LOCUNTESTED") && ($tagarray["level"] == 4))
-     {
-     $coverage_array[$index]["locuntested"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "BRANCHESTESTED") && ($tagarray["level"] == 4))
-     {
-     $coverage_array[$index]["branchstested"]=$tagarray["value"];
-     } 
-   else if(($tagarray["tag"] == "BRANCHESUNTESTED") && ($tagarray["level"] == 4))
-     {
-     $coverage_array[$index]["branchsuntested"]=$tagarray["value"];
-     }    
-   else if(($tagarray["tag"] == "FUNCTIONSTESTED") && ($tagarray["level"] == 4))
-     {
-     $coverage_array[$index]["functionstested"]=$tagarray["value"];
-     } 
-   else if(($tagarray["tag"] == "FUNCTIONSUNTESTED") && ($tagarray["level"] == 4))
-     {
-     $coverage_array[$index]["functionsuntested"]=$tagarray["value"];
-     }         
-   }
+    {
+    if(($tagarray["tag"] == "FILE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
+      {
+      $index++;
+      $coverage_array[$index]["fullpath"]=$tagarray["attributes"]["FULLPATH"];
+      $coverage_array[$index]["filename"]=$tagarray["attributes"]["NAME"];
+      $coverage_array[$index]["covered"]=1;
+      if($tagarray["attributes"]["COVERED"] == "false")
+        {
+        $coverage_array[$index]["covered"]=0;
+        }
+      }
+    else if(($tagarray["tag"] == "LOCTESTED") && ($tagarray["level"] == 4))
+      {
+      $coverage_array[$index]["loctested"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "LOCUNTESTED") && ($tagarray["level"] == 4))
+      {
+      $coverage_array[$index]["locuntested"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "BRANCHESTESTED") && ($tagarray["level"] == 4))
+      {
+      $coverage_array[$index]["branchstested"]=$tagarray["value"];
+      } 
+    else if(($tagarray["tag"] == "BRANCHESUNTESTED") && ($tagarray["level"] == 4))
+      {
+      $coverage_array[$index]["branchsuntested"]=$tagarray["value"];
+      }    
+    else if(($tagarray["tag"] == "FUNCTIONSTESTED") && ($tagarray["level"] == 4))
+      {
+      $coverage_array[$index]["functionstested"]=$tagarray["value"];
+      } 
+    else if(($tagarray["tag"] == "FUNCTIONSUNTESTED") && ($tagarray["level"] == 4))
+      {
+      $coverage_array[$index]["functionsuntested"]=$tagarray["value"];
+      }         
+    }
   
-		// We add the coverage as an array
-		add_coverage($buildid,$coverage_array);
+  // We add the coverage as an array
+  add_coverage($buildid,$coverage_array);
 }
 
 /** Parse the coveragelog xml */
@@ -514,7 +514,7 @@ function parse_coveragelog($parser,$projectid)
 {
   include_once("common.php");
   $xmlarray = $parser->vals;
-	$site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"];	
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
@@ -529,23 +529,23 @@ function parse_coveragelog($parser,$projectid)
   $index = 0;
   
   foreach($xmlarray as $tagarray)
-   {
-   if(($tagarray["tag"] == "FILE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
-     {
-     $index++;
-     $coveragelog_array[$index]["fullpath"] = $tagarray["attributes"]["FULLPATH"];
-     $coveragelog_array[$index]["filename"] = $tagarray["attributes"]["NAME"];
-     $coveragelog_array[$index]["file"] = "";
-     }
-   else if(($tagarray["tag"] == "LINE") && ($tagarray["level"] == 5))
-     {
-     if($tagarray["attributes"]["COUNT"]>=0)
-       {
-       $coveragelog_array[$index]["lines"][$tagarray["attributes"]["NUMBER"]] = $tagarray["attributes"]["COUNT"];
-       }   
-     $coveragelog_array[$index]["file"] .= @$tagarray["value"]."<br>";
-     }
-   }
+    {
+    if(($tagarray["tag"] == "FILE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
+      {
+      $index++;
+      $coveragelog_array[$index]["fullpath"] = $tagarray["attributes"]["FULLPATH"];
+      $coveragelog_array[$index]["filename"] = $tagarray["attributes"]["NAME"];
+      $coveragelog_array[$index]["file"] = "";
+      }
+    else if(($tagarray["tag"] == "LINE") && ($tagarray["level"] == 5))
+      {
+      if($tagarray["attributes"]["COUNT"]>=0)
+        {
+        $coveragelog_array[$index]["lines"][$tagarray["attributes"]["NUMBER"]] = $tagarray["attributes"]["COUNT"];
+        }   
+      $coveragelog_array[$index]["file"] .= @$tagarray["value"]."<br>";
+      }
+    }
   
   foreach($coveragelog_array as $coverage)
     {
@@ -565,7 +565,7 @@ function parse_update($parser,$projectid)
 {
   include_once("common.php");
 
-	$xmlarray = $parser->vals;
+  $xmlarray = $parser->vals;
 
   $buildname = getXMLValue($xmlarray,"BUILDNAME","UPDATE");
   $stamp = getXMLValue($xmlarray,"BUILDSTAMP","UPDATE");
@@ -574,7 +574,7 @@ function parse_update($parser,$projectid)
   $buildid = get_build_id($buildname,$stamp,$projectid);
   if($buildid<0)
     {
-	  $update = $parser->index["UPDATE"];	
+    $update = $parser->index["UPDATE"];	
     $sitename = getXMLValue($xmlarray,"SITE","UPDATE");
 
     // Extract the type from the buildstamp
@@ -602,8 +602,8 @@ function parse_update($parser,$projectid)
     $buildid = add_build($projectid,$siteid,$buildname,$stamp,$type,$generator,$start_time,$end_time,$submit_time,"","",$parser);
     }
   
-	// Remove any previous update
-	mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
+  // Remove any previous update
+  mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
   mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");
   
   $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
@@ -617,7 +617,7 @@ function parse_update($parser,$projectid)
   $end_time = gmdate("Y-m-d H:i:s",$endtimestamp);
 
   $status = 0;
-	$returnstatus = getXMLValue($xmlarray,"UPDATERETURNSTATUS","UPDATE");
+  $returnstatus = getXMLValue($xmlarray,"UPDATERETURNSTATUS","UPDATE");
   add_update($buildid,$start_time,$end_time,$command,$type,$returnstatus);
     
   $files_array = array();
@@ -627,59 +627,59 @@ function parse_update($parser,$projectid)
   foreach($xmlarray as $tagarray)
     {
     if(!$inupdate && (($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING"))&& ($tagarray["level"] == 3))
-				{
-								$index++;
-								$inupdate = 1;
-								}
-      else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
-							{
-							$files_array[$index]["filename"]=$tagarray["value"];
-							}
-      else if(($tagarray["tag"] == "CHECKINDATE") && ($tagarray["level"] == 4))
-								{
-								$files_array[$index]["checkindate"]=$tagarray["value"];
-								}
-      else if(($tagarray["tag"] == "AUTHOR") && ($tagarray["level"] == 4))
-								{
-								$files_array[$index]["author"]=$tagarray["value"];
-								}  
-      else if(($tagarray["tag"] == "EMAIL") && ($tagarray["level"] == 4))
-								{
-								$files_array[$index]["email"]=$tagarray["value"];
-								} 
-      else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
-								{
-								$files_array[$index]["log"]=$tagarray["value"];
-								}    
-      else if(($tagarray["tag"] == "REVISION") && ($tagarray["level"] == 4))
-								{
-								$value = $tagarray["value"];
-								if(	$value == "Unknown")
-								  {
-										$value = -1; // storing unknown revision as -1
-										}
-								$files_array[$index]["revision"]=$value;
-								}
-      else if(($tagarray["tag"] == "PRIORREVISION") && ($tagarray["level"] == 4))
-								{
-								$value = $tagarray["value"];
-								if(	$value == "Unknown")
-								  {
-										$value = -1;  // storing unknown revision as -1
-										}
-								$files_array[$index]["priorrevision"]=$value;
-								}  
-      else if((($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING")) && ($tagarray["type"] == "close"))
-								{
-								$inupdate = 0;
-								}
+      {
+      $index++;
+      $inupdate = 1;
       }
+    else if(($tagarray["tag"] == "FULLNAME") && ($tagarray["level"] == 4))
+      {
+      $files_array[$index]["filename"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "CHECKINDATE") && ($tagarray["level"] == 4))
+      {
+      $files_array[$index]["checkindate"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "AUTHOR") && ($tagarray["level"] == 4))
+      {
+      $files_array[$index]["author"]=$tagarray["value"];
+      }  
+    else if(($tagarray["tag"] == "EMAIL") && ($tagarray["level"] == 4))
+      {
+      $files_array[$index]["email"]=$tagarray["value"];
+      } 
+    else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
+      {
+      $files_array[$index]["log"]=$tagarray["value"];
+      }    
+    else if(($tagarray["tag"] == "REVISION") && ($tagarray["level"] == 4))
+      {
+      $value = $tagarray["value"];
+      if(	$value == "Unknown")
+        {
+        $value = -1; // storing unknown revision as -1
+        }
+      $files_array[$index]["revision"]=$value;
+      }
+    else if(($tagarray["tag"] == "PRIORREVISION") && ($tagarray["level"] == 4))
+      {
+      $value = $tagarray["value"];
+      if(	$value == "Unknown")
+        {
+        $value = -1;  // storing unknown revision as -1
+        }
+      $files_array[$index]["priorrevision"]=$value;
+      }  
+    else if((($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING")) && ($tagarray["type"] == "close"))
+      {
+      $inupdate = 0;
+      }
+    }
 						
-    foreach($files_array as $file)
-						{
-						add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
-						$file["email"],$file["log"],$file["revision"],$file["priorrevision"]);
-						}
+  foreach($files_array as $file)
+    {
+    add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
+                   $file["email"],$file["log"],$file["revision"],$file["priorrevision"]);
+    }
 }
 
 /** Parse the notes xml */
@@ -687,7 +687,7 @@ function parse_note($parser,$projectid)
 {
   include_once("common.php");
   $xmlarray = $parser->vals;
-	$site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"];	
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
@@ -720,11 +720,11 @@ function parse_dynamicanalysis($parser,$projectid)
 {
   include_once("common.php");
 	
-	$xmlarray = $parser->vals;
-	$site = $parser->index["SITE"];	
+  $xmlarray = $parser->vals;
+  $site = $parser->index["SITE"];	
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
-	$dynamicanalysis  = $parser->index["DYNAMICANALYSIS"];	
+  $dynamicanalysis  = $parser->index["DYNAMICANALYSIS"];	
   $checker = $parser->vals[$dynamicanalysis[0]]["attributes"]["CHECKER"];
   
   // Find the build id
@@ -761,44 +761,44 @@ function parse_dynamicanalysis($parser,$projectid)
   $memleak_array = array();
   $index = 0;
   foreach($xmlarray as $tagarray)
-   {
-   if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
-     {
-     $index++;
-     $memleak_array[$index]["checker"]=$checker;
-     $memleak_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
-     }
-   else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
-     {
-     $memleak_array[$index]["name"]=$tagarray["value"];
-     }
-   else if(($tagarray["tag"] == "PATH") && ($tagarray["level"] == 4))
-     {
-     $memleak_array[$index]["path"]=$tagarray["value"];
-     } 
-   else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
-     {
-     $memleak_array[$index]["fullcommandline"]=$tagarray["value"];
-     }    
-   else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
-     {
-     if(isset($tagarray["value"])>0)
-       {
-       $memleak_array[$index]["log"]=$tagarray["value"];
-       }
-     } 
-   else if(($tagarray["tag"] == "DEFECT") && ($tagarray["level"] == 5)  && isset($tagarray["attributes"]))
-     {
-     $defect["type"] = $tagarray["attributes"]["TYPE"];
-     $defect["value"] = $tagarray["value"];
-     $memleak_array[$index]["defects"][]=$defect;
-     }
-   }
+    {
+    if(($tagarray["tag"] == "TEST") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]))
+      {
+      $index++;
+      $memleak_array[$index]["checker"]=$checker;
+      $memleak_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
+      }
+    else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
+      {
+      $memleak_array[$index]["name"]=$tagarray["value"];
+      }
+    else if(($tagarray["tag"] == "PATH") && ($tagarray["level"] == 4))
+      {
+      $memleak_array[$index]["path"]=$tagarray["value"];
+      } 
+    else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
+      {
+      $memleak_array[$index]["fullcommandline"]=$tagarray["value"];
+      }    
+    else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
+      {
+      if(isset($tagarray["value"])>0)
+        {
+        $memleak_array[$index]["log"]=$tagarray["value"];
+        }
+      } 
+    else if(($tagarray["tag"] == "DEFECT") && ($tagarray["level"] == 5)  && isset($tagarray["attributes"]))
+      {
+      $defect["type"] = $tagarray["attributes"]["TYPE"];
+      $defect["value"] = $tagarray["value"];
+      $memleak_array[$index]["defects"][]=$defect;
+      }
+    }
    
   foreach($memleak_array as $memleak)
     {
     $dynid = add_dynamic_analysis($buildid,$memleak["status"],$memleak["checker"],$memleak["name"],$memleak["path"],
-                         $memleak["fullcommandline"],$memleak["log"]);
+                                  $memleak["fullcommandline"],$memleak["log"]);
     
     if(isset($memleak["defects"]))
       {
@@ -809,12 +809,12 @@ function parse_dynamicanalysis($parser,$projectid)
       }
     }
 		
-		// If we have no memory leaks then we add at leas a row in the dynamic analysis
-		// table so that it shows up on the main dashboard
-		if(count($memleak_array) == 0)
-		  {
-				add_dynamic_analysis($buildid,"passed",$checker,"","","","");
-		  }
+  // If we have no memory leaks then we add at leas a row in the dynamic analysis
+  // table so that it shows up on the main dashboard
+  if(count($memleak_array) == 0)
+    {
+    add_dynamic_analysis($buildid,"passed",$checker,"","","","");
+    }
 }
       
       
