@@ -24,6 +24,18 @@
 
 <form name="form1" enctype="multipart/form-data" method="post" action="">
 <table border="0">
+ <xsl:for-each select="cdash/log">
+  <tr>
+    <td><div align="right"><b>CDash log</b></div></td>
+    <td><div align="left"><a>
+		<xsl:attribute name="href">
+		<xsl:value-of select="fullpath"/>
+		</xsl:attribute>
+		<xsl:value-of select="name"/></a></div></td>
+  </tr> 
+	</xsl:for-each> 
+</table>
+<table border="0">
  <xsl:for-each select="cdash/file">
   <tr>
     <td><div align="right"><b>Unparsed File:</b></div></td>
