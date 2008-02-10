@@ -3,7 +3,7 @@
 
    <xsl:include href="footer.xsl"/>
     <xsl:include href="headerback.xsl"/> 
-				
+    
     <xsl:output method="html" encoding="iso-8859-1"/>
     <xsl:template match="/">
       <html>
@@ -14,15 +14,15 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
       
-			<!-- Functions to confirm the remove -->
-								<script language="JavaScript">
-								function confirmDelete() {
-											if (window.confirm("Are you sure you want to delete this group?")){
-														return true;
-											}
-											return false;
-								}
-								</script>
+   <!-- Functions to confirm the remove -->
+        <script language="JavaScript">
+        function confirmDelete() {
+           if (window.confirm("Are you sure you want to delete this group?")){
+              return true;
+           }
+           return false;
+        }
+        </script>
        </head>
        <body bgcolor="#ffffff">
 <xsl:call-template name="headerback"/>
@@ -42,7 +42,8 @@ project page</a>
 <b>Warning: <xsl:value-of select="cdash/warning"/></b><br/><br/>
 </xsl:if>
 
-<form name="form1" enctype="multipart/form-data" method="post" action="manageBuildGroup.php">
+<form name="form1" enctype="multipart/form-data" method="post">
+<xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
 <table width="100%"  border="0">
   <tr>
     <td width="10%"><div align="right"><strong>Project:</strong></div></td>
@@ -81,8 +82,9 @@ project page</a>
      <td>
      <table>
      <xsl:for-each select="cdash/project/group">
-     <form method="post" action="manageBuildGroup.php">
-     <xsl:attribute name="form"><xsl:value-of select="id"/></xsl:attribute>
+     <form method="post">
+     <xsl:attribute name="name">form_<xsl:value-of select="id"/></xsl:attribute>
+     <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
      
      <tr>
      <td><xsl:value-of select="name"/></td>
@@ -100,10 +102,10 @@ project page</a>
      </td><td>
      <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
      <input type="submit" name="deleteGroup" value="Delete Group" onclick="return confirmDelete()"/>
-		 <input name="newstartdate" type="text" id="newstartdate" size="20">
-		 <xsl:attribute name="value"><xsl:value-of select="startdate"/></xsl:attribute>
-		 </input>
-		 <input type="submit" name="newDate" value="Change Start Date"/>
+   <input name="newstartdate" type="text" id="newstartdate" size="20">
+   <xsl:attribute name="value"><xsl:value-of select="startdate"/></xsl:attribute>
+   </input>
+   <input type="submit" name="newDate" value="Change Start Date"/>
      </xsl:if>
      </td>
      </tr>
@@ -132,40 +134,40 @@ project page</a>
     <td><div align="right"></div></td>
     <td><input type="submit" name="createGroup" value="Create Group"/><br/><br/></td>
   </tr>
-		  <tr>
+    <tr>
     <td><div align="right"></div></td>
     <td  bgcolor="#DDDDDD"><strong>Global Move</strong></td>
   </tr>
-		<tr>
+  <tr>
     <td width="10%"><div align="right">Show:</div></td>
     <td width="90%" ><select onchange="location = 'manageBuildGroup.php?projectid='+projectSelection.value+'&amp;show='+this.options[this.selectedIndex].value;"  name="globalMoveSelectionType">
         <option><xsl:attribute name="value">0</xsl:attribute>All</option>
        <xsl:for-each select="cdash/project/group">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-								<xsl:if test="selected=1">
+        <xsl:if test="selected=1">
         <xsl:attribute name="selected"></xsl:attribute>
         </xsl:if>
         <xsl:value-of select="name"/>
         </option>
         </xsl:for-each>
-							 </select>
-				</td>
+        </select>
+    </td>
   </tr>
-		  <tr>
+    <tr>
     <td><div align="right"></div></td>
     <td>
-			  <select name="movebuilds[]" size="15" multiple="true" id="movebuilds">
+     <select name="movebuilds[]" size="15" multiple="true" id="movebuilds">
         <xsl:for-each select="cdash/currentbuild">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
         <xsl:value-of select="name"/>
         </option>
         </xsl:for-each>
-					</select>
-				<br/>
-				Move to group: (select a group even if you want only expected)
-				<select name="groupSelection">
+     </select>
+    <br/>
+    Move to group: (select a group even if you want only expected)
+    <select name="groupSelection">
         <option>
         <xsl:attribute name="value">0</xsl:attribute>
         Choose...
@@ -178,12 +180,12 @@ project page</a>
         </option>
         </xsl:for-each>
         </select>
-				<br/>
-				<input name="expectedMove" type="checkbox" value="1"/> expected
-				<br/>
+    <br/>
+    <input name="expectedMove" type="checkbox" value="1"/> expected
+    <br/>
     <input type="submit" name="globalMove" value="Move selected build to group"/>
-				</td>
-		</tr>
+    </td>
+  </tr>
   </xsl:if>
   
 </table>
