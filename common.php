@@ -175,6 +175,13 @@ function parse_XML($contents)
 /** Backup an XML file */
 function backup_xml_file($parser,$contents,$projectid)
 {
+  
+  // If the content of the file is empty we return
+  if(strlen($contents)==0)
+    {
+    return; 
+    }
+
   include("config.php");
    
   clean_backup_directory(); // should probably be run as a cronjob
@@ -241,7 +248,8 @@ function backup_xml_file($parser,$contents,$projectid)
   $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_Other.".$i.".xml";
   $i++;
   }
-  
+ 
+   
   if (!$handle = fopen($filename, 'w')) 
     {
     echo "Cannot open file ($filename)";
@@ -249,7 +257,7 @@ function backup_xml_file($parser,$contents,$projectid)
     return;
     }
   
-  // Write $somecontent to our opened file.
+  // Write the file.
   if (fwrite($handle, $contents) === FALSE)  
     {
     echo "Cannot write to file ($contents)";
