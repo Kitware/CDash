@@ -295,12 +295,12 @@ function get_projects()
       $project['last_build'] = $lastbuild_array["submittime"];
       }
 
-		$project['first_build'] = "NA";
-    $lastbuildquery = mysql_query("SELECT starttime FROM build WHERE projectid='$projectid' ORDER BY starttime ASC LIMIT 1");
-    if(mysql_num_rows($lastbuildquery)>0)
+  $project['first_build'] = "NA";
+    $firstbuildquery = mysql_query("SELECT starttime FROM build WHERE projectid='$projectid' AND starttime>'2000-01-01' ORDER BY starttime ASC LIMIT 1");
+    if(mysql_num_rows($firstbuildquery)>0)
       {
-      $lastbuild_array = mysql_fetch_array($lastbuildquery);
-      $project['first_build'] = $lastbuild_array["starttime"];
+      $firstbuild_array = mysql_fetch_array($firstbuildquery);
+      $project['first_build'] = $firstbuild_array["starttime"];
       }
 
     $buildquery = mysql_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
@@ -599,7 +599,7 @@ function update_site($siteid,$name,
            $description,$ip,$latitude,$longitude,$nonewrevision=false)
 {  
   include_once("config.php");
-	
+ 
   // Update the basic information first
   mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
  
@@ -751,7 +751,7 @@ function get_geolocation($ip)
   // Ask hostip.info for geolocation
   $lat = "";
   $long = "";
-	
+ 
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
       
@@ -774,7 +774,7 @@ function get_geolocation($ip)
     $long = substr($httpReply,$pos+11,$pos2-$pos-11);
     } 
   curl_close($curl);
-	
+ 
   $location['latitude'] = "";
   $location['longitude'] = "";
   
@@ -786,21 +786,21 @@ function get_geolocation($ip)
     $location['latitude'] = $lat;
     $location['longitude'] = $long;
     }
-	else// Check if we have a list of default locations
-	  {
-		foreach($CDASH_DEFAULT_IP_LOCATIONS as $defaultlocation)
-		  {
-		  $defaultip = $defaultlocation["IP"];
-			$defaultlatitude = $defaultlocation["latitude"];
-			$defaultlongitude = $defaultlocation["longitude"];
-			if(preg_match("#^".strtr(preg_quote($defaultip, '#'), array('\*' => '.*', '\?' => '.'))."$#i", $ip))
-			  {
-				$location['latitude'] =  $defaultlocation["latitude"];
+ else// Check if we have a list of default locations
+   {
+  foreach($CDASH_DEFAULT_IP_LOCATIONS as $defaultlocation)
+    {
+    $defaultip = $defaultlocation["IP"];
+   $defaultlatitude = $defaultlocation["latitude"];
+   $defaultlongitude = $defaultlocation["longitude"];
+   if(preg_match("#^".strtr(preg_quote($defaultip, '#'), array('\*' => '.*', '\?' => '.'))."$#i", $ip))
+     {
+    $location['latitude'] =  $defaultlocation["latitude"];
         $location['longitude'] = $defaultlocation["longitude"];
-				}
-		  }
-	  }
-		
+    }
+    }
+   }
+  
   return $location;
 } 
 
@@ -981,7 +981,7 @@ function remove_build($buildid)
       mysql_query("DELETE FROM test2image WHERE testid='$testid'");
       }
     }
-  mysql_query("DELETE FROM build2test WHERE buildid='$buildid'");	
+  mysql_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
 }
 
 /** Add a new build */
@@ -1021,7 +1021,7 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
                                   WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
                                   AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
                                   AND '$starttime'>b2g.starttime 
-																	AND ('$starttime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
+                 AND ('$starttime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
                                   
   if(mysql_num_rows($build2grouprule)>0)
     {
@@ -1103,7 +1103,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
         
       $nimage_array = mysql_fetch_array(mysql_query($sql));  
       add_last_sql_error("add_test");
-			$nimages = $nimage_array[0];
+   $nimages = $nimage_array[0];
         
       if($nimages == count($images))
         {
@@ -1142,16 +1142,16 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
     
 
    // Add into build2test
-	 // Make sure that the test is not already added
-	 $query = mysql_query("SELECT buildid FROM build2test 
-	                       WHERE buildid='$buildid' AND testid='$testid' AND status='$status'
-												 AND time='$time'");
-	 add_last_sql_error("add_test"); 
-	 if(mysql_num_rows($query)==0)
-	  {										 				
+  // Make sure that the test is not already added
+  $query = mysql_query("SELECT buildid FROM build2test 
+                        WHERE buildid='$buildid' AND testid='$testid' AND status='$status'
+             AND time='$time'");
+  add_last_sql_error("add_test"); 
+  if(mysql_num_rows($query)==0)
+   {               
     mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
                  VALUES ('$buildid','$testid','$status','$time')");
-		}
+  }
    add_last_sql_error("add_test");              
 }
 
@@ -1365,7 +1365,7 @@ function get_cdash_dashboard_xml($projectname, $date)
     $project_array["cvsurl"] = "unknown";
     $project_array["bugtrackerurl"] = "unknown";
     $project_array["documentationurl"] = "unknown";
-		$project_array["homeurl"] = "unknown";
+  $project_array["homeurl"] = "unknown";
     $project_array["name"] = $projectname;
     $project_array["nightlytime"] = "00:00:00";
     }
@@ -1379,7 +1379,7 @@ function get_cdash_dashboard_xml($projectname, $date)
   <startdate>".date("l, F d Y H:i:s",$currentstarttime)."</startdate>
   <svn>".$project_array["cvsurl"]."</svn>
   <bugtracker>".$project_array["bugtrackerurl"]."</bugtracker>
-  <documentation>".$project_array["documentationurl"]."</documentation>	
+  <documentation>".$project_array["documentationurl"]."</documentation> 
   <home>".$project_array["homeurl"]."</home>
   <projectid>".$projectid."</projectid>
   <projectname>".$project_array["name"]."</projectname>
