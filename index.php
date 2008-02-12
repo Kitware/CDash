@@ -111,6 +111,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $svnurl = $project_array["cvsurl"];
     $homeurl = $project_array["homeurl"];
     $bugurl = $project_array["bugtrackerurl"];  
+		$googletracker = $project_array["googletracker"];  
 		$docurl = $project_array["documentationurl"];  
     $projectname = $project_array["name"];  
     }
@@ -134,6 +135,7 @@ function generate_main_dashboard_XML($projectid,$date)
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
+	<googletracker>".$googletracker."</googletracker> 
 	<documentation>".$docurl."</documentation> 
   <home>".$homeurl."</home>
   <logoid>".$logoid."</logoid> 
