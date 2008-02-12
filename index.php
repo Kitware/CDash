@@ -31,6 +31,10 @@ function generate_index_table()
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
   
+	$xml .= "<dashboard>
+	<googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>
+	</dashboard> ";
+	
     // User
   if(isset($_SESSION['cdash']))
     {
