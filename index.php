@@ -56,8 +56,19 @@ function generate_index_table()
          }
        else
          {
-      $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
-      }
+        $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
+        }
+				
+				// Display the first build
+				if($project['first_build'] == "NA")
+         {
+            $xml .= "<firstbuild>NA</firstbuild>";
+         }
+       else
+         {
+        $xml .= "<firstbuild>".date("Y-m-d H:i:s T",strtotime($project['first_build']. "UTC"))."</firstbuild>";
+        }
+
         $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";

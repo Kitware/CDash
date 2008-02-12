@@ -295,6 +295,14 @@ function get_projects()
       $project['last_build'] = $lastbuild_array["submittime"];
       }
 
+		$project['first_build'] = "NA";
+    $lastbuildquery = mysql_query("SELECT starttime FROM build WHERE projectid='$projectid' ORDER BY starttime ASC LIMIT 1");
+    if(mysql_num_rows($lastbuildquery)>0)
+      {
+      $lastbuild_array = mysql_fetch_array($lastbuildquery);
+      $project['first_build'] = $lastbuild_array["starttime"];
+      }
+
     $buildquery = mysql_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
     $buildquery_array = mysql_fetch_array($buildquery); 
     $project['nbuilds'] = $buildquery_array[0];

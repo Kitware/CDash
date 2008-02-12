@@ -88,13 +88,14 @@
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
 <tr class="table-heading1">
-  <td colspan="3" align="left" id="nob"><h3>Available Dashboards</h3></td>
+  <td colspan="4" align="left" id="nob"><h3>Available Dashboards</h3></td>
 </tr>
 
   <tr class="table-heading">
      <td align="center"><b>Project</b></td>
      <td align="center"><b>Submissions</b></td>
     <!-- <td align="center">Tests</td> -->
+		<td align="center"><b>First build</b></td>
      <td align="center" id="nob"><b>Last activity</b></td>
   </tr>
 
@@ -114,6 +115,7 @@
      <xsl:value-of select="name"/>
      </a></td>
     <td align="center"><xsl:value-of select="nbuilds"/></td>
+		<td align="center"><xsl:value-of select="firstbuild"/></td>
     <!-- <th align="center">Tests</th> <td align="right"><xsl:value-of select="ntests"/></td>-->
     <td align="center" id="nob"><xsl:value-of select="lastbuild"/></td>
     </tr>
