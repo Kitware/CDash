@@ -106,6 +106,7 @@ if($Submit)
     $HomeURL = stripHTTP($_POST["homeURL"]);
     $CVSURL = stripHTTP($_POST["cvsURL"]);
     $BugURL = stripHTTP($_POST["bugURL"]);
+		$DocURL = stripHTTP($_POST["docURL"]);
     @$Public = $_POST["public"];
     if(!isset($Public))
       {
@@ -156,9 +157,9 @@ if($Submit)
       
     //We should probably check the type of the image here to make sure the user
     //isn't trying anything fruity
-    $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,public,imageid,coveragethreshold,nightlytime,
+    $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                 googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged)
-            VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$Public','$imgid','$CoverageThreshold','$NightlyTime',
+            VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$DocURL','$Public','$imgid','$CoverageThreshold','$NightlyTime',
                     '$GoogleTracker','$EmailBrokenSubmission','$EmailBuildMissing','$EmailLowCoverage','$EmailTestTimingChanged')"; 
     if(mysql_query("$sql"))
       {
@@ -214,6 +215,7 @@ if($Update)
   $HomeURL = stripHTTP($_POST["homeURL"]);
   $CVSURL = stripHTTP($_POST["cvsURL"]);
   $BugURL = stripHTTP($_POST["bugURL"]);
+	$DocURL = stripHTTP($_POST["docURL"]);
   @$Public = $_POST["public"];
   $CoverageThreshold = $_POST["coverageThreshold"];
   $NightlyTime = $_POST["nightlyTime"];
@@ -262,7 +264,7 @@ if($Update)
   //We should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
   mysql_query("UPDATE project SET description='$Description',homeurl='$HomeURL',cvsurl='$CVSURL',
-                                  bugtrackerurl='$BugURL',public='$Public',imageid='$imgid',
+                                  bugtrackerurl='$BugURL',documentationurl='$DocURL',public='$Public',imageid='$imgid',
                                   coveragethreshold='$CoverageThreshold',nightlytime='$NightlyTime',
                                   googletracker='$GoogleTracker',emailbrokensubmission='$EmailBrokenSubmission',
                                   emailbuildmissing='$EmailBuildMissing',emaillowcoverage='$EmailLowCoverage',
@@ -305,7 +307,8 @@ if($projectid>0)
   $xml .= add_XML_value("description",$project_array['description']);
   $xml .= add_XML_value("homeurl",$project_array['homeurl']);  
   $xml .= add_XML_value("cvsurl",$project_array['cvsurl']);
-  $xml .= add_XML_value("bugtrackerurl",$project_array['bugtrackerurl']);
+  $xml .= add_XML_value("bugurl",$project_array['bugtrackerurl']);
+  $xml .= add_XML_value("docurl",$project_array['documentationurl']);	
   $xml .= add_XML_value("public",$project_array['public']);
   $xml .= add_XML_value("imageid",$project_array['imageid']);
   $xml .= add_XML_value("coveragethreshold",$project_array['coveragethreshold']);  

@@ -107,6 +107,15 @@
 				</xsl:attribute>
 				</input></td>
   </tr>
+	<tr>
+		  <td></td>
+    <td><div align="right"><strong>Documentation URL:</strong></div></td>
+    <td><input name="docURL" type="text" id="docURL" size="50">	
+				<xsl:attribute name="value">
+				<xsl:value-of select="cdash/project/docurl"/>
+				</xsl:attribute>
+				</input></td>
+  </tr>
   <tr>
 		  <td></td>
     <td><div align="right"><strong>Logo:</strong></div></td>

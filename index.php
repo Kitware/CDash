@@ -99,7 +99,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $project_array = mysql_fetch_array($project);
     $svnurl = $project_array["cvsurl"];
     $homeurl = $project_array["homeurl"];
-    $bugurl = $project_array["bugtrackerurl"];   
+    $bugurl = $project_array["bugtrackerurl"];  
+		$docurl = $project_array["documentationurl"];  
     $projectname = $project_array["name"];  
     }
   else
@@ -122,6 +123,7 @@ function generate_main_dashboard_XML($projectid,$date)
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
+	<documentation>".$docurl."</documentation> 
   <home>".$homeurl."</home>
   <logoid>".$logoid."</logoid> 
   <projectid>".$projectid."</projectid> 
