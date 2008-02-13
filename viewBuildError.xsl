@@ -21,7 +21,8 @@
 <br/>
 
 <p><b>Site:</b><xsl:value-of select="cdash/build/site"/></p>
-<p><b>Build Name:</b><xsl:value-of select="cdash/build/buildname"/></p>       
+<p><b>Build Name:</b><xsl:value-of select="cdash/build/buildname"/></p>  
+ <p><b>Build Time:</b><xsl:value-of select="cdash/build/starttime"/></p>    
 Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:text><xsl:value-of select="cdash/errortypename"/>s<br/>
 <p><a>
 <xsl:attribute name="href">viewBuildError.php?type=<xsl:value-of select="cdash/nonerrortype"/>&#38;buildid=<xsl:value-of select="cdash/build/buildid"/></xsl:attribute>

@@ -49,6 +49,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("buildname",$build_array["name"]);
+	$xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]."UTC")));
   $xml .= add_XML_value("buildid",$build_array["id"]);
   $xml .= "</build>";
   
