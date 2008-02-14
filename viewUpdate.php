@@ -133,7 +133,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $directory = substr($filename,0,strrpos($filename,"/"));
     $filename = substr($filename,strrpos($filename,"/")+1);
     
-    if($previousdir="" || $directory != $previousdir)
+    if($previousdir=="" || $directory != $previousdir)
       {
       $xml .= " dbAdd (true, \"&lt;b&gt;".$directory."&lt;/b&gt;\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
