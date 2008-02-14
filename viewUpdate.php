@@ -122,8 +122,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     }
   
   $xml .= "dbAdd (true, \"".$projectname." updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
-  $previousdir = "";
-
+  
+	$previousdir = "";
   $projecturl = $svnurl;
     // locally cached query result same as get_project_property($projectname, "cvsurl");
 
@@ -133,7 +133,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $directory = substr($filename,0,strrpos($filename,"/"));
     $filename = substr($filename,strrpos($filename,"/")+1);
     
-    if($directory != $previousdir)
+    if($previousdir="" || $directory != $previousdir)
       {
       $xml .= " dbAdd (true, \"&lt;b&gt;".$directory."&lt;/b&gt;\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
