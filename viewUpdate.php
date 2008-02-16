@@ -58,22 +58,22 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= "<updates>";
 
   
-	// Return the status
+ // Return the status
   $status_array = mysql_fetch_array(mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'"));
-	if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
-		{
+ if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
+  {
     $xml .= add_XML_value("status",$status_array["status"]);
-		}
+  }
   else
-		{
-		$xml .= add_XML_value("status",""); // empty status
-		}
+  {
+  $xml .= add_XML_value("status",""); // empty status
+  }
 
   $xml .= "<javascript>";
   
-	// This should work hopefully
+ // This should work hopefully
   $updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid'
-	                             ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
+                              ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
   
   function sort_array_by_directory($a,$b)
     { 
@@ -123,7 +123,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   $xml .= "dbAdd (true, \"".$projectname." updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   
-	$previousdir = "";
+ $previousdir = "";
   $projecturl = $svnurl;
     // locally cached query result same as get_project_property($projectname, "cvsurl");
 
@@ -131,8 +131,13 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     {
     $filename = $file['filename'];
     $directory = substr($filename,0,strrpos($filename,"/"));
-    $filename = substr($filename,strrpos($filename,"/")+1);
-    
+     
+    $pos = strrpos($filename,"/");
+    if($pos !== FALSE)
+      { 
+      $filename = substr($filename,$pos+1);
+      }
+ 
     if($previousdir=="" || $directory != $previousdir)
       {
       $xml .= " dbAdd (true, \"&lt;b&gt;".$directory."&lt;/b&gt;\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
@@ -155,8 +160,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $diff_url = XMLStrFormat($diff_url);
 
     $xml .= " dbAdd ( false, \"".$filename." Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$log."\")\n";
-		}
-		
+  }
+  
  // $xml .= "dbAdd (true, \"Modified files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
  // $xml .= "dbAdd (true, \"Conflicting files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
 
