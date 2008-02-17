@@ -52,14 +52,45 @@ if($markexpected)
 if($submit)
 {
   // Mark any previous rule as done
-  $now = gmdate("Y-m-d H:i:s");
+  /*$now = gmdate("Y-m-d H:i:s");
   mysql_query("UPDATE build2grouprule SET endtime='$now'
                WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
+               AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");*/
+ 
+  // Delete the previous rule for that build
+  mysql_query("DELETE FROM build2grouprule  WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
                AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
 
   // Add the new rule (begin time is set by default by mysql
   mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
-               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
+               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','0000-00-00 00:00:00')");
+							 
+  // Move any builds that follow this rule to the correct build2group						 
+	$buildgroups = mysql_query("SELECT * from build2group");
+  while($buildgroup_array = mysql_fetch_array($buildgroups))
+    {
+    $buildid = $buildgroup_array["buildid"];
+    
+    $build = mysql_query("SELECT * from build WHERE id='$buildid'");
+    $build_array = mysql_fetch_array($build);
+    $type = $build_array["type"];
+    $name = $build_array["name"];
+    $siteid = $build_array["siteid"];
+    $projectid = $build_array["projectid"];
+    $submittime = $build_array["submittime"];
+        
+    $build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
+                                    WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
+                                    AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
+                                    AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
+    echo mysql_error();                              
+    if(mysql_num_rows($build2grouprule)>0)
+      {
+      $build2grouprule_array = mysql_fetch_array($build2grouprule);
+      $groupid = $build2grouprule_array["groupid"];
+      mysql_query ("UPDATE build2group SET groupid='$groupid' WHERE buildid='$buildid'");
+      }
+    }						 
 
 return;
 }
@@ -117,7 +148,7 @@ function movenonexpectedbuildgroup_click(siteid,buildname,buildtype,groupid,prev
     }  
   ?>
   <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $currentgroup_array["name"] ?></b>:  </font></td>
-  <td bgcolor="#DDDDDD" width="65%" colspan="2"><font size="2"><a href="#" onclick="javascript:markasnonexpected_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $currentgroup_array["id"]?>',
+  <td bgcolor="#DDDDDD" width="65%" colspan="2"  id="nob"><font size="2"><a href="#" onclick="javascript:markasnonexpected_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $currentgroup_array["id"]?>',
   <?php if($isexpected) {echo "0";} else {echo "1";} ?>,'<?php echo $divname ?>')">
   [<?php 
   if($isexpected)
@@ -138,7 +169,7 @@ while($group_array = mysql_fetch_array($group))
   <tr>
     <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array["name"] ?></b>:  </font></td>
     <td bgcolor="#DDDDDD" width="20%"><font size="2"><input id="expectednosubmission_<?php $expectedtag = rand(); echo $expectedtag; ?>" type="checkbox"/> expected</font></td>
-    <td bgcolor="#DDDDDD" width="45%"><font size="2">	
+    <td bgcolor="#DDDDDD" width="45%"  id="nob"><font size="2">	
 				<a href="#" onclick="javascript:movenonexpectedbuildgroup_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $group_array["id"]?>','<?php echo $currentgroup_array["id"]?>','<?php echo $divname ?>','<?php echo $expectedtag ?>')">[move to group]</a>
     </font></td>
   </tr>
