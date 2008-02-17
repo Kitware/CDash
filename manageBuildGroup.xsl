@@ -17,7 +17,7 @@
    <!-- Functions to confirm the remove -->
         <script language="JavaScript">
         function confirmDelete() {
-           if (window.confirm("Are you sure you want to delete this group?")){
+           if (window.confirm("Are you sure you want to delete this group? If the group is not empty, builds will be put in their original group.")){
               return true;
            }
            return false;
@@ -102,10 +102,6 @@ project page</a>
      </td><td>
      <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
      <input type="submit" name="deleteGroup" value="Delete Group" onclick="return confirmDelete()"/>
-   <input name="newstartdate" type="text" id="newstartdate" size="20">
-   <xsl:attribute name="value"><xsl:value-of select="startdate"/></xsl:attribute>
-   </input>
-   <input type="submit" name="newDate" value="Change Start Date"/>
      </xsl:if>
      </td>
      </tr>
@@ -121,10 +117,6 @@ project page</a>
   <tr>
     <td><div align="right"></div></td>
     <td  bgcolor="#DDDDDD"><strong>Create new group</strong></td>
-  </tr>
-  <tr>
-    <td><div align="right"></div></td>
-    <td><i>Note: created groups will be kept in the history.</i></td>
   </tr>
   <tr>
     <td><div align="right">Name:</div></td>

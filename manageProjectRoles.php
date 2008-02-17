@@ -30,8 +30,8 @@ if ($session_OK)
 		// If the projectid is not set and there is only one project we go directly to the page
 		if(!isset($projectid))
 		{
-			$project = mysql_query("SELECT id FROM project LIMIT 1");
-			if(mysql_num_rows($project)>0)
+			$project = mysql_query("SELECT id FROM project");
+			if(mysql_num_rows($project)==1)
 				{
 				$project_array = mysql_fetch_array($project);
 				$projectid = $project_array["id"];
