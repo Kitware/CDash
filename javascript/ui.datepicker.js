@@ -64,7 +64,7 @@ function Datepicker() {
    // > this are in the previous century, 
    // string value starting with '+' for current year + value
   minDate: null, // The earliest selectable date, or null for no limit
-  maxDate: null, // The latest selectable date, or null for no limit
+  maxDate: new Date(), // The latest selectable date, or null for no limit
   speed: 'medium', // Speed of display/closure
   beforeShowDay: null, // Function that takes a date and returns an array with
    // [0] = true if selectable, false if not,
