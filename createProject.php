@@ -197,6 +197,16 @@ if($Submit)
 if($Delete)
   {
   remove_project_builds($projectid);
+	// Remove the project groups and rules
+	$buildgroup = mysql_query("SELECT * FROM buildgroup WHERE projectid='$projectid'");
+	while($buildgroup_array = mysql_fetch_array($buildgroup))
+	  {
+		$groupid = $buildgroup_array["id"];
+		mysql_query("DELETE FROM buildgroupposition WHERE buildgroupid='$groupid'");
+		mysql_query("DELETE FROM build2grouprule WHERE groupid='$groupid'");
+		mysql_query("DELETE FROM build2group WHERE groupid='$groupid'");
+	  }
+  mysql_query("DELETE FROM buildgroup WHERE projectid='$projectid'");
   mysql_query("DELETE FROM project WHERE id='$projectid'");
   }
 

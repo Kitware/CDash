@@ -1057,8 +1057,6 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 /** Add a new test */
 function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images)
 {
-  //add_log("Start buildid=".$buildid,"add_test");
-  
   $command = addslashes($command);
   $output = addslashes($output);
   
@@ -1151,8 +1149,8 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
    {               
     mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
                  VALUES ('$buildid','$testid','$status','$time')");
-  }
-   add_last_sql_error("add_test");              
+    }
+  add_last_sql_error("add_test");              
 }
 
 /** Add a new error/warning */
