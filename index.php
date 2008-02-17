@@ -146,10 +146,17 @@ function generate_main_dashboard_XML($projectid,$date)
   <projectid>".$projectid."</projectid> 
   <projectname>".$projectname."</projectname> 
   <previousdate>".$previousdate."</previousdate> 
-  <nextdate>".$nextdate."</nextdate> 
-  
-  </dashboard>
-  ";
+  <nextdate>".$nextdate."</nextdate>";
+	
+  if($currentstarttime>time())	
+	  {
+	  $xml .= "<future>1</future>";
+    }
+  else
+		{
+		$xml .= "<future>0</future>";
+		}
+  $xml .= "</dashboard>";
 
   // updates
   $xml .= "<updates>";

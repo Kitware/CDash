@@ -321,6 +321,8 @@
        <body bgcolor="#ffffff">
        <xsl:call-template name="header"/>
 
+<xsl:if test="cdash/dashboard/future=0">
+
 <xsl:if test="cdash/updates">
 <table width="100%" cellpadding="11" cellspacing="0">
   <tr>
@@ -625,6 +627,14 @@
 </xsl:if>
 </tbody>
 </table>
+
+</xsl:if> <!-- end dashboard is not in the future -->
+
+<xsl:if test="cdash/dashboard/future=1">
+<br/>
+CDash cannot predict the future (yet)...
+<br/>
+</xsl:if> <!-- end dashboard is in the future -->
 
 <!-- FOOTER -->
 <br/>
