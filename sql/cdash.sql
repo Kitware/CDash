@@ -252,7 +252,8 @@ CREATE TABLE `image` (
   `img` longblob NOT NULL,
   `extension` tinytext NOT NULL,
   `checksum` int NOT NULL,
-  KEY `id` (`id`)
+  KEY `id` (`id`),
+  KEY `checksum` (`checksum`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
