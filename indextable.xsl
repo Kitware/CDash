@@ -131,6 +131,9 @@
 </table>
 
 <br/>
+Database size: <b><xsl:value-of select="cdash/database/size"/></b>
+
+<br/>
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>

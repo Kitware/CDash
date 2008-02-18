@@ -35,7 +35,40 @@ function generate_index_table()
 	<googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>
 	</dashboard> ";
 	
-    // User
+	// Show the size of the database
+	$rows = mysql_query("SHOW table STATUS");
+  $dbsize = 0;
+  while ($row = mysql_fetch_array($rows)) 
+	  {
+		$dbsize += $row['Data_length'] + $row['Index_length']; 
+		}
+  
+	$ext = "b";
+  if($dbsize>1024)
+    {
+		$dbsize /= 1024;
+		$ext = "Kb";
+    }
+  if($dbsize>1024)
+    {
+		$dbsize /= 1024;
+		$ext = "Mb";
+    }
+	if($dbsize>1024)
+    {
+		$dbsize /= 1024;
+		$ext = "Gb";
+    }
+	if($dbsize>1024)
+    {
+		$dbsize /= 1024;
+		$ext = "Tb";
+    }	
+  $xml .= "<database>";
+	$xml .= add_XML_value("size",round($dbsize).$ext);
+	$xml .= "</database>";
+	
+  // User
   if(isset($_SESSION['cdash']))
     {
     $xml .= "<user>";
