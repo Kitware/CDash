@@ -148,7 +148,7 @@ function sendemail($parser,$projectid)
     $email .= $user_array["email"];
     } 
  
-  $email = "jomier@unc.edu"; // TO TEST
+  //$email = "jomier@unc.edu"; // TO TEST
 
   // Some variables we need for the email
   $site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
@@ -222,9 +222,9 @@ function sendemail($parser,$projectid)
     $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
     
     // Send the email
-    $email = "jomier@unc.edu";
-    //mail("$email", $title, $messagePlainText,
-    //     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+    //$email = "jomier@unc.edu";
+    mail("$email", $title, $messagePlainText,
+         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
     } // end $email!=""
   
    add_log("End buildid=".$buildid,"sendemail");
