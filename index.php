@@ -65,7 +65,7 @@ function generate_index_table()
 		$ext = "Tb";
     }	
   $xml .= "<database>";
-	$xml .= add_XML_value("size",round($dbsize).$ext);
+	$xml .= add_XML_value("size",round($dbsize,1).$ext);
 	$xml .= "</database>";
 	
   // User
