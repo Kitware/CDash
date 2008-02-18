@@ -165,6 +165,7 @@ if($Submit)
       {
       $projectid = mysql_insert_id();
       $xml .= "<project_name>$Name</project_name>";
+			$xml .= "<project_id>$projectid</project_id>";
       $xml .= "<project_created>1</project_created>";
       }
     else

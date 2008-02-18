@@ -32,10 +32,18 @@
 
 <xsl:choose>
  <xsl:when test="cdash/project_created=1">
- The project <b><xsl:value-of select="cdash/project_name"/></b> has been created successfully.<br/>          
+ The project <b><xsl:value-of select="cdash/project_name"/></b> has been created successfully.<br/> <br/>          
  Click here to access the  <a>
  <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/project_name"/></xsl:attribute>
- CDash project page</a>
+ CDash project page</a><br/> 
+ Click here to <a>
+ <xsl:attribute name="href">createProject.php?projectid=<xsl:value-of select="cdash/project_id"/></xsl:attribute>
+edit the project</a><br/> 
+ Click here to <a>
+<xsl:attribute name="href">generateCTestConfig.php?projectid= <xsl:value-of select="cdash/project_id"/>
+</xsl:attribute>download the CTest configuration file
+</a><br/> 
+ 
  </xsl:when>
 <xsl:otherwise>
 <form name="form1" enctype="multipart/form-data" method="post" action="">
@@ -218,6 +226,20 @@
 				</input>
 				</td>
   </tr>	
+	
+	<!-- downloading the CTestConfig.cmake -->
+	<xsl:if test="cdash/edit=1">
+	<tr>
+		  <td></td>
+    <td><div align="right"><strong>Download CTestConfig:</strong></div></td>
+    <td><a>
+		<xsl:attribute name="href">generateCTestConfig.php?projectid= <xsl:value-of select="cdash/project/id"/>
+		</xsl:attribute>CTestConfig.php
+		</a>
+				</td>
+  </tr>	
+	</xsl:if>
+	
   <tr>
 		  <td></td>
     <td><div align="right"></div></td>
@@ -233,10 +255,6 @@
 </form>
 </xsl:otherwise>
 </xsl:choose>
-        
-<script type="text/javascript">
-  Rounded('rounded', 15, 15,0,0);
-</script>
 
 <br/>
 <!-- FOOTER -->
