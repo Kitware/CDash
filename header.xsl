@@ -6,10 +6,10 @@
     <xsl:template name="header" match="/">
 
     <link rel="shortcut icon" href="favicon.ico"/>
-    <!--[if IE]>
+    <xsl:comment><![CDATA[[if IE]>
     <script language="javascript" type="text/javascript" src="javascript/excanvas.js">
     </script>
-    <![endif]-->
+    <![endif]]]></xsl:comment>
 
     <!-- Include JQuery -->
     <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
