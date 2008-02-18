@@ -14,8 +14,8 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-									
-									<!-- Include JavaScript -->
+         
+         <!-- Include JavaScript -->
          <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script> 
        </head>
        <body bgcolor="#ffffff">
@@ -32,224 +32,224 @@
 
     <xsl:if test="cdash/build/lastsubmitbuild>0">
     <p/><b>Last submission: </b><a>
-				 <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/lastsubmitbuild"/></xsl:attribute><xsl:value-of select="cdash/build/lastsubmitdate"/></a>  
-				 </xsl:if>	
-						<br/><br/>
-						<table>
-						<tr><td>
+     <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/lastsubmitbuild"/></xsl:attribute><xsl:value-of select="cdash/build/lastsubmitdate"/></a>  
+     </xsl:if> 
+      <br/><br/>
+      <table>
+      <tr><td>
       <table class="dart">
-						<tr class="table-heading">
+      <tr class="table-heading">
         <th colspan="3">Current Build</th>
       </tr>
       <tr class="table-heading">
         <th>Stage</th><th>Errors</th><th>Warnings</th>
       </tr>
-						 <tr class="tr-odd">
+       <tr class="tr-odd">
         <td><a href="#Stage0"><b>Update</b></a></td>
         <td align="right">
-								<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/update/nerrors > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute>
-							
-								<b><xsl:value-of select="cdash/update/nerrors"/></b></td>
+        <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/update/nerrors > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute>
+       
+        <b><xsl:value-of select="cdash/update/nerrors"/></b></td>
         <td align="right">
-														<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/update/nwarnings > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute>
-								
-								<b><xsl:value-of select="cdash/update/nwarnings"/></b></td>
-								</tr>
+              <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/update/nwarnings > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute>
+        
+        <b><xsl:value-of select="cdash/update/nwarnings"/></b></td>
+        </tr>
         <tr class="tr-even">
         <td><a href="#Stage1"><b>Configure</b></a></td>
 
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/configure/nerrors > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/configure/nerrors"/></b></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/configure/nwarnings > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute>
-							<b><xsl:value-of select="cdash/configure/nwarnings"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/configure/nerrors > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/configure/nerrors"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/configure/nwarnings > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute>
+       <b><xsl:value-of select="cdash/configure/nwarnings"/></b></td>
        </tr>
         <tr class="tr-odd">
         <td><a href="#Stage2"><b>Build</b></a></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/build/nerrors > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/build/nerrors"/></b></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/build/nwarnings > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/build/nwarnings"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/build/nerrors > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/build/nerrors"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/build/nwarnings > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/build/nwarnings"/></b></td>
        </tr>
-							<tr class="tr-even">
+       <tr class="tr-even">
         <td><a href="#Stage3"><b>Test</b></a></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/test/nfailed > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/test/nfailed"/></b></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/test/nnotrun> 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/test/nnotrun"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/test/nfailed > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/test/nfailed"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/test/nnotrun> 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/test/nnotrun"/></b></td>
        </tr>
       </table>
-						</td>
-						<td>
-						<!-- Previous build -->
-						<xsl:if test="cdash/previousbuild">
-						<table class="dart">
-						<tr class="table-heading">
+      </td>
+      <td>
+      <!-- Previous build -->
+      <xsl:if test="cdash/previousbuild">
+      <table class="dart">
+      <tr class="table-heading">
         <th colspan="3"><a>
-							 <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
-								Previous Build
-								</a>
-								</th>
+        <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+        Previous Build
+        </a>
+        </th>
       </tr>
       <tr class="table-heading">
         <th>Stage</th><th>Errors</th><th>Warnings</th>
       </tr>
-						 <tr class="tr-odd">
+       <tr class="tr-odd">
         <td><b>Update</b></td>
         <td align="right">
-								<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/previousbuild/nupdateerrors > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute>
-							
-								<b><xsl:value-of select="cdash/previousbuild/nupdateerrors"/></b></td>
+        <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/previousbuild/nupdateerrors > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute>
+       
+        <b><xsl:value-of select="cdash/previousbuild/nupdateerrors"/></b></td>
         <td align="right">
-														<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/previousbuild/nupdatewarnings > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute>
-								
-								<b><xsl:value-of select="cdash/previousbuild/nupdatewarnings"/></b></td>
-								</tr>
+              <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/previousbuild/nupdatewarnings > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute>
+        
+        <b><xsl:value-of select="cdash/previousbuild/nupdatewarnings"/></b></td>
+        </tr>
         <tr class="tr-even">
         <td><b>Configure</b></td>
 
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/previousbuild/nconfigurenerrors > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nconfigureerrors"/></b></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/previousbuild/nconfigurewarnings > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute>
-							<b><xsl:value-of select="cdash/previousbuild/nconfigurewarnings"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/previousbuild/nconfigurenerrors > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nconfigureerrors"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/previousbuild/nconfigurewarnings > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute>
+       <b><xsl:value-of select="cdash/previousbuild/nconfigurewarnings"/></b></td>
        </tr>
         <tr class="tr-odd">
         <td><b>Build</b></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/previousbuild/nerrors > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nerrors"/></b></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/previousbuild/nwarnings > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nwarnings"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/previousbuild/nerrors > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nerrors"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/previousbuild/nwarnings > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nwarnings"/></b></td>
        </tr>
-							<tr class="tr-even">
+       <tr class="tr-even">
         <td><b>Test</b></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/previousbuild/ntestfailed > 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/ntestfailed"/></b></td>
-        <td align="right">		<xsl:attribute name="class">
-								  <xsl:choose>
-										<xsl:when test="cdash/previousbuild/ntestnotrun> 0">error
-											    </xsl:when>
-																	<xsl:otherwise>
-																		normal
-																		</xsl:otherwise>
-															</xsl:choose>
-						 </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/ntestnotrun"/></b></td>
-							</tr>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/previousbuild/ntestfailed > 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/ntestfailed"/></b></td>
+        <td align="right">  <xsl:attribute name="class">
+          <xsl:choose>
+          <xsl:when test="cdash/previousbuild/ntestnotrun> 0">error
+               </xsl:when>
+                 <xsl:otherwise>
+                  normal
+                  </xsl:otherwise>
+               </xsl:choose>
+       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/ntestnotrun"/></b></td>
+       </tr>
       </table>
-						</xsl:if>
-						</td>
-						</tr>
-						</table>
-						
+      </xsl:if>
+      </td>
+      </tr>
+      </table>
+      
       <br/>
 <!-- Graph -->
 <a>
@@ -354,8 +354,8 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 <pre><xsl:value-of select="precontext"/></pre>
 <pre><xsl:value-of select="text"/></pre>
 <pre><xsl:value-of select="postcontext"/></pre>
-</xsl:for-each>						
-																			
+</xsl:for-each>      
+                   
 <br/>
 
 
