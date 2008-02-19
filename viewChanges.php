@@ -712,6 +712,8 @@ function sort_by_directory_file_time($e1, $e2)
 //
 function get_repository_commits($projectname, $dates)
 {
+  global $xml;
+
   // Compute cvsroot(s) for project (DB lookup?)
   //
   if ($projectname === "CDash")
@@ -746,7 +748,7 @@ function get_repository_commits($projectname, $dates)
   else
   {
     $roots = array();
-    $xml . "<error>Unrecognized project name: " . $projectname . " (could not lookup any cvsroot values)"."</error>";
+    $xml .= "<error>Unrecognized project name: " . $projectname . " (could not lookup any cvsroot values)"."</error>";
   }
 
   // Start with an empty array:
