@@ -258,11 +258,14 @@ function create_build($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   $type = substr($stamp,strrpos($stamp,"-")+1);
   $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
-  $starttime = getXMLValue($xmlarray,"STARTDATETIME","COVERAGE");
-    
+	$starttime_index = $parser->index["STARTDATETIME"];
+  $starttime = $parser->vals[$starttime_index[0]]["value"];
+  
   // Convert the starttime to a timestamp
   $starttimestamp = str_to_time($starttime,$stamp);
-  $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","COVERAGE");
+
+  $elapsedminutes_index = $parser->index["ELAPSEDMINUTES"];
+  $elapsedminutes = $parser->vals[$elapsedminutes_index[0]]["value"];
   $endtimestamp = $starttimestamp+$elapsedminutes*60;
     
   include("config.php");
