@@ -35,7 +35,7 @@ if(mysql_num_rows($project)>0)
   $project_array = mysql_fetch_array($project);  
   $projectname = $project_array["name"];  
   }
-	
+ 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -49,7 +49,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("buildname",$build_array["name"]);
-	$xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]."UTC")));
+ $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]."UTC")));
   $xml .= add_XML_value("buildid",$build_array["id"]);
   $xml .= "</build>";
   
@@ -84,12 +84,17 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $xml .= add_XML_value("sourceline",$error_array["sourceline"]);
     $xml .= add_XML_value("precontext",$error_array["precontext"]);
     $xml .= add_XML_value("postcontext",$error_array["postcontext"]);
-		
-		// If we are using viewcvs we need to reformat the URL
-		list($begin,$end) = split("?",$project_array["cvsurl"]);
-		
-		$cvsurl = "http://".$begin.$error_array["sourcefile"].$end;
-		$xml .= add_XML_value("cvsurl",$cvsurl);
+  
+  // If we are using viewcvs we need to reformat the URL
+  list($begin,$end) = explode("?",$project_array["cvsurl"]);
+  if(strlen($end)>0)
+    {
+    $end = "?".$end;
+    }  
+
+
+  $cvsurl = "http://".$begin.$error_array["sourcefile"].$end;
+  $xml .= add_XML_value("cvsurl",$cvsurl);
     $xml .= "</error>";
     }
 
