@@ -51,6 +51,9 @@
 <li id="Dartboard">
 <a href="index.php">HOME</a>
 </li>
+<li>
+<a href="editUser.php">MY PROFILE</a>
+</li>
 <li><a href="user.php?logout=1">LOGOUT</a></li>
 </ul>
 </td>

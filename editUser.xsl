@@ -12,12 +12,6 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-        <script>    
-          function doSubmit()
-            {
-            document.getElementById('url').value = 'catchbot';
-            }
-         </script>
        </head>
     <body>
             
@@ -25,7 +19,11 @@
   <tr>
     <td>
     <table width="100%" align="center" cellpadding="0" cellspacing="0" >
-  <tr>
+  <tr><tr>
+  <td width="20%" id="nob"></td>
+  <td width="80%" id="nob"><input type="submit" value="Update Profile" name="updateprofile" class="textbox"/>
+  </td>
+</tr> 
     <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
   </tr>
   <tr>
@@ -39,7 +37,7 @@
         <td width="425" valign="top" class="insd">
         <div class="insdd">
             <span class="inn1">CDash</span><br />
-            <span class="inn2">Register</span>
+            <span class="inn2">My Profile</span>
             </div>
         </td>
         <td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
@@ -54,7 +52,7 @@
 <li id="Dartboard">
 <a href="index.php">HOME</a>
 </li>
-<li><a href="login.php">LOGIN</a></li>
+<li><a href="user.php">BACK</a></li>
 </ul>
 </td>
     <td height="28" class="insd3"><xsl:text>&#160;</xsl:text></td>
@@ -74,35 +72,57 @@
 <!-- Main -->
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
-<form method="post" action="register.php" name="regform" onSubmit="doSubmit();">
+<tr class="table-heading1">
+     <td colspan="5" id="nob"><h3>My Profile</h3></td>
+ </tr>
+<form method="post" action="" name="updatprofile_form">
 <tr class="treven">
-  <td width="20%" height="2" id="nob"><div align="right"> First Name: </div></td>
-  <td  width="80%" height="2" id="nob"><input class="textbox" name="fname" size="20"/></td>
+  <td width="20%" height="2"><div align="right">First Name</div></td>
+  <td  width="80%" height="2" id="nob"><input class="textbox" name="fname" size="20">
+	<xsl:attribute name="value"><xsl:value-of select="cdash/user/firstname"/></xsl:attribute>
+	</input>
+	</td>
 </tr>
 <tr class="trodd">
-  <td width="20%" height="2" id="nob"><div align="right"> Last Name: </div></td>
-  <td  width="80%" height="2" id="nob"><input class="textbox" name="lname" size="20"/></td>
+  <td width="20%" height="2"><div align="right">Last Name</div></td>
+  <td  width="80%" height="2" id="nob"><input class="textbox" name="lname" size="20">
+	<xsl:attribute name="value"><xsl:value-of select="cdash/user/lastname"/></xsl:attribute>
+	</input>
+	</td>
 </tr>
 <tr class="treven">
-  <td width="20%" height="2" id="nob"><div align="right"> Email: </div></td>
-  <td  width="80%" height="2" id="nob"><input class="textbox" name="email" size="20"/></td>
+  <td width="20%" height="2"><div align="right">Email</div></td>
+  <td  width="80%" height="2" id="nob"><input class="textbox" name="email" size="20">
+	<xsl:attribute name="value"><xsl:value-of select="cdash/user/email"/></xsl:attribute>
+	</input>
+	</td>
 </tr>
 <tr class="trodd">
-    <td width="20%" height="2" id="nob"><div align="right">Password: </div></td>
+  <td width="20%" height="2"><div align="right"> Institution</div></td>
+  <td  width="80%" height="2" id="nob"><input class="textbox" name="institution" size="20">
+	<xsl:attribute name="value"><xsl:value-of select="cdash/user/institution"/></xsl:attribute>
+	</input>
+	</td>
+</tr>
+<tr class="treven">
+  <td width="20%" id="nob"></td>
+  <td width="80%" id="nob"><input type="submit" value="Update Profile" name="updateprofile" class="textbox"/>
+  </td>
+</tr> 
+</form>
+<form method="post" action="" name="updatemail_form">
+<tr class="trodd">
+    <td width="20%" height="2" ><div align="right">Password</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="password"  name="passwd" size="20"/></td>
 </tr>
 <tr class="treven">
-    <td width="20%" height="2" id="nob"><div align="right">Confirm Password: </div></td>
+    <td width="20%" height="2" ><div align="right">Confirm Password</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="password"  name="passwd2" size="20"/></td>
-</tr>
-<tr class="trodd">
-  <td width="20%" height="2" id="nob"><div align="right"> Institution: </div></td>
-  <td  width="80%" height="2" id="nob"><input class="textbox" name="institution" size="20"/></td>
 </tr>
 <tr>
   <td width="20%" id="nob"></td>
-  <td width="80%" id="nob"><input type="submit" value="Register" name="sent" class="textbox"/>
-  </td>
+  <td width="80%" id="nob"><input type="submit" value="Update Password" name="updatepassword" class="textbox"/>  
+	</td>
 </tr> 
 </form>
 </tbody>
