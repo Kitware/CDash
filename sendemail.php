@@ -37,10 +37,10 @@ function sendemail($parser,$projectid)
 		return;
 	  }
 
-  $site = $parse->index["SITE"];
+  $site = $parser->index["SITE"];
   $i = $site[0];
-  $name = $parse->vals[$i]["attributes"]["BUILDNAME"];
-  $stamp = $parse->vals[$i]["attributes"]["BUILDSTAMP"];
+  $name = $parser->vals[$i]["attributes"]["BUILDNAME"];
+  $stamp = $parser->vals[$i]["attributes"]["BUILDSTAMP"];
 		
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
