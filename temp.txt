@@ -1,4 +1,0 @@
-testing
-  my new commit check
-    that doesn't like
-      tabs.
