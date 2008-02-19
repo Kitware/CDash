@@ -579,6 +579,12 @@ if(mysql_select_db("$CDASH_DB_NAME",$db) === FALSE)
   echo "<script language=\"javascript\">window.location='install.php'</script>";
   return;
   }
+if(mysql_query("SELECT id FROM user LIMIT 1",$db) === FALSE)
+  {
+  echo "<script language=\"javascript\">window.location='install.php'</script>";
+  return;
+  }
+
 
 @$projectname = $_GET["project"];
 

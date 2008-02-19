@@ -55,8 +55,9 @@ else
   $xml .= "<phpcurl>1</phpcurl>";
   }
   
-// If the database already exists we quit
-if(@mysql_select_db("$CDASH_DB_NAME",$db) === TRUE)
+// If the database already exists and we have all the tables
+if(@mysql_select_db("$CDASH_DB_NAME",$db) === TRUE
+   && mysql_query("SELECT id FROM user LIMIT 1",$db))
   {
   $xml .= "<database>1</database>";
   }
