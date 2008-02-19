@@ -97,6 +97,17 @@ function str_to_time($str,$stamp)
     $str = str_replace("AEDT","UTC",$str);
     $offset = 3600*11;
     }
+	// We had more custom dates
+	else if(strpos($str,"Paris, Madrid") !== FALSE)
+    {
+    $str = str_replace("Paris, Madrid","UTC",$str);
+    $offset = 3600*1;
+    }
+	else if(strpos($str,"W. Europe Standard Time") !== FALSE)
+    {
+    $str = str_replace("W. Europe Standard Time","UTC",$str);
+    $offset = 3600*1;
+    }
   
   // The year is always at the end of the string if it exists (from CTest)
   $stampyear = substr($stamp,0,4);
