@@ -746,7 +746,7 @@ function get_repository_commits($projectname, $dates)
   else
   {
     $roots = array();
-    echo "unrecognized project name: " . $projectname . " (could not lookup any cvsroot values)<br/>";
+    $xml . "<error>Unrecognized project name: " . $projectname . " (could not lookup any cvsroot values)"."</error>";
   }
 
   // Start with an empty array:
@@ -844,26 +844,20 @@ if (!isset($query))
 
 $dates = get_related_dates($projectname, $date);
 
-
-if ($query === 1)
-{
-  $commits = get_repository_commits($projectname, $dates);
-}
-else
-{
-  $commits = array();
-}
-
-
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
-$xml .= get_updates_xml_from_commits($projectname, $dates, $commits);
 
-  //echo "<pre>";
-  //echo htmlspecialchars($xml, ENT_QUOTES);
-  //echo "</pre>";
+if ($query === 1)
+  {
+  $commits = get_repository_commits($projectname, $dates);
+  }
+else
+  {
+  $commits = array();
+  }
+$xml .= get_updates_xml_from_commits($projectname, $dates, $commits);
 
 $xml .= "</cdash>";
 
