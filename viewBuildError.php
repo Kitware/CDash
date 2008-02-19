@@ -85,7 +85,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $xml .= add_XML_value("precontext",$error_array["precontext"]);
     $xml .= add_XML_value("postcontext",$error_array["postcontext"]);
 		$cvsurl = "http://".$project_array["cvsurl"].$error_array["sourcefile"];
-		$xml .= add_XML_value("cvsurl",$error_array["postcontext"]);
+		$xml .= add_XML_value("cvsurl",$cvsurl);
     $xml .= "</error>";
     }
 
