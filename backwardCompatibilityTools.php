@@ -31,7 +31,20 @@ $xml .= "<menusubtitle>Tools</menusubtitle>";
 @$AssignBuildToDefaultGroups = $_POST["AssignBuildToDefaultGroups"];
 @$FixBuildBasedOnRule = $_POST["FixBuildBasedOnRule"];
 @$FixNewTableTest = $_POST["FixNewTableTest"];
+@$DeleteBuildsWrongDate = $_POST["DeleteBuildsWrongDate"];
 
+if($DeleteBuildsWrongDate)
+{
+  $builds = mysql_query("SELECT id FROM build WHERE starttime='2069-12-31 23:59:59'");
+  while($builds_array = mysql_fetch_array($builds))
+    {
+  $buildid = $builds_array["id"];
+  echo $buildid."<br>";
+  //remove_build(buildid); 
+  }
+}
+
+/** */
 if($FixNewTableTest)
   {
   $num = mysql_fetch_array(mysql_query("SELECT COUNT(id) FROM test"));
@@ -109,9 +122,9 @@ if($FixNewTableTest)
             }   
           } // end for each image
         
-         $nimage_array = mysql_fetch_array(mysql_query($sql));		
-						   $nimages = $nimage_array[0];
-						
+         $nimage_array = mysql_fetch_array(mysql_query($sql));  
+         $nimages = $nimage_array[0];
+      
          if($nimages == count($images))
            {
            $testid = $test_array["id"];
