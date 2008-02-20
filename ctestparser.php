@@ -97,13 +97,13 @@ function str_to_time($str,$stamp)
     $str = str_replace("AEDT","UTC",$str);
     $offset = 3600*11;
     }
-	// We had more custom dates
-	else if(strpos($str,"Paris, Madrid") !== FALSE)
+ // We had more custom dates
+ else if(strpos($str,"Paris, Madrid") !== FALSE)
     {
     $str = str_replace("Paris, Madrid","UTC",$str);
     $offset = 3600*1;
     }
-	else if(strpos($str,"W. Europe Standard Time") !== FALSE)
+ else if(strpos($str,"W. Europe Standard Time") !== FALSE)
     {
     $str = str_replace("W. Europe Standard Time","UTC",$str);
     $offset = 3600*1;
@@ -125,10 +125,10 @@ function str_to_time($str,$stamp)
       $str .= $stampyear." ".substr($tempstr,$pos-2);
       }
     }
-		
+  
   $strtotimefailed = 0;
   if(PHP_VERSION>=5.1)
-    {		
+    {  
     if(strtotime($str) === FALSE)
       {
       $strtotimefailed = 1;
@@ -141,7 +141,7 @@ function str_to_time($str,$stamp)
       $strtotimefailed = 1;
       }
     }
-				
+    
   // If it's still failing we assume GMT and put the year at the end
   if($strtotimefailed)
     {
@@ -151,10 +151,10 @@ function str_to_time($str,$stamp)
       {
       $tempstr = $str;
       $str = substr($tempstr,0,$pos-2);
-      $str .= substr($tempstr,$pos-2,5);			
+      $str .= substr($tempstr,$pos-2,5);   
       }
-    }	
-		
+    } 
+  
   return strtotime($str)-$offset;
 }
 
@@ -163,7 +163,7 @@ function str_to_time($str,$stamp)
 function parse_build($parser,$projectid)
 {   
   $xmlarray = $parser->vals;
-	
+ 
   $site = $parser->index["SITE"];
   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
@@ -261,7 +261,7 @@ function create_build($parser,$projectid)
 {
   $xmlarray = $parser->vals;
   $site = $parser->index["SITE"];
-		
+  
   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
   $buildname = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
 
@@ -269,7 +269,7 @@ function create_build($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   $type = substr($stamp,strrpos($stamp,"-")+1);
   $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
-	$starttime_index = $parser->index["STARTDATETIME"];
+ $starttime_index = $parser->index["STARTDATETIME"];
   $starttime = $parser->vals[$starttime_index[0]]["value"];
   
   // Convert the starttime to a timestamp
@@ -300,9 +300,9 @@ function create_build($parser,$projectid)
 function parse_configure($parser,$projectid)
 {
   include_once("common.php");
-	
+ 
   $xmlarray = $parser->vals;
-  $site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
@@ -335,7 +335,7 @@ function parse_testing($parser,$projectid)
   include_once("common.php");
 
   $xmlarray = $parser->vals;
-  $site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
 
@@ -438,7 +438,7 @@ function parse_coverage($parser,$projectid)
 {
   include_once("common.php");
   $xmlarray = $parser->vals;
-  $site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
@@ -528,7 +528,7 @@ function parse_coveragelog($parser,$projectid)
 {
   include_once("common.php");
   $xmlarray = $parser->vals;
-  $site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
@@ -565,7 +565,7 @@ function parse_coveragelog($parser,$projectid)
     {
     $filecontent = addslashes($coverage["file"]);
     $fileid = add_coveragefile($buildid,$coverage["fullpath"],$filecontent);
-				
+    
     // Add the line
     if($fileid && array_key_exists("lines",$coverage))
       {
@@ -588,7 +588,7 @@ function parse_update($parser,$projectid)
   $buildid = get_build_id($buildname,$stamp,$projectid);
   if($buildid<0)
     {
-    $update = $parser->index["UPDATE"];	
+    $update = $parser->index["UPDATE"]; 
     $sitename = getXMLValue($xmlarray,"SITE","UPDATE");
 
     // Extract the type from the buildstamp
@@ -637,7 +637,7 @@ function parse_update($parser,$projectid)
   $files_array = array();
   $index = 0;
   $inupdate = 0;
-				
+    
   foreach($xmlarray as $tagarray)
     {
     if(!$inupdate && (($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING"))&& ($tagarray["level"] == 3))
@@ -668,7 +668,7 @@ function parse_update($parser,$projectid)
     else if(($tagarray["tag"] == "REVISION") && ($tagarray["level"] == 4))
       {
       $value = $tagarray["value"];
-      if(	$value == "Unknown")
+      if( $value == "Unknown")
         {
         $value = -1; // storing unknown revision as -1
         }
@@ -677,7 +677,7 @@ function parse_update($parser,$projectid)
     else if(($tagarray["tag"] == "PRIORREVISION") && ($tagarray["level"] == 4))
       {
       $value = $tagarray["value"];
-      if(	$value == "Unknown")
+      if( $value == "Unknown")
         {
         $value = -1;  // storing unknown revision as -1
         }
@@ -688,7 +688,7 @@ function parse_update($parser,$projectid)
       $inupdate = 0;
       }
     }
-						
+      
   foreach($files_array as $file)
     {
     add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
@@ -701,7 +701,7 @@ function parse_note($parser,$projectid)
 {
   include_once("common.php");
   $xmlarray = $parser->vals;
-  $site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
@@ -733,12 +733,12 @@ function parse_note($parser,$projectid)
 function parse_dynamicanalysis($parser,$projectid)
 {
   include_once("common.php");
-	
+ 
   $xmlarray = $parser->vals;
-  $site = $parser->index["SITE"];	
+  $site = $parser->index["SITE"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
-  $dynamicanalysis  = $parser->index["DYNAMICANALYSIS"];	
+  $dynamicanalysis  = $parser->index["DYNAMICANALYSIS"]; 
   $checker = $parser->vals[$dynamicanalysis[0]]["attributes"]["CHECKER"];
   
   // Find the build id
@@ -781,6 +781,7 @@ function parse_dynamicanalysis($parser,$projectid)
       $index++;
       $memleak_array[$index]["checker"]=$checker;
       $memleak_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
+   $memleak_array[$index]["log"]="";
       }
     else if(($tagarray["tag"] == "NAME") && ($tagarray["level"] == 4))
       {
@@ -798,7 +799,7 @@ function parse_dynamicanalysis($parser,$projectid)
       {
       if(isset($tagarray["value"])>0)
         {
-        $memleak_array[$index]["log"]=$tagarray["value"];
+        $memleak_array[$index]["log"].=$tagarray["value"];
         }
       } 
     else if(($tagarray["tag"] == "DEFECT") && ($tagarray["level"] == 5)  && isset($tagarray["attributes"]))
@@ -808,7 +809,7 @@ function parse_dynamicanalysis($parser,$projectid)
       $memleak_array[$index]["defects"][]=$defect;
       }
     }
-   
+
   foreach($memleak_array as $memleak)
     {
     $dynid = add_dynamic_analysis($buildid,$memleak["status"],$memleak["checker"],$memleak["name"],$memleak["path"],
@@ -822,7 +823,7 @@ function parse_dynamicanalysis($parser,$projectid)
         }
       }
     }
-		
+  
   // If we have no memory leaks then we add at leas a row in the dynamic analysis
   // table so that it shows up on the main dashboard
   if(count($memleak_array) == 0)
