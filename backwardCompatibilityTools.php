@@ -39,8 +39,8 @@ if($DeleteBuildsWrongDate)
   while($builds_array = mysql_fetch_array($builds))
     {
   $buildid = $builds_array["id"];
-  echo $buildid."<br>";
-  //remove_build(buildid); 
+  //echo $buildid."<br>";
+  remove_build($buildid); 
   }
 }
 
