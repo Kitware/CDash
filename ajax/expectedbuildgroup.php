@@ -46,7 +46,7 @@ if($markexpected)
   // If a rule already exists we update it
   mysql_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
                       AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
-																				
+                    
 }
 
 if($submit)
@@ -64,9 +64,9 @@ if($submit)
   // Add the new rule (begin time is set by default by mysql
   mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
                VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','0000-00-00 00:00:00')");
-							 
-  // Move any builds that follow this rule to the correct build2group						 
-	$buildgroups = mysql_query("SELECT * from build2group");
+        
+  // Move any builds that follow this rule to the correct build2group       
+ $buildgroups = mysql_query("SELECT * from build2group");
   while($buildgroup_array = mysql_fetch_array($buildgroups))
     {
     $buildid = $buildgroup_array["buildid"];
@@ -90,7 +90,7 @@ if($submit)
       $groupid = $build2grouprule_array["groupid"];
       mysql_query ("UPDATE build2group SET groupid='$groupid' WHERE buildid='$buildid'");
       }
-    }						 
+    }       
 
 return;
 }
@@ -114,7 +114,7 @@ function markasnonexpected_click(siteid,buildname,buildtype,groupid,expected,div
 function movenonexpectedbuildgroup_click(siteid,buildname,buildtype,groupid,previousgroupid,divname,expectedtag)
 {
   var tag = "expectednosubmission_"+expectedtag;
-	 var t = document.getElementById(tag);
+  var t = document.getElementById(tag);
   var expectedbuild = 0;
   if(t.checked)
     {
@@ -169,8 +169,8 @@ while($group_array = mysql_fetch_array($group))
   <tr>
     <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array["name"] ?></b>:  </font></td>
     <td bgcolor="#DDDDDD" width="20%"><font size="2"><input id="expectednosubmission_<?php $expectedtag = rand(); echo $expectedtag; ?>" type="checkbox"/> expected</font></td>
-    <td bgcolor="#DDDDDD" width="45%"  id="nob"><font size="2">	
-				<a href="#" onclick="javascript:movenonexpectedbuildgroup_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $group_array["id"]?>','<?php echo $currentgroup_array["id"]?>','<?php echo $divname ?>','<?php echo $expectedtag ?>')">[move to group]</a>
+    <td bgcolor="#DDDDDD" width="45%"  id="nob"><font size="2"> 
+    <a href="#" onclick="javascript:movenonexpectedbuildgroup_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $group_array["id"]?>','<?php echo $currentgroup_array["id"]?>','<?php echo $divname ?>','<?php echo $expectedtag ?>')">[move to group]</a>
     </font></td>
   </tr>
 <?php

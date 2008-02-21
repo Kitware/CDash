@@ -179,7 +179,7 @@ while($group_array = mysql_fetch_array($group))
   <tr>
     <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array["name"] ?></b>:  </font></td>
     <td bgcolor="#DDDDDD" width="20%"><font size="2"><input id="expected_<?php echo $buildid."_".$group_array["id"] ?>" type="checkbox"/> expected</font></td>
-    <td bgcolor="#DDDDDD" width="45%"><font size="2">	
+    <td bgcolor="#DDDDDD" width="45%"><font size="2"> 
     <a href="#" onclick="javascript:addbuildgroup_click(<?php echo $buildid ?>,<?php echo $group_array["id"]?>,1)">[move to group]</a>
     </font></td>
   </tr>
