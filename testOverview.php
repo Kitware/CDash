@@ -27,8 +27,8 @@ if(!isset($date) or $date == "")
   {
   $date = date("Ymd",time());
   }
-	
-	
+ 
+ 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
@@ -114,7 +114,7 @@ foreach($tests as $testName)
   $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
   $xml .= "</test>\n";
   }
-		
+  
 if(count($tests)>0)
   {
   $xml .= "</section>\n";

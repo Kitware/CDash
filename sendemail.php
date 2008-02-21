@@ -21,27 +21,27 @@ function sendemail($parser,$projectid)
 {
   include_once("common.php");
   include_once("config.php");
-					
+     
   // We send email at the end of the testing
-	$testing = @$parser->index["TESTING"];
+ $testing = @$parser->index["TESTING"];
   if($testing == "")
     {
-	  return;
-	  }
-			
-	// Check if we should send the email
+   return;
+   }
+   
+ // Check if we should send the email
   $project = mysql_query("SELECT name,emailbrokensubmission  FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
   if($project_array["emailbrokensubmission"] == 0)
-		{
-		return;
-	  }
+  {
+  return;
+   }
 
   $site = $parser->index["SITE"];
   $i = $site[0];
   $name = $parser->vals[$i]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$i]["attributes"]["BUILDSTAMP"];
-		
+  
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
@@ -99,11 +99,11 @@ function sendemail($parser,$projectid)
     // Find if the build has any test failings
     $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
-				
-		add_log("previousbuildid=".$previousbuildid,"sendemail");
+    
+  add_log("previousbuildid=".$previousbuildid,"sendemail");
     add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail");
-		add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
-		add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
+  add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
+  add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
 
     // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
     // we don't send any emails
@@ -147,8 +147,6 @@ function sendemail($parser,$projectid)
     $user_array = mysql_fetch_array($user);
     $email .= $user_array["email"];
     } 
- 
-  //$email = "jomier@unc.edu"; // TO TEST
 
   // Some variables we need for the email
   $site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
@@ -190,8 +188,8 @@ function sendemail($parser,$projectid)
      
     $messagePlainText .= ".\n";  
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
-				$messagePlainText .= "or you are listed in the default contact list.\n\n";  
-				$messagePlainText .= "Details on the submission can be found at ";
+    $messagePlainText .= "or you are listed in the default contact list.\n\n";  
+    $messagePlainText .= "Details on the submission can be found at ";
 
     $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
@@ -222,7 +220,6 @@ function sendemail($parser,$projectid)
     $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
     
     // Send the email
-    //$email = "jomier@unc.edu";
     mail("$email", $title, $messagePlainText,
          "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
     } // end $email!=""

@@ -52,11 +52,11 @@ $project_array = mysql_fetch_array($project);
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
     
 $nightlytime = strtotime($project_array["nightlytime"]);
-		
+  
 $nightlyhour = gmdate("H",$nightlytime);
 $nightlyminute = gmdate("i",$nightlytime);
 $nightlysecond = gmdate("s",$nightlytime);
-		
+  
 $end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
   
 $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp),gmdate("d",$end_timestamp),gmdate("Y",$end_timestamp));
@@ -66,8 +66,8 @@ if($end_timestamp<$beginning_timestamp)
   }
   
 $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
-$end_UTCDate = gmdate("YmdHis",$end_timestamp);												
-		
+$end_UTCDate = gmdate("YmdHis",$end_timestamp);            
+  
 $build = mysql_query("SELECT siteid FROM build 
                      WHERE starttime<$end_UTCDate AND starttime>$beginning_UTCDate
                      AND projectid='$projectid' GROUP BY siteid");

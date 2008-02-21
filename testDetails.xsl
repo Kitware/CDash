@@ -13,8 +13,8 @@
       <xsl:value-of select="cdash/cssfile"/>
     </xsl:attribute>
   </link>
-		
-		<!-- Include JavaScript -->
+  
+  <!-- Include JavaScript -->
   <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script> 
 
 </head>

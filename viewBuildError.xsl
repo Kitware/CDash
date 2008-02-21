@@ -35,10 +35,10 @@ Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:te
   File: <b><xsl:value-of select="sourcefile"/></b>
   Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
   <a>
-	<xsl:attribute name="href">
+ <xsl:attribute name="href">
   <xsl:value-of select="cvsurl"/>
-	</xsl:attribute>
-	CVS/SVN</a>
+ </xsl:attribute>
+ CVS/SVN</a>
 </xsl:if>
 <pre><xsl:value-of select="precontext"/></pre>
 <pre><xsl:value-of select="text"/></pre>

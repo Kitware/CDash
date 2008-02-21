@@ -4,50 +4,50 @@
   <xsl:include href="footer.xsl"/>
   
   <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-		<xsl:output method="html" encoding="iso-8859-1"/>
+  <xsl:output method="html" encoding="iso-8859-1"/>
   <xsl:template match="/">
       <html>
-						<head>
+      <head>
         <title><xsl:value-of select="cdash/title"/></title>
         <meta name="robots" content="noindex,nofollow" />
-				<link rel="shortcut icon" href="favicon.ico"/>	
+    <link rel="shortcut icon" href="favicon.ico"/> 
         <link rel="StyleSheet" type="text/css">
           <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
         </link>
       </head>
 
  <body>
-	
-   	<table width="100%" class="toptable" cellpadding="1" cellspacing="0">
+ 
+    <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
     <td>
-		<table width="100%" align="center" cellpadding="0" cellspacing="0" >
+  <table width="100%" align="center" cellpadding="0" cellspacing="0" >
   <tr>
     <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
   </tr>
   <tr>
     <td width="100%" align="left" class="topbg">
-	
-		  <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
-	   <tr>
-		  <td width="195" height="121" class="topbgleft">
-				<xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
-				</td>
-				<td width="425" valign="top" class="insd">
-				<div class="insdd">
-						<span class="inn1">My CDash</span><br />
-						<span class="inn2"><xsl:value-of select="cdash/user_name"/></span>
-						</div>
-				</td>
-				<td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
-			</tr>
-		</table>
-		</td>
-				</tr>
+ 
+    <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
+    <tr>
+    <td width="195" height="121" class="topbgleft">
+    <xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
+    </td>
+    <td width="425" valign="top" class="insd">
+    <div class="insdd">
+      <span class="inn1">My CDash</span><br />
+      <span class="inn2"><xsl:value-of select="cdash/user_name"/></span>
+      </div>
+    </td>
+    <td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
+   </tr>
+  </table>
+  </td>
+    </tr>
   <tr>
     <td align="left" class="topbg2"><table width="100%" height="28" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
+ <tr>
+  <td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
 <li id="Dartboard">
 <a href="index.php">HOME</a>
 </li>
@@ -57,8 +57,8 @@
 <li><a href="user.php?logout=1">LOGOUT</a></li>
 </ul>
 </td>
-		<td height="28" class="insd3"><xsl:text>&#160;</xsl:text></td>
-	</tr>
+  <td height="28" class="insd3"><xsl:text>&#160;</xsl:text></td>
+ </tr>
 </table></td>
   </tr>
 </table></td>
@@ -102,7 +102,7 @@
       </td>
     </tr>
   </xsl:for-each>
-		</tbody>
+  </tbody>
 </table>
 <br/>
 </xsl:if>
@@ -126,14 +126,14 @@
     
     <!-- Fill in the information -->
     <xsl:for-each select="cdash/claimedsite">
-		<tr class="treven">
+  <tr class="treven">
       <td align="center" >
         <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute><xsl:value-of select="name"/></a>
       </td>
       
       <xsl:for-each select="project">
         <td align="center" id="nob"> 
-					<table width="100%" border="0">
+     <table width="100%" border="0">
             <xsl:if test="nightly/NA=0">
               <tr class="table-heading">
                 <td align="center"><b>N</b></td>
@@ -142,7 +142,7 @@
                 <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/errorclass"/></xsl:attribute><xsl:value-of select="nightly/error"/></td>
                 <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/testfailclass"/></xsl:attribute><xsl:value-of select="nightly/testfail"/></td>
                 <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/dateclass"/></xsl:attribute>
-                <a><xsl:attribute name="href"><xsl:value-of select="nightly/datelink"/></xsl:attribute><xsl:value-of select="nightly/date"/></a>		
+                <a><xsl:attribute name="href"><xsl:value-of select="nightly/datelink"/></xsl:attribute><xsl:value-of select="nightly/date"/></a>  
               </td>
             </tr>
           </xsl:if>
@@ -152,9 +152,9 @@
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/updateclass"/></xsl:attribute><xsl:value-of select="continuous/update"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/configureclass"/></xsl:attribute><xsl:value-of select="continuous/configure"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/errorclass"/></xsl:attribute><xsl:value-of select="continuous/error"/></td>
-              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/testfailclass"/></xsl:attribute><xsl:value-of select="continuous/testfail"/></td>	
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/testfailclass"/></xsl:attribute><xsl:value-of select="continuous/testfail"/></td> 
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/dateclass"/></xsl:attribute>
-              <a><xsl:attribute name="href"><xsl:value-of select="continuous/datelink"/></xsl:attribute><xsl:value-of select="continuous/date"/></a>		
+              <a><xsl:attribute name="href"><xsl:value-of select="continuous/datelink"/></xsl:attribute><xsl:value-of select="continuous/date"/></a>  
             </td></tr>
           </xsl:if>
           <xsl:if test="experimental/NA=0">
@@ -163,17 +163,17 @@
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/updateclass"/></xsl:attribute><xsl:value-of select="experimental/update"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/configureclass"/></xsl:attribute><xsl:value-of select="experimental/configure"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/errorclass"/></xsl:attribute><xsl:value-of select="experimental/error"/></td>
-              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/testfailclass"/></xsl:attribute><xsl:value-of select="experimental/testfail"/></td>		
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/testfailclass"/></xsl:attribute><xsl:value-of select="experimental/testfail"/></td>  
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/dateclass"/></xsl:attribute>
-              <a><xsl:attribute name="href"><xsl:value-of select="experimental/datelink"/></xsl:attribute><xsl:value-of select="experimental/date"/></a>		
+              <a><xsl:attribute name="href"><xsl:value-of select="experimental/datelink"/></xsl:attribute><xsl:value-of select="experimental/date"/></a>  
             </td></tr>
-          </xsl:if>	
+          </xsl:if> 
         </table>
       </td>
     </xsl:for-each>
-		</tr>
+  </tr>
   </xsl:for-each>
-		</tbody>
+  </tbody>
 </table>
 <br/>
 </xsl:if>
@@ -189,15 +189,15 @@
     <xsl:for-each select="cdash/publicproject">
       <tr class="table-heading">
         <td align="center"  id="nob">
-								 <xsl:attribute name="class"><xsl:value-of select="trparity"/></xsl:attribute>
-								<b><xsl:value-of select="name"/></b></td>
+         <xsl:attribute name="class"><xsl:value-of select="trparity"/></xsl:attribute>
+        <b><xsl:value-of select="name"/></b></td>
         <td  id="nob">
-								<xsl:attribute name="class"><xsl:value-of select="trparity"/></xsl:attribute>
-								<a>
+        <xsl:attribute name="class"><xsl:value-of select="trparity"/></xsl:attribute>
+        <a>
         <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Subscribe to this project]</a></td>
       </tr>
     </xsl:for-each>
-				</tbody>
+    </tbody>
   </table>
   <br/>
 </xsl:if>
@@ -209,13 +209,13 @@
     <tr class="table-heading1"><td id="nob"><h3>Administration</h3></td></tr>
     <tr class="trodd"><td id="nob"><a href="createProject.php">[Create new project]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="createProject.php?edit=1">[Edit project]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">[Manage project roles]</a></td></tr>	
-    <tr class="treven"><td id="nob"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr>	
+    <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">[Manage project roles]</a></td></tr> 
+    <tr class="treven"><td id="nob"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr> 
     <tr class="trodd"><td id="nob"><a href="backwardCompatibilityTools.php">[Backward compatibility tools]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="import.php">[Import Dart1 Files]</a></td></tr>
   </tbody>
-		</table>
+  </table>
 </xsl:if>
 <br/>
 <!-- FOOTER -->
