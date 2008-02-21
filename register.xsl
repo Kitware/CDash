@@ -99,6 +99,7 @@
   <td width="20%" height="2" id="nob"><div align="right"> Institution: </div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="institution" size="20"/></td>
 </tr>
+<input id="url" class="textbox" type="hidden" name="url" size="20"/>
 <tr>
   <td width="20%" id="nob"></td>
   <td width="80%" id="nob"><input type="submit" value="Register" name="sent" class="textbox"/>
