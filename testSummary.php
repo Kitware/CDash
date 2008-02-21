@@ -59,8 +59,12 @@ $xml .="<testName>".$testName."</testName>";
 //get information about all the builds for the given date and project
 $xml .= "<builds>\n";
 
-$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,test.id AS testid FROM build,build2test,test WHERE build.stamp RLIKE '^$date-'           
-          AND build.projectid = '$projectid' AND build2test.buildid=build.id AND test.id=build2test.testid AND test.name='$testName' ORDER BY build2test.status";
+$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,test.id AS testid,site.name AS sitename 
+          FROM build,build2test,test,site WHERE build.stamp RLIKE '^$date-'           
+          AND build.projectid = '$projectid' AND build2test.buildid=build.id 
+     AND test.id=build2test.testid AND test.name='$testName' 
+     AND site.id=build.siteid
+     ORDER BY build2test.status";
 
 $result = mysql_query($query);
 
@@ -70,7 +74,8 @@ while($row = mysql_fetch_array($result))
   {
   $buildid = $row["id"];
   $xml .= "<build>\n";
-  $xml .= add_XML_value("site", $row["name"]) . "\n";
+ 
+ $xml .= add_XML_value("site", $row["sitename"]) . "\n";
   $xml .= add_XML_value("buildName", $row["name"]) . "\n";
   $xml .= add_XML_value("buildStamp", $row["stamp"]) . "\n";
   $xml .= add_XML_value("time", $row["time"]) . "\n";
@@ -101,7 +106,7 @@ while($row = mysql_fetch_array($result))
       break;
     case "notrun":
       $xml .= add_XML_value("status", "Not Run") . "\n";
-			$xml .= add_XML_value("statusclass", "error") . "\n";
+   $xml .= add_XML_value("statusclass", "error") . "\n";
       break;
     }
   $xml .= "</build>\n";
