@@ -3,7 +3,7 @@
 
    <xsl:include href="footer.xsl"/>
    <xsl:include href="headerback.xsl"/> 
-			
+   
     <xsl:output method="html" encoding="iso-8859-1"/>
     <xsl:template match="/">
       <html>
@@ -13,19 +13,19 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-								<!-- Functions to confirm the remove -->
-								<script language="JavaScript">
-								function confirmDelete() {
-											if (window.confirm("Are you sure you want to delete this project?")){
-														return true;
-											}
-											return false;
-								}
-								</script>
+        <!-- Functions to confirm the remove -->
+        <script language="JavaScript">
+        function confirmDelete() {
+           if (window.confirm("Are you sure you want to delete this project?")){
+              return true;
+           }
+           return false;
+        }
+        </script>
        </head>
        <body bgcolor="#ffffff">
  
-	 <xsl:call-template name="headerback"/>
+  <xsl:call-template name="headerback"/>
 
 <br/>
 <xsl:value-of select="cdash/alert"/>
@@ -50,7 +50,7 @@ edit the project</a><br/>
 <table>
   <xsl:if test="cdash/edit=1">
   <tr>
-		  <td width="99"></td>
+    <td width="99"></td>
     <td><div align="right"><strong>Project:</strong></div></td>
     <td><select onchange="location = 'createProject.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
         <option>
@@ -69,188 +69,188 @@ edit the project</a><br/>
         </xsl:for-each>
         </select></td>
   </tr>
-		</xsl:if>
+  </xsl:if>
   <!-- If a project has been selected -->
   <xsl:if test="count(cdash/project)>0 or cdash/edit=0">
-		<xsl:if test="cdash/edit=0">
-				<tr>
-				  <td></td>
-						<td><div align="right"><strong>Name:</strong></div></td>
-						<td><input name="name" type="text" id="name"/></td>
-				</tr>
-		</xsl:if>	
+  <xsl:if test="cdash/edit=0">
+    <tr>
+      <td></td>
+      <td><div align="right"><strong>Name:</strong></div></td>
+      <td><input name="name" type="text" id="name"/></td>
+    </tr>
+  </xsl:if> 
   <tr>
-		  <td></td>
+    <td></td>
     <td><div align="right"><strong>Description:</strong></div></td>
     <td><textarea name="description" id="description" cols="40" rows="5">
-				<xsl:value-of select="cdash/project/description"/>
-				</textarea></td>
+    <xsl:value-of select="cdash/project/description"/>
+    </textarea></td>
   </tr>
   <tr>
-		  <td></td>
+    <td></td>
     <td><div align="right"><strong>Home URL :</strong></div></td>
     <td><input name="homeURL" type="text" id="homeURL" size="50">
-				<xsl:attribute name="value">
-				<xsl:value-of select="cdash/project/homeurl"/>
-				</xsl:attribute>
-				</input>
-				</td>
+    <xsl:attribute name="value">
+    <xsl:value-of select="cdash/project/homeurl"/>
+    </xsl:attribute>
+    </input>
+    </td>
   </tr>
   <tr>
-		  <td></td>
+    <td></td>
     <td><div align="right"><strong>CVS URL :</strong></div></td>
     <td><input name="cvsURL" type="text" id="cvsURL" size="50">
-					<xsl:attribute name="value">
-				<xsl:value-of select="cdash/project/cvsurl"/>
-				</xsl:attribute>
-				</input>
-				</td>
+     <xsl:attribute name="value">
+    <xsl:value-of select="cdash/project/cvsurl"/>
+    </xsl:attribute>
+    </input>
+    </td>
   </tr>
   <tr>
-		  <td></td>
+    <td></td>
     <td><div align="right"><strong>Bug Tracker URL:</strong></div></td>
-    <td><input name="bugURL" type="text" id="bugURL" size="50">	
-				<xsl:attribute name="value">
-				<xsl:value-of select="cdash/project/bugurl"/>
-				</xsl:attribute>
-				</input></td>
+    <td><input name="bugURL" type="text" id="bugURL" size="50"> 
+    <xsl:attribute name="value">
+    <xsl:value-of select="cdash/project/bugurl"/>
+    </xsl:attribute>
+    </input></td>
   </tr>
-	<tr>
-		  <td></td>
+ <tr>
+    <td></td>
     <td><div align="right"><strong>Documentation URL:</strong></div></td>
-    <td><input name="docURL" type="text" id="docURL" size="50">	
-				<xsl:attribute name="value">
-				<xsl:value-of select="cdash/project/docurl"/>
-				</xsl:attribute>
-				</input></td>
+    <td><input name="docURL" type="text" id="docURL" size="50"> 
+    <xsl:attribute name="value">
+    <xsl:value-of select="cdash/project/docurl"/>
+    </xsl:attribute>
+    </input></td>
   </tr>
   <tr>
-		  <td></td>
+    <td></td>
     <td><div align="right"><strong>Logo:</strong></div></td>
     <td><input type="file" name="logo" size="40"/></td>
   </tr>
-		<xsl:if test="cdash/edit=1">
-		<tr>
-		  <td></td>
-				<td><div align="right"><strong>Current logo:</strong></div></td>
-				<td>
-				<xsl:if test="cdash/project/imageid=0">
-				[none]
-				</xsl:if>
-				<img border="0">
-				<xsl:attribute name="alt"><xsl:value-of select="cdash/dashboard/project/name"/></xsl:attribute>
-				<xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/project/imageid"/></xsl:attribute>
-				</img>
-				</td>
-		</tr>
-		</xsl:if>
+  <xsl:if test="cdash/edit=1">
   <tr>
-		  <td></td>
+    <td></td>
+    <td><div align="right"><strong>Current logo:</strong></div></td>
+    <td>
+    <xsl:if test="cdash/project/imageid=0">
+    [none]
+    </xsl:if>
+    <img border="0">
+    <xsl:attribute name="alt"><xsl:value-of select="cdash/dashboard/project/name"/></xsl:attribute>
+    <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/project/imageid"/></xsl:attribute>
+    </img>
+    </td>
+  </tr>
+  </xsl:if>
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Public Dashboard:</strong></div></td>
     <td><input type="checkbox" name="public" value="1">
-				<xsl:if test="cdash/project/public=1">
-				<xsl:attribute name="checked"></xsl:attribute>
-				</xsl:if>
-				</input>
-				</td>
+    <xsl:if test="cdash/project/public=1">
+    <xsl:attribute name="checked"></xsl:attribute>
+    </xsl:if>
+    </input>
+    </td>
   </tr>
   <tr>
-		  <td></td>
+    <td></td>
     <td><div align="right"><strong>Coverage Threshold:</strong></div></td>
     <td><input name="coverageThreshold" type="text" id="coverageThreshold" size="2" value="70">
-				<xsl:attribute name="value">
-				<xsl:if test="string-length(cdash/project/coveragethreshold)=0">70</xsl:if>
-				<xsl:value-of select="cdash/project/coveragethreshold"/>
-				</xsl:attribute>
-				</input>
-				</td>
+    <xsl:attribute name="value">
+    <xsl:if test="string-length(cdash/project/coveragethreshold)=0">70</xsl:if>
+    <xsl:value-of select="cdash/project/coveragethreshold"/>
+    </xsl:attribute>
+    </input>
+    </td>
   </tr>
   <tr>
-		  <td></td>
+    <td></td>
     <td><div align="right"><strong>Nightly Start Time:</strong></div></td>
     <td>
-				<input name="nightlyTime" type="text" id="nightlyTime" size="20">
-				<xsl:attribute name="value">
-				<xsl:if test="string-length(cdash/project/nightlytime)=0">00:00:00 EST</xsl:if>
-				  <xsl:value-of select="cdash/project/nightlytime"/>
-				</xsl:attribute>
-				</input></td>
+    <input name="nightlyTime" type="text" id="nightlyTime" size="20">
+    <xsl:attribute name="value">
+    <xsl:if test="string-length(cdash/project/nightlytime)=0">00:00:00 EST</xsl:if>
+      <xsl:value-of select="cdash/project/nightlytime"/>
+    </xsl:attribute>
+    </input></td>
   </tr>
-		<tr>
-		  <td></td>
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Google Analytics Tracker:</strong></div></td>
     <td>
-				<input name="googleTracker" type="text" id="googleTracker" size="50">
-				<xsl:attribute name="value">
-				  <xsl:value-of select="cdash/project/googletracker"/>
-				</xsl:attribute>
-				</input></td>
+    <input name="googleTracker" type="text" id="googleTracker" size="50">
+    <xsl:attribute name="value">
+      <xsl:value-of select="cdash/project/googletracker"/>
+    </xsl:attribute>
+    </input></td>
   </tr>
-		<tr>
-		  <td></td>
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Email broken submission:</strong></div></td>
     <td><input type="checkbox" name="emailBrokenSubmission" value="1">
-				<xsl:if test="cdash/project/emailbrokensubmission=1">
-				<xsl:attribute name="checked"></xsl:attribute>
-				</xsl:if>
-				</input>
-				</td>
+    <xsl:if test="cdash/project/emailbrokensubmission=1">
+    <xsl:attribute name="checked"></xsl:attribute>
+    </xsl:if>
+    </input>
+    </td>
   </tr>
-		<tr>
-		  <td></td>
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Email build missing:</strong></div></td>
     <td><input type="checkbox" name="emailBuildMissing" value="1">
-				<xsl:if test="cdash/project/emailbuildmissing=1">
-				<xsl:attribute name="checked"></xsl:attribute>
-				</xsl:if>
-				</input>
-				</td>
+    <xsl:if test="cdash/project/emailbuildmissing=1">
+    <xsl:attribute name="checked"></xsl:attribute>
+    </xsl:if>
+    </input>
+    </td>
   </tr>
-		<tr>
-		  <td></td>
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Email low coverage:</strong></div></td>
     <td><input type="checkbox" name="emailLowCoverage" value="1">
-				<xsl:if test="cdash/project/emaillowcoverage=1">
-				<xsl:attribute name="checked"></xsl:attribute>
-				</xsl:if>
-				</input>
-				</td>
+    <xsl:if test="cdash/project/emaillowcoverage=1">
+    <xsl:attribute name="checked"></xsl:attribute>
+    </xsl:if>
+    </input>
+    </td>
   </tr>
-		<tr>
-		  <td></td>
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Email test timing changed:</strong></div></td>
     <td><input type="checkbox" name="emailTestTimingChanged" value="1">
-				<xsl:if test="cdash/project/emailtesttimingchanged=1">
-				<xsl:attribute name="checked"></xsl:attribute>
-				</xsl:if>
-				</input>
-				</td>
-  </tr>	
-	
-	<!-- downloading the CTestConfig.cmake -->
-	<xsl:if test="cdash/edit=1">
-	<tr>
-		  <td></td>
+    <xsl:if test="cdash/project/emailtesttimingchanged=1">
+    <xsl:attribute name="checked"></xsl:attribute>
+    </xsl:if>
+    </input>
+    </td>
+  </tr> 
+ 
+ <!-- downloading the CTestConfig.cmake -->
+ <xsl:if test="cdash/edit=1">
+ <tr>
+    <td></td>
     <td><div align="right"><strong>Download CTestConfig:</strong></div></td>
     <td><a>
-		<xsl:attribute name="href">generateCTestConfig.php?projectid= <xsl:value-of select="cdash/project/id"/>
-		</xsl:attribute>CTestConfig.php
-		</a>
-				</td>
-  </tr>	
-	</xsl:if>
-	
+  <xsl:attribute name="href">generateCTestConfig.php?projectid= <xsl:value-of select="cdash/project/id"/>
+  </xsl:attribute>CTestConfig.php
+  </a>
+    </td>
+  </tr> 
+ </xsl:if>
+ 
   <tr>
-		  <td></td>
+    <td></td>
     <td><div align="right"></div></td>
-				<xsl:if test="cdash/edit=0">
+    <xsl:if test="cdash/edit=0">
       <td><input type="submit" name="Submit" value="Create Project"/></td>
-				</xsl:if>
-				<xsl:if test="cdash/edit=1">
-			  	<td><input type="submit" name="Update" value="Update Project"/><input type="submit" name="Delete" value="Delete Project" onclick="return confirmDelete()"/></td>
-				</xsl:if>
+    </xsl:if>
+    <xsl:if test="cdash/edit=1">
+      <td><input type="submit" name="Update" value="Update Project"/><input type="submit" name="Delete" value="Delete Project" onclick="return confirmDelete()"/></td>
+    </xsl:if>
   </tr>
-		</xsl:if>
+  </xsl:if>
 </table>
 </form>
 </xsl:otherwise>

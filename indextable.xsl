@@ -4,54 +4,54 @@
    <xsl:include href="footer.xsl"/>
     
    <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-		<xsl:output method="html" encoding="iso-8859-1"/>
+  <xsl:output method="html" encoding="iso-8859-1"/>
  
     <xsl:template match="/">
       <html>
        <head>
        <title><xsl:value-of select="cdash/title"/></title>
         <meta name="robots" content="noindex,nofollow" />
-          <link rel="shortcut icon" href="favicon.ico"/>	
-				 <link rel="StyleSheet" type="text/css">
+          <link rel="shortcut icon" href="favicon.ico"/> 
+     <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
        </head>
        <body bgcolor="#ffffff">
  
-	<table width="100%" class="toptable" cellpadding="1" cellspacing="0">
+ <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
     <td>
-		<table width="100%" align="center" cellpadding="0" cellspacing="0" >
+  <table width="100%" align="center" cellpadding="0" cellspacing="0" >
   <tr>
     <td height="30" valign="middle">
-				<table width="100%" cellspacing="0" cellpadding="0">
+    <table width="100%" cellspacing="0" cellpadding="0">
       <tr>
         <td width="66%" class="paddl">
-								<a><xsl:attribute name="href">user.php</xsl:attribute>
-								<xsl:choose>
+        <a><xsl:attribute name="href">user.php</xsl:attribute>
+        <xsl:choose>
           <xsl:when test="cdash/user/id>0">
-            My CDash 	
+            My CDash  
           </xsl:when>
           <xsl:otherwise>
              Login
            </xsl:otherwise>
         </xsl:choose>  
-								</a>
-								
-								<xsl:if test="cdash/user/id>0">
-								  <xsl:text>&#160;</xsl:text>|<xsl:text>&#160;</xsl:text><a href="user.php?logout=1">Log Out</a>  
-								</xsl:if>
-								
-								</td>
+        </a>
+        
+        <xsl:if test="cdash/user/id>0">
+          <xsl:text>&#160;</xsl:text>|<xsl:text>&#160;</xsl:text><a href="user.php?logout=1">Log Out</a>  
+        </xsl:if>
+        
+        </td>
         <td width="34%" class="topdate">
-								  <span style="float:right">
-									<xsl:text>&#160;</xsl:text>
-	        </span>
-									<xsl:value-of select="cdash/dashboard/datetime"/>
-	     </td>
+          <span style="float:right">
+         <xsl:text>&#160;</xsl:text>
+         </span>
+         <xsl:value-of select="cdash/dashboard/datetime"/>
+      </td>
       </tr>
     </table>    
-				</td>
+    </td>
   </tr>
   <tr>
     <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
@@ -59,22 +59,22 @@
   <tr>
     <td width="100%" align="left" class="topbg">
 
-		  <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
-	   <tr>
-		  <td width="195" height="121" class="topbgleft">
-				<xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
-				</td>
-				<td width="425" valign="top" class="insd">
-				<div class="insdd">
-						<span class="inn1">CDash</span><br />
-						<span class="inn2">Projects</span>
-						</div>
-				</td>
-				<td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
-			</tr>
-		</table>
-		</td>
-				</tr>
+    <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
+    <tr>
+    <td width="195" height="121" class="topbgleft">
+    <xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
+    </td>
+    <td width="425" valign="top" class="insd">
+    <div class="insdd">
+      <span class="inn1">CDash</span><br />
+      <span class="inn2">Projects</span>
+      </div>
+    </td>
+    <td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
+   </tr>
+  </table>
+  </td>
+    </tr>
   <tr>
    
   </tr>
@@ -95,7 +95,7 @@
      <td align="center"><b>Project</b></td>
      <td align="center"><b>Submissions</b></td>
     <!-- <td align="center">Tests</td> -->
-		<td align="center"><b>First build</b></td>
+  <td align="center"><b>First build</b></td>
      <td align="center" id="nob"><b>Last activity</b></td>
   </tr>
 
@@ -115,13 +115,13 @@
      <xsl:value-of select="name"/>
      </a></td>
     <td align="center"><xsl:value-of select="nbuilds"/></td>
-		<td align="center"><xsl:value-of select="firstbuild"/></td>
+  <td align="center"><xsl:value-of select="firstbuild"/></td>
     <!-- <th align="center">Tests</th> <td align="right"><xsl:value-of select="ntests"/></td>-->
     <td align="center" id="nob"><xsl:value-of select="lastbuild"/></td>
     </tr>
    </xsl:for-each>
-			
-			<table width="100%" cellspacing="0" cellpadding="0">
+   
+   <table width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
 </tr>

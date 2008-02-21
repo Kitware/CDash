@@ -1364,7 +1364,7 @@ function get_cdash_dashboard_xml($projectname, $date)
     $project_array["bugtrackerurl"] = "unknown";
     $project_array["documentationurl"] = "unknown";
     $project_array["homeurl"] = "unknown";
-	  $project_array["googletracker"] = "unknown";
+   $project_array["googletracker"] = "unknown";
     $project_array["name"] = $projectname;
     $project_array["nightlytime"] = "00:00:00";
     }
@@ -1378,7 +1378,7 @@ function get_cdash_dashboard_xml($projectname, $date)
   <startdate>".date("l, F d Y H:i:s",$currentstarttime)."</startdate>
   <svn>".$project_array["cvsurl"]."</svn>
   <bugtracker>".$project_array["bugtrackerurl"]."</bugtracker>
-	<googletracker>".$project_array["googletracker"]."</googletracker>
+ <googletracker>".$project_array["googletracker"]."</googletracker>
   <documentation>".$project_array["documentationurl"]."</documentation> 
   <home>".$project_array["homeurl"]."</home>
   <projectid>".$projectid."</projectid>

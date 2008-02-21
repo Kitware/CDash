@@ -21,40 +21,40 @@ include_once('common.php');
 
 if ($session_OK) 
   {
-		@$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
 
-		$usersessionid = $_SESSION['cdash']['loginid'];
-		@$projectid = $_GET["projectid"];
-		
-		// If the projectid is not set and there is only one project we go directly to the page
-		if(!isset($projectid))
-		{
-			$project = mysql_query("SELECT id FROM project");
-			if(mysql_num_rows($project)==1)
-				{
-				$project_array = mysql_fetch_array($project);
-				$projectid = $project_array["id"];
-				}
-		}
+  $usersessionid = $_SESSION['cdash']['loginid'];
+  @$projectid = $_GET["projectid"];
+  
+  // If the projectid is not set and there is only one project we go directly to the page
+  if(!isset($projectid))
+  {
+   $project = mysql_query("SELECT id FROM project");
+   if(mysql_num_rows($project)==1)
+    {
+    $project_array = mysql_fetch_array($project);
+    $projectid = $project_array["id"];
+    }
+  }
 
-	 $role = 0;
-	
-		$user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$usersessionid'"));
-		if($projectid)
-		  {
-		  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$usersessionid' AND $projectid='$projectid'");
+  $role = 0;
+ 
+  $user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$usersessionid'"));
+  if($projectid)
+    {
+    $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$usersessionid' AND $projectid='$projectid'");
     if(mysql_num_rows($user2project)>0)
-				  {
-						$user2project_array = mysql_fetch_array($user2project);
-						$role = $user2project_array["role"];
-						}		
-				}
-		if($user_array["admin"]!=1 && $role<=2)
-		  {
-				echo "You don't have the permissions to access this page";
-			 return;
-		  }
+      {
+      $user2project_array = mysql_fetch_array($user2project);
+      $role = $user2project_array["role"];
+      }  
+    }
+  if($user_array["admin"]!=1 && $role<=2)
+    {
+    echo "You don't have the permissions to access this page";
+    return;
+    }
 
 // Form post
 @$adduser = $_POST["adduser"];
@@ -68,11 +68,11 @@ if ($session_OK)
 if($adduser)
 {
   $user2project = mysql_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-				
+    
   if(mysql_num_rows($user2project) == 0)
-		  {
+    {
     mysql_query("INSERT INTO user2project (userid,role,cvslogin,projectid) VALUES ('$userid','$role','$cvslogin','$projectid')");
-				}
+    }
 }
 
 // Remove the user
@@ -90,14 +90,14 @@ if($updateuser)
 }
 
 
-		$xml = "<cdash>";
+  $xml = "<cdash>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<backurl>user.php</backurl>";
-		$xml .= "<title>CDash - Project Roles</title>";
-		$xml .= "<menutitle>CDash</menutitle>";
-		$xml .= "<menusubtitle>Project Roles</menusubtitle>";
+  $xml .= "<title>CDash - Project Roles</title>";
+  $xml .= "<menutitle>CDash</menutitle>";
+  $xml .= "<menusubtitle>Project Roles</menusubtitle>";
 
-				
+    
 $projects = mysql_query("SELECT id,name FROM project"); // we should check if we are admin on the project
 while($project_array = mysql_fetch_array($projects))
    {
@@ -114,7 +114,7 @@ while($project_array = mysql_fetch_array($projects))
 // If we have a project id
 if($projectid>0)
   {
-		
+  
 $project = mysql_query("SELECT id,name FROM project WHERE id='$projectid'");
 $project_array = mysql_fetch_array($project);
 $xml .= "<project>";
@@ -125,31 +125,31 @@ $xml .= "</project>";
 // List the users for that project
 $user = mysql_query("SELECT u.id,u.firstname,u.lastname,u.email,up.cvslogin,up.role
                      FROM user2project AS up, user as u  
-																					WHERE u.id=up.userid  AND up.projectid='$projectid' 
+                     WHERE u.id=up.userid  AND up.projectid='$projectid' 
                      ORDER BY u.firstname ASC");
-																									
-$i=0;																									
+                         
+$i=0;                         
 while($user_array = mysql_fetch_array($user))
   {
-		$userid = $user_array["id"];
+  $userid = $user_array["id"];
   $xml .= "<user>";
-	
-	 if($i%2==0)
-		 	{
-				$xml .= add_XML_value("bgcolor","#CADBD9");
-		 	}
-		else
-				{
-				$xml .= add_XML_value("bgcolor","#FFFFFF");
-				}
-		$i++;
+ 
+  if($i%2==0)
+    {
+    $xml .= add_XML_value("bgcolor","#CADBD9");
+    }
+  else
+    {
+    $xml .= add_XML_value("bgcolor","#FFFFFF");
+    }
+  $i++;
   $xml .= add_XML_value("id",$userid);
   $xml .= add_XML_value("firstname",$user_array['firstname']);
   $xml .= add_XML_value("lastname",$user_array['lastname']);
-	 $xml .= add_XML_value("email",$user_array['email']);			
-  $xml .= add_XML_value("cvslogin",$user_array['cvslogin']);	
-		$xml .= add_XML_value("role",$user_array['role']);		
-		$xml .= "</user>";
+  $xml .= add_XML_value("email",$user_array['email']);   
+  $xml .= add_XML_value("cvslogin",$user_array['cvslogin']); 
+  $xml .= add_XML_value("role",$user_array['role']);  
+  $xml .= "</user>";
   }
 
 } // end project=0

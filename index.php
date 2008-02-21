@@ -31,43 +31,43 @@ function generate_index_table()
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
   
-	$xml .= "<dashboard>
-	<googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>
-	</dashboard> ";
-	
-	// Show the size of the database
-	$rows = mysql_query("SHOW table STATUS");
+ $xml .= "<dashboard>
+ <googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>
+ </dashboard> ";
+ 
+ // Show the size of the database
+ $rows = mysql_query("SHOW table STATUS");
   $dbsize = 0;
   while ($row = mysql_fetch_array($rows)) 
-	  {
-		$dbsize += $row['Data_length'] + $row['Index_length']; 
-		}
+   {
+  $dbsize += $row['Data_length'] + $row['Index_length']; 
+  }
   
-	$ext = "b";
+ $ext = "b";
   if($dbsize>1024)
     {
-		$dbsize /= 1024;
-		$ext = "Kb";
+  $dbsize /= 1024;
+  $ext = "Kb";
     }
   if($dbsize>1024)
     {
-		$dbsize /= 1024;
-		$ext = "Mb";
+  $dbsize /= 1024;
+  $ext = "Mb";
     }
-	if($dbsize>1024)
+ if($dbsize>1024)
     {
-		$dbsize /= 1024;
-		$ext = "Gb";
+  $dbsize /= 1024;
+  $ext = "Gb";
     }
-	if($dbsize>1024)
+ if($dbsize>1024)
     {
-		$dbsize /= 1024;
-		$ext = "Tb";
-    }	
+  $dbsize /= 1024;
+  $ext = "Tb";
+    } 
   $xml .= "<database>";
-	$xml .= add_XML_value("size",round($dbsize,1).$ext);
-	$xml .= "</database>";
-	
+ $xml .= add_XML_value("size",round($dbsize,1).$ext);
+ $xml .= "</database>";
+ 
   // User
   if(isset($_SESSION['cdash']))
     {
@@ -95,9 +95,9 @@ function generate_index_table()
          {
         $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
         }
-				
-				// Display the first build
-				if($project['first_build'] == "NA")
+    
+    // Display the first build
+    if($project['first_build'] == "NA")
          {
             $xml .= "<firstbuild>NA</firstbuild>";
          }
@@ -148,8 +148,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $svnurl = $project_array["cvsurl"];
     $homeurl = $project_array["homeurl"];
     $bugurl = $project_array["bugtrackerurl"];  
-		$googletracker = $project_array["googletracker"];  
-		$docurl = $project_array["documentationurl"];  
+  $googletracker = $project_array["googletracker"];  
+  $docurl = $project_array["documentationurl"];  
     $projectname = $project_array["name"];  
     }
   else
@@ -172,23 +172,23 @@ function generate_main_dashboard_XML($projectid,$date)
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
-	<googletracker>".$googletracker."</googletracker> 
-	<documentation>".$docurl."</documentation> 
+ <googletracker>".$googletracker."</googletracker> 
+ <documentation>".$docurl."</documentation> 
   <home>".$homeurl."</home>
   <logoid>".$logoid."</logoid> 
   <projectid>".$projectid."</projectid> 
   <projectname>".$projectname."</projectname> 
   <previousdate>".$previousdate."</previousdate> 
   <nextdate>".$nextdate."</nextdate>";
-	
-  if($currentstarttime>time())	
-	  {
-	  $xml .= "<future>1</future>";
+ 
+  if($currentstarttime>time()) 
+   {
+   $xml .= "<future>1</future>";
     }
   else
-		{
-		$xml .= "<future>0</future>";
-		}
+  {
+  $xml .= "<future>0</future>";
+  }
   $xml .= "</dashboard>";
 
   // updates
@@ -267,8 +267,8 @@ function generate_main_dashboard_XML($projectid,$date)
     }
     
   // Check the builds
- 	$beginning_timestamp = $currentstarttime;
-	$end_timestamp = $currentstarttime+3600*24;
+  $beginning_timestamp = $currentstarttime;
+ $end_timestamp = $currentstarttime+3600*24;
 
   $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
   $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
@@ -371,7 +371,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $update = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
     $update_array = mysql_fetch_row($update);
     $xml .= add_XML_value("update",$update_array[0]);
-		
+  
     $updatestatus = mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'");
     $updatestatus_array = mysql_fetch_array($updatestatus);
     
@@ -385,7 +385,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $updateerrors_array = mysql_fetch_row($updateerrors);
       $xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
       }
-			
+   
     $xml .= "<compilation>";
     
     // Find the number of errors and warnings
@@ -463,7 +463,7 @@ function generate_main_dashboard_XML($projectid,$date)
     while($coverage_array = mysql_fetch_array($coverages))
       {
       $xml .= "<coverage>";
-						if($coveragerowparity%2==0)
+      if($coveragerowparity%2==0)
         {
         $xml .= add_XML_value("rowparity","trodd");
         }
@@ -472,7 +472,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("rowparity","treven");
         }
       $coveragerowparity++;
-																
+                
       $xml .= "  <site>".$site_array["name"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
@@ -496,7 +496,7 @@ function generate_main_dashboard_XML($projectid,$date)
     while($dynanalysis_array = mysql_fetch_array($dynanalysis))
       {
       $xml .= "<dynamicanalysis>";
-						if($dynanalysisrowparity%2==0)
+      if($dynanalysisrowparity%2==0)
         {
         $xml .= add_XML_value("rowparity","trodd");
         }

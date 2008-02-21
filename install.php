@@ -47,8 +47,8 @@ else
   }
 
 if(function_exists("curl_init") == FALSE)
-		{  
-		$xml .= "<phpcurl>0</phpcurl>";
+  {  
+  $xml .= "<phpcurl>0</phpcurl>";
   }
 else
   {

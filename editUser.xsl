@@ -79,30 +79,30 @@
 <tr class="treven">
   <td width="20%" height="2"><div align="right">First Name</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="fname" size="20">
-	<xsl:attribute name="value"><xsl:value-of select="cdash/user/firstname"/></xsl:attribute>
-	</input>
-	</td>
+ <xsl:attribute name="value"><xsl:value-of select="cdash/user/firstname"/></xsl:attribute>
+ </input>
+ </td>
 </tr>
 <tr class="trodd">
   <td width="20%" height="2"><div align="right">Last Name</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="lname" size="20">
-	<xsl:attribute name="value"><xsl:value-of select="cdash/user/lastname"/></xsl:attribute>
-	</input>
-	</td>
+ <xsl:attribute name="value"><xsl:value-of select="cdash/user/lastname"/></xsl:attribute>
+ </input>
+ </td>
 </tr>
 <tr class="treven">
   <td width="20%" height="2"><div align="right">Email</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="email" size="20">
-	<xsl:attribute name="value"><xsl:value-of select="cdash/user/email"/></xsl:attribute>
-	</input>
-	</td>
+ <xsl:attribute name="value"><xsl:value-of select="cdash/user/email"/></xsl:attribute>
+ </input>
+ </td>
 </tr>
 <tr class="trodd">
   <td width="20%" height="2"><div align="right"> Institution</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="institution" size="20">
-	<xsl:attribute name="value"><xsl:value-of select="cdash/user/institution"/></xsl:attribute>
-	</input>
-	</td>
+ <xsl:attribute name="value"><xsl:value-of select="cdash/user/institution"/></xsl:attribute>
+ </input>
+ </td>
 </tr>
 <tr class="treven">
   <td width="20%" id="nob"></td>
@@ -122,7 +122,7 @@
 <tr>
   <td width="20%" id="nob"></td>
   <td width="80%" id="nob"><input type="submit" value="Update Password" name="updatepassword" class="textbox"/>  
-	</td>
+ </td>
 </tr> 
 </form>
 </tbody>

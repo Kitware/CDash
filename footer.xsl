@@ -7,12 +7,12 @@
    <td height="66" align="left" valign="middle" class="footer">
    <span style="float:right">
    <table>
-	   <tr>
-		   <td><img src="images/logo2.gif" height="66"/></td>
-	  <td>CDash 1.0 <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text> 2008 
+    <tr>
+     <td><img src="images/logo2.gif" height="66"/></td>
+   <td>CDash 1.0 <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text> 2008 
    <a href="http://www.kitware.com">Kitware Inc.</a>
    <xsl:text>&#160;</xsl:text><br/>
-	 <a href="http://www.cdash.org/Bug">[report problems]</a>
+  <a href="http://www.cdash.org/Bug">[report problems]</a>
  </td>     
 </tr>
    </table>

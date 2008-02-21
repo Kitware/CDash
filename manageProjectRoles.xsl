@@ -3,7 +3,7 @@
 
    <xsl:include href="footer.xsl"/>
    <xsl:include href="headerback.xsl"/> 
-			
+   
     <xsl:output method="html" encoding="iso-8859-1"/>
     <xsl:template match="/">
       <html>
@@ -14,13 +14,13 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
    
-								<!-- Include project roles -->
-								<script src="javascript/jquery.js"></script>
+        <!-- Include project roles -->
+        <script src="javascript/jquery.js"></script>
         <script src="javascript/cdashProjectRole.js"></script>
 
        </head>
        <body bgcolor="#ffffff">
-								 <xsl:call-template name="headerback"/>
+         <xsl:call-template name="headerback"/>
 <br/>
 
 <xsl:choose>
@@ -39,7 +39,7 @@ project page</a>
 
 <table width="100%"  border="0">
   <tr>
-		 <form name="form1" method="post" action="">
+   <form name="form1" method="post" action="">
     <td width="10%"><div align="right"><strong>Project:</strong></div></td>
     <td width="90%" ><select onchange="location = 'manageProjectRoles.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
         <option>
@@ -57,7 +57,7 @@ project page</a>
         </option>
         </xsl:for-each>
         </select></td>
-				</form>				
+    </form>    
   </tr>
   
   <!-- If a project has been selected -->
@@ -76,45 +76,45 @@ project page</a>
      <td><div align="right"></div></td>
      <td>
      <table>
-					  <tr bgcolor="#CCCCCC">
-							 <td><center><b>Firstname</b></center></td>
-								<td><center><b>Lastname</b></center></td>
+       <tr bgcolor="#CCCCCC">
+        <td><center><b>Firstname</b></center></td>
+        <td><center><b>Lastname</b></center></td>
         <td><center><b>Email</b></center></td>
-								<td><center><b>Role</b></center></td>
-								<td><center><b>CVS Login</b></center></td>
-								<td><center><b>Action</b></center></td>
-							</tr>
-								
+        <td><center><b>Role</b></center></td>
+        <td><center><b>CVS Login</b></center></td>
+        <td><center><b>Action</b></center></td>
+       </tr>
+        
        <xsl:for-each select="cdash/user">
        <form method="post" action="">
        <xsl:attribute name="form">formuser<xsl:value-of select="id"/></xsl:attribute>
        <tr>
-							 <xsl:attribute name="bgcolor"><xsl:value-of select="bgcolor"/></xsl:attribute>
+        <xsl:attribute name="bgcolor"><xsl:value-of select="bgcolor"/></xsl:attribute>
         <input name="userid" type="hidden">
-								<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-								</input>
-								<td><xsl:value-of select="firstname"/></td>
-								<td><xsl:value-of select="lastname"/></td>
+        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+        </input>
+        <td><xsl:value-of select="firstname"/></td>
+        <td><xsl:value-of select="lastname"/></td>
         <td><xsl:value-of select="email"/></td>
-								<td>
-								<select name="role">
-									<option value="0"><xsl:if test="role=0"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Normal User</option>
-									<option value="1"><xsl:if test="role=1"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Dashboard Submitter</option>
-									<option value="2"><xsl:if test="role=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project administrator</option>
-									<option value="3"><xsl:if test="role=3"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project superadmin</option>
-							</select>
-							</td>
-							<td>
-								<input type="text" name="cvslogin" size="20">
-								<xsl:attribute name="value"><xsl:value-of select="cvslogin"/></xsl:attribute>
-								</input>
-								</td>
-								<td>
-								<input type="submit" name="updateuser" value="update"/>
-								<input type="submit" name="removeuser" value="remove"/>
-								</td>
-								
-								</tr>
+        <td>
+        <select name="role">
+         <option value="0"><xsl:if test="role=0"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Normal User</option>
+         <option value="1"><xsl:if test="role=1"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Dashboard Submitter</option>
+         <option value="2"><xsl:if test="role=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project administrator</option>
+         <option value="3"><xsl:if test="role=3"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project superadmin</option>
+       </select>
+       </td>
+       <td>
+        <input type="text" name="cvslogin" size="20">
+        <xsl:attribute name="value"><xsl:value-of select="cvslogin"/></xsl:attribute>
+        </input>
+        </td>
+        <td>
+        <input type="submit" name="updateuser" value="update"/>
+        <input type="submit" name="removeuser" value="remove"/>
+        </td>
+        
+        </tr>
         </form>
         </xsl:for-each>
      </table>
@@ -139,11 +139,11 @@ project page</a>
   <tr>
     <td><div align="right"></div></td>
     <td><div name="newuser" id="newuser"></div></td>
-				<input id="projectid" type="hidden">
-				<xsl:attribute name="value"><xsl:value-of select="cdash/project/id"/></xsl:attribute>
-				</input>
+    <input id="projectid" type="hidden">
+    <xsl:attribute name="value"><xsl:value-of select="cdash/project/id"/></xsl:attribute>
+    </input>
   </tr>
-		  
+    
   </xsl:if>
 </table>
 <br/>

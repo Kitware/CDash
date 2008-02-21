@@ -106,7 +106,7 @@ if($Submit)
     $HomeURL = stripHTTP($_POST["homeURL"]);
     $CVSURL = stripHTTP($_POST["cvsURL"]);
     $BugURL = stripHTTP($_POST["bugURL"]);
-		$DocURL = stripHTTP($_POST["docURL"]);
+  $DocURL = stripHTTP($_POST["docURL"]);
     @$Public = $_POST["public"];
     if(!isset($Public))
       {
@@ -165,7 +165,7 @@ if($Submit)
       {
       $projectid = mysql_insert_id();
       $xml .= "<project_name>$Name</project_name>";
-			$xml .= "<project_id>$projectid</project_id>";
+   $xml .= "<project_id>$projectid</project_id>";
       $xml .= "<project_created>1</project_created>";
       }
     else
@@ -198,15 +198,15 @@ if($Submit)
 if($Delete)
   {
   remove_project_builds($projectid);
-	// Remove the project groups and rules
-	$buildgroup = mysql_query("SELECT * FROM buildgroup WHERE projectid='$projectid'");
-	while($buildgroup_array = mysql_fetch_array($buildgroup))
-	  {
-		$groupid = $buildgroup_array["id"];
-		mysql_query("DELETE FROM buildgroupposition WHERE buildgroupid='$groupid'");
-		mysql_query("DELETE FROM build2grouprule WHERE groupid='$groupid'");
-		mysql_query("DELETE FROM build2group WHERE groupid='$groupid'");
-	  }
+ // Remove the project groups and rules
+ $buildgroup = mysql_query("SELECT * FROM buildgroup WHERE projectid='$projectid'");
+ while($buildgroup_array = mysql_fetch_array($buildgroup))
+   {
+  $groupid = $buildgroup_array["id"];
+  mysql_query("DELETE FROM buildgroupposition WHERE buildgroupid='$groupid'");
+  mysql_query("DELETE FROM build2grouprule WHERE groupid='$groupid'");
+  mysql_query("DELETE FROM build2group WHERE groupid='$groupid'");
+   }
   mysql_query("DELETE FROM buildgroup WHERE projectid='$projectid'");
   mysql_query("DELETE FROM project WHERE id='$projectid'");
   }
@@ -226,7 +226,7 @@ if($Update)
   $HomeURL = stripHTTP($_POST["homeURL"]);
   $CVSURL = stripHTTP($_POST["cvsURL"]);
   $BugURL = stripHTTP($_POST["bugURL"]);
-	$DocURL = stripHTTP($_POST["docURL"]);
+ $DocURL = stripHTTP($_POST["docURL"]);
   @$Public = $_POST["public"];
   $CoverageThreshold = $_POST["coverageThreshold"];
   $NightlyTime = $_POST["nightlyTime"];
@@ -319,7 +319,7 @@ if($projectid>0)
   $xml .= add_XML_value("homeurl",$project_array['homeurl']);  
   $xml .= add_XML_value("cvsurl",$project_array['cvsurl']);
   $xml .= add_XML_value("bugurl",$project_array['bugtrackerurl']);
-  $xml .= add_XML_value("docurl",$project_array['documentationurl']);	
+  $xml .= add_XML_value("docurl",$project_array['documentationurl']); 
   $xml .= add_XML_value("public",$project_array['public']);
   $xml .= add_XML_value("imageid",$project_array['imageid']);
   $xml .= add_XML_value("coveragethreshold",$project_array['coveragethreshold']);  

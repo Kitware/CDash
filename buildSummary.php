@@ -21,7 +21,7 @@ $noforcelogin = 1;
 include("config.php");
 include('login.php');
 include("common.php");
-				
+    
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
 
@@ -42,19 +42,19 @@ if(mysql_num_rows($project)>0)
   $bugurl = $project_array["bugtrackerurl"];   
   $projectname = $project_array["name"];  
   }
-		
+  
 // Format the text to fit the iPhone
 function format_for_iphone($text)
 {
   global $FormatTextForIphone;
   if(!isset($FormatTextForIphone))
-	  	{
-	  	return $text;
-	  	}
-		$text = str_replace("\n","<br/>",$text);
-		return $text;
-}		
-		
+    {
+    return $text;
+    }
+  $text = str_replace("\n","<br/>",$text);
+  return $text;
+}  
+  
 
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
@@ -101,50 +101,50 @@ $xml .="<dashboard>
   $xml .= add_XML_value("id",$build_array["id"]);
   $xml .= add_XML_value("time",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC")));  
   $xml .= add_XML_value("type",$build_array["type"]);
-		
-		// Find the last submit date
-		$buildtype = $build_array["type"];
-		$buildname = $build_array["name"];
-		$starttime = $build_array["starttime"];
+  
+  // Find the last submit date
+  $buildtype = $build_array["type"];
+  $buildname = $build_array["name"];
+  $starttime = $build_array["starttime"];
   $previousbuild = mysql_query("SELECT id,starttime FROM build
                              WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-																													AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
+                             AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
 
-			if(mysql_num_rows($previousbuild)>0)
-					{
-					$previousbuild_array = mysql_fetch_array($previousbuild);              
-					$lastsubmitbuild = $previousbuild_array["id"];
-					$lastsubmitdate = date("Y-m-d H:i:s T",strtotime($previousbuild_array["starttime"]." UTC"));
-					}
-		else
-		  {
-				$lastsubmitbuild = 0;
-				$lastsubmitdate = 0;
-	  	}
-		$xml .= add_XML_value("generator",$build_array["generator"]);
-		$xml .= add_XML_value("command",$build_array["command"]);
-		$xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC")));	
-		$xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($build_array["endtime"]." UTC")));	
-		
-		$xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
-		$xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
-		
-	
-		// Number of errors and warnings
-		$builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
-		$builderror_array = mysql_fetch_array($builderror);
-		$nerrors = $builderror_array[0];
-		$xml .= add_XML_value("error",$nerrors);
-		$buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
-		$buildwarning_array = mysql_fetch_array($buildwarning);
-		$nwarnings = $buildwarning_array[0];
-			
-		$xml .= add_XML_value("nerrors",$nerrors);
-		$xml .= add_XML_value("nwarnings",$nwarnings);
-		
-		
-		// Display the errors
-		$errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='0'");
+   if(mysql_num_rows($previousbuild)>0)
+     {
+     $previousbuild_array = mysql_fetch_array($previousbuild);              
+     $lastsubmitbuild = $previousbuild_array["id"];
+     $lastsubmitdate = date("Y-m-d H:i:s T",strtotime($previousbuild_array["starttime"]." UTC"));
+     }
+  else
+    {
+    $lastsubmitbuild = 0;
+    $lastsubmitdate = 0;
+    }
+  $xml .= add_XML_value("generator",$build_array["generator"]);
+  $xml .= add_XML_value("command",$build_array["command"]);
+  $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC"))); 
+  $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($build_array["endtime"]." UTC"))); 
+  
+  $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
+  $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
+  
+ 
+  // Number of errors and warnings
+  $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+  $builderror_array = mysql_fetch_array($builderror);
+  $nerrors = $builderror_array[0];
+  $xml .= add_XML_value("error",$nerrors);
+  $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+  $buildwarning_array = mysql_fetch_array($buildwarning);
+  $nwarnings = $buildwarning_array[0];
+   
+  $xml .= add_XML_value("nerrors",$nerrors);
+  $xml .= add_XML_value("nwarnings",$nwarnings);
+  
+  
+  // Display the errors
+  $errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='0'");
   while($error_array = mysql_fetch_array($errors))
     {
     $xml .= "<error>";
@@ -156,10 +156,10 @@ $xml .="<dashboard>
     $xml .= add_XML_value("postcontext",format_for_iphone($error_array["postcontext"]));
     $xml .= "</error>";
     }
-		
-		
-		// Display the warnings
-		$errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='1'");
+  
+  
+  // Display the warnings
+  $errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='1'");
   while($error_array = mysql_fetch_array($errors))
     {
     $xml .= "<warning>";
@@ -171,87 +171,87 @@ $xml .="<dashboard>
     $xml .= add_XML_value("postcontext",format_for_iphone($error_array["postcontext"]));
     $xml .= "</warning>";
     }
-		
+  
   $xml .= "</build>";
 
   // Update
-		$xml .= "<update>";
-		
-		// Checking for locally modify files
-		$updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");						
-		$nerrors = mysql_num_rows($updatelocal);
-		$nwarnings = 0;
-		$xml .= add_XML_value("nerrors",$nerrors);
-		$xml .= add_XML_value("nwarnings",$nwarnings);
-		
-		$update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
-		$nupdates = mysql_num_rows($update);
+  $xml .= "<update>";
+  
+  // Checking for locally modify files
+  $updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");      
+  $nerrors = mysql_num_rows($updatelocal);
+  $nwarnings = 0;
+  $xml .= add_XML_value("nerrors",$nerrors);
+  $xml .= add_XML_value("nwarnings",$nwarnings);
+  
+  $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
+  $nupdates = mysql_num_rows($update);
   $xml .= add_XML_value("nupdates",$nupdates);  
-					
-		$update = mysql_query("SELECT * FROM buildupdate WHERE buildid='$buildid'");
+     
+  $update = mysql_query("SELECT * FROM buildupdate WHERE buildid='$buildid'");
   $update_array = mysql_fetch_array($update);
   $xml .= add_XML_value("command",$update_array["command"]);
   $xml .= add_XML_value("type",$update_array["type"]);
   $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($update_array["starttime"]." UTC")));
-		$xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($update_array["endtime"]." UTC")));
-		$xml .= "</update>";
-		
-		
-		// Configure
-		$xml .= "<configure>";
-		$configure = mysql_query("SELECT * FROM configure WHERE buildid='$buildid'");
+  $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($update_array["endtime"]." UTC")));
+  $xml .= "</update>";
+  
+  
+  // Configure
+  $xml .= "<configure>";
+  $configure = mysql_query("SELECT * FROM configure WHERE buildid='$buildid'");
   $configure_array = mysql_fetch_array($configure);
   
-		$nerrors = 0;
-		
-	 if($configure_array["status"]!=0)
-	   {
-				$nerrors = 1;
-	   }
-		
-		$nwarnings = 0;
-		$xml .= add_XML_value("nerrors",$nerrors);
-		$xml .= add_XML_value("nwarnings",$nwarnings);
+  $nerrors = 0;
+  
+  if($configure_array["status"]!=0)
+    {
+    $nerrors = 1;
+    }
+  
+  $nwarnings = 0;
+  $xml .= add_XML_value("nerrors",$nerrors);
+  $xml .= add_XML_value("nwarnings",$nwarnings);
   
 
   $xml .= add_XML_value("status",$configure_array["status"]);
   $xml .= add_XML_value("command",$configure_array["command"]);
   $xml .= add_XML_value("output",format_for_iphone($configure_array["log"]));
   $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($configure_array["starttime"]." UTC")));
-		$xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($configure_array["endtime"]." UTC")));
+  $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($configure_array["endtime"]." UTC")));
   $xml .= "</configure>";
 
-		// Test
-		$xml .= "<test>";
-		$nerrors = 0;
-		$nwarnings = 0;
-		$xml .= add_XML_value("nerrors",$nerrors);
-		$xml .= add_XML_value("nwarnings",$nwarnings);
-		
-		$npass_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
+  // Test
+  $xml .= "<test>";
+  $nerrors = 0;
+  $nwarnings = 0;
+  $xml .= add_XML_value("nerrors",$nerrors);
+  $xml .= add_XML_value("nwarnings",$nwarnings);
+  
+  $npass_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
   $npass = $npass_array[0];
-		$nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+  $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
   $nnotrun = $nnotrun_array[0];
   $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
   $nfail = $nfail_array[0];
   
-		$xml .= add_XML_value("npassed",$npass);
-		$xml .= add_XML_value("nnotrun",$nnotrun);  
-		$xml .= add_XML_value("nfailed",$nfail); 
-		
-		$xml .= "</test>";
-		
-		// Previous build
-		// Find the previous build
+  $xml .= add_XML_value("npassed",$npass);
+  $xml .= add_XML_value("nnotrun",$nnotrun);  
+  $xml .= add_XML_value("nfailed",$nfail); 
+  
+  $xml .= "</test>";
+  
+  // Previous build
+  // Find the previous build
   $previousbuild = mysql_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$buildtype' 
                                AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
   if(mysql_num_rows($previousbuild) > 0)
-		  {
-				$xml .= "<previousbuild>";
-				$previousbuild_array = mysql_fetch_array($previousbuild);
+    {
+    $xml .= "<previousbuild>";
+    $previousbuild_array = mysql_fetch_array($previousbuild);
     $previousbuildid = $previousbuild_array["id"];
     $xml .= add_XML_value("buildid",$previousbuildid);
-				
+    
     // Find if the build has any errors
     $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
     $builderror_array = mysql_fetch_array($builderror);
@@ -265,37 +265,37 @@ $xml .="<dashboard>
     // Find if the build has any test failings
     $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
-				$nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='notrun'"));
+    $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='notrun'"));
     $npreviousnotruntests = $nfail_array[0];
-		
-				$updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$previousbuildid' AND author='Local User'");						
-				$nupdateerrors = mysql_num_rows($updatelocal);
-				$nupdatewarnings = 0;
-				$xml .= add_XML_value("nupdateerrors",$nupdateerrors);
-				$xml .= add_XML_value("nupdatewarnings",$nupdatewarnings);
+  
+    $updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$previousbuildid' AND author='Local User'");      
+    $nupdateerrors = mysql_num_rows($updatelocal);
+    $nupdatewarnings = 0;
+    $xml .= add_XML_value("nupdateerrors",$nupdateerrors);
+    $xml .= add_XML_value("nupdatewarnings",$nupdatewarnings);
 
     $configure = mysql_query("SELECT * FROM configure WHERE buildid='$previousbuildid'");
-  	 $configure_array = mysql_fetch_array($configure);
+    $configure_array = mysql_fetch_array($configure);
   
-			 $nconfigureerrors = 0;
-		  if($configure_array["status"]!=0)
-	    	{
-				 	$nconfigureerrors = 1;
-	  	  }
-			 $nconfigurewarnings = 0;
-				$xml .= add_XML_value("nconfigureerrors",$nconfigureerrors);
-				$xml .= add_XML_value("nconfigurewarnings",$nconfigurewarnings);
+    $nconfigureerrors = 0;
+    if($configure_array["status"]!=0)
+      {
+      $nconfigureerrors = 1;
+      }
+    $nconfigurewarnings = 0;
+    $xml .= add_XML_value("nconfigureerrors",$nconfigureerrors);
+    $xml .= add_XML_value("nconfigurewarnings",$nconfigurewarnings);
 
-				$xml .= add_XML_value("nerrors",$npreviousbuilderrors);
-				$xml .= add_XML_value("nwarnings",$npreviousbuildwarnings);
+    $xml .= add_XML_value("nerrors",$npreviousbuilderrors);
+    $xml .= add_XML_value("nwarnings",$npreviousbuildwarnings);
 
-				$xml .= add_XML_value("ntestfailed",$npreviousfailingtests);
-				$xml .= add_XML_value("ntestnotrun",$npreviousnotruntests);
-					
-			 $xml .= "</previousbuild>";
+    $xml .= add_XML_value("ntestfailed",$npreviousfailingtests);
+    $xml .= add_XML_value("ntestnotrun",$npreviousnotruntests);
+     
+    $xml .= "</previousbuild>";
     }
 
-		
+  
   $xml .= "</cdash>";
  
 

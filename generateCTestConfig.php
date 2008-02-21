@@ -50,7 +50,7 @@ $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
 $ctestconfig .= "  SET(CTEST_DROP_LOCATION \"".$currentURI."/submit.php?project=".$project_array["name"]."\")\n";
 $ctestconfig .= "  SET(CTEST_TRIGGER_SITE \"\")\n";
 $ctestconfig .= "ENDIF(CTEST_DROP_METHOD STREQUAL \"http\")\n";
-	
+ 
 header('Vary: User-Agent');
 if(ob_get_contents())
   echo "Some data has already been output";
