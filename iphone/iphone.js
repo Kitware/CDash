@@ -25,15 +25,15 @@ function swipePage(fromPage,toPage,backwards)
 fromPage.style.left=(backwards?(100-percent):(percent-100))+"%";toPage.style.left=(backwards?-percent:percent)+"%";},animateInterval);}
 function showDialog(form)
   {
-	 currentDialog=form;
+  currentDialog=form;
   form.setAttribute("selection","true");
-		form.onclick=function(event)
+  form.onclick=function(event)
      {
-					if(event.target==form)
+     if(event.target==form)
      form.removeAttribute("selection");
-					}
-			}
-	})();
+     }
+   }
+ })();
 $j('.submitButton').click(function(){$j(this).parent().parent().submit();});
 $j(document).ready(function(){$j('#username, #password').focus(function(){$j('#'+$j(this).attr('id')+'-label').hide();});
 if($j.user().isLoggedIn==true)
