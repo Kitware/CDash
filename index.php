@@ -44,27 +44,27 @@ function generate_index_table()
   }
   
  $ext = "b";
-  if($dbsize>1024)
-    {
-  $dbsize /= 1024;
-  $ext = "Kb";
-    }
-  if($dbsize>1024)
-    {
-  $dbsize /= 1024;
-  $ext = "Mb";
-    }
  if($dbsize>1024)
-    {
-  $dbsize /= 1024;
-  $ext = "Gb";
-    }
+   {
+   $dbsize /= 1024;
+   $ext = "Kb";
+   }
  if($dbsize>1024)
-    {
-  $dbsize /= 1024;
-  $ext = "Tb";
-    } 
-  $xml .= "<database>";
+   {
+   $dbsize /= 1024;
+   $ext = "Mb";
+   }
+ if($dbsize>1024)
+   {
+   $dbsize /= 1024;
+   $ext = "Gb";
+   }
+ if($dbsize>1024)
+   {
+   $dbsize /= 1024;
+   $ext = "Tb";
+   } 
+ $xml .= "<database>";
  $xml .= add_XML_value("size",round($dbsize,1).$ext);
  $xml .= "</database>";
  
@@ -123,7 +123,7 @@ function generate_index_table()
 }
 
 /** Generate the main dashboard XML */
-function generate_main_dashboard_XML($projectid,$date)
+function generate_main_dashboard_XML($projectid,$date,$order="buildttime")
 {
   $noforcelogin = 1;
   include("config.php");
@@ -148,8 +148,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $svnurl = $project_array["cvsurl"];
     $homeurl = $project_array["homeurl"];
     $bugurl = $project_array["bugtrackerurl"];  
-  $googletracker = $project_array["googletracker"];  
-  $docurl = $project_array["documentationurl"];  
+    $googletracker = $project_array["googletracker"];  
+    $docurl = $project_array["documentationurl"];  
     $projectname = $project_array["name"];  
     }
   else
@@ -172,8 +172,8 @@ function generate_main_dashboard_XML($projectid,$date)
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
- <googletracker>".$googletracker."</googletracker> 
- <documentation>".$docurl."</documentation> 
+  <googletracker>".$googletracker."</googletracker> 
+  <documentation>".$docurl."</documentation> 
   <home>".$homeurl."</home>
   <logoid>".$logoid."</logoid> 
   <projectid>".$projectid."</projectid> 
@@ -272,14 +272,30 @@ function generate_main_dashboard_XML($projectid,$date)
 
   $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
   $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
-        
-  // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
-  $builds = mysql_query("SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
-                         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
+    
+  
+  $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
+                         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp,site as s
                          WHERE b.starttime<$end_UTCDate AND b.starttime>$beginning_UTCDate
                          AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate OR gp.endtime='0000-00-00 00:00:00')
-                         ORDER BY gp.position ASC,b.starttime DESC");
+                         AND s.id = b.siteid ORDER BY gp.position ASC";
+ 
+ if($order == "buildname")
+   {
+   $sql .= ",b.name ASC";
+  }
+  else if($order == "buildtime")
+   {
+  $sql .= ",b.starttime DESC";
+   }
+ else if($order == "site")
+   {
+  $sql .= ",s.name ASC";
+   }
+    
+  // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
+  $builds = mysql_query($sql);
   echo mysql_error();
   
   // The SQL results are ordered by group so this should work

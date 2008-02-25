@@ -51,14 +51,20 @@
     </td>
    </tr>
    <tr class="table-heading">
-      <td align="center" rowspan="2">Site</td>
-      <td align="center" rowspan="2">Build Name</td>
+      <td align="center" rowspan="2">
+    <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="/cdash/dashboard/date"/>&#38;order=site</xsl:attribute>Site</a>
+   </td>
+      <td align="center" rowspan="2">
+   <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="/cdash/dashboard/date"/>&#38;order=buildname</xsl:attribute>Build Name</a>
+   </td>
 
       <td align="center" rowspan="2">Update</td>
       <td align="center" rowspan="2">Cfg</td>
       <td align="center" colspan="3" class="botl">Build</td>
       <td align="center" colspan="5" class="botl">Test</td>
-      <td align="center" rowspan="2" id="nob">Build Date</td>
+      <td align="center" rowspan="2" id="nob">
+   <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="/cdash/dashboard/date"/>&#38;order=buildtime</xsl:attribute>Build Time</a>
+   </td>
       <!-- <td align="center" rowspan="2" id="nob">Submit Date</td> -->
 
    </tr>
