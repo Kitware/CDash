@@ -64,14 +64,14 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= add_XML_value("status",ucfirst($dyn_array["status"]));
   $xml .= add_XML_value("filename",$dyn_array["name"]);
   $xml .= add_XML_value("log",$dyn_array["log"]);
-  $href = "testSummary.php?project=".$projectid."&#38;name=".$dyn_array["name"];
+  $href = "testSummary.php?project=".$projectid."&name=".$dyn_array["name"];
   if($date)
     {
-    $href .= "&#38;date=".$date;
+    $href .= "&date=".$date;
     }
   else
     {
-    $href .= "&#38;date=".date("Ymd");
+    $href .= "&date=".date("Ymd");
     }
   $xml .= add_XML_value("href",$href);
   $xml .= "</dynamicanalysis>";
