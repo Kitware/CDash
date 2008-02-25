@@ -199,10 +199,11 @@ function parse_build($parser,$projectid)
   $error_array = array();
   $index = 0;
   $inerror = false;
-  
+ 
   foreach($xmlarray as $tagarray)
     {
-    if(!$inerror && (($tagarray["tag"] == "WARNING") || ($tagarray["tag"] == "ERROR") ) && ($tagarray["level"] == 3))
+    if(!$inerror && (($tagarray["tag"] == "WARNING") || ($tagarray["tag"] == "ERROR") ) 
+     && ($tagarray["level"] == 3) && $tagarray["type"]=="open")
       {
       $inerror = true;
       $index++;
