@@ -74,7 +74,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   $xml .= "<errors>";
   
-  $errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='$type'");
+  $errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='$type' ORDER BY logline ASC");
   while($error_array = mysql_fetch_array($errors))
     {
     $xml .= "<error>";
