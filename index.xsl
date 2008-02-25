@@ -82,7 +82,7 @@
       <td align="left" class="paddt">
       <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/>&#38;currenttime=<xsl:value-of select="/cdash/dashboard/unixtimestamp"/></xsl:attribute><xsl:value-of select="site"/></a>
       </td>
-      <td align="center">
+      <td align="left">
       <xsl:if test="string-length(buildid)>0">
       <a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="buildname"/></a>
      </xsl:if>
