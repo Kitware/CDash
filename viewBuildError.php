@@ -86,12 +86,19 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $xml .= add_XML_value("postcontext",$error_array["postcontext"]);
   
   // If we are using viewcvs we need to reformat the URL
+  if($project_array["cvsurl"] != "")
+   {
   list($begin,$end) = explode("?",$project_array["cvsurl"]);
   if(strlen($end)>0)
+   {
+   $end = "?".$end;
+   }  
+    }
+  else
     {
-    $end = "?".$end;
-    }  
-
+  $begin =  $project_array["cvsurl"];
+  $end = "";
+    }
 
   $cvsurl = "http://".$begin.$error_array["sourcefile"].$end;
   $xml .= add_XML_value("cvsurl",$cvsurl);
