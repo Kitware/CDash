@@ -123,7 +123,7 @@ function generate_index_table()
 }
 
 /** Generate the main dashboard XML */
-function generate_main_dashboard_XML($projectid,$date,$order="buildttime")
+function generate_main_dashboard_XML($projectid,$date,$sort="buildttime")
 {
   $noforcelogin = 1;
   include("config.php");
@@ -281,15 +281,15 @@ function generate_main_dashboard_XML($projectid,$date,$order="buildttime")
                          AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate OR gp.endtime='0000-00-00 00:00:00')
                          AND s.id = b.siteid ORDER BY gp.position ASC";
  
- if($order == "buildname")
+ if($sort == "buildname")
    {
    $sql .= ",b.name ASC";
   }
-  else if($order == "buildtime")
+  else if($sort == "buildtime")
    {
   $sql .= ",b.starttime DESC";
    }
- else if($order == "site")
+ else if($sort == "site")
    {
   $sql .= ",s.name ASC";
    }
@@ -628,7 +628,9 @@ else
     $start = microtime_float();
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
-  $xml = generate_main_dashboard_XML($projectid,$date);
+  @$sort = $_GET["sort"];
+
+  $xml = generate_main_dashboard_XML($projectid,$date,$sort);
   // Now doing the xslt transition
   generate_XSLT($xml,"index");
     $end = microtime_float();
