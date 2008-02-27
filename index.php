@@ -123,7 +123,7 @@ function generate_index_table()
 }
 
 /** Generate the main dashboard XML */
-function generate_main_dashboard_XML($projectid,$date,$sort="buildttime")
+function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
 {
   $noforcelogin = 1;
   include("config.php");
@@ -285,13 +285,13 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildttime")
    {
    $sql .= ",b.name ASC";
   }
-  else if($sort == "buildtime")
-   {
-  $sql .= ",b.starttime DESC";
-   }
  else if($sort == "site")
    {
   $sql .= ",s.name ASC";
+   }
+ else 
+   {
+  $sql .= ",b.starttime DESC";
    }
     
   // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
