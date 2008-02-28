@@ -100,10 +100,10 @@ function sendemail($parser,$projectid)
     $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
     
-  add_log("previousbuildid=".$previousbuildid,"sendemail");
+    add_log("previousbuildid=".$previousbuildid,"sendemail");
     add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail");
-  add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
-  add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
+    add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
+    add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
 
     // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
     // we don't send any emails
@@ -147,7 +147,37 @@ function sendemail($parser,$projectid)
     $user_array = mysql_fetch_array($user);
     $email .= $user_array["email"];
     } 
-
+  
+  // Select the users who want to receive all emails
+ $user = mysql_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
+                       AND user2project.userid=user.id AND user2project.emailtype>1");
+ while($user_array = mysql_fetch_array($user))
+   {
+  // If the user is already in the list we quit
+  if(strstr($email,$user_array["email"]) !== FALSE)
+    {
+   continue;
+    }
+   
+  // Nightly build notification
+  if($user_array["emailtype"] == 2 && $buildtype=="Nightly")
+    {
+   if($email != "")
+    {
+    $email .= ", ";
+    }
+   $email .= $user_array["email"];
+    }
+  else // send the email
+    {
+   if($email != "")
+    {
+    $email .= ", ";
+    }
+    $email .= $user_array["email"];
+    }
+  }
+ 
   // Some variables we need for the email
   $site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
   $site_array = mysql_fetch_array($site);
@@ -184,7 +214,7 @@ function sendemail($parser,$projectid)
          }
       $messagePlainText .= "failing tests";
       $i++;
-      } 
+      }
      
     $messagePlainText .= ".\n";  
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
