@@ -268,11 +268,15 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
     
   // Check the builds
   $beginning_timestamp = $currentstarttime;
- $end_timestamp = $currentstarttime+3600*24;
+  $end_timestamp = $currentstarttime+3600*24;
 
   $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
   $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
-    
+  
+ // Get the number of tests for that day. This is used to compute the NA value for tests
+ $ntests_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test,build,test WHERE build.projectid='$projectid'
+                                                AND build2test.buildid=build.id AND test.id=build2test.testid GROUP BY test.name"));
+ $ntests = $ntests_array[0];
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp,site as s
@@ -441,9 +445,11 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
       $nfail = $nfail_array[0];
       $npass_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
       $npass = $npass_array[0];
-      $nna_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='na'"));
-      $nna = $nna_array[0];
+      //$nna_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='na'"));
+      //$nna = $nna_array[0];
       
+   $nna = $ntests-$nnotrun-$nfail-$npass;
+  
       $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
       $time = $time_array[0];
       
