@@ -274,9 +274,8 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
   $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
   
  // Get the number of tests for that day. This is used to compute the NA value for tests
- $ntests_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test,build,test WHERE build.projectid='$projectid'
-                                                AND build2test.buildid=build.id AND test.id=build2test.testid GROUP BY test.name"));
- $ntests = $ntests_array[0];
+ //$ntests_array = mysql_fetch_array(mysql_query("SELECT count(test.id) FROM build2test,build,test WHERE build.projectid='$projectid' AND build.starttime<$end_UTCDate AND build.starttime>$beginning_UTCDate AND build2test.buildid=build.id AND test.id=build2test.testid GROUP BY test.name"));
+ $ntests = 0;//$ntests_array[0];
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp,site as s
