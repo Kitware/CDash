@@ -15,8 +15,8 @@
     <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
     <script src="javascript/jquery.flot.js" type="text/javascript" charset="utf-8"></script>   
      
-   <!-- Include Menu JavaScript -->
-   <script src='javascript/menu.js' type='text/javascript'></script>
+    <!-- Include Menu JavaScript -->
+    <script src='javascript/menu.js' type='text/javascript'></script>
       
     <!-- Include Core Datepicker JavaScript -->
     <script src="javascript/ui.datepicker.js" type="text/javascript" charset="utf-8"></script>  
@@ -24,8 +24,12 @@
     <!-- Include Calendar JavaScript -->
     <script src="javascript/cdashmenu.js" type="text/javascript" charset="utf-8"></script>
     
-      <!-- Include Core Datepicker Stylesheet -->    
+    <!-- Include Core Datepicker Stylesheet -->    
     <link rel="stylesheet" href="javascript/ui.datepicker.css" type="text/css" media="screen" title="core css file" charset="utf-8" />
+
+    <!-- Include the sorting -->
+    <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
 
 <input type="hidden" id="projectname">
 <xsl:attribute name="value"><xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
