@@ -34,22 +34,18 @@ $project_array = mysql_fetch_array($project);
 
 $ctestconfig = "";
 
-$ctestconfig .= "SET(CTEST_PROJECT_NAME \"".$project_array["name"]."\")\n";
-$ctestconfig .= "SET(CTEST_NIGHTLY_START_TIME \"".$project_array["nightlytime"]."\")\n\n";
+$ctestconfig .= "set(CTEST_PROJECT_NAME \"".$project_array["name"]."\")\n";
+$ctestconfig .= "set(CTEST_NIGHTLY_START_TIME \"".$project_array["nightlytime"]."\")\n\n";
 
-$ctestconfig .= "IF(NOT DEFINED CTEST_DROP_METHOD)\n";
-$ctestconfig .= "  SET(CTEST_DROP_METHOD \"http\")\n";
-$ctestconfig .= "ENDIF(NOT DEFINED CTEST_DROP_METHOD)\n\n";
+$ctestconfig .= "set(CTEST_DROP_METHOD \"http\")\n";
 
-$ctestconfig .= "IF(CTEST_DROP_METHOD STREQUAL \"http\")\n";
-$ctestconfig .= "  SET(CTEST_DROP_SITE \"".$_SERVER['SERVER_NAME']."\")\n";
+$ctestconfig .= "set(CTEST_DROP_SITE \"".$_SERVER['SERVER_NAME']."\")\n";
 
 $currentURI = $_SERVER['REQUEST_URI']; 
 $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
    
-$ctestconfig .= "  SET(CTEST_DROP_LOCATION \"".$currentURI."/submit.php?project=".$project_array["name"]."\")\n";
-$ctestconfig .= "  SET(CTEST_TRIGGER_SITE \"\")\n";
-$ctestconfig .= "ENDIF(CTEST_DROP_METHOD STREQUAL \"http\")\n";
+$ctestconfig .= "set(CTEST_DROP_LOCATION \"".$currentURI."/submit.php?project=".$project_array["name"]."\")\n";
+$ctestconfig .= "set(CTEST_DROP_SITE_CDASH TRUE)\n";
  
 header('Vary: User-Agent');
 if(ob_get_contents())
