@@ -4,7 +4,7 @@
     <xsl:template name="builds">
     <xsl:param name="type"/>
    <xsl:if test="count($type/build)=0">
-   
+  
    <tr class="table-heading1" >
       <td colspan="1" id="nob">
           <h3>No <xsl:value-of select="name"/> Builds</h3>
@@ -30,11 +30,11 @@
    </xsl:if>
    
     <xsl:if test="count($type/build)>0">
+ <thead> 
         <tr class="table-heading1" >
       <td colspan="1" id="nob">
           <h3><xsl:value-of select="$type/name"/></h3>
       </td>
-  <!-- quick links -->
   <td colspan="12" align="right" id="nob">
    <div>
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
@@ -50,36 +50,39 @@
     </div> 
     </td>
    </tr>
-   <tr class="table-heading">
-      <td align="center" rowspan="2">
-    <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="/cdash/dashboard/date"/>&#38;sort=site</xsl:attribute>Site</a>
-   </td>
-      <td align="center" rowspan="2">
-   <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="/cdash/dashboard/date"/>&#38;sort=buildname</xsl:attribute>Build Name</a>
-   </td>
 
-      <td align="center" rowspan="2">Update</td>
-      <td align="center" rowspan="2">Cfg</td>
-      <td align="center" colspan="3" class="botl">Build</td>
-      <td align="center" colspan="5" class="botl">Test</td>
-      <td align="center" rowspan="2" id="nob">
-   <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="/cdash/dashboard/date"/>&#38;sort=buildtime</xsl:attribute>Build Time</a>
-   </td>
+  
+   <tr class="table-heading">
+      <th align="center" rowspan="2">
+    <a><xsl:attribute name="href">javascript:site_sort_click('<xsl:value-of select="id"/>')</xsl:attribute>Site</a>
+   </th>
+      <th align="center" rowspan="2">
+   <a><xsl:attribute name="href">#</xsl:attribute>Build Name</a>
+   </th>
+
+      <th align="center" rowspan="2">Update</th>
+      <th align="center" rowspan="2">Cfg</th>
+      <th align="center" colspan="3" class="botl">Build</th>
+      <th align="center" colspan="4" class="botl">Test</th>
+      <th align="center" rowspan="2">
+   <a><xsl:attribute name="href">#</xsl:attribute>Build Time</a>
+   </th>
       <!-- <td align="center" rowspan="2" id="nob">Submit Date</td> -->
 
    </tr>
+
    <tr class="table-heading">
-      <th align="center">Error</th>
+      <th align="center"><a href="#">Error</a></th>
       <th align="center">Warn</th>
       <th align="center">Min</th>
       <th align="center">NotRun</th>
       <th align="center">Fail</th>
 
       <th align="center">Pass</th>
-      <th align="center">NA</th>
       <th align="center">Min</th>
    </tr>
-
+      </thead>
+       <tbody> 
       <xsl:for-each select="$type/build">
    <tr valign="middle">
    <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
@@ -262,24 +265,6 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>
       </td>
-      <td align="center">
-       <xsl:attribute name="class">
-        <xsl:choose>
-             <xsl:when test="string-length(test/na)=0">
-            <xsl:value-of select="rowparity"/>
-            </xsl:when>       
-          <xsl:otherwise>
-           na
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>
-      <b>
-      <a>
-      <xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/>
-      </xsl:attribute><xsl:value-of select="test/na"/>
-      
-      </a></b>
-      </td>
       <td align="right"><xsl:value-of select="test/time"/></td>
       <td id="nob"><xsl:value-of select="builddate"/></td>
       <!--
@@ -301,12 +286,106 @@
       </xsl:attribute>
       <xsl:value-of select="submitdate"/></td>
       -->
-      
    </tr>
   </xsl:for-each>
+  </tbody>
+
+  
+<!-- Row displaying the totals -->
+<xsl:if test="count(/cdash/buildgroup/build/buildid)>0 and $type/last=1">
+   <tr class="total">
+      <td align="left">Totals</td>
+      <td align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
+      <td ></td>
+      <td align="center">
+       <xsl:attribute name="class">
+       <xsl:choose>
+          <xsl:when test="/cdash/totalConfigure > 0">
+            error
+            </xsl:when>
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+      <b><xsl:value-of select = "/cdash/totalConfigure"/></b>  
+      </td>
+      <td align="center">
+       <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/totalError > 0">
+            error
+            </xsl:when>
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+      <b><xsl:value-of select = "/cdash/totalError"/></b>
+      </td>
+      <td align="center">
+       <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/totalWarning > 0">
+            warning
+            </xsl:when>
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>  
+      <b><xsl:value-of select = "/cdash/totalWarning"/></b>
+      </td>
+      <td></td>
+      <td align="center">
+      <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/totalNotRun > 0">
+            error
+            </xsl:when>
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+      <b><xsl:value-of select = "/cdash/totalNotRun"/></b>
+      </td>
+      <td align="center">
+      <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/totalFail > 0">
+            warning
+            </xsl:when>
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>   
+      <b><xsl:value-of select = "/cdash/totalFail"/></b>  
+      </td>
+      <td align="center">
+       <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/totalFail > 0">
+            warning
+            </xsl:when>
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>   
+      <b><xsl:value-of select = "/cdash/totalPass"/></b>
+      </td>
+      <td></td>
+      <td id="nob"></td>
+      <!-- <td bgcolor="#ffffff"></td> -->
+   </tr>
+</xsl:if>
+
   </xsl:if>
+
 </xsl:template>
-    
+<!-- end template -->    
    
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
@@ -340,114 +419,15 @@
 </table>
 </xsl:if>
 
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
-<tbody>
+
 <xsl:for-each select="cdash/buildgroup">
+  <table border="0" cellpadding="4" cellspacing="0" width="100%"  class="tabb">
+  <xsl:attribute name="id">table_group_<xsl:value-of select="id"/></xsl:attribute>
   <xsl:call-template name="builds">
   <xsl:with-param name="type" select="."/>
   </xsl:call-template>
+  </table>
 </xsl:for-each>
-
-<!-- Row displaying the totals -->
-<xsl:if test="count(cdash/buildgroup/build/buildid)>0">
-   <tr class="total">
-      <td align="left">Totals</td>
-      <td align="center"><b><xsl:value-of select = "count(cdash/buildgroup/build/buildid)" /> Builds</b></td>
-      <td ></td>
-      <td align="center">
-       <xsl:attribute name="class">
-       <xsl:choose>
-          <xsl:when test="cdash/totalConfigure > 0">
-            error
-            </xsl:when>
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>
-      <b><xsl:value-of select = "cdash/totalConfigure"/></b>  
-      </td>
-      <td align="center">
-       <xsl:attribute name="class">
-        <xsl:choose>
-          <xsl:when test="cdash/totalError > 0">
-            error
-            </xsl:when>
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>
-      <b><xsl:value-of select = "cdash/totalError"/></b>
-      </td>
-      <td align="center">
-       <xsl:attribute name="class">
-        <xsl:choose>
-          <xsl:when test="cdash/totalWarning > 0">
-            warning
-            </xsl:when>
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>  
-      <b><xsl:value-of select = "cdash/totalWarning"/></b>
-      </td>
-      <td></td>
-      <td align="center">
-      <xsl:attribute name="class">
-        <xsl:choose>
-          <xsl:when test="cdash/totalNotRun > 0">
-            error
-            </xsl:when>
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>
-      <b><xsl:value-of select = "cdash/totalNotRun"/></b>
-      </td>
-      <td align="center">
-      <xsl:attribute name="class">
-        <xsl:choose>
-          <xsl:when test="cdash/totalFail > 0">
-            warning
-            </xsl:when>
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>   
-      <b><xsl:value-of select = "cdash/totalFail"/></b>  
-      </td>
-      <td align="center">
-       <xsl:attribute name="class">
-        <xsl:choose>
-          <xsl:when test="cdash/totalFail > 0">
-            warning
-            </xsl:when>
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>   
-      <b><xsl:value-of select = "cdash/totalPass"/></b>
-      </td>
-      <td></td>
-      <td></td>
-      <td id="nob"></td>
-      <!-- <td bgcolor="#ffffff"></td> -->
-   </tr>
-</xsl:if>
-</tbody>
-</table>
-
-
-<table width="100%" cellspacing="0" cellpadding="0">
-<tr>
-<td height="1" colspan="13" align="left" bgcolor="#888888"></td>
-</tr>
-</table>
 
 <br/>
 

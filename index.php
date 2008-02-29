@@ -32,6 +32,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
  $xml .= "<dashboard>
+
  <googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>
  </dashboard> ";
  
@@ -218,8 +219,7 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
   $totalconfigure = 0;
   $totalnotrun = 0;
   $totalfail= 0;
-  $totalpass = 0; 
-  $totalna = 0; 
+  $totalpass = 0;  
       
   // Local function to add expected builds
   function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
@@ -251,7 +251,7 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
         $xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
         $xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
         $xml .= add_XML_value("buildtype",$build2grouprule_array["buildtype"]);
-                $xml .= add_XML_value("buildgroupid",$groupid);
+        $xml .= add_XML_value("buildgroupid",$groupid);
         $xml .= add_XML_value("expected","1");
 
         $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"]; 
@@ -272,12 +272,6 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
 
   $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
   $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
-  
- // Get the number of tests for that day. This is used to compute the NA value for tests
- $ntests_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM (SELECT t.name FROM build2test AS b2t,build AS b,test AS t WHERE b.projectid='$projectid' AND b.starttime<$end_UTCDate AND b.starttime>$beginning_UTCDate AND b2t.buildid=b.id AND t.id=b2t.testid GROUP BY t.name) AS tname"));
-
- $ntests = $ntests_array[0];
-
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp,site as s
@@ -312,6 +306,13 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
   $dynanalysisrowparity = 0;
   $coveragerowparity = 0;
   
+  // Find the last position of the group
+  $groupposition_array = mysql_fetch_array(mysql_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
+                                                        WHERE g.projectid='$projectid' AND g.id=gp.buildgroupid 
+                                                        AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate OR gp.endtime='0000-00-00 00:00:00')
+                                                        ORDER BY gp.position DESC LIMIT 1"));
+  $lastGroupPosition = $groupposition_array["position"];
+  
   while($build_array = mysql_fetch_array($builds))
     {
     $groupposition = $build_array["position"];
@@ -321,6 +322,10 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
       if($previousgroupposition != -1)
         {
         $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
+        if($previousgroupposition == $lastGroupPosition)
+          {
+          $xml .= "<last>1</last>";
+          }
         $xml .= "</buildgroup>";
         }
       
@@ -338,16 +343,22 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
                                                 AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate  OR gp.endtime='0000-00-00 00:00:00')
                                                 "));
         $xml .= "<buildgroup>";
-                $rowparity = 0;
+        $rowparity = 0;
         $xml .= add_XML_value("name",$group["name"]);
+        $xml .= add_XML_value("id",$group["id"]);
         $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
+        if($previousgroupposition == $lastGroupPosition)
+          {
+          $xml .= "<last>1</last>";
+          }
         $xml .= "</buildgroup>";  
         }  
              
       $xml .= "<buildgroup>";
-            $rowparity = 0;
+      $rowparity = 0;
       $received_builds = array();
       $xml .= add_XML_value("name",$groupname);
+      $xml .= add_XML_value("id",$build_array["groupid"]);
       $previousgroupposition = $groupposition;
       }
     $groupid = $build_array["groupid"];
@@ -445,11 +456,7 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
       $nfail_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
       $nfail = $nfail_array[0];
       $npass_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
-      $npass = $npass_array[0];
-      //$nna_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='na'"));
-      //$nna = $nna_array[0];
-      
-   $nna = $ntests-$nnotrun-$nfail-$npass;
+      $npass = $npass_array[0];      
   
       $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
       $time = $time_array[0];
@@ -457,26 +464,16 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
       $totalnotrun += $nnotrun;
       $totalfail += $nfail;
       $totalpass += $npass;
-      $totalna += $nna;
       
       $xml .= add_XML_value("notrun",$nnotrun);
       $xml .= add_XML_value("fail",$nfail);
       $xml .= add_XML_value("pass",$npass);
-      $xml .= add_XML_value("na",$nna);
       $xml .= add_XML_value("time",round($time/60,1));
       $xml .= "</test>";
       }
         $starttimestamp = strtotime($build_array["starttime"]." UTC");
         $submittimestamp = strtotime($build_array["submittime"]." UTC");
     $xml .= add_XML_value("builddate",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
-    /*if($starttimestamp > $submittimestamp)
-          {
-            $xml .= add_XML_value("clockskew","1");
-          }
-        else
-          {
-            $xml .= add_XML_value("clockskew","0");
-          }*/
         $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
    $xml .= "</build>";
     } // END IF CONFIGURE
@@ -548,6 +545,10 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
   if(mysql_num_rows($builds)>0)
     {
     $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
+    if($previousgroupposition == $lastGroupPosition)
+      {
+      $xml .= "<last>1</last>";
+      }
     $xml .= "</buildgroup>";
     }
     
@@ -558,20 +559,19 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
     $prevpos = 1;
     }
     
-  $groupposition_array = mysql_fetch_array(mysql_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
-                                                        WHERE g.projectid='$projectid' AND g.id=gp.buildgroupid 
-                                                        AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate OR gp.endtime='0000-00-00 00:00:00')
-                                                        ORDER BY gp.position DESC LIMIT 1"));
- 
-  $finalpos = $groupposition_array["position"];
-  for($i=$prevpos;$i<=$finalpos;$i++)
+  for($i=$prevpos;$i<=$lastGroupPosition;$i++)
     {
     $group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
                                                                                      AND gp.position='$i' AND g.projectid='$projectid'
                                                                                      AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate  OR gp.endtime='0000-00-00 00:00:00')"));
     $xml .= "<buildgroup>";  
+    $xml .= add_XML_value("id",$group["id"]);
     $xml .= add_XML_value("name",$group["name"]);
     $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
+    if($i == $lastGroupPosition)
+      {
+      $xml .= "<last>1</last>";
+      }
     $xml .= "</buildgroup>";  
     }
  
@@ -582,7 +582,6 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
   $xml .= add_XML_value("totalNotRun",$totalnotrun);
   $xml .= add_XML_value("totalFail",$totalfail);
   $xml .= add_XML_value("totalPass",$totalpass); 
-  $xml .= add_XML_value("totalNA",$totalna);
   
   $xml .= "</cdash>";
 
