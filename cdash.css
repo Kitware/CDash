@@ -147,9 +147,9 @@ a:active{
   background-color:#ececec;
 }
 .tabb thead tr .header {
-  background-image: url(images/bg.gif);
+//  background-image: url(images/bg.gif);
   background-repeat: no-repeat;
-  background-position: bottom right;
+  background-position: center right;
   cursor: pointer;
 }
 .tabb thead tr .headerSortUp {
