@@ -100,10 +100,10 @@ function sendemail($parser,$projectid)
     $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
     
-    add_log("previousbuildid=".$previousbuildid,"sendemail");
-    add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail");
-    add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
-    add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
+    //add_log("previousbuildid=".$previousbuildid,"sendemail");
+    //add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail");
+    //add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
+    //add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
 
     // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
     // we don't send any emails
@@ -248,6 +248,8 @@ function sendemail($parser,$projectid)
       }
      
     $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
+    
+    add_log("sending email","sendemail");
     
     // Send the email
     mail("$email", $title, $messagePlainText,
