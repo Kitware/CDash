@@ -53,40 +53,33 @@
 
   
    <tr class="table-heading">
-      <th align="center" rowspan="2">
-    <a><xsl:attribute name="href">javascript:site_sort_click('<xsl:value-of select="id"/>')</xsl:attribute>Site</a>
-   </th>
-      <th align="center" rowspan="2">
-   <a><xsl:attribute name="href">#</xsl:attribute>Build Name</a>
-   </th>
+      <th align="center" rowspan="2" id="0">Site</th>
+      <th align="center" rowspan="2" id="1">Build Name</th>
 
-      <th align="center" rowspan="2">Update</th>
-      <th align="center" rowspan="2">Cfg</th>
-      <th align="center" colspan="3" class="botl">Build</th>
-      <th align="center" colspan="4" class="botl">Test</th>
-      <th align="center" rowspan="2">
-   <a><xsl:attribute name="href">#</xsl:attribute>Build Time</a>
-   </th>
+      <th align="center" rowspan="2" id="2">Update</th>
+      <th align="center" rowspan="2" id="3">Cfg</th>
+      <td align="center" colspan="3" class="botl">Build</td>
+      <td align="center" colspan="4" class="botl">Test</td>
+      <th align="center" rowspan="2" id="11">Build Time</th>
       <!-- <td align="center" rowspan="2" id="nob">Submit Date</td> -->
 
    </tr>
 
    <tr class="table-heading">
-      <th align="center"><a href="#">Error</a></th>
-      <th align="center">Warn</th>
-      <th align="center">Min</th>
-      <th align="center">NotRun</th>
-      <th align="center">Fail</th>
-
-      <th align="center">Pass</th>
-      <th align="center">Min</th>
+      <th align="center" id="4">Error</th>
+      <th align="center" id="5">Warn</th>
+      <th align="center" id="6">Min</th>
+      <th align="center" id="7">NotRun</th>
+      <th align="center" id="8">Fail</th>
+      <th align="center" id="9">Pass</th>
+      <th align="center" id="10">Min</th>
    </tr>
       </thead>
        <tbody> 
       <xsl:for-each select="$type/build">
    <tr valign="middle">
-   <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
-   
+<!--   <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
+  --> 
    
       <td align="left" class="paddt">
       <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/>&#38;currenttime=<xsl:value-of select="/cdash/dashboard/unixtimestamp"/></xsl:attribute><xsl:value-of select="site"/></a>
@@ -158,9 +151,9 @@
           <xsl:when test="updateerrors > 0">
             error
             </xsl:when>
-           <xsl:when test="updateerrors=0">
-            <xsl:value-of select="rowparity"/>
-            </xsl:when>
+            <xsl:when test="updateerrors!=0">
+            normal
+            </xsl:when> 
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
@@ -171,12 +164,9 @@
           <xsl:when test="configure > 0">
             error
             </xsl:when>
-           <xsl:when test="string-length(configure)=0">
-           <xsl:value-of select="rowparity"/>
-            </xsl:when>     
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
+           <xsl:when test="string-length(configure)>0">
+           normal 
+           </xsl:when>     
         </xsl:choose>
       </xsl:attribute>
       <b>
@@ -189,12 +179,9 @@
           <xsl:when test="compilation/error > 0">
             error
             </xsl:when>
-           <xsl:when test="string-length(compilation/error)=0">
-           <xsl:value-of select="rowparity"/>
-            </xsl:when>     
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
+           <xsl:when test="string-length(compilation/error)>0">
+           normal 
+           </xsl:when>     
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/error"/> </a></b>
@@ -205,12 +192,9 @@
           <xsl:when test="compilation/warning > 0">
             warning
             </xsl:when>
-           <xsl:when test="string-length(compilation/warning)=0">
-            <xsl:value-of select="rowparity"/>
-            </xsl:when>   
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
+           <xsl:when test="string-length(compilation/warning)>0">
+           normal 
+           </xsl:when>   
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/warning"/></a></b>
@@ -222,12 +206,9 @@
           <xsl:when test="test/notrun > 0">
             error
             </xsl:when>
-          <xsl:when test="string-length(test/notrun)=0">
-           <xsl:value-of select="rowparity"/>
+            <xsl:when test="string-length(test/notrun)>0">
+            normal
             </xsl:when>    
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/notrun"/></a></b>
@@ -238,12 +219,9 @@
           <xsl:when test="test/fail > 0">
             warning
             </xsl:when>
-          <xsl:when test="string-length(test/fail)=0">
-            <xsl:value-of select="rowparity"/>
-            </xsl:when>  
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
+          <xsl:when test="string-length(test/fail)>0">
+          normal  
+          </xsl:when>  
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/fail"/></a></b>
@@ -255,12 +233,9 @@
           <xsl:when test="test/fail > 0">
             warning
             </xsl:when>
-             <xsl:when test="string-length(test/fail)=0">
-            <xsl:value-of select="rowparity"/>
-            </xsl:when>       
-          <xsl:otherwise>
-           normal
-           </xsl:otherwise>
+             <xsl:when test="string-length(test/fail)>0">
+             normal
+             </xsl:when>       
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>

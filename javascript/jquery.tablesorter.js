@@ -285,6 +285,7 @@
       
       function buildHeaders(table) {
         
+        
         if(table.config.debug) { var time = new Date(); }
         
         var meta = ($.meta) ? true : false, tableHeadersRows = [];
@@ -294,8 +295,10 @@
         $tableHeaders = $("thead th",table);
     
         $tableHeaders.each(function(index) {
-              
+          
+          index = this.id;
           this.count = 0;
+
           this.column = index;
           this.order = formatSortingOrder(table.config.sortInitialOrder);
           

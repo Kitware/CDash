@@ -1,22 +1,63 @@
 $(document).ready(function() {
+
+  /** Build name */ 
+  $.tablesorter.addParser({ 
+      // set a unique id 
+      id: 'buildname', 
+      is: function(s) { 
+            // return false so this parser is not auto detected 
+            return false; 
+        }, 
+        format: function(s) { 
+            // format your data for normalization
+            var i = s.indexOf("<a href");
+            var j = s.indexOf(">",i);
+            var k = s.indexOf("</a>",j);
+            var t = s.substr(j+1,k-j-1);
+            return t.toLowerCase(); 
+        }, 
+        // set type, either numeric or text 
+        type: 'text' 
+    }); 
   
-$("#testtable").tablesorter(); 
+  /** Update */
+  $.tablesorter.addParser({ 
+      // set a unique id 
+      id: 'numericvalue', 
+      is: function(s) { 
+            // return false so this parser is not auto detected 
+            return false; 
+        }, 
+        format: function(s) { 
+            // format your data for normalization
+            var i = s.indexOf("<a href");
+            var j = s.indexOf(">",i);
+            var k = s.indexOf("</a>",j);
+            var t = s.substr(j+1,k-j-1);
+            return t.toLowerCase(); 
+        }, 
+        // set type, either numeric or text 
+        type: 'numeric' 
+    }); 
+
+  // Initialize the tables
+  $tabs = $(".tabb",this);
+  $tabs.each(function(index) {
+      $(this).tablesorter({ 
+            headers: { 
+                1: { sorter:'buildname'},
+                2: { sorter:'numericvalue'},
+                3: { sorter:'numericvalue'},
+                4: { sorter:'numericvalue'},
+                5: { sorter:'numericvalue'},
+                7: { sorter:'numericvalue'},
+                8: { sorter:'numericvalue'},
+                9: { sorter:'numericvalue'}                
+            },
+          debug: false,
+          widgets: ['zebra'] 
+        });             
+                            
+      });
 
 });   
-
-
-function site_sort_click(groupid)
-{   
-  var group = "#table_group_"+groupid;
-  $(group).tablesorter(); 
-  
-  //alert(group);
-  //$("#testtable").tablesorter(); 
-   // set sorting column and direction, this will sort on the first and third column the column index starts at zero 
-  //var sorting = [[0,1]]; 
-  // sort on the first column 
-  //$("#testtable").trigger("sorton",[sorting]);   
-  //$(group).trigger("sorton",[sorting]);   
-  //$(group).fadeIn('slow');
-  return;
-}

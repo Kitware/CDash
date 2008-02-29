@@ -143,6 +143,25 @@ a:active{
  padding-top: 9px;
  padding-bottom: 9px;
 }
+.tabb tbody tr.odd {
+  background-color:#ececec;
+}
+.tabb thead tr .header {
+  background-image: url(images/bg.gif);
+  background-repeat: no-repeat;
+  background-position: center right;
+  cursor: pointer;
+}
+.tabb thead tr .headerSortUp {
+  background-image: url(images/asc.gif);
+}
+.tabb thead tr .headerSortDown {
+  background-image: url(images/desc.gif);
+}
+.tabb thead tr .headerSortDown, .tabb thead tr .headerSortUp {
+background-color: #999999;
+}
+
  .treven {
  background-color : #ececec;
  margin: 0px;
@@ -151,7 +170,8 @@ a:active{
  background-color : #ffffff;
  margin: 0px;
  border: 0px;
-}.min {
+}
+.min {
  background-color: #fff687;
 }
 .botl {
