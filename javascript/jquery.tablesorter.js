@@ -297,7 +297,7 @@
     
         $tableHeaders.each(function(index) {
           
-          index = this.id;
+          index = this.id.substr(5);
           this.count = 0;
 
           this.column = index;
