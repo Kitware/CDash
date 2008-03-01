@@ -53,26 +53,26 @@
 
   
    <tr class="table-heading">
-      <th align="center" rowspan="2" id="0">Site</th>
-      <th align="center" rowspan="2" id="1">Build Name</th>
+      <th align="center" rowspan="2" id="sort_0">Site</th>
+      <th align="center" rowspan="2" id="sort_1">Build Name</th>
 
-      <th align="center" rowspan="2" id="2">Update</th>
-      <th align="center" rowspan="2" id="3">Cfg</th>
+      <th align="center" rowspan="2" id="sort_2">Update</th>
+      <th align="center" rowspan="2" id="sort_3">Cfg</th>
       <td align="center" colspan="3" class="botl">Build</td>
       <td align="center" colspan="4" class="botl">Test</td>
-      <th align="center" rowspan="2" id="11">Build Time</th>
+      <th align="center" rowspan="2" id="sort_11">Build Time</th>
       <!-- <td align="center" rowspan="2" id="nob">Submit Date</td> -->
 
    </tr>
 
    <tr class="table-heading">
-      <th align="center" id="4">Error</th>
-      <th align="center" id="5">Warn</th>
-      <th align="center" id="6">Min</th>
-      <th align="center" id="7">NotRun</th>
-      <th align="center" id="8">Fail</th>
-      <th align="center" id="9">Pass</th>
-      <th align="center" id="10">Min</th>
+      <th align="center" id="sort_4">Error</th>
+      <th align="center" id="sort_5">Warn</th>
+      <th align="center" id="sort_6">Min</th>
+      <th align="center" id="sort_7">NotRun</th>
+      <th align="center" id="sort_8">Fail</th>
+      <th align="center" id="sort_9">Pass</th>
+      <th align="center" id="sort_10">Min</th>
    </tr>
       </thead>
        <tbody> 

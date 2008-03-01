@@ -178,12 +178,19 @@ background-color: #999999;
  border-bottom-style: solid;
  border-bottom-color: #888888;
 }
+#sort_11{
+ border-top-width: 0px;
+ border-right-width: 0px;
+ border-bottom-width: 0px;
+ border-left-width: 0px;
+}
 #nob{
  border-top-width: 0px;
  border-right-width: 0px;
  border-bottom-width: 0px;
  border-left-width: 0px;
 }
+
 .paddt {
  padding-left: 7px;
 }
