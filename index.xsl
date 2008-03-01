@@ -401,6 +401,8 @@
     <a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
          Nightly Changes</a> as of
          <xsl:value-of select="cdash/updates/timestamp"/></td>
+         <td><a href="#" class="keytrigger">Key</a></td>
+         <div class="jqmWindow" id="key">Loading key...</div>
   </tr>
 </table>
 </xsl:if>

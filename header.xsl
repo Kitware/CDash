@@ -33,6 +33,10 @@
     <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/metadata.js" type="text/javascript" charset="utf-8"></script>
 
+   <!-- include jqModal --> 
+  <script src="javascript/jqModal.js" type="text/javascript" charset="utf-8"></script>  
+  <link type="text/css" rel="stylesheet" media="all" href="javascript/jqModal.css" />
+  
 <input type="hidden" id="projectname">
 <xsl:attribute name="value"><xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
 </input>
