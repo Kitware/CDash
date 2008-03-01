@@ -18,11 +18,11 @@
 // Hostname of the MySQL database 
 $CDASH_DB_HOST = 'localhost';
 // Login for MySQL database access
-$CDASH_DB_LOGIN = 'jjomier';
+$CDASH_DB_LOGIN = 'root';
 // Password for MySQL database access
 $CDASH_DB_PASS = '';
 // Name of the MySQL database
-$CDASH_DB_NAME = 'cdash2';
+$CDASH_DB_NAME = 'cdash';
 // Default from email
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
