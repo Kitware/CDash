@@ -203,7 +203,9 @@
       <b><a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/warning"/></a></b>
       <xsl:if test="string-length(compilation/warning)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
       </td>
-      <td align="right"><xsl:value-of select="compilation/time"/></td>
+      <td align="right"><xsl:value-of select="compilation/time"/>
+      <xsl:if test="string-length(compilation/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
+      </td>
       <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
