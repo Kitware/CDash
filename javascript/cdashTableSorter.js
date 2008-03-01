@@ -10,10 +10,14 @@ $(document).ready(function() {
         }, 
         format: function(s) { 
             // format your data for normalization
+            var t = s;
             var i = s.indexOf("<a href");
-            var j = s.indexOf(">",i);
-            var k = s.indexOf("</a>",j);
-            var t = s.substr(j+1,k-j-1);
+            if(i>0)
+              {
+              var j = s.indexOf(">",i);
+              var k = s.indexOf("</a>",j);
+              t = s.substr(j+1,k-j-1);
+              }
             return t.toLowerCase(); 
         }, 
         // set type, either numeric or text 
@@ -31,8 +35,16 @@ $(document).ready(function() {
         format: function(s) { 
             // format your data for normalization
             var i = s.indexOf("<a href");
+            if(i==-1) // IE
+              {
+              i = s.indexOf("<A href");
+              }
             var j = s.indexOf(">",i);
             var k = s.indexOf("</a>",j);
+            if(k==-1) // IE
+              {
+              k = s.indexOf("</A>");
+              }
             var t = s.substr(j+1,k-j-1);
             return t.toLowerCase(); 
         }, 

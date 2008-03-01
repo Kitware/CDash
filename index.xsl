@@ -172,6 +172,7 @@
       <b>
       <a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/>
       </xsl:attribute><xsl:value-of select="configure"/></a></b>
+      <xsl:if test="string-length(configure)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
       </td>
       <td align="center">
       <xsl:attribute name="class">
@@ -212,6 +213,7 @@
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/notrun"/></a></b>
+      <xsl:if test="string-length(test/notrun)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
       </td>
       <td align="center">
       <xsl:attribute name="class">
@@ -225,6 +227,7 @@
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/fail"/></a></b>
+      <xsl:if test="string-length(test/fail)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
       </td>
 
       <td align="center">
@@ -239,6 +242,7 @@
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>
+      <xsl:if test="string-length(test/fail)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
       </td>
       <td align="right"><xsl:value-of select="test/time"/></td>
       <td id="nob"><xsl:value-of select="builddate"/></td>
@@ -271,7 +275,7 @@
    <tr class="total">
       <td align="left">Totals</td>
       <td align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
-      <td ></td>
+      <td><xsl:text>&#160;</xsl:text></td>
       <td align="center">
        <xsl:attribute name="class">
        <xsl:choose>
@@ -311,7 +315,7 @@
       </xsl:attribute>  
       <b><xsl:value-of select = "/cdash/totalWarning"/></b>
       </td>
-      <td></td>
+      <td><xsl:text>&#160;</xsl:text></td>
       <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
@@ -351,7 +355,7 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "/cdash/totalPass"/></b>
       </td>
-      <td></td>
+      <td><xsl:text>&#160;</xsl:text></td>
       <td id="nob"></td>
       <!-- <td bgcolor="#ffffff"></td> -->
    </tr>
