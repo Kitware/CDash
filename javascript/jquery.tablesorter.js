@@ -105,7 +105,8 @@
         sortList: [],
         headerList: [],
         dateFormat: "us",
-        debug: false
+        debug: false,
+        fromMetaData: false
       };
       
       /* debuging utils */
@@ -352,8 +353,7 @@
         for(var i=0; i < l; i++) {
           
           getWidgetById(c[i]).format(table);
-        }
-        
+        }        
       }
       
       function getWidgetById(name) {
@@ -458,6 +458,15 @@
         
         cache.normalized.sort(sortWrapper);
         
+        // Cache the sortlist in a cookie if it's not a default value    
+        if(!table.config.fromMetaData)
+          {
+          var cookiename = "cdash_table_sort_"+table.id; // This is referenced in cdashTableSorter.js
+          $.cookie(cookiename,sortList); // set cookie
+          }
+      
+        table.config.fromMetaData = false;
+
         if(table.config.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time:", sortTime); }
         
         return cache;
@@ -530,7 +539,7 @@
               
               // get current column sort order
               this.order = this.count++ % 2;
-              
+                           
               // user only whants to sort on one column
               if(!e[config.sortMultiSortKey]) {
                 
@@ -601,7 +610,7 @@
             cache = buildCache(this);
             
           }).bind("sorton",function(e,list) {
-          
+         
             config.sortList = list;
             
             // update and store the sortlist
@@ -630,6 +639,7 @@
           });
           
           if($.meta && ($(this).data() && $(this).data().sortlist)) {
+            config.fromMetaData = true;
             config.sortList = $(this).data().sortlist;
           }
           // if user has supplied a sort list to constructor.

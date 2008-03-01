@@ -55,7 +55,8 @@ $(document).ready(function() {
   // Initialize the tables
   $tabs = $(".tabb",this);
   $tabs.each(function(index) {
-      $(this).tablesorter({ 
+                      
+     $(this).tablesorter({
             headers: { 
                 1: { sorter:'buildname'},
                 2: { sorter:'numericvalue'},
@@ -68,8 +69,23 @@ $(document).ready(function() {
             },
           debug: false,
           widgets: ['zebra'] 
-        });             
-                            
-      });
-
+        });  
+     
+    // Get the cookie
+    var tableid = this.id;
+    var cookiename = "cdash_table_sort_"+tableid;
+    var cook = $.cookie(cookiename); // get cookie
+    if(cook)
+      {
+      var cookArray = cook.split(',');
+      var sortArray = new Array();
+      var j=0;
+      for(var i=0; i < cookArray.length; i+=2) 
+        {
+        sortArray[j] = [cookArray[i],cookArray[i+1]];
+        j++;
+        }
+      $(this).trigger("sorton",[sortArray]);    
+      }              
+    });
 });   
