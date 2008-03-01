@@ -124,7 +124,7 @@ function generate_index_table()
 }
 
 /** Generate the main dashboard XML */
-function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
+function generate_main_dashboard_XML($projectid,$date)
 {
   $noforcelogin = 1;
   include("config.php");
@@ -274,24 +274,11 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
   $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
-                         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp,site as s
+                         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
                          WHERE b.starttime<$end_UTCDate AND b.starttime>$beginning_UTCDate
                          AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate OR gp.endtime='0000-00-00 00:00:00')
-                         AND s.id = b.siteid ORDER BY gp.position ASC";
- 
- if($sort == "buildname")
-   {
-   $sql .= ",b.name ASC";
-  }
- else if($sort == "site")
-   {
-  $sql .= ",s.name ASC";
-   }
- else 
-   {
-  $sql .= ",b.starttime DESC";
-   }
+                         ORDER BY gp.position ASC,b.name ASC ";
     
   // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = mysql_query($sql);
@@ -358,7 +345,7 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
       
       // Make the default for now
       // This should probably be defined by the user as well on the users page
-      if($groupname == "Continous")
+      if($groupname == "Continuous")
         {
         $xml .= add_XML_value("sortlist","{sortlist: [[11,1]]}"); //buildtime
         }
@@ -639,9 +626,8 @@ else
     $start = microtime_float();
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
-  @$sort = $_GET["sort"];
 
-  $xml = generate_main_dashboard_XML($projectid,$date,$sort);
+  $xml = generate_main_dashboard_XML($projectid,$date);
   // Now doing the xslt transition
   generate_XSLT($xml,"index");
     $end = microtime_float();
