@@ -252,8 +252,15 @@ function sendemail($parser,$projectid)
     add_log("sending email","sendemail");
     
     // Send the email
-    mail("$email", $title, $messagePlainText,
-         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+    if(mail("$email", $title, $messagePlainText,
+         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+      {
+      add_log("email sent to: ".$email,"sendemail");
+      }
+    else
+      {
+      add_log("cannot send email to: ".$email,"sendemail");
+      }
     } // end $email!=""
   
    add_log("End buildid=".$buildid,"sendemail");
