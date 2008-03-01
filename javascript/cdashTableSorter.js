@@ -1,4 +1,7 @@
 $(document).ready(function() {
+ 
+  /** Load the key */
+  $('#key').jqm({ajax: 'key.html', trigger: 'a.keytrigger'});
 
   /** Build name */ 
   $.tablesorter.addParser({ 
