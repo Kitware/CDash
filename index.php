@@ -355,6 +355,14 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
         }  
              
       $xml .= "<buildgroup>";
+      
+      // Make the default for now
+      // This should probably be defined by the user as well on the users page
+      if($groupname == "Continous")
+        {
+        $xml .= add_XML_value("sortlist","{sortlist: [[11,1]]}"); //buildtime
+        }
+      
       $rowparity = 0;
       $received_builds = array();
       $xml .= add_XML_value("name",$groupname);
@@ -368,9 +376,6 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
     $siteid = $build_array["siteid"];
     $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
     
-    // IF NO CONFIGURE WE DON'T DISPLAY
-    //if($nconfigure > 0)
-    {
     // Get the site name
     $xml .= "<build>";
         
@@ -471,12 +476,12 @@ function generate_main_dashboard_XML($projectid,$date,$sort="buildtime")
       $xml .= add_XML_value("time",round($time/60,1));
       $xml .= "</test>";
       }
-        $starttimestamp = strtotime($build_array["starttime"]." UTC");
-        $submittimestamp = strtotime($build_array["submittime"]." UTC");
-    $xml .= add_XML_value("builddate",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
-        $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
-   $xml .= "</build>";
-    } // END IF CONFIGURE
+     
+     $starttimestamp = strtotime($build_array["starttime"]." UTC");
+     $submittimestamp = strtotime($build_array["submittime"]." UTC");
+     $xml .= add_XML_value("builddate",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
+     $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
+     $xml .= "</build>";
     
     // Coverage
     $coverages = mysql_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");

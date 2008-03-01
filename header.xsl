@@ -28,8 +28,10 @@
     <link rel="stylesheet" href="javascript/ui.datepicker.css" type="text/css" media="screen" title="core css file" charset="utf-8" />
 
     <!-- Include the sorting -->
+    <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>  
     <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascript/metadata.js" type="text/javascript" charset="utf-8"></script>
 
 <input type="hidden" id="projectname">
 <xsl:attribute name="value"><xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
