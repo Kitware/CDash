@@ -32,6 +32,9 @@
     <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/metadata.js" type="text/javascript" charset="utf-8"></script>
+    
+    <!-- Include jtooltip -->
+    <script src="javascript/jtip.js" type="text/javascript" charset="utf-8"></script>
 
    <!-- include jqModal --> 
   <script src="javascript/jqModal.js" type="text/javascript" charset="utf-8"></script>  

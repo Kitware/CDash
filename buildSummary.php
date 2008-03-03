@@ -75,7 +75,6 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
    $xml .= "</user>";
    }
 
-
 $xml .="<dashboard>
   <datetime>".date("l, F d Y H:i:s T",time())."</datetime>
   <date>".$date."</date>
@@ -89,6 +88,28 @@ $xml .="<dashboard>
   <nextdate>".$nextdate."</nextdate> 
   </dashboard>
   ";
+  
+  // Notes
+  $note = mysql_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
+  while($note_array = mysql_fetch_array($note))
+    {
+    $xml .= "<note>";
+    $userid = $note_array["userid"];
+    $user_array = mysql_fetch_array(mysql_query("SELECT firstname,lastname FROM user WHERE id='$userid'"));
+    $timestamp = strtotime($note_array["timestamp"]." UTC");
+    $usernote = $user_array["firstname"]." ".$user_array["lastname"];
+    switch($note_array["status"])
+      {
+      case 0: $status = "[note]"; break;
+      case 1: $status = "[fix in progress]"; break;
+      case 2: $status = "[fixed]"; break;
+      }
+    $xml .= add_XML_value("status",$status);
+    $xml .= add_XML_value("user",$usernote);
+    $xml .= add_XML_value("date",date("H:i:s T",$timestamp));
+    $xml .= add_XML_value("text",$note_array["note"]);
+    $xml .= "</note>";
+    }
   
   // Build
   $xml .= "<build>";
@@ -127,8 +148,7 @@ $xml .="<dashboard>
   $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($build_array["endtime"]." UTC"))); 
   
   $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
-  $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
-  
+  $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate); 
  
   // Number of errors and warnings
   $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
@@ -156,7 +176,6 @@ $xml .="<dashboard>
     $xml .= add_XML_value("postcontext",format_for_iphone($error_array["postcontext"]));
     $xml .= "</error>";
     }
-  
   
   // Display the warnings
   $errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='1'");
@@ -294,10 +313,7 @@ $xml .="<dashboard>
      
     $xml .= "</previousbuild>";
     }
-
-  
   $xml .= "</cdash>";
- 
 
 // Now doing the xslt transition
 if(!isset($NoXSLGenerate))

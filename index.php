@@ -236,16 +236,18 @@ function generate_main_dashboard_XML($projectid,$date)
       if(array_search($key,$received_builds) === FALSE) // add only if not found
         {      
         $xml .= "<build>";
-              
-               if($rowparity%2==0)
-                    {
-                    $xml .= add_XML_value("rowparity","trodd");
+        
+        /*      
+        if($rowparity%2==0)
+          {
+           $xml .= add_XML_value("rowparity","trodd");
                     }
                 else
                     {
                     $xml .= add_XML_value("rowparity","treven");
                     }
                 $rowparity++;
+        */
                 
         $xml .= add_XML_value("site",$build2grouprule_array["name"]);
         $xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
@@ -383,6 +385,15 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("buildid",$build_array["id"]);
     $xml .= add_XML_value("generator",$build_array["generator"]);
     
+            
+    // Search if we have notes for that build
+    $buildnote = mysql_query("SELECT count(*) FROM buildnote WHERE buildid='$buildid'");
+    $buildnote_array = mysql_fetch_row($buildnote);
+    if($buildnote_array[0]>0)
+      {
+      $xml .= add_XML_value("buildnote","1");
+      }
+      
     $received_builds[] = $site_array["name"]."_".$build_array["name"];
     
     $note = mysql_query("SELECT count(*) FROM note WHERE buildid='$buildid'");

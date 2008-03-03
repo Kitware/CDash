@@ -120,6 +120,15 @@
       </a>
       </xsl:if>
       
+      <!-- Display the note icon -->
+      <xsl:if test="buildnote>0">
+      <a name="Build Notes" class="jTip">
+      <xsl:attribute name="id">buildnote_<xsl:value-of select="buildid"/></xsl:attribute>
+      <xsl:attribute name="href">ajax/buildnote.php?buildid=<xsl:value-of select="buildid"/>&amp;width=350&amp;link=buildSummary.php%3Fbuildid%3D<xsl:value-of select="buildid"/></xsl:attribute>
+      <img name="buildgroup" SRC="images/note.png" border="0"></img>
+      </a>
+      </xsl:if>
+      
       <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1">
         <xsl:if test="string-length(buildid)>0">

@@ -17,6 +17,7 @@
          
          <!-- Include JavaScript -->
          <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script> 
+         <script src="javascript/cdashAddNote.js" type="text/javascript" charset="utf-8"></script> 
        </head>
        <body bgcolor="#ffffff">
    
@@ -251,7 +252,28 @@
       </table>
       
       <br/>
+
+<!-- Display notes for that build -->
+<xsl:if test="count(cdash/note)>0">
+<div class="title-divider">Users notes (<xsl:value-of select="count(cdash/note)"/>)</div>
+  <xsl:for-each select="cdash/note">
+    <b><xsl:value-of select="status"/></b> by <b><xsl:value-of select="user"/></b> at <xsl:value-of select="date"/>
+    <pre><xsl:value-of select="text"/></pre>
+    <hr/>
+  </xsl:for-each>
+</xsl:if>
+
+
+<!-- Add Notes -->
+<a>
+<xsl:attribute name="href">javascript:addnote_click(<xsl:value-of select="cdash/build/id"/>,'<xsl:value-of select="cdash/user/id"/>')</xsl:attribute>
+[Add a Note to this Build]</a>
+<div name="addnote" id="addnote"></div>
+<br/>
+
 <!-- Graph -->
+<div class="title-divider">Graph</div>
+
 <a>
 <xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
 [Show Build Time Graph]
@@ -261,6 +283,7 @@
 <div id="grapholder"></div>
 </center>
 <br/>
+
 <!-- Update -->
 <div class="title-divider" id="Stage0">
 <div class="tracknav">
