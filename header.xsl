@@ -119,6 +119,9 @@
 <li><a id="submm">
 <xsl:attribute name="href">viewChanges.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Updates</a></li>
 <li><a id="submm">
+<xsl:attribute name="href">buildOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
+Builds</a></li>
+<li><a id="submm">
 <xsl:attribute name="href">testOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
 Tests</a></li>
 <li><a id="submm">
