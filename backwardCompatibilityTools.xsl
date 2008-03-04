@@ -44,6 +44,16 @@
     <td><div align="right">Delete builds with wrong start date:</div></td>
     <td><div align="left"><input type="submit" name="DeleteBuildsWrongDate" value="Delete builds"/></div></td>
   </tr> 
+  <!-- 
+   <tr>
+    <td><div align="right">Add support for compressed coverage:</div></td>
+    <td><div align="left"><input type="submit" name="CompressCoverage" value="Compress coverage"/></div></td>
+  </tr> 
+  -->
+  <tr>
+    <td><div align="right">Check and Add New Tables:</div></td>
+    <td><div align="left"><input type="submit" name="InstallNewTables" value="Install new tables"/></div></td>
+  </tr> 
 </table>
 </form>
 

@@ -18,6 +18,8 @@
 include("config.php");
 include("common.php"); 
 
+set_time_limit(0);
+
 @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 $xml = "<cdash>";
@@ -32,6 +34,99 @@ $xml .= "<menusubtitle>Tools</menusubtitle>";
 @$FixBuildBasedOnRule = $_POST["FixBuildBasedOnRule"];
 @$FixNewTableTest = $_POST["FixNewTableTest"];
 @$DeleteBuildsWrongDate = $_POST["DeleteBuildsWrongDate"];
+@$CompressCoverage = $_POST["CompressCoverage"];
+@$InstallNewTables = $_POST["InstallNewTables"];
+
+// When adding new tables they should be added to the SQL installation file
+// and here as well
+if($InstallNewTables)
+{
+  $sql = "CREATE TABLE IF NOT EXISTS `buildnote` (
+      `buildid` int(11) NOT NULL,
+      `userid` int(11) NOT NULL,
+      `note` mediumtext NOT NULL,
+      `timestamp` datetime NOT NULL,
+      `status` tinyint(4) NOT NULL default '0',
+       KEY `buildid` (`buildid`)
+      ) ENGINE=MyISAM DEFAULT CHARSET=latin1";
+      
+   if(mysql_query($sql))
+     {
+     $xml .= "<alert>New tables successfully created.</alert>";
+     }
+}
+
+
+/** Support for compressed coverage.
+ *  This is done in two steps.
+ *  First step: Reducing the size of the coverage file by computing the crc32 in coveragefile
+ *              and changing the appropriate fileid in coverage and coveragefilelog
+ *  Second step: Reducing the size of the coveragefilelog by computing the crc32 of the groupid
+ *               if the same coverage is beeing stored over and over again then it's discarded (same groupid)
+ */
+if($CompressCoverage)
+{
+  /** FIRST STEP */
+  if(!mysql_query("SELECT crc32 FROM coveragefile LIMIT 1"))
+    {
+    // Add the new field
+    if(mysql_query("ALTER TABLE coveragefile ADD crc32 int(11)"))
+      {
+      mysql_query("ALTER TABLE coveragefile ADD INDEX (crc32)");
+      echo "crc32 added to coveragefile table";
+      }
+    else 
+      {
+      echo "Cannot add crc32 to coveragefile table";
+      return;
+      }
+    }
+  // Compute the crc32 of the fullpath+file
+  $coveragefile = mysql_query("SELECT * FROM coveragefile WHERE crc32 IS NULL");
+  while($coveragefile_array = mysql_fetch_array($coveragefile))
+    {
+    $fullpath = $coveragefile_array["fullpath"];
+    $file = $coveragefile_array["file"];
+    $id = $coveragefile_array["id"];
+    $crc32 = crc32($fullpath.$file);
+    mysql_query("UPDATE coveragefile SET crc32='$crc32' WHERE id='$id'");
+    }
+    
+  // Delete files with the same crc32 and upgrade   
+  $previouscrc32 = 0;
+  $coveragefile = mysql_query("SELECT id,crc32 FROM coveragefile ORDER BY crc32 ASC,id ASC");
+  $total = mysql_num_rows($coveragefile);
+  $i=0;
+  $previousperc = 0;
+  while($coveragefile_array = mysql_fetch_array($coveragefile))
+    {
+    $id = $coveragefile_array["id"];
+    $crc32 = $coveragefile_array["crc32"];
+    if($crc32 == $previouscrc32)
+      {
+      mysql_query("UPDATE coverage SET fileid='$currentid' WHERE fileid='$id'");
+      mysql_query("UPDATE coveragefilelog SET fileid='$currentid' WHERE fileid='$id'");
+      mysql_query("DELETE FROM coveragefile WHERE id='$id'");
+      }
+    else
+      {
+      $currentid = $id;
+      $perc = ($i/$total)*100;
+      if($previousperc != $perc)
+        {
+        echo round($perc,3)."% done.<br>";
+        flush();
+        ob_flush();
+        $previousperc = $perc;
+        }
+      }
+    $previouscrc32 = $crc32;
+    $i++;
+    }
+
+  /** SECOND STEP */    
+    
+}
 
 if($DeleteBuildsWrongDate)
 {
