@@ -68,7 +68,8 @@ $(document).ready(function() {
                 5: { sorter:'numericvalue'},
                 7: { sorter:'numericvalue'},
                 8: { sorter:'numericvalue'},
-                9: { sorter:'numericvalue'}                
+                9: { sorter:'numericvalue'},
+                11: { sorter:'text'}
             },
           debug: false,
           widgets: ['zebra'] 
