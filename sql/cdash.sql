@@ -455,6 +455,17 @@ CREATE TABLE `user2project` (
   PRIMARY KEY  (`userid`,`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- 
+-- Table structure for table `buildnote`
+-- 
+CREATE TABLE `buildnote` (
+  `buildid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `note` mediumtext NOT NULL,
+  `timestamp` datetime NOT NULL,
+  `status` tinyint(4) NOT NULL default '0',
+  KEY `buildid` (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Change the table maximum size to be more than 4GB
@@ -466,3 +477,4 @@ alter table coveragefilelog max_rows = 200000000000 avg_row_length = 3458;
 alter table coveragefile max_rows = 200000000000 avg_row_length = 3458;
 alter table image max_rows = 200000000000 avg_row_length = 3458;
 alter table note max_rows = 200000000000 avg_row_length = 3458;
+alter table buildnote max_rows = 200000000000 avg_row_length = 3458;
