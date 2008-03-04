@@ -21,7 +21,12 @@
 <form name="form1" method="post" action="">
 Please select the project to import into:
 <select name="project">
-<xsl:for-each select="cdash/project">
+
+  <option>
+    <xsl:attribute name="value">0</xsl:attribute>
+    Choose...
+  </option>
+  <xsl:for-each select="cdash/project">
   <option>
   <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
   <xsl:value-of select="name"/>

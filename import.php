@@ -77,6 +77,16 @@ if($Submit)
 {
   $directory = $_POST["directory"];
   $projectid = $_POST["project"];
+  if($projectid == 0)
+    {
+    echo("Use your browsers Back button, and select a valid project.<br>");
+    ob_flush();
+    exit(0);
+    }
+  echo("Import for Project: ");
+  echo(get_project_name($projectid));
+  echo("<br>");
+  ob_flush();
   if(strlen($directory)>0 )
     {
     $directory = str_replace('\\\\','/',$directory);  
