@@ -221,7 +221,14 @@ function sendemail($parser,$projectid)
     $messagePlainText .= "or you are listed in the default contact list.\n\n";  
     $messagePlainText .= "Details on the submission can be found at ";
 
-    $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
+    $currentPort="";
+
+    if($_SERVER['SERVER_PORT']!=80)
+      {
+      $currentPort=":".$_SERVER['SERVER_PORT'];
+      }
+    
+    $currentURI =  "http://".$_SERVER['SERVER_NAME'].$currentPort.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $messagePlainText .= $currentURI;
     $messagePlainText .= "/buildSummary.php?buildid=".$buildid;
