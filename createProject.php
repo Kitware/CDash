@@ -290,13 +290,11 @@ if($Update)
   
   
 // List the available projects
-// We should check if we are admin or not...
 $sql = "SELECT id,name FROM project";
 if($user_array["admin"] != 1)
   {
-  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid')"; 
+  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
   }
-
 $projects = mysql_query($sql);
 while($projects_array = mysql_fetch_array($projects))
    {
