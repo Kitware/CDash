@@ -50,6 +50,7 @@ if ($session_OK)
         remove_site2user($siteid,$userid);
         }  
       }
+    $xml .= "<warning>Claimed sites updated.</warning>";
     }
     
   @$claimsite = $_POST["claimsite"];
@@ -106,7 +107,7 @@ if ($session_OK)
          $site_totalphysicalmemory,
          $site_logicalprocessorsperphysical,
          $site_processorclockfrequency,
-               $site_description,$site_ip,$site_latitude,$site_longitude,!$newdescription_revision);
+         $site_description,$site_ip,$site_latitude,$site_longitude,!$newdescription_revision);
     }
    
   // If we should retrieve the geolocation

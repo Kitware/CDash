@@ -19,7 +19,7 @@
 <br/>
 
 <xsl:if test="string-length(cdash/warning)>0">
-<xsl:value-of select="cdash/warning"/>
+<b><xsl:value-of select="cdash/warning"/></b><br/>
 </xsl:if>
 
 

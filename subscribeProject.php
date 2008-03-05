@@ -71,6 +71,11 @@ if ($session_OK)
   if($Unsubscribe)
     {
     mysql_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+    
+    // Remove the claim sites for this project if they are only part of this project
+    mysql_query("DELETE FROM site2user WHERE userid='$userid' 
+                 AND siteid NOT IN(SELECT siteid FROM build WHERE projectid!='$projectid' GROUP BY siteid)");
+                 
     header( 'location: user.php?note=unsubscribedtoproject' );
     }   
   else if($Subscribe || $UpdateSubscription)
