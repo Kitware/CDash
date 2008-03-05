@@ -100,8 +100,7 @@ project page</a>
         <select name="role">
          <option value="0"><xsl:if test="role=0"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Normal User</option>
          <option value="1"><xsl:if test="role=1"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Dashboard Submitter</option>
-         <option value="2"><xsl:if test="role=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project administrator</option>
-         <option value="3"><xsl:if test="role=3"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project superadmin</option>
+         <option value="2"><xsl:if test="role=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project Administrator</option>
        </select>
        </td>
        <td>

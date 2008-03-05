@@ -51,11 +51,12 @@ if(!isset($projectid))
 
 @$show = $_GET["show"];
 
+$role=0;
 
 $user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
 if($projectid)
   {
-  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND $projectid='$projectid'");
+  $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
   if(mysql_num_rows($user2project)>0)
     {
     $user2project_array = mysql_fetch_array($user2project);
@@ -69,7 +70,12 @@ if($user_array["admin"]!=1 && $role<=1)
   return;
   }
   
-$projects = mysql_query("SELECT id,name FROM project");
+$sql = "SELECT id,name FROM project";
+if($user_array["admin"] != 1)
+  {
+  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
+  }
+$projects = mysql_query($sql);
 while($project_array = mysql_fetch_array($projects))
    {
    $xml .= "<availableproject>";

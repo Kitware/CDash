@@ -43,14 +43,15 @@ if ($session_OK)
   $user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$usersessionid'"));
   if($projectid)
     {
-    $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$usersessionid' AND $projectid='$projectid'");
+    $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$usersessionid' AND projectid='$projectid'");
     if(mysql_num_rows($user2project)>0)
       {
       $user2project_array = mysql_fetch_array($user2project);
       $role = $user2project_array["role"];
       }  
-    }
-  if($user_array["admin"]!=1 && $role<=2)
+    }  
+
+  if($user_array["admin"]!=1 && $role<=1)
     {
     echo "You don't have the permissions to access this page";
     return;
@@ -97,8 +98,14 @@ if($updateuser)
   $xml .= "<menutitle>CDash</menutitle>";
   $xml .= "<menusubtitle>Project Roles</menusubtitle>";
 
-    
-$projects = mysql_query("SELECT id,name FROM project"); // we should check if we are admin on the project
+
+
+$sql = "SELECT id,name FROM project";
+if($user_array["admin"] != 1)
+  {
+  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)"; 
+  }
+$projects = mysql_query($sql);
 while($project_array = mysql_fetch_array($projects))
    {
    $xml .= "<availableproject>";
