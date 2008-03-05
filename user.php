@@ -41,7 +41,7 @@ if ($session_OK)
     $project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
     $xml .= "<project>";
     $xml .= add_XML_value("id",$projectid);
-    $xml .= add_XML_value("role",$project2user_array["role"]); // 0 is normal user, 1 is maintainer, 2 is administrator, 3 is superadministrator
+    $xml .= add_XML_value("role",$project2user_array["role"]); // 0 is normal user, 1 is maintainer, 2 is administrator
     $xml .= add_XML_value("name",$project_array["name"]);
     $xml .= "</project>";
     }
