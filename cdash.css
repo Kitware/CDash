@@ -82,8 +82,7 @@ a:active{
 .footer img{
  vertical-align: middle;
 }
-.btip { text-decoration:none; onmouseout=hidetip(); }
- .normal {
+.normal {
  background-color : #92ca89;
 }
  .warning {
