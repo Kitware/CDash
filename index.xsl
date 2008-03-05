@@ -397,9 +397,11 @@
                   
          <!-- Include BuildGroup JavaScript -->
          <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script> 
+       
+         <xsl:call-template name="header"/>
        </head>
        <body bgcolor="#ffffff">
-       <xsl:call-template name="header"/>
+       
 
 <xsl:if test="cdash/dashboard/future=0">
 
