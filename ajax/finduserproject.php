@@ -46,10 +46,9 @@ echo mysql_error();
   <td bgcolor="#EEEEEE"><font size="2"><form method="post" action="" name="formuser_<?php echo $user_array["id"]?>">
   <input name="userid" type="hidden" value="<?php echo $user_array["id"]?>">
   role: <select name="role">
-    <option value="1">Normal User</option>
-    <option value="2">Dashboard Submitter</option>
-    <option value="3">Project administrator</option>
-    <option value="4">Project superadmin</option>
+    <option value="0">Normal User</option>
+    <option value="1">Dashboard Submitter</option>
+    <option value="2">Project administrator</option>
   </select>
   cvslogin: <input name="cvslogin" type="text" size="20"/>
   <input name="adduser" type="submit" value="add user">
