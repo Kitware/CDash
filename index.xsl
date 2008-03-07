@@ -12,8 +12,10 @@
   
   <!-- quick links -->
   <td colspan="12" align="right" id="nob">
-   <div class="quicklink">
+   <div>
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
+   </div> 
+   <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
        <xsl:if test="name!=$type/name">
         <a>
@@ -36,8 +38,10 @@
           <h3><xsl:value-of select="$type/name"/></h3>
       </td>
   <td colspan="12" align="right" id="nob">
-   <div class="quicklink">
+   <div>
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
+   </div> 
+   <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
        <xsl:if test="name!=$type/name">
          <a>
@@ -439,8 +443,9 @@
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" id="nob">
+   <div id="Coverage">
+   </div>
    <div class="quicklink">
-   <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
      <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
@@ -459,7 +464,9 @@
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" id="nob">
-   <div id="Coverage" class="quicklink">
+   <div id="Coverage">
+   </div>
+   <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
      <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
@@ -526,8 +533,9 @@
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" id="nob">
+   <div id="DynamicAnalysis">
+   </div>
    <div class="quicklink">
-   <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
       <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
@@ -546,7 +554,8 @@
       </td>
       <!-- quick links -->
   <td colspan="12" align="right" id="nob">
-   <div class="quicklink" id="DynamicAnalysis">
+   <div id="DynamicAnalysis"></div>
+   <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
       <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
