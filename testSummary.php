@@ -21,8 +21,9 @@
 * on a specific day.  It also displays information (success, execution time)
 * about each copy of the test that was run.
 */
-
+$noforcelogin = 1;
 include("config.php");
+include('login.php');
 include("common.php");
 
 $date = $_GET["date"];
@@ -35,6 +36,7 @@ if(!isset($projectid))
   {
   die('Error: no project supplied in query string');
   }
+  
 $testName = $_GET["name"];
 if(!isset($testName))
   {
@@ -49,6 +51,8 @@ if(mysql_num_rows($project)>0)
   $project_array = mysql_fetch_array($project);   
   $projectname = $project_array["name"];  
   }
+  
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";

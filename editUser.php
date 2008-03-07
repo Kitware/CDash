@@ -18,10 +18,10 @@
 include("config.php");
 include('login.php');
 
-//if ($session_OK) 
+if ($session_OK) 
   {
- include("config.php");
- include("common.php"); 
+  include("config.php");
+  include("common.php");
   
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - My Profile</title>";

@@ -15,7 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+$noforcelogin = 1;
 include("config.php");
+include('login.php');
 include("common.php");
 
 // get_related_dates takes a projectname and basedate as input
@@ -833,7 +835,6 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
 
 // Repository nightly queries are for the 24 hours leading up to the
 // nightly start time for "$projectname" on "$date"
-
 @$projectname = $_GET["project"];
 @$date = $_GET["date"];
 
@@ -843,6 +844,12 @@ if (!isset($query))
   $query = 1;
 }
 
+$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+mysql_select_db("$CDASH_DB_NAME",$db);
+$project = mysql_query("SELECT * FROM project WHERE name='$projectname'");
+$project_array = mysql_fetch_array($project);
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 
 $dates = get_related_dates($projectname, $date);
 

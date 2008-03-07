@@ -43,6 +43,9 @@ if(!$project_array = mysql_fetch_array($project))
   {
   die("Error:  project $projectname not found<br>\n");
   }
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
+
 $projectid = $project_array["id"];
 $nightlytime = $project_array["nightlytime"];
 

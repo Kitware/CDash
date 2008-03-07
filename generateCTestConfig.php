@@ -15,12 +15,13 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+$noforcelogin = 1;
 include("config.php");
+include('login.php');
 include("common.php");
 
 @$projectid = $_GET["projectid"];
 
-include("config.php");
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
   
@@ -31,6 +32,7 @@ if(mysql_num_rows($project)==0)
   }
 
 $project_array = mysql_fetch_array($project);
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 
 $ctestconfig = "";
 

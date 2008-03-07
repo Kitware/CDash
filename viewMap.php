@@ -15,7 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+$noforcelogin = 1;
 include("config.php");
+include('login.php');
 include("common.php");
 
 @$projectname = $_GET["project"];
@@ -25,6 +27,7 @@ $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
 $projectid = get_project_id($projectname);
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : Sites map for ".$projectname."</title>";

@@ -15,8 +15,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
 $noforcelogin = 1;
 include("config.php");
 include('login.php');
@@ -28,10 +26,12 @@ include("common.php");
 include("config.php");
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
-  
+
 $build_array = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 $date = date("Ymd", strtotime($build_array["starttime"]));
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
     
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
@@ -42,6 +42,8 @@ if(mysql_num_rows($project)>0)
   $bugurl = $project_array["bugtrackerurl"];   
   $projectname = $project_array["name"];  
   }
+  
+
   
 // Format the text to fit the iPhone
 function format_for_iphone($text)

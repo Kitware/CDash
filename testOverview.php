@@ -15,8 +15,11 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+$noforcelogin = 1;
 include("config.php");
+include('login.php');
 include("common.php");
+
 @$projectname = $_GET["project"];
 if(!isset($projectname))
   {
@@ -46,6 +49,8 @@ if(!$projectRow = mysql_fetch_array($projectResult))
   }
 $projectid = $projectRow["id"];
 $nightlytime = $projectRow["nightlytime"];
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 //get each build that was submitted on this date
 $buildQuery = "SELECT id FROM build WHERE stamp RLIKE '^$date-' AND projectid = '$projectid'"; 

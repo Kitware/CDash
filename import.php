@@ -15,14 +15,20 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include_once("config.php");
-include_once("common.php");
-include_once("ctestparser.php");
+include("config.php");
+include('login.php');
+
+if($session_OK) 
+  {
+  include_once('common.php');
+  include_once("ctestparser.php");
 
 set_time_limit(0);
 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 
   
 //get date info here
@@ -145,4 +151,6 @@ if($Submit)
 
 // Now doing the xslt transition
 generate_XSLT($xml,"import");
+
+} // end session
 ?>

@@ -15,7 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+$noforcelogin = 1;
 include("config.php");
+include('login.php');
 include("common.php");
 
 @$buildid = $_GET["buildid"];
@@ -35,6 +37,8 @@ if(mysql_num_rows($project)>0)
   $project_array = mysql_fetch_array($project);  
   $projectname = $project_array["name"];  
   }
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
  
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";

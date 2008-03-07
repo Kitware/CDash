@@ -15,7 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+$noforcelogin = 1;
 include("config.php");
+include('login.php');
 include("common.php");
 
 @$buildid = $_GET["buildid"];
@@ -33,6 +35,8 @@ mysql_select_db("$CDASH_DB_NAME",$db);
   
 $build_array = mysql_fetch_array(mysql_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
+ 
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
     
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)

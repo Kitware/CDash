@@ -16,12 +16,16 @@
 
 =========================================================================*/
 include("config.php");
-include("common.php"); 
+include('login.php');
+include("common.php");
 
 set_time_limit(0);
 
 @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
+
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<backurl>user.php</backurl>";

@@ -23,10 +23,16 @@ function CreateRSSFeed($projectid)
   mysql_select_db("$CDASH_DB_NAME",$db);
 
   // Find the project name
-  $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
+  $project = mysql_query("SELECT public,name FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
   $projectname = $project_array["name"];
   
+  // Don't create RSS feed for private projects
+  if($project_array["public"]!=1)
+    {
+    return;
+    }
+
   $serverbase = substr($_SERVER['SCRIPT_FILENAME'],0,strrpos($_SERVER['SCRIPT_FILENAME'],"/"));
   $filename = $serverbase."/rss/SubmissionRSS".$projectname.".xml";
 

@@ -139,19 +139,33 @@ $xml .= add_XML_value("longitude",$site_array["longitude"]);
 $xml .= "</site>";
 
 // Select projects that belong to this site
+$displayPage=0;
 $projects = array();
 $site2project = mysql_query("SELECT projectid,submittime FROM build WHERE siteid='$siteid' GROUP BY projectid");
 while($site2project_array = mysql_fetch_array($site2project))
    {
    $projectid = $site2project_array["projectid"];
-   $project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
-   $xml .= "<project>";
-   $xml .= add_XML_value("id",$projectid);
-   $xml .= add_XML_value("submittime",$site2project_array["submittime"]);
-   $xml .= add_XML_value("name",$project_array["name"]);
-   $xml .= "</project>";
-   $projects[] = $projectid;
+   $project_array = mysql_fetch_array(mysql_query("SELECT name,public FROM project WHERE id='$projectid'"));
+   
+   if(checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid,1))
+     {
+     $xml .= "<project>";
+     $xml .= add_XML_value("id",$projectid);
+     $xml .= add_XML_value("submittime",$site2project_array["submittime"]);
+     $xml .= add_XML_value("name",$project_array["name"]);
+     $xml .= "</project>";
+     $displayPage=1; // if we have at least a valid project we display the page
+     $projects[] = $projectid;
+     }
    }
+
+// If the current site as only private projects we check that we have the right
+// to view the page
+if(!$displayPage)
+  {
+  echo "You cannot access this page";
+  exit(0);
+  }
 
  if(isset($_SESSION['cdash']))
    {

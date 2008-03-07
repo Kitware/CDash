@@ -20,8 +20,9 @@
 * testDetails.php shows more detailed information for a particular test that
 * was run.  This includes test output and image comparison information
 */
-
+$noforcelogin = 1;
 include("config.php");
+include('login.php');
 include("common.php");
 
 $testid = $_GET["test"];
@@ -42,6 +43,7 @@ $testRow = mysql_fetch_array(mysql_query("SELECT * FROM build2test,test WHERE bu
 
 $buildRow = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id = '$buildid'"));
 $projectid = $buildRow["projectid"];
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 $siteid = $buildRow["siteid"];
 
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
@@ -69,7 +71,6 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
 $testName = $testRow["name"];
 $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
-
 
 $xml .= "<test>\n";
 $xml .= add_XML_value("id",$testid) . "\n";

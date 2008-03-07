@@ -16,7 +16,7 @@
 
 =========================================================================*/
 include("config.php");
-include("common.php");
+include('login.php');
 
 function cleanup($filename)
 {
@@ -51,6 +51,8 @@ if(mysql_select_db("$CDASH_DB_NAME",$db) === FALSE)
   echo mysql_error();
   return;
   }
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
