@@ -125,12 +125,14 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       }
     }
   
-  $xml .= "dbAdd (true, \"".$projectname." updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+  //$xml .= "dbAdd (true, \"".$projectname." Updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   
- $previousdir = "";
+  //$previousdir = "";
   $projecturl = $svnurl;
-    // locally cached query result same as get_project_property($projectname, "cvsurl");
-
+  
+  $locallymodified = array();
+  
+  // locally cached query result same as get_project_property($projectname, "cvsurl");
   foreach($updatearray as $file)
     {
     $filename = $file['filename'];
@@ -142,11 +144,11 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       $filename = substr($filename,$pos+1);
       }
  
-    if($previousdir=="" || $directory != $previousdir)
+    /*if($previousdir=="" || $directory != $previousdir)
       {
       $xml .= " dbAdd (true, \"&lt;b&gt;".$directory."&lt;/b&gt;\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
-      }
+      }*/
       
     $author = $file['author'];
     $email = $file['email'];
@@ -162,12 +164,54 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
     $diff_url = get_diff_url($projecturl, $directory, $filename, $revision);
     $diff_url = XMLStrFormat($diff_url);
-
-    $xml .= " dbAdd ( false, \"".$filename." Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$log."\")\n";
+    
+    $file['$directory'] = $directory;
+    $file['$author'] = $author;
+    $file['$email'] = $email;
+    $file['$log'] = $log;        
+    $file['$revision'] = $revision;    
+    $file['$filename'] = $filename;  
+    $file['$diff_url'] = $diff_url;  
+      
+    if($revision != "-1" && $log!="Locally modified file")
+      {
+      $updatedfiles[] = $file;
+      }
+    else if($log=="Locally modified file")
+      {
+      $locallymodified[] = $file;
+      }
   }
   
- // $xml .= "dbAdd (true, \"Modified files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
- // $xml .= "dbAdd (true, \"Conflicting files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+  // Updated files
+  $xml .= "dbAdd (true, \"".$projectname." Updated files  (".count($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+   $previousdir = "";
+  foreach($updatedfiles as $file)
+    {
+    $directory = $file['$directory'];
+    if($previousdir=="" || $directory != $previousdir)
+      {
+      $xml .= " dbAdd (true, \"&lt;b&gt;".$directory."&lt;/b&gt;\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
+      $previousdir = $directory;
+      }
+    $xml .= " dbAdd ( false, \"".$file['$filename']." Revision: ".$file['$revision']."\",\"".$file['$diff_url']."\",2,\"\",\"1\",\"".$file['$author']."\",\"".$file['$email']."\",\"".$file['$log']."\")\n";
+    }
+
+  // Modified files
+  $xml .= "dbAdd (true, \"Modified files  (".count($locallymodified).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+  $previousdir = "";
+  foreach($locallymodified as $file)
+    {
+    $directory = $file['$directory'];
+    if($previousdir=="" || $directory != $previousdir)
+      {
+      $xml .= " dbAdd (true, \"&lt;b&gt;".$directory."&lt;/b&gt;\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
+      $previousdir = $directory;
+      }
+    $xml .= " dbAdd ( false, \"".$file['$filename']." Revision: ".$file['$revision']."\",\"".$file['$diff_url']."\",2,\"\",\"1\",\"".$file['$author']."\",\"".$file['$email']."\",\"".$file['$log']."\")\n";
+    }
+  
+  //$xml .= "dbAdd (true, \"Conflicting files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
 
   $xml .= "</javascript>";
   $xml .= "</updates>";
