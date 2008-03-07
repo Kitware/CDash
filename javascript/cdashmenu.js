@@ -9,4 +9,24 @@ $(document).ready(function() {
   
    $('#calendar').hide();
    
+   // Quick links
+   $('.quicklink').hide();
+   
+   $('.table-heading1').mouseover(function(){
+      $('.quicklink',this).show();                  
+      }).mouseout(function(){
+        $('.quicklink',this).hide();        
+        });
+   $('.table-heading2').mouseover(function(){
+      $('.quicklink',this).show();                  
+      }).mouseout(function(){
+        $('.quicklink',this).hide();        
+        });
+
+   $('.table-heading3').mouseover(function(){
+      $('.quicklink',this).show();                  
+      }).mouseout(function(){
+        $('.quicklink',this).hide();        
+        });
+   
     });   
