@@ -30,7 +30,9 @@
     <h3>Errors:</h3>
     <xsl:for-each select="error">
     <b><xsl:value-of select="buildname"/>: </b>
-    <xsl:value-of select="text"/><br/>
+    <xsl:for-each select="text">
+      <xsl:value-of select="."/><br/>
+    </xsl:for-each>
     </xsl:for-each>
   </xsl:if>
   
@@ -39,9 +41,12 @@
     <h3>Warnings:</h3>
     <xsl:for-each select="warning">
     <b><xsl:value-of select="buildname"/>: </b>
-    <xsl:value-of select="text"/><br/>
+    <xsl:for-each select="text">
+      <xsl:value-of select="."/><br/>
+    </xsl:for-each>
     </xsl:for-each>
   </xsl:if>
+<br/>
 </xsl:for-each>  
 </p>
 

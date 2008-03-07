@@ -91,7 +91,15 @@ while($build_array = mysql_fetch_array($builds))
     $xml .= "<warning>";
     }
   $xml .= "<line>".$build_array["sourceline"]."</line>";
-  $xml .= "<text>".htmlentities($build_array["text"])."</text>";
+  $text = htmlentities($build_array["text"]);
+  $textarray = explode("\n",$text);
+  foreach($textarray as $text)
+    {
+    if(strlen($text)>0)
+      {
+      $xml .= "<text>".$text."</text>";
+      }
+    }
   $xml .= "<sitename>".$build_array["name"]."</sitename>";  
   $xml .= "<buildname>".$build_array["buildname"]."</buildname>";
  if($build_array["type"] == 0)
