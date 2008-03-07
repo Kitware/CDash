@@ -423,7 +423,7 @@
 <!-- Look each group -->
 <xsl:for-each select="cdash/buildgroup">
   <table border="0" cellpadding="4" cellspacing="0" width="100%">
-  <xsl:attribute name="class">tabb<xsl:value-of select="sortlist"/></xsl:attribute>
+  <xsl:attribute name="class">tabb <xsl:value-of select="sortlist"/></xsl:attribute>
   <xsl:attribute name="id"><xsl:value-of select="/cdash/dashboard/projectid"/>_<xsl:value-of select="id"/></xsl:attribute>
   <xsl:call-template name="builds">
   <xsl:with-param name="type" select="."/>
