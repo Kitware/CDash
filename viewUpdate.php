@@ -131,6 +131,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $projecturl = $svnurl;
   
   $locallymodified = array();
+  $updatedfiles = array();
   
   // locally cached query result same as get_project_property($projectname, "cvsurl");
   foreach($updatearray as $file)
@@ -172,12 +173,12 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $file['$revision'] = $revision;    
     $file['$filename'] = $filename;  
     $file['$diff_url'] = $diff_url;  
-      
+     
     if($revision != "-1" && $log!="Locally modified file")
       {
       $updatedfiles[] = $file;
       }
-    else if($log=="Locally modified file")
+    else if(strstr($log,"Locally modified file"))
       {
       $locallymodified[] = $file;
       }
