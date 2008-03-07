@@ -40,7 +40,7 @@
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
        <xsl:if test="name!=$type/name">
-         [<a>
+         <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
      <xsl:value-of select="name"/></a> | 
       </xsl:if>
