@@ -5,14 +5,14 @@
     <xsl:param name="type"/>
    <xsl:if test="count($type/build)=0">
   
-   <tr class="table-heading1" >
+   <tr class="table-heading1">
       <td colspan="1" id="nob">
           <h3>No <xsl:value-of select="name"/> Builds</h3>
       </td>
   
   <!-- quick links -->
   <td colspan="12" align="right" id="nob">
-   <div>
+   <div class="quicklink">
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
        <xsl:if test="name!=$type/name">
@@ -30,13 +30,13 @@
    </xsl:if>
    
     <xsl:if test="count($type/build)>0">
- <thead> 
+     <thead> 
         <tr class="table-heading1" >
       <td colspan="1" id="nob">
           <h3><xsl:value-of select="$type/name"/></h3>
       </td>
   <td colspan="12" align="right" id="nob">
-   <div>
+   <div class="quicklink">
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
        <xsl:if test="name!=$type/name">
@@ -50,8 +50,7 @@
     </div> 
     </td>
    </tr>
-
-  
+   
    <tr class="table-heading">
       <th align="center" rowspan="2" id="sort_0">Site</th>
       <th align="center" rowspan="2" id="sort_1">Build Name</th>
@@ -401,8 +400,7 @@
          <xsl:call-template name="header"/>
        </head>
        <body bgcolor="#ffffff">
-       
-
+     
 <xsl:if test="cdash/dashboard/future=0">
 
 <xsl:if test="cdash/updates">
@@ -418,10 +416,10 @@
 </table>
 </xsl:if>
 
-
+<!-- Look each group -->
 <xsl:for-each select="cdash/buildgroup">
   <table border="0" cellpadding="4" cellspacing="0" width="100%">
-  <xsl:attribute name="class">tabb <xsl:value-of select="sortlist"/></xsl:attribute>
+  <xsl:attribute name="class">tabb<xsl:value-of select="sortlist"/></xsl:attribute>
   <xsl:attribute name="id"><xsl:value-of select="/cdash/dashboard/projectid"/>_<xsl:value-of select="id"/></xsl:attribute>
   <xsl:call-template name="builds">
   <xsl:with-param name="type" select="."/>
@@ -441,7 +439,7 @@
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" id="nob">
-   <div>
+   <div class="quicklink">
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
          [<a>
@@ -461,7 +459,7 @@
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" id="nob">
-   <div id="Coverage">
+   <div id="Coverage" class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
          [<a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
@@ -528,7 +526,7 @@
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" id="nob">
-   <div>
+   <div class="quicklink">
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
          [<a>
@@ -548,7 +546,7 @@
       </td>
       <!-- quick links -->
   <td colspan="12" align="right" id="nob">
-   <div id="DynamicAnalysis">
+   <div class="quicklink" id="DynamicAnalysis">
    <xsl:for-each select="/cdash/buildgroup">
          [<a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
