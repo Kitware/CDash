@@ -16,13 +16,13 @@
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
        <xsl:if test="name!=$type/name">
-         [<a>
+        <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-     <xsl:value-of select="name"/></a>]
+     <xsl:value-of select="name"/></a> | 
       </xsl:if>
     </xsl:for-each> 
-   [<a href="#Coverage">Coverage</a>]
-   [<a href="#DynamicAnalysis">Dynamic Analysis</a>]
+   <a href="#Coverage">Coverage</a> | 
+   <a href="#DynamicAnalysis">Dynamic Analysis</a>
     </div> 
     </td>
   
@@ -42,11 +42,11 @@
        <xsl:if test="name!=$type/name">
          [<a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-     <xsl:value-of select="name"/></a>]
+     <xsl:value-of select="name"/></a> | 
       </xsl:if>
     </xsl:for-each>
-   [<a href="#Coverage">Coverage</a>]
-   [<a href="#DynamicAnalysis">Dynamic Analysis</a>]
+   <a href="#Coverage">Coverage</a> | 
+   <a href="#DynamicAnalysis">Dynamic Analysis</a>
     </div> 
     </td>
    </tr>
@@ -442,11 +442,11 @@
    <div class="quicklink">
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
-         [<a>
+     <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-     <xsl:value-of select="name"/></a>]
+     <xsl:value-of select="name"/></a> | 
     </xsl:for-each>
-   [<a href="#DynamicAnalysis">Dynamic Analysis</a>]
+    <a href="#DynamicAnalysis">Dynamic Analysis</a>
     </div> 
     </td>
    </tr>
@@ -461,11 +461,11 @@
   <td colspan="12" align="right" id="nob">
    <div id="Coverage" class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
-         [<a>
+     <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-     <xsl:value-of select="name"/></a>]
+     <xsl:value-of select="name"/></a> | 
     </xsl:for-each>
-   [<a href="#DynamicAnalysis">Dynamic Analysis</a>]
+    <a href="#DynamicAnalysis">Dynamic Analysis</a>
     </div> 
     </td>
    </tr>
@@ -529,11 +529,11 @@
    <div class="quicklink">
    <xsl:attribute name="id"><xsl:value-of select="name"/></xsl:attribute>
    <xsl:for-each select="/cdash/buildgroup">
-         [<a>
+      <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-     <xsl:value-of select="name"/></a>]
+     <xsl:value-of select="name"/></a> | 
     </xsl:for-each>
-   [<a href="#Coverage">Coverage</a>]
+    <a href="#Coverage">Coverage</a>
     </div> 
     </td>
    </tr>
@@ -548,11 +548,11 @@
   <td colspan="12" align="right" id="nob">
    <div class="quicklink" id="DynamicAnalysis">
    <xsl:for-each select="/cdash/buildgroup">
-         [<a>
+      <a>
      <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
-     <xsl:value-of select="name"/></a>]
+     <xsl:value-of select="name"/></a> | 
     </xsl:for-each>
-   [<a href="#Coverage">Coverage</a>]
+    <a href="#Coverage">Coverage</a>
     </div> 
     </td>
    </tr>
