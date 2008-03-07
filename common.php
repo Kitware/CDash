@@ -269,8 +269,31 @@ function backup_xml_file($parser,$contents,$projectid)
   fclose($handle);
 }
 
+/** Return true if the user is allowed to see the page */
+function checkUserPolicy($userid,$projectid)
+{
+   $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
+  $project_array = mysql_fetch_array($project);
+ 
+   // If the project is private and the user is not logged in we quit
+  if(!$userid && $project_array["public"]!=1)
+    {
+    echo "You cannot access this project";
+    exit(0);
+    }
+  else if($userid)
+    {
+    $user2project = mysql_query("SELECT projectid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+    if(mysql_num_rows($user2project) == 0)
+      {
+      echo "You cannot access this project";
+      exit(0);
+      }
+    }
+}
+
 /** return an array of projects */
-function get_projects()
+function get_projects($userid=0)
 {
   $projects = array();
   
@@ -278,8 +301,18 @@ function get_projects()
 
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
-
-  $projectres = mysql_query("SELECT id,name FROM project WHERE public='1' ORDER BY name");
+  
+  if(strlen($userid)==0 || $userid==0)
+    {
+    $projectres = mysql_query("SELECT id,name FROM project WHERE public='1' ORDER BY name");
+    }
+  else // If the userid is logged in we display his projects
+    {
+    $projectres = mysql_query("SELECT id,name FROM project WHERE public='1' 
+                               OR id IN (SELECT projectid as id FROM user2project 
+                               WHERE userid='$userid')  ORDER BY name");
+    }
+  
   while($project_array = mysql_fetch_array($projectres))
     {
     $project = array();
@@ -471,7 +504,22 @@ function add_coverage($buildid,$coverage_array)
     $fullpath = $coverage["fullpath"];
 
     // Create an empty file if doesn't exists
-    $coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
+    $coveragefile = mysql_query("SELECT id FROM coveragefile WHERE fullpath='$fullpath' AND file IS NULL");
+    if(mysql_num_rows($coveragefile)==0)
+      {
+      // Do not compute the crc32, that means it's a temporary file
+      // Only when the crc32 is computed it means that the file is valid
+      mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+      $fileid = mysql_insert_id();
+      }
+    else
+      {
+      $coveragefile_array = mysql_fetch_array($coveragefile);
+      $fileid = $coveragefile_array["id"];
+      }
+      
+    // Create an empty file if doesn't exists
+    /*$coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
                                  WHERE cf.id=c.fileid AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
     if(mysql_num_rows($coveragefile)==0)
       {
@@ -482,7 +530,8 @@ function add_coverage($buildid,$coverage_array)
       {
       $coveragefile_array = mysql_fetch_array($coveragefile);
       $fileid = $coveragefile_array["id"];
-      }
+      }*/
+      
     
     $covered = $coverage["covered"];
     $loctested = $coverage["loctested"];
@@ -509,14 +558,33 @@ function add_coverage($buildid,$coverage_array)
     }
   // Insert into coverage
   mysql_query($sql);
- add_last_sql_error("add_coverage");
+  add_last_sql_error("add_coverage");
 }
 
 /** Create a coverage file */
 function add_coveragefile($buildid,$fullpath,$filecontent)
 {
+  // Compute the crc32 of the file
+  $crc32 = crc32($fullpath.$filecontent);
+  
+  $coveragefile = mysql_query("SELECT id FROM coveragefile WHERE crc32='$crc32'");
+   
+  if(mysql_num_rows($coveragefile)) // we have the same crc32
+    {
+    $coveragefile_array = mysql_fetch_array($coveragefile);
+    $fileid = $coveragefile_array["id"];
+    }
+  else // The file doesn't exist in the database
+    {
+    // We find the current fileid
+    $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.fileid=cf.id AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+    $coveragefile_array = mysql_fetch_array($coveragefile);
+    $fileid = $coveragefile_array["id"];
+    mysql_query ("UPDATE coveragefile SET file='$filecontent',crc32='$crc32' WHERE id='$fileid'"); 
+    }
+
   // Check if we have the file
-  $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.fileid=cf.id AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+  /*$coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.fileid=cf.id AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
   $coveragefile_array = mysql_fetch_array($coveragefile);
   $fileid = $coveragefile_array["id"];
   
@@ -535,7 +603,7 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
       mysql_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$previousfileid'");
       add_last_sql_error("add_coveragefile");
       }  
-    }
+    }*/
   return $fileid;
 }
 

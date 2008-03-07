@@ -86,7 +86,12 @@
 
     <xsl:for-each select="cdash/project">
       <tr class="table-heading">
-        <td align="center" ><xsl:value-of select="name"/> </td>
+        <td align="center" >
+        <a>
+        <xsl:attribute name="href">
+        index.php?project=<xsl:value-of select="name"/>
+        </xsl:attribute>
+        <xsl:value-of select="name"/></a> </td>
         <td bgcolor="#DDDDDD" id="nob"><a>
         <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>[Edit subscription]</a>
         <xsl:if test="role>0">

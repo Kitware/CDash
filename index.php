@@ -70,6 +70,7 @@ function generate_index_table()
  $xml .= "</database>";
  
   // User
+  $userid = 0;
   if(isset($_SESSION['cdash']))
     {
     $xml .= "<user>";
@@ -81,33 +82,33 @@ function generate_index_table()
     $xml .= "</user>";
     }
         
-  $projects = get_projects();
+  $projects = get_projects($userid);
   $row=0;
   foreach($projects as $project)
     {
     $xml .= "<project>";
     $xml .= "<name>".$project['name']."</name>";
       
-       if($project['last_build'] == "NA")
-         {
-            $xml .= "<lastbuild>NA</lastbuild>";
-         }
-       else
-         {
-        $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
-        }
+    if($project['last_build'] == "NA")
+      {
+      $xml .= "<lastbuild>NA</lastbuild>";
+      }
+    else
+      {
+      $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
+      }
     
     // Display the first build
     if($project['first_build'] == "NA")
-         {
-            $xml .= "<firstbuild>NA</firstbuild>";
-         }
-       else
-         {
-        $xml .= "<firstbuild>".date("Y-m-d H:i:s T",strtotime($project['first_build']. "UTC"))."</firstbuild>";
-        }
+      {
+      $xml .= "<firstbuild>NA</firstbuild>";
+      }
+    else
+      {
+      $xml .= "<firstbuild>".date("Y-m-d H:i:s T",strtotime($project['first_build']. "UTC"))."</firstbuild>";
+      }
 
-        $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
+    $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
     if($row == 0)
@@ -157,6 +158,8 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     $projectname = "NA";
     }
+
+  checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
     
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - ".$projectname."</title>";

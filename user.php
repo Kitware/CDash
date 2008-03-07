@@ -47,7 +47,7 @@ if ($session_OK)
     }
   
   // Go through the public projects
-  $project = mysql_query("SELECT name,id FROM project WHERE id NOT IN (SELECT projectid as id FROM user2project WHERE userid='$userid' AND public='1')");
+  $project = mysql_query("SELECT name,id FROM project WHERE id NOT IN (SELECT projectid as id FROM user2project WHERE userid='$userid') AND public='1'");
   $j = 0;
   while($project_array = mysql_fetch_array($project))
     {
