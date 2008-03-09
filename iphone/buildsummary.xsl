@@ -1,18 +1,21 @@
 <xsl:stylesheet
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
  
-    <xsl:output method="html" encoding="iso-8859-1"/>
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+
     <xsl:template match="/">
       <html>
        <head>
-  
        <title><xsl:value-of select="cdash/title"/></title>
          <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;"/>
         <style type="text/css" media="screen">@import "iphone.css";</style>
          <script type="application/x-javascript" src="jquery-1.1.4.js"></script>
          <script type="application/x-javascript" src="jquery-iphone.js"></script>
          <script type="application/x-javascript" src="iphone.js"></script>
-         </head><body orient="landscape">
+         </head>
+         
+         <body orient="landscape">
 
    <div id="Top"></div>
     <h1 id="pageTitle">CDash</h1>
