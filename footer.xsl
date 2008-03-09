@@ -1,14 +1,15 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-        
-<xsl:output method="html" encoding="iso-8859-1"/>
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+
 <xsl:template name="footer" match="/">
 <table width="100%" cellpadding="0" cellspacing="0">
   <tr>
    <td height="66" align="left" valign="middle" class="footer">
-   <span style="float:right">
-   <table>
+   <table style="float:right">
     <tr>
-     <td><img src="images/logo2.gif" height="66"/></td>
+     <td><img src="images/logo2.gif" height="66" alt="CDash logo"/></td>
    <td>CDash 1.0 <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text> 2008 
    <a href="http://www.kitware.com">Kitware Inc.</a>
    <xsl:text>&#160;</xsl:text><br/>
@@ -16,9 +17,8 @@
  </td>     
 </tr>
    </table>
-   </span>
    <xsl:text>&#160;</xsl:text>
-   <img src="images/blogo.gif" height="66" />
+   <img src="images/blogo.gif" height="66" alt="logo" />
    </td>
   </tr>
 </table>
