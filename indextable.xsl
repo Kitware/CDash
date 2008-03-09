@@ -3,13 +3,13 @@
 
    <xsl:include href="footer.xsl"/>
    
-   <xsl:output method="xml"   doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" 
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
         
-  <xsl:output method="html" encoding="iso-8859-1"/>
+ <!--  <xsl:output method="html" encoding="iso-8859-1"/> -->
  
     <xsl:template match="/">
-      <html>
+       <html>
        <head>
        <title><xsl:value-of select="cdash/title"/></title>
         <meta name="robots" content="noindex,nofollow" />
@@ -18,12 +18,12 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
        </head>
-       <body bgcolor="#ffffff">
+       <body>
  
  <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
     <td>
-  <table width="100%" align="center" cellpadding="0" cellspacing="0" >
+  <table width="100%"  cellpadding="0" cellspacing="0" >
   <tr>
     <td height="30" valign="middle">
     <table width="100%" cellspacing="0" cellpadding="0">
@@ -61,7 +61,7 @@
   <tr>
     <td width="100%" align="left" class="topbg">
 
-    <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" >
     <tr>
     <td width="195" height="121" class="topbgleft">
     <xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
@@ -77,9 +77,6 @@
   </table>
   </td>
     </tr>
-  <tr>
-   
-  </tr>
 </table></td>
   </tr>
 </table>
@@ -90,7 +87,7 @@
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
 <tr class="table-heading1">
-  <td colspan="4" align="left" id="nob"><h3>Available Dashboards</h3></td>
+  <td colspan="4" align="left" class="nob"><h3>Available Dashboards</h3></td>
 </tr>
 
   <tr class="table-heading">
@@ -98,7 +95,7 @@
      <td align="center"><b>Submissions</b></td>
     <!-- <td align="center">Tests</td> -->
   <td align="center"><b>First build</b></td>
-     <td align="center" id="nob"><b>Last activity</b></td>
+     <td align="center" class="nob"><b>Last activity</b></td>
   </tr>
 
    <xsl:for-each select="cdash/project">
@@ -119,18 +116,19 @@
     <td align="center"><xsl:value-of select="nbuilds"/></td>
   <td align="center"><xsl:value-of select="firstbuild"/></td>
     <!-- <th align="center">Tests</th> <td align="right"><xsl:value-of select="ntests"/></td>-->
-    <td align="center" id="nob"><xsl:value-of select="lastbuild"/></td>
+    <td align="center" class="nob"><xsl:value-of select="lastbuild"/></td>
     </tr>
    </xsl:for-each>
+
+</tbody>
+</table>
    
-   <table width="100%" cellspacing="0" cellpadding="0">
+<table width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
 </tr>
 </table>
 
-</tbody>
-</table>
 
 <br/>
 Database size: <b><xsl:value-of select="cdash/database/size"/></b>
