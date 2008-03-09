@@ -637,15 +637,15 @@ if(!isset($projectname )) // if the project name is not set we display the table
   }
 else
   {
-    $start = microtime_float();
+  $start = microtime_float();
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
 
   $xml = generate_main_dashboard_XML($projectid,$date);
+  
+  $end = microtime_float();
+  $xml .= "<generationtime>".round($end-$start,3)".</generationtime>";
   // Now doing the xslt transition
   generate_XSLT($xml,"index");
-    $end = microtime_float();
-    $t = round($end-$start,4);
-    echo "<font size=\"1\">Generated in ".$t." seconds.</font>";
   }
 ?>
