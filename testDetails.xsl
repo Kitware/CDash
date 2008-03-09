@@ -100,7 +100,7 @@
 <xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
 [Show Failing/Passing Graph]
 </a>
-<div name="passinggraph" id="passinggraph"></div>
+<div id="passinggraph"></div>
 <center>
 <div id="passinggrapholder"></div>
 </center>
