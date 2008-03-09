@@ -338,6 +338,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= "<buildgroup>";
         $rowparity = 0;
         $xml .= add_XML_value("name",$group["name"]);
+        $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
         $xml .= add_XML_value("id",$group["id"]);
         $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
         if($previousgroupposition == $lastGroupPosition)
@@ -359,6 +360,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $rowparity = 0;
       $received_builds = array();
       $xml .= add_XML_value("name",$groupname);
+      $xml .= add_XML_value("linkname",str_replace(" ","_",$groupname));
       $xml .= add_XML_value("id",$build_array["groupid"]);
       $previousgroupposition = $groupposition;
       }
@@ -574,6 +576,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "<buildgroup>";  
     $xml .= add_XML_value("id",$group["id"]);
     $xml .= add_XML_value("name",$group["name"]);
+    $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
     $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
     if($i == $lastGroupPosition)
       {
