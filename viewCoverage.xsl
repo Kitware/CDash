@@ -5,7 +5,8 @@
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
     
-    <xsl:output method="html" encoding="iso-8859-1"/>
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
     <xsl:template match="/">
       <html>
        <head>
@@ -14,6 +15,7 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+      <xsl:call-template name="headscripts"/> 
        </head>
        <body bgcolor="#ffffff">
    

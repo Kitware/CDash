@@ -2,7 +2,10 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 <xsl:include href="header.xsl"/>
 <xsl:include href="footer.xsl"/>
-<xsl:output method="html" encoding="iso-8859-1"/>
+
+<xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+  
 <xsl:template match="/">
 <html>
 <head>
@@ -14,11 +17,13 @@
     </xsl:attribute>
   </link>
   
+  <xsl:call-template name="headscripts"/> 
   <!-- Include JavaScript -->
   <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script> 
-
+  
 </head>
 <body bgcolor="#ffffff">
+
 <xsl:call-template name="header"/>
 
 <br/>
