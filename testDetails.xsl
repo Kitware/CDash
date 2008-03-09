@@ -91,7 +91,7 @@
 <xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
 [Show Test Time Graph]
 </a>
-<div name="timegraph" id="timegraph"></div>
+<div id="timegraph"></div>
 <center>
 <div id="timegrapholder"></div>
 </center>
