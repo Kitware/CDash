@@ -589,7 +589,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= add_XML_value("totalNotRun",$totalnotrun);
   $xml .= add_XML_value("totalFail",$totalfail);
   $xml .= add_XML_value("totalPass",$totalpass); 
-    
+   
   $end = microtime_float();
   $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
   $xml .= "</cdash>";
