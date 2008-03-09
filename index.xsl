@@ -313,7 +313,7 @@
       -->
    </tr>
   </xsl:for-each>
-
+  </tbody>
   
 <!-- Row displaying the totals -->
 <xsl:if test="count(/cdash/buildgroup/build/buildid)>0 and $type/last=1">
@@ -406,7 +406,7 @@
    </tr>
 </xsl:if>
 
-  </tbody>
+
   </xsl:if>
 
 </xsl:template>
@@ -429,11 +429,17 @@
                   
          <!-- Include BuildGroup JavaScript -->
          <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script> 
-      <xsl:call-template name="headscripts"/> 
+         <xsl:call-template name="headscripts"/> 
        </head>
        <body bgcolor="#ffffff">
-     
-         <xsl:call-template name="header"/>
+
+<xsl:call-template name="header"/>
+ 
+ <input type="hidden" id="projectname">
+ <xsl:attribute name="value"><xsl:value-of select="cdash/dashboard/projectname"/>
+ </xsl:attribute>
+ </input>
+       
 <xsl:if test="cdash/dashboard/future=0">
 
 <xsl:if test="cdash/updates">
