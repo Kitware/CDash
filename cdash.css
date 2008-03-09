@@ -100,6 +100,14 @@ a:active{
  background-color : #c1c1c1;
  font-size: 13px;
 }
+
+.table-heading .nob {
+ border-top-width: 0px;
+ border-right-width: 0px;
+ border-bottom-width: 0px;
+ border-left-width: 0px;
+}
+
 .title-divider { background-color: #b0c4de; text-align: center; font-weight: bold; }
 .table-heading1 {
  background-color : #3867d1;
@@ -160,6 +168,8 @@ a:active{
 background-color: #999999;
 }
 
+   
+
  .treven {
  background-color : #ececec;
  margin: 0px;
@@ -172,6 +182,21 @@ background-color: #999999;
 .min {
  background-color: #fff687;
 }
+
+.tabb .nob {
+ border-top-width: 0px;
+ border-right-width: 0px;
+ border-bottom-width: 0px;
+ border-left-width: 0px;
+}
+
+.table-heading1 .nob {
+ border-top-width: 0px;
+ border-right-width: 0px;
+ border-bottom-width: 0px;
+ border-left-width: 0px;
+}
+
 .botl {
  border-bottom-width: 2px;
  border-bottom-style: solid;
@@ -183,6 +208,7 @@ background-color: #999999;
  border-bottom-width: 0px;
  border-left-width: 0px;
 }
+
 #nob{
  border-top-width: 0px;
  border-right-width: 0px;
@@ -202,6 +228,14 @@ background-color: #999999;
  font-family: Arial, Helvetica, sans-serif;
  color: #FFFFFF;
 }
+
+.table-heading2 .nob {
+ border-top-width: 0px;
+ border-right-width: 0px;
+ border-bottom-width: 0px;
+ border-left-width: 0px;
+}
+
 .table-heading2 a:link{
  font-size:10px;
  color:#FFFFFF;
@@ -246,6 +280,13 @@ background-color: #999999;
  font-family: Arial, Helvetica, sans-serif;
  color: #FFFFFF;
 }
+.table-heading3 .nob {
+ border-top-width: 0px;
+ border-right-width: 0px;
+ border-bottom-width: 0px;
+ border-left-width: 0px;
+}
+
 .table-heading3 h3{
  font-family: Arial, Helvetica, sans-serif;
  color: #FFFFFF;
@@ -601,7 +642,7 @@ img.datepicker_trigger {
     display/**/: block; /*sorry for IE5*/
     position: absolute; /*must have*/
     z-index: -1; /*must have*/
-    filter: mask(); /*must have*/
+    /* filter: mask(); must have*/
     top: -4px; /*must have*/
     left: -4px; /*must have*/
     width: 200px; /*must have*/
