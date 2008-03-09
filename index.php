@@ -127,6 +127,7 @@ function generate_index_table()
 /** Generate the main dashboard XML */
 function generate_main_dashboard_XML($projectid,$date)
 {
+  $start = microtime_float();
   $noforcelogin = 1;
   include("config.php");
   include('login.php');
@@ -588,7 +589,9 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= add_XML_value("totalNotRun",$totalnotrun);
   $xml .= add_XML_value("totalFail",$totalfail);
   $xml .= add_XML_value("totalPass",$totalpass); 
-  
+    
+  $end = microtime_float();
+  $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
   $xml .= "</cdash>";
 
   return $xml;
@@ -637,14 +640,10 @@ if(!isset($projectname )) // if the project name is not set we display the table
   }
 else
   {
-  $start = microtime_float();
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
-
-  $xml = generate_main_dashboard_XML($projectid,$date);
   
-  $end = microtime_float();
-  $xml .= "<generationtime>".round($end-$start,3)".</generationtime>";
+  $xml = generate_main_dashboard_XML($projectid,$date);
   // Now doing the xslt transition
   generate_XSLT($xml,"index");
   }
