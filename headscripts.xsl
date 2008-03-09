@@ -1,14 +1,17 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-        
-   <!--  <xsl:output method="html"/> -->
-    <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+
+  <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+
     <xsl:template name="headscripts" match="/">
 
     <xsl:comment><![CDATA[[if IE]>
     <script language="javascript" type="text/javascript" src="javascript/excanvas.js">
     </script>
     <![endif]]]></xsl:comment>
+    
+    <link rel="shortcut icon" href="favicon.ico"/>
 
     <!-- Include JQuery -->
     <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
@@ -38,7 +41,9 @@
    <!-- include jqModal --> 
   <script src="javascript/jqModal.js" type="text/javascript" charset="utf-8"></script>  
   <link type="text/css" rel="stylesheet" media="all" href="javascript/jqModal.css" />
- 
+
+<!-- include sticky table  
+  <script src="javascript/tableheader.js" type="text/javascript" charset="utf-8"></script> -->
 
     </xsl:template>
 </xsl:stylesheet>
