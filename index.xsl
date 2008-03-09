@@ -314,9 +314,9 @@
    </tr>
   </xsl:for-each>
   </tbody>
-  
 <!-- Row displaying the totals -->
 <xsl:if test="count(/cdash/buildgroup/build/buildid)>0 and $type/last=1">
+ <tbody> 
    <tr class="total">
       <td align="left">Totals</td>
       <td align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
@@ -404,6 +404,7 @@
       <td class="nob"></td>
       <!-- <td bgcolor="#ffffff"></td> -->
    </tr>
+</tbody>
 </xsl:if>
 
 
