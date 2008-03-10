@@ -30,7 +30,7 @@
     <th>Build Stamp</th>
     <th>Status</th>
     <th>Time</th>
-    <th id="nob">Detail</th>
+    <th class="nob">Detail</th>
   </tr>
 <xsl:for-each select="cdash/builds/build">
   <tr>
@@ -64,7 +64,7 @@
     <td>
       <xsl:value-of select="time"/>
     </td>
-    <td id="nob">
+    <td class="nob">
       <xsl:value-of select="details"/>
     </td>
   </tr>
