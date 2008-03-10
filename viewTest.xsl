@@ -33,7 +33,7 @@
     <th>Name</th>
     <th>Status</th>
     <th>Time</th>
-    <th id="nob">Details</th>
+    <th class="nob">Details</th>
   </tr>
 <xsl:for-each select="cdash/tests/test">
   <tr>
@@ -61,7 +61,7 @@
     <td align="right">
       <xsl:value-of select="execTime"/>
     </td>
-    <td align="right" id="nob">
+    <td align="right" class="nob">
       <xsl:value-of select="details"/>
     </td>
   </tr>
