@@ -16,7 +16,7 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
        </head>
-       <body>
+   <body onload="load()" onunload="GUnload()">
               
        <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
@@ -59,7 +59,7 @@
   <tr>
     <td width="100%" align="left" class="topbg">
 
-    <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" >
     <tr>
     <td width="195" height="121" class="topbgleft">
     </td>
@@ -75,7 +75,7 @@
   </td>
     </tr>
   <tr>
-    <td align="left" class="topbg2"><table width="100%" height="28" border="0" cellpadding="0" cellspacing="0">
+    <td align="left" class="topbg2"><table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
 <li id="Dartboard">
@@ -147,9 +147,7 @@
       }
     }
     </script>
-   <body onload="load()" onunload="GUnload()">
   <center><div id="map" style="width: 700px; height: 400px"></div></center>
-  </body>
 
 <script type="text/javascript">
   Rounded('rounded', 15, 15,0,0);
