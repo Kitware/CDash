@@ -28,7 +28,7 @@
   <tr>
     <td width="100%" align="left" class="topbg">
  
-    <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" >
     <tr>
     <td width="195" height="121" class="topbgleft">
     <xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>

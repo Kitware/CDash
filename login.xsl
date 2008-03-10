@@ -28,7 +28,7 @@
   <tr>
     <td width="100%" align="left" class="topbg">
  
-    <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" >
     <tr>
     <td width="195" height="121" class="topbgleft">
     <xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
@@ -45,7 +45,7 @@
   </td>
     </tr>
   <tr>
-    <td align="left" class="topbg2"><table width="100%" height="28" border="0" cellpadding="0" cellspacing="0">
+    <td align="left" class="topbg2"><table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
 <li id="Dartboard">
@@ -67,25 +67,25 @@
 <br/>
 
 <!-- Main -->
+<form method="post" action="" name="loginform">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
-<form method="post" action="" name="loginform">
 <tr class="table-heading">
-  <td width="10%" id="nob"><div align="right"> Email: </div></td>
-  <td  width="90%" id="nob"><input class="textbox" name="login" size="40"/></td>
+  <td width="10%" class="nob"><div align="right"> Email: </div></td>
+  <td  width="90%" class="nob"><input class="textbox" name="login" size="40"/></td>
 </tr>
 <tr class="table-heading">
-    <td width="10%" id="nob" ><div align="right">Password: </div></td>
-    <td width="90%" id="nob"><input class="textbox" type="password"  name="passwd" size="20"/></td>
+    <td width="10%" class="nob" ><div align="right">Password: </div></td>
+    <td width="90%" class="nob"><input class="textbox" type="password"  name="passwd" size="20"/></td>
 </tr>
 <tr class="table-heading">
-  <td width="10%" id="nob"></td>
-  <td width="90%" id="nob"><input type="submit" value="Login &gt;&gt;" name="sent" class="textbox"/>
+  <td width="10%" class="nob"></td>
+  <td width="90%" class="nob"><input type="submit" value="Login &gt;&gt;" name="sent" class="textbox"/>
   </td>
 </tr> 
-</form>
 </tbody>
 </table>
+</form>
 
 <!-- FOOTER -->
 <br/>
