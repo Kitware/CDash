@@ -797,14 +797,14 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
   $projecturl = get_project_property($projectname, "cvsurl");
 
   foreach($commits as $commit)
-  {
+    {
     $directory = $commit['directory'];
 
     if($directory != $previousdir)
-    {
-      $xml .= "dbAdd(true, \"&lt;b&gt;".$directory."&lt;/b&gt;\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
+      {
+      $xml .= "dbAdd(true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
-    }
+      }
 
     $filename = $commit['filename'];
     $revision = $commit['revision'];
@@ -824,7 +824,7 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     $diff_url = XMLStrFormat($diff_url);
 
     $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\")\n";
-  }
+    }
 
   $xml .= "</javascript>\n";
   $xml .= "</updates>";
