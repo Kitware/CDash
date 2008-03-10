@@ -177,7 +177,7 @@
       </div>
       </xsl:if>
      
-      <xsl:if test="string-length(expecteddivnam)>0"> 
+      <xsl:if test="string-length(expecteddivname)>0"> 
       <div>
       <xsl:attribute name="id">infoexpected_<xsl:value-of select="expecteddivname"/></xsl:attribute>
       </div>
