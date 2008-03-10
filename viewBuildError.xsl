@@ -31,7 +31,7 @@ Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:te
 <xsl:value-of select="cdash/nonerrortypename"/>s</a> are here.</p>
 <xsl:for-each select="cdash/errors/error">
 <hr/>
-<h3><A Name="650">Build Log line <xsl:value-of select="logline"/></A></h3>
+<h3><a>Build Log line <xsl:value-of select="logline"/></a></h3>
 <xsl:if test="sourceline>0">
   <br/>
   File: <b><xsl:value-of select="sourcefile"/></b>
