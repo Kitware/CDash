@@ -269,7 +269,7 @@
 <a>
 <xsl:attribute name="href">javascript:addnote_click(<xsl:value-of select="cdash/build/id"/>,'<xsl:value-of select="cdash/user/id"/>')</xsl:attribute>
 [Add a Note to this Build]</a>
-<div name="addnote" id="addnote"></div>
+<div id="addnote"></div>
 <br/>
 
 <!-- Graph -->
@@ -279,7 +279,7 @@
 <xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
 [Show Build Time Graph]
 </a>
-<div name="graph" id="graph"></div>
+<div id="graph"></div>
 <center>
 <div id="grapholder"></div>
 </center>
@@ -346,7 +346,7 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 <xsl:for-each select="cdash/build/error">
 <xsl:if test="sourceline>0">
 <hr/>
-<h3><A Name="650">Build Log line <xsl:value-of select="logline"/></A></h3>
+<h3><a>Build Log line <xsl:value-of select="logline"/></a></h3>
   <br/>
   File: <b><xsl:value-of select="sourcefile"/></b>
   Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
@@ -369,7 +369,7 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 <xsl:for-each select="cdash/build/warning">
 <xsl:if test="sourceline>0">
 <hr/>
-<h3><A Name="650">Build Log line <xsl:value-of select="logline"/></A></h3>
+<h3><a>Build Log line <xsl:value-of select="logline"/></a></h3>
   <br/>
   File: <b><xsl:value-of select="sourcefile"/></b>
   Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
