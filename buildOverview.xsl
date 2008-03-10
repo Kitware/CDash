@@ -23,7 +23,6 @@
 <xsl:value-of select="cdash/dashboard/startdate"/>
 </h3>
 
-<p>
 <xsl:for-each select="cdash/sourcefile">
 <div class="title-divider"><xsl:value-of select="name"/></div>
 
@@ -50,7 +49,6 @@
   </xsl:if>
 <br/>
 </xsl:for-each>  
-</p>
 
 <br/>
 <br/>
