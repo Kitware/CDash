@@ -100,11 +100,21 @@ $group = mysql_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' A
 ?>
 
 <script type="text/javascript" charset="utf-8">
+function URLencode(sStr) 
+{
+    return escape(sStr)
+       .replace(/\+/g, '%2B')
+          .replace(/\"/g,'%22')
+             .replace(/\'/g, '%27');
+}
 
 function markasnonexpected_click(siteid,buildname,buildtype,groupid,expected,divname)
 {
   var group = "#infoexpected_"+divname;
   $(group).html("updating...");
+  
+  buildname = URLencode(buildname);
+  
   $.post("ajax/expectedbuildgroup.php?siteid="+siteid+"&buildname="+buildname+"&buildtype="+buildtype+"&divname="+divname,{markexpected:"1",groupid:groupid,expected:expected});
   $(group).html("updated!");
   $(group).fadeOut('slow');
@@ -120,6 +130,8 @@ function movenonexpectedbuildgroup_click(siteid,buildname,buildtype,groupid,prev
     {
     expectedbuild = 1;
     }
+    
+  buildname = URLencode(buildname);
 
   var group = "#infoexpected_"+divname;
   $(group).html("addinggroup");
