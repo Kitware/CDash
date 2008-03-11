@@ -106,7 +106,7 @@ if($Submit)
     $HomeURL = stripHTTP($_POST["homeURL"]);
     $CVSURL = stripHTTP($_POST["cvsURL"]);
     $BugURL = stripHTTP($_POST["bugURL"]);
-  $DocURL = stripHTTP($_POST["docURL"]);
+    $DocURL = stripHTTP($_POST["docURL"]);
     @$Public = $_POST["public"];
     if(!isset($Public))
       {
@@ -155,6 +155,24 @@ if($Submit)
          }
       } // end if contents
       
+    // Avoid errors with MySQL
+    if(!isset($EmailBrokenSubmission))
+      {
+      $EmailBrokenSubmission = 0;
+      }      
+    if(!isset($EmailBuildMissing))
+      {
+      $EmailBuildMissing = 0;
+      }  
+    if(!isset($EmailLowCoverage))
+      {
+      $EmailLowCoverage = 0;
+      }    
+    if(!isset($EmailTestTimingChanged))
+      {
+      $EmailTestTimingChanged = 0;
+      }
+      
     //We should probably check the type of the image here to make sure the user
     //isn't trying anything fruity
     $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
@@ -165,7 +183,7 @@ if($Submit)
       {
       $projectid = mysql_insert_id();
       $xml .= "<project_name>$Name</project_name>";
-   $xml .= "<project_id>$projectid</project_id>";
+      $xml .= "<project_id>$projectid</project_id>";
       $xml .= "<project_created>1</project_created>";
       }
     else
@@ -184,6 +202,14 @@ if($Submit)
     mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
     $id = mysql_insert_id();
     mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
+    
+    // Add administrator to the project
+    mysql_query("INSERT INTO user2project(userid,projectid,role) VALUES ('1','$projectid','2')");
+    // Add current user to the project
+    if($userid != 1)
+      {
+      mysql_query("INSERT INTO user2project(userid,projectid,role) VALUES ('$userid','$projectid','2')");
+     }
     }
   else
     {
@@ -226,7 +252,7 @@ if($Update)
   $HomeURL = stripHTTP($_POST["homeURL"]);
   $CVSURL = stripHTTP($_POST["cvsURL"]);
   $BugURL = stripHTTP($_POST["bugURL"]);
- $DocURL = stripHTTP($_POST["docURL"]);
+  $DocURL = stripHTTP($_POST["docURL"]);
   @$Public = $_POST["public"];
   $CoverageThreshold = $_POST["coverageThreshold"];
   $NightlyTime = $_POST["nightlyTime"];
