@@ -127,6 +127,22 @@ if($CompressCoverage)
     $previouscrc32 = $crc32;
     $i++;
     }
+ 
+  /** Remove the Duplicates in the coverage section */
+  $coverage = mysql_query("SELECT buildid,fileid,count(*) as cnt FROM coverage GROUP BY buildid,fileid");
+  while($coverage_array = mysql_fetch_array($coverage))
+    {
+    $cnt = $coverage_array["cnt"];
+    if($cnt > 1)
+      {
+      $buildid = $coverage_array["buildid"]; 
+      $fileid = $coverage_array["fileid"]; 
+      $limit = $cnt-1;
+      $sql = "DELETE FROM coverage WHERE buildid='$buildid' AND fileid='$fileid'";
+      $sql .= " LIMIT ".$limit;
+      mysql_query($sql); 
+      }
+    }
 
   /** SECOND STEP */    
     
