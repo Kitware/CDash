@@ -24,12 +24,7 @@
 </h3>
 
 <!-- Message -->
-<table>
-  <tr>
-    <td width="95"><div align="right"></div></td>
-    <td><div style="color: green;"><xsl:value-of select="cdash/message" /></div></td>
-  </tr>
-</table>
+<xsl:value-of select="cdash/message" />
 
 
 <xsl:for-each select="cdash/sourcefile">

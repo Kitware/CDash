@@ -61,19 +61,24 @@ $end_UTCDate = gmdate("YmdHis",$end_timestamp);
 $sql =  "SELECT s.name,b.name as buildname,be.type,be.sourcefile,be.sourceline,be.text
                          FROM build AS b,builderror as be,site AS s
                          WHERE b.starttime<$end_UTCDate AND b.starttime>$beginning_UTCDate
-                         AND b.projectid='$projectid' AND be.buildid=b.id AND be.sourcefile!=''
+                         AND b.projectid='$projectid' AND be.buildid=b.id 
                          AND s.id=b.siteid
                          ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC";
     
 $builds = mysql_query($sql);
 echo mysql_error();
 
-$current_file = "";
+if(mysql_num_rows($builds)==0)
+  {
+  $xml .= "<message>No warnings or errors today!</message>";
+  }
+
+$current_file = "ThisIsMyFirstFile";
 while($build_array = mysql_fetch_array($builds))
 {
   if($build_array["sourcefile"] != $current_file)
     {
-    if($current_file != "")
+    if($current_file != "ThisIsMyFirstFile")
       {
       $xml .= "</sourcefile>";
       }
@@ -120,6 +125,7 @@ if(mysql_num_rows($builds)>0)
 
 
 $xml .= "</cdash>";
+
 
 generate_XSLT($xml, "buildOverview");
 ?>
