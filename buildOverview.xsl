@@ -23,6 +23,15 @@
 <xsl:value-of select="cdash/dashboard/startdate"/>
 </h3>
 
+<!-- Message -->
+<table>
+  <tr>
+    <td width="95"><div align="right"></div></td>
+    <td><div style="color: green;"><xsl:value-of select="cdash/message" /></div></td>
+  </tr>
+</table>
+
+
 <xsl:for-each select="cdash/sourcefile">
 <div class="title-divider"><xsl:value-of select="name"/></div>
 
