@@ -187,12 +187,14 @@
       <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="updateerrors > 0">
+          <xsl:when test="updateerrors = 1">
             error
             </xsl:when>
-            <xsl:when test="updateerrors!=0">
-            normal
-            </xsl:when> 
+            <xsl:otherwise>
+            <xsl:if test="updatewarning=1">
+            warning
+            </xsl:if>
+            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
