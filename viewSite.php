@@ -47,7 +47,7 @@ $siteinformation_array["processorclockfrequency"] = "NA";
 
 $currenttimestamp = gmdate("Y-m-d H:i:s",$currenttime+3600*24); // Current timestamp is the beginning of the dashboard and we want the end
 
-$query = mysql_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttimestamp' ORDER BY timestamp ASC LIMIT 1");
+$query = mysql_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttimestamp' ORDER BY timestamp DESC LIMIT 1");
 if(mysql_num_rows($query) > 0)
   {
  $siteinformation_array = mysql_fetch_array($query);
