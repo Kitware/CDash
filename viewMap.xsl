@@ -120,7 +120,8 @@
   <script type="text/javascript">
       <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
    </script>
-    <script type="text/javascript">
+  <xsl:text disable-output-escaping="yes">
+    &lt;script type="text/javascript"&gt;
       // Creates a marker whose info window displays the letter corresponding
       // to the given index.
       function createMarker(point,title) 
@@ -138,20 +139,24 @@
         var map = new GMap2(document.getElementById("map"));
         map.setCenter(new GLatLng(37.4419, -30.00), 2);
         map.addControl(new GLargeMapControl());
+  </xsl:text>
         <xsl:for-each select="cdash/site">
         <xsl:if test="string-length(latitude)>0">
         var point = new GLatLng(<xsl:value-of select="latitude"/>,<xsl:value-of select="longitude"/>);
         map.addOverlay(createMarker(point,'<xsl:value-of select="name"/>'));
         </xsl:if>
-        </xsl:for-each>
+        </xsl:for-each><xsl:text disable-output-escaping="yes">
       }
     }
-    </script>
+    &lt;/script&gt;
+    </xsl:text>
   <center><div id="map" style="width: 700px; height: 400px"></div></center>
 
-<script type="text/javascript">
+<xsl:text disable-output-escaping="yes">
+&lt;script type="text/javascript"&gt;
   Rounded('rounded', 15, 15,0,0);
-</script>
+&lt;/script&gt;
+</xsl:text>
 
 <!-- FOOTER -->
 <br/>

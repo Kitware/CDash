@@ -41,7 +41,8 @@
   <script type="text/javascript">
       <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
    </script>
-    <script type="text/javascript">
+    <xsl:text disable-output-escaping="yes">
+    &lt;script type="text/javascript"&gt;
       // Creates a marker whose info window displays the letter corresponding
       // to the given index.
       function createMarker(point,title) 
@@ -57,6 +58,7 @@
     function load() {
       if (GBrowserIsCompatible()) {
         var map = new GMap2(document.getElementById("map"));
+    </xsl:text>
     <xsl:if test="string-length(cdash/site/latitude)>0">
         map.setCenter(new GLatLng(<xsl:value-of select="cdash/site/latitude"/>,<xsl:value-of select="cdash/site/longitude"/>),5);
         map.addControl(new GLargeMapControl());
@@ -67,9 +69,11 @@
     <xsl:if test="string-length(cdash/site/latitude)=0">
      map.setCenter(new GLatLng(0,0),1);
     </xsl:if>
+    <xsl:text disable-output-escaping="yes">
       }
     }
-    </script>
+    &lt;/script&gt;
+    </xsl:text>
    <body onload="load()" onunload="GUnload()">
   <center><div id="map" style="width: 700px; height: 400px"></div></center>
   </body>

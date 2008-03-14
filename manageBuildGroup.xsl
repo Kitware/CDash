@@ -17,14 +17,16 @@
          </link>
       
        <!-- Functions to confirm the remove -->
-        <script language="JavaScript">
+  <xsl:text disable-output-escaping="yes">
+        &lt;script language="JavaScript"&gt;
         function confirmDelete() {
            if (window.confirm("Are you sure you want to delete this group? If the group is not empty, builds will be put in their original group.")){
               return true;
            }
            return false;
         }
-        </script>
+        &lt;/script&gt;
+  </xsl:text>
        </head>
        <body bgcolor="#ffffff">
 <xsl:call-template name="headerback"/>

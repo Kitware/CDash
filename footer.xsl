@@ -25,15 +25,17 @@
 
 <!-- Google Analytics -->
 <xsl:if test="string-length(/cdash/dashboard/googletracker)>0">
-<script type="text/javascript">
+<xsl:text disable-output-escaping="yes">
+&lt;script type="text/javascript"&gt;
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("<xsl:value-of select="/cdash/dashboard/googletracker"/>");
+&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+var pageTracker = _gat._getTracker("</xsl:text><xsl:value-of select="/cdash/dashboard/googletracker"/><xsl:text disable-output-escaping="yes">");
 pageTracker._initData();
 pageTracker._trackPageview();
-</script>
+&lt;/script&gt;
+</xsl:text>
 </xsl:if>
   </xsl:template>
 </xsl:stylesheet>

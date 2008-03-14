@@ -12,12 +12,14 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-        <script>    
+  <xsl:text disable-output-escaping="yes">
+        &lt;script language="javascript"&gt; 
           function doSubmit()
             {
             document.getElementById('url').value = 'catchbot';
             }
-         </script>
+         &lt;/script&gt;
+  </xsl:text>
        </head>
     <body>
             
