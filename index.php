@@ -148,11 +148,11 @@ function generate_main_dashboard_XML($projectid,$date)
   if(mysql_num_rows($project)>0)
     {
     $project_array = mysql_fetch_array($project);
-    $svnurl = $project_array["cvsurl"];
-    $homeurl = $project_array["homeurl"];
-    $bugurl = $project_array["bugtrackerurl"];  
-    $googletracker = $project_array["googletracker"];  
-    $docurl = $project_array["documentationurl"];  
+    $svnurl = htmlentities($project_array["cvsurl"]);
+    $homeurl = htmlentities($project_array["homeurl"]);
+    $bugurl = htmlentities($project_array["bugtrackerurl"]);  
+    $googletracker = htmlentities($project_array["googletracker"]);  
+    $docurl = htmlentities($project_array["documentationurl"]);  
     $projectname = $project_array["name"];  
     }
   else
@@ -425,7 +425,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $updateerrors = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
       $updateerrors_array = mysql_fetch_row($updateerrors);
       $xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
-      if($updaterrors_array[0]>0)
+      if($updateerrors_array[0]>0)
         {
         $xml .= add_XML_value("updatewarning",1);
         }

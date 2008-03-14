@@ -91,21 +91,21 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   // If we are using viewcvs we need to reformat the URL
   if($project_array["cvsurl"] != "")
-   {
-  list($begin,$end) = explode("?",$project_array["cvsurl"]);
-  if(strlen($end)>0)
-   {
-   $end = "?".$end;
-   }  
+    {
+    list($begin,$end) = explode("?",$project_array["cvsurl"]);
+    if(strlen($end)>0)
+      {
+      $end = "?".$end;
+      }  
     }
   else
     {
-  $begin =  $project_array["cvsurl"];
-  $end = "";
+    $begin =  $project_array["cvsurl"];
+    $end = "";
     }
 
-  $cvsurl = "http://".$begin.$error_array["sourcefile"].$end;
-  $xml .= add_XML_value("cvsurl",$cvsurl);
+    $cvsurl = "http://".$begin.$error_array["sourcefile"].$end;
+    $xml .= add_XML_value("cvsurl",$cvsurl);
     $xml .= "</error>";
     }
 

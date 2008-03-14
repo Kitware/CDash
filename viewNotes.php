@@ -43,10 +43,7 @@ if(!isset($date) || strlen($date)==0)
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
   {
-  $project_array = mysql_fetch_array($project);
-  $svnurl = $project_array["cvsurl"];
-  $homeurl = $project_array["homeurl"];
-  $bugurl = $project_array["bugtrackerurl"];   
+  $project_array = mysql_fetch_array($project);  
   $projectname = $project_array["name"];  
   }
 
@@ -56,19 +53,7 @@ if(mysql_num_rows($project)>0)
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .="<dashboard>
-  <datetime>".date("D, d M Y H:i:s",$currenttime)."</datetime>
-  <date>".date("l, F d Y",$currenttime)."</date>
-  <svn>".$svnurl."</svn>
-  <bugtracker>".$bugurl."</bugtracker> 
-  <home>".$homeurl."</home>
-  <projectid>".$projectid."</projectid> 
-  <projectname>".$projectname."</projectname> 
-  <previousdate>".$previousdate."</previousdate> 
-  <nextdate>".$nextdate."</nextdate>
-  <logoid>".getLogoID($projectid)."</logoid>
-  </dashboard>
-  ";
+$xml .= get_cdash_dashboard_xml_($projectid,$date);
   
   // Build
   $xml .= "<build>";

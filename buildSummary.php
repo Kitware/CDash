@@ -32,18 +32,7 @@ $projectid = $build_array["projectid"];
 $date = date("Ymd", strtotime($build_array["starttime"]));
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
-    
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-if(mysql_num_rows($project)>0)
-  {
-  $project_array = mysql_fetch_array($project);
-  $svnurl = $project_array["cvsurl"];
-  $homeurl = $project_array["homeurl"];
-  $bugurl = $project_array["bugtrackerurl"];   
-  $projectname = $project_array["name"];  
-  }
   
-
   
 // Format the text to fit the iPhone
 function format_for_iphone($text)
@@ -57,13 +46,10 @@ function format_for_iphone($text)
   return $text;
 }  
   
-
-list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
-$logoid = getLogoID($projectid);
-
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= get_cdash_dashboard_xml_($projectid,$date);
 
 // User
  if(isset($_SESSION['cdash']))
@@ -76,20 +62,6 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
    $xml .= add_XML_value("admin",$user_array["admin"]);
    $xml .= "</user>";
    }
-
-$xml .="<dashboard>
-  <datetime>".date("l, F d Y H:i:s T",time())."</datetime>
-  <date>".$date."</date>
-  <svn>".$svnurl."</svn>
-  <bugtracker>".$bugurl."</bugtracker> 
-  <home>".$homeurl."</home>
-  <projectid>".$projectid."</projectid> 
-  <logoid>".$logoid."</logoid> 
-  <projectname>".$projectname."</projectname> 
-  <previousdate>".$previousdate."</previousdate> 
-  <nextdate>".$nextdate."</nextdate> 
-  </dashboard>
-  ";
   
   // Notes
   $note = mysql_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
