@@ -424,7 +424,8 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $updateerrors = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
       $updateerrors_array = mysql_fetch_row($updateerrors);
-      $xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
+      //$xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
+      $xml .= add_XML_value("updateerrors",0);
       if($updateerrors_array[0]>0)
         {
         $xml .= add_XML_value("updatewarning",1);
