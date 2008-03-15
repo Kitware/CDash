@@ -712,22 +712,50 @@ function parse_note($parser,$projectid)
     {
     $buildid = create_build($parser,$projectid);
     }
- 
+  $nameIndex =0;
+  $textIndex =0;
+  // There might be more than one <Note> tag in notes file
+  // so we have to collect them all into one text buffer.
+  // fill namesarray with all the names
+  // fill textArray with all the text found
   foreach($xmlarray as $tagarray)
     {
     if(($tagarray["tag"] == "NOTE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]["NAME"]))
       {
       $name=$tagarray["attributes"]["NAME"];
+      $namesarray[$nameIndex] = $name;
+      $nameIndex = $nameIndex +1;
+      }
+    if(($tagarray["tag"] == "TEXT"))
+      {
+      $tag = $tagarray["tag"];
+      $level = $tagarray["level"]; 
+      $text = $tagarray["value"];
+      $textArray[$textIndex] = $text;
+      $textIndex = $textIndex + 1;
       }
     }
-    
+  // loop over all the text and names found
+  // and fill in allText
+  for ($i = 0; $i < $textIndex; $i++) 
+    {
+    // if this is not the first one then put the name into the
+    // text with --- around it.
+    if($i >0)
+      {
+      $allText = $allText . "---" . $namesarray[$i] . "---";
+      $allText = $allText . "\n";
+      }
+    // add the text to allText with a new line after it
+    $allText = $allText . $textArray[$i];
+    $allText = $allText . "\n";
+    }
+  // use the first date you find
   $date = getXMLValue($xmlarray,"DATETIME","NOTE");
   $timestamp = str_to_time($date,$stamp);
   $time = gmdate("Y-m-d H:i:s",$timestamp);
-  
-  $text = getXMLValue($xmlarray,"TEXT","NOTE");
-  
-  add_note($buildid,$text,$time,$name);
+  // add the note using all the text the first time, and the first name
+  add_note($buildid,$allText,$time,$namesarray[0]);
 }
 
 /** Parse the Dynamic Analysis xml */
