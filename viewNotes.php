@@ -53,7 +53,7 @@ if(mysql_num_rows($project)>0)
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= get_cdash_dashboard_xml_($projectid,$date);
+$xml .= get_cdash_dashboard_xml($projectid,$date);
   
   // Build
   $xml .= "<build>";
