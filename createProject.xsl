@@ -101,7 +101,7 @@ edit the project</a><br/>
   </tr>
   <tr>
     <td></td>
-    <td><div align="right"><strong>CVS URL :</strong></div></td>
+    <td><div align="right"><strong>CVS/SVN URL :</strong></div></td>
     <td><input name="cvsURL" type="text" id="cvsURL" size="50">
      <xsl:attribute name="value">
     <xsl:value-of select="cdash/project/cvsurl"/>
