@@ -33,7 +33,6 @@ $date = date("Ymd", strtotime($build_array["starttime"]));
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
   
-  
 // Format the text to fit the iPhone
 function format_for_iphone($text)
 {
@@ -49,7 +48,7 @@ function format_for_iphone($text)
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= get_cdash_dashboard_xml($projectid,$date);
+$xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
 
 // User
  if(isset($_SESSION['cdash']))
