@@ -51,7 +51,7 @@
     <xsl:attribute name="checked"></xsl:attribute>
     </xsl:if>
     </input>
-     Dashboard maintainer <i>(you are responsible of machines that are submitting builds for this project)</i></td>
+     Site maintainer <i>(you are responsible for machines that are submitting builds for this project)</i></td>
   </tr>
   <xsl:if test="/cdash/role>1">
    <tr>
