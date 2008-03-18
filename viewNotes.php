@@ -32,51 +32,54 @@ $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 if(!isset($date) || strlen($date)==0)
-    { 
-    $currenttime = time();
-    }
-  else
-    {
-    $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
-    }
+{ 
+  $currenttime = time();
+}
+else
+{
+  $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+}
     
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
-  {
+{
   $project_array = mysql_fetch_array($project);  
   $projectname = $project_array["name"];  
-  }
+}
 
-  $previousdate = date("Ymd",$currenttime-24*3600); 
-  $nextdate = date("Ymd",$currenttime+24*3600);
+$previousdate = date("Ymd",$currenttime-24*3600); 
+$nextdate = date("Ymd",$currenttime+24*3600);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
   
-  // Build
-  $xml .= "<build>";
-  $build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = mysql_fetch_array($build); 
-  $siteid = $build_array["siteid"];
-  $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
-  $xml .= add_XML_value("site",$site_array["name"]);
-  $xml .= add_XML_value("buildname",$build_array["name"]);
-  $xml .= add_XML_value("buildid",$build_array["id"]);
-  $xml .= "</build>";
+// Build
+$xml .= "<build>";
+$build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
+$build_array = mysql_fetch_array($build); 
+$siteid = $build_array["siteid"];
+$site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+$xml .= add_XML_value("site",$site_array["name"]);
+$xml .= add_XML_value("buildname",$build_array["name"]);
+$xml .= add_XML_value("buildid",$build_array["id"]);
+$xml .= "</build>";
   
+  
+$note = mysql_query("SELECT * FROM note WHERE buildid='$buildid'");
+while($note_array = mysql_fetch_array($note))
+{
   $xml .= "<note>";
-  
-  $note = mysql_query("SELECT * FROM note WHERE buildid='$buildid'");
-  $note_array = mysql_fetch_array($note);
-  
   $xml .= add_XML_value("name",$note_array["name"]);
   $xml .= add_XML_value("text",$note_array["text"]);
   $xml .= add_XML_value("time",$note_array["time"]);
-  
   $xml .= "</note>";
-  $xml .= "</cdash>";
+  $text = $note_array["text"];
+  $name = $note_array["name"];
+}
+
+$xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml,"viewNotes");

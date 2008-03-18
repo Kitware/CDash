@@ -22,15 +22,16 @@
 <br/>
 
 <h3 style="background: #b0c4de">Notes for <xsl:value-of select="cdash/build/site"/>--<xsl:value-of select="cdash/build/buildname"/>-<xsl:value-of select="cdash/build/stamp"/></h3>
-<p>
-<img SRC="images/Alert.gif" ALT="Notes" border="0" ALIGN="texttop"/>
-<b> <xsl:value-of select="cdash/note/time"/></b>
-<b> -- <xsl:value-of select="cdash/note/name"/></b><br/>
-<pre>
-<xsl:value-of select="cdash/note/text"/>
-</pre></p>
-<br/>
-
+<xsl:for-each select="cdash/note">
+  <p>
+    <img SRC="images/Alert.gif" ALT="Notes" border="0" ALIGN="texttop"/>
+    <b> <xsl:value-of select="time"/></b>
+    <b> -- <xsl:value-of select="name"/></b><br/>
+    <pre>
+      <xsl:value-of select="text"/>
+    </pre></p>
+    <br/>
+  </xsl:for-each>
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>
