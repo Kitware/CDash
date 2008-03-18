@@ -44,17 +44,17 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 </xsl:if></font>
 </h3>
 
-<script type="text/javascript">var Icons = "images/";</script>
+<xsl:text disable-output-escaping="yes">&lt;script type="text/javascript">var Icons = "images/";&lt;/script&gt;</xsl:text>
 <script type="text/javascript" SRC="javascript/tree.js"></script>
 
 [<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Expand all';return true;" onClick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Collapse all';return true;" onClick="contract()">Collapse all</a>]
 
 <p></p>
-<script LANGUAGE="JavaScript">
-
-    <xsl:value-of select="cdash/updates/javascript"/>
-
-</script>
+<xsl:text disable-output-escaping="yes">
+&lt;script LANGUAGE="JavaScript"&gt;</xsl:text><xsl:value-of select="cdash/updates/javascript"/>
+<xsl:text disable-output-escaping="yes">
+&lt;/script&gt;
+</xsl:text>
 
 <script type="text/javascript" SRC="javascript/tree_init.js"></script>
 <br/>
