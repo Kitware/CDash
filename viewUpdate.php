@@ -131,6 +131,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $projecturl = $svnurl;
   
   $locallymodified = array();
+  $conflictingfiles = array();
   $updatedfiles = array();
   
   // locally cached query result same as get_project_property($projectname, "cvsurl");
@@ -177,6 +178,10 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       {
       $locallymodified[] = $file;
       }
+    else if(strstr($log,"Conflict while updating"))
+      {
+      $conflictingfiles[] = $file;
+      }
   }
   
   // Updated files
@@ -207,7 +212,19 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $xml .= " dbAdd ( false, \"".$file['$filename']." Revision: ".$file['$revision']."\",\"".$file['$diff_url']."\",2,\"\",\"1\",\"".$file['$author']."\",\"".$file['$email']."\",\"".$file['$log']."\")\n";
     }
   
-  //$xml .= "dbAdd (true, \"Conflicting files  (0)\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+  // Conflicting files
+  $xml .= "dbAdd (true, \"Conflicting files  (".count($conflictingfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+  $previousdir = "";
+  foreach($conflictingfiles as $file)
+    {
+    $directory = $file['$directory'];
+    if($previousdir=="" || $directory != $previousdir)
+      {
+      $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
+      $previousdir = $directory;
+      }
+    $xml .= " dbAdd ( false, \"".$file['$filename']." Revision: ".$file['$revision']."\",\"".$file['$diff_url']."\",2,\"\",\"1\",\"".$file['$author']."\",\"".$file['$email']."\",\"".$file['$log']."\")\n";
+    }
 
   $xml .= "</javascript>";
   $xml .= "</updates>";
