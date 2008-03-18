@@ -1230,6 +1230,7 @@ function  add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$preco
 function  add_update($buildid,$start_time,$end_time,$command,$type,$status)
 {
   $command = addslashes($command);
+  $status = addslashes($status);
     
   mysql_query ("INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status) 
                VALUES ('$buildid','$start_time','$end_time','$command','$type','$status')");
