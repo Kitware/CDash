@@ -31,6 +31,13 @@ $contents = file_get_contents("php://input");
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
 
+// If not a valid project we return
+if($projectid == -1)
+  {
+  echo "Not a valid project";
+  exit();
+  }
+
 // Parse the XML
 $xml_array = parse_XML($contents);
 // Backup the XML file

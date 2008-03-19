@@ -47,9 +47,17 @@ function register()
     if ($email and $passwd and $passwd2 and $fname and $lname and $institution)
       {
       $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-     mysql_select_db("$CDASH_DB_NAME",$db);
+      mysql_select_db("$CDASH_DB_NAME",$db);
       $passwd = md5($passwd);
-     $sql="INSERT INTO user (email,password,firstname,lastname,institution) VALUES ('$email','$passwd','$fname','$lname','$institution')";
+      
+      $email = mysql_real_escape_string($email);
+      $passwd = mysql_real_escape_string($passwd);
+      $fname = mysql_real_escape_string($fname);
+      $lname = mysql_real_escape_string($lname);
+      $institution = mysql_real_escape_string($institution);
+            
+      $sql="INSERT INTO user (email,password,firstname,lastname,institution) 
+            VALUES ('$email','$passwd','$fname','$lname','$institution')";
       if(mysql_query($sql))
         {
         return 1;

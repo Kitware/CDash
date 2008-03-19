@@ -841,12 +841,14 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
 
 @$query = $_GET["query"];
 if (!isset($query))
-{
+  {
   $query = 1;
-}
+  }
 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
+
+$projectname = mysql_real_escape_string($projectname);
 $project = mysql_query("SELECT * FROM project WHERE name='$projectname'");
 $project_array = mysql_fetch_array($project);
 

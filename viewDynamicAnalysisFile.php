@@ -24,6 +24,13 @@ include("version.php");
 @$id = $_GET["id"];
 @$date = $_GET["date"];
 
+// Checks
+if(!isset($id) || !is_numeric($id))
+  {
+  echo "Not a valid id!";
+  return;
+  }
+  
 include("config.php");
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);

@@ -20,7 +20,7 @@ include("common.php");
 include("version.php");
 
 @$projectname = $_GET["project"];
-if(!isset($projectname))
+if(!isset($projectname) || strlen($projectname)==0)
   {
   die("Error: project not specified<br>\n");
   }

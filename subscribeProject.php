@@ -23,9 +23,7 @@ include('version.php');
 if ($session_OK) 
   {
   $userid = $_SESSION['cdash']['loginid'];
-  
-  $projectid = $_GET["projectid"];
-  
+   
   @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
   
@@ -40,6 +38,18 @@ if ($session_OK)
   @$projectid = $_GET["projectid"];
   @$edit = $_GET["edit"];
   
+  // Checks
+  if(!isset($projectid) || !is_numeric($projectid))
+    {
+    echo "Not a valid projectid!";
+    return;
+    }
+  if(isset($edit) && $edit!=1)
+    {
+    echo "Not a valid edit!";
+    return;
+    }
+    
   if($edit)
     {
     $xml .= "<edit>1</edit>";
@@ -48,6 +58,8 @@ if ($session_OK)
     {
     $xml .= "<edit>0</edit>";
     }
+ 
+
   $project = mysql_query("SELECT id,name FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
   

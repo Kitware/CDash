@@ -134,7 +134,7 @@ if ($session_OK)
     
   // If we have a projectid that means we should list all the sites
   @$projectid = $_GET["projectid"];
-  if(isset($projectid))
+  if(isset($projectid) && is_numeric($projectid))
     {
     $project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
     $xml .= "<project>";
@@ -166,7 +166,7 @@ if ($session_OK)
   
   // If we have a siteid we look if the user has claimed the site or not
   @$siteid = $_GET["siteid"];
-  if(isset($siteid))
+  if(isset($siteid) && is_numeric($siteid))
     {
     $xml .= "<user>";
     $xml .= "<site>";

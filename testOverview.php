@@ -31,7 +31,7 @@ if(!isset($date) or $date == "")
   {
   $date = date("Ymd",time());
   }
- 
+$date = mysql_real_escape_string($date); 
  
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
@@ -43,6 +43,7 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 //get some information about the specified project
+$projectname = mysql_real_escape_string($projectname);
 $projectQuery = "SELECT id, nightlytime FROM project WHERE name = '$projectname'";
 $projectResult = mysql_query($projectQuery);
 if(!$projectRow = mysql_fetch_array($projectResult))

@@ -23,11 +23,18 @@ include("version.php");
 
 @$projectname = $_GET["project"];
 @$date = $_GET["date"];
-
+  
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
 $projectid = get_project_id($projectname);
+
+if($projectid == -1)
+  {
+  echo "Wrong project name";
+  exit();
+  }
+
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 $xml = '<?xml version="1.0"?><cdash>';

@@ -145,6 +145,11 @@ function add_last_sql_error($functionname)
 /** Return true if the user is allowed to see the page */
 function checkUserPolicy($userid,$projectid,$onlyreturn=0)
 {
+  if(!is_numeric($userid) || !is_numeric($projectid))
+    {
+    return;
+    }
+    
   // If the projectid=0 only admin can access the page
   if($projectid==0 && mysql_num_rows(mysql_query("SELECT admin FROM user WHERE id='$userid' AND admin='1'"))==0)
     {
@@ -284,23 +289,23 @@ function backup_xml_file($parser,$contents,$projectid)
     $file = "Other.xml";
     }
   
-  // For some reasons the update.xml has a different format
+ // For some reasons the update.xml has a different format
  if(@$parser->index["UPDATE"] != "")
-  {
-  $vals = $parser->vals;
-  $sitename = getXMLValue($vals,"SITE","UPDATE");
-  $name = getXMLValue($vals,"BUILDNAME","UPDATE");
-    $stamp = getXMLValue($vals,"BUILDSTAMP","UPDATE");
-  }
-  else
-    {
+   {
+   $vals = $parser->vals;
+   $sitename = getXMLValue($vals,"SITE","UPDATE");
+   $name = getXMLValue($vals,"BUILDNAME","UPDATE");
+   $stamp = getXMLValue($vals,"BUILDSTAMP","UPDATE");
+   }
+ else
+   {
    $site = $parser->index["SITE"];
-     $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
-     $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
-     $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
+   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
+   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
+   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
    }
  
-  $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_".$file;
+ $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_".$file;
   
  // If the file is other we append a number until we get a non existing file
  $i=1;
@@ -310,7 +315,6 @@ function backup_xml_file($parser,$contents,$projectid)
   $i++;
   }
  
-   
   if (!$handle = fopen($filename, 'w')) 
     {
     echo "Cannot open file ($filename)";
@@ -377,6 +381,14 @@ function get_projects()
 /** Get the build id from stamp, name and buildname */
 function get_build_id($buildname,$stamp,$projectid)
 {  
+  if(!is_numeric($projectid))
+    {
+    return;
+    }
+  
+  $buildname = mysql_real_escape_string($buildname);
+  $stamp = mysql_real_escape_string($stamp);
+  
   $sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
   $sql .= " AND projectid='$projectid'"; 
   $sql .= " ORDER BY id DESC";
@@ -392,19 +404,25 @@ function get_build_id($buildname,$stamp,$projectid)
 /** Get the project id from the project name */
 function get_project_id($projectname)
 {
+  $projectname = mysql_real_escape_string($projectname);
   $project = mysql_query("SELECT id FROM project WHERE name='$projectname'");
   if(mysql_num_rows($project)>0)
     {
     $project_array = mysql_fetch_array($project);
     return $project_array["id"];
     }
-
   return -1;
 }
 
 /** Get the project name from the project id */
 function get_project_name($projectid)
 {
+  if(!isset($projectid) || !is_numeric($projectid))
+    {
+    echo "Not a valid buildid!";
+    return;
+    }
+
   $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
   if(mysql_num_rows($project)>0)
     {
@@ -418,6 +436,18 @@ function get_project_name($projectid)
 /** Add a new coverage */
 function add_coveragesummary($buildid,$loctested,$locuntested)
 {
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
+  if(!is_numeric($loctested))
+    {
+    return;
+    }
+  if(!is_numeric($locuntested))
+    {
+    return;
+    }  
   mysql_query ("INSERT INTO coveragesummary (buildid,loctested,locuntested) 
                 VALUES ('$buildid','$loctested','$locuntested')");
 }
@@ -427,12 +457,15 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
                              $functionstested,$functionsuntested)
 {
   include("config.php");
-   
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
   $build = mysql_query("SELECT projectid,name from build WHERE id='$buildid'");
   $build_array = mysql_fetch_array($build);
   $projectid = $build_array["projectid"];
   
-  // Check if we should send the email
+  // Check if we should send the email  
   $project = mysql_query("SELECT name,coveragethreshold,emaillowcoverage FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
   if($project_array["emaillowcoverage"] == 0)
@@ -440,8 +473,7 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
     return;
     }
     
- $coveragethreshold = $project_array["coveragethreshold"];
-   
+  $coveragethreshold = $project_array["coveragethreshold"]; 
   $coveragemetric = 1;
    
   // Compute the coverage metric for bullseye
@@ -523,8 +555,13 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
 /** Create a coverage */
 function add_coverage($buildid,$coverage_array)
 {
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
   // Construct the SQL query
-  $sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) VALUES ";
+  $sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,
+                                functionstested,functionsuntested) VALUES ";
   
   $i=0;
   foreach($coverage_array as $coverage)
@@ -576,8 +613,16 @@ function add_coverage($buildid,$coverage_array)
 /** Create a coverage file */
 function add_coveragefile($buildid,$fullpath,$filecontent)
 {
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
+    
+  $fullpath = mysql_real_escape_string($fullpath);
+  
   // Check if we have the file
-  $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf WHERE c.fileid=cf.id AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
+  $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf 
+                               WHERE c.fileid=cf.id AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
   $coveragefile_array = mysql_fetch_array($coveragefile);
   $fileid = $coveragefile_array["id"];
   
@@ -603,6 +648,15 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
 /** Add the coverage log */
 function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
 {
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
+  if(!is_numeric($fileid))
+    {
+    return;
+    }
+
   $sql = "INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ";
   
   $i=0;
@@ -628,6 +682,17 @@ function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
 /** add a user to a site */
 function add_site2user($siteid,$userid)
 {
+  if(!is_numeric($siteid))
+    {
+    return;
+    }
+  if(!is_numeric($userid))
+    {
+    return;
+    }
+    
+  $fullpath = mysql_real_escape_string($fullpath);
+    
   $site2user = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
   if(mysql_num_rows($site2user) == 0)
     {
@@ -661,25 +726,49 @@ function update_site($siteid,$name,
 {  
   include_once("config.php");
  
+  // Security checks
+  if(!is_numeric($siteid))
+    {
+    return;
+    }
+    
+  $latitude = mysql_real_escape_string($latitude);
+  $longitude = mysql_real_escape_string($longitude);
+  $ip = mysql_real_escape_string($ip);
+  $name = mysql_real_escape_string($name);
+  $processoris64bits = mysql_real_escape_string($processoris64bits);
+  $processorvendor = mysql_real_escape_string($processorvendor);
+  $processorvendorid = mysql_real_escape_string($processorvendorid);
+  $processorfamilyid = mysql_real_escape_string($processorfamilyid);
+  $processormodelid = mysql_real_escape_string($processormodelid);
+  $processorcachesize = mysql_real_escape_string($processorcachesize);
+  $numberlogicalcpus = mysql_real_escape_string($numberlogicalcpus);
+  $numberphysicalcpus = mysql_real_escape_string($numberphysicalcpus);
+  $totalvirtualmemory = mysql_real_escape_string($totalvirtualmemory);
+  $totalphysicalmemory = mysql_real_escape_string($totalphysicalmemory);
+  $logicalprocessorsperphysical = mysql_real_escape_string($logicalprocessorsperphysical);
+  $processorclockfrequency = mysql_real_escape_string($processorclockfrequency);
+  $description = mysql_real_escape_string($description);
+ 
   // Update the basic information first
   mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
  
- add_last_sql_error("update_site");
+  add_last_sql_error("update_site");
  
- $names = array();
- $names[] = "processoris64bits";
- $names[] = "processorvendor";
- $names[] = "processorvendorid";
- $names[] = "processorfamilyid";
- $names[] = "processormodelid";
- $names[] = "processorcachesize";
- $names[] = "numberlogicalcpus";     
- $names[] = "numberphysicalcpus";    
- $names[] = "totalvirtualmemory";  
- $names[] = "totalphysicalmemory";  
- $names[] = "logicalprocessorsperphysical";  
- $names[] = "processorclockfrequency";  
- $names[] = "description";      
+  $names = array();
+  $names[] = "processoris64bits";
+  $names[] = "processorvendor";
+  $names[] = "processorvendorid";
+  $names[] = "processorfamilyid";
+  $names[] = "processormodelid";
+  $names[] = "processorcachesize";
+  $names[] = "numberlogicalcpus";     
+  $names[] = "numberphysicalcpus";    
+  $names[] = "totalvirtualmemory";  
+  $names[] = "totalphysicalmemory";  
+  $names[] = "logicalprocessorsperphysical";  
+  $names[] = "processorclockfrequency";  
+  $names[] = "description";      
  
  // Check that we have a valid input
  $isinputvalid = 0;
@@ -888,18 +977,33 @@ function add_site($name,$parser)
  $description="";
  $ip = $_SERVER['REMOTE_ADDR'];
  
+ 
+  $ip = mysql_real_escape_string($ip);
+  $processoris64bits = mysql_real_escape_string($processoris64bits);
+  $processorvendor = mysql_real_escape_string($processorvendor);
+  $processorvendorid = mysql_real_escape_string($processorvendorid);
+  $processorfamilyid = mysql_real_escape_string($processorfamilyid);
+  $processormodelid = mysql_real_escape_string($processormodelid);
+  $processorcachesize = mysql_real_escape_string($processorcachesize);
+  $numberlogicalcpus = mysql_real_escape_string($numberlogicalcpus);
+  $numberphysicalcpus = mysql_real_escape_string($numberphysicalcpus);
+  $totalvirtualmemory = mysql_real_escape_string($totalvirtualmemory);
+  $totalphysicalmemory = mysql_real_escape_string($totalphysicalmemory);
+  $logicalprocessorsperphysical = mysql_real_escape_string($logicalprocessorsperphysical);
+  $processorclockfrequency = mysql_real_escape_string($processorclockfrequency);
+
   // Check if we already have the site registered
   $site = mysql_query("SELECT id,name,latitude,longitude FROM site WHERE name='$name'");
   if(mysql_num_rows($site)>0)
     {
     $site_array = mysql_fetch_array($site);
-  $siteid = $site_array["id"];
-  $sitename = $site_array["name"];
-  $latitude = $site_array["latitude"];
-  $longitude = $site_array["longitude"];
+    $siteid = $site_array["id"];
+    $sitename = $site_array["name"];
+    $latitude = $site_array["latitude"];
+    $longitude = $site_array["longitude"];
   
-  // We update the site information if needed
-  update_site($siteid,$sitename,
+    // We update the site information if needed
+    update_site($siteid,$sitename,
         $processoris64bits,
         $processorvendor,
         $processorvendorid,
@@ -913,11 +1017,10 @@ function add_site($name,$parser)
         $logicalprocessorsperphysical,
         $processorclockfrequency,
         $description,$ip,$latitude,$longitude,false);
-
     return $siteid;
     }
   
-   // If not found we create the site
+  // If not found we create the site
   // We retrieve the geolocation from the IP address
   $location = get_geolocation($ip);
   
@@ -926,16 +1029,16 @@ function add_site($name,$parser)
 
   if(!mysql_query ("INSERT INTO site (name,ip,latitude,longitude) 
                     VALUES ('$name','$ip','$latitude','$longitude')"))
-  {
+    {
     echo "add_site = ".mysql_error();  
-   }
+    }
   
- $siteid = mysql_insert_id();
+  $siteid = mysql_insert_id();
  
- // Insert the site information
- $now = gmdate("Y-m-d H:i:s");
- mysql_query ("INSERT INTO siteinformation (siteid,
-            timestamp,
+  // Insert the site information
+  $now = gmdate("Y-m-d H:i:s");
+  mysql_query ("INSERT INTO siteinformation (siteid,
+           timestamp,
            processoris64bits,
            processorvendor,
            processorvendorid,
@@ -949,8 +1052,8 @@ function add_site($name,$parser)
            logicalprocessorsperphysical,
            processorclockfrequency,
                     description) 
-                 VALUES ('$siteid',
-             '$now',
+           VALUES ('$siteid',
+            '$now',
             '$processoris64bits',
             '$processorvendor',
             '$processorvendorid',
@@ -963,7 +1066,7 @@ function add_site($name,$parser)
             '$totalphysicalmemory',
             '$logicalprocessorsperphysical',
             '$processorclockfrequency',
-                '$description')");
+            '$description')");
   
   return $siteid;
 }
@@ -971,6 +1074,11 @@ function add_site($name,$parser)
 /* remove all builds for a project */
 function remove_project_builds($projectid)
 {
+  if(!is_numeric($projectid))
+    {
+    return;
+    }
+    
   $build = mysql_query("SELECT id FROM build WHERE projectid='$projectid'");
   while($build_array = mysql_fetch_array($build))
     {
@@ -983,6 +1091,11 @@ function remove_project_builds($projectid)
 /** Remove all related inserts for a given build */
 function remove_build($buildid)
 {
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
+    
   mysql_query("DELETE FROM build WHERE id='$buildid'");
   mysql_query("DELETE FROM build2group WHERE buildid='$buildid'");
   mysql_query("DELETE FROM builderror WHERE buildid='$buildid'");
@@ -1048,6 +1161,21 @@ function remove_build($buildid)
 /** Add a new build */
 function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$endtime,$submittime,$command,$log,$parser)
 {
+  if(!is_numeric($projectid) || !is_numeric($siteid))
+    {
+    return;
+    }
+
+  $name = mysql_real_escape_string($name);
+  $stamp = mysql_real_escape_string($stamp);
+  $type = mysql_real_escape_string($type);
+  $generator = mysql_real_escape_string($generator);
+  $starttime = mysql_real_escape_string($starttime);
+  $endtime = mysql_real_escape_string($endtime);
+  $submittime = mysql_real_escape_string($submittime);
+  $command = mysql_real_escape_string($command);
+  $log = mysql_real_escape_string($log);
+
   // First we check if the build already exists if this is the case we delete all related information regarding
   // The previous build 
   $build = mysql_query("SELECT id FROM build WHERE projectid='$projectid' AND siteid='$siteid' AND name='$name' AND stamp='$stamp' AND type='$type'");
@@ -1107,9 +1235,17 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
 /** Add a new configure */
 function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 {
-  $command = addslashes($command);
-  $log = addslashes($log);
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
     
+  $starttime = mysql_real_escape_string($starttime);
+  $endtime = mysql_real_escape_string($endtime);
+  $command = mysql_real_escape_string($command);
+  $log = mysql_real_escape_string($log);
+  $status = mysql_real_escape_string($status);
+      
   mysql_query ("INSERT INTO configure (buildid,starttime,endtime,command,log,status) 
                VALUES ('$buildid','$starttime','$endtime','$command','$log','$status')");
   add_last_sql_error("add_configure");
@@ -1118,9 +1254,20 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 /** Add a new test */
 function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images)
 {
-  $command = addslashes($command);
-  $output = addslashes($output);
-  
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
+    
+  $command = mysql_real_escape_string($command);
+  $output = mysql_real_escape_string($output);
+  $name = mysql_real_escape_string($name);  
+  $status = mysql_real_escape_string($status);  
+  $path = mysql_real_escape_string($path);  
+  $fullname = mysql_real_escape_string($fullname);  
+  $time = mysql_real_escape_string($time);     
+  $details = mysql_real_escape_string($details);
+      
   $buffer = $name.$path.$command.$output.$details; 
   $crc32 = crc32($buffer);
   
@@ -1162,7 +1309,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
         
       $nimage_array = mysql_fetch_array(mysql_query($sql));  
       add_last_sql_error("add_test");
-   $nimages = $nimage_array[0];
+      $nimages = $nimage_array[0];
         
       if($nimages == count($images))
         {
@@ -1197,10 +1344,9 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
       {
       add_last_sql_error("add_test");
       } 
-    } 
-    
+    }    
 
-   // Add into build2test
+  // Add into build2test
   // Make sure that the test is not already added
   $query = mysql_query("SELECT buildid FROM build2test 
                         WHERE buildid='$buildid' AND testid='$testid' AND status='$status'
@@ -1217,20 +1363,38 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 /** Add a new error/warning */
 function  add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$precontext,$postcontext,$repeatcount)
 {
-  $text = addslashes($text);
-  $precontext = addslashes($precontext);
-  $postcontext = addslashes($postcontext);
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
     
+  $type = mysql_real_escape_string($type);
+  $logline = mysql_real_escape_string($logline);
+  $text = mysql_real_escape_string($text);
+  $sourcefile = mysql_real_escape_string($sourcefile);
+  $sourceline = mysql_real_escape_string($sourceline);  
+  $precontext = mysql_real_escape_string($precontext);  
+  $postcontext = mysql_real_escape_string($postcontext);  
+  $repeatcount = mysql_real_escape_string($repeatcount);  
+      
   mysql_query ("INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount) 
                VALUES ('$buildid','$type','$logline','$text','$sourcefile','$sourceline','$precontext','$postcontext','$repeatcount')");
   add_last_sql_error("add_error");
 }
 
 /** Add a new update */
-function  add_update($buildid,$start_time,$end_time,$command,$type,$status)
+function add_update($buildid,$start_time,$end_time,$command,$type,$status)
 {
-  $command = addslashes($command);
-  $status = addslashes($status);
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
+    
+  $start_time = mysql_real_escape_string($start_time);
+  $end_time = mysql_real_escape_string($end_time);
+  $command = mysql_real_escape_string($command);
+  $type = mysql_real_escape_string($type);
+  $status = mysql_real_escape_string($status);
     
   mysql_query ("INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status) 
                VALUES ('$buildid','$start_time','$end_time','$command','$type','$status')");
@@ -1240,7 +1404,18 @@ function  add_update($buildid,$start_time,$end_time,$command,$type,$status)
 /** Add a new update file */
 function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$revision,$priorrevision)
 {
-  $log = addslashes($log);
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
+    
+  $filename = mysql_real_escape_string($filename);
+  $checkindate = mysql_real_escape_string($checkindate);
+  $author = mysql_real_escape_string($author);
+  $email = mysql_real_escape_string($email);
+  $log = mysql_real_escape_string($log);
+  $revision = mysql_real_escape_string($revision);
+  $priorrevision = mysql_real_escape_string($priorrevision);
     
   mysql_query ("INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision) 
                VALUES ('$buildid','$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
@@ -1250,7 +1425,18 @@ function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$rev
 /** Add dynamic analysis */
 function add_dynamic_analysis($buildid,$status,$checker,$name,$path,$fullcommandline,$log)
 {  
-  $log = addslashes($log);
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
+    
+  $status = mysql_real_escape_string($status);
+  $checker = mysql_real_escape_string($checker);
+  $name = mysql_real_escape_string($name);
+  $path = mysql_real_escape_string($path);
+  $fullcommandline = mysql_real_escape_string($fullcommandline);
+  $log = mysql_real_escape_string($log);
+
   mysql_query ("INSERT INTO dynamicanalysis (buildid,status,checker,name,path,fullcommandline,log) 
                VALUES ('$buildid','$status','$checker','$name','$path','$fullcommandline','$log')");
   return mysql_insert_id();
@@ -1259,6 +1445,14 @@ function add_dynamic_analysis($buildid,$status,$checker,$name,$path,$fullcommand
 /** Add dynamic analysis defect */
 function add_dynamic_analysis_defect($dynid,$type,$value)
 {
+  if(!is_numeric($dynid))
+    {
+    return;
+    }
+    
+  $type = mysql_real_escape_string($type);
+  $value = mysql_real_escape_string($value);
+
   mysql_query ("INSERT INTO dynamicanalysisdefect (dynamicanalysisid,type,value) 
                 VALUES ('$dynid','$type','$value')");
   add_last_sql_error("add_dynamic_analysis_defect");
@@ -1268,9 +1462,17 @@ function add_dynamic_analysis_defect($dynid,$type,$value)
 /** Add a new note */
 function add_note($buildid,$text,$timestamp,$name)
 {
-  $text = addslashes($text);
+  if(!is_numeric($buildid))
+    {
+    return;
+    }
     
-  mysql_query ("INSERT INTO note (buildid,text,time,name) VALUES ('$buildid','$text','$timestamp','$name')");
+  $text = mysql_real_escape_string($text);
+  $timestamp = mysql_real_escape_string($timestamp);
+  $name = mysql_real_escape_string($name);
+    
+  mysql_query ("INSERT INTO note (buildid,text,time,name) 
+                VALUES ('$buildid','$text','$timestamp','$name')");
   add_last_sql_error("add_note");
 }
 
@@ -1344,6 +1546,11 @@ function get_dates($date,$nightlytime)
 /** Get the logo id */
 function getLogoID($projectid)
 {
+  if(!is_numeric($projectid))
+    {
+    return;
+    }
+
   //asume the caller already connected to the database
   $query = "SELECT imageid FROM project WHERE id='$projectid'";
   $result = mysql_query($query);
@@ -1374,6 +1581,7 @@ function get_project_properties($projectname)
     exit(0);
     }
 
+  $projectname = mysql_real_escape_string($projectname);
   $project = mysql_query("SELECT * FROM project WHERE name='$projectname'");
   if(mysql_num_rows($project)>0)
     {
@@ -1391,7 +1599,6 @@ function get_project_properties($projectname)
 function get_project_property($projectname, $prop)
 {
   $project_props = get_project_properties($projectname);
-
   return $project_props[$prop];
 }
 
@@ -1400,6 +1607,10 @@ function get_cdash_dashboard_xml($projectname, $date)
   include("config.php");
 
   $projectid = get_project_id($projectname);
+  if($projectid == -1)
+    {
+    return;
+    }
 
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   if(!$db)

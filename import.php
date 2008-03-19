@@ -85,6 +85,20 @@ if($Submit)
 {
   $directory = $_POST["directory"];
   $projectid = $_POST["project"];
+  
+  // Checks
+  if(!isset($projectid) || !is_numeric($projectid))
+    {
+    echo "Not a valid projectid!";
+    return;
+    }
+    // Checks
+  if(!isset($directory) || strlen($directory)<3)
+    {
+    echo "Not a valid directory!";
+    return;
+    }
+    
   if($projectid == 0)
     {
     echo("Use your browsers Back button, and select a valid project.<br>");

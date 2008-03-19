@@ -25,6 +25,13 @@ include("version.php");
 @$date = $_GET["date"];
 @$sortby = $_GET["sortby"];
 
+// Checks
+if(!isset($buildid) || !is_numeric($buildid))
+  {
+  echo "Not a valid buildid!";
+  return;
+  }
+    
 if(!$sortby)
   {
   $sortby = "filename";
@@ -38,7 +45,7 @@ $build_array = mysql_fetch_array(mysql_query("SELECT starttime,projectid FROM bu
 $projectid = $build_array["projectid"];
  
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
-    
+  
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
   {

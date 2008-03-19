@@ -27,12 +27,14 @@ include("common.php");
 include('version.php');
 
 $testid = $_GET["test"];
-if(!isset($testid))
+// Checks
+if(!isset($testid) || !is_numeric($testid))
   {
   die('Error: no test id supplied in query string');
   }
+  
 $buildid = $_GET["build"];
-if(!isset($buildid))
+if(!isset($buildid) || !is_numeric($buildid))
   {
   die('Error: no build id supplied in query string');
   }

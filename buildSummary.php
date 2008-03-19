@@ -22,6 +22,13 @@ include("common.php");
 include("version.php");
     
 @$buildid = $_GET["buildid"];
+// Checks
+if(!isset($buildid) || !is_numeric($buildid))
+  {
+  echo "Not a valid buildid!";
+  return;
+  }
+
 @$date = $_GET["date"];
 
 include("config.php");

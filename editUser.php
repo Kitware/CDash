@@ -29,7 +29,7 @@ if ($session_OK)
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
 
- $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
 
   $userid = $_SESSION['cdash']['loginid'];
@@ -37,10 +37,10 @@ if ($session_OK)
   @$updateprofile = $_POST["updateprofile"]; 
   if($updateprofile) 
    {
-  $institution = $_POST["institution"]; 
-  $email = $_POST["email"]; 
-  $lname = $_POST["lname"]; 
-  $fname = $_POST["fname"];  
+   $institution = mysql_real_escape_string($_POST["institution"]); 
+   $email = mysql_real_escape_string($_POST["email"]); 
+   $lname = mysql_real_escape_string($_POST["lname"]); 
+   $fname = mysql_real_escape_string($_POST["fname"]);  
    
    if(mysql_query("UPDATE user SET email='$email',
                                   institution='$institution',
@@ -73,7 +73,8 @@ if ($session_OK)
     }
     else
     {
-   $md5pass = md5($passwd);
+   $md5pass = md5($passwd); 
+   $md5pass = mysql_real_escape_string($md5pass); 
    if(mysql_query("UPDATE user SET password='$md5pass' WHERE id='$userid'"))
     {
     $xml .= "<error>Your password has been updated.</error>";
@@ -87,7 +88,7 @@ if ($session_OK)
     }
     }
   
- $xml .= "<user>";
+  $xml .= "<user>";
   $user = mysql_query("SELECT * FROM user WHERE id='$userid'");
   $user_array = mysql_fetch_array($user);
   $xml .= add_XML_value("firstname",$user_array["firstname"]);

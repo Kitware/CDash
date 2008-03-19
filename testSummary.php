@@ -37,7 +37,13 @@ if(!isset($projectid))
   {
   die('Error: no project supplied in query string');
   }
-  
+// Checks
+if(!isset($projectid) || !is_numeric($projectid))
+  {
+  echo "Not a valid projectid!";
+  return;
+  }
+    
 $testName = $_GET["name"];
 if(!isset($testName))
   {
@@ -66,6 +72,9 @@ $xml .="<testName>".$testName."</testName>";
 //get information about all the builds for the given date and project
 $xml .= "<builds>\n";
 
+$testName = mysql_real_escape_string($testName);
+$date = mysql_real_escape_string($date);
+  
 $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,test.id AS testid,site.name AS sitename 
           FROM build,build2test,test,site WHERE build.stamp RLIKE '^$date-'           
           AND build.projectid = '$projectid' AND build2test.buildid=build.id 

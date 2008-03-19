@@ -19,11 +19,18 @@ $noforcelogin = 1;
 include("config.php");
 include('login.php');
 include("common.php");
+include("version.php");
 
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
 
-include("config.php");
+// Checks
+if(!isset($buildid) || !is_numeric($buildid))
+  {
+  echo "Not a valid buildid!";
+  return;
+  }
+  
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
   

@@ -38,13 +38,13 @@ $xml .= "<name>cdash.log</name>";
 $xml .= "<fullpath>".$CDASH_BACKUP_DIRECTORY."/cdash.log</fullpath>";
 $xml .= "</log>";
 // List of the file in the directory that have other*.xml
-foreach (glob($CDASH_BACKUP_DIRECTORY."/*_Other*.xml") as $filename) {
-    $xml .= "<file>";
+foreach (glob($CDASH_BACKUP_DIRECTORY."/*_Other*.xml") as $filename) 
+  {
+  $xml .= "<file>";
   $xml .= "<name>".substr($filename,strrpos($filename,"/")+1)."</name>";
   $xml .= "<fullpath>".$filename."</fullpath>";
   $xml .= "</file>";
-}
-
+  }
 $xml .= "</cdash>";
 
 // Now doing the xslt transition

@@ -18,6 +18,12 @@
 include "config.php";
 
 $imgid = $_GET["imgid"];
+// Checks
+if(!isset($imgid) || !is_numeric($imgid))
+  {
+  echo "Not a valid imgid!";
+  return;
+  }
 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);

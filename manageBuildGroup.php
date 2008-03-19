@@ -27,6 +27,12 @@ if ($session_OK)
 mysql_select_db("$CDASH_DB_NAME",$db);
 
 $userid = $_SESSION['cdash']['loginid'];
+// Checks
+if(!isset($userid) || !is_numeric($userid))
+  {
+  echo "Not a valid userid!";
+  return;
+  }
   
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -42,20 +48,19 @@ $xml .= "<menusubtitle>Build Groups</menusubtitle>";
 if(!isset($projectid))
 {
   $project = mysql_query("SELECT id FROM project");
- if(mysql_num_rows($project)==1)
-   {
-   $project_array = mysql_fetch_array($project);
-   $projectid = $project_array["id"];
-   }
+  if(mysql_num_rows($project)==1)
+    {
+    $project_array = mysql_fetch_array($project);
+    $projectid = $project_array["id"];
+    }
 }
-
-
+  
 @$show = $_GET["show"];
 
 $role=0;
 
 $user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
-if($projectid)
+if($projectid && is_numeric($projectid))
   {
   $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
   if(mysql_num_rows($user2project)>0)
@@ -183,6 +188,13 @@ function swap_array_element($array,$currentgroupid,$wantedposition)
 if($up)
 {
   $Groupid = $_GET["groupid"];
+  // Checks
+  if(!isset($Groupid) || !is_numeric($Groupid))
+    {
+    echo "Not a valid Groupid!";
+    return;
+    }
+  
   $groupposition_array = mysql_fetch_array(mysql_query("SELECT position FROM buildgroupposition WHERE buildgroupid='$Groupid' AND endtime='0000-00-00 00:00:00'"));
   $position = $groupposition_array["position"];
   
@@ -215,6 +227,13 @@ if($up)
 if($down)
 {
   $Groupid = $_GET["groupid"];
+  // Checks
+  if(!isset($Groupid) || !is_numeric($Groupid))
+    {
+    echo "Not a valid Groupid!";
+    return;
+    }
+    
   $groupposition_array = mysql_fetch_array(mysql_query("SELECT position FROM buildgroupposition WHERE buildgroupid='$Groupid' AND endtime='0000-00-00 00:00:00'"));
   $position = $groupposition_array["position"];
   

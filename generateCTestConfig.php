@@ -21,6 +21,12 @@ include('login.php');
 include("common.php");
 
 @$projectid = $_GET["projectid"];
+// Checks
+if(!isset($projectid) || !is_numeric($projectid))
+  {
+  echo "Not a valid projectid!";
+  return;
+  }
 
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);

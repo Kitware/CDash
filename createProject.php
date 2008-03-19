@@ -26,26 +26,32 @@ if ($session_OK)
   mysql_select_db("$CDASH_DB_NAME",$db);
 
   $userid = $_SESSION['cdash']['loginid'];
+  // Checks
+  if(!isset($userid) || !is_numeric($userid))
+    {
+    echo "Not a valid userid!";
+    return;
+    }
+    
   @$projectid = $_GET["projectid"];
    
   @$edit = $_GET["edit"];
    
   // If the projectid is not set and there is only one project we go directly to the page
   if(isset($edit) && !isset($projectid))
-  {
-   $project = mysql_query("SELECT id FROM project");
-   if(mysql_num_rows($project)==1)
     {
-    $project_array = mysql_fetch_array($project);
-    $projectid = $project_array["id"];
+    $project = mysql_query("SELECT id FROM project");
+    if(mysql_num_rows($project)==1)
+      {
+      $project_array = mysql_fetch_array($project);
+      $projectid = $project_array["id"];
+      }
     }
-  }
   
- 
   $role = 0;
  
   $user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
-  if($projectid)
+  if($projectid && is_numeric($projectid))
     {
     $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
     if(mysql_num_rows($user2project)>0)
