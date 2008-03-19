@@ -18,6 +18,7 @@
 include("config.php");
 include('login.php');
 include("common.php");
+include("version.php");
 
 set_time_limit(0);
 
@@ -28,6 +29,7 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Backward Compatibility</title>";
 $xml .= "<menutitle>CDash</menutitle>";

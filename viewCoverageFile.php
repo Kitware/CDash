@@ -19,6 +19,7 @@ $noforcelogin = 1;
 include("config.php");
 include('login.php');
 include("common.php");
+include("version.php");
 
 @$buildid = $_GET["buildid"];
 @$fileid = $_GET["fileid"];
@@ -46,6 +47,8 @@ $logoid = getLogoID($projectid);
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
+
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   // Build

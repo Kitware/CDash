@@ -24,10 +24,13 @@ function generate_index_table()
   $noforcelogin = 1;
   include("config.php");
   include('login.php');
+  include('version.php');
 
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= add_XML_value("title","CDash");
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  $xml .= "<version>".$CDASH_VERSION."</version>";
+  
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
   
@@ -131,7 +134,8 @@ function generate_main_dashboard_XML($projectid,$date)
   $noforcelogin = 1;
   include("config.php");
   include('login.php');
-    
+  include('version.php');
+      
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)
     {
@@ -165,6 +169,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  $xml .= "<version>".$CDASH_VERSION."</version>";
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid);

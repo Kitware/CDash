@@ -17,6 +17,7 @@
 =========================================================================*/
 include("config.php");
 include('login.php');
+include("version.php");
 
 if($session_OK) 
   {
@@ -31,6 +32,7 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<title>CDash - Import Backups</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Backups</menusubtitle>";

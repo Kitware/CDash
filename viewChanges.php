@@ -19,6 +19,7 @@ $noforcelogin = 1;
 include("config.php");
 include('login.php');
 include("common.php");
+include("version.php");
 
 // get_related_dates takes a projectname and basedate as input
 // and produces an array of related dates and times based on:
@@ -856,6 +857,8 @@ $dates = get_related_dates($projectname, $date);
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
+
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
 if ($query === 1)

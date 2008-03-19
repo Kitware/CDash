@@ -10,7 +10,7 @@
    <table style="float:right">
     <tr>
      <td><img src="images/logo2.gif" height="66" alt="CDash logo"/></td>
-   <td>CDash 1.0 <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text> 2008 
+   <td>CDash <xsl:value-of select="/cdash/version"/><xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text> 2008 
    <a href="http://www.kitware.com">Kitware Inc.</a>
    <xsl:text>&#160;</xsl:text><br/>
   <a href="http://www.cmake.org/Bug">[report problems]</a>

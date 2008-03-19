@@ -77,10 +77,12 @@ function RegisterForm($regerror)
 {  
   include("config.php");
   include("common.php"); 
+  include('version.php');
   
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - Registration</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  $xml .= "<version>".$CDASH_VERSION."</version>";  
   $xml .= "<error>" . $regerror . "</error>";
   $xml .= "</cdash>";
   

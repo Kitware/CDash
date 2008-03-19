@@ -17,6 +17,7 @@
 =========================================================================*/
 include("config.php");
 include('login.php');
+include("version.php");
 
 if ($session_OK) 
   {
@@ -26,7 +27,7 @@ if ($session_OK)
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - My Profile</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-
+  $xml .= "<version>".$CDASH_VERSION."</version>";
 
  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);

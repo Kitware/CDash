@@ -16,6 +16,7 @@
 
 =========================================================================*/
 include_once("config.php");
+include_once("version.php"); 
 
 /** Authentication function */
 function auth()
@@ -106,11 +107,13 @@ function LoginForm($loginerror)
 {  
   include("config.php");
   include_once("common.php"); 
-  
+  include("version.php");
+    
   $xml = "<cdash>";
   $xml .= "<title>Login</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-    
+  $xml .= "<version>".$CDASH_VERSION."</version>";
+   
   if(@$_GET['note'] == "register")
     {
     $xml .= "<message>Registration Complete. Please login with your email and password.</message>";

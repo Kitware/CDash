@@ -19,6 +19,7 @@ $noforcelogin = 1;
 include("config.php");
 include('login.php');
 include('common.php');
+include("version.php");
 
 @$siteid = $_GET["siteid"];
 
@@ -96,6 +97,8 @@ if(mysql_num_rows($query) > 0)
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$sitename."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
+
 $xml .= "<backurl>index.php</backurl>";
 $xml .= "<title>CDash - $sitename</title>";
 $xml .= "<menutitle>CDash</menutitle>";

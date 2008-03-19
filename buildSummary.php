@@ -19,6 +19,7 @@ $noforcelogin = 1;
 include("config.php");
 include('login.php');
 include("common.php");
+include("version.php");
     
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
@@ -46,9 +47,11 @@ function format_for_iphone($text)
 }  
   
 $xml = '<?xml version="1.0"?><cdash>';
+$projectname = get_project_name($projectid);
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
+$xml .= "<version>".$CDASH_VERSION."</version>";
+$xml .= get_cdash_dashboard_xml($projectname,$date);
 
 // User
  if(isset($_SESSION['cdash']))

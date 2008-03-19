@@ -18,6 +18,7 @@
 include("config.php"); 
 include('login.php');
 include_once('common.php');
+include("version.php");
 
 if ($session_OK) 
   {
@@ -28,6 +29,7 @@ if ($session_OK)
   
   $xml = "<cdash>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  $xml .= "<version>".$CDASH_VERSION."</version>";
   $xml .= "<backurl>user.php</backurl>";
   $xml .= "<title>CDash - Edit Site</title>";
   $xml .= "<menutitle>CDash</menutitle>";

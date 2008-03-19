@@ -43,6 +43,8 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
+  
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   // Build

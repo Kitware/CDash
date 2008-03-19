@@ -16,10 +16,10 @@
 
 =========================================================================*/
 include("config.php");
-include("common.php"); 
-include("config.php");
+include("common.php"); ;
 include('login.php');
 include_once('common.php');
+include('version.php');
 
 if ($session_OK) 
 {
@@ -30,6 +30,7 @@ $userid = $_SESSION['cdash']['loginid'];
   
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Build Groups</title>";
 $xml .= "<menutitle>CDash</menutitle>";

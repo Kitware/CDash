@@ -17,6 +17,7 @@
 =========================================================================*/
 include("config.php");
 include('login.php');
+include("version.php");
 
 function cleanup($filename)
 {
@@ -56,6 +57,7 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "</cdash>";
 @$submit = $_POST["Submit"];
 

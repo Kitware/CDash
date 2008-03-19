@@ -17,6 +17,7 @@
 =========================================================================*/
 include("config.php");
 include('login.php');
+include("version.php");
 
 if($session_OK) 
   {
@@ -53,6 +54,7 @@ else
   
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Import</title>";
 $xml .= "<menutitle>CDash</menutitle>";

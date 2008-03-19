@@ -19,6 +19,7 @@ $noforcelogin = 1;
 include("config.php");
 include('login.php');
 include("common.php");
+include("version.php");
 
 @$projectname = $_GET["project"];
 @$date = $_GET["date"];
@@ -32,6 +33,7 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : Sites map for ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<dashboard>";
 $xml .= "<title>CDash</title>";
 $xml .= "<date>".$date."</date>";

@@ -18,12 +18,15 @@
 include("config.php");
 include('login.php');
 include_once('common.php');
+include("version.php");
 
 if ($session_OK) 
   {
   $userid = $_SESSION['cdash']['loginid'];
   $xml = "<cdash>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  $xml .= "<version>".$CDASH_VERSION."</version>";
+  
   $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   mysql_select_db("$CDASH_DB_NAME",$db);
   $xml .= add_XML_value("title","CDash - My Profile");
