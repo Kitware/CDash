@@ -727,18 +727,23 @@ function parse_note($parser,$projectid)
       $namesarray[$nameIndex] = $name;
       $nameIndex = $nameIndex +1;
       }
-    if(($tagarray["tag"] == "TEXT"))
+    if($tagarray["type"] == "complete")
       {
-      $text = $tagarray["value"];
-      $textArray[$textIndex] = $text;
-      $textIndex = $textIndex + 1;
-      }
-    $t = $tagarray["tag"];
-    if(($tagarray["tag"] == "DATETIME"))
-      {
-      $date = $tagarray["value"];
-      $dateArray[$dateIndex] = $date;
-      $dateIndex = $dateIndex + 1;
+      if(($tagarray["tag"] == "TEXT"))
+        {
+        $text = $tagarray["value"];
+        $textArray[$textIndex] = $text;
+        $textIndex = $textIndex + 1;
+        }
+      $t = $tagarray["tag"];
+      if(($tagarray["tag"] == "DATETIME"))
+        {
+        $date = $tagarray["value"];
+        $dateArray[$dateIndex] = $date;
+        $dateIndex = $dateIndex + 1;
+        }
+      $type = $tagarray["type"];
+      $value = $tagarray["value"];
       }
     }
   // loop over all the text and names found
@@ -747,7 +752,7 @@ function parse_note($parser,$projectid)
     {
     $date = $dateArray[$i];
     $timestamp = str_to_time($date,$stamp);
-    $time = gmdate("Y-m-d H:i:s",$timestamp);
+    $time = gmdate("Y-m-d H:i:s",$timestamp);  
     add_note($buildid,$textArray[$i],$time,$namesarray[$i]);
     }
 }
