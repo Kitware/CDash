@@ -20,11 +20,23 @@ include("../config.php");
 include("../common.php");
 
 $siteid = $_GET["siteid"];
-$buildname = $_GET["buildname"];
+$buildname = mysql_real_escape_string($_GET["buildname"]);
 $projectid = $_GET["projectid"];
-$buildtype = $_GET["buildtype"];
-$currenttime = $_GET["currenttime"];
+$buildtype = mysql_real_escape_string($_GET["buildtype"]);
+$currenttime = mysql_real_escape_string($_GET["currenttime"]);
 
+// Checks
+if(!isset($siteid) || !is_numeric($siteid))
+  {
+  echo "Not a valid siteid!";
+  return;
+  }
+if(!isset($projectid) || !is_numeric($projectid))
+  {
+  echo "Not a valid projectid!";
+  return;
+  }
+    
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 

@@ -20,11 +20,22 @@ include("../config.php");
 include("../common.php");
 
 $siteid = $_GET["siteid"];
-$buildname = $_GET["buildname"];
-$buildtype = $_GET["buildtype"];
+$buildname = mysql_real_escape_string($_GET["buildname"]);
+$buildtype = mysql_real_escape_string($_GET["buildtype"]);
 $buildgroupid = $_GET["buildgroup"];
 $divname = $_GET["divname"];
 
+if(!isset($siteid) || !is_numeric($siteid))
+  {
+  echo "Not a valid siteid!";
+  return;
+  }
+if(!isset($buildgroupid) || !is_numeric($buildgroupid))
+  {
+  echo "Not a valid buildgroupid!";
+  return;
+  }
+  
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
@@ -43,6 +54,15 @@ $projectid = $currentgroup_array["projectid"];
 
 if($markexpected)
 {
+  if(!isset($groupid) || !is_numeric($groupid))
+    {
+    echo "Not a valid groupid!";
+    return;
+    }
+    
+  $expected = mysql_real_escape_string($expected);
+  $markexpected = mysql_real_escape_string($markexpected);
+  
   // If a rule already exists we update it
   mysql_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
                       AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
@@ -56,7 +76,12 @@ if($submit)
   mysql_query("UPDATE build2grouprule SET endtime='$now'
                WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
                AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");*/
- 
+  if(!isset($previousgroupid) || !is_numeric($previousgroupid))
+    {
+    echo "Not a valid previousgroupid!";
+    return;
+    }
+    
   // Delete the previous rule for that build
   mysql_query("DELETE FROM build2grouprule  WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
                AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
@@ -66,7 +91,7 @@ if($submit)
                VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','0000-00-00 00:00:00')");
         
   // Move any builds that follow this rule to the correct build2group       
- $buildgroups = mysql_query("SELECT * from build2group");
+  $buildgroups = mysql_query("SELECT * from build2group");
   while($buildgroup_array = mysql_fetch_array($buildgroups))
     {
     $buildid = $buildgroup_array["buildid"];

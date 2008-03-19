@@ -20,7 +20,17 @@ include("../common.php");
 
 $testid = $_GET["testid"];
 $buildid = $_GET["buildid"];
-
+if(!isset($buildid) || !is_numeric($buildid))
+  {
+  echo "Not a valid buildid!";
+  return;
+  }
+if(!isset($testid) || !is_numeric($testid))
+  {
+  echo "Not a valid testid!";
+  return;
+  }
+  
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 

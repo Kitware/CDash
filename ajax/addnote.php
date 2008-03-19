@@ -28,7 +28,18 @@ if(!$userid || !$buildid || !isset($_SESSION['cdash']))
   echo "Not valid id";
   return;
   }
-  
+// Checks
+if(!isset($buildid) || !is_numeric($buildid))
+  {
+  echo "Not a valid buildid!";
+  return;
+  }
+if(!isset($userid) || !is_numeric($userid))
+  {
+  echo "Not a valid userid!";
+  return;
+  }
+   
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 
@@ -46,9 +57,7 @@ if($AddNote)
   $url = "../buildSummary.php?buildid=".$buildid."&message=noteaddded";
   header("location: ".$url);
   }
-?>
-
-<head>
+?><head>
 <style type="text/css">
   .submitLink {
    color: #00f;
@@ -60,7 +69,9 @@ if($AddNote)
   }
 </style>
 </head>
- <form method="post" action="ajax/addnote.php?buildid=<?php echo $buildid?>&userid=<?php echo $userid; ?>">
+ 
+
+<form method="post" action="ajax/addnote.php?buildid=<?php echo $buildid?>&userid=<?php echo $userid; ?>">
  <table>
  <tr>
  <td><b>Note:</b></td>
