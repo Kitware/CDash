@@ -34,6 +34,7 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<title>CDash - Import Backups</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Backups</menusubtitle>";
+$xml .= "<backurl>user.php</backurl>";
 $xml .= "</cdash>";
 
   
