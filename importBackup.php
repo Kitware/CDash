@@ -44,7 +44,7 @@ $xml .= "</cdash>";
 @$Submit = $_POST["Submit"];
 if($Submit)
 {
-  foreach(glob("$CDASH_BACKUP_DIRECTORY/*.xml", $nFlags) as $filename)
+  foreach(glob("$CDASH_BACKUP_DIRECTORY/*.xml") as $filename)
     {
     # split on path separator 
     $pathParts = split("[/\\.]", $filename);

@@ -365,11 +365,13 @@ function parse_testing($parser,$projectid)
       $test_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
       $test_array[$index]["images"] = array();
       }
-    else if( ($tagarray["level"] == 5) && ($tagarray["attributes"]["NAME"] == "Execution Time") )
+    else if( ($tagarray["level"] == 5) && array_key_exists("attributes",$tagarray) 
+            && ($tagarray["attributes"]["NAME"] == "Execution Time") )
       {
       $getTimeNext = TRUE;
       }
-    else if( ($tagarray["level"] == 5) && ($tagarray["attributes"]["NAME"] == "Completion Status") )
+    else if( ($tagarray["level"] == 5) && array_key_exists("attributes",$tagarray) 
+            && ($tagarray["attributes"]["NAME"] == "Completion Status") )
       {
       $getDetailsNext = TRUE;
       }
@@ -377,7 +379,8 @@ function parse_testing($parser,$projectid)
       {
       $getSummaryNext = TRUE;
       }
-    else if( ($tagarray["level"] == 5) && (strpos($tagarray["attributes"]["TYPE"], "image") !== FALSE) )
+    else if( ($tagarray["level"] == 5) && array_key_exists("attributes",$tagarray)
+            && (strpos($tagarray["attributes"]["TYPE"], "image") !== FALSE) )
       {
       $getImageNext = TRUE;
       $imageType = $tagarray["attributes"]["TYPE"];
@@ -395,7 +398,7 @@ function parse_testing($parser,$projectid)
       }
     else if( ($tagarray["level"] == 6) && $getSummaryNext)
       {
-      $test_array[$index]["output"]=$tagarray["value"];
+      @$test_array[$index]["output"] = $tagarray["value"];
       $getSummaryNext = FALSE;
       }
     else if( ($tagarray["level"] == 6) && $getImageNext)
