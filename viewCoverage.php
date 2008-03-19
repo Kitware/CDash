@@ -197,8 +197,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $xml .= add_XML_value("fileid",$covfile["fileid"]);
     $xml .= add_XML_value("percentcoverage",$covfile["percentcoverage"]);
     $xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
-    $xml .= add_XML_value("functionsuntested",$covfile["functionsuntested"]);
-    $xml .= add_XML_value("branchesuntested",$covfile["branchesuntested"]);    
+    $xml .= add_XML_value("functionsuntested",@$covfile["functionsuntested"]);
+    $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);    
     $xml .= "</coveragefile>";
     $i++;
     }
