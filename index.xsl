@@ -508,7 +508,7 @@
    <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
      <a>
-     <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
      <xsl:value-of select="name"/></a> | 
     </xsl:for-each>
     <a href="#DynamicAnalysis">Dynamic Analysis</a>
@@ -602,7 +602,7 @@
    <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
       <a>
-     <xsl:attribute name="href">#<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
      <xsl:value-of select="name"/></a> | 
     </xsl:for-each>
     <a href="#Coverage">Coverage</a>
