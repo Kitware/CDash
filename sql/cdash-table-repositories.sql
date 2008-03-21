@@ -1,5 +1,3 @@
--- --------------------------------------------------------
-
 --
 -- Table structure for table `repositories`
 --
@@ -16,5 +14,6 @@ CREATE TABLE IF NOT EXISTS `repositories` (
 
 CREATE TABLE IF NOT EXISTS `project2repositories` (
   `projectid` int(11) NOT NULL,
-  `repositoryid` int(11) NOT NULL
+  `repositoryid` int(11) NOT NULL,
+  PRIMARY KEY  (`projectid`,`repositoryid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
