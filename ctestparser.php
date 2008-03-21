@@ -718,45 +718,56 @@ function parse_note($parser,$projectid)
   $nameIndex =0;
   $textIndex =0;
   $dateIndex =0;
-  // There might be more than one <Note> tag in notes file
-  // so we have to collect them all into one text buffer.
-  // fill namesarray with all the names
-  // fill textArray with all the text found
-  foreach($xmlarray as $tagarray)
+
+  // get the array of indices that have NOTE
+  // as the tag name
+  $notes = $parser->index["NOTE"];
+
+  $startNote = -1;
+  $endNote = -1;
+  // find the open and close NOTE pairs as there
+  //  maybe more than one NOTE in the xml
+  for ($i = 0; $i < sizeof($notes); $i++)
     {
-    if(($tagarray["tag"] == "NOTE") && ($tagarray["level"] == 3) && isset($tagarray["attributes"]["NAME"]))
+    // get the NOTE index from notes
+    $index = $notes[$i];
+    // look for the open <NOTE> tag and get the NAME
+    // attribute for it and set the startNote to that index
+    if($parser->vals[$index]["type"] == "open")
       {
-      $name=$tagarray["attributes"]["NAME"];
-      $namesarray[$nameIndex] = $name;
-      $nameIndex = $nameIndex +1;
+      // the open NOTE has the attribute NAME
+      $startNote = $index;
+      if(isset($parser->vals[$index]["attributes"]["NAME"]))
+        {
+        $name = $parser->vals[$index]["attributes"]["NAME"];
+        }
       }
-    if($tagarray["type"] == "complete")
+    // if we find the close tag for the note, now we have
+    // the search area for DATETIME and TEXT for that note
+    if($parser->vals[$index]["type"] == "close")
       {
-      if(($tagarray["tag"] == "TEXT"))
+      $endNote = $index;
+      // search from the start+1 to endNote-1 for DATETIME and TEXT
+      for($j = $startNote+1; $j < $endNote; $j++)
         {
-        $text = $tagarray["value"];
-        $textArray[$textIndex] = $text;
-        $textIndex = $textIndex + 1;
+        $tag = $parser->vals[$j]["tag"];
+        if($tag == "DATETIME")
+          {
+          $datetime = $parser->vals[$j]["value"];
+          }
+        if($tag == "TEXT")
+          {
+          $text = $parser->vals[$j]["value"];
+          }
         }
-      $t = $tagarray["tag"];
-      if(($tagarray["tag"] == "DATETIME"))
-        {
-        $date = $tagarray["value"];
-        $dateArray[$dateIndex] = $date;
-        $dateIndex = $dateIndex + 1;
-        }
-      $type = $tagarray["type"];
-      $value = $tagarray["value"];
+      // Now we should have a complete note
+      $timestamp = str_to_time($datetime,$stamp);
+      $time = gmdate("Y-m-d H:i:s",$timestamp);  
+      // for debug add this back
+//      echo "add note $name<br>";
+//      ob_flush();
+      add_note($buildid,$text,$time,$name);
       }
-    }
-  // loop over all the text and names found
-  // and fill in allText
-  for ($i = 0; $i < $textIndex; $i++) 
-    {
-    $date = $dateArray[$i];
-    $timestamp = str_to_time($date,$stamp);
-    $time = gmdate("Y-m-d H:i:s",$timestamp);  
-    add_note($buildid,$textArray[$i],$time,$namesarray[$i]);
     }
 }
 
