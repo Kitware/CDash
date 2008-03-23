@@ -2,8 +2,8 @@
 
     <xsl:include href="footer.xsl"/>
       
-  <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-  <xsl:output method="html" encoding="iso-8859-1"/>
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="iso-8859-1"/>
    <xsl:template match="/">
       <html>
        <head>
@@ -19,11 +19,7 @@
   <tr>
     <td>
     <table width="100%" align="center" cellpadding="0" cellspacing="0" >
-  <tr><tr>
-  <td width="20%" id="nob"></td>
-  <td width="80%" id="nob"><input type="submit" value="Update Profile" name="updateprofile" class="textbox"/>
-  </td>
-</tr> 
+  <tr>
     <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
   </tr>
   <tr>
