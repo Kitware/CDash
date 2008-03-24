@@ -175,8 +175,10 @@ CREATE TABLE `coveragefile` (
   `id` int(11) NOT NULL auto_increment,
   `fullpath` varchar(255) NOT NULL default '',
   `file` blob,
+  `crc32` int(11) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `fullpath` (`fullpath`)
+  KEY `fullpath` (`fullpath`),
+  KEY `crc32` (`crc32`) 
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
