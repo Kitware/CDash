@@ -83,7 +83,6 @@ if($Submit)
   mysql_select_db("$CDASH_DB_NAME",$db);
   $sqlfile = "sql/cdash.sql";
   $file_content = file($sqlfile);
-  //print_r($file_content);
   $query = "";
   foreach($file_content as $sql_line)
     {
