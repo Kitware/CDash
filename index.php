@@ -34,7 +34,14 @@ function generate_index_table()
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
   
- $xml .= "<dashboard>
+  // Check if the database is up to date
+  if(!mysql_query("SELECT crc32 FROM coveragefile LIMIT 1"))
+    {  
+    $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
+    upgrade your database structure in the Administration panel of CDash.</upgradewarning>";
+    }
+
+  $xml .= "<dashboard>
 
  <googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>
  </dashboard> ";

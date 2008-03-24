@@ -4,10 +4,8 @@
    <xsl:include href="footer.xsl"/>
    
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
-   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="iso-8859-1"/>
         
- <!--  <xsl:output method="html" encoding="iso-8859-1"/> -->
- 
     <xsl:template match="/">
        <html>
        <head>
@@ -83,6 +81,10 @@
 
 <!-- Main table -->
 <br/>
+
+<xsl:if test="string-length(cdash/upgradewarning)>0">
+  <p style="color:red"><b><xsl:value-of select="cdash/upgradewarning"/></b></p>
+</xsl:if>
 
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
