@@ -40,26 +40,44 @@ $xml .= "<menusubtitle>Tools</menusubtitle>";
 @$FixBuildBasedOnRule = $_POST["FixBuildBasedOnRule"];
 @$FixNewTableTest = $_POST["FixNewTableTest"];
 @$DeleteBuildsWrongDate = $_POST["DeleteBuildsWrongDate"];
-@$CompressCoverage = $_POST["CompressCoverage"];
-@$InstallNewTables = $_POST["InstallNewTables"];
+@$Upgrade = $_POST["Upgrade"];
 
 // When adding new tables they should be added to the SQL installation file
 // and here as well
-if($InstallNewTables)
+if($Upgrade)
 {
-  $sql = "CREATE TABLE IF NOT EXISTS `buildnote` (
-      `buildid` int(11) NOT NULL,
-      `userid` int(11) NOT NULL,
-      `note` mediumtext NOT NULL,
-      `timestamp` datetime NOT NULL,
-      `status` tinyint(4) NOT NULL default '0',
-       KEY `buildid` (`buildid`)
-      ) ENGINE=MyISAM DEFAULT CHARSET=latin1";
-      
-   if(mysql_query($sql))
-     {
-     $xml .= "<alert>New tables successfully created.</alert>";
-     }
+  // Apply all the patches
+  foreach(glob("sql/cdash-upgrade-*.sql") as $filename)
+    {
+    $file_content = file($filename);
+    $query = "";
+    foreach($file_content as $sql_line)
+      {
+      $tsl = trim($sql_line);
+       if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) 
+         {
+         $query .= $sql_line;
+         if(preg_match("/;\s*$/", $sql_line)) 
+           {
+           $query = str_replace(";", "", "$query");
+           $result = mysql_query($query);
+           if (!$result)
+             { 
+             if(strstr($query,"ALTER") === FALSE)
+               {
+               die(mysql_error());
+               }
+             }
+           $query = "";
+           }
+         }
+       } // end for each line
+    } // end for each upgrade file
+    
+  // Compression the coverage
+  CompressCoverage();
+    
+  $xml .= add_XML_value("alert","CDash has been upgraded successfully.");
 }
 
 
@@ -70,23 +88,9 @@ if($InstallNewTables)
  *  Second step: Reducing the size of the coveragefilelog by computing the crc32 of the groupid
  *               if the same coverage is beeing stored over and over again then it's discarded (same groupid)
  */
-if($CompressCoverage)
+function CompressCoverage()
 {
   /** FIRST STEP */
-  if(!mysql_query("SELECT crc32 FROM coveragefile LIMIT 1"))
-    {
-    // Add the new field
-    if(mysql_query("ALTER TABLE coveragefile ADD crc32 int(11)"))
-      {
-      mysql_query("ALTER TABLE coveragefile ADD INDEX (crc32)");
-      echo "crc32 added to coveragefile table";
-      }
-    else 
-      {
-      echo "Cannot add crc32 to coveragefile table";
-      return;
-      }
-    }
   // Compute the crc32 of the fullpath+file
   $coveragefile = mysql_query("SELECT * FROM coveragefile WHERE crc32 IS NULL");
   while($coveragefile_array = mysql_fetch_array($coveragefile))
@@ -147,7 +151,6 @@ if($CompressCoverage)
     }
 
   /** SECOND STEP */    
-    
 }
 
 if($DeleteBuildsWrongDate)

@@ -52,8 +52,8 @@
   </tr> 
   -->
   <tr>
-    <td><div align="right">Check and Add New Tables:</div></td>
-    <td><div align="left"><input type="submit" name="InstallNewTables" value="Install new tables"/></div></td>
+    <td><div align="right">Upgrade CDash: (this might take some time)</div></td>
+    <td><div align="left"><input type="submit" name="Upgrade" value="Upgrade CDash"/></div></td>
   </tr> 
 </table>
 </form>
