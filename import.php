@@ -79,7 +79,6 @@ $xml .= "<monthTo>".$monthTo."</monthTo>";
 $xml .= "<yearTo>".$yearTo."</yearTo>";
 $xml .= "</cdash>";
 
-// If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
 {
