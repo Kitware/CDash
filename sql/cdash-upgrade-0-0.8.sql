@@ -5,13 +5,18 @@
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
+-- --------------------------------------------------------
+
 -- 
 -- Database: `cdash`
 -- 
 
+-- --------------------------------------------------------
+
 -- 
 -- Table structure for table `buildnote`
 -- 
+
 CREATE TABLE IF NOT EXISTS `buildnote` (
   `buildid` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
@@ -21,11 +26,34 @@ CREATE TABLE IF NOT EXISTS `buildnote` (
   KEY `buildid` (`buildid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `repositories`
+--
+
+CREATE TABLE IF NOT EXISTS `repositories` (
+  `id` int(11) NOT NULL auto_increment,
+  `url` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project2repositories`
+--
+
+CREATE TABLE IF NOT EXISTS `project2repositories` (
+  `projectid` int(11) NOT NULL,
+  `repositoryid` int(11) NOT NULL,
+  PRIMARY KEY  (`projectid`,`repositoryid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Add support for coverage compression
 --
 ALTER TABLE coveragefile ADD crc32 int(11);
 ALTER TABLE coveragefile ADD INDEX (crc32);
-
-
