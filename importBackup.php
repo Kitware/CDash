@@ -20,9 +20,9 @@ include('login.php');
 include("version.php");
 
 if($session_OK) 
-  {
-  include_once('common.php');
-  include_once("ctestparser.php");
+{
+include_once('common.php');
+include_once("ctestparser.php");
 
 set_time_limit(0);
 
@@ -39,11 +39,9 @@ $xml .= "<menusubtitle>Backups</menusubtitle>";
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "</cdash>";
 
-  
-// If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
-{
+  {
   foreach(glob("$CDASH_BACKUP_DIRECTORY/*.xml") as $filename)
     {
     # split on path separator 
@@ -68,7 +66,7 @@ if($Submit)
       }
     }
   exit(0);
-}
+  } // end submit
 
 // Now doing the xslt transition
 generate_XSLT($xml,"importBackup");
