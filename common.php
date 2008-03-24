@@ -1602,6 +1602,78 @@ function get_project_property($projectname, $prop)
   return $project_props[$prop];
 }
 
+
+// make_cdash_url ensures that a url begins with a known url protocol
+// identifier
+//
+function make_cdash_url($url)
+{
+  // By default, same as the input
+  //
+  $cdash_url = $url;
+
+  // Unless the input does *not* start with a known protocol identifier...
+  // If it does not start with http or https already, then prepend "http://"
+  // to the input.
+  //
+  $npos = strpos($url, "http://");
+  if ($npos === FALSE)
+  {
+    $npos2 = strpos($url, "https://");
+    if ($npos2 === FALSE)
+    {
+      $cdash_url = "http://" . $url;
+    }
+  }
+
+  return $cdash_url;
+}
+
+
+// Return the email of a given author within a given project.
+//
+function get_author_email($projectname, $author)
+{
+  include("config.php");
+
+  $projectid = get_project_id($projectname);
+  if($projectid == -1)
+    {
+    return "unknownProject";
+    }
+
+  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  if(!$db)
+    {
+    echo "Error connecting to CDash database server<br>\n";
+    exit(0);
+    }
+
+  if(!mysql_select_db("$CDASH_DB_NAME",$db))
+    {
+    echo "Error selecting CDash database<br>\n";
+    exit(0);
+    }
+
+  $qry = mysql_query("SELECT email FROM user WHERE id IN (SELECT userid FROM user2project WHERE projectid='$projectid' AND cvslogin='$author') LIMIT 1");
+
+  $email = "";
+
+  if(mysql_num_rows($qry) === 1)
+    {
+    $results = mysql_fetch_array($qry);
+    $email = $results["email"];
+    }
+
+  if (0 === strcmp($email, ""))
+    {
+    $email = "userEmailUnknown";
+    }
+
+  return $email;  
+}
+
+
 function get_cdash_dashboard_xml($projectname, $date)
 {
   include("config.php");
@@ -1649,11 +1721,11 @@ function get_cdash_dashboard_xml($projectname, $date)
   <date>".$date."</date>
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <startdate>".date("l, F d Y H:i:s",$currentstarttime)."</startdate>
-  <svn>".htmlentities($project_array["cvsurl"])."</svn>
-  <bugtracker>".htmlentities($project_array["bugtrackerurl"])."</bugtracker>
+  <svn>".make_cdash_url(htmlentities($project_array["cvsurl"]))."</svn>
+  <bugtracker>".make_cdash_url(htmlentities($project_array["bugtrackerurl"]))."</bugtracker>
   <googletracker>".htmlentities($project_array["googletracker"])."</googletracker>
-  <documentation>".htmlentities($project_array["documentationurl"])."</documentation> 
-  <home>".htmlentities($project_array["homeurl"])."</home>
+  <documentation>".make_cdash_url(htmlentities($project_array["documentationurl"]))."</documentation> 
+  <home>".make_cdash_url(htmlentities($project_array["homeurl"]))."</home>
   <projectid>".$projectid."</projectid>
   <projectname>".$project_array["name"]."</projectname>
   <previousdate>".$previousdate."</previousdate>
@@ -1789,13 +1861,7 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
 //  echo "1: '" . $cmps[1] . "'<br/>";
 //  echo "<br/>";
 
-  $npos = strpos($diff_url, "http://");
-  if ($npos === FALSE)
-  {
-    $diff_url = "http://" . $diff_url;
-  }
-
-  return $diff_url;
+  return make_cdash_url($diff_url);
 }
 
 

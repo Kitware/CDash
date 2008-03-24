@@ -222,15 +222,6 @@ function is_cvs_root($root)
 }
 
 
-// Return the email of a given author within a given project.
-// DB lookup?
-//
-function get_author_email($projectname, $author)
-{
-  return $author . "_@_" . $projectname . ".org";
-}
-
-
 function get_cvs_repository_commits($cvsroot, $dates)
 {
   $commits = array();

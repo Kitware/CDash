@@ -109,10 +109,10 @@ Map</a></li>
       </a></li>
 <li>
 <a href="#" id="activem">PROJECT</a><ul>
-<li><a class="submm"><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
-<li><a class="submm"><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/documentation"/> </xsl:attribute>Doxygen</a></li>
-<li><a class="submm"><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>CVS</a></li>
-<li><a class="submm"><xsl:attribute name="href">http://<xsl:value-of select="cdash/dashboard/bugtracker"/> </xsl:attribute>Bugs</a></li>
+<li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
+<li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/documentation"/> </xsl:attribute>Doxygen</a></li>
+<li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>CVS</a></li>
+<li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/bugtracker"/> </xsl:attribute>Bugs</a></li>
 </ul>
 </li>
 </ul>

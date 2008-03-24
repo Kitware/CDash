@@ -152,12 +152,12 @@ function generate_main_dashboard_XML($projectid,$date)
   if(mysql_num_rows($project)>0)
     {
     $project_array = mysql_fetch_array($project);
-    $svnurl = htmlentities($project_array["cvsurl"]);
-    $homeurl = htmlentities($project_array["homeurl"]);
-    $bugurl = htmlentities($project_array["bugtrackerurl"]);  
+    $svnurl = make_cdash_url(htmlentities($project_array["cvsurl"]));
+    $homeurl = make_cdash_url(htmlentities($project_array["homeurl"]));
+    $bugurl = make_cdash_url(htmlentities($project_array["bugtrackerurl"]));
     $googletracker = htmlentities($project_array["googletracker"]);  
-    $docurl = htmlentities($project_array["documentationurl"]);  
-    $projectname = $project_array["name"];  
+    $docurl = make_cdash_url(htmlentities($project_array["documentationurl"]));
+    $projectname = $project_array["name"];
     }
   else
     {
@@ -183,7 +183,7 @@ function generate_main_dashboard_XML($projectid,$date)
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker> 
   <googletracker>".$googletracker."</googletracker> 
-  <documentation>".$docurl."</documentation> 
+  <documentation>".$docurl."</documentation>
   <home>".$homeurl."</home>
   <logoid>".$logoid."</logoid> 
   <projectid>".$projectid."</projectid> 
