@@ -309,7 +309,7 @@ function backup_xml_file($parser,$contents,$projectid)
   
  // If the file is other we append a number until we get a non existing file
  $i=1;
- while($file=="Other.xml" && file_exists($filename))
+ while(($file=="Other.xml" || $file="CoverageLog.xml") && file_exists($filename))
   {
   $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_Other.".$i.".xml";
   $i++;
@@ -559,9 +559,9 @@ function add_coverage($buildid,$coverage_array)
     {
     return;
     }
+ 
   // Construct the SQL query
-  $sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,
-                                functionstested,functionsuntested) VALUES ";
+  $sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) VALUES ";
   
   $i=0;
   foreach($coverage_array as $coverage)
@@ -569,7 +569,22 @@ function add_coverage($buildid,$coverage_array)
     $fullpath = $coverage["fullpath"];
 
     // Create an empty file if doesn't exists
-    $coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
+    $coveragefile = mysql_query("SELECT id FROM coveragefile WHERE fullpath='$fullpath' AND file IS NULL");
+    if(mysql_num_rows($coveragefile)==0)
+      {
+      // Do not compute the crc32, that means it's a temporary file
+      // Only when the crc32 is computed it means that the file is valid
+      mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+      $fileid = mysql_insert_id();
+      }
+    else
+      {
+      $coveragefile_array = mysql_fetch_array($coveragefile);
+      $fileid = $coveragefile_array["id"];
+      }
+      
+    // Create an empty file if doesn't exists
+    /*$coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
                                  WHERE cf.id=c.fileid AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
     if(mysql_num_rows($coveragefile)==0)
       {
@@ -580,7 +595,8 @@ function add_coverage($buildid,$coverage_array)
       {
       $coveragefile_array = mysql_fetch_array($coveragefile);
       $fileid = $coveragefile_array["id"];
-      }
+      }*/
+      
     
     $covered = $coverage["covered"];
     $loctested = $coverage["loctested"];
@@ -607,7 +623,7 @@ function add_coverage($buildid,$coverage_array)
     }
   // Insert into coverage
   mysql_query($sql);
- add_last_sql_error("add_coverage");
+  add_last_sql_error("add_coverage");
 }
 
 /** Create a coverage file */
@@ -618,30 +634,43 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
     return;
     }
     
-  $fullpath = mysql_real_escape_string($fullpath);
+   // Compute the crc32 of the file
+  $crc32 = crc32($fullpath.$filecontent);
   
-  // Check if we have the file
-  $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf 
-                               WHERE c.fileid=cf.id AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
-  $coveragefile_array = mysql_fetch_array($coveragefile);
-  $fileid = $coveragefile_array["id"];
-  
-  if($fileid)
+  $coveragefile = mysql_query("SELECT id FROM coveragefile WHERE crc32='$crc32'");
+  add_last_sql_error("add_coveragefile");
+    
+  if(mysql_num_rows($coveragefile)>0) // we have the same crc32
     {
-    if(strlen($coveragefile_array["file"])==0)
-      {
-      mysql_query ("UPDATE coveragefile SET file='$filecontent' WHERE id='$fileid'");
-      }
-    else if(crc32($filecontent) != crc32($coveragefile_array["file"]))
-      {
-      $previousfileid = $fileid;
-      mysql_query ("INSERT INTO coveragefile(fullpath,file) VALUES ('$fullpath','$filecontent')");
-      add_last_sql_error("add_coveragefile");
-      $fileid = mysql_insert_id();
-      mysql_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$previousfileid'");
-      add_last_sql_error("add_coveragefile");
-      }  
+    $coveragefile_array = mysql_fetch_array($coveragefile);
+    $fileid = $coveragefile_array["id"];
+
+    // Update the current coverage.fileid
+    $coverage = mysql_query("SELECT c.fileid FROM coverage AS c,coveragefile AS cf 
+                             WHERE c.fileid=cf.id AND c.buildid='$buildid' 
+                             AND cf.fullpath='$fullpath'");
+    $coverage_array = mysql_fetch_array($coverage);
+    $prevfileid = $coverage_array["fileid"];
+
+    mysql_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$prevfileid'");
+    add_last_sql_error("add_coveragefile");
+
+    // Remove the file if the crc32 is NULL
+    mysql_query ("DELETE FROM coveragefile WHERE id='$prevfileid' AND file IS NULL and crc32 IS NULL");
+    add_last_sql_error("add_coveragefile");
     }
+  else // The file doesn't exist in the database
+    {
+    // We find the current fileid based on the name and the file should be null
+    $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf 
+                                 WHERE c.fileid=cf.id AND c.buildid='$buildid' 
+                                 AND cf.fullpath='$fullpath' ORDER BY cf.id ASC");
+    $coveragefile_array = mysql_fetch_array($coveragefile);
+    $fileid = $coveragefile_array["id"];
+    mysql_query ("UPDATE coveragefile SET file='$filecontent',crc32='$crc32' WHERE id='$fileid'"); 
+    add_last_sql_error("add_coveragefile");
+    }
+    
   return $fileid;
 }
 
@@ -1116,7 +1145,6 @@ function remove_build($buildid)
     }
   
   mysql_query("DELETE FROM coverage WHERE buildid='$buildid'");
-
   mysql_query("DELETE FROM coveragefilelog WHERE buildid='$buildid'");
   mysql_query("DELETE FROM coveragesummary WHERE buildid='$buildid'");
 
