@@ -203,7 +203,7 @@
       <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="configure > 0">
+          <xsl:when test="configure &lt; 0">
             error
             </xsl:when>
            <xsl:when test="string-length(configure)>0">
@@ -326,7 +326,7 @@
       <td align="center">
        <xsl:attribute name="class">
        <xsl:choose>
-          <xsl:when test="/cdash/totalConfigure > 0">
+          <xsl:when test="/cdash/totalConfigure &lt; 0">
             error
             </xsl:when>
           <xsl:otherwise>
