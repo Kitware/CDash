@@ -62,7 +62,10 @@
     <table width="100%" border="0" cellpadding="0" cellspacing="0" >
     <tr>
     <td width="195" height="121" class="topbgleft">
-    <xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
+    <xsl:text>&#160;</xsl:text> 
+    <a href="http://www.cdash.org">
+    <img  border="0" alt="" src="images/cdash.gif"/>
+    </a>
     </td>
     <td width="425" valign="top" class="insd">
     <div class="insdd">

@@ -56,12 +56,15 @@
     <tr>
     <td width="195" height="121" class="topbgleft">
     <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;</xsl:text>
-     <!-- <img src="images/top_01.jpg" width="195" height="121" alt=""/> -->
-     <img  border="0">
+    <a>
+    <xsl:attribute name="href">
+    <xsl:value-of select="cdash/dashboard/home"/></xsl:attribute>
+    <img  border="0">
     <xsl:attribute name="alt"></xsl:attribute>
     <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
     </img>
-
+    </a>
+    
     </td>
     <td width="425" valign="top" class="insd">
     <div class="insdd">

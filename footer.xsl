@@ -9,7 +9,7 @@
    <td height="66" align="left" valign="middle" class="footer">
    <table style="float:right">
     <tr>
-     <td><img src="images/logo2.gif" height="66" alt="CDash logo"/></td>
+     <td><a href="http://www.cdash.org"><img src="images/logo2.gif" border="0" height="66" alt="CDash logo"/></a></td>
    <td>CDash <xsl:value-of select="/cdash/version"/><xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text> 2008 
    <a href="http://www.kitware.com">Kitware Inc.</a>
    <xsl:text>&#160;</xsl:text><br/>
