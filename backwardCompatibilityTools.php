@@ -62,17 +62,23 @@ if($Upgrade)
            $query = str_replace(";", "", "$query");
            $result = mysql_query($query);
            if (!$result)
-             { 
-             if(strstr($query,"ALTER") === FALSE)
-               {
-               die(mysql_error());
-               }
+             {        
+             die(mysql_error());
              }
            $query = "";
            }
          }
        } // end for each line
     } // end for each upgrade file
+  
+  
+  // Add the index if they don't exist
+  $querycrc32 = mysql_query("SELECT crc32 FROM coveragefile LIMIT 1");
+  if(!$querycrc32)
+    {
+    mysql_query("ALTER TABLE coveragefile ADD crc32 int(11)");
+    mysql_query("ALTER TABLE coveragefile ADD INDEX (crc32)");
+    }
     
   // Compression the coverage
   CompressCoverage();
@@ -92,14 +98,28 @@ function CompressCoverage()
 {
   /** FIRST STEP */
   // Compute the crc32 of the fullpath+file
-  $coveragefile = mysql_query("SELECT * FROM coveragefile WHERE crc32 IS NULL");
-  while($coveragefile_array = mysql_fetch_array($coveragefile))
+  $coveragefile =  mysql_query("SELECT count(*) FROM coveragefile WHERE crc32 IS NULL");
+  $coveragefile_array = mysql_fetch_array($coveragefile);
+  $total = $coveragefile_array["count(*)"];
+  
+  $i=0;
+  $coveragefile = mysql_query("SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000");
+  while(mysql_num_rows($coveragefile)>0)
     {
-    $fullpath = $coveragefile_array["fullpath"];
-    $file = $coveragefile_array["file"];
-    $id = $coveragefile_array["id"];
-    $crc32 = crc32($fullpath.$file);
-    mysql_query("UPDATE coveragefile SET crc32='$crc32' WHERE id='$id'");
+    while($coveragefile_array = mysql_fetch_array($coveragefile))
+      {
+      $fullpath = $coveragefile_array["fullpath"];
+      $file = $coveragefile_array["file"];
+      $id = $coveragefile_array["id"];
+      $crc32 = crc32($fullpath.$file);
+      mysql_query("UPDATE coveragefile SET crc32='$crc32' WHERE id='$id'");
+      }
+    $i+=1000;
+    $coveragefile = mysql_query("SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000");
+    $perc = ($i/$total)*100;
+    echo round($perc,3)."% done.<br>";
+    flush();
+    ob_flush();
     }
     
   // Delete files with the same crc32 and upgrade   
