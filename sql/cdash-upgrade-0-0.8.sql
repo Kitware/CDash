@@ -51,9 +51,3 @@ CREATE TABLE IF NOT EXISTS `project2repositories` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
-
---
--- Add support for coverage compression
---
-ALTER TABLE coveragefile ADD crc32 int(11);
-ALTER TABLE coveragefile ADD INDEX (crc32);
