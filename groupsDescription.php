@@ -1,10 +1,3 @@
-<html>
-  <head>
-   <title>CDash-Groups Description</title>
-   <meta name="robots" content="noindex,nofollow" />
-   <link rel="StyleSheet" type="text/css" href="cdash/cssfile"/>
-  </head>
-<body>
 <?php
 /*=========================================================================
 
@@ -23,10 +16,16 @@
 
 =========================================================================*/
 include("config.php");
-include('login.php');
+include("login.php");
 include("common.php"); 
-include("version.php"); 
 ?>
+<html>
+  <head>
+   <title>CDash-Groups Description</title>
+   <meta name="robots" content="noindex,nofollow" />
+   <link rel="StyleSheet" type="text/css" href="cdash/cssfile"/>
+  </head>
+<body>
 <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" width="100%">
    <tr>
      <th colspan="2" class="table-heading1">CDash Build Group Description</th>
@@ -50,6 +49,8 @@ include("version.php");
                           FROM buildgroup,buildgroupposition 
                           WHERE buildgroup.projectid='$projectid' 
                           AND buildgroup.id = buildgroupposition.buildgroupid
+                          AND buildgroup.endtime = '0000-00-00 00:00:00'
+                          AND buildgroupposition.endtime = '0000-00-00 00:00:00'
                           ORDER BY buildgroupposition.position ASC");
     while($group_array = mysql_fetch_array($group))
     {
