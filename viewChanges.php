@@ -812,7 +812,7 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     $comment = XMLStrFormat($comment);
     $comment = XMLStrFormat($comment);
 
-    $diff_url = get_diff_url($projecturl, $directory, $filename, $revision);
+    $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename, $revision);
     $diff_url = XMLStrFormat($diff_url);
 
     $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\")\n";

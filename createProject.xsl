@@ -111,6 +111,21 @@ edit the project</a><br/>
   </tr>
   <tr>
     <td></td>
+    <td><div align="right"><strong>CVS/SVN Viewer Type :</strong></div></td>
+    <td><select name="cvsviewertype">
+    <xsl:for-each select="/cdash/cvsviewer">
+    <option>
+    <xsl:attribute name="value"><xsl:value-of select="value"/></xsl:attribute>
+    <xsl:if test="selected=1">
+      <xsl:attribute name="selected">true</xsl:attribute>
+    </xsl:if>
+    <xsl:value-of select="description"/></option>
+    </xsl:for-each>
+    </select>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Bug Tracker URL:</strong></div></td>
     <td><input name="bugURL" type="text" id="bugURL" size="50"> 
     <xsl:attribute name="value">

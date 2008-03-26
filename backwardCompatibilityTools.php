@@ -89,9 +89,11 @@ if($Upgrade)
     {
     mysql_query("ALTER TABLE buildgroup ADD description text");
     }
-
-
-
+  $cvsviewertype = mysql_query("SELECT cvsviewertype FROM project LIMIT 1");
+  if(!$cvsviewertype)
+    {
+    mysql_query("ALTER TABLE project ADD cvsviewertype varchar(10)");
+    }
 
   $xml .= add_XML_value("alert","CDash has been upgraded successfully.");
 }

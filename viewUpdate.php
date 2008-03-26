@@ -169,7 +169,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $log = XMLStrFormat($log);
     $log = XMLStrFormat($log);
 
-    $diff_url = get_diff_url($projecturl, $directory, $filename, $revision);
+    $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename, $revision);
     $diff_url = XMLStrFormat($diff_url);
     
     $file['$directory'] = $directory;

@@ -128,6 +128,7 @@ if($Submit)
     @$EmailBuildMissing = $_POST["emailBuildMissing"]; 
     @$EmailLowCoverage = $_POST["emailLowCoverage"]; 
     @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];        
+    @$CVSViewerType = $_POST["cvsviewertype"]; 
           
     $handle = fopen($_FILES['logo']['tmp_name'],"r");
     $contents = 0;
@@ -184,9 +185,9 @@ if($Submit)
     //We should probably check the type of the image here to make sure the user
     //isn't trying anything fruity
     $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
-                                googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged)
+                                googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype)
             VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$DocURL','$Public','$imgid','$CoverageThreshold','$NightlyTime',
-                    '$GoogleTracker','$EmailBrokenSubmission','$EmailBuildMissing','$EmailLowCoverage','$EmailTestTimingChanged')"; 
+                    '$GoogleTracker','$EmailBrokenSubmission','$EmailBuildMissing','$EmailLowCoverage','$EmailTestTimingChanged','$CVSViewerType')"; 
     if(mysql_query("$sql"))
       {
       $projectid = mysql_insert_id();
@@ -267,10 +268,11 @@ if($Update)
   $CoverageThreshold = $_POST["coverageThreshold"];
   $NightlyTime = $_POST["nightlyTime"];
   $GoogleTracker = $_POST["googleTracker"]; 
- @$EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
- @$EmailBuildMissing = $_POST["emailBuildMissing"]; 
- @$EmailLowCoverage = $_POST["emailLowCoverage"]; 
- @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
+  @$EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
+  @$EmailBuildMissing = $_POST["emailBuildMissing"]; 
+  @$EmailLowCoverage = $_POST["emailLowCoverage"]; 
+  @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
+  @$CVSViewerType = $_POST["cvsviewertype"]; 
 
   $imgid = $project_array["imageid"];
   
@@ -315,7 +317,8 @@ if($Update)
                                   coveragethreshold='$CoverageThreshold',nightlytime='$NightlyTime',
                                   googletracker='$GoogleTracker',emailbrokensubmission='$EmailBrokenSubmission',
                                   emailbuildmissing='$EmailBuildMissing',emaillowcoverage='$EmailLowCoverage',
-                                  emailtesttimingchanged='$EmailTestTimingChanged'
+                                  emailtesttimingchanged='$EmailTestTimingChanged',
+                                  cvsviewertype='$CVSViewerType'
                                   WHERE id='$projectid'");
   echo mysql_error();
 
@@ -363,8 +366,28 @@ if($projectid>0)
   $xml .= add_XML_value("emailbuildmissing",$project_array['emailbuildmissing']);
   $xml .= add_XML_value("emaillowcoverage",$project_array['emaillowcoverage']);
   $xml .= add_XML_value("emailtesttimingchanged",$project_array['emailtesttimingchanged']);
+  $xml .= add_XML_value("cvsviewertype",$project_array['cvsviewertype']);
   $xml .= "</project>";
   }
+
+// 
+function AddCVSViewer($name,$description,$currentViewer)
+  {
+  $xml = "<cvsviewer>";
+  if($currentViewer == $name)
+    {
+    $xml .= add_XML_value("selected","1");
+    }
+  $xml .= add_XML_value("value",$name);
+  $xml .= add_XML_value("description",$description);
+  $xml .= "</cvsviewer>";
+  return $xml;
+  }
+
+// Add the type of CVS/SVN viewers
+$xml .= AddCVSViewer("viewcvs","ViewCVS",$project_array['cvsviewertype']); // first should be lower case
+$xml .= AddCVSViewer("trac","Trac",$project_array['cvsviewertype']);
+ 
 $xml .= "</cdash>";
 
 // Now doing the xslt transition
