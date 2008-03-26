@@ -9,6 +9,7 @@ function showgraph_click(buildid,zoomout)
   if($("#graph").html() != "" && $("#grapholder").is(":visible"))
     {
     $("#grapholder").hide(); //fadeOut('medium');
+    $("#graphoptions").html("");
     return;
     }
   
