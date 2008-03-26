@@ -1818,6 +1818,7 @@ function get_previous_revision($revision)
 }
 
 
+/** Return the ViewCVS URL */
 function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
 {
   // The project's viewcvs URL is expected to contain "?root=projectname"
@@ -1830,72 +1831,80 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
   //
   $npos = strpos($cmps[1], "root=");
   if ($npos !== FALSE && $npos === 0)
-  {
+    {
     $rootdir = substr($cmps[1], 5);
-//  echo "rootdir: '" . $rootdir . "'<br/>";
 
     $npos = strpos($directory, $rootdir);
     if ($npos !== FALSE && $npos === 0)
-    {
+      {
       $directory = substr($directory, strlen($rootdir));
-//  echo "directory: '" . $directory . "'<br/>";
-
       $npos = strpos($directory, "/");
       if ($npos !== FALSE && $npos === 0)
-      {
+        {
         if (1 === strlen($directory))
-        {
+          {
           $directory = "";
-//  echo "empty directory! '" . $directory . "'<br/>";
-        }
+          }
         else
-        {
+          {
           $directory = substr($directory, 1);
-//  echo "non-empty directory! '" . $directory . "'<br/>";
+          }
         }
       }
     }
-  }
 
   $prev_revision = get_previous_revision($revision);
 
   if (strlen($directory)>0)
-  {
+    {
     $dircmp = $directory . "/";
-  }
+    }
   else
-  {
+    {
     $dircmp = "";
-  }
+    }
 
   if (0 === strcmp($revision, $prev_revision))
-  {
-    // same : just view whole file:
+    {
     $revcmp = "&rev=" . $revision . "&view=markup";
-  }
+    }
   else
-  {
+    {
     // different : view the diff of r1 and r2:
     $revcmp = "&r1=" . $prev_revision . "&r2=" . $revision;
-  }
-
-//  echo "dircmp: '" . $dircmp . "'<br/>";
-//  echo "revcmp: '" . $revcmp . "'<br/>";
+    }
 
   $diff_url = $cmps[0] . $dircmp . $file . ".diff?" . $cmps[1] . $revcmp;
-
-//  echo "diff_url: '" . $diff_url . "'<br/>";
-//  echo "0: '" . $cmps[0] . "'<br/>";
-//  echo "1: '" . $cmps[1] . "'<br/>";
-//  echo "<br/>";
-
   return make_cdash_url($diff_url);
 }
 
 
-function get_diff_url($projecturl, $directory, $file, $revision)
+/** Return the Trac URL */
+function get_trac_diff_url($projecturl, $directory, $file, $revision)
 {
-  return get_viewcvs_diff_url($projecturl, $directory, $file, $revision);
+  $diff_url = $projecturl.$directory.$file."?rev=".$revision;
+  return make_cdash_url($diff_url);
+}
+
+/** Get the diff url based on the type of viewer */
+function get_diff_url($projectid,$projecturl, $directory, $file, $revision)
+{
+  if(!is_numeric($projectid))
+    {
+    return;
+    }
+  
+  $project = mysql_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
+  $project_array = mysql_fetch_array($project);
+   
+  if($project_array["cvsviewertype"] == "trac")
+    {
+    return get_trac_diff_url($projecturl, $directory, $file, $revision);
+    }
+  else // default is viewcvs
+    {
+    return get_viewcvs_diff_url($projecturl, $directory, $file, $revision);
+    }
 }
 
 
