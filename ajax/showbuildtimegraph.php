@@ -57,7 +57,7 @@ $(function () {
     $i=0;
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t = strtotime($build_array["starttime"]);
+      $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
     ?>
       d1.push([<?php echo $t; ?>,<?php echo (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60; ?>]);
     <?php
@@ -68,12 +68,7 @@ $(function () {
     var options = {
       lines: { show: true },
       points: { show: true },
-      xaxis: { noTicks: 5, 
-               tickFormatter: function(val) {
-                 var datetime = new Date( val* 1000 );
-                 return datetime.toLocaleString();
-               }},
-
+      xaxis: { mode: "time" }, 
       grid: {backgroundColor: "#fffaff"},
       selection: { mode: "x" },
       colors: ["#0000FF", "#dba255", "#919733"]

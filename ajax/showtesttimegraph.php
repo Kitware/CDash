@@ -70,7 +70,7 @@ $(function () {
     <?php
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t = strtotime($build_array["starttime"]);
+      $t = strtotime($build_array["starttime"])*1000;
     ?>
       d1.push([<?php echo $t; ?>,<?php echo $build_array["time"]; ?>]);
     <?php
@@ -80,12 +80,7 @@ $(function () {
   var options = {
     lines: { show: true },
     points: { show: true },
-    xaxis: { noTicks: 5, 
-             tickFormatter: function(val) {
-               var datetime = new Date( val* 1000 );
-               return datetime.toLocaleString();
-             }},
-    
+    xaxis: { mode: "time"}, 
     grid: {backgroundColor: "#fffaff"},
     selection: { mode: "x" },
     colors: ["#0000FF", "#dba255", "#919733"]

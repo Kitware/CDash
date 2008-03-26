@@ -71,7 +71,7 @@ $(function () {
   <?php
   while($build_array = mysql_fetch_array($previousbuilds))
   {
-  $t = strtotime($build_array["starttime"]);
+  $t = strtotime($build_array["starttime"])*1000;
   if(strtolower($build_array["status"]) == "passed")
     {
     $status = 2;
@@ -92,11 +92,7 @@ $(function () {
     lines: { show: true },
     points: { show: true },
     yaxis: { ticks: ty }, 
-    xaxis: { noTicks: 5, 
-             tickFormatter: function(val) {
-               var datetime = new Date( val* 1000 );
-               return datetime.toLocaleString();
-             }},
+    xaxis: { mode: "time" }, 
     grid: {backgroundColor: "#fffaff"},
     selection: { mode: "x" },
     colors: ["#0000FF", "#dba255", "#919733"]
