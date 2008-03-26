@@ -91,6 +91,7 @@
 <xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
 [Show Test Time Graph]
 </a>
+<div id="timegraphoptions"></div>
 <div id="timegraph"></div>
 <center>
 <div id="timegrapholder"></div>
@@ -100,6 +101,7 @@
 <xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
 [Show Failing/Passing Graph]
 </a>
+<div id="passinggraphoptions"></div>
 <div id="passinggraph"></div>
 <center>
 <div id="passinggrapholder"></div>
