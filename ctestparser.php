@@ -371,7 +371,7 @@ function parse_testing($parser,$projectid)
       $getTimeNext = TRUE;
       }
     else if( ($tagarray["level"] == 5) && array_key_exists("attributes",$tagarray) 
-            && ($tagarray["attributes"]["NAME"] == "Completion Status") )
+            && ($tagarray["attributes"]["NAME"] == "Exit Code") )
       {
       $getDetailsNext = TRUE;
       }
