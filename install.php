@@ -16,6 +16,13 @@
 
 =========================================================================*/
 // This is the installation script for CDash
+if (class_exists('XsltProcessor') == FALSE) 
+  {
+  echo "<font color=\"#FF0000\">Your PHP install does not support xslt, please install the PHP_XSLT package.<br><br>  ";
+  echo "WAMP Hint: uncomment extension=php_xsl.dll in php.ini.<br></font>";
+  exit();
+  }
+
 include("config.php");
 include("common.php"); 
 include("version.php"); 
@@ -39,7 +46,7 @@ else
   $xml .= "<connectiondb>1</connectiondb>";
   }    
   
-if(xslt_create() === FALSE)
+if(xslt_create() == FALSE)
   {
   $xml .= "<xslt>0</xslt>";
   }
