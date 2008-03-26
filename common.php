@@ -1882,7 +1882,7 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
 /** Return the Trac URL */
 function get_trac_diff_url($projecturl, $directory, $file, $revision)
 {
-  $diff_url = $projecturl.$directory.$file."?rev=".$revision;
+  $diff_url = $projecturl."/".$directory."/".$file."?rev=".$revision;
   return make_cdash_url($diff_url);
 }
 
