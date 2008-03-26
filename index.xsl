@@ -7,7 +7,7 @@
   
    <tr class="table-heading1">
       <td colspan="1" class="nob">
-          <h3>No <xsl:value-of select="name"/> Builds</h3>
+          <a href="#" class="grouptrigger"><h3>No <xsl:value-of select="name"/> Builds</h3></a>
       </td>
   
   <!-- quick links -->
@@ -35,7 +35,7 @@
      <thead> 
         <tr class="table-heading1" >
       <td colspan="1" class="nob">
-          <h3><xsl:value-of select="$type/name"/></h3>
+          <a href="#" class="grouptrigger"><h3><xsl:value-of select="$type/name"/></h3></a>
       </td>
   <td colspan="12" align="right" class="nob">
    <div>
@@ -454,6 +454,7 @@
          <xsl:value-of select="cdash/updates/timestamp"/></td>
          <td><a href="#" class="keytrigger">Help</a>
          <div class="jqmWindow" id="key">Loading key...</div>
+         <div class="jqmWindow" id="groupsdescription">Loading key...</div>
          </td>
   </tr>
 </table>
@@ -478,7 +479,7 @@
     <xsl:if test="count(cdash/buildgroup/coverage)=0">
    <tr class="table-heading2">
       <td colspan="1" class="nob">
-          <h3>No Coverage</h3>
+          <a href="#" class="grouptrigger"><h3>No Coverage</h3></a>
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" class="nob">
@@ -499,7 +500,7 @@
     <xsl:if test="count(cdash/buildgroup/coverage)>0">
         <tr class="table-heading2">
       <td colspan="1" class="nob">
-          <h3>Coverage</h3>
+          <a href="#" class="grouptrigger"><h3>Coverage</h3></a>
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" class="nob">
@@ -573,7 +574,7 @@
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)=0">
    <tr class="table-heading3" >
       <td colspan="1" class="nob">
-          <h3>No Dynamic Analysis</h3>
+          <a href="#" class="grouptrigger"><h3>No Dynamic Analysis</h3></a>
       </td>
    <!-- quick links -->
   <td colspan="12" align="right" class="nob">
@@ -594,7 +595,7 @@
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)>0">
         <tr class="table-heading3">
       <td colspan="1" class="nob">
-          <h3>Dynamic Analysis</h3>
+          <a href="#" class="grouptrigger"><h3>Dynamic Analysis</h3></a>
       </td>
       <!-- quick links -->
   <td colspan="12" align="right" class="nob">

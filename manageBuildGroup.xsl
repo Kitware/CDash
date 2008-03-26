@@ -97,16 +97,20 @@ project page</a>
      <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;groupid=<xsl:value-of select="id"/>&amp;down=1</xsl:attribute> [down]</a>
      </td>
      <td>
-     <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'">  <!-- cannot delete Nightly/Continuous/Experimental -->
-     <input type="hidden" name="groupid">
+      <input type="hidden" name="groupid">
      <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
      </input>
+     <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'">  <!-- cannot delete Nightly/Continuous/Experimental -->
      <input name="newname" type="text" id="newname" size="20"/><input type="submit" name="rename" value="Rename"/>
      </xsl:if>
      </td><td>
      <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
      <input type="submit" name="deleteGroup" value="Delete Group" onclick="return confirmDelete()"/>
      </xsl:if>
+     <input name="description" type="text" id="description" size="40">
+     <xsl:attribute name="value"><xsl:value-of select="description"/></xsl:attribute>
+     </input>
+     <input type="submit" name="submitDescription" value="Update Description"/>
      </td>
      </tr>
      </form>

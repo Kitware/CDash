@@ -259,7 +259,20 @@ if($down)
   //ConsolidateGroupPosition($projectid);
     }
 }
-  
+
+// If we should update the description
+@$submitDescription = $_POST["submitDescription"];
+if($submitDescription)
+  {
+  $Groupid = $_POST["groupid"];
+  $Description = $_POST["description"];
+  $sql = "UPDATE buildgroup SET description='$Description' WHERE id='$Groupid'"; 
+  if(!mysql_query("$sql"))
+    {
+    echo mysql_error();
+    }
+  } // end submitDescription group
+    
 // If we should rename a group
 @$Rename = $_POST["rename"];
 if($Rename)
@@ -786,7 +799,7 @@ if($projectid>0)
   $xml .= add_XML_value("name",$project_array['name']);
   
   // Display the current groups
-  $groups = mysql_query("SELECT g.id,g.name,gp.position,g.starttime FROM buildgroup AS g, buildgroupposition AS gp 
+  $groups = mysql_query("SELECT g.id,g.name,g.description,gp.position,g.starttime FROM buildgroup AS g, buildgroupposition AS gp 
                          WHERE g.id=gp.buildgroupid AND g.projectid='$projectid' 
                          AND g.endtime='0000-00-00 00:00:00' AND gp.endtime='0000-00-00 00:00:00'
                          ORDER BY gp.position ASC");
@@ -799,8 +812,9 @@ if($projectid>0)
       }
     $xml .= add_XML_value("id",$group_array['id']);
     $xml .= add_XML_value("name",$group_array['name']);
+    $xml .= add_XML_value("description",$group_array['description']);
     $xml .= add_XML_value("position",$group_array['position']);
-  $xml .= add_XML_value("startdate",$group_array['starttime']);
+    $xml .= add_XML_value("startdate",$group_array['starttime']);
     $xml .= "</group>";
     }
   $xml .= "</project>";

@@ -1,7 +1,9 @@
 $(document).ready(function() {
  
-  /** Load the key */
+  /** Load the help page */
   $('#key').jqm({ajax: 'key.html', trigger: 'a.keytrigger'});
+  var projectname = this.getElementById('projectname').value;
+  $('#groupsdescription').jqm({ajax: 'groupsDescription.php?project='+projectname, trigger: 'a.grouptrigger'});
 
   /** Build name */ 
   $.tablesorter.addParser({ 

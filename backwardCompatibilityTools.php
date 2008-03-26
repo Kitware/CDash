@@ -71,7 +71,7 @@ if($Upgrade)
        } // end for each line
     } // end for each upgrade file
   
-  
+  /** CDASH 0.8 */
   // Add the index if they don't exist
   $querycrc32 = mysql_query("SELECT crc32 FROM coveragefile LIMIT 1");
   if(!$querycrc32)
@@ -82,7 +82,17 @@ if($Upgrade)
     
   // Compression the coverage
   CompressCoverage();
-    
+  
+  /** CDASH 0.9 */
+  $description = mysql_query("SELECT description FROM buildgroup LIMIT 1");
+  if(!$description)
+    {
+    mysql_query("ALTER TABLE buildgroup ADD description text");
+    }
+
+
+
+
   $xml .= add_XML_value("alert","CDash has been upgraded successfully.");
 }
 
