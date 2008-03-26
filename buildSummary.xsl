@@ -279,6 +279,7 @@
 <xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
 [Show Build Time Graph]
 </a>
+<div id="graphoptions"></div>
 <div id="graph"></div>
 <center>
 <div id="grapholder"></div>

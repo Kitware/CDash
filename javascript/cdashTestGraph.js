@@ -1,30 +1,51 @@
-function showtesttimegraph_click(buildid,testid)
+function showtesttimegraph_click(buildid,testid,zoomout)
 {   
-  if($("#timegraph").html() != "" && $("#timegrapholder").is(":visible"))
+  if(zoomout)
     {
-    $("#timegrapholder").hide(); //fadeOut('medium');
+    $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid);
     return;
     }
-  
+  else if($("#timegraph").html() != "" && $("#timegrapholder").is(":visible"))
+    {
+    $("#timegrapholder").hide(); //fadeOut('medium');
+    $("#timegraphoptions").html("");
+    return;
+    }
  
- $("#timegraph").fadeIn('slow');
+ 
+  $("#timegraph").fadeIn('slow');
   $("#timegraph").html("fetching...<img src=images/loading.gif></img>");
- $("#timegrapholder").attr("style","width:800px;height:400px;");
- $("#timegrapholder").show();
-  $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid,{},function(){$("#timegrapholder").fadeIn('slow');});
+  $("#timegrapholder").attr("style","width:800px;height:400px;");
+
+  $("#timegraphoptions").html("<a href=javascript:showtesttimegraph_click("+buildid+","+testid+",true)>[Zoom out]</a>");
+  $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid,{},function(){
+  $("#timegrapholder").fadeIn('slow');
+  $("#timegraphoptions").show();
+
+});
 }
 
-function showtestpassinggraph_click(buildid,testid)
-{   
-  if($("#passinggraph").html() != "" && $("#passinggrapholder").is(":visible"))
+function showtestpassinggraph_click(buildid,testid,zoomout)
+{  
+  if(zoomout)
+    {
+    $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid);
+    return;
+    }
+  else if($("#passinggraph").html() != "" && $("#passinggrapholder").is(":visible"))
     {
     $("#passinggrapholder").hide(); //fadeOut('medium');
+    $("#passinggraphoptions").html("");
     return;
     } 
 
- $("#passinggraph").fadeIn('slow');
+  $("#passinggraph").fadeIn('slow');
   $("#passinggraph").html("fetching...<img src=images/loading.gif></img>");
   $("#passinggrapholder").attr("style","width:800px;height:400px;");
- $("#passinggrapholder").show();
-  $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid,{},function(){$("#passinggrapholder").fadeIn('slow');});
+  
+  $("#passinggraphoptions").html("<a href=javascript:showtestpassinggraph_click("+buildid+","+testid+",true)>[Zoom out]</a>");
+  $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid,{},function(){
+$("#passinggrapholder").fadeIn('slow');
+$("#passinggraphoptions").show();
+});
 }
