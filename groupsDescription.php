@@ -16,8 +16,11 @@
 
 =========================================================================*/
 include("config.php");
-include("login.php");
 include("common.php"); 
+
+$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+mysql_select_db("$CDASH_DB_NAME",$db);
+
 ?>
 <html>
   <head>
