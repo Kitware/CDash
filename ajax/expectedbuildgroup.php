@@ -3,7 +3,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $RCSfile: common.php,v $
+  Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$

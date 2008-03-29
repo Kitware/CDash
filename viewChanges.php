@@ -2,7 +2,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $RCSfile: viewChanges.php,v $
+  Module:    $Id: viewChanges.php,v $
   Language:  PHP
   Date:      $Date: 2007-10-29 15:37:28 -0400 (Mon, 29 Oct 2007) $
   Version:   $Revision: 67 $
@@ -234,7 +234,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
   $npos = strpos($cvsroot, "/");
   $npos2 = strlen($cvsroot);
   $module = substr($cvsroot, $npos + strlen("/cvsroot/"));
-  $rcsfilebase = substr($cvsroot, $npos, $npos2 - $npos) . '/'; // . $module . '/';
+  $Idbase = substr($cvsroot, $npos, $npos2 - $npos) . '/'; // . $module . '/';
 
   // Do a shell_exec of a cvs rlog call to get the changes in the requested
   // date range:
@@ -288,10 +288,10 @@ function get_cvs_repository_commits($cvsroot, $dates)
 
     if ($in_revision_chunk === 0)
     {
-      $npos = strpos($vv, "RCS file: " . $rcsfilebase);
+      $npos = strpos($vv, "RCS file: " . $Idbase);
       if ($npos !== FALSE && $npos === 0)
       {
-        $npos = strlen("RCS file: " . $rcsfilebase);
+        $npos = strlen("RCS file: " . $Idbase);
         $npos2 = strlen($vv) - 2; // 2 == strlen(",v") at the end of the "RCS file:" line
 
         $current_filename = substr($vv, $npos, $npos2 - $npos);
@@ -401,7 +401,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
     echo_array($commits, "commits");
 
     echo '<br/>';
-    echo 'rcsfilebase: ' . $rcsfilebase . '<br/>';
+    echo 'Idbase: ' . $Idbase . '<br/>';
     echo 'total revisions: ' . $total_revisions . '<br/>';
     echo '<br/>';
   }

@@ -2,7 +2,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $RCSfile: common.php,v $
+  Module:    $Id: common.php,v $
   Language:  PHP
   Date:      $Date: 2008-02-04 17:50:42 -0500 (Mon, 04 Feb 2008) $
   Version:   $Revision: 435 $
