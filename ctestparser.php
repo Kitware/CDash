@@ -2,7 +2,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $RCSfile: ctestparser.php,v $
+  Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
