@@ -148,6 +148,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   foreach($updatearray as $file)
     {
     $filename = $file['filename'];
+    $filename = str_replace("\\", "/", $filename);
     $directory = substr($filename,0,strrpos($filename,"/"));
      
     $pos = strrpos($filename,"/");
