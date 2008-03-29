@@ -387,6 +387,7 @@ function AddCVSViewer($name,$description,$currentViewer)
 // Add the type of CVS/SVN viewers
 $xml .= AddCVSViewer("viewcvs","ViewCVS",$project_array['cvsviewertype']); // first should be lower case
 $xml .= AddCVSViewer("trac","Trac",$project_array['cvsviewertype']);
+$xml .= AddCVSViewer("fisheye","Fisheye",$project_array['cvsviewertype']);
  
 $xml .= "</cdash>";
 
