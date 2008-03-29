@@ -309,6 +309,7 @@ CREATE TABLE `project` (
   `emaillowcoverage` tinyint(4) NOT NULL default '0',
   `emailtesttimingchanged` tinyint(4) NOT NULL default '0',
   `emailbrokensubmission` tinyint(4) NOT NULL default '1',
+  `cvsviewertype` varchar(10) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
