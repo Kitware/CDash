@@ -27,6 +27,9 @@ $CDASH_DB_NAME = 'cdash';
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
 $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
+// Name of the server running CDash. 
+// Leave empty to use current name.
+$CDASH_SERVER_NAME = '';
 // CSS file 
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory

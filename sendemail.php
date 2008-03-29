@@ -23,19 +23,19 @@ function sendemail($parser,$projectid)
   include_once("config.php");
      
   // We send email at the end of the testing
- $testing = @$parser->index["TESTING"];
+  $testing = @$parser->index["TESTING"];
   if($testing == "")
     {
-   return;
-   }
+    return;
+    }
    
- // Check if we should send the email
-  $project = mysql_query("SELECT name,emailbrokensubmission  FROM project WHERE id='$projectid'");
+  // Check if we should send the email
+  $project = mysql_query("SELECT name,emailbrokensubmission FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
   if($project_array["emailbrokensubmission"] == 0)
-  {
-  return;
-   }
+    {
+    return;
+    }
 
   $site = $parser->index["SITE"];
   $i = $site[0];
@@ -153,27 +153,27 @@ function sendemail($parser,$projectid)
                        AND user2project.userid=user.id AND user2project.emailtype>1");
  while($user_array = mysql_fetch_array($user))
    {
-  // If the user is already in the list we quit
-  if(strstr($email,$user_array["email"]) !== FALSE)
-    {
-   continue;
-    }
+   // If the user is already in the list we quit
+   if(strstr($email,$user_array["email"]) !== FALSE)
+     {
+     continue;
+     }
    
   // Nightly build notification
   if($user_array["emailtype"] == 2 && $buildtype=="Nightly")
     {
-   if($email != "")
-    {
-    $email .= ", ";
-    }
-   $email .= $user_array["email"];
+    if($email != "")
+      {
+      $email .= ", ";
+      }
+    $email .= $user_array["email"];
     }
   else // send the email
     {
-   if($email != "")
-    {
-    $email .= ", ";
-    }
+    if($email != "")
+      {
+      $email .= ", ";
+      }
     $email .= $user_array["email"];
     }
   }
@@ -228,7 +228,13 @@ function sendemail($parser,$projectid)
       $currentPort=":".$_SERVER['SERVER_PORT'];
       }
     
-    $currentURI =  "http://".$_SERVER['SERVER_NAME'].$currentPort.$_SERVER['REQUEST_URI']; 
+    $serverName = $CDASH_SERVER_NAME;
+    if(strlen($serverName) == 0)
+      {
+      $serverName = $_SERVER['SERVER_NAME'];
+      }
+    
+    $currentURI =  "http://".$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $messagePlainText .= $currentURI;
     $messagePlainText .= "/buildSummary.php?buildid=".$buildid;
@@ -254,7 +260,7 @@ function sendemail($parser,$projectid)
       $messagePlainText .= "Tests failing: ".$nfailingtests."\n";
       }
      
-    $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
+    $messagePlainText .= "\n-CDash on ".$serverName."\n";
     
     add_log("sending email","sendemail");
     
