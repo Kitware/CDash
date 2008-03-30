@@ -20,7 +20,7 @@
 function sendemail($parser,$projectid)
 {
   include_once("common.php");
-  include_once("config.php");
+  include("config.php");
      
   // We send email at the end of the testing
   $testing = @$parser->index["TESTING"];
