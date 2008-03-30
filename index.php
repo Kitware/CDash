@@ -293,7 +293,7 @@ function generate_main_dashboard_XML($projectid,$date)
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
-                         WHERE b.starttime<$end_UTCDate AND b.starttime>$beginning_UTCDate
+                         WHERE b.starttime<$end_UTCDate AND b.starttime>=$beginning_UTCDate
                          AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate OR gp.endtime='0000-00-00 00:00:00')
                          ORDER BY gp.position ASC,b.name ASC ";
