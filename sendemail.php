@@ -20,7 +20,7 @@
 function sendemail($parser,$projectid)
 {
   include_once("common.php");
-  include_once("config.php");
+  include("config.php");
      
   // We send email at the end of the testing
  $testing = @$parser->index["TESTING"];
@@ -79,7 +79,8 @@ function sendemail($parser,$projectid)
   $buildname = $build_array["name"];
   $starttime = $build_array["starttime"];
   
-  $previousbuild = mysql_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$buildtype' 
+  $previousbuild = mysql_query("SELECT id FROM build WHERE siteid='$siteid' 
+                               AND projectid='$projectid' AND type='$buildtype' 
                                AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
   if(mysql_num_rows($previousbuild) > 0)
     {
