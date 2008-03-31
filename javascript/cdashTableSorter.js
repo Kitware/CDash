@@ -2,9 +2,12 @@ $(document).ready(function() {
  
   /** Load the help page */
   $('#key').jqm({ajax: 'key.html', trigger: 'a.keytrigger'});
-  var projectname = this.getElementById('projectname').value;
-  $('#groupsdescription').jqm({ajax: 'groupsDescription.php?project='+projectname, trigger: 'a.grouptrigger'});
-
+  if(this.getElementById('projectname'))
+    {
+    var projectname = this.getElementById('projectname').value;
+    $('#groupsdescription').jqm({ajax: 'groupsDescription.php?project='+projectname, trigger: 'a.grouptrigger'});
+    }
+    
   /** Build name */ 
   $.tablesorter.addParser({ 
       // set a unique id 
@@ -57,41 +60,84 @@ $(document).ready(function() {
         type: 'numeric' 
     }); 
 
-  // Initialize the tables
-  $tabs = $(".tabb",this);
-  $tabs.each(function(index) {
-                      
+
+  // Initialize the viewTest tables
+  $tabs = $("#viewTestTable");
+  $tabs.each(function(index) {          
      $(this).tablesorter({
             headers: { 
+                0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
-                2: { sorter:'numericvalue'},
-                3: { sorter:'numericvalue'},
-                4: { sorter:'numericvalue'},
-                5: { sorter:'numericvalue'},
-                7: { sorter:'numericvalue'},
-                8: { sorter:'numericvalue'},
-                9: { sorter:'numericvalue'},
-                11: { sorter:'text'}
+                2: { sorter:'numeric'},
+                3: { sorter:'text'},  
             },
           debug: false,
           widgets: ['zebra'] 
         });  
-     
-    // Get the cookie
-    var tableid = this.id;
-    var cookiename = "cdash_table_sort_"+tableid;
-    var cook = $.cookie(cookiename); // get cookie
-    if(cook)
-      {
-      var cookArray = cook.split(',');
-      var sortArray = new Array();
-      var j=0;
-      for(var i=0; i < cookArray.length; i+=2) 
-        {
-        sortArray[j] = [cookArray[i],cookArray[i+1]];
-        j++;
-        }
-      $(this).trigger("sorton",[sortArray]);    
-      }              
+        
     });
+  
+  // Initialize the testSummary tables
+  if($tabs.length==0)
+    {
+    $tabs = $("#testSummaryTable");
+    $tabs.each(function(index) {          
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'text'},
+                1: { sorter:'buildname'},
+                2: { sorter:'text'},
+                3: { sorter:'buildname'},
+                4: { sorter:'numeric'},
+                5: { sorter:'text'}
+            },
+          debug: false,
+          widgets: ['zebra'] 
+        });  
+      });
+    }
+
+  // If all the above are not working
+  if($tabs.length==0)
+    {
+    // Initialize the Index tables
+    $tabs = $(".tabb",this);
+    $tabs.each(function(index) {          
+       $(this).tablesorter({
+              headers: { 
+                  1: { sorter:'buildname'},
+                  2: { sorter:'numericvalue'},
+                  3: { sorter:'numericvalue'},
+                  4: { sorter:'numericvalue'},
+                  5: { sorter:'numericvalue'},
+                  7: { sorter:'numericvalue'},
+                  8: { sorter:'numericvalue'},
+                  9: { sorter:'numericvalue'},
+                  11: { sorter:'text'}
+              },
+            debug: false,
+            widgets: ['zebra'] 
+          });  
+       
+      // Get the cookie
+      var tableid = this.id;
+      var cookiename = "cdash_table_sort_"+tableid;
+      var cook = $.cookie(cookiename); // get cookie
+      if(cook)
+        {
+        var cookArray = cook.split(',');
+        var sortArray = new Array();
+        var j=0;
+        for(var i=0; i < cookArray.length; i+=2) 
+          {
+          sortArray[j] = [cookArray[i],cookArray[i+1]];
+          j++;
+          }
+        $(this).trigger("sorton",[sortArray]);    
+        }              
+      });
+    }
+  
+  
+  
 });   
