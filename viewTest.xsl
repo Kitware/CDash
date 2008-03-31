@@ -28,13 +28,16 @@
   <xsl:value-of select="cdash/numNotRun"/> not run
 </h3><br/>
 
-<table cellspacing="0" class="tabb">
+<table id="viewTestTable" cellspacing="0" class="tabb">
+<!-- <xsl:attribute name="id">project_<xsl:value-of select="/cdash/dashboard/projectid"/>_1</xsl:attribute> -->
+<thead> 
   <tr class="table-heading1">
-    <th>Name</th>
-    <th>Status</th>
-    <th>Time</th>
-    <th class="nob">Details</th>
+    <th id="sort_0">Name</th>
+    <th id="sort_1">Status</th>
+    <th id="sort_2">Time</th>
+    <th id="sort_3" class="nob">Details</th>
   </tr>
+</thead>
 <xsl:for-each select="cdash/tests/test">
   <tr>
     <xsl:attribute name="class">

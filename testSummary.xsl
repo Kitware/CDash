@@ -23,15 +23,18 @@
 <u><xsl:value-of select="cdash/testName"/></u>
  performed on <xsl:value-of select="cdash/dashboard/date"/>
 </h3>
-<table cellspacing="0" cellpadding="3" class="tabb">
+<table id="testSummaryTable" cellspacing="0" cellpadding="3" class="tabb">
+<thead> 
   <tr class="table-heading1">
-    <th>Site</th>
-    <th>Build Name</th>
-    <th>Build Stamp</th>
-    <th>Status</th>
-    <th>Time</th>
-    <th class="nob">Detail</th>
+    <th id="sort_0">Site</th>
+    <th id="sort_1">Build Name</th>
+    <th id="sort_2">Build Stamp</th>
+    <th id="sort_3">Status</th>
+    <th id="sort_4">Time</th>
+    <th id="sort_5" class="nob">Detail</th>
   </tr>
+</thead> 
+
 <xsl:for-each select="cdash/builds/build">
   <tr>
     <xsl:attribute name="class">
