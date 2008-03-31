@@ -294,25 +294,7 @@
       <xsl:if test="string-length(test/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
       </td>
       <td class="nob"><xsl:value-of select="builddate"/></td>
-      <!--
-      <td>
-      <xsl:attribute name="class">
-       <xsl:choose>
-          <xsl:when test="expected=1">
-            warning
-            </xsl:when>
-          <xsl:otherwise>
-             <xsl:if test="clockskew=1">
-             error
-             </xsl:if>
-             <xsl:if test="clockskew=0">
-             tr-odd
-             </xsl:if>
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>
-      <xsl:value-of select="submitdate"/></td>
-      -->
+
    </tr>
   </xsl:for-each>
   </tbody>
@@ -408,8 +390,6 @@
    </tr>
 </tbody>
 </xsl:if>
-
-
   </xsl:if>
 
 </xsl:template>
@@ -481,7 +461,7 @@
           <h3>No Coverage</h3>
       </td>
    <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <td colspan="6" align="right" class="nob">
    <div id="Coverage">
    </div>
    <div class="quicklink">
@@ -502,7 +482,7 @@
           <h3>Coverage</h3>
       </td>
    <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <td colspan="6" align="right" class="nob">
    <div id="Coverage">
    </div>
    <div class="quicklink">
@@ -576,7 +556,7 @@
           <h3>No Dynamic Analysis</h3>
       </td>
    <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <td colspan="5" align="right" class="nob">
    <div id="DynamicAnalysis">
    </div>
    <div class="quicklink">
@@ -596,8 +576,8 @@
       <td colspan="1" class="nob">
           <h3>Dynamic Analysis</h3>
       </td>
-      <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <!-- quick links -->
+  <td colspan="5" align="right" class="nob">
    <div id="DynamicAnalysis"></div>
    <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
@@ -641,17 +621,6 @@
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
       </td>
       <td align="left" class="nob"><xsl:value-of select="date"/></td>
-      <!--
-      <td align="left">
-      <xsl:attribute name="class">
-      <xsl:if test="clockskew=1">
-             error
-             </xsl:if>
-             <xsl:if test="clockskew=0">
-             tr-odd
-             </xsl:if>
-      </xsl:attribute>
-      <xsl:value-of select="submitdate"/></td> -->
    </tr>
   </xsl:for-each>
 
