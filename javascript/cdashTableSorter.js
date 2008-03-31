@@ -105,6 +105,7 @@ $(document).ready(function() {
     $tabs.each(function(index) {          
        $(this).tablesorter({
               headers: { 
+                  0: { sorter:'buildname'},
                   1: { sorter:'buildname'},
                   2: { sorter:'numericvalue'},
                   3: { sorter:'numericvalue'},
