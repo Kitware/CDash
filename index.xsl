@@ -482,7 +482,7 @@
           <a href="#" class="grouptrigger"><h3>No Coverage</h3></a>
       </td>
    <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <td colspan="6" align="right" class="nob">
    <div id="Coverage">
    </div>
    <div class="quicklink">
@@ -503,7 +503,7 @@
           <a href="#" class="grouptrigger"><h3>Coverage</h3></a>
       </td>
    <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <td colspan="6" align="right" class="nob">
    <div id="Coverage">
    </div>
    <div class="quicklink">
@@ -577,7 +577,7 @@
           <a href="#" class="grouptrigger"><h3>No Dynamic Analysis</h3></a>
       </td>
    <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <td colspan="5" align="right" class="nob">
    <div id="DynamicAnalysis">
    </div>
    <div class="quicklink">
@@ -598,7 +598,7 @@
           <a href="#" class="grouptrigger"><h3>Dynamic Analysis</h3></a>
       </td>
       <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <td colspan="5" align="right" class="nob">
    <div id="DynamicAnalysis"></div>
    <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
