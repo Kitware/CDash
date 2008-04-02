@@ -19,6 +19,9 @@
 include("../config.php");
 include("../common.php");
 
+$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+mysql_select_db("$CDASH_DB_NAME",$db);
+
 $siteid = $_GET["siteid"];
 $buildname = mysql_real_escape_string($_GET["buildname"]);
 $projectid = $_GET["projectid"];
@@ -36,9 +39,7 @@ if(!isset($projectid) || !is_numeric($projectid))
   echo "Not a valid projectid!";
   return;
   }
-    
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+   
 
 $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = mysql_fetch_array($project);
