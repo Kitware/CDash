@@ -145,10 +145,11 @@ function add_last_sql_error($functionname)
 /** Return true if the user is allowed to see the page */
 function checkUserPolicy($userid,$projectid,$onlyreturn=0)
 {
-  if(!is_numeric($userid) || !is_numeric($projectid))
+  if(($userid!= '' && !is_numeric($userid)) || !is_numeric($projectid))
     {
-    return;
+    return false;
     }
+
     
   // If the projectid=0 only admin can access the page
   if($projectid==0 && mysql_num_rows(mysql_query("SELECT admin FROM user WHERE id='$userid' AND admin='1'"))==0)
@@ -168,6 +169,7 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
     $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
     $project_array = mysql_fetch_array($project);
     
+ 
     // If the project is public we quit
     if($project_array["public"]==1)
       {
