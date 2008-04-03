@@ -145,7 +145,7 @@ function add_last_sql_error($functionname)
 /** Return true if the user is allowed to see the page */
 function checkUserPolicy($userid,$projectid,$onlyreturn=0)
 {
-  if(!is_numeric($userid) || !is_numeric($projectid))
+  if(($userid!= '' && !is_numeric($userid)) || !is_numeric($projectid))
     {
     return;
     }
