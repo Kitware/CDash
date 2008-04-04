@@ -19,6 +19,9 @@
 include("../config.php");
 include("../common.php");
 
+$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+mysql_select_db("$CDASH_DB_NAME",$db);
+
 $siteid = $_GET["siteid"];
 $buildname = mysql_real_escape_string($_GET["buildname"]);
 $buildtype = mysql_real_escape_string($_GET["buildtype"]);
@@ -36,8 +39,6 @@ if(!isset($buildgroupid) || !is_numeric($buildgroupid))
   return;
   }
   
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
 
 // Find the project variables
 $currentgroup = mysql_query("SELECT id,name,projectid FROM buildgroup WHERE id='$buildgroupid'");
