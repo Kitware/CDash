@@ -20,6 +20,8 @@ include("../common.php");
 
 $testid = $_GET["testid"];
 $buildid = $_GET["buildid"];
+@$zoomout = $_GET["zoomout"];
+
 if(!isset($buildid) || !is_numeric($buildid))
   {
   echo "Not a valid buildid!";
@@ -66,19 +68,19 @@ $(function () {
   var d1 = [];
   var tx = [];
   var ty = [];
-  ty.push([1,"Failed"]);
-  ty.push([2,"Passed"]);
+  ty.push([-1,"Failed"]);
+  ty.push([1,"Passed"]);
   <?php
   while($build_array = mysql_fetch_array($previousbuilds))
   {
   $t = strtotime($build_array["starttime"])*1000;
   if(strtolower($build_array["status"]) == "passed")
     {
-    $status = 2;
+    $status = 1;
     }
   else
     {
-    $status = 1;
+    $status = -1;
     }
       ?>
       d1.push([<?php echo $t; ?>,<?php echo $status; ?>]);
@@ -89,9 +91,12 @@ $(function () {
   ?>
   
   var options = {
-    lines: { show: true },
-    points: { show: true },
-    yaxis: { ticks: ty }, 
+    bars: { show: true,
+      barWidth: 35000000,
+      lineWidth: 0.9 
+      },
+    //points: { show: true },
+    yaxis: { ticks: ty, min: -1.2, max: 1.2 }, 
     xaxis: { mode: "time" }, 
     grid: {backgroundColor: "#fffaff"},
     selection: { mode: "x" },
@@ -102,6 +107,16 @@ $(function () {
   $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],
          $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
   });
+
+<?php if(isset($zoomout))
+{
+?>
   $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],options);
+<?php } else { ?>
+  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],
+$.extend(true,{},options,{xaxis: { min: <?php echo $t-2000000000?>,max: <?php echo $t ?>}} )); 
+<?php } ?>
 });
+
+
 </script>

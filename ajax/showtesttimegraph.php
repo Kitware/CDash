@@ -20,6 +20,9 @@ include("../common.php");
 
 $testid = $_GET["testid"];
 $buildid = $_GET["buildid"];
+@$zoomout = $_GET["zoomout"];
+
+
 if(!isset($buildid) || !is_numeric($buildid))
   {
   echo "Not a valid buildid!";
@@ -76,10 +79,11 @@ $(function () {
     <?php
       }
     ?>
-    
+
+ 
   var options = {
-    lines: { show: true },
-    points: { show: true },
+    bars: { show: true,  barWidth: 35000000, lineWidth:0.9  },
+    //points: { show: true },
     xaxis: { mode: "time"}, 
     grid: {backgroundColor: "#fffaff"},
     selection: { mode: "x" },
@@ -91,9 +95,23 @@ $(function () {
            $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
     
     });
-    
+   
+
+<?php if(isset($zoomout))
+{
+?>
+    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",data: d1}],options);
+<?php } else { ?>
+
     $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  
-                                            data: d1}],options);
-    
+                                            data: d1}],
+          $.extend(true,{}, options,
+                                    {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t; ?>}} 
+));
+
+<?php }
+?>    
 });
+
+
 </script>
