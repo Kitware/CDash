@@ -2,7 +2,7 @@ function showtesttimegraph_click(buildid,testid,zoomout)
 {   
   if(zoomout)
     {
-    $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid);
+    $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid+"&zoomout=1");
     return;
     }
   else if($("#timegraph").html() != "" && $("#timegrapholder").is(":visible"))
@@ -29,7 +29,7 @@ function showtestpassinggraph_click(buildid,testid,zoomout)
 {  
   if(zoomout)
     {
-    $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid);
+    $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid+"&zoomout=1");
     return;
     }
   else if($("#passinggraph").html() != "" && $("#passinggrapholder").is(":visible"))
