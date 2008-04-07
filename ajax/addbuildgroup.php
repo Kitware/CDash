@@ -64,6 +64,13 @@ if($markexpected)
     }
 }
 
+@$removebuild = $_POST["removebuild"];
+
+if($removebuild)
+{
+  remove_build($buildid);
+}
+
 
 if($submit)
 {
@@ -112,13 +119,25 @@ $group = mysql_query("SELECT name,id FROM buildgroup WHERE id NOT IN
 </head>
 
 <script type="text/javascript" charset="utf-8">
+function removebuild_click(buildid)
+{
+  if(confirm("Are you sure you want to remove this build?"))
+    {
+    var group = "#buildgroup_"+buildid;
+    $(group).html("updating...");
+    $.post("ajax/addbuildgroup.php?buildid="+buildid,{removebuild:"1",buildid:buildid});
+    $(group).html("deleted.");
+    $(group).fadeOut('slow');
+    window.location = "";
+    }
+}
 
 function markasexpected_click(buildid,groupid,expected)
 {
   var group = "#buildgroup_"+buildid;
   $(group).html("updating...");
   $.post("ajax/addbuildgroup.php?buildid="+buildid,{markexpected:"1",groupid:groupid,expected:expected});
-  $(group).html("updated!");
+  $(group).html("updated.");
   $(group).fadeOut('slow');
   window.location = "";
 }
@@ -137,7 +156,7 @@ function addbuildgroup_click(buildid,groupid,definerule)
   var group = "#buildgroup_"+buildid;
   $(group).html("addinggroup");
   $.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild,definerule:definerule});
-  $(group).html("added to group!");
+  $(group).html("added to group.");
   $(group).fadeOut('slow');
   window.location = "";
 }
@@ -191,6 +210,11 @@ while($group_array = mysql_fetch_array($group))
 <?php
   }
 ?>
+<tr>
+    <td bgcolor="#DDDDDD" width="35%" colspan="3"><font size="2">
+    <a href="#" onclick="javascript:removebuild_click(<?php echo $buildid ?>)">[remove this build]</a>
+    </font></td>
+  </tr>
 </table>
   </form>
 </html>
