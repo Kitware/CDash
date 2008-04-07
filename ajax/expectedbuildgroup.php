@@ -27,24 +27,11 @@ $buildname = mysql_real_escape_string($_GET["buildname"]);
 $buildtype = mysql_real_escape_string($_GET["buildtype"]);
 $buildgroupid = $_GET["buildgroup"];
 $divname = $_GET["divname"];
-
 if(!isset($siteid) || !is_numeric($siteid))
   {
   echo "Not a valid siteid!";
   return;
   }
-if(!isset($buildgroupid) || !is_numeric($buildgroupid))
-  {
-  echo "Not a valid buildgroupid!";
-  return;
-  }
-  
-
-// Find the project variables
-$currentgroup = mysql_query("SELECT id,name,projectid FROM buildgroup WHERE id='$buildgroupid'");
-$currentgroup_array = mysql_fetch_array($currentgroup);
-
-$projectid = $currentgroup_array["projectid"];
 
 @$submit = $_POST["submit"];
 
@@ -55,6 +42,10 @@ $projectid = $currentgroup_array["projectid"];
 
 if($markexpected)
 {
+  $h = fopen("c:/test.txt","wb");
+  fwrite($h,"test");
+  fclose($h);
+
   if(!isset($groupid) || !is_numeric($groupid))
     {
     echo "Not a valid groupid!";
@@ -67,7 +58,7 @@ if($markexpected)
   // If a rule already exists we update it
   mysql_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
                       AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
-                    
+  return;                   
 }
 
 if($submit)
@@ -121,6 +112,19 @@ if($submit)
 return;
 }
 
+
+
+if(!isset($buildgroupid) || !is_numeric($buildgroupid))
+  {
+  echo "Invalid buildgroupid";
+  return;
+  }
+  
+// Find the project variables
+$currentgroup = mysql_query("SELECT id,name,projectid FROM buildgroup WHERE id='$buildgroupid'");
+$currentgroup_array = mysql_fetch_array($currentgroup);
+$projectid = $currentgroup_array["projectid"];
+
 // Find the groups available for this project
 $group = mysql_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND projectid='$projectid'");                    
 ?>
@@ -140,7 +144,6 @@ function markasnonexpected_click(siteid,buildname,buildtype,groupid,expected,div
   $(group).html("updating...");
   
   buildname = URLencode(buildname);
-  
   $.post("ajax/expectedbuildgroup.php?siteid="+siteid+"&buildname="+buildname+"&buildtype="+buildtype+"&divname="+divname,{markexpected:"1",groupid:groupid,expected:expected});
   $(group).html("updated!");
   $(group).fadeOut('slow');
