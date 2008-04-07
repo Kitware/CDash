@@ -42,8 +42,8 @@ project page</a>
 <table width="100%"  border="0">
   <tr>
    <form name="form1" method="post" action="">
-    <td width="10%"><div align="right"><strong>Project:</strong></div></td>
-    <td width="90%" ><select onchange="location = 'manageProjectRoles.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
+    <td width="15%"><div align="right"><strong>Project:</strong></div></td>
+    <td width="85%" ><select onchange="location = 'manageProjectRoles.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
         <option>
         <xsl:attribute name="value">0</xsl:attribute>
         Choose...
@@ -144,8 +144,70 @@ project page</a>
     <xsl:attribute name="value"><xsl:value-of select="cdash/project/id"/></xsl:attribute>
     </input>
   </tr>
-    
-  </xsl:if>
+  <tr>
+      <td><div align="right">CVS Users File:</div></td>
+
+  <td>
+  <form method="post" action="" enctype="multipart/form-data">
+  <input name="cvsUserFile" type="file"/><input type="submit" name="importUsers" value="import"/>
+  </form>
+  </td>
+  </tr>    
+  
+  <!-- Show the cvsusers if imported to check that they are valid -->
+  <xsl:if test="count(cdash/cvsuser)>0">
+  <form  method="post">
+  <td><div align="right">CVS Users:</div></td>
+  <td>
+  <table>
+  <tr style="background-color:#CCCCCC">
+  <td>Send</td>
+  <td>Email</td>
+  <td>CVS Login</td>
+  <td>First Name</td>    
+  <td>Last Name</td>    
+  </tr>
+  <xsl:for-each select="cdash/cvsuser">
+  <tr>
+  <td><input type="checkbox" value="1">
+  <xsl:attribute name="checked">true</xsl:attribute>
+  <xsl:attribute name="name">cvsuser[<xsl:value-of select="id"/>]</xsl:attribute>
+  </input>
+  </td>
+  <td><xsl:value-of select="email"/>
+  <input type="hidden">
+  <xsl:attribute name="value"><xsl:value-of select="email"/></xsl:attribute>
+  <xsl:attribute name="name">email[<xsl:value-of select="id"/>]</xsl:attribute>
+  </input>
+  </td>
+  <td><xsl:value-of select="cvslogin"/>
+  <input type="hidden">
+  <xsl:attribute name="value"><xsl:value-of select="cvslogin"/></xsl:attribute>
+  <xsl:attribute name="name">cvslogin[<xsl:value-of select="id"/>]</xsl:attribute>
+  </input>
+  </td>
+  <td><xsl:value-of select="firstname"/>
+  <input type="hidden">
+  <xsl:attribute name="value"><xsl:value-of select="firstname"/></xsl:attribute>
+  <xsl:attribute name="name">firstname[<xsl:value-of select="id"/>]</xsl:attribute>
+  </input>
+  </td>    
+  <td><xsl:value-of select="lastname"/>
+  <input type="hidden">
+  <xsl:attribute name="value"><xsl:value-of select="lastname"/></xsl:attribute>
+  <xsl:attribute name="name">lastname[<xsl:value-of select="id"/>]</xsl:attribute>
+  </input>
+  </td>    
+  </tr>
+  </xsl:for-each>
+  <tr>
+  <td><input type="submit" name="registerUsers" value="Register Users"/></td>
+  </tr>
+  </table>
+  </td>
+  </form>
+  </xsl:if> <!-- end if cvsuser -->
+  </xsl:if> <!-- end if a project has been selected -->
 </table>
 <br/>
 
