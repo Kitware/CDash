@@ -96,28 +96,37 @@ if ($session_OK)
      while($site2project_array = mysql_fetch_array($site2project))
        {
        $projectid = $site2project_array["projectid"];
-       $project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
+       $project_array = mysql_fetch_array(mysql_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));
        $claimedproject = array();
        $claimedproject["id"] = $projectid;
        $claimedproject["name"] = $project_array["name"];
+       $claimedproject["nightlytime"] = $project_array["nightlytime"];
        $claimedsiteprojects[] = $claimedproject;
        }
      }
   
   /** Report statistics about the last build */
-  function ReportLastBuild($type,$projectid,$siteid,$projectname)
+  function ReportLastBuild($type,$projectid,$siteid,$projectname,$nightlytime)
     {
     $xml = "<".strtolower($type).">";
     
     // Find the last build 
-    $build = mysql_query("SELECT submittime,id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$type' ORDER BY submittime DESC LIMIT 1");
+    $build = mysql_query("SELECT starttime,id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$type' ORDER BY submittime DESC LIMIT 1");
     if(mysql_num_rows($build) > 0)
       {
       $build_array = mysql_fetch_array($build);
       $buildid = $build_array["id"];
       
       // Express the date in terms of days (makes more sens)
-      $builddate = strtotime($build_array["submittime"]." UTC");
+      $buildtime = strtotime($build_array["starttime"]." UTC");
+      $builddate = $buildtime;
+      if(date("His",$buildtime)>date("HiS",$nightlytime))
+        {
+        $builddate += 3600*24; //next day
+        } 
+      
+      $date = date("Ymd",$builddate);
+      
       $days = round((time()-$builddate)/(3600*24));
       
       if($days<1)
@@ -133,8 +142,7 @@ if ($session_OK)
         $day = $days." days";
         }  
       $xml .= add_XML_value("date",$day);
-      $xml .= add_XML_value("datelink","index.php?project=".$projectname."&date=".date("Ymd",$builddate+3600*24));
-    
+      $xml .= add_XML_value("datelink","index.php?project=".$projectname."&date=".$date);
      
       // Configure
       $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
@@ -249,10 +257,11 @@ if ($session_OK)
       
       $projectid = $project["id"];
       $projectname = $project["name"];
+      $nightlytime = $project["nightlytime"];
       
-      $xml .= ReportLastBuild("Nightly",$projectid,$siteid,$projectname);
-      $xml .= ReportLastBuild("Continuous",$projectid,$siteid,$projectname);
-      $xml .= ReportLastBuild("Experimental",$projectid,$siteid,$projectname);
+      $xml .= ReportLastBuild("Nightly",$projectid,$siteid,$projectname,$nightlytime);
+      $xml .= ReportLastBuild("Continuous",$projectid,$siteid,$projectname,$nightlytime);
+      $xml .= ReportLastBuild("Experimental",$projectid,$siteid,$projectname,$nightlytime);
      
       $xml .= "</project>";
       }
