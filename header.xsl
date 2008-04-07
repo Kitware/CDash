@@ -81,7 +81,7 @@
   <tr>
     <td align="left" class="topbg2"><table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
-  <td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
+  <td align="left" class="bgtm"><ul id="Nav" class="nav">
 <li id="Dartboard">
 <a href="index.php">DASHBOARD</a><ul>
 <li><a class="submm">
