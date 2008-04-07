@@ -756,7 +756,7 @@ if($newDate)
 if($projectid>0)
   {
   $currentUTCTime =  gmdate("YmdHis");
- $beginUTCTime = gmdate("YmdHis",time()-3600*24);
+  $beginUTCTime = gmdate("YmdHis",time()-3600*7*24); // 7 days
  
   $sql = "";
   if($show>0)
@@ -765,23 +765,45 @@ if($projectid>0)
     }
  
   
-  $builds = mysql_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,gp.position,g.id as groupid 
+  $builds = mysql_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp, site as s
                          WHERE b.starttime<'$currentUTCTime' AND b.starttime>'$beginUTCTime'
                          AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND s.id = b.siteid ".$sql." ORDER BY b.name ASC");
   
- echo mysql_error();
+  echo mysql_error();
  
   $names = array();
   
   while($build_array = mysql_fetch_array($builds))
     {
+    // Avoid adding the same build twice
     if(array_search($build_array['sitename'].$build_array['name'],$names) === FALSE)
       {
       $xml .= "<currentbuild>";
       $xml .= add_XML_value("id",$build_array['id']);
       $xml .= add_XML_value("name",$build_array['sitename']." ".$build_array['name']." [".$build_array['type']."] ".$build_array['groupname']);
+      $xml .= "</currentbuild>";
+      $names[] = $build_array['sitename'].$build_array['name'];
+      }
+    }
+  
+  // Add expected builds  
+  $builds = mysql_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,g.id as groupid 
+                         FROM site AS s,build2grouprule AS b2gr,build AS b,build2group AS b2g,buildgroup as g 
+                         WHERE b2gr.groupid=b2g.groupid 
+                         AND g.id=b2g.groupid AND b2g.buildid=b.id AND b2gr.endtime='0000-00-00 00:00:00'
+                         AND b.projectid='$projectid' AND s.id = b.siteid ".$sql." ORDER BY b.name ASC");
+  echo mysql_error();
+
+  while($build_array = mysql_fetch_array($builds))
+    {
+    // Avoid adding the same build twice
+    if(array_search($build_array['sitename'].$build_array['name'],$names) === FALSE)
+      {
+      $xml .= "<currentbuild>";
+      $xml .= add_XML_value("id",$build_array['id']);
+      $xml .= add_XML_value("name",$build_array['sitename']." ".$build_array['name']." [".$build_array['type']."] ".$build_array['groupname']." (expected)");
       $xml .= "</currentbuild>";
       $names[] = $build_array['sitename'].$build_array['name'];
       }

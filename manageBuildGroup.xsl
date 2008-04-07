@@ -152,6 +152,7 @@ project page</a>
         </option>
         </xsl:for-each>
         </select>
+        (showing the builds submitted in the past 7 days and expected builds)
     </td>
   </tr>
     <tr>

@@ -226,7 +226,12 @@ function generate_main_dashboard_XML($projectid,$date)
     $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
     $user_array = mysql_fetch_array($user);
     $xml .= add_XML_value("id",$userid);
-    $xml .= add_XML_value("admin",$user_array["admin"]);
+    $isadmin=0;
+    if($user2project_array["role"]>1 || $user_array["admin"])
+      {
+      $isadmin=1;
+       }
+    $xml .= add_XML_value("admin",$isadmin);
     $xml .= "</user>";
     }
   
