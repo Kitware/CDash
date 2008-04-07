@@ -725,9 +725,7 @@ function add_site2user($siteid,$userid)
     {
     return;
     }
-    
-  $fullpath = mysql_real_escape_string($fullpath);
-    
+        
   $site2user = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
   if(mysql_num_rows($site2user) == 0)
     {
