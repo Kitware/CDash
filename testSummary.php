@@ -73,14 +73,19 @@ $xml .="<testName>".$testName."</testName>";
 $xml .= "<builds>\n";
 
 $testName = mysql_real_escape_string($testName);
-$date = mysql_real_escape_string($date);
-  
+list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
+$beginning_timestamp = $currentstarttime;
+$end_timestamp = $currentstarttime+3600*24;
+
+$beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
+$end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
+
 $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,test.id AS testid,site.name AS sitename 
-          FROM build,build2test,test,site WHERE build.stamp RLIKE '^$date-'           
+          FROM build,build2test,test,site WHERE build.starttime<$end_UTCDate AND build.starttime>=$beginning_UTCDate           
           AND build.projectid = '$projectid' AND build2test.buildid=build.id 
-     AND test.id=build2test.testid AND test.name='$testName' 
-     AND site.id=build.siteid
-     ORDER BY build2test.status";
+          AND test.id=build2test.testid AND test.name='$testName' 
+          AND site.id=build.siteid
+          ORDER BY build2test.status";
 
 $result = mysql_query($query);
 
