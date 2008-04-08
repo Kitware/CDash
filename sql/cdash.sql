@@ -373,7 +373,7 @@ CREATE TABLE `buildinformation` (
 CREATE TABLE `site2user` (
   `siteid` int(11) NOT NULL default '0',
   `userid` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`siteid`),
+  KEY `siteid` (`siteid`),
   KEY `userid` (`userid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
