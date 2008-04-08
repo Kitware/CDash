@@ -94,6 +94,11 @@ if($Upgrade)
     {
     mysql_query("ALTER TABLE project ADD cvsviewertype varchar(10)");
     }
+  
+  if(mysql_query("ALTER TABLE site2user DROP PRIMARY KEY"))
+    {
+    mysql_query("ALTER TABLE site2user ADD INDEX (siteid)");
+    }
 
   $xml .= add_XML_value("alert","CDash has been upgraded successfully.");
 }
