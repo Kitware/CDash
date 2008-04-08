@@ -19,6 +19,9 @@
 include("../config.php");
 include("../common.php");
 
+$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+mysql_select_db("$CDASH_DB_NAME",$db);
+
 $projectid = $_GET["projectid"];
 if(!isset($projectid) || !is_numeric($projectid))
   {
@@ -28,8 +31,6 @@ if(!isset($projectid) || !is_numeric($projectid))
   
 $search = mysql_real_escape_string($_GET["search"]);
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
 
 $user = mysql_query("SELECT id,email,firstname,lastname FROM user WHERE 
                     (email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')
