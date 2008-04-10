@@ -128,7 +128,8 @@ if($Submit)
     @$EmailBuildMissing = $_POST["emailBuildMissing"]; 
     @$EmailLowCoverage = $_POST["emailLowCoverage"]; 
     @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];        
-    @$CVSViewerType = $_POST["cvsviewertype"]; 
+    @$CVSViewerType = $_POST["cvsviewertype"];
+    @$TestTimeStd = $_POST["testTimeStd"];
           
     $handle = fopen($_FILES['logo']['tmp_name'],"r");
     $contents = 0;
@@ -185,9 +186,11 @@ if($Submit)
     //We should probably check the type of the image here to make sure the user
     //isn't trying anything fruity
     $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
-                                googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype)
+                                googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
+                                testtimestd)
             VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$DocURL','$Public','$imgid','$CoverageThreshold','$NightlyTime',
-                    '$GoogleTracker','$EmailBrokenSubmission','$EmailBuildMissing','$EmailLowCoverage','$EmailTestTimingChanged','$CVSViewerType')"; 
+                    '$GoogleTracker','$EmailBrokenSubmission','$EmailBuildMissing','$EmailLowCoverage','$EmailTestTimingChanged','$CVSViewerType',
+                    '$TestTimeStd')"; 
     if(mysql_query("$sql"))
       {
       $projectid = mysql_insert_id();
@@ -273,6 +276,7 @@ if($Update)
   @$EmailLowCoverage = $_POST["emailLowCoverage"]; 
   @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
   @$CVSViewerType = $_POST["cvsviewertype"]; 
+  @$TestTimeStd = $_POST["testTimeStd"];
 
   $imgid = $project_array["imageid"];
   
@@ -318,7 +322,8 @@ if($Update)
                                   googletracker='$GoogleTracker',emailbrokensubmission='$EmailBrokenSubmission',
                                   emailbuildmissing='$EmailBuildMissing',emaillowcoverage='$EmailLowCoverage',
                                   emailtesttimingchanged='$EmailTestTimingChanged',
-                                  cvsviewertype='$CVSViewerType'
+                                  cvsviewertype='$CVSViewerType',
+                                  testtimestd='$TestTimeStd'
                                   WHERE id='$projectid'");
   echo mysql_error();
 
@@ -367,6 +372,7 @@ if($projectid>0)
   $xml .= add_XML_value("emaillowcoverage",$project_array['emaillowcoverage']);
   $xml .= add_XML_value("emailtesttimingchanged",$project_array['emailtesttimingchanged']);
   $xml .= add_XML_value("cvsviewertype",$project_array['cvsviewertype']);
+  $xml .= add_XML_value("testtimestd",$project_array['testtimestd']);
   $xml .= "</project>";
   }
 

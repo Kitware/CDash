@@ -101,9 +101,117 @@ if($Upgrade)
     mysql_query("ALTER TABLE build ADD INDEX (starttime)");
     }
 
+  // Add test timing as well as key 'name' for test
+  $reftime = mysql_query("SELECT reftime FROM build2test LIMIT 1");
+  if(!$reftime)
+    {
+    mysql_query("ALTER TABLE build2test ADD timemean float(6,2) default '0.00'");
+    mysql_query("ALTER TABLE build2test ADD timestd float(6,2) default '0.00'");  
+    mysql_query("ALTER TABLE build2test ADD timestatus tinyint(4) default '0'");
+    mysql_query("ALTER TABLE build2test ADD INDEX (timestatus)"); 
+    // Add timing test fields in the table project
+    mysql_query("ALTER TABLE project ADD testtimestd float(3,1) default '1.0'");
+    // Add the index name in the table test
+    mysql_query("ALTER TABLE test ADD INDEX (name)");
+    }
+  
+  // Compute the testtime from the previous week (this is a test)
+  //ComputeTestTiming();
+  
   $xml .= add_XML_value("alert","CDash has been upgraded successfully.");
 }
 
+/** Compute the timing for test
+ *  For each test we compare with the previous build and if the percentage time 
+ *  is more than the project.testtimepercent we increas test.timestatus by one.
+ *  We also store the test.reftime which is the time of the test passing
+ *  
+ *  If test.timestatus is more than project.testtimewindow we reset 
+ *  the test.timestatus to zero and we set the test.reftime to the previous build time.
+ */
+function ComputeTestTiming()
+{
+  // Loop through the projects
+  $project = mysql_query("SELECT id,testtimestd FROM project");
+  $weight = 0.8;
+  
+  while($project_array = mysql_fetch_array($project))
+    {    
+    $projectid = $project_array["id"];
+    echo "PROJECT id: ".$projectid."<br>";
+    $testtimestd = $project_array["testtimestd"];
+    
+    // only test a couple of days
+    $now = gmdate("Y-m-d H:i:s",time()-3600*24*7);
+    
+    $build2test = mysql_query("SELECT build2test.buildid,build2test.testid,build2test.time,build.starttime,build.siteid,build.name,build.type
+                               FROM build2test,build
+                               WHERE build2test.buildid=build.id AND build.projectid='$projectid' AND build.starttime>'$now'
+                               ORDER BY build.starttime ASC");
+    $total = mysql_num_rows($build2test);
+    echo mysql_error();
+    
+    $i=0;
+    $previousperc = 0;
+    while($build2test_array = mysql_fetch_array($build2test))
+      {                           
+      $buildid = $build2test_array["buildid"];
+      $testid = $build2test_array["testid"];
+      $testtime = $build2test_array["time"];
+      $buildname = $build2test_array["name"];
+      $buildtype = $build2test_array["type"];
+      $starttime = $build2test_array["starttime"];
+      $siteid = $build2test_array["siteid"];
+      
+      // Find the previous test
+      $previoustest = mysql_query("SELECT build2test.timemean, build2test.timestd FROM build2test,build
+                            WHERE build2test.buildid=build.id AND
+                            build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
+                            AND build.projectid='$projectid' AND build.starttime<'$starttime' ORDER BY build.starttime DESC LIMIT 1");
+    
+      if(mysql_num_rows($previoustest)>0)
+        {
+        $previoustest_array = mysql_fetch_array($previoustest);
+        $previoustimemean = $previoustest_array["timemean"];
+        $previoustimestd = $previoustest_array["timestd"];
+        
+        // Update the mean and std
+        $timemean = (1-$weight)*$previoustimemean+$weight*$testtime;
+        $timestd = (1-$weight)*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean);
+        
+        // Check the current status
+        if($timestd > $previoustimemean+testtimestd*$previoustimestd) // only do positive std
+          {
+          $timestatus = 1; // flag
+           }
+        else
+          {
+          $timestatus = 0;
+          }
+        }
+      else // this is the first test
+        {
+        $timemean = $testtime;
+        $timestd = 0;
+        $timestatus = 0;
+        }
+      
+      mysql_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
+                   WHERE buildid='$buildid' AND testid='$testid'");
+        
+      // Progress bar  
+      $perc = ($i/$total)*100;
+      if($perc-$previousperc>10)
+        {
+        echo round($perc,3)."% done.<br>";
+        flush();
+        ob_flush();
+        $previousperc = $perc;
+        }
+      $i++;
+      } // end looping through tests
+    } // end looping through projects
+}
 
 /** Support for compressed coverage.
  *  This is done in two steps.
@@ -121,6 +229,7 @@ function CompressCoverage()
   $total = $coveragefile_array["count(*)"];
   
   $i=0;
+  $previousperc = 0;
   $coveragefile = mysql_query("SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000");
   while(mysql_num_rows($coveragefile)>0)
     {
@@ -135,9 +244,13 @@ function CompressCoverage()
     $i+=1000;
     $coveragefile = mysql_query("SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000");
     $perc = ($i/$total)*100;
-    echo round($perc,3)."% done.<br>";
-    flush();
-    ob_flush();
+    if($perc-$previousperc>10)
+      {
+      echo round($perc,3)."% done.<br>";
+      flush();
+      ob_flush();
+      $previousperc = $perc;
+      }
     }
     
   // Delete files with the same crc32 and upgrade   
@@ -160,7 +273,7 @@ function CompressCoverage()
       {
       $currentid = $id;
       $perc = ($i/$total)*100;
-      if($previousperc != $perc)
+      if($perc-$previousperc>10)
         {
         echo round($perc,3)."% done.<br>";
         flush();

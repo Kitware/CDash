@@ -194,6 +194,7 @@ edit the project</a><br/>
     </xsl:attribute>
     </input></td>
   </tr>
+  
   <tr>
     <td></td>
     <td><div align="right"><strong>Google Analytics Tracker:</strong></div></td>
@@ -204,6 +205,18 @@ edit the project</a><br/>
     </xsl:attribute>
     </input></td>
   </tr>
+  
+  <tr>
+    <td></td>
+    <td><div align="right"><strong>Test time standard deviation:</strong></div></td>
+    <td>
+    <input name="testTimeStd" type="text" id="testTimeStd" size="4">
+    <xsl:attribute name="value">
+      <xsl:value-of select="cdash/project/testtimestd"/>
+    </xsl:attribute>
+    </input></td>
+  </tr>
+  
   <tr>
     <td></td>
     <td><div align="right"><strong>Email broken submission:</strong></div></td>
