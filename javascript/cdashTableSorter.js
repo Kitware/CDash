@@ -68,8 +68,9 @@ $(document).ready(function() {
             headers: { 
                 0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
-                2: { sorter:'numeric'},
-                3: { sorter:'text'},  
+                2: { sorter:'buildname'},
+                3: { sorter:'numeric'},
+                4: { sorter:'text'},  
             },
           debug: false,
           widgets: ['zebra'] 
