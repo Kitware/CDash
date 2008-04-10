@@ -310,6 +310,7 @@ CREATE TABLE `project` (
   `emailtesttimingchanged` tinyint(4) NOT NULL default '0',
   `emailbrokensubmission` tinyint(4) NOT NULL default '1',
   `cvsviewertype` varchar(10) default NULL,
+  `testtimestd` float(3,1) default '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -391,7 +392,8 @@ CREATE TABLE `test` (
   `details` text NOT NULL,
   `output` text NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `crc32` (`crc32`)
+  KEY `crc32` (`crc32`),
+  KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
@@ -402,9 +404,13 @@ CREATE TABLE `build2test` (
   `testid` int(11) NOT NULL default '0',
   `status` varchar(10) NOT NULL default '',
   `time` float(5,2) NOT NULL default '0.00',
+  `timemean` float(5,2) NOT NULL default '0.00',
+  `timestd` float(5,2) NOT NULL default '0.00',
+  `timestatus` tinyint(4) NOT NULL default '0',
   KEY `buildid` (`buildid`),
   KEY `testid` (`testid`),
-  KEY `status` (`status`)
+  KEY `status` (`status`),
+  KEY `timestatus` (`timestatus`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
