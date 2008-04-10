@@ -77,50 +77,66 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 $testName = $testRow["name"];
 $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 
-$xml .= "<test>\n";
-$xml .= add_XML_value("id",$testid) . "\n";
-$xml .= add_XML_value("buildid", $buildid) . "\n";
-$xml .= add_XML_value("build", $buildRow["name"]) . "\n";
-$xml .= add_XML_value("site", $siteRow["name"]) . "\n";
-$xml .= add_XML_value("test", $testName) . "\n";
-$xml .= add_XML_value("time", $testRow["time"]) . "\n";
-$xml .= add_XML_value("command", $testRow["command"]) . "\n";
-$xml .= add_XML_value("details", $testRow["details"]) . "\n";
-$xml .= add_XML_value("output", $testRow["output"]) . "\n";
-$xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
+$xml .= "<test>";
+$xml .= add_XML_value("id",$testid);
+$xml .= add_XML_value("buildid", $buildid);
+$xml .= add_XML_value("build", $buildRow["name"]);
+$xml .= add_XML_value("site", $siteRow["name"]);
+$xml .= add_XML_value("test", $testName);
+$xml .= add_XML_value("time", $testRow["time"]);
+$xml .= add_XML_value("command", $testRow["command"]);
+$xml .= add_XML_value("details", $testRow["details"]);
+$xml .= add_XML_value("output", $testRow["output"]);
+$xml .= add_XML_value("summaryLink", $summaryLink);
 switch($testRow["status"])
   {
   case "passed":
-    $xml .= add_XML_value("status", "Passed") . "\n";
-    $xml .= add_XML_value("statusColor", "#00aa00") . "\n";
+    $xml .= add_XML_value("status", "Passed");
+    $xml .= add_XML_value("statusColor", "#00aa00");
     break;
   case "failed":
-    $xml .= add_XML_value("status", "Failed") . "\n";
-    $xml .= add_XML_value("statusColor", "#aa0000") . "\n";
+    $xml .= add_XML_value("status", "Failed");
+    $xml .= add_XML_value("statusColor", "#aa0000");
     break;
   case "notrun":
-    $xml .= add_XML_value("status", "Not Run") . "\n";
-    $xml .= add_XML_value("statusColor", "#ffcc66") . "\n";
+    $xml .= add_XML_value("status", "Not Run");
+    $xml .= add_XML_value("statusColor", "#ffcc66");
     break;
   }
+  
+
+$xml .= add_XML_value("timemean",$testRow["timemean"]);
+$xml .= add_XML_value("timestd",$testRow["timestd"]);
+  
+switch($testRow["timestatus"])
+  {
+  case "0":
+    $xml .= add_XML_value("timestatus", "Passed");
+    $xml .= add_XML_value("timeStatusColor", "#00aa00");
+    break;
+  case "1":
+    $xml .= add_XML_value("timestatus", "Failed");
+    $xml .= add_XML_value("timeStatusColor", "#aa0000");
+    break;
+  }  
 
 //get any images associated with this test
-$xml .= "<images>\n";
+$xml .= "<images>";
 $query = "SELECT * FROM test2image WHERE testid = '$testid'";
 $result = mysql_query($query);
 while($row = mysql_fetch_array($result))
   {
-  $xml .= "<image>\n";
-  $xml .= add_XML_value("imgid", $row["imgid"]) . "\n";
-  $xml .= add_XML_value("role", $row["role"]) . "\n";
+  $xml .= "<image>";
+  $xml .= add_XML_value("imgid", $row["imgid"]);
+  $xml .= add_XML_value("role", $row["role"]);
   
-  $xml .= "</image>\n";
+  $xml .= "</image>";
   }
-$xml .= "</images>\n";
-$xml .= "</test>\n";
+$xml .= "</images>";
+$xml .= "</test>";
 
 
-$xml .= "</cdash>\n";
+$xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml,"testDetails");

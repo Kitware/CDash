@@ -73,7 +73,8 @@ $xml .= "</build>\n";
 
 // Gather test info
 $xml .= "<tests>\n";
-$result = mysql_query("SELECT * FROM test as t,build2test as bt WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,t.name");
+$result = mysql_query("SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+                       WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,bt.timestatus DESC,t.name");
 $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;
@@ -90,15 +91,21 @@ while($row = mysql_fetch_array($result))
   $testid = $row["id"]; 
   $detailsLink = "testDetails.php?test=$testid&build=$buildid";
   $xml .= add_XML_value("detailsLink", $detailsLink) . "\n";
-  if($color)
+  
+  switch($row["timestatus"])
     {
-    $xml .= add_XML_value("class", "treven") . "\n";
+    case 0:
+      $xml .= add_XML_value("timestatus", "Passed") . "\n";
+      $xml .= add_XML_value("timestatusclass", "normal") . "\n";
+      $numPassed++;
+      break; 
+    case 1:
+      $xml .= add_XML_value("timestatus", "Failed") . "\n";
+      $xml .= add_XML_value("timestatusclass", "warning") . "\n";
+      $numFailed++;
+      break;
     }
-  else
-    {
-    $xml .= add_XML_value("class", "trodd") . "\n";
-    }
-  $color = !$color;
+    
   switch($row["status"])
     {
     case "passed":

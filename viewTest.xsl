@@ -34,8 +34,9 @@
   <tr class="table-heading1">
     <th id="sort_0">Name</th>
     <th id="sort_1">Status</th>
-    <th id="sort_2">Time</th>
-    <th id="sort_3" class="nob">Details</th>
+    <th id="sort_2">Time Status</th>
+    <th id="sort_3">Time</th>
+    <th id="sort_4" class="nob">Details</th>
   </tr>
 </thead>
 <xsl:for-each select="cdash/tests/test">
@@ -59,6 +60,18 @@
    <xsl:value-of select="detailsLink"/>
  </xsl:attribute>
         <xsl:value-of select="status"/>
+      </a>
+    </td>
+     <td>
+      <xsl:attribute name="align">center</xsl:attribute>
+      <xsl:attribute name="class">
+        <xsl:value-of select="timestatusclass"/>
+      </xsl:attribute>
+      <a>
+ <xsl:attribute name="href">
+   <xsl:value-of select="detailsLink"/>
+ </xsl:attribute>
+        <xsl:value-of select="timestatus"/>
       </a>
     </td>
     <td align="right">

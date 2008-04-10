@@ -33,6 +33,14 @@
 <p>
   <b>Build Name: </b><xsl:value-of select="cdash/test/build"/>
 </p>
+<p>
+  <b>Test Timing: </b><font>
+        <xsl:attribute name="color">
+         <xsl:value-of select="cdash/test/timeStatusColor"/>
+        </xsl:attribute><xsl:value-of select="cdash/test/timestatus"/>
+      </font>
+</p>
+
 <table cellpadding="2">
   <tr>
     <td>
@@ -53,7 +61,7 @@
     </td>
   </tr>
 </table>
-<br/><br/><br/>
+<br/>
 <table>
 <xsl:for-each select="cdash/test/images/image">
   <tr>
@@ -70,6 +78,7 @@
       <th class="measurement">Execution Time</th>
       <td>
         <xsl:value-of select="cdash/test/time"/>
+         (mean:<xsl:value-of select="cdash/test/timemean"/>  std:<xsl:value-of select="cdash/test/timestd"/>)
       </td>
    </tr>
    <tr>
