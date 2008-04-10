@@ -18,6 +18,8 @@
 include("config.php");
 include("common.php");
 include("version.php");
+$noforcelogin = 1;
+include('login.php');
 
 @$projectname = $_GET["project"];
 if(!isset($projectname) || strlen($projectname)==0)
