@@ -1765,6 +1765,16 @@ function get_cdash_dashboard_xml($projectname, $date)
   <logoid>".getLogoID($projectid)."</logoid>
   </dashboard>
   ";
+  
+  $userid = 0;
+  if(isset($_SESSION['cdash']))
+    {
+    $xml .= "<user>";
+    $userid = $_SESSION['cdash']['loginid'];
+    $xml .= add_XML_value("id",$userid);
+    $xml .= "</user>";
+    }
+    
   return $xml;
 }
 
