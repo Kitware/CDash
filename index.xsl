@@ -437,11 +437,6 @@
        <body bgcolor="#ffffff">
 
 <xsl:call-template name="header"/>
- 
- <input type="hidden" id="projectname">
- <xsl:attribute name="value"><xsl:value-of select="cdash/dashboard/projectname"/>
- </xsl:attribute>
- </input>
        
 <xsl:if test="cdash/dashboard/future=0">
 

@@ -130,5 +130,10 @@ Map</a></li>
   </tr>
 </table>
 
+<input type="hidden" id="projectname">
+ <xsl:attribute name="value"><xsl:value-of select="cdash/dashboard/projectname"/>
+ </xsl:attribute>
+ </input>
+
     </xsl:template>
 </xsl:stylesheet>
