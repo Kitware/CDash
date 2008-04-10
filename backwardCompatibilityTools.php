@@ -102,15 +102,15 @@ if($Upgrade)
     }
 
   // Add test timing as well as key 'name' for test
-  $reftime = mysql_query("SELECT reftime FROM build2test LIMIT 1");
-  if(!$reftime)
+  $timestatus = mysql_query("SELECT timestatus FROM build2test LIMIT 1");
+  if(!$timestatus)
     {
-    mysql_query("ALTER TABLE build2test ADD timemean float(6,2) default '0.00'");
-    mysql_query("ALTER TABLE build2test ADD timestd float(6,2) default '0.00'");  
+    mysql_query("ALTER TABLE build2test ADD timemean float(7,2) default '0.00'");
+    mysql_query("ALTER TABLE build2test ADD timestd float(7,2) default '0.00'");  
     mysql_query("ALTER TABLE build2test ADD timestatus tinyint(4) default '0'");
     mysql_query("ALTER TABLE build2test ADD INDEX (timestatus)"); 
     // Add timing test fields in the table project
-    mysql_query("ALTER TABLE project ADD testtimestd float(3,1) default '1.0'");
+    mysql_query("ALTER TABLE project ADD testtimestd float(3,1) default '2.0'");
     // Add the index name in the table test
     mysql_query("ALTER TABLE test ADD INDEX (name)");
     }
@@ -177,7 +177,7 @@ function ComputeTestTiming()
         
         // Update the mean and std
         $timemean = (1-$weight)*$previoustimemean+$weight*$testtime;
-        $timestd = (1-$weight)*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean);
+        $timestd = sqrt((1-$weight)*$previoustimestd*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean));
         
         // Check the current status
         if($timestd > $previoustimemean+testtimestd*$previoustimestd) // only do positive std
