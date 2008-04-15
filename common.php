@@ -1923,6 +1923,22 @@ function get_fisheye_diff_url($projecturl, $directory, $file, $revision)
   return make_cdash_url($diff_url);
 }
 
+/** Return the CVSTrac URL */
+function get_cvstrac_diff_url($projecturl, $directory, $file, $revision)
+{
+  $prev_revision = get_previous_revision($revision);
+  if($prev_revision != $revision)
+    {
+    $diff_url = $projecturl."/filediff?f=".($directory ? ($directory) : "")."/".$file;
+    $diff_url .= "&v1=".$prev_revision."&v2=".$revision;
+    } 
+  else 
+    {
+    $diff_url = $projecturl."/fileview?f=".($directory ? ($directory) : "")."/".$file;
+    $diff_url .= "&v=".$revision;
+    }
+  return make_cdash_url($diff_url);
+}
 
 /** Get the diff url based on the type of viewer */
 function get_diff_url($projectid,$projecturl, $directory, $file, $revision)
@@ -1942,6 +1958,10 @@ function get_diff_url($projectid,$projecturl, $directory, $file, $revision)
   elseif($project_array["cvsviewertype"] == "fisheye")
     {
     return get_fisheye_diff_url($projecturl, $directory, $file, $revision);
+    }
+  elseif($project_array["cvsviewertype"] == "cvstrac")
+    {
+    return get_cvstrac_diff_url($projecturl, $directory, $file, $revision);
     }
   else // default is viewcvs
     {

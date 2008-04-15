@@ -394,6 +394,7 @@ function AddCVSViewer($name,$description,$currentViewer)
 $xml .= AddCVSViewer("viewcvs","ViewCVS",$project_array['cvsviewertype']); // first should be lower case
 $xml .= AddCVSViewer("trac","Trac",$project_array['cvsviewertype']);
 $xml .= AddCVSViewer("fisheye","Fisheye",$project_array['cvsviewertype']);
+$xml .= AddCVSViewer("cvstrac","CVSTrac",$project_array['cvsviewertype']);
  
 $xml .= "</cdash>";
 
