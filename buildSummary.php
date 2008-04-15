@@ -111,15 +111,15 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $buildname = $build_array["name"];
   $starttime = $build_array["starttime"];
   $previousbuild = mysql_query("SELECT id,starttime FROM build
-                             WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                             AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
+                                WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
+                                AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
 
-   if(mysql_num_rows($previousbuild)>0)
-     {
-     $previousbuild_array = mysql_fetch_array($previousbuild);              
-     $lastsubmitbuild = $previousbuild_array["id"];
-     $lastsubmitdate = date("Y-m-d H:i:s T",strtotime($previousbuild_array["starttime"]." UTC"));
-     }
+  if(mysql_num_rows($previousbuild)>0)
+    {
+    $previousbuild_array = mysql_fetch_array($previousbuild);              
+    $lastsubmitbuild = $previousbuild_array["id"];
+    $lastsubmitdate = date("Y-m-d H:i:s T",strtotime($previousbuild_array["starttime"]." UTC"));
+    }
   else
     {
     $lastsubmitbuild = 0;
@@ -131,7 +131,6 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($build_array["endtime"]." UTC"))); 
   
   $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
-  $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate); 
  
   // Number of errors and warnings
   $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
@@ -245,13 +244,10 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   
   // Previous build
   // Find the previous build
-  $previousbuild = mysql_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$buildtype' 
-                               AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
-  if(mysql_num_rows($previousbuild) > 0)
+  if($lastsubmitbuild > 0)
     {
     $xml .= "<previousbuild>";
-    $previousbuild_array = mysql_fetch_array($previousbuild);
-    $previousbuildid = $previousbuild_array["id"];
+    $previousbuildid = $lastsubmitbuild;
     $xml .= add_XML_value("buildid",$previousbuildid);
     
     // Find if the build has any errors
