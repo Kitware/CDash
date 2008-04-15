@@ -68,7 +68,14 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= add_XML_value("locuntested",$coverage_array["locuntested"]);
   
   $loc = $coverage_array["loctested"]+$coverage_array["locuntested"];
-  $percentcoverage = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
+  if($loc>0)
+    {
+    $percentcoverage = round($coverage_array["loctested"]/$loc*100,2);
+    }
+  else
+    {
+    $percentcoverage = 0;
+    }   
   $xml .= add_XML_value("loc",$loc);
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
   
