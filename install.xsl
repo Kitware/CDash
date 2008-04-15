@@ -57,7 +57,7 @@ Make sure you have modified the settings in the <b>config.php</b> file.
 
 <xsl:if test="cdash/database=1">
 The database already exists. Quitting installation script.<br/>
-Click here to access the <a href="index.php">main CDash page</a>
+Click here to access the <a href="index.php">main CDash page</a><br/><br/>
 </xsl:if>
 
 <xsl:if test="cdash/xslt=0">
@@ -65,6 +65,12 @@ Click here to access the <a href="index.php">main CDash page</a>
 </xsl:if>
 <xsl:if test="cdash/phpcurl=0">
 <font color="#FF0000">Your PHP installation doesn't support Curl please install the PHP_CURL package if you want to support geolocation.</font><br/>
+</xsl:if>
+<xsl:if test="cdash/backupwritable=0">
+<font color="#FF0000">Your backup directory is not writable, make sure that the web process can write into the directory.</font><br/>
+</xsl:if>
+<xsl:if test="cdash/rsswritable=0">
+<font color="#FF0000">Your rss directory is not writable, make sure that the web process can write into the directory.</font><br/>
 </xsl:if>
 <br/>
 <xsl:choose>

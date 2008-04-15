@@ -55,6 +55,7 @@ else
   $xml .= "<xslt>1</xslt>";
   }
 
+// Check if curl is installed
 if(function_exists("curl_init") == FALSE)
   {  
   $xml .= "<phpcurl>0</phpcurl>";
@@ -62,6 +63,26 @@ if(function_exists("curl_init") == FALSE)
 else
   {
   $xml .= "<phpcurl>1</phpcurl>";
+  }
+  
+// check if the backup directory is writable 
+if(!is_writable($CDASH_BACKUP_DIRECTORY))
+  {  
+  $xml .= "<backupwritable>0</backupwritable>";
+  }
+else
+  {
+  $xml .= "<backupwritable>1</backupwritable>";
+  }
+  
+// check if the rss directory is writable 
+if(!is_writable("rss"))
+  {  
+  $xml .= "<rsswritable>0</rsswritable>";
+  }
+else
+  {
+  $xml .= "<rsswritable>1</rsswritable>";
   }
   
 // If the database already exists and we have all the tables
