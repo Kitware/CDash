@@ -58,7 +58,7 @@ AND build.type='$buildtype' AND build.name='$buildname'
 AND build.projectid='$projectid' AND build.starttime<='$starttime' 
 AND build2test.buildid=build.id
 AND test.id=build2test.testid AND test.name='$testname'
-ORDER BY starttime ASC");
+ORDER BY starttime DESC LIMIT 30");
 ?>
 
     
@@ -66,30 +66,37 @@ ORDER BY starttime ASC");
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
   var d1 = [];
-  var tx = [];
   var ty = [];
   ty.push([-1,"Failed"]);
   ty.push([1,"Passed"]);
-  <?php
-  while($build_array = mysql_fetch_array($previousbuilds))
-  {
-  $t = strtotime($build_array["starttime"])*1000;
-  if(strtolower($build_array["status"]) == "passed")
-    {
-    $status = 1;
-    }
-  else
-    {
-    $status = -1;
-    }
-      ?>
-      d1.push([<?php echo $t; ?>,<?php echo $status; ?>]);
-      tx.push([<?php echo $t; ?>,"<?php echo $build_array["starttime"]; ?>"]);
-      
-      <?php
-          }
-  ?>
   
+  <?php
+    $tarray = array();
+    while($build_array = mysql_fetch_array($previousbuilds))
+      {
+      $t['x'] = strtotime($build_array["starttime"])*1000;
+      if(strtolower($build_array["status"]) == "passed")
+        {
+        $t['y'] = 1;
+        }
+      else
+        {
+        $t['y'] = -1;
+        }
+      $tarray[]=$t;
+    ?>
+    <?php
+      }
+    
+    $tarray = array_reverse($tarray);
+    foreach($tarray as $axis)
+      {
+    ?>
+      d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
+    <?php 
+      $t = $axis['x'];
+      } ?>
+
   var options = {
     bars: { show: true,
       barWidth: 35000000,
