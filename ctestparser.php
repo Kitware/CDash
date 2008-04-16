@@ -435,7 +435,132 @@ function parse_testing($parser,$projectid)
              $test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], 
              $test["executiontime"], $test["details"], $test["output"], $test["images"]);
     }
+
+  // Compute the test timing
+  //compute_test_timing($buildid);
 }
+
+/** Compute the test timing as a weighted average of the previous test */
+function compute_test_timing($buildid)
+{
+  // TEST TIMING 
+  $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
+  $build = mysql_query("SELECT starttime,siteid,name,type FROM build WHERE id='$buildid'");
+    
+  echo mysql_error();
+  $build_array = mysql_fetch_array($build);                           
+  $buildname = $build_array["name"];
+  $buildtype = $build_array["type"];
+  $starttime = $build_array["starttime"];
+  $siteid = $build_array["siteid"];
+      
+  // Find the previous build
+  $previousbuild = mysql_query("SELECT id FROM build
+                                WHERE build.siteid='$siteid' 
+                                AND build.type='$buildtype' AND build.name='$buildname'
+                                AND build.projectid='$projectid' 
+                                AND build.starttime<'$starttime' 
+                                AND build.starttime>'$now'
+                                ORDER BY build.starttime DESC LIMIT 1");
+
+  echo mysql_error();
+
+  // If we have one
+  if(mysql_num_rows($previousbuild)>0)
+    {
+    // Loop through the tests
+    $previousbuild_array = mysql_fetch_array($previousbuild);
+    $previousbuildid = $previousbuild_array ["id"];
+    $tests = mysql_query("SELECT build2test.time,build2test.testid,test.name 
+                          FROM build2test,test WHERE build2test.buildid='$buildid'
+                          AND build2test.testid=test.id
+                          ");
+    echo mysql_error();
+    
+    // Find the previous test
+    $previoustest = mysql_query("SELECT build2test.testid,test.name FROM build2test,test
+                                 WHERE build2test.buildid='$previousbuildid' 
+                                 AND test.id=build2test.testid 
+                                 ");    
+    $testarray = array();
+    while($test_array = mysql_fetch_array($previoustest))
+      {
+      $test = array();
+      $test['id'] = $test_array["testid"];
+      $test['name'] = $test_array["name"];
+      $testarray[] = $test;
+      }
+
+    while($test_array = mysql_fetch_array($tests))
+      {
+      $testtime = $test_array['time'];
+      $testid = $test_array['testid'];
+      $testname = $test_array['name'];
+      $previoustestid = 0;
+
+      foreach($testarray as $test)
+        {
+        if($test['name']==$testname)
+          {
+          $previoustestid = $test['id'];
+          break;
+          }
+        }
+                         
+      if($previoustestid>0)
+        {
+        $previoustest = mysql_query("SELECT timemean,timestd FROM build2test
+                                     WHERE buildid='$previousbuildid' 
+                                     AND build2test.testid='$previoustestid' 
+                                     ");
+
+        $previoustest_array = mysql_fetch_array($previoustest);
+        $previoustimemean = $previoustest_array["timemean"];
+        $previoustimestd = $previoustest_array["timestd"];
+          
+        // Update the mean and std
+        $timemean = (1-$weight)*$previoustimemean+$weight*$testtime;
+        $timestd = sqrt((1-$weight)*$previoustimestd*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean));
+            
+        // Check the current status
+        if($testtime > $previoustimemean+$testtimestd*$previoustimestd) // only do positive std
+          {
+          $timestatus = 1; // flag
+          }
+        else
+          {
+          $timestatus = 0;
+          }
+        }
+      else // the test doesn't exist
+        {
+        $timestd = 0;
+        $timestatus = 0;
+        $timemean = $testtime;
+        }
+          
+      mysql_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
+                   WHERE buildid='$buildid' AND testid='$testid'");
+       
+      }  // end loop through the test  
+    }
+  else // this is the first build
+    {
+    $timestd = 0;
+    $timestatus = 0;
+        
+    // Loop throught the tests
+    $tests = mysql_query("SELECT time,testid FROM build2test WHERE buildid='$buildid'");
+    while($test_array = mysql_fetch_array($tests))
+      {
+      $timemean = $test_array['time'];
+      $testid = $test_array['testid'];
+        
+      mysql_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
+                  WHERE buildid='$buildid' AND testid='$testid'");
+      }// loop through the tests          
+    } // end if first build
+} // end function compute_test_timing
 
 /** Parse the coverage xml */
 function parse_coverage($parser,$projectid)
