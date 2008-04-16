@@ -1760,6 +1760,7 @@ function get_cdash_dashboard_xml($projectname, $date)
   <home>".make_cdash_url(htmlentities($project_array["homeurl"]))."</home>
   <projectid>".$projectid."</projectid>
   <projectname>".$project_array["name"]."</projectname>
+  <projectpublic>".$project_array["public"]."</projectpublic>
   <previousdate>".$previousdate."</previousdate>
   <nextdate>".$nextdate."</nextdate>
   <logoid>".getLogoID($projectid)."</logoid>
