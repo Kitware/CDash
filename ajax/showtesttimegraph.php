@@ -62,7 +62,7 @@ AND build.projectid='$projectid'
 AND build.starttime<='$starttime' 
 AND build2test.buildid=build.id 
 AND test.id=build2test.testid AND test.name='$testname'
-ORDER BY build.starttime ASC");
+ORDER BY build.starttime DESC LIMIT 30" );
 ?>
 
 <script id="source" language="javascript" type="text/javascript">
@@ -71,19 +71,29 @@ $(function () {
     var tx = [];
     var ty = [];
     <?php
+    $tarray = array();
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t = strtotime($build_array["starttime"])*1000;
+      $t['x'] = strtotime($build_array["starttime"])*1000;
+      $t['y'] = $build_array["time"];    
+      $tarray[]=$t;
     ?>
-      d1.push([<?php echo $t; ?>,<?php echo $build_array["time"]; ?>]);
     <?php
       }
+    
+    $tarray = array_reverse($tarray);
+    foreach($tarray as $axis)
+      {
     ?>
-
+      d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
+    <?php 
+      $t = $axis['x'];
+      } ?>
  
   var options = {
-    bars: { show: true,  barWidth: 35000000, lineWidth:0.9  },
-    //points: { show: true },
+    //bars: { show: true,  barWidth: 35000000, lineWidth:0.9  },
+    lines: { show: true }, 
+    points: { show: true },
     xaxis: { mode: "time"}, 
     grid: {backgroundColor: "#fffaff"},
     selection: { mode: "x" },
