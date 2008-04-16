@@ -164,6 +164,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $bugurl = make_cdash_url(htmlentities($project_array["bugtrackerurl"]));
     $googletracker = htmlentities($project_array["googletracker"]);  
     $docurl = make_cdash_url(htmlentities($project_array["documentationurl"]));
+    $projectpublic =  $project_array["public"]; 
     $projectname = $project_array["name"];
     }
   else
@@ -196,6 +197,7 @@ function generate_main_dashboard_XML($projectid,$date)
   <projectid>".$projectid."</projectid> 
   <projectname>".$projectname."</projectname> 
   <previousdate>".$previousdate."</previousdate> 
+  <projectpublic>".$projectpublic."</projectpublic> 
   <nextdate>".$nextdate."</nextdate>";
  
   if($currentstarttime>time()) 
