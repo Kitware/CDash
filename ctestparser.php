@@ -460,7 +460,6 @@ function compute_test_timing($buildid)
                                 AND build.type='$buildtype' AND build.name='$buildname'
                                 AND build.projectid='$projectid' 
                                 AND build.starttime<'$starttime' 
-                                AND build.starttime>'$now'
                                 ORDER BY build.starttime DESC LIMIT 1");
 
   echo mysql_error();
