@@ -1868,7 +1868,6 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
       }
     }
 
-  $prev_revision = get_previous_revision($revision);
 
   if (strlen($directory)>0)
     {
@@ -1879,17 +1878,28 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
     $dircmp = "";
     }
 
-  if (0 === strcmp($revision, $prev_revision))
-    {
-    $revcmp = "&rev=" . $revision . "&view=markup";
+ 
+  // If we have a revision
+  if($revision != '')
+    { 
+    $prev_revision = get_previous_revision($revision);
+    if (0 === strcmp($revision, $prev_revision))
+      {
+      $revcmp = "&rev=" . $revision . "&view=markup";
+      }
+    else
+      {
+      // different : view the diff of r1 and r2:
+      $revcmp = "&r1=" . $prev_revision . "&r2=" . $revision;
+      }
+    
+    $diff_url = $cmps[0] . $dircmp . $file . ".diff?" . $cmps[1] . $revcmp;
     }
   else
     {
-    // different : view the diff of r1 and r2:
-    $revcmp = "&r1=" . $prev_revision . "&r2=" . $revision;
+    $diff_url = $cmps[0] . $dircmp . $file ."?".$cmps[1];
     }
 
-  $diff_url = $cmps[0] . $dircmp . $file . ".diff?" . $cmps[1] . $revcmp;
   return make_cdash_url($diff_url);
 }
 
@@ -1899,27 +1909,37 @@ function get_trac_diff_url($projecturl, $directory, $file, $revision)
 {
   if ($directory == "")
     {
-    $diff_url = $projecturl."/".$file."?rev=".$revision;
+    $diff_url = $projecturl."/".$file;
     }
   else
     {
-    $diff_url = $projecturl."/".$directory."/".$file."?rev=".$revision;
+    $diff_url = $projecturl."/".$directory."/".$file;
     }
+
+  if($revision != '')
+    {
+    $diff_url .= "?rev=".$revision;
+    }
+
   return make_cdash_url($diff_url);
 }
 
 /** Return the Fisheye URL */
 function get_fisheye_diff_url($projecturl, $directory, $file, $revision)
 {
-  $prev_revision = get_previous_revision($revision);
   $diff_url = rtrim($projecturl, '/').($directory ? ("/".$directory) : "")."/".$file;
-  if($prev_revision != $revision)
+  
+  if($revision != '')
     {
-    $diff_url .= "?r1=".$prev_revision."&r2=".$revision;
-    } 
-  else 
-    {
-    $diff_url .= "?r=".$revision;
+    $prev_revision = get_previous_revision($revision);
+    if($prev_revision != $revision)
+      {
+      $diff_url .= "?r1=".$prev_revision."&r2=".$revision;
+      } 
+    else 
+      {
+      $diff_url .= "?r=".$revision;
+      }
     }
   return make_cdash_url($diff_url);
 }
@@ -1927,22 +1947,30 @@ function get_fisheye_diff_url($projecturl, $directory, $file, $revision)
 /** Return the CVSTrac URL */
 function get_cvstrac_diff_url($projecturl, $directory, $file, $revision)
 {
-  $prev_revision = get_previous_revision($revision);
-  if($prev_revision != $revision)
+  if($revision != '')
     {
-    $diff_url = $projecturl."/filediff?f=".($directory ? ($directory) : "")."/".$file;
-    $diff_url .= "&v1=".$prev_revision."&v2=".$revision;
+    $prev_revision = get_previous_revision($revision);
+    if($prev_revision != $revision)
+      {
+      $diff_url = $projecturl."/filediff?f=".($directory ? ($directory) : "")."/".$file;
+      $diff_url .= "&v1=".$prev_revision."&v2=".$revision;
+      } 
+    else 
+      {
+      $diff_url = $projecturl."/fileview?f=".($directory ? ($directory) : "")."/".$file;
+      $diff_url .= "&v=".$revision;
+      }
     } 
-  else 
+  else
     {
-    $diff_url = $projecturl."/fileview?f=".($directory ? ($directory) : "")."/".$file;
-    $diff_url .= "&v=".$revision;
+    $diff_url = $projecturl."/rlog?f=".($directory ? ($directory) : "")."/".$file;
     }
+
   return make_cdash_url($diff_url);
 }
 
 /** Get the diff url based on the type of viewer */
-function get_diff_url($projectid,$projecturl, $directory, $file, $revision)
+function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
 {
   if(!is_numeric($projectid))
     {
