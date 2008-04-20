@@ -445,7 +445,7 @@ function compute_test_timing($buildid)
 {
   // TEST TIMING 
   $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
-  $build = mysql_query("SELECT starttime,siteid,name,type FROM build WHERE id='$buildid'");
+  $build = mysql_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id='$buildid'");
     
   echo mysql_error();
   $build_array = mysql_fetch_array($build);                           
@@ -453,6 +453,7 @@ function compute_test_timing($buildid)
   $buildtype = $build_array["type"];
   $starttime = $build_array["starttime"];
   $siteid = $build_array["siteid"];
+  $projectid = $build_array["projectid"];
       
   // Find the previous build
   $previousbuild = mysql_query("SELECT id FROM build
