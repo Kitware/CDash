@@ -163,7 +163,7 @@ function str_to_time($str,$stamp)
 function parse_build($parser,$projectid)
 {   
   $xmlarray = $parser->vals;
- 
+
   $site = $parser->index["SITE"];
   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
@@ -171,10 +171,15 @@ function parse_build($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   $type = substr($stamp,strrpos($stamp,"-")+1);
   $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
-  $starttime = getXMLValue($xmlarray,"STARTDATETIME","BUILD");
   
-  // Convert the starttime to a timestamp
-  $starttimestamp = str_to_time($starttime,$stamp);
+  $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","BUILD");
+  if($starttimestamp == "NA")
+    {
+    $starttime = getXMLValue($xmlarray,"STARTDATETIME","BUILD");
+    // Convert the starttime to a timestamp
+    $starttimestamp = str_to_time($starttime,$stamp);
+    }
+  
   $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","BUILD");
   $endtimestamp = $starttimestamp+$elapsedminutes*60;
   $command = getXMLValue($xmlarray,"BUILDCOMMAND","BUILD");
@@ -270,11 +275,19 @@ function create_build($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   $type = substr($stamp,strrpos($stamp,"-")+1);
   $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
- $starttime_index = $parser->index["STARTDATETIME"];
-  $starttime = $parser->vals[$starttime_index[0]]["value"];
   
-  // Convert the starttime to a timestamp
-  $starttimestamp = str_to_time($starttime,$stamp);
+  @$starttime_index = $parser->index["STARTBUILDTIME"];
+  if(!isset($starttime_index))
+    {
+    $starttime_index = $parser->index["STARTDATETIME"];
+    $starttime = $parser->vals[$starttime_index[0]]["value"];
+    // Convert the starttime to a timestamp
+    $starttimestamp = str_to_time($starttime,$stamp);
+    }
+  else
+    {
+    $starttimestamp = $parser->vals[$starttime_index[0]]["value"];
+    }      
 
   $elapsedminutes_index = $parser->index["ELAPSEDMINUTES"];
   $elapsedminutes = $parser->vals[$elapsedminutes_index[0]]["value"];
@@ -313,9 +326,14 @@ function parse_configure($parser,$projectid)
     {
     $buildid = create_build($parser,$projectid);
     }
-    
-  $starttime = getXMLValue($xmlarray,"STARTDATETIME","CONFIGURE");
-  $starttimestamp = str_to_time($starttime,$stamp);
+  
+  $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","CONFIGURE");
+  if($starttimestamp == "NA")
+    {
+    $starttime = getXMLValue($xmlarray,"STARTDATETIME","CONFIGURE");
+    $starttimestamp = str_to_time($starttime,$stamp);
+    }
+
   $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","CONFIGURE");
   $endtimestamp = $starttimestamp+$elapsedminutes*60;
   $command = getXMLValue($xmlarray,"BUILDCOMMAND","CONFIGURE");
@@ -584,10 +602,15 @@ function parse_coverage($parser,$projectid)
     // Extract the type from the buildstamp
     $type = substr($stamp,strrpos($stamp,"-")+1);
     $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
-    $starttime = getXMLValue($xmlarray,"STARTDATETIME","COVERAGE");
     
-    // Convert the starttime to a timestamp
-    $starttimestamp = str_to_time($starttime,$stamp);
+    $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","COVERAGE");
+    if($starttimestamp == "NA")
+      {
+      $starttime = getXMLValue($xmlarray,"STARTDATETIME","COVERAGE");
+      // Convert the starttime to a timestamp
+      $starttimestamp = str_to_time($starttime,$stamp);
+      }
+   
     $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","COVERAGE");
     $endtimestamp = $starttimestamp+$elapsedminutes*60;
     
@@ -727,10 +750,15 @@ function parse_update($parser,$projectid)
     // Extract the type from the buildstamp
     $type = substr($stamp,strrpos($stamp,"-")+1);
     $generator = $parser->vals[$update[0]]["attributes"]["GENERATOR"];
-    $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
     
-    // Convert the starttime to a timestamp
-    $starttimestamp = str_to_time($starttime,$stamp);
+    $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","UPDATE");
+    if($starttimestamp == "NA")
+      {
+      $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
+      // Convert the starttime to a timestamp
+      $starttimestamp = str_to_time($starttime,$stamp);
+      }
+
     $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","UPDATE");
     $endtimestamp = $starttimestamp+$elapsedminutes*60;
     
@@ -753,8 +781,13 @@ function parse_update($parser,$projectid)
   mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
   mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");
   
-  $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
-  $starttimestamp = str_to_time($starttime,$stamp);
+  $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","UPDATE");
+  if($starttimestamp == "NA")
+    {
+    $starttime = getXMLValue($xmlarray,"STARTDATETIME","UPDATE");
+    $starttimestamp = str_to_time($starttime,$stamp);
+    }
+
   $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","UPDATE");
   $endtimestamp = $starttimestamp+$elapsedminutes*60;
   $command = getXMLValue($xmlarray,"UPDATECOMMAND","UPDATE");
@@ -921,10 +954,15 @@ function parse_dynamicanalysis($parser,$projectid)
     // Extract the type from the buildstamp
     $type = substr($stamp,strrpos($stamp,"-")+1);
     $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
-    $starttime = getXMLValue($xmlarray,"STARTDATETIME","DYNAMICANALYSIS");
     
-    // Convert the starttime to a timestamp
-    $starttimestamp = str_to_time($starttime,$stamp);
+    $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","DYNAMICANALYSIS");
+    if($starttimestamp == "NA")
+      {
+      $starttime = getXMLValue($xmlarray,"STARTDATETIME","DYNAMICANALYSIS");
+      // Convert the starttime to a timestamp
+      $starttimestamp = str_to_time($starttime,$stamp);
+      }
+    
     $elapsedminutes = getXMLValue($xmlarray,"ELAPSEDMINUTES","DYNAMICANALYSIS");
     $endtimestamp = $starttimestamp+$elapsedminutes*60;
     
