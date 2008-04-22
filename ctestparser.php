@@ -437,7 +437,7 @@ function parse_testing($parser,$projectid)
     }
 
   // Compute the test timing
-  //compute_test_timing($buildid);
+  compute_test_timing($buildid);
 }
 
 /** Compute the test timing as a weighted average of the previous test */
@@ -454,6 +454,10 @@ function compute_test_timing($buildid)
   $starttime = $build_array["starttime"];
   $siteid = $build_array["siteid"];
   $projectid = $build_array["projectid"];
+
+  $project = mysql_query("SELECT testtimestd FROM project WHERE id='$projectid'");
+  $project_array = mysql_fetch_array($project);
+  $projecttimestd = $project_array["testtimestd"]; 
       
   // Find the previous build
   $previousbuild = mysql_query("SELECT id FROM build
@@ -523,7 +527,7 @@ function compute_test_timing($buildid)
         $timestd = sqrt((1-$weight)*$previoustimestd*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean));
             
         // Check the current status
-        if($testtime > $previoustimemean+$testtimestd*$previoustimestd) // only do positive std
+        if($testtime > $previoustimemean+$projecttimestd*$previoustimestd) // only do positive std
           {
           $timestatus = 1; // flag
           }
