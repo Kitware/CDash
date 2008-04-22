@@ -37,13 +37,15 @@
     <td><div align="right">Fix build group based on build rules:</div></td>
     <td><div align="left"><input type="submit" name="FixBuildBasedOnRule" value="Fix build groups"/></div></td>
   </tr>
+  <!-- 
   <tr>
     <td><div align="right">Fix new table test:</div></td>
     <td><div align="left"><input type="submit" name="FixNewTableTest" value="Move current tests to new table"/></div></td>
   </tr>
+  -->
   <tr>
     <td><div align="right">Delete builds with wrong start date:</div></td>
-    <td><div align="left"><input type="submit" name="DeleteBuildsWrongDate" value="Delete builds"/></div></td>
+    <td><div align="left"><input type="submit" name="CheckBuildsWrongDate" value="Check builds"/><input type="submit" name="DeleteBuildsWrongDate" value="Delete builds"/></div></td>
   </tr> 
   <!-- 
    <tr>

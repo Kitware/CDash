@@ -40,6 +40,8 @@ $xml .= "<menusubtitle>Tools</menusubtitle>";
 @$FixBuildBasedOnRule = $_POST["FixBuildBasedOnRule"];
 @$FixNewTableTest = $_POST["FixNewTableTest"];
 @$DeleteBuildsWrongDate = $_POST["DeleteBuildsWrongDate"];
+@$CheckBuildsWrongDate = $_POST["CheckBuildsWrongDate"];
+
 @$Upgrade = $_POST["Upgrade"];
 
 // When adding new tables they should be added to the SQL installation file
@@ -384,15 +386,28 @@ function CompressCoverage()
   /** SECOND STEP */    
 }
 
-if($DeleteBuildsWrongDate)
+/** Check the builds with wrong date */
+if($CheckBuildsWrongDate)
 {
-  $builds = mysql_query("SELECT id FROM build WHERE starttime='2069-12-31 23:59:59'");
+  $builds = mysql_query("SELECT id,name,starttime FROM build WHERE starttime<'1975-12-31 23:59:59'");
   while($builds_array = mysql_fetch_array($builds))
     {
-  $buildid = $builds_array["id"];
-  //echo $buildid."<br>";
-  remove_build($buildid); 
-  }
+    $buildid = $builds_array["id"];
+    echo $builds_array['name']."-".$builds_array['starttime']."<br>";
+    remove_build($buildid); 
+    }
+}
+
+/** Delete the builds with wrong date */
+if($DeleteBuildsWrongDate)
+{
+  $builds = mysql_query("SELECT id FROM build WHERE starttime<'2069-12-31 23:59:59'");
+  while($builds_array = mysql_fetch_array($builds))
+    {
+    $buildid = $builds_array["id"];
+    //echo $buildid."<br>";
+    remove_build($buildid); 
+    }
 }
 
 /** */
