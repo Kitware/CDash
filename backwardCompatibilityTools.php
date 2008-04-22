@@ -401,7 +401,7 @@ if($CheckBuildsWrongDate)
 /** Delete the builds with wrong date */
 if($DeleteBuildsWrongDate)
 {
-  $builds = mysql_query("SELECT id FROM build WHERE starttime<'2069-12-31 23:59:59'");
+  $builds = mysql_query("SELECT id FROM build WHERE starttime<'1975-12-31 23:59:59'");
   while($builds_array = mysql_fetch_array($builds))
     {
     $buildid = $builds_array["id"];
