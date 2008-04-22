@@ -1874,17 +1874,18 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
   {
     // same : just view whole file:
     $revcmp = "&rev=" . $revision . "&view=markup";
+    $diff_url = $cmps[0] . $dircmp . $file . "?" . $cmps[1] . $revcmp;
   }
   else
   {
     // different : view the diff of r1 and r2:
     $revcmp = "&r1=" . $prev_revision . "&r2=" . $revision;
-  }
+    $diff_url = $cmps[0] . $dircmp . $file . ".diff?" . $cmps[1] . $revcmp;
+   }
 
 //  echo "dircmp: '" . $dircmp . "'<br/>";
 //  echo "revcmp: '" . $revcmp . "'<br/>";
 
-  $diff_url = $cmps[0] . $dircmp . $file . ".diff?" . $cmps[1] . $revcmp;
 
 //  echo "diff_url: '" . $diff_url . "'<br/>";
 //  echo "0: '" . $cmps[0] . "'<br/>";
