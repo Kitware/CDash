@@ -310,7 +310,8 @@ CREATE TABLE `project` (
   `emailtesttimingchanged` tinyint(4) NOT NULL default '0',
   `emailbrokensubmission` tinyint(4) NOT NULL default '1',
   `cvsviewertype` varchar(10) default NULL,
-  `testtimestd` float(3,1) default '1.0',
+  `testtimestd` float(3,1) default '4.0',
+  `testtimestdthreshold` float(3,1) default '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -500,7 +501,16 @@ CREATE TABLE IF NOT EXISTS `project2repositories` (
   PRIMARY KEY  (`projectid`,`repositoryid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
 -- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `testmeasurement` (
+  `testid` bigint(20) NOT NULL,
+  `name` varchar(70) NOT NULL,
+  `type` varchar(70) NOT NULL,
+  `value` text NOT NULL,
+  KEY `testid` (`testid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 
 --
 -- Change the table maximum size to be more than 4GB
