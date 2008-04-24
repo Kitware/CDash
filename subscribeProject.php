@@ -87,8 +87,11 @@ if ($session_OK)
     mysql_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
     
     // Remove the claim sites for this project if they are only part of this project
-    mysql_query("DELETE FROM site2user WHERE userid='$userid' 
-                 AND siteid NOT IN(SELECT siteid FROM build WHERE projectid!='$projectid' GROUP BY siteid)");
+        mysql_query("DELETE FROM site2user WHERE userid='$userid' 
+                 AND siteid NOT IN 
+                (SELECT build.siteid FROM build,user2project as up WHERE 
+                 up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
+                 GROUP BY build.siteid)");
                  
     header( 'location: user.php?note=unsubscribedtoproject' );
     }   
@@ -97,6 +100,15 @@ if ($session_OK)
     if(mysql_num_rows($user2project)>0)
       {
       mysql_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType' WHERE userid='$userid' AND projectid='$projectid'");
+      if($Role==0)
+        { 
+        // Remove the claim sites for this project if they are only part of this project
+        mysql_query("DELETE FROM site2user WHERE userid='$userid' 
+                 AND siteid NOT IN 
+                (SELECT build.siteid FROM build,user2project as up WHERE 
+                 up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
+                 GROUP BY build.siteid)");
+        }
       }
     else
       {
