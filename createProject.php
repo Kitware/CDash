@@ -130,6 +130,7 @@ if($Submit)
     @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];        
     @$CVSViewerType = $_POST["cvsviewertype"];
     @$TestTimeStd = $_POST["testTimeStd"];
+    @$TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
           
     $handle = fopen($_FILES['logo']['tmp_name'],"r");
     $contents = 0;
@@ -187,10 +188,10 @@ if($Submit)
     //isn't trying anything fruity
     $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                 googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
-                                testtimestd)
+                                testtimestd,testtimestdthreshold)
             VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$DocURL','$Public','$imgid','$CoverageThreshold','$NightlyTime',
                     '$GoogleTracker','$EmailBrokenSubmission','$EmailBuildMissing','$EmailLowCoverage','$EmailTestTimingChanged','$CVSViewerType',
-                    '$TestTimeStd')"; 
+                    '$TestTimeStd','$TestTimeStdThreshold')"; 
     if(mysql_query("$sql"))
       {
       $projectid = mysql_insert_id();
@@ -277,6 +278,7 @@ if($Update)
   @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
   @$CVSViewerType = $_POST["cvsviewertype"]; 
   @$TestTimeStd = $_POST["testTimeStd"];
+  @$TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
 
   $imgid = $project_array["imageid"];
   
@@ -323,7 +325,8 @@ if($Update)
                                   emailbuildmissing='$EmailBuildMissing',emaillowcoverage='$EmailLowCoverage',
                                   emailtesttimingchanged='$EmailTestTimingChanged',
                                   cvsviewertype='$CVSViewerType',
-                                  testtimestd='$TestTimeStd'
+                                  testtimestd='$TestTimeStd',
+                                  testtimestdthreshold='$TestTimeStdThreshold'
                                   WHERE id='$projectid'");
   echo mysql_error();
 
@@ -373,6 +376,7 @@ if($projectid>0)
   $xml .= add_XML_value("emailtesttimingchanged",$project_array['emailtesttimingchanged']);
   $xml .= add_XML_value("cvsviewertype",$project_array['cvsviewertype']);
   $xml .= add_XML_value("testtimestd",$project_array['testtimestd']);
+  $xml .= add_XML_value("testtimestdthreshold",$project_array['testtimestdthreshold']);
   $xml .= "</project>";
   }
 

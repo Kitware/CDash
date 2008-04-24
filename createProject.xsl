@@ -219,6 +219,17 @@ edit the project</a><br/>
   
   <tr>
     <td></td>
+    <td><div align="right"><strong>Test time standard deviation threshold:</strong></div></td>
+    <td>
+    <input name="testTimeStdThreshold" type="text" id="testTimeStdThreshold" size="4">
+    <xsl:attribute name="value">
+      <xsl:value-of select="cdash/project/testtimestdthreshold"/>
+    </xsl:attribute>
+    </input></td>
+  </tr>
+  
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Email broken submission:</strong></div></td>
     <td><input type="checkbox" name="emailBrokenSubmission" value="1">
     <xsl:if test="cdash/project/emailbrokensubmission=1">

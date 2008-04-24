@@ -497,9 +497,10 @@ function compute_test_timing($buildid)
   $siteid = $build_array["siteid"];
   $projectid = $build_array["projectid"];
 
-  $project = mysql_query("SELECT testtimestd FROM project WHERE id='$projectid'");
+  $project = mysql_query("SELECT testtimestd,testtimestdthreshold FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
   $projecttimestd = $project_array["testtimestd"]; 
+  $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
       
   // Find the previous build
   $previousbuild = mysql_query("SELECT id FROM build
@@ -508,8 +509,6 @@ function compute_test_timing($buildid)
                                 AND build.projectid='$projectid' 
                                 AND build.starttime<'$starttime' 
                                 ORDER BY build.starttime DESC LIMIT 1");
-
-  echo mysql_error();
 
   // If we have one
   if(mysql_num_rows($previousbuild)>0)
@@ -521,7 +520,6 @@ function compute_test_timing($buildid)
                           FROM build2test,test WHERE build2test.buildid='$buildid'
                           AND build2test.testid=test.id
                           ");
-    echo mysql_error();
     
     // Find the previous test
     $previoustest = mysql_query("SELECT build2test.testid,test.name FROM build2test,test
@@ -569,6 +567,11 @@ function compute_test_timing($buildid)
         $timestd = sqrt((1-$weight)*$previoustimestd*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean));
             
         // Check the current status
+        if($previoustimestd)
+          {
+          $previoustimestd = $projecttimestdthreshold;
+          }
+        
         if($testtime > $previoustimemean+$projecttimestd*$previoustimestd) // only do positive std
           {
           $timestatus = 1; // flag

@@ -112,11 +112,18 @@ if($Upgrade)
     mysql_query("ALTER TABLE build2test ADD timestatus tinyint(4) default '0'");
     mysql_query("ALTER TABLE build2test ADD INDEX (timestatus)"); 
     // Add timing test fields in the table project
-    mysql_query("ALTER TABLE project ADD testtimestd float(3,1) default '2.0'");
+    mysql_query("ALTER TABLE project ADD testtimestd float(3,1) default '4.0'");
     // Add the index name in the table test
     mysql_query("ALTER TABLE test ADD INDEX (name)");
     }
   
+  // Add the testtimethreshold  
+  
+  if(!mysql_query("SELECT testtimestdthreshold FROM project LIMIT 1"))
+    {
+     mysql_query("ALTER TABLE project ADD testtimestdthreshold float(3,1) default '1.0'");
+    }
+    
   // Compute the testtime from the previous week (this is a test)
   ComputeTestTiming();
   

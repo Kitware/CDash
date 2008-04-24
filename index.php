@@ -35,7 +35,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!mysql_query("SELECT testid FROM testmeasurement LIMIT 1"))
+  if(!mysql_query("SELECT testtimestdthreshold FROM project LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration panel of CDash.</upgradewarning>";
