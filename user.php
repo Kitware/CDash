@@ -92,7 +92,10 @@ if ($session_OK)
    // Look for all the projects
    if(mysql_num_rows($site2user)>0)
      {
-     $site2project = mysql_query("SELECT projectid FROM build WHERE $siteidwheresql GROUP BY projectid");
+     $site2project = mysql_query("SELECT build.projectid FROM build,user2project WHERE ($siteidwheresql)
+                     AND user2project.projectid=build.projectid AND user2project.userid='$userid'
+                     AND user2project.role>0
+                     GROUP BY build.projectid"); 
      while($site2project_array = mysql_fetch_array($site2project))
        {
        $projectid = $site2project_array["projectid"];
