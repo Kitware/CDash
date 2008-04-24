@@ -129,10 +129,26 @@ while($row = mysql_fetch_array($result))
   $xml .= "<image>";
   $xml .= add_XML_value("imgid", $row["imgid"]);
   $xml .= add_XML_value("role", $row["role"]);
-  
   $xml .= "</image>";
   }
 $xml .= "</images>";
+
+//get any measurements associated with this test
+$xml .= "<measurements>";
+$query = "SELECT * FROM testmeasurement WHERE testid = '$testid'";
+$result = mysql_query($query);
+while($row = mysql_fetch_array($result))
+  {
+  $xml .= "<measurement>";
+  $xml .= add_XML_value("name", $row["name"]);
+  $xml .= add_XML_value("type", $row["type"]);
+  $xml .= add_XML_value("value", $row["value"]);
+  $xml .= "</measurement>";
+  }
+$xml .= "</measurements>";
+
+
+
 $xml .= "</test>";
 
 

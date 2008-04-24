@@ -93,6 +93,15 @@
         <xsl:value-of select="cdash/test/details"/>
       </td>
    </tr>
+   
+  <xsl:for-each select="/cdash/test/measurements/measurement">
+     <tr>
+      <th class="measurement"><xsl:value-of select="name"/></th>
+      <td>
+        <xsl:value-of select="value"/>
+      </td>
+   </tr>
+   </xsl:for-each>
 </table>
 <br/>
 <!-- Timing Graph -->

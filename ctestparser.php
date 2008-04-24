@@ -371,6 +371,7 @@ function parse_testing($parser,$projectid)
   $getDetailsNext = FALSE;
   $getSummaryNext = FALSE;
   $getImageNext = FALSE;
+  $inMeasurement = FALSE;
   $imageType = "";
   $imageRole = "";
   foreach($xmlarray as $tagarray)
@@ -382,6 +383,8 @@ function parse_testing($parser,$projectid)
       $index++;
       $test_array[$index]["status"]=$tagarray["attributes"]["STATUS"];
       $test_array[$index]["images"] = array();
+      $test_array[$index]['measurement'] = array();
+      $test_array[$index]['details'] = "";
       }
     else if( ($tagarray["level"] == 5) && array_key_exists("attributes",$tagarray) 
             && ($tagarray["attributes"]["NAME"] == "Execution Time") )
@@ -393,7 +396,7 @@ function parse_testing($parser,$projectid)
       {
       $getDetailsNext = TRUE;
       }
-    else if( ($tagarray["level"] == 5) && ($tagarray["tag"] == "MEASUREMENT") )
+    else if( ($tagarray["level"] == 5) && ($tagarray["tag"] == "MEASUREMENT") && ($tagarray["type"] == "open"))
       {
       $getSummaryNext = TRUE;
       }
@@ -443,7 +446,28 @@ function parse_testing($parser,$projectid)
     else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
       {
       $test_array[$index]["fullcommandline"]=$tagarray["value"];
+      }
+    // Deal with the measurements  
+    else if($inMeasurement && ($tagarray["tag"] == "NAMEDMEASUREMENT") && ($tagarray["type"] == "close") && ($tagarray["level"] == 5))
+      {
+      // We don't store the "Completion status" and "Command Line" because they are already stored
+      if($measurement['name'] != "Completion Status" && $measurement['name'] != "Command Line")
+        {
+        $test_array[$index]['measurement'][]=$measurement;
+        }
+      $inMeasurement = FALSE;
       } 
+    else if(($tagarray["tag"] == "NAMEDMEASUREMENT") && ($tagarray["type"] == "open") && ($tagarray["level"] == 5))
+      {
+      $measurement = array();
+      $measurement['type'] = $tagarray["attributes"]["TYPE"];
+      $measurement['name'] = $tagarray["attributes"]["NAME"];
+      $inMeasurement = TRUE;
+      } 
+    else if($inMeasurement && ($tagarray["tag"] == "VALUE") && ($tagarray["level"] == 6))
+      {
+      $measurement['value'] = $tagarray["value"];
+      }
     }
    
   // We cannot really do a block submission since we are having images
@@ -451,7 +475,7 @@ function parse_testing($parser,$projectid)
     {
     add_test($buildid,
              $test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], 
-             $test["executiontime"], $test["details"], $test["output"], $test["images"]);
+             $test["executiontime"], $test["details"], $test["output"], $test["images"],$test['measurement']);
     }
 
   // Compute the test timing

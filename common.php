@@ -1183,7 +1183,8 @@ function remove_build($buildid)
           }
         }
       // Tests are not shared we delete
-      mysql_query("DELETE FROM test WHERE testid='$testid'");
+      mysql_query("DELETE FROM testmeasurement WHERE testid='$testid'");
+      mysql_query("DELETE FROM test WHERE id='$testid'");
       mysql_query("DELETE FROM test2image WHERE testid='$testid'");
       }
     }
@@ -1284,7 +1285,7 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
 }
 
 /** Add a new test */
-function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images)
+function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images,$measurements)
 {
   if(!is_numeric($buildid))
     {
@@ -1299,8 +1300,13 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   $fullname = mysql_real_escape_string($fullname);  
   $time = mysql_real_escape_string($time);     
   $details = mysql_real_escape_string($details);
-      
+  
+  // CRC32 is computed with the measurements name and type and value
   $buffer = $name.$path.$command.$output.$details; 
+  foreach($measurements as $measurement)
+    {
+    $buffer .= $measurement['type'].$measurement['name'].$measurement['value'];
+    }
   $crc32 = crc32($buffer);
   
   // Check if the test doesn't exist
@@ -1360,12 +1366,28 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
     if(mysql_query("$query"))
       {
       $testid = mysql_insert_id();
+      
+      // Insert the images
       foreach($images as $image)
         {
         $imgid = $image["id"];
         $role = $image["role"];
         $query = "INSERT INTO test2image(imgid, testid, role)
                   VALUES('$imgid', '$testid', '$role')";
+        if(!mysql_query("$query"))
+          {
+          add_last_sql_error("add_test");
+          }
+        }
+      
+      // Insert the measurements  
+      foreach($measurements as $measurement)
+        {
+        $name = $measurement['name'];
+        $type = $measurement['type'];
+        $value = $measurement['value'];
+        $query = "INSERT INTO testmeasurement (testid,name,type,value) 
+                  VALUES ('$testid','$name','$type','$value')";
         if(!mysql_query("$query"))
           {
           add_last_sql_error("add_test");
