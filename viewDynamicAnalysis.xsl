@@ -46,13 +46,13 @@
       <xsl:value-of select="filename"/>
       </a></td>
       <td>
-      <xsl:attribute name="bgcolor">
+      <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="status='Passed'">
-            #00aa00
+            normal
           </xsl:when>
           <xsl:otherwise>
-            #ffcc66
+            warning
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
@@ -60,10 +60,10 @@
       <td></td>
       <!-- Memory Leak -->
       <td>
-      <xsl:attribute name="bgcolor">
+      <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="count(Memory_Leak)>0">
-            #ffcc66
+            warning
           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
@@ -71,10 +71,10 @@
       </td>
       <!-- UMR -->
       <td>
-      <xsl:attribute name="bgcolor">
+      <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="count(Uninitialized_Memory_Read)>0">
-            #ffcc66
+            warning
           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
@@ -82,10 +82,10 @@
       </td>
       <!-- PML -->
       <td>
-      <xsl:attribute name="bgcolor">
+      <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="count(Potential_Memory_Leak)>0">
-            #ffcc66
+            warning
           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
@@ -93,10 +93,10 @@
       </td>
       <!--UMC -->
       <td>
-      <xsl:attribute name="bgcolor">
+      <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="count(Uninitialized_Memory_Conditional)>0">
-            #ffcc66
+            warning
           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
