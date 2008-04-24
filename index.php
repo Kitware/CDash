@@ -556,10 +556,18 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
       
       $xml .= "  <checker>".$dynanalysis_array["checker"]."</checker>";
-      $defect = mysql_query("SELECT count(*) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
+      $defect = mysql_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
                                               WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
       $defectcount = mysql_fetch_array($defect);
-      $xml .= "  <defectcount>".$defectcount[0]."</defectcount>";
+      if(!isset($defectcount[0]))
+        {
+        $defectcounts = 0;
+        }
+      else
+        { 
+        $defectcounts = $defectcount[0];
+        }
+      $xml .= "  <defectcount>".$defectcounts."</defectcount>";
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
       $submittimestamp = strtotime($build_array["submittime"]." UTC");
       $xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
