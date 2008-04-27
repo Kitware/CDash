@@ -71,6 +71,11 @@ $xml .= add_XML_value("buildid",$build_array["id"]) . "\n";
 $xml .= add_XML_value("testtime", $build_array["endtime"]) . "\n";
 $xml .= "</build>\n";
 
+$xml .= "<project>";
+$xml .= add_XML_value("showtesttime", $project_array["showtesttime"]) . "\n";
+$xml .= "</project>";
+
+
 // Gather test info
 $xml .= "<tests>\n";
 $result = mysql_query("SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 

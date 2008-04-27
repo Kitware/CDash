@@ -33,6 +33,8 @@
 <p>
   <b>Build Name: </b><xsl:value-of select="cdash/test/build"/>
 </p>
+
+<xsl:if test="cdash/project/showtesttime=1">  
 <p>
   <b>Test Timing: </b><font>
         <xsl:attribute name="color">
@@ -40,6 +42,7 @@
         </xsl:attribute><xsl:value-of select="cdash/test/timestatus"/>
       </font>
 </p>
+</xsl:if>  
 
 <table cellpadding="2">
   <tr>

@@ -34,7 +34,9 @@
   <tr class="table-heading1">
     <th id="sort_0">Name</th>
     <th id="sort_1">Status</th>
+<xsl:if test="cdash/project/showtesttime=1">    
     <th id="sort_2">Time Status</th>
+</xsl:if>        
     <th id="sort_3">Time</th>
     <th id="sort_4" class="nob">Details</th>
   </tr>
@@ -62,6 +64,7 @@
         <xsl:value-of select="status"/>
       </a>
     </td>
+    <xsl:if test="/cdash/project/showtesttime=1">          
      <td>
       <xsl:attribute name="align">center</xsl:attribute>
       <xsl:attribute name="class">
@@ -74,6 +77,7 @@
         <xsl:value-of select="timestatus"/>
       </a>
     </td>
+</xsl:if>  
     <td align="right">
       <xsl:value-of select="execTime"/>
     </td>

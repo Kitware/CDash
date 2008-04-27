@@ -74,6 +74,10 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
+$xml .= "<project>";
+$xml .= add_XML_value("showtesttime", $project_array["showtesttime"]) . "\n";
+$xml .= "</project>";
+
 $testName = $testRow["name"];
 $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 
