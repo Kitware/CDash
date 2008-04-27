@@ -41,6 +41,7 @@ $xml .= "<menusubtitle>Tools</menusubtitle>";
 @$FixNewTableTest = $_POST["FixNewTableTest"];
 @$DeleteBuildsWrongDate = $_POST["DeleteBuildsWrongDate"];
 @$CheckBuildsWrongDate = $_POST["CheckBuildsWrongDate"];
+@$ComputeTestTiming = $_POST["ComputeTestTiming"];
 
 @$Upgrade = $_POST["Upgrade"];
 
@@ -118,16 +119,33 @@ if($Upgrade)
     }
   
   // Add the testtimethreshold  
-  
   if(!mysql_query("SELECT testtimestdthreshold FROM project LIMIT 1"))
     {
-     mysql_query("ALTER TABLE project ADD testtimestdthreshold float(3,1) default '1.0'");
+    mysql_query("ALTER TABLE project ADD testtimestdthreshold float(3,1) default '1.0'");
     }
     
-  // Compute the testtime from the previous week (this is a test)
-  ComputeTestTiming();
-  
+  // Add an option to show the testtime or not   
+  if(!mysql_query("SELECT showtesttime FROM project LIMIT 1"))
+    {
+    mysql_query("ALTER TABLE project ADD showtesttime tinyint(4) default '0'");
+    }
+
   $xml .= add_XML_value("alert","CDash has been upgraded successfully.");
+}
+
+// Compute the testtime from the previous week (this is a test)
+if($ComputeTestTiming)
+{ 
+  @$TestTimingDays = $_POST["TestTimingDays"];
+  if(is_numeric($TestTimingDays) && $TestTimingDays>0)
+    {
+    ComputeTestTiming($TestTimingDays);
+    $xml .= add_XML_value("alert","Timing for tests has been computed successfully.");
+    }
+  else
+   {
+   $xml .= add_XML_value("alert","Wrong number of days.");
+   }
 }
 
 /** Compute the timing for test
@@ -138,20 +156,22 @@ if($Upgrade)
  *  If test.timestatus is more than project.testtimewindow we reset 
  *  the test.timestatus to zero and we set the test.reftime to the previous build time.
  */
-function ComputeTestTiming()
+function ComputeTestTiming($days = 4)
 {
   // Loop through the projects
-  $project = mysql_query("SELECT id,testtimestd FROM project");
+  $project = mysql_query("SELECT id,testtimestd,testtimestdthreshold FROM project");
   $weight = 0.3;
-  
+
+
   while($project_array = mysql_fetch_array($project))
     {    
     $projectid = $project_array["id"];
     echo "PROJECT id: ".$projectid."<br>";
     $testtimestd = $project_array["testtimestd"];
+    $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
     
     // only test a couple of days
-    $now = gmdate("Y-m-d H:i:s",time()-3600*24*4);
+    $now = gmdate("Y-m-d H:i:s",time()-3600*24*$days);
     
     // Find the builds
     $builds = mysql_query("SELECT starttime,siteid,name,type,id
@@ -243,6 +263,12 @@ function ComputeTestTiming()
             $previoustest_array = mysql_fetch_array($previoustest);
             $previoustimemean = $previoustest_array["timemean"];
             $previoustimestd = $previoustest_array["timestd"];
+          
+           // Check the current status
+          if($previoustimestd<$projecttimestdthreshold)
+            {
+            $previoustimestd = $projecttimestdthreshold;
+            }
           
             // Update the mean and std
             $timemean = (1-$weight)*$previoustimemean+$weight*$testtime;

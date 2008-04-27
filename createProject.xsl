@@ -208,6 +208,17 @@ edit the project</a><br/>
   
   <tr>
     <td></td>
+    <td><div align="right"><strong>Enable test timing:</strong></div></td>
+    <td>
+    <input name="showTestTime" type="checkbox" value="1">
+    <xsl:if test="cdash/project/showtesttime=1">
+    <xsl:attribute name="checked"></xsl:attribute>
+    </xsl:if>
+    </input></td>
+  </tr>
+  
+  <tr>
+    <td></td>
     <td><div align="right"><strong>Test time standard deviation:</strong></div></td>
     <td>
     <input name="testTimeStd" type="text" id="testTimeStd" size="4">
