@@ -101,7 +101,7 @@ edit the project</a><br/>
   </tr>
   <tr>
     <td></td>
-    <td><div align="right"><strong>CVS/SVN URL :</strong></div></td>
+    <td><div align="right"><strong>CVS/SVN ViewerURL:</strong></div></td>
     <td><input name="cvsURL" type="text" id="cvsURL" size="50">
      <xsl:attribute name="value">
     <xsl:value-of select="cdash/project/cvsurl"/>
@@ -111,7 +111,7 @@ edit the project</a><br/>
   </tr>
   <tr>
     <td></td>
-    <td><div align="right"><strong>CVS/SVN Viewer Type :</strong></div></td>
+    <td><div align="right"><strong>CVS/SVN Viewer Type:</strong></div></td>
     <td><select name="cvsviewertype">
     <xsl:for-each select="/cdash/cvsviewer">
     <option>
@@ -123,6 +123,15 @@ edit the project</a><br/>
     </xsl:for-each>
     </select>
     </td>
+  </tr>
+   <tr>
+    <td></td>
+    <td><div align="right"><strong>CVS/SVN Repository:</strong></div></td>
+    <td><input name="cvsRepository" type="text" size="50">
+    <xsl:attribute name="value">
+    <xsl:value-of select="cdash/project/cvsrepository"/>
+    </xsl:attribute>
+    </input></td>
   </tr>
   <tr>
     <td></td>

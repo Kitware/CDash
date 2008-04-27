@@ -129,6 +129,7 @@ if($Submit)
     @$EmailLowCoverage = $_POST["emailLowCoverage"]; 
     @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];        
     @$CVSViewerType = $_POST["cvsviewertype"];
+    @$CVSRepository = $_POST["cvsRepository"];
     @$TestTimeStd = $_POST["testTimeStd"];
     @$TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
     @$ShowTestTime = $_POST["showTestTime"];
@@ -185,8 +186,8 @@ if($Submit)
       $EmailTestTimingChanged = 0;
       }
       
-    //We should probably check the type of the image here to make sure the user
-    //isn't trying anything fruity
+    // We should probably check the type of the image here to make sure the user
+    // isn't trying anything fruity
     $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                 googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                 testtimestd,testtimestdthreshold,showtesttime)
@@ -281,6 +282,7 @@ if($Update)
   @$TestTimeStd = $_POST["testTimeStd"];
   @$TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
   @$ShowTestTime = $_POST["showTestTime"];
+  @$CVSRepository = $_POST["cvsRepository"];
 
   $imgid = $project_array["imageid"];
   
@@ -333,9 +335,58 @@ if($Update)
                                   WHERE id='$projectid'");
   echo mysql_error();
 
+  // We update the cvs repository
+  // We check that we have a CVS repository
+  $repository = mysql_query("SELECT repositoryid from project2repositories WHERE projectid='$projectid'");
+  if(mysql_num_rows($repository)==0 && strlen($CVSRepository)>0)
+    {
+    // Insert into repositories if not any
+    $repositories = mysql_query("SELECT id FROM repositories WHERE url='$CVSRepository'");
+    if(mysql_num_rows($repositories) == 0)
+      {
+      mysql_query("INSERT INTO repositories (url) VALUES ('$CVSRepository')");
+      $repositoryid = mysql_insert_id();
+      }
+    else
+      {
+      $repositories_array = mysql_fetch_array($repositories);
+      $repositoryid = $repositories_array["id"];
+      } 
+    
+    mysql_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES ('$projectid','$repositoryid')");
+    echo mysql_error();     
+    }
+  else if(mysql_num_rows($repository)>0 && strlen($CVSRepository)>0)
+    {
+    $repository_array = mysql_fetch_array($repository);
+    $repositoryid = $repository_array["repositoryid"];
+    
+    $query = mysql_query("SELECT * FROM project2repositories WHERE repositoryid='$repositoryid'");
+    if(mysql_num_rows($query)>1)
+      {
+      mysql_query("INSERT INTO repositories (url) VALUES ('$CVSRepository')");
+      $repositoryid = mysql_insert_id();
+      mysql_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES ('$projectid','$repositoryid')");
+      }
+    else
+      {
+      mysql_query("UPDATE repositories SET url='$CVSRepository' WHERE id='$repositoryid'");
+      }
+    }
+  else if(mysql_num_rows($repository)>0 && strlen($CVSRepository)==0)
+    {
+    $repository_array = mysql_fetch_array($repository);
+    $repositoryid = $repository_array["repositoryid"];
+    
+    $query = mysql_query("SELECT * FROM project2repositories WHERE repositoryid='$repositoryid'");
+    if(mysql_num_rows($query)==1)
+      {
+      mysql_query("DELETE FROM repositories WHERE id='$repositoryid'");
+      }
+    mysql_query("DELETE FROM project2repositories WHERE projectid='$projectid' AND repositoryid='$repositoryid'");  
+    }
   $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
-
   }
   
   
@@ -381,6 +432,14 @@ if($projectid>0)
   $xml .= add_XML_value("testtimestd",$project_array['testtimestd']);
   $xml .= add_XML_value("testtimestdthreshold",$project_array['testtimestdthreshold']);
   $xml .= add_XML_value("showtesttime",$project_array['showtesttime']);
+  $repository = mysql_query("SELECT url from repositories,project2repositories
+                                   WHERE repositories.id=project2repositories.repositoryid
+                                   AND   project2repositories.projectid='$projectid'");
+  if(mysql_num_rows($repository)>0)
+    {
+    $repository_array = mysql_fetch_array($repository);
+    $xml .= add_XML_value("cvsrepository",$repository_array['url']);
+    }
   $xml .= "</project>";
   }
 
