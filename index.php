@@ -35,7 +35,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!mysql_query("SELECT testtimestdthreshold FROM project LIMIT 1"))
+  if(!mysql_query("SELECT showtesttime FROM project LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration panel of CDash.</upgradewarning>";
@@ -212,11 +212,24 @@ function generate_main_dashboard_XML($projectid,$date)
 
   // updates
   $xml .= "<updates>";
-  $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .gmdate("Ymd", $currentstarttime) . "</url>";
-  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $currentstarttime).
-          "</timestamp>";
-  $xml .= "</updates>";
+  
+  $gmdate = gmdate("Ymd", $currentstarttime);
+  $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .$gmdate. "</url>";
 
+  $dailyupdate = mysql_query("SELECT count(*) FROM dailyupdatefile,dailyupdate 
+                              WHERE dailyupdate.date='$gmdate' and projectid='$projectid'
+                              AND dailyupdatefile.dailyupdateid = dailyupdate.id");
+  $dailyupdate_array = mysql_fetch_array($dailyupdate);
+  $nchanges = $dailyupdate_array[0]; 
+  
+  $dailyupdateauthors = mysql_query("SELECT dailyupdatefile.author FROM dailyupdatefile,dailyupdate 
+                              WHERE dailyupdate.date='$gmdate' and projectid='$projectid'
+                              AND dailyupdatefile.dailyupdateid = dailyupdate.id GROUP BY dailyupdatefile.author");
+  $nauthors = mysql_num_rows($dailyupdateauthors);   
+  $xml .= "<nchanges>".$nchanges."</nchanges>";
+  $xml .= "<nauthors>".$nauthors."</nauthors>";
+  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $currentstarttime)."</timestamp>";
+  $xml .= "</updates>";
 
   // User
   if(isset($_SESSION['cdash']))
@@ -486,9 +499,25 @@ function generate_main_dashboard_XML($projectid,$date)
       // We might be able to do this in one request
       $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
-      $nfail_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus='1')"));
+      
+      $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' ";
+      if($project_array["showtesttime"] == 1)
+        {
+        $sql .= "AND (status='failed' OR timestatus='1')";
+        }
+      else
+        {
+        $sql .= "AND status='failed'";
+        }
+      $nfail_array = mysql_fetch_array(mysql_query($sql));
       $nfail = $nfail_array[0];
-      $npass_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed' AND timestatus='0'"));
+      
+      $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'";
+      if($project_array["showtesttime"] == 1)
+        {
+        $sql .= " AND timestatus='0'";
+        }
+      $npass_array = mysql_fetch_array(mysql_query($sql));
       $npass = $npass_array[0];      
   
       $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
