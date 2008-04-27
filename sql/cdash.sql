@@ -312,6 +312,7 @@ CREATE TABLE `project` (
   `cvsviewertype` varchar(10) default NULL,
   `testtimestd` float(3,1) default '4.0',
   `testtimestdthreshold` float(3,1) default '1.0',
+  `showtesttime` tinyint(4) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
