@@ -567,7 +567,7 @@ function compute_test_timing($buildid)
         $timestd = sqrt((1-$weight)*$previoustimestd*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean));
             
         // Check the current status
-        if($previoustimestd)
+        if($previoustimestd<$projecttimestdthreshold)
           {
           $previoustimestd = $projecttimestdthreshold;
           }
