@@ -1,0 +1,30 @@
+CDash 1.0.0, 2008-04-28
+------------------------
+- 0006384 Detecting timing defects
+- 0006371 Having the number of nightly changes on the main page
+- 0006497 Method to mark compile warnings, compile errors, and test failures with "fix in progress" or "fixed"
+- 0006508 Test Results information is incomplete for itk
+- 0006894 Wrong number of dynamic analysis defects
+- 0006878 Support for timestamp CTest 2.6
+- 0006612 Bad BuildTimeGraph on buildSummary page for continuous build
+- 0006843 Support of different cvs/svn/web viewers
+- 0006582 CVS Link to a version 1.1 file is invalid
+- 0006664 Incorrect timing and detail report on viewTest page
+- 0006832 Previous Build Incorrect
+- 0006807 RSS feed with private project
+- 0006797 Previous build on build summary page
+- 0006805 Warning when backup and rss directory are not writable
+- 0006798 Warning message when browsing coverage
+- 0006772 Warnings when searching for emails on manageProjectRoles page
+- 0006472 Add ability to remove bogus builds
+- 0006601 Project administrator cannot remove an expected build if it is not submitting
+- 0006471 Add a quick way to upload a cvs/svn user to password file for email notification
+- 0006715 PROJECT pulldown under DASHBOARD pulldown
+- 0006602 Sort by any column on the viewTest and testSummary pages
+- 0006681 Fisheye URL support
+- 0006653 Mouse-over build groups
+- 0006655 Project logo hyperlink
+
+CDash 0.8.0, 2008-03-24
+------------------------
+- Initial release
