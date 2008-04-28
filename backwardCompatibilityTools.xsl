@@ -14,6 +14,12 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+        
+        <xsl:if test="cdash/upgrade=1">
+           <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
+          <script src="javascript/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>  
+        </xsl:if> 
+         
        </head>
        <body bgcolor="#ffffff">
    <xsl:call-template name="headerback"/>
@@ -50,7 +56,12 @@
     <td><div align="left"><input type="submit" name="Upgrade" value="Upgrade CDash"/></div></td>
   </tr> 
 </table>
-</form>
+</form><br/>
+
+<div id="Upgrade-Tables-Status"></div><br/>
+<div id="Upgrade-0-8-Status"></div><br/>
+<div id="Upgrade-1-0-Status"></div><br/>
+<div id="DoneStatus"></div><br/>
 
 <br/>
 <!-- FOOTER -->

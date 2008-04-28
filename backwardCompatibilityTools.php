@@ -45,10 +45,8 @@ $xml .= "<menusubtitle>Tools</menusubtitle>";
 
 @$Upgrade = $_POST["Upgrade"];
 
-// When adding new tables they should be added to the SQL installation file
-// and here as well
-if($Upgrade)
-{
+if(isset($_GET['upgrade-tables']))
+{ 
   // Apply all the patches
   foreach(glob("sql/cdash-upgrade-*.sql") as $filename)
     {
@@ -73,8 +71,11 @@ if($Upgrade)
          }
        } // end for each line
     } // end for each upgrade file
-  
-  /** CDASH 0.8 */
+  exit();
+}
+
+if(isset($_GET['upgrade-0-8']))
+{ 
   // Add the index if they don't exist
   $querycrc32 = mysql_query("SELECT crc32 FROM coveragefile LIMIT 1");
   if(!$querycrc32)
@@ -86,7 +87,11 @@ if($Upgrade)
   // Compression the coverage
   CompressCoverage();
   
-  /** CDASH 0.9 */
+  exit();
+}
+
+if(isset($_GET['upgrade-1-0']))
+{ 
   $description = mysql_query("SELECT description FROM buildgroup LIMIT 1");
   if(!$description)
     {
@@ -129,8 +134,15 @@ if($Upgrade)
     {
     mysql_query("ALTER TABLE project ADD showtesttime tinyint(4) default '0'");
     }
+  exit();
+}
 
-  $xml .= add_XML_value("alert","CDash has been upgraded successfully.");
+
+// When adding new tables they should be added to the SQL installation file
+// and here as well
+if($Upgrade)
+{
+  $xml .= "<upgrade>1</upgrade>";  
 }
 
 // Compute the testtime from the previous week (this is a test)
