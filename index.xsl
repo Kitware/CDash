@@ -443,9 +443,14 @@
 <xsl:if test="cdash/updates">
 <table width="100%" cellpadding="11" cellspacing="0">
   <tr>
-    <td height="25" align="left" valign="bottom">
-    <a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
-         Nightly Changes</a> as of
+    <td height="25" align="left" valign="bottom"><xsl:if test="cdash/updates/nchanges=0">No file changed</xsl:if>
+    <xsl:if test="cdash/updates/nchanges>0">
+      <a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
+         <xsl:value-of select="cdash/updates/nchanges"/> file<xsl:if test="cdash/updates/nchanges>1">s</xsl:if>
+          changed  </a> 
+         by <xsl:value-of select="cdash/updates/nauthors"/> author<xsl:if test="cdash/updates/nauthors>1">s</xsl:if>
+    </xsl:if>
+         as of
          <xsl:value-of select="cdash/updates/timestamp"/></td>
          <td><a href="#" class="keytrigger">Help</a>
          <div class="jqmWindow" id="key">Loading key...</div>
