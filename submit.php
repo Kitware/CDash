@@ -44,6 +44,42 @@ $xml_array = parse_XML($contents);
 backup_xml_file($xml_array,$contents,$projectid);
 unset($contents);
 
+// We find the daily updates
+// If we have php curl we do it asynchronously
+if(function_exists("curl_init") == TRUE)
+  {  
+  $currentPort="";
+
+  if($_SERVER['SERVER_PORT']!=80)
+    {
+    $currentPort=":".$_SERVER['SERVER_PORT'];
+    }
+    
+   $serverName = $CDASH_SERVER_NAME;
+   if(strlen($serverName) == 0)
+     {
+     $serverName = $_SERVER['SERVER_NAME'];
+     }
+    
+  $currentURI =  "http://".$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+  
+  $request = $currentURI."/dailyupdatescurl.php?projectid=".$projectid;
+  
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $request);
+  curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+  curl_exec($ch);
+  curl_close($ch);
+  }
+else // synchronously
+  {
+  include("dailyupdates.php");
+  addDailyChanges($projectid);
+  }
+
 // Parse the XML file
 ctest_parse($xml_array,$projectid);
 
