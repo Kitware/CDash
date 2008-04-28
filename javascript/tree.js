@@ -31,6 +31,14 @@ function setCurrState(setting) {
   document.cookie = "currState=" + escape(setting) + "; expires=" + expire.toGMTString();
   }
 
+function XMLStrFormat(str)
+{
+
+  str = str.replace(/&amp;apos;/,"\'");
+  return str;
+}
+
+
 // Add an entry to the database
 function dbAdd(mother,display,URL,indent,top,open,author,mailto,comment) {
   db[total] = new Object;
@@ -43,7 +51,7 @@ function dbAdd(mother,display,URL,indent,top,open,author,mailto,comment) {
   db[total].image = ""
   db[total].author = author
   db[total].mailto = mailto
-  db[total].comment = comment
+  db[total].comment = XMLStrFormat(comment)
   total++
   }
 
