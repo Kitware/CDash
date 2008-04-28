@@ -5,3 +5,25 @@ CREATE TABLE IF NOT EXISTS `testmeasurement` (
   `value` text NOT NULL,
   KEY `testid` (`testid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `dailyupdate` (
+  `id` bigint(11) NOT NULL auto_increment,
+  `projectid` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `command` text NOT NULL,
+  `type` varchar(4) NOT NULL default '',
+  `status` tinyint(4) NOT NULL default '0',
+  KEY `buildid` (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `dailyupdatefile` (
+  `dailyupdateid` int(11) NOT NULL default '0',
+  `filename` varchar(255) NOT NULL default '',
+  `checkindate` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `author` varchar(255) NOT NULL default '',
+  `log` text NOT NULL,
+  `revision` varchar(10) NOT NULL default '0',
+  `priorrevision` varchar(10) NOT NULL default '0',
+  KEY `buildid` (`dailyupdateid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
