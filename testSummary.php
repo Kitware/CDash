@@ -80,11 +80,14 @@ $end_timestamp = $currentstarttime+3600*24;
 $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
 $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
 
-$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,test.id AS testid,site.name AS sitename 
-          FROM build,build2test,test,site WHERE build.starttime<$end_UTCDate AND build.starttime>=$beginning_UTCDate           
-          AND build.projectid = '$projectid' AND build2test.buildid=build.id 
-          AND test.id=build2test.testid AND test.name='$testName' 
-          AND site.id=build.siteid
+$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,build2test.testid AS testid,site.name AS sitename
+          FROM build
+          JOIN build2test ON (build.id = build2test.buildid)
+          JOIN site ON (build.siteid = site.id)
+          WHERE build.projectid = '$projectid'
+          AND build.starttime>=$beginning_UTCDate
+          AND build.starttime<$end_UTCDate
+          AND build2test.testid IN (SELECT id FROM test WHERE name='$testName')
           ORDER BY build2test.status";
 
 $result = mysql_query($query);
