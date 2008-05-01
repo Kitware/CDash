@@ -44,11 +44,12 @@ if(!isset($date) || strlen($date)==0)
   $date = date("Ymd", strtotime($build_array["starttime"]));
   }
     
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
+$project = mysql_query("SELECT name,showtesttime FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
   {
   $project_array = mysql_fetch_array($project);
   $projectname = $project_array["name"];  
+  $projectshowtesttime = $project_array["showtesttime"];  
   }
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
@@ -72,14 +73,46 @@ $xml .= add_XML_value("testtime", $build_array["endtime"]) . "\n";
 $xml .= "</build>\n";
 
 $xml .= "<project>";
-$xml .= add_XML_value("showtesttime", $project_array["showtesttime"]) . "\n";
+$xml .= add_XML_value("showtesttime", $projectshowtesttime) . "\n";
 $xml .= "</project>";
 
 
 // Gather test info
 $xml .= "<tests>\n";
-$result = mysql_query("SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-                       WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,bt.timestatus DESC,t.name");
+
+if(isset($_GET["onlypassed"]))
+  {
+  if($projectshowtesttime)
+    {
+    $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+         WHERE bt.buildid='$buildid' AND bt.status='passed' AND bt.timestatus=0 AND t.id=bt.testid ORDER BY t.name";
+    }
+  else
+    {
+    $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+            WHERE bt.buildid='$buildid' AND bt.status='passed' AND t.id=bt.testid ORDER BY t.name";
+    }  
+  }
+else if(isset($_GET["onlyfailed"]))
+  {
+  if($projectshowtesttime)
+    {
+    $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+         WHERE bt.buildid='$buildid' AND (bt.status!='passed' OR bt.timestatus!=0) AND t.id=bt.testid ORDER BY t.name";
+    }
+  else
+    {
+    $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+         WHERE bt.buildid='$buildid' AND bt.status!='passed' AND t.id=bt.testid ORDER BY t.name";
+    }
+  }
+else
+  {
+  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+         WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,bt.timestatus DESC,t.name";
+  }
+$result = mysql_query($sql);
+
 $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;
