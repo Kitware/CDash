@@ -52,13 +52,26 @@ $projectid = $build_array["projectid"];
 
 
 // Find the other builds
-$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.status 
+/*$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.status 
 FROM build,build2test,test WHERE build.siteid='$siteid' 
 AND build.type='$buildtype' AND build.name='$buildname'
 AND build.projectid='$projectid' AND build.starttime<='$starttime' 
 AND build2test.buildid=build.id
 AND test.id=build2test.testid AND test.name='$testname'
 ORDER BY starttime DESC LIMIT 30");
+*/
+
+$previousbuilds = mysql_query("SELECT build.id, build.starttime, build2test.time
+FROM build
+JOIN build2test ON (build.id = build2test.buildid)
+WHERE build.siteid = '$siteid'
+AND build.projectid = '$projectid'
+AND build.starttime <= '$starttime'
+AND build.type = '$buildtype'
+AND build.name = '$buildname'
+AND build2test.testid IN (SELECT id FROM test WHERE name = '$testname')
+ORDER BY build.starttime DESC
+LIMIT 30");
 ?>
 
     
