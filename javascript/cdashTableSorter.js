@@ -70,7 +70,7 @@ $(document).ready(function() {
                 1: { sorter:'buildname'},
                 2: { sorter:'buildname'},
                 3: { sorter:'numeric'},
-                4: { sorter:'text'},  
+                4: { sorter:'text'}
             },
           debug: false,
           widgets: ['zebra'] 
