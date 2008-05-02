@@ -201,7 +201,7 @@ project page</a>
   </tr>
   </xsl:for-each>
   <tr>
-  <td><input type="submit" name="registerUsers" value="Register Users"/></td>
+  <td><input type="submit" name="registerUsers" value="Register Users and Send email"/></td>
   </tr>
   </table>
   </td>
