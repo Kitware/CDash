@@ -67,6 +67,7 @@ ORDER BY build.starttime DESC
 LIMIT 30");
 ?>
 
+&nbsp;
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var d1 = [];
