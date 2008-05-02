@@ -24,6 +24,8 @@ CDash 1.0.0, 2008-04-28
 - 0006681 Fisheye URL support
 - 0006653 Mouse-over build groups
 - 0006655 Project logo hyperlink
+- 0006942: Show Test Time Graph does not toggle in Internet Explorer
+- 0006939: Separate lists of failing tests from list of passing tests
 
 CDash 0.8.0, 2008-03-24
 ------------------------
