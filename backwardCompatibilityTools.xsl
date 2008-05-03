@@ -31,10 +31,11 @@
 
 <form name="form1" enctype="multipart/form-data" method="post" action="">
 <table border="0">
+  <!-- 
   <tr>
     <td><div align="right">Create default group (nightly/experimental/continuous) for projects:</div></td>
     <td><div align="left"><input type="submit" name="CreateDefaultGroups" value="Create default groups"/></div></td>
-  </tr>  
+  </tr> -->  
   <tr>
     <td><div align="right">Assign unknown builds to group based on type:</div></td>
     <td><div align="left"><input type="submit" name="AssignBuildToDefaultGroups" value="Assign builds to default groups"/></div></td>
