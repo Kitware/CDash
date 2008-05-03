@@ -57,7 +57,7 @@ echo mysql_error();
     <option value="1">Dashboard Submitter</option>
     <option value="2">Project administrator</option>
   </select>
-  cvslogin: <input name="cvslogin" type="text" size="20"/>
+  CVS login: <input name="cvslogin" type="text" size="20"/>
   <input name="adduser" type="submit" value="add user">
   </form></font></td>
   </tr>
