@@ -232,6 +232,7 @@ edit the project</a><br/>
     <td>
     <input name="testTimeStd" type="text" id="testTimeStd" size="4">
     <xsl:attribute name="value">
+      <xsl:if test="string-length(cdash/project/testtimestd)=0">4.0</xsl:if>
       <xsl:value-of select="cdash/project/testtimestd"/>
     </xsl:attribute>
     </input></td>
@@ -243,6 +244,7 @@ edit the project</a><br/>
     <td>
     <input name="testTimeStdThreshold" type="text" id="testTimeStdThreshold" size="4">
     <xsl:attribute name="value">
+      <xsl:if test="string-length(cdash/project/testtimestdthreshold)=0">1.0</xsl:if>
       <xsl:value-of select="cdash/project/testtimestdthreshold"/>
     </xsl:attribute>
     </input></td>
