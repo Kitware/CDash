@@ -116,13 +116,20 @@ function XMLStrFormat($str){
   return $str;
 }
 
+/** Microtime function */
+function microtime_float()
+  {
+  list($usec, $sec) = explode(" ", microtime());
+  return ((float)$usec + (float)$sec);
+  }
+
 /** Add an XML tag to a string */
 function add_XML_value($tag,$value)
 {
   return "<".$tag.">".XMLStrFormat($value)."</".$tag.">";
 }
 
-/** add information to the log file */
+/** Add information to the log file */
 function add_log($text,$function)
 {
   include("config.php");

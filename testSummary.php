@@ -50,6 +50,8 @@ if(!isset($testName))
   die('Error: no test name supplied in query string');
   }
 
+$start = microtime_float();
+
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
 $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
@@ -136,6 +138,9 @@ while($row = mysql_fetch_array($result))
   $xml .= "</build>\n";
   }
 $xml .= "</builds>\n";
+
+$end = microtime_float();
+$xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
 $xml .= "</cdash>\n";
 
 // Now doing the xslt transition

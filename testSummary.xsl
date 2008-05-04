@@ -78,6 +78,7 @@
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>
+<font size="1">Generated in <xsl:value-of select="/cdash/generationtime"/> seconds</font>
 </body>
 </html>
 </xsl:template>
