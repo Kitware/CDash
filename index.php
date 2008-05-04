@@ -688,13 +688,6 @@ if(isset($NoXSLGenerate))
   {
   return;
   }
-    
-function microtime_float()
-  {
-  list($usec, $sec) = explode(" ", microtime());
-  return ((float)$usec + (float)$sec);
-  }
-
 
 if(!isset($projectname )) // if the project name is not set we display the table of projects
   {

@@ -31,7 +31,7 @@ if(!isset($buildid) || !is_numeric($buildid))
   return;
   }
   
-include("config.php");
+$start = microtime_float();
 $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 mysql_select_db("$CDASH_DB_NAME",$db);
   
@@ -168,6 +168,9 @@ $xml .= "</tests>\n";
 $xml .= add_XML_value("numPassed", $numPassed) . "\n";
 $xml .= add_XML_value("numFailed", $numFailed) . "\n";
 $xml .= add_XML_value("numNotRun", $numNotRun) . "\n";
+
+$end = microtime_float();
+$xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
 $xml .= "</cdash>\n";
 
 // Now doing the xslt transition
