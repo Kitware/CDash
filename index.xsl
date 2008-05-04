@@ -482,7 +482,7 @@
           <a href="#" class="grouptrigger"><h3>No Coverage</h3></a>
       </td>
    <!-- quick links -->
-  <td colspan="6" align="right" class="nob">
+  <td colspan="5" align="right" class="nob">
    <div id="Coverage">
    </div>
    <div class="quicklink">
@@ -503,7 +503,7 @@
           <a href="#" class="grouptrigger"><h3>Coverage</h3></a>
       </td>
    <!-- quick links -->
-  <td colspan="6" align="right" class="nob">
+  <td colspan="5" align="right" class="nob">
    <div id="Coverage">
    </div>
    <div class="quicklink">
@@ -518,13 +518,13 @@
    </tr>
 
    <tr class="table-heading">
-      <th align="center">Site</th>
-      <th align="center">Build Name</th>
-      <th align="center" width="80">Percentage</th>
+      <th align="center" width="20%">Site</th>
+      <th align="center" width="30%">Build Name</th>
+      <th align="center" width="10%">Percentage</th>
 
-      <th align="center">Passed</th>
-      <th align="center">Failed</th>
-      <th align="center" class="nob">Date</th>
+      <th align="center"  width="10%">Passed</th>
+      <th align="center"  width="10%">Failed</th>
+      <th align="center" class="nob"  width="20%">Date</th>
      <!-- <th align="center">Submission Date</th> -->
    </tr>
   <xsl:for-each select="cdash/buildgroup/coverage">
@@ -577,7 +577,7 @@
           <a href="#" class="grouptrigger"><h3>No Dynamic Analysis</h3></a>
       </td>
    <!-- quick links -->
-  <td colspan="5" align="right" class="nob">
+  <td colspan="4" align="right" class="nob">
    <div id="DynamicAnalysis">
    </div>
    <div class="quicklink">
@@ -598,7 +598,7 @@
           <a href="#" class="grouptrigger"><h3>Dynamic Analysis</h3></a>
       </td>
       <!-- quick links -->
-  <td colspan="5" align="right" class="nob">
+  <td colspan="4" align="right" class="nob">
    <div id="DynamicAnalysis"></div>
    <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
@@ -612,12 +612,12 @@
    </tr>
 
    <tr class="table-heading">
-      <th align="center">Site</th>
-      <th align="center">Build Name</th>
-      <th align="center" width="80">Checker</th>
+      <th align="center" width="20%">Site</th>
+      <th align="center" width="30%">Build Name</th>
+      <th align="center" width="20%">Checker</th>
 
-      <th align="center">Defect Count</th>
-      <th align="center" class="nob">Date</th>
+      <th align="center" width="10%">Defect Count</th>
+      <th align="center" class="nob" width="20%">Date</th>
     <!--  <th align="center">Submission Date</th> -->
    </tr>
   <xsl:for-each select="cdash/buildgroup/dynamicanalysis">
