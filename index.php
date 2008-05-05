@@ -215,19 +215,30 @@ function generate_main_dashboard_XML($projectid,$date)
   
   $gmdate = gmdate("Ymd", $currentstarttime);
   $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .$gmdate. "</url>";
-
-  $dailyupdate = mysql_query("SELECT count(*) FROM dailyupdatefile,dailyupdate 
-                              WHERE dailyupdate.date='$gmdate' and projectid='$projectid'
-                              AND dailyupdatefile.dailyupdateid = dailyupdate.id");
-  $dailyupdate_array = mysql_fetch_array($dailyupdate);
-  $nchanges = $dailyupdate_array[0]; 
   
-  $dailyupdateauthors = mysql_query("SELECT dailyupdatefile.author FROM dailyupdatefile,dailyupdate 
-                              WHERE dailyupdate.date='$gmdate' and projectid='$projectid'
-                              AND dailyupdatefile.dailyupdateid = dailyupdate.id GROUP BY dailyupdatefile.author");
-  $nauthors = mysql_num_rows($dailyupdateauthors);   
-  $xml .= "<nchanges>".$nchanges."</nchanges>";
-  $xml .= "<nauthors>".$nauthors."</nauthors>";
+  $dailyupdate = mysql_query("SELECT id FROM dailyupdate 
+                              WHERE dailyupdate.date='$gmdate' and projectid='$projectid'");
+  
+  if(mysql_num_rows($dailyupdate)>0)
+    {
+    $dailupdate_array = mysql_fetch_array($dailyupdate);
+    $dailyupdateid = $dailupdate_array["id"];    
+    $dailyupdatefile = mysql_query("SELECT count(*) FROM dailyupdatefile
+                                    WHERE dailyupdateid='$dailyupdateid'");
+    $dailyupdatefile_array = mysql_fetch_array($dailyupdatefile);
+    $nchanges = $dailyupdatefile_array[0]; 
+    
+    $dailyupdateauthors = mysql_query("SELECT author FROM dailyupdatefile
+                                       WHERE dailyupdateid='$dailyupdateid'
+                                       GROUP BY author");
+    $nauthors = mysql_num_rows($dailyupdateauthors);   
+    $xml .= "<nchanges>".$nchanges."</nchanges>";
+    $xml .= "<nauthors>".$nauthors."</nauthors>";
+    }
+  else
+   {
+   $xml .= "<nchanges>-1</nchanges>";
+   }    
   $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $currentstarttime)."</timestamp>";
   $xml .= "</updates>";
 
