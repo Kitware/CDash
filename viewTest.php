@@ -76,12 +76,9 @@ $xml .= "<project>";
 $xml .= add_XML_value("showtesttime", $projectshowtesttime) . "\n";
 $xml .= "</project>";
 
-
-// Gather test info
-$xml .= "<tests>\n";
-
 if(isset($_GET["onlypassed"]))
   {
+  $xml .= "<onlypassed>1</onlypassed>";
   if($projectshowtesttime)
     {
     $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
@@ -95,6 +92,7 @@ if(isset($_GET["onlypassed"]))
   }
 else if(isset($_GET["onlyfailed"]))
   {
+  $xml .= "<onlyfailed>1</onlyfailed>";
   if($projectshowtesttime)
     {
     $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
@@ -108,6 +106,8 @@ else if(isset($_GET["onlyfailed"]))
   }
 else
   {
+  $xml .= "<onlypassed>0</onlypassed>";
+  $xml .= "<onlyfailed>0</onlyfailed>";
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
          WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,bt.timestatus DESC,t.name";
   }
@@ -117,6 +117,9 @@ $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;
 $color = FALSE;
+
+// Gather test info
+$xml .= "<tests>\n";
 while($row = mysql_fetch_array($result))
   {
   $xml .= "<test>\n";
@@ -130,31 +133,49 @@ while($row = mysql_fetch_array($result))
   $detailsLink = "testDetails.php?test=$testid&build=$buildid";
   $xml .= add_XML_value("detailsLink", $detailsLink) . "\n";
   
-  switch($row["timestatus"])
+  $timestatus=0;
+  if($projectshowtesttime)
     {
-    case 0:
-      $xml .= add_XML_value("timestatus", "Passed") . "\n";
-      $xml .= add_XML_value("timestatusclass", "normal") . "\n";
-      $numPassed++;
-      break; 
-    case 1:
-      $xml .= add_XML_value("timestatus", "Failed") . "\n";
-      $xml .= add_XML_value("timestatusclass", "warning") . "\n";
-      $numFailed++;
-      break;
-    }
+    switch($row["timestatus"])
+      {
+      case 0:
+        $xml .= add_XML_value("timestatus", "Passed") . "\n";
+        $xml .= add_XML_value("timestatusclass", "normal") . "\n";
+        $timestatus=0;
+        break; 
+      case 1:
+        $xml .= add_XML_value("timestatus", "Failed") . "\n";
+        $xml .= add_XML_value("timestatusclass", "warning") . "\n";
+        $timestatus=1;
+        break;
+      }
+    } // end projectshowtesttime
     
   switch($row["status"])
     {
     case "passed":
       $xml .= add_XML_value("status", "Passed") . "\n";
       $xml .= add_XML_value("statusclass", "normal") . "\n";
-      $numPassed++;
+      if($projectshowtesttime)
+        {
+        if($timestatus==0)
+          {
+          $numPassed++;
+          }
+        else
+          {
+          $numFailed++;
+          }
+        }
+      else
+        {
+        $numPassed++;
+        }     
       break; 
     case "failed":
       $xml .= add_XML_value("status", "Failed") . "\n";
-      $xml .= add_XML_value("statusclass", "warning") . "\n";
-      $numFailed++;
+      $xml .= add_XML_value("statusclass", "warning") . "\n";   
+      $numFailed++;   
       break;
     case "notrun":
       $xml .= add_XML_value("status", "Not Run") . "\n";
