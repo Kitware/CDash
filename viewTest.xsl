@@ -23,9 +23,17 @@
 <p><b>Site Name: </b><xsl:value-of select="cdash/build/site"/></p>
 <p><b>Build Name: </b><xsl:value-of select="cdash/build/buildname"/></p><br/>
 <h3>
+<xsl:if test="cdash/onlypassed=1">
+  <xsl:value-of select="cdash/numPassed"/> tests passed.
+</xsl:if>
+<xsl:if test="cdash/onlyfailed=1">
+  <xsl:value-of select="cdash/numFailed"/> tests failed.
+</xsl:if>
+<xsl:if test="cdash/onlypassed!=1 and cdash/onlyfailed!=1">
   <xsl:value-of select="cdash/numPassed"/> passed, 
   <xsl:value-of select="cdash/numFailed"/> failed, 
-  <xsl:value-of select="cdash/numNotRun"/> not run
+  <xsl:value-of select="cdash/numNotRun"/> not run.
+  </xsl:if>
 </h3><br/>
 
 <table id="viewTestTable" cellspacing="0" class="tabb">
