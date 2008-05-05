@@ -790,9 +790,9 @@ if($projectid>0)
   
   // Add expected builds  
   $builds = mysql_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,g.id as groupid 
-                         FROM site AS s,build2grouprule AS b2gr,build AS b,build2group AS b2g,buildgroup as g 
-                         WHERE b2gr.groupid=b2g.groupid 
-                         AND g.id=b2g.groupid AND b2g.buildid=b.id AND b2gr.endtime='0000-00-00 00:00:00'
+                         FROM site AS s,build AS b,build2group AS b2g,buildgroup as g 
+                         WHERE 
+                         g.id=b2g.groupid AND b2g.buildid=b.id AND g.endtime='0000-00-00 00:00:00'
                          AND b.projectid='$projectid' AND s.id = b.siteid ".$sql." ORDER BY b.name ASC");
   echo mysql_error();
 
@@ -808,7 +808,7 @@ if($projectid>0)
       $names[] = $build_array['sitename'].$build_array['name'];
       }
     }
-  }
+}
 
 // If we have a project id
 // WARNING: We should check for security here
