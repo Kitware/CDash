@@ -61,7 +61,7 @@ AND test.id=build2test.testid AND test.name='$testname'
 ORDER BY starttime DESC LIMIT 30");
 */
 
-$previousbuilds = mysql_query("SELECT build.id, build.starttime, build2test.time
+$previousbuilds = mysql_query("SELECT build.id, build.starttime, build2test.status
 FROM build
 JOIN build2test ON (build.id = build2test.buildid)
 WHERE build.siteid = '$siteid'
