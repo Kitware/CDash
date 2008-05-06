@@ -322,18 +322,18 @@ function get_svn_repository_commits($svnroot, $dates)
   $last_chunk_line_number = 0;
   $in_list_of_filenames = 0;
   foreach($lines as $vv)
-  {
+    {
     $line_number = $line_number + 1;
 
     $npos = strpos($vv, "--------------------");
     if ($npos !== FALSE && $npos === 0)
-    {
-      if ($line_number > 1)
       {
-        if ($current_time > $fromtime && $current_time <= $totime)
+      if ($line_number > 1)
         {
-          foreach($gathered_file_lines as $ff)
+        if ($current_time > $fromtime && $current_time <= $totime)
           {
+          foreach($gathered_file_lines as $ff)
+            {
             // Skip the '   M ' at the beginning of the filename output lines:
             //
             $current_filename = substr($ff, 5);
@@ -343,10 +343,17 @@ function get_svn_repository_commits($svnroot, $dates)
             //
             $npos = strpos($current_filename, " (from ");
             if ($npos !== FALSE && $npos !== 0)
-            {
+              {
               $current_filename = substr($current_filename, 0, $npos);
-            }
+              }
 
+            // Remove the first directory
+            $npos = strpos($current_filename,"/",2);
+            if ($npos !== FALSE && $npos !== 0)
+              {
+              $current_filename = substr($current_filename, $npos+1);
+              }
+              
             $current_directory = remove_directory_from_filename($current_filename);
 
             $commit = array();
@@ -357,39 +364,37 @@ function get_svn_repository_commits($svnroot, $dates)
             $commit['author'] = $current_author;
             $commit['comment'] = $current_comment;
             $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
+            }
           }
-        }
         else
-        {
+          {
           //echo "excluding: '" . $current_time . "' (" . gmdate("Y-m-d H:i:s.u", $current_time) . ")<br/>";
-        }
-
+          }
         $gathered_file_lines = array();
-      }
-
+        }
       $current_comment = "";
       $last_chunk_line_number = $line_number;
       //echo "<br/>";
-    }
+      }
 
     if ($line_number === $last_chunk_line_number + 1)
-    {
+      {
       $npos = strpos($vv, " | ");
       if ($npos !== FALSE)
-      {
+        {
         $current_revision = substr($vv, 1, $npos-1); // 1 == skip the 'r' at the beginning...
         //echo "current_revision: '" . $current_revision . "'<br/>";
 
         $npos2 = strpos($vv, " | ", $npos+3);
         if ($npos2 !== FALSE)
-        {
+          {
           $current_author = substr($vv, $npos+3, $npos2 - ($npos+3));
           //echo "current_author: '" . $current_author . "'<br/>";
           $npos = $npos2;
 
           $npos2 = strpos($vv, " (", $npos+3);
           if ($npos2 !== FALSE)
-          {
+            {
             $current_date = substr($vv, $npos+3, $npos2 - ($npos+3));
             //echo "current_date: '" . $current_date . "'<br/>";
 
@@ -400,51 +405,51 @@ function get_svn_repository_commits($svnroot, $dates)
             $npos2 = strpos($vv, " | ", $npos+3);
             $npos = $npos2;
             if ($npos2 !== FALSE)
-            {
+              {
               $current_line_count = substr($vv, $npos+3);
               $npos2 = strpos($current_line_count, " line");
               $current_line_count = substr($current_line_count, 0, $npos2);
               //echo "current_line_count: '" . $current_line_count . "'<br/>";
+              }
             }
           }
         }
       }
-    }
 
     if ($in_list_of_filenames === 0 && $line_number > $last_chunk_line_number + 2)
-    {
+      {
       $in_comment = 1;
 
       //echo "gather comment line: '" . $vv . "'<br/>";
       if ($current_comment === "")
-      {
+        {
         $current_comment = $vv;
-      }
+        }
       else
-      {
+        {
         $current_comment = $current_comment . "\n" . $vv;
+        }
       }
-    }
 
     if ($in_list_of_filenames === 1)
-    {
-      if (strlen($vv) === 0)
       {
+      if (strlen($vv) === 0)
+        {
         // Empty line signals the end of the list of filenames:
         //
         $in_list_of_filenames = 0;
-      }
+        }
       else
-      {
+        {
         $gathered_file_lines[] = $vv;
+        }
       }
-    }
 
     if ($line_number === $last_chunk_line_number + 2)
-    {
+      {
       $in_list_of_filenames = 1;
+      }
     }
-  }
   return $commits;
 }
 
