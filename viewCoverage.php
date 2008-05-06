@@ -46,7 +46,7 @@ $projectid = $build_array["projectid"];
  
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
   
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
+$project = mysql_query("SELECT name,coveragethreshold FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
   {
   $project_array = mysql_fetch_array($project);
@@ -203,6 +203,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $xml .= add_XML_value("covered",$covfile["covered"]);
     $xml .= add_XML_value("fileid",$covfile["fileid"]);
     $xml .= add_XML_value("percentcoverage",$covfile["percentcoverage"]);
+    $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
     $xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
     $xml .= add_XML_value("functionsuntested",@$covfile["functionsuntested"]);
     $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);    
