@@ -180,21 +180,25 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     if($revision != "-1" && $log!="Locally modified file")
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename, $revision);
+      $diff_url = XMLStrFormat($diff_url);
+      $file['$diff_url'] = $diff_url;  
       $updatedfiles[] = $file;
       }
     else if(strstr($log,"Locally modified file"))
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
+      $diff_url = XMLStrFormat($diff_url);
+      $file['$diff_url'] = $diff_url;  
       $locallymodified[] = $file;
       }
     else if(strstr($log,"Conflict while updating"))
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
+      $diff_url = XMLStrFormat($diff_url);
+      $file['$diff_url'] = $diff_url;  
       $conflictingfiles[] = $file;
       }
       
-    $diff_url = XMLStrFormat($diff_url); 
-    $file['$diff_url'] = $diff_url;  
     }
   
   // Updated files
