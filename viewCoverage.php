@@ -78,6 +78,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     }   
   $xml .= add_XML_value("loc",$loc);
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
+  $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
   
   $coveredfiles = mysql_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
   $coveredfiles_array = mysql_fetch_array($coveredfiles);
@@ -203,7 +204,6 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $xml .= add_XML_value("covered",$covfile["covered"]);
     $xml .= add_XML_value("fileid",$covfile["fileid"]);
     $xml .= add_XML_value("percentcoverage",$covfile["percentcoverage"]);
-    $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
     $xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
     $xml .= add_XML_value("functionsuntested",@$covfile["functionsuntested"]);
     $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);    
