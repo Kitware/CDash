@@ -170,30 +170,32 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $log = XMLStrFormat($log);
     $log = XMLStrFormat($log);
 
-    $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename, $revision);
-    $diff_url = XMLStrFormat($diff_url);
-    
     $file['$directory'] = $directory;
     $file['$author'] = $author;
     $file['$email'] = $email;
     $file['$log'] = $log;        
     $file['$revision'] = $revision;    
-    $file['$filename'] = $filename;  
-    $file['$diff_url'] = $diff_url;  
+    $file['$filename'] = $filename; 
      
     if($revision != "-1" && $log!="Locally modified file")
       {
+      $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename, $revision);
       $updatedfiles[] = $file;
       }
     else if(strstr($log,"Locally modified file"))
       {
+      $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $locallymodified[] = $file;
       }
     else if(strstr($log,"Conflict while updating"))
       {
+      $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $conflictingfiles[] = $file;
       }
-  }
+      
+    $diff_url = XMLStrFormat($diff_url); 
+    $file['$diff_url'] = $diff_url;  
+    }
   
   // Updated files
   $xml .= "dbAdd (true, \"".$projectname." Updated files  (".count($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
@@ -220,7 +222,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
       }
-    $xml .= " dbAdd ( false, \"".$file['$filename']." Revision: ".$file['$revision']."\",\"".$file['$diff_url']."\",2,\"\",\"1\",\"".$file['$author']."\",\"".$file['$email']."\",\"".$file['$log']."\")\n";
+    $xml .= " dbAdd ( false, \"".$file['$filename']."\",\"".$file['$diff_url']."\",2,\"\",\"1\",\"".$file['$author']."\",\"".$file['$email']."\",\"".$file['$log']."\")\n";
     }
   
   // Conflicting files
