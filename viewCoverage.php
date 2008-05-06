@@ -46,7 +46,7 @@ $projectid = $build_array["projectid"];
  
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
   
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
+$project = mysql_query("SELECT name,coveragethreshold FROM project WHERE id='$projectid'");
 if(mysql_num_rows($project)>0)
   {
   $project_array = mysql_fetch_array($project);
@@ -78,6 +78,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     }   
   $xml .= add_XML_value("loc",$loc);
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
+  $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
   
   $coveredfiles = mysql_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
   $coveredfiles_array = mysql_fetch_array($coveredfiles);

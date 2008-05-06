@@ -33,7 +33,18 @@
             </tr>
             <tr class="treven">
                <td align="left" width="60%"> Total Coverage</td>
-               <td class="normal" align="center"><xsl:value-of select="cdash/coverage/percentcoverage"/>
+               <td align="center">
+               <xsl:attribute name="class">
+                <xsl:choose>
+                  <xsl:when test="cdash/coverage/percentcoverage > cdash/coverage/percentagegreen">
+                    normal
+                    </xsl:when>
+                  <xsl:otherwise>
+                    warning
+                   </xsl:otherwise>
+                </xsl:choose>
+                </xsl:attribute>
+               <xsl:value-of select="cdash/coverage/percentcoverage"/>
                   
                </td>
             </tr>
