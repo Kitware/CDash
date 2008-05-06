@@ -56,21 +56,21 @@
    </tr>
    
    <tr class="table-heading">
-      <th align="center" rowspan="2">
+      <th align="center" rowspan="2" width="20%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_0</xsl:attribute>
       Site</th>
-      <th align="center" rowspan="2">
+      <th align="center" rowspan="2" width="20%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_1</xsl:attribute>
       Build Name</th>
-      <th align="center" rowspan="2">
+      <th align="center" rowspan="2" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_2</xsl:attribute>
       Update</th>
-      <th align="center" rowspan="2">
+      <th align="center" rowspan="2" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_3</xsl:attribute>
       Cfg</th>
-      <td align="center" colspan="3" class="botl">Build</td>
-      <td align="center" colspan="4" class="botl">Test</td>
-      <th align="center" rowspan="2" class="nob">
+      <td align="center" colspan="3" width="15%" class="botl">Build</td>
+      <td align="center" colspan="4" width="15%" class="botl">Test</td>
+      <th align="center" rowspan="2" width="20%" class="nob">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_11</xsl:attribute>
       Build Time</th>
       <!-- <td align="center" rowspan="2" class="nob">Submit Date</td> -->
