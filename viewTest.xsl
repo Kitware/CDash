@@ -44,9 +44,13 @@
     <th id="sort_1">Status</th>
 <xsl:if test="cdash/project/showtesttime=1">    
     <th id="sort_2">Time Status</th>
-</xsl:if>        
     <th id="sort_3">Time</th>
     <th id="sort_4" class="nob">Details</th>
+</xsl:if>        
+<xsl:if test="cdash/project/showtesttime=0">    
+    <th id="sort_2">Time</th>
+    <th id="sort_3" class="nob">Details</th>
+</xsl:if>        
   </tr>
 </thead>
 <xsl:for-each select="cdash/tests/test">
