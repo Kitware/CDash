@@ -63,7 +63,31 @@ $(document).ready(function() {
 
   // Initialize the viewTest tables
   $tabs = $("#viewTestTable");
-  $tabs.each(function(index) {          
+  var nrows = 0;
+  if(document.getElementById('viewTestTable'))
+    {
+    var nrows = document.getElementById('viewTestTable').getElementsByTagName('thead')[0].getElementsByTagName('th').length; 
+    }
+
+  if(nrows==4)
+    {
+    $tabs.each(function(index) {          
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'buildname'},
+                1: { sorter:'buildname'},
+                2: { sorter:'numeric'},
+                3: { sorter:'text'}
+            },
+          debug: false,
+          widgets: ['zebra'] 
+        });  
+      });
+    } 
+  
+  if(nrows==5)
+    {
+    $tabs.each(function(index) {          
      $(this).tablesorter({
             headers: { 
                 0: { sorter:'buildname'},
@@ -75,9 +99,9 @@ $(document).ready(function() {
           debug: false,
           widgets: ['zebra'] 
         });  
-        
-    });
-  
+      });
+    }
+ 
   // Initialize the testSummary tables
   if($tabs.length==0)
     {
