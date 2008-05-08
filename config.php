@@ -34,8 +34,10 @@ $CDASH_SERVER_NAME = '';
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory
 $CDASH_BACKUP_DIRECTORY = 'backup';
-// LOG FILE
+// Log file location
 $CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
+// Using external authentication
+$CDASH_EXTERNAL_AUTH = '0';
 // Backup timeframe
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Use getIPfromApache script to get IP addresses
