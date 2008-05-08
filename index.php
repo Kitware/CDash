@@ -511,26 +511,21 @@ function generate_main_dashboard_XML($projectid,$date)
       $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
       
-      $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' ";
-      if($project_array["showtesttime"] == 1)
-        {
-        $sql .= "AND (status='failed' OR timestatus='1')";
-        }
-      else
-        {
-        $sql .= "AND status='failed'";
-        }
+      $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='failed'";
       $nfail_array = mysql_fetch_array(mysql_query($sql));
       $nfail = $nfail_array[0];
       
       $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'";
+      $npass_array = mysql_fetch_array(mysql_query($sql));
+      $npass = $npass_array[0];
+      
       if($project_array["showtesttime"] == 1)
         {
-        $sql .= " AND timestatus='0'";
-        }
-      $npass_array = mysql_fetch_array(mysql_query($sql));
-      $npass = $npass_array[0];      
-  
+        $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND timestatus='1'";
+        $ntimestatus_array = mysql_fetch_array(mysql_query($sql));
+        $ntimestatus = $ntimestatus_array[0];
+        $xml .= add_XML_value("timestatus",$ntimestatus);
+        }  
       $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
       $time = $time_array[0];
       

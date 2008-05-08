@@ -29,11 +29,15 @@
 <xsl:if test="cdash/onlyfailed=1">
   <xsl:value-of select="cdash/numFailed"/> tests failed.
 </xsl:if>
+<xsl:if test="cdash/onlytimestatus=1">
+  <xsl:value-of select="cdash/numTimeFailed"/> tests failed.
+</xsl:if>
 <xsl:if test="cdash/onlypassed!=1 and cdash/onlyfailed!=1">
   <xsl:value-of select="cdash/numPassed"/> passed, 
-  <xsl:value-of select="cdash/numFailed"/> failed, 
+  <xsl:value-of select="cdash/numFailed"/> failed,
+  <xsl:value-of select="cdash/numTimeFailed"/> failed for timing,
   <xsl:value-of select="cdash/numNotRun"/> not run.
-  </xsl:if>
+</xsl:if>
 </h3><br/>
 
 <table id="viewTestTable" cellspacing="0" class="tabb">
