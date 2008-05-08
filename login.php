@@ -24,6 +24,37 @@ function auth()
   include "config.php";
   $loginid= 1231564132;
   $m_error = 0; 
+
+  if(isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH
+     && isset($_SERVER['REMOTE_USER'])) 
+    {
+    $login = $_SERVER['REMOTE_USER'];
+    $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+    mysql_select_db("$CDASH_DB_NAME",$db);
+    $sql="SELECT * FROM user WHERE email='$login'";
+    $result = mysql_query("$sql"); 
+    if ($user_array = mysql_fetch_array($result)) 
+      {
+      session_start();  
+      // create the session array 
+      $mysession2 = array ("login" => $login, "password" => 'this is not a v
+alid password', "passwd" => $user_array['password'], "ID" => session_id(), "vali
+d" => 1, "loginid" => $user_array["id"]);  
+       // Use $HTTP_SESSION_VARS with PHP 4.0.6 or less
+       if (!isset($_SESSION['cdash'])) 
+         {
+         $_SESSION['cdash'] = $mysession2;
+         } 
+       else 
+         {
+         $_SESSION['cdash'] = $mysession2;
+         }                  
+       mysql_free_result($result);
+       return 1;                               // authentication succeeded 
+       }
+     @mysql_free_result($result);
+     }
+     
   if (@$_GET["logout"]) 
     {                             // user requested logout            
     @session_start(); 
