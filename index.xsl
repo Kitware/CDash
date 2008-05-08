@@ -290,8 +290,30 @@
       <b><a><xsl:attribute name="href">viewTest.php?onlypassed&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>
       <xsl:if test="string-length(test/fail)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
       </td>
-      <td align="right"><xsl:value-of select="test/time"/>
-      <xsl:if test="string-length(test/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
+      <td align="center">
+      <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="test/timestatus > 0">
+            warning
+            </xsl:when>
+             <xsl:when test="string-length(test/timestatus)>0">
+             normal
+             </xsl:when>  
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:choose>
+          <xsl:when test="test/timestatus > 0">
+             <b><a><xsl:attribute name="href">viewTest.php?onlytimestatus&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/timestatus"/></a></b>  
+          </xsl:when>
+             <xsl:when test="string-length(test/timestatus)>0">
+               <xsl:value-of select="test/time"/>
+               <xsl:if test="string-length(test/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
+             </xsl:when>  
+             <xsl:when test="string-length(test/timestatus)=0">
+               <xsl:value-of select="test/time"/>
+               <xsl:if test="string-length(test/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
+             </xsl:when>  
+        </xsl:choose>
       </td>
       <td class="nob"><xsl:value-of select="builddate"/></td>
       <!--

@@ -79,35 +79,26 @@ $xml .= "</project>";
 if(isset($_GET["onlypassed"]))
   {
   $xml .= "<onlypassed>1</onlypassed>";
-  if($projectshowtesttime)
-    {
-    $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-         WHERE bt.buildid='$buildid' AND bt.status='passed' AND bt.timestatus=0 AND t.id=bt.testid ORDER BY t.name";
-    }
-  else
-    {
-    $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-            WHERE bt.buildid='$buildid' AND bt.status='passed' AND t.id=bt.testid ORDER BY t.name";
-    }  
+  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+           WHERE bt.buildid='$buildid' AND bt.status='passed' AND t.id=bt.testid ORDER BY t.name"; 
   }
 else if(isset($_GET["onlyfailed"]))
   {
   $xml .= "<onlyfailed>1</onlyfailed>";
-  if($projectshowtesttime)
-    {
-    $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-         WHERE bt.buildid='$buildid' AND (bt.status!='passed' OR bt.timestatus!=0) AND t.id=bt.testid ORDER BY t.name";
-    }
-  else
-    {
-    $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
          WHERE bt.buildid='$buildid' AND bt.status!='passed' AND t.id=bt.testid ORDER BY t.name";
-    }
+  }
+else if(isset($_GET["onlytimestatus"]))
+  {
+  $xml .= "<onlytimestatus>1</onlytimestatus>";
+  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
+            WHERE bt.buildid='$buildid' AND bt.timestatus!=0 AND t.id=bt.testid ORDER BY t.name";
   }
 else
   {
   $xml .= "<onlypassed>0</onlypassed>";
   $xml .= "<onlyfailed>0</onlyfailed>";
+  $xml .= "<onlytimestatus>0</onlytimestatus>";
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
          WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,bt.timestatus DESC,t.name";
   }
@@ -116,6 +107,7 @@ $result = mysql_query($sql);
 $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;
+$numTimeFailed = 0;
 $color = FALSE;
 
 // Gather test info
@@ -156,21 +148,7 @@ while($row = mysql_fetch_array($result))
     case "passed":
       $xml .= add_XML_value("status", "Passed") . "\n";
       $xml .= add_XML_value("statusclass", "normal") . "\n";
-      if($projectshowtesttime)
-        {
-        if($timestatus==0)
-          {
-          $numPassed++;
-          }
-        else
-          {
-          $numFailed++;
-          }
-        }
-      else
-        {
-        $numPassed++;
-        }     
+      $numPassed++;   
       break; 
     case "failed":
       $xml .= add_XML_value("status", "Failed") . "\n";
@@ -183,16 +161,24 @@ while($row = mysql_fetch_array($result))
       $numNotRun++;
       break;
     }
+  
+  if(  $row["timestatus"] != 0)
+    {
+    $numTimeFailed++;   
+    }
+    
+    
   $xml .= "</test>\n";
   }
 $xml .= "</tests>\n";
-$xml .= add_XML_value("numPassed", $numPassed) . "\n";
-$xml .= add_XML_value("numFailed", $numFailed) . "\n";
-$xml .= add_XML_value("numNotRun", $numNotRun) . "\n";
+$xml .= add_XML_value("numPassed", $numPassed);
+$xml .= add_XML_value("numFailed", $numFailed);
+$xml .= add_XML_value("numNotRun", $numNotRun);
+$xml .= add_XML_value("numTimeFailed", $numTimeFailed);
 
 $end = microtime_float();
 $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
-$xml .= "</cdash>\n";
+$xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml,"viewTest");
