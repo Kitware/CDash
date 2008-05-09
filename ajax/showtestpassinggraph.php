@@ -52,15 +52,6 @@ $projectid = $build_array["projectid"];
 
 
 // Find the other builds
-/*$previousbuilds = mysql_query("SELECT build.id,build.starttime,build2test.status 
-FROM build,build2test,test WHERE build.siteid='$siteid' 
-AND build.type='$buildtype' AND build.name='$buildname'
-AND build.projectid='$projectid' AND build.starttime<='$starttime' 
-AND build2test.buildid=build.id
-AND test.id=build2test.testid AND test.name='$testname'
-ORDER BY starttime DESC LIMIT 30");
-*/
-
 $previousbuilds = mysql_query("SELECT build.id, build.starttime, build2test.status
 FROM build
 JOIN build2test ON (build.id = build2test.buildid)
@@ -71,7 +62,7 @@ AND build.type = '$buildtype'
 AND build.name = '$buildname'
 AND build2test.testid IN (SELECT id FROM test WHERE name = '$testname')
 ORDER BY build.starttime DESC
-LIMIT 30");
+");
 ?>
 
     
@@ -87,7 +78,7 @@ $(function () {
     $tarray = array();
     while($build_array = mysql_fetch_array($previousbuilds))
       {
-      $t['x'] = strtotime($build_array["starttime"])*1000;
+      $t['x'] = strtotime($build_array["starttime"])*1000; 
       if(strtolower($build_array["status"]) == "passed")
         {
         $t['y'] = 1;
@@ -134,7 +125,7 @@ $(function () {
   $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],options);
 <?php } else { ?>
   $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],
-$.extend(true,{},options,{xaxis: { min: <?php echo $t-2000000000?>,max: <?php echo $t ?>}} )); 
+$.extend(true,{},options,{xaxis: { min: <?php echo $t-2000000000?>,max: <?php echo $t+50000000 ?>}} )); 
 <?php } ?>
 });
 
