@@ -64,7 +64,7 @@ AND build.type = '$buildtype'
 AND build.name = '$buildname'
 AND build2test.testid IN (SELECT id FROM test WHERE name = '$testname')
 ORDER BY build.starttime DESC
-LIMIT 30");
+");
 ?>
 
 &nbsp;
@@ -119,7 +119,7 @@ $(function () {
     $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  
                                             data: d1}],
           $.extend(true,{}, options,
-                                    {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t; ?>}} 
+                                    {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}} 
 ));
 
 <?php }
