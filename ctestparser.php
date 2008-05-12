@@ -515,8 +515,8 @@ function compute_test_timing($buildid)
     {
     // Loop through the tests
     $previousbuild_array = mysql_fetch_array($previousbuild);
-    $previousbuildid = $previousbuild_array ["id"];
-    $tests = mysql_query("SELECT build2test.time,build2test.testid,test.name 
+    $previousbuildid = $previousbuild_array["id"];
+    $tests = mysql_query("SELECT build2test.time,build2test.testid,test.name,build2test.status
                           FROM build2test,test WHERE build2test.buildid='$buildid'
                           AND build2test.testid=test.id
                           ");
@@ -539,6 +539,7 @@ function compute_test_timing($buildid)
       {
       $testtime = $test_array['time'];
       $testid = $test_array['testid'];
+      $teststatus = $test_array['status'];
       $testname = $test_array['name'];
       $previoustestid = 0;
 
@@ -561,23 +562,32 @@ function compute_test_timing($buildid)
         $previoustest_array = mysql_fetch_array($previoustest);
         $previoustimemean = $previoustest_array["timemean"];
         $previoustimestd = $previoustest_array["timestd"];
-          
-        // Update the mean and std
-        $timemean = (1-$weight)*$previoustimemean+$weight*$testtime;
-        $timestd = sqrt((1-$weight)*$previoustimestd*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean));
-            
-        // Check the current status
-        if($previoustimestd<$projecttimestdthreshold)
-          {
-          $previoustimestd = $projecttimestdthreshold;
-          }
         
-        if($testtime > $previoustimemean+$projecttimestd*$previoustimestd) // only do positive std
-          {
-          $timestatus = 1; // flag
+        if($teststatus == "passed")
+          {  
+          // Update the mean and std
+          $timemean = (1-$weight)*$previoustimemean+$weight*$testtime;
+          $timestd = sqrt((1-$weight)*$previoustimestd*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean));
+            
+          // Check the current status
+          if($previoustimestd<$projecttimestdthreshold)
+            {
+            $previoustimestd = $projecttimestdthreshold;
+            }
+          
+          if($testtime > $previoustimemean+$projecttimestd*$previoustimestd) // only do positive std
+            {
+            $timestatus = 1; // flag
+            }
+          else
+            {
+            $timestatus = 0;
+            }
           }
-        else
+        else // the test failed so we just replicate the previous test time
           {
+          $timemean = $previoustimemean;
+          $timestd = $previoustimestd;
           $timestatus = 0;
           }
         }
@@ -607,7 +617,7 @@ function compute_test_timing($buildid)
         
       mysql_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
                   WHERE buildid='$buildid' AND testid='$testid'");
-      }// loop through the tests          
+      } // loop through the tests          
     } // end if first build
 } // end function compute_test_timing
 
