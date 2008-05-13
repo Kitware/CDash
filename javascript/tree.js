@@ -33,8 +33,8 @@ function setCurrState(setting) {
 
 function XMLStrFormat(str)
 {
-
-  str = str.replace(/&amp;apos;/,"\'");
+  str = str.replace(/&amp;apos;/g,"\'");
+  str = str.replace(/&amp;quot;/g,"\"");
   return str;
 }
 
