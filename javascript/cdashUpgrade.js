@@ -53,9 +53,15 @@ function upgrade_1_0()
 {
   var text = "Applying 1.0 patches";
   $("#Upgrade-1-0-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-0-Status","backwardCompatibilityTools.php?upgrade-1-0=1",text,done);  
+  sendAjax("#Upgrade-1-0-Status","backwardCompatibilityTools.php?upgrade-1-0=1",text,upgrade_1_2);  
 }
 
+function upgrade_1_2()
+{
+  var text = "Applying 1.2 patches";
+  $("#Upgrade-1-2-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  sendAjax("#Upgrade-1-2-Status","backwardCompatibilityTools.php?upgrade-1-2=1",text,done);  
+}
 
 // empty function needed
 function done()
