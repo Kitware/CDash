@@ -137,6 +137,17 @@ if(isset($_GET['upgrade-1-0']))
   exit();
 }
 
+if(isset($_GET['upgrade-1-2']))
+{ 
+  // Replace the field 'output' in the table test from 'text' to 'mediumtext'
+  $result = mysql_query("SELECT output FROM test LIMIT 1");
+  $type  = mysql_field_type($result,0);
+  if($type == "blob" || $type = "text")
+    {
+    $result = mysql_query("ALTER TABLE test CHANGE output output MEDIUMTEXT;");
+    }
+  exit();
+}
 
 // When adding new tables they should be added to the SQL installation file
 // and here as well

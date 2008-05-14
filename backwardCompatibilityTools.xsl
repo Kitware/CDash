@@ -62,6 +62,7 @@
 <div id="Upgrade-Tables-Status"></div><br/>
 <div id="Upgrade-0-8-Status"></div><br/>
 <div id="Upgrade-1-0-Status"></div><br/>
+<div id="Upgrade-1-2-Status"></div><br/>
 <div id="DoneStatus"></div><br/>
 
 <br/>
