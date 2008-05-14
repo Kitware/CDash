@@ -18,7 +18,7 @@
       
        <!-- Functions to confirm the remove -->
   <xsl:text disable-output-escaping="yes">
-        &lt;script language="JavaScript"&gt;
+        &lt;script language="javascript" type="text/javascript" &gt;
         function confirmDelete() {
            if (window.confirm("Are you sure you want to delete this group? If the group is not empty, builds will be put in their original group.")){
               return true;
@@ -46,12 +46,13 @@ project page</a>
 <b>Warning: <xsl:value-of select="cdash/warning"/></b><br/><br/>
 </xsl:if>
 
-<form name="form1" enctype="multipart/form-data" method="post">
-<xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
 <table width="100%"  border="0">
   <tr>
     <td width="10%"><div align="right"><strong>Project:</strong></div></td>
-    <td width="90%" ><select onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
+    <td width="90%" >
+    <form name="form1" method="post">
+    <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
+    <select onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
         <option>
         <xsl:attribute name="value">0</xsl:attribute>
         Choose...
@@ -66,14 +67,18 @@ project page</a>
         <xsl:value-of select="name"/>
         </option>
         </xsl:for-each>
-        </select></td>
+        </select>
+      </form>
+    </td>
   </tr>
+</table> 
   
-  <!-- If a project has been selected -->
-  <xsl:if test="count(cdash/project)>0">
+<!-- If a project has been selected -->
+<xsl:if test="count(cdash/project)>0">
+ <table width="100%"  border="0">
   <tr>
-    <td></td>
-    <td></td>
+    <td width="10%"></td>
+    <td width="90%"></td>
   </tr>
   <tr>
     <td ><div align="right"></div></td>
@@ -84,12 +89,8 @@ project page</a>
    <tr>
      <td><div align="right"></div></td>
      <td>
-     <table>
+     <table>    
      <xsl:for-each select="cdash/project/group">
-     <form method="post">
-     <xsl:attribute name="name">form_<xsl:value-of select="id"/></xsl:attribute>
-     <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
-     
      <tr>
      <td><xsl:value-of select="name"/></td>
      <td>
@@ -97,23 +98,35 @@ project page</a>
      <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;groupid=<xsl:value-of select="id"/>&amp;down=1</xsl:attribute> [down]</a>
      </td>
      <td>
-      <input type="hidden" name="groupid">
+     <form method="post">
+     <xsl:attribute name="name">form_<xsl:value-of select="id"/></xsl:attribute>
+     <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
+     <input type="hidden" name="groupid">
      <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
      </input>
      <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'">  <!-- cannot delete Nightly/Continuous/Experimental -->
      <input name="newname" type="text" id="newname" size="20"/><input type="submit" name="rename" value="Rename"/>
      </xsl:if>
-     </td><td>
+     </form>
+     </td>
+     <td>
+     <form method="post">
+     <xsl:attribute name="name">form_<xsl:value-of select="id"/>_2</xsl:attribute>
+     <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
+     <input type="hidden" name="groupid">
+     <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+     </input>
+     
      <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
      <input type="submit" name="deleteGroup" value="Delete Group" onclick="return confirmDelete()"/>
      </xsl:if>
-     <input name="description" type="text" id="description" size="40">
+     <input name="description" type="text" size="40">
      <xsl:attribute name="value"><xsl:value-of select="description"/></xsl:attribute>
      </input>
      <input type="submit" name="submitDescription" value="Update Description"/>
+     </form>
      </td>
      </tr>
-     </form>
      </xsl:for-each>
      </table>
      </td>
@@ -122,26 +135,40 @@ project page</a>
     <td></td>
     <td></td>
   </tr>
+</table>  
+
+<form name="formnewgroup" method="post">
+<xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
+<table width="100%"  border="0">
   <tr>
     <td><div align="right"></div></td>
     <td  bgcolor="#DDDDDD"><strong>Create new group</strong></td>
   </tr>
   <tr>
-    <td><div align="right">Name:</div></td>
-    <td><input name="name" type="text" id="name" size="40"/></td>
+    <td width="10%"><div align="right">Name:</div></td>
+    <td width="90%"><input name="name" type="text" id="name" size="40"/></td>
   </tr>
   <tr>
     <td><div align="right"></div></td>
     <td><input type="submit" name="createGroup" value="Create Group"/><br/><br/></td>
   </tr>
+</table> 
+</form>
+
+<form name="globalmove" method="post">
+<xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
+
+<table width="100%"  border="0">
     <tr>
     <td><div align="right"></div></td>
     <td  bgcolor="#DDDDDD"><strong>Global Move</strong></td>
   </tr>
   <tr>
     <td width="10%"><div align="right">Show:</div></td>
-    <td width="90%" ><select onchange="location = 'manageBuildGroup.php?projectid='+projectSelection.value+'&amp;show='+this.options[this.selectedIndex].value;"  name="globalMoveSelectionType">
-        <option><xsl:attribute name="value">0</xsl:attribute>All</option>
+    <td width="90%" >
+     <select onchange="location = 'manageBuildGroup.php?projectid='+form1.projectSelection.value+'&amp;show='+this.options[this.selectedIndex].value;"  name="globalMoveSelectionType">
+     <option>
+     <xsl:attribute name="value">0</xsl:attribute>All</option>
        <xsl:for-each select="cdash/project/group">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -187,12 +214,11 @@ project page</a>
     <input type="submit" name="globalMove" value="Move selected build to group"/>
     </td>
   </tr>
-  </xsl:if>
+  </table>
+</form>  
   
-</table>
-
-
-</form>
+   </xsl:if>
+ 
 
 <br/>
 </xsl:otherwise>
