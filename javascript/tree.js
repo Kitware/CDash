@@ -35,6 +35,9 @@ function XMLStrFormat(str)
 {
   str = str.replace(/&amp;apos;/g,"\'");
   str = str.replace(/&amp;quot;/g,"\"");
+  str = str.replace(/&amp;amp;/g,"\&");
+  str = str.replace(/&amp;lt;/g,"<");
+  str = str.replace(/&amp;gt;/g,">");
   return str;
 }
 
