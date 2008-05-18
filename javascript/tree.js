@@ -43,7 +43,7 @@ function XMLStrFormat(str)
 
 
 // Add an entry to the database
-function dbAdd(mother,display,URL,indent,top,open,author,mailto,comment) {
+function dbAdd(mother,display,URL,indent,top,open,author,mailto,comment,bugURL) {
   db[total] = new Object;
   db[total].mother = mother
   db[total].display = display
@@ -55,6 +55,7 @@ function dbAdd(mother,display,URL,indent,top,open,author,mailto,comment) {
   db[total].author = author
   db[total].mailto = mailto
   db[total].comment = XMLStrFormat(comment)
+  db[total].bugURL = bugURL
   total++
   }
 

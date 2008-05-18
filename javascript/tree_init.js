@@ -49,52 +49,96 @@
     }
   Outline += "&nbsp;";
      
-  if (db[i].URL == "" || db[i].URL == null) {
+  if (db[i].URL == "" || db[i].URL == null) 
+    {
     Outline += " " + db[i].display      // no link, just a listed item  
     }
-  else {
+  else 
+    {
     Outline += " <A HREF=\"" + db[i].URL + "\">" + db[i].display + "</A>"
     }
-                if ( db[i].author != "" && db[i].author != null )
-                {
-                  if ( db[i].mailto == "" || db[i].mailto == null )
-                  {
-                    Outline += " by " + db[i].author
-                  }
-                  else
-                  {
-                    Outline += " by <a href=\"mailto:" + db[i].mailto + "\">" + db[i].author + "</a>"
-                  }
-                }
-                if ( db[i].comment != null && db[i].comment != "" )
-                {
-                  Outline += "<br>" + pad(currIndent) + db[i].comment + "<br>"
-                }
+  if ( db[i].author != "" && db[i].author != null )
+    {
+    if ( db[i].mailto == "" || db[i].mailto == null )
+      {
+      Outline += " by " + db[i].author
+      }
+    else
+      {
+      Outline += " by <a href=\"mailto:" + db[i].mailto + "\">" + db[i].author + "</a>"
+      }
+    }
+  if ( db[i].comment != null && db[i].comment != "" )
+    {
+    var posHTTPInit = 0;
+    var comment = db[i].comment;
+    var comment = comment.replace(/  /g," "); // replace two spaces by only one
+    
+    // If we have a bugURL we add it
+    if ( db[i].bugURL != null && db[i].bugURL != "" )
+      {
+      var posSpace = comment.indexOf(' ');
+      if(posSpace > 0)
+        {
+        var posSpace2 = comment.indexOf(' ',posSpace+1);
+        if(posSpace2 > 0)
+          {
+          posSpace = posSpace2;
+          }
+        }
+      else
+        {
+        posSpace = 0;
+        }
+      
+      // Insert the bugURL
+      comment = "<a href=\""+db[i].bugURL+"\">"+comment.substr(0,posSpace)+"</a>"+comment.substr(posSpace);
+      
+      posHTTPInit = posSpace+db[i].bugURL.length+17;
+      }
+    
+    
+    
+    // Add link when there is http in the comments
+    var posHTTP = comment.indexOf("http://",posHTTPInit);
+    while(posHTTP != -1)
+      {
+      var commentBegin = comment.substr(0,posHTTP);
+      var commentEnd = comment.substr(posHTTP);
+      
+      var posSpace = commentEnd.indexOf(' ');
+      var word = commentEnd;
+      if(posSpace > 0)
+        {
+        word = commentEnd.substr(0,posSpace);
+        commentEnd = commentEnd.substr(posSpace);
+        }
+      else
+        {
+        commentEnd = "";
+        }
+      comment = commentBegin+"<a href=\""+word+"\">"+word+"</a>"+commentEnd;
+      posHTTP = comment.indexOf("http://",posHTTP+word.length*2+16);
+      }
+
+    Outline += "<br>" + pad(currIndent) + comment + "<br>"
+    }
+    
   // Bold if at level 0
-  if (currIndent == 0) { 
+  if (currIndent == 0) 
+    { 
     Outline = "<B>" + Outline + "</B>"
     }
-//  if (currIndent == 1) {
-//      Outline += "&nbsp;<a href=details_project.html><img src=../images/document_select.gif border=0 align=bottom></a>"
-//    }
-  //if (currIndent == 2) {
-  //  Outline += "&nbsp;&nbsp;<a href=overview.html><img src=../images/document_overv.gif border=0></a>&nbsp;<a href=list.html><img src=../images/document_list.gif border=0></a>"
-  //  }
-//  if (currIndent == 3) {
-//    Outline += "&nbsp;<a href=details_part.html><img src=../images/document_select.gif border=0 align=bottom></a>"
-//    }
-  //if (currIndent == 4) {
-  //  Outline += "&nbsp;&nbsp;<a href=overview.html><img src=../images/document_overv.gif border=0></a>&nbsp;<a href=definition.html><img src=../images/document_definition.gif border=0></a>"
-  //  }
+    
   Outline += "<BR>"
   prevIndentDisplayed = currIndent
   showMyDaughter = expanded
-  // if (i == 1) { Outline = ""}
-  if (db.length > 25) {
+  if (db.length > 25) 
+    {
     document.write(Outline)
     Outline = ""
-          }
-        }
+    }
    }
+ }
  document.write(Outline)
  // end -->

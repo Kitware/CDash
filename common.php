@@ -1725,12 +1725,7 @@ function get_author_email($projectname, $author)
     $results = mysql_fetch_array($qry);
     $email = $results["email"];
     }
-
-  if (0 === strcmp($email, ""))
-    {
-    $email = "userEmailUnknown";
-    }
-
+    
   return $email;  
 }
 
