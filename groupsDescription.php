@@ -31,7 +31,8 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 <body>
 <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" width="100%">
    <tr>
-     <th colspan="2" class="table-heading1">CDash Build Group Description</th>
+    <th class="table-heading1"><a href="#" class="jqmClose">[close]</a></th>
+    <th class="table-heading1">CDash Build Group Description</th>
    </tr>
    <?php
     $i = 0;
