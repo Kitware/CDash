@@ -276,15 +276,14 @@ CREATE TABLE `test2image` (
 -- 
 -- Table structure for table `note`
 -- 
-
 CREATE TABLE `note` (
-  `buildid` int(11) NOT NULL default '0',
-  `text` text NOT NULL,
-  `time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `name` varchar(255) NOT NULL default '',
-  KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+  `id` bigint(20) NOT NULL auto_increment,
+  `text` mediumtext NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `crc32` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `crc32` (`crc32`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -534,6 +533,28 @@ CREATE TABLE `dailyupdatefile` (
   `revision` varchar(10) NOT NULL default '0',
   `priorrevision` varchar(10) NOT NULL default '0',
   KEY `buildid` (`dailyupdateid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `builderrordiff` (
+  `buildid` bigint(20) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `difference` int(11) NOT NULL,
+  KEY `buildid` (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `testdiff` (
+  `buildid` bigint(20) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `difference` int(11) NOT NULL,
+  KEY `buildid` (`buildid`,`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `build2note` (
+  `buildid` bigint(20) NOT NULL,
+  `noteid`  bigint(20) NOT NULL,
+  `time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  KEY `buildid` (`buildid`,`noteid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
