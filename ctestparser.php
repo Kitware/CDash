@@ -482,7 +482,78 @@ function parse_testing($parser,$projectid)
   compute_test_timing($buildid);
 }
 
-/** Compute the test timing as a weighted average of the previous test */
+/** Add the difference between the numbers of errors and warnings
+ *  for the previous and current build */
+function compute_error_difference($buildid,$previousbuildid,$warning)
+{
+  // Look at the number of errors and warnings differences
+  $errors = mysql_query("SELECT count(*) FROM builderror WHERE type='$warning' 
+                                   AND buildid='$buildid'");
+  $errors_array  = mysql_fetch_array($errors);
+  $nerrors = $errors_array[0]; 
+    
+  $previouserrors = mysql_query("SELECT count(*) FROM builderror WHERE type='$warning' 
+                                   AND buildid='$previousbuildid'");
+  $previouserrors_array  = mysql_fetch_array($previouserrors);
+  $npreviouserrors = $previouserrors_array[0];
+    
+  // Don't log if no diff
+  $errordiff = $nerrors-$npreviouserrors;
+  if($errordiff != 0)
+    {
+    mysql_query("INSERT INTO builderrordiff (buildid,type,difference) 
+                           VALUES('$buildid','$warning','$errordiff')");
+    add_last_sql_error("compute_error_difference");
+    }
+}
+
+/** Add the difference between the numbers of tests
+ *  for the previous and current build */
+function compute_test_difference($buildid,$previousbuildid,$testtype)
+{
+  $sql="";
+  if($testtype == 0)
+    {
+    $status="notrun";
+    }
+  else if($testtype == 1)
+    {
+    $status="failed";
+    }
+  else if($testtype == 2)
+    {
+    $status="passed";
+    }
+  else if($testtype == 3)
+    {
+    $status="passed";
+    $sql = " AND timestatus>0";
+    }
+      
+  // Look at the number of errors and warnings differences
+  $errors = mysql_query("SELECT count(*) FROM build2test WHERE status='$status' 
+                                         AND buildid='$buildid'".$sql);
+  $errors_array  = mysql_fetch_array($errors);
+  $nerrors = $errors_array[0]; 
+    
+  $previouserrors = mysql_query("SELECT count(*) FROM build2test WHERE status='$status' 
+                                   AND buildid='$previousbuildid'".$sql);
+  $previouserrors_array  = mysql_fetch_array($previouserrors);
+  $npreviouserrors = $previouserrors_array[0];
+    
+  // Don't log if no diff
+  $diff = $nerrors-$npreviouserrors;
+  if($errordiff != 0)
+    {
+    mysql_query("INSERT INTO testdiff (buildid,type,difference) 
+                 VALUES('$buildid','$testtype','$diff')");
+    add_last_sql_error("compute_test_difference");
+    }
+}
+
+/** Compute the test timing as a weighted average of the previous test.
+ *  Also compute the difference in errors and tests between builds.
+ *  We do that in one shot for speed reasons. */
 function compute_test_timing($buildid)
 {
   // TEST TIMING 
@@ -513,9 +584,18 @@ function compute_test_timing($buildid)
   // If we have one
   if(mysql_num_rows($previousbuild)>0)
     {
-    // Loop through the tests
+    // Lookup the previous build id
     $previousbuild_array = mysql_fetch_array($previousbuild);
     $previousbuildid = $previousbuild_array["id"];
+   
+    compute_error_difference($buildid,$previousbuildid,0); // errors
+    compute_error_difference($buildid,$previousbuildid,1); // warnings
+    compute_test_difference($buildid,$previousbuildid,0); // not run
+    compute_test_difference($buildid,$previousbuildid,1); // fail
+    compute_test_difference($buildid,$previousbuildid,2); // pass
+    compute_test_difference($buildid,$previousbuildid,3); // time
+
+    // Loop through the tests
     $tests = mysql_query("SELECT build2test.time,build2test.testid,test.name,build2test.status
                           FROM build2test,test WHERE build2test.buildid='$buildid'
                           AND build2test.testid=test.id

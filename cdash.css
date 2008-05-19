@@ -9,6 +9,11 @@ body {
  font-weight: normal;
  color: #000000;
 }
+
+sub { 
+font-size: 0.63em 
+}
+
 a:link,a:visited{
  font-size:14px;
  color:#0000ff;

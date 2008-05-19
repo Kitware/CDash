@@ -35,7 +35,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!mysql_query("SELECT showtesttime FROM project LIMIT 1"))
+  if(!mysql_query("SELECT buildid FROM builderrordiff LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration panel of CDash.</upgradewarning>";
@@ -490,6 +490,20 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("warning",$nwarnings);
     $diff = (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;
     $xml .= "<time>".$diff."</time>";
+    
+    // Differences between number of errors and warnings
+    $builderrordiff = mysql_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='0'");
+    if(mysql_num_rows($builderrordiff)>0)
+      {
+      $builderrordiff_array = mysql_fetch_array($builderrordiff);
+      $xml .= add_XML_value("nerrordiff",$builderrordiff_array["difference"]);
+      }
+    $buildwarningdiff = mysql_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='1'");
+    if(mysql_num_rows($buildwarningdiff)>0)
+      {
+      $buildwarningdiff_array = mysql_fetch_array($buildwarningdiff);
+      $xml .= add_XML_value("nwarningdiff",$buildwarningdiff_array["difference"]);
+      }
     $xml .= "</compilation>";
     
     // Get the Configure options
@@ -511,20 +525,57 @@ function generate_main_dashboard_XML($projectid,$date)
       $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
       
+      // Add the difference
+      $notrundiff = mysql_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='0'");
+      if(mysql_num_rows($notrundiff)>0)
+        {
+        $nnotrundiff_array = mysql_fetch_array($notrundiff);
+        $nnotrundiff = $nnotrundiff_array["difference"];
+        $xml .= add_XML_value("nnotrundiff",$nnotrundiff);
+        }
+      
       $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='failed'";
       $nfail_array = mysql_fetch_array(mysql_query($sql));
       $nfail = $nfail_array[0];
       
+      // Add the difference
+      $faildiff = mysql_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='1'");
+      if(mysql_num_rows($faildiff)>0)
+        {
+        $faildiff_array = mysql_fetch_array($faildiff);
+        $nfaildiff = $faildiff_array["difference"];
+        $xml .= add_XML_value("nfaildiff",$nfaildiff);
+        }
+        
       $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'";
       $npass_array = mysql_fetch_array(mysql_query($sql));
       $npass = $npass_array[0];
       
+      // Add the difference
+      $passdiff = mysql_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='2'");
+      if(mysql_num_rows($passdiff)>0)
+        {
+        $passdiff_array = mysql_fetch_array($passdiff);
+        $npassdiff = $passdiff_array["difference"];
+        $xml .= add_XML_value("npassdiff",$npassdiff);
+        }
+        
       if($project_array["showtesttime"] == 1)
         {
         $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND timestatus='1'";
         $ntimestatus_array = mysql_fetch_array(mysql_query($sql));
         $ntimestatus = $ntimestatus_array[0];
         $xml .= add_XML_value("timestatus",$ntimestatus);
+        
+        // Add the difference
+        $timediff = mysql_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='3'");
+        if(mysql_num_rows($timediff)>0)
+          {
+          $timediff_array = mysql_fetch_array($timediff);
+          $ntimediff = $timediff_array["difference"];
+          $xml .= add_XML_value("ntimediff",$ntimediff);
+          }
+        
         }  
       $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
       $time = $time_array[0];

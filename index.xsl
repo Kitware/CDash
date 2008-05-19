@@ -227,8 +227,10 @@
            </xsl:when>     
         </xsl:choose>
       </xsl:attribute>
-      <b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/error"/> </a></b>
+      <b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/error"/></a></b>
       <xsl:if test="string-length(compilation/error)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
+      <xsl:if test="compilation/nerrordiff > 0"><sub>+<xsl:value-of select="compilation/nerrordiff"/></sub></xsl:if>
+      <xsl:if test="compilation/nerrordiff &lt; 0"><sub><xsl:value-of select="compilation/nerrordiff"/></sub></xsl:if>
       </td>
       <td align="center">
       <xsl:attribute name="class">
@@ -243,6 +245,8 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="compilation/warning"/></a></b>
       <xsl:if test="string-length(compilation/warning)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
+      <xsl:if test="compilation/nwarningdiff > 0"><sub>+<xsl:value-of select="compilation/nwarningdiff"/></sub></xsl:if>
+      <xsl:if test="compilation/nwarningdiff &lt; 0"><sub><xsl:value-of select="compilation/nwarningdiff"/></sub></xsl:if>
       </td>
       <td align="right"><xsl:value-of select="compilation/time"/>
       <xsl:if test="string-length(compilation/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
@@ -260,6 +264,8 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/notrun"/></a></b>
       <xsl:if test="string-length(test/notrun)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
+      <xsl:if test="test/nnotrundiff > 0"><sub>+<xsl:value-of select="test/nnotrundiff"/></sub></xsl:if>
+      <xsl:if test="test/nnotrundiff &lt; 0"><sub><xsl:value-of select="test/nnotrundiff"/></sub></xsl:if>
       </td>
       <td align="center">
       <xsl:attribute name="class">
@@ -274,6 +280,8 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?onlyfailed&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/fail"/></a></b>
       <xsl:if test="string-length(test/fail)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
+      <xsl:if test="test/nfaildiff > 0"><sub>+<xsl:value-of select="test/nfaildiff"/></sub></xsl:if>
+      <xsl:if test="test/nfaildiff &lt; 0"><sub><xsl:value-of select="test/nfaildiff"/></sub></xsl:if>
       </td>
 
       <td align="center">
@@ -289,6 +297,8 @@
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewTest.php?onlypassed&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/pass"/></a></b>
       <xsl:if test="string-length(test/fail)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
+      <xsl:if test="test/npassdiff > 0"><sub>+<xsl:value-of select="test/npassdiff"/></sub></xsl:if>
+      <xsl:if test="test/npassdiff &lt; 0"><sub><xsl:value-of select="test/npassdiff"/></sub></xsl:if>
       </td>
       <td align="center">
       <xsl:attribute name="class">
@@ -304,11 +314,15 @@
       <xsl:choose>
           <xsl:when test="test/timestatus > 0">
              <b><a><xsl:attribute name="href">viewTest.php?onlytimestatus&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/timestatus"/></a></b>  
+             <xsl:if test="test/ntimediff > 0"><sub>+<xsl:value-of select="test/ntimediff"/></sub></xsl:if>
+             <xsl:if test="test/ntimediff &lt; 0"><sub><xsl:value-of select="test/ntimediff"/></sub></xsl:if>
           </xsl:when>
-             <xsl:when test="string-length(test/timestatus)>0">
-               <xsl:value-of select="test/time"/>
-               <xsl:if test="string-length(test/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
-             </xsl:when>  
+           <xsl:when test="string-length(test/timestatus)>0">
+             <xsl:value-of select="test/time"/>
+             <xsl:if test="string-length(test/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
+             <xsl:if test="test/ntimediff > 0"><sub>+<xsl:value-of select="test/ntimediff"/></sub></xsl:if>
+             <xsl:if test="test/ntimediff &lt; 0"><sub><xsl:value-of select="test/ntimediff"/></sub></xsl:if>
+           </xsl:when>  
              <xsl:when test="string-length(test/timestatus)=0">
                <xsl:value-of select="test/time"/>
                <xsl:if test="string-length(test/time)=0"><xsl:text>&#160;</xsl:text></xsl:if>  

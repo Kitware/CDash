@@ -1139,6 +1139,7 @@ function remove_build($buildid)
   mysql_query("DELETE FROM build WHERE id='$buildid'");
   mysql_query("DELETE FROM build2group WHERE buildid='$buildid'");
   mysql_query("DELETE FROM builderror WHERE buildid='$buildid'");
+  mysql_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
   mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
   mysql_query("DELETE FROM configure WHERE buildid='$buildid'");
     
