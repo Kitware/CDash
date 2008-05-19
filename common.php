@@ -1169,8 +1169,20 @@ function remove_build($buildid)
     }
    
   mysql_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM note WHERE buildid='$buildid'");  
   mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");   
+  
+  // Delete the note if not shared
+  $build2note = mysql_query("SELECT * FROM build2note WHERE buildid='$buildid'");
+  while($build2note_array = mysql_fetch_array($build2note))
+    {
+    $noteid = $build2note_array["noteid"];
+    if(mysql_num_rows(mysql_query("SELECT * FROM build2note WHERE noteid='$noteid'"))==1)
+      {
+      // Note is not shared we delete
+      mysql_query("DELETE FROM note WHERE id='$noteid'");
+      }
+    }
+  mysql_query("DELETE FROM build2note WHERE buildid='$buildid'"); 
   
   // Delete the test if not shared
   $build2test = mysql_query("SELECT * FROM build2test WHERE buildid='$buildid'");
@@ -1532,9 +1544,23 @@ function add_note($buildid,$text,$timestamp,$name)
   $text = mysql_real_escape_string($text);
   $timestamp = mysql_real_escape_string($timestamp);
   $name = mysql_real_escape_string($name);
-    
-  mysql_query ("INSERT INTO note (buildid,text,time,name) 
-                VALUES ('$buildid','$text','$timestamp','$name')");
+  
+  $crc32 = crc32($text.$name);  
+  $notecrc32 =  mysql_query("SELECT id FROM note WHERE crc32='$crc32'");
+  add_last_sql_error("add_note");
+  if(mysql_num_rows($notecrc32) == 0)
+    {
+    mysql_query("INSERT INTO note (text,name,crc32) VALUES ('$text','$name','$crc32')");
+    add_last_sql_error("add_note");
+    $noteid = mysql_insert_id();
+    }
+  else // already there
+    {
+    $notecrc32_array = mysql_fetch_array($notecrc32);
+    $noteid = $notecrc32_array["id"];
+    }
+
+  mysql_query("INSERT INTO build2note (buildid,noteid,time) VALUES ('$buildid','$noteid','$timestamp')");
   add_last_sql_error("add_note");
 }
 

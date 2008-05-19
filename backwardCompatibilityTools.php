@@ -146,6 +146,13 @@ if(isset($_GET['upgrade-1-2']))
     {
     $result = mysql_query("ALTER TABLE test CHANGE output output MEDIUMTEXT;");
     }
+  
+  // Compress the notes
+  if(!mysql_query("SELECT crc32 FROM note LIMIT 1"))
+    {
+    CompressNotes();
+    }
+  
   exit();
 }
 
@@ -170,6 +177,64 @@ if($ComputeTestTiming)
    $xml .= add_XML_value("alert","Wrong number of days.");
    }
 }
+
+
+/** Compress the notes. Since they are almost always the same form build to build */
+function CompressNotes()
+{
+  // Rename the old note table
+  if(!mysql_query("RENAME TABLE note TO notetemp"))
+    {
+    echo mysql_error();
+    echo "Cannot rename table note to notetemp";
+    return false;
+    }
+
+  // Create the new note table
+  if(!mysql_query("CREATE TABLE `note` (
+     `id` bigint(20) NOT NULL auto_increment,
+     `text` mediumtext NOT NULL,
+     `name` varchar(255) NOT NULL,
+     `crc32` int(11) NOT NULL,
+     PRIMARY KEY  (`id`),
+     KEY `crc32` (`crc32`))"))
+     {
+     echo mysql_error();
+     echo "Cannot create new table 'note'";
+     return false;
+     }
+  
+  // Move each note from notetemp to the new table
+  $note = mysql_query("SELECT * FROM notetemp ORDER BY buildid ASC");
+  while($note_array = mysql_fetch_array($note))
+    {
+    $text = $note_array["text"];
+    $name = $note_array["name"];
+    $time = $note_array["time"];
+    $buildid = $note_array["buildid"];
+    $crc32 = crc32($text.$name);
+    
+    $notecrc32 =  mysql_query("SELECT id FROM note WHERE crc32='$crc32'");
+    if(mysql_num_rows($notecrc32) == 0)
+      {
+      mysql_query("INSERT INTO note (text,name,crc32) VALUES ('$text','$name','$crc32')");
+      $noteid = mysql_insert_id();
+      echo mysql_error();
+      }
+    else // already there
+      {
+      $notecrc32_array = mysql_fetch_array($notecrc32);
+      $noteid = $notecrc32_array["id"];
+      }
+
+    mysql_query("INSERT INTO build2note (buildid,noteid,time) VALUES ('$buildid','$noteid','$time')");
+    echo mysql_error();
+    }
+  
+  // Drop the old note table  
+  mysql_query("DROP TABLE notetemp");
+  echo mysql_error();
+} // end CompressNotes()
 
 /** Compute the timing for test
  *  For each test we compare with the previous build and if the percentage time 
