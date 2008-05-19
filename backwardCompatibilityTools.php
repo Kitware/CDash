@@ -191,13 +191,13 @@ function CompressNotes()
     }
 
   // Create the new note table
-  if(!mysql_query("CREATE TABLE `note` (
-     `id` bigint(20) NOT NULL auto_increment,
-     `text` mediumtext NOT NULL,
-     `name` varchar(255) NOT NULL,
-     `crc32` int(11) NOT NULL,
-     PRIMARY KEY  (`id`),
-     KEY `crc32` (`crc32`))"))
+  if(!mysql_query("CREATE TABLE note (
+     id bigint(20) NOT NULL auto_increment,
+     text mediumtext NOT NULL,
+     name varchar(255) NOT NULL,
+     crc32 int(11) NOT NULL,
+     PRIMARY KEY  (id),
+     KEY crc32 (crc32))"))
      {
      echo mysql_error();
      echo "Cannot create new table 'note'";
