@@ -445,7 +445,7 @@ function generate_main_dashboard_XML($projectid,$date)
       
     $received_builds[] = $site_array["name"]."_".$build_array["name"];
     
-    $note = mysql_query("SELECT count(*) FROM note WHERE buildid='$buildid'");
+    $note = mysql_query("SELECT count(*) FROM build2note WHERE buildid='$buildid'");
     $note_array = mysql_fetch_row($note);
     if($note_array[0]>0)
       {
