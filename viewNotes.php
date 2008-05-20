@@ -77,7 +77,7 @@ $xml .= add_XML_value("buildid",$build_array["id"]);
 $xml .= "</build>";
   
   
-$build2note = mysql_query("SELECT noteid FROM build2note WHERE buildid='$buildid'");
+$build2note = mysql_query("SELECT noteid,time FROM build2note WHERE buildid='$buildid'");
 while($build2note_array = mysql_fetch_array($build2note))
   {
   $noteid = $build2note_array["noteid"];
@@ -85,7 +85,7 @@ while($build2note_array = mysql_fetch_array($build2note))
   $xml .= "<note>";
   $xml .= add_XML_value("name",$note_array["name"]);
   $xml .= add_XML_value("text",$note_array["text"]);
-  $xml .= add_XML_value("time",$note_array["time"]);
+  $xml .= add_XML_value("time",$build2note_array["time"]);
   $xml .= "</note>";
   $text = $note_array["text"];
   $name = $note_array["name"];
