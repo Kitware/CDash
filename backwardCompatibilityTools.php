@@ -144,7 +144,7 @@ if(isset($_GET['upgrade-1-2']))
   $type  = mysql_field_type($result,0);
   if($type == "blob" || $type == "text")
     {
-    $result = mysql_query("ALTER TABLE test CHANGE output output MEDIUMTEXT;");
+    $result = mysql_query("ALTER TABLE test CHANGE output output MEDIUMTEXT");
     }
   
   // Compress the notes
