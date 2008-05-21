@@ -107,6 +107,9 @@ edit the project</a><br/>
     <xsl:value-of select="cdash/project/cvsurl"/>
     </xsl:attribute>
     </input>
+    <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+    <img src="images/help.gif" border="0"/></a>
     </td>
   </tr>
   <tr>
@@ -124,15 +127,44 @@ edit the project</a><br/>
     </select>
     </td>
   </tr>
+  <xsl:for-each select="/cdash/cvsrepository">
    <tr>
     <td></td>
-    <td><div align="right"><strong>CVS/SVN Repository:</strong></div></td>
-    <td><input name="cvsRepository" type="text" size="50">
-    <xsl:attribute name="value">
-    <xsl:value-of select="cdash/project/cvsrepository"/>
+    <td>
+    <xsl:if test="id=0">
+      <div align="right"><strong>CVS/SVN Repository:</strong></div>
+    </xsl:if>
+    </td>
+    <td>
+    <input type="text" size="50">
+    <xsl:attribute name="name">
+      cvsRepository[<xsl:value-of select="id"/>]
     </xsl:attribute>
-    </input></td>
+    <xsl:attribute name="value">
+    <xsl:value-of select="url"/>
+    </xsl:attribute>
+    </input>
+    <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+    <img src="images/help.gif" border="0"/></a>
+    </td>
   </tr>
+  </xsl:for-each>
+  
+  <xsl:if test="cdash/edit=1">
+  <tr>
+    <td></td>
+    <td></td>
+    <td>
+    <input name="AddRepository" type="submit" value="Add another repository"/>
+    <input name="nRepositories" type="hidden">
+    <xsl:attribute name="value">
+      <xsl:value-of select="cdash/nrepositories"/>
+    </xsl:attribute>
+    </input>
+    </td>
+  </tr>
+  </xsl:if>
   <tr>
     <td></td>
     <td><div align="right"><strong>Bug Tracker URL:</strong></div></td>
@@ -140,7 +172,11 @@ edit the project</a><br/>
     <xsl:attribute name="value">
     <xsl:value-of select="cdash/project/bugurl"/>
     </xsl:attribute>
-    </input></td>
+    </input>
+    <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+    <img src="images/help.gif" border="0"/></a>
+    </td>
   </tr>
  <tr>
     <td></td>
@@ -190,6 +226,9 @@ edit the project</a><br/>
     <xsl:value-of select="cdash/project/coveragethreshold"/>
     </xsl:attribute>
     </input>
+    <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+    <img src="images/help.gif" border="0"/></a>
     </td>
   </tr>
   <tr>
@@ -201,7 +240,11 @@ edit the project</a><br/>
     <xsl:if test="string-length(cdash/project/nightlytime)=0">00:00:00 EST</xsl:if>
       <xsl:value-of select="cdash/project/nightlytime"/>
     </xsl:attribute>
-    </input></td>
+    </input>
+    <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+    <img src="images/help.gif" border="0"/></a>
+    </td>
   </tr>
   
   <tr>
@@ -212,7 +255,11 @@ edit the project</a><br/>
     <xsl:attribute name="value">
       <xsl:value-of select="cdash/project/googletracker"/>
     </xsl:attribute>
-    </input></td>
+    </input>
+    <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Administration#Adding_Google_Analytics" target="blank">
+    <img src="images/help.gif" border="0"/></a>
+    </td>
   </tr>
   
   <tr>

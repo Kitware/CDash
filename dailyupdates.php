@@ -469,69 +469,30 @@ function get_repository_commits($projectid, $dates)
                         WHERE repositories.id=project2repositories.repositoryid
                         AND project2repositories.projectid='$projectid'");
 
-  if(mysql_num_rows($repositories)>0)
+  foreach($repositories_array = mysql_fetch_array($repositories))
     {
-    $repositories_array = mysql_fetch_array($repositories);
     $roots[] = $repositories_array["url"];
     } 
-  
-  // Compute cvsroot(s) for project (DB lookup?)
-  //
-  /*if ($projectname === "CDash")
-  {
-    $roots[] = "https://www.kitware.com:8443/svn/CDash";
-  }
-  else if ($projectname === "CMake")
-  {
-    $roots[] = ":pserver:anonymous:cmake@www.cmake.org/cvsroot/CMake";
-  }
-  else if ($projectname === "Insight")
-  {
-    $roots[] = ":pserver:anonymous:insight@www.itk.org/cvsroot/Insight";
-  }
-  else if ($projectname === "KWWidgets")
-  {
-    $roots[] = ":pserver:anoncvs:@www.kwwidgets.org/cvsroot/KWWidgets";
-  }
-  else if ($projectname === "ParaView3")
-  {
-    $roots[] = ":pserver:anoncvs:@www.paraview.org/cvsroot/ParaView3";
-  }
-  else if ($projectname === "VTK")
-  {
-    $roots[] = ":pserver:anonymous:vtk@public.kitware.com/cvsroot/VTK";
-    $roots[] = ":pserver:anonymous:vtk@public.kitware.com/cvsroot/VTKData";
-  }
-  else if ($projectname === "TortoiseSVN")
-  {
-    $roots[] = "http://tortoisesvn.tigris.org/svn/tortoisesvn";
-  }
-  else
-  {
-  $xml .= "<error>Unrecognized project name: " . $projectname . " (could not lookup any cvsroot values)"."</error>";
-  }
-*/
 
   // Start with an empty array:
-  //
   $commits = array();
 
   foreach($roots as $root)
-  {
+    {
     if (is_cvs_root($root))
-    {
+      {
       $new_commits = get_cvs_repository_commits($root, $dates);
-    }
+      }
     else
-    {
+      {
       $new_commits = get_svn_repository_commits($root, $dates);
-    }
+      }
 
     if (count($new_commits)>0)
-    {
+      {
       $commits = array_merge(array_values($commits), array_values($new_commits));
+      }
     }
-  }
 
   return $commits;
 }
