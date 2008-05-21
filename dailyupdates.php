@@ -469,7 +469,7 @@ function get_repository_commits($projectid, $dates)
                         WHERE repositories.id=project2repositories.repositoryid
                         AND project2repositories.projectid='$projectid'");
 
-  foreach($repositories_array = mysql_fetch_array($repositories))
+  while($repositories_array = mysql_fetch_array($repositories))
     {
     $roots[] = $repositories_array["url"];
     } 
