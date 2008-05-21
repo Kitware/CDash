@@ -352,19 +352,19 @@ function parse_configure($parser,$projectid)
 function parse_testing($parser,$projectid)
 {
   include_once("common.php");
-
+  
   $xmlarray = $parser->vals;
   $site = $parser->index["SITE"]; 
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
-
+  
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
     $buildid = create_build($parser,$projectid);
     }
-
+    
   $test_array = array();
   $index = 0;
   $getTimeNext = FALSE;
@@ -443,7 +443,7 @@ function parse_testing($parser,$projectid)
       {
       $test_array[$index]["fullname"]=$tagarray["value"];
       }
-    else if(($tagarray["tag"] == "FULLCOMMANDLINE") && ($tagarray["level"] == 4))
+    else if(($tagarray["tag"] == "FULLCOMMANDLINE") && array_key_exists("value",$tagarray) && ($tagarray["level"] == 4))
       {
       $test_array[$index]["fullcommandline"]=$tagarray["value"];
       }
@@ -464,7 +464,7 @@ function parse_testing($parser,$projectid)
       $measurement['name'] = $tagarray["attributes"]["NAME"];
       $inMeasurement = TRUE;
       } 
-    else if($inMeasurement && ($tagarray["tag"] == "VALUE") && ($tagarray["level"] == 6))
+    else if($inMeasurement && ($tagarray["tag"] == "VALUE") && array_key_exists("value",$tagarray) && ($tagarray["level"] == 6))
       {
       $measurement['value'] = $tagarray["value"];
       }
@@ -474,8 +474,8 @@ function parse_testing($parser,$projectid)
   foreach($test_array as $test)
     {
     add_test($buildid,
-             $test["name"],$test["status"],$test["path"],$test["fullname"],$test["fullcommandline"], 
-             $test["executiontime"], $test["details"], $test["output"], $test["images"],$test['measurement']);
+             $test["name"],$test["status"],$test["path"],$test["fullname"],@$test["fullcommandline"], 
+             @$test["executiontime"], $test["details"], $test["output"], $test["images"],$test['measurement']);
     }
 
   // Compute the test timing
@@ -543,7 +543,7 @@ function compute_test_difference($buildid,$previousbuildid,$testtype)
     
   // Don't log if no diff
   $diff = $nerrors-$npreviouserrors;
-  if($errordiff != 0)
+  if($diff != 0)
     {
     mysql_query("INSERT INTO testdiff (buildid,type,difference) 
                  VALUES('$buildid','$testtype','$diff')");
