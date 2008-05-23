@@ -223,10 +223,14 @@ function sendemail($parser,$projectid)
     $messagePlainText .= "Details on the submission can be found at ";
 
     $currentPort="";
-
+    $httpprefix="http://";
     if($_SERVER['SERVER_PORT']!=80)
       {
       $currentPort=":".$_SERVER['SERVER_PORT'];
+      if($_SERVER['SERVER_PORT']==443)
+        {
+        $httpprefix = "https://";
+        }
       }
     
     $serverName = $CDASH_SERVER_NAME;
@@ -235,7 +239,7 @@ function sendemail($parser,$projectid)
       $serverName = $_SERVER['SERVER_NAME'];
       }
     
-    $currentURI =  "http://".$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+    $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $messagePlainText .= $currentURI;
     $messagePlainText .= "/buildSummary.php?buildid=".$buildid;
