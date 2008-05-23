@@ -78,6 +78,12 @@ if ($session_OK)
 // Register users
 if($registerUsers)
 {
+  function make_seed_recoverpass()
+    {
+    list($usec, $sec) = explode(' ', microtime());
+    return (float) $sec + ((float) $usec * 100000);
+    }
+      
   $cvslogins = $_POST["cvslogin"];
   $emails = $_POST["email"];
   $firstnames = $_POST["firstname"];
@@ -135,11 +141,6 @@ if($registerUsers)
     $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     $length = 10;
   
-    function make_seed_recoverpass()
-      {
-      list($usec, $sec) = explode(' ', microtime());
-      return (float) $sec + ((float) $usec * 100000);
-      }
     srand(make_seed_recoverpass());
       
     $pass = "";
