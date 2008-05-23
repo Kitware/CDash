@@ -714,7 +714,7 @@ function parse_coverage($parser,$projectid)
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
-    $sitename = $parser->vals[$site[0]]["attributes"]["attributes"]["NAME"]; 
+    $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
 
     // Extract the type from the buildstamp
     $type = substr($stamp,strrpos($stamp,"-")+1);
