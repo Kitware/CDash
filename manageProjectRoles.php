@@ -78,6 +78,12 @@ if ($session_OK)
 // Register users
 if($registerUsers)
 {
+  function make_seed_recoverpass()
+    {
+    list($usec, $sec) = explode(' ', microtime());
+    return (float) $sec + ((float) $usec * 100000);
+    }
+      
   $cvslogins = $_POST["cvslogin"];
   $emails = $_POST["email"];
   $firstnames = $_POST["firstname"];
@@ -88,18 +94,17 @@ if($registerUsers)
   $project_array = mysql_fetch_array($project);
   $projectname = $project_array['name'];
 
-  for($i=0;$i<count($cvslogins);$i++)
+  for($logini=0;$logini<count($cvslogins);$logini++)
     {
-    if(!isset($cvsuser[$i]))
+    if(!isset($cvsuser[$logini]))
       {
       continue;
       }
-
     
-    $cvslogin = $cvslogins[$i];
-    $email = $emails[$i];
-    $firstName = $firstnames[$i];
-    $lastName = $lastnames[$i];
+    $cvslogin = $cvslogins[$logini];
+    $email = $emails[$logini];
+    $firstName = $firstnames[$logini];
+    $lastName = $lastnames[$logini];
     
     // Check if the user is already registered
     $user = mysql_query("SELECT id FROM user WHERE email='$email'");
@@ -110,7 +115,7 @@ if($registerUsers)
       // Check if the user has been registered to the project
       $user_array2 = mysql_fetch_array($user);
       $userid = $user_array2["id"];
-      $user = mysql_query("SELECT userid FROM user2project WHERE userid='$userid'");
+      $user = mysql_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
       if(mysql_num_rows($user)==0) // not registered
         {
         // We register the user to the project
@@ -124,7 +129,7 @@ if($registerUsers)
       } // already registered
     
     // Check if the cvslogin exists for this project
-    $usercvslogin = mysql_query("SELECT userid FROM user2project WHERE cvslogin='$cvslogin'");
+    $usercvslogin = mysql_query("SELECT userid FROM user2project WHERE cvslogin='$cvslogin' AND projectid='$projectid'");
     if(mysql_num_rows($usercvslogin)>0)
       {
       echo $cvslogin." was already registered for this project under a different email address<br>";
@@ -136,11 +141,6 @@ if($registerUsers)
     $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     $length = 10;
   
-    function make_seed_recoverpass()
-      {
-      list($usec, $sec) = explode(' ', microtime());
-      return (float) $sec + ((float) $usec * 100000);
-      }
     srand(make_seed_recoverpass());
       
     $pass = "";
