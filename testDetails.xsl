@@ -101,7 +101,7 @@
      <tr>
       <th class="measurement"><xsl:value-of select="name"/></th>
       <td>
-        <xsl:value-of select="value"/>
+        <xsl:value-of select="value" disable-output-escaping="yes"/>
       </td>
    </tr>
    </xsl:for-each>
