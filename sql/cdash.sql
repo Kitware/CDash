@@ -40,6 +40,7 @@ CREATE TABLE `buildgroup` (
   `projectid` int(11) NOT NULL default '0',
   `starttime` timestamp NOT NULL default '0000-00-00 00:00:00',
   `endtime` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `description` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
