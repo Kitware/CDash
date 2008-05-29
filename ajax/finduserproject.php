@@ -54,7 +54,7 @@ echo mysql_error();
   <input name="userid" type="hidden" value="<?php echo $user_array["id"]?>">
   role: <select name="role">
     <option value="0">Normal User</option>
-    <option value="1">Dashboard Submitter</option>
+    <option value="1">Site maintainer</option>
     <option value="2">Project administrator</option>
   </select>
   CVS login: <input name="cvslogin" type="text" size="20"/>
