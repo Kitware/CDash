@@ -35,6 +35,8 @@ function auth()
     $result = mysql_query("$sql"); 
     if ($user_array = mysql_fetch_array($result)) 
       {
+      session_name("CDash");
+      session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
       session_start();  
       // create the session array 
       $mysession2 = array ("login" => $login, "password" => 'this is not a v
@@ -57,6 +59,7 @@ d" => 1, "loginid" => $user_array["id"]);
      
   if (@$_GET["logout"]) 
     {                             // user requested logout            
+    session_name("CDash");
     @session_start(); 
     unset($_SESSION['cdash']);  
     session_destroy(); 
@@ -79,6 +82,8 @@ d" => 1, "loginid" => $user_array["id"]);
         $pass = $user_array["password"];
         if (md5($passwd)==$pass)
           {
+          session_name("CDash");
+          session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
           session_start();  
           // create the session array 
           $mysession2 = array ("login" => $login, "password" => $passwd, "passwd" => $pass, "ID" => session_id(), "valid" => 1, "loginid" => $user_array["id"]);  
@@ -104,7 +109,8 @@ d" => 1, "loginid" => $user_array["id"]);
     }
   else
     {                                         // arrive from session var 
-    //session_cache_expire(5);
+    session_name("CDash");
+    session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
     session_start();     
     $login_ok = 0;  
     $login = @$_SESSION['cdash']["login"];                         // added by jds 

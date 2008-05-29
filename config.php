@@ -27,6 +27,8 @@ $CDASH_DB_NAME = 'cdash';
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
 $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
+// Duration of the cookie session (in seconds)
+$CDASH_COOKIE_EXPIRATION_TIME='3600';
 // Name of the server running CDash. 
 // Leave empty to use current name.
 $CDASH_SERVER_NAME = '';
