@@ -21,14 +21,21 @@ function sendemail($parser,$projectid)
 {
   include_once("common.php");
   include("config.php");
-     
-  // We send email at the end of the testing
+  add_log("sendmail", "$CDASH_USE_HTTPS = $CDASH_USE_HTTPS");   
+  // Send email at the end of the testing xml file or the
+  // update xml file.  This is because the update file will
+  // contain the information on the users that made the commit
+  // however, it may never be submitted, in that case users
+  // that have registered with CDash to get email for any broken
+  // build should still get email.  The down side is that the 
+  // registered users will now get two emails.  
   $testing = @$parser->index["TESTING"];
-  if($testing == "")
+  $update = @$parser->index["UPDATE"];
+  if($testing == "" && $update == "")
     {
     return;
     }
-   
+
   // Check if we should send the email
   $project = mysql_query("SELECT name,emailbrokensubmission FROM project WHERE id='$projectid'");
   $project_array = mysql_fetch_array($project);
@@ -38,19 +45,28 @@ function sendemail($parser,$projectid)
     }
 
   $site = $parser->index["SITE"];
-  $i = $site[0];
-  $name = $parser->vals[$i]["attributes"]["BUILDNAME"];
-  $stamp = $parser->vals[$i]["attributes"]["BUILDSTAMP"];
-  
+  if($testing != "")
+  {
+    $i = $site[0];
+    $name = $parser->vals[$i]["attributes"]["BUILDNAME"];
+    $stamp = $parser->vals[$i]["attributes"]["BUILDSTAMP"];
+  }
+  else
+  {
+    $i = $parser->index["BUILDNAME"][0];
+    $name = $parser->vals[$i]["value"];
+    $i = $parser->index["BUILDSTAMP"][0];
+    $stamp =  $parser->vals[$i]["value"];
+  }
+
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
   if($buildid<0)
     {
     return;
     }
-  
   add_log("Start buildid=".$buildid,"sendemail");
-  
+
   // Find if the build has any errors
   $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
   $builderror_array = mysql_fetch_array($builderror);
@@ -113,7 +129,7 @@ function sendemail($parser,$projectid)
        && $npreviousbuilderrors==$nbuilderrors
       ) 
       {
-      return;
+//      return;
       }
     }
   
@@ -125,20 +141,25 @@ function sendemail($parser,$projectid)
   while($authors_array = mysql_fetch_array($authors))
     {
     $author = $authors_array["author"];
-   
     if($author=="Local User")
       {
       continue;
       }
     
     // Find a matching name in the database
-    $user = mysql_query("SELECT user.email FROM user,user2project WHERE user2project.projectid='$projectid' 
-                                 AND user2project.userid=user.id AND user2project.cvslogin='$author'");
+    $query = "SELECT user.email FROM user,user2project WHERE user2project.projectid='$projectid' AND user2project.userid=user.id AND user2project.cvslogin='$author'";
+    $user = mysql_query($query);
+
     if(mysql_num_rows($user)==0)
       {
       // Should send an email to the project admin to let him know that this user is not registered
       continue;
       }
+    // don't add the same user twice
+    if(strpos($email,$user_array["email"]) !== false)
+     {
+     continue;
+     }
   
     if($email != "")
       {
@@ -148,14 +169,13 @@ function sendemail($parser,$projectid)
     $user_array = mysql_fetch_array($user);
     $email .= $user_array["email"];
     } 
-  
   // Select the users who want to receive all emails
  $user = mysql_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
                        AND user2project.userid=user.id AND user2project.emailtype>1");
  while($user_array = mysql_fetch_array($user))
    {
    // If the user is already in the list we quit
-   if(strstr($email,$user_array["email"]) !== FALSE)
+   if(strpos($email,$user_array["email"]) !== false)
      {
      continue;
      }
@@ -178,7 +198,6 @@ function sendemail($parser,$projectid)
     $email .= $user_array["email"];
     }
   }
- 
   // Some variables we need for the email
   $site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
   $site_array = mysql_fetch_array($site);
@@ -227,12 +246,15 @@ function sendemail($parser,$projectid)
     if($_SERVER['SERVER_PORT']!=80)
       {
       $currentPort=":".$_SERVER['SERVER_PORT'];
-      if($_SERVER['SERVER_PORT']==443)
+      if($_SERVER['SERVER_PORT']!=80 )
         {
         $httpprefix = "https://";
         }
       }
-    
+    if($CDASH_USE_HTTPS === true)
+      {
+      $httpprefix = "https://";
+      }
     $serverName = $CDASH_SERVER_NAME;
     if(strlen($serverName) == 0)
       {
@@ -266,8 +288,6 @@ function sendemail($parser,$projectid)
       }
      
     $messagePlainText .= "\n-CDash on ".$serverName."\n";
-    
-    add_log("sending email","sendemail");
     
     // Send the email
     if(mail("$email", $title, $messagePlainText,
