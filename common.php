@@ -1898,7 +1898,7 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
   // If $cmps[1] starts with "root=" and the $directory value starts
   // with "whatever comes after that" then remove that bit from directory:
   //
-  $npos = strpos($cmps[1], "root=");
+  @$npos = strpos($cmps[1], "root=");
   if ($npos !== FALSE && $npos === 0)
     {
     $rootdir = substr($cmps[1], 5);
@@ -1951,7 +1951,7 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
     }
   else
     {
-    $diff_url = $cmps[0] . $dircmp . $file ."?".$cmps[1];
+    @$diff_url = $cmps[0] . $dircmp . $file ."?".$cmps[1];
     }
 
   return make_cdash_url($diff_url);
