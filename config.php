@@ -29,6 +29,8 @@ $CDASH_EMAIL_FROM = 'admin@cdash.org';
 $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
 // Duration of the cookie session (in seconds)
 $CDASH_COOKIE_EXPIRATION_TIME='3600';
+// Using HTTPS protocol to access CDash
+$CDASH_USE_HTTPS ='0';
 // Name of the server running CDash. 
 // Leave empty to use current name.
 $CDASH_SERVER_NAME = '';
