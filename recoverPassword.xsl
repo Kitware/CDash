@@ -36,7 +36,7 @@
     <td width="425" valign="top" class="insd">
     <div class="insdd">
       <span class="inn1">CDash</span><br />
-      <span class="inn2">Login</span>
+      <span class="inn2">Recover Login</span>
       </div>
     </td>
     <td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
@@ -49,7 +49,7 @@
  <tr>
   <td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
 <li id="Dartboard">
-<a href="index.php">HOME</a>
+<a href="user.php">LOGIN</a>
 </li>
 <li><a href="register.php">REGISTER</a></li>
 </ul>
@@ -63,6 +63,7 @@
 </table>
 
 <br/>
+<div style="color: red;"><xsl:value-of select="cdash/warning" /></div>
 <div style="color: green;"><xsl:value-of select="cdash/message" /></div>
 <br/>
 
@@ -71,19 +72,16 @@
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
 <tr class="table-heading">
-  <td width="10%" class="nob"><div align="right"> Email: </div></td>
-  <td  width="70%" class="nob"><input class="textbox" name="login" size="40"/></td>
-  <td width="20%" align="right" class="nob"></td>
+  <td width="10%" class="nob"><div align="right"></div></td>
+  <td width="90%" class="nob"><div align="left"><b>Enter your email address you registered with CDash.</b></div></td>
 </tr>
 <tr class="table-heading">
-    <td width="10%" class="nob" ><div align="right">Password: </div></td>
-    <td width="70%" class="nob"><input class="textbox" type="password"  name="passwd" size="20"/></td>
-    <td width="20%" align="right" class="nob"></td>
+  <td width="10%" class="nob"><div align="right"> Email: </div></td>
+  <td  width="90%" class="nob"><input class="textbox" name="email" size="40"/></td>
 </tr>
 <tr class="table-heading">
   <td width="10%" class="nob"></td>
-  <td width="70%" class="nob"><input type="submit" value="Login &gt;&gt;" name="sent" class="textbox"/>
-  <td width="20%" align="right" class="nob"><a href="recoverPassword.php">forgot your password?</a></td>
+  <td width="90%" class="nob"><input type="submit" value="Recover password &gt;&gt;" name="recover" class="textbox"/>
   </td>
 </tr> 
 </tbody>

@@ -18,12 +18,15 @@
 include_once("config.php");
 include_once("version.php"); 
 
+$loginerror = 0;
+
 /** Authentication function */
 function auth()
 {  
   include "config.php";
   $loginid= 1231564132;
-  $m_error = 0; 
+  global $loginerror;
+  $loginerror = 0;
 
   if(isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH
      && isset($_SERVER['REMOTE_USER'])) 
@@ -102,8 +105,8 @@ d" => 1, "loginid" => $user_array["id"]);
         }
       }
     if(!$login_ok)
-      { 
-     $m_error = 1;
+      {
+      $loginerror = 1;
       return 0;                                   // access denied 
       }  
     }
@@ -155,10 +158,12 @@ function LoginForm($loginerror)
     {
     $xml .= "<message>Registration Complete. Please login with your email and password.</message>";
     }
-  else
+  
+  if($loginerror == 1)
     {
-    $xml .= "<message></message>";
-    }
+    $xml .= "<message>Wrong email or password.</message>";
+    }     
+    
   $xml .= "</cdash>";
   generate_XSLT($xml,"login");
 }
@@ -170,9 +175,9 @@ $mysession = array ("login"=>FALSE,"password" => FALSE, "passwd"=>FALSE, "ID"=>F
 $uri = basename($_SERVER['PHP_SELF']);  
 $stamp = md5(srand(5));  
 $session_OK = 0;
-@$loginerror = $GLOBALS["loginerror"];
-if(!auth()  && !@$noforcelogin):                 // authentication failed 
-  LoginForm(@$loginerror); // display login form 
+
+if(!auth() && !@$noforcelogin):                 // authentication failed 
+  LoginForm($loginerror); // display login form 
   $session_OK=0;
 else:                        // authentication was successful 
   $tmp = session_id();       // session is already started 
