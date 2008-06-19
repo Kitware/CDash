@@ -86,7 +86,18 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     if(mysql_num_rows($coveragefilelog)>0)
       {
       $coveragefilelog_array = mysql_fetch_array($coveragefilelog);
-      $file_array[$i] = str_pad($coveragefilelog_array["code"],8, "0", STR_PAD_LEFT)."&nbsp;&nbsp;&nbsp;".$line;
+      $file_array[$i] = "";
+      if($coveragefilelog_array["code"]==0)
+        {
+        $file_array[$i] .= "<font color=\"red\">";
+        } 
+        
+      $file_array[$i] .= str_pad($coveragefilelog_array["code"],8, "0", STR_PAD_LEFT)."&nbsp;&nbsp;&nbsp;".$line;
+        
+      if($coveragefilelog_array["code"]==0)
+        {
+        $file_array[$i] .= "</font>";
+        } 
       }
     else
       {
