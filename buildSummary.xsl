@@ -47,14 +47,24 @@
         <th>Stage</th><th>Errors</th><th>Warnings</th>
       </tr>
        <tr class="tr-odd">
-        <td><a href="#Stage0"><b>Update</b></a></td>
+        <td>
+        <xsl:choose>
+          <xsl:when test="cdash/update">
+            <a href="#Stage0"><b>Update</b></a>
+          </xsl:when>
+          <xsl:otherwise><b>Update</b></xsl:otherwise>
+        </xsl:choose> 
+       </td>
         <td align="right">
         <xsl:attribute name="class">
           <xsl:choose>
           <xsl:when test="cdash/update/nerrors > 0">error
                </xsl:when>
                  <xsl:otherwise>
-                  normal
+                  <xsl:choose>
+                  <xsl:when test="cdash/update">normal</xsl:when>
+                  <xsl:otherwise>na</xsl:otherwise>
+                   </xsl:choose>
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
@@ -66,7 +76,10 @@
           <xsl:when test="cdash/update/nwarnings > 0">error
                </xsl:when>
                  <xsl:otherwise>
-                  normal
+                  <xsl:choose>
+                  <xsl:when test="cdash/update">normal</xsl:when>
+                  <xsl:otherwise>na</xsl:otherwise>
+                   </xsl:choose>
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
@@ -162,7 +175,10 @@
           <xsl:when test="cdash/previousbuild/nupdateerrors > 0">error
                </xsl:when>
                  <xsl:otherwise>
-                  normal
+                 <xsl:choose>
+                  <xsl:when test="cdash/update">normal</xsl:when>
+                  <xsl:otherwise>na</xsl:otherwise>
+                   </xsl:choose>
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
@@ -174,7 +190,10 @@
           <xsl:when test="cdash/previousbuild/nupdatewarnings > 0">error
                </xsl:when>
                  <xsl:otherwise>
-                  normal
+                  <xsl:choose>
+                  <xsl:when test="cdash/update">normal</xsl:when>
+                  <xsl:otherwise>na</xsl:otherwise>
+                   </xsl:choose>
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
@@ -287,6 +306,7 @@
 <br/>
 
 <!-- Update -->
+<xsl:if test="cdash/update">
 <div class="title-divider" id="Stage0">
 <div class="tracknav">
 [<a href="#top">Top</a>]
@@ -299,19 +319,19 @@ Stage: Update (<xsl:value-of select="cdash/update/nerrors"/> errors, <xsl:value-
 </div>
 <br/><b>Start Time: </b><xsl:value-of select="cdash/update/starttime"/> 
 <br/><b>End Time: </b><xsl:value-of select="cdash/update/endtime"/>
-<br/><b>Update Command: </b> <xsl:value-of select="cdash/update/command"/>    
+<br/><b>Update Command: </b> <xsl:value-of select="cdash/update/command"/>
 <br/><b>Update Type: </b> <xsl:value-of select="cdash/update/type"/>   
 <br/><b>Number of Updates: </b>
 <a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
 <xsl:value-of select="cdash/update/nupdates"/></a>
 <br/><br/>
-
+</xsl:if>
 
 <!-- Configure -->
 <div class="title-divider" id="Stage1">
 <div class="tracknav">
 [<a href="#top">Top</a>]
-[<a href="#Stage0">Update</a>]
+<xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
 [<a href="#Stage1">Configure</a>]
 [<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
 [<a href="#Stage3">Test</a>]
@@ -332,7 +352,7 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 <div class="title-divider" id="Stage2">
 <div class="tracknav">
 [<a href="#top">Top</a>]
-[<a href="#Stage0">Update</a>]
+<xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
 [<a href="#Stage1">Configure</a>]
 [<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
 [<a href="#Stage3">Test</a>]
@@ -361,7 +381,7 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 
         <div class="title-divider" id="Stage2Warnings"><div class="tracknav">
 [<a href="#top">Top</a>]
-[<a href="#Stage0">Update</a>]
+<xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
 [<a href="#Stage1">Configure</a>]
 [<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
 [<a href="#Stage3">Test</a>]</div>
@@ -388,7 +408,7 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 <div class="title-divider" id="Stage3">
 <div class="tracknav">
 [<a href="#top">Top</a>]
-[<a href="#Stage0">Update</a>]
+<xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
 [<a href="#Stage1">Configure</a>]
 [<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
 [<a href="#Stage3">Test</a>]

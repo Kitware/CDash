@@ -176,26 +176,31 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= "</build>";
 
   // Update
-  $xml .= "<update>";
+  $buildupdate = mysql_query("SELECT * FROM buildupdate WHERE buildid='$buildid'");
   
-  // Checking for locally modify files
-  $updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");      
-  $nerrors = mysql_num_rows($updatelocal);
-  $nwarnings = 0;
-  $xml .= add_XML_value("nerrors",$nerrors);
-  $xml .= add_XML_value("nwarnings",$nwarnings);
+  if(mysql_num_rows($buildupdate)>0) // show the update only if we have one
+    {
+    $xml .= "<update>";
   
-  $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
-  $nupdates = mysql_num_rows($update);
-  $xml .= add_XML_value("nupdates",$nupdates);  
-     
-  $update = mysql_query("SELECT * FROM buildupdate WHERE buildid='$buildid'");
-  $update_array = mysql_fetch_array($update);
-  $xml .= add_XML_value("command",$update_array["command"]);
-  $xml .= add_XML_value("type",$update_array["type"]);
-  $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($update_array["starttime"]." UTC")));
-  $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($update_array["endtime"]." UTC")));
-  $xml .= "</update>";
+    // Checking for locally modify files
+    $updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");      
+    $nerrors = mysql_num_rows($updatelocal);
+    $nwarnings = 0;
+    $xml .= add_XML_value("nerrors",$nerrors);
+    $xml .= add_XML_value("nwarnings",$nwarnings);
+    
+    $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
+    $nupdates = mysql_num_rows($update);
+    $xml .= add_XML_value("nupdates",$nupdates);  
+       
+    
+    $update_array = mysql_fetch_array($buildupdate);
+    $xml .= add_XML_value("command",$update_array["command"]);
+    $xml .= add_XML_value("type",$update_array["type"]);
+    $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($update_array["starttime"]." UTC")));
+    $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($update_array["endtime"]." UTC")));
+    $xml .= "</update>";
+    }
   
   
   // Configure
