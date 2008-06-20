@@ -147,7 +147,8 @@ function sendemail($parser,$projectid)
       }
     
     // Find a matching name in the database
-    $query = "SELECT user.email FROM user,user2project WHERE user2project.projectid='$projectid' AND user2project.userid=user.id AND user2project.cvslogin='$author'";
+    $query = "SELECT user.email FROM user,user2project WHERE user2project.projectid='$projectid' 
+                               AND user2project.userid=user.id AND user2project.cvslogin='$author'";
     $user = mysql_query($query);
 
     if(mysql_num_rows($user)==0)
@@ -155,6 +156,8 @@ function sendemail($parser,$projectid)
       // Should send an email to the project admin to let him know that this user is not registered
       continue;
       }
+    
+    $user_array = mysql_fetch_array($user);  
     // don't add the same user twice
     if(strpos($email,$user_array["email"]) !== false)
      {
@@ -165,8 +168,6 @@ function sendemail($parser,$projectid)
       {
       $email .= ", ";
       }
-     
-    $user_array = mysql_fetch_array($user);
     $email .= $user_array["email"];
     } 
   // Select the users who want to receive all emails
