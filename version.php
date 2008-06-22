@@ -15,9 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-// Hostname of the MySQL database 
+// Current version 
 $CDASH_VERSION_MAJOR = '1';
 $CDASH_VERSION_MINOR = '0';
-$CDASH_VERSION_PATCH = '0';
+$CDASH_VERSION_PATCH = '1';
 $CDASH_VERSION = $CDASH_VERSION_MAJOR.".".$CDASH_VERSION_MINOR.".".$CDASH_VERSION_PATCH;
 ?>
