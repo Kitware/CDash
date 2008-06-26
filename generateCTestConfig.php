@@ -52,7 +52,7 @@ $ctestconfig .= "set(CTEST_DROP_SITE \"".$_SERVER['SERVER_NAME']."\")\n";
 $currentURI = $_SERVER['REQUEST_URI']; 
 $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
    
-$ctestconfig .= "set(CTEST_DROP_LOCATION \"".$currentURI."/submit.php?project=".$project_array["name"]."\")\n";
+$ctestconfig .= "set(CTEST_DROP_LOCATION \"".$currentURI."/submit.php?project=".urlencode($project_array["name"])."\")\n";
 $ctestconfig .= "set(CTEST_DROP_SITE_CDASH TRUE)\n";
  
 header('Vary: User-Agent');
