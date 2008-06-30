@@ -42,6 +42,7 @@ $xml .= "<menusubtitle>Tools</menusubtitle>";
 @$DeleteBuildsWrongDate = $_POST["DeleteBuildsWrongDate"];
 @$CheckBuildsWrongDate = $_POST["CheckBuildsWrongDate"];
 @$ComputeTestTiming = $_POST["ComputeTestTiming"];
+@$ComputeUpdateStatistics = $_POST["ComputeUpdateStatistics"];
 
 @$Upgrade = $_POST["Upgrade"];
 
@@ -152,7 +153,7 @@ if(isset($_GET['upgrade-1-2']))
     {
     CompressNotes();
     }
-  
+   
   exit();
 }
 
@@ -163,7 +164,7 @@ if($Upgrade)
   $xml .= "<upgrade>1</upgrade>";  
 }
 
-// Compute the testtime from the previous week (this is a test)
+// Compute the testtime
 if($ComputeTestTiming)
 { 
   @$TestTimingDays = $_POST["TestTimingDays"];
@@ -176,6 +177,21 @@ if($ComputeTestTiming)
    {
    $xml .= add_XML_value("alert","Wrong number of days.");
    }
+}
+
+// Compute the user statistics
+if($ComputeUpdateStatistics)
+{ 
+  @$UpdateStatisticsDays = $_POST["UpdateStatisticsDays"];
+  if(is_numeric($UpdateStatisticsDays) && $UpdateStatisticsDays>0)
+    {
+    ComputeUpdateStatistics($UpdateStatisticsDays);
+    $xml .= add_XML_value("alert","User statistics has been computed successfully.");
+    }
+  else
+   {
+   $xml .= add_XML_value("alert","Wrong number of days.");
+   } 
 }
 
 
@@ -379,6 +395,8 @@ function ComputeTestTiming($days = 4)
             $timemean = $testtime;
             }
           
+          
+      
           mysql_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
                         WHERE buildid='$buildid' AND testid='$testid'");
        
@@ -415,6 +433,258 @@ function ComputeTestTiming($days = 4)
       } // end looping through builds 
     } // end looping through projects
 }
+
+
+
+/** Compute the statistics for the updated file. Number of produced errors, warning, test failings. */
+function ComputeUpdateStatistics($days = 4)
+{
+  // Loop through the projects
+  $project = mysql_query("SELECT id FROM project");
+  
+  while($project_array = mysql_fetch_array($project))
+    {    
+    $projectid = $project_array["id"];
+    echo "PROJECT id: ".$projectid."<br>";
+    
+    // only test a couple of days
+    $now = gmdate("Y-m-d H:i:s",time()-3600*24*$days);
+    
+    // Find the builds
+    $builds = mysql_query("SELECT starttime,siteid,name,type,id
+                               FROM build
+                               WHERE build.projectid='$projectid' AND build.starttime>'$now'
+                               ORDER BY build.starttime ASC");
+    
+    $total = mysql_num_rows($builds);
+    echo mysql_error();
+    
+    $i=0;
+    $previousperc = 0;
+    while($build_array = mysql_fetch_array($builds))
+      {                           
+      $buildid = $build_array["id"];
+      $buildname = $build_array["name"];
+      $buildtype = $build_array["type"];
+      $starttime = $build_array["starttime"];
+      $siteid = $build_array["siteid"];
+      
+      // Find the previous build
+      $previousbuild = mysql_query("SELECT id FROM build
+                                    WHERE build.siteid='$siteid' 
+                                    AND build.type='$buildtype' AND build.name='$buildname'
+                                    AND build.projectid='$projectid' 
+                                    AND build.starttime<'$starttime' 
+                                    AND build.starttime>'$now'
+                                    ORDER BY build.starttime DESC LIMIT 1");
+
+      echo mysql_error();
+      
+      $firstfile = 1;
+      
+      // Loop through the updated file
+      $updatefiles = mysql_query("SELECT id,author,checkindate FROM updatefile WHERE buildid='$buildid' ORDER BY buildid ASC");
+      while($updatefiles_array = mysql_fetch_array($updatefiles))
+        {
+        $updatefileid = $updatefiles_array["id"];
+        $checkindate = $updatefiles_array["checkindate"];
+        $author = $updatefiles_array["author"];
+        
+        // Find the current number of errors
+        $errors = mysql_query("SELECT count(*) FROM builderror WHERE type='0' 
+                               AND buildid='$buildid'");
+        $errors_array  = mysql_fetch_array($errors);
+        $nerrors = $errors_array[0]; 
+   
+        // Number of warnings
+         $warnings = mysql_query("SELECT count(*) FROM builderror WHERE type='1' 
+                                 AND buildid='$buildid'");
+        $warnings_array  = mysql_fetch_array($warnings);
+        $nwarnings = $warnings_array[0]; 
+        
+        // Number of tests failin
+        $tests = mysql_query("SELECT count(*) FROM build2test WHERE (status='failed' OR status='notrun')
+                              AND buildid='$buildid'");
+        $tests_array  = mysql_fetch_array($tests);
+        $ntests = $tests_array[0];
+        
+        // If we have a previous build
+        if(mysql_num_rows($previousbuild)>0)
+          {
+          $previousbuild_array = mysql_fetch_array($previousbuild);
+          $previousbuildid = $previousbuild_array["id"];
+          $previouserrors = mysql_query("SELECT count(*) FROM builderror WHERE type='0' 
+                                   AND buildid='$previousbuildid'");
+          $previouserrors_array  = mysql_fetch_array($previouserrors);
+          $npreviouserrors = $previouserrors_array[0];
+          
+          $previouswarnings = mysql_query("SELECT count(*) FROM builderror WHERE type='1' 
+                                           AND buildid='$previousbuildid'");
+          $previouswarnings_array  = mysql_fetch_array($previouswarnings);
+          $npreviouswarnings = $previouswarnings_array[0];
+          
+          $previoustests = mysql_query("SELECT count(*) FROM build2test WHERE (status='failed' OR status='notrun') 
+                                        AND buildid='$previousbuildid'");
+          $previoustests_array  = mysql_fetch_array($previoustests);
+          $nprevioustests = $previoustests_array[0];
+          
+          $warningdiff = $nwarnings-$npreviouswarnings;
+          $errordiff = $nerrors-$npreviouserrors;
+          $testdiff = $ntests-$nprevioustests;
+          }
+        else // this is the first build
+          {
+          $warningdiff = $nwarnings;
+          $errordiff = $nerrors;
+          $testdiff = $ntests;
+          } 
+        
+        // Find the userid from the author name
+        $user2project = mysql_query("SELECT userid FROM user2project WHERE cvslogin='$author' AND projectid='$projectid'");
+        if(mysql_num_rows($user2project)>0)
+          {
+          $user2project_array = mysql_fetch_array($user2project);
+          $userid = $user2project_array["userid"];
+      
+          // Check if we already have a checkin date for this user
+          $userstatistics = mysql_query("SELECT totalupdatedfiles
+                                         FROM userstatistics WHERE userid='$userid' AND projectid='$projectid' AND checkindate='$checkindate'");
+          echo mysql_error();
+                                          
+          if(mysql_num_rows($userstatistics)>0)
+            {                 
+            $userstatistics_array = mysql_fetch_array($userstatistics);
+            $totalbuilds = 0;
+            if($firstfile==1)
+              {
+              $totalbuilds=1;
+              }
+            
+            $nfailedwarnings = 0;
+            $nfixedwarnings = 0;
+            $nfailederrors = 0;
+            $nfixederrors = 0;
+            $nfailedtests = 0;
+            $nfixedtests = 0;
+                        
+            if($warningdiff>0)
+              {
+              $nfailedwarnings = $warningdiff;
+              }
+            else
+              {
+              $nfixedwarnings = abs($warningdiff);
+              }
+           
+           if($errordiff>0)
+              {
+              $nfailederrors = $errordiff;
+              }
+            else
+              {
+              $nfixederrors = abs($errordiff);
+              }
+            
+            if($testdiff>0)
+              {
+              $nfailedtests = $testdiff;
+              }
+            else
+              {
+              $nfixedtests = abs($testdiff);
+              }
+            
+            mysql_query("UPDATE userstatistics SET totalupdatedfiles=totalupdatedfiles+1,
+                        totalbuilds=totalbuilds+'$totalbuilds',
+                        nfixedwarnings=nfixedwarnings+'$nfixedwarnings',
+                        nfailedwarnings=nfailedwarnings+'$nfailedwarnings',
+                        nfixederrors=nfixederrors+'$nfixederrors',
+                        nfailederrors=nfailederrors+'$nfailederrors',
+                        nfixedtests=nfixedtests+'$nfixedtests',
+                        nfailedtests=nfailedtests+'$nfailedtests' WHERE userid='$userid' AND projectid='$projectid' AND checkindate>='$checkindate'");
+            echo mysql_error();
+            }
+         else // insert into the database
+            {
+            if($warningdiff>0)
+              {
+              $nfixedwarnings = 0;
+              $nfailedwarnings = $warningdiff;
+              }
+            else
+              {
+              $nfixedwarnings = $warningdiff;
+              $nfailedwarnings = 0;
+              }
+           
+           if($errordiff>0)
+              {
+              $nfixederrors = 0;
+              $nfailederrors = $errordiff;
+              }
+            else
+              {
+              $nfixederrors = $errordiff;
+              $nfailederrors = 0;
+              }
+            
+            if($testdiff>0)
+              {
+              $nfixedtests = 0;
+              $nfailedtests = $testdiff;
+              }
+            else
+              {
+              $nfixedtests = $testdiff;
+              $nfailedtests = 0;
+              }
+
+            $totalupdatedfiles=1;
+            $totalbuilds=1;
+
+            // Find the previous test
+            $previous = mysql_query("SELECT totalupdatedfiles,totalbuilds,nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests
+                         FROM userstatistics WHERE userid='$userid' AND projectid='$projectid' AND checkindate<'$checkindate' ORDER BY checkindate DESC LIMIT 1");
+            echo mysql_error();             
+            if(mysql_num_rows($previous)>0)
+              {
+              $previous_array = mysql_fetch_array($previous);
+              $totalupdatedfiles += $previous_array["totalupdatedfiles"];
+              $totalbuilds += $previous_array["totalbuilds"];
+              $nfixedwarnings += $previous_array["nfixedwarnings"];
+              $nfailedwarnings += $previous_array["nfailedwarnings"];
+              $nfixederrors += $previous_array["nfixederrors"];
+              $nfailederrors += $previous_array["nfailederrors"];
+              $nfixedtests += $previous_array["nfixedtests"];
+              $nfailedtests += $previous_array["nfailedtests"];
+              }
+
+            mysql_query("INSERT INTO userstatistics (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
+                        nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests)
+                        VALUES ($userid,$projectid,'$checkindate',$totalupdatedfiles,$totalbuilds,$nfixedwarnings,$nfailedwarnings,$nfixederrors,$nfailederrors,$nfixedtests,$nfailedtests)
+                        ");
+            echo mysql_error();
+            }              
+                                                    
+          } // end has a registered user      
+       
+        $firstfile = 0;
+        } // end updatefiles
+        
+      // Progress bar  
+      $perc = ($i/$total)*100;
+      if($perc-$previousperc>5)
+        {
+        echo round($perc,3)."% done.<br>";
+        flush();
+        ob_flush();
+        $previousperc = $perc;
+        }
+      $i++;
+      } // end looping through builds 
+    } // end looping through projects
+}
+
 
 /** Support for compressed coverage.
  *  This is done in two steps.
