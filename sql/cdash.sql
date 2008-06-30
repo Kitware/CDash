@@ -559,6 +559,23 @@ CREATE TABLE `build2note` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
+CREATE TABLE `userstatistics` (
+  `userid` int(11) NOT NULL,
+  `projectid` smallint(6) NOT NULL,
+  `checkindate` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `totalupdatedfiles` bigint(20) NOT NULL,
+  `totalbuilds` bigint(20) NOT NULL,
+  `nfixedwarnings` bigint(20) NOT NULL,
+  `nfailedwarnings` bigint(20) NOT NULL,
+  `nfixederrors` bigint(20) NOT NULL,
+  `nfailederrors` bigint(20) NOT NULL,
+  `nfixedtests` bigint(20) NOT NULL,
+  `nfailedtests` bigint(20) NOT NULL,
+  KEY `userid` (`userid`),
+  KEY `projectid` (`projectid`),
+  KEY `checkindate` (`checkindate`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 
