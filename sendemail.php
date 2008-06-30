@@ -170,6 +170,7 @@ function sendemail($parser,$projectid)
       }
     $email .= $user_array["email"];
     } 
+    
   // Select the users who want to receive all emails
  $user = mysql_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
                        AND user2project.userid=user.id AND user2project.emailtype>1");
@@ -190,7 +191,7 @@ function sendemail($parser,$projectid)
       }
     $email .= $user_array["email"];
     }
-  else // send the email
+  else if($user_array["emailtype"] == 3) // want to receive all emails
     {
     if($email != "")
       {
@@ -199,6 +200,7 @@ function sendemail($parser,$projectid)
     $email .= $user_array["email"];
     }
   }
+  
   // Some variables we need for the email
   $site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
   $site_array = mysql_fetch_array($site);
