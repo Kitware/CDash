@@ -23,6 +23,8 @@ $CDASH_DB_LOGIN = 'root';
 $CDASH_DB_PASS = '';
 // Name of the MySQL database
 $CDASH_DB_NAME = 'cdash';
+// Database type (empty means mysql)
+$CDASH_DB_TYPE = 'mysql';
 // Default from email
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
