@@ -16,36 +16,36 @@
 
 =========================================================================*/
 include("config.php");
+require_once("pdo.php");
 include('login.php');
 include("version.php");
 
 if ($session_OK) 
   {
-  include("config.php");
-  include("common.php");
+  include_once("common.php");
   
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - My Profile</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
 
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
 
   $userid = $_SESSION['cdash']['loginid'];
 
   @$updateprofile = $_POST["updateprofile"]; 
   if($updateprofile) 
    {
-   $institution = mysql_real_escape_string($_POST["institution"]); 
-   $email = mysql_real_escape_string($_POST["email"]); 
-   $lname = mysql_real_escape_string($_POST["lname"]); 
-   $fname = mysql_real_escape_string($_POST["fname"]);  
+   $institution = pdo_real_escape_string($_POST["institution"]); 
+   $email = pdo_real_escape_string($_POST["email"]); 
+   $lname = pdo_real_escape_string($_POST["lname"]); 
+   $fname = pdo_real_escape_string($_POST["fname"]);  
    
-   if(mysql_query("UPDATE user SET email='$email',
-                                  institution='$institution',
-                  firstname='$fname',
-                  lastname='$lname' WHERE id='$userid'"))
+   if(pdo_query("UPDATE ".qid("user")." SET email='$email',
+                 institution='$institution',
+                 firstname='$fname',
+                 lastname='$lname' WHERE id='$userid'"))
     {
    $xml .= "<error>Your profile has been updated.</error>";
     }
@@ -74,8 +74,8 @@ if ($session_OK)
     else
     {
    $md5pass = md5($passwd); 
-   $md5pass = mysql_real_escape_string($md5pass); 
-   if(mysql_query("UPDATE user SET password='$md5pass' WHERE id='$userid'"))
+   $md5pass = pdo_real_escape_string($md5pass); 
+   if(pdo_query("UPDATE ".qid("user")." SET password='$md5pass' WHERE id='$userid'"))
     {
     $xml .= "<error>Your password has been updated.</error>";
     }
@@ -89,8 +89,8 @@ if ($session_OK)
     }
   
   $xml .= "<user>";
-  $user = mysql_query("SELECT * FROM user WHERE id='$userid'");
-  $user_array = mysql_fetch_array($user);
+  $user = pdo_query("SELECT * FROM ".qid("user")." WHERE id='$userid'");
+  $user_array = pdo_fetch_array($user);
   $xml .= add_XML_value("firstname",$user_array["firstname"]);
   $xml .= add_XML_value("lastname",$user_array["lastname"]);
   $xml .= add_XML_value("email",$user_array["email"]);

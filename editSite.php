@@ -15,7 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php"); 
+include("config.php");
+require_once("pdo.php");
 include('login.php');
 include_once('common.php');
 include("version.php");
@@ -24,8 +25,8 @@ if ($session_OK)
   {
   $userid = $_SESSION['cdash']['loginid'];
  
-  @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
   
   $xml = "<cdash>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -136,23 +137,23 @@ if ($session_OK)
   @$projectid = $_GET["projectid"];
   if(isset($projectid) && is_numeric($projectid))
     {
-    $project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
+    $project_array = pdo_fetch_array(pdo_query("SELECT name FROM project WHERE id='$projectid'"));
     $xml .= "<project>";
     $xml .= add_XML_value("id",$projectid);
     $xml .= add_XML_value("name",$project_array["name"]);
     $xml .= "</project>";
     
     // Select sites that belong to this project
-    $site2project = mysql_query("SELECT siteid FROM build WHERE projectid='$projectid' GROUP BY siteid");
-    while($site2project_array = mysql_fetch_array($site2project))
+    $site2project = pdo_query("SELECT siteid FROM build WHERE projectid='$projectid' GROUP BY siteid");
+    while($site2project_array = pdo_fetch_array($site2project))
        {
        $siteid = $site2project_array["siteid"];
-       $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+       $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
        $xml .= "<site>";
        $xml .= add_XML_value("id",$siteid);
        $xml .= add_XML_value("name",$site_array["name"]);
-       $user2site = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-       if(mysql_num_rows($user2site) == 0)
+       $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
+       if(pdo_num_rows($user2site) == 0)
          {
          $xml .= add_XML_value("claimed","0");
          }
@@ -170,7 +171,7 @@ if ($session_OK)
     {
     $xml .= "<user>";
     $xml .= "<site>";
-    $site_array = mysql_fetch_array(mysql_query("SELECT * FROM site WHERE id='$siteid'"));
+    $site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'"));
     
     $siteinformation_array = array();
     $siteinformation_array["description"] = "NA";
@@ -188,10 +189,10 @@ if ($session_OK)
     $siteinformation_array["processorclockfrequency"] = "NA";
     
     // Get the last information about the size
-    $query = mysql_query("SELECT * FROM siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
-    if(mysql_num_rows($query) > 0)
+    $query = pdo_query("SELECT * FROM siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
+    if(pdo_num_rows($query) > 0)
      {
-     $siteinformation_array = mysql_fetch_array($query);
+     $siteinformation_array = pdo_fetch_array($query);
      if($siteinformation_array["processoris64bits"] == -1)
        {
        $siteinformation_array["processoris64bits"] = "NA";
@@ -254,16 +255,16 @@ if ($session_OK)
     $xml .= add_XML_value("longitude",$site_array["longitude"]); 
     $xml .= "</site>";
     
-    $site2project = mysql_query("SELECT projectid FROM build WHERE siteid='$siteid' GROUP BY projectid");
-    while($site2project_array = mysql_fetch_array($site2project))
+    $site2project = pdo_query("SELECT projectid FROM build WHERE siteid='$siteid' GROUP BY projectid");
+    while($site2project_array = pdo_fetch_array($site2project))
        {
        $projectid = $site2project_array["projectid"];
-       $user2project = mysql_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
-       if(mysql_num_rows($user2project)>0)
+       $user2project = pdo_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
+       if(pdo_num_rows($user2project)>0)
          {
          $xml .= add_XML_value("sitemanager","1");
-         $user2site = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-         if(mysql_num_rows($user2site) == 0)
+         $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
+         if(pdo_num_rows($user2site) == 0)
            {
            $xml .= add_XML_value("siteclaimed","0");
            }

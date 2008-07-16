@@ -51,9 +51,13 @@
 <br/>
 Please follow the installation step to make sure your system meets the requirements.<br/><br/>
 <xsl:if test="cdash/connectiondb=0">
-Cannot connect to mysql on <b><xsl:value-of select="cdash/connectiondb_host"/></b> using login <b><xsl:value-of select="cdash/connectiondb_login"/></b>.<br/>
+Cannot connect to <b><xsl:value-of select="cdash/connectiondb_type"/></b> on <b><xsl:value-of select="cdash/connectiondb_host"/></b> using login <b><xsl:value-of select="cdash/connectiondb_login"/></b>.<br/>
 Make sure you have modified the settings in the <b>config.php</b> file.
+<xsl:if test="cdash/connectiondb_type != 'mysql'">
+<br/>With databases other than mysql, make sure that the database has been created manually before running this installation.<br/>
 </xsl:if>
+</xsl:if>
+
 
 <xsl:if test="cdash/database=1">
 The database already exists. Quitting installation script.<br/>
@@ -82,6 +86,7 @@ Click here to  <a href="createProject.php">create a new project.</a>
 <xsl:if test="cdash/database=0 and cdash/xslt=1 and cdash/connectiondb=1">
 Please review the settings of your config.php file below and click install to install the SQL tables.<br/><br/>
 
+Database Type: <b><xsl:value-of select="cdash/connectiondb_type"/></b><br/>
 Database Hostname: <b><xsl:value-of select="cdash/connectiondb_host"/></b><br/>
 Database Login: <b><xsl:value-of select="cdash/connectiondb_login"/></b><br/>
 Database Name: <b><xsl:value-of select="cdash/connectiondb_name"/></b><br/>

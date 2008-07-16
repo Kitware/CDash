@@ -17,8 +17,9 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php");
 
 @$buildid = $_GET["buildid"];
@@ -31,17 +32,17 @@ if(!isset($buildid) || !is_numeric($buildid))
   return;
   }
   
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
   
-$build_array = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 $date = date("Ymd", strtotime($build_array["starttime"]));
 
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-if(mysql_num_rows($project)>0)
+$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+if(pdo_num_rows($project)>0)
   {
-  $project_array = mysql_fetch_array($project);  
+  $project_array = pdo_fetch_array($project);  
   $projectname = $project_array["name"];  
   }
 
@@ -56,10 +57,10 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   // Build
   $xml .= "<build>";
-  $build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = mysql_fetch_array($build); 
+  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+  $build_array = pdo_fetch_array($build); 
   $siteid = $build_array["siteid"];
-  $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+  $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("buildname",$build_array["name"]);
  $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]."UTC")));
@@ -87,8 +88,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   $xml .= "<errors>";
   
-  $errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='$type' ORDER BY logline ASC");
-  while($error_array = mysql_fetch_array($errors))
+  $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='$type' ORDER BY logline ASC");
+  while($error_array = pdo_fetch_array($errors))
     {
     $xml .= "<error>";
     $xml .= add_XML_value("logline",$error_array["logline"]);

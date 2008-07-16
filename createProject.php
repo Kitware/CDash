@@ -16,14 +16,15 @@
 
 =========================================================================*/
 include("config.php");
+require_once("pdo.php");
 include('login.php');
 include_once('common.php');
 include("version.php");
 
 if ($session_OK) 
   {
-  @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
 
   $userid = $_SESSION['cdash']['loginid'];
   // Checks
@@ -40,23 +41,23 @@ if ($session_OK)
   // If the projectid is not set and there is only one project we go directly to the page
   if(isset($edit) && !isset($projectid))
     {
-    $project = mysql_query("SELECT id FROM project");
-    if(mysql_num_rows($project)==1)
+    $project = pdo_query("SELECT id FROM project");
+    if(pdo_num_rows($project)==1)
       {
-      $project_array = mysql_fetch_array($project);
+      $project_array = pdo_fetch_array($project);
       $projectid = $project_array["id"];
       }
     }
   
   $role = 0;
- 
-  $user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$userid'"));
+   
+  $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
   if($projectid && is_numeric($projectid))
     {
-    $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-    if(mysql_num_rows($user2project)>0)
+    $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+    if(pdo_num_rows($user2project)>0)
       {
-      $user2project_array = mysql_fetch_array($user2project);
+      $user2project_array = pdo_fetch_array($user2project);
       $role = $user2project_array["role"];
       }  
     }
@@ -108,33 +109,33 @@ if($Submit)
   $Name = $_POST["name"];
   
   // Check that the name are different
-  $project = mysql_query("SELECT id FROM project WHERE name='$Name'");
+  $project = pdo_query("SELECT id FROM project WHERE name='$Name'");
   
-  if(mysql_num_rows($project)==0)
+  if(pdo_num_rows($project)==0)
     {
     $Description = addslashes($_POST["description"]);
     $HomeURL = stripHTTP($_POST["homeURL"]);
     $CVSURL = stripHTTP($_POST["cvsURL"]);
     $BugURL = stripHTTP($_POST["bugURL"]);
     $DocURL = stripHTTP($_POST["docURL"]);
-    @$Public = $_POST["public"];
+    @$Public = qnum($_POST["public"]);
     if(!isset($Public))
       {
       $Public = 0;
       }
     
-    $CoverageThreshold = $_POST["coverageThreshold"];
+    $CoverageThreshold = qnum($_POST["coverageThreshold"]);
     $NightlyTime = $_POST["nightlyTime"];
     $GoogleTracker = $_POST["googleTracker"]; 
-    @$EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
-    @$EmailBuildMissing = $_POST["emailBuildMissing"]; 
-    @$EmailLowCoverage = $_POST["emailLowCoverage"]; 
-    @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];        
+    @$EmailBrokenSubmission = qnum($_POST["emailBrokenSubmission"]);
+    @$EmailBuildMissing = qnum($_POST["emailBuildMissing"]);
+    @$EmailLowCoverage = qnum($_POST["emailLowCoverage"]);
+    @$EmailTestTimingChanged = qnum($_POST["emailTestTimingChanged"]);
     @$CVSViewerType = $_POST["cvsviewertype"];
     @$CVSRepositories = $_POST["cvsRepository"];
-    @$TestTimeStd = $_POST["testTimeStd"];
-    @$TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
-    @$ShowTestTime = $_POST["showTestTime"];
+    @$TestTimeStd = qnum($_POST["testTimeStd"]);
+    @$TestTimeStdThreshold = qnum($_POST["testTimeStdThreshold"]);
+    @$ShowTestTime = qnum($_POST["showTestTime"]);
           
     $handle = fopen($_FILES['logo']['tmp_name'],"r");
     $contents = 0;
@@ -154,18 +155,18 @@ if($Submit)
       $checksum = crc32($contents);
       //check if we already have a copy of this file in the database
       $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
-      $result = mysql_query("$sql");
-      if($row = mysql_fetch_array($result))
+      $result = pdo_query("$sql");
+      if($row = pdo_fetch_array($result))
         {
-        $imgid = $row["id"];
+        $imgid = qnum($row["id"]);
         }
       else
         {
         $sql = "INSERT INTO image(img, extension, checksum)
          VALUES ('$contents', '$filetype', '$checksum')";
-        if(mysql_query("$sql"))
+        if(pdo_query("$sql"))
           {
-          $imgid = mysql_insert_id();
+          $imgid = pdo_insert_id("image");
           }
          }
       } // end if contents
@@ -193,39 +194,46 @@ if($Submit)
     $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                 googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                 testtimestd,testtimestdthreshold,showtesttime)
-            VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$DocURL','$Public','$imgid','$CoverageThreshold','$NightlyTime',
-                    '$GoogleTracker','$EmailBrokenSubmission','$EmailBuildMissing','$EmailLowCoverage','$EmailTestTimingChanged','$CVSViewerType',
-                    '$TestTimeStd','$TestTimeStdThreshold','$ShowTestTime')"; 
-    if(mysql_query("$sql"))
+            VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$DocURL',$Public,$imgid,$CoverageThreshold,'$NightlyTime',
+                    '$GoogleTracker',$EmailBrokenSubmission,$EmailBuildMissing,$EmailLowCoverage,$EmailTestTimingChanged,'$CVSViewerType',
+                    $TestTimeStd,$TestTimeStdThreshold,$ShowTestTime)";                     
+                    
+    if(pdo_query("$sql"))
       {
-      $projectid = mysql_insert_id();
+      $projectid = pdo_insert_id("project");
       $xml .= "<project_name>$Name</project_name>";
       $xml .= "<project_id>$projectid</project_id>";
       $xml .= "<project_created>1</project_created>";
       }
     else
       {
-      echo mysql_error();
+      echo pdo_error();
       return;
       }
-    
+      
     // Add the default groups
-    mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Nightly','$projectid')");
-    $id = mysql_insert_id();
-    mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','1')");
-    mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Continuous','$projectid')");
-    $id = mysql_insert_id();
-    mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','2')");
-    mysql_query("INSERT INTO buildgroup(name,projectid) VALUES ('Experimental','$projectid')");
-    $id = mysql_insert_id();
-    mysql_query("INSERT INTO buildgroupposition(buildgroupid,position) VALUES ('$id','3')");
+    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
+               VALUES ('Nightly',$projectid,'1980-01-01 00:00:00','1980-01-01 00:00:00','Nightly builds')");
+    $id = pdo_insert_id("buildgroup");
+    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
+               VALUES ($id,1,'1980-01-01 00:00:00','1980-01-01 00:00:00')");
+    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description) 
+               VALUES ('Continuous',$projectid,'1980-01-01 00:00:00','1980-01-01 00:00:00','Continuous builds')");
+    $id = pdo_insert_id("buildgroup");
+    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
+               VALUES ($id,2,'1980-01-01 00:00:00','1980-01-01 00:00:00')");
+    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
+               VALUES ('Experimental',$projectid,'1980-01-01 00:00:00','1980-01-01 00:00:00','Experimental builds')");
+    $id = pdo_insert_id("buildgroup");
+    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
+               VALUES ($id,3,'1980-01-01 00:00:00','1980-01-01 00:00:00')");
     
     // Add administrator to the project
-    mysql_query("INSERT INTO user2project(userid,projectid,role) VALUES ('1','$projectid','2')");
+    pdo_query("INSERT INTO user2project(userid,projectid,role) VALUES (1,$projectid,2)");
     // Add current user to the project
     if($userid != 1)
       {
-      mysql_query("INSERT INTO user2project(userid,projectid,role) VALUES ('$userid','$projectid','2')");
+      pdo_query("INSERT INTO user2project(userid,projectid,role) VALUES ($userid,$projectid,2)");
      }
     
     // Add the repository 
@@ -233,19 +241,19 @@ if($Submit)
     if(strlen($url) > 0)
       {
       // Insert into repositories if not any
-      $repositories = mysql_query("SELECT id FROM repositories WHERE url='$url'");
-      if(mysql_num_rows($repositories) == 0)
+      $repositories = pdo_query("SELECT id FROM repositories WHERE url='$url'");
+      if(pdo_num_rows($repositories) == 0)
         {
-        mysql_query("INSERT INTO repositories (url) VALUES ('$url')");
-        $repositoryid = mysql_insert_id();
+        pdo_query("INSERT INTO repositories (url) VALUES ('$url')");
+        $repositoryid = pdo_insert_id("repositories");
         }
       else
         {
-        $repositories_array = mysql_fetch_array($repositories);
+        $repositories_array = pdo_fetch_array($repositories);
         $repositoryid = $repositories_array["id"];
         } 
-      mysql_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES ('$projectid','$repositoryid')");
-      echo mysql_error();   
+      pdo_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES ($projectid,$repositoryid)");
+      echo pdo_error();   
       } // end url for repository is > 0
     }
   else
@@ -261,26 +269,26 @@ if($Delete)
   {
   remove_project_builds($projectid);
   // Remove the project groups and rules
-  $buildgroup = mysql_query("SELECT * FROM buildgroup WHERE projectid='$projectid'");
-  while($buildgroup_array = mysql_fetch_array($buildgroup))
+  $buildgroup = pdo_query("SELECT * FROM buildgroup WHERE projectid=$projectid");
+  while($buildgroup_array = pdo_fetch_array($buildgroup))
     {
     $groupid = $buildgroup_array["id"];
-    mysql_query("DELETE FROM buildgroupposition WHERE buildgroupid='$groupid'");
-    mysql_query("DELETE FROM build2grouprule WHERE groupid='$groupid'");
-    mysql_query("DELETE FROM build2group WHERE groupid='$groupid'");
+    pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid=$groupid");
+    pdo_query("DELETE FROM build2grouprule WHERE groupid=$groupid");
+    pdo_query("DELETE FROM build2group WHERE groupid=$groupid");
     }
    
-  mysql_query("DELETE FROM buildgroup WHERE projectid='$projectid'");
-  mysql_query("DELETE FROM project WHERE id='$projectid'");
-  mysql_query("DELETE FROM user2project WHERE projectid='$projectid'");
+  pdo_query("DELETE FROM buildgroup WHERE projectid=$projectid");
+  pdo_query("DELETE FROM project WHERE id=$projectid");
+  pdo_query("DELETE FROM user2project WHERE projectid=$projectid");
   
   echo "<script language=\"javascript\">window.location='user.php'</script>";
   } // end Delete project
 
 if($projectid>0)
   {
-  $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT * FROM project WHERE id=$projectid");
+  $project_array = pdo_fetch_array($project);
   }
 
 
@@ -294,21 +302,21 @@ if($Update || $AddRepository)
   $CVSURL = stripHTTP($_POST["cvsURL"]);
   $BugURL = stripHTTP($_POST["bugURL"]);
   $DocURL = stripHTTP($_POST["docURL"]);
-  @$Public = $_POST["public"];
-  $CoverageThreshold = $_POST["coverageThreshold"];
+  @$Public = qnum($_POST["public"]);
+  $CoverageThreshold = qnum($_POST["coverageThreshold"]);
   $NightlyTime = $_POST["nightlyTime"];
   $GoogleTracker = $_POST["googleTracker"]; 
-  @$EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
-  @$EmailBuildMissing = $_POST["emailBuildMissing"]; 
-  @$EmailLowCoverage = $_POST["emailLowCoverage"]; 
-  @$EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
+  @$EmailBrokenSubmission = qnum($_POST["emailBrokenSubmission"]);
+  @$EmailBuildMissing = qnum($_POST["emailBuildMissing"]);
+  @$EmailLowCoverage = qnum($_POST["emailLowCoverage"]);
+  @$EmailTestTimingChanged = qnum($_POST["emailTestTimingChanged"]);
   @$CVSViewerType = $_POST["cvsviewertype"]; 
-  @$TestTimeStd = $_POST["testTimeStd"];
-  @$TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
-  @$ShowTestTime = $_POST["showTestTime"];
+  @$TestTimeStd = qnum($_POST["testTimeStd"]);
+  @$TestTimeStdThreshold = qnum($_POST["testTimeStdThreshold"]);
+  @$ShowTestTime = qnum($_POST["showTestTime"]);
   @$CVSRepositories = $_POST["cvsRepository"];
 
-  $imgid = $project_array["imageid"];
+  $imgid = qnum($project_array["imageid"]);
   
   $handle = fopen($_FILES['logo']['tmp_name'],"r");
   $contents = 0;
@@ -325,58 +333,58 @@ if($Update || $AddRepository)
     $checksum = crc32($contents);
     //check if we already have a copy of this file in the database
     $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
-    $result = mysql_query("$sql");
-    if($row = mysql_fetch_array($result))
+    $result = pdo_query("$sql");
+    if($row = pdo_fetch_array($result))
       {
-      $imgid = $row["id"];
+      $imgid = qnum($row["id"]);
       }
     else if($imgid==0)
       {
       $sql = "INSERT INTO image(img, extension, checksum) VALUES ('$contents', '$filetype', '$checksum')";
-      if(mysql_query("$sql"))
+      if(pdo_query("$sql"))
         {
-        $imgid = mysql_insert_id();
+        $imgid = qnum(pdo_insert_id("image"));
         }
        }
      else // update the current image
        { 
-       mysql_query("UPDATE image SET img='$contents',extension='$filetype',checksum='$checksum' WHERE id='$imgid'");
+       pdo_query("UPDATE image SET img='$contents',extension='$filetype',checksum='$checksum' WHERE id=$imgid");
        }
     } // end if contents
     
   //We should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
-  mysql_query("UPDATE project SET description='$Description',homeurl='$HomeURL',cvsurl='$CVSURL',
-                                  bugtrackerurl='$BugURL',documentationurl='$DocURL',public='$Public',imageid='$imgid',
-                                  coveragethreshold='$CoverageThreshold',nightlytime='$NightlyTime',
-                                  googletracker='$GoogleTracker',emailbrokensubmission='$EmailBrokenSubmission',
-                                  emailbuildmissing='$EmailBuildMissing',emaillowcoverage='$EmailLowCoverage',
-                                  emailtesttimingchanged='$EmailTestTimingChanged',
+  pdo_query("UPDATE project SET description='$Description',homeurl='$HomeURL',cvsurl='$CVSURL',
+                                  bugtrackerurl='$BugURL',documentationurl='$DocURL',public=$Public,imageid='$imgid',
+                                  coveragethreshold=$CoverageThreshold,nightlytime='$NightlyTime',
+                                  googletracker='$GoogleTracker',emailbrokensubmission=$EmailBrokenSubmission,
+                                  emailbuildmissing=$EmailBuildMissing,emaillowcoverage=$EmailLowCoverage,
+                                  emailtesttimingchanged=$EmailTestTimingChanged,
                                   cvsviewertype='$CVSViewerType',
-                                  testtimestd='$TestTimeStd',
-                                  testtimestdthreshold='$TestTimeStdThreshold',
-                                  showtesttime='$ShowTestTime'
-                                  WHERE id='$projectid'");
-  echo mysql_error();
+                                  testtimestd=$TestTimeStd,
+                                  testtimestdthreshold=$TestTimeStdThreshold,
+                                  showtesttime=$ShowTestTime
+                                  WHERE id=$projectid");
+  echo pdo_error();
 
   // First we update/delete any registered repositories
   $currentRepository = 0;
-  $repositories = mysql_query("SELECT repositoryid from project2repositories WHERE projectid='$projectid' ORDER BY repositoryid");
-  while($repository_array = mysql_fetch_array($repositories))
+  $repositories = pdo_query("SELECT repositoryid from project2repositories WHERE projectid='$projectid' ORDER BY repositoryid");
+  while($repository_array = pdo_fetch_array($repositories))
     {
     $repositoryid = $repository_array["repositoryid"];
     if(!isset($CVSRepositories[$currentRepository]) || strlen($CVSRepositories[$currentRepository])==0)
       {
-      $query = mysql_query("SELECT * FROM project2repositories WHERE repositoryid='$repositoryid'");
-      if(mysql_num_rows($query)==1)
+      $query = pdo_query("SELECT * FROM project2repositories WHERE repositoryid='$repositoryid'");
+      if(pdo_num_rows($query)==1)
         {
-        mysql_query("DELETE FROM repositories WHERE id='$repositoryid'");
+        pdo_query("DELETE FROM repositories WHERE id='$repositoryid'");
         }
-      mysql_query("DELETE FROM project2repositories WHERE projectid='$projectid' AND repositoryid='$repositoryid'");  
+      pdo_query("DELETE FROM project2repositories WHERE projectid='$projectid' AND repositoryid='$repositoryid'");  
       }
     else
       {
-      mysql_query("UPDATE repositories SET url='$CVSRepositories[$currentRepository]' WHERE id='$repositoryid'");
+      pdo_query("UPDATE repositories SET url='$CVSRepositories[$currentRepository]' WHERE id='$repositoryid'");
       }  
     $currentRepository++;
     }
@@ -391,23 +399,23 @@ if($Update || $AddRepository)
       }
     
     // Insert into repositories if not any
-    $repositories = mysql_query("SELECT id FROM repositories WHERE url='$url'");
-    if(mysql_num_rows($repositories) == 0)
+    $repositories = pdo_query("SELECT id FROM repositories WHERE url='$url'");
+    if(pdo_num_rows($repositories) == 0)
       {
-      mysql_query("INSERT INTO repositories (url) VALUES ('$url')");
-      $repositoryid = mysql_insert_id();
+      pdo_query("INSERT INTO repositories (url) VALUES ('$url')");
+      $repositoryid = pdo_insert_id("repositories");
       }
     else
       {
-      $repositories_array = mysql_fetch_array($repositories);
+      $repositories_array = pdo_fetch_array($repositories);
       $repositoryid = $repositories_array["id"];
       } 
-    mysql_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES ('$projectid','$repositoryid')");
-    echo mysql_error();   
+    pdo_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES ('$projectid','$repositoryid')");
+    echo pdo_error();   
     } 
   
-  $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
   }
   
   
@@ -417,8 +425,8 @@ if($user_array["admin"] != 1)
   {
   $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
   }
-$projects = mysql_query($sql);
-while($projects_array = mysql_fetch_array($projects))
+$projects = pdo_query($sql);
+while($projects_array = pdo_fetch_array($projects))
    {
    $xml .= "<availableproject>";
    $xml .= add_XML_value("id",$projects_array['id']);
@@ -455,12 +463,12 @@ if($projectid>0)
   $xml .= add_XML_value("showtesttime",$project_array['showtesttime']);
   $xml .= "</project>";
   
-  $repository = mysql_query("SELECT url from repositories,project2repositories
+  $repository = pdo_query("SELECT url from repositories,project2repositories
                              WHERE repositories.id=project2repositories.repositoryid
                              AND   project2repositories.projectid='$projectid'");
   $nRegisteredRepositories = 0;
   $nRepositories = 0;
-  while($repository_array = mysql_fetch_array($repository))
+  while($repository_array = pdo_fetch_array($repository))
     {
     $xml .= "<cvsrepository>";
     $xml .= add_XML_value("id",$nRepositories);

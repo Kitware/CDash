@@ -17,18 +17,19 @@
 =========================================================================*/
 // Open the database connection
 include("config.php");
-include("common.php");
+require_once("pdo.php");
+include_once("common.php");
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 $apacheaccesslog = "/var/log/apache/access.log";
 $contents = file_get_contents($apacheaccesslog);
 
 // Loop through the sites
 // Select all the ips that have been forwarded
-$site = mysql_query("SELECT name FROM site WHERE ip LIKE '$CDASH_FORWARDING_IP'");
-while($site_array = mysql_fetch_array($site))
+$site = pdo_query("SELECT name FROM site WHERE ip LIKE '$CDASH_FORWARDING_IP'");
+while($site_array = pdo_fetch_array($site))
 {
   $sitename = $site_array["name"];
   $pos = strpos($contents,$sitename."__");
@@ -44,8 +45,8 @@ while($site_array = mysql_fetch_array($site))
     $longitude = $location['longitude'];
   
     $sql = "UPDATE site SET ip='$ip',latitude='$latitude',longitude='$longitude' WHERE name='$sitename'";
-    mysql_query($sql);
-    echo mysql_error();
+    pdo_query($sql);
+    echo pdo_error();
     }
 }
 

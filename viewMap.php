@@ -17,15 +17,16 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php");
 
 @$projectname = $_GET["project"];
 @$date = $_GET["date"];
   
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 $projectid = get_project_id($projectname);
 
@@ -58,8 +59,8 @@ $xml .=  add_XML_value("googlemapkey",$apikey);
 $xml .=  add_XML_value("projectname",$projectname);
 $xml .= "</dashboard>";
 
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-$project_array = mysql_fetch_array($project);
+$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+$project_array = pdo_fetch_array($project);
 
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
     
@@ -80,14 +81,14 @@ if($end_timestamp<$beginning_timestamp)
 $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
 $end_UTCDate = gmdate("YmdHis",$end_timestamp);            
   
-$build = mysql_query("SELECT siteid FROM build 
+$build = pdo_query("SELECT siteid FROM build 
                      WHERE starttime<$end_UTCDate AND starttime>$beginning_UTCDate
                      AND projectid='$projectid' GROUP BY siteid");
 
-while($buildarray  = mysql_fetch_array($build))
+while($buildarray  = pdo_fetch_array($build))
   {
   $siteid = $buildarray["siteid"];
-  $site_array = mysql_fetch_array(mysql_query("SELECT * FROM site WHERE id='$siteid'"));
+  $site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'"));
   $xml .= "<site>";
   $xml .= add_XML_value("name",$site_array["name"]);
   $xml .= add_XML_value("description",$site_array["description"]);

@@ -15,7 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
+include_once("common.php");
+include_once("config.php");
 
 $reg = "";
 
@@ -23,7 +24,8 @@ $reg = "";
 function register()
 { 
   global $reg; 
-  include "config.php"; 
+  include("config.php");
+  require_once("pdo.php"); 
 
   if(isset($_POST["sent"])) // arrive from register form 
    {
@@ -46,19 +48,19 @@ function register()
     $institution = $_POST["institution"];
     if ($email and $passwd and $passwd2 and $fname and $lname and $institution)
       {
-      $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-      mysql_select_db("$CDASH_DB_NAME",$db);
+      $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+      pdo_select_db("$CDASH_DB_NAME",$db);
       $passwd = md5($passwd);
       
-      $email = mysql_real_escape_string($email);
-      $passwd = mysql_real_escape_string($passwd);
-      $fname = mysql_real_escape_string($fname);
-      $lname = mysql_real_escape_string($lname);
-      $institution = mysql_real_escape_string($institution);
+      $email = pdo_real_escape_string($email);
+      $passwd = pdo_real_escape_string($passwd);
+      $fname = pdo_real_escape_string($fname);
+      $lname = pdo_real_escape_string($lname);
+      $institution = pdo_real_escape_string($institution);
             
-      $sql="INSERT INTO user (email,password,firstname,lastname,institution) 
+      $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution) 
             VALUES ('$email','$passwd','$fname','$lname','$institution')";
-      if(mysql_query($sql))
+      if(pdo_query($sql))
         {
         return 1;
         }
@@ -84,8 +86,9 @@ function register()
 function RegisterForm($regerror)
 {  
   include("config.php");
-  include("common.php"); 
-  include('version.php');
+  require_once("pdo.php");
+  include_once("common.php");
+  include_once('version.php');
   
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - Registration</title>";

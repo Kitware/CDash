@@ -24,28 +24,65 @@ if (class_exists('XsltProcessor') == FALSE)
   }
 
 include("config.php");
-include("common.php"); 
-include("version.php"); 
+require_once("pdo.php");
+require_once("common.php"); 
+require_once("version.php"); 
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
-  
+
+if(!isset($CDASH_DB_TYPE))
+  {
+  $db_type = 'mysql';
+  }
+else
+  {
+  $db_type = $CDASH_DB_TYPE;
+  }
+$xml .= "<connectiondb_type>".$db_type."</connectiondb_type>";
 $xml .= "<connectiondb_host>".$CDASH_DB_HOST."</connectiondb_host>";
 $xml .= "<connectiondb_login>".$CDASH_DB_LOGIN."</connectiondb_login>";
 $xml .= "<connectiondb_name>".$CDASH_DB_NAME."</connectiondb_name>";
 
 // Step 1: Check if we can connect to the database
-@$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 if(!$db)
   {
   $xml .= "<connectiondb>0</connectiondb>";
   }
 else
-  {
-  $xml .= "<connectiondb>1</connectiondb>";
+  {  
+  // If we are installing a database other than mysql we need to 
+  // have the database already created
+  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
+    {
+    if(!pdo_select_db($CDASH_DB_NAME,$link))
+      {
+      $xml .= "<connectiondb>0</connectiondb>";
+      }
+    else
+      {  
+      $xml .= "<connectiondb>1</connectiondb>";
+      }
+    }
+  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE=="mysql")
+    {
+    if(@!mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS"))
+      {
+      $xml .= "<connectiondb>0</connectiondb>";
+      }
+    else
+      {  
+      $xml .= "<connectiondb>1</connectiondb>";
+      }
+    }
+  else
+    {  
+    $xml .= "<connectiondb>1</connectiondb>";
+    }
   }    
-  
+
 if(xslt_create() == FALSE)
   {
   $xml .= "<xslt>0</xslt>";
@@ -86,8 +123,8 @@ else
   }
   
 // If the database already exists and we have all the tables
-if(@mysql_select_db("$CDASH_DB_NAME",$db) === TRUE
-   && mysql_query("SELECT id FROM user LIMIT 1",$db))
+if(@pdo_select_db("$CDASH_DB_NAME",$db) === TRUE
+   && pdo_query("SELECT id FROM ".qid("user")." LIMIT 1",$db))
   {
   $xml .= "<database>1</database>";
   }
@@ -101,15 +138,24 @@ else
 @$Submit = $_POST["Submit"];
 if($Submit)
 {
-  if(!mysql_query("CREATE DATABASE IF NOT EXISTS $CDASH_DB_NAME"))
+  $db_created = true;
+  
+  // If this is MySQL we try to create the database
+  if($db_type=='mysql')
     {
-    $xml .= "<db_created>0</db_created>";
-    $xml .= "<alert>".mysql_error()."</alert>";
+    mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+    if(!mysql_query("CREATE DATABASE IF NOT EXISTS $CDASH_DB_NAME"))
+      {
+      $xml .= "<db_created>0</db_created>";
+      $xml .= "<alert>".mysql_error()."</alert>";
+      $db_created = false;
+      }
     }
-  else
+    
+ if($db_created)
   {
-  mysql_select_db("$CDASH_DB_NAME",$db);
-  $sqlfile = "sql/cdash.sql";
+  pdo_select_db("$CDASH_DB_NAME",$db);
+  $sqlfile = "sql/".$db_type."/cdash.sql";
   $file_content = file($sqlfile);
   $query = "";
   foreach($file_content as $sql_line)
@@ -121,18 +167,18 @@ if($Submit)
        if(preg_match("/;\s*$/", $sql_line)) 
          {
          $query = str_replace(";", "", "$query");
-         $result = mysql_query($query);
+         $result = pdo_query($query);
          if (!$result)
            { 
            $xml .= "<db_created>0</db_created>";
-           die(mysql_error());
+           die(pdo_error());
            }
          $query = "";
          }
        }
      } // end for each line
   
-  $sqlfile = "sql/cdashdata.sql";
+  $sqlfile = "sql/".$db_type."/cdashdata.sql";
   $file_content = file($sqlfile);
   //print_r($file_content);
   $query = "";
@@ -145,17 +191,20 @@ if($Submit)
        if(preg_match("/;\s*$/", $sql_line)) 
          {
          $query = str_replace(";", "", "$query");
-         $result = mysql_query($query);
+         $result = pdo_query($query);
          if (!$result)
            { 
            $xml .= "<db_created>0</db_created>";
-           die(mysql_error());
+           die(pdo_error());
            }
          $query = "";
          }
        }
      } // end for each line*/
    $xml .= "<db_created>1</db_created>";
+   
+   // Set the database version
+   setVersion();
    } // end database created
 } // end submit
 

@@ -22,8 +22,9 @@ include("sendemail.php");
 
 // Open the database connection
 include("config.php");
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+require_once("pdo.php");
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 //$contents = file_get_contents("backup/Test_Update.xml");
 $contents = file_get_contents("php://input");

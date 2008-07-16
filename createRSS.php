@@ -25,13 +25,14 @@ function CreateRSSFeed($projectid)
     return;
     }
   
-  include('config.php');
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  include("config.php");
+  require_once("pdo.php");
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
 
   // Find the project name
-  $project = mysql_query("SELECT public,name FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT public,name FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
   $projectname = $project_array["name"];
   
   // Don't create RSS feed for private projects
@@ -71,23 +72,23 @@ function CreateRSSFeed($projectid)
   $currenttime = time();
   $beginning_timestamp = $currenttime-(24*3600);
   $end_timestamp = $currenttime;
-  $builds = mysql_query("SELECT * FROM build 
+  $builds = pdo_query("SELECT * FROM build 
                          WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
                          AND projectid='$projectid'
                          ");
-  while($build_array = mysql_fetch_array($builds))
+  while($build_array = pdo_fetch_array($builds))
     {
     $siteid = $build_array["siteid"];
     $buildid = $build_array["id"];
-    $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+    $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
  
     // Find the number of errors and warnings
-    $builderror = mysql_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='0'");
-    $nerrors = mysql_num_rows($builderror);
-    $buildwarning = mysql_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='1'");
-    $nwarnings = mysql_num_rows($buildwarning);
-    $nnotrun = mysql_num_rows(mysql_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
-    $nfail = mysql_num_rows(mysql_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='failed'"));
+    $builderror = pdo_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='0'");
+    $nerrors = pdo_num_rows($builderror);
+    $buildwarning = pdo_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='1'");
+    $nwarnings = pdo_num_rows($buildwarning);
+    $nnotrun = pdo_num_rows(pdo_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+    $nfail = pdo_num_rows(pdo_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='failed'"));
       
     $title = "CDash(".$projectname.") - ".$site_array["name"]." - ".$build_array["name"]." - ".$build_array["type"];
     $title .= " - ".$build_array["submittime"]." - ".$nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";

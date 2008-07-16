@@ -15,7 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include_once("config.php");
+include_once("common.php");
+include("config.php");
+require_once("pdo.php");
 include_once("version.php"); 
 
 $loginerror = 0;
@@ -32,11 +34,11 @@ function auth()
      && isset($_SERVER['REMOTE_USER'])) 
     {
     $login = $_SERVER['REMOTE_USER'];
-    $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-    mysql_select_db("$CDASH_DB_NAME",$db);
-    $sql="SELECT * FROM user WHERE email='$login'";
-    $result = mysql_query("$sql"); 
-    if ($user_array = mysql_fetch_array($result)) 
+    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+    pdo_select_db("$CDASH_DB_NAME",$db);
+    $sql="SELECT * FROM ".qid("user")." WHERE email='$login'";
+    $result = pdo_query("$sql"); 
+    if ($user_array = pdo_fetch_array($result)) 
       {
       session_name("CDash");
       session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
@@ -54,10 +56,10 @@ d" => 1, "loginid" => $user_array["id"]);
          {
          $_SESSION['cdash'] = $mysession2;
          }                  
-       mysql_free_result($result);
+       pdo_free_result($result);
        return 1;                               // authentication succeeded 
        }
-     @mysql_free_result($result);
+     @pdo_free_result($result);
      }
      
   if (@$_GET["logout"]) 
@@ -76,11 +78,11 @@ d" => 1, "loginid" => $user_array["id"]);
     $passwd = $_POST["passwd"];
     if ($login and $passwd)
       {
-      $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-     mysql_select_db("$CDASH_DB_NAME",$db);
-     $sql="SELECT * FROM user WHERE email='$login'";
-     $result = mysql_query("$sql"); 
-     while ($user_array = mysql_fetch_array($result)) 
+      $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+     pdo_select_db("$CDASH_DB_NAME",$db);
+     $sql="SELECT * FROM ".qid("user")." WHERE email='$login'";
+     $result = pdo_query("$sql"); 
+     while ($user_array = pdo_fetch_array($result)) 
         {
         $pass = $user_array["password"];
         if (md5($passwd)==$pass)
@@ -119,11 +121,11 @@ d" => 1, "loginid" => $user_array["id"]);
     $login = @$_SESSION['cdash']["login"];                         // added by jds 
     $passwd = @$_SESSION['cdash']["passwd"];                      // added by jds 
     $password = @$_SESSION['cdash']["password"];
-    $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-    mysql_select_db("$CDASH_DB_NAME",$db);
-    $sql="SELECT * FROM user WHERE email='$login'";
-    $result = mysql_query("$sql");
-    while ($user_array = mysql_fetch_array($result)) 
+    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+    pdo_select_db("$CDASH_DB_NAME",$db);
+    $sql="SELECT * FROM ".qid("user")." WHERE email='$login'";
+    $result = pdo_query("$sql");
+    while ($user_array = pdo_fetch_array($result)) 
       {   
       $pass = $user_array["password"];
       if ($passwd==$pass)
@@ -146,6 +148,7 @@ d" => 1, "loginid" => $user_array["id"]);
 function LoginForm($loginerror)
 {  
   include("config.php");
+  require_once("pdo.php");
   include_once("common.php"); 
   include("version.php");
     

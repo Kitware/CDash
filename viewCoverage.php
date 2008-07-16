@@ -17,8 +17,9 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php");
 
 @$buildid = $_GET["buildid"];
@@ -37,19 +38,18 @@ if(!$sortby)
   $sortby = "filename";
   }
 
-include("config.php");
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
   
-$build_array = mysql_fetch_array(mysql_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
  
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
   
-$project = mysql_query("SELECT name,coveragethreshold FROM project WHERE id='$projectid'");
-if(mysql_num_rows($project)>0)
+$project = pdo_query("SELECT name,coveragethreshold FROM project WHERE id='$projectid'");
+if(pdo_num_rows($project)>0)
   {
-  $project_array = mysql_fetch_array($project);
+  $project_array = pdo_fetch_array($project);
   $projectname = $project_array["name"];  
   }
 
@@ -61,8 +61,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   // coverage
   $xml .= "<coverage>";
-  $coverage = mysql_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
-  $coverage_array = mysql_fetch_array($coverage);
+  $coverage = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
+  $coverage_array = pdo_fetch_array($coverage);
   $xml .= add_XML_value("starttime",date("l, F d Y",strtotime($build_array["starttime"])));
   $xml .= add_XML_value("loctested",$coverage_array["loctested"]);
   $xml .= add_XML_value("locuntested",$coverage_array["locuntested"]);
@@ -80,12 +80,12 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
   $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
   
-  $coveredfiles = mysql_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
-  $coveredfiles_array = mysql_fetch_array($coveredfiles);
+  $coveredfiles = pdo_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
+  $coveredfiles_array = pdo_fetch_array($coveredfiles);
   $ncoveredfiles = $coveredfiles_array[0];
   
-  $files = mysql_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid'");
-  $files_array = mysql_fetch_array($files);
+  $files = pdo_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid'");
+  $files_array = pdo_fetch_array($files);
   $nfiles = $files_array[0];
   
   $xml .= add_XML_value("totalcovered",$ncoveredfiles);
@@ -97,11 +97,11 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
     
   // Coverage files
-  $coveragefile = mysql_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested,c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested
+  $coveragefile = pdo_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested,c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested
                                FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=1");
   
   $covfile_array = array();
-  while($coveragefile_array = mysql_fetch_array($coveragefile))
+  while($coveragefile_array = pdo_fetch_array($coveragefile))
     {
     $covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
     $covfile["fullpath"] = $coveragefile_array["fullpath"];
@@ -179,8 +179,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   usort($covfile_array,"sort_array");
   
   // Add the untested files
-  $coveragefile = mysql_query("SELECT cf.fullpath FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=0");
-  while($coveragefile_array = mysql_fetch_array($coveragefile))
+  $coveragefile = pdo_query("SELECT cf.fullpath FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=0");
+  while($coveragefile_array = pdo_fetch_array($coveragefile))
     {
     $covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
     $covfile["fullpath"] = $coveragefile_array["fullpath"];

@@ -16,6 +16,7 @@
 
 =========================================================================*/
 include("config.php");
+require_once("pdo.php");
 include('login.php');
 include_once('common.php');
 include("version.php");
@@ -27,21 +28,21 @@ if ($session_OK)
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
   
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
   $xml .= add_XML_value("title","CDash - My Profile");
 
-  $user = mysql_query("SELECT * FROM user WHERE id='$userid'");
-  $user_array = mysql_fetch_array($user);
+  $user = pdo_query("SELECT * FROM ".qid("user")." WHERE id='$userid'");
+  $user_array = pdo_fetch_array($user);
   $xml .= add_XML_value("user_name",$user_array["firstname"]);
   $xml .= add_XML_value("user_is_admin",$user_array["admin"]);
   
   // Go through the list of project the user is part of
-  $project2user = mysql_query("SELECT projectid,role FROM user2project WHERE userid='$userid'"); 
-  while($project2user_array = mysql_fetch_array($project2user))
+  $project2user = pdo_query("SELECT projectid,role FROM user2project WHERE userid='$userid'"); 
+  while($project2user_array = pdo_fetch_array($project2user))
     {
     $projectid = $project2user_array["projectid"];
-    $project_array = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id='$projectid'"));
+    $project_array = pdo_fetch_array(pdo_query("SELECT name FROM project WHERE id='$projectid'"));
     $xml .= "<project>";
     $xml .= add_XML_value("id",$projectid);
     $xml .= add_XML_value("role",$project2user_array["role"]); // 0 is normal user, 1 is maintainer, 2 is administrator
@@ -50,9 +51,9 @@ if ($session_OK)
     }
   
   // Go through the public projects
-  $project = mysql_query("SELECT name,id FROM project WHERE id NOT IN (SELECT projectid as id FROM user2project WHERE userid='$userid') AND public='1'");
+  $project = pdo_query("SELECT name,id FROM project WHERE id NOT IN (SELECT projectid as id FROM user2project WHERE userid='$userid') AND public='1'");
   $j = 0;
-  while($project_array = mysql_fetch_array($project))
+  while($project_array = pdo_fetch_array($project))
     {
     $xml .= "<publicproject>";
     if($j%2==0)
@@ -73,12 +74,12 @@ if ($session_OK)
   $claimedsiteprojects = array();
   $siteidwheresql = "";
   $claimedsites = array();
-  $site2user = mysql_query("SELECT siteid FROM site2user WHERE userid='$userid'");
-  while($site2user_array = mysql_fetch_array($site2user))
+  $site2user = pdo_query("SELECT siteid FROM site2user WHERE userid='$userid'");
+  while($site2user_array = pdo_fetch_array($site2user))
     {
     $siteid = $site2user_array["siteid"];
     $site["id"] = $siteid;
-    $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+    $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
     $site["name"] = $site_array["name"]; 
     $claimedsites[] = $site;
     
@@ -90,16 +91,16 @@ if ($session_OK)
     }
   
    // Look for all the projects
-   if(mysql_num_rows($site2user)>0)
+   if(pdo_num_rows($site2user)>0)
      {
-     $site2project = mysql_query("SELECT build.projectid FROM build,user2project WHERE ($siteidwheresql)
+     $site2project = pdo_query("SELECT build.projectid FROM build,user2project WHERE ($siteidwheresql)
                      AND user2project.projectid=build.projectid AND user2project.userid='$userid'
                      AND user2project.role>0
                      GROUP BY build.projectid"); 
-     while($site2project_array = mysql_fetch_array($site2project))
+     while($site2project_array = pdo_fetch_array($site2project))
        {
        $projectid = $site2project_array["projectid"];
-       $project_array = mysql_fetch_array(mysql_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));
+       $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));
        $claimedproject = array();
        $claimedproject["id"] = $projectid;
        $claimedproject["name"] = $project_array["name"];
@@ -114,10 +115,10 @@ if ($session_OK)
     $xml = "<".strtolower($type).">";
     
     // Find the last build 
-    $build = mysql_query("SELECT starttime,id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$type' ORDER BY submittime DESC LIMIT 1");
-    if(mysql_num_rows($build) > 0)
+    $build = pdo_query("SELECT starttime,id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$type' ORDER BY submittime DESC LIMIT 1");
+    if(pdo_num_rows($build) > 0)
       {
-      $build_array = mysql_fetch_array($build);
+      $build_array = pdo_fetch_array($build);
       $buildid = $build_array["id"];
       
       // Express the date in terms of days (makes more sens)
@@ -149,10 +150,10 @@ if ($session_OK)
       $xml .= add_XML_value("datelink","index.php?project=".$projectname."&date=".$date);
      
       // Configure
-      $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
-      if(mysql_num_rows($configure)>0)
+      $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
+      if(pdo_num_rows($configure)>0)
         {
-        $configure_array = mysql_fetch_array($configure);
+        $configure_array = pdo_fetch_array($configure);
         $xml .= add_XML_value("configure",$configure_array["status"]);
         if($configure_array["status"] != 0)
           {
@@ -170,15 +171,15 @@ if ($session_OK)
         }
          
       // Update
-      $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
-      $nupdates = mysql_num_rows($update);
+      $update = pdo_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
+      $nupdates = pdo_num_rows($update);
       $xml .= add_XML_value("update", $nupdates);
   
       // Find locally modified files
-      $updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");
+      $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");
       
       // Set the color
-      if(mysql_num_rows($updatelocal)>0)
+      if(pdo_num_rows($updatelocal)>0)
         {
         $xml .= add_XML_value("updateclass","error");
         }
@@ -188,12 +189,12 @@ if ($session_OK)
         }
         
       // Find the number of errors and warnings
-      $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
-      $builderror_array = mysql_fetch_array($builderror);
+      $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+      $builderror_array = pdo_fetch_array($builderror);
       $nerrors = $builderror_array[0];
       $xml .= add_XML_value("error",$nerrors);
-      $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
-      $buildwarning_array = mysql_fetch_array($buildwarning);
+      $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+      $buildwarning_array = pdo_fetch_array($buildwarning);
       $nwarnings = $buildwarning_array[0];
       $xml .= add_XML_value("warning",$nwarnings);
       
@@ -212,9 +213,9 @@ if ($session_OK)
         }
         
       // Find the test
-      $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+      $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
-      $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
+      $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
       $nfail = $nfail_array[0];
       
       // Display the failing tests then the not run 

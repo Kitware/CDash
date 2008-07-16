@@ -17,8 +17,9 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php");
 
 @$buildid = $_GET["buildid"];
@@ -32,10 +33,10 @@ if(!isset($buildid) || !is_numeric($buildid))
   }
   
 $start = microtime_float();
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
   
-$build_array = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
@@ -44,10 +45,10 @@ if(!isset($date) || strlen($date)==0)
   $date = date("Ymd", strtotime($build_array["starttime"]));
   }
     
-$project = mysql_query("SELECT name,showtesttime FROM project WHERE id='$projectid'");
-if(mysql_num_rows($project)>0)
+$project = pdo_query("SELECT name,showtesttime FROM project WHERE id='$projectid'");
+if(pdo_num_rows($project)>0)
   {
-  $project_array = mysql_fetch_array($project);
+  $project_array = pdo_fetch_array($project);
   $projectname = $project_array["name"];  
   $projectshowtesttime = $project_array["showtesttime"];  
   }
@@ -61,10 +62,10 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
 #$siteid = $build_array["siteid"];
 #$site_array =
-#  mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id='$siteid'"));
+#  pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$siteid'"));
 $siteid = $build_array["siteid"];
 $site_array =
-  mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+  pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $xml .= "<build>\n";
 $xml .= add_XML_value("site",$site_array["name"]) . "\n";
 $xml .= add_XML_value("buildname",$build_array["name"]) . "\n";
@@ -102,7 +103,7 @@ else
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
          WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,bt.timestatus DESC,t.name";
   }
-$result = mysql_query($sql);
+$result = pdo_query($sql);
 
 $numPassed = 0;
 $numFailed = 0;
@@ -112,7 +113,7 @@ $color = FALSE;
 
 // Gather test info
 $xml .= "<tests>\n";
-while($row = mysql_fetch_array($result))
+while($row = pdo_fetch_array($result))
   {
   $xml .= "<test>\n";
   $testName = $row["name"];

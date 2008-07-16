@@ -465,11 +465,11 @@ function get_repository_commits($projectid, $dates)
   $roots = array();
  
   // Find the repository 
-  $repositories = mysql_query("SELECT repositories.url FROM repositories,project2repositories 
+  $repositories = pdo_query("SELECT repositories.url FROM repositories,project2repositories 
                         WHERE repositories.id=project2repositories.repositoryid
                         AND project2repositories.projectid='$projectid'");
 
-  while($repositories_array = mysql_fetch_array($repositories))
+  while($repositories_array = pdo_fetch_array($repositories))
     {
     $roots[] = $repositories_array["url"];
     } 
@@ -501,23 +501,24 @@ function get_repository_commits($projectid, $dates)
 function addDailyChanges($projectid)
 {
   include("config.php");
+  require_once("pdo.php");
   include_once("common.php");
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME", $db);
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME", $db);
 
-  $project_array = mysql_fetch_array(mysql_query("SELECT nightlytime,name FROM project WHERE id='$projectid'"));
+  $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name FROM project WHERE id='$projectid'"));
   $date = ""; // now
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $date = gmdate("Ymd", $currentstarttime);
   
   // Check if we already have it somwhere
-  $query = mysql_query("SELECT id FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
-  if(mysql_num_rows($query)==0)
+  $query = pdo_query("SELECT id FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
+  if(pdo_num_rows($query)==0)
     {
-    mysql_query("INSERT INTO dailyupdate (projectid,date,command,type,status) 
+    pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status) 
                  VALUES ($projectid,$date,'NA','NA','0')");
     
-    $updateid = mysql_insert_id();    
+    $updateid = pdo_insert_id("dailyupdate");    
     
     $dates = get_related_dates($project_array["nightlytime"], $date);
     $commits = get_repository_commits($projectid, $dates);
@@ -530,7 +531,7 @@ function addDailyChanges($projectid)
       $log= addslashes($commit['comment']);
       $revision= $commit['revision'];  
       
-      mysql_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
+      pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
                    VALUES ($updateid,'$filename','$checkindate','$author','$log','$revision','$priorrevision')");
       } // end foreach commit
     

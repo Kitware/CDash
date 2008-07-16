@@ -21,6 +21,7 @@ function sendemail($parser,$projectid)
 {
   include_once("common.php");
   include("config.php");
+  require_once("pdo.php");
   add_log("sendmail", "$CDASH_USE_HTTPS = $CDASH_USE_HTTPS");   
   // Send email at the end of the testing xml file or the
   // update xml file.  This is because the update file will
@@ -37,8 +38,8 @@ function sendemail($parser,$projectid)
     }
 
   // Check if we should send the email
-  $project = mysql_query("SELECT name,emailbrokensubmission FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT name,emailbrokensubmission FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
   if($project_array["emailbrokensubmission"] == 0)
     {
     return;
@@ -68,17 +69,17 @@ function sendemail($parser,$projectid)
   add_log("Start buildid=".$buildid,"sendemail");
 
   // Find if the build has any errors
-  $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
-  $builderror_array = mysql_fetch_array($builderror);
+  $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+  $builderror_array = pdo_fetch_array($builderror);
   $nbuilderrors = $builderror_array[0];
      
   // Find if the build has any warnings
-  $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
-  $buildwarning_array = mysql_fetch_array($buildwarning);
+  $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+  $buildwarning_array = pdo_fetch_array($buildwarning);
   $nbuildwarnings = $buildwarning_array[0];
 
   // Find if the build has any test failings
-  $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
+  $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
   $nfailingtests = $nfail_array[0];
 
   // Green build we return
@@ -88,33 +89,33 @@ function sendemail($parser,$projectid)
     }
   
   // Find the previous build
-  $build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = mysql_fetch_array($build);
+  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+  $build_array = pdo_fetch_array($build);
   $buildtype = $build_array["type"];
   $siteid = $build_array["siteid"];
   $buildname = $build_array["name"];
   $starttime = $build_array["starttime"];
   
-  $previousbuild = mysql_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' 
+  $previousbuild = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' 
                                AND name='$buildname' AND type='$buildtype' 
                                AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
-  if(mysql_num_rows($previousbuild) > 0)
+  if(pdo_num_rows($previousbuild) > 0)
     {
-    $previousbuild_array = mysql_fetch_array($previousbuild);
+    $previousbuild_array = pdo_fetch_array($previousbuild);
     $previousbuildid = $previousbuild_array["id"];
     
     // Find if the build has any errors
-    $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
-    $builderror_array = mysql_fetch_array($builderror);
+    $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
     $npreviousbuilderrors = $builderror_array[0];
        
     // Find if the build has any warnings
-    $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
-    $buildwarning_array = mysql_fetch_array($buildwarning);
+    $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
+    $buildwarning_array = pdo_fetch_array($buildwarning);
     $npreviousbuildwarnings = $buildwarning_array[0];
   
     // Find if the build has any test failings
-    $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
+    $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
     
     //add_log("previousbuildid=".$previousbuildid,"sendemail");
@@ -137,8 +138,8 @@ function sendemail($parser,$projectid)
   $email = "";
   
   // Find the users
-  $authors = mysql_query("SELECT author FROM updatefile WHERE buildid='$buildid'");
-  while($authors_array = mysql_fetch_array($authors))
+  $authors = pdo_query("SELECT author FROM updatefile WHERE buildid='$buildid'");
+  while($authors_array = pdo_fetch_array($authors))
     {
     $author = $authors_array["author"];
     if($author=="Local User")
@@ -149,15 +150,15 @@ function sendemail($parser,$projectid)
     // Find a matching name in the database
     $query = "SELECT user.email FROM user,user2project WHERE user2project.projectid='$projectid' 
                                AND user2project.userid=user.id AND user2project.cvslogin='$author'";
-    $user = mysql_query($query);
+    $user = pdo_query($query);
 
-    if(mysql_num_rows($user)==0)
+    if(pdo_num_rows($user)==0)
       {
       // Should send an email to the project admin to let him know that this user is not registered
       continue;
       }
     
-    $user_array = mysql_fetch_array($user);  
+    $user_array = pdo_fetch_array($user);  
     // don't add the same user twice
     if(strpos($email,$user_array["email"]) !== false)
      {
@@ -172,9 +173,9 @@ function sendemail($parser,$projectid)
     } 
     
   // Select the users who want to receive all emails
- $user = mysql_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
+ $user = pdo_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
                        AND user2project.userid=user.id AND user2project.emailtype>1");
- while($user_array = mysql_fetch_array($user))
+ while($user_array = pdo_fetch_array($user))
    {
    // If the user is already in the list we quit
    if(strpos($email,$user_array["email"]) !== false)
@@ -202,8 +203,8 @@ function sendemail($parser,$projectid)
   }
   
   // Some variables we need for the email
-  $site = mysql_query("SELECT name FROM site WHERE id='$siteid'");
-  $site_array = mysql_fetch_array($site);
+  $site = pdo_query("SELECT name FROM site WHERE id='$siteid'");
+  $site_array = pdo_fetch_array($site);
 
   if($email != "")
     {

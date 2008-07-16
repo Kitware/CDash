@@ -15,12 +15,13 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include_once("config.php");
-include("common.php");
+include("config.php");
+require_once("pdo.php");
+include_once("common.php");
 include_once("version.php"); 
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>Recover password</title>";
@@ -29,11 +30,11 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 @$recover = $_POST["recover"];
 if($recover)
   {
-  $email = mysql_real_escape_string($_POST["email"]);
-  $emailResult = mysql_query("SELECT id FROM user where email='$email'");
+  $email = pdo_real_escape_string($_POST["email"]);
+  $emailResult = pdo_query("SELECT id FROM user where email='$email'");
   add_last_sql_error("recoverPassword");
   
-  if(mysql_num_rows($emailResult) == 0)
+  if(pdo_num_rows($emailResult) == 0)
     {
     $xml .= "<warning>This email is not registered.</warning>";
     }
@@ -94,8 +95,8 @@ if($recover)
       {
       $md5pass = md5($password);
       // If we can send the email we update the database
-      mysql_query("UPDATE user SET password='$md5pass' WHERE email='$email'");
-      echo mysql_error();
+      pdo_query("UPDATE user SET password='$md5pass' WHERE email='$email'");
+      echo pdo_error();
       add_last_sql_error("recoverPassword");
       
       $xml .= "<message>A confirmation message has been sent to your inbox.</message>";

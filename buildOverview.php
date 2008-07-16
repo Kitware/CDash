@@ -16,7 +16,8 @@
 
 =========================================================================*/
 include("config.php");
-include("common.php");
+require_once("pdo.php");
+include_once("common.php");
 include("version.php");
 $noforcelogin = 1;
 include('login.php');
@@ -33,8 +34,8 @@ if(!isset($date) or $date == "")
   }
  
  
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>".$projectname." : Build Overview</title>";
@@ -43,8 +44,8 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 //get some information about the specified project
-$project = mysql_query("SELECT id, nightlytime FROM project WHERE name = '$projectname'");
-if(!$project_array = mysql_fetch_array($project))
+$project = pdo_query("SELECT id, nightlytime FROM project WHERE name = '$projectname'");
+if(!$project_array = pdo_fetch_array($project))
   {
   die("Error:  project $projectname not found<br>\n");
   }
@@ -60,26 +61,26 @@ list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$nightlytim
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime+3600*24;
 
-$beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
-$end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
+$beginning_UTCDate = gmdate("Y-m-d H:i:s",$beginning_timestamp);
+$end_UTCDate = gmdate("Y-m-d H:i:s",$end_timestamp);                                                      
   
 $sql =  "SELECT s.name,b.name as buildname,be.type,be.sourcefile,be.sourceline,be.text
                          FROM build AS b,builderror as be,site AS s
-                         WHERE b.starttime<$end_UTCDate AND b.starttime>$beginning_UTCDate
+                         WHERE b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                          AND b.projectid='$projectid' AND be.buildid=b.id 
                          AND s.id=b.siteid
                          ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC";
-    
-$builds = mysql_query($sql);
-echo mysql_error();
+                           
+$builds = pdo_query($sql);
+echo pdo_error();
 
-if(mysql_num_rows($builds)==0)
+if(pdo_num_rows($builds)==0)
   {
   $xml .= "<message>No warnings or errors today!</message>";
   }
 
 $current_file = "ThisIsMyFirstFile";
-while($build_array = mysql_fetch_array($builds))
+while($build_array = pdo_fetch_array($builds))
 {
   if($build_array["sourcefile"] != $current_file)
     {
@@ -122,7 +123,7 @@ while($build_array = mysql_fetch_array($builds))
     }
 }
 
-if(mysql_num_rows($builds)>0)
+if(pdo_num_rows($builds)>0)
   {
   $xml .= "</sourcefile>";
   }

@@ -16,12 +16,13 @@
 
 =========================================================================*/
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php"); 
+include_once("common.php");
 include("version.php"); 
 
-@$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 

@@ -140,14 +140,36 @@ function add_log($text,$function)
 /** Report last my SQL error */
 function add_last_sql_error($functionname)
 {
-  $mysql_error = mysql_error();
- if(strlen($mysql_error)>0)
+  $pdo_error = pdo_error();
+ if(strlen($pdo_error)>0)
    {
-   add_log("SQL error: ".$mysql_error."\n",$functionname);
-    $text = "SQL error in $functionname():".$mysql_error."<br>";
+   add_log("SQL error: ".$pdo_error."\n",$functionname);
+    $text = "SQL error in $functionname():".$pdo_error."<br>";
     echo $text;
   }
 }
+
+/** Set the CDash version number in the database */
+function setVersion()
+{
+  include("config.php");
+  include("version.php");
+  require_once("pdo.php");
+
+  $version = pdo_query("SELECT major FROM version");
+  if(pdo_num_rows($version) == 0)
+    {
+    pdo_query("INSERT INTO version (major,minor,patch) 
+               VALUES ($CDASH_VERSION_MAJOR,$CDASH_VERSION_MINOR,$CDASH_VERSION_PATCH)");
+    }
+  else
+    {
+    pdo_query("UPDATE version SET major=$CDASH_VERSION_MAJOR,
+                                  minor=$CDASH_VERSION_MINOR,
+                                  patch=$CDASH_VERSION_PATCH");
+    }  
+}
+
 
 /** Return true if the user is allowed to see the page */
 function checkUserPolicy($userid,$projectid,$onlyreturn=0)
@@ -158,7 +180,7 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
     }
     
   // If the projectid=0 only admin can access the page
-  if($projectid==0 && mysql_num_rows(mysql_query("SELECT admin FROM user WHERE id='$userid' AND admin='1'"))==0)
+  if($projectid==0 && pdo_num_rows(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid' AND admin='1'"))==0)
     {
     if(!$onlyreturn)
       {
@@ -172,8 +194,8 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
     }
   else if(@$projectid > 0)
     {
-    $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-    $project_array = mysql_fetch_array($project);
+    $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+    $project_array = pdo_fetch_array($project);
     
     // If the project is public we quit
     if($project_array["public"]==1)
@@ -199,8 +221,8 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
       }
     else if($userid)
       {
-      $user2project = mysql_query("SELECT projectid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-      if(mysql_num_rows($user2project) == 0)
+      $user2project = pdo_query("SELECT projectid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+      if(pdo_num_rows($user2project) == 0)
         {
         if(!$onlyreturn)
           {
@@ -222,6 +244,7 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
 function clean_backup_directory()
 {   
   include("config.php");
+  require_once("pdo.php");
   foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename) 
     {
     if(time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600)
@@ -259,6 +282,7 @@ function backup_xml_file($parser,$contents,$projectid)
     }
 
   include("config.php");
+  require_once("pdo.php");
    
   clean_backup_directory(); // should probably be run as a cronjob
  
@@ -356,12 +380,13 @@ function get_projects()
   $projects = array();
   
   include("config.php");
+  require_once("pdo.php");
 
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
 
-  $projectres = mysql_query("SELECT id,name FROM project WHERE public='1' ORDER BY name");
-  while($project_array = mysql_fetch_array($projectres))
+  $projectres = pdo_query("SELECT id,name FROM project WHERE public='1' ORDER BY name");
+  while($project_array = pdo_fetch_array($projectres))
     {
     $project = array();
     $project['id'] = $project_array["id"];  
@@ -369,23 +394,23 @@ function get_projects()
     $projectid = $project['id'];
     
     $project['last_build'] = "NA";
-    $lastbuildquery = mysql_query("SELECT submittime FROM build WHERE projectid='$projectid' ORDER BY submittime DESC LIMIT 1");
-    if(mysql_num_rows($lastbuildquery)>0)
+    $lastbuildquery = pdo_query("SELECT submittime FROM build WHERE projectid='$projectid' ORDER BY submittime DESC LIMIT 1");
+    if(pdo_num_rows($lastbuildquery)>0)
       {
-      $lastbuild_array = mysql_fetch_array($lastbuildquery);
+      $lastbuild_array = pdo_fetch_array($lastbuildquery);
       $project['last_build'] = $lastbuild_array["submittime"];
       }
 
-  $project['first_build'] = "NA";
-    $firstbuildquery = mysql_query("SELECT starttime FROM build WHERE projectid='$projectid' AND starttime>'2000-01-01' ORDER BY starttime ASC LIMIT 1");
-    if(mysql_num_rows($firstbuildquery)>0)
+    $project['first_build'] = "NA";
+    $firstbuildquery = pdo_query("SELECT starttime FROM build WHERE projectid='$projectid' AND starttime>'2000-01-01' ORDER BY starttime ASC LIMIT 1");
+    if(pdo_num_rows($firstbuildquery)>0)
       {
-      $firstbuild_array = mysql_fetch_array($firstbuildquery);
+      $firstbuild_array = pdo_fetch_array($firstbuildquery);
       $project['first_build'] = $firstbuild_array["starttime"];
       }
 
-    $buildquery = mysql_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
-    $buildquery_array = mysql_fetch_array($buildquery); 
+    $buildquery = pdo_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
+    $buildquery_array = pdo_fetch_array($buildquery); 
     $project['nbuilds'] = $buildquery_array[0];
     
     $projects[] = $project; 
@@ -402,16 +427,16 @@ function get_build_id($buildname,$stamp,$projectid)
     return;
     }
   
-  $buildname = mysql_real_escape_string($buildname);
-  $stamp = mysql_real_escape_string($stamp);
+  $buildname = pdo_real_escape_string($buildname);
+  $stamp = pdo_real_escape_string($stamp);
   
   $sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
   $sql .= " AND projectid='$projectid'"; 
   $sql .= " ORDER BY id DESC";
-  $build = mysql_query($sql);
-  if(mysql_num_rows($build)>0)
+  $build = pdo_query($sql);
+  if(pdo_num_rows($build)>0)
     {
-    $build_array = mysql_fetch_array($build);
+    $build_array = pdo_fetch_array($build);
     return $build_array["id"];
     }
   return -1;
@@ -420,11 +445,11 @@ function get_build_id($buildname,$stamp,$projectid)
 /** Get the project id from the project name */
 function get_project_id($projectname)
 {
-  $projectname = mysql_real_escape_string($projectname);
-  $project = mysql_query("SELECT id FROM project WHERE name='$projectname'");
-  if(mysql_num_rows($project)>0)
+  $projectname = pdo_real_escape_string($projectname);
+  $project = pdo_query("SELECT id FROM project WHERE name='$projectname'");
+  if(pdo_num_rows($project)>0)
     {
-    $project_array = mysql_fetch_array($project);
+    $project_array = pdo_fetch_array($project);
     return $project_array["id"];
     }
   return -1;
@@ -435,14 +460,14 @@ function get_project_name($projectid)
 {
   if(!isset($projectid) || !is_numeric($projectid))
     {
-    echo "Not a valid buildid!";
+    echo "Not a valid projectid!";
     return;
     }
 
-  $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
-  if(mysql_num_rows($project)>0)
+  $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
+  if(pdo_num_rows($project)>0)
     {
-    $project_array = mysql_fetch_array($project);
+    $project_array = pdo_fetch_array($project);
     return $project_array["name"];
     }
     
@@ -464,7 +489,7 @@ function add_coveragesummary($buildid,$loctested,$locuntested)
     {
     return;
     }  
-  mysql_query ("INSERT INTO coveragesummary (buildid,loctested,locuntested) 
+  pdo_query ("INSERT INTO coveragesummary (buildid,loctested,locuntested) 
                 VALUES ('$buildid','$loctested','$locuntested')");
 }
 
@@ -473,17 +498,18 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
                              $functionstested,$functionsuntested)
 {
   include("config.php");
+  require_once("pdo.php");
   if(!is_numeric($buildid))
     {
     return;
     }
-  $build = mysql_query("SELECT projectid,name from build WHERE id='$buildid'");
-  $build_array = mysql_fetch_array($build);
+  $build = pdo_query("SELECT projectid,name from build WHERE id='$buildid'");
+  $build_array = pdo_fetch_array($build);
   $projectid = $build_array["projectid"];
   
   // Check if we should send the email  
-  $project = mysql_query("SELECT name,coveragethreshold,emaillowcoverage FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT name,coveragethreshold,emaillowcoverage FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
   if($project_array["emaillowcoverage"] == 0)
     {
     return;
@@ -527,12 +553,12 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
     $sql = "SELECT updatefile.author from updatefile,build
                                WHERE updatefile.buildid=build.id AND build.projectid='$projectid'
                                 AND updatefile.filename='$filename' ORDER BY revision DESC LIMIT 1";
-    $updatefile = mysql_query($sql);
+    $updatefile = pdo_query($sql);
     
     // If we have a user in the database
-    if(mysql_num_rows($updatefile)>0)
+    if(pdo_num_rows($updatefile)>0)
       {                             
-      $updatefile_array = mysql_fetch_array($updatefile);
+      $updatefile_array = pdo_fetch_array($updatefile);
       $author = $updatefile_array["author"];
       
       // Writing the message
@@ -585,31 +611,31 @@ function add_coverage($buildid,$coverage_array)
     $fullpath = $coverage["fullpath"];
 
     // Create an empty file if doesn't exists
-    $coveragefile = mysql_query("SELECT id FROM coveragefile WHERE fullpath='$fullpath' AND file IS NULL");
-    if(mysql_num_rows($coveragefile)==0)
+    $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE fullpath='$fullpath' AND file IS NULL");
+    if(pdo_num_rows($coveragefile)==0)
       {
       // Do not compute the crc32, that means it's a temporary file
       // Only when the crc32 is computed it means that the file is valid
-      mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-      $fileid = mysql_insert_id();
+      pdo_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+      $fileid = pdo_insert_id("coveragefile");
       }
     else
       {
-      $coveragefile_array = mysql_fetch_array($coveragefile);
+      $coveragefile_array = pdo_fetch_array($coveragefile);
       $fileid = $coveragefile_array["id"];
       }
       
     // Create an empty file if doesn't exists
-    /*$coveragefile = mysql_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
+    /*$coveragefile = pdo_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
                                  WHERE cf.id=c.fileid AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
-    if(mysql_num_rows($coveragefile)==0)
+    if(pdo_num_rows($coveragefile)==0)
       {
-      mysql_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-      $fileid = mysql_insert_id();
+      pdo_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+      $fileid = pdo_insert_id("coveragefile");
       }
     else
       {
-      $coveragefile_array = mysql_fetch_array($coveragefile);
+      $coveragefile_array = pdo_fetch_array($coveragefile);
       $fileid = $coveragefile_array["id"];
       }*/
       
@@ -638,7 +664,7 @@ function add_coverage($buildid,$coverage_array)
     $sql .= "('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')";    
     }
   // Insert into coverage
-  mysql_query($sql);
+  pdo_query($sql);
   add_last_sql_error("add_coverage");
 }
 
@@ -653,37 +679,37 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
    // Compute the crc32 of the file
   $crc32 = crc32($fullpath.$filecontent);
   
-  $coveragefile = mysql_query("SELECT id FROM coveragefile WHERE crc32='$crc32'");
+  $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE crc32='$crc32'");
   add_last_sql_error("add_coveragefile");
     
-  if(mysql_num_rows($coveragefile)>0) // we have the same crc32
+  if(pdo_num_rows($coveragefile)>0) // we have the same crc32
     {
-    $coveragefile_array = mysql_fetch_array($coveragefile);
+    $coveragefile_array = pdo_fetch_array($coveragefile);
     $fileid = $coveragefile_array["id"];
 
     // Update the current coverage.fileid
-    $coverage = mysql_query("SELECT c.fileid FROM coverage AS c,coveragefile AS cf 
+    $coverage = pdo_query("SELECT c.fileid FROM coverage AS c,coveragefile AS cf 
                              WHERE c.fileid=cf.id AND c.buildid='$buildid' 
                              AND cf.fullpath='$fullpath'");
-    $coverage_array = mysql_fetch_array($coverage);
+    $coverage_array = pdo_fetch_array($coverage);
     $prevfileid = $coverage_array["fileid"];
 
-    mysql_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$prevfileid'");
+    pdo_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$prevfileid'");
     add_last_sql_error("add_coveragefile");
 
     // Remove the file if the crc32 is NULL
-    mysql_query ("DELETE FROM coveragefile WHERE id='$prevfileid' AND file IS NULL and crc32 IS NULL");
+    pdo_query ("DELETE FROM coveragefile WHERE id='$prevfileid' AND file IS NULL and crc32 IS NULL");
     add_last_sql_error("add_coveragefile");
     }
   else // The file doesn't exist in the database
     {
     // We find the current fileid based on the name and the file should be null
-    $coveragefile = mysql_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf 
+    $coveragefile = pdo_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf 
                                  WHERE c.fileid=cf.id AND c.buildid='$buildid' 
                                  AND cf.fullpath='$fullpath' ORDER BY cf.id ASC");
-    $coveragefile_array = mysql_fetch_array($coveragefile);
+    $coveragefile_array = pdo_fetch_array($coveragefile);
     $fileid = $coveragefile_array["id"];
-    mysql_query ("UPDATE coveragefile SET file='$filecontent',crc32='$crc32' WHERE id='$fileid'"); 
+    pdo_query ("UPDATE coveragefile SET file='$filecontent',crc32='$crc32' WHERE id='$fileid'"); 
     add_last_sql_error("add_coveragefile");
     }
     
@@ -720,7 +746,7 @@ function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
        }
      }
  
-  mysql_query ($sql);
+  pdo_query ($sql);
   add_last_sql_error("add_coveragelogfile");
 }
 
@@ -736,10 +762,10 @@ function add_site2user($siteid,$userid)
     return;
     }
         
-  $site2user = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
-  if(mysql_num_rows($site2user) == 0)
+  $site2user = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
+  if(pdo_num_rows($site2user) == 0)
     {
-    mysql_query("INSERT INTO site2user (siteid,userid) VALUES ('$siteid','$userid')");
+    pdo_query("INSERT INTO site2user (siteid,userid) VALUES ('$siteid','$userid')");
     add_last_sql_error("add_site2user");
     }
 }
@@ -747,7 +773,7 @@ function add_site2user($siteid,$userid)
 /** remove a user to a site */
 function remove_site2user($siteid,$userid)
 {
-  mysql_query("DELETE FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
+  pdo_query("DELETE FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
   add_last_sql_error("remove_site2user");
 }
 
@@ -767,7 +793,8 @@ function update_site($siteid,$name,
            $processorclockfrequency,
            $description,$ip,$latitude,$longitude,$nonewrevision=false)
 {  
-  include_once("config.php");
+  include("config.php");
+  require_once("pdo.php");
  
   // Security checks
   if(!is_numeric($siteid))
@@ -775,26 +802,26 @@ function update_site($siteid,$name,
     return;
     }
     
-  $latitude = mysql_real_escape_string($latitude);
-  $longitude = mysql_real_escape_string($longitude);
-  $ip = mysql_real_escape_string($ip);
-  $name = mysql_real_escape_string($name);
-  $processoris64bits = mysql_real_escape_string($processoris64bits);
-  $processorvendor = mysql_real_escape_string($processorvendor);
-  $processorvendorid = mysql_real_escape_string($processorvendorid);
-  $processorfamilyid = mysql_real_escape_string($processorfamilyid);
-  $processormodelid = mysql_real_escape_string($processormodelid);
-  $processorcachesize = mysql_real_escape_string($processorcachesize);
-  $numberlogicalcpus = mysql_real_escape_string($numberlogicalcpus);
-  $numberphysicalcpus = mysql_real_escape_string($numberphysicalcpus);
-  $totalvirtualmemory = mysql_real_escape_string($totalvirtualmemory);
-  $totalphysicalmemory = mysql_real_escape_string($totalphysicalmemory);
-  $logicalprocessorsperphysical = mysql_real_escape_string($logicalprocessorsperphysical);
-  $processorclockfrequency = mysql_real_escape_string($processorclockfrequency);
-  $description = mysql_real_escape_string($description);
+  $latitude = pdo_real_escape_string($latitude);
+  $longitude = pdo_real_escape_string($longitude);
+  $ip = pdo_real_escape_string($ip);
+  $name = pdo_real_escape_string($name);
+  $processoris64bits = pdo_real_escape_string($processoris64bits);
+  $processorvendor = pdo_real_escape_string($processorvendor);
+  $processorvendorid = pdo_real_escape_string($processorvendorid);
+  $processorfamilyid = pdo_real_escape_string($processorfamilyid);
+  $processormodelid = pdo_real_escape_string($processormodelid);
+  $processorcachesize = pdo_real_escape_string($processorcachesize);
+  $numberlogicalcpus = pdo_real_escape_string($numberlogicalcpus);
+  $numberphysicalcpus = pdo_real_escape_string($numberphysicalcpus);
+  $totalvirtualmemory = pdo_real_escape_string($totalvirtualmemory);
+  $totalphysicalmemory = pdo_real_escape_string($totalphysicalmemory);
+  $logicalprocessorsperphysical = pdo_real_escape_string($logicalprocessorsperphysical);
+  $processorclockfrequency = pdo_real_escape_string($processorclockfrequency);
+  $description = pdo_real_escape_string($description);
  
   // Update the basic information first
-  mysql_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
+  pdo_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
  
   add_last_sql_error("update_site");
  
@@ -832,8 +859,8 @@ function update_site($siteid,$name,
  // Check if we have valuable information and the siteinformation doesn't exist
  $hasvalidinfo = false;
  $newrevision2 = false;
- $query = mysql_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
- if(mysql_num_rows($query)==0)
+ $query = pdo_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
+ if(pdo_num_rows($query)==0)
    {
   $noinformation = 1;
   foreach($names as $name)
@@ -853,7 +880,7 @@ function update_site($siteid,$name,
    }
  else
    {
-  $query_array = mysql_fetch_array($query);
+  $query_array = pdo_fetch_array($query);
   // Check if the information are different from what we have in the database, then that means
    // the system has been upgraded and we need to create a new revision
    foreach($names as $name)
@@ -899,7 +926,7 @@ function update_site($siteid,$name,
     }
     }
    $sql .= ")"; 
-  mysql_query ($sql);
+  pdo_query ($sql);
   add_last_sql_error("update_site",$sql);
    }
  else
@@ -922,7 +949,7 @@ function update_site($siteid,$name,
      $timestamp = $query_array["timestamp"];
      $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
   
-     mysql_query ($sql); 
+     pdo_query ($sql); 
    add_last_sql_error("update_site",$sql);
   }
 }      
@@ -931,6 +958,7 @@ function update_site($siteid,$name,
 function get_geolocation($ip)
 {  
   include("config.php");
+  require_once("pdo.php");
   $location = array();
   
   // Test if curl exists
@@ -1001,8 +1029,9 @@ function get_geolocation($ip)
 function add_site($name,$parser)
 {
   include("config.php");
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  require_once("pdo.php");
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
 
  $siteindex = $parser->index["SITE"];
  @$processoris64bits=$parser->vals[$siteindex[0]]["attributes"]["IS64BITS"];
@@ -1021,25 +1050,25 @@ function add_site($name,$parser)
  $ip = $_SERVER['REMOTE_ADDR'];
  
  
-  $ip = mysql_real_escape_string($ip);
-  $processoris64bits = mysql_real_escape_string($processoris64bits);
-  $processorvendor = mysql_real_escape_string($processorvendor);
-  $processorvendorid = mysql_real_escape_string($processorvendorid);
-  $processorfamilyid = mysql_real_escape_string($processorfamilyid);
-  $processormodelid = mysql_real_escape_string($processormodelid);
-  $processorcachesize = mysql_real_escape_string($processorcachesize);
-  $numberlogicalcpus = mysql_real_escape_string($numberlogicalcpus);
-  $numberphysicalcpus = mysql_real_escape_string($numberphysicalcpus);
-  $totalvirtualmemory = mysql_real_escape_string($totalvirtualmemory);
-  $totalphysicalmemory = mysql_real_escape_string($totalphysicalmemory);
-  $logicalprocessorsperphysical = mysql_real_escape_string($logicalprocessorsperphysical);
-  $processorclockfrequency = mysql_real_escape_string($processorclockfrequency);
+  $ip = pdo_real_escape_string($ip);
+  $processoris64bits = pdo_real_escape_string($processoris64bits);
+  $processorvendor = pdo_real_escape_string($processorvendor);
+  $processorvendorid = pdo_real_escape_string($processorvendorid);
+  $processorfamilyid = pdo_real_escape_string($processorfamilyid);
+  $processormodelid = pdo_real_escape_string($processormodelid);
+  $processorcachesize = pdo_real_escape_string($processorcachesize);
+  $numberlogicalcpus = pdo_real_escape_string($numberlogicalcpus);
+  $numberphysicalcpus = pdo_real_escape_string($numberphysicalcpus);
+  $totalvirtualmemory = pdo_real_escape_string($totalvirtualmemory);
+  $totalphysicalmemory = pdo_real_escape_string($totalphysicalmemory);
+  $logicalprocessorsperphysical = pdo_real_escape_string($logicalprocessorsperphysical);
+  $processorclockfrequency = pdo_real_escape_string($processorclockfrequency);
 
   // Check if we already have the site registered
-  $site = mysql_query("SELECT id,name,latitude,longitude FROM site WHERE name='$name'");
-  if(mysql_num_rows($site)>0)
+  $site = pdo_query("SELECT id,name,latitude,longitude FROM site WHERE name='$name'");
+  if(pdo_num_rows($site)>0)
     {
-    $site_array = mysql_fetch_array($site);
+    $site_array = pdo_fetch_array($site);
     $siteid = $site_array["id"];
     $sitename = $site_array["name"];
     $latitude = $site_array["latitude"];
@@ -1070,17 +1099,17 @@ function add_site($name,$parser)
   $latitude = $location['latitude'];
   $longitude = $location['longitude'];  
 
-  if(!mysql_query ("INSERT INTO site (name,ip,latitude,longitude) 
+  if(!pdo_query ("INSERT INTO site (name,ip,latitude,longitude) 
                     VALUES ('$name','$ip','$latitude','$longitude')"))
     {
-    echo "add_site = ".mysql_error();  
+    echo "add_site = ".pdo_error();  
     }
   
-  $siteid = mysql_insert_id();
+  $siteid = pdo_insert_id("site");
  
   // Insert the site information
   $now = gmdate("Y-m-d H:i:s");
-  mysql_query ("INSERT INTO siteinformation (siteid,
+  pdo_query ("INSERT INTO siteinformation (siteid,
            timestamp,
            processoris64bits,
            processorvendor,
@@ -1122,8 +1151,8 @@ function remove_project_builds($projectid)
     return;
     }
     
-  $build = mysql_query("SELECT id FROM build WHERE projectid='$projectid'");
-  while($build_array = mysql_fetch_array($build))
+  $build = pdo_query("SELECT id FROM build WHERE projectid='$projectid'");
+  while($build_array = pdo_fetch_array($build))
     {
     $buildid = $build_array["id"];
     remove_build($buildid);
@@ -1139,79 +1168,79 @@ function remove_build($buildid)
     return;
     }
     
-  mysql_query("DELETE FROM build WHERE id='$buildid'");
-  mysql_query("DELETE FROM build2group WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM builderror WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM configure WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM build WHERE id='$buildid'");
+  pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM builderror WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM configure WHERE buildid='$buildid'");
     
   // coverage file are kept unless they are shared
-  $coverage = mysql_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
-  while($coverage_array = mysql_fetch_array($coverage))
+  $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
+  while($coverage_array = pdo_fetch_array($coverage))
     {
     $fileid = $coverage_array["fileid"];
     // Make sur the file is not shared
-    $numfiles = mysql_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
+    $numfiles = pdo_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
     if($numfiles[0]==1)
       {
-      mysql_query("DELETE FROM coveragefile WHERE id='$fileid'"); 
+      pdo_query("DELETE FROM coveragefile WHERE id='$fileid'"); 
       }
     }
   
-  mysql_query("DELETE FROM coverage WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM coveragefilelog WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM coveragesummary WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM coverage WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM coveragefilelog WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM coveragesummary WHERE buildid='$buildid'");
 
   // dynamicanalysisdefect
-  $dynamicanalysis = mysql_query("SELECT id FROM dynamicanalysis WHERE buildid='$buildid'");
-  while($dynamicanalysis_array = mysql_fetch_array($dynamicanalysis))
+  $dynamicanalysis = pdo_query("SELECT id FROM dynamicanalysis WHERE buildid='$buildid'");
+  while($dynamicanalysis_array = pdo_fetch_array($dynamicanalysis))
     {
     $dynid = $dynamicanalysis_array["id"];
-    mysql_query("DELETE FROM dynamicanalysisdefect WHERE id='$dynid'"); 
+    pdo_query("DELETE FROM dynamicanalysisdefect WHERE id='$dynid'"); 
     }
    
-  mysql_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");   
+  pdo_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM updatefile WHERE buildid='$buildid'");   
   
   // Delete the note if not shared
-  $build2note = mysql_query("SELECT * FROM build2note WHERE buildid='$buildid'");
-  while($build2note_array = mysql_fetch_array($build2note))
+  $build2note = pdo_query("SELECT * FROM build2note WHERE buildid='$buildid'");
+  while($build2note_array = pdo_fetch_array($build2note))
     {
     $noteid = $build2note_array["noteid"];
-    if(mysql_num_rows(mysql_query("SELECT * FROM build2note WHERE noteid='$noteid'"))==1)
+    if(pdo_num_rows(pdo_query("SELECT * FROM build2note WHERE noteid='$noteid'"))==1)
       {
       // Note is not shared we delete
-      mysql_query("DELETE FROM note WHERE id='$noteid'");
+      pdo_query("DELETE FROM note WHERE id='$noteid'");
       }
     }
-  mysql_query("DELETE FROM build2note WHERE buildid='$buildid'"); 
+  pdo_query("DELETE FROM build2note WHERE buildid='$buildid'"); 
   
   // Delete the test if not shared
-  $build2test = mysql_query("SELECT * FROM build2test WHERE buildid='$buildid'");
-  while($build2test_array = mysql_fetch_array($build2test))
+  $build2test = pdo_query("SELECT * FROM build2test WHERE buildid='$buildid'");
+  while($build2test_array = pdo_fetch_array($build2test))
     {
     $testid = $build2test_array["testid"];
-    if(mysql_num_rows(mysql_query("SELECT * FROM build2test WHERE testid='$testid'"))==1)
+    if(pdo_num_rows(pdo_query("SELECT * FROM build2test WHERE testid='$testid'"))==1)
       {
       // Check if the images for the test are not shared
-      $test2image = mysql_query("SELECT imgid FROM test2image WHERE testid='$testid'");
-      while($test2image_array = mysql_fetch_array($test2image))
+      $test2image = pdo_query("SELECT imgid FROM test2image WHERE testid='$testid'");
+      while($test2image_array = pdo_fetch_array($test2image))
         {
         $imgid = $test2image_array["imgid"];
         // Check if the test images are shared
-        if(mysql_num_rows(mysql_query("SELECT * FROM test2image WHERE imgid='$imgid'"))==1)
+        if(pdo_num_rows(pdo_query("SELECT * FROM test2image WHERE imgid='$imgid'"))==1)
           {
-          mysql_query("DELETE FROM image WHERE id='$imgid'");
+          pdo_query("DELETE FROM image WHERE id='$imgid'");
           }
         }
       // Tests are not shared we delete
-      mysql_query("DELETE FROM testmeasurement WHERE testid='$testid'");
-      mysql_query("DELETE FROM test WHERE id='$testid'");
-      mysql_query("DELETE FROM test2image WHERE testid='$testid'");
+      pdo_query("DELETE FROM testmeasurement WHERE testid='$testid'");
+      pdo_query("DELETE FROM test WHERE id='$testid'");
+      pdo_query("DELETE FROM test2image WHERE testid='$testid'");
       }
     }
-  mysql_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
+  pdo_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
 }
 
 /** Add a new build */
@@ -1222,30 +1251,30 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
     return;
     }
 
-  $name = mysql_real_escape_string($name);
-  $stamp = mysql_real_escape_string($stamp);
-  $type = mysql_real_escape_string($type);
-  $generator = mysql_real_escape_string($generator);
-  $starttime = mysql_real_escape_string($starttime);
-  $endtime = mysql_real_escape_string($endtime);
-  $submittime = mysql_real_escape_string($submittime);
-  $command = mysql_real_escape_string($command);
-  $log = mysql_real_escape_string($log);
+  $name = pdo_real_escape_string($name);
+  $stamp = pdo_real_escape_string($stamp);
+  $type = pdo_real_escape_string($type);
+  $generator = pdo_real_escape_string($generator);
+  $starttime = pdo_real_escape_string($starttime);
+  $endtime = pdo_real_escape_string($endtime);
+  $submittime = pdo_real_escape_string($submittime);
+  $command = pdo_real_escape_string($command);
+  $log = pdo_real_escape_string($log);
 
   // First we check if the build already exists if this is the case we delete all related information regarding
   // The previous build 
-  $build = mysql_query("SELECT id FROM build WHERE projectid='$projectid' AND siteid='$siteid' AND name='$name' AND stamp='$stamp' AND type='$type'");
-  if(mysql_num_rows($build)>0)
+  $build = pdo_query("SELECT id FROM build WHERE projectid='$projectid' AND siteid='$siteid' AND name='$name' AND stamp='$stamp' AND type='$type'");
+  if(pdo_num_rows($build)>0)
     {
-    $build_array = mysql_fetch_array($build);
+    $build_array = pdo_fetch_array($build);
     remove_build($build_array["id"]);
     }
 
-  mysql_query ("INSERT INTO build (projectid,siteid,name,stamp,type,generator,starttime,endtime,submittime,command,log) 
+  pdo_query ("INSERT INTO build (projectid,siteid,name,stamp,type,generator,starttime,endtime,submittime,command,log) 
                            VALUES ('$projectid','$siteid','$name','$stamp','$type','$generator',
                                   '$starttime','$endtime','$submittime','$command','$log')");
   
-  $buildid = mysql_insert_id();
+  $buildid = pdo_insert_id("build");
 
   // Insert information about the parser
  $site = $parser->index["SITE"];
@@ -1256,33 +1285,33 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
  
  if($osname!="" || $osrelease!="" || $osversion!="" || $osplatform!="")
    {
-   mysql_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform) 
+   pdo_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform) 
                   VALUES ('$buildid','$osname','$osrelease','$osversion','$osplatform')");
    }
 
   // Insert the build into the proper group
   // 1) Check if we have any build2grouprules for this build
-  $build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
+  $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
                                   WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
                                   AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
                                   AND '$starttime'>b2g.starttime 
-                 AND ('$starttime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
+                 AND ('$starttime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
                                   
-  if(mysql_num_rows($build2grouprule)>0)
+  if(pdo_num_rows($build2grouprule)>0)
     {
-    $build2grouprule_array = mysql_fetch_array($build2grouprule);
+    $build2grouprule_array = pdo_fetch_array($build2grouprule);
     $groupid = $build2grouprule_array["groupid"];
     
-    mysql_query ("INSERT INTO build2group (groupid,buildid) 
+    pdo_query ("INSERT INTO build2group (groupid,buildid) 
                   VALUES ('$groupid','$buildid')");
     }
   else // we don't have any rules we use the type 
     {
-    $buildgroup = mysql_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
-    $buildgroup_array = mysql_fetch_array($buildgroup);
+    $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
+    $buildgroup_array = pdo_fetch_array($buildgroup);
     $groupid = $buildgroup_array["id"];
     
-    mysql_query ("INSERT INTO build2group (groupid,buildid) 
+    pdo_query ("INSERT INTO build2group (groupid,buildid) 
                   VALUES ('$groupid','$buildid')");
     }
   return $buildid;
@@ -1296,13 +1325,13 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
     return;
     }
     
-  $starttime = mysql_real_escape_string($starttime);
-  $endtime = mysql_real_escape_string($endtime);
-  $command = mysql_real_escape_string($command);
-  $log = mysql_real_escape_string($log);
-  $status = mysql_real_escape_string($status);
+  $starttime = pdo_real_escape_string($starttime);
+  $endtime = pdo_real_escape_string($endtime);
+  $command = pdo_real_escape_string($command);
+  $log = pdo_real_escape_string($log);
+  $status = pdo_real_escape_string($status);
       
-  mysql_query ("INSERT INTO configure (buildid,starttime,endtime,command,log,status) 
+  pdo_query ("INSERT INTO configure (buildid,starttime,endtime,command,log,status) 
                VALUES ('$buildid','$starttime','$endtime','$command','$log','$status')");
   add_last_sql_error("add_configure");
 }
@@ -1315,14 +1344,14 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
     return;
     }
     
-  $command = mysql_real_escape_string($command);
-  $output = mysql_real_escape_string($output);
-  $name = mysql_real_escape_string($name);  
-  $status = mysql_real_escape_string($status);  
-  $path = mysql_real_escape_string($path);  
-  $fullname = mysql_real_escape_string($fullname);  
-  $time = mysql_real_escape_string($time);     
-  $details = mysql_real_escape_string($details);
+  $command = pdo_real_escape_string($command);
+  $output = pdo_real_escape_string($output);
+  $name = pdo_real_escape_string($name);  
+  $status = pdo_real_escape_string($status);  
+  $path = pdo_real_escape_string($path);  
+  $fullname = pdo_real_escape_string($fullname);  
+  $time = pdo_real_escape_string($time);     
+  $details = pdo_real_escape_string($details);
   
   // CRC32 is computed with the measurements name and type and value
   $buffer = $name.$path.$command.$output.$details; 
@@ -1333,13 +1362,13 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   $crc32 = crc32($buffer);
   
   // Check if the test doesn't exist
-  $test = mysql_query("SELECT id FROM test WHERE crc32='$crc32' LIMIT 1");
+  $test = pdo_query("SELECT id FROM test WHERE crc32='$crc32' LIMIT 1");
   
   $testexists = false;
     
-  if(mysql_num_rows($test) > 0) // test exists
+  if(pdo_num_rows($test) > 0) // test exists
     {   
-    while($test_array = mysql_fetch_array($test))
+    while($test_array = pdo_fetch_array($test))
       {
       $currentid = $test_array["id"];
       $sql = "SELECT count(imgid) FROM test2image WHERE testid='$currentid' ";
@@ -1368,7 +1397,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
           }   
         } // end for each image
         
-      $nimage_array = mysql_fetch_array(mysql_query($sql));  
+      $nimage_array = pdo_fetch_array(pdo_query($sql));  
       add_last_sql_error("add_test");
       $nimages = $nimage_array[0];
         
@@ -1386,9 +1415,9 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
     // Need to create a new test
     $query = "INSERT INTO test (crc32,name,path,command,details,output) 
               VALUES ('$crc32','$name','$path','$command', '$details', '$output')";
-    if(mysql_query("$query"))
+    if(pdo_query("$query"))
       {
-      $testid = mysql_insert_id();
+      $testid = pdo_insert_id("test");
       
       // Insert the images
       foreach($images as $image)
@@ -1397,7 +1426,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
         $role = $image["role"];
         $query = "INSERT INTO test2image(imgid, testid, role)
                   VALUES('$imgid', '$testid', '$role')";
-        if(!mysql_query("$query"))
+        if(!pdo_query("$query"))
           {
           add_last_sql_error("add_test");
           }
@@ -1411,7 +1440,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
         $value = $measurement['value'];
         $query = "INSERT INTO testmeasurement (testid,name,type,value) 
                   VALUES ('$testid','$name','$type','$value')";
-        if(!mysql_query("$query"))
+        if(!pdo_query("$query"))
           {
           add_last_sql_error("add_test");
           }
@@ -1425,13 +1454,13 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 
   // Add into build2test
   // Make sure that the test is not already added
-  $query = mysql_query("SELECT buildid FROM build2test 
+  $query = pdo_query("SELECT buildid FROM build2test 
                         WHERE buildid='$buildid' AND testid='$testid' AND status='$status'
              AND time='$time'");
   add_last_sql_error("add_test"); 
-  if(mysql_num_rows($query)==0)
+  if(pdo_num_rows($query)==0)
    {               
-    mysql_query("INSERT INTO build2test (buildid,testid,status,time) 
+    pdo_query("INSERT INTO build2test (buildid,testid,status,time) 
                  VALUES ('$buildid','$testid','$status','$time')");
     }
   add_last_sql_error("add_test");              
@@ -1445,17 +1474,18 @@ function  add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$preco
     return;
     }
     
-  $type = mysql_real_escape_string($type);
-  $logline = mysql_real_escape_string($logline);
-  $text = mysql_real_escape_string($text);
-  $sourcefile = mysql_real_escape_string($sourcefile);
-  $sourceline = mysql_real_escape_string($sourceline);  
-  $precontext = mysql_real_escape_string($precontext);  
-  $postcontext = mysql_real_escape_string($postcontext);  
-  $repeatcount = mysql_real_escape_string($repeatcount);  
+  $type = pdo_real_escape_string($type);
+  $logline = pdo_real_escape_string($logline);
+  $text = pdo_real_escape_string($text);
+  $sourcefile = pdo_real_escape_string($sourcefile);
+  $sourceline = pdo_real_escape_string($sourceline);  
+  $precontext = pdo_real_escape_string($precontext);  
+  $postcontext = pdo_real_escape_string($postcontext);  
+  $repeatcount = pdo_real_escape_string($repeatcount);  
       
-  mysql_query ("INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount) 
-               VALUES ('$buildid','$type','$logline','$text','$sourcefile','$sourceline','$precontext','$postcontext','$repeatcount')");
+  pdo_query ("INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount) 
+               VALUES (".qnum($buildid).",".qnum($type).",".qnum($logline).",'$text','$sourcefile',".qnum($sourceline).",'$precontext',
+                       '$postcontext',".qnum($repeatcount).")");
   add_last_sql_error("add_error");
 }
 
@@ -1467,13 +1497,13 @@ function add_update($buildid,$start_time,$end_time,$command,$type,$status)
     return;
     }
     
-  $start_time = mysql_real_escape_string($start_time);
-  $end_time = mysql_real_escape_string($end_time);
-  $command = mysql_real_escape_string($command);
-  $type = mysql_real_escape_string($type);
-  $status = mysql_real_escape_string($status);
+  $start_time = pdo_real_escape_string($start_time);
+  $end_time = pdo_real_escape_string($end_time);
+  $command = pdo_real_escape_string($command);
+  $type = pdo_real_escape_string($type);
+  $status = pdo_real_escape_string($status);
     
-  mysql_query ("INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status) 
+  pdo_query ("INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status) 
                VALUES ('$buildid','$start_time','$end_time','$command','$type','$status')");
   add_last_sql_error("add_update");
 }
@@ -1486,15 +1516,15 @@ function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$rev
     return;
     }
     
-  $filename = mysql_real_escape_string($filename);
-  $checkindate = mysql_real_escape_string($checkindate);
-  $author = mysql_real_escape_string($author);
-  $email = mysql_real_escape_string($email);
-  $log = mysql_real_escape_string($log);
-  $revision = mysql_real_escape_string($revision);
-  $priorrevision = mysql_real_escape_string($priorrevision);
+  $filename = pdo_real_escape_string($filename);
+  $checkindate = pdo_real_escape_string($checkindate);
+  $author = pdo_real_escape_string($author);
+  $email = pdo_real_escape_string($email);
+  $log = pdo_real_escape_string($log);
+  $revision = pdo_real_escape_string($revision);
+  $priorrevision = pdo_real_escape_string($priorrevision);
     
-  mysql_query ("INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision) 
+  pdo_query ("INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision) 
                VALUES ('$buildid','$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
   add_last_sql_error("add_updatefile");
 }
@@ -1507,16 +1537,16 @@ function add_dynamic_analysis($buildid,$status,$checker,$name,$path,$fullcommand
     return;
     }
     
-  $status = mysql_real_escape_string($status);
-  $checker = mysql_real_escape_string($checker);
-  $name = mysql_real_escape_string($name);
-  $path = mysql_real_escape_string($path);
-  $fullcommandline = mysql_real_escape_string($fullcommandline);
-  $log = mysql_real_escape_string($log);
+  $status = pdo_real_escape_string($status);
+  $checker = pdo_real_escape_string($checker);
+  $name = pdo_real_escape_string($name);
+  $path = pdo_real_escape_string($path);
+  $fullcommandline = pdo_real_escape_string($fullcommandline);
+  $log = pdo_real_escape_string($log);
 
-  mysql_query ("INSERT INTO dynamicanalysis (buildid,status,checker,name,path,fullcommandline,log) 
+  pdo_query ("INSERT INTO dynamicanalysis (buildid,status,checker,name,path,fullcommandline,log) 
                VALUES ('$buildid','$status','$checker','$name','$path','$fullcommandline','$log')");
-  return mysql_insert_id();
+  return pdo_insert_id("dynamicanalysis");
 }
      
 /** Add dynamic analysis defect */
@@ -1527,10 +1557,10 @@ function add_dynamic_analysis_defect($dynid,$type,$value)
     return;
     }
     
-  $type = mysql_real_escape_string($type);
-  $value = mysql_real_escape_string($value);
+  $type = pdo_real_escape_string($type);
+  $value = pdo_real_escape_string($value);
 
-  mysql_query ("INSERT INTO dynamicanalysisdefect (dynamicanalysisid,type,value) 
+  pdo_query ("INSERT INTO dynamicanalysisdefect (dynamicanalysisid,type,value) 
                 VALUES ('$dynid','$type','$value')");
   add_last_sql_error("add_dynamic_analysis_defect");
 }
@@ -1544,26 +1574,26 @@ function add_note($buildid,$text,$timestamp,$name)
     return;
     }
     
-  $text = mysql_real_escape_string($text);
-  $timestamp = mysql_real_escape_string($timestamp);
-  $name = mysql_real_escape_string($name);
+  $text = pdo_real_escape_string($text);
+  $timestamp = pdo_real_escape_string($timestamp);
+  $name = pdo_real_escape_string($name);
   
   $crc32 = crc32($text.$name);  
-  $notecrc32 =  mysql_query("SELECT id FROM note WHERE crc32='$crc32'");
+  $notecrc32 =  pdo_query("SELECT id FROM note WHERE crc32='$crc32'");
   add_last_sql_error("add_note");
-  if(mysql_num_rows($notecrc32) == 0)
+  if(pdo_num_rows($notecrc32) == 0)
     {
-    mysql_query("INSERT INTO note (text,name,crc32) VALUES ('$text','$name','$crc32')");
+    pdo_query("INSERT INTO note (text,name,crc32) VALUES ('$text','$name','$crc32')");
     add_last_sql_error("add_note");
-    $noteid = mysql_insert_id();
+    $noteid = pdo_insert_id("note");
     }
   else // already there
     {
-    $notecrc32_array = mysql_fetch_array($notecrc32);
+    $notecrc32_array = pdo_fetch_array($notecrc32);
     $noteid = $notecrc32_array["id"];
     }
 
-  mysql_query("INSERT INTO build2note (buildid,noteid,time) VALUES ('$buildid','$noteid','$timestamp')");
+  pdo_query("INSERT INTO build2note (buildid,noteid,time) VALUES ('$buildid','$noteid','$timestamp')");
   add_last_sql_error("add_note");
 }
 
@@ -1644,13 +1674,13 @@ function getLogoID($projectid)
 
   //asume the caller already connected to the database
   $query = "SELECT imageid FROM project WHERE id='$projectid'";
-  $result = mysql_query($query);
+  $result = pdo_query($query);
   if(!$result)
     {
     return 0;
     }
 
-  $row = mysql_fetch_array($result);
+  $row = pdo_fetch_array($result);
   return $row["imageid"];
 }
 
@@ -1658,25 +1688,26 @@ function getLogoID($projectid)
 function get_project_properties($projectname)
 {
   include("config.php");
+  require_once("pdo.php");
 
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   if(!$db)
     {
     echo "Error connecting to CDash database server<br>\n";
     exit(0);
     }
 
-  if(!mysql_select_db("$CDASH_DB_NAME",$db))
+  if(!pdo_select_db("$CDASH_DB_NAME",$db))
     {
     echo "Error selecting CDash database<br>\n";
     exit(0);
     }
 
-  $projectname = mysql_real_escape_string($projectname);
-  $project = mysql_query("SELECT * FROM project WHERE name='$projectname'");
-  if(mysql_num_rows($project)>0)
+  $projectname = pdo_real_escape_string($projectname);
+  $project = pdo_query("SELECT * FROM project WHERE name='$projectname'");
+  if(pdo_num_rows($project)>0)
     {
-    $project_props = mysql_fetch_array($project);
+    $project_props = pdo_fetch_array($project);
     }
   else
     {
@@ -1726,6 +1757,7 @@ function make_cdash_url($url)
 function get_author_email($projectname, $author)
 {
   include("config.php");
+  require_once("pdo.php");
 
   $projectid = get_project_id($projectname);
   if($projectid == -1)
@@ -1733,26 +1765,26 @@ function get_author_email($projectname, $author)
     return "unknownProject";
     }
 
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   if(!$db)
     {
     echo "Error connecting to CDash database server<br>\n";
     exit(0);
     }
 
-  if(!mysql_select_db("$CDASH_DB_NAME",$db))
+  if(!pdo_select_db("$CDASH_DB_NAME",$db))
     {
     echo "Error selecting CDash database<br>\n";
     exit(0);
     }
 
-  $qry = mysql_query("SELECT email FROM user WHERE id IN (SELECT userid FROM user2project WHERE projectid='$projectid' AND cvslogin='$author') LIMIT 1");
+  $qry = pdo_query("SELECT email FROM user WHERE id IN (SELECT userid FROM user2project WHERE projectid='$projectid' AND cvslogin='$author') LIMIT 1");
 
   $email = "";
 
-  if(mysql_num_rows($qry) === 1)
+  if(pdo_num_rows($qry) === 1)
     {
-    $results = mysql_fetch_array($qry);
+    $results = pdo_fetch_array($qry);
     $email = $results["email"];
     }
     
@@ -1763,6 +1795,7 @@ function get_author_email($projectname, $author)
 function get_cdash_dashboard_xml($projectname, $date)
 {
   include("config.php");
+  require_once("pdo.php");
 
   $projectid = get_project_id($projectname);
   if($projectid == -1)
@@ -1770,23 +1803,23 @@ function get_cdash_dashboard_xml($projectname, $date)
     return;
     }
 
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   if(!$db)
     {
     echo "Error connecting to CDash database server<br>\n";
     exit(0);
     }
 
-  if(!mysql_select_db("$CDASH_DB_NAME",$db))
+  if(!pdo_select_db("$CDASH_DB_NAME",$db))
     {
     echo "Error selecting CDash database<br>\n";
     exit(0);
     }
 
-  $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-  if(mysql_num_rows($project)>0)
+  $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+  if(pdo_num_rows($project)>0)
     {
-    $project_array = mysql_fetch_array($project);
+    $project_array = pdo_fetch_array($project);
     }
   else
     {
@@ -2031,8 +2064,8 @@ function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
     return;
     }
   
-  $project = mysql_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
    
   if($project_array["cvsviewertype"] == "trac")
     {
@@ -2052,5 +2085,42 @@ function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
     }
 }
 
+/** Quote SQL identifier */
+function qid($id)
+{
+  global $CDASH_DB_TYPE;
+
+  if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql")) 
+    {
+    return "`$id`";
+    }
+  elseif($CDASH_DB_TYPE == "pgsql") 
+    {
+    return "\"$id\"";
+    }
+  else 
+    {
+    return $id;
+    }
+}
+
+/** Quote SQL number */
+function qnum($num)
+{
+  global $CDASH_DB_TYPE;
+
+  if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql")) 
+    {
+    return "'$num'";
+    }
+  elseif($CDASH_DB_TYPE == "pgsql") 
+    {
+    return $num != "" ? $num : "DEFAULT";
+    }
+  else 
+    {
+    return $num;
+    }
+}
 
 ?>

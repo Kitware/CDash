@@ -17,8 +17,9 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include('common.php');
+include_once('common.php');
 include("version.php");
 
 @$siteid = $_GET["siteid"];
@@ -29,11 +30,10 @@ if(!isset($siteid) || !is_numeric($siteid))
   return;
   }
   
-include("config.php");
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
   
-$site_array = mysql_fetch_array(mysql_query("SELECT * FROM site WHERE id='$siteid'"));  
+$site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'"));  
 $sitename = $site_array["name"];
 
 @$currenttime = $_GET["currenttime"];
@@ -54,10 +54,10 @@ $siteinformation_array["processorclockfrequency"] = "NA";
 
 $currenttimestamp = gmdate("Y-m-d H:i:s",$currenttime+3600*24); // Current timestamp is the beginning of the dashboard and we want the end
 
-$query = mysql_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttimestamp' ORDER BY timestamp DESC LIMIT 1");
-if(mysql_num_rows($query) > 0)
+$query = pdo_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttimestamp' ORDER BY timestamp DESC LIMIT 1");
+if(pdo_num_rows($query) > 0)
   {
- $siteinformation_array = mysql_fetch_array($query);
+ $siteinformation_array = pdo_fetch_array($query);
  if($siteinformation_array["processoris64bits"] == -1)
   {
   $siteinformation_array["processoris64bits"] = "NA";
@@ -146,15 +146,16 @@ $xml .= add_XML_value("ip",$site_array["ip"]);
 $xml .= add_XML_value("latitude",$site_array["latitude"]);
 $xml .= add_XML_value("longitude",$site_array["longitude"]);
 $xml .= "</site>";
-
+  
 // Select projects that belong to this site
 $displayPage=0;
 $projects = array();
-$site2project = mysql_query("SELECT projectid,submittime FROM build WHERE siteid='$siteid' GROUP BY projectid");
-while($site2project_array = mysql_fetch_array($site2project))
+$site2project = pdo_query("SELECT projectid,submittime FROM build WHERE siteid=$siteid GROUP BY projectid,submittime");
+
+while($site2project_array = pdo_fetch_array($site2project))
    {
    $projectid = $site2project_array["projectid"];
-   $project_array = mysql_fetch_array(mysql_query("SELECT name,public FROM project WHERE id='$projectid'"));
+   $project_array = pdo_fetch_array(pdo_query("SELECT name,public FROM project WHERE id=$projectid"));
    
    if(checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid,1))
      {
@@ -184,13 +185,13 @@ if(!$displayPage)
    // Check if the current user as a role in this project
    foreach($projects as $projectid)
     {
-    $user2project = mysql_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
-    if(mysql_num_rows($user2project)>0)
+    $user2project = pdo_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
+    if(pdo_num_rows($user2project)>0)
       {
       $xml .= add_XML_value("sitemanager","1");
       
-      $user2site = mysql_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-      if(mysql_num_rows($user2site) == 0)
+      $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
+      if(pdo_num_rows($user2site) == 0)
         {
         $xml .= add_XML_value("siteclaimed","0");
         }
@@ -201,9 +202,9 @@ if(!$displayPage)
       break;
       }
     }
-  
-   $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
-   $user_array = mysql_fetch_array($user);
+
+   $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
+   $user_array = pdo_fetch_array($user);
    $xml .= add_XML_value("id",$userid);
    $xml .= add_XML_value("admin",$user_array["admin"]);
    $xml .= "</user>";

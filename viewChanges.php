@@ -17,8 +17,9 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php");
 
 // get_related_dates takes a projectname and basedate as input
@@ -28,16 +29,17 @@ include("version.php");
 function get_related_dates($projectname, $basedate)
 {
   include("config.php");
+  require_once("pdo.php");
 
   $dates = array();
 
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME", $db);
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME", $db);
 
-  $dbQuery = mysql_query("SELECT nightlytime FROM project WHERE name='$projectname'");
-  if(mysql_num_rows($dbQuery)>0)
+  $dbQuery = pdo_query("SELECT nightlytime FROM project WHERE name='$projectname'");
+  if(pdo_num_rows($dbQuery)>0)
     {
-    $project = mysql_fetch_array($dbQuery);
+    $project = pdo_fetch_array($dbQuery);
     $nightlytime = $project['nightlytime'];
     //echo "query result nightlytime: " . $nightlytime . "<br/>";
     }
@@ -164,9 +166,7 @@ function sort_by_directory_file_time($e1, $e2)
 function get_updates_xml_from_commits($projectname, $dates, $commits)
 {
   $xml = "<updates>\n";
-  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $dates['nightly-0']." GMT") .
-    "</timestamp>";
-  //$xml .= "<timestamp> " . $dates['basedate'] . "</timestamp>\n";
+  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $dates['nightly-0']." GMT") ."</timestamp>";
   $xml .= "<javascript>\n";
 
   // Args to dbAdd : "true" means directory, "false" means file
@@ -221,12 +221,12 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
 @$projectname = $_GET["project"];
 @$date = $_GET["date"];
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
-$projectname = mysql_real_escape_string($projectname);
-$project = mysql_query("SELECT id FROM project WHERE name='$projectname'");
-$project_array = mysql_fetch_array($project);
+$projectname = pdo_real_escape_string($projectname);
+$project = pdo_query("SELECT id FROM project WHERE name='$projectname'");
+$project_array = pdo_fetch_array($project);
 
 $projectid = $project_array["id"];
 
@@ -243,11 +243,11 @@ $gmdate = gmdate("Ymd",$dates['nightly-0']);
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
-$dailyupdate = mysql_query("SELECT * FROM dailyupdatefile,dailyupdate 
+$dailyupdate = pdo_query("SELECT * FROM dailyupdatefile,dailyupdate 
                             WHERE dailyupdate.date='$gmdate' and projectid='$projectid'
                             AND dailyupdatefile.dailyupdateid = dailyupdate.id");
 $commits = array();
-while($dailyupdate_array = mysql_fetch_array($dailyupdate))
+while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   {
   $commit = array();
   $current_directory = dirname($dailyupdate_array['filename']);

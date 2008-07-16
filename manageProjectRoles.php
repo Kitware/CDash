@@ -16,14 +16,15 @@
 
 =========================================================================*/
 include("config.php");
+require_once("pdo.php");
 include('login.php');
 include_once('common.php');
 include('version.php');
 
 if ($session_OK) 
   {
-  @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
 
   $usersessionid = $_SESSION['cdash']['loginid'];
   // Checks
@@ -38,23 +39,23 @@ if ($session_OK)
   // If the projectid is not set and there is only one project we go directly to the page
   if(!isset($projectid))
   {
-   $project = mysql_query("SELECT id FROM project");
-   if(mysql_num_rows($project)==1)
+   $project = pdo_query("SELECT id FROM project");
+   if(pdo_num_rows($project)==1)
     {
-    $project_array = mysql_fetch_array($project);
+    $project_array = pdo_fetch_array($project);
     $projectid = $project_array["id"];
     }
   }
     
   $role = 0;
  
-  $user_array = mysql_fetch_array(mysql_query("SELECT admin FROM user WHERE id='$usersessionid'"));
+  $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM user WHERE id='$usersessionid'"));
   if($projectid && is_numeric($projectid))
     {
-    $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$usersessionid' AND projectid='$projectid'");
-    if(mysql_num_rows($user2project)>0)
+    $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$usersessionid' AND projectid='$projectid'");
+    if(pdo_num_rows($user2project)>0)
       {
-      $user2project_array = mysql_fetch_array($user2project);
+      $user2project_array = pdo_fetch_array($user2project);
       $role = $user2project_array["role"];
       }  
     }  
@@ -90,8 +91,8 @@ if($registerUsers)
   $lastnames = $_POST["lastname"];
   $cvsuser = $_POST["cvsuser"];
   
-  $project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
   $projectname = $project_array['name'];
 
   for($logini=0;$logini<count($cvslogins);$logini++)
@@ -107,21 +108,21 @@ if($registerUsers)
     $lastName = $lastnames[$logini];
     
     // Check if the user is already registered
-    $user = mysql_query("SELECT id FROM user WHERE email='$email'");
-    echo mysql_error();
+    $user = pdo_query("SELECT id FROM user WHERE email='$email'");
+    echo pdo_error();
         
-    if(mysql_num_rows($user)>0)
+    if(pdo_num_rows($user)>0)
       {
       // Check if the user has been registered to the project
-      $user_array2 = mysql_fetch_array($user);
+      $user_array2 = pdo_fetch_array($user);
       $userid = $user_array2["id"];
-      $user = mysql_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-      if(mysql_num_rows($user)==0) // not registered
+      $user = pdo_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+      if(pdo_num_rows($user)==0) // not registered
         {
         // We register the user to the project
-        mysql_query("INSERT INTO user2project (userid,projectid,role,cvslogin,emailtype) 
+        pdo_query("INSERT INTO user2project (userid,projectid,role,cvslogin,emailtype) 
                                       VALUES ('$userid','$projectid','0','$cvslogin','1')");
-        echo mysql_error();
+        echo pdo_error();
         continue;
         }
       echo "User ".$cvslogin." already registered.<br>";
@@ -129,8 +130,8 @@ if($registerUsers)
       } // already registered
     
     // Check if the cvslogin exists for this project
-    $usercvslogin = mysql_query("SELECT userid FROM user2project WHERE cvslogin='$cvslogin' AND projectid='$projectid'");
-    if(mysql_num_rows($usercvslogin)>0)
+    $usercvslogin = pdo_query("SELECT userid FROM user2project WHERE cvslogin='$cvslogin' AND projectid='$projectid'");
+    if(pdo_num_rows($usercvslogin)>0)
       {
       echo $cvslogin." was already registered for this project under a different email address<br>";
       continue;
@@ -151,15 +152,15 @@ if($registerUsers)
       }
     $encrypted = md5($pass);
 
-    mysql_query("INSERT INTO user (email,password,firstname,lastname,institution,admin) 
+    pdo_query("INSERT INTO user (email,password,firstname,lastname,institution,admin) 
                  VALUES ('$email','$encrypted','$firstName','$lastName','','0')");
-    echo mysql_error();
-    $userid = mysql_insert_id();
+    echo pdo_error();
+    $userid = pdo_insert_id("user");
     
     // Insert the user into the project
-    mysql_query("INSERT INTO user2project (userid,projectid,role,cvslogin,emailtype) 
+    pdo_query("INSERT INTO user2project (userid,projectid,role,cvslogin,emailtype) 
                                   VALUES ('$userid','$projectid','0','$cvslogin','1')");
-    echo mysql_error();
+    echo pdo_error();
     
     $currentPort="";
     $httpprefix="http://";
@@ -205,26 +206,26 @@ if($registerUsers)
 // Add a user
 if($adduser)
 {
-  $user2project = mysql_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+  $user2project = pdo_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
     
-  if(mysql_num_rows($user2project) == 0)
+  if(pdo_num_rows($user2project) == 0)
     {
-    mysql_query("INSERT INTO user2project (userid,role,cvslogin,projectid) VALUES ('$userid','$role','$cvslogin','$projectid')");
+    pdo_query("INSERT INTO user2project (userid,role,cvslogin,projectid) VALUES ('$userid','$role','$cvslogin','$projectid')");
     }
 }
 
 // Remove the user
 if($removeuser)
   {
-  mysql_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-  echo mysql_error();
+  pdo_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+  echo pdo_error();
   }
 
 // Update the user
 if($updateuser)
   {
-  mysql_query("UPDATE user2project SET role='$role',cvslogin='$cvslogin' WHERE userid='$userid' AND projectid='$projectid'");
-  echo mysql_error();
+  pdo_query("UPDATE user2project SET role='$role',cvslogin='$cvslogin' WHERE userid='$userid' AND projectid='$projectid'");
+  echo pdo_error();
   }
 
   $xml = "<cdash>";
@@ -318,8 +319,8 @@ if($user_array["admin"] != 1)
   {
   $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)"; 
   }
-$projects = mysql_query($sql);
-while($project_array = mysql_fetch_array($projects))
+$projects = pdo_query($sql);
+while($project_array = pdo_fetch_array($projects))
    {
    $xml .= "<availableproject>";
    $xml .= add_XML_value("id",$project_array['id']);
@@ -335,21 +336,21 @@ while($project_array = mysql_fetch_array($projects))
 if($projectid>0)
   {
   
-$project = mysql_query("SELECT id,name FROM project WHERE id='$projectid'");
-$project_array = mysql_fetch_array($project);
+$project = pdo_query("SELECT id,name FROM project WHERE id='$projectid'");
+$project_array = pdo_fetch_array($project);
 $xml .= "<project>";
 $xml .= add_XML_value("id",$project_array['id']);
 $xml .= add_XML_value("name",$project_array['name']);
 $xml .= "</project>";
 
 // List the users for that project
-$user = mysql_query("SELECT u.id,u.firstname,u.lastname,u.email,up.cvslogin,up.role
+$user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.cvslogin,up.role
                      FROM user2project AS up, user as u  
                      WHERE u.id=up.userid  AND up.projectid='$projectid' 
                      ORDER BY u.firstname ASC");
                          
 $i=0;                         
-while($user_array = mysql_fetch_array($user))
+while($user_array = pdo_fetch_array($user))
   {
   $userid = $user_array["id"];
   $xml .= "<user>";

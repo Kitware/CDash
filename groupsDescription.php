@@ -16,10 +16,11 @@
 
 =========================================================================*/
 include("config.php");
-include("common.php"); 
+require_once("pdo.php");
+include_once("common.php"); 
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 ?>
 <html>
@@ -49,14 +50,14 @@ mysql_select_db("$CDASH_DB_NAME",$db);
 <?php
      return;
      }
-    $group = mysql_query("SELECT buildgroup.name,buildgroup.description
+    $group = pdo_query("SELECT buildgroup.name,buildgroup.description
                           FROM buildgroup,buildgroupposition 
                           WHERE buildgroup.projectid='$projectid' 
                           AND buildgroup.id = buildgroupposition.buildgroupid
-                          AND buildgroup.endtime = '0000-00-00 00:00:00'
-                          AND buildgroupposition.endtime = '0000-00-00 00:00:00'
+                          AND buildgroup.endtime = '1980-01-01 00:00:00'
+                          AND buildgroupposition.endtime = '1980-01-01 00:00:00'
                           ORDER BY buildgroupposition.position ASC");
-    while($group_array = mysql_fetch_array($group))
+    while($group_array = pdo_fetch_array($group))
     {
    ?> 
     <tr class="<?php if($i%2==0) {echo "treven";} else {echo "trodd";} ?>">

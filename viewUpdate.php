@@ -17,8 +17,9 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php");
 
 @$buildid = $_GET["buildid"];
@@ -30,21 +31,20 @@ if(!isset($buildid) || !is_numeric($buildid))
   echo "Not a valid buildid!";
   return;
   }
+ 
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
   
-include("config.php");
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
-  
-$build_array = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 $date = date("Ymd", strtotime($build_array["starttime"]));
     
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-if(mysql_num_rows($project)>0)
+$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+if(pdo_num_rows($project)>0)
   {
-  $project_array = mysql_fetch_array($project);
+  $project_array = pdo_fetch_array($project);
   $svnurl = $project_array["cvsurl"];
   $projectname = $project_array["name"];  
   }
@@ -58,10 +58,10 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
   // Build
   $xml .= "<build>";
-  $build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = mysql_fetch_array($build); 
+  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+  $build_array = pdo_fetch_array($build); 
   $siteid = $build_array["siteid"];
-  $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+  $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("buildname",$build_array["name"]);
   $xml .= add_XML_value("buildid",$build_array["id"]);
@@ -73,7 +73,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
   
  // Return the status
-  $status_array = mysql_fetch_array(mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'"));
+  $status_array = pdo_fetch_array(pdo_query("SELECT status FROM buildupdate WHERE buildid='$buildid'"));
  if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
   {
     $xml .= add_XML_value("status",$status_array["status"]);
@@ -86,7 +86,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= "<javascript>";
   
  // This should work hopefully
-  $updatedfiles = mysql_query("SELECT * FROM updatefile WHERE buildid='$buildid'
+  $updatedfiles = pdo_query("SELECT * FROM updatefile WHERE buildid='$buildid'
                               ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
   
   function sort_array_by_directory($a,$b)
@@ -105,7 +105,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $directoryarray = array();
   $updatearray1 = array();
   // Create an array so we can sort it
-  while($file_array = mysql_fetch_array($updatedfiles))
+  while($file_array = pdo_fetch_array($updatedfiles))
     {
     $file = array();
     $file['filename'] = $file_array["filename"];
@@ -135,7 +135,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       }
     }
   
-  //$xml .= "dbAdd (true, \"".$projectname." Updated files  (".mysql_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+  //$xml .= "dbAdd (true, \"".$projectname." Updated files  (".pdo_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   
   //$previousdir = "";
   $projecturl = $svnurl;

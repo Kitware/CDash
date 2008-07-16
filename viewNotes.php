@@ -17,8 +17,9 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php");
 
 @$buildid = $_GET["buildid"];
@@ -30,12 +31,11 @@ if(!isset($buildid) || !is_numeric($buildid))
   echo "Not a valid buildid!";
   return;
   }
+ 
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
   
-include("config.php");
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
-  
-$build_array = mysql_fetch_array(mysql_query("SELECT projectid FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
@@ -48,10 +48,10 @@ else
   $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
 }
     
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-if(mysql_num_rows($project)>0)
+$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+if(pdo_num_rows($project)>0)
 {
-  $project_array = mysql_fetch_array($project);  
+  $project_array = pdo_fetch_array($project);  
   $projectname = $project_array["name"];  
 }
 
@@ -67,21 +67,21 @@ $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
   
 // Build
 $xml .= "<build>";
-$build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
-$build_array = mysql_fetch_array($build); 
+$build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+$build_array = pdo_fetch_array($build); 
 $siteid = $build_array["siteid"];
-$site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $xml .= add_XML_value("site",$site_array["name"]);
 $xml .= add_XML_value("buildname",$build_array["name"]);
 $xml .= add_XML_value("buildid",$build_array["id"]);
 $xml .= "</build>";
   
   
-$build2note = mysql_query("SELECT noteid,time FROM build2note WHERE buildid='$buildid'");
-while($build2note_array = mysql_fetch_array($build2note))
+$build2note = pdo_query("SELECT noteid,time FROM build2note WHERE buildid='$buildid'");
+while($build2note_array = pdo_fetch_array($build2note))
   {
   $noteid = $build2note_array["noteid"];
-  $note_array = mysql_fetch_array(mysql_query("SELECT * FROM note WHERE id='$noteid'"));
+  $note_array = pdo_fetch_array(pdo_query("SELECT * FROM note WHERE id='$noteid'"));
   $xml .= "<note>";
   $xml .= add_XML_value("name",$note_array["name"]);
   $xml .= add_XML_value("text",$note_array["text"]);

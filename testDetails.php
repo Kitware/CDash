@@ -22,8 +22,9 @@
 */
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include('version.php');
 
 $testid = $_GET["test"];
@@ -39,29 +40,29 @@ if(!isset($buildid) || !is_numeric($buildid))
   die('Error: no build id supplied in query string');
   }
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
-$testRow = mysql_fetch_array(mysql_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$buildid' AND build2test.testid=test.id"));
+$testRow = pdo_fetch_array(pdo_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$buildid' AND build2test.testid=test.id"));
 
-$buildRow = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id = '$buildid'"));
+$buildRow = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id = '$buildid'"));
 $projectid = $buildRow["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 $siteid = $buildRow["siteid"];
 
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-if(mysql_num_rows($project)>0)
+$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+if(pdo_num_rows($project)>0)
   {
-  $project_array = mysql_fetch_array($project); 
+  $project_array = pdo_fetch_array($project); 
   $projectname = $project_array["name"];  
   }
 
-$projectRow = mysql_fetch_array(mysql_query("SELECT name FROM project WHERE id = '$projectid'"));
+$projectRow = pdo_fetch_array(pdo_query("SELECT name FROM project WHERE id = '$projectid'"));
 $projectname = $projectRow["name"];
 
 $siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
-$siteResult = mysql_query($siteQuery);
-$siteRow = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id = '$siteid'"));
+$siteResult = pdo_query($siteQuery);
+$siteRow = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id = '$siteid'"));
 
 $date = date("Ymd", strtotime($buildRow["starttime"]));
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
@@ -127,8 +128,8 @@ switch($testRow["timestatus"])
 //get any images associated with this test
 $xml .= "<images>";
 $query = "SELECT * FROM test2image WHERE testid = '$testid'";
-$result = mysql_query($query);
-while($row = mysql_fetch_array($result))
+$result = pdo_query($query);
+while($row = pdo_fetch_array($result))
   {
   $xml .= "<image>";
   $xml .= add_XML_value("imgid", $row["imgid"]);
@@ -140,8 +141,8 @@ $xml .= "</images>";
 //get any measurements associated with this test
 $xml .= "<measurements>";
 $query = "SELECT * FROM testmeasurement WHERE testid = '$testid'";
-$result = mysql_query($query);
-while($row = mysql_fetch_array($result))
+$result = pdo_query($query);
+while($row = pdo_fetch_array($result))
   {
   $xml .= "<measurement>";
   $xml .= add_XML_value("name", $row["name"]);

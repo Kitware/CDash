@@ -16,6 +16,7 @@
 
 =========================================================================*/
 include("config.php");
+require_once("pdo.php");
 include('login.php');
 include("version.php");
 
@@ -26,8 +27,8 @@ if($session_OK)
 
 set_time_limit(0);
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 
@@ -60,9 +61,9 @@ $xml .= "<title>CDash - Import</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Import Dart1</menusubtitle>";
 
-$project = mysql_query("SELECT name,id FROM project ORDER BY id");
+$project = pdo_query("SELECT name,id FROM project ORDER BY id");
 $projName = "";
-while($project_array = mysql_fetch_array($project))
+while($project_array = pdo_fetch_array($project))
 {
   $projName = $project_array["name"];
   $xml .= "<project>";

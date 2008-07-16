@@ -16,6 +16,7 @@
 
 =========================================================================*/
 include("config.php");
+require_once("pdo.php");
 include('login.php');
 include("version.php");
 
@@ -42,14 +43,14 @@ function readfile_chunked ($filename)
   return fclose($handle);
 }
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 if(!$db)
   {
-  echo mysql_error();
+  echo pdo_error();
   }
-if(mysql_select_db("$CDASH_DB_NAME",$db) === FALSE)
+if(pdo_select_db("$CDASH_DB_NAME",$db) === FALSE)
   {
-  echo mysql_error();
+  echo pdo_error();
   return;
   }
 

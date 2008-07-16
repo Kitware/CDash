@@ -15,7 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php"); 
+include("config.php");
+require_once("pdo.php"); 
 include('login.php');
 include_once('common.php');
 include('version.php');
@@ -24,8 +25,8 @@ if ($session_OK)
   {
   $userid = $_SESSION['cdash']['loginid'];
    
-  @$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
   
   $xml = "<cdash>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -60,14 +61,14 @@ if ($session_OK)
     }
  
 
-  $project = mysql_query("SELECT id,name FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT id,name FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
   
   // Check if the user is not already in the database
-  $user2project = mysql_query("SELECT cvslogin,role,emailtype FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-  if(mysql_num_rows($user2project)>0)
+  $user2project = pdo_query("SELECT cvslogin,role,emailtype FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+  if(pdo_num_rows($user2project)>0)
     {
-    $user2project_array = mysql_fetch_array($user2project);
+    $user2project_array = pdo_fetch_array($user2project);
     $xml .= add_XML_value("cvslogin",$user2project_array["cvslogin"]);
     $xml .= add_XML_value("role",$user2project_array["role"]);
     $xml .= add_XML_value("emailtype",$user2project_array["emailtype"]);
@@ -84,10 +85,10 @@ if ($session_OK)
   
   if($Unsubscribe)
     {
-    mysql_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+    pdo_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
     
     // Remove the claim sites for this project if they are only part of this project
-        mysql_query("DELETE FROM site2user WHERE userid='$userid' 
+        pdo_query("DELETE FROM site2user WHERE userid='$userid' 
                  AND siteid NOT IN 
                 (SELECT build.siteid FROM build,user2project as up WHERE 
                  up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
@@ -97,13 +98,13 @@ if ($session_OK)
     }   
   else if($Subscribe || $UpdateSubscription)
     {
-    if(mysql_num_rows($user2project)>0)
+    if(pdo_num_rows($user2project)>0)
       {
-      mysql_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType' WHERE userid='$userid' AND projectid='$projectid'");
+      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType' WHERE userid='$userid' AND projectid='$projectid'");
       if($Role==0)
         { 
         // Remove the claim sites for this project if they are only part of this project
-        mysql_query("DELETE FROM site2user WHERE userid='$userid' 
+        pdo_query("DELETE FROM site2user WHERE userid='$userid' 
                  AND siteid NOT IN 
                 (SELECT build.siteid FROM build,user2project as up WHERE 
                  up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
@@ -112,7 +113,7 @@ if ($session_OK)
       }
     else
       {
-      mysql_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype) VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType')");
+      pdo_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype) VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType')");
       }  
     header( 'location: user.php?note=subscribedtoproject' );
     }

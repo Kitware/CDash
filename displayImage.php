@@ -15,7 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include "config.php";
+include("config.php");
+require_once("pdo.php");
 
 $imgid = $_GET["imgid"];
 // Checks
@@ -25,11 +26,11 @@ if(!isset($imgid) || !is_numeric($imgid))
   return;
   }
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
-$result = mysql_query("SELECT * FROM image WHERE id='$imgid '");
-$img_array = mysql_fetch_array($result);
+$result = pdo_query("SELECT * FROM image WHERE id='$imgid '");
+$img_array = pdo_fetch_array($result);
 
 switch($img_array["extension"])
   {

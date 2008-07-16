@@ -17,8 +17,9 @@
 =========================================================================*/
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php");
     
 @$buildid = $_GET["buildid"];
@@ -30,12 +31,10 @@ if(!isset($buildid) || !is_numeric($buildid))
   }
 
 @$date = $_GET["date"];
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
-include("config.php");
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
-
-$build_array = mysql_fetch_array(mysql_query("SELECT * FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 $date = date("Ymd", strtotime($build_array["starttime"]));
 
@@ -65,20 +64,20 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
    {
    $xml .= "<user>";
    $userid = $_SESSION['cdash']['loginid'];
-   $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
-   $user_array = mysql_fetch_array($user);
+   $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
+   $user_array = pdo_fetch_array($user);
    $xml .= add_XML_value("id",$userid);
    $xml .= add_XML_value("admin",$user_array["admin"]);
    $xml .= "</user>";
    }
   
   // Notes
-  $note = mysql_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
-  while($note_array = mysql_fetch_array($note))
+  $note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
+  while($note_array = pdo_fetch_array($note))
     {
     $xml .= "<note>";
     $userid = $note_array["userid"];
-    $user_array = mysql_fetch_array(mysql_query("SELECT firstname,lastname FROM user WHERE id='$userid'"));
+    $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM user WHERE id='$userid'"));
     $timestamp = strtotime($note_array["timestamp"]." UTC");
     $usernote = $user_array["firstname"]." ".$user_array["lastname"];
     switch($note_array["status"])
@@ -96,10 +95,10 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   
   // Build
   $xml .= "<build>";
-  $build = mysql_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = mysql_fetch_array($build); 
+  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+  $build_array = pdo_fetch_array($build); 
   $siteid = $build_array["siteid"];
-  $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+  $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("name",$build_array["name"]);
   $xml .= add_XML_value("id",$build_array["id"]);
@@ -110,13 +109,13 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $buildtype = $build_array["type"];
   $buildname = $build_array["name"];
   $starttime = $build_array["starttime"];
-  $previousbuild = mysql_query("SELECT id,starttime FROM build
+  $previousbuild = pdo_query("SELECT id,starttime FROM build
                                 WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                                 AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
 
-  if(mysql_num_rows($previousbuild)>0)
+  if(pdo_num_rows($previousbuild)>0)
     {
-    $previousbuild_array = mysql_fetch_array($previousbuild);              
+    $previousbuild_array = pdo_fetch_array($previousbuild);              
     $lastsubmitbuild = $previousbuild_array["id"];
     $lastsubmitdate = date("Y-m-d H:i:s T",strtotime($previousbuild_array["starttime"]." UTC"));
     }
@@ -133,12 +132,12 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
  
   // Number of errors and warnings
-  $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
-  $builderror_array = mysql_fetch_array($builderror);
+  $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+  $builderror_array = pdo_fetch_array($builderror);
   $nerrors = $builderror_array[0];
   $xml .= add_XML_value("error",$nerrors);
-  $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
-  $buildwarning_array = mysql_fetch_array($buildwarning);
+  $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+  $buildwarning_array = pdo_fetch_array($buildwarning);
   $nwarnings = $buildwarning_array[0];
    
   $xml .= add_XML_value("nerrors",$nerrors);
@@ -146,8 +145,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   
   
   // Display the errors
-  $errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='0'");
-  while($error_array = mysql_fetch_array($errors))
+  $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='0'");
+  while($error_array = pdo_fetch_array($errors))
     {
     $xml .= "<error>";
     $xml .= add_XML_value("logline",$error_array["logline"]);
@@ -160,8 +159,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     }
   
   // Display the warnings
-  $errors = mysql_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='1'");
-  while($error_array = mysql_fetch_array($errors))
+  $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='1'");
+  while($error_array = pdo_fetch_array($errors))
     {
     $xml .= "<warning>";
     $xml .= add_XML_value("logline",$error_array["logline"]);
@@ -176,25 +175,25 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= "</build>";
 
   // Update
-  $buildupdate = mysql_query("SELECT * FROM buildupdate WHERE buildid='$buildid'");
+  $buildupdate = pdo_query("SELECT * FROM buildupdate WHERE buildid='$buildid'");
   
-  if(mysql_num_rows($buildupdate)>0) // show the update only if we have one
+  if(pdo_num_rows($buildupdate)>0) // show the update only if we have one
     {
     $xml .= "<update>";
   
     // Checking for locally modify files
-    $updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");      
-    $nerrors = mysql_num_rows($updatelocal);
+    $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");      
+    $nerrors = pdo_num_rows($updatelocal);
     $nwarnings = 0;
     $xml .= add_XML_value("nerrors",$nerrors);
     $xml .= add_XML_value("nwarnings",$nwarnings);
     
-    $update = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
-    $nupdates = mysql_num_rows($update);
+    $update = pdo_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
+    $nupdates = pdo_num_rows($update);
     $xml .= add_XML_value("nupdates",$nupdates);  
        
     
-    $update_array = mysql_fetch_array($buildupdate);
+    $update_array = pdo_fetch_array($buildupdate);
     $xml .= add_XML_value("command",$update_array["command"]);
     $xml .= add_XML_value("type",$update_array["type"]);
     $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($update_array["starttime"]." UTC")));
@@ -205,8 +204,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   
   // Configure
   $xml .= "<configure>";
-  $configure = mysql_query("SELECT * FROM configure WHERE buildid='$buildid'");
-  $configure_array = mysql_fetch_array($configure);
+  $configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
+  $configure_array = pdo_fetch_array($configure);
   
   $nerrors = 0;
   
@@ -234,11 +233,11 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("nerrors",$nerrors);
   $xml .= add_XML_value("nwarnings",$nwarnings);
   
-  $npass_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
+  $npass_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
   $npass = $npass_array[0];
-  $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+  $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
   $nnotrun = $nnotrun_array[0];
-  $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
+  $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
   $nfail = $nfail_array[0];
   
   $xml .= add_XML_value("npassed",$npass);
@@ -256,29 +255,29 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("buildid",$previousbuildid);
     
     // Find if the build has any errors
-    $builderror = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
-    $builderror_array = mysql_fetch_array($builderror);
+    $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
     $npreviousbuilderrors = $builderror_array[0];
        
     // Find if the build has any warnings
-    $buildwarning = mysql_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
-    $buildwarning_array = mysql_fetch_array($buildwarning);
+    $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
+    $buildwarning_array = pdo_fetch_array($buildwarning);
     $npreviousbuildwarnings = $buildwarning_array[0];
   
     // Find if the build has any test failings
-    $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
+    $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
-    $nfail_array = mysql_fetch_array(mysql_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='notrun'"));
+    $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='notrun'"));
     $npreviousnotruntests = $nfail_array[0];
   
-    $updatelocal = mysql_query("SELECT buildid FROM updatefile WHERE buildid='$previousbuildid' AND author='Local User'");      
-    $nupdateerrors = mysql_num_rows($updatelocal);
+    $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE buildid='$previousbuildid' AND author='Local User'");      
+    $nupdateerrors = pdo_num_rows($updatelocal);
     $nupdatewarnings = 0;
     $xml .= add_XML_value("nupdateerrors",$nupdateerrors);
     $xml .= add_XML_value("nupdatewarnings",$nupdatewarnings);
 
-    $configure = mysql_query("SELECT * FROM configure WHERE buildid='$previousbuildid'");
-    $configure_array = mysql_fetch_array($configure);
+    $configure = pdo_query("SELECT * FROM configure WHERE buildid='$previousbuildid'");
+    $configure_array = pdo_fetch_array($configure);
   
     $nconfigureerrors = 0;
     if($configure_array["status"]!=0)

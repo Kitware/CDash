@@ -23,8 +23,9 @@
 */
 $noforcelogin = 1;
 include("config.php");
+require_once("pdo.php");
 include('login.php');
-include("common.php");
+include_once("common.php");
 include("version.php"); 
 
 $date = $_GET["date"];
@@ -52,12 +53,12 @@ if(!isset($testName))
 
 $start = microtime_float();
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
-$project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-if(mysql_num_rows($project)>0)
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
+$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+if(pdo_num_rows($project)>0)
   {
-  $project_array = mysql_fetch_array($project);   
+  $project_array = pdo_fetch_array($project);   
   $projectname = $project_array["name"];  
   }
   
@@ -74,7 +75,7 @@ $xml .="<testName>".$testName."</testName>";
 //get information about all the builds for the given date and project
 $xml .= "<builds>\n";
 
-$testName = mysql_real_escape_string($testName);
+$testName = pdo_real_escape_string($testName);
 list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime+3600*24;
@@ -92,11 +93,11 @@ $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.ti
           AND build2test.testid IN (SELECT id FROM test WHERE name='$testName')
           ORDER BY build2test.status";
 
-$result = mysql_query($query);
+$result = pdo_query($query);
 
 $color = FALSE;
 //now that we have the data we need, generate some XML
-while($row = mysql_fetch_array($result))
+while($row = pdo_fetch_array($result))
   {
   $buildid = $row["id"];
   $xml .= "<build>\n";

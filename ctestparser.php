@@ -186,9 +186,10 @@ function parse_build($parser,$projectid)
   $log = getXMLValue($xmlarray,"LOG","BUILD");
   
   include("config.php");
+  require_once("pdo.php");
   include_once("common.php");
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
 
   // First we look at the site and add it if not in the list
   $siteid = add_site($sitename,$parser);
@@ -294,9 +295,10 @@ function create_build($parser,$projectid)
   $endtimestamp = $starttimestamp+$elapsedminutes*60;
     
   include("config.php");
+  require_once("pdo.php");
   include_once("common.php");
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
   
   // First we look at the site and add it if not in the list
   $siteid = add_site($sitename,$parser);
@@ -487,21 +489,21 @@ function parse_testing($parser,$projectid)
 function compute_error_difference($buildid,$previousbuildid,$warning)
 {
   // Look at the number of errors and warnings differences
-  $errors = mysql_query("SELECT count(*) FROM builderror WHERE type='$warning' 
+  $errors = pdo_query("SELECT count(*) FROM builderror WHERE type='$warning' 
                                    AND buildid='$buildid'");
-  $errors_array  = mysql_fetch_array($errors);
+  $errors_array  = pdo_fetch_array($errors);
   $nerrors = $errors_array[0]; 
     
-  $previouserrors = mysql_query("SELECT count(*) FROM builderror WHERE type='$warning' 
+  $previouserrors = pdo_query("SELECT count(*) FROM builderror WHERE type='$warning' 
                                    AND buildid='$previousbuildid'");
-  $previouserrors_array  = mysql_fetch_array($previouserrors);
+  $previouserrors_array  = pdo_fetch_array($previouserrors);
   $npreviouserrors = $previouserrors_array[0];
     
   // Don't log if no diff
   $errordiff = $nerrors-$npreviouserrors;
   if($errordiff != 0)
     {
-    mysql_query("INSERT INTO builderrordiff (buildid,type,difference) 
+    pdo_query("INSERT INTO builderrordiff (buildid,type,difference) 
                            VALUES('$buildid','$warning','$errordiff')");
     add_last_sql_error("compute_error_difference");
     }
@@ -531,21 +533,21 @@ function compute_test_difference($buildid,$previousbuildid,$testtype)
     }
       
   // Look at the number of errors and warnings differences
-  $errors = mysql_query("SELECT count(*) FROM build2test WHERE status='$status' 
+  $errors = pdo_query("SELECT count(*) FROM build2test WHERE status='$status' 
                                          AND buildid='$buildid'".$sql);
-  $errors_array  = mysql_fetch_array($errors);
+  $errors_array  = pdo_fetch_array($errors);
   $nerrors = $errors_array[0]; 
     
-  $previouserrors = mysql_query("SELECT count(*) FROM build2test WHERE status='$status' 
+  $previouserrors = pdo_query("SELECT count(*) FROM build2test WHERE status='$status' 
                                    AND buildid='$previousbuildid'".$sql);
-  $previouserrors_array  = mysql_fetch_array($previouserrors);
+  $previouserrors_array  = pdo_fetch_array($previouserrors);
   $npreviouserrors = $previouserrors_array[0];
     
   // Don't log if no diff
   $diff = $nerrors-$npreviouserrors;
   if($diff != 0)
     {
-    mysql_query("INSERT INTO testdiff (buildid,type,difference) 
+    pdo_query("INSERT INTO testdiff (buildid,type,difference) 
                  VALUES('$buildid','$testtype','$diff')");
     add_last_sql_error("compute_test_difference");
     }
@@ -558,23 +560,23 @@ function compute_test_timing($buildid)
 {
   // TEST TIMING 
   $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
-  $build = mysql_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id='$buildid'");
+  $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id='$buildid'");
     
-  echo mysql_error();
-  $build_array = mysql_fetch_array($build);                           
+  echo pdo_error();
+  $build_array = pdo_fetch_array($build);                           
   $buildname = $build_array["name"];
   $buildtype = $build_array["type"];
   $starttime = $build_array["starttime"];
   $siteid = $build_array["siteid"];
   $projectid = $build_array["projectid"];
 
-  $project = mysql_query("SELECT testtimestd,testtimestdthreshold FROM project WHERE id='$projectid'");
-  $project_array = mysql_fetch_array($project);
+  $project = pdo_query("SELECT testtimestd,testtimestdthreshold FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
   $projecttimestd = $project_array["testtimestd"]; 
   $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
       
   // Find the previous build
-  $previousbuild = mysql_query("SELECT id FROM build
+  $previousbuild = pdo_query("SELECT id FROM build
                                 WHERE build.siteid='$siteid' 
                                 AND build.type='$buildtype' AND build.name='$buildname'
                                 AND build.projectid='$projectid' 
@@ -582,10 +584,10 @@ function compute_test_timing($buildid)
                                 ORDER BY build.starttime DESC LIMIT 1");
 
   // If we have one
-  if(mysql_num_rows($previousbuild)>0)
+  if(pdo_num_rows($previousbuild)>0)
     {
     // Lookup the previous build id
-    $previousbuild_array = mysql_fetch_array($previousbuild);
+    $previousbuild_array = pdo_fetch_array($previousbuild);
     $previousbuildid = $previousbuild_array["id"];
    
     compute_error_difference($buildid,$previousbuildid,0); // errors
@@ -596,18 +598,18 @@ function compute_test_timing($buildid)
     compute_test_difference($buildid,$previousbuildid,3); // time
 
     // Loop through the tests
-    $tests = mysql_query("SELECT build2test.time,build2test.testid,test.name,build2test.status
+    $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name,build2test.status
                           FROM build2test,test WHERE build2test.buildid='$buildid'
                           AND build2test.testid=test.id
                           ");
     
     // Find the previous test
-    $previoustest = mysql_query("SELECT build2test.testid,test.name FROM build2test,test
+    $previoustest = pdo_query("SELECT build2test.testid,test.name FROM build2test,test
                                  WHERE build2test.buildid='$previousbuildid' 
                                  AND test.id=build2test.testid 
                                  ");    
     $testarray = array();
-    while($test_array = mysql_fetch_array($previoustest))
+    while($test_array = pdo_fetch_array($previoustest))
       {
       $test = array();
       $test['id'] = $test_array["testid"];
@@ -615,7 +617,7 @@ function compute_test_timing($buildid)
       $testarray[] = $test;
       }
 
-    while($test_array = mysql_fetch_array($tests))
+    while($test_array = pdo_fetch_array($tests))
       {
       $testtime = $test_array['time'];
       $testid = $test_array['testid'];
@@ -634,12 +636,12 @@ function compute_test_timing($buildid)
                          
       if($previoustestid>0)
         {
-        $previoustest = mysql_query("SELECT timemean,timestd FROM build2test
+        $previoustest = pdo_query("SELECT timemean,timestd FROM build2test
                                      WHERE buildid='$previousbuildid' 
                                      AND build2test.testid='$previoustestid' 
                                      ");
 
-        $previoustest_array = mysql_fetch_array($previoustest);
+        $previoustest_array = pdo_fetch_array($previoustest);
         $previoustimemean = $previoustest_array["timemean"];
         $previoustimestd = $previoustest_array["timestd"];
         
@@ -678,7 +680,7 @@ function compute_test_timing($buildid)
         $timemean = $testtime;
         }
           
-      mysql_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
+      pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
                    WHERE buildid='$buildid' AND testid='$testid'");
        
       }  // end loop through the test  
@@ -689,13 +691,13 @@ function compute_test_timing($buildid)
     $timestatus = 0;
         
     // Loop throught the tests
-    $tests = mysql_query("SELECT time,testid FROM build2test WHERE buildid='$buildid'");
-    while($test_array = mysql_fetch_array($tests))
+    $tests = pdo_query("SELECT time,testid FROM build2test WHERE buildid='$buildid'");
+    while($test_array = pdo_fetch_array($tests))
       {
       $timemean = $test_array['time'];
       $testid = $test_array['testid'];
         
-      mysql_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
+      pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
                   WHERE buildid='$buildid' AND testid='$testid'");
       } // loop through the tests          
     } // end if first build
@@ -732,9 +734,10 @@ function parse_coverage($parser,$projectid)
     $endtimestamp = $starttimestamp+$elapsedminutes*60;
     
     include("config.php");
+    require_once("pdo.php");
     include_once("common.php");
-    $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-    mysql_select_db("$CDASH_DB_NAME",$db);
+    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+    pdo_select_db("$CDASH_DB_NAME",$db);
   
     // First we look at the site and add it if not in the list
     $siteid = add_site($sitename,$parser);
@@ -880,9 +883,10 @@ function parse_update($parser,$projectid)
     $endtimestamp = $starttimestamp+$elapsedminutes*60;
     
     include("config.php");
+    require_once("pdo.php");
     include_once("common.php");
-    $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-    mysql_select_db("$CDASH_DB_NAME",$db);
+    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+    pdo_select_db("$CDASH_DB_NAME",$db);
   
     // First we look at the site and add it if not in the list
     $siteid = add_site($sitename,$parser);
@@ -895,8 +899,8 @@ function parse_update($parser,$projectid)
     }
   
   // Remove any previous update
-  mysql_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
-  mysql_query("DELETE FROM updatefile WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM updatefile WHERE buildid='$buildid'");
   
   $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","UPDATE");
   if($starttimestamp == "NA")
@@ -1084,9 +1088,10 @@ function parse_dynamicanalysis($parser,$projectid)
     $endtimestamp = $starttimestamp+$elapsedminutes*60;
     
     include("config.php");
+    require_once("pdo.php");
     include_once("common.php");
-    $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-    mysql_select_db("$CDASH_DB_NAME",$db);
+    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+    pdo_select_db("$CDASH_DB_NAME",$db);
   
     // First we look at the site and add it if not in the list
     $siteid = add_site($sitename,$parser);
@@ -1162,9 +1167,10 @@ function parse_dynamicanalysis($parser,$projectid)
 function store_test_image($encodedImg, $type)
 {
   include("config.php");
+  require_once("pdo.php");
   include_once("common.php");
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  mysql_select_db("$CDASH_DB_NAME",$db);
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
   $imgStr = base64_decode($encodedImg);
   $img = imagecreatefromstring($imgStr);
  
@@ -1193,8 +1199,8 @@ function store_test_image($encodedImg, $type)
   //don't store the image if there's already a copy of it in the database
   $checksum = crc32($imageVariable);
   $query = "SELECT id FROM image WHERE checksum = '$checksum'";
-  $result = mysql_query("$query");
-  if($row = mysql_fetch_array($result))
+  $result = pdo_query("$query");
+  if($row = pdo_fetch_array($result))
     {
     return $row["id"];
     }
@@ -1202,13 +1208,13 @@ function store_test_image($encodedImg, $type)
   //if we get this far this is a new image
   $query = "INSERT INTO image(img,extension,checksum)
             VALUES('$imageVariable','$type', '$checksum')";
-  if(mysql_query("$query"))
+  if(pdo_query("$query"))
     {
-    return mysql_insert_id();
+    return pdo_insert_id("image");
     }
   else
     {
-    echo mysql_error();
+    echo pdo_error();
     }
   return 0;
 }

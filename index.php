@@ -16,6 +16,7 @@
 
 =========================================================================*/
 include("config.php");
+require_once("pdo.php");
 include("common.php");
 
 /** Generate the index table */
@@ -23,6 +24,7 @@ function generate_index_table()
 { 
   $noforcelogin = 1;
   include("config.php");
+  require_once("pdo.php");
   include('login.php');
   include('version.php');
 
@@ -35,7 +37,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!mysql_query("SELECT userid FROM userstatistics LIMIT 1"))
+  if(!pdo_query("SELECT major FROM version LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration/Backward Compatibility Tools panel of CDash.</upgradewarning>";
@@ -47,37 +49,49 @@ function generate_index_table()
  </dashboard> ";
  
  // Show the size of the database
- $rows = mysql_query("SHOW table STATUS");
-  $dbsize = 0;
-  while ($row = mysql_fetch_array($rows)) 
+ if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql")) 
    {
-  $dbsize += $row['Data_length'] + $row['Index_length']; 
-  }
-  
- $ext = "b";
- if($dbsize>1024)
-   {
-   $dbsize /= 1024;
-   $ext = "Kb";
+   $rows = pdo_query("SHOW table STATUS");
+    $dbsize = 0;
+    while ($row = pdo_fetch_array($rows)) 
+     {
+    $dbsize += $row['Data_length'] + $row['Index_length']; 
+    }
+    
+   $ext = "b";
+   if($dbsize>1024)
+     {
+     $dbsize /= 1024;
+     $ext = "Kb";
+     }
+   if($dbsize>1024)
+     {
+     $dbsize /= 1024;
+     $ext = "Mb";
+     }
+   if($dbsize>1024)
+     {
+     $dbsize /= 1024;
+     $ext = "Gb";
+     }
+   if($dbsize>1024)
+     {
+     $dbsize /= 1024;
+     $ext = "Tb";
+     } 
+     
+   $xml .= "<database>";
+   $xml .= add_XML_value("size",round($dbsize,1).$ext);
+   $xml .= "</database>";
    }
- if($dbsize>1024)
-   {
-   $dbsize /= 1024;
-   $ext = "Mb";
-   }
- if($dbsize>1024)
-   {
-   $dbsize /= 1024;
-   $ext = "Gb";
-   }
- if($dbsize>1024)
-   {
-   $dbsize /= 1024;
-   $ext = "Tb";
-   } 
- $xml .= "<database>";
- $xml .= add_XML_value("size",round($dbsize,1).$ext);
- $xml .= "</database>";
+  else 
+    {
+    // no equivalent yet for other databases
+    $xml .= "<database>";
+    $xml .= add_XML_value("size","NA");
+    $xml .= "</database>";
+    }
+
  
   // User
   $userid = 0;
@@ -85,8 +99,8 @@ function generate_index_table()
     {
     $xml .= "<user>";
     $userid = $_SESSION['cdash']['loginid'];
-    $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
-    $user_array = mysql_fetch_array($user);
+    $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
+    $user_array = pdo_fetch_array($user);
     $xml .= add_XML_value("id",$userid);
     $xml .= add_XML_value("admin",$user_array["admin"]);
     $xml .= "</user>";
@@ -139,26 +153,27 @@ function generate_main_dashboard_XML($projectid,$date)
 {
   $start = microtime_float();
   $noforcelogin = 1;
-  include("config.php");
+  include_once("config.php");
+  require_once("pdo.php");
   include('login.php');
   include('version.php');
       
-  $db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)
     {
     echo "Error connecting to CDash database server<br>\n";
     exit(0);
     }
-  if(!mysql_select_db("$CDASH_DB_NAME",$db))
+  if(!pdo_select_db("$CDASH_DB_NAME",$db))
     {
     echo "Error selecting CDash database<br>\n";
     exit(0);
     }
-  
-  $project = mysql_query("SELECT * FROM project WHERE id='$projectid'");
-  if(mysql_num_rows($project)>0)
+    
+  $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+  if(pdo_num_rows($project)>0)
     {
-    $project_array = mysql_fetch_array($project);
+    $project_array = pdo_fetch_array($project);
     $svnurl = make_cdash_url(htmlentities($project_array["cvsurl"]));
     $homeurl = make_cdash_url(htmlentities($project_array["homeurl"]));
     $bugurl = make_cdash_url(htmlentities($project_array["bugtrackerurl"]));
@@ -216,22 +231,22 @@ function generate_main_dashboard_XML($projectid,$date)
   $gmdate = gmdate("Ymd", $currentstarttime);
   $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .$gmdate. "</url>";
   
-  $dailyupdate = mysql_query("SELECT id FROM dailyupdate 
+  $dailyupdate = pdo_query("SELECT id FROM dailyupdate 
                               WHERE dailyupdate.date='$gmdate' and projectid='$projectid'");
   
-  if(mysql_num_rows($dailyupdate)>0)
+  if(pdo_num_rows($dailyupdate)>0)
     {
-    $dailupdate_array = mysql_fetch_array($dailyupdate);
+    $dailupdate_array = pdo_fetch_array($dailyupdate);
     $dailyupdateid = $dailupdate_array["id"];    
-    $dailyupdatefile = mysql_query("SELECT count(*) FROM dailyupdatefile
+    $dailyupdatefile = pdo_query("SELECT count(*) FROM dailyupdatefile
                                     WHERE dailyupdateid='$dailyupdateid'");
-    $dailyupdatefile_array = mysql_fetch_array($dailyupdatefile);
+    $dailyupdatefile_array = pdo_fetch_array($dailyupdatefile);
     $nchanges = $dailyupdatefile_array[0]; 
     
-    $dailyupdateauthors = mysql_query("SELECT author FROM dailyupdatefile
+    $dailyupdateauthors = pdo_query("SELECT author FROM dailyupdatefile
                                        WHERE dailyupdateid='$dailyupdateid'
                                        GROUP BY author");
-    $nauthors = mysql_num_rows($dailyupdateauthors);   
+    $nauthors = pdo_num_rows($dailyupdateauthors);   
     $xml .= "<nchanges>".$nchanges."</nchanges>";
     $xml .= "<nauthors>".$nauthors."</nauthors>";
     }
@@ -247,10 +262,10 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     $xml .= "<user>";
     $userid = $_SESSION['cdash']['loginid'];
-    $user2project = mysql_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
-    $user2project_array = mysql_fetch_array($user2project);
-    $user = mysql_query("SELECT admin FROM user WHERE id='$userid'");
-    $user_array = mysql_fetch_array($user);
+    $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
+    $user2project_array = pdo_fetch_array($user2project);
+    $user = pdo_query("SELECT admin FROM ".qid("user")."  WHERE id='$userid'");
+    $user_array = pdo_fetch_array($user);
     $xml .= add_XML_value("id",$userid);
     $isadmin=0;
     if($user2project_array["role"]>1 || $user_array["admin"])
@@ -267,35 +282,22 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalnotrun = 0;
   $totalfail= 0;
   $totalpass = 0;  
-      
+            
   // Local function to add expected builds
   function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
     {
-    $currentUTCTime =  gmdate("YmdHis",$currentstarttime+3600*24);
+    $currentUTCTime =  gmdate("Y-m-d H:i:s",$currentstarttime+3600*24);
     $xml = "";
-    $build2grouprule = mysql_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
+    $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
                                     WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
-                                    AND g.starttime<$currentUTCTime AND (g.endtime>$currentUTCTime OR g.endtime='0000-00-00 00:00:00')
-                                    ");
-    while($build2grouprule_array = mysql_fetch_array($build2grouprule))
+                                    AND g.starttime<'$currentUTCTime' AND (g.endtime>'$currentUTCTime' OR g.endtime='1980-01-01 00:00:00')
+                                    ");                      
+    while($build2grouprule_array = pdo_fetch_array($build2grouprule))
       {
       $key = $build2grouprule_array["name"]."_".$build2grouprule_array["buildname"];
       if(array_search($key,$received_builds) === FALSE) // add only if not found
         {      
-        $xml .= "<build>";
-        
-        /*      
-        if($rowparity%2==0)
-          {
-           $xml .= add_XML_value("rowparity","trodd");
-                    }
-                else
-                    {
-                    $xml .= add_XML_value("rowparity","treven");
-                    }
-                $rowparity++;
-        */
-                
+        $xml .= "<build>";                
         $xml .= add_XML_value("site",$build2grouprule_array["name"]);
         $xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
         $xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
@@ -319,19 +321,19 @@ function generate_main_dashboard_XML($projectid,$date)
   $beginning_timestamp = $currentstarttime;
   $end_timestamp = $currentstarttime+3600*24;
 
-  $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
-  $end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
+  $beginning_UTCDate = gmdate("Y-m-d H:i:s",$beginning_timestamp);
+  $end_UTCDate = gmdate("Y-m-d H:i:s",$end_timestamp);                                                      
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
-                         WHERE b.starttime<$end_UTCDate AND b.starttime>=$beginning_UTCDate
+                         WHERE b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate'
                          AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
-                         AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate OR gp.endtime='0000-00-00 00:00:00')
+                         AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
                          ORDER BY gp.position ASC,b.name ASC ";
     
   // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
-  $builds = mysql_query($sql);
-  echo mysql_error();
+  $builds = pdo_query($sql);
+  echo pdo_error();
   
   // The SQL results are ordered by group so this should work
   // Group position have to be continuous
@@ -341,15 +343,16 @@ function generate_main_dashboard_XML($projectid,$date)
   $rowparity = 0;
   $dynanalysisrowparity = 0;
   $coveragerowparity = 0;
-  
+
   // Find the last position of the group
-  $groupposition_array = mysql_fetch_array(mysql_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
+  $groupposition_array = pdo_fetch_array(pdo_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
                                                         WHERE g.projectid='$projectid' AND g.id=gp.buildgroupid 
-                                                        AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate OR gp.endtime='0000-00-00 00:00:00')
+                                                        AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
                                                         ORDER BY gp.position DESC LIMIT 1"));
+                                                        
   $lastGroupPosition = $groupposition_array["position"];
-  
-  while($build_array = mysql_fetch_array($builds))
+              
+  while($build_array = pdo_fetch_array($builds))
     {
     $groupposition = $build_array["position"];
     if($previousgroupposition != $groupposition)
@@ -374,9 +377,9 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       for($i=$prevpos;$i<$groupposition;$i++)
         {
-        $group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
+        $group = pdo_fetch_array(pdo_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
                                                 AND gp.position='$i' AND g.projectid='$projectid'
-                                                AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate  OR gp.endtime='0000-00-00 00:00:00')
+                                                AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate'  OR gp.endtime='1980-01-01 00:00:00')
                                                 "));
         $xml .= "<buildgroup>";
         $rowparity = 0;
@@ -409,10 +412,11 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $groupid = $build_array["groupid"];
     $buildid = $build_array["id"];
-    $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
-    $nconfigure = mysql_num_rows($configure);
+    $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
+    $nconfigure = pdo_num_rows($configure);
     $siteid = $build_array["siteid"];
-    $site_array = mysql_fetch_array(mysql_query("SELECT name FROM site WHERE id='$siteid'"));
+          
+    $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
     
     // Get the site name
     $xml .= "<build>";
@@ -433,11 +437,10 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("buildname",$build_array["name"]);
     $xml .= add_XML_value("buildid",$build_array["id"]);
     $xml .= add_XML_value("generator",$build_array["generator"]);
-    
             
     // Search if we have notes for that build
-    $buildnote = mysql_query("SELECT count(*) FROM buildnote WHERE buildid='$buildid'");
-    $buildnote_array = mysql_fetch_row($buildnote);
+    $buildnote = pdo_query("SELECT count(*) FROM buildnote WHERE buildid='$buildid'");
+    $buildnote_array = pdo_fetch_row($buildnote);
     if($buildnote_array[0]>0)
       {
       $xml .= add_XML_value("buildnote","1");
@@ -445,19 +448,19 @@ function generate_main_dashboard_XML($projectid,$date)
       
     $received_builds[] = $site_array["name"]."_".$build_array["name"];
     
-    $note = mysql_query("SELECT count(*) FROM build2note WHERE buildid='$buildid'");
-    $note_array = mysql_fetch_row($note);
+    $note = pdo_query("SELECT count(*) FROM build2note WHERE buildid='$buildid'");
+    $note_array = pdo_fetch_row($note);
     if($note_array[0]>0)
       {
       $xml .= add_XML_value("note","1");
       }
       
-    $update = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
-    $update_array = mysql_fetch_row($update);
+    $update = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
+    $update_array = pdo_fetch_row($update);
     $xml .= add_XML_value("update",$update_array[0]);
   
-    $updatestatus = mysql_query("SELECT status FROM buildupdate WHERE buildid='$buildid'");
-    $updatestatus_array = mysql_fetch_array($updatestatus);
+    $updatestatus = pdo_query("SELECT status FROM buildupdate WHERE buildid='$buildid'");
+    $updatestatus_array = pdo_fetch_array($updatestatus);
     
     if(strlen($updatestatus_array["status"]) > 0 && $updatestatus_array["status"]!="0")
       {
@@ -465,8 +468,8 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     else
       {
-      $updateerrors = mysql_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
-      $updateerrors_array = mysql_fetch_row($updateerrors);
+      $updateerrors = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
+      $updateerrors_array = pdo_fetch_row($updateerrors);
       //$xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
       $xml .= add_XML_value("updateerrors",0);
       if($updateerrors_array[0]>0)
@@ -474,17 +477,16 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("updatewarning",1);
         }
       }
-   
     $xml .= "<compilation>";
     
     // Find the number of errors and warnings
-    $builderror = mysql_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
-    $builderror_array = mysql_fetch_array($builderror);
+    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
     $nerrors = $builderror_array[0];
     $totalerrors += $nerrors;
     $xml .= add_XML_value("error",$nerrors);
-    $buildwarning = mysql_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
-    $buildwarning_array = mysql_fetch_array($buildwarning);
+    $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
+    $buildwarning_array = pdo_fetch_array($buildwarning);
     $nwarnings = $buildwarning_array[0];
     $totalwarnings += $nwarnings;
     $xml .= add_XML_value("warning",$nwarnings);
@@ -492,70 +494,70 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "<time>".$diff."</time>";
     
     // Differences between number of errors and warnings
-    $builderrordiff = mysql_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='0'");
-    if(mysql_num_rows($builderrordiff)>0)
+    $builderrordiff = pdo_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='0'");
+    if(pdo_num_rows($builderrordiff)>0)
       {
-      $builderrordiff_array = mysql_fetch_array($builderrordiff);
+      $builderrordiff_array = pdo_fetch_array($builderrordiff);
       $xml .= add_XML_value("nerrordiff",$builderrordiff_array["difference"]);
       }
-    $buildwarningdiff = mysql_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='1'");
-    if(mysql_num_rows($buildwarningdiff)>0)
+    $buildwarningdiff = pdo_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='1'");
+    if(pdo_num_rows($buildwarningdiff)>0)
       {
-      $buildwarningdiff_array = mysql_fetch_array($buildwarningdiff);
+      $buildwarningdiff_array = pdo_fetch_array($buildwarningdiff);
       $xml .= add_XML_value("nwarningdiff",$buildwarningdiff_array["difference"]);
       }
     $xml .= "</compilation>";
-    
+
     // Get the Configure options
-    $configure = mysql_query("SELECT status FROM configure WHERE buildid='$buildid'");
+    $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
     if($nconfigure)
       {
-      $configure_array = mysql_fetch_array($configure);
+      $configure_array = pdo_fetch_array($configure);
       $xml .= add_XML_value("configure",$configure_array["status"]);
       $totalconfigure += $configure_array["status"];
       }
   
     // Get the tests
-    $test = mysql_query("SELECT * FROM build2test WHERE buildid='$buildid'");
-    if(mysql_num_rows($test)>0)
+    $test = pdo_query("SELECT * FROM build2test WHERE buildid='$buildid'");
+    if(pdo_num_rows($test)>0)
       {
-      $test_array = mysql_fetch_array($test);
+      $test_array = pdo_fetch_array($test);
       $xml .= "<test>";
       // We might be able to do this in one request
-      $nnotrun_array = mysql_fetch_array(mysql_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+      $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
       
       // Add the difference
-      $notrundiff = mysql_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='0'");
-      if(mysql_num_rows($notrundiff)>0)
+      $notrundiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='0'");
+      if(pdo_num_rows($notrundiff)>0)
         {
-        $nnotrundiff_array = mysql_fetch_array($notrundiff);
+        $nnotrundiff_array = pdo_fetch_array($notrundiff);
         $nnotrundiff = $nnotrundiff_array["difference"];
         $xml .= add_XML_value("nnotrundiff",$nnotrundiff);
         }
       
       $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='failed'";
-      $nfail_array = mysql_fetch_array(mysql_query($sql));
+      $nfail_array = pdo_fetch_array(pdo_query($sql));
       $nfail = $nfail_array[0];
       
       // Add the difference
-      $faildiff = mysql_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='1'");
-      if(mysql_num_rows($faildiff)>0)
+      $faildiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='1'");
+      if(pdo_num_rows($faildiff)>0)
         {
-        $faildiff_array = mysql_fetch_array($faildiff);
+        $faildiff_array = pdo_fetch_array($faildiff);
         $nfaildiff = $faildiff_array["difference"];
         $xml .= add_XML_value("nfaildiff",$nfaildiff);
         }
         
       $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'";
-      $npass_array = mysql_fetch_array(mysql_query($sql));
+      $npass_array = pdo_fetch_array(pdo_query($sql));
       $npass = $npass_array[0];
       
       // Add the difference
-      $passdiff = mysql_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='2'");
-      if(mysql_num_rows($passdiff)>0)
+      $passdiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='2'");
+      if(pdo_num_rows($passdiff)>0)
         {
-        $passdiff_array = mysql_fetch_array($passdiff);
+        $passdiff_array = pdo_fetch_array($passdiff);
         $npassdiff = $passdiff_array["difference"];
         $xml .= add_XML_value("npassdiff",$npassdiff);
         }
@@ -563,21 +565,21 @@ function generate_main_dashboard_XML($projectid,$date)
       if($project_array["showtesttime"] == 1)
         {
         $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND timestatus='1'";
-        $ntimestatus_array = mysql_fetch_array(mysql_query($sql));
+        $ntimestatus_array = pdo_fetch_array(pdo_query($sql));
         $ntimestatus = $ntimestatus_array[0];
         $xml .= add_XML_value("timestatus",$ntimestatus);
         
         // Add the difference
-        $timediff = mysql_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='3'");
-        if(mysql_num_rows($timediff)>0)
+        $timediff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='3'");
+        if(pdo_num_rows($timediff)>0)
           {
-          $timediff_array = mysql_fetch_array($timediff);
+          $timediff_array = pdo_fetch_array($timediff);
           $ntimediff = $timediff_array["difference"];
           $xml .= add_XML_value("ntimediff",$ntimediff);
           }
         
         }  
-      $time_array = mysql_fetch_array(mysql_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
+      $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
       $time = $time_array[0];
       
       $totalnotrun += $nnotrun;
@@ -598,8 +600,8 @@ function generate_main_dashboard_XML($projectid,$date)
      $xml .= "</build>";
     
     // Coverage
-    $coverages = mysql_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
-    while($coverage_array = mysql_fetch_array($coverages))
+    $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
+    while($coverage_array = pdo_fetch_array($coverages))
       {
       $xml .= "<coverage>";
       if($coveragerowparity%2==0)
@@ -631,8 +633,8 @@ function generate_main_dashboard_XML($projectid,$date)
       }  // end coverage
     
     // Dynamic Analysis
-    $dynanalysis = mysql_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
-    while($dynanalysis_array = mysql_fetch_array($dynanalysis))
+    $dynanalysis = pdo_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
+    while($dynanalysis_array = pdo_fetch_array($dynanalysis))
       {
       $xml .= "<dynamicanalysis>";
       if($dynanalysisrowparity%2==0)
@@ -649,9 +651,9 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
       
       $xml .= "  <checker>".$dynanalysis_array["checker"]."</checker>";
-      $defect = mysql_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
+      $defect = pdo_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
                                               WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
-      $defectcount = mysql_fetch_array($defect);
+      $defectcount = pdo_fetch_array($defect);
       if(!isset($defectcount[0]))
         {
         $defectcounts = 0;
@@ -668,8 +670,8 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "</dynamicanalysis>";
       }  // end coverage   
     } // end looping through builds
-    
-  if(mysql_num_rows($builds)>0)
+             
+  if(pdo_num_rows($builds)>0)
     {
     $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
     if($previousgroupposition == $lastGroupPosition)
@@ -678,19 +680,20 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $xml .= "</buildgroup>";
     }
-    
+   
   // Fill in the rest of the info
   $prevpos = $previousgroupposition+1;
   if($prevpos == 0)
     {
     $prevpos = 1;
     }
-    
+               
   for($i=$prevpos;$i<=$lastGroupPosition;$i++)
     {
-    $group = mysql_fetch_array(mysql_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
+    $group = pdo_fetch_array(pdo_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
                                                                                      AND gp.position='$i' AND g.projectid='$projectid'
-                                                                                     AND gp.starttime<$end_UTCDate AND (gp.endtime>$end_UTCDate  OR gp.endtime='0000-00-00 00:00:00')"));
+                                                                                     AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate'  OR gp.endtime='1980-01-01 00:00:00')"));
+    
     $xml .= "<buildgroup>";  
     $xml .= add_XML_value("id",$group["id"]);
     $xml .= add_XML_value("name",$group["name"]);
@@ -702,7 +705,7 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $xml .= "</buildgroup>";  
     }
- 
+
   $xml .= add_XML_value("totalConfigure",$totalconfigure);
   $xml .= add_XML_value("totalError",$totalerrors);
   $xml .= add_XML_value("totalWarning",$totalwarnings);
@@ -719,24 +722,23 @@ function generate_main_dashboard_XML($projectid,$date)
 } 
 
 // Check if we can connect to the database
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 if(!$db)
   {
   // redirect to the install.php script
   echo "<script language=\"javascript\">window.location='install.php'</script>";
   return;
   }
-if(mysql_select_db("$CDASH_DB_NAME",$db) === FALSE)
+if(pdo_select_db("$CDASH_DB_NAME",$db) === FALSE)
   {
   echo "<script language=\"javascript\">window.location='install.php'</script>";
   return;
   }
-if(mysql_query("SELECT id FROM user LIMIT 1",$db) === FALSE)
+if(pdo_query("SELECT id FROM ".qid("user")." LIMIT 1",$db) === FALSE)
   {
   echo "<script language=\"javascript\">window.location='install.php'</script>";
   return;
   }
-
 
 @$projectname = $_GET["project"];
 
@@ -753,7 +755,7 @@ if(!isset($projectname )) // if the project name is not set we display the table
   generate_XSLT($xml,"indextable");
   }
 else
-  {
+  {  
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
   
