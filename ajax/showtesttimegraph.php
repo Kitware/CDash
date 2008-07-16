@@ -15,8 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("../config.php");
-include("../common.php");
+require_once("../config.php");
+require_once("../pdo.php");
+require_once("../common.php");
 
 $testid = $_GET["testid"];
 $buildid = $_GET["buildid"];
@@ -34,18 +35,18 @@ if(!isset($testid) || !is_numeric($testid))
   return;
   }
   
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 // Find the project variables
-$test = mysql_query("SELECT name FROM test WHERE id='$testid'");
-$test_array = mysql_fetch_array($test);
+$test = pdo_query("SELECT name FROM test WHERE id='$testid'");
+$test_array = pdo_fetch_array($test);
 $testname = $test_array["name"];
 
 
-$build = mysql_query("SELECT name,type,siteid,projectid,starttime 
+$build = pdo_query("SELECT name,type,siteid,projectid,starttime 
 FROM build WHERE id='$buildid'");
-$build_array = mysql_fetch_array($build);
+$build_array = pdo_fetch_array($build);
 
 $buildname = $build_array["name"];
 $siteid = $build_array["siteid"];
@@ -54,7 +55,7 @@ $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
 // Find the other builds
-$previousbuilds = mysql_query("SELECT build.id, build.starttime, build2test.time
+$previousbuilds = pdo_query("SELECT build.id, build.starttime, build2test.time
 FROM build
 JOIN build2test ON (build.id = build2test.buildid)
 WHERE build.siteid = '$siteid'
@@ -75,7 +76,7 @@ $(function () {
     var ty = [];
     <?php
     $tarray = array();
-    while($build_array = mysql_fetch_array($previousbuilds))
+    while($build_array = pdo_fetch_array($previousbuilds))
       {
       $t['x'] = strtotime($build_array["starttime"])*1000;
       $t['y'] = $build_array["time"];    

@@ -16,11 +16,12 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("../config.php");
-include("../common.php");
+require_once("../config.php");
+require_once("../pdo.php");
+require_once("../common.php");
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 $projectid = $_GET["projectid"];
 if(!isset($projectid) || !is_numeric($projectid))
@@ -29,23 +30,23 @@ if(!isset($projectid) || !is_numeric($projectid))
   return;
   }
   
-$search = mysql_real_escape_string($_GET["search"]);
+$search = pdo_real_escape_string($_GET["search"]);
 
 
-$user = mysql_query("SELECT id,email,firstname,lastname FROM user WHERE 
+$user = pdo_query("SELECT id,email,firstname,lastname FROM user WHERE 
                     (email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')
                     AND id NOT IN (SELECT userid as id FROM user2project WHERE projectid='$projectid')");
-echo mysql_error();
+echo pdo_error();
 
 ?>
    
   <table width="100%"  border="0">
   <?php
-  if(mysql_num_rows($user)==0)
+  if(pdo_num_rows($user)==0)
     {
     echo "<tr><td>[none]</tr></td>";
     }
-  while($user_array = mysql_fetch_array($user))
+  while($user_array = pdo_fetch_array($user))
   {
   ?>
   <tr>

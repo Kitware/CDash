@@ -15,7 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("../config.php");
+require_once("../config.php");
+require_once("../pdo.php");
 include("../common.php");
 $noforcelogin = 1;
 include('../login.php');
@@ -40,8 +41,8 @@ if(!isset($userid) || !is_numeric($userid))
   return;
   }
    
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 @$AddNote = $_POST["AddNote"];
 if($AddNote)
@@ -51,7 +52,7 @@ if($AddNote)
   if(strlen($TextNote)>0)
     {
     $now = gmdate("Y-m-d H:i:s");
-    mysql_query("INSERT INTO buildnote (buildid,userid,note,timestamp,status) 
+    pdo_query("INSERT INTO buildnote (buildid,userid,note,timestamp,status) 
                    VALUES ('$buildid','$userid','$TextNote','$now','$Status')");
     }
   $url = "../buildSummary.php?buildid=".$buildid."&message=noteaddded";

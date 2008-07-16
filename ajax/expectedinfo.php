@@ -16,17 +16,18 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("../config.php");
-include("../common.php");
+require_once("../config.php");
+require_once("../pdo.php");
+require_once("../common.php");
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 $siteid = $_GET["siteid"];
-$buildname = mysql_real_escape_string($_GET["buildname"]);
+$buildname = pdo_real_escape_string($_GET["buildname"]);
 $projectid = $_GET["projectid"];
-$buildtype = mysql_real_escape_string($_GET["buildtype"]);
-$currenttime = mysql_real_escape_string($_GET["currenttime"]);
+$buildtype = pdo_real_escape_string($_GET["buildtype"]);
+$currenttime = pdo_real_escape_string($_GET["currenttime"]);
 
 // Checks
 if(!isset($siteid) || !is_numeric($siteid))
@@ -40,19 +41,19 @@ if(!isset($projectid) || !is_numeric($projectid))
   return;
   }
     
-$project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
-$project_array = mysql_fetch_array($project);
+$project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
+$project_array = pdo_fetch_array($project);
 
 $currentUTCtime =  gmdate("YmdHis",$currenttime);
     
 // Find the last build corresponding to thie siteid and buildid
-$lastbuild = mysql_query("SELECT starttime FROM build
+$lastbuild = pdo_query("SELECT starttime FROM build
                           WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                           AND projectid='$projectid' AND starttime<='$currentUTCtime' ORDER BY starttime DESC LIMIT 1");
 
-if(mysql_num_rows($lastbuild)>0)
+if(pdo_num_rows($lastbuild)>0)
   {
-  $lastbuild_array = mysql_fetch_array($lastbuild);              
+  $lastbuild_array = pdo_fetch_array($lastbuild);              
   $datelastbuild = $lastbuild_array["starttime"];
   $lastsbuilddays = round(($currenttime-strtotime($datelastbuild))/(3600*24));
   }

@@ -16,15 +16,16 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("../config.php");
-include("../common.php");
+require_once("../config.php");
+require_once("../pdo.php");
+require_once("../common.php");
 
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 $siteid = $_GET["siteid"];
-$buildname = mysql_real_escape_string($_GET["buildname"]);
-$buildtype = mysql_real_escape_string($_GET["buildtype"]);
+$buildname = pdo_real_escape_string($_GET["buildname"]);
+$buildtype = pdo_real_escape_string($_GET["buildtype"]);
 $buildgroupid = $_GET["buildgroup"];
 $divname = $_GET["divname"];
 if(!isset($siteid) || !is_numeric($siteid))
@@ -52,12 +53,12 @@ if($markexpected)
     return;
     }
     
-  $expected = mysql_real_escape_string($expected);
-  $markexpected = mysql_real_escape_string($markexpected);
+  $expected = pdo_real_escape_string($expected);
+  $markexpected = pdo_real_escape_string($markexpected);
   
   // If a rule already exists we update it
-  mysql_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
-                      AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
+  pdo_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
+                      AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
   return;                   
 }
 
@@ -65,9 +66,9 @@ if($submit)
 {
   // Mark any previous rule as done
   /*$now = gmdate("Y-m-d H:i:s");
-  mysql_query("UPDATE build2grouprule SET endtime='$now'
+  pdo_query("UPDATE build2grouprule SET endtime='$now'
                WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
-               AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");*/
+               AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");*/
   if(!isset($previousgroupid) || !is_numeric($previousgroupid))
     {
     echo "Not a valid previousgroupid!";
@@ -75,37 +76,37 @@ if($submit)
     }
     
   // Delete the previous rule for that build
-  mysql_query("DELETE FROM build2grouprule  WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
-               AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
+  pdo_query("DELETE FROM build2grouprule  WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
+               AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
 
   // Add the new rule (begin time is set by default by mysql
-  mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
-               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','0000-00-00 00:00:00')");
+  pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
+               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','1980-01-01 00:00:00')");
         
   // Move any builds that follow this rule to the correct build2group       
-  $buildgroups = mysql_query("SELECT * from build2group");
-  while($buildgroup_array = mysql_fetch_array($buildgroups))
+  $buildgroups = pdo_query("SELECT * from build2group");
+  while($buildgroup_array = pdo_fetch_array($buildgroups))
     {
     $buildid = $buildgroup_array["buildid"];
     
-    $build = mysql_query("SELECT * from build WHERE id='$buildid'");
-    $build_array = mysql_fetch_array($build);
+    $build = pdo_query("SELECT * from build WHERE id='$buildid'");
+    $build_array = pdo_fetch_array($build);
     $type = $build_array["type"];
     $name = $build_array["name"];
     $siteid = $build_array["siteid"];
     $projectid = $build_array["projectid"];
     $submittime = $build_array["submittime"];
         
-    $build2grouprule = mysql_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
+    $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
                                     WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
                                     AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
-                                    AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='0000-00-00 00:00:00')");
-    echo mysql_error();                              
-    if(mysql_num_rows($build2grouprule)>0)
+                                    AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
+    echo pdo_error();                              
+    if(pdo_num_rows($build2grouprule)>0)
       {
-      $build2grouprule_array = mysql_fetch_array($build2grouprule);
+      $build2grouprule_array = pdo_fetch_array($build2grouprule);
       $groupid = $build2grouprule_array["groupid"];
-      mysql_query ("UPDATE build2group SET groupid='$groupid' WHERE buildid='$buildid'");
+      pdo_query ("UPDATE build2group SET groupid='$groupid' WHERE buildid='$buildid'");
       }
     }       
 
@@ -121,12 +122,12 @@ if(!isset($buildgroupid) || !is_numeric($buildgroupid))
   }
   
 // Find the project variables
-$currentgroup = mysql_query("SELECT id,name,projectid FROM buildgroup WHERE id='$buildgroupid'");
-$currentgroup_array = mysql_fetch_array($currentgroup);
+$currentgroup = pdo_query("SELECT id,name,projectid FROM buildgroup WHERE id='$buildgroupid'");
+$currentgroup_array = pdo_fetch_array($currentgroup);
 $projectid = $currentgroup_array["projectid"];
 
 // Find the groups available for this project
-$group = mysql_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND projectid='$projectid'");                    
+$group = pdo_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND projectid='$projectid'");                    
 ?>
 
 <script type="text/javascript" charset="utf-8">
@@ -181,9 +182,9 @@ function movenonexpectedbuildgroup_click(siteid,buildname,buildtype,groupid,prev
   $currentgroupid = $currentgroup_array["id"];
   
   // This works only for the most recent dashboard (and future)  
-  $build2groupexpected = mysql_query("SELECT groupid FROM build2grouprule WHERE groupid='$currentgroupid' AND buildtype='$buildtype'
-                                      AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00' AND expected='1'");
-  if(mysql_num_rows($build2groupexpected) > 0 )
+  $build2groupexpected = pdo_query("SELECT groupid FROM build2grouprule WHERE groupid='$currentgroupid' AND buildtype='$buildtype'
+                                      AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00' AND expected='1'");
+  if(pdo_num_rows($build2groupexpected) > 0 )
     {
     $isexpected = 1;
     }  
@@ -204,7 +205,7 @@ function movenonexpectedbuildgroup_click(siteid,buildname,buildtype,groupid,prev
   ?>]</a> </font></td>
   </tr>
 <?php
-while($group_array = mysql_fetch_array($group))
+while($group_array = pdo_fetch_array($group))
   {
 ?>
   <tr>

@@ -15,8 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("../config.php");
-include("../common.php");
+require_once("../config.php");
+require_once("../pdo.php");
+require_once("../common.php");
 
 $buildid = $_GET["buildid"];
 if(!isset($buildid) || !is_numeric($buildid))
@@ -25,12 +26,12 @@ if(!isset($buildid) || !is_numeric($buildid))
   return;
   }
   
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 // Find the project variables
-$build = mysql_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
-$build_array = mysql_fetch_array($build);
+$build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
+$build_array = pdo_fetch_array($build);
 
 $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
@@ -38,11 +39,11 @@ $siteid = $build_array["siteid"];
 $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
-$project = mysql_query("SELECT name FROM project WHERE id='$projectid'");
-$project_array = mysql_fetch_array($project);
+$project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
+$project_array = pdo_fetch_array($project);
 
 // Find the other builds
-$previousbuilds = mysql_query("SELECT id,starttime,endtime FROM build WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
+$previousbuilds = pdo_query("SELECT id,starttime,endtime FROM build WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                                AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC");
 ?>
 
@@ -55,7 +56,7 @@ $(function () {
     var ty = [];
     <?php
     $i=0;
-    while($build_array = mysql_fetch_array($previousbuilds))
+    while($build_array = pdo_fetch_array($previousbuilds))
       {
       $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
     ?>

@@ -16,7 +16,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("../config.php");
+require_once("../config.php");
+require_once("../pdo.php");
 include("../common.php");
 
 $buildid = $_GET["buildid"];
@@ -26,12 +27,12 @@ if(!isset($buildid) || !is_numeric($buildid))
   return;
   }
   
-$db = mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-mysql_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
 
 // Find the project variables
-$build = mysql_query("SELECT name,type,siteid,projectid FROM build WHERE id='$buildid'");
-$build_array = mysql_fetch_array($build);
+$build = pdo_query("SELECT name,type,siteid,projectid FROM build WHERE id='$buildid'");
+$build_array = pdo_fetch_array($build);
 
 $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
@@ -48,18 +49,18 @@ $projectid = $build_array["projectid"];
 if($markexpected)
 {
   // If a rule already exists we update it
-  $build2groupexpected = mysql_query("SELECT groupid FROM build2grouprule WHERE groupid='$groupid' AND buildtype='$buildtype'
-                                      AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
-  if(mysql_num_rows($build2groupexpected) > 0 )
+  $build2groupexpected = pdo_query("SELECT groupid FROM build2grouprule WHERE groupid='$groupid' AND buildtype='$buildtype'
+                                      AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
+  if(pdo_num_rows($build2groupexpected) > 0 )
     {
-    mysql_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
-                                        AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
+    pdo_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
+                                        AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
     
     }
   else if($expected) // we add the grouprule
     {
     $now = gmdate("Y-m-d H:i:s");
-    mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
+    pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
                  VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
     }
 }
@@ -75,24 +76,24 @@ if($removebuild)
 if($submit)
 {
 // Remove the group
-$prevgroup = mysql_fetch_array(mysql_query("SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
+$prevgroup = pdo_fetch_array(pdo_query("SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
 $prevgroupid = $prevgroup["id"]; 
                     
-mysql_query("DELETE FROM build2group WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+pdo_query("DELETE FROM build2group WHERE groupid='$prevgroupid' AND buildid='$buildid'");
 
 // Insert into the group
-mysql_query("INSERT INTO build2group(groupid,buildid) VALUES ('$groupid','$buildid')");
+pdo_query("INSERT INTO build2group(groupid,buildid) VALUES ('$groupid','$buildid')");
 
 if($definerule)
   {
   // Mark any previous rule as done
   $now = gmdate("Y-m-d H:i:s");
-  mysql_query("UPDATE build2grouprule SET endtime='$now'
+  pdo_query("UPDATE build2grouprule SET endtime='$now'
                WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
-               AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00'");
+               AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
 
   // Add the new rule (begin time is set by default by mysql
-  mysql_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
+  pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
                VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
   }
 
@@ -100,7 +101,7 @@ return;
 }
 
 // Find the groups available for this project
-$group = mysql_query("SELECT name,id FROM buildgroup WHERE id NOT IN 
+$group = pdo_query("SELECT name,id FROM buildgroup WHERE id NOT IN 
                      (SELECT groupid as id FROM build2group WHERE buildid='$buildid') 
                       AND projectid='$projectid'");                    
 ?>
@@ -168,15 +169,15 @@ function addbuildgroup_click(buildid,groupid,definerule)
   <?php
   // If expected
   // Find the groups available for this project
-  $currentgroup = mysql_query("SELECT g.name,g.id FROM buildgroup AS g,build2group as bg WHERE g.id=bg.groupid  AND bg.buildid='$buildid'");
-  $currentgroup_array = mysql_fetch_array($currentgroup);
+  $currentgroup = pdo_query("SELECT g.name,g.id FROM buildgroup AS g,build2group as bg WHERE g.id=bg.groupid  AND bg.buildid='$buildid'");
+  $currentgroup_array = pdo_fetch_array($currentgroup);
   $isexpected = 0;
   $currentgroupid = $currentgroup_array ["id"];
   
   // This works only for the most recent dashboard (and future)  
-  $build2groupexpected = mysql_query("SELECT groupid FROM build2grouprule WHERE groupid='$currentgroupid' AND buildtype='$buildtype'
-                                      AND buildname='$buildname' AND siteid='$siteid' AND endtime='0000-00-00 00:00:00' AND expected='1'");
-  if(mysql_num_rows($build2groupexpected) > 0 )
+  $build2groupexpected = pdo_query("SELECT groupid FROM build2grouprule WHERE groupid='$currentgroupid' AND buildtype='$buildtype'
+                                      AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00' AND expected='1'");
+  if(pdo_num_rows($build2groupexpected) > 0 )
     {
     $isexpected = 1;
     }  
@@ -197,7 +198,7 @@ function addbuildgroup_click(buildid,groupid,definerule)
   ?>]</a> </font></td>
   </tr>
 <?php
-while($group_array = mysql_fetch_array($group))
+while($group_array = pdo_fetch_array($group))
   {
 ?>
   <tr>
