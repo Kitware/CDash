@@ -48,6 +48,8 @@
   </tr>
 </table>
 
+<font color="red"><xsl:value-of select="cdash/alert"/></font><br/>
+
 <br/>
 Please follow the installation step to make sure your system meets the requirements.<br/><br/>
 <xsl:if test="cdash/connectiondb=0">
@@ -86,14 +88,16 @@ Click here to  <a href="createProject.php">create a new project.</a>
 <xsl:if test="cdash/database=0 and cdash/xslt=1 and cdash/connectiondb=1">
 Please review the settings of your config.php file below and click install to install the SQL tables.<br/><br/>
 
-Database Type: <b><xsl:value-of select="cdash/connectiondb_type"/></b><br/>
-Database Hostname: <b><xsl:value-of select="cdash/connectiondb_host"/></b><br/>
-Database Login: <b><xsl:value-of select="cdash/connectiondb_login"/></b><br/>
-Database Name: <b><xsl:value-of select="cdash/connectiondb_name"/></b><br/>
-Admin username: <b>admin@cdash.org</b><br/>
-Admin password: <b>administrator</b><br/>
-<br/>
 <form name="form1" method="post" action="">
+<table>
+<tr><td>Database Type:</td><td><b><xsl:value-of select="cdash/connectiondb_type"/></b></td></tr>
+<tr><td>Database Hostname:</td><td><b><xsl:value-of select="cdash/connectiondb_type"/></b></td></tr>
+<tr><td>Database Login:</td><td><b><xsl:value-of select="cdash/connectiondb_login"/></b></td></tr>
+<tr><td>Database Name:</td><td><b><xsl:value-of select="cdash/connectiondb_name"/></b></td></tr>
+<tr><td>Admin Email:</td><td><input name="admin_email" type="text"/></td></tr>
+<tr><td>Admin Password:</td><td><input name="admin_password" type="password"/></td></tr>
+</table>
+<br/>
 <input type="submit" name="Submit" value="Install"/>
 </form>
 </xsl:if>

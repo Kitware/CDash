@@ -138,74 +138,75 @@ else
 @$Submit = $_POST["Submit"];
 if($Submit)
 {
-  $db_created = true;
+  $admin_email = $_POST["admin_email"];
+  $admin_password = $_POST["admin_password"];
   
-  // If this is MySQL we try to create the database
-  if($db_type=='mysql')
+  $valid_email = true;
+  
+  if(strlen($admin_email) < 6 || strstr($admin_email,'@') === FALSE)
     {
-    mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-    if(!mysql_query("CREATE DATABASE IF NOT EXISTS $CDASH_DB_NAME"))
-      {
-      $xml .= "<db_created>0</db_created>";
-      $xml .= "<alert>".mysql_error()."</alert>";
-      $db_created = false;
-      }
+    $xml .= "<db_created>0</db_created>";
+    $xml .= "<alert>* Administrator's email should be a valid email address</alert>";
+    $valid_email = false;
     }
-    
- if($db_created)
-  {
-  pdo_select_db("$CDASH_DB_NAME",$db);
-  $sqlfile = "sql/".$db_type."/cdash.sql";
-  $file_content = file($sqlfile);
-  $query = "";
-  foreach($file_content as $sql_line)
-    {
-    $tsl = trim($sql_line);
-     if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) 
-       {
-       $query .= $sql_line;
-       if(preg_match("/;\s*$/", $sql_line)) 
-         {
-         $query = str_replace(";", "", "$query");
-         $result = pdo_query($query);
-         if (!$result)
-           { 
-           $xml .= "<db_created>0</db_created>";
-           die(pdo_error());
-           }
-         $query = "";
-         }
-       }
-     } // end for each line
   
-  $sqlfile = "sql/".$db_type."/cdashdata.sql";
-  $file_content = file($sqlfile);
-  //print_r($file_content);
-  $query = "";
-  foreach($file_content as $sql_line)
+  if($valid_email && strlen($admin_password)<5)
     {
-    $tsl = trim($sql_line);
-     if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) 
-       {
-       $query .= $sql_line;
-       if(preg_match("/;\s*$/", $sql_line)) 
+    $xml .= "<db_created>0</db_created>";
+    $xml .= "<alert>* Administrator's password should be at least 5 characters</alert>";
+    $valid_email = false;
+    }    
+  
+  if($valid_email)
+    {
+    $db_created = true;
+    // If this is MySQL we try to create the database
+    if($db_type=='mysql')
+      {
+      mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+      if(!mysql_query("CREATE DATABASE IF NOT EXISTS $CDASH_DB_NAME"))
+        {
+        $xml .= "<db_created>0</db_created>";
+        $xml .= "<alert>".mysql_error()."</alert>";
+        $db_created = false;
+        }
+      }
+      
+   if($db_created)
+    {
+    pdo_select_db("$CDASH_DB_NAME",$db);
+    $sqlfile = "sql/".$db_type."/cdash.sql";
+    $file_content = file($sqlfile);
+    $query = "";
+    foreach($file_content as $sql_line)
+      {
+      $tsl = trim($sql_line);
+       if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) 
          {
-         $query = str_replace(";", "", "$query");
-         $result = pdo_query($query);
-         if (!$result)
-           { 
-           $xml .= "<db_created>0</db_created>";
-           die(pdo_error());
+         $query .= $sql_line;
+         if(preg_match("/;\s*$/", $sql_line)) 
+           {
+           $query = str_replace(";", "", "$query");
+           $result = pdo_query($query);
+           if (!$result)
+             { 
+             $xml .= "<db_created>0</db_created>";
+             die(pdo_error());
+             }
+           $query = "";
            }
-         $query = "";
          }
-       }
-     } // end for each line*/
-   $xml .= "<db_created>1</db_created>";
-   
-   // Set the database version
-   setVersion();
-   } // end database created
+       } // end for each line
+    
+     pdo_query("INSERT INTO ".qid("user")." VALUES (1, '".$admin_email."', '".md5($admin_password)."', 'administrator', '','Kitware Inc.', 1)");
+     echo pdo_error();
+    
+     $xml .= "<db_created>1</db_created>";
+     
+     // Set the database version
+     setVersion();
+     } // end database created
+  } // end check valid username and password
 } // end submit
 
 } // end database doesn't exists
