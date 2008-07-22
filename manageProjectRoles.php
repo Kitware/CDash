@@ -49,7 +49,7 @@ if ($session_OK)
     
   $role = 0;
  
-  $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM user WHERE id='$usersessionid'"));
+  $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$usersessionid'"));
   if($projectid && is_numeric($projectid))
     {
     $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$usersessionid' AND projectid='$projectid'");
@@ -108,7 +108,7 @@ if($registerUsers)
     $lastName = $lastnames[$logini];
     
     // Check if the user is already registered
-    $user = pdo_query("SELECT id FROM user WHERE email='$email'");
+    $user = pdo_query("SELECT id FROM ".qid("user")." WHERE email='$email'");
     echo pdo_error();
         
     if(pdo_num_rows($user)>0)
@@ -345,7 +345,7 @@ $xml .= "</project>";
 
 // List the users for that project
 $user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.cvslogin,up.role
-                     FROM user2project AS up, user as u  
+                     FROM user2project AS up, ".qid("user")." as u  
                      WHERE u.id=up.userid  AND up.projectid='$projectid' 
                      ORDER BY u.firstname ASC");
                          

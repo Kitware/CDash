@@ -59,7 +59,7 @@ if(!isset($projectid))
 
 $role=0;
 
-$user_array = pdo_fetch_array(pdo_query("SELECT admin FROM user WHERE id='$userid'"));
+ $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
 if($projectid && is_numeric($projectid))
   {
   $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
@@ -755,8 +755,8 @@ if($newDate)
 // Find the recent builds for this project
 if($projectid>0)
   {
-  $currentUTCTime =  gmdate("YmdHis");
-  $beginUTCTime = gmdate("YmdHis",time()-3600*7*24); // 7 days
+  $currentUTCTime =  gmdate("Y-m-d H:i:s");
+  $beginUTCTime = gmdate("Y-m-d H:i:s",time()-3600*7*24); // 7 days
  
   $sql = "";
   if($show>0)
