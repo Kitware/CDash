@@ -260,7 +260,6 @@ if($Submit)
     {
     $xml .= "<alert>Project's name already exists.</alert>";
     }
-  
   } // end submit
   
 // If we should delete the project
