@@ -354,7 +354,7 @@ if($Update || $AddRepository)
   //We should probably check the type of the image here to make sure the user
   //isn't trying anything fruity
   pdo_query("UPDATE project SET description='$Description',homeurl='$HomeURL',cvsurl='$CVSURL',
-                                  bugtrackerurl='$BugURL',documentationurl='$DocURL',public=$Public,imageid='$imgid',
+                                  bugtrackerurl='$BugURL',documentationurl='$DocURL',public=$Public,imageid=$imgid,
                                   coveragethreshold=$CoverageThreshold,nightlytime='$NightlyTime',
                                   googletracker='$GoogleTracker',emailbrokensubmission=$EmailBrokenSubmission,
                                   emailbuildmissing=$EmailBuildMissing,emaillowcoverage=$EmailLowCoverage,
