@@ -249,7 +249,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $previousdir = "";
   foreach($locallymodified as $file)
     {
-    $directory = $file['$directory'];
+    $directory = $file['directory'];
     if($previousdir=="" || $directory != $previousdir)
       {
       $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\",\"\")\n";
@@ -263,13 +263,13 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $previousdir = "";
   foreach($conflictingfiles as $file)
     {
-    $directory = $file['$directory'];
+    $directory = $file['directory'];
     if($previousdir=="" || $directory != $previousdir)
       {
       $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
       }
-    $xml .= " dbAdd ( false, \"".$file['$filename']." Revision: ".$file['$revision']."\",\"".$file['$diff_url']."\",2,\"\",\"1\",\"".$file['$author']."\",\"".$file['$email']."\",\"".$file['$log']."\",\"".$file['$bugurl']."\")\n";
+    $xml .= " dbAdd ( false, \"".$file['filename']." Revision: ".$file['revision']."\",\"".$file['diff_url']."\",2,\"\",\"1\",\"".$file['author']."\",\"".$file['email']."\",\"".$file['log']."\",\"".$file['bugurl']."\")\n";
     }
 
   $xml .= "</javascript>";

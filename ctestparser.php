@@ -927,7 +927,9 @@ function parse_update($parser,$projectid)
     
   foreach($xmlarray as $tagarray)
     {
-    if(!$inupdate && (($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING"))&& ($tagarray["level"] == 3))
+    if(!$inupdate && (($tagarray["tag"] == "UPDATED") 
+                     || ($tagarray["tag"] == "CONFLICTING") 
+                     || ($tagarray["tag"] == "MODIFIED"))&& ($tagarray["level"] == 3))
       {
       $index++;
       $inupdate = 1;
@@ -970,7 +972,10 @@ function parse_update($parser,$projectid)
         }
       $files_array[$index]["priorrevision"]=$value;
       }  
-    else if((($tagarray["tag"] == "UPDATED") || ($tagarray["tag"] == "CONFLICTING")) && ($tagarray["type"] == "close"))
+    else if((($tagarray["tag"] == "UPDATED") 
+            || ($tagarray["tag"] == "CONFLICTING")
+            || ($tagarray["tag"] == "MODIFIED"))
+            && ($tagarray["type"] == "close"))
       {
       $inupdate = 0;
       }
