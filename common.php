@@ -208,10 +208,7 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
       {
       if(!$onlyreturn)
         {
-        echo "<script language=\"javascript\">";
-        echo "window.location='user.php';";
-        echo "</script>";
-        echo "You cannot access this page";
+        LoginForm(0);
         exit(0);
         }
       else
