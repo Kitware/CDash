@@ -186,7 +186,7 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
       {
       if(!$onlyreturn)
         {
-        echo "You cannot access this page";
+        LoginForm(0);
         exit(0);
         }
       else
