@@ -37,7 +37,7 @@ pdo_select_db("$CDASH_DB_NAME",$db);
   
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
-$date = date("Y-m-d", strtotime($build_array["starttime"]));
+$date = date("Ymd", strtotime($build_array["starttime"]));
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
