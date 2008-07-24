@@ -154,7 +154,31 @@ function sendemail($parser,$projectid)
       return;
       }
     }
-  
+ 
+  // Current URI of the dashboard
+  $currentPort="";
+  $httpprefix="http://";
+  if($_SERVER['SERVER_PORT']!=80)
+    {
+    $currentPort=":".$_SERVER['SERVER_PORT'];
+    if($_SERVER['SERVER_PORT']!=80 )
+      {
+      $httpprefix = "https://";
+      }
+    }
+  if($CDASH_USE_HTTPS === true)
+    {
+    $httpprefix = "https://";
+    }
+  $serverName = $CDASH_SERVER_NAME;
+  if(strlen($serverName) == 0)
+    {
+    $serverName = $_SERVER['SERVER_NAME'];
+    }
+    
+  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+    
   // Send a summary of the errors/warnings and test failings
   $project_emailmaxitems = $project_array["emailmaxitems"];
   $project_emailmaxchars = $project_array["emailmaxchars"];
@@ -167,7 +191,7 @@ function sendemail($parser,$projectid)
       {
       if(strlen($error_array["sourcefile"])>0)
         {
-        $info = "*Error* in file ".$error_array["sourcefile"]." line ".sourceline."\n";
+        $info = "*Error* in file <a href=\"".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid."\">".$error_array["sourcefile"]."</a> line ".sourceline."\n";
         $info .= $error_array["text"]."\n";
         }
      else
@@ -187,7 +211,7 @@ function sendemail($parser,$projectid)
       {
       if(strlen($error_array["sourcefile"])>0)
         {
-        $info = "*Warning* in file ".$error_array["sourcefile"]." line ".sourceline."\n";
+        $info = "*Warning* in file <a href=\"".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid."\">".$error_array["sourcefile"]."</a> line ".sourceline."\n";
         $info .= $error_array["text"]."\n";
         }
      else
@@ -207,10 +231,10 @@ function sendemail($parser,$projectid)
       {
       $sql = "OR timestatus>".qnum($project_testtimemaxstatus);
       }
-    $test_query = pdo_query("SELECT test.name FROM build2test,test WHERE test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $project_emailmaxitems");
+    $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid)." AND test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $project_emailmaxitems");
     while($test_array = pdo_fetch_array($test_query))
       {
-      $info = "*Test failing*:".$test_array["name"]."\n";
+      $info = "*Test failing*: <a href=\"".$currentURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid."\">".$test_array["name"]."</a>\n";
       $test_information .= substr($info,0,$project_emailmaxchars);
       }
     }
@@ -326,28 +350,6 @@ function sendemail($parser,$projectid)
     $messagePlainText .= "or you are listed in the default contact list.\n\n";  
     $messagePlainText .= "Details on the submission can be found at ";
 
-    $currentPort="";
-    $httpprefix="http://";
-    if($_SERVER['SERVER_PORT']!=80)
-      {
-      $currentPort=":".$_SERVER['SERVER_PORT'];
-      if($_SERVER['SERVER_PORT']!=80 )
-        {
-        $httpprefix = "https://";
-        }
-      }
-    if($CDASH_USE_HTTPS === true)
-      {
-      $httpprefix = "https://";
-      }
-    $serverName = $CDASH_SERVER_NAME;
-    if(strlen($serverName) == 0)
-      {
-      $serverName = $_SERVER['SERVER_NAME'];
-      }
-    
-    $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
-    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $messagePlainText .= $currentURI;
     $messagePlainText .= "/buildSummary.php?buildid=".$buildid;
     $messagePlainText .= "\n\n";
@@ -373,7 +375,7 @@ function sendemail($parser,$projectid)
       }
      
     // Send the extra information
-    $messagePlainText .= $error_information;
+    $messagePlainText .= "\n".$error_information;
     $messagePlainText .= $warning_information;
     $messagePlainText .= $test_information; 
      
