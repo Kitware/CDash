@@ -282,7 +282,11 @@ edit the project</a><br/>
       <xsl:if test="string-length(cdash/project/testtimestd)=0">4.0</xsl:if>
       <xsl:value-of select="cdash/project/testtimestd"/>
     </xsl:attribute>
-    </input></td>
+    </input>
+     <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Design#Test_Timing" target="blank">
+    <img src="images/help.gif" border="0"/></a>
+    </td>
   </tr>
   
   <tr>
@@ -294,7 +298,27 @@ edit the project</a><br/>
       <xsl:if test="string-length(cdash/project/testtimestdthreshold)=0">1.0</xsl:if>
       <xsl:value-of select="cdash/project/testtimestdthreshold"/>
     </xsl:attribute>
-    </input></td>
+    </input>
+    <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Design#Test_Timing" target="blank">
+    <img src="images/help.gif" border="0"/></a>
+    </td>
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td><div align="right"><strong>Test time # max failures before flag:</strong></div></td>
+    <td>
+    <input name="testTimeMaxStatus" type="text" id="testTimeMaxStatus" size="4">
+    <xsl:attribute name="value">
+      <xsl:if test="string-length(cdash/project/testtimemaxstatus)=0">3</xsl:if>
+      <xsl:value-of select="cdash/project/testtimemaxstatus"/>
+    </xsl:attribute>
+    </input>
+     <xsl:text disable-output-escaping="yes"> </xsl:text>
+    <a href="http://public.kitware.com/Wiki/CDash:Design#Test_Timing" target="blank">
+    <img src="images/help.gif" border="0"/></a>
+    </td>
   </tr>
   
   <tr>
@@ -337,6 +361,32 @@ edit the project</a><br/>
     </input>
     </td>
   </tr> 
+  
+   <tr>
+    <td></td>
+    <td><div align="right"><strong>Maximum number of items in email:</strong></div></td>
+    <td>
+    <input name="emailMaxItems" type="text" id="emailMaxItems" size="4">
+    <xsl:attribute name="value">
+      <xsl:if test="string-length(cdash/project/emailmaxitems)=0">5</xsl:if>
+      <xsl:value-of select="cdash/project/emailmaxitems"/>
+    </xsl:attribute>
+    </input>
+    </td>
+  </tr>
+  
+   <tr>
+    <td></td>
+    <td><div align="right"><strong>Maximum number of characters per item in email:</strong></div></td>
+    <td>
+    <input name="emailMaxChars" type="text" id="emailMaxChars" size="4">
+    <xsl:attribute name="value">
+      <xsl:if test="string-length(cdash/project/emailmaxchars)=0">255</xsl:if>
+      <xsl:value-of select="cdash/project/emailmaxchars"/>
+    </xsl:attribute>
+    </input>
+    </td>
+  </tr>
  
  <!-- downloading the CTestConfig.cmake -->
  <xsl:if test="cdash/edit=1">

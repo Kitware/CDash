@@ -38,7 +38,9 @@ function sendemail($parser,$projectid)
     }
 
   // Check if we should send the email
-  $project = pdo_query("SELECT name,emailbrokensubmission FROM project WHERE id='$projectid'");
+  $project = pdo_query("SELECT name,emailbrokensubmission,emailmaxitems,
+                               emailmaxchars,emailtesttimingchanged,
+                               testtimemaxstatus FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
   if($project_array["emailbrokensubmission"] == 0)
     {
@@ -47,18 +49,18 @@ function sendemail($parser,$projectid)
 
   $site = $parser->index["SITE"];
   if($testing != "")
-  {
+    {
     $i = $site[0];
     $name = $parser->vals[$i]["attributes"]["BUILDNAME"];
     $stamp = $parser->vals[$i]["attributes"]["BUILDSTAMP"];
-  }
+    }
   else
-  {
+    {
     $i = $parser->index["BUILDNAME"][0];
     $name = $parser->vals[$i]["value"];
     $i = $parser->index["BUILDSTAMP"][0];
     $stamp =  $parser->vals[$i]["value"];
-  }
+    }
 
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid);
@@ -79,6 +81,15 @@ function sendemail($parser,$projectid)
   $nbuildwarnings = $buildwarning_array[0];
 
   // Find if the build has any test failings
+  if($project_emailtesttimingchanged)
+    {
+    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>".qnum($project_testtimemaxstatus).")";
+    }
+  else
+    {
+    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'";
+    }  
+    
   $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
   $nfailingtests = $nfail_array[0];
 
@@ -95,7 +106,9 @@ function sendemail($parser,$projectid)
   $siteid = $build_array["siteid"];
   $buildname = $build_array["name"];
   $starttime = $build_array["starttime"];
-  
+  $project_emailtesttimingchanged = $project_array["emailtesttimingchanged"];
+  $project_testtimemaxstatus =  $project_array["testtimemaxstatus"];
+    
   $previousbuild = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' 
                                AND name='$buildname' AND type='$buildtype' 
                                AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
@@ -115,7 +128,15 @@ function sendemail($parser,$projectid)
     $npreviousbuildwarnings = $buildwarning_array[0];
   
     // Find if the build has any test failings
-    $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
+    if($project_emailtesttimingchanged)
+      {
+      $sql = "SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND (status='failed' OR timestatus>".qnum($project_testtimemaxstatus).")";
+      }
+    else
+      {
+      $sql = "SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'";
+      }
+    $nfail_array = pdo_fetch_array(pdo_query($sql));
     $npreviousfailingtests = $nfail_array[0];
     
     //add_log("previousbuildid=".$previousbuildid,"sendemail");
@@ -130,10 +151,70 @@ function sendemail($parser,$projectid)
        && $npreviousbuilderrors==$nbuilderrors
       ) 
       {
-//      return;
+      return;
       }
     }
   
+  // Send a summary of the errors/warnings and test failings
+  $project_emailmaxitems = $project_array["emailmaxitems"];
+  $project_emailmaxchars = $project_array["emailmaxchars"];
+  
+  $error_information = "";
+  if($npreviousbuilderrors<$nbuilderrors)
+    {
+    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM build2test WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
+    while($error_array = pdo_fetch_array($error_query))
+      {
+      if(strlen($error_array["sourcefile"])>0)
+        {
+        $info = "*Error* in file ".$error_array["sourcefile"]." line ".sourceline."\n";
+        $info .= $error_array["text"]."\n";
+        }
+     else
+        {
+        $info = "*Error*\n";
+        $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";
+        }
+      $error_information .= substr($info,0,$project_emailmaxchars);
+      }
+    }
+  
+  $warning_information = "";
+  if($npreviousbuildwarnings<$nbuildwarnings)
+    {
+    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM build2test WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
+    while($error_array = pdo_fetch_array($error_query))
+      {
+      if(strlen($error_array["sourcefile"])>0)
+        {
+        $info = "*Warning* in file ".$error_array["sourcefile"]." line ".sourceline."\n";
+        $info .= $error_array["text"]."\n";
+        }
+     else
+        {
+        $info = "*Warning*\n";
+        $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";;
+        }
+      $warning_information .= substr($info,0,$project_emailmaxchars);
+      }
+    }
+      
+  $test_information = "";
+  if($npreviousfailingtests<$nfailingtests)
+    {
+    $sql = "";
+    if($project_emailtesttimingchanged)
+      {
+      $sql = "OR timestatus>".qnum($project_testtimemaxstatus);
+      }
+    $test_query = pdo_query("SELECT test.name FROM build2test,test WHERE test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $project_emailmaxitems");
+    while($test_array = pdo_fetch_array($test_query))
+      {
+      $info = "*Test failing*:".$test_array["name"]."\n";
+      $test_information .= substr($info,0,$project_emailmaxchars);
+      }
+    }
+
   // We have a test failing so we send emails
   $email = "";
   
@@ -290,6 +371,12 @@ function sendemail($parser,$projectid)
       {
       $messagePlainText .= "Tests failing: ".$nfailingtests."\n";
       }
+     
+    // Send the extra information
+    $messagePlainText .= $error_information;
+    $messagePlainText .= $warning_information;
+    $messagePlainText .= $test_information; 
+     
      
     $messagePlainText .= "\n-CDash on ".$serverName."\n";
     

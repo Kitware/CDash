@@ -175,6 +175,15 @@ if(isset($_GET['upgrade-1-2']))
   pdo_query("UPDATE buildgroup SET endtime='1980-01-01 00:00:00' WHERE endtime='0000-00-00 00:00:00'");
   pdo_query("UPDATE buildgroupposition SET starttime='1980-01-01 00:00:00' WHERE starttime='0000-00-00 00:00:00'");
   pdo_query("UPDATE buildgroupposition SET endtime='1980-01-01 00:00:00' WHERE endtime='0000-00-00 00:00:00'");
+  
+  //  Add fields in the project table 
+  $timestatus = pdo_query("SELECT testtimemaxstatus FROM project LIMIT 1");
+  if(!$timestatus)
+    {
+    pdo_query("ALTER TABLE project ADD testtimemaxstatus tinyint(4) default '3'");
+    pdo_query("ALTER TABLE project ADD emailmaxitems tinyint(4) default '5'");
+    pdo_query("ALTER TABLE project ADD emailmaxchars int(11) default '255'");
+    }
       
   // Set the database version
   setVersion();

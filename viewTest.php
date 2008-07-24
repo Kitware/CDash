@@ -45,12 +45,13 @@ if(!isset($date) || strlen($date)==0)
   $date = date("Ymd", strtotime($build_array["starttime"]));
   }
     
-$project = pdo_query("SELECT name,showtesttime FROM project WHERE id='$projectid'");
+$project = pdo_query("SELECT name,showtesttime,testtimemaxstatus FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
   $project_array = pdo_fetch_array($project);
   $projectname = $project_array["name"];  
   $projectshowtesttime = $project_array["showtesttime"];  
+  $testtimemaxstatus = $project_array["testtimemaxstatus"];
   }
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
@@ -60,12 +61,8 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
-#$siteid = $build_array["siteid"];
-#$site_array =
-#  pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$siteid'"));
 $siteid = $build_array["siteid"];
-$site_array =
-  pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
+$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $xml .= "<build>\n";
 $xml .= add_XML_value("site",$site_array["name"]) . "\n";
 $xml .= add_XML_value("buildname",$build_array["name"]) . "\n";
@@ -93,7 +90,7 @@ else if(isset($_GET["onlytimestatus"]))
   {
   $xml .= "<onlytimestatus>1</onlytimestatus>";
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-            WHERE bt.buildid='$buildid' AND bt.timestatus!=0 AND t.id=bt.testid ORDER BY t.name";
+            WHERE bt.buildid='$buildid' AND bt.timestatus>='$testtimemaxstatus' AND t.id=bt.testid ORDER BY t.name";
   }
 else
   {
@@ -126,21 +123,17 @@ while($row = pdo_fetch_array($result))
   $detailsLink = "testDetails.php?test=$testid&build=$buildid";
   $xml .= add_XML_value("detailsLink", $detailsLink) . "\n";
   
-  $timestatus=0;
   if($projectshowtesttime)
     {
-    switch($row["timestatus"])
+    if($row["timestatus"] < $testtimemaxstatus)
       {
-      case 0:
-        $xml .= add_XML_value("timestatus", "Passed") . "\n";
-        $xml .= add_XML_value("timestatusclass", "normal") . "\n";
-        $timestatus=0;
-        break; 
-      case 1:
-        $xml .= add_XML_value("timestatus", "Failed") . "\n";
-        $xml .= add_XML_value("timestatusclass", "warning") . "\n";
-        $timestatus=1;
-        break;
+      $xml .= add_XML_value("timestatus", "Passed") . "\n";
+      $xml .= add_XML_value("timestatusclass", "normal") . "\n";
+      }
+    else
+      {    
+      $xml .= add_XML_value("timestatus", "Failed") . "\n";
+      $xml .= add_XML_value("timestatusclass", "warning") . "\n";
       }
     } // end projectshowtesttime
     
@@ -163,11 +156,10 @@ while($row = pdo_fetch_array($result))
       break;
     }
   
-  if(  $row["timestatus"] != 0)
+  if($row["timestatus"] >= $testtimemaxstatus)
     {
     $numTimeFailed++;   
     }
-    
     
   $xml .= "</test>\n";
   }

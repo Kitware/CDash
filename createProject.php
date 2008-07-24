@@ -135,8 +135,11 @@ if($Submit)
     @$CVSRepositories = $_POST["cvsRepository"];
     @$TestTimeStd = qnum($_POST["testTimeStd"]);
     @$TestTimeStdThreshold = qnum($_POST["testTimeStdThreshold"]);
+    @$TestTimeMaxStatus = qnum($_POST["testTimeMaxStatus"]);
     @$ShowTestTime = qnum($_POST["showTestTime"]);
-          
+     @$EmailMaxItems = qnum($_POST["emailMaxItems"]);
+    @$EmailMaxChars = qnum($_POST["emailMaxChars"]);
+         
     $handle = fopen($_FILES['logo']['tmp_name'],"r");
     $contents = 0;
     if($handle)
@@ -193,10 +196,10 @@ if($Submit)
     // isn't trying anything fruity
     $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                 googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
-                                testtimestd,testtimestdthreshold,showtesttime)
+                                testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime)
             VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$DocURL',$Public,$imgid,$CoverageThreshold,'$NightlyTime',
                     '$GoogleTracker',$EmailBrokenSubmission,$EmailBuildMissing,$EmailLowCoverage,$EmailTestTimingChanged,'$CVSViewerType',
-                    $TestTimeStd,$TestTimeStdThreshold,$ShowTestTime)";                     
+                    $TestTimeStd,$TestTimeStdThreshold,$TestTimeMaxStatus,$EmailMaxItems,$EmailMaxChars,$ShowTestTime)";                     
                     
     if(pdo_query("$sql"))
       {
@@ -312,7 +315,11 @@ if($Update || $AddRepository)
   @$CVSViewerType = $_POST["cvsviewertype"]; 
   @$TestTimeStd = qnum($_POST["testTimeStd"]);
   @$TestTimeStdThreshold = qnum($_POST["testTimeStdThreshold"]);
+  @$TestTimeMaxStatus = qnum($_POST["testTimeMaxStatus"]);  
+  @$TestTimeStdThreshold = qnum($_POST["testTimeStdThreshold"]);
   @$ShowTestTime = qnum($_POST["showTestTime"]);
+  @$EmailMaxItems = qnum($_POST["emailMaxItems"]);
+  @$EmailMaxChars = qnum($_POST["emailMaxChars"]);
   @$CVSRepositories = $_POST["cvsRepository"];
 
   $imgid = qnum($project_array["imageid"]);
@@ -362,6 +369,9 @@ if($Update || $AddRepository)
                                   cvsviewertype='$CVSViewerType',
                                   testtimestd=$TestTimeStd,
                                   testtimestdthreshold=$TestTimeStdThreshold,
+                                  testtimemaxstatus=$TestTimeMaxStatus,
+                                  emailmaxitems=$EmailMaxItems,
+                                  emailmaxchars=$EmailMaxChars,
                                   showtesttime=$ShowTestTime
                                   WHERE id=$projectid");
   echo pdo_error();
@@ -459,7 +469,10 @@ if($projectid>0)
   $xml .= add_XML_value("cvsviewertype",$project_array['cvsviewertype']);
   $xml .= add_XML_value("testtimestd",$project_array['testtimestd']);
   $xml .= add_XML_value("testtimestdthreshold",$project_array['testtimestdthreshold']);
+  $xml .= add_XML_value("testtimemaxstatus",$project_array['testtimemaxstatus']);  
   $xml .= add_XML_value("showtesttime",$project_array['showtesttime']);
+  $xml .= add_XML_value("emailmaxitems",$project_array['emailmaxitems']);
+  $xml .= add_XML_value("emailmaxchars",$project_array['emailmaxchars']);
   $xml .= "</project>";
   
   $repository = pdo_query("SELECT url from repositories,project2repositories

@@ -57,7 +57,7 @@ if(pdo_num_rows($project)>0)
   $projectname = $project_array["name"];  
   }
 
-$projectRow = pdo_fetch_array(pdo_query("SELECT name FROM project WHERE id = '$projectid'"));
+$projectRow = pdo_fetch_array(pdo_query("SELECT name,testtimemaxstatus FROM project WHERE id = '$projectid'"));
 $projectname = $projectRow["name"];
 
 $siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
@@ -112,17 +112,17 @@ switch($testRow["status"])
 
 $xml .= add_XML_value("timemean",$testRow["timemean"]);
 $xml .= add_XML_value("timestd",$testRow["timestd"]);
-  
-switch($testRow["timestatus"])
+ 
+$testtimemaxstatus = $projectRow["testtimemaxstatus"];
+if($testRow["timestatus"]) < $testtimemaxstatus)
   {
-  case "0":
-    $xml .= add_XML_value("timestatus", "Passed");
-    $xml .= add_XML_value("timeStatusColor", "#00aa00");
-    break;
-  case "1":
-    $xml .= add_XML_value("timestatus", "Failed");
-    $xml .= add_XML_value("timeStatusColor", "#aa0000");
-    break;
+  $xml .= add_XML_value("timestatus", "Passed");
+  $xml .= add_XML_value("timeStatusColor", "#00aa00");
+  }
+else
+  {
+  $xml .= add_XML_value("timestatus", "Failed");
+  $xml .= add_XML_value("timeStatusColor", "#aa0000");
   }  
 
 //get any images associated with this test
@@ -151,12 +151,7 @@ while($row = pdo_fetch_array($result))
   $xml .= "</measurement>";
   }
 $xml .= "</measurements>";
-
-
-
 $xml .= "</test>";
-
-
 $xml .= "</cdash>";
 
 // Now doing the xslt transition

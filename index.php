@@ -37,7 +37,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!pdo_query("SELECT major FROM version LIMIT 1"))
+  if(!pdo_query("SELECT testtimemaxstatus FROM project LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration/Backward Compatibility Tools panel of CDash.</upgradewarning>";
@@ -564,7 +564,8 @@ function generate_main_dashboard_XML($projectid,$date)
         
       if($project_array["showtesttime"] == 1)
         {
-        $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND timestatus='1'";
+        $testtimemaxstatus = $project_array["testtimemaxstatus"];
+        $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND timestatus>='$testtimemaxstatus'";
         $ntimestatus_array = pdo_fetch_array(pdo_query($sql));
         $ntimestatus = $ntimestatus_array[0];
         $xml .= add_XML_value("timestatus",$ntimestatus);

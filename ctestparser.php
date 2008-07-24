@@ -636,7 +636,7 @@ function compute_test_timing($buildid)
                          
       if($previoustestid>0)
         {
-        $previoustest = pdo_query("SELECT timemean,timestd FROM build2test
+        $previoustest = pdo_query("SELECT timemean,timestd,timestatus FROM build2test
                                      WHERE buildid='$previousbuildid' 
                                      AND build2test.testid='$previoustestid' 
                                      ");
@@ -644,6 +644,7 @@ function compute_test_timing($buildid)
         $previoustest_array = pdo_fetch_array($previoustest);
         $previoustimemean = $previoustest_array["timemean"];
         $previoustimestd = $previoustest_array["timestd"];
+        $previoustimestatus = $previoustest_array["timestatus"];
         
         if($teststatus == "passed")
           {  
@@ -659,11 +660,11 @@ function compute_test_timing($buildid)
           
           if($testtime > $previoustimemean+$projecttimestd*$previoustimestd) // only do positive std
             {
-            $timestatus = 1; // flag
+            $timestatus = $previoustimestatus+1; // flag
             }
           else
             {
-            $timestatus = 0;
+            $timestatus = 0; // reset the time status to 0
             }
           }
         else // the test failed so we just replicate the previous test time
@@ -681,7 +682,7 @@ function compute_test_timing($buildid)
         }
           
       pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
-                   WHERE buildid='$buildid' AND testid='$testid'");
+                 WHERE buildid='$buildid' AND testid='$testid'");
        
       }  // end loop through the test  
     }
