@@ -313,6 +313,9 @@ CREATE TABLE `project` (
   `testtimestd` float(3,1) default '4.0',
   `testtimestdthreshold` float(3,1) default '1.0',
   `showtesttime` tinyint(4) default '0',
+  `testtimemaxstatus` tinyint(4) default '3',
+  `emailmaxitems` tinyint(4) default '5'
+  `emailmaxchars` int(11) default '255'
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -392,7 +395,7 @@ CREATE TABLE `test` (
   `path` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
   `details` text NOT NULL,
-  `output` text NOT NULL,
+  `output` MEDIUMTEXT NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `crc32` (`crc32`),
   KEY `name` (`name`)

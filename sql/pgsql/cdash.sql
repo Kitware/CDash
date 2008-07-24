@@ -265,6 +265,9 @@ CREATE TABLE "project" (
   "testtimestd" numeric(3,1) DEFAULT '4.0',
   "testtimestdthreshold" numeric(3,1) DEFAULT '1.0',
   "showtesttime" smallint DEFAULT '0',
+  "testtimemaxstatustinyint" smallint DEFAULT '3',
+  "emailmaxitems" smallint DEFAULT '5',
+  "emailmaxchars" smallint DEFAULT '255',
   PRIMARY KEY ("id")
 );
 
