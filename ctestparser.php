@@ -951,9 +951,13 @@ function parse_update($parser,$projectid)
       {
       $files_array[$index]["email"]=$tagarray["value"];
       } 
-    else if(($tagarray["tag"] == "LOG") && ($tagarray["level"] == 4))
+    else if(($tagarray["tag"] == "LOG")  && ($tagarray["level"] == 4))
       {
-      $files_array[$index]["log"]=$tagarray["value"];
+      $files_array[$index]["log"] = "";
+      if(isset($tagarray["value"]))
+        {
+        $files_array[$index]["log"]=$tagarray["value"];
+        }
       }    
     else if(($tagarray["tag"] == "REVISION") && ($tagarray["level"] == 4))
       {
