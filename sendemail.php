@@ -186,17 +186,17 @@ function sendemail($parser,$projectid)
   $error_information = "";
   if($npreviousbuilderrors<$nbuilderrors)
     {
-    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM build2test WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
+    $error_information .= "*Error*\n";
+    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
     while($error_array = pdo_fetch_array($error_query))
       {
       if(strlen($error_array["sourcefile"])>0)
         {
-        $info = "*Error* in file <a href=\"".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid."\">".$error_array["sourcefile"]."</a> line ".sourceline."\n";
+        $info = $error_array["sourcefile"]." line ".sourceline." (".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
         $info .= $error_array["text"]."\n";
         }
-     else
+      else
         {
-        $info = "*Error*\n";
         $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";
         }
       $error_information .= substr($info,0,$project_emailmaxchars);
@@ -206,18 +206,18 @@ function sendemail($parser,$projectid)
   $warning_information = "";
   if($npreviousbuildwarnings<$nbuildwarnings)
     {
-    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM build2test WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
+    $warning_information .= "*Warnings*\n";
+    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
     while($error_array = pdo_fetch_array($error_query))
       {
       if(strlen($error_array["sourcefile"])>0)
         {
-        $info = "*Warning* in file <a href=\"".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid."\">".$error_array["sourcefile"]."</a> line ".sourceline."\n";
+        $info = $error_array["sourcefile"]." line ".sourceline." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
         $info .= $error_array["text"]."\n";
         }
-     else
+      else
         {
-        $info = "*Warning*\n";
-        $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";;
+        $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";
         }
       $warning_information .= substr($info,0,$project_emailmaxchars);
       }
@@ -226,6 +226,7 @@ function sendemail($parser,$projectid)
   $test_information = "";
   if($npreviousfailingtests<$nfailingtests)
     {
+    $test_information .= "*Tests failing*\n";
     $sql = "";
     if($project_emailtesttimingchanged)
       {
@@ -234,7 +235,7 @@ function sendemail($parser,$projectid)
     $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid)." AND test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $project_emailmaxitems");
     while($test_array = pdo_fetch_array($test_query))
       {
-      $info = "*Test failing*: <a href=\"".$currentURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid."\">".$test_array["name"]."</a>\n";
+      $info = $test_array["name"]."(".$currentURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
       $test_information .= substr($info,0,$project_emailmaxchars);
       }
     }
