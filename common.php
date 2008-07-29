@@ -70,6 +70,32 @@ if (PHP_VERSION >= 5) {
  *  doesn't exist */
 function generate_XSLT($xml,$pageName)
 {
+  // For common xsl pages not referenced directly
+  // i.e. header, headerback, etc...
+  // look if they are in the local directory, and set
+  // an XML value accordingly
+  include("config.php");
+  if($CDASH_USE_LOCAL_DIRECTORY)
+    {
+    $pos = strpos($xml,"</cdash>"); // this should be the last
+    if($pos !== FALSE)
+      {
+      $xml = substr($xml,0,$pos);
+      $xml .= "<uselocaldirectory>1</uselocaldirectory>";
+      
+      // look at the local directory if we have the same php file
+      // and add the xml if needed
+      $localphpfile = "local/".$pageName.".php";
+      if(file_exists($localphpfile))
+        {
+        include($localphpfile);
+        $xml .= getLocalXML();
+        }
+        
+      $xml .= "</cdash>"; // finish the xml
+      }
+    }
+
   $xh = xslt_create();
   
   if(PHP_VERSION < 5)
@@ -1923,6 +1949,11 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
   // The project's viewcvs URL is expected to contain "?root=projectname"
   // Split it at the "?"
   //
+  if(strlen($projecturl)==0)
+    {
+    return "";
+    }
+    
   $cmps = split("\?", $projecturl);
 
   // If $cmps[1] starts with "root=" and the $directory value starts

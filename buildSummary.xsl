@@ -3,6 +3,9 @@
      
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
+  
+   <xsl:include href="local/header.xsl"/>
+   <xsl:include href="local/footer.xsl"/>
     
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="iso-8859-1"/>
@@ -22,7 +25,15 @@
        </head>
        <body bgcolor="#ffffff">
    
-       <xsl:call-template name="header"/>
+<xsl:choose>         
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="header_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="header"/>
+</xsl:otherwise>
+</xsl:choose>
+
 <br/>
 
 
@@ -422,7 +433,14 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 
 <!-- FOOTER -->
 <br/>
-<xsl:call-template name="footer"/>
+<xsl:choose>         
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="footer_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="footer"/>
+</xsl:otherwise>
+</xsl:choose>
         </body>
       </html>
     </xsl:template>

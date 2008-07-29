@@ -1,7 +1,12 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
+   
+   <xsl:include href="footer.xsl"/>
+   <xsl:include href="headerback.xsl"/> 
+   
+   <!-- Local includes -->
+   <xsl:include href="local/footer.xsl"/>
+   <xsl:include href="local/headerback.xsl"/> 
 
-    <xsl:include href="footer.xsl"/>
-      
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="iso-8859-1"/>
    <xsl:template match="/">
@@ -13,52 +18,17 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
        </head>
-    <body>
-            
-     <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
-  <tr>
-    <td>
-    <table width="100%" align="center" cellpadding="0" cellspacing="0" >
-  <tr>
-    <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
-  </tr>
-  <tr>
-    <td width="100%" align="left" class="topbg">
-  
-      <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
-     <tr>
-      <td width="195" height="121" class="topbgleft">
-        <xsl:text>&#160;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
-        </td>
-        <td width="425" valign="top" class="insd">
-        <div class="insdd">
-            <span class="inn1">CDash</span><br />
-            <span class="inn2">My Profile</span>
-            </div>
-        </td>
-        <td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
-      </tr>
-    </table>
-    </td>
-        </tr>
-  <tr>
-    <td align="left" class="topbg2"><table width="100%" height="28" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
-<li id="Dartboard">
-<a href="index.php">HOME</a>
-</li>
-<li><a href="user.php">BACK</a></li>
-</ul>
-</td>
-    <td height="28" class="insd3"><xsl:text>&#160;</xsl:text></td>
-  </tr>
-</table></td>
-  </tr>
-</table></td>
-  </tr>
-</table>
+        <body bgcolor="#ffffff">
  
+<xsl:choose>         
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="headerback_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="headerback"/>
+</xsl:otherwise>
+</xsl:choose>
+
 <br/>
 
 <div style="color: red;"><xsl:value-of select="cdash/error" /></div>
@@ -126,7 +96,14 @@
 
 <!-- FOOTER -->
 <br/>
-<xsl:call-template name="footer"/>
+<xsl:choose>         
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="footer_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="footer"/>
+</xsl:otherwise>
+</xsl:choose>
         </body>
       </html>
     </xsl:template>

@@ -28,7 +28,11 @@ if ($session_OK)
   $xml .= "<title>CDash - My Profile</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
-
+  $xml .= "<backurl>user.php</backurl>";
+  $xml .= "<title>CDash - My Profile</title>";
+  $xml .= "<menutitle>CDash</menutitle>";
+  $xml .= "<menusubtitle>My Profile</menusubtitle>";
+  
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
 

@@ -42,6 +42,10 @@ $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : Sites map for ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
+$xml .= "<backurl>index.php?project=$projectname&#38;date=$date</backurl>";
+$xml .= "<menutitle>CDash</menutitle>";
+$xml .= "<menusubtitle>Build location</menusubtitle>";
+
 $xml .= "<dashboard>";
 $xml .= "<title>CDash</title>";
 $xml .= "<date>".$date."</date>";

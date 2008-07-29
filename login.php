@@ -187,4 +187,9 @@ else:                        // authentication was successful
   $session_OK = 1;
 endif;
 
+// If we should use the local/prelogin.php
+if(file_exists("local/prelogin.php"))
+  {
+  include("local/prelogin.php");
+  }
 ?>

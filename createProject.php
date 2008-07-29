@@ -62,7 +62,9 @@ if ($session_OK)
       }  
     }
     
-  if($user_array["admin"]!=1 && $role<=1)
+  if(!(isset($_SESSION['cdash']['user_can_create_project']) && 
+     $_SESSION['cdash']['user_can_create_project'] == 1)
+     && ($user_array["admin"]!=1 && $role<=1))
     {
     echo "You don't have the permissions to access this page";
     return;

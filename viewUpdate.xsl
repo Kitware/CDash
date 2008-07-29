@@ -5,6 +5,10 @@
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
     
+   <!-- Include local common files -->
+   <xsl:include href="local/header.xsl"/>
+   <xsl:include href="local/footer.xsl"/>
+  
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="iso-8859-1"/>
     <xsl:template match="/">
@@ -19,7 +23,14 @@
        </head>
        <body bgcolor="#ffffff">
    
-       <xsl:call-template name="header"/>
+<xsl:choose>         
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="header_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="header"/>
+</xsl:otherwise>
+</xsl:choose>
 <br/>
 
 <h3>
@@ -60,9 +71,19 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 <br/>
 [<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Expand all';return true;" onClick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Collapse all';return true;" onClick="contract()">Collapse all</a>]
 <br/>
+
 <!-- FOOTER -->
 <br/>
-<xsl:call-template name="footer"/>
+
+<xsl:choose>         
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="footer_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="footer"/>
+</xsl:otherwise>
+</xsl:choose>
+
         </body>
       </html>
     </xsl:template>

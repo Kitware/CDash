@@ -1,8 +1,12 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     
-    <xsl:include href="footer.xsl"/>
-    <xsl:include href="headerback.xsl"/> 
+   <xsl:include href="footer.xsl"/>
+   <xsl:include href="headerback.xsl"/> 
+   
+   <!-- Local includes -->
+   <xsl:include href="local/footer.xsl"/>
+   <xsl:include href="local/headerback.xsl"/> 
 
  <!-- HEADER -->   
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
@@ -17,7 +21,16 @@
          </link>         
        </head>
        <body bgcolor="#ffffff">
-     <xsl:call-template name="headerback"/>
+
+<xsl:choose>         
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="headerback_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="headerback"/>
+</xsl:otherwise>
+</xsl:choose>
+     
 <br/>
 
 <!-- Main -->         
@@ -101,7 +114,16 @@
 
 <!-- FOOTER -->
 <br/>
-<xsl:call-template name="footer"/>
+
+<xsl:choose>         
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="footer_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="footer"/>
+</xsl:otherwise>
+</xsl:choose>
+
         </body>
       </html>
     </xsl:template>
