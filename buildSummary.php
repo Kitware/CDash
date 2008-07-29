@@ -110,12 +110,30 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   if(pdo_num_rows($buildinformation)>0)
     {
     $buildinformation_array = pdo_fetch_array($buildinformation);
-    $xml .= add_XML_value("osname",$buildinformation_array["osname"]);
-    $xml .= add_XML_value("osplatform",$buildinformation_array["osplatform"]);
-    $xml .= add_XML_value("osrelease",$buildinformation_array["osrelease"]);
-    $xml .= add_XML_value("osversion",$buildinformation_array["osversion"]);
-    $xml .= add_XML_value("compilername",$buildinformation_array["compilername"]);
-    $xml .= add_XML_value("compilerversion",$buildinformation_array["compilerversion"]);
+    if($buildinformation_array["osname"]!="")
+      {
+      $xml .= add_XML_value("osname",$buildinformation_array["osname"]);
+      }
+    if($buildinformation_array["osplatform"]!="")
+      {
+      $xml .= add_XML_value("osplatform",$buildinformation_array["osplatform"]);
+      }
+    if($buildinformation_array["osrelease"]!="")
+      {
+      $xml .= add_XML_value("osrelease",$buildinformation_array["osrelease"]);
+      }
+    if($buildinformation_array["osversion"]!="")
+      {
+      $xml .= add_XML_value("osversion",$buildinformation_array["osversion"]);
+      }
+    if($buildinformation_array["compilername"]!="")
+      {
+      $xml .= add_XML_value("compilername",$buildinformation_array["compilername"]);
+      }
+    if($buildinformation_array["compilerversion"]!="")
+      {
+      $xml .= add_XML_value("compilerversion",$buildinformation_array["compilerversion"]);
+      }
     }
   
   // Find the last submit date
