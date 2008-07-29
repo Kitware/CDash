@@ -106,7 +106,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("type",$build_array["type"]);
   
   // Find the OS and compiler information
-  $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'"));
+  $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
   if(pdo_num_rows($buildinformation)>0)
     {
     $buildinformation_array = pdo_fetch_array($buildinformation);
