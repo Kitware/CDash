@@ -35,7 +35,7 @@
 <br/>
 <h3>Testing summary for 
 <u><xsl:value-of select="cdash/testName"/></u>
- performed on <xsl:value-of select="cdash/dashboard/date"/>
+ performed between <xsl:value-of select="cdash/build/teststarttime"/> and <xsl:value-of select="cdash/build/testendtime"/>
 </h3>
 <table id="testSummaryTable" cellspacing="0" cellpadding="3" class="tabb">
 <thead> 
@@ -51,9 +51,6 @@
 
 <xsl:for-each select="cdash/builds/build">
   <tr>
-    <xsl:attribute name="class">
-      <xsl:value-of select="class"/>
-    </xsl:attribute>
     <td>
       <xsl:value-of select="site"/>
     </td>

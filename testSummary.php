@@ -81,7 +81,11 @@ $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime+3600*24;
 
 $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
-$end_UTCDate = gmdate("YmdHis",$end_timestamp);                                                      
+$end_UTCDate = gmdate("YmdHis",$end_timestamp);   
+
+// Add the date/time                                                   
+$xml .= add_XML_value("teststarttime",date("Y-M-D H:i:s",$beginning_timestamp));
+$xml .= add_XML_value("testendtime",date("Y-M-D H:i:s",$end_timestamp));
 
 $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,build2test.testid AS testid,site.name AS sitename
           FROM build
@@ -95,45 +99,35 @@ $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.ti
 
 $result = pdo_query($query);
 
-$color = FALSE;
 //now that we have the data we need, generate some XML
 while($row = pdo_fetch_array($result))
   {
   $buildid = $row["id"];
   $xml .= "<build>\n";
  
- $xml .= add_XML_value("site", $row["sitename"]) . "\n";
-  $xml .= add_XML_value("buildName", $row["name"]) . "\n";
-  $xml .= add_XML_value("buildStamp", $row["stamp"]) . "\n";
-  $xml .= add_XML_value("time", $row["time"]) . "\n";
+  $xml .= add_XML_value("site", $row["sitename"]);
+  $xml .= add_XML_value("buildName", $row["name"]);
+  $xml .= add_XML_value("buildStamp", $row["stamp"]);
+  $xml .= add_XML_value("time", $row["time"]);
   //$xml .= add_XML_value("details", $row["details"]) . "\n";
   $buildLink = "viewTest.php?buildid=$buildid";
-  $xml .= add_XML_value("buildLink", $buildLink) . "\n";
+  $xml .= add_XML_value("buildLink", $buildLink);
   $testid = $row["testid"];
   $testLink = "testDetails.php?test=$testid&build=$buildid";
-  $xml .= add_XML_value("testLink", $testLink) . "\n";
-  if($color)
-    {
-    $xml .= add_XML_value("class", "treven") . "\n";
-    }
-  else
-    {
-    $xml .= add_XML_value("class", "trodd") . "\n";
-    }
-  $color = !$color;
+  $xml .= add_XML_value("testLink", $testLink);
   switch($row["status"])
     {
     case "passed":
-      $xml .= add_XML_value("status", "Passed") . "\n";
-      $xml .= add_XML_value("statusclass", "normal") . "\n";
+      $xml .= add_XML_value("status", "Passed");
+      $xml .= add_XML_value("statusclass", "normal");
       break; 
     case "failed":
-      $xml .= add_XML_value("status", "Failed") . "\n";
-      $xml .= add_XML_value("statusclass", "warning") . "\n";
+      $xml .= add_XML_value("status", "Failed");
+      $xml .= add_XML_value("statusclass", "warning");
       break;
     case "notrun":
-      $xml .= add_XML_value("status", "Not Run") . "\n";
-   $xml .= add_XML_value("statusclass", "error") . "\n";
+      $xml .= add_XML_value("status", "Not Run");
+   $xml .= add_XML_value("statusclass", "error");
       break;
     }
   $xml .= "</build>\n";
