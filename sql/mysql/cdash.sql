@@ -315,7 +315,7 @@ CREATE TABLE `project` (
   `showtesttime` tinyint(4) default '0',
   `testtimemaxstatus` tinyint(4) default '3',
   `emailmaxitems` tinyint(4) default '5',
-  `emailmaxchars` int(11) default '255'
+  `emailmaxchars` int(11) default '255',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
