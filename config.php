@@ -46,6 +46,9 @@ $CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
 $CDASH_EXTERNAL_AUTH = '0';
 // Backup timeframe
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
+// Request full email address to add new users
+// instead of displaying a list
+$CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
 $CDASH_FORWARDING_IP='192.%'; // should be an SQL format 
