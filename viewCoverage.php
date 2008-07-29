@@ -90,11 +90,11 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   $xml .= add_XML_value("totalcovered",$ncoveredfiles);
   $xml .= add_XML_value("totalfiles",$nfiles);
-  $xml .= add_XML_value("totalsatisfactorilycovered",$ncoveredfiles);
-  $xml .= add_XML_value("totalunsatisfactorilycovered",$nfiles-$ncoveredfiles);
   $xml .= add_XML_value("buildid",$buildid);
   $xml .= add_XML_value("sortby",$sortby);
   
+  
+  $nsatisfactorycoveredfiles = 0;
     
   // Coverage files
   $coveragefile = pdo_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested,c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested
@@ -137,12 +137,22 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       $covfile["coveragemetric"] = ($covfile["loctested"]+10)/($covfile["loctested"]+$covfile["locuntested"]+10);
       $coveragetype = "gcov";
       }
+    
+    // Add the number of satisfactory covered files
+    if($covfile["coveragemetric"]>=0.7)
+      {
+      $nsatisfactorycoveredfiles++;
+      }
       
     $covfile_array[] = $covfile;
     }
     
    // Add the coverage type
   $xml .= add_XML_value("coveragetype",$coveragetype);
+
+  $xml .= add_XML_value("totalsatisfactorilycovered",$nsatisfactorycoveredfiles);
+  $xml .= add_XML_value("totalunsatisfactorilycovered",$nfiles-$nsatisfactorycoveredfiles);
+
   $xml .= "</coverage>";  
   
   // Do the sorting
