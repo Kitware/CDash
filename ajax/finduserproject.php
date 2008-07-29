@@ -32,10 +32,16 @@ if(!isset($projectid) || !is_numeric($projectid))
   
 $search = pdo_real_escape_string($_GET["search"]);
 
-
-$user = pdo_query("SELECT id,email,firstname,lastname FROM user WHERE 
-                    (email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')
-                    AND id NOT IN (SELECT userid as id FROM user2project WHERE projectid='$projectid')");
+if(isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1)
+  {
+  $sql = "email='$search'";
+  }
+else
+  {
+  $sql = "(email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')";
+  }
+$user = pdo_query("SELECT id,email,firstname,lastname FROM user WHERE ".$sql." AND 
+                   id NOT IN (SELECT userid as id FROM user2project WHERE projectid='$projectid')");
 echo pdo_error();
 
 ?>
