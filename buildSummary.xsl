@@ -35,14 +35,34 @@
 </xsl:choose>
 
 <br/>
-
-
     <!-- Build log for a single submission -->
     <br/><b>Site Name: </b><xsl:value-of select="cdash/build/site"/>
     <br/><b>Build Name: </b><xsl:value-of select="cdash/build/name"/>
     <br/><b>Time: </b><xsl:value-of select="cdash/build/time"/>
     <br/><b>Type: </b><xsl:value-of select="cdash/build/type"/>
-
+    <br/>
+    <!-- Display Operating System information  -->
+    <xsl:if test="cdash/build/osname">
+      <br/><b>OS Name: </b><xsl:value-of select="cdash/build/osname"/>
+    </xsl:if>
+    <xsl:if test="cdash/build/osplatform">
+      <br/><b>OS Platform: </b><xsl:value-of select="cdash/build/osplatform"/>
+    </xsl:if>
+    <xsl:if test="cdash/build/osrelease">
+      <br/><b>OS Release: </b><xsl:value-of select="cdash/build/osrelease"/>
+    </xsl:if>
+    <xsl:if test="cdash/build/osversion">
+      <br/><b>OS Version: </b><xsl:value-of select="cdash/build/osversion"/>
+    </xsl:if>  
+  
+    <!-- Display Compiler information  -->
+    <xsl:if test="cdash/build/compilername">
+      <br/><b>Compiler Name: </b><xsl:value-of select="cdash/build/compilername"/>
+    </xsl:if>
+    <xsl:if test="cdash/build/compilerversion">
+      <br/><b>Compiler Version: </b><xsl:value-of select="cdash/build/compilerversion"/>
+    </xsl:if>  
+    
     <xsl:if test="cdash/build/lastsubmitbuild>0">
     <p/><b>Last submission: </b><a>
      <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/lastsubmitbuild"/></xsl:attribute><xsl:value-of select="cdash/build/lastsubmitdate"/></a>  

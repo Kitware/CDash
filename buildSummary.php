@@ -105,6 +105,19 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("time",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC")));  
   $xml .= add_XML_value("type",$build_array["type"]);
   
+  // Find the OS and compiler information
+  $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'"));
+  if(pdo_num_rows($buildinformation)>0)
+    {
+    $buildinformation_array = pdo_fetch_array($buildinformation);
+    $xml .= add_XML_value("osname",$buildinformation_array["osname"]);
+    $xml .= add_XML_value("osplatform",$buildinformation_array["osplatform"]);
+    $xml .= add_XML_value("osrelease",$buildinformation_array["osrelease"]);
+    $xml .= add_XML_value("osversion",$buildinformation_array["osversion"]);
+    $xml .= add_XML_value("compilername",$buildinformation_array["compilername"]);
+    $xml .= add_XML_value("compilerversion",$buildinformation_array["compilerversion"]);
+    }
+  
   // Find the last submit date
   $buildtype = $build_array["type"];
   $buildname = $build_array["name"];
