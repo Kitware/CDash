@@ -377,6 +377,10 @@ while($user_array = pdo_fetch_array($user))
 
 } // end project=0
 
+if(isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1)
+  {
+  $xml .= add_XML_value("fullemail","1");
+  }
 $xml .= "</cdash>";
 
 // Now doing the xslt transition

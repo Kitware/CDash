@@ -144,7 +144,16 @@ project page</a>
   </tr>
   <tr>
     <td><div align="right"></div></td>
-    <td><i>start typing a name or email address (% to display all users)</i></td>
+    <td>
+    <xsl:choose>
+    <xsl:when test="/cdash/fullemail">
+      <i>type the full email address of the user to add</i>
+    </xsl:when>
+    <xsl:otherwise>
+      <i>start typing a name or email address (% to display all users)</i>
+    </xsl:otherwise>
+    </xsl:choose>
+    </td>
   </tr>
   <tr>
     <td><div align="right">Search:</div></td>
