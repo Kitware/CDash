@@ -84,8 +84,8 @@ $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
 $end_UTCDate = gmdate("YmdHis",$end_timestamp);   
 
 // Add the date/time                                                   
-$xml .= add_XML_value("teststarttime",date("Y-M-D H:i:s",$beginning_timestamp));
-$xml .= add_XML_value("testendtime",date("Y-M-D H:i:s",$end_timestamp));
+$xml .= add_XML_value("teststarttime",date("Y-m-d H:i:s",$beginning_timestamp));
+$xml .= add_XML_value("testendtime",date("Y-m-d H:i:s",$end_timestamp));
 
 $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,build2test.testid AS testid,site.name AS sitename
           FROM build
