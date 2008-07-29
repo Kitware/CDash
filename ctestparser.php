@@ -511,7 +511,7 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
 
 /** Add the difference between the numbers of tests
  *  for the previous and current build */
-function compute_test_difference($buildid,$previousbuildid,$testtype)
+function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttestmaxstatus)
 {
   $sql="";
   if($testtype == 0)
@@ -529,7 +529,7 @@ function compute_test_difference($buildid,$previousbuildid,$testtype)
   else if($testtype == 3)
     {
     $status="passed";
-    $sql = " AND timestatus>0";
+    $sql = " AND timestatus>".$projecttestmaxstatus;
     }
       
   // Look at the number of errors and warnings differences
@@ -570,11 +570,12 @@ function compute_test_timing($buildid)
   $siteid = $build_array["siteid"];
   $projectid = $build_array["projectid"];
 
-  $project = pdo_query("SELECT testtimestd,testtimestdthreshold FROM project WHERE id='$projectid'");
+  $project = pdo_query("SELECT testtimestd,testtimestdthreshold,testtimemaxstatus FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
   $projecttimestd = $project_array["testtimestd"]; 
   $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
-      
+  $projecttestmaxstatus = $project_array["testtimemaxstatus"]; 
+  
   // Find the previous build
   $previousbuild = pdo_query("SELECT id FROM build
                                 WHERE build.siteid='$siteid' 
@@ -592,10 +593,10 @@ function compute_test_timing($buildid)
    
     compute_error_difference($buildid,$previousbuildid,0); // errors
     compute_error_difference($buildid,$previousbuildid,1); // warnings
-    compute_test_difference($buildid,$previousbuildid,0); // not run
-    compute_test_difference($buildid,$previousbuildid,1); // fail
-    compute_test_difference($buildid,$previousbuildid,2); // pass
-    compute_test_difference($buildid,$previousbuildid,3); // time
+    compute_test_difference($buildid,$previousbuildid,0,$projecttestmaxstatus); // not run
+    compute_test_difference($buildid,$previousbuildid,1,$projecttestmaxstatus); // fail
+    compute_test_difference($buildid,$previousbuildid,2,$projecttestmaxstatus); // pass
+    compute_test_difference($buildid,$previousbuildid,3,$projecttestmaxstatus); // time
 
     // Loop through the tests
     $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name,build2test.status
