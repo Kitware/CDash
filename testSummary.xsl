@@ -35,7 +35,7 @@
 <br/>
 <h3>Testing summary for 
 <u><xsl:value-of select="cdash/testName"/></u>
- performed between <xsl:value-of select="cdash/build/teststarttime"/> and <xsl:value-of select="cdash/build/testendtime"/>
+ performed between <xsl:value-of select="cdash/builds/teststarttime"/> and <xsl:value-of select="cdash/builds/testendtime"/>
 </h3>
 <table id="testSummaryTable" cellspacing="0" cellpadding="3" class="tabb">
 <thead> 
