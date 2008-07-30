@@ -184,7 +184,7 @@ function sendemail($parser,$projectid)
   $project_emailmaxchars = $project_array["emailmaxchars"];
   
   $error_information = "";
-  if($npreviousbuilderrors<$nbuilderrors)
+  if($nbuilderrors>0)
     {
     $error_information .= "*Error*\n";
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
@@ -204,7 +204,7 @@ function sendemail($parser,$projectid)
     }
   
   $warning_information = "";
-  if($npreviousbuildwarnings<=$nbuildwarnings)
+  if($nbuildwarnings>0)
     {
     $warning_information .= "*Warnings*\n";
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
@@ -224,7 +224,7 @@ function sendemail($parser,$projectid)
     }
       
   $test_information = "";
-  if($npreviousfailingtests<=$nfailingtests)
+  if($nfailingtests>0)
     {
     $test_information .= "*Tests failing*\n";
     $sql = "";
