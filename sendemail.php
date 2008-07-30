@@ -186,7 +186,7 @@ function sendemail($parser,$projectid)
   $error_information = "";
   if($nbuilderrors>0)
     {
-    $error_information .= "*Error*\n";
+    $error_information .= "\n\n*Error*\n";
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
     while($error_array = pdo_fetch_array($error_query))
       {
@@ -206,7 +206,7 @@ function sendemail($parser,$projectid)
   $warning_information = "";
   if($nbuildwarnings>0)
     {
-    $warning_information .= "*Warnings*\n";
+    $warning_information .= "\n\n*Warnings*\n";
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
     while($error_array = pdo_fetch_array($error_query))
       {
@@ -226,7 +226,7 @@ function sendemail($parser,$projectid)
   $test_information = "";
   if($nfailingtests>0)
     {
-    $test_information .= "*Tests failing*\n";
+    $test_information .= "\n\n*Tests failing*\n";
     $sql = "";
     if($project_emailtesttimingchanged)
       {
@@ -376,7 +376,7 @@ function sendemail($parser,$projectid)
       }
      
     // Send the extra information
-    $messagePlainText .= "\n".$error_information;
+    $messagePlainText .= $error_information;
     $messagePlainText .= $warning_information;
     $messagePlainText .= $test_information; 
      
