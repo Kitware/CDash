@@ -51,6 +51,7 @@ project page</a>
 <xsl:value-of select="cdash/warning"/>
 </xsl:if>
 
+<div style="color: red;"><xsl:value-of select="cdash/error" /></div>
 
 <table width="100%"  border="0">
   <tr>
@@ -74,11 +75,13 @@ project page</a>
         </select></td>
     </form>    
   </tr>
-  
-  <!-- If a project has been selected -->
+</table>  
+  <!-- If a project has 
+  been selected -->
   <xsl:if test="count(cdash/project)>0">
+  <table width="100%"  border="0">
   <tr>
-    <td></td>
+    <td width="100"></td>
     <td></td>
   </tr>
   <tr>
@@ -124,8 +127,8 @@ project page</a>
         </input>
         </td>
         <td>
-        <input type="submit" name="updateuser" value="update"/>
-        <input type="submit" name="removeuser" value="remove"/>
+        <input type="submit" name="updateuser" value="Update"/>
+        <input type="submit" name="removeuser" value="Remove"/>
         </td>
         
         </tr>
@@ -134,13 +137,14 @@ project page</a>
      </table>
      </td>
      </tr>
+
   <tr>
     <td></td>
     <td></td>
   </tr>
   <tr>
     <td><div align="right"></div></td>
-    <td  bgcolor="#DDDDDD"><strong>Add new user</strong></td>
+    <td  bgcolor="#DDDDDD"><strong>Search for already registered users</strong></td>
   </tr>
   <tr>
     <td><div align="right"></div></td>
@@ -166,20 +170,65 @@ project page</a>
     <xsl:attribute name="value"><xsl:value-of select="cdash/project/id"/></xsl:attribute>
     </input>
   </tr>
+</table>  
+
+<form  method="post">
+<table width="100%"  border="0">
+  <tr>
+    <td width="100"><div align="right"></div></td>
+    <td  bgcolor="#DDDDDD"><strong>Register User</strong></td>
+  </tr>
+  <tr>
+      <td><div align="right">User Email:</div></td>
+  <td>
+  <input name="registeruseremail" type="text" id="registeruseremail" size="40"/>
+  </td>
+  </tr>
+  <tr>
+   <td><div align="right">First name:</div></td>
+  <td>
+  <input name="registeruserfirstname" type="text" id="registeruserfirstname" size="40"/>
+  </td>
+  </tr>
+  <tr>
+   <td><div align="right">Last name:</div></td>
+  <td>
+  <input name="registeruserlastname" type="text" id="registeruserlastname" size="40"/>
+  </td>
+  </tr>
+  <tr>
+   <td><div align="right">CVS Login:</div></td>
+  <td>
+  <input name="registerusercvslogin" type="text" id="registerusercvslogin" size="40"/>
+  </td>
+  </tr>
+  <tr>
+  <td></td>
+  <td>
+  <input type="submit" name="registerUser" value="Register User"/>
+  </td>
+  </tr>
+</table>
+</form>
+
+<table width="100%"  border="0"> 
+  <tr>
+    <td width="100"><div align="right"></div></td>
+    <td  bgcolor="#DDDDDD"><strong>Import users from CVS file</strong></td>
+  </tr>
   <tr>
       <td><div align="right">CVS Users File:</div></td>
 
   <td>
   <form method="post" action="" enctype="multipart/form-data">
-  <input name="cvsUserFile" type="file"/><input type="submit" name="importUsers" value="import"/>
+  <input name="cvsUserFile" type="file"/><input type="submit" name="importUsers" value="Import"/>
   </form>
   </td>
-  </tr>    
-  
+  </tr>  
   <!-- Show the cvsusers if imported to check that they are valid -->
   <xsl:if test="count(cdash/cvsuser)>0">
   <form  method="post">
-  <td><div align="right">CVS Users:</div></td>
+  <td width="100"><div align="right">Import CVS Users:</div></td>
   <td>
   <table>
   <tr style="background-color:#CCCCCC">
@@ -229,8 +278,8 @@ project page</a>
   </td>
   </form>
   </xsl:if> <!-- end if cvsuser -->
+  </table>
   </xsl:if> <!-- end if a project has been selected -->
-</table>
 <br/>
 
 </xsl:otherwise>
