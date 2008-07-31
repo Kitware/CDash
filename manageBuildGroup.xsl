@@ -101,9 +101,10 @@ project page</a>
    <tr>
      <td><div align="right"></div></td>
      <td>
-     <table>    
+     <table border="0" width="100%">    
      <xsl:for-each select="cdash/project/group">
      <tr>
+     <xsl:attribute name="bgcolor"><xsl:value-of select="bgcolor"/></xsl:attribute> 
      <td><xsl:value-of select="name"/></td>
      <td>
      <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;groupid=<xsl:value-of select="id"/>&amp;up=1</xsl:attribute> [up]</a>
@@ -111,14 +112,17 @@ project page</a>
      </td>
      <td>
      <form method="post">
-     <xsl:attribute name="name">form_<xsl:value-of select="id"/></xsl:attribute>
-     <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
-     <input type="hidden" name="groupid">
-     <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-     </input>
-     <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'">  <!-- cannot delete Nightly/Continuous/Experimental -->
-     <input name="newname" type="text" id="newname" size="20"/><input type="submit" name="rename" value="Rename"/>
-     </xsl:if>
+       <xsl:attribute name="name">form_<xsl:value-of select="id"/></xsl:attribute>
+       <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
+       <input type="hidden" name="groupid">
+       <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+       </input>
+       <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'">  <!-- cannot delete Nightly/Continuous/Experimental -->
+       <input name="newname" type="text" id="newname" size="20"/><input type="submit" name="rename" value="Rename"/>
+       </xsl:if>
+       <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
+       <input type="submit" name="deleteGroup" value="Delete" onclick="return confirmDelete()"/>
+       </xsl:if>
      </form>
      </td>
      <td>
@@ -128,11 +132,7 @@ project page</a>
      <input type="hidden" name="groupid">
      <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
      </input>
-     
-     <xsl:if test="name!='Nightly' and name!='Experimental' and name !='Continuous'"> <!-- cannot delete Nightly/Continuous/Experimental -->
-     <input type="submit" name="deleteGroup" value="Delete Group" onclick="return confirmDelete()"/>
-     </xsl:if>
-     <input name="description" type="text" size="40">
+     <input name="description" type="text" size="30">
      <xsl:attribute name="value"><xsl:value-of select="description"/></xsl:attribute>
      </input>
      <input type="submit" name="submitDescription" value="Update Description"/>
@@ -141,7 +141,7 @@ project page</a>
        <xsl:attribute name="checked">1</xsl:attribute> 
       </xsl:if> 
      </input>
-     Send summary email
+     Summary email
      </form>
      </td>
      </tr>

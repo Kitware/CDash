@@ -841,13 +841,25 @@ if($projectid>0)
   $xml .= add_XML_value("name",$project_array['name']);
   
   // Display the current groups
+  
   $groups = pdo_query("SELECT g.id,g.name,g.description,g.summaryemail,gp.position,g.starttime FROM buildgroup AS g, buildgroupposition AS gp 
                          WHERE g.id=gp.buildgroupid AND g.projectid='$projectid' 
                          AND g.endtime='1980-01-01 00:00:00' AND gp.endtime='1980-01-01 00:00:00'
                          ORDER BY gp.position ASC");
+  $color = 0;
   while($group_array = pdo_fetch_array($groups))
     {
     $xml .= "<group>";
+    if($color == 0)
+      {
+      $xml .= add_XML_value("bgcolor","#FFFFFF");
+      $color = 1;
+      }
+    else
+      {
+      $xml .= add_XML_value("bgcolor","#DDDDDD");
+      $color = 0;
+      }  
     if($show == $group_array['id'])
       {
       $xml .= add_XML_value("selected","1");
