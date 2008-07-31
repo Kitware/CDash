@@ -41,6 +41,7 @@ function auth()
     if ($user_array = pdo_fetch_array($result)) 
       {
       session_name("CDash");
+      session_cache_limiter('private');
       session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
       session_start();  
       // create the session array 
@@ -65,6 +66,7 @@ d" => 1, "loginid" => $user_array["id"]);
   if (@$_GET["logout"]) 
     {                             // user requested logout            
     session_name("CDash");
+    session_cache_limiter('private');
     @session_start(); 
     unset($_SESSION['cdash']);  
     session_destroy(); 
@@ -88,6 +90,7 @@ d" => 1, "loginid" => $user_array["id"]);
         if (md5($passwd)==$pass)
           {
           session_name("CDash");
+          session_cache_limiter('private');
           session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
           session_start();  
           // create the session array 
@@ -115,6 +118,7 @@ d" => 1, "loginid" => $user_array["id"]);
   else
     {                                         // arrive from session var 
     session_name("CDash");
+    session_cache_limiter('private');
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
     session_start();     
     $login_ok = 0;  
