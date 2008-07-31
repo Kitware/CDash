@@ -39,7 +39,7 @@ function sendemail($parser,$projectid)
 
   // Check if we should send the email
   $project = pdo_query("SELECT name,emailbrokensubmission,emailmaxitems,
-                               emailmaxchars,emailtesttimingchanged,
+                               emailmaxchars,emailtesttimingchanged,nightlytime,
                                testtimemaxstatus FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
   if($project_array["emailbrokensubmission"] == 0)
@@ -154,6 +154,104 @@ function sendemail($parser,$projectid)
       return;
       }
     }
+ 
+  // Get the buildgroup
+  $buildgroup_array = pdo_fetch_array(pdo_query("SELECT groupid FROM build2group WHERE buildid=$buildid"));
+  add_log(pdo_error(),"sendemail");
+  $groupid = $buildgroup_array["groupid"];
+  
+  // Check if the group as summaryemail enable
+  $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name,summaryemail FROM buildgroup WHERE groupid=$groupid"));
+  add_log(pdo_error(),"sendemail");
+  if($summaryemail_array["summaryemail"]==1)
+    {
+    // Check if the email has been sent
+    $date = ""; // now
+    list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
+    $dashboarddate = gmdate("Y-m-d", $currentstarttime);
+
+    // If we already have it we return
+    if(pdo_num_rows(pdo_query("SELECT buildid FROM summaryemail WHERE date=$dashboarddate AND groupid=$groupid"))==1)
+      {
+      return;
+      }  
+    
+    // Update the summaryemail table to specify that we have send the email
+    // We also delete any previous rows from that groupid
+    pdo_query("DELETE FROM summaryemail WHERE groupid=$groupid");
+    pdo_query("INSERT INTO summaryemail (buildid,date,groupid) VALUES ($buildid,$dashboarddate,$groupid)");
+    
+    // Find the current updaters from the night using the dailyupdatefile table
+    $summaryEmail = "";
+    $query = "SELECT user.email FROM user,user2project,dailyupdate,dailyupdatefile WHERE 
+                           user2project.projectid=$projectid
+                           AND user2project.userid=user.id 
+                           AND user2project.cvslogin=dailyupdatefile.author
+                           AND dailyupdatefile.dailyupdateid=dailyupdate.id
+                           AND dailyupdate.date=$dashboarddate
+                           ";
+    $user = pdo_query($query);
+    if(strlen(pdo_error())>0)
+      {
+      add_log($query."\n".pdo_error(),"sendemail");
+      }
+    // Loop through the users and add them to the email array  
+    while($user_array = pdo_fetch_array($user))
+       {
+      // If the user is already in the list we quit
+       if(strpos($summaryEmail,$user_array["email"]) !== false)
+         {
+         continue;
+         }
+      if($summaryEmail != "")
+        {
+        $summaryEmail .= ", ";
+        }
+       $summaryEmail .= $user_array["email"];
+      }
+    
+    // Select the users who want to receive all emails
+     $user = pdo_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
+                       AND user2project.userid=user.id AND user2project.emailtype>1");
+     while($user_array = pdo_fetch_array($user))
+       {
+      // If the user is already in the list we quit
+       if(strpos($summaryEmail,$user_array["email"]) !== false)
+         {
+         continue;
+         }
+      if($summaryEmail != "")
+        {
+        $summaryEmail .= ", ";
+        }
+       $summaryEmail .= $user_array["email"];
+      }
+       
+    // Send the email
+    if($summaryEmail != "")
+      {
+      $title = "CDash [".$project_array["name"]."] - ".$summaryemail_array["name"];
+      $title .= " ".date("Y-m-d H:i:s T",strtotime($starttime." UTC"));
+      
+      $messagePlainText = "The current group has either error, warning or test failures.";
+       
+      $messagePlainText .= ".\n";  
+      $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
+      $messagePlainText .= "or you are listed in the default contact list.\n\n";  
+      $messagePlainText .= "\n-CDash on ".$serverName."\n";
+      
+      // Send the email
+      if(mail("$summaryEmail", $title, $messagePlainText,
+           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+        {
+        add_log("email sent to: ".$email,"sendemail");
+        }
+      else
+        {
+        add_log("cannot send email to: ".$email,"sendemail");
+        }
+      } // end $summaryEmail!=""
+    } 
  
   // Current URI of the dashboard
   $currentPort="";
@@ -281,7 +379,7 @@ function sendemail($parser,$projectid)
     $email .= $user_array["email"];
     } 
     
-  // Select the users who want to receive all emails
+ // Select the users who want to receive all emails
  $user = pdo_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
                        AND user2project.userid=user.id AND user2project.emailtype>1");
  while($user_array = pdo_fetch_array($user))
@@ -382,8 +480,7 @@ function sendemail($parser,$projectid)
     $messagePlainText .= $error_information;
     $messagePlainText .= $warning_information;
     $messagePlainText .= $test_information; 
-     
-     
+      
     $messagePlainText .= "\n-CDash on ".$serverName."\n";
     
     // Send the email
@@ -396,8 +493,7 @@ function sendemail($parser,$projectid)
       {
       add_log("cannot send email to: ".$email,"sendemail");
       }
+
     } // end $email!=""
-  
-   add_log("End buildid=".$buildid,"sendemail");
 }
 ?>

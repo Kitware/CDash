@@ -184,7 +184,21 @@ if(isset($_GET['upgrade-1-2']))
     pdo_query("ALTER TABLE project ADD emailmaxitems tinyint(4) default '5'");
     pdo_query("ALTER TABLE project ADD emailmaxchars int(11) default '255'");
     }
-      
+  
+  // Add summary email
+  $summaryemail = pdo_query("SELECT summaryemail FROM buildgroup LIMIT 1");
+  if(!$summaryemail)
+    {
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      pdo_query("ALTER TABLE \"buildgroup\" ADD \"summaryemail\" smallint DEFAULT '0'");
+      }
+    else
+      {
+      pdo_query("ALTER TABLE buildgroup ADD summaryemail tinyint(4) default '0'");
+      }
+    }   
+    
   // Set the database version
   setVersion();
   

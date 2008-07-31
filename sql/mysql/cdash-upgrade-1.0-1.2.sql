@@ -41,3 +41,12 @@ CREATE TABLE IF NOT EXISTS `version` (
   `minor` tinyint(4) NOT NULL,
   `patch` tinyint(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `summaryemail` (
+  `buildid` bigint(20) NOT NULL,
+  `date` date NOT NULL,
+  `groupid` smallint(6) NOT NULL,
+  KEY `date` (`date`),
+  KEY `groupid` (`groupid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

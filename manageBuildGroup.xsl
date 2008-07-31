@@ -136,6 +136,12 @@ project page</a>
      <xsl:attribute name="value"><xsl:value-of select="description"/></xsl:attribute>
      </input>
      <input type="submit" name="submitDescription" value="Update Description"/>
+     <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="1">  
+     <xsl:if test="summaryemail=1">
+       <xsl:attribute name="checked">1</xsl:attribute> 
+      </xsl:if> 
+     </input>
+     Send summary email
      </form>
      </td>
      </tr>

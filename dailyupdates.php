@@ -509,7 +509,7 @@ function addDailyChanges($projectid)
   $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name FROM project WHERE id='$projectid'"));
   $date = ""; // now
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
-  $date = gmdate("Ymd", $currentstarttime);
+  $date = gmdate("Y-m-d", $currentstarttime);
   
   // Check if we already have it somwhere
   $query = pdo_query("SELECT id FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");

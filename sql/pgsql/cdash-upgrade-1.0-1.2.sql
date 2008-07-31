@@ -35,3 +35,10 @@ CREATE TABLE "version" (
   "minor" smallint DEFAULT '0' NOT NULL,
   "patch" smallint DEFAULT '0' NOT NULL
 );
+
+CREATE TABLE "summaryemail" (
+  "buildid" smallint  NOT NULL,
+  "date" date NOT NULL,
+  "groupid" smallint  NOT NULL
+);
+CREATE INDEX "summaryemail_date_idx" on "summaryemail" ("date", "groupid");

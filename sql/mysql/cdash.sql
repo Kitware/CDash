@@ -41,6 +41,7 @@ CREATE TABLE `buildgroup` (
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `description` text NOT NULL,
+  `summaryemail` tinyint(4) default '0',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -583,6 +584,15 @@ CREATE TABLE `version` (
   `major` tinyint(4) NOT NULL,
   `minor` tinyint(4) NOT NULL,
   `patch` tinyint(4) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `summaryemail` (
+  `buildid` bigint(20) NOT NULL,
+  `date` date NOT NULL,
+  `groupid` smallint(6) NOT NULL,
+  KEY `date` (`date`),
+  KEY `groupid` (`groupid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
