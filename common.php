@@ -2253,4 +2253,15 @@ function qnum($num)
     }
 }
 
+/** Return formated time given time in minutes (that's how CTest returns the time */
+function get_formated_time($minutes)
+{
+  $time_in_seconds = round($minutes*60);
+  $hours=floor($time_in_seconds/3600);
+  
+  $remainingseconds = $time_in_seconds-$hours*3600;
+  $minutes=floor($remainingseconds/60);
+  $seconds = $remainingseconds-$minutes*60;  
+  return $hours.":".str_pad($minutes, 2, "0", STR_PAD_LEFT).":".str_pad($seconds, 2, "0", STR_PAD_LEFT);  
+}
 ?>

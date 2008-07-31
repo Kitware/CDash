@@ -35,8 +35,34 @@
 
 <br/><br/>
 <h2>Testing started on <xsl:value-of select="cdash/build/testtime"/></h2>
-<p><b>Site Name: </b><xsl:value-of select="cdash/build/site"/></p>
-<p><b>Build Name: </b><xsl:value-of select="cdash/build/buildname"/></p><br/>
+<table border="0">
+<tr><td align="right"><b>Site Name:</b></td><td><xsl:value-of select="cdash/build/site"/></td></tr>
+<tr><td align="right"><b>Build Name:</b></td><td><xsl:value-of select="cdash/build/buildname"/></td></tr>
+<tr><td align="right"><b>Total time:</b></td><td><xsl:value-of select="cdash/tests/totaltime"/></td></tr>
+<!-- Display Operating System information  -->
+<xsl:if test="cdash/build/osname">
+  <tr><td align="right"><b>OS Name:</b></td><td><xsl:value-of select="cdash/build/osname"/></td></tr>
+</xsl:if>
+<xsl:if test="cdash/build/osplatform">
+  <tr><td align="right"><b>OS Platform:</b></td><td><xsl:value-of select="cdash/build/osplatform"/></td></tr>
+</xsl:if>
+<xsl:if test="cdash/build/osrelease">
+  <tr><td align="right"><b>OS Release:</b></td><td><xsl:value-of select="cdash/build/osrelease"/></td></tr>
+</xsl:if>
+<xsl:if test="cdash/build/osversion">
+  <tr><td align="right"><b>OS Version:</b></td><td><xsl:value-of select="cdash/build/osversion"/></td></tr>
+</xsl:if>  
+  
+<!-- Display Compiler information  -->
+<xsl:if test="cdash/build/compilername">
+  <tr><td align="right"><b>Compiler Name:</b></td><td><xsl:value-of select="cdash/build/compilername"/></td></tr>
+</xsl:if>
+<xsl:if test="cdash/build/compilerversion">
+  <tr><td align="right"><b>Compiler Version:</b></td><td><xsl:value-of select="cdash/build/compilerversion"/></td></tr>
+</xsl:if>  
+
+</table>
+
 <h3>
 <xsl:if test="cdash/onlypassed=1">
   <xsl:value-of select="cdash/numPassed"/> tests passed.

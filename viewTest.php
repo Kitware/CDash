@@ -64,14 +64,45 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 $siteid = $build_array["siteid"];
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $xml .= "<build>\n";
-$xml .= add_XML_value("site",$site_array["name"]) . "\n";
-$xml .= add_XML_value("buildname",$build_array["name"]) . "\n";
-$xml .= add_XML_value("buildid",$build_array["id"]) . "\n";
-$xml .= add_XML_value("testtime", $build_array["endtime"]) . "\n";
+$xml .= add_XML_value("site",$site_array["name"]);
+$xml .= add_XML_value("buildname",$build_array["name"]);
+$xml .= add_XML_value("buildid",$build_array["id"]);
+$xml .= add_XML_value("testtime", $build_array["endtime"]);
+
+// Find the OS and compiler information
+$buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
+if(pdo_num_rows($buildinformation)>0)
+  {
+  $buildinformation_array = pdo_fetch_array($buildinformation);
+  if($buildinformation_array["osname"]!="")
+    {
+    $xml .= add_XML_value("osname",$buildinformation_array["osname"]);
+    }
+  if($buildinformation_array["osplatform"]!="")
+    {
+    $xml .= add_XML_value("osplatform",$buildinformation_array["osplatform"]);
+    }
+  if($buildinformation_array["osrelease"]!="")
+    {
+    $xml .= add_XML_value("osrelease",$buildinformation_array["osrelease"]);
+    }
+  if($buildinformation_array["osversion"]!="")
+    {
+    $xml .= add_XML_value("osversion",$buildinformation_array["osversion"]);
+    }
+  if($buildinformation_array["compilername"]!="")
+    {
+    $xml .= add_XML_value("compilername",$buildinformation_array["compilername"]);
+    }
+  if($buildinformation_array["compilerversion"]!="")
+    {
+    $xml .= add_XML_value("compilerversion",$buildinformation_array["compilerversion"]);
+    }
+  }
 $xml .= "</build>\n";
 
 $xml .= "<project>";
-$xml .= add_XML_value("showtesttime", $projectshowtesttime) . "\n";
+$xml .= add_XML_value("showtesttime", $projectshowtesttime);
 $xml .= "</project>";
 
 if(isset($_GET["onlypassed"]))
@@ -102,56 +133,62 @@ else
   }
 $result = pdo_query($sql);
 
+
 $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;
 $numTimeFailed = 0;
-$color = FALSE;
 
 // Gather test info
 $xml .= "<tests>\n";
+
+// Find the time to run all the tests
+$time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
+$time = $time_array[0];
+$xml .= add_XML_value("totaltime", get_formated_time($time));
+
 while($row = pdo_fetch_array($result))
   {
   $xml .= "<test>\n";
   $testName = $row["name"];
-  $xml .= add_XML_value("name", $testName) . "\n";
-  $xml .= add_XML_value("execTime", $row["time"]) . "\n";
-  $xml .= add_XML_value("details", $row["details"]) . "\n"; 
+  $xml .= add_XML_value("name", $testName);
+  $xml .= add_XML_value("execTime", $row["time"]);
+  $xml .= add_XML_value("details", $row["details"]); 
   $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
-  $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
+  $xml .= add_XML_value("summaryLink", $summaryLink);
   $testid = $row["id"]; 
   $detailsLink = "testDetails.php?test=$testid&build=$buildid";
-  $xml .= add_XML_value("detailsLink", $detailsLink) . "\n";
+  $xml .= add_XML_value("detailsLink", $detailsLink);
   
   if($projectshowtesttime)
     {
     if($row["timestatus"] < $testtimemaxstatus)
       {
-      $xml .= add_XML_value("timestatus", "Passed") . "\n";
-      $xml .= add_XML_value("timestatusclass", "normal") . "\n";
+      $xml .= add_XML_value("timestatus", "Passed");
+      $xml .= add_XML_value("timestatusclass", "normal");
       }
     else
       {    
-      $xml .= add_XML_value("timestatus", "Failed") . "\n";
-      $xml .= add_XML_value("timestatusclass", "warning") . "\n";
+      $xml .= add_XML_value("timestatus", "Failed");
+      $xml .= add_XML_value("timestatusclass", "warning");
       }
     } // end projectshowtesttime
     
   switch($row["status"])
     {
     case "passed":
-      $xml .= add_XML_value("status", "Passed") . "\n";
-      $xml .= add_XML_value("statusclass", "normal") . "\n";
+      $xml .= add_XML_value("status", "Passed");
+      $xml .= add_XML_value("statusclass", "normal");
       $numPassed++;   
       break; 
     case "failed":
-      $xml .= add_XML_value("status", "Failed") . "\n";
-      $xml .= add_XML_value("statusclass", "warning") . "\n";   
+      $xml .= add_XML_value("status", "Failed");
+      $xml .= add_XML_value("statusclass", "warning");   
       $numFailed++;   
       break;
     case "notrun":
-      $xml .= add_XML_value("status", "Not Run") . "\n";
-      $xml .= add_XML_value("statusclass", "error") . "\n";
+      $xml .= add_XML_value("status", "Not Run");
+      $xml .= add_XML_value("statusclass", "error");
       $numNotRun++;
       break;
     }
