@@ -114,7 +114,7 @@ $xml .= add_XML_value("timemean",$testRow["timemean"]);
 $xml .= add_XML_value("timestd",$testRow["timestd"]);
  
 $testtimemaxstatus = $projectRow["testtimemaxstatus"];
-if($testRow["timestatus"]) < $testtimemaxstatus)
+if($testRow["timestatus"] < $testtimemaxstatus)
   {
   $xml .= add_XML_value("timestatus", "Passed");
   $xml .= add_XML_value("timeStatusColor", "#00aa00");
