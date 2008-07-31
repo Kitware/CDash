@@ -201,6 +201,7 @@ function sendemail($parser,$projectid)
         }
       $error_information .= substr($info,0,$project_emailmaxchars);
       }
+    $error_information .= "\n";
     }
   
   $warning_information = "";
@@ -221,6 +222,7 @@ function sendemail($parser,$projectid)
         }
       $warning_information .= substr($info,0,$project_emailmaxchars);
       }
+    $warning_information .= "\n";  
     }
       
   $test_information = "";
@@ -238,6 +240,7 @@ function sendemail($parser,$projectid)
       $info = $test_array["name"]."(".$currentURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
       $test_information .= substr($info,0,$project_emailmaxchars);
       }
+    $test_information .= "\n";
     }
 
   // We have a test failing so we send emails
