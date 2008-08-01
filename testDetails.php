@@ -79,17 +79,77 @@ $xml .= "<project>";
 $xml .= add_XML_value("showtesttime", $project_array["showtesttime"]) . "\n";
 $xml .= "</project>";
 
+$testName = $testRow["name"];
+$buildtype = $buildRow["type"];
+$buildname = $buildRow["name"];
+$starttime = $buildRow["starttime"];
+
+// Helper function
+function findTest($buildid,$testName)
+{
+  $test = pdo_query("SELECT build2test.testid FROM build2test,test
+                            WHERE build2test.buildid=".qnum($buildid)." 
+                            AND test.id=build2test.testid 
+                            AND test.name='$testName'"); 
+  if(pdo_num_rows($test)>0)
+    {
+    $test_array = pdo_fetch_array($test); 
+    return  $test_array["testid"];
+    }
+  return 0;    
+}
+
 $xml .= "<menu>";
 $xml .= add_XML_value("back","viewTest.php?buildid=".$buildid);
+$previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+$gotprevious = false;
+if($previousbuildid>0)
+  {
+  if($previoustestid = findTest($previousbuildid,$testName))
+    {          
+    $xml .= add_XML_value("previous","testDetails.php?test=".$previoustestid."&build=".$previousbuildid);
+    $gotprevious = true;
+    }                         
+  }
+  
+if(!$gotprevious)
+  {
+  $xml .= add_XML_value("noprevious","1");
+  }
+  
+// Find the last build  
+$lastbuildid  = get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+if($lasttestid = findTest($lastbuildid,$testName))
+    {          
+    $xml .= add_XML_value("current","testDetails.php?test=".$lasttestid."&build=".$lastbuildid);
+    $gotprevious = true;
+    }      
+
+// Next build
+$nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+$gotnext = false;
+if($nextbuildid>0)
+  {
+  if($nexttestid = findTest($nextbuildid,$testName))
+    {          
+    $xml .= add_XML_value("next","testDetails.php?test=".$nexttestid."&build=".$nextbuildid);
+    $gotnext = true;
+    }                         
+  }
+  
+if(!$gotnext)
+  {
+  $xml .= add_XML_value("nonext","1");
+  }
+
 $xml .= "</menu>";
 
-$testName = $testRow["name"];
 $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 
 $xml .= "<test>";
 $xml .= add_XML_value("id",$testid);
 $xml .= add_XML_value("buildid", $buildid);
-$xml .= add_XML_value("build", $buildRow["name"]);
+$xml .= add_XML_value("build", $buildname);
 $xml .= add_XML_value("site", $siteRow["name"]);
 $xml .= add_XML_value("test", $testName);
 $xml .= add_XML_value("time", $testRow["time"]);
