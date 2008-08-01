@@ -90,7 +90,8 @@ else
   {
   $xml .= add_XML_value("noprevious","1");
   }  
-$xml .= add_XML_value("current","buildSummary.php?buildid=".$buildid);  
+
+$xml .= add_XML_value("current","buildSummary.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));  
 $nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($nextbuildid>0)
   {

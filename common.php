@@ -1845,6 +1845,22 @@ function get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
   return 0;
 }
 
+/** Get the last build id */
+function get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
+{
+ 
+   $nextbuild = pdo_query("SELECT id FROM build
+                          WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
+                          AND projectid='$projectid' ORDER BY starttime DESC LIMIT 1");
+
+  if(pdo_num_rows($nextbuild)>0)
+    {
+    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    return $nextbuild_array["id"];
+    }
+  return 0;
+}
+
 /** Get the date from the buildid */
 function get_dashboard_date_from_build_starttime($starttime,$nightlytime)
 {
