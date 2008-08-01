@@ -79,6 +79,10 @@ $xml .= "<project>";
 $xml .= add_XML_value("showtesttime", $project_array["showtesttime"]) . "\n";
 $xml .= "</project>";
 
+$xml .= "<menu>";
+$xml .= add_XML_value("back","viewTest.php?buildid=".$buildid);
+$xml .= "</menu>";
+
 $testName = $testRow["name"];
 $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 

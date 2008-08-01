@@ -28,11 +28,6 @@ if(!isset($projectname))
   die("Error: project not specified<br>\n");
   }
 @$date = $_GET["date"];
-if(!isset($date) or $date == "")
-  {
-  $date = date("Ymd",time());
-  }
-$date = pdo_real_escape_string($date); 
  
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
@@ -42,6 +37,10 @@ $xml .= "<title>".$projectname." : Test Overview</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
+
+$xml .= "<menu>";
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_project($projectname,$date));
+$xml .= "</menu>";
 
 //get some information about the specified project
 $projectname = pdo_real_escape_string($projectname);
@@ -90,50 +89,49 @@ else
 $testQuery .= ") AND build2test.testid=test.id AND build2test.status NOT LIKE 'passed'";
 
 @$testResult = pdo_query($testQuery);
-if($testResult === FALSE)
+if($testResult !== FALSE)
   {
-  die("No tests found for $projectname on $date");
-  }
-$tests = array();
-while($testRow = pdo_fetch_array($testResult))
-  {
-  array_push($tests, $testRow["name"]);
-  }
-natcasesort($tests);
-
-//now generate some XML
-$xml .= "<tests>\n";
-$previousLetter = "";
-$firstSection = TRUE;
-foreach($tests as $testName)
-  {
-  $letter = strtolower(substr($testName, 0, 1));
-  if($letter != $previousLetter)
+  $tests = array();
+  while($testRow = pdo_fetch_array($testResult))
     {
-    if($firstSection)
-      {
-      $xml .= "<section>\n";
-      $firstSection = FALSE;
-      }
-    else
-      {
-      $xml .= "</section>\n<section>";
-      }
-    $xml .= add_XML_value("sectionName", $letter) . "\n";
-    $previousLetter = $letter;
+    array_push($tests, $testRow["name"]);
     }
-  $xml .= "<test>\n";
-  $xml .= add_XML_value("testName", $testName) . "\n";
-  $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
-  $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
-  $xml .= "</test>\n";
-  }
+  natcasesort($tests);
   
-if(count($tests)>0)
-  {
-  $xml .= "</section>\n";
-  }
-$xml .= "</tests>\n";
+  //now generate some XML
+  $xml .= "<tests>\n";
+  $previousLetter = "";
+  $firstSection = TRUE;
+  foreach($tests as $testName)
+    {
+    $letter = strtolower(substr($testName, 0, 1));
+    if($letter != $previousLetter)
+      {
+      if($firstSection)
+        {
+        $xml .= "<section>\n";
+        $firstSection = FALSE;
+        }
+      else
+        {
+        $xml .= "</section>\n<section>";
+        }
+      $xml .= add_XML_value("sectionName", $letter) . "\n";
+      $previousLetter = $letter;
+      }
+    $xml .= "<test>\n";
+    $xml .= add_XML_value("testName", $testName) . "\n";
+    $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
+    $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
+    $xml .= "</test>\n";
+    }
+    
+  if(count($tests)>0)
+    {
+    $xml .= "</section>\n";
+    }
+  $xml .= "</tests>\n";
+  }  
 $xml .= "</cdash>";
 
 generate_XSLT($xml, "testOverview");

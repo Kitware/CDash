@@ -1684,7 +1684,7 @@ function get_dates($date,$nightlytime)
   $previousdate = date("Ymd",$todaydate-3600*24);
   $nextdate = date("Ymd",$todaydate+3600*24);
  
-  return array($previousdate, $today, $nextdate);
+  return array($previousdate, $today, $nextdate, $date);
 }
 
 /** Get the logo id */
@@ -1814,6 +1814,55 @@ function get_author_email($projectname, $author)
   return $email;  
 }
 
+/** Get the next build id */
+function get_next_buildid($buildid,$projectid="",$siteid="",$buildtype="",$buildname="",$starttime="")
+{
+  $nextbuild = pdo_query("SELECT id FROM build
+                          WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
+                          AND projectid='$projectid' AND starttime>'$starttime' ORDER BY starttime ASC LIMIT 1");
+
+  if(pdo_num_rows($nextbuild)>0)
+    {
+    $nextbuild_array = pdo_fetch_array($nextbuildbuild);              
+    return $nextbuild_array["id"];
+    }
+  return 0;
+}
+
+/** Get the date from the buildid */
+function get_dashboard_date_from_build_starttime($starttime,$nightlytime)
+{
+  $nightlytime = strtotime($nightlytime);
+  $starttime = strtotime($starttime);
+  
+  if(date("His",$starttime)>date("HiS",$nightlytime))
+    {
+    return date("Ymd",$starttime+3600*24); //next day
+    } 
+  return date("Ymd",$starttime);
+}
+
+function get_dashboard_date_from_project($projectname, $date)
+{
+  $project = pdo_query("SELECT nightlytime FROM project WHERE name='$projectname'");
+  $project_array = pdo_fetch_array($project);
+  
+  $nightlytime = strtotime($project_array["nightlytime"]);
+  $nightlyhour = date("H",$nightlytime);
+  $nightlyminute = date("i",$nightlytime);
+  $nightlysecond = date("s",$nightlytime);
+ 
+  if(!isset($date) || strlen($date)==0)
+    { 
+    $date = date("Ymd"); // the date is always the date of the server
+    
+    if(date("His")>date("HiS",$nightlytime))
+      {
+      $date = date("Ymd",time()+3600*24); //next day
+      } 
+    }
+  return $date;  
+}
 
 function get_cdash_dashboard_xml($projectname, $date)
 {

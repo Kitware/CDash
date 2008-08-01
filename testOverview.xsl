@@ -30,7 +30,13 @@
 </xsl:otherwise>
 </xsl:choose>
 
-    <br/>
+<br/>
+<xsl:choose>
+  <xsl:when test="count(cdash/tests)=0">
+  No failing tests for this date.
+  </xsl:when>
+  <xsl:otherwise>
+
 <h3>List of 
 <u><xsl:value-of select="cdash/dashboard/projectname"/></u>
  tests that did not run cleanly on 
@@ -49,6 +55,8 @@
 </xsl:for-each>
 </xsl:for-each>
 </p>
+</xsl:otherwise>
+</xsl:choose>
 
 <br/>
 <br/>

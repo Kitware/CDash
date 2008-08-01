@@ -28,11 +28,6 @@ if(!isset($projectname) || strlen($projectname)==0)
   die("Error: project not specified<br>\n");
   }
 @$date = $_GET["date"];
-if(!isset($date) or $date == "")
-  {
-  $date = date("Ymd",time());
-  }
- 
  
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
@@ -42,6 +37,8 @@ $xml .= "<title>".$projectname." : Build Overview</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
+
+
 
 //get some information about the specified project
 $project = pdo_query("SELECT id, nightlytime FROM project WHERE name = '$projectname'");
@@ -56,7 +53,11 @@ $projectid = $project_array["id"];
 $nightlytime = $project_array["nightlytime"];
 
 // We select the builds
-list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$nightlytime);
+list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
+$xml .= "<menu>";
+
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$today);
+$xml .= "</menu>";
 // Check the builds
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime+3600*24;

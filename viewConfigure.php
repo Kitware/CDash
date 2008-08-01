@@ -54,7 +54,10 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
-  
+$xml .= "<menu>";
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]));
+$xml .= "</menu>";
+
   // Build
   $xml .= "<build>";
   $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");

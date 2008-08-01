@@ -33,8 +33,8 @@
 </xsl:otherwise>
 </xsl:choose>
 
-<br/><br/>
-<h2>Testing started on <xsl:value-of select="cdash/build/testtime"/></h2>
+<br/>
+<h3>Testing started on <xsl:value-of select="cdash/build/testtime"/></h3>
 <table border="0">
 <tr><td align="right"><b>Site Name:</b></td><td><xsl:value-of select="cdash/build/site"/></td></tr>
 <tr><td align="right"><b>Build Name:</b></td><td><xsl:value-of select="cdash/build/buildname"/></td></tr>

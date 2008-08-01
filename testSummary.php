@@ -72,6 +72,10 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 $xml .="<testName>".$testName."</testName>";
   
+$xml .= "<menu>";
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$date);
+$xml .= "</menu>";
+  
 //get information about all the builds for the given date and project
 $xml .= "<builds>\n";
 

@@ -37,6 +37,7 @@ $site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'")
 $sitename = $site_array["name"];
 
 @$currenttime = $_GET["currenttime"];
+
 $siteinformation_array = array();
 $siteinformation_array["description"] = "NA";
 $siteinformation_array["processoris64bits"] = "NA";
@@ -105,7 +106,18 @@ $xml .= "<title>CDash : ".$sitename."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
-$xml .= "<backurl>index.php</backurl>";
+@$projectid = $_GET["project"];
+if($projectid)
+  {
+  $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));  
+  $xml .= "<backurl>index.php?project=".$project_array["name"];
+  $xml .= "&#38;date=".get_dashboard_date_from_build_starttime(gmdate("Y-m-d H:i:s",$currenttime),$project_array["nightlytime"]);
+  $xml .= "</backurl>";
+  }
+else  
+  {
+  $xml .= "<backurl>index.php</backurl>";
+  }
 $xml .= "<title>CDash - $sitename</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>$sitename</menusubtitle>";

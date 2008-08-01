@@ -85,6 +85,14 @@
  <tr>
   <td align="left" class="bgtm"><ul id="Nav" class="nav">
 <li id="Dartboard">
+
+<xsl:choose>
+<xsl:when test="string-length(cdash/menu/back)>0">
+<a>
+<xsl:attribute name="href"><xsl:value-of select="cdash/menu/back"/></xsl:attribute>
+BACK</a><ul></ul>
+</xsl:when>
+<xsl:otherwise>
 <a href="index.php">DASHBOARD</a><ul>
 <li><a class="submm">
 <xsl:attribute name="href">viewChanges.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Updates</a></li>
@@ -98,20 +106,57 @@ Tests</a></li>
 <xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
 Map</a></li>
 </ul>
+</xsl:otherwise>
+</xsl:choose>
 </li>
 <li><a id="cal" href="#">CALENDAR</a></li>
-<li><a>
-<xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/previousdate"/></xsl:attribute>
-  
+
+<xsl:if test="string-length(cdash/menu/noprevious)=0">    
+<li>
+<a>
+<xsl:attribute name="href">
+<xsl:choose>
+  <xsl:when test="string-length(cdash/menu/previous)>0">
+    <xsl:value-of select="cdash/menu/previous"/>
+  </xsl:when>
+  <xsl:otherwise>
+  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/previousdate"/>
+  </xsl:otherwise>
+</xsl:choose>
+</xsl:attribute>
   PREVIOUS
   </a></li>
-<li><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/></xsl:attribute>
+</xsl:if>
+  
+<li><a><xsl:attribute name="href">
+<xsl:choose>
+  <xsl:when test="string-length(cdash/menu/current)>0">
+    <xsl:value-of select="cdash/menu/current"/>
+  </xsl:when>
+  <xsl:otherwise>
+  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>
+  </xsl:otherwise>
+</xsl:choose>
+</xsl:attribute>
     CURRENT 
     </a></li>
+
+<xsl:if test="string-length(cdash/menu/nonext)=0">    
 <li><a>
-<xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/></xsl:attribute>
+<xsl:attribute name="href">
+<xsl:choose>
+  <xsl:when test="string-length(cdash/menu/next)>0">
+    <xsl:value-of select="cdash/menu/next"/>
+  </xsl:when>
+  <xsl:otherwise>
+  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/>
+  </xsl:otherwise>
+</xsl:choose>
+</xsl:attribute>
       NEXT
       </a></li>
+</xsl:if>
+
 <li>
 <a href="#" id="activem">PROJECT</a><ul>
 <li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>

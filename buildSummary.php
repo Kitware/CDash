@@ -36,7 +36,6 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
-$date = date("Ymd", strtotime($build_array["starttime"]));
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
   
@@ -57,6 +56,52 @@ $projectname = get_project_name($projectid);
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
+
+
+// Find the last submit date
+$siteid = $build_array["siteid"];
+$buildtype = $build_array["type"];
+$buildname = $build_array["name"];
+$starttime = $build_array["starttime"];
+$previousbuild = pdo_query("SELECT id,starttime FROM build
+                            WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
+                             AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
+
+if(pdo_num_rows($previousbuild)>0)
+  {
+  $previousbuild_array = pdo_fetch_array($previousbuild);              
+  $lastsubmitbuild = $previousbuild_array["id"];
+  $lastsubmitdate = date("Y-m-d H:i:s T",strtotime($previousbuild_array["starttime"]." UTC"));
+  }
+else
+  {
+  $lastsubmitbuild = 0;
+  $lastsubmitdate = 0;
+  }
+
+$xml .= "<menu>";
+$nightlytime = get_project_property($projectname,"nightlytime");
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
+if(isset($previousbuild_array))
+  {
+  $xml .= add_XML_value("previous","buildSummary.php?buildid=".$previousbuild_array["id"]);
+  }
+else
+  {
+  $xml .= add_XML_value("noprevious","1");
+  }  
+$xml .= add_XML_value("current","buildSummary.php?buildid=".$buildid);  
+$nextbuildid = get_next_buildid($buildid,$projectid,$siteid,$buildtype,$buildname,$starttime);
+if($nextbuildid>0)
+  {
+  $xml .= add_XML_value("next","buildSummary.php?buildid=".$nextbuildid);
+  }  
+else
+  {
+  $xml .= add_XML_value("nonext","1");
+  }
+$xml .= "</menu>";
+
 $xml .= get_cdash_dashboard_xml($projectname,$date);
 
 // User
@@ -97,7 +142,6 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= "<build>";
   $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
   $build_array = pdo_fetch_array($build); 
-  $siteid = $build_array["siteid"];
   $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("name",$build_array["name"]);
@@ -136,25 +180,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
       }
     }
   
-  // Find the last submit date
-  $buildtype = $build_array["type"];
-  $buildname = $build_array["name"];
-  $starttime = $build_array["starttime"];
-  $previousbuild = pdo_query("SELECT id,starttime FROM build
-                                WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                                AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
 
-  if(pdo_num_rows($previousbuild)>0)
-    {
-    $previousbuild_array = pdo_fetch_array($previousbuild);              
-    $lastsubmitbuild = $previousbuild_array["id"];
-    $lastsubmitdate = date("Y-m-d H:i:s T",strtotime($previousbuild_array["starttime"]." UTC"));
-    }
-  else
-    {
-    $lastsubmitbuild = 0;
-    $lastsubmitdate = 0;
-    }
   $xml .= add_XML_value("generator",$build_array["generator"]);
   $xml .= add_XML_value("command",$build_array["command"]);
   $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC"))); 

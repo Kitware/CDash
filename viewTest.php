@@ -40,11 +40,6 @@ $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-if(!isset($date) || strlen($date)==0)
-  { 
-  $date = date("Ymd", strtotime($build_array["starttime"]));
-  }
-    
 $project = pdo_query("SELECT name,showtesttime,testtimemaxstatus FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
@@ -53,14 +48,24 @@ if(pdo_num_rows($project)>0)
   $projectshowtesttime = $project_array["showtesttime"];  
   $testtimemaxstatus = $project_array["testtimemaxstatus"];
   }
-
+  
+if(!isset($date) || strlen($date)==0)
+  { 
+  //$date = date("Ymd", strtotime($build_array["starttime"]));
+  $date = get_dashboard_date_from_project($projectname, $date);
+  }
+  
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
-  
+$xml .= "<menu>";
+$nightlytime = get_project_property($projectname,"nightlytime");
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
+$xml .= "</menu>";
+
 $siteid = $build_array["siteid"];
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $xml .= "<build>\n";

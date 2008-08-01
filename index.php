@@ -225,6 +225,15 @@ function generate_main_dashboard_XML($projectid,$date)
   }
   $xml .= "</dashboard>";
 
+  // Menu definition
+  $xml .= "<menu>";
+  if(!isset($date) || strlen($date)<8 || date("Ymd", $currentstarttime)==date("Ymd"))
+    {
+    $xml .= add_XML_value("nonext","1");
+    }
+  $xml .= "</menu>";
+
+
   // updates
   $xml .= "<updates>";
   
