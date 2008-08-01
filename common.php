@@ -1814,8 +1814,23 @@ function get_author_email($projectname, $author)
   return $email;  
 }
 
+/** Get the previous build id */
+function get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
+{
+  $previousbuild = pdo_query("SELECT id FROM build
+                              WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
+                              AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
+  
+  if(pdo_num_rows($previousbuild)>0)
+    {
+    $previousbuild_array = pdo_fetch_array($previousbuild);              
+    return $previousbuild_array["id"];
+    }
+  return 0;
+}
+
 /** Get the next build id */
-function get_next_buildid($buildid,$projectid="",$siteid="",$buildtype="",$buildname="",$starttime="")
+function get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
 {
  
    $nextbuild = pdo_query("SELECT id FROM build

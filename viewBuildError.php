@@ -52,21 +52,44 @@ $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
-  
+ 
+$build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+$build_array = pdo_fetch_array($build); 
+$siteid = $build_array["siteid"];
+$buildtype = $build_array["type"];
+$buildname = $build_array["name"];
+$starttime = $build_array["starttime"];
+
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 $xml .= "<menu>";
 $xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]));
+$previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+if($previousbuildid>0)
+  {
+  $xml .= add_XML_value("previous","viewBuildError.php?buildid=".$previousbuildid);
+  }
+else
+  {
+  $xml .= add_XML_value("noprevious","1");
+  }  
+$xml .= add_XML_value("current","viewBuildError.php?buildid=".$buildid);  
+$nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+if($nextbuildid>0)
+  {
+  $xml .= add_XML_value("next","viewBuildError.php?buildid=".$nextbuildid);
+  }  
+else
+  {
+  $xml .= add_XML_value("nonext","1");
+  }
 $xml .= "</menu>";
  
   // Build
   $xml .= "<build>";
-  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = pdo_fetch_array($build); 
-  $siteid = $build_array["siteid"];
   $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("buildname",$build_array["name"]);
- $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]."UTC")));
+  $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]."UTC")));
   $xml .= add_XML_value("buildid",$build_array["id"]);
   $xml .= "</build>";
   
