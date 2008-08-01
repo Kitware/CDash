@@ -1817,13 +1817,14 @@ function get_author_email($projectname, $author)
 /** Get the next build id */
 function get_next_buildid($buildid,$projectid="",$siteid="",$buildtype="",$buildname="",$starttime="")
 {
-  $nextbuild = pdo_query("SELECT id FROM build
+ 
+   $nextbuild = pdo_query("SELECT id FROM build
                           WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                           AND projectid='$projectid' AND starttime>'$starttime' ORDER BY starttime ASC LIMIT 1");
 
   if(pdo_num_rows($nextbuild)>0)
     {
-    $nextbuild_array = pdo_fetch_array($nextbuildbuild);              
+    $nextbuild_array = pdo_fetch_array($nextbuild);              
     return $nextbuild_array["id"];
     }
   return 0;
