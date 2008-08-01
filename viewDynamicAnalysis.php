@@ -35,7 +35,7 @@ if(!isset($buildid) || !is_numeric($buildid))
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
   
-$build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid,siteid,type,name FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
@@ -69,7 +69,7 @@ if($previousbuildid>0)
 else
   {
   $xml .= add_XML_value("noprevious","1");
-  }  
+  }
 $xml .= add_XML_value("current","viewDynamicAnalysis.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));  
 $nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($nextbuildid>0)
