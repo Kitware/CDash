@@ -1672,7 +1672,7 @@ function get_dates($date,$nightlytime)
     { 
     $date = date("Ymd"); // the date is always the date of the server
     
-    if(date("His")>date("HiS",$nightlytime))
+    if(date("His")>date("His",$nightlytime))
       {
       $date = date("Ymd",time()+3600*24); //next day
       } 

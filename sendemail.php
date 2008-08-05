@@ -155,6 +155,30 @@ function sendemail($parser,$projectid)
       }
     }
  
+   // Current URI of the dashboard
+  $currentPort="";
+  $httpprefix="http://";
+  if($_SERVER['SERVER_PORT']!=80)
+    {
+    $currentPort=":".$_SERVER['SERVER_PORT'];
+    if($_SERVER['SERVER_PORT']!=80 )
+      {
+      $httpprefix = "https://";
+      }
+    }
+  if($CDASH_USE_HTTPS === true)
+    {
+    $httpprefix = "https://";
+    }
+  $serverName = $CDASH_SERVER_NAME;
+  if(strlen($serverName) == 0)
+    {
+    $serverName = $_SERVER['SERVER_NAME'];
+    }
+    
+  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+  
   // Get the buildgroup
   $buildgroup_array = pdo_fetch_array(pdo_query("SELECT groupid FROM build2group WHERE buildid=$buildid"));
   add_log(pdo_error(),"sendemail");
@@ -253,29 +277,6 @@ function sendemail($parser,$projectid)
       } // end $summaryEmail!=""
     } 
  
-  // Current URI of the dashboard
-  $currentPort="";
-  $httpprefix="http://";
-  if($_SERVER['SERVER_PORT']!=80)
-    {
-    $currentPort=":".$_SERVER['SERVER_PORT'];
-    if($_SERVER['SERVER_PORT']!=80 )
-      {
-      $httpprefix = "https://";
-      }
-    }
-  if($CDASH_USE_HTTPS === true)
-    {
-    $httpprefix = "https://";
-    }
-  $serverName = $CDASH_SERVER_NAME;
-  if(strlen($serverName) == 0)
-    {
-    $serverName = $_SERVER['SERVER_NAME'];
-    }
-    
-  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
-  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     
   // Send a summary of the errors/warnings and test failings
   $project_emailmaxitems = $project_array["emailmaxitems"];
