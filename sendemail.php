@@ -161,7 +161,7 @@ function sendemail($parser,$projectid)
   $groupid = $buildgroup_array["groupid"];
   
   // Check if the group as summaryemail enable
-  $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name,summaryemail FROM buildgroup WHERE groupid=$groupid"));
+  $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name,summaryemail FROM buildgroup WHERE id=$groupid"));
   add_log(pdo_error(),"sendemail");
   if($summaryemail_array["summaryemail"]==1)
     {
