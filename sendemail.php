@@ -257,9 +257,7 @@ function sendemail($parser,$projectid)
       $title = "CDash [".$project_array["name"]."] - ".$summaryemail_array["name"];
       $title .= " ".date("Y-m-d H:i:s T",strtotime($starttime." UTC"));
       
-      $messagePlainText = "The current group has either error, warning or test failures.";
-       
-      $messagePlainText .= ".\n";  
+      $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
       $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
       $messagePlainText .= "or you are listed in the default contact list.\n\n";  
       
