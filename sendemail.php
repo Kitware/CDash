@@ -191,11 +191,11 @@ function sendemail($parser,$projectid)
     {
     // Check if the email has been sent
     $date = ""; // now
-    list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
+    list ($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date,$project_array["nightlytime"]);
     $dashboarddate = gmdate("Y-m-d", $currentstarttime);
 
     // If we already have it we return
-    if(pdo_num_rows(pdo_query("SELECT buildid FROM summaryemail WHERE date=$dashboarddate AND groupid=$groupid"))==1)
+    if(pdo_num_rows(pdo_query("SELECT buildid FROM summaryemail WHERE date='$dashboarddate' AND groupid=$groupid"))==1)
       {
       return;
       }  
@@ -262,6 +262,12 @@ function sendemail($parser,$projectid)
       $messagePlainText .= ".\n";  
       $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
       $messagePlainText .= "or you are listed in the default contact list.\n\n";  
+      
+      $messagePlainText .= "To see this dashboard:\n";  
+      $messagePlainText .= $currentURI;
+      $messagePlainText .= "/index.php?project=".$project_array["name"]."&date=".$today;
+      $messagePlainText .= "\n\n";
+    
       $messagePlainText .= "\n-CDash on ".$serverName."\n";
       
       // Send the email
