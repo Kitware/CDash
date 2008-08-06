@@ -158,6 +158,10 @@ function add_XML_value($tag,$value)
 /** Add information to the log file */
 function add_log($text,$function)
 {
+  if(strlen($text)==0)
+    {
+    return;
+    }
   include("config.php");
   $error = "[".date("Y-m-d H:i:s")."] (".$function."): ".$text."\n";  
   error_log($error,3,$CDASH_LOG_FILE);
@@ -1677,13 +1681,16 @@ function get_dates($date,$nightlytime)
       $date = date("Ymd",time()+3600*24); //next day
       } 
     }
- 
+
+
+
   $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4))-3600*24; // starting time
-  
+
   $todaydate = mktime(0,0,0,substr($date,4,2),substr($date,6,2),substr($date,0,4)); 
   $previousdate = date("Ymd",$todaydate-3600*24);
   $nextdate = date("Ymd",$todaydate+3600*24);
- 
+
+
   return array($previousdate, $today, $nextdate, $date);
 }
 
