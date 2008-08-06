@@ -624,7 +624,7 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
 /** Create a coverage */
 function add_coverage($buildid,$coverage_array)
 {
-  if(!is_numeric($buildid))
+  if(!is_numeric($buildid) || count($coverage_array)==0)
     {
     return;
     }
