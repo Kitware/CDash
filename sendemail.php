@@ -273,6 +273,7 @@ function sendemail($parser,$projectid)
            "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
         add_log("email sent to: ".$email,"sendemail");
+        return;
         }
       else
         {
