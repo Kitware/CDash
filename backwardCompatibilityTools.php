@@ -198,6 +198,21 @@ if(isset($_GET['upgrade-1-2']))
       pdo_query("ALTER TABLE buildgroup ADD summaryemail tinyint(4) default '0'");
       }
     }   
+  
+  // Add emailcategory 
+  $emailcategory = pdo_query("SELECT emailcategory FROM user2project LIMIT 1");
+  if(!$emailcategory)
+    {
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      pdo_query("ALTER TABLE \"user2project\" ADD \"emailcategory\" smallint DEFAULT '62'");
+      }
+    else
+      {
+      pdo_query("ALTER TABLE user2project ADD emailcategory tinyint(4) default '62'");
+      }
+    }     
+    
     
   // Set the database version
   setVersion();

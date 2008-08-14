@@ -467,6 +467,7 @@ CREATE TABLE `user2project` (
   `role` int(11) NOT NULL default '0',
   `cvslogin` varchar(50) NOT NULL default '',
   `emailtype` tinyint(4) NOT NULL default '0',
+  `emailcategory` tinyint(4) NOT NULL default '62',
   PRIMARY KEY  (`userid`,`projectid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

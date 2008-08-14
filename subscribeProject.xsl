@@ -153,6 +153,57 @@
    </td>
   </tr>
   
+  
+  <tr>
+    <td width="98"></td>
+    <td bgcolor="#CCCCCC"><strong>Email Category</strong></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="checkbox" name="emailcategory_update" value="2">
+     <xsl:if test="/cdash/emailcategory_update=1">
+     <xsl:attribute name="checked"></xsl:attribute>
+     </xsl:if>
+     </input> Update
+   </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="checkbox" name="emailcategory_configure" value="4">
+     <xsl:if test="/cdash/emailcategory_configure=1">
+     <xsl:attribute name="checked"></xsl:attribute>
+     </xsl:if>
+     </input> Configure
+   </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="checkbox" name="emailcategory_warning" value="8">
+     <xsl:if test="/cdash/emailcategory_warning=1">
+     <xsl:attribute name="checked"></xsl:attribute>
+     </xsl:if>
+     </input> Warning
+   </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="checkbox" name="emailcategory_error" value="16">
+     <xsl:if test="/cdash/emailcategory_error=1">
+     <xsl:attribute name="checked"></xsl:attribute>
+     </xsl:if>
+     </input> Error
+   </td>
+  </tr>  
+  <tr>
+    <td></td>
+    <td bgcolor="#EEEEEE"><input type="checkbox" name="emailcategory_test" value="32">
+     <xsl:if test="/cdash/emailcategory_test=1">
+     <xsl:attribute name="checked"></xsl:attribute>
+     </xsl:if>
+     </input> Test
+   </td>
+  </tr>  
+
   <tr>
     <td></td>
     <td bgcolor="#FFFFFF">

@@ -414,6 +414,7 @@ CREATE TABLE "user2project" (
   "role" bigint DEFAULT '0' NOT NULL,
   "cvslogin" character varying(50) DEFAULT '' NOT NULL,
   "emailtype" smallint DEFAULT '0' NOT NULL,
+  "emailcategory" smallint DEFAULT '62' NOT NULL,
   PRIMARY KEY ("userid", "projectid")
 );
 

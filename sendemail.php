@@ -16,6 +16,26 @@
 
 =========================================================================*/
 
+/** */
+function checkEmailPreferences($emailcategory,$nwarnings,$nerrors,$nfailingtests)
+{
+  include("common.php");
+  if($nwarnings>0 && check_email_category("warning",$emailcategory))
+    {
+    return true;
+    }
+  if($nerrors>0 && check_email_category("error",$emailcategory))
+    {
+    return true;
+    }
+  if($nfailingtests>0 && check_email_category("test",$emailcategory))
+    {
+    return true;
+    }
+  return false;  
+}
+
+
 /** Main function to send email if necessary */
 function sendemail($parser,$projectid)
 {
@@ -207,7 +227,7 @@ function sendemail($parser,$projectid)
     
     // Find the current updaters from the night using the dailyupdatefile table
     $summaryEmail = "";
-    $query = "SELECT user.email FROM user,user2project,dailyupdate,dailyupdatefile WHERE 
+    $query = "SELECT user.email,user2project.emailcategory FROM user,user2project,dailyupdate,dailyupdatefile WHERE 
                            user2project.projectid=$projectid
                            AND user2project.userid=user.id 
                            AND user2project.cvslogin=dailyupdatefile.author
@@ -219,27 +239,33 @@ function sendemail($parser,$projectid)
       {
       add_log($query."\n".pdo_error(),"sendemail");
       }
+      
     // Loop through the users and add them to the email array  
     while($user_array = pdo_fetch_array($user))
-       {
+      {
       // If the user is already in the list we quit
-       if(strpos($summaryEmail,$user_array["email"]) !== false)
-         {
-         continue;
-         }
+      if(strpos($summaryEmail,$user_array["email"]) !== false)
+        {
+        continue;
+        }
+      // If the user doesn't want to receive email
+      if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
+        {
+        continue;
+        }   
       if($summaryEmail != "")
         {
         $summaryEmail .= ", ";
         }
-       $summaryEmail .= $user_array["email"];
+      $summaryEmail .= $user_array["email"];
       }
     
-    // Select the users who want to receive all emails
+     // Select the users who want to receive all emails
      $user = pdo_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
                        AND user2project.userid=user.id AND user2project.emailtype>1");
      while($user_array = pdo_fetch_array($user))
        {
-      // If the user is already in the list we quit
+       // If the user is already in the list we quit
        if(strpos($summaryEmail,$user_array["email"]) !== false)
          {
          continue;
@@ -361,8 +387,9 @@ function sendemail($parser,$projectid)
       }
     
     // Find a matching name in the database
-    $query = "SELECT user.email FROM user,user2project WHERE user2project.projectid='$projectid' 
-                               AND user2project.userid=user.id AND user2project.cvslogin='$author'";
+    $query = "SELECT user.email,user2project.emailcategory 
+                     FROM user,user2project WHERE user2project.projectid='$projectid' 
+                     AND user2project.userid=user.id AND user2project.cvslogin='$author'";
     $user = pdo_query($query);
 
     if(pdo_num_rows($user)==0)
@@ -372,6 +399,13 @@ function sendemail($parser,$projectid)
       }
     
     $user_array = pdo_fetch_array($user);  
+    
+    // If the user doesn't want to receive email
+    if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
+      {
+      continue;
+      }
+     
     // don't add the same user twice
     if(strpos($email,$user_array["email"]) !== false)
      {
@@ -386,7 +420,7 @@ function sendemail($parser,$projectid)
     } 
     
  // Select the users who want to receive all emails
- $user = pdo_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
+ $user = pdo_query("SELECT user.email,user2project.emailtype,user2project.emailcategory FROM user,user2project WHERE user2project.projectid='$projectid' 
                        AND user2project.userid=user.id AND user2project.emailtype>1");
  while($user_array = pdo_fetch_array($user))
    {
@@ -396,6 +430,12 @@ function sendemail($parser,$projectid)
      continue;
      }
    
+   // If the user doesn't want to receive email
+   if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
+     {
+     continue;
+     }
+      
   // Nightly build notification
   if($user_array["emailtype"] == 2 && $buildtype=="Nightly")
     {

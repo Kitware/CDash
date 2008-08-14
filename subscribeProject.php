@@ -65,15 +65,21 @@ if ($session_OK)
   $project_array = pdo_fetch_array($project);
   
   // Check if the user is not already in the database
-  $user2project = pdo_query("SELECT cvslogin,role,emailtype FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+  $user2project = pdo_query("SELECT cvslogin,role,emailtype,emailcategory FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
   if(pdo_num_rows($user2project)>0)
     {
     $user2project_array = pdo_fetch_array($user2project);
     $xml .= add_XML_value("cvslogin",$user2project_array["cvslogin"]);
     $xml .= add_XML_value("role",$user2project_array["role"]);
     $xml .= add_XML_value("emailtype",$user2project_array["emailtype"]);
-    }
     
+    $emailcategory = $user2project_array["emailcategory"];
+    $xml .= add_XML_value("emailcategory_update",check_email_category("update",$emailcategory));
+    $xml .= add_XML_value("emailcategory_configure",check_email_category("configure",$emailcategory));
+    $xml .= add_XML_value("emailcategory_warning",check_email_category("warning",$emailcategory));
+    $xml .= add_XML_value("emailcategory_error",check_email_category("error",$emailcategory));
+    $xml .= add_XML_value("emailcategory_test",check_email_category("test",$emailcategory));
+    }
   
   // If we ask to subscribe
   @$Subscribe = $_POST["subscribe"];
@@ -82,25 +88,37 @@ if ($session_OK)
   @$Role = $_POST["role"];
   @$CVSLogin = $_POST["cvslogin"];
   @$EmailType = $_POST["emailtype"];
-  
+  @$EmailType = $_POST["emailtype"];
+
+      
   if($Unsubscribe)
     {
     pdo_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
     
     // Remove the claim sites for this project if they are only part of this project
-        pdo_query("DELETE FROM site2user WHERE userid='$userid' 
-                 AND siteid NOT IN 
-                (SELECT build.siteid FROM build,user2project as up WHERE 
-                 up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
-                 GROUP BY build.siteid)");
-                 
+    pdo_query("DELETE FROM site2user WHERE userid='$userid' 
+               AND siteid NOT IN 
+              (SELECT build.siteid FROM build,user2project as up WHERE 
+               up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
+               GROUP BY build.siteid)");             
     header( 'location: user.php?note=unsubscribedtoproject' );
     }   
   else if($Subscribe || $UpdateSubscription)
     {
+    @$emailcategory_update = $_POST["emailcategory_update"];
+    @$emailcategory_configure = $_POST["emailcategory_configure"];
+    @$emailcategory_warning = $_POST["emailcategory_warning"];
+    @$emailcategory_error = $_POST["emailcategory_error"];
+    @$emailcategory_test = $_POST["emailcategory_test"];
+    
+    $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test;
+    
+    echo $EmailCategory;
+    
     if(pdo_num_rows($user2project)>0)
       {
-      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType' WHERE userid='$userid' AND projectid='$projectid'");
+      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',emailcategory='$EmailCategory' 
+                         WHERE userid='$userid' AND projectid='$projectid'");
       if($Role==0)
         { 
         // Remove the claim sites for this project if they are only part of this project
@@ -113,10 +131,12 @@ if ($session_OK)
       }
     else
       {
-      pdo_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype) VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType')");
+      pdo_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype,emailcategory) 
+              VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType','$EmailCategory ')");
       }  
     header( 'location: user.php?note=subscribedtoproject' );
     }
+    
   // XML
   $xml .= "<project>";
   $xml .= add_XML_value("id",$project_array['id']);

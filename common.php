@@ -1509,7 +1509,12 @@ function  add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$preco
   $precontext = pdo_real_escape_string($precontext);  
   $postcontext = pdo_real_escape_string($postcontext);  
   $repeatcount = pdo_real_escape_string($repeatcount);  
-      
+  
+  if($sourceline == "")
+    {
+    $sourceline = 0;
+    }
+        
   pdo_query ("INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount) 
                VALUES (".qnum($buildid).",".qnum($type).",".qnum($logline).",'$text','$sourcefile',".qnum($sourceline).",'$precontext',
                        '$postcontext',".qnum($repeatcount).")");
@@ -2351,5 +2356,56 @@ function get_formated_time($minutes)
   $minutes=floor($remainingseconds/60);
   $seconds = $remainingseconds-$minutes*60;  
   return $hours.":".str_pad($minutes, 2, "0", STR_PAD_LEFT).":".str_pad($seconds, 2, "0", STR_PAD_LEFT);  
+}
+
+/** Check the email category */
+function check_email_category($name,$emailcategory)
+{
+  if($emailcategory>= 32)
+    {
+    if($name == "test")
+      {
+      return true;
+      }
+    $emailcategory -= 32;
+    }
+
+  if($emailcategory >= 16)
+    {
+    if($name == "error")
+      {
+      return true;
+      }
+    $emailcategory -= 16;
+    }
+    
+  if($emailcategory >= 8)
+    {
+    if($name == "warning")
+      {
+      return true;
+      }
+    $emailcategory -= 8;
+    }
+  
+  if($emailcategory >= 4)
+    {
+    if($name == "configure")
+      {
+      return true;
+      }
+    $emailcategory -= 4;
+    }
+      
+  if($emailcategory >= 2)
+    {
+
+    if($name == "update")
+      {
+      return true;
+      }
+    }
+      
+  return false;
 }
 ?>
