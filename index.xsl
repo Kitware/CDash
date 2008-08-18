@@ -63,10 +63,10 @@
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_1</xsl:attribute>
       Build Name</th>
       <td align="center" colspan="2" width="5%" class="botl">Update</td>
-      <td align="center" colspan="3" width="5%" class="botl">Configure</td>
+      <td align="center" colspan="3" width="15%" class="botl">Configure</td>
       <td align="center" colspan="3" width="15%" class="botl">Build</td>
       <td align="center" colspan="4" width="15%" class="botl">Test</td>
-      <th align="center" rowspan="2" width="20%" class="nob">
+      <th align="center" rowspan="2" width="10%" class="nob">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
       Build Time</th>
       <!-- <td align="center" rowspan="2" class="nob">Submit Date</td> -->
