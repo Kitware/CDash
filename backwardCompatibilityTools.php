@@ -663,6 +663,7 @@ function ComputeUpdateStatistics($days = 4)
                         nfailederrors=nfailederrors+'$nfailederrors',
                         nfixedtests=nfixedtests+'$nfixedtests',
                         nfailedtests=nfailedtests+'$nfailedtests' WHERE userid='$userid' AND projectid='$projectid' AND checkindate>='$checkindate'");
+            
             echo pdo_error();
             }
          else // insert into the database
@@ -703,6 +704,17 @@ function ComputeUpdateStatistics($days = 4)
             $totalupdatedfiles=1;
             $totalbuilds=1;
 
+            pdo_query("UPDATE userstatistics SET totalupdatedfiles=totalupdatedfiles+1,
+                        totalbuilds=totalbuilds+1,
+                        nfixedwarnings=nfixedwarnings+'$nfixedwarnings',
+                        nfailedwarnings=nfailedwarnings+'$nfailedwarnings',
+                        nfixederrors=nfixederrors+'$nfixederrors',
+                        nfailederrors=nfailederrors+'$nfailederrors',
+                        nfixedtests=nfixedtests+'$nfixedtests',
+                        nfailedtests=nfailedtests+'$nfailedtests' WHERE userid='$userid' AND projectid='$projectid' AND checkindate>'$checkindate'");
+           
+            echo pdo_error();             
+            
             // Find the previous test
             $previous = pdo_query("SELECT totalupdatedfiles,totalbuilds,nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests
                          FROM userstatistics WHERE userid='$userid' AND projectid='$projectid' AND checkindate<'$checkindate' ORDER BY checkindate DESC LIMIT 1");
@@ -725,6 +737,7 @@ function ComputeUpdateStatistics($days = 4)
                         VALUES ($userid,$projectid,'$checkindate',$totalupdatedfiles,$totalbuilds,$nfixedwarnings,$nfailedwarnings,$nfixederrors,$nfailederrors,$nfixedtests,$nfailedtests)
                         ");
             echo pdo_error();
+            
             }              
                                                     
           } // end has a registered user      
