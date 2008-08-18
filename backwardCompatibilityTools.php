@@ -540,16 +540,14 @@ function ComputeUpdateStatistics($days = 4)
                                     AND build.starttime<'$starttime' 
                                     AND build.starttime>'$now'
                                     ORDER BY build.starttime DESC LIMIT 1");
-
       echo pdo_error();
       
       $firstfile = 1;
       
       // Loop through the updated file
-      $updatefiles = pdo_query("SELECT id,author,checkindate FROM updatefile WHERE buildid='$buildid' ORDER BY buildid ASC");
+      $updatefiles = pdo_query("SELECT author,checkindate FROM updatefile WHERE buildid='$buildid' ORDER BY buildid ASC");
       while($updatefiles_array = pdo_fetch_array($updatefiles))
         {
-        $updatefileid = $updatefiles_array["id"];
         $checkindate = $updatefiles_array["checkindate"];
         $author = $updatefiles_array["author"];
         
@@ -730,7 +728,6 @@ function ComputeUpdateStatistics($days = 4)
             }              
                                                     
           } // end has a registered user      
-       
         $firstfile = 0;
         } // end updatefiles
         
