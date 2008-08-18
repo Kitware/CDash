@@ -133,13 +133,15 @@ $(document).ready(function() {
                   0: { sorter:'buildname'},
                   1: { sorter:'buildname'},
                   2: { sorter:'numericvalue'},
-                  3: { sorter:'numericvalue'},
                   4: { sorter:'numericvalue'},
                   5: { sorter:'numericvalue'},
                   7: { sorter:'numericvalue'},
                   8: { sorter:'numericvalue'},
-                  9: { sorter:'numericvalue'},
-                  11: { sorter:'text'}
+                  10: { sorter:'numericvalue'},
+                  11: { sorter:'numericvalue'},
+                  12: { sorter:'numericvalue'},
+                  13: { sorter:'numericvalue'},
+                  15: { sorter:'text'}
               },
             debug: false,
             widgets: ['zebra'] 

@@ -509,6 +509,31 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
     }
 }
 
+/** Add the difference between the numbers of configure warnings
+ *  for the previous and current build */
+function compute_configure_difference($buildid,$previousbuildid,$warning)
+{
+  // Look at the number of errors and warnings differences
+  $errors = pdo_query("SELECT count(*) FROM configureerror WHERE type='$warning' 
+                                   AND buildid='$buildid'");
+  $errors_array  = pdo_fetch_array($errors);
+  $nerrors = $errors_array[0]; 
+    
+  $previouserrors = pdo_query("SELECT count(*) FROM configureerror WHERE type='$warning' 
+                                   AND buildid='$previousbuildid'");
+  $previouserrors_array  = pdo_fetch_array($previouserrors);
+  $npreviouserrors = $previouserrors_array[0];
+   
+  // Don't log if no diff
+  $errordiff = $nerrors-$npreviouserrors;
+  if($errordiff != 0)
+    {
+    pdo_query("INSERT INTO configureerrordiff (buildid,type,difference) 
+                           VALUES('$buildid','$warning','$errordiff')");
+    add_last_sql_error("compute_configure_difference");
+    }
+}
+
 /** Add the difference between the numbers of tests
  *  for the previous and current build */
 function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttestmaxstatus)
@@ -593,6 +618,7 @@ function compute_test_timing($buildid)
    
     compute_error_difference($buildid,$previousbuildid,0); // errors
     compute_error_difference($buildid,$previousbuildid,1); // warnings
+    compute_configure_difference($buildid,$previousbuildid,1); // warnings
     compute_test_difference($buildid,$previousbuildid,0,$projecttestmaxstatus); // not run
     compute_test_difference($buildid,$previousbuildid,1,$projecttestmaxstatus); // fail
     compute_test_difference($buildid,$previousbuildid,2,$projecttestmaxstatus); // pass

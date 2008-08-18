@@ -133,7 +133,7 @@ CREATE TABLE "coverage" (
   "functionstested" bigint DEFAULT '0' NOT NULL,
   "functionsuntested" bigint DEFAULT '0' NOT NULL
 );
-CREATE INDEX "coverage_buildid_idx" on "coverage" ("buildid");;
+CREATE INDEX "coverage_buildid_idx" on "coverage" ("buildid");
 CREATE INDEX "coverage_fileid_idx" on "coverage" ("fileid");
 
 
@@ -541,3 +541,20 @@ CREATE TABLE "summaryemail" (
   "groupid" smallint  NOT NULL
 );
 CREATE INDEX "summaryemail_date_idx" on "summaryemail" ("date", "groupid");
+
+CREATE TABLE "configureerror" (
+  "buildid" bigint NOT NULL,
+  "type" smallint NOT NULL,
+  "text" text NOT NULL,
+);
+CREATE INDEX "configureerror_buildid_idx" on "configureerror" ("buildid");
+CREATE INDEX "configureerror_type_idx" on "configureerror" ("type");
+
+
+CREATE TABLE "configureerrordiff" (
+  "buildid" bigint NOT NULL,
+  "type" smallint NOT NULL,
+  "difference" smallint NOT NULL,
+);
+CREATE INDEX "configureerrordiff_buildid_idx" on "configureerrordiff" ("buildid");
+CREATE INDEX "configureerrordiff_type_idx" on "configureerrordiff" ("type");

@@ -37,7 +37,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!pdo_query("SELECT emailcategory FROM user2project LIMIT 1"))
+  if(!pdo_query("SELECT buildid FROM configureerror LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration/Backward Compatibility Tools panel of CDash.</upgradewarning>";
@@ -287,7 +287,8 @@ function generate_main_dashboard_XML($projectid,$date)
   
   $totalerrors = 0;
   $totalwarnings = 0;
-  $totalconfigure = 0;
+  $totalConfigureError = 0;
+  $totalConfigureWarning = 0;
   $totalnotrun = 0;
   $totalfail= 0;
   $totalpass = 0;  
@@ -464,28 +465,34 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("note","1");
       }
       
+      
+    $xml .= "<update>";  
     $update = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
     $update_array = pdo_fetch_row($update);
-    $xml .= add_XML_value("update",$update_array[0]);
+    $xml .= add_XML_value("files",$update_array[0]);
   
-    $updatestatus = pdo_query("SELECT status FROM buildupdate WHERE buildid='$buildid'");
+    $updatestatus = pdo_query("SELECT status,starttime,endtime FROM buildupdate WHERE buildid='$buildid'");
     $updatestatus_array = pdo_fetch_array($updatestatus);
     
     if(strlen($updatestatus_array["status"]) > 0 && $updatestatus_array["status"]!="0")
       {
-      $xml .= add_XML_value("updateerrors",1);
+      $xml .= add_XML_value("errors",1);
       }
     else
       {
       $updateerrors = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
       $updateerrors_array = pdo_fetch_row($updateerrors);
-      //$xml .= add_XML_value("updateerrors",$updateerrors_array[0]);
-      $xml .= add_XML_value("updateerrors",0);
+      $xml .= add_XML_value("errors",0);
       if($updateerrors_array[0]>0)
         {
-        $xml .= add_XML_value("updatewarning",1);
+        $xml .= add_XML_value("warning",1);
         }
       }
+
+    $diff = (strtotime($updatestatus_array["endtime"])-strtotime($updatestatus_array["starttime"]))/60;
+    $xml .= "<time>".$diff."</time>";
+
+    $xml .= "</update>";  
     $xml .= "<compilation>";
     
     // Find the number of errors and warnings
@@ -518,14 +525,35 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "</compilation>";
 
     // Get the Configure options
-    $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
+    $xml .= "<configure>";
+    $configure = pdo_query("SELECT status,starttime,endtime FROM configure WHERE buildid='$buildid'");
     if($nconfigure)
       {
       $configure_array = pdo_fetch_array($configure);
-      $xml .= add_XML_value("configure",$configure_array["status"]);
-      $totalconfigure += $configure_array["status"];
+      $xml .= add_XML_value("error",$configure_array["status"]);
+      $totalConfigureError += $configure_array["status"];
+
+      // Put the configuration warnings here
+      $configurewarnings = pdo_query("SELECT count(*) FROM configureerror WHERE buildid='$buildid' AND type='1'");
+      $configurewarnings_array = pdo_fetch_array($configurewarnings);
+      $nconfigurewarnings = $configurewarnings_array['count(*)'];
+      $xml .= add_XML_value("warning",$nconfigurewarnings);
+      $totalConfigureWarning += $nconfigurewarnings;
+      
+      // Add the difference
+      $configurewarning = pdo_query("SELECT difference FROM configureerrordiff WHERE buildid='$buildid' AND type='1'");
+      if(pdo_num_rows($configurewarning)>0)
+        {
+        $configurewarning_array = pdo_fetch_array($configurewarning);
+        $nconfigurewarning = $configurewarning_array["difference"];
+        $xml .= add_XML_value("warningdiff",$nconfigurewarning);
+        }
+      
+      $diff = (strtotime($configure_array["endtime"])-strtotime($configure_array["starttime"]))/60;
+      $xml .= "<time>".$diff."</time>";
       }
-  
+    $xml .= "</configure>";
+     
     // Get the tests
     $test = pdo_query("SELECT * FROM build2test WHERE buildid='$buildid'");
     if(pdo_num_rows($test)>0)
@@ -716,7 +744,9 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "</buildgroup>";  
     }
 
-  $xml .= add_XML_value("totalConfigure",$totalconfigure);
+  $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
+  $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
+  
   $xml .= add_XML_value("totalError",$totalerrors);
   $xml .= add_XML_value("totalWarning",$totalwarnings);
  

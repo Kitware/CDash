@@ -11,7 +11,7 @@
       </td>
   
   <!-- quick links -->
-  <td colspan="12" align="right" class="nob">
+  <td colspan="15" align="right" class="nob">
    <div>
    <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
    </div> 
@@ -37,7 +37,7 @@
       <td colspan="1" class="nob">
           <a href="#" class="grouptrigger"><h3><xsl:value-of select="$type/name"/></h3></a>
       </td>
-  <td colspan="12" align="right" class="nob">
+  <td colspan="15" align="right" class="nob">
    <div>
    <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
    </div> 
@@ -62,22 +62,24 @@
       <th align="center" rowspan="2" width="20%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_1</xsl:attribute>
       Build Name</th>
-      <th align="center" rowspan="2" width="5%">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_2</xsl:attribute>
-      Update</th>
-      <th align="center" rowspan="2" width="5%">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_3</xsl:attribute>
-      Cfg</th>
+      <td align="center" colspan="2" width="5%" class="botl">Update</td>
+      <td align="center" colspan="3" width="5%" class="botl">Configure</td>
       <td align="center" colspan="3" width="15%" class="botl">Build</td>
       <td align="center" colspan="4" width="15%" class="botl">Test</td>
       <th align="center" rowspan="2" width="20%" class="nob">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_11</xsl:attribute>
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
       Build Time</th>
       <!-- <td align="center" rowspan="2" class="nob">Submit Date</td> -->
 
    </tr>
 
    <tr class="table-heading">
+      <th align="center">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_2</xsl:attribute>
+      Files</th>
+      <th align="center">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_3</xsl:attribute>
+      Min</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_4</xsl:attribute>
       Error</th>
@@ -89,15 +91,24 @@
       Min</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_7</xsl:attribute>
-      NotRun</th>
+      Error</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_8</xsl:attribute>
-      Fail</th>
+      Warn</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_9</xsl:attribute>
-      Pass</th>
+      Min</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_10</xsl:attribute>
+      NotRun</th>
+      <th align="center">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_11</xsl:attribute>
+      Fail</th>
+      <th align="center">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_12</xsl:attribute>
+      Pass</th>
+      <th align="center">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_13</xsl:attribute>
       Min</th>
    </tr>
       </thead>
@@ -131,7 +142,7 @@
       </xsl:if> 
       
       <!-- If the build has errors or test failing -->
-       <xsl:if test="compilation/error > 0 or test/fail > 0">
+      <xsl:if test="compilation/error > 0 or test/fail > 0">
       <a href="javascript:;">
       <xsl:attribute name="onclick">javascript:buildinfo_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
       <img src="images/Info.png" alt="info" border="0"></img>
@@ -187,34 +198,64 @@
       <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="updateerrors = 1">
+          <xsl:when test="update/errors = 1">
             error
             </xsl:when>
             <xsl:otherwise>
-            <xsl:if test="updatewarning=1">
+            <xsl:choose>
+            <xsl:when test="update/warning=1">
             warning
-            </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+            normal
+            </xsl:otherwise>
+            </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="update"/> </a></b>
-      <xsl:if test="string-length(update)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
+      <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="update/files"/> </a></b>
+      <xsl:if test="string-length(update/files)=0"><xsl:text>&#160;</xsl:text></xsl:if>  
       </td>
+      <td align="right">
+      <xsl:value-of select="update/time"/>
+      <xsl:if test="string-length(update/time)=0"><xsl:text>&#160;</xsl:text></xsl:if> 
+      </td>    
       <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="configure!=0">
+          <xsl:when test="configure/error>0">
             error
             </xsl:when>
-           <xsl:when test="string-length(configure)>0">
+           <xsl:when test="string-length(configure/error)>0">
            normal 
-           </xsl:when>     
+           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
       <b>
       <a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/>
-      </xsl:attribute><xsl:value-of select="configure"/></a></b>
-      <xsl:if test="string-length(configure)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
+      </xsl:attribute><xsl:value-of select="configure/error"/></a></b>
+      <xsl:if test="string-length(configure/error)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
+       <xsl:if test="string-length(configure/warning)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
+      </td>
+      <td align="center">
+      <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="configure/warning > 0">
+            warning
+            </xsl:when>
+           <xsl:when test="string-length(configure/warning)>0">
+           normal 
+           </xsl:when>     
+        </xsl:choose>
+      </xsl:attribute>
+      <b><a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="configure/warning"/></a></b>
+      <xsl:if test="string-length(configure/warning)=0"><xsl:text>&#160;</xsl:text></xsl:if>   
+      <xsl:if test="configure/nwarningdiff > 0"><sub>+<xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
+      <xsl:if test="configure/nwarningdiff &lt; 0"><sub><xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
+      </td>
+      <td align="right">
+      <xsl:value-of select="configure/time"/>
+      <xsl:if test="string-length(configure/time)=0"><xsl:text>&#160;</xsl:text></xsl:if> 
       </td>
       <td align="center">
       <xsl:attribute name="class">
@@ -359,10 +400,11 @@
       <td align="left">Totals</td>
       <td align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
       <td><xsl:text>&#160;</xsl:text></td>
+      <td><xsl:text>&#160;</xsl:text></td>
       <td align="center">
        <xsl:attribute name="class">
        <xsl:choose>
-          <xsl:when test="/cdash/totalConfigure!=0">
+          <xsl:when test="/cdash/totalConfigureError!=0">
             error
             </xsl:when>
           <xsl:otherwise>
@@ -370,8 +412,22 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <b><xsl:value-of select = "/cdash/totalConfigure"/></b>  
+      <b><xsl:value-of select = "/cdash/totalConfigureError"/></b>  
       </td>
+      <td align="center">
+       <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/totalConfigureWarning > 0">
+            warning
+            </xsl:when>
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>  
+      <b><xsl:value-of select = "/cdash/totalConfigureWarning"/></b>
+      </td>
+      <td><xsl:text>&#160;</xsl:text></td>
       <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>

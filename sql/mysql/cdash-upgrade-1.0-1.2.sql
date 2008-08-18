@@ -50,3 +50,21 @@ CREATE TABLE IF NOT EXISTS `summaryemail` (
   KEY `date` (`date`),
   KEY `groupid` (`groupid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `configureerror` (
+  `buildid` bigint(20) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `text` text NOT NULL,
+  KEY `buildid` (`buildid`),
+  KEY `type` (`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `configureerrordiff` (
+  `buildid` bigint(20) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `difference` int(11) NOT NULL,
+  KEY `buildid` (`buildid`),
+  KEY `type` (`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

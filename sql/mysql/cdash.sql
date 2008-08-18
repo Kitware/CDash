@@ -596,6 +596,25 @@ CREATE TABLE `summaryemail` (
   KEY `groupid` (`groupid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
+CREATE TABLE `configureerror` (
+  `buildid` bigint(20) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `text` text NOT NULL,
+  KEY `buildid` (`buildid`),
+  KEY `type` (`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `configureerrordiff` (
+  `buildid` bigint(20) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `difference` int(11) NOT NULL,
+  KEY `buildid` (`buildid`),
+  KEY `type` (`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 

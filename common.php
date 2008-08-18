@@ -1201,7 +1201,9 @@ function remove_build($buildid)
   pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
   pdo_query("DELETE FROM configure WHERE buildid='$buildid'");
-    
+  pdo_query("DELETE FROM configureerror WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM configureerrordiff WHERE buildid='$buildid'");
+  
   // coverage file are kept unless they are shared
   $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
   while($coverage_array = pdo_fetch_array($coverage))
@@ -1361,6 +1363,27 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
   pdo_query ("INSERT INTO configure (buildid,starttime,endtime,command,log,status) 
                VALUES ('$buildid','$starttime','$endtime','$command','$log','$status')");
   add_last_sql_error("add_configure");
+  
+  // Add the warnings in the configurewarningtable
+  $position = strpos($log,'Warning:',0);
+  while($position !== false)
+    {
+    $warning = "";
+    $endline = strpos($log,'\n',$position);
+    if($endline !== false)
+      {
+      $warning = substr($log,$position,$endline-$position);
+      }
+    else
+      {
+      $warning = substr($log,$position);
+      }
+    
+    pdo_query ("INSERT INTO configureerror (buildid,type,text) 
+              VALUES ('$buildid','1','$warning')");
+    add_last_sql_error("add_configure");
+    $position = strpos($log,'Warning:',$position+1);
+    }
 }
 
 /** Add a new test */
