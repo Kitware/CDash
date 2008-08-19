@@ -36,6 +36,8 @@ $CDASH_USE_HTTPS ='0';
 // Name of the server running CDash. 
 // Leave empty to use current name.
 $CDASH_SERVER_NAME = '';
+// Define the location of the local directory
+$CDASH_USE_LOCAL_DIRECTORY = '0';
 // CSS file 
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory
