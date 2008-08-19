@@ -541,6 +541,7 @@ $xml .= AddCVSViewer("trac","Trac",$project_array['cvsviewertype']);
 $xml .= AddCVSViewer("fisheye","Fisheye",$project_array['cvsviewertype']);
 $xml .= AddCVSViewer("cvstrac","CVSTrac",$project_array['cvsviewertype']);
 $xml .= AddCVSViewer("viewvc","ViewVC",$project_array['cvsviewertype']);
+$xml .= AddCVSViewer("viewvc1.1","ViewVC1.1",$project_array['cvsviewertype']);
 $xml .= AddCVSViewer("websvn","WebSVN",$project_array['cvsviewertype']);
  
 $xml .= add_XML_value("nrepositories",$nRepositories); // should be at the end

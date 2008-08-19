@@ -2226,6 +2226,31 @@ function get_viewvc_diff_url($projecturl, $directory, $file, $revision)
   return make_cdash_url($diff_url);
 }
 
+/** Return the viewVC 1-1 url */
+function get_viewvc_1_1_diff_url($projecturl, $directory, $file, $revision)
+{
+  if($revision != '')
+    {
+    $prev_revision = get_previous_revision($revision);
+    if($prev_revision != $revision) //diff
+      {
+      $diff_url = $projecturl."/".($directory ? ($directory) : "")."/".$file;
+      $diff_url .= "?r1=".$prev_revision."&r2=".$revision;
+      } 
+    else //view
+      {
+      $diff_url = $projecturl."/".($directory ? ($directory) : "")."/".$file;
+      $diff_url .= "?revision=".$revision."&view=markup";
+      }
+    } 
+  else //log
+    {
+    $diff_url = $projecturl."/".($directory ? ($directory) : "")."/".$file."?view=log";
+    }
+
+  return make_cdash_url($diff_url);
+}
+
 /** Return the WebSVN URL */
 function get_websvn_diff_url($projecturl, $directory, $file, $revision)
 {
@@ -2320,6 +2345,10 @@ function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
   elseif($project_array["cvsviewertype"] == "viewvc")
     {
     return get_viewvc_diff_url($projecturl, $directory, $file, $revision);
+    }
+  elseif($project_array["cvsviewertype"] == "viewvc1.1")
+    {
+    return get_viewvc_1_1_diff_url($projecturl, $directory, $file, $revision);
     }
   elseif($project_array["cvsviewertype"] == "websvn")
     {
