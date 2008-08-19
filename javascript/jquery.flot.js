@@ -1,7 +1,7 @@
-/* Javascript plotting library for jQuery, v. 0.4.
+/*
+ * Flot v0.8.2
  *
- * Released under the MIT license by iola, December 2007.
- *
+ * Released under the MIT license.
  */
 
 (function($) {
@@ -10,7 +10,7 @@
         //   [ series1, series2 ... ]
         // where series is either just the data as [ [x1, y1], [x2, y2], ... ]
         // or { data: [ [x1, y1], [x2, y2], ... ], label: "some label" }
-        
+
         var series = [];
         var options = {
             // the color theme used for graphs
@@ -27,12 +27,16 @@
                 backgroundOpacity: 0.85 // set to 0 to avoid background
             },
             xaxis: {
+                label: null,
+                showLabels: true,
                 mode: null, // null or "time"
                 min: null, // min. value to show, null means set automatically
                 max: null, // max. value to show, null means set automatically
                 autoscaleMargin: null, // margin in % to add if auto-setting min/max
                 ticks: null, // either [1, 3] or [[1, "a"], 3] or (fn: axis info -> ticks) or app. number of ticks for auto-ticks
                 tickFormatter: null, // fn: number -> string
+                labelWidth: null, // size of tick labels in pixels
+                labelHeight: null,
                 
                 // mode specific options
                 tickDecimals: null, // no. of decimals, null means auto
@@ -42,6 +46,8 @@
                 timeformat: null // format string to use
             },
             yaxis: {
+                label: null,
+                showLabels: true,
                 autoscaleMargin: 0.02
             },
             points: {
@@ -64,37 +70,75 @@
                 fill: true,
                 fillColor: null
             },
+            deltas: {
+                show: false,
+                color: { above: '#A00', below: '#00A', equal: '#D52' },
+                markerWidth: 3
+            },
             grid: {
+                // marker lines -> should be an array of objects of the form:
+                // [ { axis: 'x', color: '#888888', value: 1, width: 1 }, ... ]
+                // they will only be drawn if they fall within the current
+                // graph scale
+                showLines: 'both',
+                showBorder: true,
+                markers: [],
+                labelFontSize: 16, // default is 16px font size for axis labels
                 color: "#545454", // primary color used for outline and labels
                 backgroundColor: null, // null for transparent, else color
                 tickColor: "#dddddd", // color used for the ticks
+                tickWidth: 1, // thickness of grid lines
                 labelMargin: 3, // in pixels
                 borderWidth: 2,
                 clickable: null,
+                hoverable: false,
+                hoverColor: null,
+                hoverFill: null,
+                hoverRadius: null,
+                mouseCatchingArea: 15,
                 coloredAreas: null, // array of { x1, y1, x2, y2 } or fn: plot area -> areas
                 coloredAreasColor: "#f4f4f4"
             },
+            hints: {
+                show: false,
+                showColorBox: true,
+                showSeriesLabel: true,
+                labelFormatter: defaultLabelFormatter,
+                hintFormatter: defaultHintFormatter,
+                backgroundColor: "#DDD", // null means auto-detect
+                backgroundOpacity: 0.7, // set to 0 to avoid background
+                borderColor: "#BBB" // set to 'transparent' for none
+            },
             selection: {
+                snapToTicks: false, // boolean for if we should snap to ticks on selection
                 mode: null, // one of null, "x", "y" or "xy"
                 color: "#e8cfac"
             },
-            shadowSize: 4
+            shadowSize: 4,
+            sortData: true
         };
+
         var canvas = null, overlay = null, eventHolder = null, 
             ctx = null, octx = null,
             target = target_,
             xaxis = {}, yaxis = {},
             plotOffset = { left: 0, right: 0, top: 0, bottom: 0},
-            yLabelMaxWidth = 0, yLabelMaxHeight = 0, xLabelBoxWidth = 0,
             canvasWidth = 0, canvasHeight = 0,
             plotWidth = 0, plotHeight = 0,
             hozScale = 0, vertScale = 0,
+            hintDiv = null, hintBackground = null,
+            lastMarker = null,
             // dedicated to storing data for buggy standard compliance cases
-            workarounds = {};
+            workarounds = {},
+            // buffer constants
+            RIGHT_SIDE_BUFFER = 10,
+            BOTTOM_SIDE_BUFFER = 10;
         
         this.setData = setData;
         this.setupGrid = setupGrid;
+        this.highlightSelected = highlightSelected;
         this.draw = draw;
+        this.cleanup = cleanup;
         this.clearSelection = clearSelection;
         this.setSelection = setSelection;
         this.getCanvas = function() { return canvas; };
@@ -108,7 +152,8 @@
         constructCanvas();
         setupGrid();
         draw();
-
+        // kill hints and highlighted points when the mouse leaves the graph
+        if (options.grid.hoverable) { $(target).mouseout(cleanup); }
 
         function setData(d) {
             series = parseData(d);
@@ -118,20 +163,35 @@
         }
         
         function parseData(d) {
+            // normalize the data given by the call to $.plot. If we're
+            // going to be monitoring mousemove's then sort the data
+            function sortData(x, y) {
+                if (!x || !y) return 0;
+                if (x[0] > y[0]) return 1;
+                else if( x[0] < y[0]) return -1;
+                else return 0;
+            }
+
             var res = [];
             for (var i = 0; i < d.length; ++i) {
                 var s;
                 if (d[i].data) {
                     s = {};
-                    for (var v in d[i])
+                    if (options.sortData) {
+                        d[i].data.sort(sortData);
+                    }
+                    for (var v in d[i]) {
                         s[v] = d[i][v];
+                    }
                 }
                 else {
                     s = { data: d[i] };
+                    if (options.sortData) {
+                        d[i].sort(sortData);
+                    }
                 }
                 res.push(s);
             }
-
             return res;
         }
         
@@ -210,17 +270,21 @@
                     s.color = colors[s.color].toString();
 
                 // copy the rest
-                s.lines = $.extend(true, {}, options.lines, s.lines);
+                s.lines =  $.extend(true, {}, options.lines,  s.lines);
                 s.points = $.extend(true, {}, options.points, s.points);
-                s.bars = $.extend(true, {}, options.bars, s.bars);
-                if (s.shadowSize == null)
-                    s.shadowSize = options.shadowSize;
+                s.bars =   $.extend(true, {}, options.bars,   s.bars);
+                s.deltas = $.extend(true, {}, options.deltas, s.deltas);
+                s.hints =  $.extend(true, {}, options.hints,  s.hints);
+                if (s.shadowSize == null) s.shadowSize = options.shadowSize;
             }
         }
         
         function processData() {
-            xaxis.datamin = yaxis.datamin = Number.MAX_VALUE;
-            xaxis.datamax = yaxis.datamax = Number.MIN_VALUE;
+            var top_sentry = Number.POSITIVE_INFINITY,
+                bottom_sentry = Number.NEGATIVE_INFINITY;
+            
+            xaxis.datamin = yaxis.datamin = top_sentry;
+            xaxis.datamax = yaxis.datamax = bottom_sentry;
 
             for (var i = 0; i < series.length; ++i) {
                 var data = series[i].data;
@@ -247,13 +311,13 @@
                 }
             }
             
-            if (xaxis.datamin == Number.MAX_VALUE)
+            if (xaxis.datamin == top_sentry)
                 xaxis.datamin = 0;
-            if (yaxis.datamin == Number.MAX_VALUE)
+            if (yaxis.datamin == top_sentry)
                 yaxis.datamin = 0;
-            if (xaxis.datamax == Number.MIN_VALUE)
+            if (xaxis.datamax == bottom_sentry)
                 xaxis.datamax = 1;
-            if (yaxis.datamax == Number.MIN_VALUE)
+            if (yaxis.datamax == bottom_sentry)
                 yaxis.datamax = 1;
         }
 
@@ -293,8 +357,15 @@
                 });
             }
 
-            if (options.grid.clickable)
+            if (options.grid.hoverable) {
+                eventHolder.each(function () {
+                    this.onmousemove = onMouseMove;
+                });
+            }
+
+            if (options.grid.clickable) {
                 eventHolder.click(onClick);
+            }
         }
 
         function setupGrid() {
@@ -310,8 +381,9 @@
             setTicks(yaxis, options.yaxis);
 
             setSpacing();
-            insertLabels();
+            insertTickLabels();
             insertLegend();
+            insertAxisLabels();
         }
         
         function setRange(axis, axisOptions) {
@@ -382,14 +454,14 @@
                         
                         if (escape) {
                             switch (c) {
-                            case 'h': c = "" + d.getHours(); break;
-                            case 'H': c = leftPad(d.getHours()); break;
-                            case 'M': c = leftPad(d.getMinutes()); break;
-                            case 'S': c = leftPad(d.getSeconds()); break;
-                            case 'd': c = "" + d.getDate(); break;
-                            case 'm': c = "" + (d.getMonth() + 1); break;
-                            case 'y': c = "" + d.getFullYear(); break;
-                            case 'b': c = "" + monthNames[d.getMonth()]; break;
+                            case 'h': c = "" + d.getUTCHours(); break;
+                            case 'H': c = leftPad(d.getUTCHours()); break;
+                            case 'M': c = leftPad(d.getUTCMinutes()); break;
+                            case 'S': c = leftPad(d.getUTCSeconds()); break;
+                            case 'd': c = "" + d.getUTCDate(); break;
+                            case 'm': c = "" + (d.getUTCMonth() + 1); break;
+                            case 'y': c = "" + d.getUTCFullYear(); break;
+                            case 'b': c = "" + monthNames[d.getUTCMonth()]; break;
                             }
                             r.push(c);
                             escape = false;
@@ -476,32 +548,33 @@
                     var step = tickSize * timeUnitSize[unit];
 
                     if (unit == "second")
-                        d.setSeconds(floorInBase(d.getSeconds(), tickSize));
+                        d.setUTCSeconds(floorInBase(d.getUTCSeconds(), tickSize));
                     if (unit == "minute")
-                        d.setMinutes(floorInBase(d.getMinutes(), tickSize));
+                        d.setUTCMinutes(floorInBase(d.getUTCMinutes(), tickSize));
                     if (unit == "hour")
-                        d.setHours(floorInBase(d.getHours(), tickSize));
+                        d.setUTCHours(floorInBase(d.getUTCHours(), tickSize));
                     if (unit == "month")
-                        d.setMonth(floorInBase(d.getMonth(), tickSize));
+                        d.setUTCMonth(floorInBase(d.getUTCMonth(), tickSize));
                     if (unit == "year")
-                        d.setFullYear(floorInBase(d.getFullYear(), tickSize));
+                        d.setUTCFullYear(floorInBase(d.getUTCFullYear(), tickSize));
                     
                     // reset smaller components
-                    d.setMilliseconds(0);
+                    d.setUTCMilliseconds(0);
                     if (step >= timeUnitSize.minute)
-                        d.setSeconds(0);
+                        d.setUTCSeconds(0);
                     if (step >= timeUnitSize.hour)
-                        d.setMinutes(0);
+                        d.setUTCMinutes(0);
                     if (step >= timeUnitSize.day)
-                        d.setHours(0);
+                        d.setUTCHours(0);
                     if (step >= timeUnitSize.day * 4)
-                        d.setDate(1);
+                        d.setUTCDate(1);
                     if (step >= timeUnitSize.year)
-                        d.setMonth(0);
+                        d.setUTCMonth(0);
 
 
-                    var carry = 0, v;
+                    var carry = 0, v = Number.NaN, prev;
                     do {
+                        prev = v;
                         v = d.getTime();
                         ticks.push({ v: v, label: axis.tickFormatter(v, axis) });
                         if (unit == "month") {
@@ -509,23 +582,23 @@
                                 // a bit complicated - we'll divide the month
                                 // up but we need to take care of fractions
                                 // so we don't end up in the middle of a day
-                                d.setDate(1);
+                                d.setUTCDate(1);
                                 var start = d.getTime();
-                                d.setMonth(d.getMonth() + 1);
+                                d.setUTCMonth(d.getUTCMonth() + 1);
                                 var end = d.getTime();
                                 d.setTime(v + carry * timeUnitSize.hour + (end - start) * tickSize);
-                                carry = d.getHours();
-                                d.setHours(0);
+                                carry = d.getUTCHours();
+                                d.setUTCHours(0);
                             }
                             else
-                                d.setMonth(d.getMonth() + tickSize);
+                                d.setUTCMonth(d.getUTCMonth() + tickSize);
                         }
                         else if (unit == "year") {
-                            d.setFullYear(d.getFullYear() + tickSize);
+                            d.setUTCFullYear(d.getUTCFullYear() + tickSize);
                         }
                         else
                             d.setTime(v + step);
-                    } while (v < axis.max);
+                    } while (v < axis.max && v != prev);
 
                     return ticks;
                 };
@@ -601,12 +674,13 @@
                     var ticks = [];
                     var start = floorInBase(axis.min, axis.tickSize);
                     // then spew out all possible ticks
-                    var i = 0, v;
+                    var i = 0, v = Number.NaN, prev;
                     do {
+                        prev = v;
                         v = start + i * axis.tickSize;
                         ticks.push({ v: v, label: axis.tickFormatter(v, axis) });
                         ++i;
-                    } while (v < axis.max);
+                    } while (v < axis.max && v != prev);
                     return ticks;
                 };
 
@@ -621,6 +695,10 @@
                 axis.tickFormatter = function (v, axis) { return "" + axisOptions.tickFormatter(v, axis); };
             else
                 axis.tickFormatter = formatter;
+            if (axisOptions.labelWidth != null)
+                axis.labelWidth = axisOptions.labelWidth;
+            if (axisOptions.labelHeight != null)
+                axis.labelHeight = axisOptions.labelHeight;
         }
         
         function extendXRangeIfNeededByBar() {
@@ -679,23 +757,32 @@
         }
         
         function setSpacing() {
-            // calculate y label dimensions
             var i, labels = [], l;
-            for (i = 0; i < yaxis.ticks.length; ++i) {
-                l = yaxis.ticks[i].label;
-                if (l)
-                    labels.push('<div class="tickLabel">' + l + '</div>');
-            }
+            if (yaxis.labelWidth == null || yaxis.labelHeight == null) {
+                // calculate y label dimensions
+                for (i = 0; i < yaxis.ticks.length; ++i) {
+                    l = yaxis.ticks[i].label;
+                    if (l)
+                        labels.push('<div class="tickLabel">' + l + '</div>');
+                }
+                
+                if (labels.length > 0) {
+                    var dummyDiv = $('<div style="position:absolute;top:-10000px;font-size:smaller">'
+                                     + labels.join("") + '</div>').appendTo(target);
+                    if (yaxis.labelWidth == null)
+                        yaxis.labelWidth = dummyDiv.width();
+                    if (yaxis.labelHeight == null)
+                        yaxis.labelHeight = dummyDiv.find("div").height();
+                    dummyDiv.remove();
+                }
 
-            if (labels.length > 0) {
-                var dummyDiv = $('<div style="position:absolute;top:-10000px;font-size:smaller">'
-                                 + labels.join("") + '</div>').appendTo(target);
-                yLabelMaxWidth = dummyDiv.width();
-                yLabelMaxHeight = dummyDiv.find("div").height();
-                dummyDiv.remove();
+                if (yaxis.labelWidth == null)
+                    yaxis.labelWidth = 0;
+                if (yaxis.labelHeight == null)
+                    yaxis.labelHeight = 0;
             }
-
-            var maxOutset = options.grid.borderWidth;
+                
+            var maxOutset = options.grid.borderWidth / 2;
             if (options.points.show)
                 maxOutset = Math.max(maxOutset, options.points.radius + options.points.lineWidth/2);
             for (i = 0; i < series.length; ++i) {
@@ -704,40 +791,53 @@
             }
 
             plotOffset.left = plotOffset.right = plotOffset.top = plotOffset.bottom = maxOutset;
-            
-            plotOffset.left += yLabelMaxWidth + options.grid.labelMargin;
-            plotWidth = canvasWidth - plotOffset.left - plotOffset.right;
+
+            if (yaxis.labelWidth > 0 && options.xaxis.showLabels)
+                plotOffset.left += yaxis.labelWidth + options.grid.labelMargin;
+
+            plotWidth = canvasWidth - plotOffset.left - plotOffset.right - RIGHT_SIDE_BUFFER;
 
             // set width for labels; to avoid measuring the widths of
             // the labels, we construct fixed-size boxes and put the
             // labels inside them, the fixed-size boxes are easy to
             // mid-align
-            xLabelBoxWidth = plotWidth / 6;
+            if (xaxis.labelWidth == null)
+                xaxis.labelWidth = plotWidth / 6;
+
+            if (xaxis.labelHeight == null) {
+                // measure x label heights
+                labels = [];
+                for (i = 0; i < xaxis.ticks.length; ++i) {
+                    l = xaxis.ticks[i].label;
+                    if (l)
+                        labels.push('<span class="tickLabel" width="' + xaxis.labelWidth + '">' + l + '</span>');
+                }
+                
+                xaxis.labelHeight = 0;
+                if (labels.length > 0) {
+                    var dummyDiv = $('<div style="position:absolute;top:-10000px;font-size:smaller">'
+                                     + labels.join("") + '</div>').appendTo(target);
+                    xaxis.labelHeight = dummyDiv.height();
+                    dummyDiv.remove();
+                }
+            }
+                
+            if (xaxis.labelHeight > 0 && options.yaxis.showLabels)
+                plotOffset.bottom += xaxis.labelHeight + options.grid.labelMargin;
+                
+            // add a bit of extra buffer on the bottom of the graph to account
+            // for the axis label, if there is one
+            if (options.xaxis.label)
+                plotOffset.bottom += BOTTOM_SIDE_BUFFER;
             
-            // measure x label heights
-            labels = [];
-            for (i = 0; i < xaxis.ticks.length; ++i) {
-                l = xaxis.ticks[i].label;
-                if (l)
-                    labels.push('<span class="tickLabel" width="' + xLabelBoxWidth + '">' + l + '</span>');
-            }
-
-            var xLabelMaxHeight = 0;
-            if (labels.length > 0) {
-                var dummyDiv = $('<div style="position:absolute;top:-10000px;font-size:smaller">'
-                                 + labels.join("") + '</div>').appendTo(target);
-                xLabelMaxHeight = dummyDiv.height();
-                dummyDiv.remove();
-            }
-
-            plotOffset.bottom += xLabelMaxHeight + options.grid.labelMargin;
-            plotHeight = canvasHeight - plotOffset.bottom - plotOffset.top;
+            plotHeight = canvasHeight - plotOffset.bottom - BOTTOM_SIDE_BUFFER - plotOffset.top;
             hozScale = plotWidth / (xaxis.max - xaxis.min);
             vertScale = plotHeight / (yaxis.max - yaxis.min);
         }
         
         function draw() {
             drawGrid();
+            drawMarkers();
             for (var i = 0; i < series.length; i++) {
                 drawSeries(series[i]);
             }
@@ -753,13 +853,13 @@
 
         function drawGrid() {
             var i;
-            
+
             ctx.save();
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             ctx.translate(plotOffset.left, plotOffset.top);
 
             // draw background, if any
-            if (options.grid.backgroundColor != null) {
+            if (options.grid.backgroundColor) {
                 ctx.fillStyle = options.grid.backgroundColor;
                 ctx.fillRect(0, 0, plotWidth, plotHeight);
             }
@@ -806,30 +906,35 @@
             }
             
             // draw the inner grid
-            ctx.lineWidth = 1;
+            ctx.lineWidth = options.grid.tickWidth;
             ctx.strokeStyle = options.grid.tickColor;
             ctx.beginPath();
             var v;
-            for (i = 0; i < xaxis.ticks.length; ++i) {
-                v = xaxis.ticks[i].v;
-                if (v <= xaxis.min || v >= xaxis.max)
-                    continue;   // skip those lying on the axes
+            if (options.grid.showLines == 'x' || options.grid.showLines == 'both') {
+                for (i = 0; i < xaxis.ticks.length; ++i) {
+                    v = xaxis.ticks[i].v;
+                     if (v <= xaxis.min || v >= xaxis.max)
+                         continue;   // skip those lying on the axes
 
-                ctx.moveTo(Math.floor(tHoz(v)) + ctx.lineWidth/2, 0);
-                ctx.lineTo(Math.floor(tHoz(v)) + ctx.lineWidth/2, plotHeight);
+                     ctx.moveTo(Math.floor(tHoz(v)) + ctx.lineWidth/2, 0);
+                     ctx.lineTo(Math.floor(tHoz(v)) + ctx.lineWidth/2, plotHeight);
+                }
             }
 
-            for (i = 0; i < yaxis.ticks.length; ++i) {
-                v = yaxis.ticks[i].v;
-                if (v <= yaxis.min || v >= yaxis.max)
-                    continue;
+            if (options.grid.showLines == 'y' || options.grid.showLines == 'both') {
+                for (i = 0; i < yaxis.ticks.length; ++i) {
+                    v = yaxis.ticks[i].v;
+                    if (v <= yaxis.min || v >= yaxis.max)
+                        continue;
 
-                ctx.moveTo(0, Math.floor(tVert(v)) + ctx.lineWidth/2);
-                ctx.lineTo(plotWidth, Math.floor(tVert(v)) + ctx.lineWidth/2);
+                    ctx.moveTo(0, Math.floor(tVert(v)) + ctx.lineWidth/2);
+                    ctx.lineTo(plotWidth, Math.floor(tVert(v)) + ctx.lineWidth/2);
+                }
             }
+
             ctx.stroke();
             
-            if (options.grid.borderWidth) {
+            if (options.grid.showBorder && options.grid.borderWidth) {
                 // draw border
                 ctx.lineWidth = options.grid.borderWidth;
                 ctx.strokeStyle = options.grid.color;
@@ -839,40 +944,91 @@
             }
         }
         
-        function insertLabels() {
+        function insertTickLabels() {
             target.find(".tickLabels").remove();
             
             var i, tick;
             var html = '<div class="tickLabels" style="font-size:smaller;color:' + options.grid.color + '">';
             
             // do the x-axis
-            for (i = 0; i < xaxis.ticks.length; ++i) {
-                tick = xaxis.ticks[i];
-                if (!tick.label || tick.v < xaxis.min || tick.v > xaxis.max)
-                    continue;
-                html += '<div style="position:absolute;top:' + (plotOffset.top + plotHeight + options.grid.labelMargin) + 'px;left:' + (plotOffset.left + tHoz(tick.v) - xLabelBoxWidth/2) + 'px;width:' + xLabelBoxWidth + 'px;text-align:center" class="tickLabel">' + tick.label + "</div>";
+            if (options.xaxis.showLabels) {
+                for (i = 0; i < xaxis.ticks.length; ++i) {
+                    tick = xaxis.ticks[i];
+                    if (!tick.label || tick.v < xaxis.min || tick.v > xaxis.max)
+                        continue;
+                    html += '<div style="position:absolute;top:' + (plotOffset.top + plotHeight + options.grid.labelMargin) + 'px;left:' + (plotOffset.left + tHoz(tick.v) - xaxis.labelWidth/2) + 'px;width:' + xaxis.labelWidth + 'px;text-align:center" class="tickLabel">' + tick.label + "</div>";
+                }
             }
             
             // do the y-axis
-            for (i = 0; i < yaxis.ticks.length; ++i) {
-                tick = yaxis.ticks[i];
-                if (!tick.label || tick.v < yaxis.min || tick.v > yaxis.max)
-                    continue;
-                html += '<div style="position:absolute;top:' + (plotOffset.top + tVert(tick.v) - yLabelMaxHeight/2) + 'px;left:0;width:' + yLabelMaxWidth + 'px;text-align:right" class="tickLabel">' + tick.label + "</div>";
+            if (options.yaxis.showLabels) {
+                for (i = 0; i < yaxis.ticks.length; ++i) {
+                    tick = yaxis.ticks[i];
+                    if (!tick.label || tick.v < yaxis.min || tick.v > yaxis.max)
+                        continue;
+                    html += '<div style="position:absolute;top:' + (plotOffset.top + tVert(tick.v) - yaxis.labelHeight/2) + 'px;left:0;width:' + yaxis.labelWidth + 'px;text-align:right" class="tickLabel">' + tick.label + "</div>";
+                }
             }
 
             html += '</div>';
             
             target.append(html);
         }
+        
+        function insertAxisLabels() {
+            if (options.xaxis.label) {
+                yLocation = plotOffset.top + plotHeight + (xaxis.labelHeight * 1.5);
+                xLocation = plotOffset.left;
+                target.find('#xaxislabel').remove();
+                target.append("<div id='xaxislabel' style='color:" +
+                              options.grid.color + ";width:" + plotWidth +
+                              "px;text-align:center;position:absolute;top:" +
+                              yLocation + "px;left:" + xLocation + "px;'>" +
+                              options.xaxis.label + "</div>");
+            }
+            if (options.yaxis.label) {
+                var element;
+                if ($.browser.msie) {
+                    element = "<span class='yaxis axislabel' style='writing-mode: tb-rl;filter: flipV flipH;'>" + options.yaxis.label + "</span>";
+                }
+                else {
+                    // we'll use svg instead
+                    var element = document.createElement('object');
+                    element.setAttribute('type', 'image/svg+xml');
+                    xAxisHeight = $('#xaxislabel').height();
+                    string = '<svg:svg baseProfile="full" height="' + plotHeight +
+                             '" width="' + xAxisHeight * 1.5 +
+                             '" xmlns:svg="http://www.w3.org/2000/svg" ' +
+                             'xmlns="http://www.w3.org/2000/svg" xmlns:xlink=' +
+                             '"http://www.w3.org/1999/xlink"><svg:g>';
+                    string += '<svg:text text-anchor="middle" style="fill:#545454; ' +
+                              'stroke:none" x="' + options.grid.labelFontSize + '" y="' + plotHeight / 2 + '" ' + 
+                              'transform="rotate(-90,' + options.grid.labelFontSize + ',' + plotHeight / 2 +
+                              ')" font-size="' + options.grid.labelFontSize + '">' +
+                              options.yaxis.label + '</svg:text></svg:g></svg:svg>';
+                    element.setAttribute('data', 'data:image/svg+xml,' + string);
+                }
+
+                xLocation = plotOffset.left - (yaxis.labelWidth * 1.5) - options.grid.labelFontSize;
+                yLocation = plotOffset.top;
+                var yAxisLabel = $("<div id='yaxislabel' style='color:" +
+                                   options.grid.color + ";height:" + plotHeight +
+                                   "px;text-align:center;position:absolute;top:" +
+                                   yLocation + "px;left:" + xLocation + "px;'</div>");
+                yAxisLabel.append(element);
+                target.find('#yaxislabel').remove().end().append(yAxisLabel);
+            }
+        }
 
         function drawSeries(series) {
-            if (series.lines.show || (!series.bars.show && !series.points.show))
+            if (series.lines.show || (!series.bars.show && !series.points.show && !series.deltas.show))
                 drawSeriesLines(series);
             if (series.bars.show)
                 drawSeriesBars(series);
             if (series.points.show)
                 drawSeriesPoints(series);
+            if (series.deltas.show)
+                drawSeriesDeltas(series);
         }
         
         function drawSeriesLines(series) {
@@ -1116,11 +1272,9 @@
 
             ctx.lineWidth = lw;
             ctx.strokeStyle = series.color;
-            if (series.lines.fill) {
-                ctx.fillStyle = series.lines.fillColor != null ? series.lines.fillColor : parseColor(series.color).scale(null, null, null, 0.4).toString();
+            setFillStyle(series.lines, series.color);
+            if (series.lines.fill)
                 plotLineArea(series.data, 0);
-            }
-
             plotLine(series.data, 0);
             ctx.restore();
         }
@@ -1175,8 +1329,115 @@
 
             ctx.lineWidth = series.points.lineWidth;
             ctx.strokeStyle = series.color;
-            ctx.fillStyle = series.points.fillColor != null ? series.points.fillColor : series.color;
+            setFillStyle(series.points, series.color);
             plotPoints(series.data, series.points.radius, series.points.fill);
+            ctx.restore();
+        }
+
+        function drawSeriesDeltas(series) {
+            function plotPoints(data, radius, fill) {
+                for (var i = 0; i < data.length; ++i) {
+                    if (data[i] == null)
+                        continue;
+
+                    var x = data[i][0];
+                    var y = data[i][1]; // the datapoint
+                    var d = data[i][2]; // the delta
+                    if (x < xaxis.min || x > xaxis.max ||
+                        y < yaxis.min || y > yaxis.max ||
+                        d < yaxis.min || d > yaxis.max)
+                        continue;
+
+                    ctx.beginPath();
+                    ctx.arc(tHoz(x), tVert(y), radius, 0, 2 * Math.PI, true);
+                    if (fill)
+                        ctx.fill();
+                    ctx.stroke();
+                }
+            }
+
+            function plotDeltas(data, settings) {
+                for (var i = 0; i < data.length; ++i) {
+                    if (data[i] == null)
+                        continue;
+
+                    var x = data[i][0];
+                    var y = data[i][1]; // the datapoint
+                    var d = data[i][2]; // the delta
+                    if (x < xaxis.min || x > xaxis.max ||
+                        y < yaxis.min || y > yaxis.max ||
+                        d < yaxis.min || d > yaxis.max)
+                        continue;
+
+                    if (y < d)       ctx.strokeStyle = settings.color.below;
+                    else if (y > d)  ctx.strokeStyle = settings.color.above;
+                    else             ctx.strokeStyle = settings.color.equal;
+
+                    ctx.beginPath();
+                    ctx.moveTo(tHoz(x), tVert(y));
+                    ctx.lineTo(tHoz(x), tVert(d));
+                    ctx.stroke();
+
+                    // draw the markers for the deltas (horizontal line)
+                    // but constrain them to the plot area
+                    var markerLeft = tHoz(x) - (ctx.lineWidth*settings.markerWidth);
+                    var markerRight = tHoz(x) + (ctx.lineWidth*settings.markerWidth);
+                    //if (markerLeft <= tHoz(xaxis.min))
+                    //    markerLeft = tHoz(xaxis.min);
+                    //if (markerRight >= tHoz(xaxis.max))
+                    //    markerRight = tHoz(xaxis.max);
+
+                    ctx.beginPath();
+                    ctx.moveTo(markerLeft, tVert(d));
+                    ctx.lineTo(markerRight, tVert(d));
+                    ctx.stroke();
+                }
+            }
+
+            function plotPointShadows(data, offset, radius) {
+                for (var i = 0; i < data.length; ++i) {
+                    if (data[i] == null)
+                        continue;
+
+                    var x = data[i][0];
+                    var y = data[i][1]; // the datapoint
+                    var d = data[i][2]; // the delta
+                    if (x < xaxis.min || x > xaxis.max ||
+                        y < yaxis.min || y > yaxis.max ||
+                        d < yaxis.min || d > yaxis.max)
+                        continue;
+                    ctx.beginPath();
+                    ctx.arc(tHoz(x), tVert(y) + offset, radius, 0, Math.PI, false);
+                    ctx.stroke();
+                }
+            }
+
+            ctx.save();
+            ctx.translate(plotOffset.left, plotOffset.top);
+
+            var lw = series.lines.lineWidth;
+            var sw = series.shadowSize;
+            if (sw > 0) {
+                // draw shadow in two steps
+                ctx.lineWidth = sw / 2;
+                ctx.strokeStyle = "rgba(0,0,0,0.1)";
+                plotPointShadows(series.data, sw/2 + ctx.lineWidth/2, series.points.radius);
+
+                ctx.lineWidth = sw / 2;
+                ctx.strokeStyle = "rgba(0,0,0,0.2)";
+                plotPointShadows(series.data, ctx.lineWidth/2, series.points.radius);
+            }
+
+            ctx.lineWidth = series.points.lineWidth;
+
+            // draw the delta lines and markers
+            plotDeltas(series.data, series.deltas);
+
+            // draw the actual datapoints
+            ctx.strokeStyle = series.color;
+            setFillStyle(series.points, series.color);
+            plotPoints(series.data, series.points.radius, series.points.fill);
+
             ctx.restore();
         }
 
@@ -1188,9 +1449,14 @@
                     
                     var x = data[i][0], y = data[i][1];
                     var drawLeft = true, drawTop = true, drawRight = true;
-                    var left = x, right = x + barWidth, bottom = 0, top = y;
 
-                    if (right < xaxis.min || left > xaxis.max || top < yaxis.min || bottom > yaxis.max)
+                    // determine the co-ordinates of the bar, account for negative bars having
+                    // flipped top/bottom and draw/don't draw accordingly
+                    var halfBar = barWidth / 2;
+                    var left = x - halfBar, right = x + halfBar,
+                        bottom = (y < 0 ? y : 0), top = (y < 0 ? 0 : y);
+                    if (right < xaxis.min || left > xaxis.max ||
+                        top < yaxis.min || bottom > yaxis.max)
                         continue;
 
                     // clip
@@ -1266,19 +1532,64 @@
 
             ctx.lineWidth = lw;
             ctx.strokeStyle = series.color;
-            if (series.bars.fill) {
-                ctx.fillStyle = series.bars.fillColor != null ? series.bars.fillColor : parseColor(series.color).scale(null, null, null, 0.4).toString();
-            }
-
+            setFillStyle(series.bars, series.color);
             plotBars(series.data, bw, 0, series.bars.fill);
             ctx.restore();
         }
 
-        function insertLegend() {
-            target.find(".legend").remove();
+        function setFillStyle(obj, seriesColor) {
+            var fill = obj.fill;
+            if (fill) {
+                if (obj.fillColor)
+                    ctx.fillStyle = obj.fillColor;
+                else {
+                    var c = parseColor(seriesColor);
+                    c.a = typeof fill == "number" ? fill : 0.4;
+                    c.normalize();
+                    ctx.fillStyle = c.toString();
+                }
+            }
+            
+        }
 
-            if (!options.legend.show)
-                return;
+        function drawMarkers() {
+            if( !options.grid.markers.length ) return;
+
+            for( var i = 0; i < options.grid.markers.length; i++ ) {
+                marker = options.grid.markers[i];
+                if( marker.value < yaxis.max && marker.value > yaxis.min ) {
+                    ctx.lineWidth = marker.width;
+                    ctx.strokeStyle = marker.color;
+                    ctx.beginPath();
+
+                    if( marker.axis == 'x' ) {
+                        ctx.moveTo( tHoz( xaxis.min ) + plotOffset.left,
+                                    tVert( marker.value ) + plotOffset.top );
+                        ctx.lineTo( tHoz( xaxis.max ) + plotOffset.left,
+                                    tVert( marker.value ) + plotOffset.top );
+                    }
+                    else if( marker.axis == 'y' ) {
+                        ctx.moveTo( tHoz( marker.value ) + plotOffset.left,
+                                    tVert( yaxis.min ) + plotOffset.top );
+                        ctx.lineTo( tHoz( marker.value ) + plotOffset.left,
+                                    tVert( yaxis.max ) + plotOffset.top );
+                    }
+
+                    ctx.stroke();
+                }
+            }
+        }
+
+        function insertLegend() {
+            // remove legends from the appropriate container
+            if (options.legend.container != null) {
+                options.legend.container.find('table.legend_table').remove();
+            }
+            else {
+                target.find('.legend').remove();
+            }
+
+            if (!options.legend.show) { return; }
             
             var fragments = [];
             var rowStarted = false;
@@ -1305,7 +1616,7 @@
                 fragments.push('</tr>');
             
             if (fragments.length > 0) {
-                var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
+                var table = '<table class="legend_table" style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
                 if (options.legend.container != null)
                     options.legend.container.append(table);
                 else {
@@ -1314,23 +1625,21 @@
                     if (p.charAt(0) == "n")
                         pos += 'top:' + (m + plotOffset.top) + 'px;';
                     else if (p.charAt(0) == "s")
-                        pos += 'bottom:' + (m + plotOffset.bottom) + 'px;';
+                        pos += 'bottom:' + (m + plotOffset.bottom + BOTTOM_SIDE_BUFFER) + 'px;';
                     if (p.charAt(1) == "e")
-                        pos += 'right:' + (m + plotOffset.right) + 'px;';
+                        pos += 'right:' + (m + plotOffset.right + RIGHT_SIDE_BUFFER) + 'px;';
                     else if (p.charAt(1) == "w")
-                        pos += 'left:' + (m + plotOffset.bottom) + 'px;';
+                        pos += 'left:' + (m + plotOffset.left) + 'px;';
+                        
                     var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(target);
+                    
                     if (options.legend.backgroundOpacity != 0.0) {
                         // put in the transparent background
                         // separately to avoid blended labels and
                         // label boxes
                         var c = options.legend.backgroundColor;
                         if (c == null) {
-                            var tmp;
-                            if (options.grid.backgroundColor != null)
-                                tmp = options.grid.backgroundColor;
-                            else
-                                tmp = extractColor(legend);
+                            tmp = options.grid.backgroundColor ? options.grid.backgroundColor : extractColor(legend);
                             c = parseColor(tmp).adjust(null, null, null, 1).toString();
                         }
                         var div = legend.children();
@@ -1347,6 +1656,59 @@
         var selectionInterval = null;
         var ignoreClick = false;
         
+        // Returns the data item the mouse is over, or null if none is found
+        function findSelectedItem(mouseX, mouseY) {
+            // How close do we need to be to an item in order to select it?
+            // The clickCatchingArea parameter is the radius of the circle, in pixels.
+            lowestDistance = options.grid.mouseCatchingArea * options.grid.mouseCatchingArea;
+            selectedItem = null;
+
+            for (var i = 0; i < series.length; ++i) {
+                var data = series[i].data;
+
+                if (options.sortData) {
+                    var half = tHoz(data[(data.length/2).toFixed(0)][0]).toFixed(0);
+                    if (mouseX < half) {
+                        start = 0;
+                        end = (data.length/2).toFixed(0) + 5;
+                    }
+                    else {
+                        start = (data.length/2).toFixed(0) - 5;
+                        end = data.length;
+                    }
+                }
+                else {
+                    start = 0;
+                    end = data.length;
+                }
+
+                for (var j = start; j < end; ++j) {
+                    if (data[j] == null) continue;
+
+                    // We have to calculate distances in pixels, not in data units, because
+                    // the scale of the axes may be different
+                    var x = data[j][0], y = data[j][1];
+
+                    xDistance = Math.abs(tHoz(x)-mouseX);
+                    if (xDistance > options.grid.mouseCatchingArea) continue;
+
+                    yDistance = Math.abs(tVert(y)-mouseY);
+                    if (yDistance > options.grid.mouseCatchingArea) continue;
+
+                    sqrDistance = xDistance*xDistance + yDistance*yDistance;
+                    if (sqrDistance < lowestDistance) {
+                        selectedItem = {
+                            x: x, y: y,
+                            data: series[i]
+                        };
+                        lowestDistance = sqrDistance;
+                    }
+                }
+            }
+
+            return selectedItem;
+        }
+        
         function onMouseMove(ev) {
             // FIXME: temp. work-around until jQuery bug 1871 is fixed
             var e = ev || window.event;
@@ -1358,6 +1720,25 @@
             else {
                 lastMousePos.pageX = e.pageX;
                 lastMousePos.pageY = e.pageY;
+            }
+            
+            if ( options.grid.hoverable ) {
+                var offset = eventHolder.offset();
+                result = { raw: { 
+                    x: lastMousePos.pageX - offset.left - plotOffset.left,
+                    y: lastMousePos.pageY - offset.top - plotOffset.top
+                } };
+                result.selected = findSelectedItem(result.raw.x, result.raw.y);
+                
+                // display the tooltip/hint if requested
+                if (!$.browser.msie && result.selected && result.selected.data.hints.show) {
+                    showHintDiv(result.selected.x,
+                                result.selected.y,
+                                result.selected.data);
+                }
+                
+                if (!result.selected) cleanup();
+                target.trigger("plotmousemove", [ result ]);
             }
         }
         
@@ -1379,9 +1760,7 @@
             }
             
             setSelectionPos(selection.first, e);
-                
-            if (selectionInterval != null)
-                clearInterval(selectionInterval);
+            clearInterval(selectionInterval);
             lastMousePos.pageX = null;
             selectionInterval = setInterval(updateSelectionOnMouseMove, 200);
             $(document).one("mouseup", onSelectionMouseUp);
@@ -1394,13 +1773,16 @@
             }
             
             var offset = eventHolder.offset();
-            var pos = {};
-            pos.x = e.pageX - offset.left - plotOffset.left;
-            pos.x = xaxis.min + pos.x / hozScale;
-            pos.y = e.pageY - offset.top - plotOffset.top;
-            pos.y = yaxis.max - pos.y / vertScale;
+            var canvasX = e.pageX - offset.left - plotOffset.left;
+            var canvasY = e.pageY - offset.top - plotOffset.top;
 
-            target.trigger("plotclick", [ pos ]);
+            var result = { raw: {
+                x: xaxis.min + canvasX / hozScale,
+                y: yaxis.max - canvasY / vertScale
+            } };
+            result.selected = findSelectedItem(canvasX, canvasY);
+
+            target.trigger("plotclick", [ result ]);
         }
         
         function triggerSelectedEvent() {
@@ -1458,21 +1840,43 @@
         function setSelectionPos(pos, e) {
             var offset = $(overlay).offset();
             if (options.selection.mode == "y") {
-                if (pos == selection.first)
-                    pos.x = 0;
-                else
-                    pos.x = plotWidth;
+                pos.x = (pos == selection.first) ? 0 : plotWidth;
             }
             else {
                 pos.x = e.pageX - offset.left - plotOffset.left;
                 pos.x = Math.min(Math.max(0, pos.x), plotWidth);
+
+                if (options.selection.snapToTicks) {
+                    // find our current location in terms of the xaxis
+                    var x = xaxis.min + pos.x / hozScale;
+
+                    // determine if we're moving left or right on the xaxis
+                    if (selection.first.x - selection.second.x < 0 ||
+                        selection.first.x == -1) {
+                        // to the right
+                        idx = pos == selection.first ? -1 : 0
+                        for (var i = 0; i < xaxis.ticks.length; i++) {
+                            if (x <= xaxis.ticks[i].v) {
+                                pos.x = Math.floor((xaxis.ticks[i+idx].v - xaxis.min) * hozScale);
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        // to the left
+                        idx = pos == selection.first ? 1 : 0
+                        for (var i = xaxis.ticks.length - 1; i >= 0; i--) {
+                            if (x >= xaxis.ticks[i].v) {
+                                pos.x = Math.floor((xaxis.ticks[i+idx].v - xaxis.min) * hozScale);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             if (options.selection.mode == "x") {
-                if (pos == selection.first)
-                    pos.y = 0;
-                else
-                    pos.y = plotHeight;
+                pos.y = (pos == selection.first) ? 0 : plotHeight;
             }
             else {
                 pos.y = e.pageY - offset.top - plotOffset.top;
@@ -1481,18 +1885,15 @@
         }
         
         function updateSelectionOnMouseMove() {
-            if (lastMousePos.pageX == null)
-                return;
+            if (lastMousePos.pageX == null) { return; }
             
             setSelectionPos(selection.second, lastMousePos);
             clearSelection();
-            if (selectionIsSane())
-                drawSelection();
+            if (selectionIsSane()) { drawSelection(); }
         }
 
         function clearSelection() {
-            if (prevSelection == null)
-                return;
+            if (prevSelection == null) { return; }
 
             var x = Math.min(prevSelection.first.x, prevSelection.second.x),
                 y = Math.min(prevSelection.first.y, prevSelection.second.y),
@@ -1518,6 +1919,7 @@
                 selection.first.y = (yaxis.max - area.y1) * vertScale;
                 selection.second.y = (yaxis.max - area.y2) * vertScale;
             }
+            
             if (options.selection.mode == "y") {
                 selection.first.x = 0;
                 selection.second.x = plotWidth;
@@ -1530,7 +1932,35 @@
             drawSelection();
             triggerSelectedEvent();
         }
-        
+       
+        function highlightSelected(marker) {
+            // prevent unnecessary work
+            if (marker == lastMarker) { return; }
+            else { lastMarker = marker; }
+
+            // draw a marker on the graph over the point that the mouse is hovering over
+            if (marker) {
+                var color = options.grid.hoverColor ? options.grid.hoverColor : marker.data.color;
+                var fill = options.grid.hoverFill ? options.grid.hoverFill : 'white';
+                var radius = options.grid.hoverRadius ? options.grid.hoverRadius : marker.data.points.radius;
+
+                var temp_series = {
+                    shadowSize: options.shadowSize,
+                    lines: { show: false },
+                    points: $.extend(true, options.points,
+                                           { fillColor: fill,
+                                             radius: radius }),
+                    color: color,
+                    data: [[marker.x, marker.y]]
+                };
+                draw();
+                drawSeriesPoints(temp_series);
+            }
+            else {
+                draw();
+            }
+        }
+ 
         function drawSelection() {
             if (prevSelection != null &&
                 selection.first.x == prevSelection.first.x &&
@@ -1544,6 +1974,8 @@
             ctx.lineJoin = "round";
             octx.fillStyle = parseColor(options.selection.color).scale(null, null, null, 0.4).toString();
 
+            //prevSelection = { first:  selection.first,
+            //                  second: selection.second } };
             prevSelection = { first:  { x: selection.first.x,
                                         y: selection.first.y },
                               second: { x: selection.second.x,
@@ -1561,13 +1993,88 @@
         function selectionIsSane() {
             var minSize = 5;
             return Math.abs(selection.second.x - selection.first.x) >= minSize &&
-                Math.abs(selection.second.y - selection.first.y) >= minSize;
+                   Math.abs(selection.second.y - selection.first.y) >= minSize;
+        }
+        
+        function showHintDiv(x, y, data) {
+            var offset = $(overlay).offset();
+            if ($('.hint-wrapper').length > 0 &&
+                $('.hint-wrapper:first').attr('name') == x + ":" + y) {
+                var hintDiv = $('div.plot-hint');
+                var hintBackground = $('div.hint-background');
+            }
+            else {
+                cleanup();
+                var fragments = [];
+                var hintWrapper = $('<div class="hint-wrapper" name="' +
+                                    x + ':' + y + '"></div>');
+                hintWrapper.appendTo(target);
+            
+                fragments.push('<tbody>');
+                fragments.push('<tr>');
+                if (data.hints.showColorBox) {
+                    fragments.push('<td class="legendColorBox"><div style="border:1px solid ' +
+                                   options.legend.labelBoxBorderColor +
+                                   ';padding:1px"><div style="width:14px;height:10px;background-color:' +
+                                   data.color + '"></div></div></td>');
+                }
+            
+                if (data.hints.showSeriesLabel && data.label) {
+                    var label = data.hints.labelFormatter(data.label);
+                    fragments.push('<td class="legendLabel" style="padding: 0px 4px">' + label + '</td>');
+                }
+                fragments.push('<td class="hintData" style="padding-left: 4px;"></td>');
+                fragments.push('</tr>');
+                fragments.push('</tbody>');
+                
+                hintDiv = $('<div class="plot-hint" style="border: 1px solid ' + options.hints.borderColor +
+                            ';padding: 1px;z-index:5;position:absolute;top:1px;left:1px;display:none;"></div>').appendTo(hintWrapper);
+                var table = $('<table style="font-size:smaller;white-space: nowrap;color:' +
+                              options.grid.color + '">' + fragments.join('') + '</table>');
+                hintDiv.append(table);
+                if (data.hints.backgroundOpacity != 0.0) {
+                    var c = data.hints.backgroundColor;
+                    if (c == null) {
+                        tmp = options.grid.backgroundColor ? options.grid.backgroundColor : extractColor(hintDiv);
+                        c = parseColor(tmp).adjust(null, null, null, 1).toString();
+                    }
+                    hintBackground = $('<div class="hint-background" style="padding: 2px;z-index:4;position:absolute;display:none;background-color:' + c + ';"> </div>').appendTo(hintWrapper).css('opacity', data.hints.backgroundOpacity);
+                }
+            
+                var hintDataContainer = hintDiv.find('.hintData');
+                $(hintDataContainer).html(data.hints.hintFormatter(x, y, data));
+            }
+
+            leftEdge = lastMousePos.pageX - offset.left + 15;
+            if (hintDiv.width() + leftEdge > target.width()) {
+                leftEdge = leftEdge - 30 - hintDiv.width();
+            }
+            hintDiv.css({ left: leftEdge,
+                          top: lastMousePos.pageY - offset.top + 15 }).show();
+            hintBackground.css({ left: leftEdge,
+                                 top: lastMousePos.pageY - offset.top + 15,
+                                 width: hintDiv.width(),
+                                 height: hintDiv.height() }).show();
+        }
+        
+        function cleanup() {
+            $('.hint-wrapper').remove();
+            draw();
+        }
+        
+        function defaultHintFormatter(x, y) {
+            return "<strong>x:</strong> " + x.toFixed(2) +
+                   "<br/><strong>y:</strong> " + y.toFixed(2);
+        }
+        
+        function defaultLabelFormatter(label) {
+            return "<span style='font-size:1.2em;'>" + label + "</span>";
         }
     }
     
     $.plot = function(target, data, options) {
         var plot = new Plot(target, data, options);
-        /*var t0 = new Date();     
+        /*var t0 = new Date();
         var t1 = new Date();
         var tstr = "time used (msecs): " + (t1.getTime() - t0.getTime())
         if (window.console)
@@ -1585,7 +2092,6 @@
     // color helpers, inspiration from the jquery color animation
     // plugin by John Resig
     function Color (r, g, b, a) {
-       
         var rgba = ['r','g','b','a'];
         var x = 4; //rgba.length
        
@@ -1639,49 +2145,49 @@
     }
     
     var lookupColors = {
-        aqua:[0,255,255],
-        azure:[240,255,255],
-        beige:[245,245,220],
-        black:[0,0,0],
-        blue:[0,0,255],
-        brown:[165,42,42],
-        cyan:[0,255,255],
-        darkblue:[0,0,139],
-        darkcyan:[0,139,139],
-        darkgrey:[169,169,169],
-        darkgreen:[0,100,0],
-        darkkhaki:[189,183,107],
-        darkmagenta:[139,0,139],
-        darkolivegreen:[85,107,47],
-        darkorange:[255,140,0],
-        darkorchid:[153,50,204],
-        darkred:[139,0,0],
-        darksalmon:[233,150,122],
-        darkviolet:[148,0,211],
-        fuchsia:[255,0,255],
-        gold:[255,215,0],
-        green:[0,128,0],
-        indigo:[75,0,130],
-        khaki:[240,230,140],
-        lightblue:[173,216,230],
-        lightcyan:[224,255,255],
-        lightgreen:[144,238,144],
-        lightgrey:[211,211,211],
-        lightpink:[255,182,193],
-        lightyellow:[255,255,224],
-        lime:[0,255,0],
-        magenta:[255,0,255],
-        maroon:[128,0,0],
-        navy:[0,0,128],
-        olive:[128,128,0],
-        orange:[255,165,0],
-        pink:[255,192,203],
-        purple:[128,0,128],
-        violet:[128,0,128],
-        red:[255,0,0],
-        silver:[192,192,192],
-        white:[255,255,255],
-        yellow:[255,255,0]
+        aqua:           [0,255,255],
+        azure:          [240,255,255],
+        beige:          [245,245,220],
+        black:          [0,0,0],
+        blue:           [0,0,255],
+        brown:          [165,42,42],
+        cyan:           [0,255,255],
+        darkblue:       [0,0,139],
+        darkcyan:       [0,139,139],
+        darkgrey:       [169,169,169],
+        darkgreen:      [0,100,0],
+        darkkhaki:      [189,183,107],
+        darkmagenta:    [139,0,139],
+        darkolivegreen: [85,107,47],
+        darkorange:     [255,140,0],
+        darkorchid:     [153,50,204],
+        darkred:        [139,0,0],
+        darksalmon:     [233,150,122],
+        darkviolet:     [148,0,211],
+        fuchsia:        [255,0,255],
+        gold:           [255,215,0],
+        green:          [0,128,0],
+        indigo:         [75,0,130],
+        khaki:          [240,230,140],
+        lightblue:      [173,216,230],
+        lightcyan:      [224,255,255],
+        lightgreen:     [144,238,144],
+        lightgrey:      [211,211,211],
+        lightpink:      [255,182,193],
+        lightyellow:    [255,255,224],
+        lime:           [0,255,0],
+        magenta:        [255,0,255],
+        maroon:         [128,0,0],
+        navy:           [0,0,128],
+        olive:          [128,128,0],
+        orange:         [255,165,0],
+        pink:           [255,192,203],
+        purple:         [128,0,128],
+        violet:         [128,0,128],
+        red:            [255,0,0],
+        silver:         [192,192,192],
+        white:          [255,255,255],
+        yellow:         [255,255,0]
     };    
 
     function extractColor(element) {
@@ -1705,7 +2211,16 @@
     // parse string, returns Color
     function parseColor(str) {
         var result;
-
+        
+        // Try to lookup the color first before going mad with regexes
+        var name = $.trim(str).toLowerCase();
+        if (name == "transparent")
+            return new Color(255, 255, 255, 0);
+        else if (!name.match(/^(rgb|#)/)) {
+            result = lookupColors[name];
+            return new Color(result[0], result[1], result[2]);
+        }
+        
         // Look for rgb(num,num,num)
         if (result = /rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(str))
             return new Color(parseInt(result[1], 10), parseInt(result[2], 10), parseInt(result[3], 10));
@@ -1729,15 +2244,6 @@
         // Look for #fff
         if (result = /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(str))
             return new Color(parseInt(result[1]+result[1], 16), parseInt(result[2]+result[2], 16), parseInt(result[3]+result[3], 16));
-
-        // Otherwise, we're most likely dealing with a named color
-        var name = $.trim(str).toLowerCase();
-        if (name == "transparent")
-            return new Color(255, 255, 255, 0);
-        else {
-            result = lookupColors[name];
-            return new Color(result[0], result[1], result[2]);
-        }
     }
         
 })(jQuery);

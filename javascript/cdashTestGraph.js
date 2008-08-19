@@ -21,7 +21,6 @@ function showtesttimegraph_click(buildid,testid,zoomout)
   $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid,{},function(){
   $("#timegrapholder").fadeIn('slow');
   $("#timegraphoptions").show();
-
 });
 }
 
@@ -45,7 +44,7 @@ function showtestpassinggraph_click(buildid,testid,zoomout)
   
   $("#passinggraphoptions").html("<a href=javascript:showtestpassinggraph_click("+buildid+","+testid+",true)>[Zoom out]</a>");
   $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid,{},function(){
-$("#passinggrapholder").fadeIn('slow');
-$("#passinggraphoptions").show();
-});
+  $("#passinggrapholder").fadeIn('slow');
+  $("#passinggraphoptions").show();
+  });
 }
