@@ -81,8 +81,9 @@ $(function () {
   
     $("#grapholder").bind("selected", function (event, area) {
     plot = $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
-
-     $("#grapholder").bind("plotclick", function (e, pos) {
+     });
+  
+   $("#grapholder").bind("plotclick", function (e, pos) {
         if (!pos.selected) { return; }
         plot.highlightSelected( pos.selected );
         x = pos.selected.x;
@@ -94,8 +95,7 @@ $(function () {
         if (!pos.selected) { return; }
         plot.highlightSelected( pos.selected );
     });
-  });
-   
+     
   plot = $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}],options);
 });
 </script>
