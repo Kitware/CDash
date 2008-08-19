@@ -55,7 +55,7 @@ $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
 // Find the other builds
-$previousbuilds = pdo_query("SELECT build.id, build.starttime, build2test.time
+$previousbuilds = pdo_query("SELECT build.id,build.starttime,build2test.time,build2test.testid
 FROM build
 JOIN build2test ON (build.id = build2test.buildid)
 WHERE build.siteid = '$siteid'
@@ -72,14 +72,16 @@ ORDER BY build.starttime DESC
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var d1 = [];
-    var tx = [];
-    var ty = [];
+    var buildids = [];
+    var testids = [];
     <?php
     $tarray = array();
     while($build_array = pdo_fetch_array($previousbuilds))
       {
       $t['x'] = strtotime($build_array["starttime"])*1000;
-      $t['y'] = $build_array["time"];    
+      $t['y'] = $build_array["time"];
+      $t['builid'] = $build_array["id"];
+      $t['testid'] = $build_array["testid"];
       $tarray[]=$t;
     ?>
     <?php
@@ -89,6 +91,8 @@ $(function () {
     foreach($tarray as $axis)
       {
     ?>
+      buildids[<?php echo $axis['x']; ?>]=<?php echo $axis['builid']; ?>;
+      testids[<?php echo $axis['x']; ?>]=<?php echo $axis['testid']; ?>;
       d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
     <?php 
       $t = $axis['x'];
@@ -99,25 +103,43 @@ $(function () {
     lines: { show: true }, 
     points: { show: true },
     xaxis: { mode: "time"}, 
-    grid: {backgroundColor: "#fffaff"},
+    grid: {backgroundColor: "#fffaff",
+      clickable: true,
+      hoverable: true,
+      hoverFill: '#444',
+      hoverRadius: 4
+    },
     selection: { mode: "x" },
     colors: ["#0000FF", "#dba255", "#919733"]
   };
     
     $("#timegrapholder").bind("selected", function (event, area) {
-    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], 
+    plot = $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], 
            $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
     
     });
    
+    $("#timegrapholder").bind("plotclick", function (e, pos) {
+        if (!pos.selected) { return; }
+        plot.highlightSelected( pos.selected );
+        x = pos.selected.x;
+        buildid = buildids[x];
+        testid = testids[x];
+        window.location = "testDetails.php?test="+testid+"&build="+buildid;
+    });
+
+    $("#timegrapholder").bind("plotmousemove", function (e, pos) {
+        if (!pos.selected) { return; }
+        plot.highlightSelected( pos.selected );
+    });
 
 <?php if(isset($zoomout))
 {
 ?>
-    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",data: d1}],options);
+    plot = $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",data: d1}],options);
 <?php } else { ?>
 
-    $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  
+    plot = $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  
                                             data: d1}],
           $.extend(true,{}, options,
                                     {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}} 

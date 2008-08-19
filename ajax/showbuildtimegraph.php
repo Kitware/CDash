@@ -52,8 +52,7 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime FROM build WHERE siteid
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var d1 = [];
-    var tx = [];
-    var ty = [];
+    var buildids = [];
     <?php
     $i=0;
     while($build_array = pdo_fetch_array($previousbuilds))
@@ -61,6 +60,7 @@ $(function () {
       $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
     ?>
       d1.push([<?php echo $t; ?>,<?php echo (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60; ?>]);
+      buildids[<?php echo $t; ?>] = <?php echo $build_array["id"]; ?>;
     <?php
     $i++;
       }
@@ -70,16 +70,32 @@ $(function () {
       lines: { show: true },
       points: { show: true },
       xaxis: { mode: "time" }, 
-      grid: {backgroundColor: "#fffaff"},
+      grid: {backgroundColor: "#fffaff",
+      clickable: true,
+      hoverable: true,
+      hoverFill: '#444',
+      hoverRadius: 4},
       selection: { mode: "x" },
       colors: ["#0000FF", "#dba255", "#919733"]
     };
   
     $("#grapholder").bind("selected", function (event, area) {
-    $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
+    plot = $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
 
+     $("#grapholder").bind("plotclick", function (e, pos) {
+        if (!pos.selected) { return; }
+        plot.highlightSelected( pos.selected );
+        x = pos.selected.x;
+        buildid = buildids[x];
+        window.location = "buildSummary.php?buildid="+buildid;
+    });
+
+    $("#grapholder").bind("plotmousemove", function (e, pos) {
+        if (!pos.selected) { return; }
+        plot.highlightSelected( pos.selected );
+    });
   });
    
-  $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}],options);
+  plot = $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}],options);
 });
 </script>
