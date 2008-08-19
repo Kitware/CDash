@@ -199,7 +199,8 @@ while($row = pdo_fetch_array($result))
   $xml .= add_XML_value("name", $testName);
   $xml .= add_XML_value("execTime", $row["time"]);
   $xml .= add_XML_value("details", $row["details"]); 
-  $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
+  $testdate = get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime);
+  $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$testdate";
   $xml .= add_XML_value("summaryLink", $summaryLink);
   $testid = $row["id"]; 
   $detailsLink = "testDetails.php?test=$testid&build=$buildid";
