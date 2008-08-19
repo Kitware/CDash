@@ -35,6 +35,28 @@
      
 <br/>
 
+<form method="post">
+Date Range:
+<select onChange="form.submit()" name="range">
+<option value="thisweek">
+<xsl:if test="/cdash/datarange='thisweek'"><xsl:attribute name="selected"></xsl:attribute></xsl:if>
+This Week
+</option>
+<option value="lastweek">
+<xsl:if test="/cdash/datarange='lastweek'"><xsl:attribute name="selected"></xsl:attribute></xsl:if>
+Last Week</option>
+<option value="thismonth">
+<xsl:if test="/cdash/datarange='thismonth'"><xsl:attribute name="selected"></xsl:attribute></xsl:if>
+This Month</option>
+<option value="lastmonth">
+<xsl:if test="/cdash/datarange='lastmonth'"><xsl:attribute name="selected"></xsl:attribute></xsl:if>
+Last Month</option>
+<option value="thisyear">
+<xsl:if test="/cdash/datarange='thisyear'"><xsl:attribute name="selected"></xsl:attribute></xsl:if>
+This Year</option>
+</select>
+</form>
+<br/>
 
 <table id="viewTestTable" cellspacing="0" class="tabb">
 <!-- <xsl:attribute name="id">project_<xsl:value-of select="/cdash/dashboard/projectid"/>_1</xsl:attribute> -->

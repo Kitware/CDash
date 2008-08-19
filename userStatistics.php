@@ -45,14 +45,53 @@ $xml .= "<title>CDash - User Statistics</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>User Stats</menusubtitle>";
 
-
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);    
+
+$range = "thisweek";
+if(isset($_POST["range"]))
+{
+  $range = $_POST["range"];
+  $xml .= add_XML_value("datarange",$range);
+}
 
 // Find the list of the best submitters for the project
 $now = time();
 
-$beginning = $now-7*3600*24; // 7 days
-$end = $now;
+if($range=="thisweek")
+  {
+  // find the current day of the week
+  $day = date("w");
+  $end = $now;
+  $beginning = $now-$day*3600*24;
+  }
+else if($range=="lastweek")
+  {
+  // find the current day of the week
+  $day = date("w");
+  $end = $now-$day*3600*24;
+  $beginning = $end-7*3600*24;
+  }
+else if($range=="thismonth")
+  {
+  // find the current day of the month
+  $day = date("j");
+  $end = $now;
+  $beginning = $now-$day*3600*24;
+  }
+else if($range=="lastmonth")
+  {
+  // find the current day of the month
+  $day = date("j");
+  $end = $now-$day*3600*24;
+  $beginning = $end-30*3600*24; // assume 30 days months
+  }
+else if($range=="thisyear")
+  {
+  // find the current day of the month
+  $day = date("z");
+  $end = $now-$day*3600*24;
+  $beginning = $now;
+  }
 
 $beginning_UTCDate = gmdate("Y-m-d H:i:s",$beginning);
 $end_UTCDate = gmdate("Y-m-d H:i:s",$end);                                                      
