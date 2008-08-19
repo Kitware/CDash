@@ -41,7 +41,12 @@ if(pdo_num_rows($project)==0)
 $project_array = pdo_fetch_array($project);
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 
-$ctestconfig = "";
+$ctestconfig = "## This file should be placed in the root directory of your project.\n";
+$ctestconfig .= "## Then modify the CMakeLists.txt file in the root directory of your\n";
+$ctestconfig .= "## project to incorporate the testing dashboard.\n";
+$ctestconfig .= "## # The following are required to uses Dart and the Cdash dashboard\n";
+$ctestconfig .= "##   ENABLE_TESTING()\n";
+$ctestconfig .= "##   INCLUDE(Dart)\n";
 
 $ctestconfig .= "set(CTEST_PROJECT_NAME \"".$project_array["name"]."\")\n";
 $ctestconfig .= "set(CTEST_NIGHTLY_START_TIME \"".$project_array["nightlytime"]."\")\n\n";
