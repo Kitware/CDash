@@ -62,6 +62,9 @@ function sendemail($parser,$projectid)
                                emailmaxchars,emailtesttimingchanged,nightlytime,
                                testtimemaxstatus FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
+  $project_emailtesttimingchanged = $project_array["emailtesttimingchanged"];
+  $project_testtimemaxstatus =  $project_array["testtimemaxstatus"];
+
   if($project_array["emailbrokensubmission"] == 0)
     {
     return;
@@ -126,8 +129,6 @@ function sendemail($parser,$projectid)
   $siteid = $build_array["siteid"];
   $buildname = $build_array["name"];
   $starttime = $build_array["starttime"];
-  $project_emailtesttimingchanged = $project_array["emailtesttimingchanged"];
-  $project_testtimemaxstatus =  $project_array["testtimemaxstatus"];
     
   $previousbuild = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' 
                                AND name='$buildname' AND type='$buildtype' 
@@ -316,13 +317,14 @@ function sendemail($parser,$projectid)
   $error_information = "";
   if($nbuilderrors>0)
     {
+    $info = "";
     $error_information .= "\n\n*Error*\n";
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
     while($error_array = pdo_fetch_array($error_query))
       {
       if(strlen($error_array["sourcefile"])>0)
         {
-        $info = $error_array["sourcefile"]." line ".sourceline." (".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
+        $info .= $error_array["sourcefile"]." line ".sourceline." (".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
         $info .= $error_array["text"]."\n";
         }
       else
@@ -337,13 +339,14 @@ function sendemail($parser,$projectid)
   $warning_information = "";
   if($nbuildwarnings>0)
     {
+    $info = "";
     $warning_information .= "\n\n*Warnings*\n";
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
     while($error_array = pdo_fetch_array($error_query))
       {
       if(strlen($error_array["sourcefile"])>0)
         {
-        $info = $error_array["sourcefile"]." line ".sourceline." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
+        $info .= $error_array["sourcefile"]." line ".sourceline." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
         $info .= $error_array["text"]."\n";
         }
       else
