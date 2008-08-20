@@ -1485,9 +1485,9 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
       // Insert the measurements  
       foreach($measurements as $measurement)
         {
-        $name = $measurement['name'];
-        $type = $measurement['type'];
-        $value = $measurement['value'];
+        $name = pdo_real_escape_string($measurement['name']);
+        $type = pdo_real_escape_string($measurement['type']);
+        $value = pdo_real_escape_string($measurement['value']);
         $query = "INSERT INTO testmeasurement (testid,name,type,value) 
                   VALUES ('$testid','$name','$type','$value')";
         if(!pdo_query("$query"))
