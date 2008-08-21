@@ -80,6 +80,14 @@ if ($session_OK)
     $xml .= add_XML_value("emailcategory_error",check_email_category("error",$emailcategory));
     $xml .= add_XML_value("emailcategory_test",check_email_category("test",$emailcategory));
     }
+  else // we set the default categories
+    {
+    $xml .= add_XML_value("emailcategory_update",1);
+    $xml .= add_XML_value("emailcategory_configure",1);
+    $xml .= add_XML_value("emailcategory_warning",1);
+    $xml .= add_XML_value("emailcategory_error",1);
+    $xml .= add_XML_value("emailcategory_test",1);
+    }
   
   // If we ask to subscribe
   @$Subscribe = $_POST["subscribe"];
@@ -111,10 +119,7 @@ if ($session_OK)
     @$emailcategory_error = $_POST["emailcategory_error"];
     @$emailcategory_test = $_POST["emailcategory_test"];
     
-    $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test;
-    
-    echo $EmailCategory;
-    
+    $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test;    
     if(pdo_num_rows($user2project)>0)
       {
       pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',emailcategory='$EmailCategory' 
@@ -132,7 +137,7 @@ if ($session_OK)
     else
       {
       pdo_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype,emailcategory) 
-              VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType','$EmailCategory ')");
+                 VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType','$EmailCategory ')");
       }  
     header( 'location: user.php?note=subscribedtoproject' );
     }
