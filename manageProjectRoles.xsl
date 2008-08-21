@@ -23,7 +23,17 @@
         <!-- Include project roles -->
         <script src="javascript/jquery.js"></script>
         <script src="javascript/cdashProjectRole.js"></script>
-
+        <!-- Functions to confirm the email -->
+        <xsl:text disable-output-escaping="yes">
+              &lt;script language="JavaScript"&gt;
+              function confirmEmail() {
+                 if (window.confirm("Are you sure you want to send this email to all site maintainers?")){
+                    return true;
+                 }
+                 return false;
+              }
+              &lt;/script&gt;
+        </xsl:text>
        </head>
        <body bgcolor="#ffffff">
 
@@ -279,12 +289,31 @@ project page</a>
   </form>
   </xsl:if> <!-- end if cvsuser -->
   </table>
-  </xsl:if> <!-- end if a project has been selected -->
-<br/>
 
+
+<!-- Send email to site maintainer -->
+<form name="emailsitemaintainers_form" method="post" action="">
+<table width="100%"  border="0"> 
+  <tr>
+    <td width="100"><div align="right"></div></td>
+    <td  bgcolor="#DDDDDD"><strong>Send email to site maintainers</strong></td>
+  </tr>
+  <tr>
+  <td></td>
+  <td><textarea name="emailMaintainers" cols="70" rows="10"></textarea></td>
+  </tr>
+  <tr>
+  <td></td>
+  <td><input type="submit" onclick="return confirmEmail()" name="sendEmailToSiteMaintainers" value="Send email to all the site maintainers"/></td>
+  </tr>
+</table>
+</form>
+
+
+</xsl:if> <!-- end if a project has been selected -->
 </xsl:otherwise>
 </xsl:choose>
-
+  
 <!-- FOOTER -->
 <br/>
 

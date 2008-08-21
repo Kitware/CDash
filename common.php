@@ -2398,6 +2398,32 @@ function qnum($num)
     }
 }
 
+/** Return the list of site maintainers for a given project */
+function find_site_maintainers($projectid)
+{
+  $userids = array();
+  
+  // Get the registered user first
+  $site2user = pdo_query("SELECT site2user.userid FROM site2user,user2project 
+                        WHERE site2user.userid=user2project.userid AND user2project.projectid='$projectid'");
+  while($site2user_array = pdo_fetch_array($site2user))
+    {
+    $userids[] = $site2user_array["userid"];
+    }
+
+  // Then we list all the users that have been submitting in the past 48 hours 
+  $submittime_UTCDate = gmdate("Y-m-d H:i:s",time()-3600*48);
+  $site2project = pdo_query("SELECT DISTINCT  userid FROM site2user WHERE siteid IN 
+                            (SELECT siteid FROM build WHERE projectid=$projectid 
+                             AND submittime>'$submittime_UTCDate')");                           
+  while($site2project_array = pdo_fetch_array($site2project))
+    {
+    $userids[] = $site2project_array["userid"];
+    }
+  
+  return array_unique($userids);
+}
+
 /** Return formated time given time in minutes (that's how CTest returns the time */
 function get_formated_time($minutes)
 {
