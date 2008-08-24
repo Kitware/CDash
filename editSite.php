@@ -144,14 +144,16 @@ if ($session_OK)
     $xml .= "</project>";
     
     // Select sites that belong to this project
-    $site2project = pdo_query("SELECT siteid FROM build WHERE projectid='$projectid' GROUP BY siteid");
+    $beginUTCTime = gmdate("Y-m-d H:i:s",time()-3600*7*24); // 7 days
+    $site2project = pdo_query("SELECT DISTINCT site.id,site.name FROM build,site WHERE build.projectid='$projectid' 
+                               AND build.starttime>'beginUTCTime'
+                               AND site.id=build.siteid ORDER BY sitename ASC"); //group by is slow
     while($site2project_array = pdo_fetch_array($site2project))
        {
-       $siteid = $site2project_array["siteid"];
-       $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
+       $siteid = $site2project_array["id"];
        $xml .= "<site>";
        $xml .= add_XML_value("id",$siteid);
-       $xml .= add_XML_value("name",$site_array["name"]);
+       $xml .= add_XML_value("name",$site2project_array["name"]);
        $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
        if(pdo_num_rows($user2site) == 0)
          {
