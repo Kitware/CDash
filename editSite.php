@@ -146,8 +146,9 @@ if ($session_OK)
     // Select sites that belong to this project
     $beginUTCTime = gmdate("Y-m-d H:i:s",time()-3600*7*24); // 7 days
     $site2project = pdo_query("SELECT DISTINCT site.id,site.name FROM build,site WHERE build.projectid='$projectid' 
-                               AND build.starttime>'beginUTCTime'
-                               AND site.id=build.siteid ORDER BY sitename ASC"); //group by is slow
+                               AND build.starttime>'$beginUTCTime'
+                               AND site.id=build.siteid ORDER BY site.name ASC"); //group by is slow
+
     while($site2project_array = pdo_fetch_array($site2project))
        {
        $siteid = $site2project_array["id"];
