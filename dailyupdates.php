@@ -497,6 +497,151 @@ function get_repository_commits($projectid, $dates)
   return $commits;
 }
 
+/** Send email if expected build from last day have not been submitting */
+function sendEmailExpectedBuilds($projectid,$currentstarttime)
+{
+  include("config.php");
+  require_once("pdo.php");
+  include_once("common.php");
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME", $db);
+
+  $currentEndUTCTime =  gmdate("Y-m-d H:i:s",$currentstarttime);
+  $currentBeginUTCTime =  gmdate("Y-m-d H:i:s",$currentstarttime-3600*24);
+  $sql = "SELECT buildtype,buildname,siteid,groupid,site.name FROM (SELECT g.siteid,g.buildtype,g.buildname,g.groupid FROM build2grouprule as g  LEFT JOIN (build as b) ON( 
+          g.expected='1' AND (b.type=g.buildtype AND b.name=g.buildname AND b.siteid=g.siteid)
+          AND b.projectid='$projectid' AND b.starttime>'$currentBeginUTCTime' AND b.starttime<'$currentEndUTCTime')
+          WHERE (b.type is null AND b.name is null AND b.siteid is null) 
+          AND g.expected='1'
+          AND g.starttime<'$currentBeginUTCTime' AND (g.endtime>'$currentEndUTCTime' OR g.endtime='1980-01-01 00:00:00')) as t1, buildgroup as bg, site
+          WHERE t1.groupid=bg.id AND bg.projectid='$projectid' AND bg.starttime<'$currentBeginUTCTime' AND (bg.endtime>'$currentEndUTCTime' OR bg.endtime='1980-01-01 00:00:00')
+          AND site.id=t1.siteid
+          ";
+  $build2grouprule = pdo_query($sql);
+  $authors = array();
+  $projectname = get_project_name($projectid);    
+  $summary = "The following expected builds for the project ".$projectname." didn't submit yesterday:\n";
+  $missingbuilds = 0;
+  
+  // Current URI of the dashboard
+  $currentPort="";
+  $httpprefix="http://";
+  if($_SERVER['SERVER_PORT']!=80)
+    {
+    $currentPort=":".$_SERVER['SERVER_PORT'];
+    if($_SERVER['SERVER_PORT']!=80 )
+      {
+      $httpprefix = "https://";
+      }
+    }
+  if($CDASH_USE_HTTPS === true)
+    {
+    $httpprefix = "https://";
+    }
+  $serverName = $CDASH_SERVER_NAME;
+  if(strlen($serverName) == 0)
+    {
+    $serverName = $_SERVER['SERVER_NAME'];
+    }
+    
+  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+  
+  while($build2grouprule_array = pdo_fetch_array($build2grouprule))
+    {
+    $builtype = $build2grouprule_array["buildtype"];
+    $buildname = $build2grouprule_array["buildname"];
+    $sitename = $build2grouprule_array["name"];
+    $siteid = $build2grouprule_array["siteid"];
+    $summary .= "* <a href=\"".$currentURI."/viewSite.php?siteid=".$siteid."\">".$sitename."</a> - ".$buildname." (".$builtype.")\n";
+    
+    // Find the site maintainers
+    $email = "";
+    $emails = pdo_query("SELECT email FROM user,site2user WHERE user.id=site2user.userid AND site2user.siteid='$siteid'");
+    while($emails_array = pdo_fetch_array($emails))
+      {
+      if($email != "")
+        {
+        $email .= ", ";
+        }
+      $email = $emails_array["email"];
+      }
+    
+    if($email!="")
+      {
+      $missingTitle = "CDash [".$projectname."] - Missing Build for ".$sitename; 
+      $missingSummary = "The following expected build for the project ".$projectname." didn't submit yesterday:\n";
+      $missingSummary .= "* <a href=\"".$currentURI."/viewSite.php?siteid=".$siteid."\">".$sitename."</a> - ".$buildname." (".$builtype.")\n";
+      $missingSummary .= "\n-CDash on ".$serverName."\n";
+      
+      echo $missingSummary;
+      
+      /*if(mail("$email", $missingTitle, $missingSummary,
+       "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+        {
+        add_log("email sent to: ".$email,"sendEmailExpectedBuilds");
+        return;
+        }
+      else
+        {
+        add_log("cannot send email to: ".$email,"sendEmailExpectedBuilds");
+        }*/
+      }
+    $missingbuilds = 1;
+    }
+  
+  // Send a summary email to the project administrator
+  if($missingbuilds == 1)
+    {
+    echo $summary;
+    $summary .= "\n-CDash on ".$serverName."\n";
+    
+    $title = "CDash [".$projectname."] - Missing Builds"; 
+    
+    // Find the site administrators
+    $email = "";
+    $emails = pdo_query("SELECT email FROM user,user2project WHERE user.id=user2project.userid AND user2project.role='2'");
+    while($emails_array = pdo_fetch_array($emails))
+      {
+      if($email != "")
+        {
+        $email .= ", ";
+        }
+      $email = $emails_array["email"];
+      }
+      
+    // Send the email
+    if($email != "")
+      {
+      /*if(mail("$email", $title, $summary,
+         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+        {
+        add_log("email sent to: ".$email,"sendEmailExpectedBuilds");
+        return;
+        }
+      else
+        {
+        add_log("cannot send email to: ".$email,"sendEmailExpectedBuilds");
+        }*/
+      }
+    }
+    
+}
+
+/*
+include("config.php");
+include("pdo.php");
+include("common.php");
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
+
+$projectid = 1;
+$project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name FROM project WHERE id='$projectid'"));
+$date = ""; // now
+list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
+sendEmailExpectedBuilds($projectid,$currentstarttime);
+*/
+
 /** Add daily changes if necessary */
 function addDailyChanges($projectid)
 {
@@ -516,7 +661,7 @@ function addDailyChanges($projectid)
   if(pdo_num_rows($query)==0)
     {
     pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status) 
-                 VALUES ($projectid,$date,'NA','NA','0')");
+               VALUES ($projectid,$date,'NA','NA','0')");
     
     $updateid = pdo_insert_id("dailyupdate");    
     
@@ -535,6 +680,8 @@ function addDailyChanges($projectid)
                    VALUES ($updateid,'$filename','$checkindate','$author','$log','$revision','$priorrevision')");
       } // end foreach commit
     
+    // Send an email if some expected builds have not been submitting
+    sendEmailExpectedBuilds($projectid,$currentstarttime);    
     }
 }
 ?>
