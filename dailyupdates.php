@@ -171,15 +171,15 @@ function get_cvs_repository_commits($cvsroot, $dates)
   $total_revisions = 0;
 
   foreach($lines as $vv)
-  {
+    {
     $num_revisions = 0;
     $line_number = $line_number + 1;
 
     $npos = strpos($vv, "--------------------");
     if ($npos !== FALSE && $npos === 0)
-    {
-      if ($in_revision_chunk === 1)
       {
+      if ($in_revision_chunk === 1)
+        {
         $commit = array();
         $commit['directory'] = $current_directory;
         $commit['filename'] = $current_filename;
@@ -188,20 +188,20 @@ function get_cvs_repository_commits($cvsroot, $dates)
         $commit['author'] = $current_author;
         $commit['comment'] = $current_comment;
         $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
-      }
+        }
 
       $current_comment = "";
       $in_revision_chunk = 1;
       $in_revision_chunk_line_number = $line_number;
 
       $total_revisions = $total_revisions + 1;
-    }
+      }  
 
     if ($in_revision_chunk === 0)
-    {
+      {
       $npos = strpos($vv, "RCS file: " . $Idbase);
       if ($npos !== FALSE && $npos === 0)
-      {
+        {
         $npos = strlen("RCS file: " . $Idbase);
         $npos2 = strlen($vv) - 2; // 2 == strlen(",v") at the end of the "RCS file:" line
 
@@ -216,24 +216,24 @@ function get_cvs_repository_commits($cvsroot, $dates)
           } 
 
         $current_directory = remove_directory_from_filename($current_filename);
+        }
       }
-    }
 
     if ($in_revision_chunk === 1)
-    {
+      {
       // $in_revision_chunk_line_number + 1
       $npos = strpos($vv, "revision ");
       if ($npos !== FALSE && $npos === 0 && $line_number === $in_revision_chunk_line_number + 1)
-      {
+        {
         $npos = strlen("revision ");
         $npos2 = strlen($vv);
         $current_revision = substr($vv, $npos, $npos2 - $npos);
-      }
+        }
 
       // $in_revision_chunk_line_number + 2
       $npos = strpos($vv, "date: ");
       if ($npos !== FALSE && $npos === 0 && $line_number === $in_revision_chunk_line_number + 2)
-      {
+        {
         $npos2 = strpos($vv, "; ", $npos);
         $current_time = strtotime(substr($vv, $npos + 6, $npos2 - ($npos + 6))); // 6 == strlen("date: ")
 
@@ -520,7 +520,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
   $build2grouprule = pdo_query($sql);
   $authors = array();
   $projectname = get_project_name($projectid);    
-  $summary = "The following expected builds for the project ".$projectname." didn't submit yesterday:\n";
+  $summary = "The following expected builds for the project *".$projectname."* didn't submit yesterday:\n";
   $missingbuilds = 0;
   
   // Current URI of the dashboard
@@ -554,7 +554,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
     $sitename = $build2grouprule_array["name"];
     $siteid = $build2grouprule_array["siteid"];
     $summary .= "* <a href=\"".$currentURI."/viewSite.php?siteid=".$siteid."\">".$sitename."</a> - ".$buildname." (".$builtype.")\n";
-    
+   
     // Find the site maintainers
     $email = "";
     $emails = pdo_query("SELECT email FROM user,site2user WHERE user.id=site2user.userid AND site2user.siteid='$siteid'");
@@ -564,9 +564,9 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
         {
         $email .= ", ";
         }
-      $email = $emails_array["email"];
+      $email .= $emails_array["email"];
       }
-    
+
     if($email!="")
       {
       $missingTitle = "CDash [".$projectname."] - Missing Build for ".$sitename; 
@@ -574,9 +574,8 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
       $missingSummary .= "* <a href=\"".$currentURI."/viewSite.php?siteid=".$siteid."\">".$sitename."</a> - ".$buildname." (".$builtype.")\n";
       $missingSummary .= "\n-CDash on ".$serverName."\n";
       
-      echo $missingSummary;
       
-      /*if(mail("$email", $missingTitle, $missingSummary,
+      if(mail("$email", $missingTitle, $missingSummary,
        "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
         add_log("email sent to: ".$email,"sendEmailExpectedBuilds");
@@ -585,7 +584,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
       else
         {
         add_log("cannot send email to: ".$email,"sendEmailExpectedBuilds");
-        }*/
+        }
       }
     $missingbuilds = 1;
     }
@@ -593,27 +592,26 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
   // Send a summary email to the project administrator
   if($missingbuilds == 1)
     {
-    echo $summary;
     $summary .= "\n-CDash on ".$serverName."\n";
     
     $title = "CDash [".$projectname."] - Missing Builds"; 
     
     // Find the site administrators
     $email = "";
-    $emails = pdo_query("SELECT email FROM user,user2project WHERE user.id=user2project.userid AND user2project.role='2'");
+    $emails = pdo_query("SELECT email FROM user,user2project WHERE user.id=user2project.userid AND user2project.role='2' AND user2project.projectid='$projectid'");
     while($emails_array = pdo_fetch_array($emails))
       {
       if($email != "")
         {
         $email .= ", ";
         }
-      $email = $emails_array["email"];
+      $email .= $emails_array["email"];
       }
       
     // Send the email
     if($email != "")
       {
-      /*if(mail("$email", $title, $summary,
+      if(mail("$email", $title, $summary,
          "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
         add_log("email sent to: ".$email,"sendEmailExpectedBuilds");
@@ -622,25 +620,25 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
       else
         {
         add_log("cannot send email to: ".$email,"sendEmailExpectedBuilds");
-        }*/
+        }
       }
     }
     
 }
 
-/*
+
 include("config.php");
 include("pdo.php");
 include("common.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-$projectid = 1;
+$projectid = 2;
 $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name FROM project WHERE id='$projectid'"));
 $date = ""; // now
 list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 sendEmailExpectedBuilds($projectid,$currentstarttime);
-*/
+
 
 /** Add daily changes if necessary */
 function addDailyChanges($projectid)
