@@ -162,7 +162,7 @@ $xml .= "</site>";
 // Select projects that belong to this site
 $displayPage=0;
 $projects = array();
-$site2project = pdo_query("SELECT projectid,submittime FROM build WHERE siteid=$siteid GROUP BY projectid,submittime");
+$site2project = pdo_query("SELECT projectid,max(submittime) FROM build WHERE siteid=$siteid GROUP BY projectid");
 
 while($site2project_array = pdo_fetch_array($site2project))
    {
@@ -173,7 +173,7 @@ while($site2project_array = pdo_fetch_array($site2project))
      {
      $xml .= "<project>";
      $xml .= add_XML_value("id",$projectid);
-     $xml .= add_XML_value("submittime",$site2project_array["submittime"]);
+     $xml .= add_XML_value("submittime",$site2project_array["max(submittime)"]);
      $xml .= add_XML_value("name",$project_array["name"]);
      $xml .= "</project>";
      $displayPage=1; // if we have at least a valid project we display the page
