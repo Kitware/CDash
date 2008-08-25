@@ -18,7 +18,10 @@
         <meta name="robots" content="noindex,nofollow" />
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link>         
+         </link>   
+       <!--[if IE]><script language="javascript" type="text/javascript" src="javascript/excanvas.pack.js"></script><![endif]-->
+       <script language="javascript" type="text/javascript" src="javascript/jquery.js"></script> 
+       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.pie.js"></script>      
        </head>
        <body bgcolor="#ffffff">
 
@@ -111,6 +114,50 @@
 (<xsl:value-of select="submittime"/>)<br/>
 </xsl:for-each>
 <br/>
+
+<!-- Timing per project -->
+<b>Time spent per project (computed from data collected in the past 24h):</b><br/><br/>
+
+<center><div id="placeholder" style="width:450px;height:250px"></div></center>
+    
+<script id="source" language="javascript" type="text/javascript">
+$(function () {
+    $.plot($("#placeholder"), [
+    
+<xsl:for-each select="cdash/siteload/build">
+ { label: "<xsl:value-of select="name"/> (<xsl:value-of select="type"/>)",  data: <xsl:value-of select="time"/>},
+</xsl:for-each>
+ { label: "Non-CDash",  data: <xsl:value-of select="cdash/siteload/idle"/>},
+  ], 
+  {
+    pie: { 
+      show: true, 
+      pieStrokeLineWidth: 0, 
+      pieStrokeColor: '#FFF', 
+      //pieChartRadius: 100,       // by default it calculated by 
+      //centerOffsetTop:30,
+      //centerOffsetLeft:30,       // if 'auto' and legend position is "nw" then centerOffsetLeft is equal a width of legend.
+      showLabel: true,        //use ".pieLabel div" to format looks of labels
+      labelOffsetFactor: 5/6,     // part of radius (default 5/6)
+      //labelOffset: 0            // offset in pixels if > 0 then labelOffsetFactor is ignored
+      labelBackgroundOpacity: 0.55,   // default is 0.85
+      labelFormatter: function(serie){// default formatter is "serie.label"
+        //return serie.label;
+        //return serie.data;
+        return serie.label+'<br/>'+Math.round(serie.percent)+'%';
+      }
+    },
+    legend: {
+      show: true, 
+      position: "ne", 
+      backgroundOpacity: 0
+    }
+  })
+});
+</script>
+
+
+
 
 <!-- FOOTER -->
 <br/>

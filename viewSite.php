@@ -158,7 +158,7 @@ $xml .= add_XML_value("ip",$site_array["ip"]);
 $xml .= add_XML_value("latitude",$site_array["latitude"]);
 $xml .= add_XML_value("longitude",$site_array["longitude"]);
 $xml .= "</site>";
-  
+
 // Select projects that belong to this site
 $displayPage=0;
 $projects = array();
@@ -168,7 +168,7 @@ while($site2project_array = pdo_fetch_array($site2project))
    {
    $projectid = $site2project_array["projectid"];
    $project_array = pdo_fetch_array(pdo_query("SELECT name,public FROM project WHERE id=$projectid"));
-   
+
    if(checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid,1))
      {
      $xml .= "<project>";
@@ -181,6 +181,9 @@ while($site2project_array = pdo_fetch_array($site2project))
      }
    }
 
+
+
+
 // If the current site as only private projects we check that we have the right
 // to view the page
 if(!$displayPage)
@@ -188,8 +191,43 @@ if(!$displayPage)
   echo "You cannot access this page";
   exit(0);
   }
+  
+  
+// Compute the time for all the projects (faster than individually) average of the week
+$testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, AVG(TIME_TO_SEC(TIMEDIFF(build.submittime, buildupdate.starttime))) AS elapsed
+              FROM build, buildupdate
+              WHERE
+                build.submittime > TIMESTAMPADD(HOUR, -167, NOW())
+                AND buildupdate.buildid = build.id
+                AND build.siteid = '$siteid'    
+                GROUP BY projectid,buildname,buildtype
+                ORDER BY elapsed    
+                ");          
 
- if(isset($_SESSION['cdash']))
+$xml .= "<siteload>";
+                
+echo pdo_error();
+$totalload = 0;
+while($testtime_array = pdo_fetch_array($testtime))
+  {
+  $xml .= "<build>";
+  $projectid = $testtime_array["projectid"];
+  if(checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid,1))
+     {
+     $xml .= add_XML_value("name",$testtime_array["buildname"]);
+     $xml .= add_XML_value("type",$testtime_array["buildtype"]);
+     $xml .= add_XML_value("time",$testtime_array["elapsed"]);
+     $totalload += $testtime_array["elapsed"];
+     }
+  $xml .= "</build>";   
+  }
+
+// Compute the idle time
+$idletime = 24*3600-$totalload;
+$xml .= "<idle>".$idletime."</idle>";
+$xml .= "</siteload>";
+
+if(isset($_SESSION['cdash']))
    {
    $xml .= "<user>";
    $userid = $_SESSION['cdash']['loginid'];
