@@ -29,10 +29,30 @@
   <xsl:call-template name="header"/>
 </xsl:otherwise>
 </xsl:choose>
-
 <br/>
+
+<!-- Group selection -->
+<form name="form1" method="post" action="">
+<b>Group: </b>
+<select onchange="document.form1.submit()" name="groupSelection">
+  <option>
+     <xsl:attribute name="value">0</xsl:attribute>All
+  </option>
+<xsl:for-each select="cdash/group">
+  <option>
+     <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+     <xsl:if test="selected=1">
+     <xsl:attribute name="selected"></xsl:attribute>
+     </xsl:if>
+     <xsl:value-of select="name"/>
+     </option>
+     </xsl:for-each>
+  </select>
+</form>
+
 <xsl:choose>
   <xsl:when test="count(cdash/tests)=0">
+  <br/>
   No failing tests for this date.
   </xsl:when>
   <xsl:otherwise>

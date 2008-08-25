@@ -36,6 +36,7 @@
 <xsl:value-of select="cdash/dashboard/startdate"/>
 </h3>
 
+<!-- Group selection -->
 <form name="form1" method="post" action="">
 <b>Group: </b>
 <select onchange="document.form1.submit()" name="groupSelection">

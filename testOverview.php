@@ -61,7 +61,7 @@ $xml .= add_XML_value("current","buildOverview.php?project=".$projectname."&date
 $xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_project($projectname,$date));
 $xml .= "</menu>";
 
-//get some information about the specified project
+// Get some information about the specified project
 $projectname = pdo_real_escape_string($projectname);
 $projectQuery = "SELECT id, nightlytime FROM project WHERE name = '$projectname'";
 $projectResult = pdo_query($projectQuery);
@@ -74,13 +74,39 @@ $nightlytime = $projectRow["nightlytime"];
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-//get each build that was submitted on this date
+// Return the available groups
+@$groupSelection = $_POST["groupSelection"];
+if(!isset($groupSelection))
+  {  
+  $groupSelection = 0;
+  }
+  
+$buildgroup = pdo_query("SELECT id,name FROM buildgroup WHERE projectid='$projectid'");
+while($buildgroup_array = pdo_fetch_array($buildgroup))
+{
+  $xml .= "<group>";
+  $xml .= add_XML_value("id",$buildgroup_array["id"]);
+  $xml .= add_XML_value("name",$buildgroup_array["name"]);
+  if($groupSelection == $buildgroup_array["id"])
+    {
+    $xml .= add_XML_value("selected","1");
+    }
+  $xml .= "</group>";
+}
+
+$groupSelectionSQL = "";
+if($groupSelection>0)
+  {
+  $groupSelectionSQL = " AND b2g.buildid=build.id AND b2g.groupid='$groupSelection' ";
+  }  
+
+// Get each build that was submitted on this date
 $rlike = "RLIKE";
 if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql")
    {
    $rlike = "~";
    }
-$buildQuery = "SELECT id FROM build WHERE stamp ".$rlike." '^$date-' AND projectid = '$projectid'"; 
+$buildQuery = "SELECT id FROM build,build2group as b2g WHERE stamp ".$rlike." '^$date-' AND projectid = '$projectid'".$groupSelectionSQL; 
 $buildResult = pdo_query($buildQuery);
 $builds = array();
 while($buildRow = pdo_fetch_array($buildResult))
