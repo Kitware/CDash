@@ -2486,4 +2486,30 @@ function check_email_category($name,$emailcategory)
       
   return false;
 }
+
+/** Return the byte value with proper extension */
+function getByteValueWithExtension($value)
+    {
+    $valueext = "";
+    if($value>1024)
+      {
+      $value /= 1024;
+      $value = $value;
+      $valueext = "K";
+      }
+    if($value>1024)
+      {
+      $value /= 1024;
+      $value = $value;
+      $valueext = "M";
+      }
+    if($value>1024)
+      {
+      $value /= 1024;
+      $value = $value;        
+      $valueext = "G";
+      }    
+    return round($value,2).$valueext;
+    }
+
 ?>

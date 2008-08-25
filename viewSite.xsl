@@ -37,22 +37,22 @@
 <br/>
 
 <!-- Main -->         
-<b>Processor Speed:</b><xsl:if test="string-length(cdash/site/processorclockfrequency)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>   
-<b>64 Bits:</b><xsl:if test="string-length(cdash/site/processoris64bits)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processoris64bits"/><br/>    
-<b>Processor Vendor:</b><xsl:if test="string-length(cdash/site/processorvendor)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendor"/><br/>    
-<b>Processor Vendor ID:</b><xsl:if test="string-length(cdash/site/processorvendorid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendorid"/><br/>    
-<b>Processor Family ID:</b><xsl:if test="string-length(cdash/site/processorfamilyid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorfamilyid"/><br/>    
-<b>Processor Cache Size:</b><xsl:if test="string-length(cdash/site/processorcachesize)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorcachesize"/><br/>    
-<b>Number of logical CPUs:</b><xsl:if test="string-length(cdash/site/numberlogicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberlogicalcpus"/><br/>    
-<b>Number of physical CPUs:</b><xsl:if test="string-length(cdash/site/numberphysicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberphysicalcpus"/><br/>    
-<b>Number of logical CPU per Physical CPUs:</b><xsl:if test="string-length(cdash/site/logicalprocessorsperphysical)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/logicalprocessorsperphysical"/><br/>   
-<b>Total Virtual Memory:</b><xsl:if test="string-length(cdash/site/totalvirtualmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalvirtualmemory"/><br/>    
-<b>Total Physical Memory:</b><xsl:if test="string-length(cdash/site/totalphysicalmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalphysicalmemory"/><br/>    
-<b>Description:</b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/description"/><br/>    
+<b>Processor Speed: </b><xsl:if test="string-length(cdash/site/processorclockfrequency)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>   
+<b>64 Bits: </b><xsl:if test="string-length(cdash/site/processoris64bits)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processoris64bits"/><br/>    
+<b>Processor Vendor: </b><xsl:if test="string-length(cdash/site/processorvendor)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendor"/><br/>    
+<b>Processor Vendor ID: </b><xsl:if test="string-length(cdash/site/processorvendorid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendorid"/><br/>    
+<b>Processor Family ID: </b><xsl:if test="string-length(cdash/site/processorfamilyid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorfamilyid"/><br/>    
+<b>Processor Cache Size: </b><xsl:if test="string-length(cdash/site/processorcachesize)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorcachesize"/><br/>    
+<b>Number of logical CPUs: </b><xsl:if test="string-length(cdash/site/numberlogicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberlogicalcpus"/><br/>    
+<b>Number of physical CPUs: </b><xsl:if test="string-length(cdash/site/numberphysicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberphysicalcpus"/><br/>    
+<b>Number of logical CPU per Physical CPUs: </b><xsl:if test="string-length(cdash/site/logicalprocessorsperphysical)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/logicalprocessorsperphysical"/><br/>   
+<b>Total Virtual Memory: </b><xsl:if test="string-length(cdash/site/totalvirtualmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalvirtualmemory"/><br/>    
+<b>Total Physical Memory: </b><xsl:if test="string-length(cdash/site/totalphysicalmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalphysicalmemory"/><br/>    
+<b>Description: </b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/description"/><br/>    
 
 <!-- Display the map -->
 <xsl:if test="string-length(cdash/site/ip)>0">  
-  <b>IP address:</b><xsl:value-of select="cdash/site/ip"/><br/>
+  <b>IP address: </b><xsl:value-of select="cdash/site/ip"/><br/>
   <b>Map:</b><br/>
   <script type="text/javascript">
       <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
