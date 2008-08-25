@@ -31,6 +31,12 @@ if(!isset($projectname))
  
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME",$db);
+
+$projectname = pdo_real_escape_string($projectname);
+$project = pdo_query("SELECT id,nightlytime FROM project WHERE name='$projectname'");
+$project_array = pdo_fetch_array($project);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>".$projectname." : Test Overview</title>";
@@ -38,7 +44,20 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
+$nightlytime = $project_array["nightlytime"];
+// We select the builds
+list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
+$xml .= add_XML_value("previous","buildOverview.php?project=".$projectname."&date=".$previousdate);
+if($date!="" && date("Ymd", $currentstarttime)!=date("Ymd"))
+  {
+  $xml .= add_XML_value("next","buildOverview.php?project=".$projectname."&date=".$nextdate);
+  }
+else
+  {
+  $xml .= add_XML_value("nonext","1");
+  }
+$xml .= add_XML_value("current","buildOverview.php?project=".$projectname."&date=");
 $xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_project($projectname,$date));
 $xml .= "</menu>";
 

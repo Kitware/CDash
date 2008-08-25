@@ -225,7 +225,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
 $projectname = pdo_real_escape_string($projectname);
-$project = pdo_query("SELECT id FROM project WHERE name='$projectname'");
+$project = pdo_query("SELECT id,nightlytime FROM project WHERE name='$projectname'");
 $project_array = pdo_fetch_array($project);
 
 $projectid = $project_array["id"];
@@ -241,8 +241,23 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 
 $gmdate = gmdate("Ymd",$dates['nightly-0']);
 
+$nightlytime = $project_array["nightlytime"];
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
+list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
+$xml .= add_XML_value("previous","viewChanges.php?project=".$projectname."&date=".$previousdate);
+if($date!="" && date("Ymd", $currentstarttime)!=date("Ymd"))
+  {
+  $xml .= add_XML_value("next","viewChanges.php?project=".$projectname."&date=".$nextdate);
+  }
+else
+  {
+  $xml .= add_XML_value("nonext","1");
+  }
+$xml .= add_XML_value("current","viewChanges.php?project=".$projectname."&date=");
+
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$today);
+
 $xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_project($projectname,$date));
 $xml .= "</menu>";
 
