@@ -553,7 +553,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
     $buildname = $build2grouprule_array["buildname"];
     $sitename = $build2grouprule_array["name"];
     $siteid = $build2grouprule_array["siteid"];
-    $summary .= "* <a href=\"".$currentURI."/viewSite.php?siteid=".$siteid."\">".$sitename."</a> - ".$buildname." (".$builtype.")\n";
+    $summary .= "* ".$sitename." - ".$buildname." (".$builtype.")\n";
    
     // Find the site maintainers
     $email = "";
@@ -571,10 +571,9 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
       {
       $missingTitle = "CDash [".$projectname."] - Missing Build for ".$sitename; 
       $missingSummary = "The following expected build for the project ".$projectname." didn't submit yesterday:\n";
-      $missingSummary .= "* <a href=\"".$currentURI."/viewSite.php?siteid=".$siteid."\">".$sitename."</a> - ".$buildname." (".$builtype.")\n";
+      $missingSummary .= "* ".$sitename." - ".$buildname." (".$builtype.")\n";
       $missingSummary .= "\n-CDash on ".$serverName."\n";
-      
-      
+
       if(mail("$email", $missingTitle, $missingSummary,
        "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
@@ -623,22 +622,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
         }
       }
     }
-    
 }
-
-
-include("config.php");
-include("pdo.php");
-include("common.php");
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
-$projectid = 2;
-$project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name FROM project WHERE id='$projectid'"));
-$date = ""; // now
-list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
-sendEmailExpectedBuilds($projectid,$currentstarttime);
-
 
 /** Add daily changes if necessary */
 function addDailyChanges($projectid)
