@@ -1710,14 +1710,11 @@ function get_dates($date,$nightlytime)
       } 
     }
 
-
-
   $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4))-3600*24; // starting time
 
   $todaydate = mktime(0,0,0,substr($date,4,2),substr($date,6,2),substr($date,0,4)); 
   $previousdate = date("Ymd",$todaydate-3600*24);
   $nextdate = date("Ymd",$todaydate+3600*24);
-
 
   return array($previousdate, $today, $nextdate, $date);
 }
