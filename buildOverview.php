@@ -98,14 +98,14 @@ $end_UTCDate = gmdate("Y-m-d H:i:s",$end_timestamp);
 $groupSelectionSQL = "";
 if($groupSelection>0)
   {
-  $groupSelectionSQL = " AND b2g.buildid=b.id AND b2g.groupid='$groupSelection' ";
+  $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
   }  
   
 $sql =  "SELECT s.name,b.name as buildname,be.type,be.sourcefile,be.sourceline,be.text
-                         FROM build AS b,builderror as be,site AS s,build2group AS b2g
+                         FROM build AS b,builderror as be,site AS s, build2group as b2g
                          WHERE b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                          AND b.projectid='$projectid' AND be.buildid=b.id 
-                         AND s.id=b.siteid
+                         AND s.id=b.siteid AND b2g.buildid=b.id
                          ".$groupSelectionSQL."ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC";
                            
 $builds = pdo_query($sql);

@@ -97,7 +97,7 @@ while($buildgroup_array = pdo_fetch_array($buildgroup))
 $groupSelectionSQL = "";
 if($groupSelection>0)
   {
-  $groupSelectionSQL = " AND b2g.buildid=build.id AND b2g.groupid='$groupSelection' ";
+  $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
   }  
 
 // Get each build that was submitted on this date
@@ -106,7 +106,7 @@ if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql")
    {
    $rlike = "~";
    }
-$buildQuery = "SELECT id FROM build,build2group as b2g WHERE stamp ".$rlike." '^$date-' AND projectid = '$projectid'".$groupSelectionSQL; 
+$buildQuery = "SELECT id FROM build,build2group as b2g WHERE stamp ".$rlike." '^$date-' AND projectid = '$projectid' AND b2g.buildid=build.id".$groupSelectionSQL; 
 $buildResult = pdo_query($buildQuery);
 $builds = array();
 while($buildRow = pdo_fetch_array($buildResult))
