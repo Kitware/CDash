@@ -40,7 +40,7 @@ function generate_index_table()
   if(!pdo_query("SELECT buildid FROM configureerror LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
-    upgrade your database structure in the Administration/Backward Compatibility Tools panel of CDash.</upgradewarning>";
+    upgrade your database structure in the Administration/CDash maintenance panel of CDash.</upgradewarning>";
     }
 
   $xml .= "<dashboard>
