@@ -2316,6 +2316,21 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
   return make_cdash_url($diff_url);
 }
 
+/** Return the Loggerhead URL */
+function get_loggerhead_diff_url($projecturl, $directory, $file, $revision)
+{
+  if($revision != '')
+    {
+       $diff_url = $projecturl."/revision/".$revision.($directory ? ("/".$directory) : "")."/".$file;
+    } 
+  else
+    {
+    $diff_url .= $projecturl."/changes/head:/".($directory ? ($directory) : "")."/".$file;
+    }
+
+  return make_cdash_url($diff_url);
+}
+
 /** Get the diff url based on the type of viewer */
 function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
 {
@@ -2350,6 +2365,10 @@ function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
   elseif($project_array["cvsviewertype"] == "websvn")
     {
     return get_websvn_diff_url($projecturl, $directory, $file, $revision);
+    }
+  elseif($project_array["cvsviewertype"] == "loggerhead")
+    {
+    return get_loggerhead_diff_url($projecturl, $directory, $file, $revision);
     }
   else // default is viewcvs
     {

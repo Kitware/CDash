@@ -454,6 +454,46 @@ function get_svn_repository_commits($svnroot, $dates)
 }
 
 
+function get_bzr_repository_commits($bzrroot, $dates)
+{
+  $commits = array();
+
+  $fromtime = gmdate("Y-m-d H:i:s", $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate("Y-m-d H:i:s", $dates['nightly-0']) . " GMT";
+
+  $raw_output = `bzr log -v --xml -r date:"$fromtime"..date:"$totime" $bzrroot 2>&1`;  
+
+  $doc = new DomDocument;
+  $doc->loadXML($raw_output);
+  $logs = $doc->getElementsByTagName("log");
+
+  foreach ($logs as $log) {
+     $current_author = $log->getElementsByTagName("committer")->item(0)->nodeValue;
+     // remove email from author and strip result
+     $current_author = trim(substr($current_author, 0, strpos($current_author, "<")));     
+     
+     $current_comment = $log->getElementsByTagName("message")->item(0)->nodeValue;
+     $current_time = gmdate("Y-m-d H:i:s.u",strtotime($log->getElementsByTagName("timestamp")->item(0)->nodeValue));
+     $current_revision = $log->getElementsByTagName("revno")->item(0)->nodeValue;
+     
+     $files = $log->getElementsByTagName("file");
+     foreach ($files as $file) {
+        $current_filename = $file->nodeValue;
+        $current_directory = remove_directory_from_filename($current_filename);
+        $commit = array();
+        $commit['directory'] = $current_directory;
+        $commit['filename'] = $current_filename;
+        $commit['revision'] = $current_revision;
+        $commit['time'] = $current_time;
+        $commit['author'] = $current_author;
+        $commit['comment'] = $current_comment;
+        $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;        
+     }
+  }
+
+  return $commits;
+}
+
 // Return an array of arrays. Each entry in the returned array will
 // have the following named elements:
 //   directory, filename, revision, time, author, comment
@@ -474,6 +514,12 @@ function get_repository_commits($projectid, $dates)
     $roots[] = $repositories_array["url"];
     } 
 
+  $cvsviewers = pdo_query("SELECT cvsviewertype FROM project 
+                        WHERE id='$projectid'");
+
+  $cvsviewers_array = pdo_fetch_array($cvsviewers);
+  $cvsviewer = $cvsviewers_array[0];
+  
   // Start with an empty array:
   $commits = array();
 
@@ -485,7 +531,14 @@ function get_repository_commits($projectid, $dates)
       }
     else
       {
-      $new_commits = get_svn_repository_commits($root, $dates);
+      if ($cvsviewer == "loggerhead")
+        {
+        $new_commits = get_bzr_repository_commits($root, $dates);
+        }
+      else
+        {
+          $new_commits = get_svn_repository_commits($root, $dates);
+        }       
       }
 
     if (count($new_commits)>0)
