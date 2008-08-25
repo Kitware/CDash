@@ -36,9 +36,29 @@
 <xsl:value-of select="cdash/dashboard/startdate"/>
 </h3>
 
-<!-- Message -->
-<xsl:value-of select="cdash/message" />
+<form name="form1" method="post" action="">
+<b>Group: </b>
+<select onchange="document.form1.submit()" name="groupSelection">
+  <option>
+     <xsl:attribute name="value">0</xsl:attribute>All
+  </option>
+<xsl:for-each select="cdash/group">
+  <option>
+     <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+     <xsl:if test="selected=1">
+     <xsl:attribute name="selected"></xsl:attribute>
+     </xsl:if>
+     <xsl:value-of select="name"/>
+     </option>
+     </xsl:for-each>
+  </select>
+</form>
 
+<!-- Message -->
+<xsl:if test="string-length(cdash/message)>0">
+  <br/>
+  <xsl:value-of select="cdash/message" />
+</xsl:if>
 
 <xsl:for-each select="cdash/sourcefile">
 <div class="title-divider"><xsl:value-of select="name"/></div>

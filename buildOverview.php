@@ -38,9 +38,7 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
-
-
-//get some information about the specified project
+// Get some information about the specified project
 $project = pdo_query("SELECT id, nightlytime FROM project WHERE name = '$projectname'");
 if(!$project_array = pdo_fetch_array($project))
   {
@@ -68,6 +66,27 @@ $xml .= add_XML_value("current","buildOverview.php?project=".$projectname."&date
 
 $xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$today);
 $xml .= "</menu>";
+
+// Return the available groups
+@$groupSelection = $_POST["groupSelection"];
+if(!isset($groupSelection))
+  {  
+  $groupSelection = 0;
+  }
+  
+$buildgroup = pdo_query("SELECT id,name FROM buildgroup WHERE projectid='$projectid'");
+while($buildgroup_array = pdo_fetch_array($buildgroup))
+{
+  $xml .= "<group>";
+  $xml .= add_XML_value("id",$buildgroup_array["id"]);
+  $xml .= add_XML_value("name",$buildgroup_array["name"]);
+  if($groupSelection == $buildgroup_array["id"])
+    {
+    $xml .= add_XML_value("selected","1");
+    }
+  $xml .= "</group>";
+}
+
 // Check the builds
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime+3600*24;
@@ -75,12 +94,19 @@ $end_timestamp = $currentstarttime+3600*24;
 $beginning_UTCDate = gmdate("Y-m-d H:i:s",$beginning_timestamp);
 $end_UTCDate = gmdate("Y-m-d H:i:s",$end_timestamp);                                                      
   
+
+$groupSelectionSQL = "";
+if($groupSelection>0)
+  {
+  $groupSelectionSQL = " AND b2g.buildid=b.id AND b2g.groupid='$groupSelection' ";
+  }  
+  
 $sql =  "SELECT s.name,b.name as buildname,be.type,be.sourcefile,be.sourceline,be.text
-                         FROM build AS b,builderror as be,site AS s
+                         FROM build AS b,builderror as be,site AS s,build2group AS b2g
                          WHERE b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                          AND b.projectid='$projectid' AND be.buildid=b.id 
                          AND s.id=b.siteid
-                         ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC";
+                         ".$groupSelectionSQL."ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC";
                            
 $builds = pdo_query($sql);
 echo pdo_error();
@@ -138,9 +164,6 @@ if(pdo_num_rows($builds)>0)
   {
   $xml .= "</sourcefile>";
   }
-
-
-
 $xml .= "</cdash>";
 
 
