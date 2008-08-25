@@ -162,7 +162,7 @@ $xml .= "</site>";
 // Select projects that belong to this site
 $displayPage=0;
 $projects = array();
-$site2project = pdo_query("SELECT projectid,max(submittime) FROM build WHERE siteid=$siteid GROUP BY projectid");
+$site2project = pdo_query("SELECT projectid,max(submittime) FROM build WHERE siteid='$siteid' AND projectid>0 GROUP BY projectid");
 
 while($site2project_array = pdo_fetch_array($site2project))
    {
@@ -210,16 +210,17 @@ echo pdo_error();
 $totalload = 0;
 while($testtime_array = pdo_fetch_array($testtime))
   {
-  $xml .= "<build>";
   $projectid = $testtime_array["projectid"];
   if(checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid,1))
      {
+     $xml .= "<build>";
      $xml .= add_XML_value("name",$testtime_array["buildname"]);
+     $xml .= add_XML_value("project",get_project_name($projectid));
      $xml .= add_XML_value("type",$testtime_array["buildtype"]);
      $xml .= add_XML_value("time",$testtime_array["elapsed"]);
      $totalload += $testtime_array["elapsed"];
+     $xml .= "</build>";   
      }
-  $xml .= "</build>";   
   }
 
 // Compute the idle time

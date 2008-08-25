@@ -118,14 +118,14 @@
 <!-- Timing per project -->
 <b>Time spent per project (computed from data collected in the past 24h):</b><br/><br/>
 
-<center><div id="placeholder" style="width:450px;height:250px"></div></center>
+<center><div id="placeholder" style="width:550px;height:250px"></div></center>
     
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     $.plot($("#placeholder"), [
     
 <xsl:for-each select="cdash/siteload/build">
- { label: "<xsl:value-of select="name"/> (<xsl:value-of select="type"/>)",  data: <xsl:value-of select="time"/>},
+ { label: "<xsl:value-of select="project"/> - <xsl:value-of select="name"/> (<xsl:value-of select="type"/>)",  data: <xsl:value-of select="time"/>},
 </xsl:for-each>
  { label: "Non-CDash",  data: <xsl:value-of select="cdash/siteload/idle"/>},
   ], 
@@ -144,7 +144,7 @@ $(function () {
       labelFormatter: function(serie){// default formatter is "serie.label"
         //return serie.label;
         //return serie.data;
-        return serie.label+'<br/>'+Math.round(serie.percent)+'%';
+        return Math.round(serie.percent)+'%';
       }
     },
     legend: {
