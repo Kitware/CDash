@@ -159,6 +159,18 @@ $xml .= add_XML_value("latitude",$site_array["latitude"]);
 $xml .= add_XML_value("longitude",$site_array["longitude"]);
 $xml .= "</site>";
 
+// List the claimers of the site
+
+$siteclaimer = pdo_query("SELECT firstname,lastname FROM user,site2user 
+                          WHERE user.id=site2user.userid AND site2user.siteid='$siteid' ORDER BY firstname");
+while($siteclaimer_array = pdo_fetch_array($siteclaimer))
+   {
+   $xml .= "<claimer>";
+   $xml .= add_XML_value("firstname",$siteclaimer_array["firstname"]);
+   $xml .= add_XML_value("lastname",$siteclaimer_array["lastname"]);
+   $xml .= "</claimer>";
+   }
+
 // Select projects that belong to this site
 $displayPage=0;
 $projects = array();
@@ -180,9 +192,6 @@ while($site2project_array = pdo_fetch_array($site2project))
      $projects[] = $projectid;
      }
    }
-
-
-
 
 // If the current site as only private projects we check that we have the right
 // to view the page

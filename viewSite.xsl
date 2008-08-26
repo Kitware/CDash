@@ -49,6 +49,16 @@
 <b>Total Virtual Memory: </b><xsl:if test="string-length(cdash/site/totalvirtualmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalvirtualmemory"/><br/>    
 <b>Total Physical Memory: </b><xsl:if test="string-length(cdash/site/totalphysicalmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalphysicalmemory"/><br/>    
 <b>Description: </b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/description"/><br/>    
+<br/>
+
+<!-- Display the claimers -->
+<xsl:if test="count(cdash/claimer)>0">
+<b>Claimed by: </b>
+<xsl:for-each select="cdash/claimer">
+  <xsl:value-of select="firstname"/> <xsl:value-of select="lastname"/>
+</xsl:for-each>
+<br/><br/>
+</xsl:if>
 
 <!-- Display the map -->
 <xsl:if test="string-length(cdash/site/ip)>0">  
