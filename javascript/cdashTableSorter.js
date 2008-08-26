@@ -141,7 +141,7 @@ $(document).ready(function() {
                   11: { sorter:'numericvalue'},
                   12: { sorter:'numericvalue'},
                   13: { sorter:'numericvalue'},
-                  15: { sorter:'text'}
+                  14: { sorter:'text'}
               },
             debug: false,
             widgets: ['zebra'] 
