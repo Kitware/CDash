@@ -87,7 +87,9 @@ $end_timestamp = $currentstarttime+3600*24;
 $beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
 $end_UTCDate = gmdate("YmdHis",$end_timestamp);   
 
-// Add the date/time                                                   
+// Add the date/time      
+$xml .= add_XML_value("projectid",$projectid);  
+$xml .= add_XML_value("currentstarttime",$currentstarttime);                                            
 $xml .= add_XML_value("teststarttime",date("Y-m-d H:i:s",$beginning_timestamp));
 $xml .= add_XML_value("testendtime",date("Y-m-d H:i:s",$end_timestamp));
 

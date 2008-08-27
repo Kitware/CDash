@@ -20,6 +20,9 @@
     </xsl:attribute>
   </link>
   <xsl:call-template name="headscripts"/> 
+   <!-- Include JavaScript -->
+  <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script> 
+ 
 </head>
 <body bgcolor="#ffffff">
 
@@ -37,6 +40,19 @@
 <u><xsl:value-of select="cdash/testName"/></u>
  performed between <xsl:value-of select="cdash/builds/teststarttime"/> and <xsl:value-of select="cdash/builds/testendtime"/>
 </h3>
+
+<!-- Failure Graph -->
+<a>
+<xsl:attribute name="href">javascript:showtestfailuregraph_click('<xsl:value-of select="/cdash/dashboard/projectid"/>','<xsl:value-of select="/cdash/testName"/>','<xsl:value-of select="/cdash/builds/currentstarttime"/>')</xsl:attribute>
+[Show Test Failure Trend]
+</a>
+<div id="testfailuregraphoptions"></div>
+<div id="testfailuregraph"></div>
+<center>
+<div id="testfailuregrapholder"></div>
+</center>
+<br/>
+<!-- Test Summary table -->
 <table id="testSummaryTable" cellspacing="0" cellpadding="3" class="tabb">
 <thead> 
   <tr class="table-heading1">
