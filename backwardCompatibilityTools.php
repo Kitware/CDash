@@ -32,9 +32,9 @@ $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<backurl>user.php</backurl>";
-$xml .= "<title>CDash - Backward Compatibility</title>";
+$xml .= "<title>CDash - Maintenance</title>";
 $xml .= "<menutitle>CDash</menutitle>";
-$xml .= "<menusubtitle>Tools</menusubtitle>";
+$xml .= "<menusubtitle>Maintenance</menusubtitle>";
 $xml .= "<minversion>".$CDASH_VERSION_MAJOR.".".$CDASH_VERSION_MINOR."</minversion>";
 
 @$CreateDefaultGroups = $_POST["CreateDefaultGroups"];
