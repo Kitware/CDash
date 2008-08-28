@@ -794,17 +794,16 @@ if($projectid>0)
   echo pdo_error();
  
   $names = array();
-  
   while($build_array = pdo_fetch_array($builds))
     {
     // Avoid adding the same build twice
-    if(array_search($build_array['sitename'].$build_array['name'],$names) === FALSE)
+    if(array_search($build_array['sitename'].$build_array['name'].$build_array['type'],$names) === FALSE)
       {
       $xml .= "<currentbuild>";
       $xml .= add_XML_value("id",$build_array['id']);
       $xml .= add_XML_value("name",$build_array['sitename']." ".$build_array['name']." [".$build_array['type']."] ".$build_array['groupname']);
       $xml .= "</currentbuild>";
-      $names[] = $build_array['sitename'].$build_array['name'];
+      $names[] = $build_array['sitename'].$build_array['name'].$build_array['type'];
       }
     }
   
@@ -819,13 +818,13 @@ if($projectid>0)
   while($build_array = pdo_fetch_array($builds))
     {
     // Avoid adding the same build twice
-    if(array_search($build_array['sitename'].$build_array['name'],$names) === FALSE)
+    if(array_search($build_array['sitename'].$build_array['name'].$build_array['type'],$names) === FALSE)
       {
       $xml .= "<currentbuild>";
       $xml .= add_XML_value("id",$build_array['id']);
       $xml .= add_XML_value("name",$build_array['sitename']." ".$build_array['name']." [".$build_array['type']."] ".$build_array['groupname']." (expected)");
       $xml .= "</currentbuild>";
-      $names[] = $build_array['sitename'].$build_array['name'];
+      $names[] = $build_array['sitename'].$build_array['name'].$build_array['type'];
       }
     }
 }
