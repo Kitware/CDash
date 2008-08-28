@@ -169,7 +169,7 @@ if($projectid>0)
                        f.nfixedtests, f.nfailedtests, f.totalupdatedfiles
   from (
      select userid, max(checkindate) as checkindate
-     from userstatistics WHERE checkindate<'$end_UTCDate' AND projectid='$projectid' group by userid
+     from userstatistics WHERE checkindate<'$end_UTCDate' AND checkindate>='$beginning_UTCDate' AND projectid='$projectid' group by userid
   ) as x inner join userstatistics as f on f.userid=x.userid AND f.checkindate=x.checkindate";
   
   $startselect = "select f.userid, f.checkindate, f.totalbuilds, f.nfixedwarnings,
@@ -179,7 +179,7 @@ if($projectid>0)
      select userid, max(checkindate) as checkindate
      from userstatistics WHERE checkindate<'$beginning_UTCDate' AND projectid='$projectid' group by userid
   ) as x inner join userstatistics as f on f.userid=x.userid AND f.checkindate=x.checkindate";
-  
+    
   // First loop through the endselect
   $users = array();
   $endquery = pdo_query($endselect);
@@ -202,6 +202,7 @@ if($projectid>0)
     {
     if(isset($users[$startquery_array['userid']]))
       {
+      echo $startquery_array['totalupdatedfiles']."<br>";
       $users[$startquery_array['userid']]['nfailedwarnings'] -= $startquery_array['nfailedwarnings'];
       $users[$startquery_array['userid']]['nfixedwarnings'] -= $startquery_array['nfixedwarnings'];
       $users[$startquery_array['userid']]['nfailederrors'] -= $startquery_array['nfailederrors'];
