@@ -35,6 +35,35 @@
      
 <br/>
 
+<table width="100%"  border="0">
+  <tr>
+    <td width="10%"><div align="right"><strong>Project:</strong></div></td>
+    <td width="90%" >
+    <form name="form1" method="post">
+    <xsl:attribute name="action">userStatistics.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
+    <select onchange="location = 'userStatistics.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
+        <option>
+        <xsl:attribute name="value">0</xsl:attribute>
+        Choose...
+        </option>
+        
+        <xsl:for-each select="cdash/availableproject">
+        <option>
+        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+        <xsl:if test="selected=1">
+        <xsl:attribute name="selected"></xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="name"/>
+        </option>
+        </xsl:for-each>
+        </select>
+      </form>
+    </td>
+  </tr>
+</table> 
+  
+<!-- If a project has been selected -->
+<xsl:if test="count(cdash/project)>0">
 <form method="post">
 Date Range:
 <select onChange="form.submit()" name="range">
@@ -89,7 +118,7 @@ This Year</option>
 </xsl:for-each>
 </table>
 <br/>
-
+   </xsl:if> <!-- if we have a project selected -->
 
 
 
