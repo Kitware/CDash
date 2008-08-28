@@ -202,7 +202,6 @@ if($projectid>0)
     {
     if(isset($users[$startquery_array['userid']]))
       {
-      echo $startquery_array['totalupdatedfiles']."<br>";
       $users[$startquery_array['userid']]['nfailedwarnings'] -= $startquery_array['nfailedwarnings'];
       $users[$startquery_array['userid']]['nfixedwarnings'] -= $startquery_array['nfixedwarnings'];
       $users[$startquery_array['userid']]['nfailederrors'] -= $startquery_array['nfailederrors'];
