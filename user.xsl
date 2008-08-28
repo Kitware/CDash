@@ -220,6 +220,7 @@
     <tr class="trodd"><td id="nob"><a href="backwardCompatibilityTools.php">[CDash maintenance]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="siteStatistics.php">[Sites Statistics]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="userStatistics.php">[User Statistics] (beta)</a></td></tr>
     <tr class="treven"><td id="nob"><a href="import.php">[Import Dart1 Files]</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="importBackup.php">[Import From Backups]</a></td></tr>
   </tbody>

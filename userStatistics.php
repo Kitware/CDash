@@ -33,8 +33,7 @@ $projectid = get_project_id($projectname);
 if($projectid)
   {
   $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));  
-  $xml .= "<backurl>index.php?project=".$project_array["name"];
-  $xml .= "&#38;date=".get_dashboard_date_from_build_starttime("",$project_array["nightlytime"]);
+  $xml .= "<backurl>user.php";
   $xml .= "</backurl>";
   }
 else  
