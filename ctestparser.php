@@ -616,6 +616,9 @@ function compute_test_timing($buildid)
     $previousbuild_array = pdo_fetch_array($previousbuild);
     $previousbuildid = $previousbuild_array["id"];
    
+     // Compute the update statistics
+    compute_update_statistics($buildid,$previousbuildid);
+   
     compute_error_difference($buildid,$previousbuildid,0); // errors
     compute_error_difference($buildid,$previousbuildid,1); // warnings
     compute_configure_difference($buildid,$previousbuildid,1); // warnings
@@ -715,6 +718,9 @@ function compute_test_timing($buildid)
     }
   else // this is the first build
     {
+    // Compute the update statistics
+    compute_update_statistics($buildid,0);
+    
     $timestd = 0;
     $timestatus = 0;
         
