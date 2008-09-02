@@ -106,7 +106,7 @@ if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql")
    {
    $rlike = "~";
    }
-$buildQuery = "SELECT id FROM build,build2group as b2g WHERE stamp ".$rlike." '^$date-' AND projectid = '$projectid' AND b2g.buildid=build.id".$groupSelectionSQL; 
+$buildQuery = "SELECT id FROM build,build2group as b2g WHERE stamp ".$rlike." '^$today-' AND projectid = '$projectid' AND b2g.buildid=build.id".$groupSelectionSQL; 
 $buildResult = pdo_query($buildQuery);
 $builds = array();
 while($buildRow = pdo_fetch_array($buildResult))
@@ -166,7 +166,7 @@ if($testResult !== FALSE)
       }
     $xml .= "<test>\n";
     $xml .= add_XML_value("testName", $testName) . "\n";
-    $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
+    $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$today";
     $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
     $xml .= "</test>\n";
     }
