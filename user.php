@@ -17,6 +17,7 @@
 =========================================================================*/
 include("config.php");
 require_once("pdo.php");
+$SessionCachePolicy = 'nocache';
 include('login.php');
 include_once('common.php');
 include("version.php");

@@ -23,7 +23,7 @@ include_once("version.php");
 $loginerror = 0;
 
 /** Authentication function */
-function auth()
+function auth($SessionCachePolicy='private_no_expire')
 {  
   include "config.php";
   $loginid= 1231564132;
@@ -41,7 +41,7 @@ function auth()
     if ($user_array = pdo_fetch_array($result)) 
       {
       session_name("CDash");
-      session_cache_limiter('private');
+      session_cache_limiter($SessionCachePolicy);
       session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
       session_start();  
       // create the session array 
@@ -66,7 +66,7 @@ d" => 1, "loginid" => $user_array["id"]);
   if (@$_GET["logout"]) 
     {                             // user requested logout            
     session_name("CDash");
-    session_cache_limiter('private');
+    session_cache_limiter('nocache');
     @session_start(); 
     unset($_SESSION['cdash']);  
     session_destroy(); 
@@ -90,7 +90,7 @@ d" => 1, "loginid" => $user_array["id"]);
         if (md5($passwd)==$pass)
           {
           session_name("CDash");
-          session_cache_limiter('private');
+          session_cache_limiter($SessionCachePolicy);
           session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
           session_start();  
           // create the session array 
@@ -118,7 +118,7 @@ d" => 1, "loginid" => $user_array["id"]);
   else
     {                                         // arrive from session var 
     session_name("CDash");
-    session_cache_limiter('private');
+    session_cache_limiter($SessionCachePolicy);
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
     session_start();     
     $login_ok = 0;  
@@ -183,7 +183,7 @@ $uri = basename($_SERVER['PHP_SELF']);
 $stamp = md5(srand(5));  
 $session_OK = 0;
 
-if(!auth() && !@$noforcelogin):                 // authentication failed 
+if(!auth(@$SessionCachePolicy) && !@$noforcelogin):                 // authentication failed 
   LoginForm($loginerror); // display login form 
   $session_OK=0;
 else:                        // authentication was successful 
