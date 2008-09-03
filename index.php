@@ -410,7 +410,7 @@ function generate_main_dashboard_XML($projectid,$date)
       // This should probably be defined by the user as well on the users page
       if($groupname == "Continuous")
         {
-        $xml .= add_XML_value("sortlist","{sortlist: [[11,1]]}"); //buildtime
+        $xml .= add_XML_value("sortlist","{sortlist: [[14,1]]}"); //buildtime
         }
       
       $rowparity = 0;
