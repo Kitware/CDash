@@ -207,7 +207,9 @@
             warning
             </xsl:when>
             <xsl:otherwise>
+            <xsl:if test="string-length(update/files)>0">
             normal
+            </xsl:if>
             </xsl:otherwise>
             </xsl:choose>
             </xsl:otherwise>
