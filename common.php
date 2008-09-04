@@ -2529,7 +2529,7 @@ function getByteValueWithExtension($value)
     }
 
 /** Compute the update Statistics */
-function compute_update_statistics($buildid,$previousbuildid)
+function compute_update_statistics($projectid,$buildid,$previousbuildid)
 {
   $firstfile = 1;
   // Loop through the updated file

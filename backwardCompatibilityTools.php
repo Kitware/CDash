@@ -548,11 +548,11 @@ function ComputeUpdateStatistics($days = 4)
         {
         $previousbuild_array = pdo_fetch_array($previousbuild);
         $previousbuildid = $previousbuild_array["id"];   
-        compute_update_statistics($buildid,$previousbuildid);
+        compute_update_statistics($projectid,$buildid,$previousbuildid);
         }
       else
         {
-        compute_update_statistics($buildid,0);
+        compute_update_statistics($projectid,$buildid,0);
         }
 
       // Progress bar  
