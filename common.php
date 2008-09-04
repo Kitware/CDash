@@ -2321,11 +2321,11 @@ function get_loggerhead_diff_url($projecturl, $directory, $file, $revision)
 {
   if($revision != '')
     {
-       $diff_url = $projecturl."/revision/".$revision.($directory ? ("/".$directory) : "")."/".$file;
+    $diff_url = $projecturl."/revision/".$revision.($directory ? ("/".$directory) : "")."/".$file;
     } 
   else
     {
-    $diff_url .= $projecturl."/changes/head:/".($directory ? ($directory) : "")."/".$file;
+    $diff_url = $projecturl."/changes/head:/".($directory ? ($directory) : "")."/".$file;
     }
 
   return make_cdash_url($diff_url);
