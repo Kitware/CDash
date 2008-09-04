@@ -64,7 +64,8 @@ function sendemail($parser,$projectid)
   $project_array = pdo_fetch_array($project);
   $project_emailtesttimingchanged = $project_array["emailtesttimingchanged"];
   $project_testtimemaxstatus =  $project_array["testtimemaxstatus"];
-
+  $projectname = $project_array["name"];
+  
   if($project_array["emailbrokensubmission"] == 0)
     {
     return;
@@ -91,7 +92,7 @@ function sendemail($parser,$projectid)
     {
     return;
     }
-  add_log("Start buildid=".$buildid,"sendemail");
+  add_log("Buildid ".$buildid,"sendemail ".$projectname);
 
   // Find if the build has any errors
   $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
@@ -134,7 +135,7 @@ function sendemail($parser,$projectid)
                                AND name='$buildname' AND type='$buildtype' 
                                AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
                                
-  add_last_sql_error("sendmail");
+  add_last_sql_error("sendemail ".$projectname);
                                
   if(pdo_num_rows($previousbuild) > 0)
     {
@@ -143,13 +144,13 @@ function sendemail($parser,$projectid)
     
     // Find if the build has any errors
     $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
-    add_last_sql_error("sendmail");
+    add_last_sql_error("sendemail ".$projectname);
     $builderror_array = pdo_fetch_array($builderror);
     $npreviousbuilderrors = $builderror_array[0];
        
     // Find if the build has any warnings
     $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
-    add_last_sql_error("sendmail");
+    add_last_sql_error("sendemail ".$projectname);
     $buildwarning_array = pdo_fetch_array($buildwarning);
     $npreviousbuildwarnings = $buildwarning_array[0];
   
@@ -167,10 +168,10 @@ function sendemail($parser,$projectid)
     $npreviousfailingtests = $nfail_array[0];
     
     
-    //add_log("previousbuildid=".$previousbuildid,"sendemail");
-    //add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail");
-    //add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail");
-    //add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail");
+    //add_log("previousbuildid=".$previousbuildid,"sendemail ".$projectname);
+    //add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail ".$projectname);
+    //add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail ".$projectname);
+    //add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail ".$projectname);
 
     // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
     // we don't send any emails
@@ -179,7 +180,7 @@ function sendemail($parser,$projectid)
        && $npreviousbuilderrors==$nbuilderrors
       ) 
       {
-      add_log("returning","sendemail");
+      add_log("returning","sendemail ".$projectname);
       return;
       }
     }
@@ -247,7 +248,7 @@ function sendemail($parser,$projectid)
     $user = pdo_query($query);
     if(strlen(pdo_error())>0)
       {
-      add_log($query."\n".pdo_error(),"sendemail");
+      add_log($query."\n".pdo_error(),"sendemail ".$projectname);
       }
       
     // Loop through the users and add them to the email array  
@@ -291,7 +292,7 @@ function sendemail($parser,$projectid)
     // Send the email
     if($summaryEmail != "")
       {
-      $title = "CDash [".$project_array["name"]."] - ".$summaryemail_array["name"];
+      $title = "CDash [".$projectname."] - ".$summaryemail_array["name"];
       $title .= " ".date("Y-m-d H:i:s T",strtotime($starttime." UTC"));
       
       $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
@@ -309,12 +310,12 @@ function sendemail($parser,$projectid)
       if(mail("$summaryEmail", $title, $messagePlainText,
            "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
-        add_log("email sent to: ".$email,"sendemail");
+        add_log("email sent to: ".$email,"sendemail ".$projectname);
         return;
         }
       else
         {
-        add_log("cannot send email to: ".$email,"sendemail");
+        add_log("cannot send email to: ".$email,"sendemail ".$projectname);
         }
       } // end $summaryEmail!=""
     } 
@@ -551,11 +552,11 @@ function sendemail($parser,$projectid)
     if(mail("$email", $title, $messagePlainText,
          "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
       {
-      add_log("email sent to: ".$email,"sendemail");
+      add_log("email sent to: ".$email,"sendemail ".$projectname);
       }
     else
       {
-      add_log("cannot send email to: ".$email,"sendemail");
+      add_log("cannot send email to: ".$email,"sendemail ".$projectname);
       }
 
     } // end $email!=""
