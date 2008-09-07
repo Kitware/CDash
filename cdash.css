@@ -119,6 +119,7 @@ a:active{
  font-family: Arial, Helvetica, sans-serif;
  color: #FFFFFF;
 }
+
 .table-heading1 a:link{
  font-size:10px;
  color:#FFFFFF;
@@ -133,6 +134,7 @@ a:active{
  font-weight: normal;
  text-decoration: none;
 }
+
 .table-heading1 h3{
  font-family: Arial, Helvetica, sans-serif;
  color: #FFFFFF;
@@ -144,6 +146,7 @@ a:active{
  padding-bottom: 1px;
  padding-left: 7px;
 }
+
 .tabb td, .tabb th{
  border-right-width: 2px;
  border-right-style: solid;
@@ -734,4 +737,18 @@ margin:3px 0;
 #JT_copy img{
   padding: 1px;
   border: 1px solid #CCCCCC;
+}
+
+a.grouptrigger:link{
+  font-family: Arial, Helvetica, sans-serif;
+  color: #FFFFFF;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+a.grouptrigger:visited{
+  font-family: Arial, Helvetica, sans-serif;
+  color: #FFFFFF;
+  font-size: 17px;
+  font-weight: bold;
 }
