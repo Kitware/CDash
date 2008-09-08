@@ -42,7 +42,7 @@ function sendemail($parser,$projectid)
   include_once("common.php");
   include("config.php");
   require_once("pdo.php");
-  add_log("sendmail", "$CDASH_USE_HTTPS = $CDASH_USE_HTTPS");   
+  
   // Send email at the end of the testing xml file or the
   // update xml file.  This is because the update file will
   // contain the information on the users that made the commit
