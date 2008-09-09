@@ -578,6 +578,62 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
     }
 }
 
+/** Add the difference between the numbers of loc tested and untested
+ *  for the previous and current build */
+function compute_coverage_difference($buildid)
+{
+  // Find the previous build
+  $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id='$buildid'");
+ 
+  $build_array = pdo_fetch_array($build);                           
+  $buildname = $build_array["name"];
+  $buildtype = $build_array["type"];
+  $starttime = $build_array["starttime"];
+  $siteid = $build_array["siteid"];
+  $projectid = $build_array["projectid"];
+  
+  // Find the previous build
+  $previousbuild = pdo_query("SELECT id FROM build
+                                WHERE build.siteid='$siteid' 
+                                AND build.type='$buildtype' AND build.name='$buildname'
+                                AND build.projectid='$projectid' 
+                                AND build.starttime<'$starttime' 
+                                ORDER BY build.starttime DESC LIMIT 1");
+  if(pdo_num_rows($previousbuild) == 0)
+    {
+    return;
+    }
+    
+  // Lookup the previous build id
+  $previousbuild_array = pdo_fetch_array($previousbuild);
+  $previousbuildid = $previousbuild_array["id"];
+  
+  // Look at the number of errors and warnings differences
+  $coverage = pdo_query("SELECT loctested,locuntested FROM coveragesummary WHERE buildid='$buildid'");
+  $coverage_array  = pdo_fetch_array($coverage);
+  $loctested = $coverage_array['loctested']; 
+  $locuntested = $coverage_array['locuntested']; 
+    
+  $previouscoverage = pdo_query("SELECT loctested,locuntested FROM coveragesummary WHERE buildid='$previousbuildid'");
+  if(pdo_num_rows($previouscoverage)>0)
+    {
+    $previouscoverage_array = pdo_fetch_array($previouscoverage);
+    $previousloctested = $previouscoverage_array['loctested']; 
+    $previouslocuntested = $previouscoverage_array['locuntested']; 
+
+    // Don't log if no diff
+    $loctesteddiff = $loctested-$previousloctested;
+    $locuntesteddiff = $locuntested-$previouslocuntested;
+    
+    if($loctesteddiff != 0 && $locuntesteddiff != 0)
+      {
+      pdo_query("INSERT INTO coveragesummarydiff (buildid,loctested,locuntested) 
+                             VALUES('$buildid','$loctesteddiff','$locuntesteddiff')");
+      add_last_sql_error("compute_coverage_difference");
+      }
+    }
+}
+
 /** Compute the test timing as a weighted average of the previous test.
  *  Also compute the difference in errors and tests between builds.
  *  We do that in one shot for speed reasons. */
@@ -784,8 +840,10 @@ function parse_coverage($parser,$projectid)
     }
   
   $LOCTested = getXMLValue($xmlarray,"LOCTESTED","COVERAGE");
-  $LOCUntested = getXMLValue($xmlarray,"LOCUNTESTED","COVERAGE");     
+  $LOCUntested = getXMLValue($xmlarray,"LOCUNTESTED","COVERAGE");
+     
   add_coveragesummary($buildid,$LOCTested,$LOCUntested);
+  compute_coverage_difference($buildid);
   
   $coverage_array = array();
   $index = 0;

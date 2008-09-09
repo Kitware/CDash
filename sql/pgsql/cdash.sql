@@ -174,7 +174,15 @@ CREATE TABLE "coveragesummary" (
   PRIMARY KEY ("buildid")
 );
 
-
+--
+-- Table: coveragesummarydiff
+--
+CREATE TABLE "coveragesummarydiff" (
+  "buildid" bigint DEFAULT '0' NOT NULL,
+  "loctested" bigint DEFAULT '0' NOT NULL,
+  "locuntested" bigint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("buildid")
+);
 
 --
 -- Table: dynamicanalysis

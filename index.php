@@ -37,7 +37,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!pdo_query("SELECT buildid FROM configureerror LIMIT 1"))
+  if(!pdo_query("SELECT buildid FROM coveragesummarydiff LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration/CDash maintenance panel of CDash.</upgradewarning>";
@@ -662,6 +662,19 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <percentagegreen>".$project_array["coveragethreshold"]."</percentagegreen>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
+      
+      // Compute the diff
+      $coveragediff = pdo_query("SELECT * FROM coveragesummarydiff WHERE buildid='$buildid'");
+      if(pdo_num_rows($coveragediff) >0)
+        {
+        $coveragediff_array = pdo_fetch_array($coveragediff);
+        $previousloctested = $coveragediff_array['loctested'];
+        $previouslocuntested = $coveragediff_array['locuntested'];
+        @$previouspercent = round($previousloctested/($previousloctested+$previouslocuntested)*100,2);
+        $xml .= "  <percentagediff>".$percent-$previouspercent."</percentagediff>";
+        $xml .= "  <faildiff>".$coverage_array["locuntested"]-$previouslocuntested."</faildiff>";
+        $xml .= "  <passdiff>".$coverage_array["loctested"]-$previousloctested."</passdiff>";
+        }
       
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
       $submittimestamp = strtotime($build_array["submittime"]." UTC");

@@ -615,6 +615,13 @@ CREATE TABLE `configureerrordiff` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
+CREATE TABLE `coveragesummarydiff` (
+  `buildid` bigint(20) NOT NULL,
+  `loctested` int(11) NOT NULL default '0',
+  `locuntested` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`buildid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 
