@@ -235,7 +235,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
       if ($npos !== FALSE && $npos === 0 && $line_number === $in_revision_chunk_line_number + 2)
         {
         $npos2 = strpos($vv, "; ", $npos);
-        $current_time = strtotime(substr($vv, $npos + 6, $npos2 - ($npos + 6))); // 6 == strlen("date: ")
+        $current_time = gmdate("Y-m-d H:i:s",strtotime(substr($vv, $npos + 6, $npos2 - ($npos + 6)))); // 6 == strlen("date: ")
 
         // Lines that begin with "date: " also contain "author: "
         //
@@ -398,7 +398,7 @@ function get_svn_repository_commits($svnroot, $dates)
             $current_date = substr($vv, $npos+3, $npos2 - ($npos+3));
             //echo "current_date: '" . $current_date . "'<br/>";
 
-            $current_time = strtotime($current_date);
+            $current_time = gmdate("Y-m-d H:i:s",strtotime($current_date));
             //echo "date: '" . $current_time . "' (" . date("Y-m-d H:i:s.u", $current_time) . ")<br/>";
             //echo "gmdate: '" . $current_time . "' (" . gmdate("Y-m-d H:i:s.u", $current_time) . ")<br/>";
 
