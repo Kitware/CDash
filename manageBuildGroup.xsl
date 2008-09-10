@@ -142,6 +142,12 @@ project page</a>
       </xsl:if> 
      </input>
      Summary email
+     <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="2">  
+     <xsl:if test="summaryemail=2">
+       <xsl:attribute name="checked">1</xsl:attribute> 
+      </xsl:if> 
+     </input>
+     No email
      </form>
      </td>
      </tr>

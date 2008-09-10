@@ -94,6 +94,21 @@ function sendemail($parser,$projectid)
     }
   add_log("Buildid ".$buildid,"sendemail ".$projectname);
 
+  // Get the buildgroup
+  $buildgroup_array = pdo_fetch_array(pdo_query("SELECT groupid FROM build2group WHERE buildid=$buildid"));
+  add_last_sql_error("sendmail");
+  $groupid = $buildgroup_array["groupid"];
+  
+  // Check if the group as summaryemail enable
+  $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name,summaryemail FROM buildgroup WHERE id=$groupid"));
+  add_last_sql_error("sendmail");
+  
+  // If we specified no email we stop here
+  if($summaryemail_array["summaryemail"]==2)
+    {
+    return;
+    }
+
   // Find if the build has any errors
   $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
   $builderror_array = pdo_fetch_array($builderror);
@@ -209,14 +224,7 @@ function sendemail($parser,$projectid)
   $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
   $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
   
-  // Get the buildgroup
-  $buildgroup_array = pdo_fetch_array(pdo_query("SELECT groupid FROM build2group WHERE buildid=$buildid"));
-  add_last_sql_error("sendmail");
-  $groupid = $buildgroup_array["groupid"];
-  
-  // Check if the group as summaryemail enable
-  $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name,summaryemail FROM buildgroup WHERE id=$groupid"));
-  add_last_sql_error("sendmail");
+    
   if($summaryemail_array["summaryemail"]==1)
     {
     // Check if the email has been sent
