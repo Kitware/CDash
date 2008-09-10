@@ -652,9 +652,18 @@
            </xsl:otherwise>
         </xsl:choose>
         </xsl:attribute>
-      <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a></td>
-      <td align="center" ><b><xsl:value-of select="pass"/></b></td>
-      <td align="center" ><b><xsl:value-of select="fail"/></b></td>
+      <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a>
+      <xsl:if test="coverage/percentdiff > 0"><sub>+<xsl:value-of select="coverage/percentdiff"/>%</sub></xsl:if>
+      <xsl:if test="coverage/percentdiff &lt; 0"><sub><xsl:value-of select="coverage/percentdiff"/>%</sub></xsl:if>
+      </td>
+      <td align="center" ><b><xsl:value-of select="pass"/></b>
+      <xsl:if test="coverage/passdiff > 0"><sub>+<xsl:value-of select="coverage/passdiff"/></sub></xsl:if>
+      <xsl:if test="coverage/passdiff &lt; 0"><sub><xsl:value-of select="coverage/passdiff"/></sub></xsl:if>    
+      </td>
+      <td align="center" ><b><xsl:value-of select="fail"/></b>
+      <xsl:if test="coverage/faildiff > 0"><sub>+<xsl:value-of select="coverage/faildiff"/></sub></xsl:if>
+      <xsl:if test="coverage/faildiff &lt; 0"><sub><xsl:value-of select="coverage/faildiff"/></sub></xsl:if>    
+      </td>
       <td align="left"  class="nob"><xsl:value-of select="date"/></td>
    </tr>
   </xsl:for-each>
