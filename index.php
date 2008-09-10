@@ -673,10 +673,8 @@ function generate_main_dashboard_XML($projectid,$date)
         @$previouspercent = round($previousloctested/($previousloctested+$previouslocuntested)*100,2);
         $percentdiff = $percent-$previouspercent;
         $xml .= "<percentagediff>".$percentdiff."</percentagediff>";
-        $faildiff = $coverage_array["locuntested"]-$previouslocuntested;
-        $xml .= "<faildiff>".$faildiff."</faildiff>";
-        $passdiff = $coverage_array["loctested"]-$previousloctested;
-        $xml .= "<passdiff>".$passdiff."</passdiff>";
+        $xml .= "<faildiff>".$previouslocuntested."</faildiff>";
+        $xml .= "<passdiff>".$previousloctested."</passdiff>";
         }
      
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
