@@ -671,11 +671,14 @@ function generate_main_dashboard_XML($projectid,$date)
         $previousloctested = $coveragediff_array['loctested'];
         $previouslocuntested = $coveragediff_array['locuntested'];
         @$previouspercent = round($previousloctested/($previousloctested+$previouslocuntested)*100,2);
-        $xml .= "  <percentagediff>".$percent-$previouspercent."</percentagediff>";
-        $xml .= "  <faildiff>".$coverage_array["locuntested"]-$previouslocuntested."</faildiff>";
-        $xml .= "  <passdiff>".$coverage_array["loctested"]-$previousloctested."</passdiff>";
+        $percentdiff = $percent-$previouspercent;
+        $xml .= "<percentagediff>".$percentdiff."</percentagediff>";
+        $faildiff = $coverage_array["locuntested"]-$previouslocuntested;
+        $xml .= "<faildiff>".$faildiff."</faildiff>";
+        $passdiff = $coverage_array["loctested"]-$previousloctested;
+        $xml .= "<passdiff>".$passdiff."</passdiff>";
         }
-      
+     
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
       $submittimestamp = strtotime($build_array["submittime"]." UTC");
       $xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone         
