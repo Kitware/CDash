@@ -668,13 +668,13 @@ function generate_main_dashboard_XML($projectid,$date)
       if(pdo_num_rows($coveragediff) >0)
         {
         $coveragediff_array = pdo_fetch_array($coveragediff);
-        $previousloctested = $coveragediff_array['loctested'];
-        $previouslocuntested = $coveragediff_array['locuntested'];
-        @$previouspercent = round($previousloctested/($previousloctested+$previouslocuntested)*100,2);
+        $loctesteddiff = $coveragediff_array['loctested'];
+        $locuntesteddiff = $coveragediff_array['locuntested'];
+        @$previouspercent = round(($coverage_array["loctested"]+$loctesteddiff)/($coverage_array["loctested"]+$loctesteddiff+$coverage_array["locuntested"]+$locuntesteddiff)*100,2);
         $percentdiff = $percent-$previouspercent;
         $xml .= "<percentagediff>".$percentdiff."</percentagediff>";
-        $xml .= "<faildiff>".$previouslocuntested."</faildiff>";
-        $xml .= "<passdiff>".$previousloctested."</passdiff>";
+        $xml .= "<faildiff>".$locuntesteddiff."</faildiff>";
+        $xml .= "<passdiff>".$loctesteddiff."</passdiff>";
         }
      
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
