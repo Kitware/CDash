@@ -130,6 +130,21 @@ function pdo_field_type($result, $field_offset)
 }
 
 /** */
+function pdo_field_len($result, $field_offset)
+{
+  global $CDASH_DB_TYPE;
+
+  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") 
+    {
+    // TODO...
+    }
+  else 
+    {
+    return mysql_field_len($result, $field_offset);
+    }
+}
+
+/** */
 function pdo_free_result($result)
 {
   global $CDASH_DB_TYPE;
