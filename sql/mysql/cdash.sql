@@ -176,7 +176,7 @@ CREATE TABLE `coverage` (
 CREATE TABLE `coveragefile` (
   `id` int(11) NOT NULL auto_increment,
   `fullpath` varchar(255) NOT NULL default '',
-  `file` blob,
+  `file` longblob,
   `crc32` int(11) default NULL,
   PRIMARY KEY  (`id`),
   KEY `fullpath` (`fullpath`),
