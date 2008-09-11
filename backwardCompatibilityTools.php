@@ -27,7 +27,7 @@ set_time_limit(0);
 pdo_select_db("$CDASH_DB_NAME",$db);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
-
+ 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
@@ -166,7 +166,7 @@ if(isset($_GET['upgrade-1-2']))
   // Change the file from blob to longblob
   $result = pdo_query("SELECT file FROM coveragefile LIMIT 1");
   $length = mysql_field_len($result, 0);
-  if($length != 4294967295)
+  if($length == 65535)
     {
     $result = pdo_query("ALTER TABLE coveragefile CHANGE file file LONGBLOB");
     }
