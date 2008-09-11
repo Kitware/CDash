@@ -1203,7 +1203,9 @@ function remove_build($buildid)
   pdo_query("DELETE FROM configure WHERE buildid='$buildid'");
   pdo_query("DELETE FROM configureerror WHERE buildid='$buildid'");
   pdo_query("DELETE FROM configureerrordiff WHERE buildid='$buildid'");
-  
+  pdo_query("DELETE FROM coveragesummarydiff WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM testdiff WHERE buildid='$buildid'");
+        
   // coverage file are kept unless they are shared
   $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
   while($coverage_array = pdo_fetch_array($coverage))
