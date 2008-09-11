@@ -46,7 +46,7 @@ $projectid = $build_array["projectid"];
  
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
   
-$project = pdo_query("SELECT name,coveragethreshold FROM project WHERE id='$projectid'");
+$project = pdo_query("SELECT name,coveragethreshold,nightlytime FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
   $project_array = pdo_fetch_array($project);
