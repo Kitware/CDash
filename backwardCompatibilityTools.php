@@ -166,7 +166,6 @@ if(isset($_GET['upgrade-1-2']))
   // Change the file from blob to longblob
   $result = pdo_query("SELECT file FROM coveragefile LIMIT 1");
   $length = mysql_field_len($result, 0);
-  echo $length;
   if($length != 4294967295)
     {
     $result = pdo_query("ALTER TABLE coveragefile CHANGE file file LONGBLOB");
