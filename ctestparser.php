@@ -158,6 +158,13 @@ function str_to_time($str,$stamp)
   return strtotime($str)-$offset;
 }
 
+/** Extract the type from the build stamp */
+function extract_type_from_buildstamp($buildstamp)
+{
+  // We assume that the time stamp is always of the form
+  // 20080912-1810-this-is-a-type
+  return substr($buildstamp,strpos($buildstamp,"-",strpos($buildstamp,"-")+1)+1);
+}
 
 /** Parse the build xml */
 function parse_build($parser,$projectid)
@@ -169,7 +176,7 @@ function parse_build($parser,$projectid)
   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
   // Extract the type from the buildstamp
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
-  $type = substr($stamp,strrpos($stamp,"-")+1);
+  $type = extract_type_from_buildstamp($stamp); 
   $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
   
   $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","BUILD");
@@ -274,7 +281,7 @@ function create_build($parser,$projectid)
 
   // Extract the type from the buildstamp
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
-  $type = substr($stamp,strrpos($stamp,"-")+1);
+  $type = extract_type_from_buildstamp($stamp);
   $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
   
   @$starttime_index = $parser->index["STARTBUILDTIME"];
@@ -809,7 +816,7 @@ function parse_coverage($parser,$projectid)
     $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
 
     // Extract the type from the buildstamp
-    $type = substr($stamp,strrpos($stamp,"-")+1);
+    $type = extract_type_from_buildstamp($stamp);
     $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
     
     $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","COVERAGE");
@@ -960,7 +967,7 @@ function parse_update($parser,$projectid)
     $sitename = getXMLValue($xmlarray,"SITE","UPDATE");
 
     // Extract the type from the buildstamp
-    $type = substr($stamp,strrpos($stamp,"-")+1);
+    $type = extract_type_from_buildstamp($stamp);
     $generator = $parser->vals[$update[0]]["attributes"]["GENERATOR"];
     
     $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","UPDATE");
@@ -1174,7 +1181,7 @@ function parse_dynamicanalysis($parser,$projectid)
     $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
 
     // Extract the type from the buildstamp
-    $type = substr($stamp,strrpos($stamp,"-")+1);
+    $type = extract_type_from_buildstamp($stamp);
     $generator = $parser->vals[$site[0]]["attributes"]["GENERATOR"];
     
     $starttimestamp = getXMLValue($xmlarray,"STARTBUILDTIME","DYNAMICANALYSIS");
