@@ -19,12 +19,12 @@ function sendAjax(divname,ajaxurl,text,nextstep)
     
     if(prefix != "ERROR" && prefix != "WARNING")
       {
-      $(divname).html(text+": <img src=\"images/check.gif\""); 
+      $(divname).html(text+": <img src=\"images/check.gif\"/>"); 
       nextstep();
       }
     else if(prefix == "WARNING")
       {
-      $(divname).html(text+": "+error+" <img src=\"images/check.gif\"");
+      $(divname).html(text+": "+error+" <img src=\"images/check.gif\"/>");
       nextstep();
       }
     else
