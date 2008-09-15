@@ -300,9 +300,8 @@ function get_svn_repository_commits($svnroot, $dates)
   $svnrevision = "{" . gmdate("Ymd", $dates['nightly-2']) . "}:{" .
     gmdate("Ymd", $dates['nightly+1']) . "}";
 
-  $fromtime = $dates['nightly-1'];
-  $totime = $dates['nightly-0'];
-
+  $fromtime = gmdate("Y-m-d H:i:s", $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate("Y-m-d H:i:s", $dates['nightly-0']) . " GMT";
 
   $raw_output = `svn log $svnroot -r $svnrevision -v 2>&1`;
   //$raw_output = `svn help log`;

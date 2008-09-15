@@ -61,8 +61,14 @@ if(function_exists("curl_init") == TRUE)
      {
      $serverName = $_SERVER['SERVER_NAME'];
      }
+  
+  $prefix =  "http://";
+  if($CDASH_USE_HTTPS)
+    {
+    $prefix =  "https://";
+    }
     
-  $currentURI =  "http://".$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+  $currentURI =  $prefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
   $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
   
   $request = $currentURI."/dailyupdatescurl.php?projectid=".$projectid;
