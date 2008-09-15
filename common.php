@@ -1364,7 +1364,7 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
       
   pdo_query ("INSERT INTO configure (buildid,starttime,endtime,command,log,status) 
                VALUES ('$buildid','$starttime','$endtime','$command','$log','$status')");
-  add_last_sql_error("add_configure");
+  add_last_sql_error("add_configure_1");
   
   // Add the warnings in the configurewarningtable
   $position = strpos($log,'Warning:',0);
@@ -1383,7 +1383,7 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
     
     pdo_query ("INSERT INTO configureerror (buildid,type,text) 
               VALUES ('$buildid','1','$warning')");
-    add_last_sql_error("add_configure");
+    add_last_sql_error("add_configure_2");
     $position = strpos($log,'Warning:',$position+1);
     }
 }
