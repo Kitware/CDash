@@ -613,10 +613,9 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
       
       // Send the email
       $title = "CDash [".$project_array["name"]."] - ".$fullpath." - Low Coverage";
-     
-      $email = "jomier@unc.edu";
-      //mail("$email", $title, $messagePlainText,
-     //      "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+      
+      mail("$email", $title, $messagePlainText,
+           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
       }
     }
 }
