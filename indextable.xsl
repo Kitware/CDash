@@ -38,6 +38,10 @@
         </xsl:choose>  
         </a>
         
+        <xsl:if test="string-length(cdash/user/id)=0">
+         | <a href="register.php">Register</a>
+        </xsl:if>  
+        
         <xsl:if test="cdash/user/id>0">
           <xsl:text>&#160;</xsl:text>|<xsl:text>&#160;</xsl:text><a href="user.php?logout=1">Log Out</a>  
         </xsl:if>
