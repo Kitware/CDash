@@ -19,9 +19,12 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>   
-       <!--[if IE]><script language="javascript" type="text/javascript" src="javascript/excanvas.pack.js"></script><![endif]-->
-       <script language="javascript" type="text/javascript" src="javascript/jquery.js"></script> 
-       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.pie.js"></script>      
+       <xsl:comment><![CDATA[[if IE]>
+       <script language="javascript" type="text/javascript" src="javascript/excanvas.js">
+       </script>
+       <![endif]]]></xsl:comment>
+       <script language="javascript" type="text/javascript" src="javascript/jquery.js" charset="utf-8"></script> 
+       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.pie.js" charset="utf-8"></script>      
        </head>
        <body bgcolor="#ffffff">
 
@@ -137,7 +140,7 @@ $(function () {
 <xsl:for-each select="cdash/siteload/build">
  { label: "<xsl:value-of select="project"/> - <xsl:value-of select="name"/> (<xsl:value-of select="type"/>)",  data: <xsl:value-of select="time"/>},
 </xsl:for-each>
- { label: "Non-CDash",  data: <xsl:value-of select="cdash/siteload/idle"/>},
+ { label: "Non-CDash",  data: <xsl:value-of select="cdash/siteload/idle"/>}
   ], 
   {
     pie: { 
