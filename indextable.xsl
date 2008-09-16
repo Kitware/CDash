@@ -33,8 +33,7 @@
             My CDash  
           </xsl:when>
           <xsl:otherwise>
-             Login
-           </xsl:otherwise>
+             Login</xsl:otherwise>
         </xsl:choose>  
         </a>
         
