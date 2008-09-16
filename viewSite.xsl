@@ -58,7 +58,7 @@
 <xsl:if test="count(cdash/claimer)>0">
 <b>Claimed by: </b>
 <xsl:for-each select="cdash/claimer">
-  <xsl:value-of select="firstname"/> <xsl:value-of select="lastname"/>
+  <xsl:value-of select="firstname"/>&nbsp;<xsl:value-of select="lastname"/>
 </xsl:for-each>
 <br/><br/>
 </xsl:if>
