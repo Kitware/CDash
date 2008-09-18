@@ -1847,6 +1847,7 @@ function get_author_email($projectname, $author)
   return $email;  
 }
 
+
 /** Get the previous build id */
 function get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
 {

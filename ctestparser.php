@@ -591,7 +591,6 @@ function compute_coverage_difference($buildid)
 {
   // Find the previous build
   $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id='$buildid'");
- 
   $build_array = pdo_fetch_array($build);                           
   $buildname = $build_array["name"];
   $buildtype = $build_array["type"];
@@ -600,20 +599,11 @@ function compute_coverage_difference($buildid)
   $projectid = $build_array["projectid"];
   
   // Find the previous build
-  $previousbuild = pdo_query("SELECT id FROM build
-                                WHERE build.siteid='$siteid' 
-                                AND build.type='$buildtype' AND build.name='$buildname'
-                                AND build.projectid='$projectid' 
-                                AND build.starttime<'$starttime' 
-                                ORDER BY build.starttime DESC LIMIT 1");
-  if(pdo_num_rows($previousbuild) == 0)
+  $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+  if($previousbuildid == 0)
     {
     return;
     }
-    
-  // Lookup the previous build id
-  $previousbuild_array = pdo_fetch_array($previousbuild);
-  $previousbuildid = $previousbuild_array["id"];
   
   // Look at the number of errors and warnings differences
   $coverage = pdo_query("SELECT loctested,locuntested FROM coveragesummary WHERE buildid='$buildid'");
@@ -665,23 +655,15 @@ function compute_test_timing($buildid)
   $projecttestmaxstatus = $project_array["testtimemaxstatus"]; 
   
   // Find the previous build
-  $previousbuild = pdo_query("SELECT id FROM build
-                                WHERE build.siteid='$siteid' 
-                                AND build.type='$buildtype' AND build.name='$buildname'
-                                AND build.projectid='$projectid' 
-                                AND build.starttime<'$starttime' 
-                                ORDER BY build.starttime DESC LIMIT 1");
+  $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+  if($previousbuildid == 0)
+    {
+    return;
+    }
 
   // If we have one
-  if(pdo_num_rows($previousbuild)>0)
-    {
-    // Lookup the previous build id
-    $previousbuild_array = pdo_fetch_array($previousbuild);
-    $previousbuildid = $previousbuild_array["id"];
-   
-    // Compute the update statistics
-    compute_update_statistics($projectid,$buildid,$previousbuildid);
-   
+  if($previousbuildid>0)
+    {      
     compute_error_difference($buildid,$previousbuildid,0); // errors
     compute_error_difference($buildid,$previousbuildid,1); // warnings
     compute_configure_difference($buildid,$previousbuildid,1); // warnings
@@ -781,9 +763,6 @@ function compute_test_timing($buildid)
     }
   else // this is the first build
     {
-    // Compute the update statistics
-    compute_update_statistics($projectid,$buildid,0);
-    
     $timestd = 0;
     $timestatus = 0;
         
@@ -1089,6 +1068,19 @@ function parse_update($parser,$projectid)
     add_updatefile($buildid,$file["filename"],$file["checkindate"],$file["author"],
                    $file["email"],$file["log"],$file["revision"],$file["priorrevision"]);
     }
+    
+  // Find the previous build
+  $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id='$buildid'");
+  $build_array = pdo_fetch_array($build);                           
+  $buildname = $build_array["name"];
+  $buildtype = $build_array["type"];
+  $starttime = $build_array["starttime"];
+  $siteid = $build_array["siteid"];
+  $projectid = $build_array["projectid"];
+  $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+  
+  // Compute the update statistics
+  compute_update_statistics($projectid,$buildid,$previousbuildid);
 }
 
 /** Parse the notes xml */
