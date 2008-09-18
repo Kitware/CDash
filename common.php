@@ -1449,7 +1449,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
         } // end for each image
         
       $nimage_array = pdo_fetch_array(pdo_query($sql));  
-      add_last_sql_error("add_test");
+      add_last_sql_error("add_test-images");
       $nimages = $nimage_array[0];
         
       if($nimages == count($images))
@@ -1479,7 +1479,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
                   VALUES('$imgid', '$testid', '$role')";
         if(!pdo_query("$query"))
           {
-          add_last_sql_error("add_test");
+          add_last_sql_error("add_test-test2image");
           }
         }
       
@@ -1493,7 +1493,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
                   VALUES ('$testid','$name','$type','$value')";
         if(!pdo_query("$query"))
           {
-          add_last_sql_error("add_test");
+          add_last_sql_error("add_test-testmeasurement");
           }
         }
       }
@@ -1508,13 +1508,13 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   $query = pdo_query("SELECT buildid FROM build2test 
                         WHERE buildid='$buildid' AND testid='$testid' AND status='$status'
              AND time='$time'");
-  add_last_sql_error("add_test"); 
+  add_last_sql_error("add_test-SELECT"); 
   if(pdo_num_rows($query)==0)
    {               
     pdo_query("INSERT INTO build2test (buildid,testid,status,time) 
                  VALUES ('$buildid','$testid','$status','$time')");
-    }
-  add_last_sql_error("add_test");              
+    add_last_sql_error("add_test-build2test"); 
+    }             
 }
 
 /** Add a new error/warning */
