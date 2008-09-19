@@ -44,7 +44,7 @@ SELECT site.id AS siteid,site.name AS sitename, project.name AS projectname, bui
 AVG(TIME_TO_SEC(TIMEDIFF(submittime, buildupdate.starttime))) AS elapsed
 FROM build, buildupdate, project, site
 WHERE
-  submittime > TIMESTAMPADD(HOUR, -168, NOW())
+  submittime > TIMESTAMPADD(".qiv("HOUR").", -168, NOW())
   AND buildupdate.buildid = build.id
   AND site.id = build.siteid
   AND build.projectid = project.id

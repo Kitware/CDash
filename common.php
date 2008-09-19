@@ -65,6 +65,12 @@ if (PHP_VERSION >= 5) {
         unset($xsltproc);
     }
 }
+
+define("FMT_TIME", "H:i:s");  // time
+define("FMT_DATE", "Y-m-d");  // date
+define("FMT_DATETIME", "Y-m-d\TH:i:s");  // date and time
+define("FMT_DATETIMETZ", "Y-m-d\TH:i:s T");  // date and time with time zone
+define("FMT_DATETIMEMS", "Y-m-d\TH:i:s.u");  // date and time with milliseconds
   
 /** Do the XSLT translation and look in the local directory if the file
  *  doesn't exist */
@@ -163,7 +169,7 @@ function add_log($text,$function)
     return;
     }
   include("config.php");
-  $error = "[".date("Y-m-d H:i:s")."] (".$function."): ".$text."\n";  
+  $error = "[".date(FMT_DATETIME)."] (".$function."): ".$text."\n";  
   error_log($error,3,$CDASH_LOG_FILE);
 }
 
@@ -933,7 +939,7 @@ function update_site($siteid,$name,
   
   if($newrevision2 && !$nonewrevision)
    {
-  $now = gmdate("Y-m-d H:i:s");
+  $now = gmdate(FMT_DATETIME);
   $sql = "INSERT INTO siteinformation(siteid,timestamp";
   foreach($names as $name)
     {
@@ -1134,7 +1140,7 @@ function add_site($name,$parser)
   $siteid = pdo_insert_id("site");
  
   // Insert the site information
-  $now = gmdate("Y-m-d H:i:s");
+  $now = gmdate(FMT_DATETIME);
   pdo_query ("INSERT INTO siteinformation (siteid,
            timestamp,
            processoris64bits,
@@ -1315,8 +1321,8 @@ function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$
  
  if($osname!="" || $osrelease!="" || $osversion!="" || $osplatform!="")
    {
-   pdo_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform) 
-                  VALUES ('$buildid','$osname','$osrelease','$osversion','$osplatform')");
+   pdo_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion) 
+                  VALUES ('$buildid','$osname','$osrelease','$osversion','$osplatform','unknown','unknown')");
    }
 
   // Insert the build into the proper group
@@ -1688,10 +1694,46 @@ function globr($sDir, $sPattern, $nFlags = NULL)
   return $aFiles;
 } 
 
+/** Get year from formatted date */
+function date2year($date)
+{
+  return substr($date,0,4);
+}
+
+/** Get month from formatted date */
+function date2month($date)
+{
+  return ctype_digit(substr($date,4,1)) ? substr($date,4,2) : substr($date,5,2);
+}
+
+/** Get day from formatted date */
+function date2day($date)
+{
+  return ctype_digit(substr($date,4,1)) ? substr($date,6,2) : substr($date,8,2);
+}
+
+/** Get hour from formatted time */
+function time2hour($time)
+{
+  return substr($time,0,2);
+}
+
+/** Get minute from formatted time */
+function time2minute($time)
+{
+  return ctype_digit(substr($time,2,1)) ? substr($time,2,2) : substr($time,3,2);
+}
+
+/** Get second from formatted time */
+function time2second($time)
+{
+  return ctype_digit(substr($time,2,1)) ? substr($time,4,2) : substr($time,6,2);
+}
+
 /** Get dates 
  * today: the *starting* timestamp of the current dashboard
- * previousdate: the date in Ymd format of the previous dashboard
- * nextdate: the date in Ymd format of the next dashboard
+ * previousdate: the date in Y-m-d format of the previous dashboard
+ * nextdate: the date in Y-m-d format of the next dashboard
  */
 function get_dates($date,$nightlytime)
 {
@@ -1703,19 +1745,19 @@ function get_dates($date,$nightlytime)
  
   if(!isset($date) || strlen($date)==0)
     { 
-    $date = date("Ymd"); // the date is always the date of the server
+    $date = date(FMT_DATE); // the date is always the date of the server
     
-    if(date("His")>date("His",$nightlytime))
+    if(date(FMT_TIME)>date(FMT_TIME,$nightlytime))
       {
-      $date = date("Ymd",time()+3600*24); //next day
+      $date = date(FMT_DATE,time()+3600*24); //next day
       } 
     }
 
-  $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,substr($date,4,2),substr($date,6,2),substr($date,0,4))-3600*24; // starting time
+  $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,date2month($date),date2day($date),date2year($date))-3600*24; // starting time
 
-  $todaydate = mktime(0,0,0,substr($date,4,2),substr($date,6,2),substr($date,0,4)); 
-  $previousdate = date("Ymd",$todaydate-3600*24);
-  $nextdate = date("Ymd",$todaydate+3600*24);
+  $todaydate = mktime(0,0,0,date2month($date),date2day($date),date2year($date)); 
+  $previousdate = date(FMT_DATE,$todaydate-3600*24);
+  $nextdate = date(FMT_DATE,$todaydate+3600*24);
 
   return array($previousdate, $today, $nextdate, $date);
 }
@@ -1834,7 +1876,7 @@ function get_author_email($projectname, $author)
     exit(0);
     }
 
-  $qry = pdo_query("SELECT email FROM user WHERE id IN (SELECT userid FROM user2project WHERE projectid='$projectid' AND cvslogin='$author') LIMIT 1");
+  $qry = pdo_query("SELECT email FROM ".qid("user")." WHERE id IN (SELECT userid FROM user2project WHERE projectid='$projectid' AND cvslogin='$author') LIMIT 1");
 
   $email = "";
 
@@ -1901,11 +1943,11 @@ function get_dashboard_date_from_build_starttime($starttime,$nightlytime)
   $nightlytime = strtotime($nightlytime);
   $starttime = strtotime($starttime);
   
-  if(date("His",$starttime)>date("HiS",$nightlytime))
+  if(date(FMT_TIME,$starttime)>date(FMT_TIME,$nightlytime))
     {
-    return date("Ymd",$starttime+3600*24); //next day
+    return date(FMT_DATE,$starttime+3600*24); //next day
     } 
-  return date("Ymd",$starttime);
+  return date(FMT_DATE,$starttime);
 }
 
 function get_dashboard_date_from_project($projectname, $date)
@@ -1920,11 +1962,11 @@ function get_dashboard_date_from_project($projectname, $date)
  
   if(!isset($date) || strlen($date)==0)
     { 
-    $date = date("Ymd"); // the date is always the date of the server
+    $date = date(FMT_DATE); // the date is always the date of the server
     
-    if(date("His")>date("HiS",$nightlytime))
+    if(date(FMT_TIME)>date(FMT_TIME,$nightlytime))
       {
-      $date = date("Ymd",time()+3600*24); //next day
+      $date = date(FMT_DATE,time()+3600*24); //next day
       } 
     }
   return $date;  
@@ -2397,6 +2439,21 @@ function qid($id)
     }
 }
 
+/** Quote SQL interval specifier */
+function qiv($iv)
+{
+  global $CDASH_DB_TYPE;
+
+  if($CDASH_DB_TYPE == "pgsql") 
+    {
+    return "'$iv'";
+    }
+  else 
+    {
+    return $iv;
+    }
+}
+
 /** Quote SQL number */
 function qnum($num)
 {
@@ -2430,7 +2487,7 @@ function find_site_maintainers($projectid)
     }
 
   // Then we list all the users that have been submitting in the past 48 hours 
-  $submittime_UTCDate = gmdate("Y-m-d H:i:s",time()-3600*48);
+  $submittime_UTCDate = gmdate(FMT_DATETIME,time()-3600*48);
   $site2project = pdo_query("SELECT DISTINCT  userid FROM site2user WHERE siteid IN 
                             (SELECT siteid FROM build WHERE projectid=$projectid 
                              AND submittime>'$submittime_UTCDate')");                           

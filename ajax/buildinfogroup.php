@@ -60,7 +60,7 @@ if(pdo_num_rows($cleanbuild)>0)
   {
   $cleanbuild_array = pdo_fetch_array($cleanbuild);
   $gmtdate = strtotime($cleanbuild_array["starttime"]." UTC");
-  $datefirstbuildfailing = date("Y-m-d H:i:s T",$gmtdate);
+  $datefirstbuildfailing = date(FMT_DATETIMETZ,$gmtdate);
   }
 else
   {
@@ -70,7 +70,7 @@ else
                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC LIMIT 1");
   $firstbuild_array = pdo_fetch_array($firstbuild);              
   $gmtdate = strtotime($firstbuild_array["starttime"]." UTC");
-  $datefirstbuildfailing = date("Y-m-d H:i:s T",$gmtdate);
+  $datefirstbuildfailing = date(FMT_DATETIMETZ,$gmtdate);
   }
 
   $buildfailingdays = round((strtotime($starttime)-$gmtdate)/(3600*24));
@@ -92,7 +92,7 @@ if(pdo_num_rows($cleanbuild)>0)
   {
   $cleanbuild_array = pdo_fetch_array($cleanbuild);
   $gmtdate = strtotime($cleanbuild_array["starttime"]." UTC");  
-  $datefirsttestfailing = date("Y-m-d H:i:s T",$gmtdate);
+  $datefirsttestfailing = date(FMT_DATETIMETZ,$gmtdate);
   }
 else
   {
@@ -102,7 +102,7 @@ else
                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC LIMIT 1");
   $firstbuild_array = pdo_fetch_array($firstbuild);
   $gmtdate = strtotime($firstbuild_array["starttime"]." UTC");               
-  $datefirsttestfailing = date("Y-m-d H:i:s T",$gmtdate);
+  $datefirsttestfailing = date(FMT_DATETIMETZ,$gmtdate);
   }
 
   $testfailingdays = round((strtotime($starttime)-$gmtdate)/(3600*24));
@@ -119,12 +119,12 @@ else
   <?php 
   if($buildfailingdays>1)
     {
-    $date = substr($datefirstbuildfailing,0,4).substr($datefirstbuildfailing,5,2).substr($datefirstbuildfailing,8,2);
+    $date = date2year($datefirstbuildfailing).date2month($datefirstbuildfailing).date2day($datefirstbuildfailing);
     echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." days)";
     }
   else if($buildfailingdays==1)
     {
-    $date = substr($datefirstbuildfailing,0,4).substr($datefirstbuildfailing,5,2).substr($datefirstbuildfailing,8,2);
+    $date = date2year($datefirstbuildfailing).date2month($datefirstbuildfailing).date2day($datefirstbuildfailing);
     echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." day)";
     }
   else 
@@ -144,7 +144,7 @@ else
   <?php
   if($testfailingdays>1)
     {
-    $date = substr($datefirsttestfailing,0,4).substr($datefirsttestfailing,5,2).substr($datefirsttestfailing,8,2);
+    $date = date2year($datefirsttestfailing).date2month($datefirsttestfailing).date2day($datefirsttestfailing);
     echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirsttestfailing."</a> (".$testfailingdays." days)";
     }
   else if($testfailingdays==1)

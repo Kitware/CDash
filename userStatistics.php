@@ -161,8 +161,8 @@ if($projectid>0)
     $beginning = $now;
     }
   
-  $beginning_UTCDate = gmdate("Y-m-d H:i:s",$beginning);
-  $end_UTCDate = gmdate("Y-m-d H:i:s",$end);                                                      
+  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning);
+  $end_UTCDate = gmdate(FMT_DATETIME,$end);                                                      
   
   $endselect = "select f.userid, f.checkindate, f.totalbuilds, f.nfixedwarnings, 
                        f.nfailedwarnings, f.nfixederrors, f.nfailederrors, 
@@ -222,7 +222,7 @@ if($projectid>0)
   foreach($users as $key=>$value)
     {  
     $xml .= "<user>";
-    $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM user WHERE id=".qnum($key)));
+    $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id=".qnum($key)));
   
     $xml .= add_XML_value("name",$user_array['firstname']." ".$user_array['lastname']);
     $xml .= add_XML_value("id",$key);

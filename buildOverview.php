@@ -54,7 +54,7 @@ $nightlytime = $project_array["nightlytime"];
 list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
 $xml .= add_XML_value("previous","buildOverview.php?project=".$projectname."&date=".$previousdate);
-if($date!="" && date("Ymd", $currentstarttime)!=date("Ymd"))
+if($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE))
   {
   $xml .= add_XML_value("next","buildOverview.php?project=".$projectname."&date=".$nextdate);
   }
@@ -91,8 +91,8 @@ while($buildgroup_array = pdo_fetch_array($buildgroup))
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime+3600*24;
 
-$beginning_UTCDate = gmdate("Y-m-d H:i:s",$beginning_timestamp);
-$end_UTCDate = gmdate("Y-m-d H:i:s",$end_timestamp);                                                      
+$beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
+$end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);                                                      
   
 
 $groupSelectionSQL = "";

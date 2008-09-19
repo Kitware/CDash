@@ -20,6 +20,10 @@
 // the input, the project's nightly start time, now
 //
 
+include("config.php");
+require_once("pdo.php");
+include_once("common.php");
+
 set_time_limit(0);
 
 function get_related_dates($projectnightlytime, $basedate)
@@ -29,18 +33,18 @@ function get_related_dates($projectnightlytime, $basedate)
 
   if(!isset($basedate) || strlen($basedate)==0)
     {
-    $basedate = gmdate("Ymd");
+    $basedate = gmdate(FMT_DATE);
     }
 
   // Convert the nightly time into GMT
-  $nightlytime = gmdate("H:i:s",strtotime($nightlytime)); 
+  $nightlytime = gmdate(FMT_TIME,strtotime($nightlytime)); 
 
-  $nightlyhour = substr($nightlytime,0,2);
-  $nightlyminute = substr($nightlytime,3,2);
-  $nightlysecond = substr($nightlytime,6,2);
-  $basemonth = substr($basedate,4,2);
-  $baseday = substr($basedate,6,2);
-  $baseyear = substr($basedate,0,4);
+  $nightlyhour = time2hour($nightlytime);
+  $nightlyminute = time2minute($nightlytime);
+  $nightlysecond = time2second($nightlytime);
+  $basemonth = date2month($basedate);
+  $baseday = date2day($basedate);
+  $baseyear = date2year($basedate);
 
   $dates['nightly+2'] = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
     $basemonth, $baseday+2, $baseyear);
@@ -56,13 +60,13 @@ function get_related_dates($projectnightlytime, $basedate)
   // Snapshot of "now"
   //
   $currentgmtime = time();
-  $currentgmdate = gmdate("Ymd", $currentgmtime);
+  $currentgmdate = gmdate(FMT_DATE, $currentgmtime);
 
   // Find the most recently past nightly time:
   //
-  $todaymonth = substr($currentgmdate,4,2);
-  $todayday = substr($currentgmdate,6,2);
-  $todayyear = substr($currentgmdate,0,4);
+  $todaymonth = date2month($currentgmdate);
+  $todayday = date2day($currentgmdate);
+  $todayyear = date2year($currentgmdate);
   $currentnightly = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
     $todaymonth, $todayday, $todayyear);
   while ($currentnightly>$currentgmtime)
@@ -75,7 +79,7 @@ function get_related_dates($projectnightlytime, $basedate)
   $dates['now'] = $currentgmtime;
   $dates['most-recent-nightly'] = $currentnightly;
   $dates['today_utc'] = $currentgmdate;
-  $dates['basedate'] = gmdate("Ymd", $dates['nightly-0']);
+  $dates['basedate'] = gmdate(FMT_DATE, $dates['nightly-0']);
 
   // CDash equivalent of DART1's "last rollup time"
   if ($dates['basedate'] === $dates['today_utc'])
@@ -139,8 +143,8 @@ function get_cvs_repository_commits($cvsroot, $dates)
 
   // Compute time stamp range expressed as $fromtime and $totime for cvs
   //
-  $fromtime = gmdate("Y-m-d H:i:s", $dates['nightly-1']+1) . " GMT";
-  $totime = gmdate("Y-m-d H:i:s", $dates['nightly-0']) . " GMT";
+  $fromtime = gmdate(FMT_DATETIME, $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate(FMT_DATETIME, $dates['nightly-0']) . " GMT";
 
   $npos = strpos($cvsroot, "/");
   $npos2 = strlen($cvsroot);
@@ -235,7 +239,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
       if ($npos !== FALSE && $npos === 0 && $line_number === $in_revision_chunk_line_number + 2)
         {
         $npos2 = strpos($vv, "; ", $npos);
-        $current_time = gmdate("Y-m-d H:i:s",strtotime(substr($vv, $npos + 6, $npos2 - ($npos + 6)))); // 6 == strlen("date: ")
+        $current_time = gmdate(FMT_DATETIME,strtotime(substr($vv, $npos + 6, $npos2 - ($npos + 6)))); // 6 == strlen("date: ")
 
         // Lines that begin with "date: " also contain "author: "
         //
@@ -297,11 +301,11 @@ function get_svn_repository_commits($svnroot, $dates)
   // So call get_dates twice to get yesterday ($fromdate) and again to
   // get the low end of the svn log date range ($daybefore)...
   //
-  $svnrevision = "{" . gmdate("Ymd", $dates['nightly-2']) . "}:{" .
-    gmdate("Ymd", $dates['nightly+1']) . "}";
+  $svnrevision = "{" . gmdate(FMT_DATE, $dates['nightly-2']) . "}:{" .
+    gmdate(FMT_DATE, $dates['nightly+1']) . "}";
 
-  $fromtime = gmdate("Y-m-d H:i:s", $dates['nightly-1']+1) . " GMT";
-  $totime = gmdate("Y-m-d H:i:s", $dates['nightly-0']) . " GMT";
+  $fromtime = gmdate(FMT_DATETIME, $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate(FMT_DATETIME, $dates['nightly-0']) . " GMT";
 
   $raw_output = `svn log $svnroot -r $svnrevision -v 2>&1`;
   //$raw_output = `svn help log`;
@@ -367,7 +371,7 @@ function get_svn_repository_commits($svnroot, $dates)
           }
         else
           {
-          //echo "excluding: '" . $current_time . "' (" . gmdate("Y-m-d H:i:s.u", $current_time) . ")<br/>";
+          //echo "excluding: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
           }
         $gathered_file_lines = array();
         }
@@ -397,9 +401,9 @@ function get_svn_repository_commits($svnroot, $dates)
             $current_date = substr($vv, $npos+3, $npos2 - ($npos+3));
             //echo "current_date: '" . $current_date . "'<br/>";
 
-            $current_time = gmdate("Y-m-d H:i:s",strtotime($current_date));
-            //echo "date: '" . $current_time . "' (" . date("Y-m-d H:i:s.u", $current_time) . ")<br/>";
-            //echo "gmdate: '" . $current_time . "' (" . gmdate("Y-m-d H:i:s.u", $current_time) . ")<br/>";
+            $current_time = gmdate(FMT_DATETIME,strtotime($current_date));
+            //echo "date: '" . $current_time . "' (" . date(FMT_DATETIMEMS, $current_time) . ")<br/>";
+            //echo "gmdate: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
 
             $npos2 = strpos($vv, " | ", $npos+3);
             $npos = $npos2;
@@ -457,8 +461,8 @@ function get_bzr_repository_commits($bzrroot, $dates)
 {
   $commits = array();
 
-  $fromtime = gmdate("Y-m-d H:i:s", $dates['nightly-1']+1) . " GMT";
-  $totime = gmdate("Y-m-d H:i:s", $dates['nightly-0']) . " GMT";
+  $fromtime = gmdate(FMT_DATETIME, $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate(FMT_DATETIME, $dates['nightly-0']) . " GMT";
 
   $raw_output = `bzr log -v --xml -r date:"$fromtime"..date:"$totime" $bzrroot 2>&1`;  
 
@@ -472,7 +476,7 @@ function get_bzr_repository_commits($bzrroot, $dates)
      $current_author = trim(substr($current_author, 0, strpos($current_author, "<")));     
      
      $current_comment = $log->getElementsByTagName("message")->item(0)->nodeValue;
-     $current_time = gmdate("Y-m-d H:i:s.u",strtotime($log->getElementsByTagName("timestamp")->item(0)->nodeValue));
+     $current_time = gmdate(FMT_DATETIMEMS,strtotime($log->getElementsByTagName("timestamp")->item(0)->nodeValue));
      $current_revision = $log->getElementsByTagName("revno")->item(0)->nodeValue;
      
      $files = $log->getElementsByTagName("file");
@@ -553,14 +557,13 @@ function get_repository_commits($projectid, $dates)
 function sendEmailExpectedBuilds($projectid,$currentstarttime)
 {
   include("config.php");
-  require_once("pdo.php");
   include_once("common.php");
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME", $db);
 
-  $currentEndUTCTime =  gmdate("Y-m-d H:i:s",$currentstarttime);
-  $currentBeginUTCTime =  gmdate("Y-m-d H:i:s",$currentstarttime-3600*24);
-  $sql = "SELECT buildtype,buildname,siteid,groupid,site.name FROM (SELECT g.siteid,g.buildtype,g.buildname,g.groupid FROM build2grouprule as g  LEFT JOIN (build as b) ON( 
+  $currentEndUTCTime =  gmdate(FMT_DATETIME,$currentstarttime);
+  $currentBeginUTCTime =  gmdate(FMT_DATETIME,$currentstarttime-3600*24);
+  $sql = "SELECT buildtype,buildname,siteid,groupid,site.name FROM (SELECT g.siteid,g.buildtype,g.buildname,g.groupid FROM build2grouprule as g  LEFT JOIN build as b ON( 
           g.expected='1' AND (b.type=g.buildtype AND b.name=g.buildname AND b.siteid=g.siteid)
           AND b.projectid='$projectid' AND b.starttime>'$currentBeginUTCTime' AND b.starttime<'$currentEndUTCTime')
           WHERE (b.type is null AND b.name is null AND b.siteid is null) 
@@ -609,7 +612,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
    
     // Find the site maintainers
     $email = "";
-    $emails = pdo_query("SELECT email FROM user,site2user WHERE user.id=site2user.userid AND site2user.siteid='$siteid'");
+    $emails = pdo_query("SELECT email FROM ".qid("user").",site2user WHERE ".qid("user").".id=site2user.userid AND site2user.siteid='$siteid'");
     while($emails_array = pdo_fetch_array($emails))
       {
       if($email != "")
@@ -649,7 +652,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
     
     // Find the site administrators
     $email = "";
-    $emails = pdo_query("SELECT email FROM user,user2project WHERE user.id=user2project.userid AND user2project.role='2' AND user2project.projectid='$projectid'");
+    $emails = pdo_query("SELECT email FROM ".qid("user").",user2project WHERE ".qid("user").".id=user2project.userid AND user2project.role='2' AND user2project.projectid='$projectid'");
     while($emails_array = pdo_fetch_array($emails))
       {
       if($email != "")
@@ -680,7 +683,6 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
 function addDailyChanges($projectid)
 {
   include("config.php");
-  require_once("pdo.php");
   include_once("common.php");
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME", $db);
@@ -688,14 +690,14 @@ function addDailyChanges($projectid)
   $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name FROM project WHERE id='$projectid'"));
   $date = ""; // now
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
-  $date = gmdate("Ymd", $currentstarttime);
+  $date = gmdate(FMT_DATE, $currentstarttime);
   
   // Check if we already have it somwhere
   $query = pdo_query("SELECT id FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
   if(pdo_num_rows($query)==0)
     {
     pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status) 
-               VALUES ($projectid,$date,'NA','NA','0')");
+               VALUES ($projectid,'$date','NA','NA','0')");
     
     $updateid = pdo_insert_id("dailyupdate");    
     

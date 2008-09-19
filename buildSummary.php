@@ -71,7 +71,7 @@ if(pdo_num_rows($previousbuild)>0)
   {
   $previousbuild_array = pdo_fetch_array($previousbuild);              
   $lastsubmitbuild = $previousbuild_array["id"];
-  $lastsubmitdate = date("Y-m-d H:i:s T",strtotime($previousbuild_array["starttime"]." UTC"));
+  $lastsubmitdate = date(FMT_DATETIMETZ,strtotime($previousbuild_array["starttime"]." UTC"));
   }
 else
   {
@@ -123,7 +123,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     {
     $xml .= "<note>";
     $userid = $note_array["userid"];
-    $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM user WHERE id='$userid'"));
+    $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='$userid'"));
     $timestamp = strtotime($note_array["timestamp"]." UTC");
     $usernote = $user_array["firstname"]." ".$user_array["lastname"];
     switch($note_array["status"])
@@ -147,7 +147,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("name",$build_array["name"]);
   $xml .= add_XML_value("id",$build_array["id"]);
-  $xml .= add_XML_value("time",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC")));  
+  $xml .= add_XML_value("time",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]." UTC")));  
   $xml .= add_XML_value("type",$build_array["type"]);
   
   // Find the OS and compiler information
@@ -184,8 +184,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
 
   $xml .= add_XML_value("generator",$build_array["generator"]);
   $xml .= add_XML_value("command",$build_array["command"]);
-  $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($build_array["starttime"]." UTC"))); 
-  $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($build_array["endtime"]." UTC"))); 
+  $xml .= add_XML_value("starttime",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]." UTC"))); 
+  $xml .= add_XML_value("endtime",date(FMT_DATETIMETZ,strtotime($build_array["endtime"]." UTC"))); 
   
   $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
  
@@ -254,8 +254,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $update_array = pdo_fetch_array($buildupdate);
     $xml .= add_XML_value("command",$update_array["command"]);
     $xml .= add_XML_value("type",$update_array["type"]);
-    $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($update_array["starttime"]." UTC")));
-    $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($update_array["endtime"]." UTC")));
+    $xml .= add_XML_value("starttime",date(FMT_DATETIMETZ,strtotime($update_array["starttime"]." UTC")));
+    $xml .= add_XML_value("endtime",date(FMT_DATETIMETZ,strtotime($update_array["endtime"]." UTC")));
     $xml .= "</update>";
     }
   
@@ -280,8 +280,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("status",$configure_array["status"]);
   $xml .= add_XML_value("command",$configure_array["command"]);
   $xml .= add_XML_value("output",format_for_iphone($configure_array["log"]));
-  $xml .= add_XML_value("starttime",date("Y-m-d H:i:s T",strtotime($configure_array["starttime"]." UTC")));
-  $xml .= add_XML_value("endtime",date("Y-m-d H:i:s T",strtotime($configure_array["endtime"]." UTC")));
+  $xml .= add_XML_value("starttime",date(FMT_DATETIMETZ,strtotime($configure_array["starttime"]." UTC")));
+  $xml .= add_XML_value("endtime",date(FMT_DATETIMETZ,strtotime($configure_array["endtime"]." UTC")));
   $xml .= "</configure>";
 
   // Test

@@ -31,7 +31,7 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 if($recover)
   {
   $email = pdo_real_escape_string($_POST["email"]);
-  $emailResult = pdo_query("SELECT id FROM user where email='$email'");
+  $emailResult = pdo_query("SELECT id FROM ".qid("user")." where email='$email'");
   add_last_sql_error("recoverPassword");
   
   if(pdo_num_rows($emailResult) == 0)
@@ -95,7 +95,7 @@ if($recover)
       {
       $md5pass = md5($password);
       // If we can send the email we update the database
-      pdo_query("UPDATE user SET password='$md5pass' WHERE email='$email'");
+      pdo_query("UPDATE ".qid("user")." SET password='$md5pass' WHERE email='$email'");
       echo pdo_error();
       add_last_sql_error("recoverPassword");
       

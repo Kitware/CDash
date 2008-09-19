@@ -7,7 +7,7 @@ CREATE TABLE "testmeasurement" (
   "type" character varying(70) NOT NULL,
   "value" text NOT NULL
 );
-CREATE INDEX "testmeasurement_testid_idx" on "testmeasurement" ("testid");
+CREATE INDEX "testid" on "testmeasurement" ("testid");
 
 
 --
@@ -21,7 +21,7 @@ CREATE TABLE "dailyupdate" (
   "type" character varying(4) DEFAULT '' NOT NULL,
   "status" smallint DEFAULT '0' NOT NULL
 );
-CREATE INDEX "dailyupdate_buildid_idx" on "dailyupdate" ("id");
+CREATE INDEX "buildid" on "dailyupdate" ("id");
 
 
 --
@@ -36,4 +36,4 @@ CREATE TABLE "dailyupdatefile" (
   "revision" character varying(10) DEFAULT '0' NOT NULL,
   "priorrevision" character varying(10) DEFAULT '0' NOT NULL
 );
-CREATE INDEX "dailyupdatefile_buildid_idx" on "dailyupdatefile" ("dailyupdateid");
+CREATE INDEX "buildid2" on "dailyupdatefile" ("dailyupdateid");

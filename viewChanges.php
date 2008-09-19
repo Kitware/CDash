@@ -51,18 +51,18 @@ function get_related_dates($projectname, $basedate)
 
   if(!isset($basedate) || strlen($basedate)==0)
     {
-    $basedate = gmdate("Ymd");
+    $basedate = gmdate(FMT_DATE);
     }
 
   // Convert the nightly time into GMT
-  $nightlytime = gmdate("H:i:s",strtotime($nightlytime)); 
+  $nightlytime = gmdate(FMT_TIME,strtotime($nightlytime)); 
 
-  $nightlyhour = substr($nightlytime,0,2);
-  $nightlyminute = substr($nightlytime,3,2);
-  $nightlysecond = substr($nightlytime,6,2);
-  $basemonth = substr($basedate,4,2);
-  $baseday = substr($basedate,6,2);
-  $baseyear = substr($basedate,0,4);
+  $nightlyhour = time2hour($nightlytime);
+  $nightlyminute = time2minute($nightlytime);
+  $nightlysecond = time2second($nightlytime);
+  $basemonth = date2month($basedate);
+  $baseday = date2day($basedate);
+  $baseyear = date2year($basedate);
 
   $dates['nightly+2'] = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
     $basemonth, $baseday+2, $baseyear);
@@ -78,13 +78,13 @@ function get_related_dates($projectname, $basedate)
   // Snapshot of "now"
   //
   $currentgmtime = time();
-  $currentgmdate = gmdate("Ymd", $currentgmtime);
+  $currentgmdate = gmdate(FMT_DATE, $currentgmtime);
 
   // Find the most recently past nightly time:
   //
-  $todaymonth = substr($currentgmdate,4,2);
-  $todayday = substr($currentgmdate,6,2);
-  $todayyear = substr($currentgmdate,0,4);
+  $todaymonth = date2month($currentgmdate);
+  $todayday = date2day($currentgmdate);
+  $todayyear = date2year($currentgmdate);
   $currentnightly = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
     $todaymonth, $todayday, $todayyear);
   while ($currentnightly>$currentgmtime)
@@ -97,7 +97,7 @@ function get_related_dates($projectname, $basedate)
   $dates['now'] = $currentgmtime;
   $dates['most-recent-nightly'] = $currentnightly;
   $dates['today_utc'] = $currentgmdate;
-  $dates['basedate'] = gmdate("Ymd", $dates['nightly-0']);
+  $dates['basedate'] = gmdate(FMT_DATE, $dates['nightly-0']);
 
   // CDash equivalent of DART1's "last rollup time"
   if ($dates['basedate'] === $dates['today_utc'])
@@ -166,7 +166,7 @@ function sort_by_directory_file_time($e1, $e2)
 function get_updates_xml_from_commits($projectname, $dates, $commits)
 {
   $xml = "<updates>\n";
-  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $dates['nightly-0']." GMT") ."</timestamp>";
+  $xml .= "<timestamp>" . date(FMT_DATETIMETZ, $dates['nightly-0']." GMT") ."</timestamp>";
   $xml .= "<javascript>\n";
 
   // Args to dbAdd : "true" means directory, "false" means file
@@ -191,7 +191,7 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
 
     $filename = $commit['filename'];
     $revision = $commit['revision'];
-    $time = gmdate("Y-m-d H:i:s", $commit['time']);
+    $time = gmdate(FMT_DATETIME, $commit['time']);
     $author = $commit['author'];
     $email = get_author_email($projectname, $author);
 
@@ -239,14 +239,14 @@ $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
-$gmdate = gmdate("Ymd",$dates['nightly-0']);
+$gmdate = gmdate(FMT_DATE,$dates['nightly-0']);
 
 $nightlytime = $project_array["nightlytime"];
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
 $xml .= add_XML_value("previous","viewChanges.php?project=".$projectname."&date=".$previousdate);
-if($date!="" && date("Ymd", $currentstarttime)!=date("Ymd"))
+if($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE))
   {
   $xml .= add_XML_value("next","viewChanges.php?project=".$projectname."&date=".$nextdate);
   }

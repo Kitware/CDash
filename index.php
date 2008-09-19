@@ -119,7 +119,7 @@ function generate_index_table()
       }
     else
       {
-      $xml .= "<lastbuild>".date("Y-m-d H:i:s T",strtotime($project['last_build']. "UTC"))."</lastbuild>";
+      $xml .= "<lastbuild>".date(FMT_DATETIMETZ,strtotime($project['last_build']. "UTC"))."</lastbuild>";
       }
     
     // Display the first build
@@ -129,7 +129,7 @@ function generate_index_table()
       }
     else
       {
-      $xml .= "<firstbuild>".date("Y-m-d H:i:s T",strtotime($project['first_build']. "UTC"))."</firstbuild>";
+      $xml .= "<firstbuild>".date(FMT_DATETIMETZ,strtotime($project['first_build']. "UTC"))."</firstbuild>";
       }
 
     $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
@@ -227,7 +227,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
   // Menu definition
   $xml .= "<menu>";
-  if(!isset($date) || strlen($date)<8 || date("Ymd", $currentstarttime)==date("Ymd"))
+  if(!isset($date) || strlen($date)<8 || date(FMT_DATE, $currentstarttime)==date(FMT_DATE))
     {
     $xml .= add_XML_value("nonext","1");
     }
@@ -237,7 +237,7 @@ function generate_main_dashboard_XML($projectid,$date)
   // updates
   $xml .= "<updates>";
   
-  $gmdate = gmdate("Ymd", $currentstarttime);
+  $gmdate = gmdate(FMT_DATE, $currentstarttime);
   $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .$gmdate. "</url>";
   
   $dailyupdate = pdo_query("SELECT id FROM dailyupdate 
@@ -263,7 +263,7 @@ function generate_main_dashboard_XML($projectid,$date)
    {
    $xml .= "<nchanges>-1</nchanges>";
    }    
-  $xml .= "<timestamp>" . date("Y-m-d H:i:s T", $currentstarttime)."</timestamp>";
+  $xml .= "<timestamp>" . date(FMT_DATETIMETZ, $currentstarttime)."</timestamp>";
   $xml .= "</updates>";
 
   // User
@@ -296,7 +296,7 @@ function generate_main_dashboard_XML($projectid,$date)
   // Local function to add expected builds
   function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
     {
-    $currentUTCTime =  gmdate("Y-m-d H:i:s",$currentstarttime+3600*24);
+    $currentUTCTime =  gmdate(FMT_DATETIME,$currentstarttime+3600*24);
     $xml = "";
     $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
                                     WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
@@ -331,8 +331,8 @@ function generate_main_dashboard_XML($projectid,$date)
   $beginning_timestamp = $currentstarttime;
   $end_timestamp = $currentstarttime+3600*24;
 
-  $beginning_UTCDate = gmdate("Y-m-d H:i:s",$beginning_timestamp);
-  $end_UTCDate = gmdate("Y-m-d H:i:s",$end_timestamp);                                                      
+  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
+  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);                                                      
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
@@ -534,9 +534,9 @@ function generate_main_dashboard_XML($projectid,$date)
       $totalConfigureError += $configure_array["status"];
 
       // Put the configuration warnings here
-      $configurewarnings = pdo_query("SELECT count(*) FROM configureerror WHERE buildid='$buildid' AND type='1'");
+      $configurewarnings = pdo_query("SELECT count(*) AS num FROM configureerror WHERE buildid='$buildid' AND type='1'");
       $configurewarnings_array = pdo_fetch_array($configurewarnings);
-      $nconfigurewarnings = $configurewarnings_array['count(*)'];
+      $nconfigurewarnings = $configurewarnings_array['num'];
       $xml .= add_XML_value("warning",$nconfigurewarnings);
       $totalConfigureWarning += $nconfigurewarnings;
       
@@ -633,8 +633,8 @@ function generate_main_dashboard_XML($projectid,$date)
      
      $starttimestamp = strtotime($build_array["starttime"]." UTC");
      $submittimestamp = strtotime($build_array["submittime"]." UTC");
-     $xml .= add_XML_value("builddate",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
-     $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
+     $xml .= add_XML_value("builddate",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
+     $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
      $xml .= "</build>";
     
     // Coverage
@@ -679,8 +679,8 @@ function generate_main_dashboard_XML($projectid,$date)
      
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
       $submittimestamp = strtotime($build_array["submittime"]." UTC");
-      $xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone         
-      $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
+      $xml .= add_XML_value("date",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone         
+      $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
       $xml .= "</coverage>";
       }  // end coverage
     
@@ -717,8 +717,8 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <defectcount>".$defectcounts."</defectcount>";
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
       $submittimestamp = strtotime($build_array["submittime"]." UTC");
-      $xml .= add_XML_value("date",date("Y-m-d H:i:s T",$starttimestamp)); // use the default timezone
-      $xml .= add_XML_value("submitdate",date("Y-m-d H:i:s T",$submittimestamp));// use the default timezone
+      $xml .= add_XML_value("date",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
+      $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
       $xml .= "</dynamicanalysis>";
       }  // end coverage   
     } // end looping through builds

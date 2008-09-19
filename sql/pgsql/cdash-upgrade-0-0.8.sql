@@ -8,7 +8,7 @@ CREATE TABLE "buildnote" (
   "timestamp" timestamp(0) NOT NULL,
   "status" smallint DEFAULT '0' NOT NULL
 );
-CREATE INDEX "buildnote_buildid_idx" on "buildnote" ("buildid");
+CREATE INDEX "buildid" on "buildnote" ("buildid");
 
 
 --

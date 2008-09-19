@@ -53,7 +53,7 @@ $siteinformation_array["totalphysicalmemory"] = "NA";
 $siteinformation_array["logicalprocessorsperphysical"] = "NA";
 $siteinformation_array["processorclockfrequency"] = "NA";
 
-$currenttimestamp = gmdate("Y-m-d H:i:s",$currenttime+3600*24); // Current timestamp is the beginning of the dashboard and we want the end
+$currenttimestamp = gmdate(FMT_DATETIME,$currenttime+3600*24); // Current timestamp is the beginning of the dashboard and we want the end
 
 $query = pdo_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttimestamp' ORDER BY timestamp DESC LIMIT 1");
 if(pdo_num_rows($query) > 0)
@@ -111,7 +111,7 @@ if($projectid)
   {
   $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));  
   $xml .= "<backurl>index.php?project=".$project_array["name"];
-  $xml .= "&#38;date=".get_dashboard_date_from_build_starttime(gmdate("Y-m-d H:i:s",$currenttime),$project_array["nightlytime"]);
+  $xml .= "&#38;date=".get_dashboard_date_from_build_starttime(gmdate(FMT_DATETIME,$currenttime),$project_array["nightlytime"]);
   $xml .= "</backurl>";
   }
 else  
@@ -161,8 +161,8 @@ $xml .= "</site>";
 
 // List the claimers of the site
 
-$siteclaimer = pdo_query("SELECT firstname,lastname FROM user,site2user 
-                          WHERE user.id=site2user.userid AND site2user.siteid='$siteid' ORDER BY firstname");
+$siteclaimer = pdo_query("SELECT firstname,lastname FROM ".qid("user").",site2user 
+                          WHERE ".qid("user").".id=site2user.userid AND site2user.siteid='$siteid' ORDER BY firstname");
 while($siteclaimer_array = pdo_fetch_array($siteclaimer))
    {
    $xml .= "<claimer>";
@@ -174,7 +174,7 @@ while($siteclaimer_array = pdo_fetch_array($siteclaimer))
 // Select projects that belong to this site
 $displayPage=0;
 $projects = array();
-$site2project = pdo_query("SELECT projectid,max(submittime) FROM build WHERE siteid='$siteid' AND projectid>0 GROUP BY projectid");
+$site2project = pdo_query("SELECT projectid,max(submittime) AS maxtime FROM build WHERE siteid='$siteid' AND projectid>0 GROUP BY projectid");
 
 while($site2project_array = pdo_fetch_array($site2project))
    {
@@ -185,7 +185,7 @@ while($site2project_array = pdo_fetch_array($site2project))
      {
      $xml .= "<project>";
      $xml .= add_XML_value("id",$projectid);
-     $xml .= add_XML_value("submittime",$site2project_array["max(submittime)"]);
+     $xml .= add_XML_value("submittime",$site2project_array["maxtime"]);
      $xml .= add_XML_value("name",$project_array["name"]);
      $xml .= "</project>";
      $displayPage=1; // if we have at least a valid project we display the page
@@ -206,7 +206,7 @@ if(!$displayPage)
 $testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, AVG(TIME_TO_SEC(TIMEDIFF(build.submittime, buildupdate.starttime))) AS elapsed
               FROM build, buildupdate
               WHERE
-                build.submittime > TIMESTAMPADD(HOUR, -167, NOW())
+                build.submittime > TIMESTAMPADD(".qiv("HOUR").", -167, NOW())
                 AND buildupdate.buildid = build.id
                 AND build.siteid = '$siteid'    
                 GROUP BY projectid,buildname,buildtype

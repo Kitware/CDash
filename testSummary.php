@@ -84,22 +84,22 @@ list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_ar
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime+3600*24;
 
-$beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
-$end_UTCDate = gmdate("YmdHis",$end_timestamp);   
+$beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
+$end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);   
 
 // Add the date/time      
 $xml .= add_XML_value("projectid",$projectid);  
 $xml .= add_XML_value("currentstarttime",$currentstarttime);                                            
-$xml .= add_XML_value("teststarttime",date("Y-m-d H:i:s",$beginning_timestamp));
-$xml .= add_XML_value("testendtime",date("Y-m-d H:i:s",$end_timestamp));
+$xml .= add_XML_value("teststarttime",date(FMT_DATETIME,$beginning_timestamp));
+$xml .= add_XML_value("testendtime",date(FMT_DATETIME,$end_timestamp));
 
 $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,build2test.testid AS testid,site.name AS sitename
           FROM build
           JOIN build2test ON (build.id = build2test.buildid)
           JOIN site ON (build.siteid = site.id)
           WHERE build.projectid = '$projectid'
-          AND build.starttime>=$beginning_UTCDate
-          AND build.starttime<$end_UTCDate
+          AND build.starttime>='$beginning_UTCDate'
+          AND build.starttime<'$end_UTCDate'
           AND build2test.testid IN (SELECT id FROM test WHERE name='$testName')
           ORDER BY build2test.status";
 

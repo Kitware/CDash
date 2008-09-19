@@ -123,7 +123,7 @@ if($Submit)
     $numDays = ($endDate - $startDate) / (24 * 3600) + 1;
     for($i=0;$i<$numDays;$i++)
       {
-      $currentDay = date("Ymd", mktime(0,0,0,$monthFrom,$dayFrom+$i,$yearFrom));
+      $currentDay = date(FMT_DATE, mktime(0,0,0,$monthFrom,$dayFrom+$i,$yearFrom));
       echo("Gathering XML files for $currentDay...  $directory/*/*/$currentDay-*/XML/*.xml <br>\n");
       flush();
       ob_flush();

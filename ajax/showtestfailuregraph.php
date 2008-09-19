@@ -52,8 +52,8 @@ for($beginning_timestamp = $starttime; $beginning_timestamp>$starttime-3600*24*7
   {
   $end_timestamp = $beginning_timestamp+3600*24;
   
-  $beginning_UTCDate = gmdate("Y-m-d H:i:s",$beginning_timestamp);
-  $end_UTCDate = gmdate("Y-m-d H:i:s",$end_timestamp);  
+  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
+  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);  
   
   $query = "SELECT min(starttime) AS starttime,count(*)
             FROM build

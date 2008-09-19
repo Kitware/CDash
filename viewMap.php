@@ -82,11 +82,11 @@ if($end_timestamp<$beginning_timestamp)
   $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp-24*3600),gmdate("d",$end_timestamp-24*3600),gmdate("Y",$end_timestamp-24*3600));
   }
   
-$beginning_UTCDate = gmdate("YmdHis",$beginning_timestamp);
-$end_UTCDate = gmdate("YmdHis",$end_timestamp);            
+$beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
+$end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);            
   
 $build = pdo_query("SELECT siteid FROM build 
-                     WHERE starttime<$end_UTCDate AND starttime>$beginning_UTCDate
+                     WHERE starttime<'$end_UTCDate' AND starttime>'$beginning_UTCDate'
                      AND projectid='$projectid' GROUP BY siteid");
 
 while($buildarray  = pdo_fetch_array($build))

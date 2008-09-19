@@ -230,7 +230,7 @@ function sendemail($parser,$projectid)
     // Check if the email has been sent
     $date = ""; // now
     list ($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date,$project_array["nightlytime"]);
-    $dashboarddate = gmdate("Y-m-d", $currentstarttime);
+    $dashboarddate = gmdate(FMT_DATE, $currentstarttime);
 
     // If we already have it we return
     if(pdo_num_rows(pdo_query("SELECT buildid FROM summaryemail WHERE date='$dashboarddate' AND groupid=$groupid"))==1)
@@ -246,9 +246,9 @@ function sendemail($parser,$projectid)
     
     // Find the current updaters from the night using the dailyupdatefile table
     $summaryEmail = "";
-    $query = "SELECT user.email,user2project.emailcategory FROM user,user2project,dailyupdate,dailyupdatefile WHERE 
+    $query = "SELECT ".qid("user").".email,user2project.emailcategory FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
                            user2project.projectid=$projectid
-                           AND user2project.userid=user.id 
+                           AND user2project.userid=".qid("user").".id 
                            AND user2project.cvslogin=dailyupdatefile.author
                            AND dailyupdatefile.dailyupdateid=dailyupdate.id
                            AND dailyupdate.date=$dashboarddate
@@ -280,8 +280,8 @@ function sendemail($parser,$projectid)
       }
     
      // Select the users who want to receive all emails
-     $user = pdo_query("SELECT user.email,user2project.emailtype FROM user,user2project WHERE user2project.projectid='$projectid' 
-                       AND user2project.userid=user.id AND user2project.emailtype>1");
+     $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
+                       AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
      add_last_sql_error("sendmail");
      while($user_array = pdo_fetch_array($user))
        {
@@ -301,7 +301,7 @@ function sendemail($parser,$projectid)
     if($summaryEmail != "")
       {
       $title = "CDash [".$projectname."] - ".$summaryemail_array["name"];
-      $title .= " ".date("Y-m-d H:i:s T",strtotime($starttime." UTC"));
+      $title .= " ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
       
       $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
       $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
@@ -412,9 +412,9 @@ function sendemail($parser,$projectid)
       }
     
     // Find a matching name in the database
-    $query = "SELECT user.email,user2project.emailcategory 
-                     FROM user,user2project WHERE user2project.projectid='$projectid' 
-                     AND user2project.userid=user.id AND user2project.cvslogin='$author'";
+    $query = "SELECT ".qid("user").".email,user2project.emailcategory 
+                     FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
+                     AND user2project.userid=".qid("user").".id AND user2project.cvslogin='$author'";
     $user = pdo_query($query);
     add_last_sql_error("sendmail");
     
@@ -446,8 +446,8 @@ function sendemail($parser,$projectid)
     } 
 
  // Select the users who want to receive all emails
- $user = pdo_query("SELECT user.email,user2project.emailtype,user2project.emailcategory FROM user,user2project WHERE user2project.projectid='$projectid' 
-                    AND user2project.userid=user.id AND user2project.emailtype>1");
+ $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,user2project.emailcategory FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
+                    AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
  add_last_sql_error("sendmail");
  while($user_array = pdo_fetch_array($user))
    {
@@ -489,7 +489,7 @@ function sendemail($parser,$projectid)
   if($email != "")
     {
     $title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
-    $title .= " - ".$buildname." - ".$buildtype." - ".date("Y-m-d H:i:s T",strtotime($starttime." UTC"));
+    $title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
     
     $messagePlainText = "A submission to CDash for the project ".$project_array["name"]." has ";
     

@@ -45,7 +45,7 @@ if(!isset($date) || strlen($date)==0)
 }
 else
 {
-  $currenttime = mktime("23","59","0",substr($date,4,2),substr($date,6,2),substr($date,0,4));
+  $currenttime = mktime("23","59","0",date2month($date),date2day($date),date2year($date));
 }
     
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
@@ -55,8 +55,8 @@ if(pdo_num_rows($project)>0)
   $projectname = $project_array["name"];  
 }
 
-$previousdate = date("Ymd",$currenttime-24*3600); 
-$nextdate = date("Ymd",$currenttime+24*3600);
+$previousdate = date(FMT_DATE,$currenttime-24*3600); 
+$nextdate = date(FMT_DATE,$currenttime+24*3600);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";

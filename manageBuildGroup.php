@@ -388,7 +388,7 @@ if($DeleteGroup)
 if($DeleteGroup)
   {
   $Groupid = $_POST["groupid"];
-  $now = date("Y-m-d H:i:s");
+  $now = date(FMT_DATETIME);
     
   // WARNING: We restore the state of the previous groups if we meet the following conditions
   // 1) No builds have been defined for this group (the table group2build is empty)
@@ -546,7 +546,7 @@ if($GlobalMove)
   
     // Define a new rule
     // Mark any previous rule as done
-    /*$now = date("Y-m-d H:i:s");
+    /*$now = date(FMT_DATETIME);
     pdo_query("UPDATE build2grouprule SET endtime='$now'
                  WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
                  AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");*/
@@ -601,7 +601,7 @@ if($newDate)
    {
   $Groupid = $_POST["groupid"];
   // Change the starttime of the group
-  $newdatetime = date("Y-m-d H:i:s",$newstartdatestamp);
+  $newdatetime = date(FMT_DATETIME,$newstartdatestamp);
   pdo_query("UPDATE buildgroup SET starttime='$newdatetime' WHERE id='$Groupid'"); 
   
   // Change the starttime of the build2group rules
@@ -775,8 +775,8 @@ if($newDate)
 // Find the recent builds for this project
 if($projectid>0)
   {
-  $currentUTCTime =  gmdate("Y-m-d H:i:s");
-  $beginUTCTime = gmdate("Y-m-d H:i:s",time()-3600*7*24); // 7 days
+  $currentUTCTime =  gmdate(FMT_DATETIME);
+  $beginUTCTime = gmdate(FMT_DATETIME,time()-3600*7*24); // 7 days
  
   $sql = "";
   if($show>0)

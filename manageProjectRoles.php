@@ -141,7 +141,7 @@ function register_user($projectid,$email,$firstName,$lastName,$cvslogin)
     }
   $encrypted = md5($pass);
 
-  pdo_query("INSERT INTO user (email,password,firstname,lastname,institution,admin) 
+  pdo_query("INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution,admin) 
                  VALUES ('$email','$encrypted','$firstName','$lastName','','0')");
   echo pdo_error();
   $userid = pdo_insert_id("user");
@@ -211,7 +211,7 @@ if(isset($_POST["sendEmailToSiteMaintainers"]))
     $email = "";
     foreach($maintainerids as $maintainerid)
       {
-      $user2 = pdo_query("SELECT email FROM user WHERE id='$maintainerid'");
+      $user2 = pdo_query("SELECT email FROM ".qid("user")." WHERE id='$maintainerid'");
       $user_array2 = pdo_fetch_array($user2);
       if(strlen($email)>0)
         {

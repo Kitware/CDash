@@ -144,7 +144,7 @@ if ($session_OK)
     $xml .= "</project>";
     
     // Select sites that belong to this project
-    $beginUTCTime = gmdate("Y-m-d H:i:s",time()-3600*7*24); // 7 days
+    $beginUTCTime = gmdate(FMT_DATETIME,time()-3600*7*24); // 7 days
     $site2project = pdo_query("SELECT DISTINCT site.id,site.name FROM build,site WHERE build.projectid='$projectid' 
                                AND build.starttime>'$beginUTCTime'
                                AND site.id=build.siteid ORDER BY site.name ASC"); //group by is slow

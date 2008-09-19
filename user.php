@@ -126,12 +126,12 @@ if ($session_OK)
       $buildtime = strtotime($build_array["starttime"]." UTC");
       $builddate = $buildtime;
       
-      if(date("His",$buildtime)>date("HiS",strtotime($nightlytime)))
+      if(date(FMT_TIME,$buildtime)>date(FMT_TIME,strtotime($nightlytime)))
         {
         $builddate += 3600*24; //next day
         } 
       
-      $date = date("Ymd",$builddate);
+      $date = date(FMT_DATE,$builddate);
       
       $days = round((time()-$builddate)/(3600*24));
       

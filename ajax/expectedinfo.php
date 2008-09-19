@@ -44,7 +44,7 @@ if(!isset($projectid) || !is_numeric($projectid))
 $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
 
-$currentUTCtime =  gmdate("YmdHis",$currenttime);
+$currentUTCtime =  gmdate(FMT_DATETIME,$currenttime);
     
 // Find the last build corresponding to thie siteid and buildid
 $lastbuild = pdo_query("SELECT starttime FROM build
@@ -72,7 +72,7 @@ else
     }
   else if($lastsbuilddays>=0)
     {
-    $date = substr($datelastbuild,0,4).substr($datelastbuild,5,2).substr($datelastbuild,8,2);
+    $date = date2year($datelastbuild).date2month($datelastbuild).date2day($datelastbuild);
     echo "This build has not been submitting since <b><a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datelastbuild."</a> (".$lastsbuilddays." days)</b>";
     }
   ?>

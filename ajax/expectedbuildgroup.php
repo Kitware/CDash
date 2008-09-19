@@ -65,7 +65,7 @@ if($markexpected)
 if($submit)
 {
   // Mark any previous rule as done
-  /*$now = gmdate("Y-m-d H:i:s");
+  /*$now = gmdate(FMT_DATETIME);
   pdo_query("UPDATE build2grouprule SET endtime='$now'
                WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
                AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");*/

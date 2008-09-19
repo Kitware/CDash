@@ -35,7 +35,7 @@ $note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY tim
 while($note_array = pdo_fetch_array($note))
   {
   $userid = $note_array["userid"];
-  $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM user WHERE id='$userid'"));
+  $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='$userid'"));
   $timestamp = strtotime($note_array["timestamp"]." UTC");
   switch($note_array["status"])
     {

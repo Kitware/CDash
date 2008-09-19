@@ -83,7 +83,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     }
   else
     {
-    $href .= "&date=".date("Ymd");
+    $href .= "&date=".date(FMT_DATE);
     }
   $xml .= add_XML_value("href",$href);
   $xml .= "</dynamicanalysis>";

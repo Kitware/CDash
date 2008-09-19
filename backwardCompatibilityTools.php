@@ -348,7 +348,7 @@ function ComputeTestTiming($days = 4)
     $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
     
     // only test a couple of days
-    $now = gmdate("Y-m-d H:i:s",time()-3600*24*$days);
+    $now = gmdate(FMT_DATETIME,time()-3600*24*$days);
     
     // Find the builds
     $builds = pdo_query("SELECT starttime,siteid,name,type,id
@@ -521,7 +521,7 @@ function ComputeUpdateStatistics($days = 4)
     echo "PROJECT id: ".$projectid."<br>";
     
     // only test a couple of days
-    $now = gmdate("Y-m-d H:i:s",time()-3600*24*$days);
+    $now = gmdate(FMT_DATETIME,time()-3600*24*$days);
     
     // Find the builds
     $builds = pdo_query("SELECT starttime,siteid,name,type,id
@@ -589,9 +589,9 @@ function CompressCoverage()
 {
   /** FIRST STEP */
   // Compute the crc32 of the fullpath+file
-  $coveragefile =  pdo_query("SELECT count(*) FROM coveragefile WHERE crc32 IS NULL");
+  $coveragefile =  pdo_query("SELECT count(*) AS num FROM coveragefile WHERE crc32 IS NULL");
   $coveragefile_array = pdo_fetch_array($coveragefile);
-  $total = $coveragefile_array["count(*)"];
+  $total = $coveragefile_array["num"];
   
   $i=0;
   $previousperc = 0;

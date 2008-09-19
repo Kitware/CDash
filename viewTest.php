@@ -51,7 +51,7 @@ if(pdo_num_rows($project)>0)
   
 if(!isset($date) || strlen($date)==0)
   { 
-  //$date = date("Ymd", strtotime($build_array["starttime"]));
+  //$date = date(FMT_DATE, strtotime($build_array["starttime"]));
   $date = get_dashboard_date_from_project($projectname, $date);
   }
   

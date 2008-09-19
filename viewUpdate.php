@@ -81,7 +81,7 @@ else
   }
 $xml .= "</menu>";
 
-$date = date("Ymd", strtotime($build_array["starttime"]));
+$date = date(FMT_DATE, strtotime($build_array["starttime"]));
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
   // Build

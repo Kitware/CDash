@@ -35,7 +35,7 @@ if(!is_numeric($projectid))
   }
 $cvsuser = pdo_real_escape_string($cvsuser);
 // Check if the given user exists in the database
-$qry = pdo_query("SELECT id FROM user,user2project WHERE user.id=user2project.userid 
+$qry = pdo_query("SELECT id FROM ".qid("user").",user2project WHERE ".qid("user").".id=user2project.userid 
                      AND user2project.cvslogin='$cvsuser'
                      AND user2project.projectid='$projectid'");
                                           

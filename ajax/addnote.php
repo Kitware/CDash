@@ -51,7 +51,7 @@ if($AddNote)
   $Status = $_POST["Status"];
   if(strlen($TextNote)>0)
     {
-    $now = gmdate("Y-m-d H:i:s");
+    $now = gmdate(FMT_DATETIME);
     pdo_query("INSERT INTO buildnote (buildid,userid,note,timestamp,status) 
                    VALUES ('$buildid','$userid','$TextNote','$now','$Status')");
     }

@@ -6,7 +6,7 @@ CREATE TABLE "builderrordiff" (
   "type" smallint NOT NULL,
   "difference" bigint NOT NULL
 );
-CREATE INDEX "builderrordiff_buildid_idx" on "builderrordiff" ("buildid");
+CREATE INDEX "buildid" on "builderrordiff" ("buildid");
 
 
 --
@@ -17,7 +17,7 @@ CREATE TABLE "testdiff" (
   "type" smallint NOT NULL,
   "difference" bigint NOT NULL
 );
-CREATE INDEX "testdiff_buildid_idx" on "testdiff" ("buildid", "type");
+CREATE INDEX "buildid2" on "testdiff" ("buildid", "type");
 
 
 --
@@ -28,43 +28,84 @@ CREATE TABLE "build2note" (
   "noteid" bigint NOT NULL,
   "time" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-CREATE INDEX "build2note_buildid_idx" on "build2note" ("buildid", "noteid");
+CREATE INDEX "buildid3" on "build2note" ("buildid", "noteid");
 
+
+--
+-- Table: userstatistics
+--
+CREATE TABLE "userstatistics" (
+  "userid" bigint NOT NULL,
+  "projectid" smallint NOT NULL,
+  "checkindate" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  "totalupdatedfiles" bigint NOT NULL,
+  "totalbuilds" bigint NOT NULL,
+  "nfixedwarnings" bigint NOT NULL,
+  "nfailedwarnings" bigint NOT NULL,
+  "nfixederrors" bigint NOT NULL,
+  "nfailederrors" bigint NOT NULL,
+  "nfixedtests" bigint NOT NULL,
+  "nfailedtests" bigint NOT NULL
+);
+CREATE INDEX "userid" on "userstatistics" ("userid");
+CREATE INDEX "projectid" on "userstatistics" ("projectid");
+CREATE INDEX "checkindate" on "userstatistics" ("checkindate");
+
+
+--
+-- Table: version
+--
 CREATE TABLE "version" (
-  "major" smallint DEFAULT '0' NOT NULL,
-  "minor" smallint DEFAULT '0' NOT NULL,
-  "patch" smallint DEFAULT '0' NOT NULL
+  "major" smallint NOT NULL,
+  "minor" smallint NOT NULL,
+  "patch" smallint NOT NULL
 );
 
+
+
+--
+-- Table: summaryemail
+--
 CREATE TABLE "summaryemail" (
-  "buildid" smallint  NOT NULL,
+  "buildid" bigint NOT NULL,
   "date" date NOT NULL,
-  "groupid" smallint  NOT NULL
+  "groupid" smallint NOT NULL
 );
-CREATE INDEX "summaryemail_date_idx" on "summaryemail" ("date", "groupid");
+CREATE INDEX "date" on "summaryemail" ("date");
+CREATE INDEX "groupid" on "summaryemail" ("groupid");
 
 
+--
+-- Table: configureerror
+--
 CREATE TABLE "configureerror" (
   "buildid" bigint NOT NULL,
   "type" smallint NOT NULL,
   "text" text NOT NULL
 );
-CREATE INDEX "configureerror_buildid_idx" on "configureerror" ("buildid");
-CREATE INDEX "configureerror_type_idx" on "configureerror" ("type");
+CREATE INDEX "buildid4" on "configureerror" ("buildid");
+CREATE INDEX "type" on "configureerror" ("type");
 
 
+--
+-- Table: configureerrordiff
+--
 CREATE TABLE "configureerrordiff" (
   "buildid" bigint NOT NULL,
   "type" smallint NOT NULL,
-  "difference" smallint NOT NULL
+  "difference" bigint NOT NULL
 );
-CREATE INDEX "configureerrordiff_buildid_idx" on "configureerrordiff" ("buildid");
-CREATE INDEX "configureerrordiff_type_idx" on "configureerrordiff" ("type");
+CREATE INDEX "buildid5" on "configureerrordiff" ("buildid");
+CREATE INDEX "type2" on "configureerrordiff" ("type");
 
 
+--
+-- Table: coveragesummarydiff
+--
 CREATE TABLE "coveragesummarydiff" (
-  "buildid" bigint DEFAULT '0' NOT NULL,
+  "buildid" bigint NOT NULL,
   "loctested" bigint DEFAULT '0' NOT NULL,
-  "locuntested" bigint DEFAULT '0' NOT NULL
+  "locuntested" bigint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("buildid")
 );
-CREATE INDEX "coveragesummarydiff_buildid_idx" on "coveragesummarydiff" ("buildid");
+
