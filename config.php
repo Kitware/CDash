@@ -15,13 +15,13 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-// Hostname of the MySQL database 
+// Hostname of the database server
 $CDASH_DB_HOST = 'localhost';
-// Login for MySQL database access
+// Login for database access
 $CDASH_DB_LOGIN = 'root';
-// Password for MySQL database access
+// Password for database access
 $CDASH_DB_PASS = '';
-// Name of the MySQL database
+// Name of the database
 $CDASH_DB_NAME = 'cdash';
 // Database type (empty means mysql)
 $CDASH_DB_TYPE = 'mysql';
