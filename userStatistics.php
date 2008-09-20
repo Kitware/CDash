@@ -219,7 +219,7 @@ if($projectid>0)
   $alpha_test = 0.3;
   $fixingvsfailing = 0.2;
   
-  foreach($users as $key=>$value)
+  foreach($users as $key=>$user)
     {  
     $xml .= "<user>";
     $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id=".qnum($key)));
