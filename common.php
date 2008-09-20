@@ -2696,7 +2696,11 @@ function add_update_statistics($projectid,$author,$checkindate,$firstbuild,
       }
 
     $totalupdatedfiles=1;
-    $totalbuilds=1;
+    $totalbuilds = 0;
+    if($firstbuild==1)
+      {
+      $totalbuilds=1;
+      }
 
     pdo_query("UPDATE userstatistics SET totalupdatedfiles=totalupdatedfiles+1,
                totalbuilds=totalbuilds+1,
