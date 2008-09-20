@@ -2610,7 +2610,7 @@ function add_update_statistics($projectid,$author,$checkindate,$firstbuild,
     {                 
     $userstatistics_array = pdo_fetch_array($userstatistics);
     $totalbuilds = 0;
-    if($firstfile==1)
+    if($firstbuild==1)
       {
       $totalbuilds=1;
       }
