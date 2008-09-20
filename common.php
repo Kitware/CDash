@@ -2814,7 +2814,7 @@ function compute_update_statistics($projectid,$buildid,$previousbuildid)
   $newbuild = 1;
   $previousauthor = "";
   // Loop through the updated files
-  $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile WHERE buildid='$buildid' ORDER BY author ASC");
+  $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile WHERE buildid='$buildid' AND checkindate>'1980-01-0100:00:00' ORDER BY author ASC");
   $nupdatedfiles = pdo_num_rows($updatefiles);
   
   while($updatefiles_array = pdo_fetch_array($updatefiles))
