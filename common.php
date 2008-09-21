@@ -68,6 +68,7 @@ if (PHP_VERSION >= 5) {
 
 define("FMT_TIME", "H:i:s");  // time
 define("FMT_DATE", "Y-m-d");  // date
+define("FMT_DATETIMESTD", "Y-m-d H:i:s");  // date and time standard
 define("FMT_DATETIME", "Y-m-d\TH:i:s");  // date and time
 define("FMT_DATETIMETZ", "Y-m-d\TH:i:s T");  // date and time with time zone
 define("FMT_DATETIMEMS", "Y-m-d\TH:i:s.u");  // date and time with milliseconds

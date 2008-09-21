@@ -143,8 +143,8 @@ function get_cvs_repository_commits($cvsroot, $dates)
 
   // Compute time stamp range expressed as $fromtime and $totime for cvs
   //
-  $fromtime = gmdate(FMT_DATETIME, $dates['nightly-1']+1) . " GMT";
-  $totime = gmdate(FMT_DATETIME, $dates['nightly-0']) . " GMT";
+  $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
 
   $npos = strpos($cvsroot, "/");
   $npos2 = strlen($cvsroot);
@@ -304,8 +304,8 @@ function get_svn_repository_commits($svnroot, $dates)
   $svnrevision = "{" . gmdate(FMT_DATE, $dates['nightly-2']) . "}:{" .
     gmdate(FMT_DATE, $dates['nightly+1']) . "}";
 
-  $fromtime = gmdate(FMT_DATETIME, $dates['nightly-1']+1) . " GMT";
-  $totime = gmdate(FMT_DATETIME, $dates['nightly-0']) . " GMT";
+  $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
 
   $raw_output = `svn log $svnroot -r $svnrevision -v 2>&1`;
   //$raw_output = `svn help log`;
@@ -461,8 +461,8 @@ function get_bzr_repository_commits($bzrroot, $dates)
 {
   $commits = array();
 
-  $fromtime = gmdate(FMT_DATETIME, $dates['nightly-1']+1) . " GMT";
-  $totime = gmdate(FMT_DATETIME, $dates['nightly-0']) . " GMT";
+  $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
 
   $raw_output = `bzr log -v --xml -r date:"$fromtime"..date:"$totime" $bzrroot 2>&1`;  
 
