@@ -131,7 +131,7 @@
 <!-- Timing per project -->
 <b>Time spent per project (computed from data collected in the past 24h):</b><br/><br/>
 
-<center><div id="placeholder" style="width:550px;height:250px"></div></center>
+<center><div id="placeholder" style="width:850px;height:300px"></div></center>
     
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
