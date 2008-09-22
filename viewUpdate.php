@@ -223,11 +223,11 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
           {
           $slash = "/";
           }
-        $file['bugurl'] = "http://".$project_array["bugtrackerurl"].$slash."view.php?id=".$bugid;
+        $file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"].$slash."view.php?id=".$bugid);
         } // end have bugid
       else
         {
-        $file['bugurl'] = "http://".$project_array["bugtrackerurl"];
+        $file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"]);
         }
       }
     
