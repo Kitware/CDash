@@ -241,7 +241,7 @@ function sendemail($parser,$projectid)
     // Update the summaryemail table to specify that we have send the email
     // We also delete any previous rows from that groupid
     pdo_query("DELETE FROM summaryemail WHERE groupid=$groupid");
-    pdo_query("INSERT INTO summaryemail (buildid,date,groupid) VALUES ($buildid,$dashboarddate,$groupid)");
+    pdo_query("INSERT INTO summaryemail (buildid,date,groupid) VALUES ($buildid,'$dashboarddate',$groupid)");
     add_last_sql_error("sendmail");
     
     // Find the current updaters from the night using the dailyupdatefile table
