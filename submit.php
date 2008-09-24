@@ -56,11 +56,15 @@ if(function_exists("curl_init") == TRUE)
     $currentPort=":".$_SERVER['SERVER_PORT'];
     }
     
-   $serverName = $CDASH_SERVER_NAME;
-   if(strlen($serverName) == 0)
-     {
-     $serverName = $_SERVER['SERVER_NAME'];
-     }
+  /** Server should be local */
+  /*
+  $serverName = $CDASH_SERVER_NAME;
+  if(strlen($serverName) == 0)
+    {
+    $serverName = $_SERVER['SERVER_NAME'];
+    }*/
+  
+  $serverName = "localhost";  
   
   $prefix =  "http://";
   if($CDASH_USE_HTTPS)
