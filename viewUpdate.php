@@ -227,7 +227,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
         } // end have bugid
       else
         {
-        $file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"]);
+        //$file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"]);
         }
       }
     
