@@ -42,13 +42,13 @@
         </xsl:if>  
         
         <xsl:if test="cdash/user/id>0">
-          <xsl:text>&#160;</xsl:text>|<xsl:text>&#160;</xsl:text><a href="user.php?logout=1">Log Out</a>  
+          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>|<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="user.php?logout=1">Log Out</a>  
         </xsl:if>
         
         </td>
         <td width="34%" class="topdate">
           <span style="float:right">
-         <xsl:text>&#160;</xsl:text>
+         <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
          </span>
          <xsl:value-of select="cdash/dashboard/datetime"/>
       </td>
@@ -57,7 +57,7 @@
     </td>
   </tr>
   <tr>
-    <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
+    <td height="22" class="topline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
   </tr>
   <tr>
     <td width="100%" align="left" class="topbg">
@@ -65,7 +65,7 @@
     <table width="100%" border="0" cellpadding="0" cellspacing="0" >
     <tr>
     <td width="195" height="121" class="topbgleft">
-    <xsl:text>&#160;</xsl:text> 
+    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text> 
     <a href="http://www.cdash.org">
     <img  border="0" alt="" src="images/cdash.gif"/>
     </a>
@@ -76,7 +76,7 @@
       <span class="inn2">Projects</span>
       </div>
     </td>
-    <td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
+    <td height="121" class="insd2"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
    </tr>
   </table>
   </td>

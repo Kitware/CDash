@@ -29,7 +29,7 @@
         </a>
         
         <xsl:if test="cdash/user/id>0">
-          <xsl:text>&#160;</xsl:text>|<xsl:text>&#160;</xsl:text><a href="user.php?logout=1">Log Out</a>  
+          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>|<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="user.php?logout=1">Log Out</a>  
         </xsl:if>
         
         </td>
@@ -40,7 +40,7 @@
             <xsl:attribute name="href">rss/SubmissionRSS<xsl:value-of select="cdash/dashboard/projectname"/>.xml</xsl:attribute><img src="images/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
          </a> 
          </xsl:if>
-         <xsl:text>&#160;</xsl:text>
+         <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
          </span>
          <xsl:value-of select="cdash/dashboard/datetime"/>
       </td>
@@ -49,7 +49,7 @@
     </td>
   </tr>
   <tr>
-    <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
+    <td height="22" class="topline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
   </tr>
   <tr>
     <td width="100%" align="left" class="topbg">
@@ -74,7 +74,7 @@
       <span class="inn2">Dashboard</span>
       </div>
     </td>
-    <td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
+    <td height="121" class="insd2"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
    </tr>
   </table>
 
@@ -169,7 +169,7 @@ Map</a></li>
 </td>
   <td height="28" class="insd3">
 <span id="calendar" class="cal"></span>
-<xsl:text>&#160;</xsl:text></td>
+<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
  </tr>
 </table></td>
   </tr>

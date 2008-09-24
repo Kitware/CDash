@@ -23,7 +23,7 @@
     <td>
   <table width="100%" align="center" cellpadding="0" cellspacing="0" >
   <tr>
-    <td height="22" class="topline"><xsl:text>&#160;</xsl:text></td>
+    <td height="22" class="topline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
   </tr>
   <tr>
     <td width="100%" align="left" class="topbg">
@@ -31,7 +31,7 @@
     <table width="100%" border="0" cellpadding="0" cellspacing="0" >
     <tr>
     <td width="195" height="121" class="topbgleft">
-    <xsl:text>&#160;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
     <a href="http://www.cdash.org">
     <img  border="0" alt="" src="images/cdash.gif"/>
     </a>
@@ -42,7 +42,7 @@
       <span class="inn2"><xsl:value-of select="cdash/user_name"/></span>
       </div>
     </td>
-    <td height="121" class="insd2"><xsl:text>&#160;</xsl:text></td>
+    <td height="121" class="insd2"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
    </tr>
   </table>
   </td>
@@ -60,7 +60,7 @@
 <li><a href="user.php?logout=1">LOGOUT</a></li>
 </ul>
 </td>
-  <td height="28" class="insd3"><xsl:text>&#160;</xsl:text></td>
+  <td height="28" class="insd3"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
  </tr>
 </table></td>
   </tr>
