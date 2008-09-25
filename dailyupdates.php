@@ -684,6 +684,7 @@ function addDailyChanges($projectid)
 {
   include("config.php");
   include_once("common.php");
+  include_once("sendemail.php");
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME", $db);
 
@@ -718,6 +719,48 @@ function addDailyChanges($projectid)
     
     // Send an email if some expected builds have not been submitting
     sendEmailExpectedBuilds($projectid,$currentstarttime);    
+    
+    // If the status of daily update is set to 2 that means we should send an email
+    $query = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
+    $dailyupdate_array = $pdo_fetch_array($query);
+    $dailyupdate_status = $dailyupdate_array["status"];
+    if($dailyupdate_status == 2)
+      {
+      // Find the groupid
+      $group_query = pdo_query("SELECT buildid,groupid FROM summaryemail WHERE date='$date'");
+      while($group_array = pdo_fetch_array($group_query))
+        {
+        $groupid = $group_array["groupid"];
+        $buildid = $group_array["buildid"];
+        
+        // Find if the build has any errors
+        $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+        $builderror_array = pdo_fetch_array($builderror);
+        $nbuilderrors = $builderror_array[0];
+           
+        // Find if the build has any warnings
+        $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+        $buildwarning_array = pdo_fetch_array($buildwarning);
+        $nbuildwarnings = $buildwarning_array[0];
+      
+        // Find if the build has any test failings
+        if($project_emailtesttimingchanged)
+          {
+          $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>".qnum($project_testtimemaxstatus).")";
+          }
+        else
+          {
+          $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'";
+          }  
+          
+        $nfail_array = pdo_fetch_array(pdo_query($sql));
+        $nfailingtests = $nfail_array[0];
+  
+        sendsummaryemail($projectid,$project_array["name"],$date,$groupid,$nbuildwarnings,$nbuilderrors,$nfailingtests);
+        }
+      }
+    
+    pdo_query("UPDATE dailyupdate SET status='1' WHERE projectid='$projectid' AND date='$date'");
     }
 }
 ?>
