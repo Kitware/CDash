@@ -35,7 +35,96 @@ function checkEmailPreferences($emailcategory,$nwarnings,$nerrors,$nfailingtests
   return false;  
 }
 
+/** Send a summary email */
+function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
+                          $nbuildwarnings,$nbuilderrors,$nfailingtests)
+{
 
+  // Find the current updaters from the night using the dailyupdatefile table
+  $summaryEmail = "";
+  $query = "SELECT ".qid("user").".email,user2project.emailcategory FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
+                           user2project.projectid=$projectid
+                           AND user2project.userid=".qid("user").".id 
+                           AND user2project.cvslogin=dailyupdatefile.author
+                           AND dailyupdatefile.dailyupdateid=dailyupdate.id
+                           AND dailyupdate.date='$dashboarddate'
+                           ";
+  $user = pdo_query($query);
+  if(strlen(pdo_error())>0)
+    {
+    add_log($query."\n".pdo_error(),"sendemail ".$projectname);
+    }
+      
+  // Loop through the users and add them to the email array  
+  while($user_array = pdo_fetch_array($user))
+    {
+    // If the user is already in the list we quit
+    if(strpos($summaryEmail,$user_array["email"]) !== false)
+      {
+      continue;
+      }
+        
+    // If the user doesn't want to receive email
+    if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
+      {
+      continue;
+      }   
+    if($summaryEmail != "")
+      {
+      $summaryEmail .= ", ";
+      }
+    $summaryEmail .= $user_array["email"];
+    }
+    
+  // Select the users who want to receive all emails
+  $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
+                       AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
+  add_last_sql_error("sendmail");
+  while($user_array = pdo_fetch_array($user))
+    {
+    // If the user is already in the list we quit
+    if(strpos($summaryEmail,$user_array["email"]) !== false)
+       {
+       continue;
+       }
+    if($summaryEmail != "")
+      {
+      $summaryEmail .= ", ";
+      }
+     $summaryEmail .= $user_array["email"];
+    }
+       
+  // Send the email
+  if($summaryEmail != "")
+    {
+    $title = "CDash [".$projectname."] - ".$summaryemail_array["name"];
+    $title .= " ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
+      
+    $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
+    $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
+    $messagePlainText .= "or you are listed in the default contact list.\n\n";  
+      
+    $messagePlainText .= "To see this dashboard:\n";  
+    $messagePlainText .= $currentURI;
+    $messagePlainText .= "/index.php?project=".$project_array["name"]."&date=".$today;
+    $messagePlainText .= "\n\n";
+    
+    $messagePlainText .= "\n-CDash on ".$serverName."\n";
+      
+    // Send the email
+    if(mail("$summaryEmail", $title, $messagePlainText,
+         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+      {
+      add_log("email sent to: ".$email,"sendemail ".$projectname);
+      return;
+      }
+    else
+      {
+      add_log("cannot send email to: ".$email,"sendemail ".$projectname);
+      }
+    } // end $summaryEmail!=""
+}
+                          
 /** Main function to send email if necessary */
 function sendemail($parser,$projectid)
 {
@@ -237,96 +326,35 @@ function sendemail($parser,$projectid)
       {
       return;
       }  
-    
+
     // Update the summaryemail table to specify that we have send the email
     // We also delete any previous rows from that groupid
     pdo_query("DELETE FROM summaryemail WHERE groupid=$groupid");
     pdo_query("INSERT INTO summaryemail (buildid,date,groupid) VALUES ($buildid,'$dashboarddate',$groupid)");
     add_last_sql_error("sendmail");
     
-    // Find the current updaters from the night using the dailyupdatefile table
-    $summaryEmail = "";
-    $query = "SELECT ".qid("user").".email,user2project.emailcategory FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
-                           user2project.projectid=$projectid
-                           AND user2project.userid=".qid("user").".id 
-                           AND user2project.cvslogin=dailyupdatefile.author
-                           AND dailyupdatefile.dailyupdateid=dailyupdate.id
-                           AND dailyupdate.date=$dashboarddate
-                           ";
-    $user = pdo_query($query);
-    if(strlen(pdo_error())>0)
-      {
-      add_log($query."\n".pdo_error(),"sendemail ".$projectname);
-      }
-      
-    // Loop through the users and add them to the email array  
-    while($user_array = pdo_fetch_array($user))
-      {
-      // If the user is already in the list we quit
-      if(strpos($summaryEmail,$user_array["email"]) !== false)
-        {
-        continue;
-        }
-      // If the user doesn't want to receive email
-      if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
-        {
-        continue;
-        }   
-      if($summaryEmail != "")
-        {
-        $summaryEmail .= ", ";
-        }
-      $summaryEmail .= $user_array["email"];
-      }
+    // If the trigger for SVN/CVS diff is not done yet we specify that the asynchronous trigger should
+    // send an email
+    $dailyupdatequery = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$dashboarddate'");
+    add_last_sql_error("sendmail");
     
-     // Select the users who want to receive all emails
-     $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
-                       AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
-     add_last_sql_error("sendmail");
-     while($user_array = pdo_fetch_array($user))
-       {
-       // If the user is already in the list we quit
-       if(strpos($summaryEmail,$user_array["email"]) !== false)
-         {
-         continue;
-         }
-      if($summaryEmail != "")
-        {
-        $summaryEmail .= ", ";
-        }
-       $summaryEmail .= $user_array["email"];
-      }
-       
-    // Send the email
-    if($summaryEmail != "")
+    if(pdo_num_rows($dailyupdatequery) == 0)
       {
-      $title = "CDash [".$projectname."] - ".$summaryemail_array["name"];
-      $title .= " ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
+      exit();
+      }
       
-      $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
-      $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
-      $messagePlainText .= "or you are listed in the default contact list.\n\n";  
-      
-      $messagePlainText .= "To see this dashboard:\n";  
-      $messagePlainText .= $currentURI;
-      $messagePlainText .= "/index.php?project=".$project_array["name"]."&date=".$today;
-      $messagePlainText .= "\n\n";
+    $dailyupdate_array = $pdo_fetch_array($dailyupdatequery);
+    $dailyupdate_status = $dailyupdate_array['status'];
+    if($dailyupdate_status == 0)
+      {
+      pdo_query("UPDATE dailyupdate SET status='2' WHERE projectid='$projectid' AND date='$dashboarddate'");
+      exit();
+      }
+
+    // Send the summary email
+    sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$nbuildwarnings,$nbuilderrors,$nfailingtests);
     
-      $messagePlainText .= "\n-CDash on ".$serverName."\n";
-      
-      // Send the email
-      if(mail("$summaryEmail", $title, $messagePlainText,
-           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
-        {
-        add_log("email sent to: ".$email,"sendemail ".$projectname);
-        return;
-        }
-      else
-        {
-        add_log("cannot send email to: ".$email,"sendemail ".$projectname);
-        }
-      } // end $summaryEmail!=""
-    } 
+    } // end summary email
 
   // Send a summary of the errors/warnings and test failings
   $project_emailmaxitems = $project_array["emailmaxitems"];
