@@ -40,7 +40,7 @@ else
   {
   $sql = "(email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')";
   }
-$user = pdo_query("SELECT id,email,firstname,lastname FROM user WHERE ".$sql." AND 
+$user = pdo_query("SELECT id,email,firstname,lastname FROM ".qid("user")." WHERE ".$sql." AND 
                    id NOT IN (SELECT userid as id FROM user2project WHERE projectid='$projectid')");
 echo pdo_error();
 
