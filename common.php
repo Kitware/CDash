@@ -2466,7 +2466,7 @@ function qnum($num)
     }
   elseif($CDASH_DB_TYPE == "pgsql") 
     {
-    return $num != "" ? $num : "DEFAULT";
+    return $num != "" ? $num : "0";
     }
   else 
     {
