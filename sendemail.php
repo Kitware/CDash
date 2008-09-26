@@ -343,7 +343,7 @@ function sendemail($parser,$projectid)
       exit();
       }
       
-    $dailyupdate_array = $pdo_fetch_array($dailyupdatequery);
+    $dailyupdate_array = pdo_fetch_array($dailyupdatequery);
     $dailyupdate_status = $dailyupdate_array['status'];
     if($dailyupdate_status == 0)
       {
