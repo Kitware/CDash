@@ -671,7 +671,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $loctesteddiff = $coveragediff_array['loctested'];
         $locuntesteddiff = $coveragediff_array['locuntested'];
         @$previouspercent = round(($coverage_array["loctested"]-$loctesteddiff)/($coverage_array["loctested"]-$loctesteddiff+$coverage_array["locuntested"]-$locuntesteddiff)*100,2);
-        $percentdiff = $percent-$previouspercent;
+        $percentdiff = round($percent-$previouspercent,2);
         $xml .= "<percentagediff>".$percentdiff."</percentagediff>";
         $xml .= "<faildiff>".$locuntesteddiff."</faildiff>";
         $xml .= "<passdiff>".$loctesteddiff."</passdiff>";
