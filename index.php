@@ -670,7 +670,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $coveragediff_array = pdo_fetch_array($coveragediff);
         $loctesteddiff = $coveragediff_array['loctested'];
         $locuntesteddiff = $coveragediff_array['locuntested'];
-        @$previouspercent = round(($coverage_array["loctested"]+$loctesteddiff)/($coverage_array["loctested"]+$loctesteddiff+$coverage_array["locuntested"]+$locuntesteddiff)*100,2);
+        @$previouspercent = round(($coverage_array["loctested"]-$loctesteddiff)/($coverage_array["loctested"]-$loctesteddiff+$coverage_array["locuntested"]-$locuntesteddiff)*100,2);
         $percentdiff = $percent-$previouspercent;
         $xml .= "<percentagediff>".$percentdiff."</percentagediff>";
         $xml .= "<faildiff>".$locuntesteddiff."</faildiff>";
