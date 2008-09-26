@@ -722,7 +722,7 @@ function addDailyChanges($projectid)
     
     // If the status of daily update is set to 2 that means we should send an email
     $query = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
-    $dailyupdate_array = $pdo_fetch_array($query);
+    $dailyupdate_array = pdo_fetch_array($query);
     $dailyupdate_status = $dailyupdate_array["status"];
     if($dailyupdate_status == 2)
       {
