@@ -1366,7 +1366,7 @@ function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
   $endtime = pdo_real_escape_string($endtime);
   $command = pdo_real_escape_string($command);
   $log = pdo_real_escape_string($log);
-  $status = pdo_real_escape_string($status);
+  $status = pdo_real_escape_numeric($status);
       
   pdo_query ("INSERT INTO configure (buildid,starttime,endtime,command,log,status) 
                VALUES ('$buildid','$starttime','$endtime','$command','$log','$status')");
@@ -1408,7 +1408,7 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   $status = pdo_real_escape_string($status);  
   $path = pdo_real_escape_string($path);  
   $fullname = pdo_real_escape_string($fullname);  
-  $time = pdo_real_escape_string($time);     
+  $time = pdo_real_escape_numeric($time);     
   $details = pdo_real_escape_string($details);
   
   // CRC32 is computed with the measurements name and type and value
@@ -1525,21 +1525,21 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
 }
 
 /** Add a new error/warning */
-function  add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$precontext,$postcontext,$repeatcount)
+function add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$precontext,$postcontext,$repeatcount)
 {
   if(!is_numeric($buildid))
     {
     return;
     }
     
-  $type = pdo_real_escape_string($type);
-  $logline = pdo_real_escape_string($logline);
+  $type = pdo_real_escape_numeric($type);
+  $logline = pdo_real_escape_numeric($logline);
   $text = pdo_real_escape_string($text);
   $sourcefile = pdo_real_escape_string($sourcefile);
-  $sourceline = pdo_real_escape_string($sourceline);  
+  $sourceline = pdo_real_escape_numeric($sourceline);  
   $precontext = pdo_real_escape_string($precontext);  
   $postcontext = pdo_real_escape_string($postcontext);  
-  $repeatcount = pdo_real_escape_string($repeatcount);  
+  $repeatcount = pdo_real_escape_numeric($repeatcount);  
   
   if($sourceline == "")
     {
@@ -1547,8 +1547,8 @@ function  add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$preco
     }
         
   pdo_query ("INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount) 
-               VALUES (".qnum($buildid).",".qnum($type).",".qnum($logline).",'$text','$sourcefile',".qnum($sourceline).",'$precontext',
-                       '$postcontext',".qnum($repeatcount).")");
+               VALUES ('$buildid','$type','$logline','$text','$sourcefile','$sourceline','$precontext',
+                       '$postcontext','$repeatcount')");
   add_last_sql_error("add_error");
 }
 

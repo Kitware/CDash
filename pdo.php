@@ -232,6 +232,20 @@ function pdo_real_escape_string($unescaped_string, $link_identifier = NULL)
 }
 
 /** */
+function pdo_real_escape_numeric($unescaped_string, $link_identifier = NULL)
+{
+  global $CDASH_DB_TYPE;
+
+  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE=="pgsql" && $unescaped_string=="") {
+    // MySQL interprets an empty string as zero when assigned to a numeric field,
+    // for PostgreSQL this must be done explicitly:
+    $unescaped_string = "0";
+  }
+
+  return pdo_real_escape_string($unescaped_string, $link_identifier);
+}
+
+/** */
 function pdo_select_db($database_name, &$link_identifier)
 {
   global $CDASH_DB_TYPE;
