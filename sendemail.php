@@ -79,7 +79,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
   // Select the users who want to receive all emails
   $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
                        AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
-  add_last_sql_error("sendmail");
+  add_last_sql_error("sendsummaryemail");
   while($user_array = pdo_fetch_array($user))
     {
     // If the user is already in the list we quit
@@ -97,6 +97,9 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
   // Send the email
   if($summaryEmail != "")
     {
+    $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name FROM buildgroup WHERE id=$groupid"));
+    add_last_sql_error("sendsummaryemail");
+
     $title = "CDash [".$projectname."] - ".$summaryemail_array["name"];
     $title .= " ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
       
@@ -106,9 +109,14 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
       
     $messagePlainText .= "To see this dashboard:\n";  
     $messagePlainText .= $currentURI;
-    $messagePlainText .= "/index.php?project=".$project_array["name"]."&date=".$today;
+    $messagePlainText .= "/index.php?project=".$projectname."&date=".$dashboarddate;
     $messagePlainText .= "\n\n";
     
+    $serverName = $CDASH_SERVER_NAME;
+    if(strlen($serverName) == 0)
+      {
+      $serverName = $_SERVER['SERVER_NAME'];
+      }
     $messagePlainText .= "\n-CDash on ".$serverName."\n";
       
     // Send the email
@@ -189,7 +197,7 @@ function sendemail($parser,$projectid)
   $groupid = $buildgroup_array["groupid"];
   
   // Check if the group as summaryemail enable
-  $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name,summaryemail FROM buildgroup WHERE id=$groupid"));
+  $summaryemail_array = pdo_fetch_array(pdo_query("SELECT summaryemail FROM buildgroup WHERE id=$groupid"));
   add_last_sql_error("sendmail");
   
   // If we specified no email we stop here
