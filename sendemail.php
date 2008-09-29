@@ -348,7 +348,7 @@ function sendemail($parser,$projectid)
     
     if(pdo_num_rows($dailyupdatequery) == 0)
       {
-      exit();
+      return;
       }
       
     $dailyupdate_array = pdo_fetch_array($dailyupdatequery);
@@ -356,12 +356,12 @@ function sendemail($parser,$projectid)
     if($dailyupdate_status == 0)
       {
       pdo_query("UPDATE dailyupdate SET status='2' WHERE projectid='$projectid' AND date='$dashboarddate'");
-      exit();
+      return;
       }
 
     // Send the summary email
     sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$nbuildwarnings,$nbuilderrors,$nfailingtests);
-    
+    return;
     } // end summary email
 
   // Send a summary of the errors/warnings and test failings
