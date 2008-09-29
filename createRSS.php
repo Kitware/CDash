@@ -50,7 +50,12 @@ function CreateRSSFeed($projectid)
    return;
    }
    
-  $urlbase = "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['SCRIPT_NAME']);
+    $prefix =  "http://";
+  if($CDASH_USE_HTTPS)
+    {
+    $prefix =  "https://";
+    }
+ $urlbase = $prefix.$_SERVER['HTTP_HOST'].dirname($_SERVER['SCRIPT_NAME']);
   
   fputs($fp,"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n");
   fputs($fp,"<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n");
