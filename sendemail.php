@@ -48,6 +48,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
                            AND user2project.cvslogin=dailyupdatefile.author
                            AND dailyupdatefile.dailyupdateid=dailyupdate.id
                            AND dailyupdate.date='$dashboarddate'
+                           ADN dailyupdate.projectid=$projectid
                            ";
   $user = pdo_query($query);
   if(strlen(pdo_error())>0)
@@ -106,17 +107,36 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
     $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
     $messagePlainText .= "or you are listed in the default contact list.\n\n";  
-      
-    $messagePlainText .= "To see this dashboard:\n";  
-    $messagePlainText .= $currentURI;
-    $messagePlainText .= "/index.php?project=".$projectname."&date=".$dashboarddate;
-    $messagePlainText .= "\n\n";
     
+    
+    $currentPort="";
+    $httpprefix="http://";
+    if($_SERVER['SERVER_PORT']!=80)
+      {
+      $currentPort=":".$_SERVER['SERVER_PORT'];
+      if($_SERVER['SERVER_PORT']!=80 )
+        {
+        $httpprefix = "https://";
+        }
+      }
+    if($CDASH_USE_HTTPS === true)
+      {
+      $httpprefix = "https://";
+      }
     $serverName = $CDASH_SERVER_NAME;
     if(strlen($serverName) == 0)
       {
       $serverName = $_SERVER['SERVER_NAME'];
       }
+      
+    $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+    
+    $messagePlainText .= "To see this dashboard:\n";  
+    $messagePlainText .= $currentURI;
+    $messagePlainText .= "/index.php?project=".$projectname."&date=".$dashboarddate;
+    $messagePlainText .= "\n\n";
+    
     $messagePlainText .= "\n-CDash on ".$serverName."\n";
       
     // Send the email
@@ -297,7 +317,7 @@ function sendemail($parser,$projectid)
       }
     }
  
-   // Current URI of the dashboard
+  // Current URI of the dashboard
   $currentPort="";
   $httpprefix="http://";
   if($_SERVER['SERVER_PORT']!=80)
