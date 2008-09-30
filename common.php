@@ -1890,7 +1890,6 @@ function get_author_email($projectname, $author)
   return $email;  
 }
 
-
 /** Get the previous build id */
 function get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
 {
@@ -1909,8 +1908,7 @@ function get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttim
 /** Get the next build id */
 function get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
 {
- 
-   $nextbuild = pdo_query("SELECT id FROM build
+  $nextbuild = pdo_query("SELECT id FROM build
                           WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                           AND projectid='$projectid' AND starttime>'$starttime' ORDER BY starttime ASC LIMIT 1");
 
@@ -1929,6 +1927,58 @@ function get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
    $nextbuild = pdo_query("SELECT id FROM build
                           WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                           AND projectid='$projectid' ORDER BY starttime DESC LIMIT 1");
+
+  if(pdo_num_rows($nextbuild)>0)
+    {
+    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    return $nextbuild_array["id"];
+    }
+  return 0;
+}
+
+/** Get the previous build id dynamicanalysis*/
+function get_previous_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime)
+{
+  $previousbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
+                              WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
+                              AND build.projectid='$projectid' AND build.starttime<'$starttime' 
+                              AND dynamicanalysis.builid=build.id
+                              ORDER BY build.starttime DESC LIMIT 1");
+  
+  if(pdo_num_rows($previousbuild)>0)
+    {
+    $previousbuild_array = pdo_fetch_array($previousbuild);              
+    return $previousbuild_array["id"];
+    }
+  return 0;
+}
+
+/** Get the next build id dynamicanalysis*/
+function get_next_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime)
+{
+  $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
+                          WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
+                          AND build.projectid='$projectid' AND build.starttime>'$starttime' 
+                          AND dynamicanalysis.builid=build.id
+                          ORDER BY build.starttime ASC LIMIT 1");
+
+  if(pdo_num_rows($nextbuild)>0)
+    {
+    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    return $nextbuild_array["id"];
+    }
+  return 0;
+}
+
+/** Get the last build id dynamicanalysis */
+function get_last_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime)
+{
+ 
+   $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
+                          WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
+                          AND build.projectid='$projectid' 
+                          AND dynamicanalysis.builid=build.id
+                          ORDER BY build.starttime DESC LIMIT 1");
 
   if(pdo_num_rows($nextbuild)>0)
     {
