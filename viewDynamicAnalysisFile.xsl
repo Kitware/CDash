@@ -34,12 +34,13 @@
 <br/>
 
 <!-- Main -->
-
 <br/>
-<p><b>Site:</b><xsl:value-of select="cdash/build/site"/> 
-</p>
-<p><b>Build Name:</b><xsl:value-of select="cdash/build/buildname"/> 
-</p>
+<h3>Dynamic analysis started on <xsl:value-of select="cdash/build/buildtime"/></h3>
+<table border="0">
+<tr><td align="right"><b>Site Name:</b></td><td><xsl:value-of select="cdash/build/site"/></td></tr>
+<tr><td align="right"><b>Build Name:</b></td><td><xsl:value-of select="cdash/build/buildname"/></td></tr>
+</table>
+
 <a>
 <xsl:attribute name="href"><xsl:value-of select="cdash/dynamicanalysis/href"/></xsl:attribute>
 <xsl:value-of select="cdash/dynamicanalysis/filename"/></a>
