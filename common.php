@@ -1938,6 +1938,58 @@ function get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
   return 0;
 }
 
+/** Get the previous build id dynamicanalysis*/
+function get_previous_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime)
+{
+  $previousbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
+                              WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
+                              AND build.projectid='$projectid' AND build.starttime<'$starttime' 
+                              AND dynamicanalysis.buildid=build.id
+                              ORDER BY build.starttime DESC LIMIT 1");
+ 
+  if(pdo_num_rows($previousbuild)>0)
+    {
+    $previousbuild_array = pdo_fetch_array($previousbuild);              
+    return $previousbuild_array["id"];
+    }
+  return 0;
+}
+
+/** Get the next build id dynamicanalysis*/
+function get_next_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime)
+{
+  $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
+                          WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
+                          AND build.projectid='$projectid' AND build.starttime>'$starttime' 
+                          AND dynamicanalysis.buildid=build.id
+                          ORDER BY build.starttime ASC LIMIT 1");
+
+  if(pdo_num_rows($nextbuild)>0)
+    {
+    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    return $nextbuild_array["id"];
+    }
+  return 0;
+}
+
+/** Get the last build id dynamicanalysis */
+function get_last_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime)
+{
+ 
+   $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
+                          WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
+                          AND build.projectid='$projectid' 
+                          AND dynamicanalysis.buildid=build.id
+                          ORDER BY build.starttime DESC LIMIT 1");
+
+  if(pdo_num_rows($nextbuild)>0)
+    {
+    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    return $nextbuild_array["id"];
+    }
+  return 0;
+}
+
 /** Get the date from the buildid */
 function get_dashboard_date_from_build_starttime($starttime,$nightlytime)
 {

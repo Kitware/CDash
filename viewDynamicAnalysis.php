@@ -61,7 +61,7 @@ $starttime = $build_array["starttime"];
 
 $xml .= "<menu>";
 $xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]));
-$previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+$previousbuildid = get_previous_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($previousbuildid>0)
   {
   $xml .= add_XML_value("previous","viewDynamicAnalysis.php?buildid=".$previousbuildid);
@@ -70,8 +70,8 @@ else
   {
   $xml .= add_XML_value("noprevious","1");
   }
-$xml .= add_XML_value("current","viewDynamicAnalysis.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));  
-$nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+$xml .= add_XML_value("current","viewDynamicAnalysis.php?buildid=".get_last_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime));  
+$nextbuildid = get_next_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($nextbuildid>0)
   {
   $xml .= add_XML_value("next","viewDynamicAnalysis.php?buildid=".$nextbuildid);
