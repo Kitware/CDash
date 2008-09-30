@@ -199,7 +199,7 @@ CREATE INDEX "buildid6" on "dynamicanalysis" ("buildid");
 CREATE TABLE "dynamicanalysisdefect" (
   "dynamicanalysisid" bigint DEFAULT '0' NOT NULL,
   "type" character varying(50) DEFAULT '' NOT NULL,
-  "value" character varying(50) DEFAULT '' NOT NULL
+  "value" bigint DEFAULT '0' NOT NULL
 );
 CREATE INDEX "buildid7" on "dynamicanalysisdefect" ("dynamicanalysisid");
 
@@ -607,14 +607,3 @@ CREATE TABLE "coveragesummarydiff" (
   PRIMARY KEY ("buildid")
 );
 
-
---
--- Language: plpgsql
---
-CREATE LANGUAGE 'plpgsql';
-
-
---
--- Function: unix_timestamp
---
-CREATE FUNCTION unix_timestamp(timestamp) RETURNS int AS $$ BEGIN RETURN floor(extract(EPOCH FROM $1)); END $$ LANGUAGE 'plpgsql';
