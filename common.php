@@ -1942,9 +1942,9 @@ function get_previous_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$bui
   $previousbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
                               WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
                               AND build.projectid='$projectid' AND build.starttime<'$starttime' 
-                              AND dynamicanalysis.builid=build.id
+                              AND dynamicanalysis.buildid=build.id
                               ORDER BY build.starttime DESC LIMIT 1");
-  
+ 
   if(pdo_num_rows($previousbuild)>0)
     {
     $previousbuild_array = pdo_fetch_array($previousbuild);              
@@ -1959,7 +1959,7 @@ function get_next_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildna
   $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
                           WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
                           AND build.projectid='$projectid' AND build.starttime>'$starttime' 
-                          AND dynamicanalysis.builid=build.id
+                          AND dynamicanalysis.buildid=build.id
                           ORDER BY build.starttime ASC LIMIT 1");
 
   if(pdo_num_rows($nextbuild)>0)
@@ -1977,7 +1977,7 @@ function get_last_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildna
    $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
                           WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
                           AND build.projectid='$projectid' 
-                          AND dynamicanalysis.builid=build.id
+                          AND dynamicanalysis.buildid=build.id
                           ORDER BY build.starttime DESC LIMIT 1");
 
   if(pdo_num_rows($nextbuild)>0)
@@ -2810,7 +2810,9 @@ function compute_update_statistics($projectid,$buildid,$previousbuildid)
   require_once("pdo.php");
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
-    
+
+  add_log("compute stats","compute_update_statistics");
+
   // Find the errors, warnings and test failures
   // Find the current number of errors
   $errors = pdo_query("SELECT count(*) FROM builderror WHERE type='0' 
