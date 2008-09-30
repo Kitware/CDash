@@ -680,7 +680,6 @@ if($CheckBuildsWrongDate)
     {
     $buildid = $builds_array["id"];
     echo $builds_array['name']."-".$builds_array['starttime']."<br>";
-    remove_build($buildid); 
     }
 }
 
