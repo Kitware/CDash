@@ -672,7 +672,10 @@ function CompressCoverage()
 /** Check the builds with wrong date */
 if($CheckBuildsWrongDate)
 {
-  $builds = pdo_query("SELECT id,name,starttime FROM build WHERE starttime<'1975-12-31 23:59:59'");
+  $currentdate = time()+3600*24*3; // or 3 days away from now
+  $forwarddate = date(FMT_DATETIME,$currentdate);
+   
+  $builds = pdo_query("SELECT id,name,starttime FROM build WHERE starttime<'1975-12-31 23:59:59' OR starttime>'$forwarddate'");
   while($builds_array = pdo_fetch_array($builds))
     {
     $buildid = $builds_array["id"];
@@ -684,7 +687,10 @@ if($CheckBuildsWrongDate)
 /** Delete the builds with wrong date */
 if($DeleteBuildsWrongDate)
 {
-  $builds = pdo_query("SELECT id FROM build WHERE starttime<'1975-12-31 23:59:59'");
+  $currentdate = time()+3600*24*3; // or 3 days away from now
+  $forwarddate = date(FMT_DATETIME,$currentdate);
+
+  $builds = pdo_query("SELECT id FROM build WHERE starttime<'1975-12-31 23:59:59' OR starttime>'$forwarddate'");
   while($builds_array = pdo_fetch_array($builds))
     {
     $buildid = $builds_array["id"];
