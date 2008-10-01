@@ -39,7 +39,8 @@ function checkEmailPreferences($emailcategory,$nwarnings,$nerrors,$nfailingtests
 function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
                           $nbuildwarnings,$nbuilderrors,$nfailingtests)
 {
-
+  include("config.php");
+  
   // Find the current updaters from the night using the dailyupdatefile table
   $summaryEmail = "";
   $query = "SELECT ".qid("user").".email,user2project.emailcategory FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
