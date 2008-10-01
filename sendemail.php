@@ -101,8 +101,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
     $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name FROM buildgroup WHERE id=$groupid"));
     add_last_sql_error("sendsummaryemail");
 
-    $title = "CDash [".$projectname."] - ".$summaryemail_array["name"];
-    $title .= " ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
+    $title = "CDash [".$projectname."] - ".$summaryemail_array["name"]." Failures";
       
     $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
