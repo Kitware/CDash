@@ -1,1 +1,5 @@
 ALTER TABLE dynamicanalysisdefect MODIFY value INT NOT NULL DEFAULT 0;
+
+ALTER TABLE test2image DROP PRIMARY KEY;
+ALTER TABLE test2image CHANGE imgid imgid INT( 11 ) NOT NULL AUTO_INCREMENT
+ALTER TABLE test2image ADD INDEX ( testid ) 

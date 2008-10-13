@@ -266,13 +266,13 @@ CREATE TABLE `image` (
 -- 
 -- Table structure for table `test2image`
 -- 
-
 CREATE TABLE `test2image` (
-  `imgid` int(11) NOT NULL default '0',
+  `imgid` int(11) NOT NULL auto_increment,
   `testid` int(11) NOT NULL default '0',
   `role` tinytext NOT NULL,
-  PRIMARY KEY  (`imgid`,`testid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  PRIMARY KEY  (`imgid`),
+  KEY `testid` (`testid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 -- 

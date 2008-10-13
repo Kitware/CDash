@@ -221,13 +221,12 @@ CREATE INDEX "checksum" on "image" ("checksum");
 -- Table: test2image
 --
 CREATE TABLE "test2image" (
-  "imgid" bigint DEFAULT '0' NOT NULL,
+  "imgid" serial NOT NULL,
   "testid" bigint DEFAULT '0' NOT NULL,
   "role" text NOT NULL,
-  PRIMARY KEY ("imgid", "testid")
+  PRIMARY KEY ("imgid")
 );
-
-
+CREATE INDEX "testid" on "test2image" ("testid");
 
 --
 -- Table: note
