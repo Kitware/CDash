@@ -348,35 +348,35 @@ if($DeleteGroup)
   pdo_query("DELETE FROM buildgroup WHERE id='$Groupid'"); 
 
   // Restore the builds that were associated with this group
- $oldbuilds = pdo_query("SELECT id,type FROM build WHERE id IN (SELECT buildid AS id FROM build2group WHERE groupid='$Groupid')"); 
+  $oldbuilds = pdo_query("SELECT id,type FROM build WHERE id IN (SELECT buildid AS id FROM build2group WHERE groupid='$Groupid')"); 
   echo pdo_error();
   while($oldbuilds_array = pdo_fetch_array($oldbuilds))
-  {
-  // Move the builds
-  $buildid = $oldbuilds_array["id"];
-  $buildtype = $oldbuilds_array["type"];
+    {
+    // Move the builds
+    $buildid = $oldbuilds_array["id"];
+    $buildtype = $oldbuilds_array["type"];
    
-  // Find the group corresponding to the build type
-  $grouptype_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'")); 
-   echo pdo_error();   
-  $grouptype = $grouptype_array["id"];
+    // Find the group corresponding to the build type
+    $grouptype_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'")); 
+    echo pdo_error();   
+    $grouptype = $grouptype_array["id"];
    
-  pdo_query("UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'"); 
-   echo pdo_error();   
-   }
+    pdo_query("UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'"); 
+    echo pdo_error();   
+    }
 
   // We delete the buildgroupposition and update the position of the other groups
-  pdo_query("DELETE FROM buildgoupposition WHERE buildgroupid='$Groupid'"); 
+  pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid='$Groupid'"); 
 
   $buildgoupposition = pdo_query("SELECT bg.buildgroupid FROM buildgroupposition as bg, buildgroup as g
                                         WHERE g.projectid='$projectid' AND bg.buildgroupid=g.id ORDER BY bg.position ASC"); 
    
- $p = 1;
+  $p = 1;
   while($buildgoupposition_array = pdo_fetch_array($buildgoupposition))
    {
-  $buildgroupid = $buildgoupposition_array["buildgroupid"];
+   $buildgroupid = $buildgoupposition_array["buildgroupid"];
    pdo_query("UPDATE buildgroupposition SET position='$p' WHERE buildgroupid='$buildgroupid'"); 
-  $p++;
+   $p++;
    }
  
  } // end DeleteGroup
