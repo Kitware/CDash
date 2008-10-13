@@ -186,6 +186,13 @@ if(isset($_GET['upgrade-1-2']))
   pdo_query("UPDATE buildgroupposition SET starttime='1980-01-01 00:00:00' WHERE starttime='0000-00-00 00:00:00'");
   pdo_query("UPDATE buildgroupposition SET endtime='1980-01-01 00:00:00' WHERE endtime='0000-00-00 00:00:00'");
   
+  pdo_query("ALTER TABLE buildgroup MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
+  pdo_query("ALTER TABLE buildgroup MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");
+  pdo_query("ALTER TABLE build2grouprule MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
+  pdo_query("ALTER TABLE build2grouprule MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");  
+  pdo_query("ALTER TABLE buildgroupposition MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
+  pdo_query("ALTER TABLE buildgroupposition MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");
+
   //  Add fields in the project table 
   $timestatus = pdo_query("SELECT testtimemaxstatus FROM project LIMIT 1");
   if(!$timestatus)
