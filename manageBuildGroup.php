@@ -366,15 +366,15 @@ if($DeleteGroup)
    }
 
   // We delete the buildgroupposition and update the position of the other groups
-  pdo_query("DELETE FROM buildgoupposition WHERE buildgroupid='$Groupid'"); 
+  pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid='$Groupid'"); 
 
-  $buildgoupposition = pdo_query("SELECT bg.buildgroupid FROM buildgroupposition as bg, buildgroup as g
+  $buildgroupposition = pdo_query("SELECT bg.buildgroupid FROM buildgroupposition as bg, buildgroup as g
                                         WHERE g.projectid='$projectid' AND bg.buildgroupid=g.id ORDER BY bg.position ASC"); 
    
  $p = 1;
-  while($buildgoupposition_array = pdo_fetch_array($buildgoupposition))
+  while($buildgroupposition_array = pdo_fetch_array($buildgroupposition))
    {
-  $buildgroupid = $buildgoupposition_array["buildgroupid"];
+  $buildgroupid = $buildgroupposition_array["buildgroupid"];
    pdo_query("UPDATE buildgroupposition SET position='$p' WHERE buildgroupid='$buildgroupid'"); 
   $p++;
    }
