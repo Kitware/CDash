@@ -1,5 +1,5 @@
 $(document).ready(function() {
- 
+         
   /** Load the help page */
   $('#key').jqm({ajax: 'key.html', trigger: 'a.keytrigger'});
   if(this.getElementById('projectname'))
@@ -59,8 +59,7 @@ $(document).ready(function() {
         // set type, either numeric or text 
         type: 'numeric' 
     }); 
-
-
+      
   // Initialize the viewTest tables
   $tabs = $("#viewTestTable");
   var nrows = 0;
@@ -121,7 +120,30 @@ $(document).ready(function() {
         });  
       });
     }
-
+    
+  // Initialize the userStatistics table
+  if($tabs.length==0)
+    {
+    $tabs = $("#userStatistics");
+    $tabs.each(function(index) {          
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'text'},
+                1: { sorter:'numeric'},
+                2: { sorter:'numeric'},
+                3: { sorter:'numeric'},
+                4: { sorter:'numeric'},
+                5: { sorter:'numeric'},
+                6: { sorter:'numeric'},
+                7: { sorter:'numeric'},
+                8: { sorter:'numeric'}
+            },
+          debug: false,
+          widgets: ['zebra'] 
+        });  
+      });
+    }
+    
   // If all the above are not working
   if($tabs.length==0)
     {
