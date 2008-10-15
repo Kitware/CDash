@@ -225,7 +225,7 @@ if($projectid>0)
     $users[$key]['nfixederrors'] = abs(round($user['nfixederrors']/$user['totalbuilds']));
     $users[$key]['nfailedwarnings'] = abs(round($user['nfailedwarnings']/$user['totalbuilds']));
     $users[$key]['nfixedwarnings'] = abs(round($user['nfixedwarnings']/$user['totalbuilds']));
-    $users[$key]'nfailedtests'] = abs(round($user['nfailedtests']/$user['totalbuilds']));
+    $users[$key]['nfailedtests'] = abs(round($user['nfailedtests']/$user['totalbuilds']));
     $users[$key]['nfixedtests'] = abs(round($user['nfixedtests']/$user['totalbuilds']));
     $users[$key]['totalupdatedfiles'] = abs(round($user['totalupdatedfiles']/$user['totalbuilds']));
     }
