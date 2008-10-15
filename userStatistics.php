@@ -234,18 +234,20 @@ if($projectid>0)
     $score-=$alpha_warning*(1-$fixingvsfailing)*$user['nfailedwarnings'];
     $score /= $user['totalbuilds'];
     $xml .= add_XML_value("score",round($score,3));
-    $xml .= add_XML_value("failed_errors",round($user['nfailederrors']/$user['totalbuilds']));
-    $xml .= add_XML_value("fixed_errors",round($user['nfixederrors']/$user['totalbuilds']));  
-    $xml .= add_XML_value("failed_warnings",round($user['nfailedwarnings']/$user['totalbuilds']));
-    $xml .= add_XML_value("fixed_warnings",round($user['nfixedwarnings']/$user['totalbuilds']));
-    $xml .= add_XML_value("failed_tests",round($user['nfailedtests']/$user['totalbuilds']));
-    $xml .= add_XML_value("fixed_tests",round($user['nfixedtests']/$user['totalbuilds']));
-    $xml .= add_XML_value("fixed_tests",round($user['nfixedtests']/$user['totalbuilds']));
-    $xml .= add_XML_value("totalupdatedfiles",round($user['totalupdatedfiles']/$user['totalbuilds']));
+    $xml .= add_XML_value("failed_errors",abs(round($user['nfailederrors']/$user['totalbuilds'])));
+    $xml .= add_XML_value("fixed_errors",abs(round($user['nfixederrors']/$user['totalbuilds'])));  
+    $xml .= add_XML_value("failed_warnings",abs(round($user['nfailedwarnings']/$user['totalbuilds'])));
+    $xml .= add_XML_value("fixed_warnings",abs(round($user['nfixedwarnings']/$user['totalbuilds'])));
+    $xml .= add_XML_value("failed_tests",abs(round($user['nfailedtests']/$user['totalbuilds'])));
+    $xml .= add_XML_value("fixed_tests",abs(round($user['nfixedtests']/$user['totalbuilds'])));
+    $xml .= add_XML_value("fixed_tests",abs(round($user['nfixedtests']/$user['totalbuilds'])));
+    $xml .= add_XML_value("totalupdatedfiles",abs(round($user['totalupdatedfiles']/$user['totalbuilds'])));
     $xml .= "</user>";
     }
   } // end if project found
-
+  
+// order by score by default  
+$xml .= add_XML_value("sortlist","{sortlist: [[1,1]]}"); // score
 $xml .= "</cdash>";
   
 // Now doing the xslt transition
