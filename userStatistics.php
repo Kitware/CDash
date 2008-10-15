@@ -221,6 +221,10 @@ if($projectid>0)
   
   foreach($users as $key=>$user)
     { 
+    if($user['totalbuilds']==0)
+      {
+      $users[$key]['totalbuilds'] = 1;
+      }
     $users[$key]['nfailederrors'] = abs(round($user['nfailederrors']/$user['totalbuilds']));
     $users[$key]['nfixederrors'] = abs(round($user['nfixederrors']/$user['totalbuilds']));
     $users[$key]['nfailedwarnings'] = abs(round($user['nfailedwarnings']/$user['totalbuilds']));
@@ -243,10 +247,8 @@ if($projectid>0)
     $score-=$alpha_error*(1-$fixingvsfailing)*$user['nfailederrors'];
     $score+=$alpha_warning*$fixingvsfailing*$user['nfixedwarnings'];
     $score-=$alpha_warning*(1-$fixingvsfailing)*$user['nfailedwarnings'];
-    if($user['totalbuilds']>0)
-      {
-      $score /= $user['totalbuilds'];
-      }
+    $score /= $user['totalbuilds'];
+    
     $xml .= add_XML_value("score",round($score,3));
     $xml .= add_XML_value("failed_errors",$user['nfailederrors']);
     $xml .= add_XML_value("fixed_errors",$user['nfixederrors']);  
@@ -254,7 +256,7 @@ if($projectid>0)
     $xml .= add_XML_value("fixed_warnings",$user['nfixedwarnings']);
     $xml .= add_XML_value("failed_tests",$user['nfailedtests']);
     $xml .= add_XML_value("fixed_tests",$user['nfixedtests']);
-    $xml .= add_XML_value("totalupdatedfiles",$user['nfixedtests']);
+    $xml .= add_XML_value("totalupdatedfiles",$user['totalupdatedfiles']);
     $xml .= "</user>";
     }    
 
