@@ -88,7 +88,7 @@ This Year</option>
 <br/>
 
 <table id="userStatistics" cellspacing="0">
-<xsl:attribute name="class">tabb <xsl:value-of select="sortlist"/></xsl:attribute>
+<xsl:attribute name="class">tabb <xsl:value-of select="/cdash/sortlist"/></xsl:attribute>
 <thead> 
   <tr class="table-heading1">
     <th id="sort_0">Username</th>
