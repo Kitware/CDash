@@ -220,6 +220,17 @@ if($projectid>0)
   $fixingvsfailing = 0.2;
   
   foreach($users as $key=>$user)
+    { 
+    $users[$key]['nfailederrors'] = abs(round($user['nfailederrors']/$user['totalbuilds'];
+    $users[$key]['nfixederrors'] = abs(round($user['nfixederrors']/$user['totalbuilds'];
+    $users[$key]['nfailedwarnings'] = abs(round($user['nfailedwarnings']/$user['totalbuilds'];
+    $users[$key]['nfixedwarnings'] = abs(round($user['nfixedwarnings']/$user['totalbuilds'];
+    $users[$key]'nfailedtests'] = abs(round($user['nfailedtests']/$user['totalbuilds'];
+    $users[$key]['nfixedtests'] = abs(round($user['nfixedtests']/$user['totalbuilds'];
+    $users[$key]['totalupdatedfiles'] = abs(round($user['totalupdatedfiles']/$user['totalbuilds'];
+    }
+
+  foreach($users as $key=>$user)
     {  
     $xml .= "<user>";
     $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id=".qnum($key)));
@@ -232,18 +243,21 @@ if($projectid>0)
     $score-=$alpha_error*(1-$fixingvsfailing)*$user['nfailederrors'];
     $score+=$alpha_warning*$fixingvsfailing*$user['nfixedwarnings'];
     $score-=$alpha_warning*(1-$fixingvsfailing)*$user['nfailedwarnings'];
-    $score /= $user['totalbuilds'];
+    if($user['totalbuilds']>0)
+      {
+      $score /= $user['totalbuilds'];
+      }
     $xml .= add_XML_value("score",round($score,3));
-    $xml .= add_XML_value("failed_errors",abs(round($user['nfailederrors']/$user['totalbuilds'])));
-    $xml .= add_XML_value("fixed_errors",abs(round($user['nfixederrors']/$user['totalbuilds'])));  
-    $xml .= add_XML_value("failed_warnings",abs(round($user['nfailedwarnings']/$user['totalbuilds'])));
-    $xml .= add_XML_value("fixed_warnings",abs(round($user['nfixedwarnings']/$user['totalbuilds'])));
-    $xml .= add_XML_value("failed_tests",abs(round($user['nfailedtests']/$user['totalbuilds'])));
-    $xml .= add_XML_value("fixed_tests",abs(round($user['nfixedtests']/$user['totalbuilds'])));
-    $xml .= add_XML_value("fixed_tests",abs(round($user['nfixedtests']/$user['totalbuilds'])));
-    $xml .= add_XML_value("totalupdatedfiles",abs(round($user['totalupdatedfiles']/$user['totalbuilds'])));
+    $xml .= add_XML_value("failed_errors",$user['nfailederrors']);
+    $xml .= add_XML_value("fixed_errors",$user['nfixederrors']);  
+    $xml .= add_XML_value("failed_warnings",$user['nfailedwarnings']);
+    $xml .= add_XML_value("fixed_warnings",$user['nfixedwarnings']);
+    $xml .= add_XML_value("failed_tests",$user['nfailedtests']);
+    $xml .= add_XML_value("fixed_tests",$user['nfixedtests']);
+    $xml .= add_XML_value("totalupdatedfiles",$user['nfixedtests']);
     $xml .= "</user>";
-    }
+    }    
+
   } // end if project found
   
 // order by score by default  
