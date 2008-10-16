@@ -49,7 +49,8 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
                            AND user2project.cvslogin=dailyupdatefile.author
                            AND dailyupdatefile.dailyupdateid=dailyupdate.id
                            AND dailyupdate.date='$dashboarddate'
-                           ADN dailyupdate.projectid=$projectid
+                           AND dailyupdate.projectid=$projectid
+                           AND user2project.emailtype>0
                            ";
   $user = pdo_query($query);
   if(strlen(pdo_error())>0)
@@ -470,7 +471,9 @@ function sendemail($parser,$projectid)
     // Find a matching name in the database
     $query = "SELECT ".qid("user").".email,user2project.emailcategory 
                      FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
-                     AND user2project.userid=".qid("user").".id AND user2project.cvslogin='$author'";
+                     AND user2project.userid=".qid("user").".id AND user2project.cvslogin='$author'
+                     AND user2project.emailtype>0
+                     ";
     $user = pdo_query($query);
     add_last_sql_error("sendmail");
     
