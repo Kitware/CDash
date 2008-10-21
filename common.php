@@ -1201,7 +1201,6 @@ function remove_build($buildid)
     return;
     }
     
-  pdo_query("DELETE FROM build WHERE id='$buildid'");
   pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderror WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
@@ -1278,6 +1277,9 @@ function remove_build($buildid)
       }
     }
   pdo_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
+
+  // Only delete the buildid at the end so that no other build can get it in the meantime
+  pdo_query("DELETE FROM build WHERE id='$buildid'");
 }
 
 /** Add a new build */
