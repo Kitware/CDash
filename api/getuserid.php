@@ -23,7 +23,7 @@ require_once("../pdo.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-@$cvsuser = $_GET['cvsuser'];
+@$author = $_GET['author'];
 @$project = $_GET['project'];
 
 $projectid = get_project_id($project);
@@ -36,17 +36,17 @@ if(!is_numeric($projectid))
   return;
   }
   
-$cvsuser = pdo_real_escape_string($cvsuser);
+$author = pdo_real_escape_string($author);
 // Check if the given user exists in the database
 $userquery = pdo_query("SELECT id FROM ".qid("user").",user2project WHERE ".qid("user").".id=user2project.userid 
-                        AND user2project.cvslogin='$cvsuser'
+                        AND user2project.cvslogin='$author'
                         AND user2project.projectid='$projectid'");
                                           
 if(pdo_num_rows($userquery)>0)
   { 
   $userarray = pdo_fetch_array($userquery);
   $userid = $userarray['id'];
-  echo $userid."</buildid>";
+  echo $userid."</userid>";
   return;
   }
 
