@@ -190,11 +190,13 @@ function sendemail($parser,$projectid)
     }
 
   $site = $parser->index["SITE"];
+    
   if($testing != "")
     {
     $i = $site[0];
     $name = $parser->vals[$i]["attributes"]["BUILDNAME"];
     $stamp = $parser->vals[$i]["attributes"]["BUILDSTAMP"];
+    $sitename = $parser->vals[$site[0]]["attributes"]["NAME"];   
     }
   else
     {
@@ -202,10 +204,12 @@ function sendemail($parser,$projectid)
     $name = $parser->vals[$i]["value"];
     $i = $parser->index["BUILDSTAMP"][0];
     $stamp =  $parser->vals[$i]["value"];
+    $i = $parser->index["NAME"][0];
+    $sitename =  $parser->vals[$i]["value"];
     }
 
   // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid,$site);
+  $buildid = get_build_id($name,$stamp,$projectid,$sitename);
   if($buildid<0)
     {
     return;
