@@ -18,11 +18,17 @@
 // This is the installation script for CDash
 if (class_exists('XsltProcessor') == FALSE) 
   {
-  echo "<font color=\"#FF0000\">Your PHP install does not support xslt, please install the PHP_XSLT package.<br><br>  ";
+  echo "<font color=\"#FF0000\">Your PHP install does not support xslt, please install the PHP_XSLT package.<br>  ";
   echo "WAMP Hint: uncomment extension=php_xsl.dll in php.ini.<br></font>";
   exit();
   }
-
+if (function_exists('imagecreatefromstring') == FALSE) 
+  {
+  echo "<font color=\"#FF0000\">Your PHP install does not support the imagecreatefromstring() function, please install the PHP_GD package.<br>  ";
+  echo "WAMP Hint: uncomment extension=php_gd.dll in php.ini.<br></font>";
+  exit();
+  }
+  
 include("config.php");
 require_once("pdo.php");
 require_once("common.php"); 
