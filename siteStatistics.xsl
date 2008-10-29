@@ -6,7 +6,7 @@
    <xsl:include href="header.xsl"/>
    <xsl:include href="local/header.xsl"/>
 
-    <xsl:output method="html" encoding="iso-8859-1"/>
+    <xsl:output method="html" />
     <xsl:template match="/">
       <html>
        <head>
