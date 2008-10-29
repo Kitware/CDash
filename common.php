@@ -454,7 +454,7 @@ function get_projects()
 }
 
 /** Get the build id from stamp, name and buildname */
-function get_build_id($buildname,$stamp,$projectid)
+function get_build_id($buildname,$stamp,$projectid,$sitename)
 {  
   if(!is_numeric($projectid))
     {
@@ -465,7 +465,8 @@ function get_build_id($buildname,$stamp,$projectid)
   $stamp = pdo_real_escape_string($stamp);
   
   $sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
-  $sql .= " AND projectid='$projectid'"; 
+  $sql .= " AND projectid='$projectid'";
+  $sql .= " AND build.siteid=site.id AND site.name='$sitename'"; 
   $sql .= " ORDER BY id DESC";
   $build = pdo_query($sql);
   if(pdo_num_rows($build)>0)

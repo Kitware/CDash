@@ -205,7 +205,7 @@ function sendemail($parser,$projectid)
     }
 
   // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid);
+  $buildid = get_build_id($name,$stamp,$projectid,$site);
   if($buildid<0)
     {
     return;

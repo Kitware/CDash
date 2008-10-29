@@ -330,7 +330,7 @@ function parse_configure($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid);
+  $buildid = get_build_id($name,$stamp,$projectid,$site);
   if($buildid<0)
     {
     $buildid = create_build($parser,$projectid);
@@ -368,7 +368,7 @@ function parse_testing($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid);
+  $buildid = get_build_id($name,$stamp,$projectid,$site);
   if($buildid<0)
     {
     $buildid = create_build($parser,$projectid);
@@ -789,7 +789,7 @@ function parse_coverage($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid);
+  $buildid = get_build_id($name,$stamp,$projectid,$site);
   if($buildid<0)
     {
     $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
@@ -887,7 +887,7 @@ function parse_coveragelog($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid);
+  $buildid = get_build_id($name,$stamp,$projectid,$site);
   if($buildid<0)
     {
     $buildid = create_build($parser,$projectid);
@@ -939,7 +939,7 @@ function parse_update($parser,$projectid)
   $stamp = getXMLValue($xmlarray,"BUILDSTAMP","UPDATE");
      
   // Find the build id
-  $buildid = get_build_id($buildname,$stamp,$projectid);
+  $buildid = get_build_id($buildname,$stamp,$projectid,$site);
   if($buildid<0)
     {
     $update = $parser->index["UPDATE"]; 
@@ -1093,7 +1093,7 @@ function parse_note($parser,$projectid)
   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
   
   // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid);
+  $buildid = get_build_id($name,$stamp,$projectid,$site);
   if($buildid<0)
     {
     $buildid = create_build($parser,$projectid);
@@ -1167,7 +1167,7 @@ function parse_dynamicanalysis($parser,$projectid)
   $checker = $parser->vals[$dynamicanalysis[0]]["attributes"]["CHECKER"];
   
   // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid);
+  $buildid = get_build_id($name,$stamp,$projectid,$site);
   if($buildid<0)
     {
     $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
