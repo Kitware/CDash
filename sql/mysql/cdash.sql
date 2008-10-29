@@ -40,7 +40,7 @@ CREATE TABLE `buildgroup` (
   `projectid` int(11) NOT NULL default '0',
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `description` text NOT NULL,
+  `description` text NOT NULL default '',
   `summaryemail` tinyint(4) default '0',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`)
