@@ -31,7 +31,7 @@ CREATE TABLE `build` (
   PRIMARY KEY  (`id`),
   KEY `siteid` (`siteid`,`name`),
   KEY `projectid` (`projectid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `buildgroup` (
@@ -44,7 +44,7 @@ CREATE TABLE `buildgroup` (
   `summaryemail` tinyint(4) default '0',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -58,7 +58,7 @@ CREATE TABLE `buildgroupposition` (
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   KEY `buildgroupid` (`buildgroupid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
         
 
 
@@ -73,7 +73,7 @@ CREATE TABLE `build2group` (
   `buildid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`buildid`),
   KEY `groupid` (`groupid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,7 @@ CREATE TABLE `build2grouprule` (
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   KEY `groupid` (`groupid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
         
 
 
@@ -113,7 +113,7 @@ CREATE TABLE `builderror` (
   `postcontext` text NOT NULL,
   `repeatcount` int(11) NOT NULL default '0',
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -129,7 +129,7 @@ CREATE TABLE `buildupdate` (
   `type` varchar(4) NOT NULL default '',
   `status` text NOT NULL,
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -145,7 +145,7 @@ CREATE TABLE `configure` (
   `log` text NOT NULL,
   `status` tinyint(4) NOT NULL default '0',
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -165,7 +165,7 @@ CREATE TABLE `coverage` (
   `functionsuntested` int(11) NOT NULL default '0',
   KEY `buildid` (`buildid`),
   KEY `fileid` (`fileid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -181,7 +181,7 @@ CREATE TABLE `coveragefile` (
   PRIMARY KEY  (`id`),
   KEY `fullpath` (`fullpath`),
   KEY `crc32` (`crc32`) 
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -196,7 +196,7 @@ CREATE TABLE `coveragefilelog` (
   `code` varchar(10) NOT NULL default '',
   KEY `fileid` (`fileid`),
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -209,7 +209,7 @@ CREATE TABLE `coveragesummary` (
   `loctested` int(11) NOT NULL default '0',
   `locuntested` int(11) NOT NULL default '0',
   PRIMARY KEY  (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -228,7 +228,7 @@ CREATE TABLE `dynamicanalysis` (
   `log` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -241,7 +241,7 @@ CREATE TABLE `dynamicanalysisdefect` (
   `type` varchar(50) NOT NULL default '',
   `value` int(11) NOT NULL default '0',
   KEY `buildid` (`dynamicanalysisid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
   
 
@@ -258,7 +258,7 @@ CREATE TABLE `image` (
   `checksum` int NOT NULL,
   KEY `id` (`id`),
   KEY `checksum` (`checksum`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 -- --------------------------------------------------------
@@ -272,7 +272,7 @@ CREATE TABLE `test2image` (
   `role` tinytext NOT NULL,
   PRIMARY KEY  (`imgid`),
   KEY `testid` (`testid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 -- 
@@ -285,7 +285,7 @@ CREATE TABLE `note` (
   `crc32` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `crc32` (`crc32`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
 
@@ -318,7 +318,7 @@ CREATE TABLE `project` (
   `emailmaxitems` tinyint(4) default '5',
   `emailmaxchars` int(11) default '255',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -333,7 +333,7 @@ CREATE TABLE `site` (
   `latitude` varchar(10) NOT NULL default '',
   `longitude` varchar(10) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM ;
 
 -- 
 -- Table structure for table `siteinformation`
@@ -356,7 +356,7 @@ CREATE TABLE `siteinformation` (
   `processorclockfrequency` int(11) NOT NULL default '-1',
   `description` varchar(255) NOT NULL default 'NA',
   KEY `siteid` (`siteid`,`timestamp`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `buildinformation` (
@@ -368,7 +368,7 @@ CREATE TABLE `buildinformation` (
   `compilername` varchar(255) NOT NULL,
   `compilerversion` varchar(20) NOT NULL,
   PRIMARY KEY  (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 -- --------------------------------------------------------
@@ -382,7 +382,7 @@ CREATE TABLE `site2user` (
   `userid` int(11) NOT NULL default '0',
   KEY `siteid` (`siteid`),
   KEY `userid` (`userid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -400,7 +400,7 @@ CREATE TABLE `test` (
   PRIMARY KEY  (`id`),
   KEY `crc32` (`crc32`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- 
 -- Table structure for table `build2test`
@@ -417,7 +417,7 @@ CREATE TABLE `build2test` (
   KEY `testid` (`testid`),
   KEY `status` (`status`),
   KEY `timestatus` (`timestatus`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 -- --------------------------------------------------------
@@ -436,7 +436,7 @@ CREATE TABLE `updatefile` (
   `revision` varchar(20) NOT NULL default '0',
   `priorrevision` varchar(20) NOT NULL default '0',
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -453,7 +453,7 @@ CREATE TABLE `user` (
   `institution` varchar(255) NOT NULL default '',
   `admin` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -469,7 +469,7 @@ CREATE TABLE `user2project` (
   `emailtype` tinyint(4) NOT NULL default '0',
   `emailcategory` tinyint(4) NOT NULL default '62',
   PRIMARY KEY  (`userid`,`projectid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- 
 -- Table structure for table `buildnote`
@@ -481,7 +481,7 @@ CREATE TABLE `buildnote` (
   `timestamp` datetime NOT NULL,
   `status` tinyint(4) NOT NULL default '0',
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -493,7 +493,7 @@ CREATE TABLE `repositories` (
   `id` int(11) NOT NULL auto_increment,
   `url` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -505,7 +505,7 @@ CREATE TABLE `project2repositories` (
   `projectid` int(11) NOT NULL,
   `repositoryid` int(11) NOT NULL,
   PRIMARY KEY  (`projectid`,`repositoryid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 -- --------------------------------------------------------
@@ -515,7 +515,7 @@ CREATE TABLE `testmeasurement` (
   `type` varchar(70) NOT NULL,
   `value` text NOT NULL,
   KEY `testid` (`testid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 
@@ -527,7 +527,7 @@ CREATE TABLE `dailyupdate` (
   `type` varchar(4) NOT NULL default '',
   `status` tinyint(4) NOT NULL default '0',
   KEY `buildid` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM ;
 
 
 CREATE TABLE `dailyupdatefile` (
@@ -539,7 +539,7 @@ CREATE TABLE `dailyupdatefile` (
   `revision` varchar(10) NOT NULL default '0',
   `priorrevision` varchar(10) NOT NULL default '0',
   KEY `buildid` (`dailyupdateid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `builderrordiff` (
@@ -547,21 +547,21 @@ CREATE TABLE `builderrordiff` (
   `type` tinyint(4) NOT NULL,
   `difference` int(11) NOT NULL,
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 CREATE TABLE `testdiff` (
   `buildid` bigint(20) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `difference` int(11) NOT NULL,
   KEY `buildid` (`buildid`,`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 CREATE TABLE `build2note` (
   `buildid` bigint(20) NOT NULL,
   `noteid`  bigint(20) NOT NULL,
   `time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   KEY `buildid` (`buildid`,`noteid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `userstatistics` (
@@ -579,13 +579,13 @@ CREATE TABLE `userstatistics` (
   KEY `userid` (`userid`),
   KEY `projectid` (`projectid`),
   KEY `checkindate` (`checkindate`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 CREATE TABLE `version` (
   `major` tinyint(4) NOT NULL,
   `minor` tinyint(4) NOT NULL,
   `patch` tinyint(4) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `summaryemail` (
@@ -594,7 +594,7 @@ CREATE TABLE `summaryemail` (
   `groupid` smallint(6) NOT NULL,
   KEY `date` (`date`),
   KEY `groupid` (`groupid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `configureerror` (
@@ -603,7 +603,7 @@ CREATE TABLE `configureerror` (
   `text` text NOT NULL,
   KEY `buildid` (`buildid`),
   KEY `type` (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `configureerrordiff` (
@@ -612,7 +612,7 @@ CREATE TABLE `configureerrordiff` (
   `difference` int(11) NOT NULL,
   KEY `buildid` (`buildid`),
   KEY `type` (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `coveragesummarydiff` (
@@ -620,7 +620,7 @@ CREATE TABLE `coveragesummarydiff` (
   `loctested` int(11) NOT NULL default '0',
   `locuntested` int(11) NOT NULL default '0',
   PRIMARY KEY  (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 --
 -- Change the table maximum size to be more than 4GB

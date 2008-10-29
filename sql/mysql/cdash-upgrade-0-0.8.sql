@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `buildnote` (
   `timestamp` datetime NOT NULL,
   `status` tinyint(4) NOT NULL default '0',
   KEY `buildid` (`buildid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `repositories` (
   `id` int(11) NOT NULL auto_increment,
   `url` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -48,6 +48,6 @@ CREATE TABLE IF NOT EXISTS `project2repositories` (
   `projectid` int(11) NOT NULL,
   `repositoryid` int(11) NOT NULL,
   PRIMARY KEY  (`projectid`,`repositoryid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
