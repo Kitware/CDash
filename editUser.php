@@ -40,26 +40,33 @@ if ($session_OK)
 
   @$updateprofile = $_POST["updateprofile"]; 
   if($updateprofile) 
-   {
-   $institution = pdo_real_escape_string($_POST["institution"]); 
-   $email = pdo_real_escape_string($_POST["email"]); 
-   $lname = pdo_real_escape_string($_POST["lname"]); 
-   $fname = pdo_real_escape_string($_POST["fname"]);  
-   
-   if(pdo_query("UPDATE ".qid("user")." SET email='$email',
-                 institution='$institution',
-                 firstname='$fname',
-                 lastname='$lname' WHERE id='$userid'"))
     {
-   $xml .= "<error>Your profile has been updated.</error>";
-    }
-  else
-    {
-   $xml .= "<error>Cannot update profile.</error>";
-    }
+    $institution = pdo_real_escape_string($_POST["institution"]); 
+    $email = pdo_real_escape_string($_POST["email"]); 
    
-  add_last_sql_error("editUser.php");
-  }
+    if(strlen($email)<3 || strpos($email,"@")===FALSE)
+      {
+      $xml .= "<error>Email should be a valid address.</error>";  
+      }
+    else
+      { 
+      $lname = pdo_real_escape_string($_POST["lname"]); 
+      $fname = pdo_real_escape_string($_POST["fname"]);  
+     
+      if(pdo_query("UPDATE ".qid("user")." SET email='$email',
+                   institution='$institution',
+                   firstname='$fname',
+                   lastname='$lname' WHERE id='$userid'"))
+        {
+        $xml .= "<error>Your profile has been updated.</error>";
+        }
+      else
+        {
+        $xml .= "<error>Cannot update profile.</error>";
+        }
+      add_last_sql_error("editUser.php");
+      }
+    }
   
  @$updatepassword = $_POST["updatepassword"];
  if($updatepassword) 
