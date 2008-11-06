@@ -46,7 +46,7 @@ $ctestconfig .= "## Then modify the CMakeLists.txt file in the root directory of
 $ctestconfig .= "## project to incorporate the testing dashboard.\n";
 $ctestconfig .= "## # The following are required to uses Dart and the Cdash dashboard\n";
 $ctestconfig .= "##   ENABLE_TESTING()\n";
-$ctestconfig .= "##   INCLUDE(Dart)\n";
+$ctestconfig .= "##   INCLUDE(CTest)\n";
 
 $ctestconfig .= "set(CTEST_PROJECT_NAME \"".$project_array["name"]."\")\n";
 $ctestconfig .= "set(CTEST_NIGHTLY_START_TIME \"".$project_array["nightlytime"]."\")\n\n";
