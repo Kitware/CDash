@@ -170,7 +170,7 @@ if($Submit)
     if($db_type=='mysql')
       {
       mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-      if(!mysql_query("CREATE DATABASE IF NOT EXISTS $CDASH_DB_NAME"))
+      if(!mysql_query("CREATE DATABASE IF NOT EXISTS `$CDASH_DB_NAME`"))
         {
         $xml .= "<db_created>0</db_created>";
         $xml .= "<alert>".mysql_error()."</alert>";
