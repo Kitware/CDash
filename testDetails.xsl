@@ -37,21 +37,19 @@
 </xsl:choose>
 
 <br/>
-<p>
-  <b>Site Name: </b><xsl:value-of select="cdash/test/site"/>
-</p>
-<p>
-  <b>Build Name: </b><xsl:value-of select="cdash/test/build"/>
-</p>
+<b>Site Name: </b><xsl:value-of select="cdash/test/site"/>
+<br/>
+<b>Build Name: </b><xsl:value-of select="cdash/test/build"/>
+<br/>
+<b>Build Date: </b><xsl:value-of select="cdash/test/buildstarttime"/>
 
-<xsl:if test="cdash/project/showtesttime=1">  
-<p>
+<xsl:if test="cdash/project/showtesttime=1"> 
+<br/>
   <b>Test Timing: </b><font>
         <xsl:attribute name="color">
          <xsl:value-of select="cdash/test/timeStatusColor"/>
         </xsl:attribute><xsl:value-of select="cdash/test/timestatus"/>
       </font>
-</p>
 </xsl:if>  
 
 <table cellpadding="2">
