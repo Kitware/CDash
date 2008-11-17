@@ -43,6 +43,7 @@ function auth($SessionCachePolicy='private_no_expire')
       session_name("CDash");
       session_cache_limiter($SessionCachePolicy);
       session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
+      @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
       session_start();  
       // create the session array 
       $mysession2 = array ("login" => $login, "password" => 'this is not a v
@@ -92,6 +93,7 @@ d" => 1, "loginid" => $user_array["id"]);
           session_name("CDash");
           session_cache_limiter($SessionCachePolicy);
           session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
+          @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
           session_start();  
           // create the session array 
           $mysession2 = array ("login" => $login, "password" => $passwd, "passwd" => $pass, "ID" => session_id(), "valid" => 1, "loginid" => $user_array["id"]);  
@@ -120,6 +122,7 @@ d" => 1, "loginid" => $user_array["id"]);
     session_name("CDash");
     session_cache_limiter($SessionCachePolicy);
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
+    @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
     session_start();     
     $login_ok = 0;  
     $login = @$_SESSION['cdash']["login"];                         // added by jds 
