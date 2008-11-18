@@ -464,10 +464,10 @@ function get_build_id($buildname,$stamp,$projectid,$sitename)
   $buildname = pdo_real_escape_string($buildname);
   $stamp = pdo_real_escape_string($stamp);
   
-  $sql = "SELECT id FROM build WHERE name='$buildname' AND stamp='$stamp'";
-  $sql .= " AND projectid='$projectid'";
+  $sql = "SELECT build.id AS id FROM build,site WHERE build.name='$buildname' AND build.stamp='$stamp'";
+  $sql .= " AND build.projectid='$projectid'";
   $sql .= " AND build.siteid=site.id AND site.name='$sitename'"; 
-  $sql .= " ORDER BY id DESC";
+  $sql .= " ORDER BY build.id DESC";
   $build = pdo_query($sql);
   if(pdo_num_rows($build)>0)
     {
