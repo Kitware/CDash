@@ -848,10 +848,10 @@ function update_site($siteid,$name,
   $processorcachesize = pdo_real_escape_string($processorcachesize);
   $numberlogicalcpus = pdo_real_escape_string($numberlogicalcpus);
   $numberphysicalcpus = pdo_real_escape_string($numberphysicalcpus);
-  $totalvirtualmemory = pdo_real_escape_string($totalvirtualmemory);
-  $totalphysicalmemory = pdo_real_escape_string($totalphysicalmemory);
-  $logicalprocessorsperphysical = pdo_real_escape_string($logicalprocessorsperphysical);
-  $processorclockfrequency = pdo_real_escape_string($processorclockfrequency);
+  $totalvirtualmemory = round(pdo_real_escape_string($totalvirtualmemory));
+  $totalphysicalmemory = round(pdo_real_escape_string($totalphysicalmemory));
+  $logicalprocessorsperphysical = round(pdo_real_escape_string($logicalprocessorsperphysical));
+  $processorclockfrequency = round(pdo_real_escape_string($processorclockfrequency));
   $description = pdo_real_escape_string($description);
  
   // Update the basic information first
@@ -1093,10 +1093,10 @@ function add_site($name,$parser)
   $processorcachesize = pdo_real_escape_string($processorcachesize);
   $numberlogicalcpus = pdo_real_escape_string($numberlogicalcpus);
   $numberphysicalcpus = pdo_real_escape_string($numberphysicalcpus);
-  $totalvirtualmemory = pdo_real_escape_string($totalvirtualmemory);
-  $totalphysicalmemory = pdo_real_escape_string($totalphysicalmemory);
-  $logicalprocessorsperphysical = pdo_real_escape_string($logicalprocessorsperphysical);
-  $processorclockfrequency = pdo_real_escape_string($processorclockfrequency);
+  $totalvirtualmemory = round(pdo_real_escape_string($totalvirtualmemory));
+  $totalphysicalmemory = round(pdo_real_escape_string($totalphysicalmemory));
+  $logicalprocessorsperphysical = round(pdo_real_escape_string($logicalprocessorsperphysical));
+  $processorclockfrequency = round(pdo_real_escape_string($processorclockfrequency));
 
   // Check if we already have the site registered
   $site = pdo_query("SELECT id,name,latitude,longitude FROM site WHERE name='$name'");
