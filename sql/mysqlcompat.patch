@@ -1,0 +1,29 @@
+diff -aur mysqlcompat-1.0b3.orig/datetime.sql mysqlcompat-1.0b3/datetime.sql
+--- mysqlcompat-1.0b3.orig/datetime.sql  2005-12-10 06:26:53.000000000 +0100
++++ mysqlcompat-1.0b3/datetime.sql  2008-09-18 16:42:02.000000000 +0200
+@@ -503,6 +503,11 @@
+   SELECT $3 + ($2 operator(pg_catalog.||) ' ' operator(pg_catalog.||) $1)::interval
+ $$ IMMUTABLE STRICT LANGUAGE SQL;
+ 
++CREATE OR REPLACE FUNCTION timestampadd(text, integer, timestamp with time zone)
++RETURNS timestamp with time zone AS $$
++  SELECT $3 + ($2 operator(pg_catalog.||) ' ' operator(pg_catalog.||) $1)::interval
++$$ IMMUTABLE STRICT LANGUAGE SQL;
++
+ -- TIMESTAMPDIFF()
+ -- Note that first parameter needs to be quoted in this version
+ 
+@@ -650,10 +655,10 @@
+ RETURNS text AS $$
+   SELECT CASE
+     WHEN EXTRACT(WEEK FROM $1)::integer = 53 THEN
+-      pg_catalog.lpad(EXTRACT(YEAR FROM $1) - 1, 4, '0') || '53'
++      pg_catalog.lpad((EXTRACT(YEAR FROM $1) - 1)::text, 4, '0') || '53'
+     ELSE
+-      pg_catalog.lpad(EXTRACT(YEAR FROM $1) - 1, 4, '0')
+-        || pg_catalog.lpad(EXTRACT(WEEK FROM $1), 2, '0')
++      pg_catalog.lpad((EXTRACT(YEAR FROM $1) - 1)::text, 4, '0')
++        || pg_catalog.lpad(EXTRACT(WEEK FROM $1)::text, 2, '0')
+     END
+ $$ IMMUTABLE STRICT LANGUAGE SQL;
+ 
