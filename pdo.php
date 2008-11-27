@@ -84,15 +84,15 @@ function pdo_error($link_identifier = NULL)
 }
 
 /** */
-function pdo_fetch_array($result, $result_type = MYSQL_BOTH)
+function pdo_fetch_array($result, $result_type = 'MYSQL_BOTH')
 {
   global $CDASH_DB_TYPE;
 
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") 
     {
-    if    ($result_type == MYSQL_BOTH)  $result_type = PDO::FETCH_BOTH;
-    elseif($result_type == MYSQL_NUM)   $result_type = PDO::FETCH_NUM;
-    elseif($result_type == MYSQL_ASSOC) $result_type = PDO::FETCH_ASSOC;
+    if    ($result_type == 'MYSQL_BOTH')  $result_type = PDO::FETCH_BOTH;
+    elseif($result_type == 'MYSQL_NUM')   $result_type = PDO::FETCH_NUM;
+    elseif($result_type == 'MYSQL_ASSOC') $result_type = PDO::FETCH_ASSOC;
     return $result->fetch($result_type);
     }
   else 
@@ -266,6 +266,7 @@ function pdo_select_db($database_name, &$link_identifier)
       }
     catch(PDOException $e) 
       {
+      print_r($e); // Add debug information
       return false;
       }
     }
