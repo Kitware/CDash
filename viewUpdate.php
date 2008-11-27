@@ -135,7 +135,17 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $file = array();
     $file['filename'] = $file_array["filename"];
     $file['author'] = $file_array["author"];
-    $file['email'] = get_author_email($projectname, $file['author']);
+    
+    // Only display email if the user is logged int
+    if(isset($_SESSION['cdash']))
+      {
+      $file['email'] = get_author_email($projectname, $file['author']);
+      }
+    else
+      {
+      $file['email'] = "";
+      }  
+   
     $file['log'] = $file_array["log"];
     $file['revision'] = $file_array["revision"];
     $updatearray1[] = $file;

@@ -194,7 +194,7 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     $time = gmdate(FMT_DATETIME, $commit['time']);
     $author = $commit['author'];
     
-    // Only display email if the user is logged int
+    // Only display email if the user is logged in
     if(isset($_SESSION['cdash']))
       {
       $email = get_author_email($projectname, $author);
