@@ -193,8 +193,16 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     $revision = $commit['revision'];
     $time = gmdate(FMT_DATETIME, $commit['time']);
     $author = $commit['author'];
-    $email = get_author_email($projectname, $author);
-
+    
+    // Only display email if the user is logged int
+    if(isset($_SESSION['cdash']))
+      {
+      $email = get_author_email($projectname, $author);
+      }
+    else
+      {
+      $email = "";
+      }  
     $comment = $commit['comment'];
     $comment = str_replace("\n", " ", $comment); 
     // Do this twice so that <something> ends up as
