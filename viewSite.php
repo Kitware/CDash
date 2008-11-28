@@ -203,10 +203,21 @@ if(!$displayPage)
   
   
 // Compute the time for all the projects (faster than individually) average of the week
-$testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, AVG(TIME_TO_SEC(TIMEDIFF(build.submittime, buildupdate.starttime))) AS elapsed
+if($CDASH_DB_TYPE == "pgsql")
+  {
+  $timediff = "EXTRACT(EPOCH FROM (build.submittime - buildupdate.starttime))";
+  $timestampadd = "NOW()-INTERVAL'167 hours'";
+  }
+else
+  {
+  $timediff = "TIME_TO_SEC(TIMEDIFF(build.submittime, buildupdate.starttime))";
+  $timestampadd = "TIMESTAMPADD(".qiv("HOUR").", -167, NOW())";
+  }
+
+$testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, AVG(".$timediff.") AS elapsed
               FROM build, buildupdate
               WHERE
-                build.submittime > TIMESTAMPADD(".qiv("HOUR").", -167, NOW())
+                build.submittime > ".$timestampadd."
                 AND buildupdate.buildid = build.id
                 AND build.siteid = '$siteid'    
                 GROUP BY projectid,buildname,buildtype
@@ -228,7 +239,7 @@ while($testtime_array = pdo_fetch_array($testtime))
      $xml .= add_XML_value("type",$testtime_array["buildtype"]);
      $xml .= add_XML_value("time",$testtime_array["elapsed"]);
      $totalload += $testtime_array["elapsed"];
-     $xml .= "</build>";   
+     $xml .= "</build>"; 
      }
   }
 
