@@ -367,7 +367,7 @@ CREATE TABLE "build2test" (
   "timestatus" smallint DEFAULT '0' NOT NULL
 );
 CREATE INDEX "buildid8" on "build2test" ("buildid");
-CREATE INDEX "testid" on "build2test" ("testid");
+CREATE INDEX "testid2" on "build2test" ("testid");
 CREATE INDEX "status" on "build2test" ("status");
 CREATE INDEX "timestatus" on "build2test" ("timestatus");
 
@@ -463,7 +463,7 @@ CREATE TABLE "testmeasurement" (
   "type" character varying(70) NOT NULL,
   "value" text NOT NULL
 );
-CREATE INDEX "testid2" on "testmeasurement" ("testid");
+CREATE INDEX "testid3" on "testmeasurement" ("testid");
 
 
 --
