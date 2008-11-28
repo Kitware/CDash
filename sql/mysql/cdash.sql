@@ -177,7 +177,7 @@ CREATE TABLE `coveragefile` (
   `id` int(11) NOT NULL auto_increment,
   `fullpath` varchar(255) NOT NULL default '',
   `file` longblob,
-  `crc32` int(11) default NULL,
+  `crc32` bigint(20) default NULL,
   PRIMARY KEY  (`id`),
   KEY `fullpath` (`fullpath`),
   KEY `crc32` (`crc32`) 
@@ -255,7 +255,7 @@ CREATE TABLE `image` (
   `id` int(11) NOT NULL auto_increment,
   `img` longblob NOT NULL,
   `extension` tinytext NOT NULL,
-  `checksum` int NOT NULL,
+  `checksum` bigint(20) NOT NULL,
   KEY `id` (`id`),
   KEY `checksum` (`checksum`)
 ) ENGINE=MyISAM;
@@ -282,7 +282,7 @@ CREATE TABLE `note` (
   `id` bigint(20) NOT NULL auto_increment,
   `text` mediumtext NOT NULL,
   `name` varchar(255) NOT NULL,
-  `crc32` int(11) NOT NULL,
+  `crc32` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `crc32` (`crc32`)
 ) ENGINE=MyISAM ;
@@ -391,7 +391,7 @@ CREATE TABLE `site2user` (
 -- 
 CREATE TABLE `test` (
   `id` int(11) NOT NULL auto_increment,
-  `crc32` int(11) NOT NULL,
+  `crc32` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL default '',
   `path` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
