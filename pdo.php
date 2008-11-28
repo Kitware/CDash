@@ -266,7 +266,7 @@ function pdo_select_db($database_name, &$link_identifier)
       }
     catch(PDOException $e) 
       {
-      print_r($e); // Add debug information
+      //print_r($e); // Add debug information
       return false;
       }
     }
