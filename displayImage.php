@@ -29,32 +29,42 @@ if(!isset($imgid) || !is_numeric($imgid))
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$result = pdo_query("SELECT * FROM image WHERE id='$imgid '");
+$result = pdo_query("SELECT * FROM image WHERE id=$imgid");
 $img_array = pdo_fetch_array($result);
 
 switch($img_array["extension"])
   {
   case "image/jpg":
     header("Content-type: image/jpeg");
-//    imagejpeg($img_array["img"]);
     break;
   case "image/jpeg":
     header("Content-type: image/jpeg");
-//    imagejpeg($img_array["img"]);
     break;
   case "image/gif":
     header("Content-type: image/gif");
-//    imagegif($img_array["img"]);
     break;
   case "image/png":
     header("Content-type: image/png");
-//    imagepng($img_array["img"]);
     break;
   default:
     echo "Unknown image type: ";
     echo $img_array["extension"];
     exit();
   }
-echo $img_array["img"];
+
+if($CDASH_DB_TYPE == "pgsql")
+  {
+  $buf = "";
+  while(!feof($img_array["img"])) 
+    {
+    $buf .= fread($img_array["img"], 2048);
+    }
+  $buf = stripslashes($buf);
+  }
+else
+  {
+  $buf = $img_array["img"];
+  }
+echo $buf;
 exit();
 ?>
