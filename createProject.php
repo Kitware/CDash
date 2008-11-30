@@ -20,6 +20,8 @@ require_once("pdo.php");
 include('login.php');
 include_once('common.php');
 include("version.php");
+include("models/project.php");
+include("models/user.php");
 
 if ($session_OK) 
   {
@@ -34,37 +36,30 @@ if ($session_OK)
     return;
     }
     
-  @$projectid = $_GET["projectid"];
-   
+  @$projectid = $_GET["projectid"]; 
   @$edit = $_GET["edit"];
-   
+  
+  $Project = new Project;
+     
   // If the projectid is not set and there is only one project we go directly to the page
   if(isset($edit) && !isset($projectid))
     {
-    $project = pdo_query("SELECT id FROM project");
-    if(pdo_num_rows($project)==1)
+    $projectids = $Project->GetIds();
+    if(count($projectids)==1)
       {
-      $project_array = pdo_fetch_array($project);
-      $projectid = $project_array["id"];
+      $projectid = $projectids[0];
       }
     }
+
+  $User = new User;
+  $User->Id = $userid;
+  $Project->Id = $projectid;
   
-  $role = 0;
-   
-  $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
-  if($projectid && is_numeric($projectid))
-    {
-    $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-    if(pdo_num_rows($user2project)>0)
-      {
-      $user2project_array = pdo_fetch_array($user2project);
-      $role = $user2project_array["role"];
-      }  
-    }
-    
+  $role = $Project->GetUserRole($userid);
+     
   if(!(isset($_SESSION['cdash']['user_can_create_project']) && 
      $_SESSION['cdash']['user_can_create_project'] == 1)
-     && ($user_array["admin"]!=1 && $role<=1))
+     && ($User->IsAdmin()===FALSE && $role<=1))
     {
     echo "You don't have the permissions to access this page";
     return;
@@ -111,37 +106,92 @@ if($Submit)
   $Name = $_POST["name"];
   
   // Check that the name are different
-  $project = pdo_query("SELECT id FROM project WHERE name='$Name'");
-  
-  if(pdo_num_rows($project)==0)
-    {
-    $Description = addslashes($_POST["description"]);
-    $HomeURL = stripHTTP($_POST["homeURL"]);
-    $CVSURL = stripHTTP($_POST["cvsURL"]);
-    $BugURL = stripHTTP($_POST["bugURL"]);
-    $DocURL = stripHTTP($_POST["docURL"]);
-    @$Public = qnum($_POST["public"]);
+  if(!$Project->ExistsByName($Name))
+    {    
+    $Project->Name = $Name;
+    $Project->Description = addslashes($_POST["description"]);
+    $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
+    $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
+    $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
+    $Project->DocumentationUrl = stripHTTP($_POST["docURL"]);
+    @$Public = $_POST["public"];
     if(!isset($Public))
       {
       $Public = 0;
       }
     
-    $CoverageThreshold = qnum($_POST["coverageThreshold"]);
-    $NightlyTime = $_POST["nightlyTime"];
-    $GoogleTracker = $_POST["googleTracker"]; 
-    @$EmailBrokenSubmission = qnum($_POST["emailBrokenSubmission"]);
-    @$EmailBuildMissing = qnum($_POST["emailBuildMissing"]);
-    @$EmailLowCoverage = qnum($_POST["emailLowCoverage"]);
-    @$EmailTestTimingChanged = qnum($_POST["emailTestTimingChanged"]);
-    @$CVSViewerType = $_POST["cvsviewertype"];
+    $Project->CoverageThreshold = $_POST["coverageThreshold"];
+    $Project->NightlyTime = $_POST["nightlyTime"];
+    $Project->GoogleTracker = $_POST["googleTracker"]; 
+    @$Project->EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
+    @$Project->EmailBuildMissing = $_POST["emailBuildMissing"];
+    @$Project->EmailLowCoverage = $_POST["emailLowCoverage"];
+    @$Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
+    @$Project->CvsViewerType = $_POST["cvsviewertype"];
     @$CVSRepositories = $_POST["cvsRepository"];
-    @$TestTimeStd = qnum($_POST["testTimeStd"]);
-    @$TestTimeStdThreshold = qnum($_POST["testTimeStdThreshold"]);
-    @$TestTimeMaxStatus = qnum($_POST["testTimeMaxStatus"]);
-    @$ShowTestTime = qnum($_POST["showTestTime"]);
-     @$EmailMaxItems = qnum($_POST["emailMaxItems"]);
-    @$EmailMaxChars = qnum($_POST["emailMaxChars"]);
-         
+    @$Project->TestTimeStd = $_POST["testTimeStd"];
+    @$Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
+    @$Project->TestTimeMaxStatus = $_POST["testTimeMaxStatus"];
+    @$Project->ShowTestTime = $_POST["showTestTime"];
+    @$Project->EmailMaxItems = $_POST["emailMaxItems"];
+    @$Project->EmailMaxChars = $_POST["emailMaxChars"];
+    $Project->Public = $Public;
+    
+    $projectid = -1;
+    $Project->Id = '';
+   
+    // Save the project
+    if($Project->Save())
+      {
+      $projectid = $Project->Id;
+      }
+                         
+    if($projectid>0)
+      {
+      $xml .= "<project_name>$Name</project_name>";
+      $xml .= "<project_id>$projectid</project_id>";
+      $xml .= "<project_created>1</project_created>";
+      }
+    else
+      {
+      return;
+      }
+      
+    // Add the default groups
+    $BuildGroup = new BuildGroup;
+    $BuildGroup->Id = ''; 
+    $BuildGroup->Name = 'Nightly';
+    $BuildGroup->Description = 'Nightly builds';
+    $Project->AddBuildGroup($BuildGroup);
+    $BuildGroup->Id = ''; 
+    $BuildGroup->Name = 'Continuous';
+    $BuildGroup->Description = 'Continuous builds';
+    $Project->AddBuildGroup($BuildGroup);
+    $BuildGroup->Id = ''; 
+    $BuildGroup->Name = 'Experimental';
+    $BuildGroup->Description = 'Experimental builds';
+    $Project->AddBuildGroup($BuildGroup);
+
+    // Add administrator to the project
+    $UserProject = new UserProject;
+    $UserProject->Role = 2;
+    $UserProject->EmailType=3;// receive all emails
+    $UserProject->ProjectId = $projectid;
+    $User->Id = 1; // administrator
+    $User->AddProject($UserProject);
+    
+    // Add current user to the project
+    $User->Id = $userid;
+    if($userid != 1)
+      {
+      $User->Id = $userid;
+      $User->AddProject($UserProject);
+      }
+    
+    // Add the repositories
+    $Project->AddRepositories($CVSRepositories);
+    
+    /** Add the logo if any */     
     $handle = fopen($_FILES['logo']['tmp_name'],"r");
     $contents = 0;
     if($handle)
@@ -150,116 +200,12 @@ if($Submit)
       $filetype = $_FILES['logo']['type'];
       fclose($handle);
       }
-    
-    $projectid = -1;
-    $imgid = 0;
-    
-    /** Add the logo if any */
+
     if($contents)
       {
-      $checksum = crc32($contents);
-      //check if we already have a copy of this file in the database
-      $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
-      $result = pdo_query("$sql");
-      if($row = pdo_fetch_array($result))
-        {
-        $imgid = qnum($row["id"]);
-        }
-      else
-        {
-        $sql = "INSERT INTO image(img, extension, checksum)
-         VALUES ('$contents', '$filetype', '$checksum')";
-        if(pdo_query("$sql"))
-          {
-          $imgid = pdo_insert_id("image");
-          }
-         }
+      $imageId = $Project->AddLogo($contents,$filetype);
       } // end if contents
       
-    // Avoid errors with MySQL
-    if(!isset($EmailBrokenSubmission))
-      {
-      $EmailBrokenSubmission = 0;
-      }      
-    if(!isset($EmailBuildMissing))
-      {
-      $EmailBuildMissing = 0;
-      }  
-    if(!isset($EmailLowCoverage))
-      {
-      $EmailLowCoverage = 0;
-      }    
-    if(!isset($EmailTestTimingChanged))
-      {
-      $EmailTestTimingChanged = 0;
-      }
-      
-    // We should probably check the type of the image here to make sure the user
-    // isn't trying anything fruity
-    $sql = "INSERT INTO project(name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
-                                googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
-                                testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime)
-            VALUES ('$Name','$Description','$HomeURL','$CVSURL','$BugURL','$DocURL',$Public,$imgid,$CoverageThreshold,'$NightlyTime',
-                    '$GoogleTracker',$EmailBrokenSubmission,$EmailBuildMissing,$EmailLowCoverage,$EmailTestTimingChanged,'$CVSViewerType',
-                    $TestTimeStd,$TestTimeStdThreshold,$TestTimeMaxStatus,$EmailMaxItems,$EmailMaxChars,$ShowTestTime)";                     
-                    
-    if(pdo_query("$sql"))
-      {
-      $projectid = pdo_insert_id("project");
-      $xml .= "<project_name>$Name</project_name>";
-      $xml .= "<project_id>$projectid</project_id>";
-      $xml .= "<project_created>1</project_created>";
-      }
-    else
-      {
-      echo pdo_error();
-      return;
-      }
-      
-    // Add the default groups
-    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
-               VALUES ('Nightly',$projectid,'1980-01-01 00:00:00','1980-01-01 00:00:00','Nightly builds')");
-    $id = pdo_insert_id("buildgroup");
-    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
-               VALUES ($id,1,'1980-01-01 00:00:00','1980-01-01 00:00:00')");
-    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description) 
-               VALUES ('Continuous',$projectid,'1980-01-01 00:00:00','1980-01-01 00:00:00','Continuous builds')");
-    $id = pdo_insert_id("buildgroup");
-    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
-               VALUES ($id,2,'1980-01-01 00:00:00','1980-01-01 00:00:00')");
-    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
-               VALUES ('Experimental',$projectid,'1980-01-01 00:00:00','1980-01-01 00:00:00','Experimental builds')");
-    $id = pdo_insert_id("buildgroup");
-    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
-               VALUES ($id,3,'1980-01-01 00:00:00','1980-01-01 00:00:00')");
-    
-    // Add administrator to the project
-    pdo_query("INSERT INTO user2project(userid,projectid,role) VALUES (1,$projectid,2)");
-    // Add current user to the project
-    if($userid != 1)
-      {
-      pdo_query("INSERT INTO user2project(userid,projectid,role) VALUES ($userid,$projectid,2)");
-     }
-    
-    // Add the repository 
-    $url = $CVSRepositories[0];
-    if(strlen($url) > 0)
-      {
-      // Insert into repositories if not any
-      $repositories = pdo_query("SELECT id FROM repositories WHERE url='$url'");
-      if(pdo_num_rows($repositories) == 0)
-        {
-        pdo_query("INSERT INTO repositories (url) VALUES ('$url')");
-        $repositoryid = pdo_insert_id("repositories");
-        }
-      else
-        {
-        $repositories_array = pdo_fetch_array($repositories);
-        $repositoryid = $repositories_array["id"];
-        } 
-      pdo_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES ($projectid,$repositoryid)");
-      echo pdo_error();   
-      } // end url for repository is > 0
     }
   else
     {
@@ -272,167 +218,60 @@ if($Submit)
 if($Delete)
   {
   remove_project_builds($projectid);
-  // Remove the project groups and rules
-  $buildgroup = pdo_query("SELECT * FROM buildgroup WHERE projectid=$projectid");
-  while($buildgroup_array = pdo_fetch_array($buildgroup))
-    {
-    $groupid = $buildgroup_array["id"];
-    pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid=$groupid");
-    pdo_query("DELETE FROM build2grouprule WHERE groupid=$groupid");
-    pdo_query("DELETE FROM build2group WHERE groupid=$groupid");
-    }
-   
-  pdo_query("DELETE FROM buildgroup WHERE projectid=$projectid");
-  pdo_query("DELETE FROM project WHERE id=$projectid");
-  pdo_query("DELETE FROM user2project WHERE projectid=$projectid");
-  
+  $Project->Delete();
   echo "<script language=\"javascript\">window.location='user.php'</script>";
   } // end Delete project
-
-if($projectid>0)
-  {
-  $project = pdo_query("SELECT * FROM project WHERE id=$projectid");
-  $project_array = pdo_fetch_array($project);
-  }
-
 
 // If we should update the project
 @$Update = $_POST["Update"];
 @$AddRepository = $_POST["AddRepository"];
 if($Update || $AddRepository)
   {
-  $Description = addslashes($_POST["description"]);
-  $HomeURL = stripHTTP($_POST["homeURL"]);
-  $CVSURL = stripHTTP($_POST["cvsURL"]);
-  $BugURL = stripHTTP($_POST["bugURL"]);
-  $DocURL = stripHTTP($_POST["docURL"]);
-  @$Public = qnum($_POST["public"]);
-  $CoverageThreshold = qnum($_POST["coverageThreshold"]);
-  $NightlyTime = $_POST["nightlyTime"];
-  $GoogleTracker = $_POST["googleTracker"]; 
-  @$EmailBrokenSubmission = qnum($_POST["emailBrokenSubmission"]);
-  @$EmailBuildMissing = qnum($_POST["emailBuildMissing"]);
-  @$EmailLowCoverage = qnum($_POST["emailLowCoverage"]);
-  @$EmailTestTimingChanged = qnum($_POST["emailTestTimingChanged"]);
-  @$CVSViewerType = $_POST["cvsviewertype"]; 
-  @$TestTimeStd = qnum($_POST["testTimeStd"]);
-  @$TestTimeStdThreshold = qnum($_POST["testTimeStdThreshold"]);
-  @$TestTimeMaxStatus = qnum($_POST["testTimeMaxStatus"]);  
-  @$TestTimeStdThreshold = qnum($_POST["testTimeStdThreshold"]);
-  @$ShowTestTime = qnum($_POST["showTestTime"]);
-  @$EmailMaxItems = qnum($_POST["emailMaxItems"]);
-  @$EmailMaxChars = qnum($_POST["emailMaxChars"]);
-  @$CVSRepositories = $_POST["cvsRepository"];
-
-  $imgid = qnum($project_array["imageid"]);
+  $Project->Description = addslashes($_POST["description"]);
+  $Project->HomeURL = stripHTTP($_POST["homeURL"]);
+  $Project->CVSURL = stripHTTP($_POST["cvsURL"]);
+  $Project->BugURL = stripHTTP($_POST["bugURL"]);
+  $Project->DocURL = stripHTTP($_POST["docURL"]);
+  @$Project->Public = $_POST["public"];
+  $Project->CoverageThreshold = $_POST["coverageThreshold"];
+  $Project->NightlyTime = $_POST["nightlyTime"];
+  $Project->GoogleTracker = $_POST["googleTracker"]; 
+  @$Project->EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
+  @$Project->EmailBuildMissing = $_POST["emailBuildMissing"];
+  @$Project->EmailLowCoverage = $_POST["emailLowCoverage"];
+  @$Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
+  @$Project->CvsViewerType = $_POST["cvsviewertype"]; 
+  @$Project->TestTimeStd = $_POST["testTimeStd"];
+  @$Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
+  @$Project->TestTimeMaxStatus = $_POST["testTimeMaxStatus"];  
+  @$Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
+  @$Project->ShowTestTime = $_POST["showTestTime"];
+  @$Project->EmailMaxItems = $_POST["emailMaxItems"];
+  @$Project->EmailMaxChars = $_POST["emailMaxChars"];
   
-  $handle = fopen($_FILES['logo']['tmp_name'],"r");
-  $contents = 0;
-  if($handle)
-    {
-    $contents = addslashes(fread($handle,$_FILES['logo']['size']));
-    $filetype = $_FILES['logo']['type'];
-    fclose($handle);
-    }
+  $Project->Save();
   
-  /** Add the logo if any */
-  if($contents)
+  // Add the logo
+  if(strlen($_FILES['logo']['tmp_name'])>0)
     {
-    $checksum = crc32($contents);
-    //check if we already have a copy of this file in the database
-    $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
-    $result = pdo_query("$sql");
-    if($row = pdo_fetch_array($result))
+    $handle = fopen($_FILES['logo']['tmp_name'],"r");
+    $contents = 0;
+    if($handle)
       {
-      $imgid = qnum($row["id"]);
-      }
-    else if($imgid==0)
-      {
-      $sql = "INSERT INTO image(img, extension, checksum) VALUES ('$contents', '$filetype', '$checksum')";
-      if(pdo_query("$sql"))
-        {
-        $imgid = qnum(pdo_insert_id("image"));
-        }
-       }
-     else // update the current image
-       { 
-       pdo_query("UPDATE image SET img='$contents',extension='$filetype',checksum='$checksum' WHERE id=$imgid");
-       }
-    } // end if contents
-    
-  //We should probably check the type of the image here to make sure the user
-  //isn't trying anything fruity
-  pdo_query("UPDATE project SET description='$Description',homeurl='$HomeURL',cvsurl='$CVSURL',
-                                  bugtrackerurl='$BugURL',documentationurl='$DocURL',public=$Public,imageid=$imgid,
-                                  coveragethreshold=$CoverageThreshold,nightlytime='$NightlyTime',
-                                  googletracker='$GoogleTracker',emailbrokensubmission=$EmailBrokenSubmission,
-                                  emailbuildmissing=$EmailBuildMissing,emaillowcoverage=$EmailLowCoverage,
-                                  emailtesttimingchanged=$EmailTestTimingChanged,
-                                  cvsviewertype='$CVSViewerType',
-                                  testtimestd=$TestTimeStd,
-                                  testtimestdthreshold=$TestTimeStdThreshold,
-                                  testtimemaxstatus=$TestTimeMaxStatus,
-                                  emailmaxitems=$EmailMaxItems,
-                                  emailmaxchars=$EmailMaxChars,
-                                  showtesttime=$ShowTestTime
-                                  WHERE id=$projectid");
-  echo pdo_error();
-
-  // First we update/delete any registered repositories
-  $currentRepository = 0;
-  $repositories = pdo_query("SELECT repositoryid from project2repositories WHERE projectid='$projectid' ORDER BY repositoryid");
-  while($repository_array = pdo_fetch_array($repositories))
-    {
-    $repositoryid = $repository_array["repositoryid"];
-    if(!isset($CVSRepositories[$currentRepository]) || strlen($CVSRepositories[$currentRepository])==0)
-      {
-      $query = pdo_query("SELECT * FROM project2repositories WHERE repositoryid='$repositoryid'");
-      if(pdo_num_rows($query)==1)
-        {
-        pdo_query("DELETE FROM repositories WHERE id='$repositoryid'");
-        }
-      pdo_query("DELETE FROM project2repositories WHERE projectid='$projectid' AND repositoryid='$repositoryid'");  
-      }
-    else
-      {
-      pdo_query("UPDATE repositories SET url='$CVSRepositories[$currentRepository]' WHERE id='$repositoryid'");
+      $contents = addslashes(fread($handle,$_FILES['logo']['size']));
+      $filetype = $_FILES['logo']['type'];
+      fclose($handle);
       }  
-    $currentRepository++;
+    $Project->AddLogo($contents,$filetype);
     }
   
-  //  Then we add new repositories
-  for($i=$currentRepository;$i<count($CVSRepositories);$i++)
-    {
-    $url = $CVSRepositories[$i];
-    if(strlen($url) == 0)
-      {
-      continue;
-      }
-    
-    // Insert into repositories if not any
-    $repositories = pdo_query("SELECT id FROM repositories WHERE url='$url'");
-    if(pdo_num_rows($repositories) == 0)
-      {
-      pdo_query("INSERT INTO repositories (url) VALUES ('$url')");
-      $repositoryid = pdo_insert_id("repositories");
-      }
-    else
-      {
-      $repositories_array = pdo_fetch_array($repositories);
-      $repositoryid = $repositories_array["id"];
-      } 
-    pdo_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES ('$projectid','$repositoryid')");
-    echo pdo_error();   
-    } 
-  
-  $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-  $project_array = pdo_fetch_array($project);
+  // Add repositories
+  $Project->AddRepositories($_POST["cvsRepository"]);
   }
-  
   
 // List the available projects
 $sql = "SELECT id,name FROM project";
-if($user_array["admin"] != 1)
+if(!$User->IsAdmin())
   {
   $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
   }
@@ -451,42 +290,42 @@ while($projects_array = pdo_fetch_array($projects))
    
 if($projectid>0)
   {
+  $Project->Fill();
+  
   $xml .= "<project>";
-  $xml .= add_XML_value("id",$project_array['id']);
-  $xml .= add_XML_value("name",$project_array['name']);
-  $xml .= add_XML_value("description",$project_array['description']);
-  $xml .= add_XML_value("homeurl",$project_array['homeurl']);  
-  $xml .= add_XML_value("cvsurl",$project_array['cvsurl']);
-  $xml .= add_XML_value("bugurl",$project_array['bugtrackerurl']);
-  $xml .= add_XML_value("docurl",$project_array['documentationurl']); 
-  $xml .= add_XML_value("public",$project_array['public']);
-  $xml .= add_XML_value("imageid",$project_array['imageid']);
-  $xml .= add_XML_value("coveragethreshold",$project_array['coveragethreshold']);  
-  $xml .= add_XML_value("nightlytime",$project_array['nightlytime']);
-  $xml .= add_XML_value("googletracker",$project_array['googletracker']);
-  $xml .= add_XML_value("emailbrokensubmission",$project_array['emailbrokensubmission']);
-  $xml .= add_XML_value("emailbuildmissing",$project_array['emailbuildmissing']);
-  $xml .= add_XML_value("emaillowcoverage",$project_array['emaillowcoverage']);
-  $xml .= add_XML_value("emailtesttimingchanged",$project_array['emailtesttimingchanged']);
-  $xml .= add_XML_value("cvsviewertype",$project_array['cvsviewertype']);
-  $xml .= add_XML_value("testtimestd",$project_array['testtimestd']);
-  $xml .= add_XML_value("testtimestdthreshold",$project_array['testtimestdthreshold']);
-  $xml .= add_XML_value("testtimemaxstatus",$project_array['testtimemaxstatus']);  
-  $xml .= add_XML_value("showtesttime",$project_array['showtesttime']);
-  $xml .= add_XML_value("emailmaxitems",$project_array['emailmaxitems']);
-  $xml .= add_XML_value("emailmaxchars",$project_array['emailmaxchars']);
+  $xml .= add_XML_value("id",$Project->Id);
+  $xml .= add_XML_value("name",$Project->Name);
+  $xml .= add_XML_value("description",$Project->Description);
+  $xml .= add_XML_value("homeurl",$Project->HomeUrl);  
+  $xml .= add_XML_value("cvsurl",$Project->CvsUrl);
+  $xml .= add_XML_value("bugurl",$Project->BugTrackerUrl);
+  $xml .= add_XML_value("docurl",$Project->DocumentationUrl); 
+  $xml .= add_XML_value("public",$Project->Public);
+  $xml .= add_XML_value("imageid",$Project->ImageId);
+  $xml .= add_XML_value("coveragethreshold",$Project->CoverageThreshold);  
+  $xml .= add_XML_value("nightlytime",$Project->NightlyTime);
+  $xml .= add_XML_value("googletracker",$Project->GoogleTracker);
+  $xml .= add_XML_value("emailbrokensubmission",$Project->EmailBrokenSubmission);
+  $xml .= add_XML_value("emailbuildmissing",$Project->EmailBuildMissing);
+  $xml .= add_XML_value("emaillowcoverage",$Project->EmailLowCoverage);
+  $xml .= add_XML_value("emailtesttimingchanged",$Project->EmailTestTimingChanged);
+  $xml .= add_XML_value("cvsviewertype",$Project->CvsViewerType);
+  $xml .= add_XML_value("testtimestd",$Project->TestTimeStd);
+  $xml .= add_XML_value("testtimestdthreshold",$Project->TestTimeStdThreshold);
+  $xml .= add_XML_value("testtimemaxstatus",$Project->TestTimeMaxStatus);  
+  $xml .= add_XML_value("showtesttime",$Project->ShowTestTime);
+  $xml .= add_XML_value("emailmaxitems",$Project->EmailMaxItems);
+  $xml .= add_XML_value("emailmaxchars",$Project->EmailMaxChars);
   $xml .= "</project>";
   
-  $repository = pdo_query("SELECT url from repositories,project2repositories
-                             WHERE repositories.id=project2repositories.repositoryid
-                             AND   project2repositories.projectid='$projectid'");
+  $repositories = $Project->GetRepositories();
   $nRegisteredRepositories = 0;
   $nRepositories = 0;
-  while($repository_array = pdo_fetch_array($repository))
+  foreach($repositories as $repository)
     {
     $xml .= "<cvsrepository>";
     $xml .= add_XML_value("id",$nRepositories);
-    $xml .= add_XML_value("url",$repository_array['url']);
+    $xml .= add_XML_value("url",$repository['url']);
     $xml .= "</cvsrepository>";
     $nRegisteredRepositories++;
     $nRepositories++;
@@ -532,18 +371,19 @@ function AddCVSViewer($name,$description,$currentViewer)
   }
 
 // Add the type of CVS/SVN viewers
-if(!isset($project_array))
+if(strlen($Project->CvsViewerType)==0)
   {
-  $project_array['cvsviewertype'] = "viewcvs";
+  $Project->CvsViewerType = "viewcvs";
   }
-$xml .= AddCVSViewer("viewcvs","ViewCVS",$project_array['cvsviewertype']); // first should be lower case
-$xml .= AddCVSViewer("trac","Trac",$project_array['cvsviewertype']);
-$xml .= AddCVSViewer("fisheye","Fisheye",$project_array['cvsviewertype']);
-$xml .= AddCVSViewer("cvstrac","CVSTrac",$project_array['cvsviewertype']);
-$xml .= AddCVSViewer("viewvc","ViewVC",$project_array['cvsviewertype']);
-$xml .= AddCVSViewer("viewvc1.1","ViewVC1.1",$project_array['cvsviewertype']);
-$xml .= AddCVSViewer("websvn","WebSVN",$project_array['cvsviewertype']);
-$xml .= AddCVSViewer("loggerhead","Loggerhead",$project_array['cvsviewertype']);
+  
+$xml .= AddCVSViewer("viewcvs","ViewCVS",$Project->CvsViewerType); // first should be lower case
+$xml .= AddCVSViewer("trac","Trac",$Project->CvsViewerType);
+$xml .= AddCVSViewer("fisheye","Fisheye",$Project->CvsViewerType);
+$xml .= AddCVSViewer("cvstrac","CVSTrac",$Project->CvsViewerType);
+$xml .= AddCVSViewer("viewvc","ViewVC",$Project->CvsViewerType);
+$xml .= AddCVSViewer("viewvc1.1","ViewVC1.1",$Project->CvsViewerType);
+$xml .= AddCVSViewer("websvn","WebSVN",$Project->CvsViewerType);
+$xml .= AddCVSViewer("loggerhead","Loggerhead",$Project->CvsViewerType);
  
 $xml .= add_XML_value("nrepositories",$nRepositories); // should be at the end
   
