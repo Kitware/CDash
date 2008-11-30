@@ -222,8 +222,7 @@
     <tr class="trodd"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="siteStatistics.php">[Site Statistics]</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="userStatistics.php">[User Statistics]</a>  (beta)</td></tr>
-    <tr class="treven"><td id="nob"><a href="import.php">[Import Dart1 Files]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="importBackup.php">[Import From Backups]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="manageBackup.php">[Manage Backup]</a></td></tr>
   </tbody>
   </table>
 </xsl:if>
