@@ -51,8 +51,15 @@ function register()
       $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
       pdo_select_db("$CDASH_DB_NAME",$db);
       $passwd = md5($passwd);
-      
       $email = pdo_real_escape_string($email);
+
+      $sql = "SELECT * FROM ".qid("user")." WHERE email='$email'";
+      if(pdo_num_rows(pdo_query($sql)) > 0)
+        {
+        $reg = "$email is already registered.";
+        return 0;
+        }
+
       $passwd = pdo_real_escape_string($passwd);
       $fname = pdo_real_escape_string($fname);
       $lname = pdo_real_escape_string($lname);
