@@ -185,6 +185,10 @@ function pdo_insert_id($tablename)
 /** */
 function pdo_num_rows($result)
 {
+  if(!$result) 
+    {
+    return false;
+    }
   global $CDASH_DB_TYPE;
 
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") 
