@@ -20,6 +20,8 @@ require_once("pdo.php");
 include('login.php');
 include_once('common.php');
 include('version.php');
+include("models/project.php");
+include("models/user.php");
 
 if ($session_OK) 
   {
@@ -60,9 +62,21 @@ if ($session_OK)
     $xml .= "<edit>0</edit>";
     }
  
-
-  $project = pdo_query("SELECT id,name FROM project WHERE id='$projectid'");
+  $project = pdo_query("SELECT id,name,public FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
+  
+  $Project = new Project;
+  $User = new User;
+  $User->Id = $userid;
+  $Project->Id = $projectid;
+  $role = $Project->GetUserRole($userid);
+    
+  // Check if the project is public
+  if(!$project_array['public'] && ($User->IsAdmin()===FALSE && $role<0))
+    {
+    echo "You don't have the permissions to access this page";
+    return;
+    }
   
   // Check if the user is not already in the database
   $user2project = pdo_query("SELECT cvslogin,role,emailtype,emailcategory FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
