@@ -648,13 +648,17 @@ class Project
       {
       return -1;
       }
+     
+    $role = -1; 
       
     $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='".$this->Id."'");
     if(pdo_num_rows($user2project)>0)
       {
       $user2project_array = pdo_fetch_array($user2project);
       $role = $user2project_array["role"];
-      }      
+      }
+    
+    return $role;
     }
   
   /** Return true if the project exists */
