@@ -249,7 +249,7 @@ if($registerUser)
   
   if(strlen($email)<3 || strlen($firstName)<2 || strlen($lastName)<2 ||  strlen($cvslogin)<2)
     {
-    $xml .= "<error>Empty fields</error>";
+    $xml .= "<error>All fields should be fille out including the cvslogin.</error>";
     }
   else
     {
