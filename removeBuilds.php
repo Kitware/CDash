@@ -107,49 +107,89 @@ $xml .= "<yearTo>".$yearTo."</yearTo>";
 $xml .= "</cdash>";
 @$submit = $_POST["Submit"];
 
+/** THIS SHOULD GO IN  common.php */
+/* Remove an array of builds 
+ * This should be much faster than deleting builds one by one */
+function remove_builds($builds)
+{
+  if(empty($builds))
+    {
+    return;
+    }
+    
+  $buildsql="";
+  $buildidsql="";
+
+  foreach($builds as $buildid)
+    {
+    if(!is_numeric($buildid))
+      {
+      return;
+      }
+    
+    if($buildsql != "")
+      {
+      $buildsql .= " OR ";
+      $buildidsql .= " OR ";
+      }
+    $buildsql .= 'buildid='.qnum($buildid);
+    $buildidsql .= 'id='.qnum($buildid);  
+    }
+
+  pdo_query("DELETE FROM build2group WHERE ".$buildsql);
+  pdo_query("DELETE FROM builderror WHERE ".$buildsql);
+  pdo_query("DELETE FROM builderrordiff WHERE ".$buildsql);
+  pdo_query("DELETE FROM buildupdate WHERE ".$buildsql);
+  pdo_query("DELETE FROM configure WHERE ".$buildsql);
+  pdo_query("DELETE FROM configureerror WHERE ".$buildsql);
+  pdo_query("DELETE FROM configureerrordiff WHERE ".$buildsql);
+  pdo_query("DELETE FROM coveragesummarydiff WHERE ".$buildsql);
+  pdo_query("DELETE FROM testdiff WHERE ".$buildsql);
+  pdo_query("DELETE FROM coverage WHERE ".$buildsql);
+  pdo_query("DELETE FROM coveragefilelog WHERE ".$buildsql);
+  pdo_query("DELETE FROM coveragesummary WHERE ".$buildsql);
+  pdo_query("DELETE FROM dynamicanalysis WHERE ".$buildsql);
+  pdo_query("DELETE FROM updatefile WHERE ".$buildsql);   
+  pdo_query("DELETE FROM build2note WHERE ".$buildsql); 
+  pdo_query("DELETE FROM build2test WHERE ".$buildsql); 
+  
+  // coverage file are kept unless they are shared
+  pdo_query("DELETE FROM coveragefile WHERE id NOT IN (SELECT fileid as id FROM coverage)");
+
+  // dynamicanalysisdefect
+  pdo_query("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid NOT IN (SELECT id as dynamicanalysisid FROM dynamicanalysis)");  
+  
+  // Delete the note if not shared
+  pdo_query("DELETE FROM note WHERE id NOT IN (SELECT noteid as id FROM build2note)");
+  
+  // Delete the test if not shared
+  pdo_query("DELETE FROM test WHERE id NOT IN (SELECT testid as id FROM build2test)");
+  pdo_query("DELETE FROM testmeasurement WHERE testid NOT IN (SELECT id as testid FROM test)");
+  pdo_query("DELETE FROM test2image WHERE testid NOT IN (SELECT id as testid FROM test)");
+
+  // Delete the testimages if not shared
+  pdo_query("DELETE FROM image WHERE id NOT IN (SELECT imgid as id FROM test2image) AND id NOT IN (SELECT imageid FROM project)");
+  pdo_query("DELETE FROM build WHERE ".$buildidsql);
+}
+
+
 // Delete the builds
 if(isset($submit))
   {
   $begin = $yearFrom."-".$monthFrom."-".$dayFrom." 00:00:00";
   $end = $yearTo."-".$monthTo."-".$dayTo." 00:00:00";
   $sql = "SELECT id FROM build WHERE projectid=".qnum($projectid)." AND starttime<='$end' AND starttime>='$begin' ORDER BY starttime ASC";
-  
-  echo $sql."<br>";
-  
+    
   $build = pdo_query($sql);
   
-  ob_end_flush(); // This should be called at start
-
-  // Do some preliminary calculations, such as:
-  $totalloops = pdo_num_rows($build);
-  $percent_per_loop = 100 / $totalloops;
-  $prev_percent = 0;
-  $percent_last = 0;
-  $i=1;
-
-  echo "0..................................................................................................100%<br>";
+  $builds = array();
   while($build_array = pdo_fetch_array($build))
     {
-    //sleep(1);
-    //echo $build_array['id']."<br>";
-    remove_build($build_array['id']);
-    
-    // Print progress
-    $percent_now = round($i * $percent_per_loop);
-    if($percent_now != $percent_last) 
-      {
-      $difference = $percent_now - $percent_last;
-      for($j=1;$j<=$difference;$j++) 
-        {
-        echo '.';
-        }
-      $percent_last = $percent_now;
-      $i++;
-      flush(); // Push the new data to the browser;
-      }
+    $builds[] = $build_array['id'];
     }
-
-  echo "<br> Removed ".$i." builds.<br>";
+ 
+  remove_builds($builds);
+  echo "<br> Removed ".count($builds)." builds.<br>";
   }
   
 generate_XSLT($xml,"removeBuilds");
