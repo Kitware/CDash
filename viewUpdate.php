@@ -202,7 +202,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     // Do this twice so that <something> ends up as
     // &amp;lt;something&amp;gt; because it gets sent to a 
     // java script function not just displayed as html
-    $log = XMLStrFormat($log);
+    //$log = XMLStrFormat($log); // Apparently no need to do this twice anymore
     $log = XMLStrFormat($log);
     $log = trim($log);
     
