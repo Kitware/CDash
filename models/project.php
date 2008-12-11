@@ -573,6 +573,9 @@ class Project
     // Check if the project is already
     if($this->Exists())
       {
+      // Trim the name
+      $this->Name = trim($this->Name);
+      
       // Update the project
       $query = "UPDATE project SET ";
       $query .= "description='".$this->Description."'";
@@ -617,6 +620,9 @@ class Project
         {
         $this->ImageId = 0;
         }
+      
+      // Trim the name
+      $this->Name = trim($this->Name);
       
       $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                     googletracker,emailbrokensubmission,emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
@@ -713,7 +719,7 @@ class Project
       $this->CvsUrl = $project_array['cvsurl'];
       $this->DocumentationUrl = $project_array['documentationurl'];
       $this->BugTrackerUrl = $project_array['bugtrackerurl'];
-       $this->ImageId = $project_array['imageid'];
+      $this->ImageId = $project_array['imageid'];
       $this->Public = $project_array['public'];
       $this->CoverageThreshold = $project_array['coveragethreshold'];
       $this->NightlyTime = $project_array['nightlytime'];
