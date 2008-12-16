@@ -23,13 +23,25 @@ require_once("../pdo.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
+echo '<?xml version="1.0" encoding="UTF-8"?>';
+echo "<userid>";
+
 @$author = $_GET['author'];
 @$project = $_GET['project'];
 
-$projectid = get_project_id($project);
+if(!isset($_GET['author']) || !isset($_GET['project']))
+  {
+  echo "not found</userid>";
+  return;
+  }
 
-echo '<?xml version="1.0" encoding="UTF-8"?>';
-echo "<userid>";
+if(strlen($_GET['author']) == 0 || strlen($_GET['project'])==0)
+  {
+  echo "not found</userid>";
+  return;
+  }
+  
+$projectid = get_project_id($project);
 if(!is_numeric($projectid))
   {
   echo "not found</userid>";
