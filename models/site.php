@@ -18,7 +18,7 @@
 // It is assumed that appropriate headers should be included before including this file
 class SiteInformation
 {
-  var $Timestamp;
+  var $TimeStamp;
   var $ProcessorIs64Bits;
   var $ProcessorVendor;
   var $ProcessorVendorId;
@@ -38,20 +38,19 @@ class SiteInformation
     {
     switch($tag)
       {
-      case "NAME": $this->Name = $data;break;
-      case "DESCRIPTION": $this->Description = $data;break;
-      case "PROCESSORIS64BITS": $this->ProcessorIs64Bits = $data;break;
-      case "PROCESSORVENDOR": $this->ProcessorVendor = $data;break;
-      case "PROCESSORVENDORID": $this->ProcessorVendorId = $data;break;
-      case "PROCESSORFAMILYID": $this->ProcessorFamilyId = $data;break;
-      case "PROCESSORMODELID": $this->ProcessorModelId = $data;break;
-      case "PROCESSORCACHESIZE": $this->ProcessorCacheSize = $data;break;
-      case "NUMBERLOGICALCPUS": $this->NumberLogicalCpus = $data;break;
-      case "NUMBERPHYSICALCPUS": $this->NumberPhysicalCpus = $data;break;
-      case "TOTALVIRTUALMEMORY": $this->TotalVirtualMemory = $data;break;
-      case "TOTALPHYSICALMEMORY": $this->TotalPhysicalMemory = $data;break;
-      case "LOGICALPROCESSORSPERPHYSICAL": $this->LogicalProcessorsPerPhysical = $data;break;
-      case "PROCESSORCLOCKFREQUENCY": $this->ProcessorClockFrequency = $data;break;
+      case "DESCRIPTION": $this->Description = $value;break;
+      case "PROCESSORIS64BITS": $this->ProcessorIs64Bits = $value;break;
+      case "PROCESSORVENDOR": $this->ProcessorVendor = $value;break;
+      case "PROCESSORVENDORID": $this->ProcessorVendorId = $value;break;
+      case "PROCESSORFAMILYID": $this->ProcessorFamilyId = $value;break;
+      case "PROCESSORMODELID": $this->ProcessorModelId = $value;break;
+      case "PROCESSORCACHESIZE": $this->ProcessorCacheSize = $value;break;
+      case "NUMBERLOGICALCPUS": $this->NumberLogicalCpus = $value;break;
+      case "NUMBERPHYSICALCPUS": $this->NumberPhysicalCpus = $value;break;
+      case "TOTALVIRTUALMEMORY": $this->TotalVirtualMemory = $value;break;
+      case "TOTALPHYSICALMEMORY": $this->TotalPhysicalMemory = $value;break;
+      case "LOGICALPROCESSORSPERPHYSICAL": $this->LogicalProcessorsPerPhysical = $value;break;
+      case "PROCESSORCLOCKFREQUENCY": $this->ProcessorClockFrequency = $value;break;
       }
     }
     
@@ -70,7 +69,7 @@ class SiteInformation
       {
       return false;
       }
-    return true;  
+    return true;
     }
     
   /** Save the site information */
@@ -117,8 +116,7 @@ class SiteInformation
                      '$this->ProcessorCacheSize','$this->NumberLogicalCpus',
                      '$this->NumberPhysicalCpus','$this->TotalVirtualMemory',
                      '$this->TotalPhysicalMemory','$this->LogicalProcessorsPerPhysical',
-                     '$this->LogicalProcessorsPerPhysical','$this->ProcessorClockFrequency',
-                     '$this->Description'
+                     '$this->ProcessorClockFrequency','$this->Description'
                      )"))
          {
          add_last_sql_error("SiteInformation Insert");
@@ -158,52 +156,87 @@ class Site
   function Exists()
     {
     // If no id specify return false
-    if(!$this->Id || !$this->Name)
+    if(!$this->Id && !$this->Name)
       {
       return false;    
       }
     
-    $query = pdo_query("SELECT count(*) FROM site WHERE id='".$this->Id."' AND name='".$this->Name."'");
-    $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']==0)
+    if($this->Id)
       {
-      return false;
-      }
-    return true;  
-    }
-    
-  /** Save the site */
-  function Save()
-    {
-    if($this->Exists())
-      {
-      // Update the project
-      $query = "UPDATE site SET";
-      $query .= " name='".$this->Name."'";
-      $query .= ",ip='".$this->Ip."'";
-      $query .= ",latitude='".$this->Latitude."'";
-      $query .= ",longitude='".$this->Longitude."'";
-      $query .= " WHERE id='".$this->Id."'";
-      
-      if(!pdo_query($query))
+      $query = pdo_query("SELECT count(*) FROM site WHERE id=".qnum($this->Id));
+      $query_array = pdo_fetch_array($query);
+      if($query_array['count(*)']>0)
         {
-        add_last_sql_error("Site Update");
-        return false;
+        return true;
         }
       }
+    if($this->Name)
+      {
+      $query = pdo_query("SELECT id FROM site WHERE name='".$this->Name."'");
+      if(pdo_num_rows($query)>0)
+        {
+        $query_array = pdo_fetch_array($query);
+        $this->Id = $query_array['id'];
+        return true;
+        }
+      }
+    return false;  
+    }
+  
+  /** Update a site */
+  function Update()
+    {
+    if(!$this->Exists())
+      {
+      return;
+      }
+      
+    // Update the project
+    $query = "UPDATE site SET";
+    $query .= " name='".$this->Name."'";
+    $query .= ",ip='".$this->Ip."'";
+    $query .= ",latitude='".$this->Latitude."'";
+    $query .= ",longitude='".$this->Longitude."'";
+    $query .= " WHERE id='".$this->Id."'";
+      
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("Site Update");
+      return false;
+      }
+    } 
+    
+  /** Insert a new site */
+  function Insert()
+    {
+     if($this->Exists())
+      {
+      return $this->Id;
+      }
+    
+    if(strlen($this->Ip)==0)
+      {
+      $this->Ip = $_SERVER['REMOTE_ADDR'];
+      }
+        
+    // Get the geolocation
+    if(strlen($this->Latitude)==0)
+      {
+      $location = get_geolocation($this->Ip);
+      $this->Latitude = $location['latitude'];
+      $this->Longitude = $location['longitude'];  
+      }
+                                          
+    if(pdo_query("INSERT INTO site (name,ip,latitude,longitude)
+                  VALUES ('$this->Name','$this->Ip','$this->Latitude','$this->Longitude')"))
+      {
+      $this->Id = pdo_insert_id("site");
+      }
     else
-      {                                              
-      if(pdo_query("INSERT INTO site (name,ip,latitude,longitude)
-                     VALUES ('$this->Name','$this->Ip','$this->Latitude','$this->Longitude')"))
-         {
-         $this->Id = pdo_insert_id("site");
-         }
-       else
-         {
-         add_last_sql_error("Site Insert");
-         return false;
-         }
-      }  
+      {
+      add_last_sql_error("Site Insert");
+      return false;
+      }
     } // end function save  
 }
 

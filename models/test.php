@@ -112,6 +112,89 @@ class TestMeasurement
     
 }
 
+/** Build Test Diff */
+class BuildTestDiff
+{
+  var $Type;
+  var $Difference;
+  var $BuildId;
+  
+  function SetValue($tag,$value)  
+    {
+    switch($tag)
+      {
+      case "TESTDIFF": $this->Difference = $value;break;
+      }
+    }
+    
+  // Insert in the database
+  function Insert()
+    {
+    if(!$this->BuildId)
+      {
+      echo "BuildTestDiff::Insert(): BuildId is not set<br>";
+      return false;
+      }
+      
+    $query = "INSERT INTO testdiff (buildid,type,difference) VALUES ('$this->BuildId','$this->Type','$this->Difference')";                     
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("BuildTestDiff Insert");
+      return false;
+      }  
+    return true;
+    }      
+}
+    
+/** Build Test class */          
+class BuildTest
+{
+  var $TestId;
+  var $Status;
+  var $Time;
+  var $TimeMean;
+  var $TimeStd;
+  var $TimeStatus;
+  var $BuildId;
+    
+  function SetValue($tag,$value)  
+    {
+    switch($tag)
+      {
+      case "TESTID": $this->TestId = $value;break;
+      case "STATUS": $this->Status = $value;break;
+      case "TIME": $this->Time = $value;break;
+      case "TIMEMEAN": $this->TimeMean = $value;break;
+      case "TIMESTD": $this->TimeStd = $value;break;
+      case "TIMESTATUS": $this->TimeStatus = $value;break;
+      }
+    }    
+
+  // Insert in the database
+  function Insert()
+    {
+    if(!$this->BuildId)
+      {
+      echo "BuildTest::Insert(): BuildId is not set";
+      return false;
+      }
+
+    if(!$this->TestId)
+      {
+      echo "BuildTest::Insert(): TestId is not set";
+      return false;
+      }
+      
+    $query = "INSERT INTO build2test (buildid,testid,status,time,timemean,timestd,timestatus)
+                 VALUES ('$this->BuildId','$this->TestId','$this->Status','$this->Time','$this->TimeMean','$this->TimeStd','$this->TimeStatus')";                     
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("BuildTest Insert");
+      return false;
+      }  
+    return true;
+    }    
+}
 
 /** Test */
 class Test
@@ -244,9 +327,7 @@ class Test
       }
     
     return true;
-    }  // end Insert  
+    }  // end Insert 
   
-  
-    
 }
 ?>
