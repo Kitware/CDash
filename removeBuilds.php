@@ -138,6 +138,8 @@ function remove_builds($builds)
 
   pdo_query("DELETE FROM build2group WHERE ".$buildsql);
   pdo_query("DELETE FROM builderror WHERE ".$buildsql);
+  pdo_query("DELETE FROM buildinformation WHERE ".$buildsql);
+  pdo_query("DELETE FROM buildnote WHERE ".$buildsql);
   pdo_query("DELETE FROM builderrordiff WHERE ".$buildsql);
   pdo_query("DELETE FROM buildupdate WHERE ".$buildsql);
   pdo_query("DELETE FROM configure WHERE ".$buildsql);
@@ -169,6 +171,8 @@ function remove_builds($builds)
 
   // Delete the testimages if not shared
   pdo_query("DELETE FROM image WHERE id NOT IN (SELECT imgid as id FROM test2image) AND id NOT IN (SELECT imageid FROM project)");
+  
+  // Delete build
   pdo_query("DELETE FROM build WHERE ".$buildidsql);
 }
 
