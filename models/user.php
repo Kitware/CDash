@@ -107,8 +107,34 @@ class UserProject
          }  
        }
     return true;
-    }  
-}
+    } 
+  
+  /** Get the users of the project */
+  function GetUsers()
+    {
+    if(!$this->ProjectId)
+      {
+      echo "UserProject GetUsers(): ProjectId not set";
+      return false;
+      }
+  
+    $project = pdo_query("SELECT userid FROM user2project WHERE projectid=".qnum($this->ProjectId));
+    if(!$project)
+      {
+      add_last_sql_error("UserProject GetUsers");
+      return false;
+      }
+    
+    $userids = array();  
+    while($project_array = pdo_fetch_array($project))
+      {
+      $userids[] = $project_array['userid'];
+      }
+    return $userids;
+    }     
+    
+    
+} // end class UserProject
 
 class User
 {
@@ -218,6 +244,21 @@ class User
          }  
        }
     return true;
-    }  
+    } 
+    
+  /** Get the name */
+  function GetName()
+    {
+    // If no id specify return false
+    if(!$this->Id)
+      {
+      return false;    
+      }
+      
+    $query = pdo_query("SELECT firstname,lastname FROM user WHERE id=".qnum($this->Id));  
+    $query_array = pdo_fetch_array($query);
+    
+    return $query_array['firstname']." ".$query_array['lastname'];
+    }       
 }
 ?>

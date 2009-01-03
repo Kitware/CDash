@@ -870,7 +870,59 @@ class Project
       }
     return $ids;    
     }
+   
+  /** Get the Name of the project */
+  function GetName()
+    {
+    if(strlen($this->Name)>0)
+      {
+      return $this->Name;
+      }
+      
+    if(!$this->Id)
+      {
+      echo "Project GetName(): Id not set";
+      return false;
+      }
+  
+    $project = pdo_query("SELECT name FROM project WHERE id=".qnum($this->Id));
+    if(!$project)
+      {
+      add_last_sql_error("Project GetName");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    $this->Name = $project_array['name'];
     
+    return $this->Name;
+    }   
+ 
+  /** Get the coveragethreshold */
+  function GetCoverageThreshold()
+    {
+    if(strlen($this->CoverageThreshold)>0)
+      {
+      return $this->CoverageThreshold;
+      }
+      
+    if(!$this->Id)
+      {
+      echo "Project GetCoverageThreshold(): Id not set";
+      return false;
+      }
+  
+    $project = pdo_query("SELECT coveragethreshold FROM project WHERE id=".qnum($this->Id));
+    if(!$project)
+      {
+      add_last_sql_error("Project GetCoverageThreshold");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    $this->CoverageThreshold = $project_array['coveragethreshold'];
+    
+    return $this->CoverageThreshold;
+    }   
+ 
 }  // end class Project
 
 
