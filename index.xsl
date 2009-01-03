@@ -547,6 +547,13 @@
 
 <xsl:if test="cdash/updates">
 <table width="100%" cellpadding="11" cellspacing="0">
+  <xsl:for-each select="cdash/banner">
+  <tr bgcolor="#DDDDDD">
+  <td align="center" width="100%" colspan="2">
+  <b><xsl:value-of select="text"/></b>
+  </td>
+  </tr>
+  </xsl:for-each>  
   <tr>
     <td height="25" align="left" valign="bottom">
     <xsl:if test="cdash/updates/nchanges=-1">No update data</xsl:if>
@@ -564,6 +571,7 @@
          <div class="jqmWindow" id="groupsdescription">Loading key...</div>
          </td>
   </tr>
+  
 </table>
 </xsl:if>
 

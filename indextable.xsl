@@ -84,6 +84,15 @@
 </table></td>
   </tr>
 </table>
+<table border="0" width="100%">
+<xsl:if test="cdash/banner">
+  <tr bgcolor="#DDDDDD">
+  <td align="center" width="100%" colspan="2">
+  <b><xsl:value-of select="cdash/banner/text"/></b>
+  </td>
+  </tr>
+  </xsl:if>  
+</table>
 
 <!-- Main table -->
 <br/>

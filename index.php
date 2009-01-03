@@ -19,6 +19,7 @@ include("config.php");
 require_once("pdo.php");
 include("common.php");
 
+
 /** Generate the index table */
 function generate_index_table()
 { 
@@ -27,17 +28,28 @@ function generate_index_table()
   require_once("pdo.php");
   include('login.php');
   include('version.php');
+  include_once('models/banner.php');
 
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= add_XML_value("title","CDash");
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
   
+  $Banner = new Banner;
+  $Banner->SetProjectId(0);
+  $text = $Banner->GetText();
+  if($text !== false)
+    {
+    $xml .= "<banner>";
+    $xml .= add_XML_value("text",$text);
+    $xml .= "</banner>";
+    }
+    
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!pdo_query("SELECT buildid FROM coveragesummarydiff LIMIT 1"))
+  if(!pdo_query("SELECT text FROM banner LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration/CDash maintenance panel of CDash.</upgradewarning>";
@@ -157,6 +169,7 @@ function generate_main_dashboard_XML($projectid,$date)
   require_once("pdo.php");
   include('login.php');
   include('version.php');
+  include_once("models/banner.php");
       
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)
@@ -193,6 +206,27 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
+
+  $Banner = new Banner;
+  $Banner->SetProjectId(0);
+  $text = $Banner->GetText();
+  if($text !== false)
+    {
+    $xml .= "<banner>";
+    $xml .= add_XML_value("text",$text);
+    $xml .= "</banner>";
+    }
+
+  $Banner->SetProjectId($projectid);
+  $text = $Banner->GetText();
+  if($text !== false)
+    {
+    $xml .= "<banner>";
+    $xml .= add_XML_value("text",$text);
+    $xml .= "</banner>";
+    }
+  
+  
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid);
