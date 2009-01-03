@@ -622,6 +622,22 @@ CREATE TABLE `coveragesummarydiff` (
   PRIMARY KEY  (`buildid`)
 ) ENGINE=MyISAM;
 
+
+CREATE TABLE `banner` (
+  `projectid` int(11) NOT NULL,
+  `text` varchar(500) NOT NULL,
+  PRIMARY KEY  (`projectid`)
+);
+
+
+CREATE TABLE `coveragefile2user` (
+  `fileid` bigint(20) NOT NULL,
+  `userid` bigint(20) NOT NULL,
+  `position` tinyint(4) NOT NULL,
+  KEY `coveragefileid` (`fileid`),
+  KEY `userid` (`userid`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 
