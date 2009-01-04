@@ -441,7 +441,24 @@ class CoverageFile
     {
     return $this->LastPercentCoverage;
     }  
-    
+ 
+  // Get the fileid from the name
+  function GetIdFromName($file,$buildid)
+    {
+    $coveragefile = pdo_query("SELECT id FROM coveragefile,coverage WHERE fullpath LIKE '%".$file."%' 
+                               AND coverage.buildid=".qnum($buildid)." AND coverage.fileid=coveragefile.id");
+    if(!$coveragefile)
+      {
+      add_last_sql_error("CoverageFile:GetIdFromName()");
+      return false;
+      }
+    if(pdo_num_rows($coveragefile)==0)
+      {
+      return false;
+      }
+    $coveragefile_array = pdo_fetch_array($coveragefile);
+    return $coveragefile_array['id'];
+    }  
     
 }
 

@@ -259,6 +259,25 @@ class User
     $query_array = pdo_fetch_array($query);
     
     return $query_array['firstname']." ".$query_array['lastname'];
-    }       
+    }
+    
+  /** Get the user id from the name */
+  function GetIdFromName($name)
+    {
+    $query = pdo_query("SELECT id FROM user WHERE firstname='".$name."' OR lastname='".$name."'");  
+    if(!$query)
+      {
+      add_last_sql_error("User:GetIdFromName");
+      return false;
+      }
+    
+    if(pdo_num_rows($query)==0)
+      {
+      return false;
+      }  
+      
+    $query_array = pdo_fetch_array($query);
+    return $query_array['id'];
+    }    
 }
 ?>
