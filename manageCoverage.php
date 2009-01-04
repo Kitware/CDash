@@ -91,6 +91,10 @@ while($project_array = pdo_fetch_array($projects))
    $xml .= "</availableproject>";
    }
 
+// Display the current builds who have coverage for the past 7 days
+$currentUTCTime =  gmdate(FMT_DATETIME);
+$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*30*24); // 7 days
+
 $CoverageFile2User = new CoverageFile2User();
 
 // Add an author manually
@@ -124,7 +128,68 @@ if(isset($_POST["assignAllAuthors"]))
 // Upload file
 if(isset($_POST["uploadAuthorsFile"]))
   {
-  print_r($_FILES);
+  $contents = file_get_contents($_FILES['authorsFile']['tmp_name']);
+  if(strlen($contents)>0)
+    {  
+    $pos = 0;
+    $pos2 = strpos($contents,"\n");
+    while($pos !== false)
+      {
+      $line = substr($contents,$pos,$pos2-$pos);
+      
+      $file = "";
+      $authors = array();
+      
+      // first is the svnuser
+      $posfile = strpos($line,":");
+      if($posfile !== false)
+        {
+        $file = trim(substr($line,0,$posfile));
+        $begauthor = $posfile+1;
+        $endauthor = strpos($line,",",$begauthor);
+        while($endauthor !== false)
+          {
+          $authors[] = trim(substr($line,$begauthor,$endauthor-$begauthor));
+          $begauthor = $endauthor+1;
+          $endauthor = strpos($line,",",$begauthor);
+          }
+        
+        $authors[] = trim(substr($line,$begauthor));
+        
+        // Insert the user
+        // Last build
+        $CoverageSummary = new CoverageSummary();
+        $buildids = $CoverageSummary->GetBuilds($Project->Id,$beginUTCTime,$currentUTCTime);
+ 
+        $CoverageFile = new CoverageFile;
+        $CoverageFile2User->FileId = $CoverageFile->GetIdFromName($file,$buildids[0]);
+        
+        if($CoverageFile2User->FileId === false)
+          {
+          echo "File not found for: ".$file."<br>";
+          }
+        else
+          {      
+          foreach($authors as $author)
+            {
+            $User = new User;
+            $CoverageFile2User->UserId = $User->GetIdFromName($author);
+            if($CoverageFile2User->UserId === false)
+              {
+              echo "User not found for: ".$author."<br>";
+              }
+            else
+              {
+              $CoverageFile2User->Insert();
+              }
+            }
+          }
+        }
+        
+      $pos = $pos2;
+      $pos2 = strpos($contents,"\n",$pos2+1);
+      } // end looping through lines
+    } // end if strlen>0    
   }  // end upload authors file
   
 // Send an email
@@ -199,10 +264,6 @@ if($projectid>0)
   
   $CoverageSummary = new CoverageSummary();
   
-  // Display the current builds who have coverage for the past 7 days
-  $currentUTCTime =  gmdate(FMT_DATETIME);
-  $beginUTCTime = gmdate(FMT_DATETIME,time()-3600*30*24); // 7 days
-
   $buildids = $CoverageSummary->GetBuilds($Project->Id,$beginUTCTime,$currentUTCTime);
   foreach($buildids as $buildid)
     {

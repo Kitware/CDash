@@ -170,12 +170,13 @@ project page</a>
 </table>
 </form>
 
-<form name="formuploadfile" method="post">
+<form name="formuploadfile" method="post" enctype="multipart/form-data">
 <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
-<table width="100%"  border="0">
+<table width="100%" border="0">
 <tr>
-    <td><div align="right">Upload file</div></td>
-    <td><input type="file" name="authorsFile"/><input type="submit" name="uploadAuthorsFile" value="Upload authors file"/> </td>
+    <td valign="top" width="10%"><div align="right"><b>Upload file:</b></div></td>
+    <td><div align="left">(format: filename:authors1,authors2)</div>
+    <input type="file" name="authorsFile"/><input type="submit" name="uploadAuthorsFile" value="Upload authors file"/> </td>
   </tr>
 </table>
 </form>
