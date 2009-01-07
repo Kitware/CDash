@@ -714,6 +714,13 @@ CREATE TABLE `subproject2subproject` (
 );
 
 
+CREATE TABLE `subproject2build` (
+  `subprojectid` int(11) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
+  PRIMARY KEY  (`buildid`),
+  KEY `subprojectid` (`subprojectid`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 

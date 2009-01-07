@@ -95,6 +95,14 @@ CREATE TABLE IF NOT EXISTS `subproject2subproject` (
   KEY `dependsonid` (`dependsonid`)
 );
 
+
+CREATE TABLE IF NOT EXISTS `subproject2build` (
+  `subprojectid` int(11) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
+  PRIMARY KEY  (`buildid`),
+  KEY `subprojectid` (`subprojectid`)
+);
+
 ALTER TABLE dynamicanalysisdefect MODIFY value INT NOT NULL DEFAULT 0;
 
 ALTER TABLE test2image DROP PRIMARY KEY;
