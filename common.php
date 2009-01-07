@@ -288,23 +288,6 @@ function clean_backup_directory()
     }
 }
 
-/** Parse the XML file and returns an array */
-function parse_XML($contents)
-{
-  $p = xml_parser_create();
-  if(!xml_parse_into_struct($p, $contents, $vals, $index))
-   {
-   add_log("Cannot parse XML".xml_error_string(xml_get_error_code($p)),"parse_XML");
-   }
-  
-  // create a parse struct with vals and index in it
-  $parse->vals = $vals;
-  $parse->index = $index;
-  
-  xml_parser_free($p);
-  return $parse;
-}
-
 /** Backup an XML file */
 function backup_xml_file($parser,$contents,$projectid)
 {
@@ -468,6 +451,7 @@ function get_build_id($buildname,$stamp,$projectid,$sitename)
   $sql .= " AND build.projectid='$projectid'";
   $sql .= " AND build.siteid=site.id AND site.name='$sitename'"; 
   $sql .= " ORDER BY build.id DESC";
+  
   $build = pdo_query($sql);
   if(pdo_num_rows($build)>0)
     {
@@ -507,25 +491,6 @@ function get_project_name($projectid)
     }
     
   return "NA";
-}
-
-/** Add a new coverage */
-function add_coveragesummary($buildid,$loctested,$locuntested)
-{
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-  if(!is_numeric($loctested))
-    {
-    return;
-    }
-  if(!is_numeric($locuntested))
-    {
-    return;
-    }  
-  pdo_query ("INSERT INTO coveragesummary (buildid,loctested,locuntested) 
-                VALUES ('$buildid','$loctested','$locuntested')");
 }
 
 /** Send a coverage email */
@@ -626,80 +591,6 @@ function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,
            "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
       }
     }
-}
-
-/** Create a coverage */
-function add_coverage($buildid,$coverage_array)
-{
-  if(!is_numeric($buildid) || count($coverage_array)==0)
-    {
-    return;
-    }
- 
-  // Construct the SQL query
-  $sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,functionstested,functionsuntested) VALUES ";
-  
-  $i=0;
-  foreach($coverage_array as $coverage)
-    {    
-    $fullpath = $coverage["fullpath"];
-
-    // Create an empty file if doesn't exists
-    $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE fullpath='$fullpath' AND file IS NULL");
-    if(pdo_num_rows($coveragefile)==0)
-      {
-      // Do not compute the crc32, that means it's a temporary file
-      // Only when the crc32 is computed it means that the file is valid
-      pdo_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-      $fileid = pdo_insert_id("coveragefile");
-      }
-    else
-      {
-      $coveragefile_array = pdo_fetch_array($coveragefile);
-      $fileid = $coveragefile_array["id"];
-      }
-      
-    // Create an empty file if doesn't exists
-    /*$coveragefile = pdo_query("SELECT cf.id FROM coverage AS c,coveragefile AS cf 
-                                 WHERE cf.id=c.fileid AND c.buildid='$buildid' AND cf.fullpath='$fullpath'");
-    if(pdo_num_rows($coveragefile)==0)
-      {
-      pdo_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-      $fileid = pdo_insert_id("coveragefile");
-      }
-    else
-      {
-      $coveragefile_array = pdo_fetch_array($coveragefile);
-      $fileid = $coveragefile_array["id"];
-      }*/
-      
-    
-    $covered = $coverage["covered"];
-    $loctested = $coverage["loctested"];
-    $locuntested = $coverage["locuntested"];
-    @$branchstested = $coverage["branchstested"];
-    @$branchsuntested = $coverage["branchsuntested"];
-    @$functionstested = $coverage["functionstested"];
-    @$functionsuntested = $coverage["functionsuntested"];
-    
-    // Send an email if the coverage is below the project threshold
-    send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,$branchstested,
-                        $branchsuntested,$functionstested,$functionsuntested);
-   
-    if($i>0)
-      {
-      $sql .= ", ";
-      }
-    else
-      {
-      $i=1;
-      }
-       
-    $sql .= "('$buildid','$fileid','$covered','$loctested','$locuntested','$branchstested','$branchsuntested','$functionstested','$functionsuntested')";    
-    }
-  // Insert into coverage
-  pdo_query($sql);
-  add_last_sql_error("add_coverage");
 }
 
 /** Create a coverage file */
@@ -1060,26 +951,25 @@ function get_geolocation($ip)
 } 
 
 /** Create a site */
-function add_site($name,$parser)
+/*function add_site($name, $attributes)
 {
   include("config.php");
   require_once("pdo.php");
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
 
- $siteindex = $parser->index["SITE"];
- @$processoris64bits=$parser->vals[$siteindex[0]]["attributes"]["IS64BITS"];
- @$processorvendor=$parser->vals[$siteindex[0]]["attributes"]["VENDORSTRING"]; 
- @$processorvendorid=$parser->vals[$siteindex[0]]["attributes"]["VENDORID"]; 
- @$processorfamilyid=$parser->vals[$siteindex[0]]["attributes"]["FAMILYID"]; 
- @$processormodelid=$parser->vals[$siteindex[0]]["attributes"]["MODELID"]; 
- @$processorcachesize=$parser->vals[$siteindex[0]]["attributes"]["PROCESSORCACHESIZE"]; 
- @$numberlogicalcpus=$parser->vals[$siteindex[0]]["attributes"]["NUMBEROFLOGICALCPU"]; 
- @$numberphysicalcpus=$parser->vals[$siteindex[0]]["attributes"]["NUMBEROFPHYSICALCPU"]; 
- @$totalvirtualmemory=$parser->vals[$siteindex[0]]["attributes"]["TOTALVIRTUALMEMORY"]; 
- @$totalphysicalmemory=$parser->vals[$siteindex[0]]["attributes"]["TOTALPHYSICALMEMORY"]; 
- @$logicalprocessorsperphysical=$parser->vals[$siteindex[0]]["attributes"]["LOGICALPROCESSORSPERPHYSICAL"]; 
- @$processorclockfrequency=$parser->vals[$siteindex[0]]["attributes"]["PROCESSORCLOCKFREQUENCY"]; 
+ @$processoris64bits=$attributes["IS64BITS"];
+ @$processorvendor=$attributes["VENDORSTRING"]; 
+ @$processorvendorid=$attributes["VENDORID"]; 
+ @$processorfamilyid=$attributes["FAMILYID"]; 
+ @$processormodelid=$attributes["MODELID"]; 
+ @$processorcachesize=$attributes["PROCESSORCACHESIZE"]; 
+ @$numberlogicalcpus=$attributes["NUMBEROFLOGICALCPU"]; 
+ @$numberphysicalcpus=$attributes["NUMBEROFPHYSICALCPU"]; 
+ @$totalvirtualmemory=$attributes["TOTALVIRTUALMEMORY"]; 
+ @$totalphysicalmemory=$attributes["TOTALPHYSICALMEMORY"]; 
+ @$logicalprocessorsperphysical=$attributes["LOGICALPROCESSORSPERPHYSICAL"]; 
+ @$processorclockfrequency=$attributes["PROCESSORCLOCKFREQUENCY"]; 
  $description="";
  $ip = $_SERVER['REMOTE_ADDR'];
  
@@ -1175,7 +1065,7 @@ function add_site($name,$parser)
             '$description')");
   
   return $siteid;
-}
+}*/
 
 /* remove all builds for a project */
 function remove_project_builds($projectid)
@@ -1193,7 +1083,6 @@ function remove_project_builds($projectid)
     }
 }
 
-
 /** Remove all related inserts for a given build */
 function remove_build($buildid)
 {
@@ -1204,6 +1093,7 @@ function remove_build($buildid)
     
   pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderror WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM buildinformation WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
   pdo_query("DELETE FROM configure WHERE buildid='$buildid'");
@@ -1284,120 +1174,6 @@ function remove_build($buildid)
 
 }
 
-/** Add a new build */
-function add_build($projectid,$siteid,$name,$stamp,$type,$generator,$starttime,$endtime,$submittime,$command,$log,$parser)
-{
-  if(!is_numeric($projectid) || !is_numeric($siteid))
-    {
-    return;
-    }
-
-  $name = pdo_real_escape_string($name);
-  $stamp = pdo_real_escape_string($stamp);
-  $type = pdo_real_escape_string($type);
-  $generator = pdo_real_escape_string($generator);
-  $starttime = pdo_real_escape_string($starttime);
-  $endtime = pdo_real_escape_string($endtime);
-  $submittime = pdo_real_escape_string($submittime);
-  $command = pdo_real_escape_string($command);
-  $log = pdo_real_escape_string($log);
-
-  // First we check if the build already exists if this is the case we delete all related information regarding
-  // The previous build 
-  $build = pdo_query("SELECT id FROM build WHERE projectid='$projectid' AND siteid='$siteid' AND name='$name' AND stamp='$stamp' AND type='$type'");
-  if(pdo_num_rows($build)>0)
-    {
-    $build_array = pdo_fetch_array($build);
-    remove_build($build_array["id"]);
-    }
-
-  pdo_query ("INSERT INTO build (projectid,siteid,name,stamp,type,generator,starttime,endtime,submittime,command,log) 
-                           VALUES ('$projectid','$siteid','$name','$stamp','$type','$generator',
-                                  '$starttime','$endtime','$submittime','$command','$log')");
-  
-  $buildid = pdo_insert_id("build");
-
-  // Insert information about the parser
- $site = $parser->index["SITE"];
- @$osname=$parser->vals[$site[0]]["attributes"]["OSNAME"]; 
- @$osrelease=$parser->vals[$site[0]]["attributes"]["OSRELEASE"]; 
- @$osversion=$parser->vals[$site[0]]["attributes"]["OSVERSION"]; 
- @$osplatform=$parser->vals[$site[0]]["attributes"]["OSPLATFORM"];
- 
- if($osname!="" || $osrelease!="" || $osversion!="" || $osplatform!="")
-   {
-   pdo_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion) 
-                  VALUES ('$buildid','$osname','$osrelease','$osversion','$osplatform','unknown','unknown')");
-   }
-
-  // Insert the build into the proper group
-  // 1) Check if we have any build2grouprules for this build
-  $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
-                                  WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
-                                  AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
-                                  AND '$starttime'>b2g.starttime 
-                 AND ('$starttime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
-                                  
-  if(pdo_num_rows($build2grouprule)>0)
-    {
-    $build2grouprule_array = pdo_fetch_array($build2grouprule);
-    $groupid = $build2grouprule_array["groupid"];
-    
-    pdo_query ("INSERT INTO build2group (groupid,buildid) 
-                  VALUES ('$groupid','$buildid')");
-    }
-  else // we don't have any rules we use the type 
-    {
-    $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
-    $buildgroup_array = pdo_fetch_array($buildgroup);
-    $groupid = $buildgroup_array["id"];
-    
-    pdo_query ("INSERT INTO build2group (groupid,buildid) 
-                  VALUES ('$groupid','$buildid')");
-    }
-  return $buildid;
-}
-
-/** Add a new configure */
-function add_configure($buildid,$starttime,$endtime,$command,$log,$status)
-{
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-    
-  $starttime = pdo_real_escape_string($starttime);
-  $endtime = pdo_real_escape_string($endtime);
-  $command = pdo_real_escape_string($command);
-  $log = pdo_real_escape_string($log);
-  $status = pdo_real_escape_numeric($status);
-      
-  pdo_query ("INSERT INTO configure (buildid,starttime,endtime,command,log,status) 
-               VALUES ('$buildid','$starttime','$endtime','$command','$log','$status')");
-  add_last_sql_error("add_configure_1");
-  
-  // Add the warnings in the configurewarningtable
-  $position = strpos($log,'Warning:',0);
-  while($position !== false)
-    {
-    $warning = "";
-    $endline = strpos($log,'\n',$position);
-    if($endline !== false)
-      {
-      $warning = substr($log,$position,$endline-$position);
-      }
-    else
-      {
-      $warning = substr($log,$position);
-      }
-    
-    pdo_query ("INSERT INTO configureerror (buildid,type,text) 
-              VALUES ('$buildid','1','$warning')");
-    add_last_sql_error("add_configure_2");
-    $position = strpos($log,'Warning:',$position+1);
-    }
-}
-
 /** Add a new test */
 function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details, $output, $images,$measurements)
 {
@@ -1425,7 +1201,6 @@ function add_test($buildid,$name,$status,$path,$fullname,$command,$time,$details
   
   // Check if the test doesn't exist
   $test = pdo_query("SELECT id FROM test WHERE crc32='$crc32' LIMIT 1");
-  
   $testexists = false;
     
   if(pdo_num_rows($test) > 0) // test exists
@@ -1554,46 +1329,6 @@ function add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$precon
                VALUES ('$buildid','$type','$logline','$text','$sourcefile','$sourceline','$precontext',
                        '$postcontext','$repeatcount')");
   add_last_sql_error("add_error");
-}
-
-/** Add a new update */
-function add_update($buildid,$start_time,$end_time,$command,$type,$status)
-{
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-    
-  $start_time = pdo_real_escape_string($start_time);
-  $end_time = pdo_real_escape_string($end_time);
-  $command = pdo_real_escape_string($command);
-  $type = pdo_real_escape_string($type);
-  $status = pdo_real_escape_string($status);
-    
-  pdo_query ("INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status) 
-               VALUES ('$buildid','$start_time','$end_time','$command','$type','$status')");
-  add_last_sql_error("add_update");
-}
-
-/** Add a new update file */
-function add_updatefile($buildid,$filename,$checkindate,$author,$email,$log,$revision,$priorrevision)
-{
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-    
-  $filename = pdo_real_escape_string($filename);
-  $checkindate = pdo_real_escape_string($checkindate);
-  $author = pdo_real_escape_string($author);
-  $email = pdo_real_escape_string($email);
-  $log = pdo_real_escape_string($log);
-  $revision = pdo_real_escape_string($revision);
-  $priorrevision = pdo_real_escape_string($priorrevision);
-    
-  pdo_query ("INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision) 
-               VALUES ('$buildid','$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
-  add_last_sql_error("add_updatefile");
 }
 
 /** Add dynamic analysis */
@@ -2641,275 +2376,4 @@ function getByteValueWithExtension($value)
       }    
     return round($value,2).$valueext;
     }
-
-/** Helper function for compute_update_statistics */
-function add_update_statistics($projectid,$author,$checkindate,$firstbuild,
-                               $warningdiff,$errordiff,$testdiff)
-{
-  // Find the userid from the author name
-  $user2project = pdo_query("SELECT userid FROM user2project WHERE cvslogin='$author' AND projectid='$projectid'");
-  if(pdo_num_rows($user2project)==0)
-    {
-    return;
-    }
-   
-  $user2project_array = pdo_fetch_array($user2project);
-  $userid = $user2project_array["userid"];
-      
-  // Check if we already have a checkin date for this user
-  $userstatistics = pdo_query("SELECT totalupdatedfiles
-                               FROM userstatistics WHERE userid='$userid' AND projectid='$projectid' AND checkindate='$checkindate'");
-  add_last_sql_error("add_update_statistics");
-                                          
-  if(pdo_num_rows($userstatistics)>0)
-    {                 
-    $userstatistics_array = pdo_fetch_array($userstatistics);
-    $totalbuilds = 0;
-    if($firstbuild==1)
-      {
-      $totalbuilds=1;
-      }
-            
-    $nfailedwarnings = 0;
-    $nfixedwarnings = 0;
-    $nfailederrors = 0;
-    $nfixederrors = 0;
-    $nfailedtests = 0;
-    $nfixedtests = 0;
-                          
-    if($warningdiff>0)
-      {
-      $nfailedwarnings = $warningdiff;
-      }
-    else
-      {
-      $nfixedwarnings = abs($warningdiff);
-      }
-          
-    if($errordiff>0)
-      {
-      $nfailederrors = $errordiff;
-      }
-    else
-      {
-      $nfixederrors = abs($errordiff);
-      }
-            
-    if($testdiff>0)
-      {
-      $nfailedtests = $testdiff;
-      }
-    else
-      {
-      $nfixedtests = abs($testdiff);
-      }
-         
-    pdo_query("UPDATE userstatistics SET totalupdatedfiles=totalupdatedfiles+1,
-                totalbuilds=totalbuilds+'$totalbuilds',
-                nfixedwarnings=nfixedwarnings+'$nfixedwarnings',
-                nfailedwarnings=nfailedwarnings+'$nfailedwarnings',
-                nfixederrors=nfixederrors+'$nfixederrors',
-                nfailederrors=nfailederrors+'$nfailederrors',
-                nfixedtests=nfixedtests+'$nfixedtests',
-                nfailedtests=nfailedtests+'$nfailedtests' WHERE userid='$userid' AND projectid='$projectid' AND checkindate>='$checkindate'");
-           
-    add_last_sql_error("add_update_statistics");
-    }
-  else // insert into the database
-    {
-    if($warningdiff>0)
-      {
-      $nfixedwarnings = 0;
-      $nfailedwarnings = $warningdiff;
-      }
-    else
-      {
-      $nfixedwarnings = $warningdiff;
-      $nfailedwarnings = 0;
-      }
-           
-    if($errordiff>0)
-      {
-      $nfixederrors = 0;
-      $nfailederrors = $errordiff;
-      }
-    else
-      {
-      $nfixederrors = $errordiff;
-      $nfailederrors = 0;
-      }
-            
-    if($testdiff>0)
-      {
-      $nfixedtests = 0;
-      $nfailedtests = $testdiff;
-      }
-    else
-      {
-      $nfixedtests = $testdiff;
-      $nfailedtests = 0;
-      }
-
-    $totalupdatedfiles=1;
-    $totalbuilds = 0;
-    if($firstbuild==1)
-      {
-      $totalbuilds=1;
-      }
-
-    pdo_query("UPDATE userstatistics SET totalupdatedfiles=totalupdatedfiles+1,
-               totalbuilds=totalbuilds+1,
-               nfixedwarnings=nfixedwarnings+'$nfixedwarnings',
-               nfailedwarnings=nfailedwarnings+'$nfailedwarnings',
-               nfixederrors=nfixederrors+'$nfixederrors',
-               nfailederrors=nfailederrors+'$nfailederrors',
-               nfixedtests=nfixedtests+'$nfixedtests',
-               nfailedtests=nfailedtests+'$nfailedtests' WHERE userid='$userid' AND projectid='$projectid' AND checkindate>'$checkindate'");
-           
-    add_last_sql_error("add_update_statistics");            
-           
-    // Find the previous userstatistics
-    $previous = pdo_query("SELECT totalupdatedfiles,totalbuilds,nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests
-                           FROM userstatistics WHERE userid='$userid' AND projectid='$projectid' AND checkindate<'$checkindate' ORDER BY checkindate DESC LIMIT 1");
-    add_last_sql_error("compute_update_statistics");             
-    if(pdo_num_rows($previous)>0)
-      {
-      $previous_array = pdo_fetch_array($previous);
-      $totalupdatedfiles += $previous_array["totalupdatedfiles"];
-      $totalbuilds += $previous_array["totalbuilds"];
-      $nfixedwarnings += $previous_array["nfixedwarnings"];
-      $nfailedwarnings += $previous_array["nfailedwarnings"];
-      $nfixederrors += $previous_array["nfixederrors"];
-      $nfailederrors += $previous_array["nfailederrors"];
-      $nfixedtests += $previous_array["nfixedtests"];
-      $nfailedtests += $previous_array["nfailedtests"];
-      }
-
-    pdo_query("INSERT INTO userstatistics (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
-                  nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests)
-                  VALUES ($userid,$projectid,'$checkindate',$totalupdatedfiles,$totalbuilds,$nfixedwarnings,$nfailedwarnings,$nfixederrors,$nfailederrors,$nfixedtests,$nfailedtests)
-                  ");
-    add_last_sql_error("add_update_statistics");
-    } 
-} // end add_update_statistics
-
-/** Find the errors associated with a user */
-function find_real_errors($type,$author,$buildid,$filename)
-{
-  $errortype=0;
-  if($type=="WARNING")
-    {
-    $errortype=1;
-    }
-  $errors = pdo_query("SELECT count(*) FROM builderror WHERE type='$errortype' 
-                                      AND sourcefile LIKE '%$filename%' AND buildid='$buildid'");
-  $errors_array  = pdo_fetch_array($errors);
-  return $errors_array[0];
-} // end find_real_errors
-
-/** Compute the update Statistics */
-function compute_update_statistics($projectid,$buildid,$previousbuildid)
-{
-  include("config.php");
-  require_once("pdo.php");
-  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-  pdo_select_db("$CDASH_DB_NAME",$db);
-
-  add_log("compute stats","compute_update_statistics");
-
-  // Find the errors, warnings and test failures
-  // Find the current number of errors
-  $errors = pdo_query("SELECT count(*) FROM builderror WHERE type='0' 
-                         AND buildid='$buildid'");
-  $errors_array  = pdo_fetch_array($errors);
-  $nerrors = $errors_array[0]; 
-   
-  // Number of warnings
-  $warnings = pdo_query("SELECT count(*) FROM builderror WHERE type='1' 
-                           AND buildid='$buildid'");
-  $warnings_array  = pdo_fetch_array($warnings);
-  $nwarnings = $warnings_array[0]; 
-        
-  // Number of tests failing
-  $tests = pdo_query("SELECT count(*) FROM build2test WHERE (status='failed' OR status='notrun')
-                       AND buildid='$buildid'");
-  $tests_array  = pdo_fetch_array($tests);
-  $ntests = $tests_array[0];
-        
-  // If we have a previous build
-  if($previousbuildid>0)
-    {
-    $previouserrors = pdo_query("SELECT count(*) FROM builderror WHERE type='0' 
-                                   AND buildid='$previousbuildid'");
-    $previouserrors_array  = pdo_fetch_array($previouserrors);
-    $npreviouserrors = $previouserrors_array[0];
-          
-    $previouswarnings = pdo_query("SELECT count(*) FROM builderror WHERE type='1' 
-                                     AND buildid='$previousbuildid'");
-    $previouswarnings_array  = pdo_fetch_array($previouswarnings);
-    $npreviouswarnings = $previouswarnings_array[0];
-          
-    $previoustests = pdo_query("SELECT count(*) FROM build2test WHERE (status='failed' OR status='notrun') 
-                                      AND buildid='$previousbuildid'");
-    $previoustests_array  = pdo_fetch_array($previoustests);
-    $nprevioustests = $previoustests_array[0];
-          
-    $warningdiff = $nwarnings-$npreviouswarnings;
-    $errordiff = $nerrors-$npreviouserrors;
-    $testdiff = $ntests-$nprevioustests;
-    }
-  else // this is the first build
-    {
-    $warningdiff = $nwarnings;
-    $errordiff = $nerrors;
-    $testdiff = $ntests;
-    } 
-    
-  // Find the number of different users  
-  $nauthors_array = pdo_fetch_array(pdo_query("SELECT count(author) FROM (SELECT author FROM updatefile WHERE buildid = '$buildid' GROUP BY author) AS test"));
-  add_last_sql_error("compute_update_statistics"); 
-  $nauthors = $nauthors_array[0];
-  
-  //add_log("Nauthors = ".$nauthors,"compute_update_statistics");
- 
-  $newbuild = 1;
-  $previousauthor = "";
-  // Loop through the updated files
-  $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile WHERE buildid='$buildid' 
-                            AND checkindate>'1980-01-0100:00:00' ORDER BY author ASC, checkindate ASC");
-  $nupdatedfiles = pdo_num_rows($updatefiles);
-  
-  while($updatefiles_array = pdo_fetch_array($updatefiles))
-    {
-    $checkindate = $updatefiles_array["checkindate"];
-    $author = $updatefiles_array["author"];
-    $filename = $updatefiles_array["filename"];
-    
-    if($author != $previousauthor)
-      {
-      $newbuild = 1;
-      }
-    $previousauthor  = $author;
-    
-    // If we have more than one author we need to find who caused the error
-    if($nauthors>1)
-      {
-      $warningdiff = find_real_errors("WARNING",$author,$buildid,$filename);
-      $errordiff = find_real_errors("ERROR",$author,$buildid,$filename);
-      $testdiff = 0; // no idea how to find if the update file is responsible for the test failure
-      }
-    else
-      {
-      $warningdiff /= $nupdatedfiles;
-      $errordiff /= $nupdatedfiles;
-      $testdiff /= $nupdatedfiles;
-      }   
-    
-    add_update_statistics($projectid,$author,$checkindate,$newbuild,
-                          $warningdiff,$errordiff,$testdiff);   
-       
-    $newbuild = 0;
-    } // end updatefiles
-} //end Compute the update Statistics
-
 ?>

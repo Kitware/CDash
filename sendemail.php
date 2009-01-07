@@ -155,25 +155,12 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
 }
                           
 /** Main function to send email if necessary */
-function sendemail($parser,$projectid)
+function sendemail($attributes,$projectid)
 {
   include_once("common.php");
   include("config.php");
   require_once("pdo.php");
-  
-  // Send email at the end of the testing xml file or the
-  // update xml file.  This is because the update file will
-  // contain the information on the users that made the commit
-  // however, it may never be submitted, in that case users
-  // that have registered with CDash to get email for any broken
-  // build should still get email.  The down side is that the 
-  // registered users will now get two emails.  
-  $testing = @$parser->index["TESTING"];
-  $update = @$parser->index["UPDATE"];
-  if($testing == "" && $update == "")
-    {
-    return;
-    }
+
 
   // Check if we should send the email
   $project = pdo_query("SELECT name,emailbrokensubmission,emailmaxitems,
@@ -188,25 +175,10 @@ function sendemail($parser,$projectid)
     {
     return;
     }
-
-  $site = $parser->index["SITE"];
-    
-  if($testing != "")
-    {
-    $i = $site[0];
-    $name = $parser->vals[$i]["attributes"]["BUILDNAME"];
-    $stamp = $parser->vals[$i]["attributes"]["BUILDSTAMP"];
-    $sitename = $parser->vals[$site[0]]["attributes"]["NAME"];   
-    }
-  else
-    {
-    $i = $parser->index["BUILDNAME"][0];
-    $name = $parser->vals[$i]["value"];
-    $i = $parser->index["BUILDSTAMP"][0];
-    $stamp =  $parser->vals[$i]["value"];
-    $i = $parser->index["NAME"][0];
-    $sitename =  $parser->vals[$i]["value"];
-    }
+  
+    $name = $attributes["attributes"]["BUILDNAME"];
+    $stamp = $attributes["attributes"]["BUILDSTAMP"];
+    $sitename = $attributes["NAME"];   
 
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid,$sitename);

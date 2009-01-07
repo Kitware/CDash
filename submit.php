@@ -15,6 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+//error_reporting(0); // disable error reporting
+
 include("ctestparser.php");
 include_once("common.php");
 include_once("createRSS.php");
@@ -25,9 +27,9 @@ include("config.php");
 require_once("pdo.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
-
-//$contents = file_get_contents("backup/Test_Update.xml");
-$contents = file_get_contents("php://input");
+set_time_limit(0);
+$fp = fopen('php://input', 'r');
+//$fp = fopen('backup/TestCovLog2.xml', 'r');
 
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
@@ -38,12 +40,6 @@ if($projectid == -1)
   echo "Not a valid project";
   exit();
   }
-
-// Parse the XML
-$xml_array = parse_XML($contents);
-// Backup the XML file
-backup_xml_file($xml_array,$contents,$projectid);
-unset($contents);
 
 // We find the daily updates
 // If we have php curl we do it asynchronously
@@ -92,11 +88,15 @@ else // synchronously
   }
 
 // Parse the XML file
-ctest_parse($xml_array,$projectid);
+$handler = ctest_parse($fp,$projectid);
 
 // Send the emails if necessary
-sendemail($xml_array,$projectid);
+if($handler instanceof TestingHandler || $handler instanceof UpdateHandler )
+  {
+  sendemail($handler->getSiteAttributes(), $projectid);
+  }
 
-// Create the RSS fee
+// Create the RSS feed
 CreateRSSFeed($projectid);
+fclose($fp);
 ?>
