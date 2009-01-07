@@ -706,6 +706,14 @@ CREATE TABLE `subproject` (
 );
 
 
+CREATE TABLE `subproject2subproject` (
+  `subprojectid` int(11) NOT NULL,
+  `dependsonid` int(11) NOT NULL,
+  KEY `subprojectid` (`subprojectid`),
+  KEY `dependsonid` (`dependsonid`)
+);
+
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 

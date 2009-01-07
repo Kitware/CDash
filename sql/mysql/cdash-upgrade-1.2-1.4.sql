@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `coveragefile2user` (
   KEY `userid` (`userid`)
 );
 
-CREATE TABLE `label` (
+CREATE TABLE IF NOT EXISTS `label` (
   `id` bigint(20) NOT NULL auto_increment,
   `text` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
@@ -23,7 +23,7 @@ CREATE TABLE `label` (
 -- 
 -- Table structure for table `label2build`
 -- 
-CREATE TABLE `label2build` (
+CREATE TABLE IF NOT EXISTS `label2build` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
   KEY `buildid` (`labelid`,`buildid`)
@@ -32,7 +32,7 @@ CREATE TABLE `label2build` (
 -- 
 -- Table structure for table `label2configure`
 -- 
-CREATE TABLE `label2configure` (
+CREATE TABLE IF NOT EXISTS `label2configure` (
   `labelid` bigint(20) NOT NULL,
   `configureid` bigint(20) NOT NULL,
   KEY `configureid` (`labelid`,`configureid`)
@@ -41,7 +41,7 @@ CREATE TABLE `label2configure` (
 -- 
 -- Table structure for table `label2coverage`
 -- 
-CREATE TABLE `label2coverage` (
+CREATE TABLE IF NOT EXISTS `label2coverage` (
   `labelid` bigint(20) NOT NULL,
   `coverageid` bigint(20) NOT NULL,
   KEY `labelid` (`labelid`,`coverageid`)
@@ -50,7 +50,7 @@ CREATE TABLE `label2coverage` (
 -- 
 -- Table structure for table `label2dynamicanalysis`
 -- 
-CREATE TABLE `label2dynamicanalysis` (
+CREATE TABLE IF NOT EXISTS `label2dynamicanalysis` (
   `labelid` bigint(20) NOT NULL,
   `dynamicanalysisid` bigint(20) NOT NULL,
   KEY `dynamicanalysisid` (`labelid`,`dynamicanalysisid`)
@@ -60,7 +60,7 @@ CREATE TABLE `label2dynamicanalysis` (
 -- 
 -- Table structure for table `label2test`
 -- 
-CREATE TABLE `label2test` (
+CREATE TABLE IF NOT EXISTS `label2test` (
   `labelid` bigint(20) NOT NULL,
   `testid` bigint(20) NOT NULL,
   KEY `labelid` (`labelid`,`testid`)
@@ -69,7 +69,7 @@ CREATE TABLE `label2test` (
 -- 
 -- Table structure for table `label2update`
 -- 
-CREATE TABLE `label2update` (
+CREATE TABLE IF NOT EXISTS `label2update` (
   `labelid` bigint(20) NOT NULL,
   `updateid` bigint(20) NOT NULL,
   KEY `labelid` (`labelid`,`updateid`)
@@ -79,7 +79,7 @@ CREATE TABLE `label2update` (
 -- 
 -- Table structure for table `subproject`
 -- 
-CREATE TABLE `subproject` (
+CREATE TABLE IF NOT EXISTS `subproject` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL,
   `projectid` int(11) NOT NULL,
@@ -87,6 +87,13 @@ CREATE TABLE `subproject` (
   KEY `projectid` (`projectid`)
 );
 
+
+CREATE TABLE IF NOT EXISTS `subproject2subproject` (
+  `subprojectid` int(11) NOT NULL,
+  `dependsonid` int(11) NOT NULL,
+  KEY `subprojectid` (`subprojectid`),
+  KEY `dependsonid` (`dependsonid`)
+);
 
 ALTER TABLE dynamicanalysisdefect MODIFY value INT NOT NULL DEFAULT 0;
 
