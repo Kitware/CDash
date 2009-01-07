@@ -12,6 +12,81 @@ CREATE TABLE IF NOT EXISTS `coveragefile2user` (
   KEY `userid` (`userid`)
 );
 
+CREATE TABLE `label` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `text` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `text` (`text`)
+);
+
+
+-- 
+-- Table structure for table `label2build`
+-- 
+CREATE TABLE `label2build` (
+  `labelid` bigint(20) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
+  KEY `buildid` (`labelid`,`buildid`)
+);
+
+-- 
+-- Table structure for table `label2configure`
+-- 
+CREATE TABLE `label2configure` (
+  `labelid` bigint(20) NOT NULL,
+  `configureid` bigint(20) NOT NULL,
+  KEY `configureid` (`labelid`,`configureid`)
+);
+
+-- 
+-- Table structure for table `label2coverage`
+-- 
+CREATE TABLE `label2coverage` (
+  `labelid` bigint(20) NOT NULL,
+  `coverageid` bigint(20) NOT NULL,
+  KEY `labelid` (`labelid`,`coverageid`)
+);
+
+-- 
+-- Table structure for table `label2dynamicanalysis`
+-- 
+CREATE TABLE `label2dynamicanalysis` (
+  `labelid` bigint(20) NOT NULL,
+  `dynamicanalysisid` bigint(20) NOT NULL,
+  KEY `dynamicanalysisid` (`labelid`,`dynamicanalysisid`)
+);
+
+
+-- 
+-- Table structure for table `label2test`
+-- 
+CREATE TABLE `label2test` (
+  `labelid` bigint(20) NOT NULL,
+  `testid` bigint(20) NOT NULL,
+  KEY `labelid` (`labelid`,`testid`)
+);
+
+-- 
+-- Table structure for table `label2update`
+-- 
+CREATE TABLE `label2update` (
+  `labelid` bigint(20) NOT NULL,
+  `updateid` bigint(20) NOT NULL,
+  KEY `labelid` (`labelid`,`updateid`)
+);
+
+
+-- 
+-- Table structure for table `subproject`
+-- 
+CREATE TABLE `subproject` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `projectid` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `projectid` (`projectid`)
+);
+
 
 ALTER TABLE dynamicanalysisdefect MODIFY value INT NOT NULL DEFAULT 0;
 
