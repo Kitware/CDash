@@ -16,7 +16,7 @@
 
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
-include('test.php');
+include('models/test.php');
 
 class BuildUserNote
 {
