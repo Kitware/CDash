@@ -8,8 +8,7 @@ CREATE TABLE "buildnote" (
   "timestamp" timestamp(0) NOT NULL,
   "status" smallint DEFAULT '0' NOT NULL
 );
-CREATE INDEX "buildid" on "buildnote" ("buildid");
-
+CREATE INDEX "buildnote_buildid_idx" on "buildnote" ("buildid");
 
 --
 -- Table: repositories
@@ -19,8 +18,6 @@ CREATE TABLE "repositories" (
   "url" character varying(255) NOT NULL,
   PRIMARY KEY ("id")
 );
-
-
 
 --
 -- Table: project2repositories

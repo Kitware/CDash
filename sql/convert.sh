@@ -5,9 +5,13 @@
 
 cd mysql
 
-for sql in *.sql; do
-    echo "processing \"$sql\""
-    grep -v "alter table" $sql | sqlt --from MySQL --to PostgreSQL - > ../pgsql/$sql
-done
+for in in *.sql; do
+    echo "processing \"$in\""
+    out=../pgsql/$in
+    grep -vi "alter table" $in | sqlt --from MySQL --to PostgreSQL - > $out
+    ext=$(echo $out | sed 's/\.sql$/.ext.sql/g')
 
-cat ../pgsql/cdash-compat.sql >> ../pgsql/cdash.sql
+    if test -e $ext; then
+        cat $ext >> $out
+    fi
+done

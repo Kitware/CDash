@@ -6,8 +6,7 @@ CREATE TABLE "builderrordiff" (
   "type" smallint NOT NULL,
   "difference" bigint NOT NULL
 );
-CREATE INDEX "buildid" on "builderrordiff" ("buildid");
-
+CREATE INDEX "builderrordiff_buildid_idx" on "builderrordiff" ("buildid");
 
 --
 -- Table: testdiff
@@ -17,8 +16,7 @@ CREATE TABLE "testdiff" (
   "type" smallint NOT NULL,
   "difference" bigint NOT NULL
 );
-CREATE INDEX "buildid2" on "testdiff" ("buildid", "type");
-
+CREATE INDEX "testdiff_buildid_idx" on "testdiff" ("buildid", "type");
 
 --
 -- Table: build2note
@@ -28,8 +26,7 @@ CREATE TABLE "build2note" (
   "noteid" bigint NOT NULL,
   "time" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-CREATE INDEX "buildid3" on "build2note" ("buildid", "noteid");
-
+CREATE INDEX "build2note_buildid_idx" on "build2note" ("buildid", "noteid");
 
 --
 -- Table: userstatistics
@@ -47,10 +44,9 @@ CREATE TABLE "userstatistics" (
   "nfixedtests" bigint NOT NULL,
   "nfailedtests" bigint NOT NULL
 );
-CREATE INDEX "userid" on "userstatistics" ("userid");
-CREATE INDEX "projectid" on "userstatistics" ("projectid");
-CREATE INDEX "checkindate" on "userstatistics" ("checkindate");
-
+CREATE INDEX "userstatistics_userid_idx" on "userstatistics" ("userid");
+CREATE INDEX "userstatistics_projectid_idx" on "userstatistics" ("projectid");
+CREATE INDEX "userstatistics_checkindate_idx" on "userstatistics" ("checkindate");
 
 --
 -- Table: version
@@ -61,8 +57,6 @@ CREATE TABLE "version" (
   "patch" smallint NOT NULL
 );
 
-
-
 --
 -- Table: summaryemail
 --
@@ -71,9 +65,8 @@ CREATE TABLE "summaryemail" (
   "date" date NOT NULL,
   "groupid" smallint NOT NULL
 );
-CREATE INDEX "date" on "summaryemail" ("date");
-CREATE INDEX "groupid" on "summaryemail" ("groupid");
-
+CREATE INDEX "summaryemail_date_idx" on "summaryemail" ("date");
+CREATE INDEX "summaryemail_groupid_idx" on "summaryemail" ("groupid");
 
 --
 -- Table: configureerror
@@ -83,9 +76,8 @@ CREATE TABLE "configureerror" (
   "type" smallint NOT NULL,
   "text" text NOT NULL
 );
-CREATE INDEX "buildid4" on "configureerror" ("buildid");
-CREATE INDEX "type" on "configureerror" ("type");
-
+CREATE INDEX "configureerror_buildid_idx" on "configureerror" ("buildid");
+CREATE INDEX "configureerror_type_idx" on "configureerror" ("type");
 
 --
 -- Table: configureerrordiff
@@ -95,9 +87,8 @@ CREATE TABLE "configureerrordiff" (
   "type" smallint NOT NULL,
   "difference" bigint NOT NULL
 );
-CREATE INDEX "buildid5" on "configureerrordiff" ("buildid");
-CREATE INDEX "type2" on "configureerrordiff" ("type");
-
+CREATE INDEX "configureerrordiff_buildid_idx" on "configureerrordiff" ("buildid");
+CREATE INDEX "configureerrordiff_type_idx" on "configureerrordiff" ("type");
 
 --
 -- Table: coveragesummarydiff
