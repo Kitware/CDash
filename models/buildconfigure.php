@@ -56,8 +56,9 @@ class BuildConfigureError
       
     if(!$this->Exists())
       {
+      $text = pdo_real_escape_string($this->Text);
       $query = "INSERT INTO configureerror (buildid,type,text)
-                 VALUES ('$this->BuildId','$this->Type','$this->Text')";                     
+                VALUES (".qnum($this->BuildId).",".qnum($this->Type).",'$text')";                     
       if(!pdo_query($query))
         {
         add_last_sql_error("BuildConfigureError Save");
@@ -86,7 +87,7 @@ class BuildConfigureErrorDiff
     /** Return if exists */
   function Exists()
     {
-    $query = pdo_query("SELECT count(*) FROM configureerrordiff WHERE buildid='".$this->BuildId."'");  
+    $query = pdo_query("SELECT count(*) FROM configureerrordiff WHERE buildid=".qnum($this->BuildId));  
     $query_array = pdo_fetch_array($query);
     if($query_array['count(*)']>0)
       {
@@ -108,9 +109,9 @@ class BuildConfigureErrorDiff
       {
       // Update
       $query = "UPDATE configureerrordiff SET";
-      $query .= " type='".$this->Type."'";
-      $query .= ",difference='".$this->Difference."'";
-      $query .= " WHERE buildid='".$this->BuildId."'";
+      $query .= " type=".qnum($this->Type);
+      $query .= ",difference=".qnum($this->Difference);
+      $query .= " WHERE buildid=".qnum($this->BuildId);
       if(!pdo_query($query))
         {
         add_last_sql_error("BuildConfigureErrorDiff Update");
@@ -120,7 +121,7 @@ class BuildConfigureErrorDiff
     else // insert  
       {
       $query = "INSERT INTO configureerrordiff (buildid,type,difference)
-                 VALUES ('$this->BuildId','$this->Type','$this->Difference')";                     
+                 VALUES (".qnum($this->BuildId).",".qnum($this->Type).",".qnum($this->Difference).")";                     
       if(!pdo_query($query))
         {
         add_last_sql_error("BuildConfigureErrorDiff Create");
@@ -173,9 +174,13 @@ class BuildConfigure
       echo "BuildConfigure::Insert(): BuildId not set";
       return false;    
       }
-            
+    
+    $command = pdo_real_escape_string($this->Command);
+    $log = pdo_real_escape_string($this->Log);
+    $status = pdo_real_escape_string($this->Status);
+    
     $query = "INSERT INTO configure (buildid,starttime,endtime,command,log,status)
-              VALUES ('$this->BuildId','$this->StartTime','$this->EndTime','$this->Command','$this->Log','$this->Status')";                     
+              VALUES (".qnum($this->BuildId).",'$this->StartTime','$this->EndTime','$command','$log','$status')";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildConfigure Insert()");
@@ -201,6 +206,8 @@ class BuildConfigure
         {
         $warning = substr($this->Log,$position);
         }
+        
+      $warning = pdo_real_escape_string($warning);
     
       pdo_query ("INSERT INTO configureerror (buildid,type,text) 
                   VALUES ('$this->BuildId','1','$warning')");
