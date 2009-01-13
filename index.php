@@ -319,7 +319,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .$gmdate. "</url>";
   
   $dailyupdate = pdo_query("SELECT id FROM dailyupdate 
-                              WHERE dailyupdate.date='$gmdate' and projectid='$projectid'");
+                            WHERE dailyupdate.date='$gmdate' and projectid='$projectid'");
   
   if(pdo_num_rows($dailyupdate)>0)
     {
@@ -377,9 +377,9 @@ function generate_main_dashboard_XML($projectid,$date)
     $currentUTCTime =  gmdate(FMT_DATETIME,$currentstarttime+3600*24);
     $xml = "";
     $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
-                                    WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
-                                    AND g.starttime<'$currentUTCTime' AND (g.endtime>'$currentUTCTime' OR g.endtime='1980-01-01 00:00:00')
-                                    ");                      
+                                  WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
+                                  AND g.starttime<'$currentUTCTime' AND (g.endtime>'$currentUTCTime' OR g.endtime='1980-01-01 00:00:00')
+                                  ");                      
     while($build2grouprule_array = pdo_fetch_array($build2grouprule))
       {
       $key = $build2grouprule_array["name"]."_".$build2grouprule_array["buildname"];
@@ -404,15 +404,25 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     return $xml;
     }
-    
+ 
+  // add a request for the subproject
+  $subprojectsql = "";
+  $subprojecttablesql = "";
+  if(isset($_GET["subproject"]))
+    {
+    $subprojecttablesql = ",subproject2build AS sp2b";
+    $subprojectsql = " AND sp2b.buildid=b.id AND sp2b.subprojectid=".$subprojectid;
+    }   
                                                    
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
-                         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
+                         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql."
                          WHERE b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate'
                          AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
-                         ORDER BY gp.position ASC,b.name ASC ";
+                         ".$subprojectsql." ORDER BY gp.position ASC,b.name ASC ";
+                         
+                         
     
   // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = pdo_query($sql);
