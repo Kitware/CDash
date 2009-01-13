@@ -18,7 +18,7 @@
 include("config.php");
 require_once("pdo.php");
 include("common.php");
-
+require_once("models/project.php");
 
 /** Generate the index table */
 function generate_index_table()
@@ -170,6 +170,7 @@ function generate_main_dashboard_XML($projectid,$date)
   include('login.php');
   include('version.php');
   include_once("models/banner.php");
+  include_once("models/subproject.php");
       
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)
@@ -225,8 +226,6 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("text",$text);
     $xml .= "</banner>";
     }
-  
-  
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid);
@@ -267,6 +266,51 @@ function generate_main_dashboard_XML($projectid,$date)
     }
   $xml .= "</menu>";
 
+  // Check the builds
+  $beginning_timestamp = $currentstarttime;
+  $end_timestamp = $currentstarttime+3600*24;
+
+  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
+  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);   
+  
+  // If we have a subproject
+  if(isset($_GET["subproject"]))
+    {
+    $xml .= "<subproject>";
+    
+    $SubProject = new SubProject();
+    $SubProject->Name = $_GET["subproject"];
+    $SubProject->ProjectId = $projectid;
+    $subprojectid = $SubProject->GetIdFromName();
+    
+    $rowparity = 0;
+    $dependencies = $SubProject->GetDependencies();
+    foreach($dependencies as $dependency)
+      {
+      $xml .= "<dependency>";
+      $DependProject = new SubProject();
+      $DependProject->Id = $dependency;
+      $xml .= add_XML_value("rowparity",$rowparity);
+      $xml .= add_XML_value("name",$DependProject->GetName());
+      $xml .= add_XML_value("nbuildfail",$DependProject->GetNumberOfFailingBuilds($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("nbuild",$DependProject->GetNumberOfBuilds($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("nconfigurefail",$DependProject->GetNumberOfFailingConfigures($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("nconfigure",$DependProject->GetNumberOfConfigures($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("ntestfail",$DependProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("ntest",$DependProject->GetNumberOfTests($beginning_UTCDate,$end_UTCDate));
+      if(strlen($DependProject->GetLastSubmission()) == 0)
+        {
+        $xml .= add_XML_value("lastsubmission","NA");
+        }
+      else
+        {  
+        $xml .= add_XML_value("lastsubmission",$DependProject->GetLastSubmission());
+        }
+      $rowparity = ($rowparity==1) ? 0:1;  
+      $xml .= "</dependency>";
+      }
+    $xml .= "</subproject>";
+    } // end isset(subproject)
 
   // updates
   $xml .= "<updates>";
@@ -361,12 +405,7 @@ function generate_main_dashboard_XML($projectid,$date)
     return $xml;
     }
     
-  // Check the builds
-  $beginning_timestamp = $currentstarttime;
-  $end_timestamp = $currentstarttime+3600*24;
-
-  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);                                                      
+                                                   
   
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
@@ -807,7 +846,172 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "</cdash>";
 
   return $xml;
-} 
+} // end generate_main_dashboard_XML
+
+/** Generate the subprojects dashboard */
+function generate_subprojects_dashboard_XML($projectid,$date)
+{ 
+ 
+  $start = microtime_float();
+  $noforcelogin = 1;
+  include_once("config.php");
+  require_once("pdo.php");
+  include('login.php');
+  include('version.php');
+  include_once("models/banner.php");
+  include_once("models/subproject.php");
+      
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  if(!$db)
+    {
+    echo "Error connecting to CDash database server<br>\n";
+    exit(0);
+    }
+  if(!pdo_select_db("$CDASH_DB_NAME",$db))
+    {
+    echo "Error selecting CDash database<br>\n";
+    exit(0);
+    }
+  
+  $Project = new Project();
+  $Project->Id = $projectid;
+  $Project->Fill();
+  
+  $homeurl = make_cdash_url(htmlentities($Project->HomeUrl));
+
+  checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
+    
+  $xml = '<?xml version="1.0"?><cdash>';
+  $xml .= "<title>CDash - ".$Project->Name."</title>";
+  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
+  $xml .= "<version>".$CDASH_VERSION."</version>";
+
+  $Banner = new Banner;
+  $Banner->SetProjectId(0);
+  $text = $Banner->GetText();
+  if($text !== false)
+    {
+    $xml .= "<banner>";
+    $xml .= add_XML_value("text",$text);
+    $xml .= "</banner>";
+    }
+
+  $Banner->SetProjectId($projectid);
+  $text = $Banner->GetText();
+  if($text !== false)
+    {
+    $xml .= "<banner>";
+    $xml .= add_XML_value("text",$text);
+    $xml .= "</banner>";
+    }
+
+  list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$Project->NightlyTime);
+  
+  // Main dashboard section 
+  $xml .=
+  "<dashboard>
+  <datetime>".date("l, F d Y H:i:s T",time())."</datetime>
+  <date>".$date."</date>
+  <unixtimestamp>".$currentstarttime."</unixtimestamp>
+  <svn>".$Project->CvsUrl."</svn>
+  <bugtracker>".$Project->BugTrackerUrl."</bugtracker> 
+  <googletracker>".$Project->GoogleTracker."</googletracker> 
+  <documentation>".$Project->DocumentationUrl."</documentation>
+  <home>".$Project->HomeUrl."</home>
+  <logoid>".$Project->getLogoID()."</logoid> 
+  <projectid>".$projectid."</projectid> 
+  <projectname>".$Project->Name."</projectname> 
+  <previousdate>".$previousdate."</previousdate> 
+  <projectpublic>".$Project->Public."</projectpublic> 
+  <nextdate>".$nextdate."</nextdate>";
+ 
+  if($currentstarttime>time()) 
+   {
+   $xml .= "<future>1</future>";
+    }
+  else
+  {
+  $xml .= "<future>0</future>";
+  }
+  $xml .= "</dashboard>";
+
+  // Menu definition
+  $xml .= "<menu>";
+  if(!isset($date) || strlen($date)<8 || date(FMT_DATE, $currentstarttime)==date(FMT_DATE))
+    {
+    $xml .= add_XML_value("nonext","1");
+    }
+  $xml .= "</menu>";
+
+  $beginning_timestamp = $currentstarttime;
+  $end_timestamp = $currentstarttime+3600*24;
+
+  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
+  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);                                                      
+
+
+  // User
+  if(isset($_SESSION['cdash']))
+    {
+    $xml .= "<user>";
+    $userid = $_SESSION['cdash']['loginid'];
+    $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
+    $user2project_array = pdo_fetch_array($user2project);
+    $user = pdo_query("SELECT admin FROM ".qid("user")."  WHERE id='$userid'");
+    $user_array = pdo_fetch_array($user);
+    $xml .= add_XML_value("id",$userid);
+    $isadmin=0;
+    if($user2project_array["role"]>1 || $user_array["admin"])
+      {
+      $isadmin=1;
+       }
+    $xml .= add_XML_value("admin",$isadmin);
+    $xml .= "</user>";
+    }
+ 
+  // Look for the subproject
+  $row=0;
+  $subprojectids = $Project->GetSubProjects();
+  foreach($subprojectids as $subprojectid)
+    {
+    $SubProject = new SubProject();
+    $SubProject->Id = $subprojectid;
+    $xml .= "<subproject>";
+    $xml .= add_XML_value("row",$row);
+    $xml .= add_XML_value("name",$SubProject->GetName());
+    $xml .= add_XML_value("nbuildfail",$SubProject->GetNumberOfFailingBuilds($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("nbuild",$SubProject->GetNumberOfBuilds($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("nconfigurefail",$SubProject->GetNumberOfFailingConfigures($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("nconfigure",$SubProject->GetNumberOfConfigures($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("ntestfail",$SubProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("ntest",$SubProject->GetNumberOfTests($beginning_UTCDate,$end_UTCDate));
+    if(strlen($SubProject->GetLastSubmission()) == 0)
+      {
+      $xml .= add_XML_value("lastsubmission","NA");
+      }
+    else
+      {  
+      $xml .= add_XML_value("lastsubmission",$SubProject->GetLastSubmission());
+      }
+    $xml .= "</subproject>";
+    
+    if($row == 1)
+      {
+      $row=0;
+      }
+    else
+      {
+      $row=1;
+      }  
+    } // end for each subproject
+ 
+   
+  $end = microtime_float();
+  $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
+  $xml .= "</cdash>";
+
+  return $xml;
+} // end
 
 // Check if we can connect to the database
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
@@ -843,12 +1047,24 @@ if(!isset($projectname )) // if the project name is not set we display the table
   generate_XSLT($xml,"indextable");
   }
 else
-  {  
+  {
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
-  
-  $xml = generate_main_dashboard_XML($projectid,$date);
-  // Now doing the xslt transition
-  generate_XSLT($xml,"index");
-  }
+ 
+  // Check if the project has any subproject 
+  $Project = new Project();
+  $Project->Id = $projectid;
+  if(!isset($_GET["subproject"]) && $Project->GetNumberOfSubProjects() > 0)
+    {  
+    $xml = generate_subprojects_dashboard_XML($projectid,$date);
+    // Now doing the xslt transition
+    generate_XSLT($xml,"indexsubproject");
+    }
+  else
+    {
+    $xml = generate_main_dashboard_XML($projectid,$date);
+    // Now doing the xslt transition
+    generate_XSLT($xml,"index");
+    }
+  }  
 ?>

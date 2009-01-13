@@ -575,6 +575,52 @@
 </table>
 </xsl:if>
 
+<!-- Display the table dependencies -->
+<xsl:if test="count(cdash/subproject/dependency)>0">
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+<tbody>
+  <tr class="table-heading1">
+      <td colspan="1" class="nob">
+          <h3><a href="#" class="grouptrigger">SubProject Dependencies</a></h3>
+      </td>
+   <!-- quick links -->
+  <td colspan="4" align="right" class="nob">
+   <div id="Coverage">
+   </div>
+   <div class="quicklink">
+   <xsl:for-each select="/cdash/buildgroup">
+     <a>
+     <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
+     <xsl:value-of select="name"/></a> | 
+    </xsl:for-each>
+    <a href="#DynamicAnalysis">Dynamic Analysis</a>
+    </div> 
+    </td>
+   </tr>
+
+   <tr class="table-heading">
+      <th align="center" width="30%">Project</th>
+      <th align="center" width="10%">Configure</th>
+      <th align="center" width="10%">Build</th>
+      <th align="center"  width="10%">Test</th>
+      <th align="center"  width="20%">Last Submissions</th>
+   </tr>
+   
+  <xsl:for-each select="cdash/subproject/dependency">
+   <tr>
+      <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
+
+      <td align="center" class="paddt"><xsl:value-of select="name"/></td>
+      <td align="center" class="paddt"><xsl:value-of select="nconfigurefail"/>/<xsl:value-of select="nconfigure"/></td>
+      <td align="center" class="paddt"><xsl:value-of select="nbuildfail"/>/<xsl:value-of select="nbuild"/></td>
+      <td align="center" class="paddt"><xsl:value-of select="ntestfail"/>/<xsl:value-of select="ntest"/></td>
+      <td align="center"  class="nob"><xsl:value-of select="lastsubmission"/></td>
+   </tr>
+  </xsl:for-each>
+</tbody>
+</table>
+</xsl:if>
+ 
 <!-- Look each group -->
 <xsl:for-each select="cdash/buildgroup">
   <table border="0" cellpadding="4" cellspacing="0" width="100%">
