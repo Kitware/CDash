@@ -56,9 +56,8 @@ if($Submit)
       echo "Project [$name] import : $filename<br>";
       ob_flush(); 
       $handle = fopen($filename,"r");
-      $contents = fread($handle,filesize($filename));
-      $xml_array = parse_XML($contents);
-      ctest_parse($xml_array,$projectid);
+      ctest_parse($handle,$projectid);
+      fclose($handle);
       }
     else
       {
