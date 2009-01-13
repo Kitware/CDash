@@ -166,9 +166,10 @@ class SubProject
       return false;
       }
   
-    $project = pdo_query("SELECT count(*) FROM build,subproject2build WHERE subprojectid=".qnum($this->Id).
-                         " AND subproject2build.buildid=build.id AND build.starttime<'$startUTCdate' 
-                           AND build.starttime>='$endUTCdate'");
+    $project = pdo_query("SELECT count(build.id) FROM build,subproject2build WHERE subprojectid=".qnum($this->Id).
+                         " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'");
+                           
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfBuilds");
@@ -188,8 +189,8 @@ class SubProject
       }
   
     $project = pdo_query("SELECT count(*) FROM build,subproject2build,builderror WHERE subprojectid=".qnum($this->Id).
-                         " AND subproject2build.buildid=build.id AND build.starttime<'$startUTCdate' 
-                           AND build.starttime>='$endUTCdate' AND builderror.buildid=build.id");
+                         " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND builderror.buildid=build.id");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfFailingBuilds");
@@ -209,8 +210,8 @@ class SubProject
       }
   
     $project = pdo_query("SELECT count(*) FROM configure,build,subproject2build WHERE subprojectid=".qnum($this->Id).
-                         " AND configure.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime<'$startUTCdate' 
-                           AND build.starttime>='$endUTCdate'");
+                         " AND configure.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfConfigures");
@@ -230,8 +231,8 @@ class SubProject
       }
       
     $project = pdo_query("SELECT count(*) FROM configure,build,subproject2build WHERE subprojectid=".qnum($this->Id).
-                         " AND configure.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime<'$startUTCdate' 
-                           AND build.starttime>='$endUTCdate' AND configure.status='1'");
+                         " AND configure.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND configure.status='1'");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfFailingConfigures");
@@ -251,8 +252,8 @@ class SubProject
       }
   
     $project = pdo_query("SELECT count(*) FROM build2test,build,subproject2build WHERE subprojectid=".qnum($this->Id).
-                         " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime<'$startUTCdate' 
-                           AND build.starttime>='$endUTCdate'");
+                         " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfTests");
@@ -272,8 +273,8 @@ class SubProject
       }
   
     $project = pdo_query("SELECT count(*) FROM build2test,build,subproject2build WHERE subprojectid=".qnum($this->Id).
-                         " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime<'$startUTCdate' 
-                           AND build.starttime>='$endUTCdate' AND build2test.status!='passed'");
+                         " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND build2test.status!='passed'");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfFailingTests");
