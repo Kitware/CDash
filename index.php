@@ -292,11 +292,11 @@ function generate_main_dashboard_XML($projectid,$date)
       $DependProject->Id = $dependency;
       $xml .= add_XML_value("rowparity",$rowparity);
       $xml .= add_XML_value("name",$DependProject->GetName());
-      $xml .= add_XML_value("nbuildfail",$DependProject->GetNumberOfFailingBuilds($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("nbuildfail",$DependProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("nbuild",$DependProject->GetNumberOfBuilds($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nconfigurefail",$DependProject->GetNumberOfFailingConfigures($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("nconfigurefail",$DependProject->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("nconfigure",$DependProject->GetNumberOfConfigures($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("ntestfail",$DependProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("ntestfail",$DependProject->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("ntest",$DependProject->GetNumberOfTests($beginning_UTCDate,$end_UTCDate));
       if(strlen($DependProject->GetLastSubmission()) == 0)
         {
@@ -989,11 +989,11 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     $xml .= "<subproject>";
     $xml .= add_XML_value("row",$row);
     $xml .= add_XML_value("name",$SubProject->GetName());
-    $xml .= add_XML_value("nbuildfail",$SubProject->GetNumberOfFailingBuilds($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("nbuildfail",$SubProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("nbuild",$SubProject->GetNumberOfBuilds($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nconfigurefail",$SubProject->GetNumberOfFailingConfigures($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("nconfigurefail",$SubProject->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("nconfigure",$SubProject->GetNumberOfConfigures($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("ntestfail",$SubProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("ntestfail",$SubProject->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("ntest",$SubProject->GetNumberOfTests($beginning_UTCDate,$end_UTCDate));
     if(strlen($SubProject->GetLastSubmission()) == 0)
       {
