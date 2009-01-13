@@ -923,6 +923,49 @@ class Project
     return $this->CoverageThreshold;
     }   
  
+  /** Get the number of subproject */
+  function GetNumberOfSubProjects()
+    {
+    if(!$this->Id)
+      {
+      echo "Project GetNumberOfSubprojects(): Id not set";
+      return false;
+      }
+  
+    $project = pdo_query("SELECT count(*) FROM subproject WHERE projectid=".qnum($this->Id));
+    if(!$project)
+      {
+      add_last_sql_error("Project GetNumberOfSubprojects");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    return $project_array[0];
+    }   
+ 
+  /** Get the subproject ids*/
+  function GetSubProjects()
+    {
+    if(!$this->Id)
+      {
+      echo "Project GetNumberOfSubprojects(): Id not set";
+      return false;
+      }
+  
+    $project = pdo_query("SELECT id FROM subproject WHERE projectid=".qnum($this->Id));
+    if(!$project)
+      {
+      add_last_sql_error("Project GetSubProjects");
+      return false;
+      }
+    
+    $ids = array();
+    while($project_array = pdo_fetch_array($project))
+      {
+      $ids[] = $project_array['id'];
+      }
+    return $ids;
+    }  
+    
 }  // end class Project
 
 
