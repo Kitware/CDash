@@ -180,7 +180,7 @@ class SubProject
     }
   
   /** Get the number of failing builds given a date range */
-  function GetNumberOfFailingBuilds($startUTCdate,$endUTCdate)
+  function GetNumberOfPassingBuilds($startUTCdate,$endUTCdate)
     {
     if(!$this->Id)
       {
@@ -188,12 +188,18 @@ class SubProject
       return false;
       }
   
-    $project = pdo_query("SELECT count(*) FROM build,subproject2build,builderror WHERE subprojectid=".qnum($this->Id).
+  
+    $project = pdo_query("SELECT count(*) FROM (SELECT count(be.buildid) as c FROM subproject2build,build 
+                           LEFT JOIN builderror as be ON be.buildid=build.id 
+                          WHERE subprojectid=".qnum($this->Id).
                          " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND builderror.buildid=build.id");
+                           AND build.starttime<='$endUTCdate'
+                          GROUP BY build.id
+                          ) as t WHERE t.c=0");
+  
     if(!$project)
       {
-      add_last_sql_error("SubProject GetNumberOfFailingBuilds");
+      add_last_sql_error("SubProject GetNumberOfPassingBuilds");
       return false;
       }
     $project_array = pdo_fetch_array($project);
@@ -222,7 +228,7 @@ class SubProject
     }     
   
   /** Get the number of failing configure given a date range */
-  function GetNumberOfFailingConfigures($startUTCdate,$endUTCdate)
+  function GetNumberOfPassingConfigures($startUTCdate,$endUTCdate)
     {
     if(!$this->Id)
       {
@@ -232,7 +238,7 @@ class SubProject
       
     $project = pdo_query("SELECT count(*) FROM configure,build,subproject2build WHERE subprojectid=".qnum($this->Id).
                          " AND configure.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND configure.status='1'");
+                           AND build.starttime<='$endUTCdate' AND configure.status='0'");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfFailingConfigures");
@@ -264,7 +270,7 @@ class SubProject
     }
   
   /** Get the number of tests given a date range */
-  function GetNumberOfFailingTests($startUTCdate,$endUTCdate)
+  function GetNumberOfPassingTests($startUTCdate,$endUTCdate)
     {
     if(!$this->Id)
       {
@@ -274,7 +280,7 @@ class SubProject
   
     $project = pdo_query("SELECT count(*) FROM build2test,build,subproject2build WHERE subprojectid=".qnum($this->Id).
                          " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND build2test.status!='passed'");
+                           AND build.starttime<='$endUTCdate' AND build2test.status='passed'");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfFailingTests");
