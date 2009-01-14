@@ -66,7 +66,7 @@ class BuildHandler extends AbstractHandler
     else if($name=='ERROR') 
       {
       $this->Error = new BuildError();
-      $this->Error->Type = 1;
+      $this->Error->Type = 0;
       }
     }
   
