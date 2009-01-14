@@ -19,10 +19,12 @@
 <br/>
 
 <form name="form1" method="post" action="">
-This page allows you to import all of the xml files in the backup directory for this installation of CDash.<br/>
+This page allows you to import xml files in the backup directory for this installation of CDash.<br/>
 <br/>
 <p>
   <input type="submit" name="Submit" value="Import Backups"/>
+  matching
+  <input type="text" name="filemask" size="60" value="*.xml"/>
 </p>
 </form>
 <br/>

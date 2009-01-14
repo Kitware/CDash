@@ -41,11 +41,13 @@ $xml .= "<backurl>manageBackup.php</backurl>";
 $xml .= "</cdash>";
 
 @$Submit = $_POST["Submit"];
-if($Submit)
+@$filemask = $_POST["filemask"];
+
+if($Submit && $filemask)
   {
-  foreach(glob("$CDASH_BACKUP_DIRECTORY/*.xml") as $filename)
+  foreach(glob("$CDASH_BACKUP_DIRECTORY/$filemask") as $filename)
     {
-    # split on path separator 
+    # split on path separator
     $pathParts = split("[/\\.]", $filename);
     # split on cdash separator "_"
     $cdashParts = split("[_]", $pathParts[1]);
