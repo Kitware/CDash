@@ -44,8 +44,8 @@ class NoteHandler extends AbstractHandler
       $this->Site->Insert();
       
       $siteInformation = new SiteInformation();
-       $buildInformation =  new BuildInformation();
-      
+      $buildInformation = new BuildInformation();
+
       // Fill in the attribute
       foreach($attributes as $key=>$value)
         {
@@ -70,7 +70,7 @@ class NoteHandler extends AbstractHandler
       {
       // We need a build to add notes (and cannot create one from the information)
       $this->Build->ProjectId = $this->projectid;
-      $buildid = $this->Build->GetIdFromName();
+      $buildid = $this->Build->GetIdFromName($this->SubProjectName);
       $this->BuildId = $buildid;
       }
     } // end startElement
@@ -89,7 +89,7 @@ class NoteHandler extends AbstractHandler
         }
       else
         {
-        add_log("note_handle.php","Trying to add a note to an unexisting build");
+        add_log("note_handler.php","Trying to add a note to an unexisting build");
         }  
       }
    } // end endElement

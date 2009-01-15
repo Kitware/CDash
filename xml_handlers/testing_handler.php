@@ -33,6 +33,7 @@ class TestingHandler extends AbstractHandler
   private $BuildTestDiff;
   private $TestImage;
   private $TestMeasurement;
+  private $Append;
   
   /** Constructor */
   public function __construct($projectID)
@@ -76,6 +77,8 @@ class TestingHandler extends AbstractHandler
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
+
+      $this->Append = $attributes['APPEND'];
       }
     else if($name == "TEST" && count($attributes) > 0)
       {
@@ -113,8 +116,8 @@ class TestingHandler extends AbstractHandler
       {  
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $this->Build->ProjectId = $this->projectid;
-      $buildid = $this->Build->GetIdFromName();
-      
+      $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+
       // If the build doesn't exist we add it
       if($buildid==0)
         {
@@ -122,7 +125,11 @@ class TestingHandler extends AbstractHandler
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $start_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+        $this->Build->SetSubProject($this->SubProjectName);
+        $this->Build->Append = $this->Append;
+
         add_build($this->Build);
+
         $this->UpdateEndTime = true;  
         $buildid = $this->Build->Id;
         }

@@ -75,7 +75,7 @@ class CoverageLogHandler extends AbstractHandler
       {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $this->Build->ProjectId = $this->projectid;
-      $this->BuildId = $this->Build->GetIdFromName();
+      $this->BuildId = $this->Build->GetIdFromName($this->SubProjectName);
       if($this->BuildId == 0)
         {
         echo "Trying to add a coverage log to a build that doesn't exist";

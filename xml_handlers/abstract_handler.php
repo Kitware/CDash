@@ -27,7 +27,8 @@ abstract class AbstractHandler implements SaxHandler
   protected $projectid;
   protected $Build;
   protected $Site;
-    
+  protected $SubProjectName;
+
   public function __construct($projectid)
     {
     $this->projectid = $projectid;
@@ -47,13 +48,18 @@ abstract class AbstractHandler implements SaxHandler
   public function startElement($parser, $name, $attributes)
     {
     $this->stack->push($name);
+
+    if($name == 'SUBPROJECT')
+      {
+      $this->SubProjectName = $attributes['NAME'];
+      }
     }
-  
+
   public function endElement($parser, $name)
     {
     $this->stack->pop();
     }
-  
+
   public function processingInstruction($parser, $target, $data){}
   
   public function externalEntity($parser, $open_entity_name, $base, $system_id, $public_id){}

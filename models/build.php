@@ -18,6 +18,7 @@
 // It is assumed that appropriate headers should be included before including this file
 include('models/test.php');
 
+
 class BuildUserNote
 {
   var $UserId;
@@ -25,8 +26,8 @@ class BuildUserNote
   var $TimeStamp;
   var $Status;
   var $BuildId;
-  
-  function SetValue($tag,$value)  
+
+  function SetValue($tag,$value)
     {
     switch($tag)
       {
@@ -36,7 +37,7 @@ class BuildUserNote
       case "STATUS": $this->Status = $value;break;
       }
     } 
-    
+
   // Insert in the database
   function Insert()
     {
@@ -62,6 +63,7 @@ class BuildUserNote
     return true;
     }        
 }
+
 
 /** BuildErrorDiff */
 class BuildErrorDiff
@@ -97,7 +99,7 @@ class BuildErrorDiff
       echo "BuildErrorDiff::Save(): BuildId not set<br>";
       return false;    
       }
-      
+
     if($this->Exists())
       {
       // Update
@@ -124,6 +126,7 @@ class BuildErrorDiff
     return true;
     }      
 }
+
 
 /** BuildError */
 class BuildError
@@ -178,6 +181,7 @@ class BuildError
     } // end insert
 }
 
+
 class BuildInformation
 {
   var $BuildId;
@@ -215,6 +219,7 @@ class BuildInformation
     } // end function save  
 }
 
+
 class Build
 {
   var $Id;
@@ -230,66 +235,80 @@ class Build
   var $Command;
   var $Log;
   var $Information;
-  
+
   // For the moment we accept only one group per build
   var $GroupId;  
-  
+
   var $Errors;
   var $ErrorDiffs;
-  
+
+  var $SubProjectId;
+  var $SubProjectName;
+  var $Append;
+
+
   function __construct()
     {
     $this->Errors = array();
     $this->ErrorDiffs = array();
     }
-  
+
+
   function AddError($error)
     {
     $error->BuildId = $this->Id;
     $this->Errors[] = $error;
     }
+
   
   function AddErrorDiff($diff)
     {
     $diff->BuildId = $this->Id;
     $this->ErrorDiffs[] = $diff;
     }    
+
     
   function SaveTest($test)
     {
     $test->BuildId = $this->Id;
     $test->Insert();
     }
+
   
   function SaveTestDiff($diff)
     {
     $diff->BuildId = $this->Id;
     $diff->Insert();
     }    
+
   
   function SaveUpdate($update)
     {
     $update->BuildId = $this->Id;
     $update->Insert();
     }
+
     
   function SaveConfigure($configure)
     {
     $configure->BuildId = $this->Id;
     $configure->Insert();
     }
+
   
   function SaveNote($note)
     {
     $note->BuildId = $this->Id;
     $note->Insert();
     }
+
   
   function SaveUserNote($note)
     {
     $note->BuildId = $this->Id;
     $note->Insert();
     }
+
     
   function SetStamp($stamp)
     {
@@ -299,12 +318,55 @@ class Build
       $this->Type = extract_type_from_buildstamp($this->Stamp);
       }
     }    
-  
+
+
   function GetStamp()
     {
     return $this->Stamp;
     }  
-    
+
+
+  function SetSubProject($subproject)
+    {
+    if(!empty($this->SubProjectId))
+      {
+      return $this->SubProjectId;
+      }
+
+    if(empty($subproject))
+      {
+      return false;
+      }
+
+    if(empty($this->ProjectId))
+      {
+      add_log('error: need ProjectId to fetch SubProjectId for ' . $subproject, 'Build::SetSubProject');
+      return false;
+      }
+
+    $query = pdo_query(
+      "SELECT id FROM subproject WHERE name='$subproject' AND " .
+        "projectid=" . qnum($this->ProjectId)
+        );
+    if(!$query)
+      {
+      add_last_sql_error("Build:SetSubProject()");
+      return false;
+      }  
+
+    if(pdo_num_rows($query)>0)
+      {
+      $query_array = pdo_fetch_array($query);
+      $this->SubProjectId = $query_array['id'];
+      $this->SubProjectName = $subproject;
+      return $this->SubProjectId; 
+      }
+
+    add_log('error: could not retrieve SubProjectId for subproject: ' . $subproject, 'Build::SetSubProject');
+    return false;
+    }
+
+
   /** Update the end time */
   function UpdateEndTime($end_time)
     {
@@ -312,15 +374,16 @@ class Build
       {
       return false;
       }
-      
-    $query = "UPDATE build SET endtime=$endtime WHERE id='$this->Id')";                     
+
+    $query = "UPDATE build SET endtime='$end_time' WHERE id='$this->Id'";
     if(!pdo_query($query))
       {
       add_last_sql_error("Build:UpdateEndTime()");
       return false;
       }  
     }
-  
+
+
   /** Fill the current build information from the build id */
   function FillFromId($buildid)
     {
@@ -337,9 +400,23 @@ class Build
     $this->StartTime = $build_array["starttime"];
     $this->SiteId = $build_array["siteid"];
     $this->ProjectId = $build_array["projectid"];
+
+    $query2 = pdo_query(
+      "SELECT id FROM subproject, subproject2build " .
+      "WHERE subproject.id=subproject2build.subprojectid AND subproject2build.buildid=" .
+      qnum($buildid));
+    if(!$query2)
+      {
+      add_last_sql_error("Build:FillFromId()");
+      return false;
+      }
+    $subprojectid_array = pdo_fetch_array($query2);
+    $this->SubProjectId = $subprojectid_array["id"];
+    add_log('info: subprojectid: ' . $this->SubProjectId, 'Build::FillFromId');
     }
-  
-  /** Get the previous build id */  
+
+
+  /** Get the previous build id */
   function GetPreviousBuildId()
     {
     if(!$this->Id)
@@ -364,6 +441,7 @@ class Build
       }
     return false;
     }
+
 
   /** Get the next build id */
   function GetNextBuildId()
@@ -392,6 +470,7 @@ class Build
     return false;
     }
 
+
   /** Get the last build id */
   function GetLastBuildId()
     {
@@ -412,7 +491,8 @@ class Build
     return false;
     }
 
-  /**  et the value */
+
+  /**  Set the value */
   function SetValue($tag,$value)  
     {
     switch($tag)
@@ -429,25 +509,67 @@ class Build
       case "COMMAND": $this->Command = $value;break;
       case "LOG": $this->Log = $value;break;
       case "GROUPID": $this->GroupId = $value;break;
+      case "SUBPROJECTID": $this->SubProjectId = $value;break;
       }
     }
-  
-  function GetIdFromName()
+
+
+  function GetIdFromName($subproject)
     {
-    // First we check if the build already exists if this is the case we delete all related information regarding
-    // The previous build
-    $build = pdo_query("SELECT id FROM build WHERE projectid=".qnum($this->ProjectId)." AND siteid=".qnum($this->SiteId).
-                        " AND name='".$this->Name."' AND stamp='".$this->Stamp."'");
+    $buildid = 0;
+    $subprojectid = 0;
+
+    // If there's a subproject given then only return a build id if there is also
+    // a record for that subproject already associated with that buildid...
+    //
+    if ($subproject != '')
+      {
+      $query = pdo_query("SELECT id FROM subproject WHERE name='".$subproject."'");
+      if(pdo_num_rows($query)>0)
+        {
+        $rows = pdo_fetch_array($query);
+        $subprojectid = $rows['id'];
+        //add_log('subprojectid='.$subprojectid, 'Build::GetIdFromName');
+        }
+      }
+    else
+      {
+      //add_log('still no subproject... WT*?', 'Build::GetIdFromName');
+      }
+
+    if($subprojectid != 0)
+      {
+      $build = pdo_query("SELECT id FROM build, subproject2build".
+                         " WHERE projectid=".qnum($this->ProjectId).
+                         " AND siteid=".qnum($this->SiteId).
+                         " AND name='".$this->Name."'".
+                         " AND stamp='".$this->Stamp."'".
+                         " AND build.id=subproject2build.buildid".
+                         " AND subproject2build.subprojectid=".qnum($subprojectid));
+      }
+    else
+      {
+      $build = pdo_query("SELECT id FROM build".
+                         " WHERE projectid=".qnum($this->ProjectId).
+                         " AND siteid=".qnum($this->SiteId).
+                         " AND name='".$this->Name."'".
+                         " AND stamp='".$this->Stamp."'");
+      }
 
     if(pdo_num_rows($build)>0)
       {
       $build_array = pdo_fetch_array($build);
-      return $build_array["id"];
+      $buildid = $build_array["id"];
+      //add_log('returning '.$buildid, 'Build::GetIdFromName');
+      return $buildid;
       }
-    echo pdo_error();    
+
+    echo pdo_error();
+    //add_log('returning 0 after pdo_error...', 'Build::GetIdFromName');
     return 0;  
     }  
-    
+
+
   /** Return if exists */
   function Exists()
     {
@@ -455,8 +577,8 @@ class Build
       {
       return false;    
       }
-      
-    $query = pdo_query("SELECT count(*) FROM build WHERE id='".$this->Id."'");  
+
+    $query = pdo_query("SELECT count(*) FROM build WHERE id='".$this->Id."'");
     $query_array = pdo_fetch_array($query);
     if($query_array['count(*)']>0)
       {
@@ -464,6 +586,7 @@ class Build
       }
     return false;
     }      
+
       
   // Save in the database
   function Save()
@@ -492,7 +615,7 @@ class Build
       $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
       $this->Command = pdo_real_escape_string($this->Command);
       $this->Log = pdo_real_escape_string($this->Log);
-        
+
       $query = "INSERT INTO build (".$id."siteid,projectid,stamp,name,type,generator,starttime,endtime,submittime,command,log)
                 VALUES (".$idvalue."'$this->SiteId','$this->ProjectId','$this->Stamp','$this->Name',
                         '$this->Type','$this->Generator','$this->StartTime',
@@ -515,7 +638,18 @@ class Build
           return false;
           }  
         }
-        
+
+      // Add the subproject2build relationship:
+      if($this->SubProjectId)
+        {
+        $query = "INSERT INTO subproject2build (subprojectid,buildid) VALUES ('$this->SubProjectId','$this->Id')";
+        if(!pdo_query($query))
+          {
+          add_last_sql_error("Build Insert");
+          return false;
+          }  
+        }
+
       // Add errors/warnings
       foreach($this->Errors as $error)
         {
@@ -537,10 +671,49 @@ class Build
         $this->Information->Save();
         }      
       }
+    else
+      {
+      if ($this->Append)
+        {
+        //add_log("info: Append UPDATE into build id: " . $this->Id, 'Build::Save');
+        $this->EndTime = pdo_real_escape_string($this->EndTime);
+        $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
+        $this->Command = pdo_real_escape_string(' '.$this->Command);
+        $this->Log = pdo_real_escape_string(' '.$this->Log);
+
+        $query = "UPDATE build SET endtime='$this->EndTime', submittime='$this->SubmitTime'," .
+          "command=CONCAT(command, '$this->Command'), log=CONCAT(log, '$this->Log')" .
+          "WHERE id=".qnum($this->Id);
+        if(!pdo_query($query))
+          {
+          add_last_sql_error("Build Insert (Append)");
+          return false;
+          }
+
+        // Add errors/warnings
+        foreach($this->Errors as $error)
+          {
+          $error->BuildId = $this->Id;
+          $error->Insert();
+          }
+
+        // Add ErrorDiff
+        foreach($this->ErrorDiffs as $diff)
+          {
+          $diff->BuildId = $this->Id;
+          $diff->Insert();
+          } 
+        }  
+      else
+        {
+        //echo "info: nothing<br/>";
+        }
+      }
+
     return true;
     }
-    
-    
+
+
   /** Compute the test timing as a weighted average of the previous test.
    *  Also compute the difference in errors and tests between builds.
    *  We do that in one shot for speed reasons. */
@@ -551,14 +724,14 @@ class Build
       add_log("BuildId is not set","Build::ComputeTestTiming");
       return false;
       }
-    
+
     if(!$this->ProjectId)
       {
       add_log("ProjectId is not set","Build::ComputeTestTiming");
       return false;
       }
-        
-    // TEST TIMING 
+
+    // TEST TIMING
     $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
     $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id=".qnum($this->Id));
       
@@ -711,6 +884,7 @@ class Build
       
     return true;  
     } // end function compute_test_timing
+
   
   /** Compute the user statistics */
   function ComputeUpdateStatistics()
@@ -826,8 +1000,8 @@ class Build
     
     return true;
     } // end function ComputeUpdateStatistics
-  
-  
+
+
   /** Helper function for compute_update_statistics */
   private function AddUpdateStatistics($author,$checkindate,$firstbuild,
                                         $warningdiff,$errordiff,$testdiff)
@@ -978,8 +1152,8 @@ class Build
       add_last_sql_error("add_update_statistics");
       } 
     } // end add_update_statistics
-  
-  
+
+
   /** Find the errors associated with a user */
   private function FindRealErrors($type,$author,$buildid,$filename)
     {
@@ -993,7 +1167,8 @@ class Build
     $errors_array  = pdo_fetch_array($errors);
     return $errors_array[0];
     } // end FindRealErrors
-  
+
+
   /** Return the name of a build */
   function GetName()
     {
@@ -1002,7 +1177,7 @@ class Build
       echo "Build GetName(): Id not set";
       return false;
       }
-  
+
     $build = pdo_query("SELECT name FROM build WHERE id=".qnum($this->Id));
     if(!$build)
       {
@@ -1012,6 +1187,7 @@ class Build
     $build_array = pdo_fetch_array($build);
     return $build_array['name'];
     }
-  
-} // end class build
+
+
+} // end class Build
 ?>

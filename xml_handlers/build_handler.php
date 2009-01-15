@@ -24,24 +24,26 @@ class BuildHandler extends AbstractHandler
   private $StartTimeStamp;
   private $EndTimeStamp;
   private $Error;
-  
+  private $Append;
+
   public function __construct($projectid)
     {
     parent::__construct($projectid);
     $this->Build = new Build();
     $this->Site = new Site();
     }
-  
+
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
+
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
       $this->Site->Insert();
       
       $siteInformation = new SiteInformation();
-       $buildInformation =  new BuildInformation();
+      $buildInformation = new BuildInformation();
       
       // Fill in the attribute
       foreach($attributes as $key=>$value)
@@ -57,6 +59,8 @@ class BuildHandler extends AbstractHandler
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
+
+      $this->Append = $attributes['APPEND'];
       }
     else if($name=='WARNING') 
       {
@@ -69,10 +73,11 @@ class BuildHandler extends AbstractHandler
       $this->Error->Type = 0;
       }
     }
-  
+
   public function endElement($parser, $name)
     {
     parent::endElement($parser, $name);
+
     if($name == 'BUILD')
       {    
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
@@ -83,7 +88,9 @@ class BuildHandler extends AbstractHandler
       $this->Build->StartTime = $start_time;
       $this->Build->EndTime = $end_time;
       $this->Build->SubmitTime = $submit_time;
-      
+      $this->Build->SetSubProject($this->SubProjectName);
+      $this->Build->Append = $this->Append;
+
       add_build($this->Build);
       }
     else if($name=='WARNING' || $name=='ERROR') 

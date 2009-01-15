@@ -72,7 +72,7 @@ class UpdateHandler extends AbstractHandler
       $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
       $this->Build->ProjectId = $this->projectid;
-      $buildid = $this->Build->GetIdFromName();
+      $buildid = $this->Build->GetIdFromName($this->SubProjectName);
 
       // If the build doesn't exist we add it
       if($buildid==0)
@@ -81,7 +81,7 @@ class UpdateHandler extends AbstractHandler
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $end_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-        add_build($this->Build);   
+        add_build($this->Build);
         $buildid = $this->Build->Id;
         }
       

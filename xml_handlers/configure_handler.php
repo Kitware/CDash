@@ -20,13 +20,13 @@ require_once('models/build.php');
 require_once('models/site.php');
 require_once('models/buildconfigure.php');
 
-class ConfigureHandler extends AbstractHandler 
+class ConfigureHandler extends AbstractHandler
 {  
   private $StartTimeStamp;
   private $EndTimeStamp;
-  
+
   private $Configure;
-  
+
   public function __construct($projectid)
     {
     parent::__construct($projectid);
@@ -34,27 +34,28 @@ class ConfigureHandler extends AbstractHandler
     $this->Site = new Site();
     $this->Configure = new BuildConfigure();
     }
-  
+
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
+
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
       $this->Site->Insert();
-      
+
       $siteInformation = new SiteInformation();
-       $buildInformation =  new BuildInformation();
-      
+      $buildInformation = new BuildInformation();
+
       // Fill in the attribute
       foreach($attributes as $key=>$value)
         {
         $siteInformation->SetValue($key,$value);
         $buildInformation->SetValue($key,$value);
         }
-      
+
       $this->Site->SetInformation($siteInformation);
-      
+
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
@@ -62,17 +63,18 @@ class ConfigureHandler extends AbstractHandler
       $this->Build->Information = $buildInformation;
       }
     }
-  
+
   public function endElement($parser, $name)
     {
     parent::endElement($parser, $name);
+
     if($name=='CONFIGURE')
       {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
       $this->Build->ProjectId = $this->projectid;
-      $buildid = $this->Build->GetIdFromName();
+      $buildid = $this->Build->GetIdFromName($this->SubProjectName);
 
       // If the build doesn't exist we add it
       if($buildid==0)
@@ -81,7 +83,8 @@ class ConfigureHandler extends AbstractHandler
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $end_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-        add_build($this->Build);   
+        $this->Build->SetSubProject($this->SubProjectName);
+        add_build($this->Build);
         $buildid = $this->Build->Id;
         }
       
@@ -94,11 +97,12 @@ class ConfigureHandler extends AbstractHandler
       $this->Configure->ComputeErrors();
       }
     }
-  
+
   public function text($parser, $data)
     {
     $parent = $this->getParent();
     $element = $this->getElement();
+
     if($parent=='CONFIGURE')
       {
       switch ($element)
@@ -127,6 +131,5 @@ class ConfigureHandler extends AbstractHandler
         }
       }
     }
-    
 }
 ?>

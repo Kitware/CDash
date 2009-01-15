@@ -7,20 +7,28 @@ function add_build($build)
     {
     return;
     }  
-  
-  $buildid = $build->GetIdFromName();
-  
-  if($buildid > 0)
+
+  //add_log('subprojectname: '.$build->SubProjectName, 'add_build');
+  $buildid = $build->GetIdFromName($build->SubProjectName);
+
+  if($buildid > 0 && !$build->Append)
     {
     remove_build($buildid);
     }
-    
+
+  // Move this into a Build::SetAppend($append, $buildid) method:
+  //
+  if (!$build->Exists() && $build->Append && empty($build->Id))
+    {
+    $build->Id = $buildid;
+    }
+
   // Find the groupid
   $buildGroup = new BuildGroup();
   $build->GroupId = $buildGroup->GetGroupIdFromRule($build);
-  
+
   $build->Save();
-    
+
   return $build->Id;
 }
 

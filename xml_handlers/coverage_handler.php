@@ -90,7 +90,7 @@ class CoverageHandler extends AbstractHandler
       $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
       $this->Build->ProjectId = $this->projectid;
-      $buildid = $this->Build->GetIdFromName();
+      $buildid = $this->Build->GetIdFromName($this->SubProjectName);
 
       // If the build doesn't exist we add it
       if($buildid==0)
