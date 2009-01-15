@@ -573,11 +573,11 @@ function generate_main_dashboard_XML($projectid,$date)
       }
 
     $diff = (strtotime($updatestatus_array["endtime"])-strtotime($updatestatus_array["starttime"]))/60;
-    $xml .= "<time>".$diff."</time>";
+    $xml .= "<time>".round($diff,1)."</time>";
 
-    $xml .= "</update>";  
+    $xml .= "</update>";
     $xml .= "<compilation>";
-    
+
     // Find the number of errors and warnings
     $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
     $builderror_array = pdo_fetch_array($builderror);
@@ -590,7 +590,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $totalwarnings += $nwarnings;
     $xml .= add_XML_value("warning",$nwarnings);
     $diff = (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;
-    $xml .= "<time>".$diff."</time>";
+    $xml .= "<time>".round($diff,1)."</time>";
     
     // Differences between number of errors and warnings
     $builderrordiff = pdo_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='0'");
@@ -633,7 +633,7 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       
       $diff = (strtotime($configure_array["endtime"])-strtotime($configure_array["starttime"]))/60;
-      $xml .= "<time>".$diff."</time>";
+      $xml .= "<time>".round($diff,1)."</time>";
       }
     $xml .= "</configure>";
      
