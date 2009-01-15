@@ -79,9 +79,70 @@
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;subproject=<xsl:value-of select="name"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
      <xsl:value-of select="name"/>
      </a></td>
-    <td align="center"><xsl:value-of select="nconfigurefail"/>/<xsl:value-of select="nconfigure"/></td>
-    <td align="center"><xsl:value-of select="nbuildfail"/>/<xsl:value-of select="nbuild"/></td>
-    <td align="center"><xsl:value-of select="ntestfail"/>/<xsl:value-of select="ntest"/></td>
+    <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="nconfigurepass &lt; nconfigure">
+            error
+            </xsl:when>
+            <xsl:otherwise>
+            <xsl:choose>
+            <xsl:when test="nconfigurepass &lt; nconfigure">
+            warning
+            </xsl:when>
+            <xsl:otherwise>
+            <xsl:if test="nconfigure > 0">
+            normal
+            </xsl:if>
+            </xsl:otherwise>
+            </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:value-of select="nconfigurepass"/>/<xsl:value-of select="nconfigure"/>
+    </td>
+    <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="nbuildpass &lt; nbuild">
+            error
+            </xsl:when>
+            <xsl:otherwise>
+            <xsl:choose>
+            <xsl:when test="nbuildpass &lt; nbuild">
+            warning
+            </xsl:when>
+            <xsl:otherwise>
+            <xsl:if test="nbuild > 0">
+            normal
+            </xsl:if>
+            </xsl:otherwise>
+            </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:attribute>
+    <xsl:value-of select="nbuildpass"/>/<xsl:value-of select="nbuild"/></td>
+    <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="ntestpass &lt; ntest">
+            error
+            </xsl:when>
+            <xsl:otherwise>
+            <xsl:choose>
+            <xsl:when test="ntestpass &lt; ntest">
+            warning
+            </xsl:when>
+            <xsl:otherwise>
+            <xsl:if test="ntest > 0">
+            normal
+            </xsl:if>
+            </xsl:otherwise>
+            </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:attribute>
+    <xsl:value-of select="ntestpass"/>/<xsl:value-of select="ntest"/></td>
     <td align="center" class="nob"><xsl:value-of select="lastsubmission"/></td>
     </tr>
    </xsl:for-each>
