@@ -283,6 +283,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $SubProject->ProjectId = $projectid;
     $subprojectid = $SubProject->GetIdFromName();
     
+    $xml .= add_XML_value("name",$SubProject->Name );
+     
     $rowparity = 0;
     $dependencies = $SubProject->GetDependencies();
     foreach($dependencies as $dependency)
@@ -292,12 +294,15 @@ function generate_main_dashboard_XML($projectid,$date)
       $DependProject->Id = $dependency;
       $xml .= add_XML_value("rowparity",$rowparity);
       $xml .= add_XML_value("name",$DependProject->GetName());
+      $xml .= add_XML_value("nbuilderror",$DependProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("nbuildwarning",$DependProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate)); 
       $xml .= add_XML_value("nbuildpass",$DependProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nbuild",$DependProject->GetNumberOfBuilds($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("nconfigureerror",$DependProject->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("nconfigurewarning",$DependProject->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("nconfigurepass",$DependProject->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nconfigure",$DependProject->GetNumberOfConfigures($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("ntestpass",$DependProject->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("ntest",$DependProject->GetNumberOfTests($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("ntestfail",$DependProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
+      $xml .= add_XML_value("ntestnotrun",$DependProject->GetNumberOfNotRunTests($beginning_UTCDate,$end_UTCDate));
       if(strlen($DependProject->GetLastSubmission()) == 0)
         {
         $xml .= add_XML_value("lastsubmission","NA");
@@ -978,7 +983,28 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("admin",$isadmin);
     $xml .= "</user>";
     }
- 
+    
+  // Get some information about the project
+  $xml .= "<project>";
+  $xml .= add_XML_value("nbuilderror",$Project->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
+  $xml .= add_XML_value("nbuildwarning",$Project->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate)); 
+  $xml .= add_XML_value("nbuildpass",$Project->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
+  $xml .= add_XML_value("nconfigureerror",$Project->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
+  $xml .= add_XML_value("nconfigurewarning",$Project->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
+  $xml .= add_XML_value("nconfigurepass",$Project->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
+  $xml .= add_XML_value("ntestpass",$Project->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
+  $xml .= add_XML_value("ntestfail",$Project->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
+  $xml .= add_XML_value("ntestnotrun",$Project->GetNumberOfNotRunTests($beginning_UTCDate,$end_UTCDate));
+  if(strlen($Project->GetLastSubmission()) == 0)
+    {
+    $xml .= add_XML_value("lastsubmission","NA");
+    }
+  else
+    {  
+    $xml .= add_XML_value("lastsubmission",$Project->GetLastSubmission());
+    }  
+  $xml .= "</project>";
+  
   // Look for the subproject
   $row=0;
   $subprojectids = $Project->GetSubProjects();
@@ -989,12 +1015,16 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     $xml .= "<subproject>";
     $xml .= add_XML_value("row",$row);
     $xml .= add_XML_value("name",$SubProject->GetName());
+    
+    $xml .= add_XML_value("nbuilderror",$SubProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("nbuildwarning",$SubProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate)); 
     $xml .= add_XML_value("nbuildpass",$SubProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nbuild",$SubProject->GetNumberOfBuilds($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("nconfigureerror",$SubProject->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("nconfigurewarning",$SubProject->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("nconfigurepass",$SubProject->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nconfigure",$SubProject->GetNumberOfConfigures($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("ntestpass",$SubProject->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("ntest",$SubProject->GetNumberOfTests($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("ntestfail",$SubProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
+    $xml .= add_XML_value("ntestnotrun",$SubProject->GetNumberOfNotRunTests($beginning_UTCDate,$end_UTCDate));
     if(strlen($SubProject->GetLastSubmission()) == 0)
       {
       $xml .= add_XML_value("lastsubmission","NA");
@@ -1064,7 +1094,13 @@ else
   // Check if the project has any subproject 
   $Project = new Project();
   $Project->Id = $projectid;
-  if(!isset($_GET["subproject"]) && $Project->GetNumberOfSubProjects() > 0)
+  $displayProject = false;
+  if(isset($_GET["display"]) && $_GET["display"]=="project")
+    {
+    $displayProject = true;
+    }
+  
+  if(!$displayProject && !isset($_GET["subproject"]) && $Project->GetNumberOfSubProjects() > 0)
     {  
     $xml = generate_subprojects_dashboard_XML($projectid,$date);
     // Now doing the xslt transition

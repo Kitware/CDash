@@ -71,7 +71,16 @@
     <td width="425" valign="top" class="insd">
     <div class="insdd">
       <span class="inn1"><xsl:value-of select="cdash/dashboard/projectname"/></span><br />
-      <span class="inn2">Dashboard</span>
+      <span class="inn2">
+      <xsl:choose>
+      <xsl:when test="string-length(cdash/subproject/name)>0">
+      <xsl:value-of select="cdash/subproject/name"/>
+      </xsl:when>
+      <xsl:otherwise>
+      Dashboard
+      </xsl:otherwise>
+      </xsl:choose>
+      </span>
       </div>
     </td>
     <td height="121" class="insd2"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>

@@ -51,20 +51,185 @@
 </xsl:if>
 
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+<!-- Display the project -->
 <tbody>
 <tr class="table-heading1">
-  <td colspan="5" align="left" class="nob"><h3>SubProjects</h3></td>
+  <td colspan="11" align="left" class="nob"><h3>Project</h3></td>
+</tr>
+  <tr class="table-heading">
+     <td align="center" rowspan="2" width="20%"><b>Project</b></td>
+     <td align="center" colspan="3" width="20%"><b>Configure</b></td>
+     <td align="center" colspan="3" width="20%"><b>Build</b></td>
+     <td align="center" colspan="3" width="20%"><b>Test</b></td>
+     <td align="center" rowspan="2" width="20%" class="nob"><b>Last submission</b></td>
+  </tr>
+   <tr class="table-heading">
+     <td align="center"><b>Error</b></td>
+     <td align="center"><b>Warning</b></td>
+     <td align="center"><b>Pass</b></td>
+     <td align="center"><b>Error</b></td>
+     <td align="center"><b>Warning</b></td>
+     <td align="center"><b>Pass</b></td>
+     <td align="center"><b>Not Run</b></td>
+     <td align="center"><b>Fail</b></td>
+     <td align="center"><b>Pass</b></td>
+  </tr>
+  
+   <tr class="treven">
+   <td align="center">
+     <a>
+     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;display=project&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
+     <xsl:value-of select="/cdash/dashboard/projectname"/>
+     </a></td>
+    <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/nconfigureerror>0">error</xsl:when>
+          <xsl:otherwise> 
+          <xsl:choose>
+          <xsl:when test="/cdash/project/nconfigureerror=0 and /cdash/project/nconfigurewarning=0 and /cdash/project/nconfigurepass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">  
+    <xsl:value-of select="/cdash/project/nconfigureerror"/>
+    </xsl:if>
+    </td>
+    <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/nconfigurewarning>0">warning</xsl:when>
+          <xsl:otherwise>
+          <xsl:choose>
+          <xsl:when test="/cdash/project/nconfigureerror=0 and /cdash/project/nconfigurewarning=0 and /cdash/project/nconfigurepass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">  
+    <xsl:value-of select="/cdash/project/nconfigurewarning"/>
+    </xsl:if>
+    </td>
+    <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/nconfigureerror=0 and /cdash/project/nconfigurewarning=0 and /cdash/project/nconfigurepass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute> 
+    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">        
+    <xsl:value-of select="/cdash/project/nconfigurepass"/>
+    </xsl:if>
+    </td>
+   <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/nbuilderror>0">error</xsl:when>
+          <xsl:otherwise><xsl:choose>
+          <xsl:when test="/cdash/project/nbuilderror=0 and /cdash/project/nbuildwarning=0 and /cdash/project/nbuildpass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">        
+    <xsl:value-of select="/cdash/project/nbuilderror"/>
+    </xsl:if>
+    </td>
+   <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/nbuildwarning>0">warning</xsl:when>
+          <xsl:otherwise><xsl:choose>
+          <xsl:when test="/cdash/project/nbuilderror=0 and /cdash/project/nbuildwarning=0 and /cdash/project/nbuildpass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">     
+    <xsl:value-of select="/cdash/project/nbuildwarning"/>
+    </xsl:if>
+    </td>
+   <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/nbuildpass>0">normal</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">     
+    <xsl:value-of select="nbuildpass"/>
+    </xsl:if>
+    </td>
+   <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/ntestnotrun>0">error</xsl:when>
+          <xsl:otherwise><xsl:choose>
+          <xsl:when test="/cdash/project/ntestfail=0 and /cdash/project/ntestpass=0 and /cdash/project/ntestnotrun=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/ntestfail!=0 or /cdash/project/ntestpass!=0 or /cdash/project/ntestnotrun!=0">
+    <xsl:value-of select="/cdash/project/ntestnotrun"/>
+    </xsl:if>
+    </td>
+  <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/ntestfail>0">error</xsl:when>
+          <xsl:otherwise><xsl:choose>
+          <xsl:when test="/cdash/project/ntestfail=0 and /cdash/project/ntestpass=0 and /cdash/project/ntestnotrun=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>  
+    <xsl:if test="/cdash/project/ntestfail!=0 or /cdash/project/ntestpass!=0 or /cdash/project/ntestnotrun!=0">    
+    <xsl:value-of select="/cdash/project/ntestfail"/>
+    </xsl:if>
+    </td>
+  <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/project/ntestpass>0">normal</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute> 
+    <xsl:if test="/cdash/project/ntestfail!=0 or /cdash/project/ntestpass!=0 or /cdash/project/ntestnotrun!=0">   
+    <xsl:value-of select="/cdash/project/ntestpass"/>
+    </xsl:if>
+    </td>
+    <td align="center" class="nob"><xsl:value-of select="/cdash/project/lastsubmission"/></td>
+    </tr>
+</tbody>
+<!-- Display the subprojects -->
+<tbody>
+<tr class="table-heading1">
+  <td colspan="11" align="left" class="nob"><h3>SubProjects</h3></td>
 </tr>
 
   <tr class="table-heading">
-     <td align="center" width="30%"><b>Project</b></td>
-     <td align="center" width="10%"><b>Configure</b></td>
-     <td align="center" width="10%"><b>Build</b></td>
-     <td align="center" width="10%"><b>Test</b></td>
-     <td align="center" width="20%" class="nob"><b>Last submission</b></td>
+     <td align="center" rowspan="2" width="10%"><b>Project</b></td>
+     <td align="center" colspan="3" width="20%"><b>Configure</b></td>
+     <td align="center" colspan="3" width="20%"><b>Build</b></td>
+     <td align="center" colspan="3" width="20%"><b>Test</b></td>
+     <td align="center" rowspan="2" width="30%" class="nob"><b>Last submission</b></td>
   </tr>
-
-   <xsl:for-each select="cdash/subproject">
+   <tr class="table-heading">
+     <td align="center"><b>Error</b></td>
+     <td align="center"><b>Warning</b></td>
+     <td align="center"><b>Pass</b></td>
+     <td align="center"><b>Error</b></td>
+     <td align="center"><b>Warning</b></td>
+     <td align="center"><b>Pass</b></td>
+     <td align="center"><b>Not Run</b></td>
+     <td align="center"><b>Fail</b></td>
+     <td align="center"><b>Pass</b></td>
+  </tr>
+  
+  <xsl:for-each select="cdash/subproject">
    <tr>
      <xsl:choose>
           <xsl:when test="row=0">
@@ -82,67 +247,124 @@
     <td align="center">
     <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="nconfigurepass &lt; nconfigure">
-            error
-            </xsl:when>
-            <xsl:otherwise>
-            <xsl:choose>
-            <xsl:when test="nconfigurepass &lt; nconfigure">
-            warning
-            </xsl:when>
-            <xsl:otherwise>
-            <xsl:if test="nconfigure > 0">
-            normal
-            </xsl:if>
-            </xsl:otherwise>
-            </xsl:choose>
-            </xsl:otherwise>
+          <xsl:when test="nconfigureerror>0">error</xsl:when>
+          <xsl:otherwise> 
+          <xsl:choose>
+          <xsl:when test="nconfigureerror=0 and nconfigurewarning=0 and nconfigurepass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>    
-    <xsl:value-of select="nconfigurepass"/>/<xsl:value-of select="nconfigure"/>
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">  
+    <xsl:value-of select="nconfigureerror"/>
+    </xsl:if>
     </td>
     <td align="center">
     <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="nbuildpass &lt; nbuild">
-            error
-            </xsl:when>
-            <xsl:otherwise>
-            <xsl:choose>
-            <xsl:when test="nbuildpass &lt; nbuild">
-            warning
-            </xsl:when>
-            <xsl:otherwise>
-            <xsl:if test="nbuild > 0">
-            normal
-            </xsl:if>
-            </xsl:otherwise>
-            </xsl:choose>
-            </xsl:otherwise>
+          <xsl:when test="nconfigurewarning>0">warning</xsl:when>
+          <xsl:otherwise>
+          <xsl:choose>
+          <xsl:when test="nconfigureerror=0 and nconfigurewarning=0 and nconfigurepass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose>
+          </xsl:otherwise>
         </xsl:choose>
-    </xsl:attribute>
-    <xsl:value-of select="nbuildpass"/>/<xsl:value-of select="nbuild"/></td>
+      </xsl:attribute>    
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">  
+    <xsl:value-of select="nconfigurewarning"/>
+    </xsl:if>
+    </td>
     <td align="center">
     <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="ntestpass &lt; ntest">
-            error
-            </xsl:when>
-            <xsl:otherwise>
-            <xsl:choose>
-            <xsl:when test="ntestpass &lt; ntest">
-            warning
-            </xsl:when>
-            <xsl:otherwise>
-            <xsl:if test="ntest > 0">
-            normal
-            </xsl:if>
-            </xsl:otherwise>
-            </xsl:choose>
-            </xsl:otherwise>
+          <xsl:when test="nconfigureerror=0 and nconfigurewarning=0 and nconfigurepass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
         </xsl:choose>
-    </xsl:attribute>
-    <xsl:value-of select="ntestpass"/>/<xsl:value-of select="ntest"/></td>
+      </xsl:attribute> 
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">        
+    <xsl:value-of select="nconfigurepass"/>
+    </xsl:if>
+    </td>
+   <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="nbuilderror>0">error</xsl:when>
+          <xsl:otherwise><xsl:choose>
+          <xsl:when test="nbuilderror=0 and nbuildwarning=0 and nbuildpass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">        
+    <xsl:value-of select="nbuilderror"/>
+    </xsl:if>
+    </td>
+   <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="nbuildwarning>0">warning</xsl:when>
+          <xsl:otherwise><xsl:choose>
+          <xsl:when test="nbuilderror=0 and nbuildwarning=0 and nbuildpass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">     
+    <xsl:value-of select="nbuildwarning"/>
+    </xsl:if>
+    </td>
+   <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="nbuildpass>0">normal</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>    
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">     
+    <xsl:value-of select="nbuildpass"/>
+    </xsl:if>
+    </td>
+   <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="ntestnotrun>0">error</xsl:when>
+          <xsl:otherwise><xsl:choose>
+          <xsl:when test="ntestfail=0 and ntestpass=0 and ntestnotrun=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">
+    <xsl:value-of select="ntestnotrun"/>
+    </xsl:if>
+    </td>
+  <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="ntestfail>0">error</xsl:when>
+          <xsl:otherwise><xsl:choose>
+          <xsl:when test="ntestfail=0 and ntestpass=0 and ntestnotrun=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>  
+    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">    
+    <xsl:value-of select="ntestfail"/>
+    </xsl:if>
+    </td>
+  <td align="center">
+    <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="ntestpass>0">normal</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute> 
+    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">   
+    <xsl:value-of select="ntestpass"/>
+    </xsl:if>
+    </td>
+   
     <td align="center" class="nob"><xsl:value-of select="lastsubmission"/></td>
     </tr>
    </xsl:for-each>
