@@ -173,7 +173,7 @@ class SubProject
     {
     if(!$this->Id)
       {
-      echo "SubProject GetLastSubmission(): Id not set";
+      echo "SubProject GetNumberOfBuilds(): Id not set";
       return false;
       }
   
@@ -189,13 +189,63 @@ class SubProject
     $project_array = pdo_fetch_array($project);
     return $project_array[0];
     }
+    
+  /** Get the number of warning builds given a date range */
+  function GetNumberOfWarningBuilds($startUTCdate,$endUTCdate)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject GetNumberOfWarningBuilds(): Id not set";
+      return false;
+      }
   
+  
+    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM subproject2build,build,builderror
+                          WHERE  builderror.buildid=build.id  AND subprojectid=".qnum($this->Id).
+                         " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND builderror.type='1'
+                          GROUP BY build.id) as c");
+    
+    if(!$project)
+      {
+      add_last_sql_error("SubProject GetNumberOfWarningBuilds");
+      return false;
+      }  
+    $project_array = pdo_fetch_array($project);
+    return $project_array[0];
+    }
+  
+  /** Get the number of error builds given a date range */
+  function GetNumberOfErrorBuilds($startUTCdate,$endUTCdate)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject GetNumberOfWarningBuilds(): Id not set";
+      return false;
+      }
+  
+  
+    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM subproject2build,build,builderror
+                          WHERE  builderror.buildid=build.id  AND subprojectid=".qnum($this->Id).
+                         " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND builderror.type='0'
+                          GROUP BY build.id) as c");
+  
+    if(!$project)
+      {
+      add_last_sql_error("SubProject GetNumberOfWarningBuilds");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    return $project_array[0];
+    }
+      
   /** Get the number of failing builds given a date range */
   function GetNumberOfPassingBuilds($startUTCdate,$endUTCdate)
     {
     if(!$this->Id)
       {
-      echo "SubProject GetLastSubmission(): Id not set";
+      echo "SubProject GetNumberOfPassingBuilds(): Id not set";
       return false;
       }
   
@@ -222,7 +272,7 @@ class SubProject
     {
     if(!$this->Id)
       {
-      echo "SubProject GetLastSubmission(): Id not set";
+      echo "SubProject GetNumberOfConfigures(): Id not set";
       return false;
       }
   
@@ -236,14 +286,60 @@ class SubProject
       }
     $project_array = pdo_fetch_array($project);
     return $project_array[0];
-    }     
+    } 
   
+  /** Get the number of failing configure given a date range */
+  function GetNumberOfWarningConfigures($startUTCdate,$endUTCdate)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject GetNumberOfWarningConfigures(): Id not set";
+      return false;
+      }
+      
+    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM subproject2build,build,configureerror
+                          WHERE  configureerror.buildid=build.id  AND subprojectid=".qnum($this->Id).
+                         " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND configureerror.type='1'
+                          GROUP BY build.id) as c");
+    if(!$project)
+      {
+      add_last_sql_error("SubProject GetNumberOfWarningConfigures");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    return $project_array[0];
+    }  
+  
+  /** Get the number of failing configure given a date range */
+  function GetNumberOfErrorConfigures($startUTCdate,$endUTCdate)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject GetNumberOfErrorConfigures(): Id not set";
+      return false;
+      }
+      
+    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM subproject2build,build,configureerror
+                          WHERE  configureerror.buildid=build.id  AND subprojectid=".qnum($this->Id).
+                         " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND configureerror.type='0'
+                          GROUP BY build.id) as c");
+    if(!$project)
+      {
+      add_last_sql_error("SubProject GetNumberOfErrorConfigures");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    return $project_array[0];
+    }  
+    
   /** Get the number of failing configure given a date range */
   function GetNumberOfPassingConfigures($startUTCdate,$endUTCdate)
     {
     if(!$this->Id)
       {
-      echo "SubProject GetLastSubmission(): Id not set";
+      echo "SubProject GetNumberOfPassingConfigures(): Id not set";
       return false;
       }
       
@@ -252,7 +348,7 @@ class SubProject
                            AND build.starttime<='$endUTCdate' AND configure.status='0'");
     if(!$project)
       {
-      add_last_sql_error("SubProject GetNumberOfFailingConfigures");
+      add_last_sql_error("SubProject GetNumberOfPassingConfigures");
       return false;
       }
     $project_array = pdo_fetch_array($project);
@@ -264,7 +360,7 @@ class SubProject
     {
     if(!$this->Id)
       {
-      echo "SubProject GetLastSubmission(): Id not set";
+      echo "SubProject GetNumberOfTests(): Id not set";
       return false;
       }
   
@@ -285,7 +381,7 @@ class SubProject
     {
     if(!$this->Id)
       {
-      echo "SubProject GetLastSubmission(): Id not set";
+      echo "SubProject GetNumberOfPassingTests(): Id not set";
       return false;
       }
   
@@ -294,13 +390,55 @@ class SubProject
                            AND build.starttime<='$endUTCdate' AND build2test.status='passed'");
     if(!$project)
       {
+      add_last_sql_error("SubProject GetNumberOfPassingTests");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    return $project_array[0];
+    }
+    
+  /** Get the number of tests given a date range */
+  function GetNumberOfFailingTests($startUTCdate,$endUTCdate)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject GetNumberOfFailingTests(): Id not set";
+      return false;
+      }
+  
+    $project = pdo_query("SELECT count(*) FROM build2test,build,subproject2build WHERE subprojectid=".qnum($this->Id).
+                         " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND build2test.status='failed'");
+    if(!$project)
+      {
       add_last_sql_error("SubProject GetNumberOfFailingTests");
       return false;
       }
     $project_array = pdo_fetch_array($project);
     return $project_array[0];
     }
+    
+  /** Get the number of tests given a date range */
+  function GetNumberOfNotRunTests($startUTCdate,$endUTCdate)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject GetNumberOfNotRunTests(): Id not set";
+      return false;
+      }
   
+    $project = pdo_query("SELECT count(*) FROM build2test,build,subproject2build WHERE subprojectid=".qnum($this->Id).
+                         " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND build2test.status='not run'");
+    if(!$project)
+      {
+      add_last_sql_error("SubProject GetNumberOfNotRunTests");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    return $project_array[0];
+    }  
+    
   /** Get the id of the subproject from the name */
   function GetIdFromName()
     {
