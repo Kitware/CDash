@@ -41,33 +41,52 @@ $xml .= "<backurl>manageBackup.php</backurl>";
 $xml .= "</cdash>";
 
 @$Submit = $_POST["Submit"];
+
 @$filemask = $_POST["filemask"];
+if ($filemask == '')
+{
+  $filemask = "*.xml";
+}
 
 if($Submit && $filemask)
   {
-  foreach(glob("$CDASH_BACKUP_DIRECTORY/$filemask") as $filename)
+  $filelist = glob("$CDASH_BACKUP_DIRECTORY/$filemask");
+
+  $i = 0;
+  $n = count($filelist);
+
+  foreach($filelist as $filename)
     {
+    ++$i;
+
     # split on path separator
     $pathParts = split("[/\\.]", $filename);
     # split on cdash separator "_"
     $cdashParts = split("[_]", $pathParts[1]);
     $projectid = get_project_id($cdashParts[0]);
+
     if($projectid != -1)
       {
       $name = get_project_name($projectid);
-      echo "Project [$name] import : $filename<br>";
-      ob_flush(); 
+
+      echo 'Project ['.$name.'] importing file ('.$i.'/'.$n.'): '.$filename.'<br/>';
+      ob_flush();
+      flush();
+
       $handle = fopen($filename,"r");
       ctest_parse($handle,$projectid);
       fclose($handle);
       }
     else
       {
-      echo "Project id not found skipping file: $filename<br>";
+      echo 'Project id not found - skipping file ('.$i.'/'.$n.'): '.$filename.'<br/>';
       ob_flush();
+      flush();
       }
     }
-  exit(0);
+
+  echo 'Import backup complete. '.$i.' files processed.<br/>';
+  echo '<br/>';
   } // end submit
 
 // Now doing the xslt transition

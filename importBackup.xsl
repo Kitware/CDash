@@ -24,7 +24,7 @@ This page allows you to import xml files in the backup directory for this instal
 <p>
   <input type="submit" name="Submit" value="Import Backups"/>
   matching
-  <input type="text" name="filemask" size="60" value="*.xml"/>
+  <input type="text" name="filemask" size="100" value="*.xml"/>
 </p>
 </form>
 <br/>
