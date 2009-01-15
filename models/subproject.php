@@ -28,6 +28,17 @@ class SubProject
     {
     }
   
+  /** Function to set the project id */
+  function SetProjectId($projectid)
+    {
+    if(is_numeric($projectid))
+      {
+      $this->ProjectId = $projectid;
+      return true;
+      }
+    return false;  
+    }  
+  
   /** Delete a project */
   function Delete()
     {
@@ -332,7 +343,76 @@ class SubProject
       $ids[] = $project_array['dependsonid'];
       } 
     return $ids;
-    }
+    } // end GetDependencies
+  
+  /** Add a dependency */
+  function AddDependency($subprojectid)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject AddDependency(): Id not set";
+      return false;
+      }
+    
+    if(!isset($subprojectid) || !is_numeric($subprojectid))
+      {
+      echo "SubProject AddDependency(): subproject not set or invalid";
+      return false;
+      }
+  
+    // Check that the dependency doesn't exist
+    $project = pdo_query("SELECT count(*) FROM subproject2subproject WHERE subprojectid=".qnum($this->Id).
+                         " AND dependsonid=".qnum($subprojectid));
+    if(!$project)
+      {
+      add_last_sql_error("SubProject AddDependency");
+      return false;
+      }
+    
+    $project_array = pdo_fetch_array($project);
+    if($project_array[0]>0)
+      {
+      echo "Dependency already exists";
+      return false;
+      }
+    
+    // Add the dependency
+    $project = pdo_query("INSERT INTO subproject2subproject (subprojectid,dependsonid) VALUES (".qnum($this->Id).
+                         ",".qnum($subprojectid).")");
+    if(!$project)
+      {
+      add_last_sql_error("SubProject AddDependency");
+      return false;
+      }
+    
+    return true;
+    } // end AddDependency
+  
+  /** Remove a dependency */
+  function RemoveDependency($subprojectid)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject RemoveDependency(): Id not set";
+      return false;
+      }
+    
+    if(!isset($subprojectid) || !is_numeric($subprojectid))
+      {
+      echo "SubProject RemoveDependency(): subproject not set or invalid";
+      return false;
+      }
+  
+    // Check that the dependency doesn't exist
+    $project = pdo_query("DELETE FROM subproject2subproject WHERE subprojectid=".qnum($this->Id).
+                         " AND dependsonid=".qnum($subprojectid));
+    if(!$project)
+      {
+      add_last_sql_error("SubProject RemoveDependency");
+      return false;
+      }
+    return true;
+    } // end RemoveDependency
             
 }  // end class Project
 
