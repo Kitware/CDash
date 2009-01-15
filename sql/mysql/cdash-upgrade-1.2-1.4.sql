@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `label2update` (
 -- Table structure for table `subproject`
 -- 
 CREATE TABLE IF NOT EXISTS `subproject` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `projectid` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
