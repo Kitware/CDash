@@ -91,6 +91,8 @@ CREATE TABLE IF NOT EXISTS `subproject` (
 CREATE TABLE IF NOT EXISTS `subproject2subproject` (
   `subprojectid` int(11) NOT NULL,
   `dependsonid` int(11) NOT NULL,
+  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   KEY `subprojectid` (`subprojectid`),
   KEY `dependsonid` (`dependsonid`)
 );
