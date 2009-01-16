@@ -72,8 +72,8 @@
       <span class="inn1"><xsl:value-of select="cdash/dashboard/projectname"/></span><br />
       <span class="inn2">
       <xsl:choose>
-      <xsl:when test="string-length(cdash/subproject/name)>0">
-      <xsl:value-of select="cdash/subproject/name"/>
+      <xsl:when test="string-length(cdash/subprojectname)>0">
+      <xsl:value-of select="cdash/subprojectname"/>
       </xsl:when>
       <xsl:otherwise>
       Dashboard

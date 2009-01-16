@@ -375,7 +375,6 @@
     <td align="center" class="nob"><xsl:value-of select="lastsubmission"/></td>
     </tr>
    </xsl:for-each>
-
 </tbody>
 </table>
    
@@ -384,6 +383,13 @@
 <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
 </tr>
 </table>
+
+<br/>
+<!-- Add link to view the subproject dependencies -->
+<a>
+<xsl:attribute name="href">viewSubprojectDependencies.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
+[View Subproject Dependencies]
+</a>
 
 <br/>
 <!-- FOOTER -->
