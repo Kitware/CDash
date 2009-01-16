@@ -276,6 +276,9 @@ function generate_main_dashboard_XML($projectid,$date)
   // If we have a subproject
   if(isset($_GET["subproject"]))
     {
+    // Add an extra URL argument for the menu
+    $xml .= add_XML_value("extraurl","&subproject=".$_GET["subproject"]);
+    
     $xml .= "<subproject>";
     
     $SubProject = new SubProject();
@@ -983,7 +986,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("admin",$isadmin);
     $xml .= "</user>";
     }
-    
+     
   // Get some information about the project
   $xml .= "<project>";
   $xml .= add_XML_value("nbuilderror",$Project->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));

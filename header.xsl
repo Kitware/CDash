@@ -1,7 +1,6 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     <xsl:include href="headscripts.xsl"/>
-
   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
@@ -102,17 +101,28 @@
 BACK</a><ul></ul>
 </xsl:when>
 <xsl:otherwise>
-<a href="index.php">DASHBOARD</a><ul>
+
+<!-- Back to the main page if not a subpackage otherwise goes back to the list of subprojects -->
+
+<a>
+<xsl:attribute name="href">
+<xsl:choose>
+<xsl:when test="count(cdash/subproject)>0 and count(cdash/project)=0">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:when>
+<xsl:otherwise>index.php</xsl:otherwise>
+</xsl:choose>
+</xsl:attribute>
+DASHBOARD</a>
+<ul>
 <li><a class="submm">
-<xsl:attribute name="href">viewChanges.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Updates</a></li>
+<xsl:attribute name="href">viewChanges.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>Updates</a></li>
 <li><a class="submm">
-<xsl:attribute name="href">buildOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
+<xsl:attribute name="href">buildOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
 Builds</a></li>
 <li><a class="submm">
-<xsl:attribute name="href">testOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
+<xsl:attribute name="href">testOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
 Tests</a></li>
 <li><a class="submm">
-<xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
+<xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
 Map</a></li>
 </ul>
 </xsl:otherwise>
@@ -129,7 +139,7 @@ Map</a></li>
     <xsl:value-of select="cdash/menu/previous"/>
   </xsl:when>
   <xsl:otherwise>
-  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/previousdate"/>
+  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/previousdate"/><xsl:value-of select="cdash/extraurl"/>
   </xsl:otherwise>
 </xsl:choose>
 </xsl:attribute>
@@ -143,7 +153,7 @@ Map</a></li>
     <xsl:value-of select="cdash/menu/current"/>
   </xsl:when>
   <xsl:otherwise>
-  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>
+  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/><xsl:value-of select="cdash/extraurl"/>
   </xsl:otherwise>
 </xsl:choose>
 </xsl:attribute>
@@ -158,7 +168,7 @@ Map</a></li>
     <xsl:value-of select="cdash/menu/next"/>
   </xsl:when>
   <xsl:otherwise>
-  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/>
+  index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/nextdate"/><xsl:value-of select="cdash/extraurl"/>
   </xsl:otherwise>
 </xsl:choose>
 </xsl:attribute>

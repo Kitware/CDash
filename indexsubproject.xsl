@@ -1,7 +1,7 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-    <xsl:include href="header.xsl"/>
+   <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
    
    <!-- Include local common files -->
@@ -21,6 +21,7 @@
      <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+          <xsl:call-template name="headscripts"/> 
        </head>
        <body>
  
