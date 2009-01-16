@@ -158,9 +158,9 @@ function php_parameters_to_sql()
   $sql = '';
   $clauses = 0;
 
-  $filtercount = $_REQUEST['filtercount'];
+  @$filtercount = $_REQUEST['filtercount'];
 
-  $clear = $_REQUEST['clear'];
+  @$clear = $_REQUEST['clear'];
   if ($clear == 'Clear')
   {
     if ($echo_on == 1)
@@ -178,7 +178,7 @@ function php_parameters_to_sql()
     }
   }
 
-  $filtercombine = strtolower($_REQUEST['filtercombine']);
+  @$filtercombine = strtolower($_REQUEST['filtercombine']);
   if ($filtercombine == 'or')
   {
     $filtercombine = 'OR';
