@@ -80,7 +80,13 @@
      <a>
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;display=project&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
      <xsl:value-of select="/cdash/dashboard/projectname"/>
-     </a></td>
+     </a>
+     <a>
+     <xsl:attribute name="href">filters.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
+     <img border="0" src="images/filter.gif"/>
+     </a>
+     
+     </td>
     <td align="center">
     <xsl:attribute name="class">
         <xsl:choose>
