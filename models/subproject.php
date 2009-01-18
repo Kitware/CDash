@@ -531,8 +531,11 @@ class SubProject
       }
     
     // Add the dependency
-    $project = pdo_query("INSERT INTO subproject2subproject (subprojectid,dependsonid) VALUES (".qnum($this->Id).
-                         ",".qnum($subprojectid).")");
+    $starttime = gmdate(FMT_DATETIME);
+    $endtime = "1980-01-01 00:00:00";
+    $project = pdo_query("INSERT INTO subproject2subproject (subprojectid,dependsonid,starttime,endtime) 
+                         VALUES (".qnum($this->Id).
+                         ",".qnum($subprojectid).",'".$starttime."','".$endtime."')");
     if(!$project)
       {
       add_last_sql_error("SubProject AddDependency");
@@ -557,8 +560,10 @@ class SubProject
       return false;
       }
   
-    // Check that the dependency doesn't exist
-    $project = pdo_query("DELETE FROM subproject2subproject WHERE subprojectid=".qnum($this->Id).
+    // Set the date of the dependency to be now
+    $now = gmdate(FMT_DATETIME);
+    $project = pdo_query("UPDATE subproject2subproject SET endtime='".$now."' 
+                          WHERE subprojectid=".qnum($this->Id).
                          " AND dependsonid=".qnum($subprojectid));
     if(!$project)
       {
