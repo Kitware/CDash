@@ -943,7 +943,7 @@ class Project
     }   
  
   /** Get the subproject ids*/
-  function GetSubProjects()
+  function GetSubProjects($date=NULL)
     {
     if(!$this->Id)
       {
@@ -951,7 +951,14 @@ class Project
       return false;
       }
   
-    $project = pdo_query("SELECT id FROM subproject WHERE projectid=".qnum($this->Id));
+    // If not set, the date is now
+    if($date == NULL)
+      {
+      $date = gmdate(FMT_DATETIME);
+      }
+      
+    $project = pdo_query("SELECT id FROM subproject WHERE projectid=".qnum($this->Id)." AND 
+                          starttime<='".$date."' AND (endtime>'".$date."' OR endtime='1980-01-01 00:00:00')");
     if(!$project)
       {
       add_last_sql_error("Project GetSubProjects");

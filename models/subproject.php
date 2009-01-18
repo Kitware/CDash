@@ -40,17 +40,32 @@ class SubProject
     }  
   
   /** Delete a project */
-  function Delete()
+  function Delete($keephistory=true)
     {
     if(!$this->Id)
       {
       return false;    
       }
-     
-    pdo_query("DELETE FROM subproject2build WHERE subprojectid=".qnum($this->Id));
-    pdo_query("DELETE FROM subproject2subproject WHERE subprojectid=".qnum($this->Id));
-    pdo_query("DELETE FROM subproject2subproject WHERE dependsonid=".qnum($this->Id));
-    pdo_query("DELETE FROM subproject WHERE id=".qnum($this->Id));
+    
+    if(!$keephistory)
+      { 
+      pdo_query("DELETE FROM subproject2build WHERE subprojectid=".qnum($this->Id));
+      pdo_query("DELETE FROM subproject2subproject WHERE subprojectid=".qnum($this->Id));
+      pdo_query("DELETE FROM subproject2subproject WHERE dependsonid=".qnum($this->Id));
+      pdo_query("DELETE FROM subproject WHERE id=".qnum($this->Id));
+      }
+    else
+      {
+      $endtime = gmdate(FMT_DATETIME);
+      $query = "UPDATE subproject SET ";
+      $query .= "endtime='".$endtime."'";
+      $query .= " WHERE id=".qnum($this->Id)."";
+      if(!pdo_query($query))
+        {
+        add_last_sql_error("SubProject Delete");
+        return false;
+        }
+      }  
     }
       
   /** Return if a project exists */
@@ -62,7 +77,7 @@ class SubProject
       return false;    
       }
     
-    $query = pdo_query("SELECT count(*) FROM subproject WHERE id='".$this->Id."'");
+    $query = pdo_query("SELECT count(*) FROM subproject WHERE id='".$this->Id."' AND endtime='1980-01-01 00:00:00'");
     $query_array = pdo_fetch_array($query);
     if($query_array[0]>0)
       {
@@ -80,7 +95,7 @@ class SubProject
       // Trim the name
       $this->Name = trim($this->Name);
       
-      // Update the project
+      // Update the subproject
       $query = "UPDATE subproject SET ";
       $query .= "name='".$this->Name."'";
       $query .= ",projectid=".qnum($this->ProjectId);
@@ -106,7 +121,8 @@ class SubProject
       $this->Name = trim($this->Name);
       
       // Make sure it's no already in the database
-      $query = pdo_query("SELECT id FROM subproject WHERE name='".$this->Name."' AND projectid=".qnum($this->ProjectId));
+      $query = pdo_query("SELECT id FROM subproject WHERE name='".$this->Name."' AND projectid=".qnum($this->ProjectId)
+                         ." AND endtime='1980-01-01 00:00:00'");
       if(!$query)
         {
         add_last_sql_error("SubProject Update");
@@ -120,8 +136,11 @@ class SubProject
         return true;
         }
       
-      $query = "INSERT INTO subproject(".$id."name,projectid)
-                 VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId).")";
+      $starttime = gmdate(FMT_DATETIME);
+      $endtime = "1980-01-01 00:00:00";
+      $query = "INSERT INTO subproject(".$id."name,projectid,starttime,endtime)
+                 VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId)
+                 .",'".$starttime."','".$endtime."')";
                     
       if(pdo_query($query))
         {
@@ -486,7 +505,7 @@ class SubProject
       }
   
     // If not set, the date is now
-    if(!isset($date))
+    if($date == NULL)
       {
       $date = gmdate(FMT_DATETIME);
       }
