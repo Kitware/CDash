@@ -701,6 +701,8 @@ CREATE TABLE `subproject` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `projectid` int(11) NOT NULL,
+  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`)
 );
