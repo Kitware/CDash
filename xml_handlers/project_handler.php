@@ -23,6 +23,7 @@ class ProjectHandler extends AbstractHandler
 {
   private $SubProject;
   private $Dependencies; // keep an array of dependencies in order to remove them
+  private $Subprojects; // keep an array of supbprojects in order to remove them
   
   /** Constructor */
   public function __construct($projectid)
@@ -42,6 +43,7 @@ class ProjectHandler extends AbstractHandler
         add_log("Wrong project name","ProjectHandler:startElement");
         exit();
         }
+      $this->Subprojects = array();  
       }
     else if($name=='SUBPROJECT')
       {
@@ -50,6 +52,7 @@ class ProjectHandler extends AbstractHandler
       $this->SubProject->Name = $attributes['NAME'];
       $this->SubProject->Save();
       $this->Dependencies = array();
+      $this->Subprojects[] = $this->SubProject->Id;
       }
     else if($name=='DEPENDENCY') 
       {
@@ -75,8 +78,23 @@ class ProjectHandler extends AbstractHandler
         {
         $this->SubProject->RemoveDependency($removeid);
         }
-      
       }
+    else if($name=='PROJECT')
+      {  
+      // Remove subprojects
+      $Project = new Project();
+      $Project->Id = $this->projectid;
+      $subprojectids = $Project->GetSubprojects();
+      $removeids = array_diff($subprojectids,$this->Subprojects);
+      foreach($removeids as $removeid)
+        {
+        $SubProject = new SubProject();
+        $SubProject->ProjectId = $this->projectid;
+        $SubProject->Id = $removeid;
+        $SubProject->Delete();
+        }
+      
+      }  
    } // end endElement
 
   /** text function */
