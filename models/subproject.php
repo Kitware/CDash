@@ -477,7 +477,7 @@ class SubProject
     }
   
   /** Get the subprojectids of the subprojects depending on this one */
-  function GetDependencies()
+  function GetDependencies($date=NULL)
     {
     if(!$this->Id)
       {
@@ -485,7 +485,16 @@ class SubProject
       return false;
       }
   
-    $project = pdo_query("SELECT dependsonid FROM subproject2subproject WHERE subprojectid    =".qnum($this->Id));
+    // If not set, the date is now
+    if(!isset($date))
+      {
+      $date = gmdate(FMT_DATETIME);
+      }
+  
+    $project = pdo_query("SELECT dependsonid FROM subproject2subproject 
+                          WHERE subprojectid=".qnum($this->Id)." AND 
+                          starttime<='".$date."' AND (endtime>'".$date."' OR endtime='1980-01-01 00:00:00')"
+                          );
     if(!$project)
       {
       add_last_sql_error("SubProject GetDependencies");
