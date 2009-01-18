@@ -81,8 +81,7 @@
     <table width="100%" border="0">
     <tr>
     <td width="10%"><xsl:value-of select="name"/></td>
-    <td align="left" width="10%"><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;delete=
-    <xsl:value-of select="id"/>
+    <td align="left" width="10%"><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;delete=<xsl:value-of select="id"/>
     </xsl:attribute>
     [x]</a></td>
     <td align="left" width="80%">
@@ -117,8 +116,7 @@
     <tr> <!-- List the dependencies for that subproject -->
     <td width="100%" colspan="3">
     <xsl:for-each select="dependency">
-    - <xsl:value-of select="name"/> <a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;removeDependency=
-    <xsl:value-of select="id"/>&amp;dependency=<xsl:value-of select="../id"/>
+    - <xsl:value-of select="name"/> <a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;removeDependency=<xsl:value-of select="id"/>&amp;dependency=<xsl:value-of select="../id"/>
     </xsl:attribute>[x]</a>
     <br/>
     </xsl:for-each>

@@ -238,6 +238,14 @@ if(isset($_GET['upgrade-1-2']))
 // 1.4 Upgrade
 if(isset($_GET['upgrade-1-4']))
 {    
+  //  Add fields in the project table 
+  $starttime = pdo_query("SELECT starttime FROM subproject LIMIT 1");
+  if(!$starttime)
+    {
+    pdo_query("ALTER TABLE subproject ADD starttime TIMESTAMP NOT NULL default '1980-01-01 00:00:00'");
+    pdo_query("ALTER TABLE subproject ADD endtime TIMESTAMP NOT NULL default '1980-01-01 00:00:00'");
+    }
+
   // Set the database version
   setVersion();
   exit();
