@@ -105,19 +105,34 @@ class SubProject
       // Trim the name
       $this->Name = trim($this->Name);
       
+      // Make sure it's no already in the database
+      $query = pdo_query("SELECT id FROM subproject WHERE name='".$this->Name."' AND projectid=".qnum($this->ProjectId));
+      if(!$query)
+        {
+        add_last_sql_error("SubProject Update");
+        return false;
+        }
+      
+      if(pdo_num_rows($query)>0)
+        {
+        $query_array = pdo_fetch_array($query);
+        $this->Id = $query_array['id'];
+        return true;
+        }
+      
       $query = "INSERT INTO subproject(".$id."name,projectid)
                  VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId).")";
                     
-       if(pdo_query($query))
-         {
-         $this->Id = pdo_insert_id("subproject");
-         }
-       else
-         {
-         add_last_sql_error("SubProject Create");
-         return false;
-         }  
-       }
+      if(pdo_query($query))
+        {
+        $this->Id = pdo_insert_id("subproject");
+        }
+      else
+        {
+        add_last_sql_error("SubProject Create");
+        return false;
+        }  
+      }
       
     return true;
     }  
@@ -450,6 +465,7 @@ class SubProject
   
     $project = pdo_query("SELECT id FROM subproject WHERE projectid=".qnum($this->ProjectId).
                          " AND name='".$this->Name."'");
+                        
     if(!$project)
       {
       add_last_sql_error("SubProject GetIdFromName");
