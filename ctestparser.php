@@ -24,7 +24,7 @@ require_once 'xml_handlers/coverage_handler.php';
 require_once 'xml_handlers/coverage_log_handler.php';
 require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/dynamic_analysis_handler.php';
-
+require_once 'xml_handlers/project_handler.php';
 
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid)
@@ -77,6 +77,11 @@ function ctest_parse($filehandler, $projectid)
     $handler = new DynamicAnalysisHandler($projectid);
     $file = "DynamicAnalysis";
     }
+  else if(preg_match('/<Project/', $content)) 
+    {
+    $handler = new ProjectHandler($projectid);
+    $file = "Project";
+    }  
   if($handler == NULL)
     {
     echo "no handler found";
@@ -87,10 +92,17 @@ function ctest_parse($filehandler, $projectid)
   xml_set_character_data_handler($parser, array($handler, 'text'));
   xml_parse($parser, $content, false);
   
-  //clean_backup_directory();
+  clean_backup_directory();
   
-  $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$handler->getSiteName()."_".$handler->getBuildName()."_".$handler->getBuildStamp()."_".$file.".xml";
-  
+  if($file == "Project")
+    {
+    $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".time()."_".$file.".xml";
+    }
+  else
+    {  
+    $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$handler->getSiteName()."_".$handler->getBuildName()."_".$handler->getBuildStamp()."_".$file.".xml";
+    }
+    
   // If the file is other we append a number until we get a non existing file
   $i=1;
   while(file_exists($filename))
