@@ -525,7 +525,8 @@ class SubProject
   
     // Check that the dependency doesn't exist
     $project = pdo_query("SELECT count(*) FROM subproject2subproject WHERE subprojectid=".qnum($this->Id).
-                         " AND dependsonid=".qnum($subprojectid));
+                         " AND dependsonid=".qnum($subprojectid)." AND endtime='1980-01-01 00:00:00'"
+                         );
     if(!$project)
       {
       add_last_sql_error("SubProject AddDependency");
@@ -573,7 +574,7 @@ class SubProject
     $now = gmdate(FMT_DATETIME);
     $project = pdo_query("UPDATE subproject2subproject SET endtime='".$now."' 
                           WHERE subprojectid=".qnum($this->Id).
-                         " AND dependsonid=".qnum($subprojectid));
+                         " AND dependsonid=".qnum($subprojectid)." AND endtime='1980-01-01 00:00:00'");
     if(!$project)
       {
       add_last_sql_error("SubProject RemoveDependency");
