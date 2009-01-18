@@ -47,6 +47,19 @@ class SubProject
       return false;    
       }
     
+    // If there is no build in the subproject we remove
+    $query = pdo_query("SELECT count(*) FROM subproject2build WHERE subprojectid=".qnum($this->Id));
+    if(!$query)
+      {
+      add_last_sql_error("SubProject Delete");
+      return false;
+      }
+    $query_array = pdo_fetch_array($query);
+    if($query_array[0]==0)
+      {
+      $keephistory = false;
+      }
+    
     if(!$keephistory)
       { 
       pdo_query("DELETE FROM subproject2build WHERE subprojectid=".qnum($this->Id));
