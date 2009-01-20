@@ -19,6 +19,7 @@ include("config.php");
 require_once("pdo.php");
 include("common.php");
 require_once("models/project.php");
+require_once("filterdataFunctions.php");
 
 /** Generate the index table */
 function generate_index_table()
@@ -30,11 +31,11 @@ function generate_index_table()
   include('version.php');
   include_once('models/banner.php');
 
-  $xml = '<?xml version="1.0"?><cdash>';
+  $xml = '<?xml version="1.0"?'.'><cdash>';
   $xml .= add_XML_value("title","CDash");
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
-  
+
   $Banner = new Banner;
   $Banner->SetProjectId(0);
   $text = $Banner->GetText();
@@ -203,7 +204,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
     
-  $xml = '<?xml version="1.0"?><cdash>';
+  $xml = '<?xml version="1.0"?'.'><cdash>';
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
@@ -371,7 +372,15 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("admin",$isadmin);
     $xml .= "</user>";
     }
-  
+
+  // Filters:
+  //
+  $filterdata = get_filterdata_from_request();
+  $filter_sql = $filterdata['sql'];
+  $xml .= $filterdata['xml'];
+
+  // Statistics:
+  //
   $totalerrors = 0;
   $totalwarnings = 0;
   $totalConfigureError = 0;
@@ -379,7 +388,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalnotrun = 0;
   $totalfail= 0;
   $totalpass = 0;  
-            
+
   // Local function to add expected builds
   function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
     {
@@ -424,13 +433,24 @@ function generate_main_dashboard_XML($projectid,$date)
     }   
                                                    
   
+  // Use this as the default date clause, but if $filterdata has a date clause,
+  // then cancel this one out:
+  //
+  $date_clause = "b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' AND ";
+
+  if($filterdata['hasdateclause'])
+    {
+    $date_clause = '';
+    }
+
+
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql."
-                         WHERE b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate'
-                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
+                         WHERE ".$date_clause."
+                         b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
-                         ".$subprojectsql." ORDER BY gp.position ASC,b.name ASC ";
-                         
+                         ".$subprojectsql." ".$filter_sql." ORDER BY gp.position ASC,b.name ASC ";
+
                          
     
   // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
@@ -462,7 +482,10 @@ function generate_main_dashboard_XML($projectid,$date)
       $groupname = $build_array["groupname"];  
       if($previousgroupposition != -1)
         {
-        $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
+        if (!$filter_sql)
+          {
+          $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
+          }
         if($previousgroupposition == $lastGroupPosition)
           {
           $xml .= "<last>1</last>";
@@ -488,7 +511,10 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("name",$group["name"]);
         $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
         $xml .= add_XML_value("id",$group["id"]);
-        $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
+        if (!$filter_sql)
+          {
+          $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
+          }
         if($previousgroupposition == $lastGroupPosition)
           {
           $xml .= "<last>1</last>";
@@ -817,7 +843,10 @@ function generate_main_dashboard_XML($projectid,$date)
              
   if(pdo_num_rows($builds)>0)
     {
-    $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
+    if (!$filter_sql)
+      {
+      $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
+      }
     if($previousgroupposition == $lastGroupPosition)
       {
       $xml .= "<last>1</last>";
@@ -842,7 +871,10 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("id",$group["id"]);
     $xml .= add_XML_value("name",$group["name"]);
     $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
-    $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
+    if (!$filter_sql)
+      {
+      $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
+      }
     if($i == $lastGroupPosition)
       {
       $xml .= "<last>1</last>";
@@ -900,7 +932,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
 
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
     
-  $xml = '<?xml version="1.0"?><cdash>';
+  $xml = '<?xml version="1.0"?'.'><cdash>';
   $xml .= "<title>CDash - ".$Project->Name."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";

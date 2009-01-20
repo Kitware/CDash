@@ -509,6 +509,7 @@
 </xsl:template>
 <!-- end template -->    
    
+   <xsl:include href="filterdataTemplate.xsl"/>
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
    
@@ -528,8 +529,9 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
                   
-         <!-- Include BuildGroup JavaScript -->
-         <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script> 
+         <!-- Include JavaScript -->
+         <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
+         <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
          <xsl:call-template name="headscripts"/> 
        </head>
        <body bgcolor="#ffffff">
@@ -755,6 +757,11 @@
 </table>
 </xsl:if>
  
+<!-- Filters? -->
+<xsl:if test="count(cdash/filterdata) = 1">
+  <xsl:call-template name="filterdata" select="."/>
+</xsl:if>
+
 <!-- Look each group -->
 <xsl:for-each select="cdash/buildgroup">
   <table border="0" cellpadding="4" cellspacing="0" width="100%">
