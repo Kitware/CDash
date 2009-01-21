@@ -1,3 +1,59 @@
+function addFilter(indexSelected)
+{
+  string=$(".filterFields:last").html();// find index last element
+  index=$(".filterFields:last input:last").attr("name");
+  index=parseInt(index.substr(3));
+  // create html
+  string=string.replace("name=\"field"+index,"name=\"field"+(index+1));
+  string=string.replace("id=\"id_compare"+index+"\" name=\"compare"+index+"\"","id=\"id_compare"+(index+1)+"\" name=\"compare"+(index+1)+"\"");
+  string=string.replace("id=\"id_value"+index+"\" name=\"value"+index+"\"","id=\"id_value"+(index+1)+"\" name=\"value"+(index+1)+"\"");
+  string=string.replace("name=\"remove"+index,"name=\"remove"+(index+1));
+  string=string.replace("name=\"add"+index,"name=\"add"+(index+1));
+  string=string.replace("disabled=\"disabled\"","");
+  string=string.replace("removeFilter("+index+")","removeFilter("+(index+1)+")");
+  class_filed='treven';
+  if($(".filterFields:last").attr("class")=="treven filterFields")
+    {
+    class_filed='trodd';
+    }
+  $(".filterFields:last").after('<tr class="'+class_filed+' filterFields">'+string+'</tr>'); //create new element
+  $(".filterFields:last input[type='text']").attr("value","");
+  $(".filterFields:first input[value='-']").attr("disabled",false); //enable remove button
+  $("input[name='filtercount']").attr("value",countFilters()); //set value of the hidden input which tell the number of filter
+}
+
+function removeFilter(index)
+{
+  $(".filterFields").each(function(){ // remove selected element
+    if($(this).find("input:last").attr("name")=="add"+index)
+      {
+      $(this).remove();
+      }
+  });
+  if(countFilters()==1)
+    {
+    $(".filterFields:first input[value='-']").attr("disabled",true);
+    }
+  $("input[name='filtercount']").attr("value",countFilters());
+}
+
+function clearFilter()
+{
+  $(".filterFields:gt(0)").remove();// keep only one element(this element will be empty)
+  $(".filterFields input[type='text']").attr("value","");
+  $(".filterFields input[value='-']").attr("disabled",true);
+  $("input[name='filtercount']").attr("value",1);
+}
+
+function countFilters()
+{
+  i=0;
+  $(".filterFields").each(function(){
+    i++;
+  });
+  return i;
+}
+
 function filters_toggle()
 {
   if ($("#label_showfilters").html() == "[Hide Filters]")

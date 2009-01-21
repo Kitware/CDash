@@ -1,15 +1,16 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
+
+
 <!-- filterdata template -->
 <xsl:template name="filterdata">
-<a>
-<xsl:attribute name="href">javascript:filters_toggle()</xsl:attribute>
-<div id="label_showfilters">
+<a style="display:block;" id="label_showfilters" href="javascript:filters_toggle();">
 <xsl:if test="cdash/filterdata/showfilters = 0">[Show Filters]</xsl:if>
 <xsl:if test="cdash/filterdata/showfilters != 0">[Hide Filters]</xsl:if>
-</div>
 </a>
+
+
 <br/>
 
 <div id="div_showfilters">
@@ -58,7 +59,7 @@ Filter Definitions:<br/>
   </tr>
 
   <xsl:for-each select="cdash/filterdata/filters/filter">
-  <tr><xsl:attribute name="class"><xsl:if test="position() mod 2 = 0">trodd</xsl:if><xsl:if test="position() mod 2 = 1">treven</xsl:if></xsl:attribute>
+  <tr><xsl:attribute name="class"><xsl:if test="position() mod 2 = 0">trodd filterFields</xsl:if><xsl:if test="position() mod 2 = 1">treven filterFields</xsl:if></xsl:attribute>
   <td>
       <select onchange="filters_field_changed(this)">
         <xsl:attribute name="name">field<xsl:value-of select="position()"/></xsl:attribute>
@@ -118,13 +119,15 @@ Filter Definitions:<br/>
       </input>
 
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-      <input type="submit" value="-">
+      <input type="button" value="-">
         <xsl:attribute name="name">remove<xsl:value-of select="position()"/></xsl:attribute>
+        <xsl:attribute name="onclick">removeFilter(<xsl:value-of select="position()"/>)</xsl:attribute>
         <xsl:if test="last() = 1">
           <xsl:attribute name="disabled">disabled</xsl:attribute>
         </xsl:if>
       </input>
-      <input type="submit" value="+">
+      <input type="button" value="+">
+        <xsl:attribute name="onclick">addFilter(<xsl:value-of select="position()"/>)</xsl:attribute>
         <xsl:attribute name="name">add<xsl:value-of select="position()"/></xsl:attribute>
       </input>
   </td>
@@ -152,7 +155,7 @@ Filter Definitions:<br/>
       <input type="hidden" name="showfilters" value="1" />
       <input type="submit" name="apply" value="Apply" />
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-      <input type="submit" name="clear" value="Clear" />
+      <input type="button" onclick="clearFilter();" name="clear" value="Clear" />
   </td>
   </tr>
   </table>

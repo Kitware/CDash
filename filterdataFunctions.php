@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -157,8 +157,15 @@ function get_filterdata_from_request()
 
   $sql = 'AND (';
 
-  for ($i = 1; $i <= $filtercount; ++$i)
+  $offset=0;
+
+  for ($i = 1; $i <= $filtercount+$offset; ++$i)
   {
+    if(empty($_REQUEST['field'.$i]))
+      {
+      $offset++;
+      continue;
+      }
     $fieldinfo = $_REQUEST['field'.$i];
     $compare = $_REQUEST['compare'.$i];
     $value = $_REQUEST['value'.$i];
