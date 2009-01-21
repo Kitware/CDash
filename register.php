@@ -97,6 +97,11 @@ function RegisterForm($regerror)
   include_once("common.php");
   include_once('version.php');
   
+  if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
+    {
+    die("You cannot access this page. Contact your administrator if you think that's an error.");
+    }
+    
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - Registration</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";

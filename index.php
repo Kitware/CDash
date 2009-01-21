@@ -56,10 +56,13 @@ function generate_index_table()
     upgrade your database structure in the Administration/CDash maintenance panel of CDash.</upgradewarning>";
     }
 
-  $xml .= "<dashboard>
-
- <googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>
- </dashboard> ";
+ $xml .= "<dashboard>
+ <googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>";
+ if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
+   {
+   $xml .= add_XML_value("noregister","1");
+   }
+ $xml .= "</dashboard> ";
  
  // Show the size of the database
  if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql")) 

@@ -37,7 +37,7 @@
         </xsl:choose>  
         </a>
         
-        <xsl:if test="string-length(cdash/user/id)=0">
+        <xsl:if test="string-length(cdash/user/id)=0  and string-length(cdash/dashboard/noregister)=0">
          | <a href="register.php">Register</a>
         </xsl:if>  
         

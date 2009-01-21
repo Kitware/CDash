@@ -37,7 +37,7 @@ if ($session_OK)
   $user_array = pdo_fetch_array($user);
   $xml .= add_XML_value("user_name",$user_array["firstname"]);
   $xml .= add_XML_value("user_is_admin",$user_array["admin"]);
-  
+    
   // Go through the list of project the user is part of
   $project2user = pdo_query("SELECT projectid,role FROM user2project WHERE userid='$userid'"); 
   while($project2user_array = pdo_fetch_array($project2user))

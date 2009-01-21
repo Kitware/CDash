@@ -163,7 +163,10 @@ function LoginForm($loginerror)
   $xml .= "<title>Login</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
   $xml .= "<version>".$CDASH_VERSION."</version>";
-   
+  if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
+    {
+    $xml .= add_XML_value("noregister","1");
+    } 
   if(@$_GET['note'] == "register")
     {
     $xml .= "<message>Registration Complete. Please login with your email and password.</message>";

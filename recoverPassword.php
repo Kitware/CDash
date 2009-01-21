@@ -26,7 +26,11 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>Recover password</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-
+if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
+  {
+  $xml .= add_XML_value("noregister","1");
+  }
+    
 @$recover = $_POST["recover"];
 if($recover)
   {

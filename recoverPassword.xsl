@@ -51,7 +51,9 @@
 <li id="Dartboard">
 <a href="user.php">LOGIN</a>
 </li>
+<xsl:if test="string-length(cdash/noregister)=0">
 <li><a href="register.php">REGISTER</a></li>
+</xsl:if>
 </ul>
 </td>
   <td height="28" class="insd3"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
