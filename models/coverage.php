@@ -641,13 +641,85 @@ class CoverageFile2User
     } // end GetUsersFromProject
 
   /** Assign the last author */
-  function AssignLastAuthor($projectid)
+  function AssignLastAuthor($projectid,$beginUTCTime,$currentUTCTime)
     {
+    include_once('models/dailyupdate.php');
+    
+    // Find the last build
+    $CoverageSummary = new CoverageSummary();
+    $buildids = $CoverageSummary->GetBuilds($projectid,$beginUTCTime,$currentUTCTime);
+    // For now take the first one
+    if(count($buildids)==0)
+      {
+      return false;
+      }
+      
+    $buildid = $buildids[0];
+    
+    // Find the files associated with the build
+    $Coverage = new Coverage();
+    $Coverage->BuildId = $buildid;
+    $fileIds = $Coverage->GetFiles();
+    foreach($fileIds as $fileid)
+      {
+      $CoverageFile = new CoverageFile();
+      $CoverageFile->Id = $fileid;
+      $fullpath = $CoverageFile->GetPath();
+      
+      $DailyUpdate = new DailyUpdate();
+      $DailyUpdate->ProjectId = $projectid;
+      $userids = $DailyUpdate->GetAuthors($fullpath,true); // only last
+      
+      foreach($userids as $userid)
+        {
+        $this->FileId = $fileid;
+        $this->UserId = $userid;
+        $this->Insert();
+        }
+      }
+      
+    return true;
     } // end AssignLastAuthor
 
   /** Assign all author author */
-  function AssignAllAuthors($projectid)
+  function AssignAllAuthors($projectid,$beginUTCTime,$currentUTCTime)
     {
+    include_once('models/dailyupdate.php');
+    
+    // Find the last build
+    $CoverageSummary = new CoverageSummary();
+    $buildids = $CoverageSummary->GetBuilds($projectid,$beginUTCTime,$currentUTCTime);
+    // For now take the first one
+    if(count($buildids)==0)
+      {
+      return false;
+      }
+      
+    $buildid = $buildids[0];
+    
+    // Find the files associated with the build
+    $Coverage = new Coverage();
+    $Coverage->BuildId = $buildid;
+    $fileIds = $Coverage->GetFiles();
+    foreach($fileIds as $fileid)
+      {
+      $CoverageFile = new CoverageFile();
+      $CoverageFile->Id = $fileid;
+      $fullpath = $CoverageFile->GetPath();
+      
+      $DailyUpdate = new DailyUpdate();
+      $DailyUpdate->ProjectId = $projectid;
+      $userids = $DailyUpdate->GetAuthors($fullpath);
+      
+      foreach($userids as $userid)
+        {
+        $this->FileId = $fileid;
+        $this->UserId = $userid;
+        $this->Insert();
+        }
+      }
+      
+    return true;
     } // end AssignAllAuthors
     
 }
