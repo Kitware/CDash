@@ -19,6 +19,131 @@ include_once('build.php');
 
 class BuildGroup
 {
+  var $Id;
+  var $Name;
+  var $StartTime;
+  var $EndTime;
+  var $Description;
+  var $SummaryEmail;
+  var $ProjectId;
+
+  function __construct()
+    {
+    $this->StartTime = '1980-01-01 00:00:00';
+    $this->EndTime = '1980-01-01 00:00:00';
+    $this->SummaryEmail = 0;
+    }
+  
+  function SetPosition($position)
+    {
+    $position->GroupId = $this->Id;
+    $position->Add();
+    }
+    
+  function AddRule($rule)
+    {
+    $rule->GroupId = $this->Id;
+    $rule->Add();
+    }
+    
+  /** Get the next position available for that group */
+  function GetNextPosition()
+    {
+    $query = pdo_query("SELECT bg.position FROM buildgroupposition as bg,buildgroup as g 
+                        WHERE bg.buildgroupid=g.id AND g.projectid='".$this->ProjectId."' 
+                        AND bg.endtime='1980-01-01 00:00:00'
+                        ORDER BY bg.position DESC LIMIT 1");
+    if(pdo_num_rows($query)>0)
+      {
+      $query_array = pdo_fetch_array($query);
+      return $query_array['position']+1;
+      }
+    return 1;    
+    }  
+    
+  function SetValue($tag,$value)  
+    {
+    switch($tag)
+      {
+      case "NAME": $this->Name = $value;break;
+      case "DESCRIPTION": $this->Description = $value;break;
+      case "STARTTIME": $this->StartTime = $value;break;
+      case "ENDTIME": $this->EndTime = $value;break;
+      case "SUMMARYEMAIL": $this->SummaryEmail = $value;break;
+      case "PROJECTID": $this->ProjectId = $value;break;  
+      }
+    }
+    
+  /** Check if the group already exists */  
+  function Exists()
+    {
+    // If no id specify return false
+    if(!$this->Id || !$this->ProjectId)
+      {
+      return false;    
+      }
+    
+    $query = pdo_query("SELECT count(*) FROM buildgroup WHERE id='".$this->Id."' AND projectid='".$this->ProjectId."'");
+    $query_array = pdo_fetch_array($query);
+    if($query_array['count(*)']==0)
+      {
+      return false;
+      }
+    
+    return true;  
+    }
+    
+  /** Save the group */
+  function Save()
+    {
+    if($this->Exists())
+      {
+      // Update the project
+      $query = "UPDATE buildgroup SET";
+      $query .= " name='".$this->Name."'";
+      $query .= ",projectid='".$this->ProjectId."'";
+      $query .= ",starttime='".$this->StartTime."'";
+      $query .= ",endtime='".$this->EndTime."'";
+      $query .= ",description='".$this->Description."'";
+      $query .= ",summaryemail='".$this->SummaryEmail."'";
+      $query .= " WHERE id='".$this->Id."'";
+      
+      if(!pdo_query($query))
+        {
+        add_last_sql_error("BuildGroup Update");
+        return false;
+        }
+      }
+    else
+      {
+      $id = "";
+      $idvalue = "";
+      if($this->Id)
+        {
+        $id = "id,";
+        $idvalue = "'".$this->Id."',";
+        }
+                                                      
+      if(pdo_query("INSERT INTO buildgroup (".$id."name,projectid,starttime,endtime,description)
+                     VALUES (".$idvalue."'$this->Name','$this->ProjectId','$this->StartTime','$this->EndTime','$this->Description')"))
+         {
+         $this->Id = pdo_insert_id("buildgroup");
+         }
+       else
+         {
+         add_last_sql_error("Buildgroup Insert");
+         return false;
+         }
+    
+      // Insert the default position for this group
+      // Find the position for this group
+      $position = $this->GetNextPosition();               
+      pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
+                 VALUES ('".$this->Id."','".$position."','".$this->StartTime."','".$this->EndTime."')");
+ 
+      }  
+    } // end function save
+  
   function GetGroupIdFromRule($build)
     {
     $name = $build->Name;
@@ -48,5 +173,6 @@ class BuildGroup
       }
     }
 }
+
 ?>
 
