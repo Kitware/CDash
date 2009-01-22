@@ -116,13 +116,13 @@ if(isset($_GET["removefileid"]))
 // Assign last author
 if(isset($_POST["assignLastAuthor"]))
   {
-  $CoverageFile2User->AssignLastAuthor($projectid);
+  $CoverageFile2User->AssignLastAuthor($projectid,$beginUTCTime,$currentUTCTime);
   } // end last author
   
 // Assign all authors
 if(isset($_POST["assignAllAuthors"]))
   {
-  $CoverageFile2User->AssignAllAuthors($projectid);
+  $CoverageFile2User->AssignAllAuthors($projectid,$beginUTCTime,$currentUTCTime);
   } // end Assign all authors
 
 // Upload file
@@ -276,46 +276,49 @@ if($projectid>0)
     }
   
   // For now take the first one
-  $buildid = $buildids[0];
-  
-  // Find the files associated with the build
-  $Coverage = new Coverage();
-  $Coverage->BuildId = $buildid;
-  $fileIds = $Coverage->GetFiles();
-  $row = "0";
-  foreach($fileIds as $fileid)
+  if(count($buildids)>0)
     {
-    $CoverageFile = new CoverageFile();
-    $CoverageFile->Id = $fileid;
-    $xml .= "<file>";
-    $xml .= add_XML_value("id",$fileid);
-    $xml .= add_XML_value("name",$CoverageFile->GetPath());
+    $buildid = $buildids[0];
     
-    if($row == 0)
+    // Find the files associated with the build
+    $Coverage = new Coverage();
+    $Coverage->BuildId = $buildid;
+    $fileIds = $Coverage->GetFiles();
+    $row = "0";
+    foreach($fileIds as $fileid)
       {
-      $row = 1;
-      }
-    else
-      {
-      $row = 0;
-      }   
-    $xml .= add_XML_value("row",$row);
-    
-    // Get the authors
-    $CoverageFile2User->FileId = $fileid;
-    $authorids = $CoverageFile2User->GetAuthors();
-    foreach($authorids as $authorid)
-      {
-      $xml .= "<author>";
-      $User = new User();
-      $User->Id = $authorid;
-      $xml .= add_XML_value("id",$authorid);
-      $xml .= add_XML_value("name",$User->GetName());
-      $xml .= "</author>";
-      }
+      $CoverageFile = new CoverageFile();
+      $CoverageFile->Id = $fileid;
+      $xml .= "<file>";
+      $xml .= add_XML_value("id",$fileid);
+      $xml .= add_XML_value("name",$CoverageFile->GetPath());
       
-    $xml .= "</file>";
-    }
+      if($row == 0)
+        {
+        $row = 1;
+        }
+      else
+        {
+        $row = 0;
+        }   
+      $xml .= add_XML_value("row",$row);
+      
+      // Get the authors
+      $CoverageFile2User->FileId = $fileid;
+      $authorids = $CoverageFile2User->GetAuthors();
+      foreach($authorids as $authorid)
+        {
+        $xml .= "<author>";
+        $User = new User();
+        $User->Id = $authorid;
+        $xml .= add_XML_value("id",$authorid);
+        $xml .= add_XML_value("name",$User->GetName());
+        $xml .= "</author>";
+        }
+        
+      $xml .= "</file>";
+      }
+    } // end count(buildids)
  
   // List all the users of the project
   $UserProject = new UserProject();
