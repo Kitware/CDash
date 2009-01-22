@@ -103,8 +103,8 @@
         <xsl:if test="role>1">
           <a><xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>[Edit project]</a>
           <a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage subprojects]</a>
-          <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage project groups]</a>
-          <a><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage project roles]</a>
+          <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage groups]</a>
+          <a><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage roles]</a>
           <a><xsl:attribute name="href">manageBanner.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage banner]</a>
         </xsl:if>
       </td>
