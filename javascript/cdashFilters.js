@@ -1,25 +1,78 @@
 function addFilter(indexSelected)
 {
+  indexSelected=parseInt(indexSelected);
   string=$(".filterFields:last").html();// find index last element
   index=$(".filterFields:last input:last").attr("name");
   index=parseInt(index.substr(3));
+  lastIndex=parseInt($(".filterFields:last").attr("number"));
+
+  for(i=(lastIndex+1);i>=(indexSelected+1);i--)
+    {
+      if($(".filterFields[number='"+i+"']").length)//test if the element exists
+        {
+        element=$(".filterFields[number='"+i+"']");
+        element.find("select:first").attr("name","field"+(i+1));
+        element.find("select:last").attr("name","compare"+(i+1));
+        element.find("select:last").attr("id","id_compare"+(i+1));
+        element.find("select[type='text']:first").attr("id","id_value"+(i+1));
+        element.find("input[type='text']:first").attr("name","value"+(i+1));
+        element.find("input[type='button']:first").attr("name","remove"+(i+1));
+        $(".filterFields[number='"+i+"'] input[type='button']:first").attr("id","temp");
+        document.getElementById("temp").setAttribute("onclick","removeFilter("+(i+1)+")");
+        $(".filterFields[number='"+i+"'] input[type='button']:first").removeAttr("id");
+        element.find("input[type='button']:last").attr("name","add"+(i+1));
+        $(".filterFields[number='"+i+"'] input[type='button']:last").attr("id","temp");
+        document.getElementById("temp").setAttribute("onclick","addFilter("+(i+1)+")");
+        $(".filterFields[number='"+i+"'] input[type='button']:last").removeAttr("id");
+        element.attr("number",(i+1));
+        element.attr("id","filter"+(i+1));
+        }
+    }
   // create html
-  string=string.replace("name=\"field"+index,"name=\"field"+(index+1));
-  string=string.replace("id=\"id_compare"+index+"\" name=\"compare"+index+"\"","id=\"id_compare"+(index+1)+"\" name=\"compare"+(index+1)+"\"");
-  string=string.replace("id=\"id_value"+index+"\" name=\"value"+index+"\"","id=\"id_value"+(index+1)+"\" name=\"value"+(index+1)+"\"");
-  string=string.replace("name=\"remove"+index,"name=\"remove"+(index+1));
-  string=string.replace("name=\"add"+index,"name=\"add"+(index+1));
+  string=string.replace("name=\"field"+index,"name=\"field"+(indexSelected+1));
+  string=string.replace("id=\"id_compare"+index+"\" name=\"compare"+index+"\"","id=\"id_compare"+(indexSelected+1)+"\" name=\"compare"+(indexSelected+1)+"\"");
+  string=string.replace("id=\"id_value"+index+"\" name=\"value"+index+"\"","id=\"id_value"+(indexSelected+1)+"\" name=\"value"+(indexSelected+1)+"\"");
+  string=string.replace("name=\"remove"+index,"name=\"remove"+(indexSelected+1));
+  string=string.replace("name=\"add"+index,"name=\"add"+(indexSelected+1));
   string=string.replace("disabled=\"disabled\"","");
-  string=string.replace("removeFilter("+index+")","removeFilter("+(index+1)+")");
+  string=string.replace("disabled=\"\"","");
+  string=string.replace("selected=\"selected\"","");
+  string=string.replace("selected=\"selected\"","");
+  string=string.replace("removeFilter("+index+")","removeFilter("+(indexSelected+1)+")");
+  string=string.replace("addFilter("+index+")","addFilter("+(indexSelected+1)+")");
   class_filed='treven';
-  if($(".filterFields:last").attr("class")=="treven filterFields")
+  if($(".filterFields[number='"+indexSelected+"']").attr("class")=="treven filterFields")
     {
     class_filed='trodd';
     }
-  $(".filterFields:last").after('<tr class="'+class_filed+' filterFields">'+string+'</tr>'); //create new element
-  $(".filterFields:last input[type='text']").attr("value","");
-  $(".filterFields:first input[value='-']").attr("disabled",false); //enable remove button
+    //create new element
+  $(".filterFields[number='"+(indexSelected)+"']").after('<tr class="'+class_filed+' filterFields" number="'+(indexSelected+1)+'" id="filter'+(indexSelected+1)+'">'+string+'</tr>');
+  previousValue=$(".filterFields[number='"+(indexSelected)+"'] input[type='text']").attr("value");
+  $(".filterFields[number='"+(indexSelected+1)+"'] input[type='text']").attr("value",previousValue);
+  selectOption=$(".filterFields[number='"+(indexSelected)+"'] select:first").attr("value");
+  $(".filterFields[number='"+(indexSelected+1)+"'] select:first option").each(function(){
+          if ($(this).attr("value") == selectOption) {
+            $(this).attr("selected",true);
+          };
+     });
+  $(".filterFields:first input:first").removeAttr("disabled"); //enable remove button
   $("input[name='filtercount']").attr("value",countFilters()); //set value of the hidden input which tell the number of filter
+
+  content=$(".filterFields[number='"+(indexSelected)+"'] select:last").html();
+  $(".filterFields[number='"+(indexSelected+1)+"'] select:last").html(content);
+  selectOption=$(".filterFields[number='"+(indexSelected)+"'] select:last").attr("value");
+  $(".filterFields[number='"+(indexSelected+1)+"'] select:last option").each(function(){
+          if ($(this).attr("value") == selectOption) {
+            $(this).attr("selected",true);
+          };
+     });
+
+  if(countFilters()==2)
+    {
+    string=' Match <select name="filtercombine"><option value="and" selected="selected"> all</option';
+    string+='><option value="or">any </option></select> of the following rules:';
+    $("#Match_filter").html(string);
+    }
 }
 
 function removeFilter(index)
@@ -32,9 +85,13 @@ function removeFilter(index)
   });
   if(countFilters()==1)
     {
-    $(".filterFields:first input[value='-']").attr("disabled",true);
+    $(".filterFields:first input[value='-']").attr("disabled","disabled");
     }
   $("input[name='filtercount']").attr("value",countFilters());
+  if(countFilters()==1)
+    {
+    $("#Match_filter").html('Match the following rule: ');
+    }
 }
 
 function clearFilter()
@@ -43,6 +100,7 @@ function clearFilter()
   $(".filterFields input[type='text']").attr("value","");
   $(".filterFields input[value='-']").attr("disabled",true);
   $("input[name='filtercount']").attr("value",1);
+  $("#Match_filter").html('Match the following rule: ');
 }
 
 function countFilters()
@@ -192,8 +250,9 @@ function update_compare_options(o)
 
       // Also clear the corresponding 'value' input when data type changes:
       //
-      valueElement = document.getElementById('id_value' + num);
-      valueElement.value = '';
+      //valueElement = document.getElementById('id_value' + num);
+      $("#id_value"+num).attr("value",'');
+      //valueElement.value = '';
       }
     }
 }

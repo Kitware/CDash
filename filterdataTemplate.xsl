@@ -4,7 +4,10 @@
 
 
 <!-- filterdata template -->
+
 <xsl:template name="filterdata">
+
+
 <a style="display:block;" id="label_showfilters" href="javascript:filters_toggle();">
 <xsl:if test="cdash/filterdata/showfilters = 0">[Show Filters]</xsl:if>
 <xsl:if test="cdash/filterdata/showfilters != 0">[Hide Filters]</xsl:if>
@@ -31,6 +34,7 @@ Filter Definitions:<br/>
   <table>
   <tr class="trodd">
   <td>
+  <span id="Match_filter">
     <xsl:if test="count(cdash/filterdata/filters/filter) = 1">
       Match the following rule:
       <input type="hidden" name="filtercombine">
@@ -55,11 +59,14 @@ Filter Definitions:<br/>
       </select>
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>of the following rules:
     </xsl:if>
+    </span>
   </td>
   </tr>
 
   <xsl:for-each select="cdash/filterdata/filters/filter">
   <tr><xsl:attribute name="class"><xsl:if test="position() mod 2 = 0">trodd filterFields</xsl:if><xsl:if test="position() mod 2 = 1">treven filterFields</xsl:if></xsl:attribute>
+  <xsl:attribute name="number"><xsl:value-of select="position()"/></xsl:attribute>
+  <xsl:attribute name="id">filter<xsl:value-of select="position()"/></xsl:attribute>
   <td>
       <select onchange="filters_field_changed(this)">
         <xsl:attribute name="name">field<xsl:value-of select="position()"/></xsl:attribute>
