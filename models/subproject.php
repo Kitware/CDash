@@ -367,11 +367,9 @@ class SubProject
       return false;
       }
       
-    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM subproject2build,build,configureerror
-                          WHERE  configureerror.buildid=build.id  AND subprojectid=".qnum($this->Id).
-                         " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND configureerror.type='0'
-                          GROUP BY build.id) as c");
+    $project = pdo_query("SELECT count(*) FROM configure,build,subproject2build WHERE subprojectid=".qnum($this->Id).
+                         " AND configure.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate' AND configure.status='1'");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfErrorConfigures");
