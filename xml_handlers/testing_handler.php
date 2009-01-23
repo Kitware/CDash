@@ -78,7 +78,14 @@ class TestingHandler extends AbstractHandler
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
 
-      $this->Append = $attributes['APPEND'];
+      if (array_key_exists('APPEND', $attributes))
+        {
+        $this->Append = $attributes['APPEND'];
+        }
+      else
+        {
+        $this->Append = false;
+        }
       }
     else if($name == "TEST" && count($attributes) > 0)
       {
