@@ -107,6 +107,20 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
   KEY `subprojectid` (`subprojectid`)
 );
 
+---
+--- Place the alter table in reverse order to make sure the 
+--- new ones are executed correctly
+---
+ALTER TABLE image CHANGE id id BIGINT( 11 ) NOT NULL;
+ALTER TABLE image DROP INDEX id;
+ALTER TABLE image ADD PRIMARY KEY ( id );
+ALTER TABLE image CHANGE id id BIGINT( 11 ) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE dailyupdate CHANGE id id BIGINT( 11 ) NOT NULL;
+ALTER TABLE dailyupdate DROP INDEX buildid;
+ALTER TABLE dailyupdate ADD PRIMARY KEY ( id );
+ALTER TABLE dailyupdate CHANGE id id BIGINT( 11 ) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE dynamicanalysisdefect MODIFY value INT NOT NULL DEFAULT 0;
 
 ALTER TABLE test2image DROP PRIMARY KEY;
