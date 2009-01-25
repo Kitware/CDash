@@ -33,6 +33,8 @@ CREATE TABLE `build` (
   KEY `starttime` (`starttime`),
   KEY `submittime` (`submittime`),
   KEY `siteid` (`siteid`),
+  KEY `stamp` (`stamp`),
+  KEY `type` (`type`),
   KEY `name` (`name`)
 );
 

@@ -120,6 +120,8 @@ ALTER TABLE build ADD INDEX ( submittime );
 ALTER TABLE build DROP INDEX siteid;
 ALTER TABLE build ADD INDEX ( siteid );
 ALTER TABLE build ADD INDEX ( name );
+ALTER TABLE build ADD INDEX ( stamp );
+ALTER TABLE build ADD INDEX ( type );
 
 ALTER TABLE project ADD INDEX ( name );
 ALTER TABLE site ADD INDEX ( name );
