@@ -72,7 +72,9 @@ CREATE TABLE IF NOT EXISTS `label2test` (
 CREATE TABLE IF NOT EXISTS `label2update` (
   `labelid` bigint(20) NOT NULL,
   `updateid` bigint(20) NOT NULL,
-  KEY `labelid` (`labelid`,`updateid`)
+  KEY `labelid` (`labelid`),
+  KEY `updateid` (`updateid`)
+  
 );
 
 
@@ -111,6 +113,17 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
 --- Place the alter table in reverse order to make sure the 
 --- new ones are executed correctly
 ---
+ALTER TABLE builderror ADD INDEX ( type );
+
+ALTER TABLE build ADD INDEX ( starttime );
+ALTER TABLE build ADD INDEX ( submittime );
+ALTER TABLE build DROP INDEX siteid;
+ALTER TABLE build ADD INDEX ( siteid );
+ALTER TABLE build ADD INDEX ( name );
+
+ALTER TABLE project ADD INDEX ( name );
+ALTER TABLE site ADD INDEX ( name );
+
 ALTER TABLE image CHANGE id id BIGINT( 11 ) NOT NULL;
 ALTER TABLE image DROP INDEX id;
 ALTER TABLE image ADD PRIMARY KEY ( id );

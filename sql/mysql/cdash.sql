@@ -29,8 +29,11 @@ CREATE TABLE `build` (
   `command` text NOT NULL,
   `log` text NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `siteid` (`siteid`,`name`),
-  KEY `projectid` (`projectid`)
+  KEY `projectid` (`projectid`),
+  KEY `starttime` (`starttime`),
+  KEY `submittime` (`submittime`),
+  KEY `siteid` (`siteid`),
+  KEY `name` (`name`)
 );
 
 
@@ -112,7 +115,8 @@ CREATE TABLE `builderror` (
   `precontext` text NOT NULL,
   `postcontext` text NOT NULL,
   `repeatcount` int(11) NOT NULL default '0',
-  KEY `buildid` (`buildid`)
+  KEY `buildid` (`buildid`),
+  KEY `type` (`type`)
 );
 
 -- --------------------------------------------------------
@@ -317,7 +321,8 @@ CREATE TABLE `project` (
   `testtimemaxstatus` tinyint(4) default '3',
   `emailmaxitems` tinyint(4) default '5',
   `emailmaxchars` int(11) default '255',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `name` (`name`)
 );
 
 -- --------------------------------------------------------
@@ -332,7 +337,8 @@ CREATE TABLE `site` (
   `ip` varchar(255) NOT NULL default '',
   `latitude` varchar(10) NOT NULL default '',
   `longitude` varchar(10) NOT NULL default '',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `name` (`name`)
 ) ;
 
 -- 
