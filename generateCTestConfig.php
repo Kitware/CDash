@@ -20,6 +20,8 @@ include("config.php");
 require_once("pdo.php");
 include('login.php');
 include_once("common.php");
+require_once("models/project.php");
+require_once("models/subproject.php");
 
 @$projectid = $_GET["projectid"];
 // Checks
@@ -60,6 +62,57 @@ $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
    
 $ctestconfig .= "set(CTEST_DROP_LOCATION \"".$currentURI."/submit.php?project=".urlencode($project_array["name"])."\")\n";
 $ctestconfig .= "set(CTEST_DROP_SITE_CDASH TRUE)\n";
+
+// Add the subproject
+$Project = new Project();
+$Project->Id = $projectid;
+$subprojectids = $Project->GetSubprojects();
+
+function get_graph_depth($a,$value)
+  {
+  $SubProject = new SubProject();
+  $SubProject->Id = $a;
+  $parents = $SubProject->GetDependencies();
+  foreach($parents as $parentid)
+    {
+    $subvalue = get_graph_depth($parentid,$value+1);
+    if($subvalue>$value)
+      {
+      $value = $subvalue;
+      }
+    }
+  return $value;
+  }
+
+// Compare two subprojects to check the depth
+function cmp($a, $b)
+  {
+  $va = get_graph_depth($a,0);
+  $vb = get_graph_depth($b,0);  
+  if ($va == $vb) 
+    {
+    return 0;
+    }
+  return ($va < $vb) ? -1 : 1;
+  }
+usort($subprojectids,"cmp");
+
+if(count($subprojectids)>0)
+  {
+  $ctestconfig .= "\nset(CTEST_PROJECT_SUBPROJECTS\n";
+  }
+  
+foreach($subprojectids as $subprojectid) 
+  {
+  $SubProject = new SubProject();
+  $SubProject->Id = $subprojectid;
+  $ctestconfig .= $SubProject->GetName()."\n";
+  }
+  
+if(count($subprojectids)>0)
+  {
+  $ctestconfig .= ")\n";
+  }
  
 header('Vary: User-Agent');
 if(ob_get_contents())

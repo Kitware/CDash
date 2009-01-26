@@ -506,6 +506,38 @@ class SubProject
     return $this->Id;
     }
   
+  /** Get the subprojectids of the subprojects parent to this one */
+  function GetParents($date=NULL)
+    {
+    if(!$this->Id)
+      {
+      echo "SubProject GetParents(): Id not set";
+      return false;
+      }
+  
+    // If not set, the date is now
+    if($date == NULL)
+      {
+      $date = gmdate(FMT_DATETIME);
+      }
+  
+    $project = pdo_query("SELECT subprojectid  FROM subproject2subproject 
+                          WHERE dependsonid=".qnum($this->Id)." AND 
+                          starttime<='".$date."' AND (endtime>'".$date."' OR endtime='1980-01-01 00:00:00')"
+                          );
+    if(!$project)
+      {
+      add_last_sql_error("SubProject GetParents");
+      return false;
+      }
+    $ids = array();
+    while($project_array = pdo_fetch_array($project))
+      {
+      $ids[] = $project_array['subprojectid'];
+      } 
+    return $ids;
+    } // end GetDependencies
+    
   /** Get the subprojectids of the subprojects depending on this one */
   function GetDependencies($date=NULL)
     {
