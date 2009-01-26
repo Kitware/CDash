@@ -113,6 +113,28 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
 --- Place the alter table in reverse order to make sure the 
 --- new ones are executed correctly
 ---
+
+ALTER TABLE build2note DROP INDEX buildid;
+ALTER TABLE build2note ADD INDEX ( buildid );
+ALTER TABLE build2note ADD INDEX ( noteid );
+
+ALTER TABLE user2project ADD INDEX ( cvslogin );
+ALTER TABLE user2project ADD INDEX ( emailtype );
+
+ALTER TABLE user ADD INDEX ( email ); 
+
+ALTER TABLE project ADD INDEX ( public ); 
+
+ALTER TABLE buildgroup ADD INDEX  ( starttime );
+ALTER TABLE buildgroup ADD INDEX  ( endtime );
+
+ALTER TABLE buildgroupposition ADD INDEX  ( position );
+ALTER TABLE buildgroupposition ADD INDEX  ( starttime );
+ALTER TABLE buildgroupposition ADD INDEX  ( endtime );
+
+ALTER TABLE dailyupdate ADD INDEX ( date );
+ALTER TABLE dailyupdate ADD INDEX ( projectid );
+
 ALTER TABLE builderror ADD INDEX ( type );
 
 ALTER TABLE build ADD INDEX ( starttime );
@@ -146,6 +168,5 @@ ALTER TABLE image CHANGE checksum checksum BIGINT( 20 ) NOT NULL;
 ALTER TABLE note CHANGE crc32 crc32 BIGINT( 20 ) NOT NULL;
 ALTER TABLE test CHANGE crc32 crc32 BIGINT( 20 ) NOT NULL;
 ALTER TABLE coveragefile CHANGE crc32 crc32 BIGINT( 20 ) NOT NULL;
-
 
 

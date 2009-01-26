@@ -48,7 +48,9 @@ CREATE TABLE `buildgroup` (
   `description` text NOT NULL default '',
   `summaryemail` tinyint(4) default '0',
   PRIMARY KEY  (`id`),
-  KEY `projectid` (`projectid`)
+  KEY `projectid` (`projectid`),
+  KEY `starttime` (`starttime`),
+  KEY `endtime` (`endtime`) 
 );
 
 -- --------------------------------------------------------
@@ -62,7 +64,10 @@ CREATE TABLE `buildgroupposition` (
   `position` int(11) NOT NULL default '0',
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  KEY `buildgroupid` (`buildgroupid`)
+  KEY `buildgroupid` (`buildgroupid`),
+  KEY `projectid` (`projectid`),
+  KEY `starttime` (`starttime`),
+  KEY `position` (`position`)
 );
         
 
@@ -324,7 +329,8 @@ CREATE TABLE `project` (
   `emailmaxitems` tinyint(4) default '5',
   `emailmaxchars` int(11) default '255',
   PRIMARY KEY  (`id`),
-  KEY `name` (`name`)
+  KEY `name` (`name`),
+  KEY `public` (`public`)
 );
 
 -- --------------------------------------------------------
@@ -460,7 +466,8 @@ CREATE TABLE `user` (
   `lastname` varchar(40) NOT NULL default '',
   `institution` varchar(255) NOT NULL default '',
   `admin` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `email` (`email`)
 );
 
 -- --------------------------------------------------------
@@ -476,7 +483,9 @@ CREATE TABLE `user2project` (
   `cvslogin` varchar(50) NOT NULL default '',
   `emailtype` tinyint(4) NOT NULL default '0',
   `emailcategory` tinyint(4) NOT NULL default '62',
-  PRIMARY KEY  (`userid`,`projectid`)
+  PRIMARY KEY  (`userid`,`projectid`),
+  KEY `cvslogin` (`cvslogin`),
+  KEY `emailtype` (`emailtype`)
 );
 
 -- 
@@ -534,7 +543,9 @@ CREATE TABLE `dailyupdate` (
   `command` text NOT NULL,
   `type` varchar(4) NOT NULL default '',
   `status` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `date` (`date`),
+  KEY `projectid` (`projectid`)
 );
 
 
@@ -568,7 +579,8 @@ CREATE TABLE `build2note` (
   `buildid` bigint(20) NOT NULL,
   `noteid`  bigint(20) NOT NULL,
   `time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  KEY `buildid` (`buildid`,`noteid`)
+  KEY `buildid` (`buildid`),
+  KEY `noteid` (`noteid`)
 );
 
 
