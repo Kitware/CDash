@@ -99,11 +99,15 @@ CREATE TABLE `build2grouprule` (
   `expected` tinyint(4) NOT NULL default '0',
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  KEY `groupid` (`groupid`)
+  KEY `groupid` (`groupid`),
+  KEY `buildtype` (`buildtype`),
+  KEY `buildname` (`buildname`),
+  KEY `siteid` (`siteid`),
+  KEY `expected` (`expected`),
+  KEY `starttime` (`starttime`),
+  KEY `endtime` (`endtime`)
 );
         
-
-
 
 
 -- --------------------------------------------------------

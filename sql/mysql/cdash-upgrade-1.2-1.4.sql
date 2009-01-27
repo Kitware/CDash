@@ -113,6 +113,12 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
 --- Place the alter table in reverse order to make sure the 
 --- new ones are executed correctly
 ---
+ALTER TABLE build2grouprule ADD INDEX  ( starttime );
+ALTER TABLE build2grouprule ADD INDEX  ( endtime );
+ALTER TABLE build2grouprule ADD INDEX  ( buildtype );
+ALTER TABLE build2grouprule ADD INDEX  ( buildname );
+ALTER TABLE build2grouprule ADD INDEX  ( expected );
+ALTER TABLE build2grouprule ADD INDEX  ( siteid );
 
 ALTER TABLE build2note DROP INDEX buildid;
 ALTER TABLE build2note ADD INDEX ( buildid );
