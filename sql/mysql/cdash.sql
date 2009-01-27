@@ -179,7 +179,8 @@ CREATE TABLE `coverage` (
   `functionstested` int(11) NOT NULL default '0',
   `functionsuntested` int(11) NOT NULL default '0',
   KEY `buildid` (`buildid`),
-  KEY `fileid` (`fileid`)
+  KEY `fileid` (`fileid`),
+  KEY `covered` (`covered`)
 );
 
 -- --------------------------------------------------------
