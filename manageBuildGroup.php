@@ -201,15 +201,16 @@ if($CreateGroup)
                                                         AND bg.endtime='1980-01-01 00:00:00' ORDER BY bg.position DESC LIMIT 1"));
   $newposition = $groupposition_array["position"]+1;
   $starttime = '1980-01-01 00:00:00';
+  $endtime = '1980-01-01 00:00:00';
     
   // Insert the new group
-  $sql = "INSERT INTO buildgroup (name,projectid,starttime,description) VALUES ('$Name','$projectid','$starttime','')"; 
+  $sql = "INSERT INTO buildgroup (name,projectid,starttime,endtime,description) VALUES ('$Name','$projectid','$starttime','$endtime','')"; 
   if(pdo_query("$sql"))
     {
     $newgroupid = pdo_insert_id("buildgroup");
 
     // Create a new position for this group
-    pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime) VALUES ('$newgroupid','$newposition','$starttime')");   
+    pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime) VALUES ('$newgroupid','$newposition','$starttime','$endtime')");   
     }
   else
     {
