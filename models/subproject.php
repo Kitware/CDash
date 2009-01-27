@@ -474,7 +474,7 @@ class SubProject
   
     $project = pdo_query("SELECT count(*) FROM build2test,build,subproject2build WHERE subprojectid=".qnum($this->Id).
                          " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND build2test.status='not run'");
+                           AND build.starttime<='$endUTCdate' AND build2test.status='notrun'");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfNotRunTests");
