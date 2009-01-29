@@ -80,8 +80,8 @@ if($submit)
                AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
 
   // Add the new rule (begin time is set by default by mysql
-  pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
-               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','1980-01-01 00:00:00')");
+  pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
+               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','1980-01-01 00:00:00','1980-01-01 00:00:00')");
         
   // Move any builds that follow this rule to the correct build2group       
   $buildgroups = pdo_query("SELECT * from build2group");

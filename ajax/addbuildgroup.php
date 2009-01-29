@@ -60,8 +60,8 @@ if($markexpected)
   else if($expected) // we add the grouprule
     {
     $now = gmdate(FMT_DATETIME);
-    pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
-                 VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
+    pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
+                 VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now','1980-01-01 00:00:00')");
     }
 }
 
@@ -93,8 +93,8 @@ if($definerule)
                AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
 
   // Add the new rule (begin time is set by default by mysql
-  pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
-               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now')");
+  pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
+               VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now','1980-01-01 00:00:00')");
   }
 
 return;
