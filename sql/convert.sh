@@ -9,6 +9,7 @@ for in in *.sql; do
     echo "processing \"$in\""
     out=../pgsql/$in
     grep -vi "alter table" $in | sqlt --from MySQL --to PostgreSQL - > $out
+    ../convert_alter_table.pl $in >> $out
     ext=$(echo $out | sed 's/\.sql$/.ext.sql/g')
 
     if test -e $ext; then

@@ -16,8 +16,13 @@ CREATE TABLE "build" (
   "log" text NOT NULL,
   PRIMARY KEY ("id")
 );
-CREATE INDEX "build_siteid_idx" on "build" ("siteid", "name");
 CREATE INDEX "build_projectid_idx" on "build" ("projectid");
+CREATE INDEX "build_starttime_idx" on "build" ("starttime");
+CREATE INDEX "build_submittime_idx" on "build" ("submittime");
+CREATE INDEX "build_siteid_idx" on "build" ("siteid");
+CREATE INDEX "build_stamp_idx" on "build" ("stamp");
+CREATE INDEX "build_type_idx" on "build" ("type");
+CREATE INDEX "build_name_idx" on "build" ("name");
 
 --
 -- Table: buildgroup
@@ -33,6 +38,8 @@ CREATE TABLE "buildgroup" (
   PRIMARY KEY ("id")
 );
 CREATE INDEX "buildgroup_projectid_idx" on "buildgroup" ("projectid");
+CREATE INDEX "buildgroup_starttime_idx" on "buildgroup" ("starttime");
+CREATE INDEX "buildgroup_endtime_idx" on "buildgroup" ("endtime");
 
 --
 -- Table: buildgroupposition
@@ -44,6 +51,9 @@ CREATE TABLE "buildgroupposition" (
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
 );
 CREATE INDEX "buildgroupposition_buildgroupid_idx" on "buildgroupposition" ("buildgroupid");
+CREATE INDEX "buildgroupposition_projectid_idx" on "buildgroupposition" ("projectid");
+CREATE INDEX "buildgroupposition_starttime_idx" on "buildgroupposition" ("starttime");
+CREATE INDEX "buildgroupposition_position_idx" on "buildgroupposition" ("position");
 
 --
 -- Table: build2group
@@ -68,6 +78,12 @@ CREATE TABLE "build2grouprule" (
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
 );
 CREATE INDEX "build2grouprule_groupid_idx" on "build2grouprule" ("groupid");
+CREATE INDEX "build2grouprule_buildtype_idx" on "build2grouprule" ("buildtype");
+CREATE INDEX "build2grouprule_buildname_idx" on "build2grouprule" ("buildname");
+CREATE INDEX "build2grouprule_siteid_idx" on "build2grouprule" ("siteid");
+CREATE INDEX "build2grouprule_expected_idx" on "build2grouprule" ("expected");
+CREATE INDEX "build2grouprule_starttime_idx" on "build2grouprule" ("starttime");
+CREATE INDEX "build2grouprule_endtime_idx" on "build2grouprule" ("endtime");
 
 --
 -- Table: builderror
@@ -84,6 +100,7 @@ CREATE TABLE "builderror" (
   "repeatcount" bigint DEFAULT '0' NOT NULL
 );
 CREATE INDEX "builderror_buildid_idx" on "builderror" ("buildid");
+CREATE INDEX "builderror_type_idx" on "builderror" ("type");
 
 --
 -- Table: buildupdate
@@ -127,6 +144,7 @@ CREATE TABLE "coverage" (
 );
 CREATE INDEX "coverage_buildid_idx" on "coverage" ("buildid");
 CREATE INDEX "coverage_fileid_idx" on "coverage" ("fileid");
+CREATE INDEX "coverage_covered_idx" on "coverage" ("covered");
 
 --
 -- Table: coveragefile
@@ -196,9 +214,9 @@ CREATE TABLE "image" (
   "id" serial NOT NULL,
   "img" bytea NOT NULL,
   "extension" text NOT NULL,
-  "checksum" bigint NOT NULL
+  "checksum" bigint NOT NULL,
+  CONSTRAINT "image_id_con" PRIMARY KEY ("id")
 );
-CREATE INDEX "image_id_idx" on "image" ("id");
 CREATE INDEX "image_checksum_idx" on "image" ("checksum");
 
 --
@@ -253,6 +271,8 @@ CREATE TABLE "project" (
   "emailmaxchars" bigint DEFAULT '255',
   PRIMARY KEY ("id")
 );
+CREATE INDEX "project_name_idx" on "project" ("name");
+CREATE INDEX "project_public_idx" on "project" ("public");
 
 --
 -- Table: site
@@ -265,6 +285,7 @@ CREATE TABLE "site" (
   "longitude" character varying(10) DEFAULT '' NOT NULL,
   PRIMARY KEY ("id")
 );
+CREATE INDEX "site_name_idx" on "site" ("name");
 
 --
 -- Table: siteinformation
@@ -373,6 +394,7 @@ CREATE TABLE "user" (
   "admin" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("id")
 );
+CREATE INDEX "user_email_idx" on "user" ("email");
 
 --
 -- Table: user2project
@@ -386,6 +408,8 @@ CREATE TABLE "user2project" (
   "emailcategory" smallint DEFAULT '62' NOT NULL,
   PRIMARY KEY ("userid", "projectid")
 );
+CREATE INDEX "user2project_cvslogin_idx" on "user2project" ("cvslogin");
+CREATE INDEX "user2project_emailtype_idx" on "user2project" ("emailtype");
 
 --
 -- Table: buildnote
@@ -437,9 +461,11 @@ CREATE TABLE "dailyupdate" (
   "date" date NOT NULL,
   "command" text NOT NULL,
   "type" character varying(4) DEFAULT '' NOT NULL,
-  "status" smallint DEFAULT '0' NOT NULL
+  "status" smallint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("id")
 );
-CREATE INDEX "dailyupdate_buildid_idx" on "dailyupdate" ("id");
+CREATE INDEX "dailyupdate_date_idx" on "dailyupdate" ("date");
+CREATE INDEX "dailyupdate_projectid_idx" on "dailyupdate" ("projectid");
 
 --
 -- Table: dailyupdatefile
@@ -483,7 +509,8 @@ CREATE TABLE "build2note" (
   "noteid" bigint NOT NULL,
   "time" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-CREATE INDEX "build2note_buildid_idx" on "build2note" ("buildid", "noteid");
+CREATE INDEX "build2note_buildid_idx" on "build2note" ("buildid");
+CREATE INDEX "build2note_noteid_idx" on "build2note" ("noteid");
 
 --
 -- Table: userstatistics
@@ -635,9 +662,11 @@ CREATE INDEX "label2update_labelid_idx" on "label2update" ("labelid", "updateid"
 -- Table: subproject
 --
 CREATE TABLE "subproject" (
-  "id" bigint NOT NULL,
+  "id" bigserial NOT NULL,
   "name" character varying(255) NOT NULL,
   "projectid" bigint NOT NULL,
+  "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "subproject_projectid_idx" on "subproject" ("projectid");
@@ -647,7 +676,9 @@ CREATE INDEX "subproject_projectid_idx" on "subproject" ("projectid");
 --
 CREATE TABLE "subproject2subproject" (
   "subprojectid" bigint NOT NULL,
-  "dependsonid" bigint NOT NULL
+  "dependsonid" bigint NOT NULL,
+  "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
 );
 CREATE INDEX "subproject2subproject_subprojectid_idx" on "subproject2subproject" ("subprojectid");
 CREATE INDEX "subproject2subproject_dependsonid_idx" on "subproject2subproject" ("dependsonid");
