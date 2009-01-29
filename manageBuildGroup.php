@@ -300,9 +300,9 @@ if($GlobalMove)
   pdo_query("DELETE FROM build2grouprule WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
                  AND buildname='$buildname' AND siteid='$siteid'");
            
-    // Add the new rule (end time is set by default by mysql)
-    pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime) 
-                 VALUES ('$GroupSelection','$buildtype','$buildname','$siteid','$ExpectedMove','1980-01-01 00:00:00')");
+    // Add the new rule
+    pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
+                 VALUES ('$GroupSelection','$buildtype','$buildname','$siteid','$ExpectedMove','1980-01-01 00:00:00','1980-01-01 00:00:00')");
     }
 } // end GlobalMove
 
