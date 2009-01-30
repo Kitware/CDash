@@ -1730,7 +1730,7 @@ function get_last_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildna
 /** Get the date from the buildid */
 function get_dashboard_date_from_build_starttime($starttime,$nightlytime)
 {
-  $nightlytime = strtotime($nightlytime);
+  $nightlytime = strtotime($nightlytime)-1; // in case it's midnight
   $starttime = strtotime($starttime);
   
   if(date(FMT_TIME,$starttime)>date(FMT_TIME,$nightlytime))

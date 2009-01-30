@@ -18,19 +18,16 @@
         <td width="66%" class="paddl">
         <a><xsl:attribute name="href">user.php</xsl:attribute>
         <xsl:choose>
-          <xsl:when test="cdash/user/id>0">
-            My CDash  
-          </xsl:when>
-          <xsl:otherwise>
-             Login
-           </xsl:otherwise>
+          <xsl:when test="cdash/user/id>0">My CDash</xsl:when>
+          <xsl:otherwise>Login</xsl:otherwise>
         </xsl:choose>  
         </a>
         
         <xsl:if test="cdash/user/id>0">
           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>|<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="user.php?logout=1">Log Out</a>  
         </xsl:if>
-        
+        | <a href="index.php">Dashboards</a>
+                  
         </td>
         <td width="34%" class="topdate">
           <span style="float:right">
@@ -92,24 +89,27 @@
     <td align="left" class="topbg2"><table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td align="left" class="bgtm"><ul id="Nav" class="nav">
-<li id="Dartboard">
+
 
 <xsl:choose>
 <xsl:when test="string-length(cdash/menu/back)>0">
+<li id="Dartboard">
+<a>
+<xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
+DASHBOARD</a>
+</li><li id="Back">
 <a>
 <xsl:attribute name="href"><xsl:value-of select="cdash/menu/back"/></xsl:attribute>
 BACK</a><ul></ul>
+</li>
 </xsl:when>
 <xsl:otherwise>
-
+<li id="Dartboard">
 <!-- Back to the main page if not a subpackage otherwise goes back to the list of subprojects -->
 
 <a>
 <xsl:attribute name="href">
-<xsl:choose>
-<xsl:when test="count(cdash/subproject)>0 and count(cdash/project)=0">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:when>
-<xsl:otherwise>index.php</xsl:otherwise>
-</xsl:choose>
+index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/>
 </xsl:attribute>
 DASHBOARD</a>
 <ul>
@@ -125,9 +125,9 @@ Tests</a></li>
 <xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
 Map</a></li>
 </ul>
+</li>
 </xsl:otherwise>
 </xsl:choose>
-</li>
 <li><a id="cal" href="#">CALENDAR</a></li>
 
 <xsl:if test="string-length(cdash/menu/noprevious)=0">    
