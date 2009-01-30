@@ -228,10 +228,10 @@ if($Delete)
 if($Update || $AddRepository)
   {
   $Project->Description = addslashes($_POST["description"]);
-  $Project->HomeURL = stripHTTP($_POST["homeURL"]);
-  $Project->CVSURL = stripHTTP($_POST["cvsURL"]);
-  $Project->BugURL = stripHTTP($_POST["bugURL"]);
-  $Project->DocURL = stripHTTP($_POST["docURL"]);
+  $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
+  $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
+  $Project->BugUrl = stripHTTP($_POST["bugURL"]);
+  $Project->DocUrl = stripHTTP($_POST["docURL"]);
   @$Project->Public = $_POST["public"];
   $Project->CoverageThreshold = $_POST["coverageThreshold"];
   $Project->NightlyTime = $_POST["nightlyTime"];
