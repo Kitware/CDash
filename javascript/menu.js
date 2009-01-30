@@ -58,6 +58,10 @@ function findHeight(obj)
 
 function findCalendarXPos(obj)
   {
+  if(document.getElementById("Back"))
+    {   
+    return document.getElementById("Nav").offsetLeft+document.getElementById("Dartboard").offsetWidth+document.getElementById("Back").offsetWidth;
+    }
   return document.getElementById("Nav").offsetLeft+document.getElementById("Dartboard").offsetWidth;
   }
 
