@@ -230,8 +230,8 @@ if($Update || $AddRepository)
   $Project->Description = addslashes($_POST["description"]);
   $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
   $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
-  $Project->BugUrl = stripHTTP($_POST["bugURL"]);
-  $Project->DocUrl = stripHTTP($_POST["docURL"]);
+  $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
+  $Project->DocumentationUrl = stripHTTP($_POST["docURL"]);
   @$Project->Public = $_POST["public"];
   $Project->CoverageThreshold = $_POST["coverageThreshold"];
   $Project->NightlyTime = $_POST["nightlyTime"];
