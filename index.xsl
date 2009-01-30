@@ -1,43 +1,46 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-    
-   <xsl:template name="builds">
-   <xsl:param name="type"/>
-   <xsl:if test="count($type/build)=0">
-  
-   <tr class="table-heading1">
+
+<xsl:template name="builds">
+  <xsl:param name="type"/>
+
+
+  <xsl:if test="count($type/build)=0">
+    <thead>
+    <tr class="table-heading1">
       <td colspan="1" class="nob">
-          <h3><a href="#" class="grouptrigger">No <xsl:value-of select="name"/> Builds</a></h3>
+        <h3><a href="#" class="grouptrigger">No <xsl:value-of select="name"/> Builds</a></h3>
       </td>
-  
-  <!-- quick links -->
-  <td colspan="15" align="right" class="nob">
-   <div>
-   <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
-   </div> 
-   <div class="quicklink">
-   <xsl:for-each select="/cdash/buildgroup">
-       <xsl:if test="name!=$type/name">
+
+      <!-- quick links -->
+      <td colspan="15" align="right" class="nob">
+      <div>
+      <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
+      </div> 
+      <div class="quicklink">
+      <xsl:for-each select="/cdash/buildgroup">
+        <xsl:if test="name!=$type/name">
         <a>
-     <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
-     <xsl:value-of select="name"/></a> | 
-      </xsl:if>
-    </xsl:for-each> 
-   <a href="#Coverage">Coverage</a> | 
-   <a href="#DynamicAnalysis">Dynamic Analysis</a>
-    </div> 
-    </td>
-  
-   </tr>
-   </xsl:if>
-   
-    <xsl:if test="count($type/build)>0">
-     <thead> 
-        <tr class="table-heading1" >
+        <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
+        <xsl:value-of select="name"/></a> | 
+        </xsl:if>
+      </xsl:for-each> 
+      <a href="#Coverage">Coverage</a> | 
+      <a href="#DynamicAnalysis">Dynamic Analysis</a>
+      </div> 
+      </td>
+    </tr>
+    </thead>
+  </xsl:if>
+
+
+  <xsl:if test="count($type/build)>0">
+    <thead>
+    <tr class="table-heading1" >
       <td colspan="1" class="nob">
           <h3><a href="#" class="grouptrigger"><xsl:value-of select="$type/name"/></a></h3>
       </td>
-  <td colspan="15" align="right" class="nob">
+      <td colspan="15" align="right" class="nob">
    <div>
    <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
    </div> 
@@ -111,9 +114,10 @@
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_13</xsl:attribute>
       Min</th>
    </tr>
-      </thead>
-       <tbody> 
-      <xsl:for-each select="$type/build">
+   </thead>
+
+   <tbody>
+     <xsl:for-each select="$type/build">
    <tr valign="middle">
 <!--   <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
   --> 
@@ -395,10 +399,15 @@
    </tr>
   </xsl:for-each>
   </tbody>
-<!-- Row displaying the totals -->
-<xsl:if test="count(/cdash/buildgroup/build/buildid)>0 and $type/last=1">
- <tbody> 
-   <tr class="total">
+
+  </xsl:if>
+  <!-- end "count($type/build)>0" -->
+
+
+  <!-- Row displaying the totals -->
+  <xsl:if test="$type/last=1">
+  <tbody>
+    <tr class="total">
       <td align="left">Totals</td>
       <td align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
       <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
@@ -499,16 +508,15 @@
       <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
       <td class="nob"></td>
       <!-- <td bgcolor="#ffffff"></td> -->
-   </tr>
-</tbody>
-</xsl:if>
-
-
+    </tr>
+  </tbody>
   </xsl:if>
+  <!-- end "Row displaying the totals" -->
 
 </xsl:template>
-<!-- end template -->    
-   
+<!-- end template -->
+
+
    <xsl:include href="filterdataTemplate.xsl"/>
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
