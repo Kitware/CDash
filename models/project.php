@@ -864,7 +864,7 @@ class Project
   
     $project = pdo_query("SELECT count(*) FROM (SELECT count(be.buildid) as c FROM build 
                            LEFT JOIN builderror as be ON be.buildid=build.id 
-                          WHERE projectid=".qnum($this->Id).
+                          WHERE build.projectid=".qnum($this->Id).
                          " AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate'
                           GROUP BY build.id
@@ -932,11 +932,11 @@ class Project
       return false;
       }
       
-    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM build,configureerror
-                          WHERE  configureerror.buildid=build.id  AND projectid=".qnum($this->Id).
+    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM build,configure
+                          WHERE  configure.buildid=build.id  AND build.projectid=".qnum($this->Id).
                          " AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate' 
-                           AND configureerror.type='0'
+                            AND configure.status='1'
                           GROUP BY build.id) as c");
     if(!$project)
       {
