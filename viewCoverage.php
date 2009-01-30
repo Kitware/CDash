@@ -35,7 +35,7 @@ if(!isset($buildid) || !is_numeric($buildid))
     
 if(!$sortby)
   {
-  $sortby = "filename";
+  $sortby = "status";
   }
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
