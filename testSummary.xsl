@@ -60,7 +60,7 @@
     <th id="sort_1">Build Name</th>
     <th id="sort_2">Build Stamp</th>
     <th id="sort_3">Status</th>
-    <th id="sort_4">Time</th>
+    <th id="sort_4">Time (s)</th>
     <th id="sort_5" class="nob">Detail</th>
   </tr>
 </thead> 

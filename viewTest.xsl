@@ -93,7 +93,7 @@
     <th id="sort_4" class="nob">Details</th>
 </xsl:if>        
 <xsl:if test="cdash/project/showtesttime=0">    
-    <th id="sort_2">Time</th>
+    <th id="sort_2">Time (s)</th>
     <th id="sort_3" class="nob">Details</th>
 </xsl:if>        
   </tr>

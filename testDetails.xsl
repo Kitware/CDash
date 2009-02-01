@@ -86,7 +86,7 @@
   </tr>
 </xsl:for-each>
    <tr>
-      <th class="measurement">Execution Time</th>
+      <th class="measurement">Execution Time (s)</th>
       <td>
         <xsl:value-of select="cdash/test/time"/>
          (mean:<xsl:value-of select="cdash/test/timemean"/>  std:<xsl:value-of select="cdash/test/timestd"/>)
