@@ -229,9 +229,6 @@ if(isset($_GET['upgrade-1-2']))
       pdo_query("ALTER TABLE user2project ADD emailcategory tinyint(4) default '62'");
       }
     }     
-
-  // Set the database version
-  setVersion();
   exit();
 }
 

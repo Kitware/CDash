@@ -195,28 +195,35 @@ if($CreateGroup)
   {
   $Name = $_POST["name"];
  
-  // Find the last position available
-  $groupposition_array = pdo_fetch_array(pdo_query("SELECT bg.position,bg.starttime FROM buildgroup AS g, buildgroupposition AS bg 
-                                                        WHERE g.id=bg.buildgroupid AND g.projectid='$projectid' 
-                                                        AND bg.endtime='1980-01-01 00:00:00' ORDER BY bg.position DESC LIMIT 1"));
-  $newposition = $groupposition_array["position"]+1;
-  $starttime = '1980-01-01 00:00:00';
-  $endtime = '1980-01-01 00:00:00';
-    
-  // Insert the new group
-  $sql = "INSERT INTO buildgroup (name,projectid,starttime,endtime,description) VALUES ('$Name','$projectid','$starttime','$endtime','')"; 
-  if(pdo_query("$sql"))
+  // Avoid creating a group that is Nightly, Experimental or Continuous
+  if($Name == "Nightly" || $Name == "Experimental" || $Name == "Continuous")
     {
-    $newgroupid = pdo_insert_id("buildgroup");
-
-    // Create a new position for this group
-    pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime) VALUES ('$newgroupid','$newposition','$starttime','$endtime')");   
+     $xml .= add_XML_value("warning","You cannot a group named 'Nightly','Experimental' or 'Continous'");
     }
   else
     {
-    echo pdo_error();
-    }
-    
+    // Find the last position available
+    $groupposition_array = pdo_fetch_array(pdo_query("SELECT bg.position,bg.starttime FROM buildgroup AS g, buildgroupposition AS bg 
+                                                          WHERE g.id=bg.buildgroupid AND g.projectid='$projectid' 
+                                                          AND bg.endtime='1980-01-01 00:00:00' ORDER BY bg.position DESC LIMIT 1"));
+    $newposition = $groupposition_array["position"]+1;
+    $starttime = '1980-01-01 00:00:00';
+    $endtime = '1980-01-01 00:00:00';
+      
+    // Insert the new group
+    $sql = "INSERT INTO buildgroup (name,projectid,starttime,endtime,description) VALUES ('$Name','$projectid','$starttime','$endtime','')"; 
+    if(pdo_query("$sql"))
+      {
+      $newgroupid = pdo_insert_id("buildgroup");
+  
+      // Create a new position for this group
+      pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime) VALUES ('$newgroupid','$newposition','$starttime','$endtime')");   
+      }
+    else
+      {
+      echo pdo_error();
+      }
+    } // end not Nightly or Experimental or Continuous
   } // end CreateGroup
 
 
@@ -226,29 +233,29 @@ if($DeleteGroup)
   {
   $Groupid = $_POST["groupid"];
  
- // We delete all the build2grouprule associated with the group
- pdo_query("DELETE FROM build2grouprule WHERE groupid='$Groupid'"); 
+  // We delete all the build2grouprule associated with the group
+  pdo_query("DELETE FROM build2grouprule WHERE groupid='$Groupid'"); 
  
- // We delete the buildgroup
+  // We delete the buildgroup
   pdo_query("DELETE FROM buildgroup WHERE id='$Groupid'"); 
 
   // Restore the builds that were associated with this group
- $oldbuilds = pdo_query("SELECT id,type FROM build WHERE id IN (SELECT buildid AS id FROM build2group WHERE groupid='$Groupid')"); 
+  $oldbuilds = pdo_query("SELECT id,type FROM build WHERE id IN (SELECT buildid AS id FROM build2group WHERE groupid='$Groupid')"); 
   echo pdo_error();
   while($oldbuilds_array = pdo_fetch_array($oldbuilds))
-  {
-  // Move the builds
-  $buildid = $oldbuilds_array["id"];
-  $buildtype = $oldbuilds_array["type"];
-   
-  // Find the group corresponding to the build type
-  $grouptype_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'")); 
-   echo pdo_error();   
-  $grouptype = $grouptype_array["id"];
-   
-  pdo_query("UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'"); 
-   echo pdo_error();   
-   }
+    {
+    // Move the builds
+    $buildid = $oldbuilds_array["id"];
+    $buildtype = $oldbuilds_array["type"];
+     
+    // Find the group corresponding to the build type
+    $grouptype_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'")); 
+    echo pdo_error();   
+    $grouptype = $grouptype_array["id"];
+     
+    pdo_query("UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'"); 
+    echo pdo_error();   
+    }
 
   // We delete the buildgroupposition and update the position of the other groups
   pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid='$Groupid'"); 
@@ -256,15 +263,14 @@ if($DeleteGroup)
   $buildgroupposition = pdo_query("SELECT bg.buildgroupid FROM buildgroupposition as bg, buildgroup as g
                                         WHERE g.projectid='$projectid' AND bg.buildgroupid=g.id ORDER BY bg.position ASC"); 
    
- $p = 1;
+  $p = 1;
   while($buildgroupposition_array = pdo_fetch_array($buildgroupposition))
-   {
-  $buildgroupid = $buildgroupposition_array["buildgroupid"];
-   pdo_query("UPDATE buildgroupposition SET position='$p' WHERE buildgroupid='$buildgroupid'"); 
-  $p++;
-   }
- 
- } // end DeleteGroup
+    {
+    $buildgroupid = $buildgroupposition_array["buildgroupid"];
+    pdo_query("UPDATE buildgroupposition SET position='$p' WHERE buildgroupid='$buildgroupid'"); 
+    $p++;
+    }
+  } // end DeleteGroup
  
 
 @$GlobalMove = $_POST["globalMove"];
