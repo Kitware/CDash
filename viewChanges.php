@@ -190,7 +190,11 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
       }
 
     $filename = $commit['filename'];
-    $revision = $commit['revision'];
+    $revision = '';
+    if($commit['priorrevision'] != "-1")
+      {
+      $revision = $commit['revision'];
+      }
     $time = gmdate(FMT_DATETIME, $commit['time']);
     $author = $commit['author'];
     
@@ -282,6 +286,7 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   $commit['directory'] = $current_directory;
   $commit['filename'] = $current_filename;
   $commit['revision'] = $current_revision;
+  $commit['priorrevision'] = $dailyupdate_array['priorrevision'];
   $commit['time'] = $dailyupdate_array['time'];
   $commit['author'] = $dailyupdate_array['author'];
   $commit['comment'] = $dailyupdate_array['log'];

@@ -188,6 +188,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
         $commit['directory'] = $current_directory;
         $commit['filename'] = $current_filename;
         $commit['revision'] = $current_revision;
+        $commit['priorrevision'] = "";
         $commit['time'] = $current_time;
         $commit['author'] = $current_author;
         $commit['comment'] = $current_comment;
@@ -259,6 +260,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
         $commit['directory'] = $current_directory;
         $commit['filename'] = $current_filename;
         $commit['revision'] = $current_revision;
+        $commit['priorrevision'] = "";
         $commit['time'] = $current_time;
         $commit['author'] = $current_author;
         $commit['comment'] = $current_comment;
@@ -337,6 +339,13 @@ function get_svn_repository_commits($svnroot, $dates)
           {
           foreach($gathered_file_lines as $ff)
             {
+            $previous_revision = ""
+            // Look if we have a A or a M
+            if(strpos(substr($ff,0, 5),'A')!== FALSE)
+              {
+              $previous_revision = "-1"; // newly added file so we marked it as no prior revision
+               }
+              
             // Skip the '   M ' at the beginning of the filename output lines:
             //
             $current_filename = substr($ff, 5);
@@ -363,6 +372,7 @@ function get_svn_repository_commits($svnroot, $dates)
             $commit['directory'] = $current_directory;
             $commit['filename'] = $current_filename;
             $commit['revision'] = $current_revision;
+            $commit['priorrevision'] = $previous_revision;
             $commit['time'] = $current_time;
             $commit['author'] = $current_author;
             $commit['comment'] = $current_comment;
@@ -487,6 +497,7 @@ function get_bzr_repository_commits($bzrroot, $dates)
         $commit['directory'] = $current_directory;
         $commit['filename'] = $current_filename;
         $commit['revision'] = $current_revision;
+        $commit['priorrevision'] = "";
         $commit['time'] = $current_time;
         $commit['author'] = $current_author;
         $commit['comment'] = $current_comment;
@@ -540,7 +551,7 @@ function get_repository_commits($projectid, $dates)
         }
       else
         {
-          $new_commits = get_svn_repository_commits($root, $dates);
+        $new_commits = get_svn_repository_commits($root, $dates);
         }       
       }
 
@@ -711,7 +722,8 @@ function addDailyChanges($projectid)
       $checkindate = $commit['time'];
       $author = addslashes($commit['author']);
       $log= addslashes($commit['comment']);
-      $revision= $commit['revision'];  
+      $revision= $commit['revision'];
+      $priorrevision = $commit['priorrevision'];
       
       pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
                    VALUES ($updateid,'$filename','$checkindate','$author','$log','$revision','$priorrevision')");
