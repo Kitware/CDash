@@ -339,7 +339,8 @@ function get_svn_repository_commits($svnroot, $dates)
           {
           foreach($gathered_file_lines as $ff)
             {
-            $previous_revision = ""
+            $previous_revision = "";
+
             // Look if we have a A or a M
             if(strpos(substr($ff,0, 5),'A')!== FALSE)
               {
