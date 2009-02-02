@@ -166,7 +166,7 @@
         </xsl:choose>
       </xsl:attribute>    
     <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">     
-    <xsl:value-of select="nbuildpass"/>
+    <xsl:value-of select="/cdash/project/nbuildpass"/>
     </xsl:if>
     </td>
    <td align="center">
