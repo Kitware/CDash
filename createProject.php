@@ -20,6 +20,7 @@ require_once("pdo.php");
 include('login.php');
 include_once('common.php');
 include("version.php");
+include("models/buildgroup.php");
 include("models/project.php");
 include("models/user.php");
 
