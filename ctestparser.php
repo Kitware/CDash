@@ -31,12 +31,12 @@ function ctest_parse($filehandler, $projectid)
 { 
   include 'config.php';
   require_once 'common.php';
-  
+
   $content = fread($filehandler, 8192);
   $handler = null;
   $parser = xml_parser_create();
   $file = "";
-  
+
   if(preg_match('/<Update/', $content)) // Should be first otherwise confused with Build
     {
     $handler = new UpdateHandler($projectid);
@@ -82,12 +82,14 @@ function ctest_parse($filehandler, $projectid)
     $handler = new ProjectHandler($projectid);
     $file = "Project";
     }  
+
   if($handler == NULL)
     {
     echo "no handler found";
+    add_log('error: could not create handler based on xml content', 'ctest_parse');
     exit();
     }
-  
+
   xml_set_element_handler($parser, array($handler, 'startElement'), array($handler, 'endElement'));
   xml_set_character_data_handler($parser, array($handler, 'text'));
   xml_parse($parser, $content, false);

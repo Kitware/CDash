@@ -38,13 +38,14 @@ $projectid = get_project_id($projectname);
 if($projectid == -1)
   {
   echo "Not a valid project";
+  add_log('Not a valid project. projectname: ' . $projectname, 'global:submit.php');
   exit();
   }
 
 // We find the daily updates
 // If we have php curl we do it asynchronously
 if(function_exists("curl_init") == TRUE)
-  {  
+  {
   $currentPort="";
 
   if($_SERVER['SERVER_PORT']!=80)
