@@ -6,7 +6,6 @@
 
 
   <xsl:if test="count($type/build)=0">
-    <thead>
     <tr class="table-heading1">
       <td colspan="1" class="nob">
         <h3><a href="#" class="grouptrigger">No <xsl:value-of select="name"/> Builds</a></h3>
@@ -30,7 +29,6 @@
       </div> 
       </td>
     </tr>
-    </thead>
   </xsl:if>
 
 
@@ -405,7 +403,7 @@
 
 
   <!-- Row displaying the totals -->
-  <xsl:if test="$type/last=1">
+  <xsl:if test="count(/cdash/buildgroup/build/buildid)>0 and $type/last=1">
   <tbody>
     <tr class="total">
       <td align="left">Totals</td>
