@@ -2090,10 +2090,10 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
   $root = "";
   // find the repository name
   $pos_repname = strpos($projecturl,"repname=");
-  if($pos_repname != false)
+  if($pos_repname !== false)
     {
     $pos_repname_end = strpos($projecturl,"&",$pos_repname+1);
-    if($pos_repname_end != false)
+    if($pos_repname_end !== false)
       {
       $repname = substr($projecturl,$pos_repname,$pos_repname_end-$pos_repname);
       }
@@ -2105,10 +2105,10 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
   
   // find the root name
   $pos_root = strpos($projecturl,"path=");
-  if($pos_root != false)
+  if($pos_root !== false)
     {
     $pos_root_end = strpos($projecturl,"&",$pos_root+1);
-    if($pos_root_end != false)
+    if($pos_root_end !== false)
       {
       $root = substr($projecturl,$pos_root+5,$pos_root_end-$pos_root-5);
       }
@@ -2121,7 +2121,7 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
   
   // find the project url
   $pos_dotphp = strpos($projecturl,".php?");
-  if($pos_dotphp != false)
+  if($pos_dotphp !== false)
     {
     $projecturl = substr($projecturl,0,$pos_dotphp);
     $pos_slash = strrpos($projecturl,"/");
