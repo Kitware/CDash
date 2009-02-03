@@ -54,14 +54,15 @@ class TestingHandler extends AbstractHandler
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
-          
+    $parent = $this->getParent(); // should be before endElement
+    
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
       $this->Site->Insert();
       
       $siteInformation = new SiteInformation();
-       $buildInformation =  new BuildInformation();
+      $buildInformation =  new BuildInformation();
       
       // Fill in the attribute
       foreach($attributes as $key=>$value)
@@ -99,27 +100,7 @@ class TestingHandler extends AbstractHandler
       $this->TestMeasurement->Name = $attributes['NAME'];
       $this->TestMeasurement->Type = $attributes['TYPE'];
       }
-
-    } // end startElement
-  
-  
-  /** End Element */
-  public function endElement($parser, $name)
-    {
-    $parent = $this->getParent(); // should be before endElement
-    parent::endElement($parser, $name);
-     
-    if($name == "TEST" && $parent == 'TESTING')
-      {  
-      $this->Test->Insert();
-      if($this->Test->Id>0)
-        {
-        $this->BuildTest->TestId = $this->Test->Id;
-        $this->BuildTest->BuildId = $this->BuildId;
-        $this->BuildTest->Insert();
-        }
-      }
-    else if($name == "STARTTESTTIME" && $parent == 'TESTING')
+     else if($name == "TESTLIST" && $parent == 'TESTING')
       {  
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $this->Build->ProjectId = $this->projectid;
@@ -143,6 +124,25 @@ class TestingHandler extends AbstractHandler
         
       $this->BuildId = $buildid;
       }  
+    } // end startElement
+  
+  
+  /** End Element */
+  public function endElement($parser, $name)
+    {
+    $parent = $this->getParent(); // should be before endElement
+    parent::endElement($parser, $name);
+     
+    if($name == "TEST" && $parent == 'TESTING')
+      {  
+      $this->Test->Insert();
+      if($this->Test->Id>0)
+        {
+        $this->BuildTest->TestId = $this->Test->Id;
+        $this->BuildTest->BuildId = $this->BuildId;
+        $this->BuildTest->Insert();
+        }
+      }
     else if($name == "NAMEDMEASUREMENT")
       {  
       if($this->TestMeasurement->Name == 'Execution Time')
@@ -177,20 +177,20 @@ class TestingHandler extends AbstractHandler
     {
     $parent = $this->getParent();
     $element = $this->getElement();
-  
-    if($parent == 'SITE' && $element == 'STARTDATETIME')
+
+    if($parent == 'TESTING' && $element == 'STARTDATETIME')
       {
       $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
       }
-    else if($parent == 'SITE' && $element == 'STARTTESTTIME')
+    else if($parent == 'TESTING' && $element == 'STARTTESTTIME')
       {
       $this->StartTimeStamp = $data;
       }
-    else if($parent == 'SITE' && $element == 'ENDDATETIME')
+    else if($parent == 'TESTING' && $element == 'ENDDATETIME')
       {
       $this->EndTimeStamp = str_to_time($data, $this->Build->GetStamp());
       }  
-    else if($parent == 'SITE' && $element == 'ENDTESTTIME')
+    else if($parent == 'TESTING' && $element == 'ENDTESTTIME')
       {
       $this->EndTimeStamp = $data;
       }
@@ -199,26 +199,26 @@ class TestingHandler extends AbstractHandler
       switch ($element)
         {
         case "NAME":
-          $this->Test->Name = $data;
+          $this->Test->Name .= $data;
         break;
         case "PATH":
-          $this->Test->Path = $data;
+          $this->Test->Path .= $data;
         break;
         case "FULLNAME":
           //$this->Test->Command = $data;
           break;
         case "FULLCOMMANDLINE":
-          $this->Test->Command = $data;
+          $this->Test->Command .= $data;
           break;
         }
       }
     else if($parent == "NAMEDMEASUREMENT" && $element == "VALUE")
       {
-      $this->TestMeasurement->Value = $data;
+      $this->TestMeasurement->Value .= $data;
       }
     else if($parent == "MEASUREMENT" && $element == "VALUE")
       {
-      $this->Test->Output = $data;
+      $this->Test->Output .= $data;
       }
     }
 }
