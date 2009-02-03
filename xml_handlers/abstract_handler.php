@@ -15,7 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-require_once 'ctestparserutils.php';
+require_once 'cdash/ctestparserutils.php';
 require_once 'xml_handlers/sax_handler.php';
 require_once 'xml_handlers/stack.php';
 require_once('models/build.php');

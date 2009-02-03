@@ -29,10 +29,10 @@ if (function_exists('imagecreatefromstring') == FALSE)
   exit();
   }
   
-include("config.php");
-require_once("pdo.php");
-require_once("common.php"); 
-require_once("version.php"); 
+include("cdash/config.php");
+require_once("cdash/pdo.php");
+require_once("cdash/common.php"); 
+require_once("cdash/version.php"); 
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";

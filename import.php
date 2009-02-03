@@ -15,15 +15,15 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
-require_once("pdo.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
 include('login.php');
-include("version.php");
+include("cdash/version.php");
 
 if($session_OK) 
   {
-  include_once('common.php');
-  include_once("ctestparser.php");
+  include_once('cdash/common.php');
+  include_once("cdash/ctestparser.php");
 
 set_time_limit(0);
 

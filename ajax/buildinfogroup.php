@@ -16,9 +16,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-require_once("../config.php");
-require_once("../pdo.php");
-include("../common.php");
+require_once("../cdash/config.php");
+require_once("../cdash/pdo.php");
+include("../cdash/common.php");
 
 $buildid = $_GET["buildid"];
 if(!isset($buildid) || !is_numeric($buildid))

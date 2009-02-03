@@ -2,7 +2,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: common.php,v $
+  Module:    $Id: buildOverview.php 1161 2008-09-19 14:56:14Z jjomier $
   Language:  PHP
   Date:      $Date: 2008-02-04 14:19:42 -0500 (Mon, 04 Feb 2008) $
   Version:   $Revision: 430 $
@@ -16,9 +16,9 @@
 
 =========================================================================*/
 // Open the database connection
-include("config.php");
-require_once("pdo.php");
-include_once("common.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
+include_once("cdash/common.php");
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);

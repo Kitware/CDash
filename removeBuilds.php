@@ -15,11 +15,11 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
-require_once("pdo.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
 include('login.php');
-include("version.php");
-require_once("common.php");
+include("cdash/version.php");
+require_once("cdash/common.php");
 
 set_time_limit(0);
 

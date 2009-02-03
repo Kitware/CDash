@@ -15,17 +15,17 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include_once("common.php");
-include("config.php");
-require_once("pdo.php");
-include_once("version.php"); 
+include_once("cdash/common.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
+include_once("cdash/version.php"); 
 
 $loginerror = 0;
 
 /** Authentication function */
 function auth($SessionCachePolicy='private_no_expire')
 {  
-  include "config.php";
+  include "cdash/config.php";
   $loginid= 1231564132;
   global $loginerror;
   $loginerror = 0;
@@ -154,10 +154,10 @@ d" => 1, "loginid" => $user_array["id"]);
 /** Login Form function */
 function LoginForm($loginerror)
 {  
-  include("config.php");
-  require_once("pdo.php");
-  include_once("common.php"); 
-  include("version.php");
+  include("cdash/config.php");
+  require_once("cdash/pdo.php");
+  include_once("ccdash/ommon.php"); 
+  include("cdash/version.php");
     
   $xml = "<cdash>";
   $xml .= "<title>Login</title>";

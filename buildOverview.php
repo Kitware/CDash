@@ -15,10 +15,10 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
-require_once("pdo.php");
-include_once("common.php");
-include("version.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
+include_once("cdash/common.php");
+include("cdash/version.php");
 $noforcelogin = 1;
 include('login.php');
 

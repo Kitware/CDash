@@ -16,11 +16,11 @@
 
 =========================================================================*/
 $noforcelogin = 1;
-include("config.php");
-require_once("pdo.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
 include('login.php');
-include_once("common.php");
-include("version.php");
+include_once("cdash/common.php");
+include("cdash/version.php");
 
 // get_related_dates takes a projectname and basedate as input
 // and produces an array of related dates and times based on:
@@ -28,8 +28,8 @@ include("version.php");
 //
 function get_related_dates($projectname, $basedate)
 {
-  include("config.php");
-  require_once("pdo.php");
+  include("cdash/config.php");
+  require_once("cdash/pdo.php");
 
   $dates = array();
 

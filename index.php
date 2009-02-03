@@ -15,9 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
-require_once("pdo.php");
-include("common.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
+include("cdash/common.php");
 require_once("models/project.php");
 require_once("filterdataFunctions.php");
 
@@ -25,10 +25,10 @@ require_once("filterdataFunctions.php");
 function generate_index_table()
 { 
   $noforcelogin = 1;
-  include("config.php");
-  require_once("pdo.php");
+  include("cdash/config.php");
+  require_once("cdash/pdo.php");
   include('login.php');
-  include('version.php');
+  include('cdash/version.php');
   include_once('models/banner.php');
 
   $xml = '<?xml version="1.0"?'.'><cdash>';
@@ -191,10 +191,10 @@ function generate_main_dashboard_XML($projectid,$date)
 {
   $start = microtime_float();
   $noforcelogin = 1;
-  include_once("config.php");
-  require_once("pdo.php");
+  include_once("cdash/config.php");
+  require_once("cdash/pdo.php");
   include('login.php');
-  include('version.php');
+  include('cdash/version.php');
   include_once("models/banner.php");
   include_once("models/subproject.php");
       
@@ -926,10 +926,10 @@ function generate_subprojects_dashboard_XML($projectid,$date)
  
   $start = microtime_float();
   $noforcelogin = 1;
-  include_once("config.php");
-  require_once("pdo.php");
+  include_once("cdash/config.php");
+  require_once("cdash/pdo.php");
   include('login.php');
-  include('version.php');
+  include('cdash/version.php');
   include_once("models/banner.php");
   include_once("models/subproject.php");
       

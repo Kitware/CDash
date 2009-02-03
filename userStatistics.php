@@ -16,10 +16,10 @@
 
 =========================================================================*/
 $noforcelogin = 1;
-include_once("config.php");
-require_once("pdo.php");
+include_once("cdash/config.php");
+require_once("cdash/pdo.php");
 include('login.php');
-include('version.php');
+include('cdash/version.php');
       
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);

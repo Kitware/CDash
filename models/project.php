@@ -333,7 +333,7 @@ class Project
       }
     else if($imgid==0)
       {
-      include("config.php");
+      include("cdash/config.php");
       if($CDASH_DB_TYPE == "pgsql")
         {
         $contents = pg_escape_bytea($contents);
@@ -350,7 +350,7 @@ class Project
       }
      else // update the current image
        {
-       include("config.php");
+       include("cdash/config.php");
        if($CDASH_DB_TYPE == "pgsql")
          {
          $contents = pg_escape_bytea($contents);

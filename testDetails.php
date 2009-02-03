@@ -21,11 +21,11 @@
 * was run.  This includes test output and image comparison information
 */
 $noforcelogin = 1;
-include("config.php");
-require_once("pdo.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
 include('login.php');
-include_once("common.php");
-include('version.php');
+include_once("cdash/common.php");
+include('cdash/version.php');
 
 $testid = $_GET["test"];
 // Checks

@@ -2,7 +2,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: common.php,v $
+  Module:    $Id: buildOverview.php 1161 2008-09-19 14:56:14Z jjomier $
   Language:  PHP
   Date:      $Date: 2007-10-16 11:23:29 -0400 (Tue, 16 Oct 2007) $
   Version:   $Revision: 12 $
@@ -15,8 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include_once("common.php");
-include_once("config.php");
+include_once("cdash/common.php");
+include_once("cdash/config.php");
 
 $reg = "";
 
@@ -24,8 +24,8 @@ $reg = "";
 function register()
 { 
   global $reg; 
-  include("config.php");
-  require_once("pdo.php"); 
+  include("cdash/config.php");
+  require_once("cdash/pdo.php"); 
 
   if(isset($_POST["sent"])) // arrive from register form 
    {
@@ -92,10 +92,10 @@ function register()
 /** Login Form function */
 function RegisterForm($regerror)
 {  
-  include("config.php");
-  require_once("pdo.php");
-  include_once("common.php");
-  include_once('version.php');
+  include("cdash/config.php");
+  require_once("cdash/pdo.php");
+  include_once("cdash/common.php");
+  include_once('cdash/version.php');
   
   if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
     {

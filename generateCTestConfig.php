@@ -2,7 +2,7 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: common.php,v $
+  Module:    $Id: buildOverview.php 1161 2008-09-19 14:56:14Z jjomier $
   Language:  PHP
   Date:      $Date: 2008-02-04 17:50:42 -0500 (Mon, 04 Feb 2008) $
   Version:   $Revision: 435 $
@@ -16,10 +16,10 @@
 
 =========================================================================*/
 $noforcelogin = 1;
-include("config.php");
-require_once("pdo.php");
+include("ccdash/onfig.php");
+require_once("cdash/pdo.php");
 include('login.php');
-include_once("common.php");
+include_once("cdash/common.php");
 require_once("models/project.php");
 require_once("models/subproject.php");
 

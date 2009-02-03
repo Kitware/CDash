@@ -15,18 +15,18 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
-require_once("pdo.php");
-include("common.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
+include("cdash/common.php");
 
 /** Generate the index table */
 function generate_index_table()
 { 
   $noforcelogin = 1;
-  include("config.php");
-  require_once("pdo.php");
+  include("cdash/config.php");
+  require_once("cdash/pdo.php");
   include('login.php');
-  include('version.php');
+  include('cdash/version.php');
 
   $xml = '<?xml version="1.0"?'.'><cdash>';
   $xml .= add_XML_value("title","CDash");
@@ -508,10 +508,10 @@ function generate_main_dashboard_XML($projectid,$date)
 {
   $start = microtime_float();
   $noforcelogin = 1;
-  include_once("config.php");
-  require_once("pdo.php");
+  include_once("ccdash/onfig.php");
+  require_once("cdash/pdo.php");
   include('login.php');
-  include('version.php');
+  include('cdash/version.php');
 
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)

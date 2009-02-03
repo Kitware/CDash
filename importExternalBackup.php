@@ -15,10 +15,10 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("config.php");
-require_once("pdo.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
 include('login.php');
-include("version.php");
+include("cdash/version.php");
 include("models/project.php");
 include("models/site.php");
 include("models/user.php");
@@ -27,7 +27,7 @@ include("models/build.php");
 
 if($session_OK) 
 {
-include_once('common.php');
+include_once('cdash/common.php');
 
 set_time_limit(0);
 

@@ -17,14 +17,14 @@
 =========================================================================*/
 //error_reporting(0); // disable error reporting
 
-include("ctestparser.php");
-include_once("common.php");
-include_once("createRSS.php");
-include("sendemail.php");
+include("cdash/ctestparser.php");
+include_once("cdash/common.php");
+include_once("cdash/createRSS.php");
+include("cdash/sendemail.php");
 
 // Open the database connection
-include("config.php");
-require_once("pdo.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 set_time_limit(0);
@@ -72,7 +72,7 @@ if(function_exists("curl_init") == TRUE)
   $currentURI =  $prefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
   $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
   
-  $request = $currentURI."/dailyupdatescurl.php?projectid=".$projectid;
+  $request = $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
   
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $request);
@@ -84,7 +84,7 @@ if(function_exists("curl_init") == TRUE)
   }
 else // synchronously
   {
-  include("dailyupdates.php");
+  include("cdash/dailyupdates.php");
   addDailyChanges($projectid);
   }
 
