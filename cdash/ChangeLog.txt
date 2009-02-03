@@ -1,0 +1,134 @@
+CDash 1.2.1, 2008-10-23
+------------------------
+
+- 0006801 Test Failure History Graph
+- 0007556 ViewSite page should list the users who claimed a site
+- 0007499 Summarize busytime by site
+- 0007204 Error summary page
+- 0007537 Feature request: loggerhead support
+- 0007116 Add functionality to send email to all site claimers
+- 0007124 Add warning and minutes column to the cfg-column
+- 0006943 Feature Request: Use Time, Pass/Fail graphs for navigation
+- 0007209 add a user or group of users without a file upload
+- 0007266 seeking ViewVC support in CDash
+- 0007420 Support for WebSVN
+- 0006606 Support for other databases
+- 0007068 Support for multiple repositories update
+- 0007212 Password recovery
+- 0007063 Support <Measurement> tags containing HTML
+- 0006646 Compressing notes
+- 0007019 Email notification of nigthly builds
+- 0006466 Email when an expected nightly does not show up.
+- 0007636 +- reporting on the coverage
+- 0007573 Only builds from default groups show when All is selected
+- 0007535 Tests are not sorted by build time
+- 0007497 email sent when an expected nightly does not show up
+- 0007532 Claim sites list is slow to generate and unsorted
+- 0007504 <DartMeasurement> output is not SQL-escaped
+- 0006492 There are no options to define "broken"
+- 0007458 add_coverage produce SQL error
+- 0007019 email notification of nigthly builds
+- 0006842 make browser back buttons smarter
+- 0007210 time error hides number summary of test time
+- 0007368 Detail in build warning/error emails
+- 0007246 test summary page shows previous days builds
+- 0007422 Configuration option to request full email
+- 0007051 Timing tests have too many false positives
+- 0006996 Cannot view graphs
+- 0007252 OS Name and Version not displayed in viewSite
+- 0007405 Number of files covered unsatisfactorily is wrong
+- 0007293 CDash doesn't show all modified and conflicted files
+- 0006841 show number of new errors
+- 0007299 cdash install issues
+- 0007262 Email always sent for experimental builds
+- 0007247 URL encoding in CTestConfig
+- 0007188 buildSummary.php reports update time when no update
+- 0007211 Better visualization of the code coverage
+- 0007135 Timing test statistics should not sample timing value
+- 0007112 Login information not saved
+- 0007113 Cannot directly link to pages in protected projects
+- 0007064 CDash: CDash content of coverage differs to Coverage.xml
+- 0007066 Documentation link
+- 0007053 CDash loses my identity
+- 0007052 Redirect user to login page for private project
+- 0007017 Help screen cannot be dismissed if browser window is small
+- 0007021 Parse cvs/svn/git commit comments and make URL expressions
+- 0007018 Output from test is truncated
+- 0007654 Coverage file are truncated
+- 0006492 There are no options to define "broken"
+- 0007535 Tests are not sorted by build time
+- 0007667 Submitting using a custom name fails when contains a dash
+- 0007668 Broken image link on database upgrade
+- 0007648 Commit ordering issue in Nightly Changes page of VTK Cdash
+- 0007639 Build group description required by MySQL 
+
+CDash 1.0.0, 2008-04-28
+------------------------
+- 0006384 Detecting timing defects
+- 0006371 Having the number of nightly changes on the main page
+- 0006497 Method to mark compile warnings, compile errors, and test failures with "fix in progress" or "fixed"
+- 0006508 Test Results information is incomplete for itk
+- 0006894 Wrong number of dynamic analysis defects
+- 0006878 Support for timestamp CTest 2.6
+- 0006612 Bad BuildTimeGraph on buildSummary page for continuous build
+- 0006843 Support of different cvs/svn/web viewers
+- 0006582 CVS Link to a version 1.1 file is invalid
+- 0006664 Incorrect timing and detail report on viewTest page
+- 0006832 Previous Build Incorrect
+- 0006807 RSS feed with private project
+- 0006797 Previous build on build summary page
+- 0006805 Warning when backup and rss directory are not writable
+- 0006798 Warning message when browsing coverage
+- 0006772 Warnings when searching for emails on manageProjectRoles page
+- 0006472 Add ability to remove bogus builds
+- 0006601 Project administrator cannot remove an expected build if it is not submitting
+- 0006471 Add a quick way to upload a cvs/svn user to password file for email notification
+- 0006715 PROJECT pulldown under DASHBOARD pulldown
+- 0006602 Sort by any column on the viewTest and testSummary pages
+- 0006681 Fisheye URL support
+- 0006653 Mouse-over build groups
+- 0006655 Project logo hyperlink
+- 0006942 Show Test Time Graph does not toggle in Internet Explorer
+- 0006939 Separate lists of failing tests from list of passing tests
+- 0006995 The test pass/failure history does not include current data
+- 0006966 Displaying test timing on main dashboard in the minutes columns
+- 0006968 Coverage summary total coverage always shown in green
+- 0006989 Support for external authentication
+
+
+CDash 1.0.0, 2008-04-28
+------------------------
+- 0006384 Detecting timing defects
+- 0006371 Having the number of nightly changes on the main page
+- 0006497 Method to mark compile warnings, compile errors, and test failures with "fix in progress" or "fixed"
+- 0006508 Test Results information is incomplete for itk
+- 0006894 Wrong number of dynamic analysis defects
+- 0006878 Support for timestamp CTest 2.6
+- 0006612 Bad BuildTimeGraph on buildSummary page for continuous build
+- 0006843 Support of different cvs/svn/web viewers
+- 0006582 CVS Link to a version 1.1 file is invalid
+- 0006664 Incorrect timing and detail report on viewTest page
+- 0006832 Previous Build Incorrect
+- 0006807 RSS feed with private project
+- 0006797 Previous build on build summary page
+- 0006805 Warning when backup and rss directory are not writable
+- 0006798 Warning message when browsing coverage
+- 0006772 Warnings when searching for emails on manageProjectRoles page
+- 0006472 Add ability to remove bogus builds
+- 0006601 Project administrator cannot remove an expected build if it is not submitting
+- 0006471 Add a quick way to upload a cvs/svn user to password file for email notification
+- 0006715 PROJECT pulldown under DASHBOARD pulldown
+- 0006602 Sort by any column on the viewTest and testSummary pages
+- 0006681 Fisheye URL support
+- 0006653 Mouse-over build groups
+- 0006655 Project logo hyperlink
+- 0006942 Show Test Time Graph does not toggle in Internet Explorer
+- 0006939 Separate lists of failing tests from list of passing tests
+- 0006995 The test pass/failure history does not include current data
+- 0006966 Displaying test timing on main dashboard in the minutes columns
+- 0006968 Coverage summary total coverage always shown in green
+- 0006989 Support for external authentication
+
+CDash 0.8.0, 2008-03-24
+------------------------
+- Initial release
