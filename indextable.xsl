@@ -131,10 +131,7 @@
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute>
      <xsl:value-of select="name"/>
      </a></td>
-     <td align="center" >
-     <a>
-     <xsl:value-of select="description"/>
-     </a></td>
+     <td align="center"><xsl:value-of select="description"/></td>
     <td align="center"><xsl:value-of select="nbuilds"/></td>
   <td align="center"><xsl:value-of select="firstbuild"/></td>
     <!-- <th align="center">Tests</th> <td align="right"><xsl:value-of select="ntests"/></td>-->
