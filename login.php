@@ -156,7 +156,7 @@ function LoginForm($loginerror)
 {  
   include("cdash/config.php");
   require_once("cdash/pdo.php");
-  include_once("cdash/ommon.php"); 
+  include_once("cdash/common.php"); 
   include("cdash/version.php");
     
   $xml = "<cdash>";
