@@ -15,122 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-/** BuildConfigureError class */
-class BuildConfigureError
-{
-  var $Type;
-  var $Text;
-  var $BuildId;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "TYPE": $this->Type = $value;break;
-      case "TEXT": $this->Text = $value;break;
-      }
-    }
-  
-  /** Return if exists */
-  function Exists()
-    {
-    $query = pdo_query("SELECT count(*) FROM configureerror WHERE buildid='".$this->BuildId."'
-                         AND type='".$this->Type."' AND text='".$this->Text."'");  
-    $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']>0)
-      {
-      return true;
-      }
-    return false;
-    }      
-      
-  /** Save in the database */
-  function Save()
-    {
-    if(!$this->BuildId)
-      {
-      echo "BuildConfigureError::Save(): BuildId not set";
-      return false;    
-      }
-      
-    if(!$this->Exists())
-      {
-      $text = pdo_real_escape_string($this->Text);
-      $query = "INSERT INTO configureerror (buildid,type,text)
-                VALUES (".qnum($this->BuildId).",".qnum($this->Type).",'$text')";                     
-      if(!pdo_query($query))
-        {
-        add_last_sql_error("BuildConfigureError Save");
-        return false;
-        }  
-      }
-    return true;
-    }        
-}
-
-/** BuildConfigureErrorDiff class */
-class BuildConfigureErrorDiff
-{
-  var $Type;
-  var $Difference;
-  var $BuildId;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "BUILDERRORDIFF": $this->Difference = $value;break;
-      case "TYPE": $this->Type = $value;break;
-      }
-    }
-    /** Return if exists */
-  function Exists()
-    {
-    $query = pdo_query("SELECT count(*) FROM configureerrordiff WHERE buildid=".qnum($this->BuildId));  
-    $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']>0)
-      {
-      return true;
-      }
-    return false;
-    }      
-      
-  /** Save in the database */
-  function Save()
-    {
-    if(!$this->BuildId)
-      {
-      echo "BuildConfigureErrorDiff::Save(): BuildId not set";
-      return false;    
-      }
-      
-    if($this->Exists())
-      {
-      // Update
-      $query = "UPDATE configureerrordiff SET";
-      $query .= " type=".qnum($this->Type);
-      $query .= ",difference=".qnum($this->Difference);
-      $query .= " WHERE buildid=".qnum($this->BuildId);
-      if(!pdo_query($query))
-        {
-        add_last_sql_error("BuildConfigureErrorDiff Update");
-        return false;
-        }
-      }
-    else // insert  
-      {
-      $query = "INSERT INTO configureerrordiff (buildid,type,difference)
-                 VALUES (".qnum($this->BuildId).",".qnum($this->Type).",".qnum($this->Difference).")";                     
-      if(!pdo_query($query))
-        {
-        add_last_sql_error("BuildConfigureErrorDiff Create");
-        return false;
-        }  
-      }
-    return true;
-    }        
-}
+include_once('models/buildconfigureerror.php');
+include_once('models/buildconfigureerrordiff.php');
 
 /** BuildConfigure class */
 class BuildConfigure
@@ -214,6 +100,6 @@ class BuildConfigure
       add_last_sql_error("BuildConfigure ComputeErrors()");
       $position = strpos($this->Log,'Warning:',$position+1);
       }
-    } // end ComputeErrors()
-    
+    } // end ComputeErrors()  
 }
+?>

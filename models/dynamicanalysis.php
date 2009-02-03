@@ -15,35 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-class DynamicAnalysisDefect
-{
-  var $DynamicAnalysisId;
-  var $Type;
-  var $Value;
-  
-  // Insert the DynamicAnalysisDefect
-  function Insert()
-    {
-    if(strlen($this->DynamicAnalysisId)==0)
-      {
-      echo "DynamicAnalysisDefect::Insert DynamicAnalysisId not set";
-      return false;
-      } 
-
-    $this->Type = pdo_real_escape_string($this->Type);
-    $this->Value = pdo_real_escape_string($this->Value);
-    $this->DynamicAnalysisId = pdo_real_escape_string($this->DynamicAnalysisId);
-    
-    $query = "INSERT INTO dynamicanalysisdefect (dynamicanalysisid,type,value)
-              VALUES (".qnum($this->DynamicAnalysisId).",'$this->Type','$this->Value')";                     
-    if(!pdo_query($query))
-      {
-      add_last_sql_error("DynamicAnalysisDefect Insert");
-      return false;
-      }
-    return true;
-    } // end function insert
-}
+include_once('models/dynamicanalysisdefect.php');
 
 class DynamicAnalysis
 {

@@ -1,0 +1,108 @@
+<?php
+/*=========================================================================
+
+  Program:   CDash - Cross-Platform Dashboard System
+  Module:    $Id$
+  Language:  PHP
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
+  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
+// It is assumed that appropriate headers should be included before including this file
+
+class DailyUpdateFile
+{ 
+  var $Filename;
+  var $CheckinDate;
+  var $Author;
+  var $Log;
+  var $Revision;
+  var $PriorRevision;
+  var $DailyUpdateId;
+  
+  function SetValue($tag,$value)  
+    {
+    switch($tag)
+      {
+      case "FILENAME": $this->Filename = $value;break;
+      case "CHECKINDATE": $this->CheckinDate = $value;break;
+      case "AUTHOR": $this->Author = $value;break;
+      case "LOG": $this->Log = $value;break;
+      case "REVISION": $this->Revision = $value;break;
+      case "PRIORREVISION": $this->PriorRevision = $value;break;
+      }
+    }
+    
+  /** Check if exists */  
+  function Exists()
+    {
+    // If no id specify return false
+    if(!$this->DailyUpdateId)
+      {
+      return false;    
+      }
+    
+    $query = pdo_query("SELECT count(*) FROM dailyupdate WHERE dailyupdateid='".$this->dailyupadteid."' AND filename='".$this->Filename."'");
+    $query_array = pdo_fetch_array($query);
+    if($query_array['count(*)']==0)
+      {
+      return false;
+      }
+    
+    return true;  
+    }
+    
+  /** Save the group */
+  function Save()
+    {
+    if(!$this->DailyUpdateId)
+      {
+      echo "DailyUpdateFile::Save(): DailyUpdateId not set!";
+      return false;
+      }
+    
+    if(!$this->Filename)
+      {
+      echo "DailyUpdateFile::Save(): Filename not set!";
+      return false;
+      }
+      
+    if($this->Exists())
+      {
+      // Update the project
+      $query = "UPDATE dailyupdatefile SET";
+      $query .= " checkindate='".$this->Command."'";
+      $query .= ",author='".$this->Type."'";
+      $query .= ",log='".$this->Status."'";
+      $query .= ",revision='".$this->Revision."'";
+      $query .= ",priorrevision='".$this->PriorRevision."'";
+      $query .= " WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'";
+      
+      if(!pdo_query($query))
+        {
+        add_last_sql_error("DailyUpdateFile Update");
+        return false;
+        }
+      }
+    else
+      {                                              
+      if(!pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
+                     VALUES ('$this->DailyUpdateId','$this->Filename','$this->CheckinDate','$this->Author','$this->Log',
+                     '$this->Revision','$this->PriorRevision')"))
+         {
+         add_last_sql_error("DailyUpdateFile Insert");
+         return false;
+         }
+      }
+    } // end function save    
+}
+
+
+?>
