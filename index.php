@@ -127,8 +127,8 @@ function generate_index_table()
   foreach($projects as $project)
     {
     $xml .= "<project>";
-    $xml .= "<name>".$project['name']."</name>";
-      
+    $xml .= add_XML_value("name",$project['name']);
+    $xml .= add_XML_value("description",$project['description']);
     if($project['last_build'] == "NA")
       {
       $xml .= "<lastbuild>NA</lastbuild>";

@@ -104,11 +104,12 @@
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
 <tr class="table-heading1">
-  <td colspan="4" align="left" class="nob"><h3>Available Dashboards</h3></td>
+  <td colspan="5" align="left" class="nob"><h3>Available Dashboards</h3></td>
 </tr>
 
   <tr class="table-heading">
      <td align="center"><b>Project</b></td>
+     <td align="center"><b>Description</b></td>
      <td align="center"><b>Submissions</b></td>
     <!-- <td align="center">Tests</td> -->
   <td align="center"><b>First build</b></td>
@@ -129,6 +130,10 @@
      <a>
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute>
      <xsl:value-of select="name"/>
+     </a></td>
+     <td align="center" >
+     <a>
+     <xsl:value-of select="description"/>
      </a></td>
     <td align="center"><xsl:value-of select="nbuilds"/></td>
   <td align="center"><xsl:value-of select="firstbuild"/></td>
