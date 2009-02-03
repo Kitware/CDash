@@ -2133,18 +2133,18 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
     $prev_revision = get_previous_revision($revision);
     if($prev_revision != $revision) //diff
       {
-      $diff_url = $projecturl."/diff.php?".$repname."&path=".$root.($directory ? ($directory) : "")."/".$file;
+      $diff_url = $projecturl."/diff.php?".$repname."&path=".$root.($directory ? "/".($directory) : "")."/".$file;
       $diff_url .= "&rev=".$revision."&sc=1";
       } 
     else //view
       {
-      $diff_url = $projecturl."/filedetails.php?".$repname."&path=".$root.($directory ? ($directory) : "")."/".$file;
+      $diff_url = $projecturl."/filedetails.php?".$repname."&path=".$root.($directory ? "/".($directory) : "")."/".$file;
       $diff_url .= "&rev=".$revision;
       }
     } 
   else //log 
     {
-    $diff_url = $projecturl."/log.php?".$repname."&path=".$root.($directory ? ($directory) : "")."/".$file;
+    $diff_url = $projecturl."/log.php?".$repname."&path=".$root.($directory ? "/".($directory) : "")."/".$file;
     $diff_url .= "&rev=0&sc=0&isdir=0";
     }
 
