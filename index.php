@@ -164,6 +164,28 @@ function generate_index_table()
   return $xml;
 }
 
+
+function add_default_buildgroup_sortlist($groupname)
+{
+  $xml = '';
+
+  // Sort settings should probably be defined by the user as well on the users page
+  //
+  switch($groupname)
+    {
+    case 'Continuous':
+    case 'Experimental':
+      $xml .= add_XML_value("sortlist", "{sortlist: [[14,1]]}"); //build time
+      break;
+    case 'Nightly':
+      $xml .= add_XML_value("sortlist", "{sortlist: [[1,0]]}"); //build name
+      break;
+    }
+
+  return $xml;
+}
+
+
 /** Generate the main dashboard XML */
 function generate_main_dashboard_XML($projectid,$date)
 {
@@ -476,7 +498,7 @@ function generate_main_dashboard_XML($projectid,$date)
                                                         ORDER BY gp.position DESC LIMIT 1"));
                                                         
   $lastGroupPosition = $groupposition_array["position"];
-              
+
   while($build_array = pdo_fetch_array($builds))
     {
     $groupposition = $build_array["position"];
@@ -510,6 +532,7 @@ function generate_main_dashboard_XML($projectid,$date)
                                                 AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate'  OR gp.endtime='1980-01-01 00:00:00')
                                                 "));
         $xml .= "<buildgroup>";
+        $xml .= add_default_buildgroup_sortlist($group['name']);
         $rowparity = 0;
         $xml .= add_XML_value("name",$group["name"]);
         $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
@@ -524,16 +547,10 @@ function generate_main_dashboard_XML($projectid,$date)
           }
         $xml .= "</buildgroup>";  
         }  
-             
+
       $xml .= "<buildgroup>";
-      
-      // Make the default for now
-      // This should probably be defined by the user as well on the users page
-      if($groupname == "Continuous")
-        {
-        $xml .= add_XML_value("sortlist","{sortlist: [[14,1]]}"); //buildtime
-        }
-      
+      $xml .= add_default_buildgroup_sortlist($groupname);
+
       $rowparity = 0;
       $received_builds = array();
       $xml .= add_XML_value("name",$groupname);
@@ -843,7 +860,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "</dynamicanalysis>";
       }  // end coverage   
     } // end looping through builds
-             
+
   if(pdo_num_rows($builds)>0)
     {
     if (!$filter_sql)
@@ -870,7 +887,8 @@ function generate_main_dashboard_XML($projectid,$date)
                                                                                      AND gp.position='$i' AND g.projectid='$projectid'
                                                                                      AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate'  OR gp.endtime='1980-01-01 00:00:00')"));
     
-    $xml .= "<buildgroup>";  
+    $xml .= "<buildgroup>";
+    $xml .= add_default_buildgroup_sortlist($group['name']);
     $xml .= add_XML_value("id",$group["id"]);
     $xml .= add_XML_value("name",$group["name"]);
     $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
@@ -887,14 +905,14 @@ function generate_main_dashboard_XML($projectid,$date)
 
   $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
   $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
-  
+
   $xml .= add_XML_value("totalError",$totalerrors);
   $xml .= add_XML_value("totalWarning",$totalwarnings);
- 
+
   $xml .= add_XML_value("totalNotRun",$totalnotrun);
   $xml .= add_XML_value("totalFail",$totalfail);
   $xml .= add_XML_value("totalPass",$totalpass); 
-   
+
   $end = microtime_float();
   $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
   $xml .= "</cdash>";
