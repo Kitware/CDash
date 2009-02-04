@@ -65,7 +65,7 @@ CREATE TABLE `buildgroupposition` (
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   KEY `buildgroupid` (`buildgroupid`),
-  KEY `projectid` (`projectid`),
+  KEY `endtime` (`endtime`),
   KEY `starttime` (`starttime`),
   KEY `position` (`position`)
 );
