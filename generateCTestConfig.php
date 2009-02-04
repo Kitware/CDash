@@ -16,7 +16,7 @@
 
 =========================================================================*/
 $noforcelogin = 1;
-include("ccdash/onfig.php");
+include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
