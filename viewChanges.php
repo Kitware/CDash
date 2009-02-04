@@ -218,7 +218,9 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     $diff_url = get_diff_url(get_project_id($projectname),$projecturl, $directory, $filename, $revision);
     $diff_url = XMLStrFormat($diff_url);
 
-    $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\")\n";
+
+
+    $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\",\"".$commit['bugurl']."\")\n";
     }
 
   $xml .= "</javascript>\n";
@@ -237,7 +239,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
 $projectname = pdo_real_escape_string($projectname);
-$project = pdo_query("SELECT id,nightlytime FROM project WHERE name='$projectname'");
+$project = pdo_query("SELECT id,nightlytime,bugtrackerurl FROM project WHERE name='$projectname'");
 $project_array = pdo_fetch_array($project);
 
 $projectid = $project_array["id"];
@@ -290,6 +292,48 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   $commit['time'] = $dailyupdate_array['time'];
   $commit['author'] = $dailyupdate_array['author'];
   $commit['comment'] = $dailyupdate_array['log'];
+  $commit['buglink'] = '';
+  
+  $log = $commit['comment'];
+  // If the log starts with BUG:
+  if(strpos($log,"BUG:") !== FALSE && strpos($log,"BUG:")==0)
+    {
+    // Try to find the bugid
+    $posend = strpos($log," ",6);
+    if($posend === FALSE)
+      {
+      $posend = strlen($log);
+      }
+    $bugid = trim(substr($log,4,$posend-4));      
+    if(is_numeric($bugid))
+      {
+      // For now we assume we are using mantis in the future we might want 
+      // to support other bug trackers
+      $url = $project_array["bugtrackerurl"];
+      // Sometimes administrators are putting more information in the bug tracker
+      // URL. Let's trim that
+      $posslash = strrpos($url,"/");
+      if($posslash !== false)
+        {
+        $substr = substr($url,$posslash);
+        if(strpos($substr,"?") !== FALSE || strpos($substr,"&") !== FALSE)
+          {
+          $url = substr($url,0,$posslash);
+          }
+        }
+        
+      if($url[strlen($url)-1] != "/")
+        {
+        $url .= "/";
+        }
+      $commit['bugurl'] = XMLStrFormat("http://".$url."view.php?id=".$bugid);
+      } // end have bugid
+    else
+      {
+      //$file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"]);
+      }
+    }
+
   $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
   }
 
