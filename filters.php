@@ -508,7 +508,7 @@ function generate_main_dashboard_XML($projectid,$date)
 {
   $start = microtime_float();
   $noforcelogin = 1;
-  include_once("ccdash/onfig.php");
+  include_once("cdash/config.php");
   require_once("cdash/pdo.php");
   include('login.php');
   include('cdash/version.php');
