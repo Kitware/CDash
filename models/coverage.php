@@ -19,6 +19,7 @@ include_once('models/coveragesummary.php');
 include_once('models/coveragesummarydiff.php');
 include_once('models/coveragefile.php');
 include_once('models/coveragefile2user.php');
+include_once('models/coveragefilelog.php');
 
 /** Coverage class. Used by CoverageSummary */
 class Coverage
