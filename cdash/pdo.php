@@ -15,7 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-require_once("cdash/config.php");
+@include_once("cdash/config.php");
 
 /** */
 function pdo_connect($server = NULL, $username = NULL, $password = NULL, $new_link = false, $client_flags = 0)
