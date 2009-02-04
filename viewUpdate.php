@@ -214,6 +214,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $file['revision'] = $revision;    
     $file['filename'] = $filename;
     $file['bugurl'] = ""; 
+    
     // If the log starts with BUG:
     if(strpos($log,"BUG:") !== FALSE && strpos($log,"BUG:")==0)
       {
@@ -228,22 +229,32 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
         {
         // For now we assume we are using mantis in the future we might want 
         // to support other bug trackers
-        $slash = "";
         $url = $project_array["bugtrackerurl"];
+
+        // Sometimes administrators are putting more information in the bug tracker
+        // URL. Let's trim that
+        $posslash = strrpos($url,"/");
+        if($posslash !== false)
+          {
+          $substr = substr($url,$posslash);
+          if(strpos($substr,"?") !== FALSE || strpos($substr,"&") !== FALSE)
+            {
+            $url = substr($url,0,$posslash);
+            }
+          }
+        
         if($url[strlen($url)-1] != "/")
           {
-          $slash = "/";
+          $url .= "/";
           }
-        $file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"].$slash."view.php?id=".$bugid);
+        $file['bugurl'] = XMLStrFormat("http://".$url."view.php?id=".$bugid);
         } // end have bugid
       else
         {
         //$file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"]);
         }
       }
-    
 
-     
     if($revision != "-1" && $log!="Locally modified file" && $log!="Conflict while updating")
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename, $revision);
