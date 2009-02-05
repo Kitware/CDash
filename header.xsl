@@ -128,7 +128,10 @@ Map</a></li>
 </li>
 </xsl:otherwise>
 </xsl:choose>
-<li><a id="cal" href="#">CALENDAR</a></li>
+<li><a id="cal" href="#">CALENDAR</a>
+<span id="date_now" style="display:none;">
+<xsl:value-of select="cdash/dashboard/date"/>
+</span></li>
 
 <xsl:if test="string-length(cdash/menu/noprevious)=0">    
 <li>

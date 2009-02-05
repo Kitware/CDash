@@ -21,6 +21,7 @@ $SessionCachePolicy = 'nocache';
 include('login.php');
 include_once('cdash/common.php');
 include("cdash/version.php");
+include_once('models/project.php');
 
 if ($session_OK) 
   {
@@ -39,15 +40,24 @@ if ($session_OK)
   $xml .= add_XML_value("user_is_admin",$user_array["admin"]);
     
   // Go through the list of project the user is part of
-  $project2user = pdo_query("SELECT projectid,role FROM user2project WHERE userid='$userid'"); 
+  $project2user = pdo_query("SELECT projectid,role FROM user2project WHERE userid='$userid'");
+  $condition_list_projects='';
+  $Project= new Project();
+  $start=gmdate(FMT_DATETIME,strtotime(date("r"))-(3600*24));
   while($project2user_array = pdo_fetch_array($project2user))
     {
+    $Project->Id=$project2user_array["projectid"];      
     $projectid = $project2user_array["projectid"];
     $project_array = pdo_fetch_array(pdo_query("SELECT name FROM project WHERE id='$projectid'"));
     $xml .= "<project>";
     $xml .= add_XML_value("id",$projectid);
     $xml .= add_XML_value("role",$project2user_array["role"]); // 0 is normal user, 1 is maintainer, 2 is administrator
     $xml .= add_XML_value("name",$project_array["name"]);
+    $xml .= add_XML_value("nbuilds",$Project->GetNumberOfBuilds(0, date("r")));
+    $xml .= add_XML_value("average_builds",round($Project->GetBuildsDailyAverage(strtotime(date("r"))-(3600*24*7), date("r")),2));
+    $xml .= add_XML_value("success",$Project->GetNumberOfPassingBuilds($start, date("r")));
+    $xml .= add_XML_value("error",$Project->GetNumberOfErrorBuilds($start, date("r")));
+    $xml .= add_XML_value("warning",$Project->GetNumberOfWarningBuilds($start, date("r")));
     $xml .= "</project>";
     }
   

@@ -3,6 +3,7 @@
 
    <xsl:include href="footer.xsl"/>
    <xsl:include href="headerback.xsl"/> 
+   <xsl:include href="headscripts.xsl"/>
    
     <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
@@ -19,6 +20,11 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+          <xsl:comment><![CDATA[[if IE]></xsl:comment>
+        <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
+        <xsl:comment><![ endif]]></xsl:comment>
+         <xsl:call-template name="headscripts"/>
+         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
        </head>
        <body bgcolor="#ffffff">
        
@@ -38,7 +44,7 @@
 <b>Warning: <xsl:value-of select="cdash/warning"/></b><br/><br/>
 </xsl:if>
 
-<table width="100%"  border="0">
+<table   border="0">
   <tr>
     <td width="10%"><div align="right"><strong>Project:</strong></div></td>
     <td width="90%" >
@@ -67,91 +73,104 @@
   
 <!-- If a project has been selected -->
 <xsl:if test="cdash/project/id > -1">
-<form name="formnewgroup" method="post">
-<xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
-<table width="100%"  border="0">
-  <tr>
-    <td><div align="right"></div></td>
-    <td bgcolor="#DDDDDD"><strong>Current Subprojects</strong></td>
-  </tr>
-  <xsl:for-each select="cdash/project/subproject">
-  <tr>
-    <td width="10%"></td>
-    <td width="90%">
-    <table width="100%" border="0">
-    <tr>
-    <td width="10%"><xsl:value-of select="name"/></td>
-    <td align="left" width="10%"><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;delete=<xsl:value-of select="id"/>
-    </xsl:attribute>
-    [x]</a></td>
-    <td align="left" width="80%">
-    <form method="post">
-    <xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
-    <xsl:attribute name="name">form_add_dependency_<xsl:value-of select="id"/></xsl:attribute>
-    Add dependency: 
-    <input type="hidden" name="dependencyid">
-    <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-    </input>
-    <select>
-       <xsl:attribute name="name">dependency_selection_<xsl:value-of select="id"/></xsl:attribute>  
-        <option>
-        <xsl:attribute name="value">-1</xsl:attribute>
-        Choose...
-        </option>
-        
-        <xsl:for-each select="availabledependency">
-        <option>
-        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-        <xsl:if test="selected=1">
-        <xsl:attribute name="selected"></xsl:attribute>
-        </xsl:if>
-        <xsl:value-of select="name"/>
-        </option>
-        </xsl:for-each>
-        </select>
-        <input type="submit" name="addDependency" value="Add dependency"/>
-      </form>    
-    </td>
-    </tr>
-    <tr> <!-- List the dependencies for that subproject -->
-    <td width="100%" colspan="3">
-    <xsl:for-each select="dependency">
-    - <xsl:value-of select="name"/> <a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;removeDependency=<xsl:value-of select="id"/>&amp;dependency=<xsl:value-of select="../id"/>
-    </xsl:attribute>[x]</a>
-    <br/>
-    </xsl:for-each>
-    </td>
-    </tr>
-    <tr><td width="100%" colspan="3"><hr/></td></tr>
-    </table>
-    </td>
-  </tr>
-  </xsl:for-each>
-</table> 
-</form>
-<br/>
-<form name="formnewgroup" method="post">
-<xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
-<table width="100%"  border="0">
-  <tr>
-    <td><div align="right"></div></td>
-    <td bgcolor="#DDDDDD"><strong>Add a subproject</strong></td>
-  </tr>
-  <tr>
-    <td width="10%"></td>
-    <td width="90%">
-    <input name="newsubproject" type="text"></input>
-    </td>
-  </tr>
-  
-  <tr>
-    <td><div align="right"></div></td>
-    <td><input type="submit" name="addSubproject" value="Add subproject >>"/><br/><br/></td>
-  </tr>
-</table> 
-</form>
 
-  
+
+<div id="wizard">
+      <ul>
+          <li>                 
+            <a href="#fragment-1"><span>Current Subprojects</span></a></li>                
+          <li>
+            <a href="#fragment-2"><span>Add a subproject</span></a></li>
+      </ul>
+  <div id="fragment-1" class="tab_content" >
+      <div class="tab_help"></div>
+      <form name="formnewgroup" method="post">
+        <xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
+        <table width="800"  border="0">
+          <tr>
+            <td><div align="right"></div></td>
+            <td ><strong>Current Subprojects</strong></td>
+          </tr>
+          <xsl:for-each select="cdash/project/subproject">
+          <tr>
+            <td width="10%"></td>
+            <td width="90%">
+            <table width="100%" border="0">
+            <tr>
+            <td width="10%"><xsl:value-of select="name"/></td>
+            <td align="left" width="10%"><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;delete=<xsl:value-of select="id"/>
+            </xsl:attribute>
+            [x]</a></td>
+            <td align="left" width="80%">
+            <form method="post">
+            <xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
+            <xsl:attribute name="name">form_add_dependency_<xsl:value-of select="id"/></xsl:attribute>
+            Add dependency: 
+            <input type="hidden" name="dependencyid">
+            <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+            </input>
+            <select>
+               <xsl:attribute name="name">dependency_selection_<xsl:value-of select="id"/></xsl:attribute>  
+                <option>
+                <xsl:attribute name="value">-1</xsl:attribute>
+                Choose...
+                </option>
+                
+                <xsl:for-each select="availabledependency">
+                <option>
+                <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                <xsl:if test="selected=1">
+                <xsl:attribute name="selected"></xsl:attribute>
+                </xsl:if>
+                <xsl:value-of select="name"/>
+                </option>
+                </xsl:for-each>
+                </select>
+                <input type="submit" name="addDependency" value="Add dependency"/>
+              </form>    
+            </td>
+            </tr>
+            <tr> <!-- List the dependencies for that subproject -->
+            <td width="100%" colspan="3">
+            <xsl:for-each select="dependency">
+            - <xsl:value-of select="name"/> <a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;removeDependency=<xsl:value-of select="id"/>&amp;dependency=<xsl:value-of select="../id"/>
+            </xsl:attribute>[x]</a>
+            <br/>
+            </xsl:for-each>
+            </td>
+            </tr>
+            <tr><td width="100%" colspan="3"><hr/></td></tr>
+            </table>
+            </td>
+          </tr>
+          </xsl:for-each>
+        </table> 
+        </form>
+    </div>
+    <div id="fragment-2" class="tab_content" >
+      <div class="tab_help"></div>
+        <form name="formnewgroup" method="post">
+        <xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
+        <table width="100%"  border="0">
+          <tr>
+            <td><div align="right"></div></td>
+            <td ><strong>Add a subproject</strong></td>
+          </tr>
+          <tr>
+            <td width="10%"></td>
+            <td width="90%">
+            <input name="newsubproject" type="text"></input>
+            </td>
+          </tr>
+          
+          <tr>
+            <td><div align="right"></div></td>
+            <td><input type="submit" name="addSubproject" value="Add subproject >>"/><br/><br/></td>
+          </tr>
+        </table> 
+        </form>
+    </div>
+ </div>
 </xsl:if>
  
 

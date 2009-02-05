@@ -2,9 +2,11 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
   <xsl:include href="footer.xsl"/>
-  
-  <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
-   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
+  <xsl:include href="headscripts.xsl"/>
+
+
+  <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="iso-8859-1"/>
   <xsl:template match="/">
       <html>
       <head>
@@ -14,6 +16,7 @@
         <link rel="StyleSheet" type="text/css">
           <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
         </link>
+        <xsl:call-template name="headscripts"/>
       </head>
 
  <body>
@@ -84,9 +87,19 @@
  <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
     <tr class="table-heading1">
-      <td colspan="5" id="nob"><h3>My Projects</h3></td>
+      <td colspan="7" id="nob"><h3>My Projects</h3></td>
     </tr>
 
+   <tr class="table-heading">
+      <td align="center" class="botl">Project Name</td>   
+      <td align="center" width="240px" class="botl">Actions</td>   
+      <td align="center" width="130px" class="botl">Builds</td>
+      <td align="center" width="130px" class="botl">Builds per day</td>
+      <td align="center" width="130px" class="botl">Success Last 24h</td>
+      <td align="center" width="130px" class="botl">Errors Last 24h</td>
+      <td align="center" width="130px" class="botl">Warnings Last 24h</td>
+      
+   </tr>
     <xsl:for-each select="cdash/project">
       <tr class="table-heading">
         <td align="center" >
@@ -94,20 +107,51 @@
         <xsl:attribute name="href">
         index.php?project=<xsl:value-of select="name"/>
         </xsl:attribute>
-        <xsl:value-of select="name"/></a> </td>
-        <td bgcolor="#DDDDDD" id="nob"><a>
-        <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>[Edit subscription]</a>
+        <xsl:value-of select="name"/></a> </td>      
+       <td align="center"  bgcolor="#DDDDDD" ><a class="tooltip" title="Edit Subscription" >
+        <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>
+        <img src="images/edit.png" border="0" alt="edit" />
+        </a>
         <xsl:if test="role>0">
-          <a><xsl:attribute name="href">editSite.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Claim sites]</a>
+          <a class="tooltip" title="Claim sites" >
+          <xsl:attribute name="href">editSite.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
+          <img src="images/systemtray.png" border="0" alt="edit" /></a>
         </xsl:if>
         <xsl:if test="role>1">
-          <a><xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>[Edit project]</a>
-          <a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage subprojects]</a>
-          <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage groups]</a>
-          <a><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage roles]</a>
-          <a><xsl:attribute name="href">manageBanner.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Manage banner]</a>
+          <a class="tooltip" title="Edit project" >
+          <xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>
+          <img  src="images/edit2.png" border="0" alt="edit" /></a>
+          <a class="tooltip" title="Manage project groups" >
+          <xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute><img src="images/edit_group.png" border="0" alt="edit" /></a>
+          <a class="tooltip" title="Manage project roles" >
+          <xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute><img src="images/users.png" border="0" alt="edit" /></a>
         </xsl:if>
+      </td>  
+      <td align="center"  bgcolor="#DDDDDD">
+        <xsl:value-of select="nbuilds"/>
       </td>
+      <td align="center"  bgcolor="#DDDDDD">
+        <xsl:value-of select="average_builds"/>
+      </td>
+      <td align="center"  bgcolor="#DDDDDD">
+        <xsl:if test="success>0">
+           <xsl:attribute name="bgcolor">#92CA89</xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="success"/>
+      </td>
+      <td align="center"  bgcolor="#DDDDDD">
+        <xsl:if test="error>0">
+           <xsl:attribute name="bgcolor">#FF6666</xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="error"/>
+      </td>
+      <td align="center"  bgcolor="#DDDDDD">
+        <xsl:if test="warning>0">
+           <xsl:attribute name="bgcolor">#FDBA76</xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="warning"/>
+      </td>
+
     </tr>
   </xsl:for-each>
   </tbody>
