@@ -585,7 +585,33 @@ class Project
     $project_array = pdo_fetch_array($project);
     return $project_array[0];
     }
+  
+  /** Get the number of builds given per day */
+  function GetBuildsDailyAverage($startUTCdate,$endUTCdate)
+    {
+    if(!$this->Id)
+      {
+      echo "Project GetNumberOfBuilds(): Id not set";
+      return false;
+      }  
+  $nbuilds=$this->GetNumberOfBuilds($startUTCdate,$endUTCdate);   
+  $project = pdo_query("SELECT starttime FROM build WHERE projectid=".qnum($this->Id).
+                         " AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'
+                           ORDER BY starttime ASC 
+                           LIMIT 1");  
+  $first_build=pdo_fetch_array($project);      
+  $first_build=$first_build['starttime'];     
+  $nb_days=strtotime($endUTCdate)-strtotime($first_build);
+  $nb_days=intval($nb_days/86400)+1;
+    if(!$project)
+      {
+      return 0;
+      }
     
+    return $nbuilds/$nb_days;
+    }
+
   /** Get the number of warning builds given a date range */
   function GetNumberOfWarningBuilds($startUTCdate,$endUTCdate)
     {

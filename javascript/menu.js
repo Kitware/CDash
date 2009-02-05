@@ -110,12 +110,15 @@ $(document).ready(function() {
    obj = null;
   } //if
   
-  $(this).find('ul').fadeIn('fast');
-  var height = findHeight(document.getElementById("cal"));
-  $(this).find('ul').css({ top:height });
-  if ( jQuery.browser.msie )
+  $(this).find('ul').fadeIn('fast');  
+  if ( jQuery.browser.msie ||document.getElementById("cal")==undefined)
     {
     $(this).find('ul').find('a').css({ width:100 });
+    }
+  else 
+    {
+    var height = findHeight(document.getElementById("cal"));
+    $(this).find('ul').css({ top:height });
     }
  }
  
