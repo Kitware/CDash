@@ -10,6 +10,7 @@ body {
  color: #000000;
 }
 
+
 sub { 
 font-size: 0.63em 
 }
@@ -879,4 +880,10 @@ span.help_content{
       padding:2px 5px;
       color:#333;
       display:none;
+}
+
+/* fix the position of the help tootip */
+
+div#key {
+  position: absolute;
 }
