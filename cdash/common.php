@@ -115,6 +115,14 @@ function generate_XSLT($xml,$pageName)
     '/_xml' => $xml
   );
 
+  if(!empty($CDASH_DEBUG_XML))
+    {
+     $tmp=eregi_replace("(\<)([A-Za-z0-9\-_.]{1,250})(\>)","\\0\n",$xml);
+     $tmp=eregi_replace("(\</)([A-Za-z0-9\-_.]{1,250})(\>)","\n\\0\n",$tmp);
+     $inF=fopen($CDASH_DEBUG_XML,"w");
+     fwrite($inF, $tmp);
+     fclose($inF);
+    }
   $xslpage = $pageName.".xsl";
   
   // Check if the page exists in the local directory
