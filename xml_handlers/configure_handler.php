@@ -89,8 +89,14 @@ class ConfigureHandler extends AbstractHandler
         }
       
       $this->Configure->BuildId = $buildid;
+      $this->Configure->StartTime = $start_time;
+      $this->Configure->EndTime = $end_time;
       
       // Insert the configure
+      if($this->Configure->Exists())
+        {
+        $this->Configure->Delete();
+        }
       $this->Configure->Insert();
       // Insert errors from the log file 
       // Note: The diff should also be computed here at some point
