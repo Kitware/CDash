@@ -51,6 +51,54 @@ class BuildConfigure
       case "STATUS": $this->Status = $value;break;
       }
     }
+   
+  /** Check if the configure exists */ 
+  function Exists()
+    {
+    if(!$this->BuildId)
+      {
+      echo "BuildConfigure::Exists(): BuildId not set";
+      return false;    
+      }
+    
+    if(!is_numeric($this->BuildId))
+      {
+      echo "BuildConfigure::Exists(): Buildid is not numeric";
+      return false;
+      }
+    
+    $query = pdo_query("SELECT COUNT(*) FROM configure WHERE buildid=".qnum($this->BuildId));                     
+    if(!$query)
+      {
+      add_last_sql_error("BuildConfigure Exists()");
+      return false;
+      }
+    
+    $query_array = pdo_fetch_array($query);
+    if($query_array[0] > 0)
+      {
+      return true;
+      }
+    return false;
+    } 
+  
+  /** Delete a current configure given a buildid */ 
+  function Delete()
+    {
+    if(!$this->BuildId)
+      {
+      echo "BuildConfigure::Delete(): BuildId not set";
+      return false;    
+      }
+    
+    $query = pdo_query("DELETE FROM configure WHERE buildid=".qnum($this->BuildId));                     
+    if(!$query)
+      {
+      add_last_sql_error("BuildConfigure Delete()");
+      return false;
+      }
+    return true;
+    } 
       
   // Save in the database
   function Insert()
@@ -60,11 +108,18 @@ class BuildConfigure
       echo "BuildConfigure::Insert(): BuildId not set";
       return false;    
       }
+     
+     if($this->Exists())
+      {
+      echo "BuildConfigure::Exists(): Cannot insert new configure. Use Delete() first";
+      return false;    
+      }
     
     $command = pdo_real_escape_string($this->Command);
     $log = pdo_real_escape_string($this->Log);
     $status = pdo_real_escape_string($this->Status);
-    
+
+
     $query = "INSERT INTO configure (buildid,starttime,endtime,command,log,status)
               VALUES (".qnum($this->BuildId).",'$this->StartTime','$this->EndTime','$command','$log','$status')";                     
     if(!pdo_query($query))
