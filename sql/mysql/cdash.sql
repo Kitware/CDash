@@ -157,7 +157,7 @@ CREATE TABLE `configure` (
   `starttime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `command` text NOT NULL,
-  `log` text NOT NULL,
+  `log` MEDIUMTEXT NOT NULL,
   `status` tinyint(4) NOT NULL default '0',
   KEY `buildid` (`buildid`)
 );

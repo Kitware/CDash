@@ -110,6 +110,8 @@ DROP TABLE IF EXISTS `label2coverage`;
 --- Place the alter table in reverse order to make sure the 
 --- new ones are executed correctly
 ---
+ALTER TABLE `configure` CHANGE `log` `log` MEDIUMTEXT NOT NULL 
+
 ALTER TABLE coverage ADD INDEX  ( covered );
 
 ALTER TABLE build2grouprule ADD INDEX  ( starttime );
