@@ -30,21 +30,12 @@ CREATE TABLE IF NOT EXISTS `label2build` (
 );
 
 -- 
--- Table structure for table `label2configure`
+-- Table structure for table `label2coveragefile`
 -- 
-CREATE TABLE IF NOT EXISTS `label2configure` (
+CREATE TABLE IF NOT EXISTS `label2coveragefile` (
   `labelid` bigint(20) NOT NULL,
-  `configureid` bigint(20) NOT NULL,
-  KEY `configureid` (`labelid`,`configureid`)
-);
-
--- 
--- Table structure for table `label2coverage`
--- 
-CREATE TABLE IF NOT EXISTS `label2coverage` (
-  `labelid` bigint(20) NOT NULL,
-  `coverageid` bigint(20) NOT NULL,
-  KEY `labelid` (`labelid`,`coverageid`)
+  `coveragefileid` bigint(20) NOT NULL,
+  KEY `labelid` (`labelid`,`coveragefileid`)
 );
 
 -- 
@@ -73,8 +64,7 @@ CREATE TABLE IF NOT EXISTS `label2update` (
   `labelid` bigint(20) NOT NULL,
   `updateid` bigint(20) NOT NULL,
   KEY `labelid` (`labelid`),
-  KEY `updateid` (`updateid`)
-  
+  KEY `updateid` (`updateid`)  
 );
 
 
@@ -108,6 +98,13 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
   PRIMARY KEY  (`buildid`),
   KEY `subprojectid` (`subprojectid`)
 );
+
+---
+--- Drop tables that only existed for a short time in
+--- intermediate svn updates of CDash 1.3
+---
+DROP TABLE IF EXISTS `label2configure`;
+DROP TABLE IF EXISTS `label2coverage`;
 
 ---
 --- Place the alter table in reverse order to make sure the 
@@ -176,5 +173,3 @@ ALTER TABLE image CHANGE checksum checksum BIGINT( 20 ) NOT NULL;
 ALTER TABLE note CHANGE crc32 crc32 BIGINT( 20 ) NOT NULL;
 ALTER TABLE test CHANGE crc32 crc32 BIGINT( 20 ) NOT NULL;
 ALTER TABLE coveragefile CHANGE crc32 crc32 BIGINT( 20 ) NOT NULL;
-
-

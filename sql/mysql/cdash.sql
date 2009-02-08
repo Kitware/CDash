@@ -663,6 +663,14 @@ CREATE TABLE `coveragefile2user` (
   KEY `userid` (`userid`)
 );
 
+
+CREATE TABLE IF NOT EXISTS `label` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `text` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `text` (`text`)
+);
+
 -- 
 -- Table structure for table `label2build`
 -- 
@@ -673,21 +681,12 @@ CREATE TABLE `label2build` (
 );
 
 -- 
--- Table structure for table `label2configure`
+-- Table structure for table `label2coveragefile`
 -- 
-CREATE TABLE `label2configure` (
+CREATE TABLE `label2coveragefile` (
   `labelid` bigint(20) NOT NULL,
-  `configureid` bigint(20) NOT NULL,
-  KEY `configureid` (`labelid`,`configureid`)
-);
-
--- 
--- Table structure for table `label2coverage`
--- 
-CREATE TABLE `label2coverage` (
-  `labelid` bigint(20) NOT NULL,
-  `coverageid` bigint(20) NOT NULL,
-  KEY `labelid` (`labelid`,`coverageid`)
+  `coveragefileid` bigint(20) NOT NULL,
+  KEY `labelid` (`labelid`,`coveragefileid`)
 );
 
 -- 
