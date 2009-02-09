@@ -704,13 +704,14 @@ class Project
       }
   
   
-    $project = pdo_query("SELECT count(*) FROM (SELECT count(be.buildid) as c FROM build 
+    $project = pdo_query("SELECT count(*) FROM (SELECT count(be.buildid) as c,count(bf.buildid) as cf FROM build 
                           LEFT JOIN builderror as be ON be.buildid=build.id 
+                          LEFT JOIN buildfailure as bf ON bf.buildid=build.id 
                           WHERE build.projectid=".qnum($this->Id).
                          " AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate'
                           GROUP BY build.id
-                          ) as t WHERE t.c=0");
+                          ) as t WHERE t.c=0 AND t.cf=0");
   
     if(!$project)
       {
@@ -718,25 +719,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    $count = $project_array[0];
-    
-    // Build failtures
-    $project = pdo_query("SELECT count(*) FROM (SELECT count(be.buildid) as c FROM build 
-                          LEFT JOIN buildfailure as be ON be.buildid=build.id 
-                          WHERE build.projectid=".qnum($this->Id).
-                         " AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate'
-                          GROUP BY build.id
-                          ) as t WHERE t.c=0");
-  
-    if(!$project)
-      {
-      add_last_sql_error("Project GetNumberOfPassingBuilds");
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    $count += $project_array[0];
-    return $count;
+    return $project_array[0];
     }
   
   /** Get the number of configure given a date range */
