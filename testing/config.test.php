@@ -9,5 +9,5 @@ $configure = array(
   'svnroot'          => '/var/www/CDashTesting'
   );
   
-include('cdash/config.php');  
+include('../cdash/config.php');  
 ?>
