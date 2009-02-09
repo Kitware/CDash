@@ -1102,6 +1102,7 @@ function remove_build($buildid)
     
   pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderror WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM buildfailure WHERE buildid='$buildid'");
   pdo_query("DELETE FROM buildinformation WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM buildupdate WHERE buildid='$buildid'");

@@ -10,7 +10,6 @@ function add_build($build)
 
   //add_log('subprojectname: '.$build->SubProjectName, 'add_build');
   $buildid = $build->GetIdFromName($build->SubProjectName);
-
   if($buildid > 0 && !$build->Append)
     {
     remove_build($buildid);
