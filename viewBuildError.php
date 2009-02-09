@@ -115,6 +115,7 @@ $xml .= "</menu>";
   
   $xml .= "<errors>";
   
+  // Build error table
   $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='$type' ORDER BY logline ASC");
   while($error_array = pdo_fetch_array($errors))
     {
@@ -133,6 +134,33 @@ $xml .= "</menu>";
 
 
     $xml .= add_XML_value("cvsurl",$cvsurl);
+    $xml .= "</error>";
+    }
+
+  // Build failure table
+  $errors = pdo_query("SELECT * FROM buildfailure WHERE buildid='$buildid' and type='$type' ORDER BY id ASC");
+  while($error_array = pdo_fetch_array($errors))
+    {
+    $xml .= "<error>";
+    $xml .= add_XML_value("language",$error_array["language"]);
+    $xml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
+    $xml .= add_XML_value("targetname",$error_array["targetname"]);
+    $xml .= add_XML_value("outputfile",$error_array["outputfile"]);
+    $xml .= add_XML_value("outputtype",$error_array["outputtype"]);
+    $xml .= add_XML_value("workingdirectory",$error_array["workingdirectory"]);
+    $xml .= add_XML_value("arguments",$error_array["arguments"]);
+    $xml .= add_XML_value("stderror",$error_array["stderror"]);
+    $xml .= add_XML_value("stdoutput",$error_array["stdoutput"]);
+    $xml .= add_XML_value("exitcondition",$error_array["exitcondition"]);
+  
+    if(isset($error_array["sourcefile"]))
+      {
+      $projectCvsUrl = $project_array["cvsurl"];
+      $file = basename($error_array["sourcefile"]);
+      $directory = dirname($error_array["sourcefile"]);  
+      $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file);
+      $xml .= add_XML_value("cvsurl",$cvsurl);
+      }
     $xml .= "</error>";
     }
 

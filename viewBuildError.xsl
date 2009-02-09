@@ -42,7 +42,9 @@ Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:te
 <xsl:value-of select="cdash/nonerrortypename"/>s</a> are here.</p>
 <xsl:for-each select="cdash/errors/error">
 <hr/>
+<xsl:if test="logline">
 <h3><a>Build Log line <xsl:value-of select="logline"/></a></h3>
+</xsl:if>
 <xsl:if test="sourceline>0">
   <br/>
   File: <b><xsl:value-of select="sourcefile"/></b>
@@ -56,6 +58,39 @@ Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:te
 <pre><xsl:value-of select="precontext"/></pre>
 <pre><xsl:value-of select="text"/></pre>
 <pre><xsl:value-of select="postcontext"/></pre>
+
+<xsl:if test="string-length(workingdirectory)>0">
+<b>Directory: </b> <xsl:value-of select="workingdirectory"/><br/>
+</xsl:if>
+<xsl:if test="string-length(arguments)>0">
+<b>Arguments: </b> <xsl:value-of select="arguments"/><br/>
+</xsl:if>
+<xsl:if test="string-length(language)>0">
+<b>Language: </b> <xsl:value-of select="language"/><br/>
+</xsl:if>
+<xsl:if test="string-length(targetname)>0">
+<b>Target Name: </b> <xsl:value-of select="targetname"/><br/>
+</xsl:if>
+<xsl:if test="string-length(outputtype)>0">
+<b>Output Type: </b> <xsl:value-of select="outputtype"/><br/>
+</xsl:if>
+<xsl:if test="string-length(outputfile)>0">
+<b>Output File: </b> <xsl:value-of select="outputfile"/><br/>
+</xsl:if>
+<xsl:if test="string-length(sourcefile)>0">
+<b>Source File: </b> <xsl:value-of select="sourcefile"/><br/>
+</xsl:if>
+<xsl:if test="string-length(stderror)>0">
+<b>Standard Error: </b>
+<pre><xsl:value-of select="stderror"/></pre>
+</xsl:if>
+<xsl:if test="string-length(stdoutput)>0">
+<b>Standard Output: </b>
+<pre><xsl:value-of select="stdoutput"/></pre>
+</xsl:if>
+<xsl:if test="exitcondition">
+<b>Exit Condition: </b><xsl:value-of select="exitcondition"/>
+</xsl:if>
 </xsl:for-each>
 <hr/>
 <!-- FOOTER -->
