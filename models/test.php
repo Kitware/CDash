@@ -20,7 +20,8 @@ include_once('models/testimage.php');
 include_once('models/testmeasurement.php');
 include_once('models/buildtestdiff.php');
 include_once('models/buildtest.php');
-    
+include_once('models/label.php');
+
 /** Test */
 class Test
 {
@@ -33,27 +34,42 @@ class Test
   var $Output;
   
   var $Images;
+  var $Labels;
   var $Measurements;
   
   function __construct()
     {
-    $this->Measurements = array();
     $this->Images = array();
+    $this->Labels = array();
+    $this->Measurements = array();
     }
-  
+
   function AddMeasurement($measurement)
     {
     $measurement->TestId = $this->Id;
     $this->Measurements[] = $measurement;
+
+    if ($measurement->Name == 'Label')
+      {
+      $label = new Label();
+      $label->SetText($measurement->Value);
+      $this->AddLabel($label);
+      }
     }
-   
+
   function AddImage($image)
     {
     $image->TestId = $this->Id;
     $this->Images[] = $image;
     }
-    
-  function SetValue($tag,$value)  
+
+  function AddLabel($label)
+    {
+    $label->TestId = $this->Id;
+    $this->Labels[] = $label;
+    }
+
+  function SetValue($tag,$value)
     {
     switch($tag)
       {
@@ -91,7 +107,24 @@ class Test
     return $this->Crc32;
     }
 
-  /** Return if exists */
+  function InsertLabelAssociations()
+    {
+    if($this->Id)
+      {
+      foreach($this->Labels as $label)
+        {
+        $label->TestId = $this->Id;
+        $label->Insert();
+        }
+      }
+    else
+      {
+      add_log('No Test::Id - cannot call $label->Insert...',
+        'Test::InsertLabelAssociations');
+      }
+    }
+
+    /** Return if exists */
   function Exists()
     {
     $crc32 = $this->GetCrc32();
@@ -103,20 +136,28 @@ class Test
       return true;
       }
     return false;
-    }      
-      
+    }
+
   // Save in the database
   function Insert()
     {
     if($this->Exists())
       {
+      // Even if the test already exists, insert the label associations since
+      // this run may include a different set of labels than prior runs:
+      //
+      $this->InsertLabelAssociations();
+
+      // But then short-circuit the rest of this method because the test is
+      // already in the database.
+      //
       return true;
       }
 
     $command = pdo_real_escape_string($this->Command);
     $output = pdo_real_escape_string($this->Output);
-    $name = pdo_real_escape_string($this->Name);  
-    $path = pdo_real_escape_string($this->Path);  
+    $name = pdo_real_escape_string($this->Name);
+    $path = pdo_real_escape_string($this->Path);
     $details = pdo_real_escape_string($this->Details);
 
     $id = "";
@@ -126,7 +167,7 @@ class Test
       $id = "id,";
       $idvalue = "'".$this->Id."',";
       }
-        
+
     $query = "INSERT INTO test (".$id."crc32,name,path,command,details,output)
               VALUES (".$idvalue."'$this->Crc32','$name','$path','$command','$details','$output')";                     
     if(!pdo_query($query))
@@ -150,7 +191,10 @@ class Test
       $image->TestId = $this->Id;
       $image->Insert();
       }
-    
+
+    // Add the labels
+    $this->InsertLabelAssociations();
+
     return true;
     }  // end Insert 
 }

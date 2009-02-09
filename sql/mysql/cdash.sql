@@ -668,7 +668,7 @@ CREATE TABLE IF NOT EXISTS `label` (
   `id` bigint(20) NOT NULL auto_increment,
   `text` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `text` (`text`)
+  UNIQUE KEY `text` (`text`)
 );
 
 -- 
@@ -677,7 +677,7 @@ CREATE TABLE IF NOT EXISTS `label` (
 CREATE TABLE `label2build` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
-  KEY `buildid` (`labelid`,`buildid`)
+  PRIMARY KEY (`labelid`,`buildid`)
 );
 
 -- 
@@ -686,7 +686,7 @@ CREATE TABLE `label2build` (
 CREATE TABLE `label2coveragefile` (
   `labelid` bigint(20) NOT NULL,
   `coveragefileid` bigint(20) NOT NULL,
-  KEY `labelid` (`labelid`,`coveragefileid`)
+  PRIMARY KEY (`labelid`,`coveragefileid`)
 );
 
 -- 
@@ -695,7 +695,7 @@ CREATE TABLE `label2coveragefile` (
 CREATE TABLE `label2dynamicanalysis` (
   `labelid` bigint(20) NOT NULL,
   `dynamicanalysisid` bigint(20) NOT NULL,
-  KEY `dynamicanalysisid` (`labelid`,`dynamicanalysisid`)
+  PRIMARY KEY (`labelid`,`dynamicanalysisid`)
 );
 
 
@@ -705,7 +705,7 @@ CREATE TABLE `label2dynamicanalysis` (
 CREATE TABLE `label2test` (
   `labelid` bigint(20) NOT NULL,
   `testid` bigint(20) NOT NULL,
-  KEY `labelid` (`labelid`,`testid`)
+  PRIMARY KEY (`labelid`,`testid`)
 );
 
 -- 
@@ -714,7 +714,7 @@ CREATE TABLE `label2test` (
 CREATE TABLE `label2update` (
   `labelid` bigint(20) NOT NULL,
   `updateid` bigint(20) NOT NULL,
-  KEY `labelid` (`labelid`,`updateid`)
+  PRIMARY KEY (`labelid`,`updateid`)
 );
 
 

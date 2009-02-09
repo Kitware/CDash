@@ -17,6 +17,7 @@
 =========================================================================*/
 require_once 'xml_handlers/abstract_handler.php';
 require_once('models/build.php');
+require_once('models/label.php');
 require_once('models/site.php');
 require_once('models/test.php');
 
@@ -26,15 +27,16 @@ class TestingHandler extends AbstractHandler
   private $StartTimeStamp;
   private $EndTimeStamp;
   private $UpdateEndTime; // should we update the end time of the build
-  
+
   private $BuildId;  
   private $Test;
   private $BuildTest;
   private $BuildTestDiff;
   private $TestImage;
   private $TestMeasurement;
+  private $Label;
   private $Append;
-  
+
   /** Constructor */
   public function __construct($projectID)
     {
@@ -100,8 +102,12 @@ class TestingHandler extends AbstractHandler
       $this->TestMeasurement->Name = $attributes['NAME'];
       $this->TestMeasurement->Type = $attributes['TYPE'];
       }
-     else if($name == "TESTLIST" && $parent == 'TESTING')
-      {  
+    else if($name == "LABEL" && $parent == 'LABELS')
+      {
+      $this->Label = new Label();
+      }
+    else if($name == "TESTLIST" && $parent == 'TESTING')
+      {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $this->Build->ProjectId = $this->projectid;
       $buildid = $this->Build->GetIdFromName($this->SubProjectName);
@@ -125,8 +131,8 @@ class TestingHandler extends AbstractHandler
       $this->BuildId = $buildid;
       }  
     } // end startElement
-  
-  
+
+
   /** End Element */
   public function endElement($parser, $name)
     {
@@ -143,8 +149,12 @@ class TestingHandler extends AbstractHandler
         $this->BuildTest->Insert();
         }
       }
+    else if($name == "LABEL" && $parent == 'LABELS')
+      {
+      $this->Test->AddLabel($this->Label);
+      }
     else if($name == "NAMEDMEASUREMENT")
-      {  
+      {
       if($this->TestMeasurement->Name == 'Execution Time')
         {
         $this->BuildTest->Time = $this->TestMeasurement->Value;
@@ -219,6 +229,10 @@ class TestingHandler extends AbstractHandler
     else if($parent == "MEASUREMENT" && $element == "VALUE")
       {
       $this->Test->Output .= $data;
+      }
+    else if($parent == 'LABELS' && $element == 'LABEL')
+      {
+      $this->Label->SetText($data);
       }
     }
 }
