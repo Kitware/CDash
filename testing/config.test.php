@@ -1,5 +1,4 @@
 <?php
-// Everything should go here
 $configure = array(
   'urlwebsite'       => 'http://localhost/CDashTesting', 
   'outputdirectory'  => '/tmp',
@@ -9,4 +8,6 @@ $configure = array(
   'cdash'            => 'http://www.cdash.org/CDash',
   'svnroot'          => '/var/www/CDashTesting'
   );
+  
+include('cdash/config.php');  
 ?>
