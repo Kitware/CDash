@@ -19,6 +19,7 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include("cdash/common.php");
 require_once("models/project.php");
+require_once("models/buildfailure.php");
 require_once("filterdataFunctions.php");
 
 /** Generate the index table */
@@ -50,7 +51,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
   
   // Check if the database is up to date
-  if(!pdo_query("SELECT labelid FROM label2coveragefile LIMIT 1"))
+  if(!pdo_query("SELECT id FROM buildfailure LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration/CDash maintenance panel of CDash.</upgradewarning>";
@@ -638,10 +639,19 @@ function generate_main_dashboard_XML($projectid,$date)
     $builderror_array = pdo_fetch_array($builderror);
     $nerrors = $builderror_array[0];
     $totalerrors += $nerrors;
+    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
+    $nerrors += $builderror_array[0];
+    $totalerrors += $nerrors;
     $xml .= add_XML_value("error",$nerrors);
+    
     $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
     $buildwarning_array = pdo_fetch_array($buildwarning);
     $nwarnings = $buildwarning_array[0];
+    $totalwarnings += $nwarnings;
+    $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='1'");
+    $buildwarning_array = pdo_fetch_array($buildwarning);
+    $nwarnings += $buildwarning_array[0];
     $totalwarnings += $nwarnings;
     $xml .= add_XML_value("warning",$nwarnings);
     $diff = (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;

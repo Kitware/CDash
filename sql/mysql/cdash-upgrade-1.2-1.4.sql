@@ -1,3 +1,21 @@
+CREATE TABLE IF NOT EXISTS `buildfailure` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `buildid` bigint(20) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `workingdirectory` varchar(255) NOT NULL,
+  `arguments` text NOT NULL,
+  `stdoutput` text NOT NULL,
+  `stderror` text NOT NULL,
+  `exitcondition` tinyint(4) NOT NULL,
+  `language` varchar(10) NOT NULL,
+  `targetname` varchar(255) NOT NULL,
+  `outputfile` varchar(255) NOT NULL,
+  `outputtype` varchar(255) NOT NULL,
+  `sourcefile` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+
 CREATE TABLE IF NOT EXISTS `banner` (
   `projectid` int(11) NOT NULL,
   `text` varchar(500) NOT NULL,

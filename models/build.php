@@ -53,6 +53,7 @@ class Build
     {
     $this->Errors = array();
     $this->ErrorDiffs = array();
+    $this->Append = false;
     }
 
 

@@ -18,6 +18,7 @@
 require_once('xml_handlers/abstract_handler.php');
 require_once('models/build.php');
 require_once('models/site.php');
+require_once('models/buildfailure.php');
 
 class BuildHandler extends AbstractHandler
 {
@@ -31,6 +32,7 @@ class BuildHandler extends AbstractHandler
     parent::__construct($projectid);
     $this->Build = new Build();
     $this->Site = new Site();
+    $this->Append = false;
     }
 
   public function startElement($parser, $name, $attributes)
@@ -62,7 +64,10 @@ class BuildHandler extends AbstractHandler
 
       if (array_key_exists('APPEND', $attributes))
         {
-        $this->Append = $attributes['APPEND'];
+        if(strtolower($attributes['APPEND']) == "true")
+          {
+          $this->Append = true;
+          }
         }
       else
         {
@@ -78,6 +83,19 @@ class BuildHandler extends AbstractHandler
       {
       $this->Error = new BuildError();
       $this->Error->Type = 0;
+      }
+    else if($name=='FAILURE') 
+      {
+      $this->Error = new BuildFailure();
+      $this->Error->Type = 0;
+      if($attributes['TYPE']=="Error")
+        {
+        $this->Error->Type = 0;
+        }
+      else if($attributes['TYPE']=="Warning")
+        {
+        $this->Error->Type = 0;
+        }
       }
     }
 
@@ -100,7 +118,7 @@ class BuildHandler extends AbstractHandler
 
       add_build($this->Build);
       }
-    else if($name=='WARNING' || $name=='ERROR') 
+    else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE') 
       {
       $this->Build->AddError($this->Error);
       } 
@@ -130,33 +148,85 @@ class BuildHandler extends AbstractHandler
           $this->Build->Command = $data;
           break;
         case 'LOG':
-          $this->Build->Log = $data;
+          $this->Build->Log .= $data;
           break;
         }
       } 
+    else if($parent == 'ACTION')
+      {
+      switch ($element)
+        {
+        case 'LANGUAGE':
+          $this->Error->Language .= $data;
+          break;
+        case 'SOURCEFILE':
+          $this->Error->SourceFile .= $data;
+          break;
+        case 'TARGETNAME':
+          $this->Error->TargetName .= $data;
+          break;
+        case 'OUTPUTFILE':
+          $this->Error->OutputFile .= $data;
+          break;
+        case 'OUTPUTTYPE':
+          $this->Error->OutputType .= $data;
+          break;
+        }
+      }  
+    else if($parent == 'COMMAND')
+      {
+      switch ($element)
+        {
+        case 'WORKINGDIRECTORY':
+          $this->Error->WorkingDirectory .= $data;
+          break;
+        case 'ARGUMENT':
+          if(strlen($this->Error->Arguments)>0)
+            {
+            $this->Error->Arguments .= ' ';
+            } 
+          $this->Error->Arguments  .= $data;
+          break;
+        }
+      }  
+    else if($parent == 'RESULT')
+      {
+      switch ($element)
+        {
+        case 'STDOUT':
+          $this->Error->StdOutput .= $data;
+          break;
+        case 'STDERR':
+          $this->Error->StdError .= $data;
+          break;
+        case 'EXITCONDITION':
+          $this->Error->ExitCondition .= $data;
+          break;  
+        }
+      }    
     else if($element == 'BUILDLOGLINE')
       {
-      $this->Error->Logline = $data;
+      $this->Error->Logline .= $data;
       }
     else if($element == 'TEXT')
       {
-      $this->Error->Text = $data;
+      $this->Error->Text .= $data;
       }
     else if($element == 'SOURCEFILE') 
       {
-      $this->Error->SourceFile = $data;
+      $this->Error->SourceFile .= $data;
       }
     else if($element == 'SOURCELINENUMBER') 
       {
-      $this->Error->SourceLine = $data;
+      $this->Error->SourceLine .= $data;
       } 
     else if($element == 'PRECONTEXT') 
       {
-      $this->Error->PreContext = $data;
+      $this->Error->PreContext .= $data;
       } 
     else if($element == 'POSTCONTEXT') 
       {
-      $this->Error->PostContext = $data;
+      $this->Error->PostContext .= $data;
       }
     } // end function text
   } // end class
