@@ -94,7 +94,7 @@ class BuildHandler extends AbstractHandler
         }
       else if($attributes['TYPE']=="Warning")
         {
-        $this->Error->Type = 0;
+        $this->Error->Type = 1;
         }
       }
     }
