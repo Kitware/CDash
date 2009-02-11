@@ -69,6 +69,7 @@ class Test
     $this->Labels[] = $label;
     }
 
+
   function SetValue($tag,$value)
     {
     switch($tag)
@@ -107,6 +108,7 @@ class Test
     return $this->Crc32;
     }
 
+
   function InsertLabelAssociations()
     {
     if($this->Id)
@@ -124,7 +126,8 @@ class Test
       }
     }
 
-    /** Return if exists */
+
+  /** Return if exists */
   function Exists()
     {
     $crc32 = $this->GetCrc32();

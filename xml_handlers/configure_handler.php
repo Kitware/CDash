@@ -17,6 +17,7 @@
 =========================================================================*/
 require_once 'xml_handlers/abstract_handler.php';
 require_once('models/build.php');
+require_once('models/label.php');
 require_once('models/site.php');
 require_once('models/buildconfigure.php');
 
@@ -26,6 +27,7 @@ class ConfigureHandler extends AbstractHandler
   private $EndTimeStamp;
 
   private $Configure;
+  private $Label;
 
   public function __construct($projectid)
     {
@@ -61,6 +63,10 @@ class ConfigureHandler extends AbstractHandler
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
+      }
+    else if($name == 'LABEL')
+      {
+      $this->Label = new Label();
       }
     }
 
@@ -102,6 +108,13 @@ class ConfigureHandler extends AbstractHandler
       // Note: The diff should also be computed here at some point
       $this->Configure->ComputeErrors();
       }
+    else if($name == 'LABEL')
+      {
+      if(isset($this->Configure))
+        {
+        $this->Configure->AddLabel($this->Label);
+        }
+      }
     }
 
   public function text($parser, $data)
@@ -135,6 +148,11 @@ class ConfigureHandler extends AbstractHandler
           $this->Configure->Status .= $data;
           break;
         }
+      }
+
+    if($element == 'LABEL')
+      {
+      $this->Label->SetText($data);
       }
     }
 }

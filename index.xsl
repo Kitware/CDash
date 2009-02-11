@@ -57,19 +57,22 @@
    </tr>
    
    <tr class="table-heading">
-      <th align="center" rowspan="2" width="20%">
+      <th align="center" rowspan="2" width="15%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_0</xsl:attribute>
       Site</th>
-      <th align="center" rowspan="2" width="20%">
+      <th align="center" rowspan="2" width="15%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_1</xsl:attribute>
       Build Name</th>
       <td align="center" colspan="2" width="5%" class="botl">Update</td>
       <td align="center" colspan="3" width="15%" class="botl">Configure</td>
       <td align="center" colspan="3" width="15%" class="botl">Build</td>
       <td align="center" colspan="4" width="15%" class="botl">Test</td>
-      <th align="center" rowspan="2" width="10%" class="nob">
+      <th align="center" rowspan="2" width="10%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
       Build Time</th>
+      <th align="center" rowspan="2" width="10%" class="nob">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_15</xsl:attribute>
+      Labels</th>
       <!-- <td align="center" rowspan="2" class="nob">Submit Date</td> -->
 
    </tr>
@@ -142,7 +145,7 @@
       </img>
       </a>
       </xsl:if> 
-      
+
       <!-- If the build has errors or test failing -->
       <xsl:if test="compilation/error > 0 or test/fail > 0">
       <a href="javascript:;">
@@ -158,7 +161,7 @@
       <img src="images/Info.png" border="0" alt="info"></img>
       </a>
       </xsl:if>
-      
+
       <!-- Display the note icon -->
       <xsl:if test="buildnote>0">
       <a name="Build Notes" class="jTip">
@@ -374,7 +377,13 @@
              </xsl:when>  
         </xsl:choose>
       </td>
-      <td class="nob"><xsl:value-of select="builddate"/></td>
+      <td><xsl:value-of select="builddate"/></td>
+
+      <td class="nob" align="left">
+      <xsl:if test="count(labels/label)=0">(none)</xsl:if>
+      <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
+      </td>
+
       <!--
       <td>
       <xsl:attribute name="class">
@@ -503,6 +512,7 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "/cdash/totalPass"/></b>
       </td>
+      <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
       <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
       <td class="nob"></td>
       <!-- <td bgcolor="#ffffff"></td> -->

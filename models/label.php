@@ -28,10 +28,44 @@ class Label
   var $TestId;
   var $UpdateFileKey;
 
+
   function SetText($text)
     {
     $this->Text = $text;
     }
+
+
+  function InsertAssociation($value, $table, $field)
+    {
+    if(!empty($value))
+      {
+      $v = pdo_get_field_value(
+        "SELECT $field FROM $table WHERE labelid='$this->Id' ".
+        "AND $field='$value'", "$field", 0);
+
+      // Only do the INSERT if it's not already there:
+      //
+      if (0 == $v)
+        {
+        $query = "INSERT INTO $table (labelid, $field) ".
+          "VALUES ('$this->Id', '$value')";
+
+        //add_log("associating labelid='$this->Id' with $field='$value'",
+        //  'Label::InsertAssociation');
+
+        if(!pdo_query($query))
+          {
+          add_last_sql_error("Label::InsertAssociation");
+          }
+        }
+      //else
+      //  {
+      //  add_log("* labelid='$this->Id' already associated with $field=" .
+      //    "'$value' v='$v'", 'Label::InsertAssociation');
+      //  }
+      }
+    }
+
 
   // Save in the database
   function Insert()
@@ -40,25 +74,21 @@ class Label
 
     // Get this->Id from the database if text is already in the label table:
     //
-    $query = pdo_query("SELECT id FROM label WHERE text='$text'");
-    if(pdo_num_rows($query)>0)
-      {
-      $query_array = pdo_fetch_array($query);
-      $this->Id = $query_array['id'];
-      }
+    $this->Id = pdo_get_field_value(
+      "SELECT id FROM label WHERE text='$text'", 'id', 0);
 
     // Or, if necessary, insert a new row, then get the id of the inserted row:
     //
-    if(empty($this->Id))
+    if(0 == $this->Id)
       {
       $query = "INSERT INTO label (text) VALUES ('$text')";
       if(!pdo_query($query))
         {
-        add_last_sql_error("Label::Insert");
+        add_last_sql_error('Label::Insert');
         return false;
         }
 
-      $this->Id = pdo_insert_id("label");
+      $this->Id = pdo_insert_id('label');
       //add_log('new Label::Id='.$this->Id, 'Label::Insert');
       }
     else
@@ -66,66 +96,28 @@ class Label
       //add_log('existing Label::Id='.$this->Id, 'Label::Insert');
       }
 
+
     // Insert relationship records, too, but only for those relationships
     // established by callers. (If coming from test.php, for example, TestId
     // will be set, but none of the others will. Similarly for other callers.)
     //
-    if(!empty($this->BuildId))
-      {
-      $query = "INSERT INTO label2build (labelid, buildid) ".
-        "VALUES ('$this->Id', '$this->BuildId')";
-      //add_log('associating labelid='.$this->Id.' with buildid='.$this->BuildId,
-      //  'Label::Insert');
-      pdo_query($query);
-        // intentionally do not report sql errors - "duplicate key" (already
-        // exists) "errors" may validly occur frequently
-      }
+    $this->InsertAssociation($this->BuildId,
+      'label2build', 'buildid');
 
-    if(!empty($this->CoverageFileId))
-      {
-      $query = "INSERT INTO label2coveragefile (labelid, coveragefileid) ".
-        "VALUES ('$this->Id', '$this->CoverageFileId')";
-      //add_log('associating labelid='.$this->Id.' with coveragefileid='.$this->CoverageFileId,
-      //  'Label::Insert');
-      pdo_query($query);
-        // intentionally do not report sql errors - "duplicate key" (already
-        // exists) "errors" may validly occur frequently
-      }
+    $this->InsertAssociation($this->CoverageFileId,
+      'label2coveragefile', 'coveragefileid');
 
-    if(!empty($this->DynamicAnalysisId))
-      {
-      $query = "INSERT INTO label2dynamicanalysis (labelid, dynamicanalysisid) ".
-        "VALUES ('$this->Id', '$this->DynamicAnalysisId')";
-      //add_log('associating labelid='.$this->Id.' with dynamicanalysisid='.$this->DynamicAnalysisId,
-      //  'Label::Insert');
-      pdo_query($query);
-        // intentionally do not report sql errors - "duplicate key" (already
-        // exists) "errors" may validly occur frequently
-      }
+    $this->InsertAssociation($this->DynamicAnalysisId,
+      'label2dynamicanalysis', 'dynamicanalysisid');
 
-    if(!empty($this->TestId))
-      {
-      $query = "INSERT INTO label2test (labelid, testid) ".
-        "VALUES ('$this->Id', '$this->TestId')";
-      //add_log('associating labelid='.$this->Id.' with testid='.$this->TestId,
-      //  'Label::Insert');
-      pdo_query($query);
-        // intentionally do not report sql errors - "duplicate key" (already
-        // exists) "errors" may validly occur frequently
-      }
+    $this->InsertAssociation($this->TestId,
+      'label2test', 'testid');
 
     // TODO: Implement this:
     //
-    //if(!empty($this->UpdateFileKey))
-    //  {
-    //  $query = "INSERT INTO label2updatefile (labelid, updatefilekey) ".
-    //    "VALUES ('$this->Id', '$this->UpdateFileKey')";
-    //  //add_log('associating labelid='.$this->Id.' with updatefilekey='.$this->UpdateFileKey,
-    //  //  'Label::Insert');
-    //  pdo_query($query);
-    //    // intentionally do not report sql errors - "duplicate key" (already
-    //    // exists) "errors" may validly occur frequently
-    //  }
+    //$this->InsertAssociation($this->UpdateFileKey,
+    //  'label2updatefile', 'updatefilekey');
+
 
     return true;
     }

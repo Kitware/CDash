@@ -603,9 +603,24 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $xml .= add_XML_value("note","1");
       }
-      
-      
-    $xml .= "<update>";  
+
+
+    // Are there labels for this build?
+    //
+    $labels = pdo_query("SELECT text FROM label, label2build WHERE label2build.buildid='$buildid' AND label2build.labelid=label.id");
+    $labels_array = pdo_fetch_array($labels);
+    if(!empty($labels_array))
+      {
+      $xml .= '<labels>';
+      foreach($labels_array as $label)
+        {
+        $xml .= add_XML_value("label",$label);
+        }
+      $xml .= '</labels>';
+      }
+
+
+    $xml .= "<update>";
     $update = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
     $update_array = pdo_fetch_row($update);
     $xml .= add_XML_value("files",$update_array[0]);

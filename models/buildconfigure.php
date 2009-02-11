@@ -27,20 +27,36 @@ class BuildConfigure
   var $Log;
   var $Status;
   var $BuildId;
-  
+  var $Labels;
+
+
   function AddError($error)
     {
     $error->BuildId = $this->BuildId;
     $error->Save();
     }
-  
+
+
   function AddErrorDifference($diff)
     {
     $diff->BuildId = $this->BuildId;
     $diff->Save();
     }
-    
-  function SetValue($tag,$value)  
+
+
+  function AddLabel($label)
+    {
+    if(!isset($this->Labels))
+      {
+      $this->Labels = array();
+      }
+
+    $label->BuildId = $this->BuildId;
+    $this->Labels[] = $label;
+    }
+
+
+  function SetValue($tag,$value)
     {
     switch($tag)
       {
@@ -51,7 +67,8 @@ class BuildConfigure
       case "STATUS": $this->Status = $value;break;
       }
     }
-   
+
+
   /** Check if the configure exists */ 
   function Exists()
     {
@@ -81,7 +98,8 @@ class BuildConfigure
       }
     return false;
     } 
-  
+
+
   /** Delete a current configure given a buildid */ 
   function Delete()
     {
@@ -98,8 +116,27 @@ class BuildConfigure
       return false;
       }
     return true;
-    } 
-      
+    }
+
+
+  function InsertLabelAssociations()
+    {
+    if($this->BuildId)
+      {
+      foreach($this->Labels as $label)
+        {
+        $label->BuildId = $this->BuildId;
+        $label->Insert();
+        }
+      }
+    else
+      {
+      add_log('No BuildConfigure::BuildId - cannot call $label->Insert...',
+        'BuildConfigure::InsertLabelAssociations');
+      }
+    }
+
+
   // Save in the database
   function Insert()
     {
@@ -127,9 +164,13 @@ class BuildConfigure
       add_last_sql_error("BuildConfigure Insert()");
       return false;
       }  
+
+    $this->InsertLabelAssociations();
+
     return true;
     }  // end insert            
-    
+
+
   /** Compute the errors from the log */
   function ComputeErrors()
     {

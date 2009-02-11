@@ -21,6 +21,7 @@ include_once('models/buildusernote.php');
 include_once('models/builderrordiff.php');
 include_once('models/builderror.php');
 include_once('models/buildinformation.php');
+include_once('models/label.php');
 
 class Build
 {
@@ -47,6 +48,7 @@ class Build
   var $SubProjectId;
   var $SubProjectName;
   var $Append;
+  var $Labels;
 
 
   function __construct()
@@ -63,56 +65,68 @@ class Build
     $this->Errors[] = $error;
     }
 
-  
+
   function AddErrorDiff($diff)
     {
     $diff->BuildId = $this->Id;
     $this->ErrorDiffs[] = $diff;
     }    
 
-    
+
+  function AddLabel($label)
+    {
+    if(!isset($this->Labels))
+      {
+      $this->Labels = array();
+      }
+
+    $label->BuildId = $this->Id;
+    $this->Labels[] = $label;
+    }
+
+
   function SaveTest($test)
     {
     $test->BuildId = $this->Id;
     $test->Insert();
     }
 
-  
+
   function SaveTestDiff($diff)
     {
     $diff->BuildId = $this->Id;
     $diff->Insert();
     }    
 
-  
+
   function SaveUpdate($update)
     {
     $update->BuildId = $this->Id;
     $update->Insert();
     }
 
-    
+
   function SaveConfigure($configure)
     {
     $configure->BuildId = $this->Id;
     $configure->Insert();
     }
 
-  
+
   function SaveNote($note)
     {
     $note->BuildId = $this->Id;
     $note->Insert();
     }
 
-  
+
   function SaveUserNote($note)
     {
     $note->BuildId = $this->Id;
     $note->Insert();
     }
 
-    
+
   function SetStamp($stamp)
     {
     $this->Stamp = $stamp;
@@ -370,7 +384,25 @@ class Build
     echo pdo_error();
     //add_log('returning 0 after pdo_error...', 'Build::GetIdFromName');
     return 0;  
-    }  
+    }
+
+
+  function InsertLabelAssociations()
+    {
+    if($this->Id)
+      {
+      foreach($this->Labels as $label)
+        {
+        $label->BuildId = $this->Id;
+        $label->Insert();
+        }
+      }
+    else
+      {
+      add_log('No Build::Id - cannot call $label->Insert...',
+        'Build::InsertLabelAssociations');
+      }
+    }
 
 
   /** Return if exists */
@@ -388,9 +420,9 @@ class Build
       return true;
       }
     return false;
-    }      
+    }
 
-      
+
   // Save in the database
   function Save()
     {
@@ -505,13 +537,17 @@ class Build
           {
           $diff->BuildId = $this->Id;
           $diff->Insert();
-          } 
-        }  
+          }
+        }
       else
         {
         //echo "info: nothing<br/>";
         }
       }
+
+    // Add label associations regardless of how Build::Save gets called:
+    //
+    $this->InsertLabelAssociations();
 
     return true;
     }

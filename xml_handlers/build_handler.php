@@ -17,6 +17,7 @@
 =========================================================================*/
 require_once('xml_handlers/abstract_handler.php');
 require_once('models/build.php');
+require_once('models/label.php');
 require_once('models/site.php');
 require_once('models/buildfailure.php');
 
@@ -25,6 +26,7 @@ class BuildHandler extends AbstractHandler
   private $StartTimeStamp;
   private $EndTimeStamp;
   private $Error;
+  private $Label;
   private $Append;
 
   public function __construct($projectid)
@@ -97,7 +99,12 @@ class BuildHandler extends AbstractHandler
         $this->Error->Type = 1;
         }
       }
+    else if($name == 'LABEL')
+      {
+      $this->Label = new Label();
+      }
     }
+
 
   public function endElement($parser, $name)
     {
@@ -122,8 +129,16 @@ class BuildHandler extends AbstractHandler
       {
       $this->Build->AddError($this->Error);
       } 
+    else if($name == 'LABEL')
+      {
+      if(isset($this->Build))
+        {
+        $this->Build->AddLabel($this->Label);
+        }
+      }
     }
-  
+
+
   public function text($parser, $data)
     {
     $parent = $this->getParent();
@@ -223,6 +238,10 @@ class BuildHandler extends AbstractHandler
     else if($element == 'POSTCONTEXT') 
       {
       $this->Error->PostContext .= $data;
+      }
+    else if($element == 'LABEL')
+      {
+      $this->Label->SetText($data);
       }
     } // end function text
   } // end class

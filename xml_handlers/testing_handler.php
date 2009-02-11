@@ -45,7 +45,7 @@ class TestingHandler extends AbstractHandler
     $this->Site = new Site();
     $this->UpdateEndTime = false;
     }
-  
+
   /** Destructor */
   public function __destruct()
     {
@@ -72,9 +72,9 @@ class TestingHandler extends AbstractHandler
         $siteInformation->SetValue($key,$value);
         $buildInformation->SetValue($key,$value);
         }
-      
+
       $this->Site->SetInformation($siteInformation);
-      
+
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
@@ -102,7 +102,7 @@ class TestingHandler extends AbstractHandler
       $this->TestMeasurement->Name = $attributes['NAME'];
       $this->TestMeasurement->Type = $attributes['TYPE'];
       }
-    else if($name == "LABEL" && $parent == 'LABELS')
+    else if($name == 'LABEL' && $parent == 'LABELS')
       {
       $this->Label = new Label();
       }
@@ -149,9 +149,12 @@ class TestingHandler extends AbstractHandler
         $this->BuildTest->Insert();
         }
       }
-    else if($name == "LABEL" && $parent == 'LABELS')
+    else if($name == 'LABEL' && $parent == 'LABELS')
       {
-      $this->Test->AddLabel($this->Label);
+      if(isset($this->Test))
+        {
+        $this->Test->AddLabel($this->Label);
+        }
       }
     else if($name == "NAMEDMEASUREMENT")
       {

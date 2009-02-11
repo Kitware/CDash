@@ -166,7 +166,8 @@ $(document).ready(function() {
                   11: { sorter:'numericvalue'},
                   12: { sorter:'numericvalue'},
                   13: { sorter:'numeric'},
-                  14: { sorter:'text'}
+                  14: { sorter:'text'},
+                  15: { sorter:'text'}
               },
             debug: false,
             widgets: ['zebra'] 

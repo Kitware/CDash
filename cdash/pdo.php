@@ -279,4 +279,80 @@ function pdo_select_db($database_name, &$link_identifier)
     }
 }
 
+
+// pdo_single_row_query returns a single row. Useful for SELECT
+// queries that are expected to return 0 or 1 rows.
+//
+function pdo_single_row_query($qry)
+{
+  $result = pdo_query($qry);
+  if (FALSE === $result)
+  {
+    add_log('error: pdo_query failed: ' . pdo_error(),
+      'pdo_single_row_query');
+    return array();
+  }
+
+  $num_rows = pdo_num_rows($result);
+  if (0 !== $num_rows && 1 !== $num_rows)
+  {
+    add_log('error: at most 1 row should be returned, not ' . $num_rows,
+      'pdo_single_row_query');
+    add_log('warning: returning the first row anyway even though result ' .
+      'contains ' . $num_rows . ' rows', 'pdo_single_row_query');
+  }
+
+  $row = pdo_fetch_array($result);
+  pdo_free_result($result);
+
+  return $row;
+}
+
+
+// pdo_all_rows_query returns all rows. Useful for SELECT
+// queries that return any number of rows. Only use
+// this one on queries expected to return small result
+// sets.
+//
+function pdo_all_rows_query($qry)
+{
+  $result = pdo_query($qry);
+  if (FALSE === $result)
+  {
+    add_log('error: pdo_query failed: ' . pdo_error(), 'pdo_all_rows_query');
+    return array();
+  }
+
+  $all_rows = array();
+  while ($row = pdo_fetch_array($result))
+    {
+    $all_rows[] = $row;
+    }
+  pdo_free_result($result);
+
+  return $all_rows;
+}
+
+
+// pdo_get_field_value executes the given query, expected to return 0 rows
+// or 1 row. If it gets a row, it retrieves the value of the named field
+// and returns it. Otherwise, it returns the passed in default value.
+//
+function pdo_get_field_value($qry, $fieldname, $default)
+{
+  $row = pdo_single_row_query($qry);
+
+  if (!empty($row))
+  {
+    $f = $row["$fieldname"];
+  }
+  else
+  {
+    $f = $default;
+  }
+
+  return $f;
+}
+
+
 ?>
