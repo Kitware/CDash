@@ -155,8 +155,23 @@ $xml .= "</menu>";
       {
       $xml .= add_XML_value("argument",$argument_array["argument"]);
       }
+
     $xml .= add_XML_value("stderror",$error_array["stderror"]);
+    $rows = substr_count($error_array["stderror"],"\n")+1;
+    if ($rows > 10)
+      {
+      $rows = 10;
+      }
+    $xml .= add_XML_value("stderrorrows",$rows);
+
     $xml .= add_XML_value("stdoutput",$error_array["stdoutput"]);
+    $rows = substr_count($error_array["stdoutput"],"\n")+1;
+    if ($rows > 10)
+      {
+      $rows = 10;
+      }
+    $xml .= add_XML_value("stdoutputrows",$rows);
+
     $xml .= add_XML_value("exitcondition",$error_array["exitcondition"]);
   
     if(isset($error_array["sourcefile"]))
