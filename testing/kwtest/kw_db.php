@@ -16,7 +16,7 @@ class database
       case "mysql":
         $this->dbo = new dbo_mysql(); 
         break;
-      case "postgres":
+      case "pgsql":
         $this->dbo = new dbo_pgsql();
         break;
       default:
@@ -218,6 +218,105 @@ class dbo_mysql extends dbo
        } // end for each line
      mysql_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '".md5('simpletest')."', 'administrator', '','Kitware Inc.', 1)");
      echo mysql_error();
+     $this->disconnect();
+     return true;
+     }
+}
+
+class dbo_postgre extends dbo
+{
+   function connect($dbname = null)
+     {
+     if(!$dbname)
+       {
+       $dbname = $this->db;
+       }
+     $host     = $this->host;
+     $user     = $this->user;
+     $password = $this->password; 
+     $conn  = "host='$host' dbname='$dbname' user='$user' password='$password'";
+     $this->dbconnect = pg_connect($conn, PGSQL_CONNECT_FORCE_NEW);
+     }
+  
+   function disconnect()
+     {
+     pg_close($this->dbconnect);
+     $this->dbconnect = null;
+     }
+  
+   function create($db)
+     {
+     $this->connect('host');
+     pg_query($this->dbconnect,"CREATE DATABASE IF NOT EXISTS $db");
+     $this->disconnect();
+     }
+  
+   function drop($db)
+     {
+     $this->connect('host');
+     pg_query($this->dbconnect,"DROP DATABASE $db");
+     $this->disconnect();
+     }
+  
+   function connectToDb()
+     {
+     $this->connect();
+     if(!$this->dbconnect)
+       {
+       return false;
+       }
+     return true;
+     }
+  
+   function query($query)
+     {
+     $this->connect();
+     $resource = pg_query($this->dbconnect,$query);
+     if (!$result) 
+       {
+       return false;
+       }
+     $result = array();
+     while($row = pg_fetch_array($result, NULL, PGSQL_ASSOC))
+       {
+       $result[] = $row;
+       }
+     $this->disconnect();
+     return $result;
+     }
+  
+   function fillDb($sqlfile)
+     {
+     if(!$this->dbconnect)
+        {
+        $this->connect();
+        }
+     $file_content = file($sqlfile);
+     //print_r($file_content);
+     $query = "";
+     $linnum=0;
+     foreach($file_content as $sql_line)
+       {
+       $tsl = trim($sql_line);
+       if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0,
+           1) != "#"))
+         {
+         $query .= $sql_line;
+         if(preg_match("/;\s*$/", $sql_line))
+           {
+           $query = str_replace(";", "", "$query");
+           $result = pg_query($query);
+           if (!$result)
+             {
+             echo "Error line:".$linnum."<br/>";
+             return pg_last_error();
+             }
+           $query = "";
+           }
+         }
+       $linnum++;
+       } // end for each line
+     echo pg_last_error();
      $this->disconnect();
      return true;
      }
