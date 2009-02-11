@@ -1,16 +1,18 @@
 <?php
-// simpletest library
-require_once('simpletest/kw_web_tester.php');
+// kwtest library
+require_once('kwtest/kw_web_tester.php');
 
-class loginTestCase extends KWWebTestCase
+class LoginTestCase extends KWWebTestCase
 {
+  var $url = null;
+  
   function __construct()
    {
    parent::__construct();
    require('config.test.php');
    $this->url = $configure['urlwebsite'];
    }
-   
+  
   function testHomePage()
     {
     $content = $this->connect($this->url);
@@ -21,8 +23,9 @@ class loginTestCase extends KWWebTestCase
     $this->clickLink('Login');
     $this->setField('login','simpletest@localhost');
     $this->setField('passwd','simpletest');
+  //$this->setField('passwd','toto');
     $this->clickSubmit('Login >>');
-    $this->assertNoText('Wrong email or password','No text Wrong email or password detected in test_login.php.18');
+    $this->assertNoText('Wrong email or password');
     }
 
   function testRegisterWithBotsDetection()
@@ -36,9 +39,9 @@ class loginTestCase extends KWWebTestCase
     $this->fillOutRegisterForm();
     $this->setField('url', 'catchbot');
     $this->clickSubmit('Register');
-    $this->assertText('Bots are not allowed to obtain CDash accounts!','Bots detected');
+    $this->assertText('Bots are not allowed to obtain CDash accounts!','Bots detected in test_login.php.42');
     }
-    
+  
   function testRegister()
     {
     $url = $this->url.'/register.php';
@@ -51,7 +54,7 @@ class loginTestCase extends KWWebTestCase
     $this->clickSubmit('Register',array('url' => 'catchbot'));
     $this->assertText('Registration Complete. Please login with your email and password.');
     }
-    
+  
   function fillOutRegisterForm()
    {
     $fname        = 'test';
