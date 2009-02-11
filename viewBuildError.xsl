@@ -62,9 +62,6 @@ Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:te
 <xsl:if test="string-length(workingdirectory)>0">
 <b>Directory: </b> <xsl:value-of select="workingdirectory"/><br/>
 </xsl:if>
-<xsl:if test="string-length(arguments)>0">
-<b>Arguments: </b> <xsl:value-of select="arguments"/><br/>
-</xsl:if>
 <xsl:if test="string-length(language)>0">
 <b>Language: </b> <xsl:value-of select="language"/><br/>
 </xsl:if>

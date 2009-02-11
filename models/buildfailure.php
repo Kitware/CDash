@@ -31,13 +31,18 @@ class BuildFailure
   var $OutputFile;
   var $OutputType;    
   
+  function __construct()
+    {
+    $this->Arguments = array();
+    }
+  
   function SetValue($tag,$value)  
     {
     switch($tag)
       {
       case "TYPE": $this->Type = $value;break;
       case "WORKINGDIRECTORY": $this->WorkingDirectory = $value;break;
-      case "ARGUMENT": $this->Arguments .= $value;break; // Concatenate the arguments
+      case "ARGUMENT": $this->AddArgument($value);break; // Concatenate the arguments
       case "STDOUT": $this->StdOutput = $value;break;
       case "STDERR": $this->StdError = $value;break;
       case "EXITCONDITION": $this->ExitCondition = $value;break;
@@ -49,6 +54,12 @@ class BuildFailure
       }
     }
       
+  // Add an argument to the buildfailure
+  function AddArgument($argument)
+    {
+    $this->Arguments[]  = $argument;
+    }      
+      
   // Insert in the database (no update possible)
   function Insert()
     {
@@ -59,7 +70,6 @@ class BuildFailure
       }
     
     $workingDirectory = pdo_real_escape_string($this->WorkingDirectory);
-    $arguments = pdo_real_escape_string($this->Arguments);
     $stdOutput = pdo_real_escape_string($this->StdOutput);
     $stdError = pdo_real_escape_string($this->StdError);
     $exitCondition = pdo_real_escape_string($this->ExitCondition);
@@ -69,9 +79,9 @@ class BuildFailure
     $outputType = pdo_real_escape_string($this->OutputType);
     $sourceFile = pdo_real_escape_string($this->SourceFile);
      
-    $query = "INSERT INTO buildfailure (buildid,type,workingdirectory,arguments,stdoutput,stderror,exitcondition,
+    $query = "INSERT INTO buildfailure (buildid,type,workingdirectory,stdoutput,stderror,exitcondition,
               language,targetname,outputfile,outputtype,sourcefile)
-              VALUES (".qnum($this->BuildId).",".qnum($this->Type).",'$workingDirectory','$arguments',
+              VALUES (".qnum($this->BuildId).",".qnum($this->Type).",'$workingDirectory',
               '$stdOutput','$stdError',".qnum($exitCondition).",
               '$language','$targetName','$outputFile','$outputType','$sourceFile')";                     
     if(!pdo_query($query))
@@ -79,6 +89,30 @@ class BuildFailure
       add_last_sql_error("BuildFailure Insert");
       return false;
       }  
+   
+    $id = pdo_insert_id("buildfailure");
+   
+    // Insert the arguments
+    $query = "INSERT INTO buildfailureargument (buildfailureid,argument) VALUES ";
+
+   $i=0;
+    foreach($this->Arguments as $argument)
+      {
+      if($i>0)
+        {
+        $query .= ",";
+        }
+      $argument = pdo_real_escape_string($argument);    
+      $query .= "(".qnum($id).",'$argument')";   
+      $i++;
+      } 
+      
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("BuildFailure Insert");
+      return false;
+      }
+     
     return true;
     } // end insert
 }

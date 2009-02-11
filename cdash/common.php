@@ -1102,7 +1102,7 @@ function remove_build($buildid)
     
   pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderror WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM buildfailure WHERE buildid='$buildid'");
+  
   pdo_query("DELETE FROM buildinformation WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
@@ -1111,7 +1111,17 @@ function remove_build($buildid)
   pdo_query("DELETE FROM configureerrordiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM coveragesummarydiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM testdiff WHERE buildid='$buildid'");
-        
+  
+  // Remove the buildfailureargument
+  $buildfailure = pdo_query("SELECT id FROM buildfailure WHERE buildid='$buildid'");
+  while($buildfailure_array = pdo_fetch_array($buildfailure))
+    {
+    $buildfailureid = $buildfailure_array['id'];
+    pdo_query("DELETE FROM buildfailureargument WHERE buildfailureid='$buildfailureid'");
+    }
+  
+  pdo_query("DELETE FROM buildfailure WHERE buildid='$buildid'");      
+          
   // coverage file are kept unless they are shared
   $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
   while($coverage_array = pdo_fetch_array($coverage))

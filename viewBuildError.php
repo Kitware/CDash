@@ -148,7 +148,13 @@ $xml .= "</menu>";
     $xml .= add_XML_value("outputfile",$error_array["outputfile"]);
     $xml .= add_XML_value("outputtype",$error_array["outputtype"]);
     $xml .= add_XML_value("workingdirectory",$error_array["workingdirectory"]);
-    $xml .= add_XML_value("arguments",$error_array["arguments"]);
+    
+    $buildfailureid = $error_array["id"];
+    $arguments = pdo_query("SELECT argument FROM buildfailureargument WHERE buildfailureid='$buildfailureid' ORDER BY id ASC");
+    while($argument_array = pdo_fetch_array($arguments))
+      {
+      $xml .= add_XML_value("argument",$argument_array["argument"]);
+      }
     $xml .= add_XML_value("stderror",$error_array["stderror"]);
     $xml .= add_XML_value("stdoutput",$error_array["stdoutput"]);
     $xml .= add_XML_value("exitcondition",$error_array["exitcondition"]);

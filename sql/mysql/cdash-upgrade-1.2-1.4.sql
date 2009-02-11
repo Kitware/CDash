@@ -16,6 +16,14 @@ CREATE TABLE IF NOT EXISTS `buildfailure` (
 );
 
 
+CREATE TABLE IF NOT EXISTS `buildfailureargument` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `buildfailureid` bigint(20) NOT NULL,
+  `argument` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `buildfailureid` (`buildfailureid`)
+);
+
 CREATE TABLE IF NOT EXISTS `banner` (
   `projectid` int(11) NOT NULL,
   `text` varchar(500) NOT NULL,
@@ -116,6 +124,7 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
   KEY `subprojectid` (`subprojectid`)
 );
 
+
 ---
 --- Drop tables that only existed for a short time in
 --- intermediate svn updates of CDash 1.3
@@ -127,6 +136,11 @@ DROP TABLE IF EXISTS `label2coverage`;
 --- Place the alter table in reverse order to make sure the 
 --- new ones are executed correctly
 ---
+ALTER TABLE `buildfailure` CHANGE `exitcondition` `exitcondition` VARCHAR( 255 ) NOT NULL; 
+ALTER TABLE `buildfailure` CHANGE `language` `language` VARCHAR( 64 ) NOT NULL;
+ALTER TABLE `buildfailure` CHANGE `sourcefile` `sourcefile` VARCHAR( 512 ) NOT NULL;
+ALTER TABLE `buildfailure` DROP `arguments`;
+
 ALTER TABLE `configure` CHANGE `log` `log` MEDIUMTEXT NOT NULL 
 
 ALTER TABLE coverage ADD INDEX  ( covered );

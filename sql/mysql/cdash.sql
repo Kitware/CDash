@@ -750,23 +750,31 @@ CREATE TABLE `subproject2build` (
 );
 
 
+
 CREATE TABLE `buildfailure` (
   `id` bigint(20) NOT NULL auto_increment,
   `buildid` bigint(20) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `workingdirectory` varchar(255) NOT NULL,
-  `arguments` text NOT NULL,
   `stdoutput` text NOT NULL,
   `stderror` text NOT NULL,
-  `exitcondition` tinyint(4) NOT NULL,
-  `language` varchar(10) NOT NULL,
+  `exitcondition` varchar(255) NOT NULL,
+  `language` varchar(64) NOT NULL,
   `targetname` varchar(255) NOT NULL,
   `outputfile` varchar(255) NOT NULL,
   `outputtype` varchar(255) NOT NULL,
-  `sourcefile` varchar(255) NOT NULL,
+  `sourcefile` varchar(512) NOT NULL,
   PRIMARY KEY  (`id`)
 );
 
+
+CREATE TABLE `buildfailureargument` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `buildfailureid` bigint(20) NOT NULL,
+  `argument` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `buildfailureid` (`buildfailureid`)
+);
 
 --
 -- Change the table maximum size to be more than 4GB

@@ -181,12 +181,8 @@ class BuildHandler extends AbstractHandler
           $this->Error->WorkingDirectory .= $data;
           break;
         case 'ARGUMENT':
-          if(strlen($this->Error->Arguments)>0)
-            {
-            $this->Error->Arguments .= ' ';
-            } 
-          $this->Error->Arguments  .= $data;
-          break;
+           $this->Error->AddArgument($data);
+           break;
         }
       }  
     else if($parent == 'RESULT')
@@ -223,7 +219,7 @@ class BuildHandler extends AbstractHandler
     else if($element == 'PRECONTEXT') 
       {
       $this->Error->PreContext .= $data;
-      } 
+      }
     else if($element == 'POSTCONTEXT') 
       {
       $this->Error->PostContext .= $data;
