@@ -197,7 +197,10 @@ class CDashTestManager extends TestManager
        $reporter->paintUpdateStart();
        $execution_time = $this->__performSvnUpdate($reporter,$svnroot);
        // We put in minute the execution time of the svn update
-       $execution_time = round($execution_time / 60 , 3);
+       if(is_numeric($execution_time))
+         {
+         $execution_time = round($execution_time / 60 , 3);
+         }
        $reporter->paintUpdateEnd($execution_time);
        }
     }
@@ -218,9 +221,9 @@ class CDashTestManager extends TestManager
       $raw_output = $this->__performSvnCommand(`svn update $svnroot 2>&1 | grep revision`);
       if(strpos($raw_output[0],'revision') === false)
         {
-        $msg  = "svn update did not return the right standard output.\n";
-        $msg .= "svn update should not work on your repository\n";
-        die($msg);
+        $execution_time  = "Svn Error:\nsvn update did not return the right standard output.\n";
+        $execution_time .= "svn update should not work on your repository\n";
+        return $execution_time;
         }
       if(strpos($raw_output[0],'At revision') !== false)
         {

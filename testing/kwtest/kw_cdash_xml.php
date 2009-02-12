@@ -273,7 +273,7 @@ class CDashXmlReporter extends XmlReporter
    fwrite($this->_configurefile, $this->_getIndent(1));
    fwrite($this->_configurefile, "<EndDateTime>".date("M d G:i T")."</EndDateTime>\n");
    fwrite($this->_configurefile, $this->_getIndent(1));
-   fwrite($this->_configurefile, "<".$this->_namespace."EndConfigureTime>".time()."</EndConfigureTime\n>");
+   fwrite($this->_configurefile, "<".$this->_namespace."EndConfigureTime>".time()."</EndConfigureTime>\n");
    fwrite($this->_configurefile, $this->_getIndent(1));
    fwrite($this->_configurefile, "<".$this->_namespace."ElapsedMinutes>".$elapsedMinutes."</ElapsedMinutes>\n");
    fwrite($this->_configurefile, "<".$this->_namespace."/Configure>\n");
@@ -333,6 +333,13 @@ class CDashXmlReporter extends XmlReporter
     *     paint the end of the update.xml for CDash 
     */
     function paintUpdateEnd($elapsedMinutes){
+      $updatestatus = '';
+      if(!is_numeric($elapsedMinutes))
+        {
+        $updatestatus = -1;
+        $elapsedMinutes = 0;
+        // TODO: write the log error and update
+        }
       fwrite($this->_updatefile, $this->_getIndent(1));
       fwrite($this->_updatefile,"<".$this->_namespace."EndDateTime>".date("M d G:i T")."</EndDateTime>\n");
       fwrite($this->_updatefile, $this->_getIndent(1));
@@ -340,7 +347,7 @@ class CDashXmlReporter extends XmlReporter
       fwrite($this->_updatefile, $this->_getIndent(1));
       fwrite($this->_updatefile,"<".$this->_namespace."ElapsedMinutes>".$elapsedMinutes."</ElapsedMinutes>\n");
       fwrite($this->_updatefile, $this->_getIndent(1));
-      fwrite($this->_updatefile,"<".$this->_namespace."UpdateReturnStatus></UpdateReturnStatus>\n");
+      fwrite($this->_updatefile,"<".$this->_namespace."UpdateReturnStatus>$updatestatus</UpdateReturnStatus>\n");
       fwrite($this->_updatefile,"<".$this->_namespace."/Update>\n");
     }
     

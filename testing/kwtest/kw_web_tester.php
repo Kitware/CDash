@@ -58,14 +58,19 @@ class KWWebTestCase extends WebTestCase {
     if($browser->getResponseCode() == 200)
       {
       $content = $browser->getContent();
-      if($this->findString($content,'error'))
+      if($this->findString($content,' error</b>:'))
         {
         $this->assertNoText('error');
         $error = true;
         }
-      if($this->findString($content,'warning'))
+      if($this->findString($content,'Warning:'))
         {
-        $this->assertNoText('warning');
+        $this->assertNoText('Warning');
+        $error = true;
+        }
+      if($this->findString($content,'Notice:'))
+        {
+        $this->assertNoText('Notice');
         $error = true;
         }
       }

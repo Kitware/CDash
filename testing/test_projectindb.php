@@ -79,11 +79,7 @@ class PubProjectTestCase extends KWWebTestCase
   
   function createProjectTest4Db()
     {
-    $content = $this->connect($this->url);
-    if(!$content)
-      {
-      return;
-      }
+    $this->get($this->url);
     $this->clickLink('Login');
     $this->setField('login','simpletest@localhost');
     $this->setField('passwd','simpletest');
@@ -92,7 +88,7 @@ class PubProjectTestCase extends KWWebTestCase
     $this->setField('name','ProjectTest4Db');
     $this->setField('description','This is a project test for cdash');
     $this->setField('public','0');
-    $this->clickSubmit('Create Project');
+    return $this->clickSubmit('Create Project');
     }
   
 }
