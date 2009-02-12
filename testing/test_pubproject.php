@@ -40,7 +40,7 @@ class ProjectInDbTestCase extends KWWebTestCase
     $this->assertText('The project ProjectTest has been created successfully.');
     }
   
-    function testProjectInDatabase()
+    function testProjectTestInDatabase()
     {
     $query = "SELECT name,description,public FROM project WHERE name = 'ProjectTest'";
     $result = $this->db->query($query);

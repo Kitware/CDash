@@ -21,7 +21,7 @@ class PubProjectTestCase extends KWWebTestCase
    $this->db->setPassword($db['pwd']);
    }
 
-  function testProjectInDatabase()
+  function testProjectTest4DbInDatabase()
     {
     $this->createProjectTest4Db();
     $query = "SELECT name,description,public FROM project WHERE name = 'ProjectTest4Db'";
