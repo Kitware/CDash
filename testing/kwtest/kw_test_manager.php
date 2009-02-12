@@ -216,14 +216,20 @@ class CDashTestManager extends TestManager
       // We catch the current revision of the repository
       $currentRevision = str_replace('Revision: ','',$raw_output[0]);
       $raw_output = $this->__performSvnCommand(`svn update $svnroot 2>&1 | grep revision`);
+      if(strpos($raw_output[0],'revision') === false)
+        {
+        $msg  = "svn update did not return the right standard output.\n";
+        $msg .= "svn update should not work on your repository\n";
+        die($msg);
+        }
       if(strpos($raw_output[0],'At revision') !== false)
-       {
-       $time_end = (float) array_sum(explode(' ',microtime()));
-       $execution_time = $time_end - $time_start;
-       echo "Old revision of repository is: $currentRevision\nCurrent revision of repository is: $currentRevision\n";
-       echo "Project is up to date\n";
-       return $execution_time;
-       }
+        {
+        $time_end = (float) array_sum(explode(' ',microtime()));
+        $execution_time = $time_end - $time_start;
+        echo "Old revision of repository is: $currentRevision\nCurrent revision of repository is: $currentRevision\n";
+        echo "Project is up to date\n";
+        return $execution_time;
+        }
       $newRevision = str_replace('Updated to revision ','',$raw_output[0]);
       $newRevision = strtok($newRevision,'.');
       $raw_output = `svn log $svnroot -r $currentRevision:$newRevision -v --xml 2>&1`;
