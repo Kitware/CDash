@@ -217,7 +217,7 @@ class BuildHandler extends AbstractHandler
       }    
     else if($element == 'BUILDLOGLINE')
       {
-      $this->Error->Logline .= $data;
+      $this->Error->LogLine .= $data;
       }
     else if($element == 'TEXT')
       {
