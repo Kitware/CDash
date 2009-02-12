@@ -24,7 +24,7 @@ function filterdefinition_XML($key, $uitext, $type, $valuelist, $defaultvalue)
   $xml .= add_XML_value('uitext', $uitext);
   $xml .= add_XML_value('type', $type);
     // type == bool, enum, number, string, date
-    // (enum and date not implemented yet...)
+    // (enum not implemented yet...)
   $xml .= add_XML_value('valuelist', $valuelist);
   $xml .= add_XML_value('defaultvalue', $defaultvalue);
   $xml .= '</def>';
@@ -457,10 +457,7 @@ function get_filterdata_from_request()
 
       case 'label':
       {
-      //  $sql_field = "(SELECT )";
-        add_log(
-          'warning: label field not implemented yet...',
-          'get_filterdata_from_request');
+        $sql_field = "(SELECT text FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
       }
       break;
 
@@ -472,10 +469,7 @@ function get_filterdata_from_request()
 
       case 'subproject':
       {
-      //  $sql_field = "(SELECT )";
-        add_log(
-          'warning: subproject field not implemented yet...',
-          'get_filterdata_from_request');
+        $sql_field = "(SELECT name FROM subproject, subproject2build WHERE subproject2build.subprojectid=subproject.id AND subproject2build.buildid=b.id)";
       }
       break;
 
