@@ -46,56 +46,29 @@ Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:te
 
 <table width="100%">
 
-<xsl:if test="logline">
-<h3><a>Build Log line <xsl:value-of select="logline"/></a></h3>
+<xsl:if test="sourceline">
+<tr style="background-color: #b0c4de; font-weight: bold">
+<th colspan="2" align="left">
+<pre> </pre>
+</th>
+</tr>
 </xsl:if>
 
-<xsl:if test="sourceline>0">
-  <br/>
-  File: <b><xsl:value-of select="sourcefile"/></b>
-  Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
-  <a>
- <xsl:attribute name="href">
-  <xsl:value-of select="cvsurl"/>
- </xsl:attribute>
- CVS/SVN</a>
-</xsl:if>
-
-<xsl:if test="precontext">
-<tr>
-<th class="measurement"><nobr> Pre-Context </nobr></th>
-<td>
-<pre><xsl:value-of select="precontext"/></pre>
 <!--
-<textarea readonly="readonly" name="prectx" wrap="off" style="width: 100%" rows="3">
-<xsl:value-of select="precontext"/>
-</textarea>
+<div style="margin-left: 200px">
+<xsl:if test="sourceline>0">
+<xsl:value-of select="/cdash/errortypename"/> while building file <xsl:value-of select="sourcefile"/>
+at line <xsl:value-of select="sourceline"/>
+</xsl:if>
+<xsl:if test="sourceline=0">
+<xsl:value-of select="/cdash/errortypename"/>
+</xsl:if>
+</div>
 -->
-</td>
-</tr>
-</xsl:if>
-
-<xsl:if test="text">
-<tr>
-<th class="measurement"><nobr> Err/W </nobr></th>
-<td>
-<pre><xsl:value-of select="text"/></pre>
-</td>
-</tr>
-</xsl:if>
-
-<xsl:if test="postcontext">
-<tr>
-<th class="measurement"><nobr> Post </nobr></th>
-<td>
-<pre><xsl:value-of select="postcontext"/></pre>
-</td>
-</tr>
-</xsl:if>
 
 <xsl:if test="targetname">
-<tr colspan="2">
-<th colspan="2" style="width: 100%; background-color: #b0c4de; font-weight: bold">
+<tr style="background-color: #b0c4de; font-weight: bold">
+<th colspan="2">
   <xsl:value-of select="/cdash/errortypename"/> while building
   <code><xsl:value-of select="language"/></code>
   <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
@@ -107,7 +80,41 @@ Found <xsl:value-of select="count(cdash/errors/error)"/><xsl:text>&#x20;</xsl:te
 </tr>
 </xsl:if>
 
-<xsl:if test="string-length(sourcefile)>0">
+<xsl:if test="string-length(cvsurl) > 0">
+<tr>
+<th class="measurement"><nobr> CVS/SVN </nobr></th>
+<td>
+<a>
+  <xsl:attribute name="href">
+    <xsl:value-of select="cvsurl"/>
+  </xsl:attribute>
+  <xsl:value-of select="cvsurl"/>
+</a>
+</td>
+</tr>
+</xsl:if>
+
+<xsl:if test="logline">
+<tr>
+<th class="measurement"><nobr> Build Log Line </nobr></th>
+<td>
+<xsl:value-of select="logline"/>
+</td>
+</tr>
+</xsl:if>
+
+<xsl:if test="precontext or text or postcontext">
+<tr>
+<th class="measurement"><nobr> <xsl:value-of select="/cdash/errortypename"/> </nobr></th>
+<td>
+<pre><xsl:value-of select="precontext"/></pre>
+<b><pre><xsl:value-of select="text"/></pre></b>
+<pre><xsl:value-of select="postcontext"/></pre>
+</td>
+</tr>
+</xsl:if>
+
+<xsl:if test="string-length(sourcefile)>0 and targetname">
 <tr>
 <th class="measurement"><nobr>Source File</nobr></th><td><xsl:value-of select="sourcefile"/></td>
 </tr>
