@@ -681,6 +681,15 @@ CREATE TABLE `label2build` (
 );
 
 -- 
+-- Table structure for table `label2buildfailure`
+-- 
+CREATE TABLE `label2buildfailure` (
+  `labelid` bigint(20) NOT NULL,
+  `buildfailureid` bigint(20) NOT NULL,
+  PRIMARY KEY (`labelid`,`buildfailureid`)
+);
+
+-- 
 -- Table structure for table `label2coveragefile`
 -- 
 CREATE TABLE `label2coveragefile` (
