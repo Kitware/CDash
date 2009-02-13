@@ -23,6 +23,7 @@ class Label
   var $Text;
 
   var $BuildId;
+  var $BuildFailureId;
   var $CoverageFileId;
   var $DynamicAnalysisId;
   var $TestId;
@@ -103,6 +104,9 @@ class Label
     //
     $this->InsertAssociation($this->BuildId,
       'label2build', 'buildid');
+
+    $this->InsertAssociation($this->BuildFailureId,
+      'label2buildfailure', 'buildfailureid');
 
     $this->InsertAssociation($this->CoverageFileId,
       'label2coveragefile', 'coveragefileid');

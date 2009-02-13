@@ -111,7 +111,7 @@ class BuildHandler extends AbstractHandler
     parent::endElement($parser, $name);
 
     if($name == 'BUILD')
-      {    
+      {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
       $submit_time = gmdate(FMT_DATETIME);
@@ -128,10 +128,15 @@ class BuildHandler extends AbstractHandler
     else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE') 
       {
       $this->Build->AddError($this->Error);
-      } 
+      unset($this->Error);
+      }
     else if($name == 'LABEL')
       {
-      if(isset($this->Build))
+      if(isset($this->Error))
+        {
+        $this->Error->AddLabel($this->Label);
+        }
+      else if(isset($this->Build))
         {
         $this->Build->AddLabel($this->Label);
         }

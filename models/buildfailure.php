@@ -15,6 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+include_once('models/label.php');
+
 /** BuildFailure */
 class BuildFailure
 {
@@ -29,8 +31,9 @@ class BuildFailure
   var $TargetName;
   var $SourceFile;
   var $OutputFile;
-  var $OutputType;    
-  
+  var $OutputType;
+  var $Labels;
+
   function __construct()
     {
     $this->Arguments = array();
@@ -53,13 +56,43 @@ class BuildFailure
       case "OUTPUTTYPE": $this->OutputType = $value;break;
       }
     }
-      
+
+
+  function AddLabel($label)
+    {
+    if(!isset($this->Labels))
+      {
+      $this->Labels = array();
+      }
+
+    $this->Labels[] = $label;
+    }
+
+
   // Add an argument to the buildfailure
   function AddArgument($argument)
     {
     $this->Arguments[]  = $argument;
     }      
-      
+
+
+  function InsertLabelAssociations($id)
+    {
+    if($id)
+      {
+      foreach($this->Labels as $label)
+        {
+        $label->BuildFailureId = $id;
+        $label->Insert();
+        }
+      }
+    else
+      {
+      add_log('No BuildFailure id - cannot call $label->Insert...',
+        'BuildFailure::InsertLabelAssociations');
+      }
+    }
+
   // Insert in the database (no update possible)
   function Insert()
     {
@@ -106,13 +139,15 @@ class BuildFailure
       $query .= "(".qnum($id).",'$argument')";   
       $i++;
       } 
-      
+
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildFailure Insert");
       return false;
       }
-     
+
+    $this->InsertLabelAssociations($id);
+
     return true;
     } // end insert
 }
