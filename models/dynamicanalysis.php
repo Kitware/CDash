@@ -16,6 +16,7 @@
 
 =========================================================================*/
 include_once('models/dynamicanalysisdefect.php');
+include_once('models/label.php');
 
 class DynamicAnalysis
 {
@@ -28,15 +29,25 @@ class DynamicAnalysis
   var $Log;
   private $Defects;
   var $BuildId;
-  
+  var $Labels;
+
+
   /** Add a defect */
   function AddDefect($defect)
     {
     $defect->DynamicAnalysisId = $this->Id;
     $this->Defects[] = $defect;
     }
-  
-  /** Remove all the dynamic analysis associated with a buildid 
+
+
+  function AddLabel($label)
+    {
+    $label->DynamicAnalysisId = $this->Id;
+    $this->Labels[] = $label;
+    }
+
+
+  /** Remove all the dynamic analysis associated with a buildid
    *  Maybe should be in a controller */
   function RemoveAll()
     {
@@ -45,17 +56,17 @@ class DynamicAnalysis
       echo "DynamicAnalysis::RemoveAll BuildId not set";
       return false;
       } 
-    
+
     $query = "DELETE dynamicanalysisdefect,dynamicanalysis FROM dynamicanalysisdefect INNER JOIN dynamicanalysis 
               WHERE dynamicanalysis.buildid=".qnum($this->BuildId)."
-              AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid";                     
+              AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid";
     if(!pdo_query($query))
       {
       add_last_sql_error("DynamicAnalysis RemoveAll");
       return false;
       }
-    
-    $query = "DELETE FROM dynamicanalysis WHERE buildid=".qnum($this->BuildId);                     
+
+    $query = "DELETE FROM dynamicanalysis WHERE buildid=".qnum($this->BuildId);
     if(!pdo_query($query))
       {
       add_last_sql_error("DynamicAnalysis RemoveAll");
@@ -63,7 +74,26 @@ class DynamicAnalysis
       }
         
     }
-  
+
+
+  function InsertLabelAssociations()
+    {
+    if($this->Id)
+      {
+      foreach($this->Labels as $label)
+        {
+        $label->DynamicAnalysisId = $this->Id;
+        $label->Insert();
+        }
+      }
+    else
+      {
+      add_log('No DynamicAnalysis::Id - cannot call $label->Insert...',
+        'DynamicAnalysis::InsertLabelAssociations');
+      }
+    }
+
+
   // Insert the DynamicAnalysis
   function Insert()
     {
@@ -109,8 +139,11 @@ class DynamicAnalysis
         $defect->Insert();
         }
       }    
-      
-    return true;  
+
+    // Add the labels
+    $this->InsertLabelAssociations();
+
+    return true;
     } // end function insert
 }
 ?>

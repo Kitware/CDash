@@ -17,6 +17,7 @@
 =========================================================================*/
 require_once 'xml_handlers/abstract_handler.php';
 require_once('models/build.php');
+require_once('models/label.php');
 require_once('models/site.php');
 require_once('models/dynamicanalysis.php');
 
@@ -27,10 +28,12 @@ class DynamicAnalysisHandler extends AbstractHandler
   private $Checker;
   private $UpdateEndTime;
   private $BuildId;
-  
+
   private $DynamicAnalysis;
   private $DynamicAnalysisDefect;
-  
+  private $Label;
+
+
   /** Constructor */
   public function __construct($projectID)
     {
@@ -39,7 +42,8 @@ class DynamicAnalysisHandler extends AbstractHandler
     $this->Site = new Site();
     $this->UpdateEndTime = false; 
     }
-  
+
+
   /** Start element */
   public function startElement($parser, $name, $attributes)
     {
@@ -83,8 +87,13 @@ class DynamicAnalysisHandler extends AbstractHandler
       $this->DynamicAnalysisDefect = new DynamicAnalysisDefect();
       $this->DynamicAnalysisDefect->Type = $attributes['TYPE'];
       }
+    else if($name == 'LABEL')
+      {
+      $this->Label = new Label();
+      }
     } // end start element
-  
+
+
   /** Function endElement */
   public function endElement($parser, $name)
     {
@@ -136,13 +145,22 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->Build->UpdateEndTime($end_time);
         }
       }
+    else if($name == 'LABEL')
+      {
+      if(isset($this->DynamicAnalysis))
+        {
+        $this->DynamicAnalysis->AddLabel($this->Label);
+        }
+      }
     } // end endElement
-  
+
+
   /** Function Text */
   public function text($parser, $data)
     {
     $parent = $this->getParent();
     $element = $this->getElement();
+
     if($parent=='DYNAMICANALYSIS')
       {
       switch($element)
@@ -182,6 +200,10 @@ class DynamicAnalysisHandler extends AbstractHandler
         {
         $this->DynamicAnalysisDefect->Value .= $data;
         }
+      }
+    else if($element == 'LABEL')
+      {
+      $this->Label->SetText($data);
       }
     } // end text function
 }
