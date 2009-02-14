@@ -109,19 +109,20 @@ class Test
     }
 
 
-  function InsertLabelAssociations()
+  function InsertLabelAssociations($buildid)
     {
-    if($this->Id)
+    if($this->Id && $buildid)
       {
       foreach($this->Labels as $label)
         {
         $label->TestId = $this->Id;
+        $label->TestBuildId = $buildid;
         $label->Insert();
         }
       }
     else
       {
-      add_log('No Test::Id - cannot call $label->Insert...',
+      add_log('No Test::Id or buildid - cannot call $label->Insert...',
         'Test::InsertLabelAssociations');
       }
     }
@@ -146,14 +147,6 @@ class Test
     {
     if($this->Exists())
       {
-      // Even if the test already exists, insert the label associations since
-      // this run may include a different set of labels than prior runs:
-      //
-      $this->InsertLabelAssociations();
-
-      // But then short-circuit the rest of this method because the test is
-      // already in the database.
-      //
       return true;
       }
 
@@ -178,25 +171,22 @@ class Test
       add_last_sql_error("Test Insert");
       return false;
       }  
-    
+
     $this->Id = pdo_insert_id("test");
-    
+
     // Add the measurements
     foreach($this->Measurements as $measurement)
       {
       $measurement->TestId = $this->Id;
       $measurement->Insert();
       }
-    
+
     // Add the images
     foreach($this->Images as $image)
       {
       $image->TestId = $this->Id;
       $image->Insert();
       }
-
-    // Add the labels
-    $this->InsertLabelAssociations();
 
     return true;
     }  // end Insert 

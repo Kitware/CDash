@@ -156,6 +156,12 @@ $xml .= "</menu>";
       $xml .= add_XML_value("argument",$argument_array["argument"]);
       }
 
+    $xml .= get_labels_xml_from_query_results(
+      "SELECT text FROM label, label2buildfailure WHERE ".
+      "label.id=label2buildfailure.labelid AND ".
+      "label2buildfailure.buildfailureid='$buildfailureid' ".
+      "ORDER BY text ASC");
+
     $xml .= add_XML_value("stderror",$error_array["stderror"]);
     $rows = substr_count($error_array["stderror"],"\n")+1;
     if ($rows > 10)

@@ -117,12 +117,12 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 // Build
 $xml .= "<build>";
 $build = pdo_query("SELECT starttime,projectid,siteid,type,name FROM build WHERE id='$buildid'");
-$build_array = pdo_fetch_array($build); 
+$build_array = pdo_fetch_array($build);
 $siteid = $build_array["siteid"];
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $xml .= add_XML_value("site",$site_array["name"]);
 $xml .= add_XML_value("buildname",$build_array["name"]);
-$xml .= add_XML_value("buildid",$build_array["id"]);
+$xml .= add_XML_value("buildid",$buildid);
 $xml .= add_XML_value("buildtime",$build_array["starttime"]);  
 $xml .= "</build>";
   

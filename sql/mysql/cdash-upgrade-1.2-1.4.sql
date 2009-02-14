@@ -46,6 +46,18 @@ CREATE TABLE IF NOT EXISTS `label` (
 );
 
 
+---
+--- Drop tables that only existed for a short time
+--- in previous svn updates of CDash 1.3
+---
+
+DROP TABLE IF EXISTS `label2configure`;
+  --- table unnecessary: configure identified by buildid
+
+DROP TABLE IF EXISTS `label2coverage`;
+  --- table renamed label2coveragefile
+
+
 -- 
 -- Table structure for table `label2build`
 -- 
@@ -58,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `label2build` (
 -- 
 -- Table structure for table `label2buildfailure`
 -- 
-CREATE TABLE `label2buildfailure` (
+CREATE TABLE IF NOT EXISTS `label2buildfailure` (
   `labelid` bigint(20) NOT NULL,
   `buildfailureid` bigint(20) NOT NULL,
   PRIMARY KEY (`labelid`,`buildfailureid`)
@@ -69,8 +81,9 @@ CREATE TABLE `label2buildfailure` (
 -- 
 CREATE TABLE IF NOT EXISTS `label2coveragefile` (
   `labelid` bigint(20) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
   `coveragefileid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`coveragefileid`)
+  PRIMARY KEY (`labelid`,`buildid`,`coveragefileid`)
 );
 
 -- 
@@ -82,14 +95,14 @@ CREATE TABLE IF NOT EXISTS `label2dynamicanalysis` (
   PRIMARY KEY (`labelid`,`dynamicanalysisid`)
 );
 
-
 -- 
 -- Table structure for table `label2test`
 -- 
 CREATE TABLE IF NOT EXISTS `label2test` (
   `labelid` bigint(20) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
   `testid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`testid`)
+  PRIMARY KEY (`labelid`,`buildid`,`testid`)
 );
 
 -- 
@@ -133,13 +146,6 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
   KEY `subprojectid` (`subprojectid`)
 );
 
-
----
---- Drop tables that only existed for a short time in
---- intermediate svn updates of CDash 1.3
----
-DROP TABLE IF EXISTS `label2configure`;
-DROP TABLE IF EXISTS `label2coverage`;
 
 ---
 --- Place the alter table in reverse order to make sure the 

@@ -2396,4 +2396,31 @@ function getByteValueWithExtension($value)
       }    
     return round($value,2).$valueext;
     }
+
+
+/** Given a query that returns a set of rows,
+  * each of which contains a 'text' field,
+  * construct a chunk of <labels><label>....
+  * style xml
+  */
+function get_labels_xml_from_query_results($qry)
+  {
+  $xml = '';
+
+  $rows = pdo_all_rows_query($qry);
+
+  if (count($rows)>0)
+    {
+    $xml .= '<labels>';
+    foreach($rows as $row)
+      {
+      $xml .= add_XML_value('label', $row['text']);
+      }
+    $xml .= '</labels>';
+    }
+
+  return $xml;
+  }
+
+
 ?>

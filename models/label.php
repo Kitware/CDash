@@ -25,8 +25,10 @@ class Label
   var $BuildId;
   var $BuildFailureId;
   var $CoverageFileId;
+  var $CoverageFileBuildId;
   var $DynamicAnalysisId;
   var $TestId;
+  var $TestBuildId;
   var $UpdateFileKey;
 
 
@@ -36,34 +38,66 @@ class Label
     }
 
 
-  function InsertAssociation($value, $table, $field)
+  function InsertAssociation($table, $field1, $value1, $field2, $value2)
     {
-    if(!empty($value))
+    if(!empty($value1))
       {
-      $v = pdo_get_field_value(
-        "SELECT $field FROM $table WHERE labelid='$this->Id' ".
-        "AND $field='$value'", "$field", 0);
-
-      // Only do the INSERT if it's not already there:
-      //
-      if (0 == $v)
+      if(!empty($value2))
         {
-        $query = "INSERT INTO $table (labelid, $field) ".
-          "VALUES ('$this->Id', '$value')";
+        $v = pdo_get_field_value(
+          "SELECT $field1 FROM $table WHERE labelid='$this->Id' ".
+          "AND $field1='$value1' AND $field2='$value2'", "$field1", 0);
 
-        //add_log("associating labelid='$this->Id' with $field='$value'",
-        //  'Label::InsertAssociation');
-
-        if(!pdo_query($query))
+        // Only do the INSERT if it's not already there:
+        //
+        if (0 == $v)
           {
-          add_last_sql_error("Label::InsertAssociation");
+          $query = "INSERT INTO $table (labelid, $field1, $field2) ".
+            "VALUES ('$this->Id', '$value1', '$value2')";
+
+          //add_log("associating labelid='$this->Id' with " .
+          //  "$field1='$value1' and $field2='$value2'",
+          //  'Label::InsertAssociation');
+
+          if(!pdo_query($query))
+            {
+            add_last_sql_error("Label::InsertAssociation");
+            }
           }
+          //else
+          //  {
+          //  add_log("* labelid='$this->Id' already associated with $field1=" .
+          //    "'$value1' and $field2='$value2' v='$v'",
+          //    'Label::InsertAssociation');
+          //  }
         }
-      //else
-      //  {
-      //  add_log("* labelid='$this->Id' already associated with $field=" .
-      //    "'$value' v='$v'", 'Label::InsertAssociation');
-      //  }
+      else
+        {
+        $v = pdo_get_field_value(
+          "SELECT $field1 FROM $table WHERE labelid='$this->Id' ".
+          "AND $field1='$value1'", "$field1", 0);
+
+        // Only do the INSERT if it's not already there:
+        //
+        if (0 == $v)
+          {
+          $query = "INSERT INTO $table (labelid, $field1) ".
+            "VALUES ('$this->Id', '$value1')";
+
+          //add_log("associating labelid='$this->Id' with $field1='$value1'",
+          //  'Label::InsertAssociation');
+
+          if(!pdo_query($query))
+            {
+            add_last_sql_error("Label::InsertAssociation");
+            }
+          }
+          //else
+          //  {
+          //  add_log("* labelid='$this->Id' already associated with $field1=" .
+          //    "'$value1' v='$v'", 'Label::InsertAssociation');
+          //  }
+        }
       }
     }
 
@@ -102,20 +136,22 @@ class Label
     // established by callers. (If coming from test.php, for example, TestId
     // will be set, but none of the others will. Similarly for other callers.)
     //
-    $this->InsertAssociation($this->BuildId,
-      'label2build', 'buildid');
+    $this->InsertAssociation('label2build',
+      'buildid', $this->BuildId);
 
-    $this->InsertAssociation($this->BuildFailureId,
-      'label2buildfailure', 'buildfailureid');
+    $this->InsertAssociation('label2buildfailure',
+      'buildfailureid', $this->BuildFailureId);
 
-    $this->InsertAssociation($this->CoverageFileId,
-      'label2coveragefile', 'coveragefileid');
+    $this->InsertAssociation('label2coveragefile',
+      'buildid', $this->CoverageFileBuildId,
+      'coveragefileid', $this->CoverageFileId);
 
-    $this->InsertAssociation($this->DynamicAnalysisId,
-      'label2dynamicanalysis', 'dynamicanalysisid');
+    $this->InsertAssociation('label2dynamicanalysis',
+      'dynamicanalysisid', $this->DynamicAnalysisId);
 
-    $this->InsertAssociation($this->TestId,
-      'label2test', 'testid');
+    $this->InsertAssociation('label2test',
+      'buildid', $this->TestBuildId,
+      'testid', $this->TestId);
 
     // TODO: Implement this:
     //

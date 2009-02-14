@@ -46,12 +46,12 @@ function generate_index_table()
     $xml .= add_XML_value("text",$text);
     $xml .= "</banner>";
     }
-    
+
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
-  
+
   // Check if the database is up to date
-  if(!pdo_query("SELECT labelid FROM label2buildfailure LIMIT 1"))
+  if(!pdo_query("SELECT buildid FROM label2coveragefile LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration/CDash maintenance panel of CDash.</upgradewarning>";

@@ -173,6 +173,9 @@
         </th>
       </xsl:if> 
       
+      <xsl:if test="count(//labels/label) > 0">
+        <th>Labels</th>
+      </xsl:if> 
    </tr>
    
    <xsl:for-each select="cdash/coveragefile">
@@ -284,6 +287,17 @@
        UNTESTED
        </xsl:if>
      </td>
+     </xsl:if>
+
+     <xsl:if test="count(//labels/label) > 0">
+      <td align="left" class="nob">
+        <xsl:for-each select="labels/label">
+          <xsl:if test="position() > 1">,
+          <xsl:text disable-output-escaping="yes"> </xsl:text>
+          </xsl:if>
+          <nobr><xsl:value-of select="."/></nobr>
+        </xsl:for-each>
+      </td>
      </xsl:if>
 
    </tr>

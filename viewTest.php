@@ -243,7 +243,17 @@ while($row = pdo_fetch_array($result))
     {
     $numTimeFailed++;   
     }
-    
+
+  $testid = $row['id'];
+
+  $xml .= get_labels_xml_from_query_results(
+    "SELECT text FROM label, label2test WHERE ".
+    "label.id=label2test.labelid AND ".
+    "label2test.testid='$testid' AND ".
+    "label2test.buildid='$buildid' ".
+    "ORDER BY text ASC"
+    );
+
   $xml .= "</test>\n";
   }
 $xml .= "</tests>\n";

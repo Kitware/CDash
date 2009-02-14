@@ -50,14 +50,15 @@
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Uninitialized Memory Read<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Potential Memory Leak<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Uninitialized Memory Conditional<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+      <th>Labels</th>
   </tr>
-   
+
    <xsl:for-each select="cdash/dynamicanalysis">
    <tr align="center">
    <xsl:attribute name="bgcolor"><xsl:value-of select="bgcolor"/></xsl:attribute>
       <td align="left"><a>
       <xsl:attribute name="href">viewDynamicAnalysisFile.php?id=<xsl:value-of select="id"/></xsl:attribute>
-      <xsl:value-of select="filename"/>
+      <xsl:value-of select="name"/>
       </a></td>
       <td>
       <xsl:attribute name="class">
@@ -116,8 +117,18 @@
       </xsl:attribute>
       <xsl:value-of select="Uninitialized_Memory_Conditional"/>
       </td>
-      
-   </tr>
+
+      <!-- Labels -->
+      <td>
+        <xsl:for-each select="labels/label">
+          <xsl:if test="position() > 1">,
+          <xsl:text disable-output-escaping="yes"> </xsl:text>
+          </xsl:if>
+          <nobr><xsl:value-of select="."/></nobr>
+        </xsl:for-each>
+      </td>
+
+    </tr>
    </xsl:for-each>
 </table>
 

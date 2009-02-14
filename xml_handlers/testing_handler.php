@@ -147,6 +147,8 @@ class TestingHandler extends AbstractHandler
         $this->BuildTest->TestId = $this->Test->Id;
         $this->BuildTest->BuildId = $this->BuildId;
         $this->BuildTest->Insert();
+
+        $this->Test->InsertLabelAssociations($this->BuildId);
         }
       }
     else if($name == 'LABEL' && $parent == 'LABELS')

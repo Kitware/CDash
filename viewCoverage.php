@@ -171,7 +171,7 @@ $xml .= "</menu>";
       {
       $nsatisfactorycoveredfiles++;
       }
-      
+
     $covfile_array[] = $covfile;
     }
     
@@ -245,6 +245,16 @@ $xml .= "</menu>";
     $xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
     $xml .= add_XML_value("functionsuntested",@$covfile["functionsuntested"]);
     $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);    
+
+    $fileid = $covfile['fileid'];
+
+    $xml .= get_labels_xml_from_query_results(
+      "SELECT text FROM label, label2coveragefile WHERE ".
+      "label.id=label2coveragefile.labelid AND ".
+      "label2coveragefile.coveragefileid='$fileid' AND ".
+      "label2coveragefile.buildid='$buildid' ".
+      "ORDER BY text ASC");
+
     $xml .= "</coveragefile>";
     $i++;
     }

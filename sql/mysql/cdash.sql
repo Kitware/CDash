@@ -694,8 +694,9 @@ CREATE TABLE `label2buildfailure` (
 -- 
 CREATE TABLE `label2coveragefile` (
   `labelid` bigint(20) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
   `coveragefileid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`coveragefileid`)
+  PRIMARY KEY (`labelid`,`buildid`,`coveragefileid`)
 );
 
 -- 
@@ -713,8 +714,9 @@ CREATE TABLE `label2dynamicanalysis` (
 -- 
 CREATE TABLE `label2test` (
   `labelid` bigint(20) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
   `testid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`testid`)
+  PRIMARY KEY (`labelid`,`buildid`,`testid`)
 );
 
 -- 

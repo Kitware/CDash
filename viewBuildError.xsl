@@ -120,6 +120,23 @@ at line <xsl:value-of select="sourceline"/>
 </tr>
 </xsl:if>
 
+<xsl:if test="labels/label">
+<tr>
+<th class="measurement">
+<xsl:if test="count(labels/label) = 1"><nobr>Label</nobr></xsl:if>
+<xsl:if test="count(labels/label) > 1"><nobr>Labels</nobr></xsl:if>
+</th>
+<td>
+<xsl:for-each select="labels/label">
+<xsl:if test="position() > 1">,
+<xsl:text disable-output-escaping="yes"> </xsl:text>
+</xsl:if>
+<nobr><xsl:value-of select="."/></nobr>
+</xsl:for-each>
+</td>
+</tr>
+</xsl:if>
+
 <xsl:if test="argument">
 <tr>
 <th class="measurement" style="width: 1%">Command</th>

@@ -87,7 +87,7 @@ $xml .= "</menu>";
   $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("buildname",$build_array["name"]);
-  $xml .= add_XML_value("buildid",$build_array["id"]);
+  $xml .= add_XML_value("buildid",$buildid);
   $xml .= add_XML_value("buildtime",$build_array["starttime"]);  
   $xml .= "</build>";
   
@@ -103,7 +103,7 @@ $xml .= "</menu>";
       }
     $i++;
     $xml .= add_XML_value("status",ucfirst($dynamicanalysis_array["status"]));
-    $xml .= add_XML_value("filename",$dynamicanalysis_array["name"]);
+    $xml .= add_XML_value("name",$dynamicanalysis_array["name"]);
     $xml .= add_XML_value("id",$dynamicanalysis_array["id"]);
     
     $dynid = $dynamicanalysis_array["id"];
@@ -112,7 +112,14 @@ $xml .= "</menu>";
       {
       $xml .= add_XML_value(str_replace(" ","_",$defects_array["type"]),$defects_array["value"]);
       }
-    
+
+    $xml .= get_labels_xml_from_query_results(
+      "SELECT text FROM label, label2dynamicanalysis WHERE ".
+      "label.id=label2dynamicanalysis.labelid AND ".
+      "label2dynamicanalysis.dynamicanalysisid='$dynid' ".
+      "ORDER BY text ASC"
+      );
+
     $xml .= "</dynamicanalysis>";
     }
     
