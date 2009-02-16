@@ -259,7 +259,21 @@ class SubProject
       return false;
       }  
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    $n1 = $project_array[0];
+
+    $qry = "SELECT count(*) FROM
+        (SELECT build.id FROM subproject2build,build,buildfailure
+         WHERE  buildfailure.buildid=build.id AND
+         subprojectid=".qnum($this->Id)." AND
+         subproject2build.buildid=build.id AND
+         build.starttime>'$startUTCdate' AND
+         build.starttime<='$endUTCdate' AND
+         buildfailure.type='1'
+         GROUP BY build.id) AS c";
+
+    $n2 = pdo_get_field_value($qry, 'count(*)', 0);
+
+    return $n1 + $n2;
     }
   
   /** Get the number of error builds given a date range */
@@ -284,7 +298,21 @@ class SubProject
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    $n1 = $project_array[0];
+
+    $qry = "SELECT count(*) FROM
+        (SELECT build.id FROM subproject2build,build,buildfailure
+         WHERE  buildfailure.buildid=build.id AND
+         subprojectid=".qnum($this->Id)." AND
+         subproject2build.buildid=build.id AND
+         build.starttime>'$startUTCdate' AND
+         build.starttime<='$endUTCdate' AND
+         buildfailure.type='0'
+         GROUP BY build.id) AS c";
+
+    $n2 = pdo_get_field_value($qry, 'count(*)', 0);
+
+    return $n1 + $n2;
     }
       
   /** Get the number of failing builds given a date range */
@@ -297,13 +325,14 @@ class SubProject
       }
   
   
-    $project = pdo_query("SELECT count(*) FROM (SELECT count(be.buildid) as c FROM subproject2build,build 
-                           LEFT JOIN builderror as be ON be.buildid=build.id 
+    $project = pdo_query("SELECT count(*) FROM (SELECT count(be.buildid) as c,count(bf.buildid) as cf FROM subproject2build,build 
+                          LEFT JOIN builderror as be ON be.buildid=build.id 
+                          LEFT JOIN buildfailure as bf ON bf.buildid=build.id 
                           WHERE subprojectid=".qnum($this->Id).
                          " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate'
                           GROUP BY build.id
-                          ) as t WHERE t.c=0");
+                          ) as t WHERE t.c=0 AND t.cf=0");
   
     if(!$project)
       {
