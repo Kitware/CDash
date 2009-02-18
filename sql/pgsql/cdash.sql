@@ -51,7 +51,7 @@ CREATE TABLE "buildgroupposition" (
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
 );
 CREATE INDEX "buildgroupposition_buildgroupid_idx" on "buildgroupposition" ("buildgroupid");
-CREATE INDEX "buildgroupposition_projectid_idx" on "buildgroupposition" ("projectid");
+CREATE INDEX "buildgroupposition_endtime_idx" on "buildgroupposition" ("endtime");
 CREATE INDEX "buildgroupposition_starttime_idx" on "buildgroupposition" ("starttime");
 CREATE INDEX "buildgroupposition_position_idx" on "buildgroupposition" ("position");
 
@@ -605,58 +605,70 @@ CREATE INDEX "coveragefile2user_coveragefileid_idx" on "coveragefile2user" ("fil
 CREATE INDEX "coveragefile2user_userid_idx" on "coveragefile2user" ("userid");
 
 --
+-- Table: label
+--
+CREATE TABLE "label" (
+  "id" bigserial NOT NULL,
+  "text" character varying(255) NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "label_text_con" UNIQUE ("text")
+);
+
+--
 -- Table: label2build
 --
 CREATE TABLE "label2build" (
   "labelid" bigint NOT NULL,
-  "buildid" bigint NOT NULL
+  "buildid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildid")
 );
-CREATE INDEX "label2build_buildid_idx" on "label2build" ("labelid", "buildid");
 
 --
--- Table: label2configure
+-- Table: label2buildfailure
 --
-CREATE TABLE "label2configure" (
+CREATE TABLE "label2buildfailure" (
   "labelid" bigint NOT NULL,
-  "configureid" bigint NOT NULL
+  "buildfailureid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildfailureid")
 );
-CREATE INDEX "label2configure_configureid_idx" on "label2configure" ("labelid", "configureid");
 
 --
--- Table: label2coverage
+-- Table: label2coveragefile
 --
-CREATE TABLE "label2coverage" (
+CREATE TABLE "label2coveragefile" (
   "labelid" bigint NOT NULL,
-  "coverageid" bigint NOT NULL
+  "buildid" bigint NOT NULL,
+  "coveragefileid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildid", "coveragefileid")
 );
-CREATE INDEX "label2coverage_labelid_idx" on "label2coverage" ("labelid", "coverageid");
 
 --
 -- Table: label2dynamicanalysis
 --
 CREATE TABLE "label2dynamicanalysis" (
   "labelid" bigint NOT NULL,
-  "dynamicanalysisid" bigint NOT NULL
+  "dynamicanalysisid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "dynamicanalysisid")
 );
-CREATE INDEX "label2dynamicanalysis_dynamicanalysisid_idx" on "label2dynamicanalysis" ("labelid", "dynamicanalysisid");
 
 --
 -- Table: label2test
 --
 CREATE TABLE "label2test" (
   "labelid" bigint NOT NULL,
-  "testid" bigint NOT NULL
+  "buildid" bigint NOT NULL,
+  "testid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildid", "testid")
 );
-CREATE INDEX "label2test_labelid_idx" on "label2test" ("labelid", "testid");
 
 --
 -- Table: label2update
 --
 CREATE TABLE "label2update" (
   "labelid" bigint NOT NULL,
-  "updateid" bigint NOT NULL
+  "updateid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "updateid")
 );
-CREATE INDEX "label2update_labelid_idx" on "label2update" ("labelid", "updateid");
 
 --
 -- Table: subproject
@@ -692,6 +704,36 @@ CREATE TABLE "subproject2build" (
   PRIMARY KEY ("buildid")
 );
 CREATE INDEX "subproject2build_subprojectid_idx" on "subproject2build" ("subprojectid");
+
+--
+-- Table: buildfailure
+--
+CREATE TABLE "buildfailure" (
+  "id" bigserial NOT NULL,
+  "buildid" bigint NOT NULL,
+  "type" smallint NOT NULL,
+  "workingdirectory" character varying(255) NOT NULL,
+  "stdoutput" text NOT NULL,
+  "stderror" text NOT NULL,
+  "exitcondition" character varying(255) NOT NULL,
+  "language" character varying(64) NOT NULL,
+  "targetname" character varying(255) NOT NULL,
+  "outputfile" character varying(255) NOT NULL,
+  "outputtype" character varying(255) NOT NULL,
+  "sourcefile" character varying(512) NOT NULL,
+  PRIMARY KEY ("id")
+);
+
+--
+-- Table: buildfailureargument
+--
+CREATE TABLE "buildfailureargument" (
+  "id" bigserial NOT NULL,
+  "buildfailureid" bigint NOT NULL,
+  "argument" character varying(255) NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "buildfailureargument_buildfailureid_idx" on "buildfailureargument" ("buildfailureid");
 
 
 --

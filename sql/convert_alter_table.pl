@@ -58,6 +58,7 @@ sub alter_column_type
 while(<>) {
     next if !/^ALTER TABLE/;
     chop;
+    s/`//g;
 
     if(/^ALTER TABLE\s+(\w+)\s+ADD\s+INDEX\s*\(\s*(\w+)\s*\)\s*;\s*$/) {
         $table = $1;
@@ -94,7 +95,13 @@ while(<>) {
         print "ALTER TABLE \"$table\" ADD PRIMARY KEY (\"$column\");\n";
     }
     elsif(/^ALTER TABLE\s+(\w+)\s+DROP\s+PRIMARY\s+KEY\s*;\s*$/) {
+        $table = $1;
         print "ALTER TABLE \"$table\" DROP CONSTRAINT \"${column}_pkey\";\n";
+    }
+    elsif(/^ALTER TABLE\s+(\w+)\s+DROP\s+(.*)\s*;\s*$/) {
+        $table = $1;
+        $column = $2;
+        print "ALTER TABLE \"$table\" DROP COLUMN \"$column\";\n";
     }
     else {
         print stderr "can't convert \"$_\"\n";

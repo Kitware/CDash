@@ -156,7 +156,7 @@ ALTER TABLE `buildfailure` CHANGE `language` `language` VARCHAR( 64 ) NOT NULL;
 ALTER TABLE `buildfailure` CHANGE `sourcefile` `sourcefile` VARCHAR( 512 ) NOT NULL;
 ALTER TABLE `buildfailure` DROP `arguments`;
 
-ALTER TABLE `configure` CHANGE `log` `log` MEDIUMTEXT NOT NULL 
+ALTER TABLE `configure` CHANGE `log` `log` MEDIUMTEXT NOT NULL;
 
 ALTER TABLE coverage ADD INDEX  ( covered );
 

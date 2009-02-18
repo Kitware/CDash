@@ -1,4 +1,35 @@
 --
+-- Table: buildfailure
+--
+CREATE TABLE "buildfailure" (
+  "id" bigserial NOT NULL,
+  "buildid" bigint NOT NULL,
+  "type" smallint NOT NULL,
+  "workingdirectory" character varying(255) NOT NULL,
+  "arguments" text NOT NULL,
+  "stdoutput" text NOT NULL,
+  "stderror" text NOT NULL,
+  "exitcondition" smallint NOT NULL,
+  "language" character varying(10) NOT NULL,
+  "targetname" character varying(255) NOT NULL,
+  "outputfile" character varying(255) NOT NULL,
+  "outputtype" character varying(255) NOT NULL,
+  "sourcefile" character varying(255) NOT NULL,
+  PRIMARY KEY ("id")
+);
+
+--
+-- Table: buildfailureargument
+--
+CREATE TABLE "buildfailureargument" (
+  "id" bigserial NOT NULL,
+  "buildfailureid" bigint NOT NULL,
+  "argument" character varying(255) NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "buildfailureargument_buildfailureid_idx" on "buildfailureargument" ("buildfailureid");
+
+--
 -- Table: banner
 --
 CREATE TABLE "banner" (
@@ -24,64 +55,65 @@ CREATE INDEX "coveragefile2user_userid_idx" on "coveragefile2user" ("userid");
 CREATE TABLE "label" (
   "id" bigserial NOT NULL,
   "text" character varying(255) NOT NULL,
-  PRIMARY KEY ("id")
+  PRIMARY KEY ("id"),
+  CONSTRAINT "label_text_con" UNIQUE ("text")
 );
-CREATE INDEX "label_text_idx" on "label" ("text");
 
 --
 -- Table: label2build
 --
 CREATE TABLE "label2build" (
   "labelid" bigint NOT NULL,
-  "buildid" bigint NOT NULL
+  "buildid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildid")
 );
-CREATE INDEX "label2build_buildid_idx" on "label2build" ("labelid", "buildid");
 
 --
--- Table: label2configure
+-- Table: label2buildfailure
 --
-CREATE TABLE "label2configure" (
+CREATE TABLE "label2buildfailure" (
   "labelid" bigint NOT NULL,
-  "configureid" bigint NOT NULL
+  "buildfailureid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildfailureid")
 );
-CREATE INDEX "label2configure_configureid_idx" on "label2configure" ("labelid", "configureid");
 
 --
--- Table: label2coverage
+-- Table: label2coveragefile
 --
-CREATE TABLE "label2coverage" (
+CREATE TABLE "label2coveragefile" (
   "labelid" bigint NOT NULL,
-  "coverageid" bigint NOT NULL
+  "buildid" bigint NOT NULL,
+  "coveragefileid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildid", "coveragefileid")
 );
-CREATE INDEX "label2coverage_labelid_idx" on "label2coverage" ("labelid", "coverageid");
 
 --
 -- Table: label2dynamicanalysis
 --
 CREATE TABLE "label2dynamicanalysis" (
   "labelid" bigint NOT NULL,
-  "dynamicanalysisid" bigint NOT NULL
+  "dynamicanalysisid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "dynamicanalysisid")
 );
-CREATE INDEX "label2dynamicanalysis_dynamicanalysisid_idx" on "label2dynamicanalysis" ("labelid", "dynamicanalysisid");
 
 --
 -- Table: label2test
 --
 CREATE TABLE "label2test" (
   "labelid" bigint NOT NULL,
-  "testid" bigint NOT NULL
+  "buildid" bigint NOT NULL,
+  "testid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildid", "testid")
 );
-CREATE INDEX "label2test_labelid_idx" on "label2test" ("labelid", "testid");
 
 --
 -- Table: label2update
 --
 CREATE TABLE "label2update" (
   "labelid" bigint NOT NULL,
-  "updateid" bigint NOT NULL
+  "updateid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "updateid")
 );
-CREATE INDEX "label2update_labelid_idx" on "label2update" ("labelid");
-CREATE INDEX "label2update_updateid_idx" on "label2update" ("updateid");
 
 --
 -- Table: subproject
@@ -118,6 +150,15 @@ CREATE TABLE "subproject2build" (
 );
 CREATE INDEX "subproject2build_subprojectid_idx" on "subproject2build" ("subprojectid");
 
+ALTER TABLE "buildfailure" ALTER COLUMN "exitcondition" TYPE VARCHAR( 255 );
+ALTER TABLE "buildfailure" ALTER COLUMN "exitcondition" SET NOT NULL;
+ALTER TABLE "buildfailure" ALTER COLUMN "language" TYPE VARCHAR( 64 );
+ALTER TABLE "buildfailure" ALTER COLUMN "language" SET NOT NULL;
+ALTER TABLE "buildfailure" ALTER COLUMN "sourcefile" TYPE VARCHAR( 512 );
+ALTER TABLE "buildfailure" ALTER COLUMN "sourcefile" SET NOT NULL;
+ALTER TABLE "buildfailure" DROP COLUMN "arguments";
+ALTER TABLE "configure" ALTER COLUMN "log" TYPE MEDIUMTEXT;
+ALTER TABLE "configure" ALTER COLUMN "log" SET NOT NULL;
 CREATE INDEX "coverage_covered_idx" ON "coverage" ("covered");
 CREATE INDEX "build2grouprule_starttime_idx" ON "build2grouprule" ("starttime");
 CREATE INDEX "build2grouprule_endtime_idx" ON "build2grouprule" ("endtime");
@@ -170,7 +211,7 @@ ALTER SEQUENCE "dailyupdate_id_seq" OWNED BY "dailyupdate"."id";
 ALTER TABLE "dynamicanalysisdefect" ALTER COLUMN "value" TYPE INT;
 ALTER TABLE "dynamicanalysisdefect" ALTER COLUMN "value" SET NOT NULL;
 ALTER TABLE "dynamicanalysisdefect" ALTER COLUMN "value" SET DEFAULT 0;
-ALTER TABLE "dynamicanalysisdefect" DROP CONSTRAINT "value_pkey";
+ALTER TABLE "test2image" DROP CONSTRAINT "value_pkey";
 ALTER TABLE "test2image" ALTER COLUMN "imgid" TYPE INT;
 ALTER TABLE "test2image" ALTER COLUMN "imgid" SET NOT NULL;
 CREATE SEQUENCE "test2image_imgid_seq";
