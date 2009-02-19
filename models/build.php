@@ -391,6 +391,11 @@ class Build
     {
     if($this->Id)
       {
+      if(!isset($this->Labels))
+        {
+        return;
+        }
+      
       foreach($this->Labels as $label)
         {
         $label->BuildId = $this->Id;

@@ -38,7 +38,7 @@ class Label
     }
 
 
-  function InsertAssociation($table, $field1, $value1, $field2, $value2)
+  function InsertAssociation($table, $field1, $value1=NULL, $field2=NULL, $value2=NULL)
     {
     if(!empty($value1))
       {
@@ -136,8 +136,8 @@ class Label
     // established by callers. (If coming from test.php, for example, TestId
     // will be set, but none of the others will. Similarly for other callers.)
     //
-    $this->InsertAssociation('label2build',
-      'buildid', $this->BuildId);
+    $this->InsertAssociation('label2build','buildid',
+      $this->BuildId);
 
     $this->InsertAssociation('label2buildfailure',
       'buildfailureid', $this->BuildFailureId);
