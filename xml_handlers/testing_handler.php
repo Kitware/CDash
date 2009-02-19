@@ -127,6 +127,10 @@ class TestingHandler extends AbstractHandler
         $this->UpdateEndTime = true;  
         $buildid = $this->Build->Id;
         }
+      else
+        {
+        $this->Build->Id = $buildid;
+        }  
         
       $this->BuildId = $buildid;
       }  
