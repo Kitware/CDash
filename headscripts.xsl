@@ -39,7 +39,7 @@
     <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>  
     <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
-    <script src="javascript/metadata.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascript/jquery.metadata.js" type="text/javascript" charset="utf-8"></script>
     
     <!-- Include jtooltip -->
     <script src="javascript/jtip.js" type="text/javascript" charset="utf-8"></script>

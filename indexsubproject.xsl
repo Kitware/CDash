@@ -51,12 +51,13 @@
   <p style="color:red"><b><xsl:value-of select="cdash/upgradewarning"/></b></p>
 </xsl:if>
 
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+<table border="0" cellpadding="4" cellspacing="0" width="100%"  class="tabb" >
 <!-- Display the project -->
-<tbody>
 <tr class="table-heading1">
-  <td colspan="11" align="left" class="nob"><h3>Project</h3></td>
+  <td colspan="11" align="left" class="nob">
+  <h3>Project</h3></td>
 </tr>
+
   <tr class="table-heading">
      <td align="center" rowspan="2" width="20%"><b>Project</b></td>
      <td align="center" colspan="3" width="20%"><b>Configure</b></td>
@@ -74,8 +75,7 @@
      <td align="center"><b>Not Run</b></td>
      <td align="center"><b>Fail</b></td>
      <td align="center"><b>Pass</b></td>
-  </tr>
-  
+  </tr> 
    <tr class="treven">
    <td align="center">
      <a>
@@ -210,42 +210,36 @@
     </td>
     <td align="center" class="nob"><xsl:value-of select="/cdash/project/lastsubmission"/></td>
     </tr>
-</tbody>
+</table>
+
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="subproject">
 <!-- Display the subprojects -->
-<tbody>
+<thead>
 <tr class="table-heading1">
   <td colspan="11" align="left" class="nob"><h3>SubProjects</h3></td>
 </tr>
-
   <tr class="table-heading">
-     <td align="center" rowspan="2" width="10%"><b>Project</b></td>
+     <th align="center" rowspan="2" width="20%" id="sort_0"><b>Project</b></th>
      <td align="center" colspan="3" width="20%"><b>Configure</b></td>
      <td align="center" colspan="3" width="20%"><b>Build</b></td>
      <td align="center" colspan="3" width="20%"><b>Test</b></td>
-     <td align="center" rowspan="2" width="30%" class="nob"><b>Last submission</b></td>
+     <th align="center" rowspan="2" width="20%" class="nob" id="sort_10"><b>Last submission</b></th>
   </tr>
    <tr class="table-heading">
-     <td align="center"><b>Error</b></td>
-     <td align="center"><b>Warning</b></td>
-     <td align="center"><b>Pass</b></td>
-     <td align="center"><b>Error</b></td>
-     <td align="center"><b>Warning</b></td>
-     <td align="center"><b>Pass</b></td>
-     <td align="center"><b>Not Run</b></td>
-     <td align="center"><b>Fail</b></td>
-     <td align="center"><b>Pass</b></td>
+     <th align="center" id="sort_1"><b>Error</b></th>
+     <th align="center" id="sort_2"><b>Warning</b></th>
+     <th align="center" id="sort_3"><b>Pass</b></th>
+     <th align="center" id="sort_4"><b>Error</b></th>
+     <th align="center" id="sort_5"><b>Warning</b></th>
+     <th align="center" id="sort_6"><b>Pass</b></th>
+     <th align="center" id="sort_7"><b>Not Run</b></th>
+     <th align="center" id="sort_8"><b>Fail</b></th>
+     <th align="center" id="sort_9"><b>Pass</b></th>
   </tr>
-  
+</thead>
+  <tbody>
   <xsl:for-each select="cdash/subproject">
    <tr>
-     <xsl:choose>
-          <xsl:when test="row=0">
-            <xsl:attribute name="class">trodd</xsl:attribute>
-           </xsl:when>
-          <xsl:otherwise>
-           <xsl:attribute name="class">treven</xsl:attribute>
-           </xsl:otherwise>
-        </xsl:choose>
    <td align="center" >
      <a>
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;subproject=<xsl:value-of select="name"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
@@ -375,7 +369,7 @@
     <td align="center" class="nob"><xsl:value-of select="lastsubmission"/></td>
     </tr>
    </xsl:for-each>
-</tbody>
+</tbody>   
 </table>
    
 <table width="100%" cellspacing="0" cellpadding="0">

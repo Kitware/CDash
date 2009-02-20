@@ -73,8 +73,6 @@
       <th align="center" rowspan="2" width="10%" class="nob">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_15</xsl:attribute>
       Labels</th>
-      <!-- <td align="center" rowspan="2" class="nob">Submit Date</td> -->
-
    </tr>
 
    <tr class="table-heading">
@@ -120,9 +118,6 @@
    <tbody>
      <xsl:for-each select="$type/build">
    <tr valign="middle">
-<!--   <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
-  --> 
-   
       <td align="left" class="paddt">
       <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/>&#38;project=<xsl:value-of select="/cdash/dashboard/projectid"/>&#38;currenttime=<xsl:value-of select="/cdash/dashboard/unixtimestamp"/></xsl:attribute><xsl:value-of select="site"/></a>
       </td>
@@ -241,8 +236,7 @@
       <b>
       <a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/>
       </xsl:attribute><xsl:value-of select="configure/error"/></a></b>
-      <xsl:if test="string-length(configure/error)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>   
-       <xsl:if test="string-length(configure/warning)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>   
+      <xsl:if test="string-length(configure/error)=0"><xsl:text disable-output-escaping="yes">0</xsl:text></xsl:if>
       </td>
       <td align="center">
       <xsl:attribute name="class">
@@ -256,13 +250,13 @@
         </xsl:choose>
       </xsl:attribute>
       <b><a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><xsl:value-of select="configure/warning"/></a></b>
-      <xsl:if test="string-length(configure/warning)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>   
+      <xsl:if test="string-length(configure/warning)=0"><xsl:text disable-output-escaping="yes">0</xsl:text></xsl:if>   
       <xsl:if test="configure/nwarningdiff > 0"><sub>+<xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       <xsl:if test="configure/nwarningdiff &lt; 0"><sub><xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       </td>
       <td align="right">
       <xsl:value-of select="configure/time"/>
-      <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if> 
+      <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">0</xsl:text></xsl:if> 
       </td>
       <td align="center">
       <xsl:attribute name="class">
