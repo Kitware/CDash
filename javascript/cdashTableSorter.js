@@ -144,12 +144,37 @@ $(document).ready(function() {
       });
     }
     
-  // If all the above are not working
+  // Initialize the subproject table
+  if($tabs.length==0)
+    {
+    $tabs = $("#subproject");
+    $tabs.each(function(index) {
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'text'},
+                1: { sorter:'numeric'},
+                2: { sorter:'numeric'},
+                3: { sorter:'numeric'},
+                4: { sorter:'numeric'},
+                5: { sorter:'numeric'},
+                6: { sorter:'numeric'},
+                7: { sorter:'numeric'},
+                8: { sorter:'numeric'},
+                9: { sorter:'numeric'},
+                10: { sorter:'text'}
+            },
+          debug: false,
+          widgets: ['zebra']
+        });  
+      });
+    }
+    
+  // If all the above are not working then it should be the index table
   if($tabs.length==0)
     {
     // Initialize the Index tables
     $tabs = $(".tabb",this);
-    $tabs.each(function(index) {          
+    $tabs.each(function(index) { 
        $(this).tablesorter({
               headers: { 
                   0: { sorter:'buildname'},
