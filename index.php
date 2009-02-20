@@ -300,6 +300,12 @@ function generate_main_dashboard_XML($projectid,$date)
   $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
   $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);   
   
+  // Add the extra url if necessary
+  if(isset($_GET["display"]) && $_GET["display"]=="project")
+    {
+    $xml .= add_XML_value("extraurl","&display=project");
+    }
+    
   // If we have a subproject
   if(isset($_GET["subproject"]))
     {
