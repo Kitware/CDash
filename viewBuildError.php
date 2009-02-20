@@ -150,7 +150,8 @@ $xml .= "</menu>";
     $xml .= add_XML_value("workingdirectory",$error_array["workingdirectory"]);
     
     $buildfailureid = $error_array["id"];
-    $arguments = pdo_query("SELECT argument FROM buildfailureargument WHERE buildfailureid='$buildfailureid' ORDER BY id ASC");
+    $arguments = pdo_query("SELECT bfa.argument FROM buildfailureargument AS bfa,buildfailure2argument AS bf2a
+                            WHERE bf2a.buildfailureid='$buildfailureid' AND bf2a.argumentid=bfa.id ORDER BY bfa.id ASC");
     while($argument_array = pdo_fetch_array($arguments))
       {
       $xml .= add_XML_value("argument",$argument_array["argument"]);
