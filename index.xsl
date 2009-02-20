@@ -786,10 +786,9 @@
 <br/>
 
 <!-- COVERAGE -->
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
-<tbody>
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
     <xsl:if test="count(cdash/buildgroup/coverage)=0">
-   <tr class="table-heading2">
+       <tr class="table-heading2">
       <td colspan="1" class="nob">
           <h3><a href="#" class="grouptrigger">No Coverage</a></h3>
       </td>
@@ -810,7 +809,8 @@
    </xsl:if>
    
     <xsl:if test="count(cdash/buildgroup/coverage)>0">
-        <tr class="table-heading2">
+<thead>
+<tr class="table-heading2">
       <td colspan="1" class="nob">
           <h3><a href="#" class="grouptrigger">Coverage</a></h3>
       </td>
@@ -828,22 +828,19 @@
     </div> 
     </td>
    </tr>
-
    <tr class="table-heading">
-      <th align="center" width="20%">Site</th>
-      <th align="center" width="30%">Build Name</th>
-      <th align="center" width="10%">Percentage</th>
-
-      <th align="center"  width="10%">Passed</th>
-      <th align="center"  width="10%">Failed</th>
-      <th align="center" class="nob"  width="20%">Date</th>
-     <!-- <th align="center">Submission Date</th> -->
+      <th align="center" width="20%" id="sortcoveragesort_0">Site</th>
+      <th align="center" width="30%" id="sortcoveragesort_1">Build Name</th>
+      <th align="center" width="10%" id="sortcoveragesort_2">Percentage</th>
+      <th align="center"  width="10%" id="sortcoveragesort_3" >Passed</th>
+      <th align="center"  width="10%" id="sortcoveragesort_4">Failed</th>
+      <th align="center" class="nob"  width="20%" id="sortcoveragesort_5">Date</th>
    </tr>
+</thead>
+<tbody>   
   <xsl:for-each select="cdash/buildgroup/coverage">
    
    <tr>
-      <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
-
       <td align="left" class="paddt"><xsl:value-of select="site"/></td>
       <td align="left" class="paddt"><xsl:value-of select="buildname"/></td>
       <td align="center">
@@ -872,10 +869,8 @@
       <td align="left"  class="nob"><xsl:value-of select="date"/></td>
    </tr>
   </xsl:for-each>
-
-</xsl:if>
-
 </tbody>
+</xsl:if>
 </table>
 
 

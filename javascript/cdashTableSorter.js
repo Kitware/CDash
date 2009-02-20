@@ -59,7 +59,28 @@ $(document).ready(function() {
         // set type, either numeric or text 
         type: 'numeric' 
     }); 
-      
+  
+  /** percent for coverage */
+  $.tablesorter.addParser({ 
+      // set a unique id 
+      id: 'percentage', 
+      is: function(s) { 
+            // return false so this parser is not auto detected 
+            return false; 
+        }, 
+        format: function(s) {
+            // format your data for normalization
+            var i = s.indexOf("<b");
+            var j = s.indexOf(">",i);
+            var k = s.indexOf("</b>",j);
+            var t = s.substr(j+1,k-j-2);
+            return t.toLowerCase(); 
+        }, 
+        // set type, either numeric or text 
+        type: 'numeric' 
+    }); 
+  
+  
   // Initialize the viewTest tables
   $tabs = $("#viewTestTable");
   var nrows = 0;
@@ -168,13 +189,21 @@ $(document).ready(function() {
         });  
       });
     }
-    
+  
+
+
   // If all the above are not working then it should be the index table
   if($tabs.length==0)
     {
     // Initialize the Index tables
     $tabs = $(".tabb",this);
-    $tabs.each(function(index) { 
+    $tabs.each( 
+        function(index) {
+       var tableid = this.id;
+      if(tableid == "coveragetable")
+        {
+        return;
+        }
        $(this).tablesorter({
               headers: { 
                   0: { sorter:'buildname'},
@@ -199,7 +228,7 @@ $(document).ready(function() {
           });  
        
       // Get the cookie
-      var tableid = this.id;
+      
       var cookiename = "cdash_table_sort_"+tableid;
       var cook = $.cookie(cookiename); // get cookie
       if(cook)
@@ -213,9 +242,27 @@ $(document).ready(function() {
           j++;
           }
         $(this).trigger("sorton",[sortArray]);    
-        }              
+        }
       });
-    }
+    
+    
+     // Initialize the coverage table 
+    $tabs = $("#coveragetable");
+    $tabs.each(function(index) {
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'text'},
+                1: { sorter:'text'},
+                2: { sorter:'percentage'},
+                3: { sorter:'numeric'},
+                4: { sorter:'numeric'},
+                5: { sorter:'text'}
+            },
+          debug: false,
+          widgets: ['zebra']
+        });  
+      });
+    } // end indextable
   
   
   
