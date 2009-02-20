@@ -78,6 +78,11 @@ class BuildFailure
 
   function InsertLabelAssociations($id)
     {
+    if(empty($this->Labels))
+      {
+      return;
+      }
+      
     if($id)
       {
       foreach($this->Labels as $label)
@@ -126,17 +131,48 @@ class BuildFailure
     $id = pdo_insert_id("buildfailure");
    
     // Insert the arguments
-    $query = "INSERT INTO buildfailureargument (buildfailureid,argument) VALUES ";
-
-   $i=0;
+    $argumentids = array();
+    
     foreach($this->Arguments as $argument)
+      {
+      $argumentescaped = pdo_real_escape_string($argument);
+      
+      // Check if the argument exists
+      $query = pdo_query("SELECT id FROM buildfailureargument WHERE argument='".$argumentescaped."'");
+      if(!$query)
+        {
+        add_last_sql_error("BuildFailure Insert");
+        return false;
+        }
+
+      if(pdo_num_rows($query)>0)
+        {
+        $argumentarray = pdo_fetch_array($query);
+        $argumentids[] = $argumentarray['id'];
+        }
+      else // insert the argument
+        {
+        $query = "INSERT INTO buildfailureargument (argument) VALUES ('".$argumentescaped."')";                     
+        if(!pdo_query($query))
+          {
+          add_last_sql_error("BuildFailure Insert");
+          return false;
+          }  
+        
+        $argumentids[] = pdo_insert_id("buildfailure");
+        }
+      }
+    
+    // Insert the argument
+    $query = "INSERT INTO buildfailure2argument (buildfailureid,argumentid) VALUES ";
+    $i=0;
+    foreach($argumentids as $argumentid)
       {
       if($i>0)
         {
         $query .= ",";
         }
-      $argument = pdo_real_escape_string($argument);    
-      $query .= "(".qnum($id).",'$argument')";   
+      $query .= "(".qnum($id).",".qnum($argumentid).")";   
       $i++;
       } 
 
