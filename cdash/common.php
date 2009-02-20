@@ -1117,7 +1117,8 @@ function remove_build($buildid)
   while($buildfailure_array = pdo_fetch_array($buildfailure))
     {
     $buildfailureid = $buildfailure_array['id'];
-    pdo_query("DELETE FROM buildfailureargument WHERE buildfailureid='$buildfailureid'");
+    pdo_query("DELETE FROM buildfailure2argument WHERE buildfailureid='$buildfailureid'");
+    // Don't delete the arguments for now...
     }
   
   pdo_query("DELETE FROM buildfailure WHERE buildid='$buildid'");      
