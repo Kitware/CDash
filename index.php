@@ -136,7 +136,7 @@ function generate_index_table()
       }
     else
       {
-      $xml .= "<lastbuild>".date(FMT_DATETIMETZ,strtotime($project['last_build']. "UTC"))."</lastbuild>";
+      $xml .= "<lastbuild>".date(FMT_DATETIMESTD,strtotime($project['last_build']. "UTC"))."</lastbuild>";
       }
     
     // Display the first build

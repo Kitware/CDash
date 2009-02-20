@@ -552,16 +552,16 @@ class Project
       return false;
       }
   
-    $project = pdo_query("SELECT submittime FROM build WHERE projectid=".qnum($this->Id).
+    $build = pdo_query("SELECT submittime FROM build WHERE projectid=".qnum($this->Id).
                          " ORDER BY submittime DESC LIMIT 1");
                           
-    if(!$project)
+    if(!$build)
       {
       add_last_sql_error("Project GetLastSubmission");
       return false;
       }
-    $project_array = pdo_fetch_array($project);
-    return $project_array['submittime'];
+    $build_array = pdo_fetch_array($build);
+    return date(FMT_DATETIMESTD,strtotime($build_array['submittime']. "UTC"));
     }   
  
   /** Get the number of builds given a date range */
