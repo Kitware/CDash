@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS buildfailureargument;
+
 CREATE TABLE IF NOT EXISTS `buildfailure` (
   `id` bigint(20) NOT NULL auto_increment,
   `buildid` bigint(20) NOT NULL,
@@ -18,9 +20,14 @@ CREATE TABLE IF NOT EXISTS `buildfailure` (
 
 CREATE TABLE IF NOT EXISTS `buildfailureargument` (
   `id` bigint(20) NOT NULL auto_increment,
+  `argument` varchar(60) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `buildfailure2argument` (
   `buildfailureid` bigint(20) NOT NULL,
-  `argument` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
+  `argumentid` bigint(20) NOT NULL,
+  KEY `argumentid` (`argumentid`),
   KEY `buildfailureid` (`buildfailureid`)
 );
 

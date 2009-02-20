@@ -779,11 +779,16 @@ CREATE TABLE `buildfailure` (
 );
 
 
-CREATE TABLE `buildfailureargument` (
+CREATE TABLE  `buildfailureargument` (
   `id` bigint(20) NOT NULL auto_increment,
+  `argument` varchar(60) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE  `buildfailure2argument` (
   `buildfailureid` bigint(20) NOT NULL,
-  `argument` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
+  `argumentid` bigint(20) NOT NULL,
+  KEY `argumentid` (`argumentid`),
   KEY `buildfailureid` (`buildfailureid`)
 );
 
