@@ -38,8 +38,6 @@ class Coverage
 
 
   // Purposely no Insert function. Everything is done from the coverage summary
-
-
   function AddLabel($label)
     {
     if(!isset($this->Labels))
@@ -59,6 +57,12 @@ class Coverage
        isset($this->CoverageFile) &&
        $this->CoverageFile->Id)
       {
+      
+      if(empty($this->Labels))
+        {
+        return;
+        }
+      
       foreach($this->Labels as $label)
         {
         $label->CoverageFileId = $this->CoverageFile->Id;
