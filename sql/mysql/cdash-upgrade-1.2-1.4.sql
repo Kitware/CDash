@@ -18,6 +18,15 @@ CREATE TABLE IF NOT EXISTS `buildfailure` (
 );
 
 
+CREATE TABLE IF NOT EXISTS  `labelemail` (
+  `projectid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `labelid` bigint(20) NOT NULL,
+  KEY `projectid` (`projectid`),
+  KEY `userid` (`userid`)
+);
+
+
 CREATE TABLE IF NOT EXISTS `buildfailureargument` (
   `id` bigint(20) NOT NULL auto_increment,
   `argument` varchar(60) NOT NULL,

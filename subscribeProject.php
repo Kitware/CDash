@@ -22,6 +22,8 @@ include_once('cdash/common.php');
 include('cdash/version.php');
 include("models/project.php");
 include("models/user.php");
+include("models/label.php");
+include("models/labelemail.php");
 
 if ($session_OK) 
   {
@@ -155,11 +157,71 @@ if ($session_OK)
       }  
     header( 'location: user.php?note=subscribedtoproject' );
     }
+  
+  // Deals with label email
+  $LabelEmail = new LabelEmail();
+  $LabelEmail->ProjectId = $projectid;
+  $LabelEmail->UserId = $userid;
+  
+  $Label = new Label();
     
+  // If we add a label
+  if(isset($_POST['addlabel']))
+    {
+    if(isset($_POST['movelabels']))
+      {
+      $movelabels = $_POST['movelabels'];
+      foreach($movelabels as $labelid)
+        {
+        $LabelEmail->LabelId = $labelid;
+        $LabelEmail->Insert();
+        }
+      }
+    }
+
+  // If we add an email
+  if(isset($_POST['removelabel']))
+    {
+    if(isset($_POST['emaillabels']))
+      {
+      $labels = $_POST['emaillabels'];
+      foreach($labels as $labelid)
+        {
+        $LabelEmail->LabelId = $labelid;
+        $LabelEmail->Remove();
+        }
+      }
+    }
+
   // XML
   $xml .= "<project>";
   $xml .= add_XML_value("id",$project_array['id']);
   $xml .= add_XML_value("name",$project_array['name']);
+  
+  $labelavailableids = $Project->GetLabels(7); // Get the labels for the last 7 days
+  $labelids = $LabelEmail->GetLabels();
+
+  $labelavailableids = array_diff($labelavailableids,$labelids);
+   
+  foreach($labelavailableids as $labelid)
+    {
+    $xml .= "<label>";
+    $xml .= add_XML_value("id",$labelid);
+    $Label->Id = $labelid;
+    $xml .= add_XML_value("text",$Label->GetText());
+    $xml .= "</label>";
+    }
+  
+
+  foreach($labelids as $labelid)
+    {
+    $xml .= "<labelemail>";
+    $xml .= add_XML_value("id",$labelid);
+    $Label->Id = $labelid;
+    $xml .= add_XML_value("text",$Label->GetText());
+    $xml .= "</labelemail>";
+    }
+  
   $xml .= "</project>";  
   
   $xml .= "</cdash>";

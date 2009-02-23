@@ -50,6 +50,8 @@
 <xsl:value-of select="cdash/warning"/>
 </xsl:if>
 
+<b>Project:</b> <xsl:value-of select="cdash/project/name"/><br/>
+
 <form name="form1" enctype="multipart/form-data" method="post" action="">
   <div id="wizard">
       <ul>
@@ -61,6 +63,8 @@
             <a href="#fragment-3"><span>Email Preference</span></a></li>                
           <li>
             <a href="#fragment-4"><span>Email Category</span></a></li>
+          <li>
+            <a href="#fragment-5"><span>Email Labels</span></a></li>
       </ul>
     <div id="fragment-1" class="tab_content" >
       <div class="tab_help"></div>
@@ -222,6 +226,39 @@
              </input> Test
            </td>
           </tr>  
+        </table>
+    </div>
+    <div id="fragment-5" class="tab_content" >
+      <div class="tab_help"></div>
+        <table width="800">
+          <tr>
+            <td align="right">
+             Available Labels (last 7 days)<br/>
+             <select name="movelabels[]" size="15" multiple="true" id="movelabels">
+                <xsl:for-each select="/cdash/project/label">
+                <option>
+                  <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                  <xsl:value-of select="text"/>
+                </option>
+                </xsl:for-each>
+             </select>
+            </td>
+            <td align="center">
+            <input name="addlabel" type="submit" value="&gt;&gt;" /><br/><br/>
+            <input name="removelabel" type="submit" value="&lt;&lt;" />
+            </td>
+            <td align="left">
+             Email Labels <br/>
+            <select name="emaillabels[]" size="15" multiple="true" id="labels">
+                <xsl:for-each select="/cdash/project/labelemail">
+                <option>
+                  <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                  <xsl:value-of select="text"/>
+                </option>
+                </xsl:for-each>
+             </select>
+           </td>
+          </tr>
         </table>
     </div>
  </div>

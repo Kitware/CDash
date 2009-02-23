@@ -792,6 +792,15 @@ CREATE TABLE  `buildfailure2argument` (
   KEY `buildfailureid` (`buildfailureid`)
 );
 
+
+CREATE TABLE `labelemail` (
+  `projectid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `labelid` bigint(20) NOT NULL,
+  KEY `projectid` (`projectid`),
+  KEY `userid` (`userid`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 
