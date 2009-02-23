@@ -230,6 +230,7 @@
     </div>
     <div id="fragment-5" class="tab_content" >
       <div class="tab_help"></div>
+        Select the labels you want to subscribe to. You will receive only emails corresponding to these labels. <br/><br/>
         <table width="800">
           <tr>
             <td align="right">
