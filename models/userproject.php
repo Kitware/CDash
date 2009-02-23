@@ -131,7 +131,6 @@ class UserProject
       }
     return $userids;
     }     
-    
-    
+      
 } // end class UserProject
 ?>

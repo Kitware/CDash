@@ -37,6 +37,11 @@ class Label
     $this->Text = $text;
     }
 
+  /** Get the text of a label */
+  function GetText()
+    {
+    return pdo_get_field_value("SELECT text FROM label WHERE id=".qnum($this->Id),"text",0);
+    }
 
   function InsertAssociation($table, $field1, $value1=NULL, $field2=NULL, $value2=NULL)
     {
@@ -157,8 +162,6 @@ class Label
     //
     //$this->InsertAssociation($this->UpdateFileKey,
     //  'label2updatefile', 'updatefilekey');
-
-
     return true;
     }
 }

@@ -893,7 +893,45 @@ class Project
       }
     $project_array = pdo_fetch_array($project);
     return $project_array[0];
-    }  
+    }  // end GetNumberOfNotRunTests()
+    
+  /** Get the labels ids for a given project */
+  function GetLabels($days)
+    {
+    $today = time();
+    $today -= 3600*24*$days;
+    
+    $labelids = array();
+        
+    $labels = pdo_query("SELECT labelid FROM label2build,build WHERE build.projectid=".qnum($this->Id).
+                         " AND label2build.buildid=build.id AND build.starttime>'$today'");           
+    if(!$labels)
+      {
+      add_last_sql_error("Project GetLabels");
+      return false;
+      }
+    
+    while($label_array = pdo_fetch_array($labels))
+      {
+      $labelids[] = $label_array['labelid'];
+      }
+    
+    $labels = pdo_query("SELECT labelid FROM label2test,build WHERE build.projectid=".qnum($this->Id).
+                         " AND label2test.buildid=build.id AND build.starttime>'$today'");           
+    if(!$labels)
+      {
+      add_last_sql_error("Project GetLabels");
+      return false;
+      }
+    
+    while($label_array = pdo_fetch_array($labels))
+      {
+      $labelids[] = $label_array['labelid'];
+      }
+    
+    return array_unique($labelids);
+    } // end GetLabels()  
+    
     
 }  // end class Project
 
