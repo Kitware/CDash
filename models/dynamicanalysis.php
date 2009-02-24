@@ -75,9 +75,14 @@ class DynamicAnalysis
         
     }
 
-
+  /** Insert labels */
   function InsertLabelAssociations()
     {
+    if(empty($this->Labels))
+      {
+      return;
+      }
+      
     if($this->Id)
       {
       foreach($this->Labels as $label)
