@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-MSVC2009"
+  BuildStamp="20090223-0100-Nightly"
+  Name="Dash20.kitware"
+  Generator="ctest2.6-patch 0"  OSName="Windows"
+  Hostname="dash20"
+  OSRelease="XP Professional"
+  OSVersion="Service Pack 2(Build 2600)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="15"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2400"
+>
+<Build>
+  <StartDateTime>Feb 23 05:02 Eastern Standard Time</StartDateTime>
+  <StartBuildTime>1235383323</StartBuildTime>
+<BuildCommand>F:\PROGRA~1\MICROS~1.0\Common7\IDE\VCExpress.exe BatchMake.sln /build Release /project ALL_BUILD</BuildCommand>
+  <Warning>
+    <BuildLogLine>34</BuildLogLine>
+    <Text>3&gt;f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma
+</Text>
+    <PreContext>1&gt;uncompr.c
+2&gt;bmDashboardSend.cxx
+1&gt;inftrees.c
+1&gt;gzio.c
+1&gt;Generating Code...
+4&gt;SliceExtractor.cxx
+</PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>35</BuildLogLine>
+    <Text>3&gt;F:\Program Files\Microsoft SDKs\Windows\v6.0A\\include\urlmon.h(352) : warning C4068: unknown pragma
+</Text>
+    <PreContext></PreContext>
+    <PostContext>3&gt;XcedeCatalog.cxx
+2&gt;bmScriptAddDashboardLabelAction.cxx
+</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>38</BuildLogLine>
+    <Text>3&gt;f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma
+</Text>
+    <PreContext></PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>39</BuildLogLine>
+    <Text>3&gt;F:\Program Files\Microsoft SDKs\Windows\v6.0A\\include\urlmon.h(352) : warning C4068: unknown pragma
+</Text>
+    <PreContext></PreContext>
+    <PostContext>3&gt;Xcede.cxx
+2&gt;bmScriptActionManagerDashboard.cxx
+3&gt;Subject.cxx
+4&gt;XMLBufferReader.cxx
+3&gt;Resource.cxx
+4&gt;TCPSocket.cxx</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>195</BuildLogLine>
+    <Text>13&gt;..\..\..\BatchMake\Utilities\Zip\unzipcmd.cxx(118) : warning C4996: 'unlink': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _unlink. See online help for details.
+</Text>
+    <PreContext>2&gt;bmScriptDbSendValueAction.cxx
+12&gt;Build log was saved at "file://f:\Dashboards\BatchMake-Nightly\Testing\Code\BatchMakeMemoryTest.dir\Release\BuildLog.htm"
+12&gt;BatchMakeMemoryTest - 0 error(s), 0 warning(s)
+13&gt;------ Build started: Project: Unzip, Configuration: Release Win32 ------
+13&gt;Compiling...
+13&gt;unzipcmd.cxx
+</PreContext>
+    <PostContext>13&gt;        F:\Program Files\Microsoft Visual Studio 9.0\VC\include\stdio.h(301) : see declaration of 'unlink'
+13&gt;Compiling...
+13&gt;unzip.c
+2&gt;bmScriptCreateMethodActionGrid.cxx
+10&gt;Linking...
+13&gt;Linking...</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>211</BuildLogLine>
+    <Text>14&gt;..\..\..\BatchMake\Utilities\Zip\zipcmd.cxx(106) : warning C4996: 'unlink': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _unlink. See online help for details.
+</Text>
+    <PreContext>13&gt;Unzip - 0 error(s), 1 warning(s)
+10&gt;Embedding manifest...
+2&gt;bmScriptDashboardSendActionGrid.cxx
+14&gt;------ Build started: Project: Zip, Configuration: Release Win32 ------
+14&gt;Compiling...
+14&gt;zipcmd.cxx
+</PreContext>
+    <PostContext>14&gt;        F:\Program Files\Microsoft Visual Studio 9.0\VC\include\stdio.h(301) : see declaration of 'unlink'
+10&gt;Build log was saved at "file://f:\Dashboards\BatchMake-Nightly\Examples\CondorTutorial\Applications\ImageResample\ImageResample.dir\Release\BuildLog.htm"
+10&gt;ImageResample - 0 error(s), 0 warning(s)
+14&gt;Compiling...
+14&gt;zip.c
+15&gt;------ Build started: Project: ModuleFactoryTest, Configuration: Release Win32 ------</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>355</BuildLogLine>
+    <Text>20&gt;XcedeLib.lib(XcedeCatalog.obj) : warning LNK4217: locally defined symbol _itk_libxml2_xmlFree imported in function "public: class std::vector&lt;class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;,class std::allocator&lt;class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt; &gt; &gt; __thiscall XcedeCatalog::GetUrls(struct _xmlDoc *,class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)" (?GetUrls@XcedeCatalog@@QAE?AV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@std@@PAU_xmlDoc@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z)
+</Text>
+    <PreContext>21&gt;Linking...
+20&gt;Linking...
+18&gt;Linking...
+21&gt;Embedding manifest...
+20&gt;   Creating library F:\Dashboards\BatchMake-Nightly\bin\Release\BatchMake.lib and object F:\Dashboards\BatchMake-Nightly\bin\Release\BatchMake.exp
+21&gt;Performing Post-Build Event...
+</PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>356</BuildLogLine>
+    <Text>20&gt;XcedeLib.lib(XnatCatalog.obj) : warning LNK4049: locally defined symbol _itk_libxml2_xmlFree imported
+</Text>
+    <PreContext></PreContext>
+    <PostContext>18&gt;Embedding manifest...
+21&gt;Build log was saved at "file://f:\Dashboards\BatchMake-Nightly\Applications\bmGridSend.dir\Release\BuildLog.htm"
+21&gt;bmGridSend - 0 error(s), 0 warning(s)
+22&gt;------ Build started: Project: bmGetCPUSpeed, Configuration: Release Win32 ------
+20&gt;Embedding manifest...
+18&gt;Build log was saved at "file://f:\Dashboards\BatchMake-Nightly\Examples\Calculator\Calculator.dir\Release\BuildLog.htm"</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>416</BuildLogLine>
+    <Text>25&gt;XcedeLib.lib(XcedeCatalog.obj) : warning LNK4217: locally defined symbol _itk_libxml2_xmlFree imported in function "public: class std::vector&lt;class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;,class std::allocator&lt;class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt; &gt; &gt; __thiscall XcedeCatalog::GetUrls(struct _xmlDoc *,class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)" (?GetUrls@XcedeCatalog@@QAE?AV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@std@@PAU_xmlDoc@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z)
+</Text>
+    <PreContext>27&gt;Performing Post-Build Event...
+27&gt;Build log was saved at "file://f:\Dashboards\BatchMake-Nightly\Applications\bmSliceExtractor.dir\Release\BuildLog.htm"
+27&gt;bmSliceExtractor - 0 error(s), 0 warning(s)
+25&gt;Generating Code...
+25&gt;Linking...
+25&gt;   Creating library F:\Dashboards\BatchMake-Nightly\bin\Release\BatchMakeTests.lib and object F:\Dashboards\BatchMake-Nightly\bin\Release\BatchMakeTests.exp
+</PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>417</BuildLogLine>
+    <Text>25&gt;XcedeLib.lib(XnatCatalog.obj) : warning LNK4049: locally defined symbol _itk_libxml2_xmlFree imported
+</Text>
+    <PreContext></PreContext>
+    <PostContext>25&gt;Embedding manifest...
+25&gt;Build log was saved at "file://f:\Dashboards\BatchMake-Nightly\Testing\Code\BatchMakeTests.dir\Release\BuildLog.htm"
+25&gt;BatchMakeTests - 0 error(s), 2 warning(s)
+========== Build: 27 succeeded, 0 failed, 2 up-to-date, 0 skipped ==========
+</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Log Encoding="base64" Compression="/bin/gzip">
+  </Log>
+  <EndDateTime>Feb 23 05:04 Eastern Standard Time</EndDateTime>
+  <EndBuildTime>1235383451</EndBuildTime>
+<ElapsedMinutes>2.1</ElapsedMinutes></Build>
+</Site>

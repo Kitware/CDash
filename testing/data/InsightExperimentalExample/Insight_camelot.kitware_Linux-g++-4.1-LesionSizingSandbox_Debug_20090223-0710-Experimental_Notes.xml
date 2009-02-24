@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="Linux-g++-4.1-LesionSizingSandbox_Debug" BuildStamp="20090223-0710-Experimental" Name="camelot.kitware" Generator="ctest2.7-20080827">
+<Notes>
+<Note Name="/home/ibanez/src/Work/Luis/DashboardScripts/camelot_itk_lesion_sizing_sandbox_debug_gcc41.cmake">
+<Time>1.23539e+09</Time>
+<DateTime>Feb 23 07:32 EST</DateTime>
+<Text>
+SET (CTEST_SOURCE_DIRECTORY "$ENV{HOME}/src/LesionSizingKit/Sandbox")
+SET (CTEST_BINARY_DIRECTORY "$ENV{HOME}/bin/LesionSizingKitGcc4.1/Sandbox/Debug")
+
+# which ctest command to use for running the dashboard
+SET (CTEST_COMMAND 
+  "$ENV{HOME}/local/bin/ctest -C Debug -D Experimental -D ExperimentalMemCheck -A ${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME} -V"
+  )
+
+# what cmake command to use for configuring this dashboard
+SET (CTEST_CMAKE_COMMAND 
+  "$ENV{HOME}/local/bin/cmake"
+  )
+
+
+# should ctest wipe the binary tree before running
+SET (CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
+
+
+# this is the initial cache to use for the binary tree, be careful to escape
+# any quotes inside of this string if you use it
+SET (CTEST_INITIAL_CACHE "
+//Command used to build entire project from the command line.
+MAKECOMMAND:STRING=/usr/bin/make -i -j4
+//make program
+CMAKE_MAKE_PROGRAM:FILEPATH=/usr/bin/make
+//Name of the build
+BUILDNAME:STRING=Linux-g++-4.1-LesionSizingSandbox_Debug
+//Name of the computer/site where compile is being run
+SITE:STRING=camelot.kitware
+//Build ITK with shared libraries.
+BUILD_SHARED_LIBS:BOOL=OFF
+// Select Debug or Release
+CMAKE_BUILD_TYPE:STRING=Debug
+//The directory containing ITK binaries
+ITK_DIR:PATH=/home/ibanez/bin/ITKGcc4.1
+// Path to valgrind
+MEMORYCHECK_COMMAND:FILEPATH=/usr/bin/valgrind
+// Option for running Valgrind
+MEMORYCHECK_COMMAND_OPTIONS:STRING=--sim-hints=lax-ioctls --trace-children=yes -q --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=100 -v
+//Path to the coverage program that CTest uses for performing coverage
+// inspection
+COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov-4.1
+// Option for code coverage
+CMAKE_CXX_FLAGS:STRING=-g -O0  -fprofile-arcs -ftest-coverage
+// Option for code coverage
+CMAKE_C_FLAGS:STRING=-g -O0  -fprofile-arcs -ftest-coverage
+//Path to KWStyle
+KWSTYLE_EXECUTABLE:FILEPATH=/home/ibanez/local/bin/KWStyle
+//Set KWStyle to generate errors with a VisualStudio-compatible
+// format.
+KWSTYLE_USE_MSVC_FORMAT:BOOL=OFF
+//Set KWStyle to generate errors with a VIM-compatible format.
+KWSTYLE_USE_VIM_FORMAT:BOOL=ON
+")
+
+# set any extra envionment varibles here
+SET (CTEST_ENVIRONMENT
+ "DISPLAY=:0"
+ "CXX=/usr/bin/g++-4.1"
+ "CC=/usr/bin/gcc-4.1"
+)
+</Text>
+</Note>
+</Notes>
+</Site>

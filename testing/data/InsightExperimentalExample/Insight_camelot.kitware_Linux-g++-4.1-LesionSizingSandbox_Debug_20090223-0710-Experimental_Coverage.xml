@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-g++-4.1-LesionSizingSandbox_Debug"
+  BuildStamp="20090223-0710-Experimental"
+  Name="camelot.kitware"
+  Generator="ctest2.7-20080827"  OSName="Linux"
+  Hostname="Camelot"
+  OSRelease="2.6.20-17-generic"
+  OSVersion="#2 SMP Wed Aug 20 16:47:34 UTC 2008"
+  OSPlatform="i686"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="15"
+  ModelID="4"
+  ProcessorCacheSize="1024"
+  NumberOfLogicalCPU="2"
+  NumberOfPhysicalCPU="1"
+  TotalVirtualMemory="1906"
+  TotalPhysicalMemory="1003"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2992.84"
+>
+<Coverage>
+  <StartDateTime>Feb 23 03:10 EST</StartDateTime>
+  <StartTime>1235376627</StartTime>
+  <File Name="itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h" FullPath="./Source/itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h" Covered="true">
+    <LOCTested>5</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>62.50</PercentCoverage>
+    <CoverageMetric>0.83</CoverageMetric>
+  </File>
+  <File Name="itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.txx" FullPath="./Source/itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.txx" Covered="true">
+    <LOCTested>44</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>95.65</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkCannyEdgesDistanceFeatureGenerator.h" FullPath="./Source/itkCannyEdgesDistanceFeatureGenerator.h" Covered="true">
+    <LOCTested>8</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkCannyEdgesDistanceFeatureGenerator.txx" FullPath="./Source/itkCannyEdgesDistanceFeatureGenerator.txx" Covered="true">
+    <LOCTested>37</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>94.87</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkCannyEdgesFeatureGenerator.h" FullPath="./Source/itkCannyEdgesFeatureGenerator.h" Covered="true">
+    <LOCTested>8</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkCannyEdgesFeatureGenerator.txx" FullPath="./Source/itkCannyEdgesFeatureGenerator.txx" Covered="true">
+    <LOCTested>41</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>95.35</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkConfidenceConnectedSegmentationModule.h" FullPath="./Source/itkConfidenceConnectedSegmentationModule.h" Covered="true">
+    <LOCTested>4</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkConfidenceConnectedSegmentationModule.txx" FullPath="./Source/itkConfidenceConnectedSegmentationModule.txx" Covered="true">
+    <LOCTested>26</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkConnectedThresholdSegmentationModule.h" FullPath="./Source/itkConnectedThresholdSegmentationModule.h" Covered="true">
+    <LOCTested>6</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkConnectedThresholdSegmentationModule.txx" FullPath="./Source/itkConnectedThresholdSegmentationModule.txx" Covered="true">
+    <LOCTested>25</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkDescoteauxSheetnessFeatureGenerator.h" FullPath="./Source/itkDescoteauxSheetnessFeatureGenerator.h" Covered="true">
+    <LOCTested>9</LOCTested>
+    <LOCUnTested>4</LOCUnTested>
+    <PercentCoverage>69.23</PercentCoverage>
+    <CoverageMetric>0.83</CoverageMetric>
+  </File>
+  <File Name="itkDescoteauxSheetnessFeatureGenerator.txx" FullPath="./Source/itkDescoteauxSheetnessFeatureGenerator.txx" Covered="true">
+    <LOCTested>48</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>96.00</PercentCoverage>
+    <CoverageMetric>0.97</CoverageMetric>
+  </File>
+  <File Name="itkDescoteauxSheetnessImageFilter.h" FullPath="./Source/itkDescoteauxSheetnessImageFilter.h" Covered="true">
+    <LOCTested>67</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>97.10</PercentCoverage>
+    <CoverageMetric>0.97</CoverageMetric>
+  </File>
+  <File Name="itkFastMarchingSegmentationModule.h" FullPath="./Source/itkFastMarchingSegmentationModule.h" Covered="true">
+    <LOCTested>6</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkFastMarchingSegmentationModule.txx" FullPath="./Source/itkFastMarchingSegmentationModule.txx" Covered="true">
+    <LOCTested>47</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkFeatureAggregator.h" FullPath="./Source/itkFeatureAggregator.h" Covered="false">
+    <LOCTested>0</LOCTested>
+    <LOCUnTested>1</LOCUnTested>
+    <PercentCoverage>0.00</PercentCoverage>
+    <CoverageMetric>0.91</CoverageMetric>
+  </File>
+  <File Name="itkFeatureAggregator.txx" FullPath="./Source/itkFeatureAggregator.txx" Covered="true">
+    <LOCTested>23</LOCTested>
+    <LOCUnTested>12</LOCUnTested>
+    <PercentCoverage>65.71</PercentCoverage>
+    <CoverageMetric>0.73</CoverageMetric>
+  </File>
+  <File Name="itkFeatureGenerator.h" FullPath="./Source/itkFeatureGenerator.h" Covered="true">
+    <LOCTested>2</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkFeatureGenerator.txx" FullPath="./Source/itkFeatureGenerator.txx" Covered="true">
+    <LOCTested>16</LOCTested>
+    <LOCUnTested>1</LOCUnTested>
+    <PercentCoverage>94.12</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkFrangiTubularnessFeatureGenerator.h" FullPath="./Source/itkFrangiTubularnessFeatureGenerator.h" Covered="true">
+    <LOCTested>5</LOCTested>
+    <LOCUnTested>5</LOCUnTested>
+    <PercentCoverage>50.00</PercentCoverage>
+    <CoverageMetric>0.75</CoverageMetric>
+  </File>
+  <File Name="itkFrangiTubularnessFeatureGenerator.txx" FullPath="./Source/itkFrangiTubularnessFeatureGenerator.txx" Covered="true">
+    <LOCTested>47</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>94.00</PercentCoverage>
+    <CoverageMetric>0.95</CoverageMetric>
+  </File>
+  <File Name="itkFrangiTubularnessImageFilter.h" FullPath="./Source/itkFrangiTubularnessImageFilter.h" Covered="true">
+    <LOCTested>62</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>95.38</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkGeodesicActiveContourLevelSetSegmentationModule.h" FullPath="./Source/itkGeodesicActiveContourLevelSetSegmentationModule.h" Covered="true">
+    <LOCTested>2</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkGeodesicActiveContourLevelSetSegmentationModule.txx" FullPath="./Source/itkGeodesicActiveContourLevelSetSegmentationModule.txx" Covered="true">
+    <LOCTested>28</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkGradientMagnitudeSigmoidFeatureGenerator.h" FullPath="./Source/itkGradientMagnitudeSigmoidFeatureGenerator.h" Covered="true">
+    <LOCTested>5</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>62.50</PercentCoverage>
+    <CoverageMetric>0.83</CoverageMetric>
+  </File>
+  <File Name="itkGradientMagnitudeSigmoidFeatureGenerator.txx" FullPath="./Source/itkGradientMagnitudeSigmoidFeatureGenerator.txx" Covered="true">
+    <LOCTested>43</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>93.48</PercentCoverage>
+    <CoverageMetric>0.95</CoverageMetric>
+  </File>
+  <File Name="itkGrayscaleImageSegmentationVolumeEstimator.h" FullPath="./Source/itkGrayscaleImageSegmentationVolumeEstimator.h" Covered="true">
+    <LOCTested>2</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkGrayscaleImageSegmentationVolumeEstimator.txx" FullPath="./Source/itkGrayscaleImageSegmentationVolumeEstimator.txx" Covered="true">
+    <LOCTested>37</LOCTested>
+    <LOCUnTested>1</LOCUnTested>
+    <PercentCoverage>97.37</PercentCoverage>
+    <CoverageMetric>0.98</CoverageMetric>
+  </File>
+  <File Name="itkLandmarksReader.h" FullPath="./Source/itkLandmarksReader.h" Covered="true">
+    <LOCTested>3</LOCTested>
+    <LOCUnTested>1</LOCUnTested>
+    <PercentCoverage>75.00</PercentCoverage>
+    <CoverageMetric>0.93</CoverageMetric>
+  </File>
+  <File Name="itkLandmarksReader.txx" FullPath="./Source/itkLandmarksReader.txx" Covered="true">
+    <LOCTested>28</LOCTested>
+    <LOCUnTested>6</LOCUnTested>
+    <PercentCoverage>82.35</PercentCoverage>
+    <CoverageMetric>0.86</CoverageMetric>
+  </File>
+  <File Name="itkLesionSegmentationMethod.h" FullPath="./Source/itkLesionSegmentationMethod.h" Covered="true">
+    <LOCTested>7</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkLesionSegmentationMethod.txx" FullPath="./Source/itkLesionSegmentationMethod.txx" Covered="true">
+    <LOCTested>46</LOCTested>
+    <LOCUnTested>4</LOCUnTested>
+    <PercentCoverage>92.00</PercentCoverage>
+    <CoverageMetric>0.93</CoverageMetric>
+  </File>
+  <File Name="itkLocalStructureImageFilter.h" FullPath="./Source/itkLocalStructureImageFilter.h" Covered="true">
+    <LOCTested>57</LOCTested>
+    <LOCUnTested>1</LOCUnTested>
+    <PercentCoverage>98.28</PercentCoverage>
+    <CoverageMetric>0.99</CoverageMetric>
+  </File>
+  <File Name="itkLungWallFeatureGenerator.h" FullPath="./Source/itkLungWallFeatureGenerator.h" Covered="true">
+    <LOCTested>4</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkLungWallFeatureGenerator.txx" FullPath="./Source/itkLungWallFeatureGenerator.txx" Covered="true">
+    <LOCTested>49</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>94.23</PercentCoverage>
+    <CoverageMetric>0.95</CoverageMetric>
+  </File>
+  <File Name="itkMatrixInterpolateImageFunction.h" FullPath="./Source/itkMatrixInterpolateImageFunction.h" Covered="true">
+    <LOCTested>16</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkMatrixLinearInterpolateImageFunction.h" FullPath="./Source/itkMatrixLinearInterpolateImageFunction.h" Covered="true">
+    <LOCTested>3</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkMatrixLinearInterpolateImageFunction.txx" FullPath="./Source/itkMatrixLinearInterpolateImageFunction.txx" Covered="true">
+    <LOCTested>29</LOCTested>
+    <LOCUnTested>1</LOCUnTested>
+    <PercentCoverage>96.67</PercentCoverage>
+    <CoverageMetric>0.98</CoverageMetric>
+  </File>
+  <File Name="itkMinimumFeatureAggregator.h" FullPath="./Source/itkMinimumFeatureAggregator.h" Covered="true">
+    <LOCTested>1</LOCTested>
+    <LOCUnTested>1</LOCUnTested>
+    <PercentCoverage>50.00</PercentCoverage>
+    <CoverageMetric>0.92</CoverageMetric>
+  </File>
+  <File Name="itkMinimumFeatureAggregator.txx" FullPath="./Source/itkMinimumFeatureAggregator.txx" Covered="true">
+    <LOCTested>25</LOCTested>
+    <LOCUnTested>5</LOCUnTested>
+    <PercentCoverage>83.33</PercentCoverage>
+    <CoverageMetric>0.88</CoverageMetric>
+  </File>
+  <File Name="itkMorphologicalOpenningFeatureGenerator.h" FullPath="./Source/itkMorphologicalOpenningFeatureGenerator.h" Covered="true">
+    <LOCTested>4</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkMorphologicalOpenningFeatureGenerator.txx" FullPath="./Source/itkMorphologicalOpenningFeatureGenerator.txx" Covered="true">
+    <LOCTested>64</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>95.52</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkRegionCompetitionImageFilter.h" FullPath="./Source/itkRegionCompetitionImageFilter.h" Covered="true">
+    <LOCTested>3</LOCTested>
+    <LOCUnTested>5</LOCUnTested>
+    <PercentCoverage>37.50</PercentCoverage>
+    <CoverageMetric>0.72</CoverageMetric>
+  </File>
+  <File Name="itkRegionCompetitionImageFilter.txx" FullPath="./Source/itkRegionCompetitionImageFilter.txx" Covered="true">
+    <LOCTested>181</LOCTested>
+    <LOCUnTested>4</LOCUnTested>
+    <PercentCoverage>97.84</PercentCoverage>
+    <CoverageMetric>0.98</CoverageMetric>
+  </File>
+  <File Name="itkRegionGrowingSegmentationModule.h" FullPath="./Source/itkRegionGrowingSegmentationModule.h" Covered="true">
+    <LOCTested>2</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkRegionGrowingSegmentationModule.txx" FullPath="./Source/itkRegionGrowingSegmentationModule.txx" Covered="true">
+    <LOCTested>33</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkSatoLocalStructureFeatureGenerator.h" FullPath="./Source/itkSatoLocalStructureFeatureGenerator.h" Covered="true">
+    <LOCTested>5</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>62.50</PercentCoverage>
+    <CoverageMetric>0.83</CoverageMetric>
+  </File>
+  <File Name="itkSatoLocalStructureFeatureGenerator.txx" FullPath="./Source/itkSatoLocalStructureFeatureGenerator.txx" Covered="true">
+    <LOCTested>37</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>94.87</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkSatoVesselnessFeatureGenerator.h" FullPath="./Source/itkSatoVesselnessFeatureGenerator.h" Covered="true">
+    <LOCTested>5</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>62.50</PercentCoverage>
+    <CoverageMetric>0.83</CoverageMetric>
+  </File>
+  <File Name="itkSatoVesselnessFeatureGenerator.txx" FullPath="./Source/itkSatoVesselnessFeatureGenerator.txx" Covered="true">
+    <LOCTested>43</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>93.48</PercentCoverage>
+    <CoverageMetric>0.95</CoverageMetric>
+  </File>
+  <File Name="itkSatoVesselnessSigmoidFeatureGenerator.h" FullPath="./Source/itkSatoVesselnessSigmoidFeatureGenerator.h" Covered="true">
+    <LOCTested>4</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>66.67</PercentCoverage>
+    <CoverageMetric>0.88</CoverageMetric>
+  </File>
+  <File Name="itkSatoVesselnessSigmoidFeatureGenerator.txx" FullPath="./Source/itkSatoVesselnessSigmoidFeatureGenerator.txx" Covered="true">
+    <LOCTested>28</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkSegmentationModule.h" FullPath="./Source/itkSegmentationModule.h" Covered="true">
+    <LOCTested>2</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkSegmentationModule.txx" FullPath="./Source/itkSegmentationModule.txx" Covered="true">
+    <LOCTested>23</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkSegmentationVolumeEstimator.h" FullPath="./Source/itkSegmentationVolumeEstimator.h" Covered="true">
+    <LOCTested>1</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkSegmentationVolumeEstimator.txx" FullPath="./Source/itkSegmentationVolumeEstimator.txx" Covered="true">
+    <LOCTested>18</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkShapeDetectionLevelSetSegmentationModule.h" FullPath="./Source/itkShapeDetectionLevelSetSegmentationModule.h" Covered="true">
+    <LOCTested>2</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkShapeDetectionLevelSetSegmentationModule.txx" FullPath="./Source/itkShapeDetectionLevelSetSegmentationModule.txx" Covered="true">
+    <LOCTested>26</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkSigmoidFeatureGenerator.h" FullPath="./Source/itkSigmoidFeatureGenerator.h" Covered="true">
+    <LOCTested>6</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkSigmoidFeatureGenerator.txx" FullPath="./Source/itkSigmoidFeatureGenerator.txx" Covered="true">
+    <LOCTested>36</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>94.74</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkSinglePhaseLevelSetSegmentationModule.h" FullPath="./Source/itkSinglePhaseLevelSetSegmentationModule.h" Covered="true">
+    <LOCTested>12</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>80.00</PercentCoverage>
+    <CoverageMetric>0.88</CoverageMetric>
+  </File>
+  <File Name="itkSinglePhaseLevelSetSegmentationModule.txx" FullPath="./Source/itkSinglePhaseLevelSetSegmentationModule.txx" Covered="true">
+    <LOCTested>52</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>94.55</PercentCoverage>
+    <CoverageMetric>0.95</CoverageMetric>
+  </File>
+  <File Name="itkVectorFiniteDifferenceFunction.h" FullPath="./Source/itkVectorFiniteDifferenceFunction.h" Covered="true">
+    <LOCTested>3</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>50.00</PercentCoverage>
+    <CoverageMetric>0.81</CoverageMetric>
+  </File>
+  <File Name="itkVectorFiniteDifferenceFunction.txx" FullPath="./Source/itkVectorFiniteDifferenceFunction.txx" Covered="true">
+    <LOCTested>4</LOCTested>
+    <LOCUnTested>6</LOCUnTested>
+    <PercentCoverage>40.00</PercentCoverage>
+    <CoverageMetric>0.70</CoverageMetric>
+  </File>
+  <File Name="itkVectorFiniteDifferenceImageFilter.h" FullPath="./Source/itkVectorFiniteDifferenceImageFilter.h" Covered="true">
+    <LOCTested>2</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkVectorFiniteDifferenceImageFilter.txx" FullPath="./Source/itkVectorFiniteDifferenceImageFilter.txx" Covered="true">
+    <LOCTested>22</LOCTested>
+    <LOCUnTested>27</LOCUnTested>
+    <PercentCoverage>44.90</PercentCoverage>
+    <CoverageMetric>0.54</CoverageMetric>
+  </File>
+  <File Name="itkVectorLevelSetFunction.h" FullPath="./Source/itkVectorLevelSetFunction.h" Covered="true">
+    <LOCTested>28</LOCTested>
+    <LOCUnTested>2</LOCUnTested>
+    <PercentCoverage>93.33</PercentCoverage>
+    <CoverageMetric>0.95</CoverageMetric>
+  </File>
+  <File Name="itkVectorLevelSetFunction.txx" FullPath="./Source/itkVectorLevelSetFunction.txx" Covered="true">
+    <LOCTested>153</LOCTested>
+    <LOCUnTested>43</LOCUnTested>
+    <PercentCoverage>78.06</PercentCoverage>
+    <CoverageMetric>0.79</CoverageMetric>
+  </File>
+  <File Name="itkVectorSegmentationLevelSetFunction.h" FullPath="./Source/itkVectorSegmentationLevelSetFunction.h" Covered="true">
+    <LOCTested>14</LOCTested>
+    <LOCUnTested>5</LOCUnTested>
+    <PercentCoverage>73.68</PercentCoverage>
+    <CoverageMetric>0.83</CoverageMetric>
+  </File>
+  <File Name="itkVectorSegmentationLevelSetFunction.txx" FullPath="./Source/itkVectorSegmentationLevelSetFunction.txx" Covered="true">
+    <LOCTested>20</LOCTested>
+    <LOCUnTested>29</LOCUnTested>
+    <PercentCoverage>40.82</PercentCoverage>
+    <CoverageMetric>0.51</CoverageMetric>
+  </File>
+  <File Name="itkVectorSegmentationLevelSetImageFilter.h" FullPath="./Source/itkVectorSegmentationLevelSetImageFilter.h" Covered="true">
+    <LOCTested>15</LOCTested>
+    <LOCUnTested>15</LOCUnTested>
+    <PercentCoverage>50.00</PercentCoverage>
+    <CoverageMetric>0.62</CoverageMetric>
+  </File>
+  <File Name="itkVectorSegmentationLevelSetImageFilter.txx" FullPath="./Source/itkVectorSegmentationLevelSetImageFilter.txx" Covered="true">
+    <LOCTested>28</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>90.32</PercentCoverage>
+    <CoverageMetric>0.93</CoverageMetric>
+  </File>
+  <File Name="itkVectorShiftScaleImageFilter.h" FullPath="./Source/itkVectorShiftScaleImageFilter.h" Covered="true">
+    <LOCTested>8</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkVectorShiftScaleImageFilter.txx" FullPath="./Source/itkVectorShiftScaleImageFilter.txx" Covered="true">
+    <LOCTested>49</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkVectorSparseFieldLevelSetImageFilter.h" FullPath="./Source/itkVectorSparseFieldLevelSetImageFilter.h" Covered="true">
+    <LOCTested>22</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>88.00</PercentCoverage>
+    <CoverageMetric>0.91</CoverageMetric>
+  </File>
+  <File Name="itkVectorSparseFieldLevelSetImageFilter.txx" FullPath="./Source/itkVectorSparseFieldLevelSetImageFilter.txx" Covered="true">
+    <LOCTested>55</LOCTested>
+    <LOCUnTested>430</LOCUnTested>
+    <PercentCoverage>11.34</PercentCoverage>
+    <CoverageMetric>0.13</CoverageMetric>
+  </File>
+  <File Name="itkVectorZeroCrossingImageFilter.h" FullPath="./Source/itkVectorZeroCrossingImageFilter.h" Covered="true">
+    <LOCTested>11</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <File Name="itkVectorZeroCrossingImageFilter.txx" FullPath="./Source/itkVectorZeroCrossingImageFilter.txx" Covered="true">
+    <LOCTested>69</LOCTested>
+    <LOCUnTested>3</LOCUnTested>
+    <PercentCoverage>95.83</PercentCoverage>
+    <CoverageMetric>0.96</CoverageMetric>
+  </File>
+  <File Name="itkVotingBinaryHoleFillFloodingImageFilter.h" FullPath="./Source/itkVotingBinaryHoleFillFloodingImageFilter.h" Covered="true">
+    <LOCTested>9</LOCTested>
+    <LOCUnTested>1</LOCUnTested>
+    <PercentCoverage>90.00</PercentCoverage>
+    <CoverageMetric>0.95</CoverageMetric>
+  </File>
+  <File Name="itkVotingBinaryHoleFillFloodingImageFilter.txx" FullPath="./Source/itkVotingBinaryHoleFillFloodingImageFilter.txx" Covered="true">
+    <LOCTested>165</LOCTested>
+    <LOCUnTested>0</LOCUnTested>
+    <PercentCoverage>100.00</PercentCoverage>
+    <CoverageMetric>1.00</CoverageMetric>
+  </File>
+  <LOCTested>2185</LOCTested>
+  <LOCUntested>674</LOCUntested>
+  <LOC>2859</LOC>
+  <PercentCoverage>76.43</PercentCoverage>
+  <EndDateTime>Feb 23 03:10 EST</EndDateTime>
+  <EndTime>1235376645</EndTime>
+<ElapsedMinutes>0.30</ElapsedMinutes></Coverage>
+</Site>

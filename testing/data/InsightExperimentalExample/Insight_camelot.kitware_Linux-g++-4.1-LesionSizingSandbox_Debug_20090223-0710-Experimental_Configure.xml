@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-g++-4.1-LesionSizingSandbox_Debug"
+  BuildStamp="20090223-0710-Experimental"
+  Name="camelot.kitware"
+  Generator="ctest2.7-20080827"  OSName="Linux"
+  Hostname="Camelot"
+  OSRelease="2.6.20-17-generic"
+  OSVersion="#2 SMP Wed Aug 20 16:47:34 UTC 2008"
+  OSPlatform="i686"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="15"
+  ModelID="4"
+  ProcessorCacheSize="1024"
+  NumberOfLogicalCPU="2"
+  NumberOfPhysicalCPU="1"
+  TotalVirtualMemory="1906"
+  TotalPhysicalMemory="1003"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2992.84"
+>
+<Configure>
+  <StartDateTime>Feb 23 02:10 EST</StartDateTime>
+  <StartConfigureTime>1235373038</StartConfigureTime>
+<ConfigureCommand>"/home/ibanez/local/bin/cmake" "/home/ibanez/src/LesionSizingKit/Sandbox"</ConfigureCommand>
+<Log>-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug
+</Log>
+  <ConfigureStatus>0</ConfigureStatus>
+  <EndDateTime>Feb 23 02:10 EST</EndDateTime>
+  <EndConfigureTime>1235373038</EndConfigureTime>
+<ElapsedMinutes>0</ElapsedMinutes></Configure>
+</Site>

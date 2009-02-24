@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-g++-4.1-LesionSizingSandbox_Debug"
+  BuildStamp="20090223-0710-Experimental"
+  Name="camelot.kitware"
+  Generator="ctest2.7-20080827"  OSName="Linux"
+  Hostname="Camelot"
+  OSRelease="2.6.20-17-generic"
+  OSVersion="#2 SMP Wed Aug 20 16:47:34 UTC 2008"
+  OSPlatform="i686"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="15"
+  ModelID="4"
+  ProcessorCacheSize="1024"
+  NumberOfLogicalCPU="2"
+  NumberOfPhysicalCPU="1"
+  TotalVirtualMemory="1906"
+  TotalPhysicalMemory="1003"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2992.84"
+>
+<Build>
+  <StartDateTime>Feb 23 02:10 EST</StartDateTime>
+  <StartBuildTime>1235373038</StartBuildTime>
+<BuildCommand>/usr/bin/make -i -j4</BuildCommand>
+  <Warning>
+    <BuildLogLine>70</BuildLogLine>
+    <Text>/.../Sandbox/Testing/itkDescoteauxSheetnessImageFilterTest2.cxx:187: warning: converting to &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;main::InputPixelType&lt;-30&gt;&lt;-128&gt;&lt;-103&gt; from &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;double&lt;-30&gt;&lt;-128&gt;&lt;-103&gt;
+</Text>
+    <SourceFile>Testing/itkDescoteauxSheetnessImageFilterTest2.cxx</SourceFile>
+    <SourceLineNumber>187</SourceLineNumber>
+    <PreContext>[ 22%] Built target itkDescoteauxSheetnessFeatureGeneratorMultiScaleTest1
+Scanning dependencies of target itkDescoteauxSheetnessImageFilterTest2
+[ 23%] Building CXX object Testing/CMakeFiles/itkDescoteauxSheetnessImageFilterTest2.dir/itkDescoteauxSheetnessImageFilterTest2.cxx.o
+Scanning dependencies of target itkFeatureGeneratorTest1
+[ 25%] Building CXX object Testing/CMakeFiles/itkFeatureGeneratorTest1.dir/itkFeatureGeneratorTest1.cxx.o
+/.../Sandbox/Testing/itkDescoteauxSheetnessImageFilterTest2.cxx: In function &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;int main(int, char**)&lt;-30&gt;&lt;-128&gt;&lt;-103&gt;:
+</PreContext>
+    <PostContext>Scanning dependencies of target itkFastMarchingSegmentationModuleTest1
+Scanning dependencies of target itkFeatureAggregatorTest1
+[ 26%] Building CXX object Testing/CMakeFiles/itkFastMarchingSegmentationModuleTest1.dir/itkFastMarchingSegmentationModuleTest1.cxx.o
+[ 27%] Building CXX object Testing/CMakeFiles/itkFeatureAggregatorTest1.dir/itkFeatureAggregatorTest1.cxx.o
+Linking CXX executable ../bin/itkFeatureGeneratorTest1
+[ 27%] Built target itkFeatureGeneratorTest1</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>173</BuildLogLine>
+    <Text>/.../Sandbox/Source/itkMorphologicalOpenningFeatureGenerator.txx:140: warning: passing &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;double&lt;-30&gt;&lt;-128&gt;&lt;-103&gt; for argument 1 to &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;void itk::BinaryThresholdImageFilter&lt;TInputImage, TOutputImage&gt;::SetInsideValue(typename TOutputImage::PixelType) [with TInputImage = itk::Image&lt;short int, 3u&gt;, TOutputImage = itk::Image&lt;unsigned char, 3u&gt;]&lt;-30&gt;&lt;-128&gt;&lt;-103&gt;
+</Text>
+    <SourceFile>Source/itkMorphologicalOpenningFeatureGenerator.txx</SourceFile>
+    <SourceLineNumber>140</SourceLineNumber>
+    <PreContext>Linking CXX executable ../bin/itkMinimumFeatureAggregatorTest2
+[ 59%] Built target itkMinimumFeatureAggregatorTest2
+Scanning dependencies of target itkMorphologicalOpenningFeatureGeneratorTest1
+[ 61%] Building CXX object Testing/CMakeFiles/itkMorphologicalOpenningFeatureGeneratorTest1.dir/itkMorphologicalOpenningFeatureGeneratorTest1.cxx.o
+/.../Sandbox/Source/itkMorphologicalOpenningFeatureGenerator.txx: In member function &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;void itk::MorphologicalOpenningFeatureGenerator&lt;NDimension&gt;::GenerateData() [with unsigned int NDimension = 3u]&lt;-30&gt;&lt;-128&gt;&lt;-103&gt;:
+/.../Sandbox/Testing/itkMorphologicalOpenningFeatureGeneratorTest1.cxx:138:   instantiated from here
+</PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>174</BuildLogLine>
+    <Text>/.../Sandbox/Source/itkMorphologicalOpenningFeatureGenerator.txx:141: warning: passing &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;double&lt;-30&gt;&lt;-128&gt;&lt;-103&gt; for argument 1 to &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;void itk::BinaryThresholdImageFilter&lt;TInputImage, TOutputImage&gt;::SetOutsideValue(typename TOutputImage::PixelType) [with TInputImage = itk::Image&lt;short int, 3u&gt;, TOutputImage = itk::Image&lt;unsigned char, 3u&gt;]&lt;-30&gt;&lt;-128&gt;&lt;-103&gt;
+</Text>
+    <SourceFile>Source/itkMorphologicalOpenningFeatureGenerator.txx</SourceFile>
+    <SourceLineNumber>141</SourceLineNumber>
+    <PreContext></PreContext>
+    <PostContext>Linking CXX executable ../bin/itkMorphologicalOpenningFeatureGeneratorTest1
+[ 61%] Built target itkMorphologicalOpenningFeatureGeneratorTest1
+Scanning dependencies of target itkNumericTraitsMatrixPixelTest1
+[ 62%] Building CXX object Testing/CMakeFiles/itkNumericTraitsMatrixPixelTest1.dir/itkNumericTraitsMatrixPixelTest1.cxx.o
+Linking CXX executable ../bin/itkNumericTraitsMatrixPixelTest1
+[ 62%] Built target itkNumericTraitsMatrixPixelTest1</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Log Encoding="base64" Compression="/bin/gzip">
+  </Log>
+  <EndDateTime>Feb 23 03:02 EST</EndDateTime>
+  <EndBuildTime>1235376141</EndBuildTime>
+<ElapsedMinutes>51.7</ElapsedMinutes></Build>
+</Site>

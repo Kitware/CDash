@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-g++-4.1-LesionSizingSandbox_Debug"
+  BuildStamp="20090223-0710-Experimental"
+  Name="camelot.kitware"
+  Generator="ctest2.7-20080827"  OSName="Linux"
+  Hostname="Camelot"
+  OSRelease="2.6.20-17-generic"
+  OSVersion="#2 SMP Wed Aug 20 16:47:34 UTC 2008"
+  OSPlatform="i686"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="15"
+  ModelID="4"
+  ProcessorCacheSize="1024"
+  NumberOfLogicalCPU="2"
+  NumberOfPhysicalCPU="1"
+  TotalVirtualMemory="1906"
+  TotalPhysicalMemory="1003"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2992.84"
+>
+<CoverageLog>
+  <StartDateTime>Feb 23 03:10 EST</StartDateTime>  <StartTime>1235376645</StartTime>
+  <EndDateTime>Feb 23 03:10 EST</EndDateTime>
+  <EndTime>1235376645</EndTime>
+</CoverageLog>
+</Site>

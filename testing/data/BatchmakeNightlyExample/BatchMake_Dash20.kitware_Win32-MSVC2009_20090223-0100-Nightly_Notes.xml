@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="Win32-MSVC2009" BuildStamp="20090223-0100-Nightly" Name="Dash20.kitware" Generator="ctest2.6-patch 0">
+<Notes>
+<Note Name="F:/Dashboards/Dash20_batchmake_vs9.cmake">
+<Time>1.23538e+009</Time>
+<DateTime>Feb 23 05:04 Eastern Standard Time</DateTime>
+<Text>
+
+SET(CTEST_SOURCE_NAME BatchMake)
+SET(CTEST_BINARY_NAME BatchMake-Nightly)
+SET(CTEST_DASHBOARD_ROOT "F:/Dashboards")
+SET(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}")
+SET(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}")
+
+SET(CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
+
+SET(CTEST_COMMAND
+  "\"ctest\" -V -VV -D Nightly -A \"${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}\""
+)
+
+SET(CVSCOMMAND "F:/Program Files/TortoiseCVS/cvs.exe")
+SET(CTEST_CVS_COMMAND "F:/Program Files/TortoiseCVS/cvs.exe")
+
+SET(CTEST_CMAKE_COMMAND
+  "\"cmake\""
+  )
+
+SET(CTEST_INITIAL_CACHE "
+CVSCOMMAND:FILEPATH=F:/Program Files/TortoiseCVS/cvs.exe
+BUILD_SHARED_LIBS:BOOL=ON
+BUILD_TESTING:BOOL=ON
+BUILDNAME:STRING=Win32-MSVC2009
+CMAKE_GENERATOR:INTERNAL=Visual Studio 9 2008
+SITE:STRING=Dash20.kitware
+GRID_SUPPORT:BOOL=ON
+DASHBOARD_SUPPORT:BOOL=ON
+BUILD_EXAMPLES:BOOL=ON
+BATCHMAKE_USE_XCEDE:BOOL=ON
+ITK_DIR:PATH=F:/Dashboards/Slicer3-lib/Insight-build
+")
+</Text>
+</Note>
+</Notes>
+</Site>
