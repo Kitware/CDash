@@ -242,7 +242,27 @@ if(isset($_GET['upgrade-1-4']))
     pdo_query("ALTER TABLE subproject ADD starttime TIMESTAMP NOT NULL default '1980-01-01 00:00:00'");
     pdo_query("ALTER TABLE subproject ADD endtime TIMESTAMP NOT NULL default '1980-01-01 00:00:00'");
     }
-
+  
+  // Create the right indexes if necessary  
+  if(!pdo_check_index_exists('buildfailure','buildid'))
+    {
+    pdo_query("ALTER TABLE buildfailure ADD INDEX ( buildid )");
+    }
+    
+  if(!pdo_check_index_exists('buildfailure','type'))
+    {
+    pdo_query("ALTER TABLE buildfailure ADD INDEX ( type )");
+    }
+  
+  // Create the new table buildfailure arguments if the old one is still there
+  if(pdo_query("SELECT buildfailureid FROM buildfailureargument"))
+    {
+    pdo_query("DROP TABLE IF EXISTS buildfailureargument");
+    pdo_query("CREATE TABLE IF NOT EXISTS `buildfailureargument` (
+              `id` bigint(20) NOT NULL auto_increment,
+              `argument` varchar(60) NOT NULL,
+              PRIMARY KEY  (`id`))");
+    }
   // Set the database version
   setVersion();
   exit();
