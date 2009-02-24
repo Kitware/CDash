@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS buildfailureargument;
-
 CREATE TABLE IF NOT EXISTS `buildfailure` (
   `id` bigint(20) NOT NULL auto_increment,
   `buildid` bigint(20) NOT NULL,
