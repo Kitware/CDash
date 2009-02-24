@@ -14,7 +14,9 @@ CREATE TABLE IF NOT EXISTS `buildfailure` (
   `outputfile` varchar(255) NOT NULL,
   `outputtype` varchar(255) NOT NULL,
   `sourcefile` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `buildid` (`buildid`),
+  KEY `type` (`type`)
 );
 
 

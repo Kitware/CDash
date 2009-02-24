@@ -775,7 +775,9 @@ CREATE TABLE `buildfailure` (
   `outputfile` varchar(255) NOT NULL,
   `outputtype` varchar(255) NOT NULL,
   `sourcefile` varchar(512) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `buildid` (`buildid`),
+  KEY `type` (`type`)
 );
 
 
