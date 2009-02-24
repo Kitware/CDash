@@ -261,8 +261,18 @@ if(isset($_GET['upgrade-1-4']))
     pdo_query("CREATE TABLE IF NOT EXISTS `buildfailureargument` (
               `id` bigint(20) NOT NULL auto_increment,
               `argument` varchar(60) NOT NULL,
-              PRIMARY KEY  (`id`))");
+              PRIMARY KEY  (`id`),
+              KEY `argument` (`argument`))");
     }
+  
+  if(!pdo_check_index_exists('buildfailureargument','argument'))
+    {
+    pdo_query("ALTER TABLE buildfailureargument ADD INDEX ( argument )");
+    }
+
+  // Remove duplicates in buildfailureargument
+  //pdo_query("DELETE FROM buildfailureargument WHERE id NOT IN (SELECT buildfailureid as id FROM buildfailure2argument)");
+   
   // Set the database version
   setVersion();
   exit();

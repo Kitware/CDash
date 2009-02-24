@@ -783,8 +783,9 @@ CREATE TABLE `buildfailure` (
 
 CREATE TABLE  `buildfailureargument` (
   `id` bigint(20) NOT NULL auto_increment,
-  `argument` varchar(60) NOT NULL,
-  PRIMARY KEY  (`id`)
+  `argument` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `argument` (`argument`)
 );
 
 CREATE TABLE  `buildfailure2argument` (

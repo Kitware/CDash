@@ -29,8 +29,9 @@ CREATE TABLE IF NOT EXISTS  `labelemail` (
 
 CREATE TABLE IF NOT EXISTS `buildfailureargument` (
   `id` bigint(20) NOT NULL auto_increment,
-  `argument` varchar(60) NOT NULL,
-  PRIMARY KEY  (`id`)
+  `argument` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `argument` (`argument`)
 );
 
 CREATE TABLE IF NOT EXISTS `buildfailure2argument` (
@@ -167,6 +168,8 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
 --- Place the alter table in reverse order to make sure the 
 --- new ones are executed correctly
 ---
+ALTER TABLE `buildfailureargument` CHANGE `argument` `argument` VARCHAR( 255 )  NOT NULL;
+
 ALTER TABLE `buildfailure` CHANGE `exitcondition` `exitcondition` VARCHAR( 255 ) NOT NULL; 
 ALTER TABLE `buildfailure` CHANGE `language` `language` VARCHAR( 64 ) NOT NULL;
 ALTER TABLE `buildfailure` CHANGE `sourcefile` `sourcefile` VARCHAR( 512 ) NOT NULL;
