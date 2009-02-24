@@ -40,20 +40,20 @@ class PubProjectTestCase extends KWWebTestCase
     $query  = "SELECT id FROM project WHERE name = 'ProjectTest4Db'";
     $result = $this->db->query($query);
     $this->projecttestid = $result[0]['id'];
-    $query  = "SELECT name,starttime,endtime,description FROM buildgroup WHERE projectid = '".$this->projecttestid."'";
+    $query  = "SELECT name,starttime,endtime,description FROM buildgroup WHERE projectid = '".$this->projecttestid."' order by name desc";
     $result = $this->db->query($query);
     $expected = array('0' => array('name'        => 'Nightly',
                                    'starttime'   => '1980-01-01 00:00:00',
                                    'endtime'     => '1980-01-01 00:00:00',
                                    'description' => 'Nightly builds'),
-                      '1' => array('name'        => 'Continuous',
+                      '1' => array('name'        => 'Experimental',
                                    'starttime'   => '1980-01-01 00:00:00',
                                    'endtime'     => '1980-01-01 00:00:00',
-                                   'description' => 'Continuous builds'),
-                      '2' => array('name'        => 'Experimental',
+                                   'description' => 'Experimental builds'),
+                      '2' => array('name'        => 'Continuous',
                                    'starttime'   => '1980-01-01 00:00:00',
                                    'endtime'     => '1980-01-01 00:00:00',
-                                   'description' => 'Experimental builds'));
+                                   'description' => 'Continuous builds'));
    $this->assertEqual($result,$expected);
    }
   
@@ -62,7 +62,14 @@ class PubProjectTestCase extends KWWebTestCase
     $query  = "SELECT COUNT(*) FROM buildgroupposition WHERE buildgroupid IN (SELECT id FROM buildgroup WHERE projectid =";
     $query .= $this->projecttestid.")";
     $result = $this->db->query($query);
-    $this->assertEqual($result[0]['COUNT(*)'],3);
+    if(!strcmp($this->db->getType(),'pgsql'))
+      {
+      $this->assertEqual($result[0]['count'],3);
+      }
+    elseif(!strcmp($this->db->getType(),'mysql'))
+      {
+      $this->assertEqual($result[0]['COUNT(*)'],3);  
+      }
     }
   
   function testUser2Project()

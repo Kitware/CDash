@@ -8,22 +8,30 @@
 class database 
 {
   var $dbo = null;
+  var $type = null;
   
   function __construct($type)
    {
    switch ($type)
      {
       case "mysql":
-        $this->dbo = new dbo_mysql(); 
+        $this->dbo = new dbo_mysql();
+        $this->type = "mysql";
         break;
       case "pgsql":
         $this->dbo = new dbo_pgsql();
+        $this->type = "pgsql";
         break;
       default:
         $status = "database type unsupported.\n";
         exit($status);
       }
    }
+  
+  function getType()
+    {
+    return $this->type;
+    }
   
   function connect()
     {
@@ -223,17 +231,14 @@ class dbo_mysql extends dbo
      }
 }
 
-class dbo_postgre extends dbo
+class dbo_pgsql extends dbo
 {
    function connect($dbname = null)
      {
-     if(!$dbname)
-       {
-       $dbname = $this->db;
-       }
+     $dbname   = $this->db;
      $host     = $this->host;
      $user     = $this->user;
-     $password = $this->password; 
+     $password = $this->password;
      $conn  = "host='$host' dbname='$dbname' user='$user' password='$password'";
      $this->dbconnect = pg_connect($conn, PGSQL_CONNECT_FORCE_NEW);
      }
@@ -246,16 +251,29 @@ class dbo_postgre extends dbo
   
    function create($db)
      {
-     $this->connect('host');
-     pg_query($this->dbconnect,"CREATE DATABASE IF NOT EXISTS $db");
+     $this->setDb('host');
+     $this->connect();
+     if(!pg_query($this->dbconnect,"CREATE DATABASE $db"))
+      {
+      $this->disconnect();
+      return false;
+      }
      $this->disconnect();
+     $this->setDb($db);
+     return true;
      }
   
    function drop($db)
      {
-     $this->connect('host');
-     pg_query($this->dbconnect,"DROP DATABASE $db");
+     $this->setDb('host');
+     $this->connect();
+     if(!pg_query($this->dbconnect,"DROP DATABASE $db"))
+       {
+       $this->disconnect();
+       return false;
+       }
      $this->disconnect();
+     return true;
      }
   
    function connectToDb()
@@ -272,12 +290,12 @@ class dbo_postgre extends dbo
      {
      $this->connect();
      $resource = pg_query($this->dbconnect,$query);
-     if (!$result) 
+     if (!$resource)
        {
        return false;
        }
      $result = array();
-     while($row = pg_fetch_array($result, NULL, PGSQL_ASSOC))
+     while($row = pg_fetch_array($resource, NULL, PGSQL_ASSOC))
        {
        $result[] = $row;
        }
@@ -288,9 +306,9 @@ class dbo_postgre extends dbo
    function fillDb($sqlfile)
      {
      if(!$this->dbconnect)
-        {
-        $this->connect();
-        }
+      {
+      $this->connect();
+      }
      $file_content = file($sqlfile);
      //print_r($file_content);
      $query = "";
@@ -316,6 +334,10 @@ class dbo_postgre extends dbo
          }
        $linnum++;
        } // end for each line
+     $pwd = md5('simpletest');
+     $query = "INSERT INTO \"user\" (id, email, password, firstname, lastname, institution, admin) ";
+     $query .= "VALUES (nextval('user_id_seq'::regclass), 'simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
+     pg_query($this->dbconnect,$query);
      echo pg_last_error();
      $this->disconnect();
      return true;

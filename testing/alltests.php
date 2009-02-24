@@ -2,12 +2,14 @@
 require_once('kwtest/kw_web_tester.php');
 require_once('kwtest/kw_cdash_xml.php');
 require_once('kwtest/kw_test_manager.php');
+require_once('kwtest/kw_html_reporter.php');
+
 require_once('config.test.php');
 if(strcmp($CDASH_DB_NAME,'cdash4simpletest') != 0)
   {
   die("We cannot test cdash because test database is not cdash4simpletest\n");       
   }
-/* --------------- for testing inside the console and send to cdash -----------------*/
+/*--------------- for testing inside the console and send to cdash -----------------*/
 $cdashreporter = new CDashXmlReporter($configure);
 $manager       = new CDashTestManager();
 $manager->setCDashServer($configure['cdash']);
@@ -21,5 +23,5 @@ $manager->sendToCdash($cdashreporter,$configure['outputdirectory']);
 $manager = new HtmlTestManager();
 $manager->setTestDirectory(getcwd());
 $manager->setDatabase($db);
-$manager->runAllTests(new HtmlReporter());*/
+$manager->runAllTests(new KWHtmlReporter());*/
 ?>

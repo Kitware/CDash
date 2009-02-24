@@ -28,7 +28,10 @@ class ProjectInDbTestCase extends KWWebTestCase
       return;
       }
     $this->login();
-    $this->analyse($this->clickLink('[Create new project]'));
+    if(!$this->analyse($this->clickLink('[Create new project]')))
+      {
+      return;
+      }
     $this->createProjectTest();
     $query = "SELECT COUNT(*) FROM project";
     $result = $this->db->query($query);
@@ -36,6 +39,7 @@ class ProjectInDbTestCase extends KWWebTestCase
       {
       $errormsg = "The result of the query '$query' is not the one expected: 1";
       $this->assertEqual($result[0],'1',$errormsg);
+      return;
       }
     $this->assertText('The project ProjectTest has been created successfully.');
     }

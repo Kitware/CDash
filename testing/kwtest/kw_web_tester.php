@@ -51,7 +51,7 @@ class KWWebTestCase extends WebTestCase {
     if(!$page)
       {
       $this->assertTrue(false,"The requested URL was not found on this server.");
-      return;
+      return false;
       }
     $browser = $this->getBrowser();
     $content = '';

@@ -133,7 +133,7 @@ class TestManager
        if(!$database->create($dbname))
         {
         $dbcreated = false;
-        $msg = 'error mysql_query(CREATE DATABASE)';
+        $msg = 'error query(CREATE DATABASE)';
         die("Error" . " File: " . __FILE__ . " on line: " . __LINE__.": $msg");
         return false;
         }

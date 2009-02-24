@@ -5,19 +5,20 @@ require(realpath("$cdashpath/cdash/config.php"));
 // Everything should go here
 $configure = array(
   // url of the cdash to test
-  'urlwebsite'       => 'http://localhost/CDashTesting',
+  'urlwebsite'       => 'http://localhost/CDash/CDashDev',
   // the directory to store the xml report for cdash
   'outputdirectory'  => '/tmp',
   // the kind of test: Experimental, Nightly, Continuous
-  'type'             => 'Nightly',
+  'type'             => 'Experimental',
   // the site of the test
-  'site'             => 'yellowstone.kitware',
+  'site'             => 'tatouine.kitware.com',
   // the build name
   'buildname'        => 'CDash-SVN-MySQL',
+  //'buildname'        => 'CDash-SVN-PgSQL',
   // the cdash host
-  'cdash'            => 'http://www.cdash.org/CDash',
+  'cdash'            => 'http://localhost/CDash/CDash',
   // the local svn repository
-  'svnroot'          => '/var/www/CDashTesting'
+  'svnroot'          => '/var/www/CDash/CDashDev'
   );
 $db = array( 'host'   => $CDASH_DB_HOST,
              'login'  => $CDASH_DB_LOGIN,
