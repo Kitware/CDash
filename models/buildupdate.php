@@ -86,6 +86,11 @@ class BuildUpdate
       }  
  
     // Add errors/warnings
+    if(!isset($this->Files))
+        {
+        return;
+        }
+    
     foreach($this->Files as $file)
       {
       $file->BuildId = $this->BuildId;

@@ -123,6 +123,11 @@ class BuildConfigure
     {
     if($this->BuildId)
       {
+      if(!isset($this->Labels))
+        {
+        return;
+        }
+      
       foreach($this->Labels as $label)
         {
         $label->BuildId = $this->BuildId;
