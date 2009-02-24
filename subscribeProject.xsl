@@ -24,16 +24,17 @@
         <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
         <xsl:comment><![ endif]]></xsl:comment>
          <xsl:call-template name="headscripts"/>
-         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
-         <script type="text/javascript">
+          <script type="text/javascript">
           function saveChanges()
             {
               $("#changesmade").show();
             }
          </script>
-
+         <script type="text/javascript" src="javascript/OptionTransfer.js"></script> 
+         <script type="text/javascript" src="javascript/cdashUserLabels.js"></script>
+         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
        </head>
-       <body bgcolor="#ffffff">
+       <body bgcolor="#ffffff" onLoad="opt.init(document.forms[0])">
 
 <xsl:choose>         
 <xsl:when test="/cdash/uselocaldirectory=1">
@@ -228,14 +229,15 @@
           </tr>  
         </table>
     </div>
-    <div id="fragment-5" class="tab_content" >
+    <div id="fragment-5" class="tab_content">
       <div class="tab_help"></div>
         Select the labels you want to subscribe to. You will receive only emails corresponding to these labels. <br/><br/>
+       
         <table width="800">
           <tr>
             <td align="right">
              Available Labels (last 7 days)<br/>
-             <select name="movelabels[]" size="15" multiple="true" id="movelabels">
+             <select name="movelabels[]" size="15" multiple="true" id="movelabels" onDblClick="rightTransfer()">
                 <xsl:for-each select="/cdash/project/label">
                 <option>
                   <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -245,12 +247,12 @@
              </select>
             </td>
             <td align="center">
-            <input name="addlabel" type="submit" value="&gt;&gt;" /><br/><br/>
-            <input name="removelabel" type="submit" value="&lt;&lt;" />
+            <input name="addlabel" onclick="rightTransfer()" type="button" value="&gt;&gt;" /><br/><br/>
+            <input name="removelabel" onclick="leftTransfer()" type="button" value="&lt;&lt;" />
             </td>
             <td align="left">
              Email Labels <br/>
-            <select name="emaillabels[]" size="15" multiple="true" id="labels">
+            <select name="emaillabels[]" size="15" multiple="true" id="emaillabels" onDblClick="leftTransfer()">
                 <xsl:for-each select="/cdash/project/labelemail">
                 <option>
                   <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -266,8 +268,8 @@
  
  <xsl:if test="/cdash/edit=1">
   <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;"><br/>
-  <span id="changesmade" style="color:red;display:none;">*Changes need to be updated</span>
-  <input type="submit" name="updatesubscription" value="Update Subscription"/>
+  <span id="changesmade" style="color:red;display:none;">*Changes need to be updated </span>
+  <input type="submit" onclick="SubmitForm()" name="updatesubscription" value="Update Subscription"/>
   <input type="submit" name="unsubscribe" value="Unsubscribe"/>
   </div>
   </xsl:if>
@@ -281,7 +283,6 @@
 <br/>
 
 <br/>
-
 <!-- FOOTER -->
 <br/>
 

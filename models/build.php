@@ -1032,6 +1032,41 @@ class Build
     return $build_array['name'];
     }
 
+  /** Get all the labels for a given build */
+  function GetLabels()
+    {
+    if(!$this->Id)
+      {
+      echo "Build GetLabels(): Id not set";
+      return false;
+      }
+
+    $labels = pdo_query("SELECT label.id as labelid FROM label WHERE 
+                         label.id IN (SELECT labelid AS id FROM label2build WHERE label2build.buildid=".qnum($this->Id).")
+                         OR label.id IN (SELECT labelid AS id FROM label2test WHERE label2test.buildid=".qnum($this->Id).")
+                         OR label.id IN (SELECT labelid AS id FROM label2coveragefile WHERE label2coveragefile.buildid=".qnum($this->Id).")
+                         OR label.id IN (SELECT labelid AS id FROM label2buildfailure,buildfailure 
+                            WHERE label2buildfailure.buildfailureid=buildfailure.id AND buildfailure.buildid=".qnum($this->Id).")
+                         OR label.id IN (SELECT labelid AS id FROM label2dynamicanalysis,dynamicanalysis 
+                            WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id AND dynamicanalysis.buildid=".qnum($this->Id).")
+                         ");           
+    if(!$labels)
+      {
+      add_last_sql_error("Build GetLabels");
+      return false;
+      }
+    
+    while($label_array = pdo_fetch_array($labels))
+      {
+      $labelids[] = $label_array['labelid'];
+      }
+   
+    return array_unique($labelids);
+    
+    $labelids = array();
+
+    return $labelids;
+    }
 
 } // end class Build
 ?>

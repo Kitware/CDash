@@ -116,8 +116,41 @@ class LabelEmail
     return true;
     } // end insert() function
   
+  /** Update the labels given a projectid and userid */
+  function UpdateLabels($labels)
+    {
+    if(!$this->ProjectId)
+      {
+      echo "LabelEmail UpdateLabels(): ProjectId not set";
+      return false;
+      } 
+      
+    if(!$this->UserId)
+      {
+      echo "LabelEmail UpdateLabels(): UserId not set";
+      return false;
+      } 
+    
+    $existinglabels = $this->GetLabels();
+    $toremove = array_diff($existinglabels,$labels);
+    $toadd = array_diff($labels,$existinglabels);
+    
+    foreach($toremove as $id)
+      {
+      $this->LabelId = $id;
+      $this->Remove();
+      }
+    
+     foreach($toadd as $id)
+      {
+      $this->LabelId = $id;
+      $this->Insert();
+      }
+    return true;  
+    }
+    
    
-  /** Get the labels given a projectidd and userid */
+  /** Get the labels given a projectid and userid */
   function GetLabels()
     {
     if(!$this->ProjectId)
@@ -147,6 +180,6 @@ class LabelEmail
       
     return $labelids;  
     }
-      
+
 } // end class LabelEmail
 ?>

@@ -31,7 +31,6 @@ class Label
   var $TestBuildId;
   var $UpdateFileKey;
 
-
   function SetText($text)
     {
     $this->Text = $text;
@@ -164,6 +163,7 @@ class Label
     //  'label2updatefile', 'updatefilekey');
     return true;
     }
+  
 }
 
 ?>

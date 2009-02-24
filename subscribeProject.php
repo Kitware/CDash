@@ -114,6 +114,11 @@ if ($session_OK)
   @$EmailType = $_POST["emailtype"];
   @$EmailType = $_POST["emailtype"];
 
+  // Deals with label email
+  $LabelEmail = new LabelEmail();
+  $Label = new Label();
+  $LabelEmail->ProjectId = $projectid;
+  $LabelEmail->UserId = $userid;
       
   if($Unsubscribe)
     {
@@ -126,8 +131,37 @@ if ($session_OK)
                up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
                GROUP BY build.siteid)");             
     header( 'location: user.php?note=unsubscribedtoproject' );
-    }   
-  else if($Subscribe || $UpdateSubscription)
+    }
+  else if($UpdateSubscription)
+    {
+    @$emailcategory_update = $_POST["emailcategory_update"];
+    @$emailcategory_configure = $_POST["emailcategory_configure"];
+    @$emailcategory_warning = $_POST["emailcategory_warning"];
+    @$emailcategory_error = $_POST["emailcategory_error"];
+    @$emailcategory_test = $_POST["emailcategory_test"];
+    
+    $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test;    
+    if(pdo_num_rows($user2project)>0)
+      {
+      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',emailcategory='$EmailCategory' 
+                         WHERE userid='$userid' AND projectid='$projectid'");
+      if($Role==0)
+        { 
+        // Remove the claim sites for this project if they are only part of this project
+        pdo_query("DELETE FROM site2user WHERE userid='$userid' 
+                 AND siteid NOT IN 
+                (SELECT build.siteid FROM build,user2project as up WHERE 
+                 up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
+                 GROUP BY build.siteid)");
+        }
+      }
+
+    $LabelEmail->UpdateLabels($_POST['emaillabels']);
+
+    // Redirect
+    //header( 'location: user.php' );
+    }  
+  else if($Subscribe)
     {
     @$emailcategory_update = $_POST["emailcategory_update"];
     @$emailcategory_configure = $_POST["emailcategory_configure"];
@@ -154,44 +188,10 @@ if ($session_OK)
       {
       pdo_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype,emailcategory) 
                  VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType','$EmailCategory ')");
-      }  
+      }
     header( 'location: user.php?note=subscribedtoproject' );
     }
-  
-  // Deals with label email
-  $LabelEmail = new LabelEmail();
-  $LabelEmail->ProjectId = $projectid;
-  $LabelEmail->UserId = $userid;
-  
-  $Label = new Label();
-    
-  // If we add a label
-  if(isset($_POST['addlabel']))
-    {
-    if(isset($_POST['movelabels']))
-      {
-      $movelabels = $_POST['movelabels'];
-      foreach($movelabels as $labelid)
-        {
-        $LabelEmail->LabelId = $labelid;
-        $LabelEmail->Insert();
-        }
-      }
-    }
 
-  // If we add an email
-  if(isset($_POST['removelabel']))
-    {
-    if(isset($_POST['emaillabels']))
-      {
-      $labels = $_POST['emaillabels'];
-      foreach($labels as $labelid)
-        {
-        $LabelEmail->LabelId = $labelid;
-        $LabelEmail->Remove();
-        }
-      }
-    }
 
   // XML
   $xml .= "<project>";
@@ -212,7 +212,6 @@ if ($session_OK)
     $xml .= "</label>";
     }
   
-
   foreach($labelids as $labelid)
     {
     $xml .= "<labelemail>";
