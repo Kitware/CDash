@@ -35,15 +35,40 @@ function checkEmailPreferences($emailcategory,$nwarnings,$nerrors,$nfailingtests
   return false;  
 }
 
+/** Given a user check if we should send an email based on labels */
+function checkEmailLabel($projectid, $userid, $buildid)
+{
+  include_once("cdash/labelemail.php");
+  include_once("cdash/build.php");
+  $LabelEmail = new LabelEmail();
+  $LabelEmail->UserId = $userid;
+  $LabelEmail->ProjectId = $projectid;
+  
+  $labels = $LabelEmail->GetLabels();
+  if(count($labels)==0) // if the number of subscribed labels is zero we send the email
+    {
+    return true;
+    }
+  
+  $Build = new Build();
+  $Build->Id = $buildid;
+  $buildlabels = $Build->GetLabels();
+  if(count(array_intersect($labels, $buildlabels))>0)
+    {
+    return true;
+    }
+  return false;
+} // end checkEmailLabel
+
 /** Send a summary email */
 function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
-                          $nbuildwarnings,$nbuilderrors,$nfailingtests)
+                          $nbuildwarnings,$nbuilderrors,$nfailingtests,$buildid)
 {
   include("config.php");
   
   // Find the current updaters from the night using the dailyupdatefile table
   $summaryEmail = "";
-  $query = "SELECT ".qid("user").".email,user2project.emailcategory FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
+  $query = "SELECT ".qid("user").".email,user2project.emailcategory,".qid("user").".id FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
                            user2project.projectid=$projectid
                            AND user2project.userid=".qid("user").".id 
                            AND user2project.cvslogin=dailyupdatefile.author
@@ -71,7 +96,14 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
     if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
       {
       continue;
-      }   
+      }
+    
+    // Check if the labels are defined for this user
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+      {
+      continue;
+      }
+      
     if($summaryEmail != "")
       {
       $summaryEmail .= ", ";
@@ -80,7 +112,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
     }
     
   // Select the users who want to receive all emails
-  $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
+  $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,".qid("user").".id  FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
                        AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
   add_last_sql_error("sendsummaryemail");
   while($user_array = pdo_fetch_array($user))
@@ -90,6 +122,13 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
        {
        continue;
        }
+    
+    // Check if the labels are defined for this user
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+      {
+      continue;
+      }   
+       
     if($summaryEmail != "")
       {
       $summaryEmail .= ", ";
@@ -357,7 +396,8 @@ function sendemail($attributes,$projectid)
       }
 
     // Send the summary email
-    sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$nbuildwarnings,$nbuilderrors,$nfailingtests);
+    sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
+                     $nbuildwarnings,$nbuilderrors,$nfailingtests,$buildid);
     return;
     } // end summary email
 
@@ -445,7 +485,7 @@ function sendemail($attributes,$projectid)
       }
     
     // Find a matching name in the database
-    $query = "SELECT ".qid("user").".email,user2project.emailcategory 
+    $query = "SELECT ".qid("user").".email,user2project.emailcategory,".qid("user").".id
                      FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
                      AND user2project.userid=".qid("user").".id AND user2project.cvslogin='$author'
                      AND user2project.emailtype>0
@@ -466,7 +506,13 @@ function sendemail($attributes,$projectid)
       {
       continue;
       }
-     
+    
+    // Check if the labels are defined for this user
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+      {
+      continue;
+      }
+       
     // don't add the same user twice
     if(strpos($email,$user_array["email"]) !== false)
      {
@@ -481,7 +527,7 @@ function sendemail($attributes,$projectid)
     } 
 
  // Select the users who want to receive all emails
- $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,user2project.emailcategory FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
+ $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,user2project.emailcategory,".qid("user").".id FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
                     AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
  add_last_sql_error("sendmail");
  while($user_array = pdo_fetch_array($user))
@@ -498,6 +544,12 @@ function sendemail($attributes,$projectid)
      continue;
      }
   
+   // Check if the labels are defined for this user
+   if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+      {
+      continue;
+      }
+      
   // Nightly build notification
   if($user_array["emailtype"] == 2 && $buildtype=="Nightly")
     {
