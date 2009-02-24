@@ -60,8 +60,8 @@ function filterdefinitions_XML()
   $xml .= filterdefinition_XML('testspassed', 'Tests Passed', 'number', '', '0');
   $xml .= filterdefinition_XML('testtimestatus', 'Tests Timing Failed', 'number', '', '0');
   $xml .= filterdefinition_XML('updateduration', 'Update Duration', 'number', '', '0');
-  $xml .= filterdefinition_XML('updateerrors', 'Update Errors', 'number', '', '0');
-  $xml .= filterdefinition_XML('updatewarnings', 'Update Warnings', 'number', '', '0');
+//  $xml .= filterdefinition_XML('updateerrors', 'Update Errors', 'number', '', '0');
+//  $xml .= filterdefinition_XML('updatewarnings', 'Update Warnings', 'number', '', '0');
   $xml .= filterdefinition_XML('updatedfiles', 'Updated Files', 'number', '', '0');
 
   $xml .= '</filterdefinitions>';
@@ -378,7 +378,7 @@ function get_filterdata_from_request()
 
       case 'builderrors':
       {
-        $sql_field = "(SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0')";
+        $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0'), IF((SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='0'), 0))";
       }
       break;
 
@@ -409,7 +409,7 @@ function get_filterdata_from_request()
 
       case 'buildwarnings':
       {
-        $sql_field = "(SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1')";
+        $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1'), IF((SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='1'), 0))";
       }
       break;
 
