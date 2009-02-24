@@ -169,7 +169,7 @@ class DynamicAnalysisHandler extends AbstractHandler
           $this->StartTimeStamp .= $data;
           break;
         case 'STARTDATETIME':
-          $this->StartTimeStamp = str_to_time($data, $this->stamp);
+          $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
           break;
         case 'ELAPSEDMINUTES':
           $this->EndTimeStamp = $this->StartTimeStamp+$data*60;
