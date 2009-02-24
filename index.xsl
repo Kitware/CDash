@@ -409,11 +409,11 @@
   <xsl:if test="count(/cdash/buildgroup/build/buildid)>0 and $type/last=1">
   <tbody>
     <tr class="total">
-      <td align="left">Totals</td>
-      <td align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
-      <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      <td align="center">
+      <td width="15%" align="left">Totals</td>
+      <td width="15%" align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
+      <td width="2%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="3%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="5%" align="center">
        <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="/cdash/totalConfigureError!=0">
@@ -426,7 +426,7 @@
       </xsl:attribute>
       <b><xsl:value-of select = "/cdash/totalConfigureError"/></b>  
       </td>
-      <td align="center">
+      <td width="5%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalConfigureWarning > 0">
@@ -439,8 +439,8 @@
       </xsl:attribute>  
       <b><xsl:value-of select = "/cdash/totalConfigureWarning"/></b>
       </td>
-      <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      <td align="center">
+      <td width="5%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="5%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalError > 0">
@@ -453,7 +453,7 @@
       </xsl:attribute>
       <b><xsl:value-of select = "/cdash/totalError"/></b>
       </td>
-      <td align="center">
+      <td width="5%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalWarning > 0">
@@ -466,8 +466,8 @@
       </xsl:attribute>  
       <b><xsl:value-of select = "/cdash/totalWarning"/></b>
       </td>
-      <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      <td align="center">
+      <td width="5%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="6%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalNotRun > 0">
@@ -480,7 +480,7 @@
       </xsl:attribute>
       <b><xsl:value-of select = "/cdash/totalNotRun"/></b>
       </td>
-      <td align="center">
+      <td width="3%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalFail > 0">
@@ -493,7 +493,7 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "/cdash/totalFail"/></b>  
       </td>
-      <td align="center">
+      <td width="3%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalFail > 0">
@@ -506,9 +506,9 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "/cdash/totalPass"/></b>
       </td>
-      <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      <td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      <td class="nob"></td>
+      <td width="3%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="10%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="10%" class="nob"></td>
       <!-- <td bgcolor="#ffffff"></td> -->
     </tr>
   </tbody>
