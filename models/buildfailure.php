@@ -135,8 +135,9 @@ class BuildFailure
     
     foreach($this->Arguments as $argument)
       {
-      $argumentescaped = pdo_real_escape_string($argument);
-      
+      // Limit the argument to 255
+      $argumentescaped = pdo_real_escape_string(substr($argument,0,255));
+
       // Check if the argument exists
       $query = pdo_query("SELECT id FROM buildfailureargument WHERE argument='".$argumentescaped."'");
       if(!$query)
