@@ -66,6 +66,7 @@ class CDashXmlReporter extends XmlReporter
     $this->_updatefile     = fopen($filename,'w+');
     $filename              = $this->_configure['outputdirectory'].'/Configure.xml';
     $this->_configurefile  = fopen($filename,'w+');
+    $this->_testpath       = dirname(dirname(__FILE__));
     $this->_testN          = 0;
     $this->_methodN        = 0;
     $this->_elapsedminutes = 0;
@@ -176,7 +177,7 @@ class CDashXmlReporter extends XmlReporter
     fwrite($resourcefile, $this->_getIndent(1));
     fwrite($resourcefile,"<".$this->_namespace."StartBuildTime>".time()."</StartBuildTime>\n");
     fwrite($resourcefile, $this->_getIndent(1));
-    fwrite($resourcefile,"<".$this->_namespace."BuildCommand>php5 ".realpath('./alltest.php')."</BuildCommand>\n");
+    fwrite($resourcefile,"<".$this->_namespace."BuildCommand>php5 ".$this->_testpath."/alltests.php </BuildCommand>\n");
     }
 
   /**
@@ -211,10 +212,10 @@ class CDashXmlReporter extends XmlReporter
 
   function paintConfigureStart(){
      fwrite($this->_configurefile, $this->_getIndent(1));
-     fwrite($this->_configurefile, "<".$this->_namespace."StartConfigureTime>".time()."</StartConfigureTime>");
+     fwrite($this->_configurefile, "<".$this->_namespace."StartConfigureTime>".time()."</StartConfigureTime>\n");
      fwrite($this->_configurefile, $this->_getIndent(1));
      fwrite($this->_configurefile, "<".$this->_namespace."ConfigureCommand>");
-     fwrite($this->_configurefile, "php5 ".realpath('./alltest.php')."</ConfigureCommand>\n");
+     fwrite($this->_configurefile, "php5 ".$this->_testpath."/alltests.php </ConfigureCommand>\n");
      fwrite($this->_configurefile, $this->_getIndent(1));
      fwrite($this->_configurefile, "<".$this->_namespace."Log>\n");
   }
