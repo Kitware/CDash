@@ -59,6 +59,21 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $this->assertEqual($result[0],$expected);
     }
   
+  function testProjectExperimental()
+   {
+   $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
+   if(!$content)
+     {
+     return;
+     }
+   $content = $this->analyse($this->clickLink('Dash20.kitware'));
+   if(!$content || !$this->findString($content,'<b>Total Virtual Memory: </b>2GB<br /><b>Total Physical Memory: </b>15MB<br />'))
+     {
+     return;
+     }
+  $this->assertTrue(true);
+   }
+  
   // In case of the project does not exist yet
   function createProject($name,$description)
     {
