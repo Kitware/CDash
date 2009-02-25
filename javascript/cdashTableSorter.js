@@ -96,7 +96,7 @@ $(document).ready(function() {
             headers: { 
                 0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
-                2: { sorter:'numeric'},
+                2: { sorter:'digit'},
                 3: { sorter:'text'}
             },
           debug: false,
@@ -113,7 +113,7 @@ $(document).ready(function() {
                 0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
                 2: { sorter:'buildname'},
-                3: { sorter:'numeric'},
+                3: { sorter:'digit'},
                 4: { sorter:'text'}
             },
           debug: false,
@@ -133,7 +133,7 @@ $(document).ready(function() {
                 1: { sorter:'buildname'},
                 2: { sorter:'text'},
                 3: { sorter:'buildname'},
-                4: { sorter:'numeric'},
+                4: { sorter:'digit'},
                 5: { sorter:'text'}
             },
           debug: false,
@@ -150,14 +150,14 @@ $(document).ready(function() {
      $(this).tablesorter({
             headers: { 
                 0: { sorter:'text'},
-                1: { sorter:'numeric'},
-                2: { sorter:'numeric'},
-                3: { sorter:'numeric'},
-                4: { sorter:'numeric'},
-                5: { sorter:'numeric'},
-                6: { sorter:'numeric'},
-                7: { sorter:'numeric'},
-                8: { sorter:'numeric'}
+                1: { sorter:'digit'},
+                2: { sorter:'digit'},
+                3: { sorter:'digit'},
+                4: { sorter:'digit'},
+                5: { sorter:'digit'},
+                6: { sorter:'digit'},
+                7: { sorter:'digit'},
+                8: { sorter:'digit'}
             },
           debug: false,
           widgets: ['zebra'] 
@@ -173,15 +173,15 @@ $(document).ready(function() {
      $(this).tablesorter({
             headers: { 
                 0: { sorter:'text'},
-                1: { sorter:'numeric'},
-                2: { sorter:'numeric'},
-                3: { sorter:'numeric'},
-                4: { sorter:'numeric'},
-                5: { sorter:'numeric'},
-                6: { sorter:'numeric'},
-                7: { sorter:'numeric'},
-                8: { sorter:'numeric'},
-                9: { sorter:'numeric'},
+                1: { sorter:'digit'},
+                2: { sorter:'digit'},
+                3: { sorter:'digit'},
+                4: { sorter:'digit'},
+                5: { sorter:'digit'},
+                6: { sorter:'digit'},
+                7: { sorter:'digit'},
+                8: { sorter:'digit'},
+                9: { sorter:'digit'},
                 10: { sorter:'text'}
             },
           debug: false,
@@ -209,17 +209,17 @@ $(document).ready(function() {
                   0: { sorter:'buildname'},
                   1: { sorter:'buildname'},
                   2: { sorter:'numericvalue'},
-                  3: { sorter:'numeric'},
+                  3: { sorter:'digit'},
                   4: { sorter:'numericvalue'},
                   5: { sorter:'numericvalue'},
-                  6: { sorter:'numeric'},
+                  6: { sorter:'digit'},
                   7: { sorter:'numericvalue'},
                   8: { sorter:'numericvalue'},
-                  9: { sorter:'numeric'},
+                  9: { sorter:'digit'},
                   10: { sorter:'numericvalue'},
                   11: { sorter:'numericvalue'},
                   12: { sorter:'numericvalue'},
-                  13: { sorter:'numeric'},
+                  13: { sorter:'digit'},
                   14: { sorter:'text'},
                   15: { sorter:'text'}
               },
@@ -254,8 +254,8 @@ $(document).ready(function() {
                 0: { sorter:'text'},
                 1: { sorter:'text'},
                 2: { sorter:'percentage'},
-                3: { sorter:'numeric'},
-                4: { sorter:'numeric'},
+                3: { sorter:'digit'},
+                4: { sorter:'digit'},
                 5: { sorter:'text'}
             },
           debug: false,
