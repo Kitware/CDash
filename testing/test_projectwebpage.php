@@ -10,7 +10,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
   var $db            = null;
   var $projecttestid = null;
   
-  
   function __construct()
    {
    parent::__construct();
@@ -59,21 +58,81 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $this->assertEqual($result[0],$expected);
     }
   
-  function testProjectExperimental()
-   {
-   $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
-   if(!$content)
-     {
-     return;
-     }
-   $content = $this->analyse($this->clickLink('Dash20.kitware'));
-   if(!$content || !$this->findString($content,'<b>Total Virtual Memory: </b>2GB<br /><b>Total Physical Memory: </b>15MB<br />'))
-     {
-     return;
-     }
-  $this->assertTrue(true);
-   }
+  function testProjectExperimentalLinkMachineName()
+    {
+    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
+    if(!$content)
+      {
+      return;
+      }
+    $content = $this->analyse($this->clickLink('Dash20.kitware'));
+    if(!$content)
+      {
+      return;
+      }
+    elseif(!$this->findString($content,'<b>Total Virtual Memory: </b>2GB<br /><b>Total Physical Memory: </b>15MB<br />'))
+      {
+      $this->assertTrue(false,'The webpage does not match right the content exepected');
+      }
+    $this->assertTrue(true,'The webpage match the content exepected');
+    }
   
+  function testProjectExperimentalLinkBuildSummury()
+    {
+    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
+    if(!$content)
+      {
+      return;
+      }
+    $content = $this->analyse($this->clickLink('Win32-MSVC2009'));
+    $expected = '    </a></li><li><a href="#" id="activem">PROJECT</a>';
+    $expected .= '<ul><li><a class="submm" href="http://">Home</a></li><li>';
+    $expected .= '<a class="submm" href="http://">Doxygen</a></li><li>';
+    $expected .= '<a class="submm" href="http://">CVS</a></li>';
+    $expected .= '<li><a class="submm" href="http://">Bugs</a></li>';
+    $expected .= '</ul></li></ul></td><td height="28" class="insd3">';
+    $expected .= '<span id="calendar" class="cal"></span>&nbsp;';
+    $expected .= '</td></tr></table></td></tr></table></td></tr></table>';
+    $expected .= '<input type="hidden" id="projectname" value="BatchmakeExample" /><br /><br />';
+    $expected .= '<b>Site Name: </b>Dash20.kitware<br /><b>Build Name: </b>';
+    $expected .= 'Win32-MSVC2009<br /><b>Time: </b>2009-02-23T05:02:03 EST<br /><b>Type: </b>';
+    $expected .= 'Nightly<br /><br /><b>OS Name: </b>Windows<br /><b>OS Release: </b>XP Professional<br />';
+    $expected .= '<b>OS Version: </b>Service Pack 2(Build 2600)<br /><b>Compiler Name: </b>';
+    $expected .= 'unknown<br /><b>Compiler Version: </b>unknown<br /><br /><table>';
+    $expected .= '<tr><td><table class="dart"><tr class="table-heading"><th colspan="3">Current Build</th></tr>';
+    $expected .= '<tr class="table-heading"><th>Stage</th><th>Errors</th>';
+    $expected .= '<th>Warnings</th></tr><tr class="tr-odd"><td><a href="#Stage0">';
+    $expected .= '<b>Update</b></a></td><td align="right" class="normal"><b>0</b>';
+    $expected .= '</td><td align="right" class="normal"><b>0</b></td></tr>';
+    $expected .= '<tr class="tr-even"><td><a href="#Stage1"><b>Configure</b></a></td>';
+    $expected .= '<td align="right" class="&#10;                  normal&#10;';
+    $expected .= '                  "><b>0</b></td><td align="right" class="&#10;                  normal&#10;';
+    $expected .= '                  "><b>0</b></td></tr><tr class="tr-odd"><td><a href="#Stage2"><b>Build</b></a></td>';
+    $expected .= '<td align="right" class="&#10;                  normal&#10;';
+    $expected .= '                  "><b>0</b></td><td align="right" class="error&#10;';
+    $expected .= '               "><b>10</b></td></tr><tr class="tr-even"><td>';
+    $expected .= '<a href="#Stage3"><b>Test</b></a></td><td align="right" class="error&#10;               "><b>5</b></td>';
+    $expected .= '<td align="right" class="&#10;                  normal&#10;';
+    $expected .= '                  "><b>0</b></td></tr></table></td><td></td></tr></table><br />';
+    if(!$content)
+      {
+      return;
+      }
+    elseif(!$this->findString($content,$expected))
+      {
+      $this->assertTrue(false,'The webpage does not match right the content exepected');
+      }
+    $this->assertTrue(true,'The webpage match the content exepected');  
+    }
+  
+  function testProjectExperimentalLinkNotes()
+    {
+    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
+    $content = $this->analyse($this->clickLink('Notes'));
+    $expected = '-- F:/Dashboards/Dash20_batchmake_vs9.cmake';
+    $this->assertText($expected);
+    }
+    
   // In case of the project does not exist yet
   function createProject($name,$description)
     {
@@ -98,7 +157,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     {
     if(!strcmp($projectname,'BatchmakeExample'))
       {
-      $rep = "data/BatchmakeNightlyExample";
+      $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
       $url = $this->url.'/submit.php?project=BatchmakeExample';
       $this->uploadfile($url,"$rep/BatchMake_Dash20.kitware_Win32-MSVC2009_20090223-0100-Nightly_Build.xml");
       $this->uploadfile($url,"$rep/BatchMake_Dash20.kitware_Win32-MSVC2009_20090223-0100-Nightly_Configure.xml");
@@ -110,7 +169,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     elseif(!strcmp($projectname,'InsightExample'))
       {
       $url = $this->url.'/submit.php?project=InsightExample';
-      $rep = "data/InsightExperimentalExample";
+      $rep = dirname(__FILE__)."/data/InsightExperimentalExample";
       $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_Build.xml");
       $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_Configure.xml");
       $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_CoverageLog.xml");
