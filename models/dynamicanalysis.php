@@ -47,19 +47,32 @@ class DynamicAnalysis
     }
 
 
-  /** Remove all the dynamic analysis associated with a buildid
-   *  Maybe should be in a controller */
+  /** Remove all the dynamic analysis associated with a buildid */
   function RemoveAll()
     {
+    include("cdash/config.php");
+    
     if(strlen($this->BuildId)==0)
       {
       echo "DynamicAnalysis::RemoveAll BuildId not set";
       return false;
       } 
 
-    $query = "DELETE dynamicanalysisdefect,dynamicanalysis FROM dynamicanalysisdefect INNER JOIN dynamicanalysis 
-              WHERE dynamicanalysis.buildid=".qnum($this->BuildId)."
-              AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid";
+    if($CDASH_DB_TYPE == 'pgsql') // postgresql doesn't support multiple delete
+      {
+      $query = "BEGIN";
+      $query = "DELETE FROM dynamicanalysisdefect WHERE dynamicanalysis.buildid=".qnum($this->BuildId)."
+                AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid";
+      $query = "DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid=".qnum($this->BuildId);
+      $query = "COMMIT";
+      }
+    else
+      {
+      $query = "DELETE dynamicanalysisdefect,dynamicanalysis FROM dynamicanalysisdefect, dynamicanalysis 
+               WHERE dynamicanalysis.buildid=".qnum($this->BuildId)."
+               AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid";
+      }
+    
     if(!pdo_query($query))
       {
       add_last_sql_error("DynamicAnalysis RemoveAll");
