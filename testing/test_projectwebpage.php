@@ -39,12 +39,150 @@ class ProjectWebPageTestCase extends KWWebTestCase
       return;
       }
     $this->assertText('BatchmakeExample Dashboard');
-    $this->submission('BatchmakeExample');
-    $this->submission('InsightExample');
+    }
+    
+  function testSubmissionBatchmakeBuild()
+    {
+    $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
+    $file = "$rep/BatchMake_Nightly_Build.xml";
+    if(!$this->submission('BatchmakeExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+//    $this->submission('InsightExample');    
+    }
+    
+  function testSubmissionBatchmakeConfigure()
+    {
+    $rep  = dirname(__FILE__)."/data/BatchmakeNightlyExample";
+    $file = "$rep/BatchMake_Nightly_Configure.xml";
+    if(!$this->submission('BatchmakeExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+  
+  
+  function testSubmissionBatchmakeNotes()
+    {
+    $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
+    $file = "$rep/BatchMake_Nightly_Notes.xml";
+    if(!$this->submission('BatchmakeExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+    
+  function testSubmissionBatchmakeTest()
+    {
+    $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
+    $file = "$rep/BatchMake_Nightly_Test.xml";
+    if(!$this->submission('BatchmakeExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+  
+  function testSubmissionBatchmakeUpdate()
+    {
+    $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
+    $file = "$rep/BatchMake_Nightly_Update.xml";
+    if(!$this->submission('BatchmakeExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
     }
 
-
-  function testSubmission()
+  function testSubmissionInsightBuild()
+    {
+    $url  = $this->url.'/submit.php?project=InsightExample';
+    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+    $file = "$rep/Insight_Experimental_Build.xml";
+    if(!$this->submission('InsightExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+    
+  function testSubmissionInsightConfigure()
+    {
+    $url  = $this->url.'/submit.php?project=InsightExample';
+    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+    $file = "$rep/Insight_Experimental_Configure.xml";
+    if(!$this->submission('InsightExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+    
+  function testSubmissionInsightCoverageLog()
+    {
+    $url  = $this->url.'/submit.php?project=InsightExample';
+    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+    $file = "$rep/Insight_Experimental_CoverageLog.xml";
+    if(!$this->submission('InsightExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+  
+  function testSubmissionInsightCoverage()
+    {
+    $url  = $this->url.'/submit.php?project=InsightExample';
+    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+    $file = "$rep/Insight_Experimental_Coverage.xml";
+    if(!$this->submission('InsightExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+  
+  function testSubmissionInsightDynamicAnalysis()
+    {
+    $url  = $this->url.'/submit.php?project=InsightExample';
+    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+    $file = "$rep/Insight_Experimental_DynamicAnalysis.xml";
+    if(!$this->submission('InsightExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+    
+  function testSubmissionInsightNotes()
+    {
+    $url  = $this->url.'/submit.php?project=InsightExample';
+    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+    $file = "$rep/Insight_Experimental_Notes.xml";
+    if(!$this->submission('InsightExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+    
+  function testSubmissionInsightTest()
+    {
+    $url  = $this->url.'/submit.php?project=InsightExample';
+    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+    $file = "$rep/Insight_Experimental_Test.xml";
+    if(!$this->submission('InsightExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
+  
+  function testSubmissionInDb()
     {
     $query  = "SELECT id, stamp, name, type, generator,command FROM build";
     $result = $this->db->query($query);
@@ -73,11 +211,12 @@ class ProjectWebPageTestCase extends KWWebTestCase
     elseif(!$this->findString($content,'<b>Total Virtual Memory: </b>2GB<br /><b>Total Physical Memory: </b>15MB<br />'))
       {
       $this->assertTrue(false,'The webpage does not match right the content exepected');
+      return;
       }
     $this->assertTrue(true,'The webpage match the content exepected');
     }
   
-  function testProjectExperimentalLinkBuildSummury()
+  function testProjectExperimentalLinkBuildSummary()
     {
     $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
     if(!$content)
@@ -121,6 +260,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     elseif(!$this->findString($content,$expected))
       {
       $this->assertTrue(false,'The webpage does not match right the content exepected');
+      return;
       }
     $this->assertTrue(true,'The webpage match the content exepected');  
     }
@@ -128,7 +268,15 @@ class ProjectWebPageTestCase extends KWWebTestCase
   function testProjectExperimentalLinkNotes()
     {
     $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
+    if(!$content)
+      {
+      return;
+      }
     $content = $this->analyse($this->clickLink('Notes'));
+    if(!$content)
+      {
+      return;
+      }
     $expected = '-- F:/Dashboards/Dash20_batchmake_vs9.cmake';
     $this->assertText($expected);
     }
@@ -153,45 +301,33 @@ class ProjectWebPageTestCase extends KWWebTestCase
     return $this->clickSubmit('Login >>');
     }
     
-  function submission($projectname)
+  function submission($projectname,$file)
     {
-    if(!strcmp($projectname,'BatchmakeExample'))
-      {
-      $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
-      $url = $this->url.'/submit.php?project=BatchmakeExample';
-      $this->uploadfile($url,"$rep/BatchMake_Dash20.kitware_Win32-MSVC2009_20090223-0100-Nightly_Build.xml");
-      $this->uploadfile($url,"$rep/BatchMake_Dash20.kitware_Win32-MSVC2009_20090223-0100-Nightly_Configure.xml");
-      $this->uploadfile($url,"$rep/BatchMake_Dash20.kitware_Win32-MSVC2009_20090223-0100-Nightly_Notes.xml");
-      $this->uploadfile($url,"$rep/BatchMake_Dash20.kitware_Win32-MSVC2009_20090223-0100-Nightly_Test.xml");
-      $this->uploadfile($url,"$rep/BatchMake_Dash20.kitware_Win32-MSVC2009_20090223-0100-Nightly_Update.xml");
+      $url = $this->url."/submit.php?project=$projectname";
+      $result = $this->uploadfile($url,$file);
+      if($this->findString($result,'error')   ||
+         $this->findString($result,'Warning') ||
+         $this->findString($result,'Notice'))
+        {
+        $this->assertEqual($result,"\n");
+        return false;
+        }
       return true;
-      }
-    elseif(!strcmp($projectname,'InsightExample'))
-      {
-      $url = $this->url.'/submit.php?project=InsightExample';
-      $rep = dirname(__FILE__)."/data/InsightExperimentalExample";
-      $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_Build.xml");
-      $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_Configure.xml");
-      $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_CoverageLog.xml");
-      $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_Coverage.xml");
-      $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_DynamicAnalysis.xml");
-      $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_Notes.xml");
-      $this->uploadfile($url,"$rep/Insight_camelot.kitware_Linux-g++-4.1-LesionSizingSandbox_Debug_20090223-0710-Experimental_Test.xml");
-      return true;
-      }
     }
     
   function uploadfile($url,$filename)
-    {
+    {    
     $fp = fopen($filename, 'r');
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_UPLOAD, 1);
     curl_setopt($ch, CURLOPT_INFILE, $fp);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER,true);
     curl_setopt($ch, CURLOPT_INFILESIZE, filesize($filename));
-    curl_exec($ch);
+    $page = curl_exec($ch);
     curl_close($ch);
     fclose($fp);
-    }  
+    return $page;
+    } 
 }
 ?>
