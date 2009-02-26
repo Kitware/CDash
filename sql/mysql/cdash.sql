@@ -123,8 +123,8 @@ CREATE TABLE `builderror` (
   `text` text NOT NULL,
   `sourcefile` varchar(255) NOT NULL default '',
   `sourceline` int(11) NOT NULL default '0',
-  `precontext` text NOT NULL,
-  `postcontext` text NOT NULL,
+  `precontext` text,
+  `postcontext` text,
   `repeatcount` int(11) NOT NULL default '0',
   KEY `buildid` (`buildid`),
   KEY `type` (`type`)
