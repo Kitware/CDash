@@ -109,7 +109,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   }
 
   $xml .= "<javascript>";
-  
+
  // This should work hopefully
   $updatedfiles = pdo_query("SELECT * FROM updatefile WHERE buildid='$buildid'
                               ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
@@ -126,12 +126,13 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $filenameb = $b['filename'];  
     return $filenamea>$filenameb ? 1:0;
     }
-    
+
   $directoryarray = array();
   $updatearray1 = array();
   // Create an array so we can sort it
   while($file_array = pdo_fetch_array($updatedfiles))
     {
+
     $file = array();
     $file['filename'] = $file_array["filename"];
     $file['author'] = $file_array["author"];
@@ -151,7 +152,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $updatearray1[] = $file;
     $directoryarray[] = substr($file_array["filename"],0,strrpos($file_array["filename"],"/"));
     }
-  
+
   $directoryarray = array_unique($directoryarray);
   usort($directoryarray, "sort_array_by_directory");
   usort($updatearray1, "sort_array_by_filename");
@@ -169,7 +170,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
         }
       }
     }
-  
+
   //$xml .= "dbAdd (true, \"".$projectname." Updated files  (".pdo_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
   
   //$previousdir = "";
