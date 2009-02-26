@@ -564,6 +564,26 @@ class Project
     return date(FMT_DATETIMESTD,strtotime($build_array['submittime']. "UTC"));
     }   
  
+  /** Get the total number of builds for a project*/
+  function GetTotalNumberOfBuilds()
+    {
+    if(!$this->Id)
+      {
+      echo "Project GetTotalNumberOfBuilds(): Id not set";
+      return false;
+      }
+  
+    $project = pdo_query("SELECT count(*) FROM build WHERE projectid=".qnum($this->Id));
+                           
+    if(!$project)
+      {
+      add_last_sql_error("Project GetTotalNumberOfBuilds");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    return $project_array[0];
+    }
+    
   /** Get the number of builds given a date range */
   function GetNumberOfBuilds($startUTCdate,$endUTCdate)
     {
