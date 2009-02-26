@@ -95,8 +95,8 @@ CREATE TABLE "builderror" (
   "text" text NOT NULL,
   "sourcefile" character varying(255) DEFAULT '' NOT NULL,
   "sourceline" bigint DEFAULT '0' NOT NULL,
-  "precontext" text NOT NULL,
-  "postcontext" text NOT NULL,
+  "precontext" text,
+  "postcontext" text,
   "repeatcount" bigint DEFAULT '0' NOT NULL
 );
 CREATE INDEX "buildid" on "builderror" ("buildid");
