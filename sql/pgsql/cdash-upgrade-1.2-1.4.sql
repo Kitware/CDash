@@ -17,17 +17,39 @@ CREATE TABLE "buildfailure" (
   "sourcefile" character varying(255) NOT NULL,
   PRIMARY KEY ("id")
 );
+CREATE INDEX "buildid" on "buildfailure" ("buildid");
+CREATE INDEX "type" on "buildfailure" ("type");
+
+--
+-- Table: labelemail
+--
+CREATE TABLE "labelemail" (
+  "projectid" bigint NOT NULL,
+  "userid" bigint NOT NULL,
+  "labelid" bigint NOT NULL
+);
+CREATE INDEX "projectid" on "labelemail" ("projectid");
+CREATE INDEX "userid" on "labelemail" ("userid");
 
 --
 -- Table: buildfailureargument
 --
 CREATE TABLE "buildfailureargument" (
   "id" bigserial NOT NULL,
-  "buildfailureid" bigint NOT NULL,
   "argument" character varying(255) NOT NULL,
   PRIMARY KEY ("id")
 );
-CREATE INDEX "buildfailureargument_buildfailureid_idx" on "buildfailureargument" ("buildfailureid");
+CREATE INDEX "argument" on "buildfailureargument" ("argument");
+
+--
+-- Table: buildfailure2argument
+--
+CREATE TABLE "buildfailure2argument" (
+  "buildfailureid" bigint NOT NULL,
+  "argumentid" bigint NOT NULL
+);
+CREATE INDEX "argumentid" on "buildfailure2argument" ("argumentid");
+CREATE INDEX "buildfailureid" on "buildfailure2argument" ("buildfailureid");
 
 --
 -- Table: banner
@@ -46,8 +68,8 @@ CREATE TABLE "coveragefile2user" (
   "userid" bigint NOT NULL,
   "position" smallint NOT NULL
 );
-CREATE INDEX "coveragefile2user_coveragefileid_idx" on "coveragefile2user" ("fileid");
-CREATE INDEX "coveragefile2user_userid_idx" on "coveragefile2user" ("userid");
+CREATE INDEX "coveragefileid" on "coveragefile2user" ("fileid");
+CREATE INDEX "userid2" on "coveragefile2user" ("userid");
 
 --
 -- Table: label
@@ -56,7 +78,7 @@ CREATE TABLE "label" (
   "id" bigserial NOT NULL,
   "text" character varying(255) NOT NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "label_text_con" UNIQUE ("text")
+  CONSTRAINT "text" UNIQUE ("text")
 );
 
 --
@@ -126,7 +148,7 @@ CREATE TABLE "subproject" (
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("id")
 );
-CREATE INDEX "subproject_projectid_idx" on "subproject" ("projectid");
+CREATE INDEX "projectid2" on "subproject" ("projectid");
 
 --
 -- Table: subproject2subproject
@@ -137,8 +159,8 @@ CREATE TABLE "subproject2subproject" (
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
 );
-CREATE INDEX "subproject2subproject_subprojectid_idx" on "subproject2subproject" ("subprojectid");
-CREATE INDEX "subproject2subproject_dependsonid_idx" on "subproject2subproject" ("dependsonid");
+CREATE INDEX "subprojectid" on "subproject2subproject" ("subprojectid");
+CREATE INDEX "dependsonid" on "subproject2subproject" ("dependsonid");
 
 --
 -- Table: subproject2build
@@ -148,8 +170,10 @@ CREATE TABLE "subproject2build" (
   "buildid" bigint NOT NULL,
   PRIMARY KEY ("buildid")
 );
-CREATE INDEX "subproject2build_subprojectid_idx" on "subproject2build" ("subprojectid");
+CREATE INDEX "subprojectid2" on "subproject2build" ("subprojectid");
 
+ALTER TABLE "buildfailureargument" ALTER COLUMN "argument" TYPE VARCHAR( 255 );
+ALTER TABLE "buildfailureargument" ALTER COLUMN "argument" SET NOT NULL;
 ALTER TABLE "buildfailure" ALTER COLUMN "exitcondition" TYPE VARCHAR( 255 );
 ALTER TABLE "buildfailure" ALTER COLUMN "exitcondition" SET NOT NULL;
 ALTER TABLE "buildfailure" ALTER COLUMN "language" TYPE VARCHAR( 64 );
