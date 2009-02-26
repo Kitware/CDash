@@ -53,11 +53,11 @@ if ($session_OK)
     $xml .= add_XML_value("id",$projectid);
     $xml .= add_XML_value("role",$project2user_array["role"]); // 0 is normal user, 1 is maintainer, 2 is administrator
     $xml .= add_XML_value("name",$project_array["name"]);
-    $xml .= add_XML_value("nbuilds",$Project->GetNumberOfBuilds(0, date("r")));
-    $xml .= add_XML_value("average_builds",round($Project->GetBuildsDailyAverage(strtotime(date("r"))-(3600*24*7), date("r")),2));
-    $xml .= add_XML_value("success",$Project->GetNumberOfPassingBuilds($start, date("r")));
-    $xml .= add_XML_value("error",$Project->GetNumberOfErrorBuilds($start, date("r")));
-    $xml .= add_XML_value("warning",$Project->GetNumberOfWarningBuilds($start, date("r")));
+    $xml .= add_XML_value("nbuilds",$Project->GetTotalNumberOfBuilds());
+    $xml .= add_XML_value("average_builds",round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME,time()-(3600*24*7)),gmdate(FMT_DATETIME),2)));
+    $xml .= add_XML_value("success",$Project->GetNumberOfPassingBuilds($start,gmdate(FMT_DATETIME)));
+    $xml .= add_XML_value("error",$Project->GetNumberOfErrorBuilds($start,gmdate(FMT_DATETIME)));
+    $xml .= add_XML_value("warning",$Project->GetNumberOfWarningBuilds($start,gmdate(FMT_DATETIME)));
     $xml .= "</project>";
     }
   
