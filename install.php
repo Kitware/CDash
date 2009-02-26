@@ -179,20 +179,26 @@ if($Submit)
       }
       
    if($db_created)
-    {
-    pdo_select_db("$CDASH_DB_NAME",$db);
-    $sqlfile = "sql/".$db_type."/cdash.sql";
-    $file_content = file($sqlfile);
-    $query = "";
-    foreach($file_content as $sql_line)
-      {
-      $tsl = trim($sql_line);
+     {
+     pdo_select_db("$CDASH_DB_NAME",$db);
+     $sqlfile = "sql/".$db_type."/cdash.sql";
+     $file_content = file($sqlfile);
+     $query = "";
+     foreach($file_content as $sql_line)
+       {
+       $tsl = trim($sql_line);
        if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) 
          {
          $query .= $sql_line;
          if(preg_match("/;\s*$/", $sql_line)) 
            {
-           $query = str_replace(";", "", "$query");
+           // We need to remove only the last semicolon
+           $pos = strrpos($query,";");
+           if($pos !== false)
+             {
+             $query = substr($query,0,$pos).substr($query,$pos+1);
+             }
+             
            $result = pdo_query($query);
            if (!$result)
              { 
@@ -204,6 +210,52 @@ if($Submit)
          }
        } // end for each line
     
+    // If we are with PostGreSQL we need to add some extra functions
+    if($db_type == 'pgsql')
+       {
+       $sqlfile = "sql/pgsql/cdash.ext.sql";
+       $file_content = file($sqlfile);
+       $query = "";
+       foreach($file_content as $sql_line)
+         {
+         if (($sql_line != "") && (substr($tsl, 0, 2) != "--")) 
+           {
+           $query .= $sql_line;
+           if(strpos("CREATE ", $sql_line) !== false) 
+             {
+             // We need to remove only the last semicolon
+             $pos = strrpos($query,";");
+             if($pos !== false)
+               {
+               $query = substr($query,0,$pos).substr($query,$pos+1);
+               }
+               
+             $result = pdo_query($query);
+             if (!$result)
+               { 
+               $xml .= "<db_created>0</db_created>";
+               die(pdo_error());
+               }
+             $query = "";
+             }
+           }
+         } // end foreach line
+           
+       // Run the last query
+       $pos = strrpos($query,";");
+       if($pos !== false)
+        {
+        $query = substr($query,0,$pos).substr($query,$pos+1);
+        }
+               
+       $result = pdo_query($query);
+       if (!$result)
+         { 
+         $xml .= "<db_created>0</db_created>";
+         die(pdo_error());
+         } 
+       } // end pgsql functions
+
      pdo_query("INSERT INTO ".qid("user")." VALUES (1, '".$admin_email."', '".md5($admin_password)."', 'administrator', '','Kitware Inc.', 1)");
      echo pdo_error();
     
