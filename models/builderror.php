@@ -53,12 +53,28 @@ class BuildError
       }
     
     $text = addslashes($this->Text);
-    $precontext = addslashes($this->PreContext);
-    $postcontext = addslashes($this->PostContext);
+    
+    if(strlen($this->PreContext) == 0)
+      {
+      $precontext = "NULL";
+      }   
+    else
+      {
+      $precontext = "'".addslashes($this->PreContext)."'";
+      }
+      
+    if(strlen($this->PostContext) == 0)
+      {
+      $postcontext = "NULL";
+      }   
+    else
+      {
+      $postcontext = "'".addslashes($this->PostContext)."'";
+      }
       
     $query = "INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount)
-              VALUES (".qnum($this->BuildId).",'$this->Type','$this->LogLine','$text','$this->SourceFile','$this->SourceLine',
-              '$precontext','$postcontext','$this->RepeatCount')";                     
+              VALUES (".qnum($this->BuildId).",".qnum($this->Type).",".qnum($this->LogLine).",'$text','$this->SourceFile',".qnum($this->SourceLine).",
+              ".$precontext.",".$postcontext.",".qnum($this->RepeatCount).")";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildError Insert");
