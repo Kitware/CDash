@@ -137,7 +137,7 @@ class DynamicAnalysis
     $this->BuildId = pdo_real_escape_string($this->BuildId);
     
     $query = "INSERT INTO dynamicanalysis (".$id."buildid,status,checker,name,path,fullcommandline,log)
-              VALUES (".$idvalue.qnum($this->BuildId).",'$this->Status','$this->Checker','$this->Name','".substr($this->Path)."',
+              VALUES (".$idvalue.qnum($this->BuildId).",'$this->Status','$this->Checker','$this->Name','".substr($this->Path,0,255)."',
                       '".substr($this->FullCommandLine,0,255)."','$this->Log')";                     
     if(!pdo_query($query))
       {
