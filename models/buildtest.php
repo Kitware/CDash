@@ -56,7 +56,8 @@ class BuildTest
       }
       
     $query = "INSERT INTO build2test (buildid,testid,status,time,timemean,timestd,timestatus)
-                 VALUES ('$this->BuildId','$this->TestId','$this->Status','$this->Time','$this->TimeMean','$this->TimeStd','$this->TimeStatus')";                     
+                 VALUES (".qnum($this->BuildId).",".qnum($this->TestId).",'$this->Status',".qnum($this->Time).","
+                          .qnum($this->TimeMean).",".qnum($this->TimeStd).",".qnum($this->TimeStatus).")";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildTest Insert");
