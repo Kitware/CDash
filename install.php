@@ -214,10 +214,16 @@ if($Submit)
     if($db_type == 'pgsql')
        {
        $sqlfile = "sql/pgsql/cdash.ext.sql";
+       
+       // Create the language. PgSQL has no way to know if the language already 
+       // exists
+       @pg_query("CREATE LANGUAGE plpgsql");
+       
        $file_content = file($sqlfile);
        $query = "";
        foreach($file_content as $sql_line)
          {
+         $tsl = trim($sql_line);
          if (($sql_line != "") && (substr($tsl, 0, 2) != "--")) 
            {
            $query .= $sql_line;

@@ -339,6 +339,54 @@ class dbo_pgsql extends dbo
      $query .= "VALUES (nextval('user_id_seq'::regclass), 'simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
      pg_query($this->dbconnect,$query);
      echo pg_last_error();
+     
+     // Create the language. PgSQL has no way to know if the language already 
+     // exists
+     @pg_query("CREATE LANGUAGE plpgsql"); 
+     
+     $sqlfile = str_replace(".sql", ".ext.sql", $sqlfile);
+     // If we are with PostGreSQL we need to add some extra functions
+     $file_content = file($sqlfile);
+       $query = "";
+       foreach($file_content as $sql_line)
+         {
+         $tsl = trim($sql_line);
+         if (($sql_line != "") && (substr($tsl, 0, 2) != "--")) 
+           {
+           $query .= $sql_line;
+           if(strpos("CREATE ", $sql_line) !== false) 
+             {
+             // We need to remove only the last semicolon
+             $pos = strrpos($query,";");
+             if($pos !== false)
+               {
+               $query = substr($query,0,$pos).substr($query,$pos+1);
+               }
+               
+             $result = pg_query($query);
+             if (!$result)
+               { 
+               $xml .= "<db_created>0</db_created>";
+               die(pg_last_error());
+               }
+             $query = "";
+             }
+           }
+         } // end foreach line
+           
+       // Run the last query
+       $pos = strrpos($query,";");
+       if($pos !== false)
+        {
+        $query = substr($query,0,$pos).substr($query,$pos+1);
+        }
+               
+       $result = pg_query($query);
+       if (!$result)
+         { 
+         $xml .= "<db_created>0</db_created>";
+         die(pg_last_error());
+         }
      $this->disconnect();
      return true;
      }
