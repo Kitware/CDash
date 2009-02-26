@@ -35,10 +35,22 @@ class ProjectInDbTestCase extends KWWebTestCase
     $this->createProjectTest();
     $query = "SELECT COUNT(*) FROM project";
     $result = $this->db->query($query);
-    if($result[0]['COUNT(*)'] < 1)
+    if( strcmp($this->db->getType(),"pgsql") == 0 && 
+        $result[0]['count'] < 1)
       {
-      $errormsg = "The result of the query '$query' is not the one expected: 1";
-      $this->assertEqual($result[0],'1',$errormsg);
+      $result = $result[0]['count'];  
+      $errormsg = "The result of the query '$query' which is $result"; 
+      $errormsg .= "is not the one expected: 1";
+      $this->assertEqual($result[0]['count'],'1',$errormsg);
+      return;
+      }
+    elseif(strcmp($this->db->getType(),"mysql") == 0 && 
+           $result[0]['COUNT(*)'] < 1)
+      {
+      $result = $result[0]['COUNT(*)']; 
+      $errormsg = "The result of the query '$query' which is $result"; 
+      $errormsg .= "is not the one expected: 1";
+      $this->assertEqual($result[0]['COUNT(*)'],'1',$errormsg);
       return;
       }
     $this->assertText('The project ProjectTest has been created successfully.');
