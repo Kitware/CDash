@@ -885,8 +885,7 @@
 <br/>
 
 <!-- Dynamic analysis -->
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb"> 
-<tbody>
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable"> 
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)=0">
    <tr class="table-heading3" >
       <td colspan="1" class="nob">
@@ -909,7 +908,8 @@
    </xsl:if>
    
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)>0">
-        <tr class="table-heading3">
+  <thead>
+      <tr class="table-heading3">
       <td colspan="1" class="nob">
           <h3><a href="#" class="grouptrigger">Dynamic Analysis</a></h3>
       </td>
@@ -926,16 +926,15 @@
     </div> 
     </td>
    </tr>
-
    <tr class="table-heading">
-      <th align="center" width="20%">Site</th>
-      <th align="center" width="30%">Build Name</th>
-      <th align="center" width="20%">Checker</th>
-
-      <th align="center" width="10%">Defect Count</th>
-      <th align="center" class="nob" width="20%">Date</th>
-    <!--  <th align="center">Submission Date</th> -->
+      <th align="center" width="20%" id="sortdynanalysissort_0">Site</th>
+      <th align="center" width="30%" id="sortdynanalysissort_1">Build Name</th>
+      <th align="center" width="20%" id="sortdynanalysissort_2">Checker</th>
+      <th align="center" width="10%" id="sortdynanalysissort_3">Defect Count</th>
+      <th align="center" class="nob" width="20%" id="sortdynanalysissort_4">Date</th>
    </tr>
+</thead>
+<tbody> 
   <xsl:for-each select="cdash/buildgroup/dynamicanalysis">
    
    <tr>
@@ -958,22 +957,10 @@
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
       </td>
       <td align="left" class="nob"><xsl:value-of select="date"/></td>
-      <!--
-      <td align="left">
-      <xsl:attribute name="class">
-      <xsl:if test="clockskew=1">
-             error
-             </xsl:if>
-             <xsl:if test="clockskew=0">
-             tr-odd
-             </xsl:if>
-      </xsl:attribute>
-      <xsl:value-of select="submitdate"/></td> -->
    </tr>
   </xsl:for-each>
-
-</xsl:if>
 </tbody>
+</xsl:if>
 </table>
 
 <xsl:if test="count(cdash/buildgroup/dynamicanalysis)>0">

@@ -80,6 +80,25 @@ $(document).ready(function() {
         type: 'numeric' 
     }); 
   
+  /** numeric for dynalanisys */
+  $.tablesorter.addParser({ 
+      // set a unique id 
+      id: 'dynanalysismetric', 
+      is: function(s) { 
+            // return false so this parser is not auto detected 
+            return false; 
+        }, 
+        format: function(s) {
+            // format your data for normalization
+            var i = s.indexOf("<b");
+            var j = s.indexOf(">",i);
+            var k = s.indexOf("</b>",j);
+            var t = s.substr(j+1,k-j-1);
+            return t.toLowerCase(); 
+        }, 
+        // set type, either numeric or text 
+        type: 'numeric' 
+    }); 
   
   // Initialize the viewTest tables
   $tabs = $("#viewTestTable");
@@ -198,9 +217,9 @@ $(document).ready(function() {
     // Initialize the Index tables
     $tabs = $(".tabb",this);
     $tabs.each( 
-        function(index) {
-       var tableid = this.id;
-      if(tableid == "coveragetable")
+     function(index) {
+      var tableid = this.id;
+      if(tableid == "coveragetable" || tableid == "dynamicanalysistable")
         {
         return;
         }
@@ -228,7 +247,6 @@ $(document).ready(function() {
           });  
        
       // Get the cookie
-      
       var cookiename = "cdash_table_sort_"+tableid;
       var cook = $.cookie(cookiename); // get cookie
       if(cook)
@@ -246,7 +264,7 @@ $(document).ready(function() {
       });
     
     
-     // Initialize the coverage table 
+    // Initialize the coverage table 
     $tabs = $("#coveragetable");
     $tabs.each(function(index) {
      $(this).tablesorter({
@@ -262,8 +280,22 @@ $(document).ready(function() {
           widgets: ['zebra']
         });  
       });
+    
+    // Initialize the dynamic analysis table 
+    $tabs = $("#dynamicanalysistable");
+    $tabs.each(function(index) {
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'text'},
+                1: { sorter:'text'},
+                2: { sorter:'text'},
+                3: { sorter:'dynanalysismetric'}, // not percent but same format
+                4: { sorter:'text'},
+            },
+          debug: false,
+          widgets: ['zebra']
+        });  
+      });
     } // end indextable
-  
-  
-  
+
 });   
