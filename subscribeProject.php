@@ -155,11 +155,17 @@ if ($session_OK)
                  GROUP BY build.siteid)");
         }
       }
-
-    $LabelEmail->UpdateLabels($_POST['emaillabels']);
-
+    
+    if(isset($_POST['emaillabels']))
+      {
+      $LabelEmail->UpdateLabels($_POST['emaillabels']);
+      }
+    else
+      {
+      $LabelEmail->UpdateLabels(NULL);
+      }
     // Redirect
-    //header( 'location: user.php' );
+    header( 'location: user.php' );
     }  
   else if($Subscribe)
     {
