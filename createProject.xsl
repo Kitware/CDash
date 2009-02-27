@@ -36,7 +36,7 @@
               {
               if ($("#name").attr("value") == '') 
                 {
-                alert('Please choose at leat a name.');
+                alert('Please specify a name for the project.');
                 return false;
                 }
               }            
