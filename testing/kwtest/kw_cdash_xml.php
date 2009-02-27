@@ -8,7 +8,6 @@
      *            to send his test to cdash
      */
 require_once(dirname(__FILE__) . '/simpletest/xml.php');
-require_once(dirname(__FILE__) . '/kw_db.php');
 class CDashXmlReporter extends XmlReporter
 {
   // Configuration parameters
