@@ -117,7 +117,7 @@ function ctest_parse($filehandler, $projectid)
     {
     echo "Cannot open file ($filename)";
     add_log("Cannot open file ($filename)", "backup_xml_file");
-    return;
+    return $handler;
     }
   
   // Write the file.
@@ -126,7 +126,7 @@ function ctest_parse($filehandler, $projectid)
     echo "Cannot write to file ($contents)";
     add_log("Cannot write to file ($$contents)", "backup_xml_file");
     fclose($handle);
-    return;
+    return $handler;
     }
   
   while(!feof($filehandler))
@@ -137,7 +137,7 @@ function ctest_parse($filehandler, $projectid)
       echo "Cannot write to file ($contents)";
       add_log("Cannot write to file ($$contents)", "backup_xml_file");
       fclose($handle);
-      return;
+      return $handler;
       }
     xml_parse($parser,$content, false);
     }
@@ -145,5 +145,7 @@ function ctest_parse($filehandler, $projectid)
   xml_parser_free($parser);
       
   fclose($handle);
+  
+  return $handler;
 }
 ?>

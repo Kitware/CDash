@@ -38,8 +38,8 @@ function checkEmailPreferences($emailcategory,$nwarnings,$nerrors,$nfailingtests
 /** Given a user check if we should send an email based on labels */
 function checkEmailLabel($projectid, $userid, $buildid)
 {
-  include_once("cdash/labelemail.php");
-  include_once("cdash/build.php");
+  include_once("models/labelemail.php");
+  include_once("models/build.php");
   $LabelEmail = new LabelEmail();
   $LabelEmail->UserId = $userid;
   $LabelEmail->ProjectId = $projectid;
@@ -194,12 +194,11 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
 }
                           
 /** Main function to send email if necessary */
-function sendemail($attributes,$projectid)
+function sendemail($handler,$projectid)
 {
   include_once("cdash/common.php");
   include("cdash/config.php");
   require_once("cdash/pdo.php");
-
 
   // Check if we should send the email
   $project = pdo_query("SELECT name,emailbrokensubmission,emailmaxitems,
@@ -215,9 +214,9 @@ function sendemail($attributes,$projectid)
     return;
     }
   
-    $name = $attributes["attributes"]["BUILDNAME"];
-    $stamp = $attributes["attributes"]["BUILDSTAMP"];
-    $sitename = $attributes["NAME"];   
+    $name = $handler->getBuildName();
+    $stamp = $handler->getBuildStamp();
+    $sitename = $handler->getSiteName();
 
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid,$sitename);
@@ -439,7 +438,7 @@ function sendemail($attributes,$projectid)
       {
       if(strlen($error_array["sourcefile"])>0)
         {
-        $info .= $error_array["sourcefile"]." line ".sourceline." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
+        $info .= $error_array["sourcefile"]." line ".$error_array["sourceline"]." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
         $info .= $error_array["text"]."\n";
         }
       else
