@@ -123,7 +123,8 @@ class User
          {
          add_last_sql_error("User Create");
          return false;
-         }  
+         }
+       $this->Id = pdo_insert_id("user");    
        }
     return true;
     } 

@@ -18,6 +18,9 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once('models/project.php');
 require_once('models/subproject.php');
+require_once('models/user.php');
+require_once('models/labelemail.php');
+require_once('models/label.php');
 
 class ProjectHandler extends AbstractHandler
 {
@@ -51,6 +54,12 @@ class ProjectHandler extends AbstractHandler
       $this->SubProject->SetProjectId($this->projectid);
       $this->SubProject->Name = $attributes['NAME'];
       $this->SubProject->Save();
+      
+      // Insert the label
+      $Label = new Label;
+      $Label->Text = $this->SubProject->Name;
+      $Label->Insert();
+      
       $this->Dependencies = array();
       $this->Subprojects[] = $this->SubProject->Id;
       }
@@ -63,6 +72,46 @@ class ProjectHandler extends AbstractHandler
       $this->Dependencies[] = $dependencyid;
       $this->SubProject->AddDependency($dependencyid);
       }
+    else if($name=='EMAIL') 
+      {
+      $email = $attributes['ADDRESS'];
+      
+      // Check if the user is in the database
+      $User = new User();
+      $User->FirstName = $email;
+      $User->LastName = $email;
+      $User->Email = $email;
+      $User->Password = md5($email); 
+       $User->Admin = 0;
+      $userid = $User->GetIdFromName($email);
+      if(!$userid) 
+        {
+        $User->Save();
+        $userid = $User->Id;
+        }
+      
+      // Insert into the UserProject
+      $UserProject = new UserProject();
+      $UserProject->EmailType = 3; // any build
+      $UserProject->EmailCategory = 54; // everything except warnings
+      $UserProject->UserId = $userid;
+      $UserProject->ProjectId = $this->projectid;
+      
+      // Insert the labels for this user
+      $LabelEmail = new LabelEmail;
+      $LabelEmail->UserId = $userid;
+      $LabelEmail->ProjectId = $this->projectid;
+      
+      $Label = new Label;
+      $Label->SetText($this->SubProject->Name);
+      $labelid = $Label->GetIdFromText();
+      if(!empty($labelid))
+        {
+        $LabelEmail->LabelId = $labelid;
+        $LabelEmail->Insert();
+        }
+      }  
+      
     } // end startElement
   
   /** endElement function */
@@ -93,7 +142,6 @@ class ProjectHandler extends AbstractHandler
         $SubProject->Id = $removeid;
         $SubProject->Delete();
         }
-      
       }  
    } // end endElement
 

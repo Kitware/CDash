@@ -41,7 +41,14 @@ class Label
     {
     return pdo_get_field_value("SELECT text FROM label WHERE id=".qnum($this->Id),"text",0);
     }
-
+  
+  /** Get the id from a label */
+  function GetIdFromText()
+    {
+    return pdo_get_field_value("SELECT id FROM label WHERE text='".$this->Text."'","id",0);
+    }
+    
+      
   function InsertAssociation($table, $field1, $value1=NULL, $field2=NULL, $value2=NULL)
     {
     if(!empty($value1))
@@ -53,27 +60,16 @@ class Label
           "AND $field1='$value1' AND $field2='$value2'", "$field1", 0);
 
         // Only do the INSERT if it's not already there:
-        //
         if (0 == $v)
           {
           $query = "INSERT INTO $table (labelid, $field1, $field2) ".
             "VALUES ('$this->Id', '$value1', '$value2')";
-
-          //add_log("associating labelid='$this->Id' with " .
-          //  "$field1='$value1' and $field2='$value2'",
-          //  'Label::InsertAssociation');
 
           if(!pdo_query($query))
             {
             add_last_sql_error("Label::InsertAssociation");
             }
           }
-          //else
-          //  {
-          //  add_log("* labelid='$this->Id' already associated with $field1=" .
-          //    "'$value1' and $field2='$value2' v='$v'",
-          //    'Label::InsertAssociation');
-          //  }
         }
       else
         {
@@ -82,25 +78,16 @@ class Label
           "AND $field1='$value1'", "$field1", 0);
 
         // Only do the INSERT if it's not already there:
-        //
         if (0 == $v)
           {
           $query = "INSERT INTO $table (labelid, $field1) ".
             "VALUES ('$this->Id', '$value1')";
-
-          //add_log("associating labelid='$this->Id' with $field1='$value1'",
-          //  'Label::InsertAssociation');
 
           if(!pdo_query($query))
             {
             add_last_sql_error("Label::InsertAssociation");
             }
           }
-          //else
-          //  {
-          //  add_log("* labelid='$this->Id' already associated with $field1=" .
-          //    "'$value1' v='$v'", 'Label::InsertAssociation');
-          //  }
         }
       }
     }
@@ -112,12 +99,10 @@ class Label
     $text = pdo_real_escape_string($this->Text);
 
     // Get this->Id from the database if text is already in the label table:
-    //
     $this->Id = pdo_get_field_value(
       "SELECT id FROM label WHERE text='$text'", 'id', 0);
 
     // Or, if necessary, insert a new row, then get the id of the inserted row:
-    //
     if(0 == $this->Id)
       {
       $query = "INSERT INTO label (text) VALUES ('$text')";
@@ -128,18 +113,11 @@ class Label
         }
 
       $this->Id = pdo_insert_id('label');
-      //add_log('new Label::Id='.$this->Id, 'Label::Insert');
       }
-    else
-      {
-      //add_log('existing Label::Id='.$this->Id, 'Label::Insert');
-      }
-
 
     // Insert relationship records, too, but only for those relationships
     // established by callers. (If coming from test.php, for example, TestId
     // will be set, but none of the others will. Similarly for other callers.)
-    //
     $this->InsertAssociation('label2build','buildid',
       $this->BuildId);
 
