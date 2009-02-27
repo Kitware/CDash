@@ -110,21 +110,23 @@
         <xsl:value-of select="name"/></a> </td>      
        <td align="center"  bgcolor="#DDDDDD" ><a class="tooltip" title="Edit Subscription" >
         <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>
-        <img src="images/edit.png" border="0" alt="edit" />
+        <img src="images/edit.png" border="0" alt="subscribe" />
         </a>
         <xsl:if test="role>0">
           <a class="tooltip" title="Claim sites" >
           <xsl:attribute name="href">editSite.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-          <img src="images/systemtray.png" border="0" alt="edit" /></a>
+          <img src="images/systemtray.png" border="0" alt="claimsite" /></a>
         </xsl:if>
         <xsl:if test="role>1">
           <a class="tooltip" title="Edit project" >
           <xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>
-          <img  src="images/edit2.png" border="0" alt="edit" /></a>
+          <img  src="images/edit2.png" border="0" alt="editproject" /></a>
           <a class="tooltip" title="Manage project groups" >
-          <xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute><img src="images/edit_group.png" border="0" alt="edit" /></a>
+          <xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
+            <img src="images/edit_group.png" border="0" alt="managegroups" /></a>
           <a class="tooltip" title="Manage project roles" >
-          <xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute><img src="images/users.png" border="0" alt="edit" /></a>
+          <xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
+           <img src="images/users.png" border="0" alt="manageroles" /></a>
         </xsl:if>
       </td>  
       <td align="center"  bgcolor="#DDDDDD">
