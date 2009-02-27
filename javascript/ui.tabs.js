@@ -1,12 +1,24 @@
  $(function()
   {
-  $('#wizard').tabs({  fxFade: true, fxSpeed: 'fast' });
+  params=extractUrlParams();
+  $('#wizard').tabs(parseInt(params['fragment']),{  fxFade: true, fxSpeed: 'fast' });
   });
+
 
 function showHelp(id_div)
   {
   $(".tab_help").html($("#"+id_div).html()).show();
   }
+
+function extractUrlParams(){  
+  var t = location.search.substring(1).split('&');
+  var f = [];
+  for (var i=0; i<t.length; i++){
+    var x = t[ i ].split('=');
+    f[x[0]]=x[1];
+  }
+  return f;
+}
 
 /**
  * Tabs - jQuery plugin for accessible, unobtrusive tabs
@@ -395,7 +407,7 @@ $.fn.tabs = function(initial, settings) {
                 $(this).trigger('click');
                 if (settings.bookmarkable) {
                     $.ajaxHistory.update(hash);
-                    location.hash = hash.replace('#', '');
+                   // location.hash = hash.replace('#', '');
                 }
 
             } else if ($.browser.safari) {

@@ -193,7 +193,7 @@ project page</a>
             <tr>
               <td width="10%"><div align="right">Show:</div></td>
               <td width="90%" >
-               <select onchange="location = 'manageBuildGroup.php?projectid='+form1.projectSelection.value+'&amp;show='+this.options[this.selectedIndex].value;"  name="globalMoveSelectionType">
+               <select onchange="location = 'manageBuildGroup.php?projectid='+form1.projectSelection.value+'&amp;show='+this.options[this.selectedIndex].value+'&amp;fragment=3';"  name="globalMoveSelectionType">
                <option>
                <xsl:attribute name="value">0</xsl:attribute>All</option>
                  <xsl:for-each select="cdash/project/group">
