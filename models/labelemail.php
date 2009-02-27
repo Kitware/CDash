@@ -131,6 +131,11 @@ class LabelEmail
       return false;
       } 
     
+    if(!$labels)
+      {
+      $labels = array();
+      }
+      
     $existinglabels = $this->GetLabels();
     $toremove = array_diff($existinglabels,$labels);
     $toadd = array_diff($labels,$existinglabels);
