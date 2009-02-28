@@ -82,7 +82,7 @@ class ProjectHandler extends AbstractHandler
       $User->LastName = $email;
       $User->Email = $email;
       $User->Password = md5($email); 
-       $User->Admin = 0;
+      $User->Admin = 0;
       $userid = $User->GetIdFromName($email);
       if(!$userid) 
         {
@@ -96,6 +96,7 @@ class ProjectHandler extends AbstractHandler
       $UserProject->EmailCategory = 54; // everything except warnings
       $UserProject->UserId = $userid;
       $UserProject->ProjectId = $this->projectid;
+      $UserProject->Save();
       
       // Insert the labels for this user
       $LabelEmail = new LabelEmail;
