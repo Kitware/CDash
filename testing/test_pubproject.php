@@ -169,7 +169,7 @@ class ProjectInDbTestCase extends KWWebTestCase
       }
    
     // Delete the project
-    $this->clickSubmit('Delete Project');$result[0]['count']
+    $this->clickSubmit('Delete Project');$result[0]['count'];
     
     // Check that it has been deleted correctly
     $result = $this->db->query("SELECT COUNT(*) FROM project");      
