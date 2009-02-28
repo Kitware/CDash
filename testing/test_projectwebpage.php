@@ -3,7 +3,6 @@
 require_once('kwtest/kw_web_tester.php');
 require_once('kwtest/kw_db.php');
 
-
 class ProjectWebPageTestCase extends KWWebTestCase
 {
   var $url           = null;
@@ -11,16 +10,16 @@ class ProjectWebPageTestCase extends KWWebTestCase
   var $projecttestid = null;
   
   function __construct()
-   {
-   parent::__construct();
-   require('config.test.php');
-   $this->url = $configure['urlwebsite'];
-   $this->db  =& new database($db['type']);
-   $this->db->setDb($db['name']);
-   $this->db->setHost($db['host']);
-   $this->db->setUser($db['login']);
-   $this->db->setPassword($db['pwd']);
-   }
+    {
+    parent::__construct();
+    require('config.test.php');
+    $this->url = $configure['urlwebsite'];
+    $this->db  =& new database($db['type']);
+    $this->db->setDb($db['name']);
+    $this->db->setHost($db['host']);
+    $this->db->setUser($db['login']);
+    $this->db->setPassword($db['pwd']);
+    }
    
   function testAccessToWebPageProjectTest()
     {
@@ -32,7 +31,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $name = 'InsightExample';
     $description = 'Project Insight test for cdash testing';
     $this->createProject($name,$description);
-//    $this->clickLink('ProjectTest4Db');
     $content = $this->connect($this->url.'/index.php?project=BatchmakeExample');
     if(!$content)
       {
@@ -50,7 +48,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
       return;
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
-//    $this->submission('InsightExample');    
     }
     
   function testSubmissionBatchmakeConfigure()

@@ -7,11 +7,11 @@ class LoginTestCase extends KWWebTestCase
   var $url = null;
   
   function __construct()
-   {
-   parent::__construct();
-   require('config.test.php');
-   $this->url = $configure['urlwebsite'];
-   }
+    {
+    parent::__construct();
+    require('config.test.php');
+    $this->url = $configure['urlwebsite'];
+    }
   
   function testHomePage()
     {
@@ -23,7 +23,6 @@ class LoginTestCase extends KWWebTestCase
     $this->clickLink('Login');
     $this->setField('login','simpletest@localhost');
     $this->setField('passwd','simpletest');
-  //$this->setField('passwd','toto');
     $this->clickSubmit('Login >>');
     $this->assertNoText('Wrong email or password');
     }
@@ -56,7 +55,7 @@ class LoginTestCase extends KWWebTestCase
     }
   
   function fillOutRegisterForm()
-   {
+    {
     $fname        = 'test';
     $lname        = 'kw';
     $email        = 'test@kw';
@@ -68,6 +67,6 @@ class LoginTestCase extends KWWebTestCase
     $this->setField('passwd',$passwd);
     $this->setField('passwd2',$passwd);
     $this->setField('institution',$institution);
-   }
+    }
 }
 ?>
