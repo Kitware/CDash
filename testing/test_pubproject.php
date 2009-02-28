@@ -165,7 +165,7 @@ class ProjectInDbTestCase extends KWWebTestCase
       }
     else
       {
-      $countProjectsBefore = $result[0]['COUNT(*)']
+      $countProjectsBefore = $result[0]['COUNT(*)'];
       }
    
     // Delete the project
