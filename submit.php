@@ -29,7 +29,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 set_time_limit(0);
 $fp = fopen('php://input', 'r');
-//$fp = fopen('backup/TestCovLog2.xml', 'r');
+//$fp = fopen('backup/Insight_Experimental_Test.xml', 'r');
 
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
@@ -90,11 +90,11 @@ else // synchronously
 
 // Parse the XML file
 $handler = ctest_parse($fp,$projectid);
-
+  
 // Send the emails if necessary
 if($handler instanceof TestingHandler || $handler instanceof UpdateHandler )
   {
-  sendemail($handler->getSiteAttributes(), $projectid);
+  sendemail($handler, $projectid);
   }
 
 // Create the RSS feed
