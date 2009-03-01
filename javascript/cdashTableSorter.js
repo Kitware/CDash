@@ -1,5 +1,4 @@
 $(document).ready(function() {
-         
   /** Load the help page */
   $('#key').jqm({ajax: 'key.html', trigger: 'a.keytrigger'});
   if(this.getElementById('projectname'))
@@ -99,7 +98,7 @@ $(document).ready(function() {
         // set type, either numeric or text 
         type: 'numeric' 
     }); 
-  
+
   // Initialize the viewTest tables
   $tabs = $("#viewTestTable");
   var nrows = 0;
@@ -290,7 +289,7 @@ $(document).ready(function() {
                 1: { sorter:'text'},
                 2: { sorter:'text'},
                 3: { sorter:'dynanalysismetric'}, // not percent but same format
-                4: { sorter:'text'},
+                4: { sorter:'text'}
             },
           debug: false,
           widgets: ['zebra']
