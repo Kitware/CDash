@@ -133,59 +133,8 @@ class ProjectInDbTestCase extends KWWebTestCase
       $msg .= "The deletion of ProjectTest failed\n";
       $this->assertTrue(false,$msg);
       }
-  
     }
 
-  /** Test the deletion of a project */
-  function testDeleteProject()
-    {
-    $content = $this->connect($this->url);
-    if(!$content)
-      {
-      return;
-      }
-    $this->login();
-    if(!$this->analyse($this->clickLink('[Edit project]')))
-      {
-      return;
-      }
-    
-    // Record the number of projects before
-    $result = $this->db->query("SELECT COUNT(*) FROM project");      
-    if( $this->db->getType() == "pgsql")
-      {
-      $countProjectsBefore = $result[0]['count'];
-      }
-    else
-      {
-      $countProjectsBefore = $result[0]['COUNT(*)'];
-      }
-   
-    // Delete the project
-    $this->clickSubmit('Delete Project');
-    
-    // Check that it has been deleted correctly
-    $result = $this->db->query("SELECT COUNT(*) FROM project");      
-    if( $this->db->getType() == "pgsql")
-      {
-      if($result[0]['count'] != $countProjectsBefore-1)
-        {
-        $this->fail();
-        }
-      }
-    else
-      {
-      if($result[0]['COUNT(*)'] != $countProjectsBefore-1)
-        {
-        $this->fail();
-        }
-      }
-    $this->pass();  
-    }
-
-
-
-  
   function login()
     {
     $this->clickLink('Login');
