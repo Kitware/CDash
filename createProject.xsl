@@ -669,8 +669,7 @@ edit the project</a><br/>
                   
                <xsl:if test="cdash/edit=0">
                  <img src="images/previous.png" style="cursor:pointer;" onclick="previousTab(6);" alt="previous" class="tooltip" title="Previous Step" />
-                  <br/><br/>
-                <input type="submit" name="Submit" value="Create Project">
+                <input type="submit" name="Submit" value="Create Project >> ">
                 <xsl:if test="cdash/edit=0">
                     <xsl:attribute name="disabled">
                      disabled
@@ -691,7 +690,7 @@ edit the project</a><br/>
 
     <xsl:if test="cdash/edit=1">
       <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;"><br/>
-      <span id="changesmade" style="color:red;display:none;">*Changes need to be updated</span>
+      <span id="changesmade" style="color:red;display:none;">*Changes need to be updated </span>
       <input type="submit" name="Update" value="Update Project"/></div>
     </xsl:if>
 
