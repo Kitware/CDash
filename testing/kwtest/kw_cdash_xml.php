@@ -1,4 +1,4 @@
-<?
+<?php
 /**
      *   XML reporter specific to use CDash
      *   Allows :
