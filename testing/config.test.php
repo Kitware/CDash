@@ -24,4 +24,6 @@ $db = array( 'host'   => $CDASH_DB_HOST,
              'pwd'    => $CDASH_DB_PASS,
              'name'   => $CDASH_DB_NAME,
              'type'   => $CDASH_DB_TYPE);
+// to run the test into the web browser (true or false (default value))
+$web_report = false;
 ?>
