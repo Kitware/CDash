@@ -1,5 +1,5 @@
 <?php
-require_once('simpletest/reporter.php');
+require_once(dirname(__FILE__).'/simpletest/reporter.php');
     
 class KWHtmlReporter extends HtmlReporter {
   function paintPass($message) {

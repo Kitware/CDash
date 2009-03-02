@@ -1,7 +1,7 @@
 <?php
 // To be able to access to the parameter to the database
 $cdashpath = str_replace("/testing","", dirname(__FILE__));
-require(realpath("$cdashpath/cdash/config.php"));
+require(dirname(dirname(__FILE__))."/cdash/config.php");
 // Everything should go here
 $configure = array(
   // url of the cdash to test
