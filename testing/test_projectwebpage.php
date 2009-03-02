@@ -257,7 +257,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $this->setField('name',$name);
     $this->setField('description',$description);
     $this->setField('public','1');
-    $this->clickSubmit('Create Project');
+    $this->clickSubmit('Create Project >>');
     return $this->clickLink('BACK');
     }
     
