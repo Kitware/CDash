@@ -47,7 +47,7 @@ class ProjectInDbTestCase extends KWWebTestCase
       $result = $result[0]['count'];  
       $errormsg = "The result of the query '$query' which is $result"; 
       $errormsg .= "is not the one expected: 1";
-      $this->assertEqual($result[0]['count'],'1',$errormsg);
+      $this->assertEqual($result,'1',$errormsg);
       return;
       }
     elseif(strcmp($this->db->getType(),"mysql") == 0 && 
@@ -56,7 +56,7 @@ class ProjectInDbTestCase extends KWWebTestCase
       $result = $result[0]['COUNT(*)']; 
       $errormsg = "The result of the query '$query' which is $result"; 
       $errormsg .= "is not the one expected: 1";
-      $this->assertEqual($result[0]['COUNT(*)'],'1',$errormsg);
+      $this->assertEqual($result,'1',$errormsg);
       return;
       }
     $this->assertText('The project ProjectTest has been created successfully.');
