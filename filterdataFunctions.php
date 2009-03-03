@@ -106,6 +106,22 @@ function filterdata_XML($filterdata)
 }
 
 
+function get_sql_date_value($value)
+{
+// transform from sql_value (assumed UTC)
+// to value (assumed server local timezone):
+  //$ts = strtotime($sql_value." UTC");
+  //$value = date(FMT_DATETIMETZ, $ts);
+
+// transform from value (could be anything, may be specified in the string)
+// to sql_value (UTC):
+  $ts = strtotime($value);
+  $sql_value = "'" . gmdate(FMT_DATETIME, $ts) . "'";
+
+  return $sql_value;
+}
+
+
 // Analyze parameter values given in the URL _REQUEST and fill up a php $filterdata structure
 // with them.
 //
@@ -318,7 +334,7 @@ function get_filterdata_from_request()
       {
         // date is equal
         $sql_compare = '=';
-        $sql_value = "'$value'";
+        $sql_value = get_sql_date_value($value);
       }
       break;
 
@@ -326,7 +342,7 @@ function get_filterdata_from_request()
       {
         // date is not equal
         $sql_compare = '!=';
-        $sql_value = "'$value'";
+        $sql_value = get_sql_date_value($value);
       }
       break;
 
@@ -334,7 +350,7 @@ function get_filterdata_from_request()
       {
         // date is after
         $sql_compare = '>';
-        $sql_value = "'$value'";
+        $sql_value = get_sql_date_value($value);
       }
       break;
 
@@ -342,7 +358,7 @@ function get_filterdata_from_request()
       {
         // date is before
         $sql_compare = '<';
-        $sql_value = "'$value'";
+        $sql_value = get_sql_date_value($value);
       }
       break;
 
