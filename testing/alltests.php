@@ -15,7 +15,10 @@ if(!$web_report)
   $cdashreporter = new CDashXmlReporter($configure);
   $manager       = new CDashTestManager();
   $manager->setCDashServer($configure['cdash']);
-  $manager->updateSVN($cdashreporter,$configure['svnroot']);
+  if(!$manager->updateSVN($cdashreporter,$configure['svnroot'],$configure['type']))
+    {
+    return;
+    }
   $manager->setDatabase($db);
   $manager->configure($cdashreporter);
   $manager->setTestDirectory(dirname(__FILE__));
