@@ -815,7 +815,7 @@
           <h3><a href="#" class="grouptrigger">Coverage</a></h3>
       </td>
    <!-- quick links -->
-  <td colspan="5" align="right" class="nob">
+  <td colspan="6" align="right" class="nob">
    <div id="Coverage">
    </div>
    <div class="quicklink">
@@ -830,11 +830,12 @@
    </tr>
    <tr class="table-heading">
       <th align="center" width="20%" id="sortcoveragesort_0">Site</th>
-      <th align="center" width="30%" id="sortcoveragesort_1">Build Name</th>
+      <th align="center" width="25%" id="sortcoveragesort_1">Build Name</th>
       <th align="center" width="10%" id="sortcoveragesort_2">Percentage</th>
       <th align="center"  width="10%" id="sortcoveragesort_3" >Passed</th>
       <th align="center"  width="10%" id="sortcoveragesort_4">Failed</th>
-      <th align="center" class="nob"  width="20%" id="sortcoveragesort_5">Date</th>
+      <th align="center" width="15%" id="sortcoveragesort_5">Date</th>
+      <th align="center" class="nob"  width="10%">Labels</th>
    </tr>
 </thead>
 <tbody>   
@@ -866,7 +867,13 @@
       <xsl:if test="faildiff > 0"><sub>+<xsl:value-of select="faildiff"/></sub></xsl:if>
       <xsl:if test="faildiff &lt; 0"><sub><xsl:value-of select="faildiff"/></sub></xsl:if>    
       </td>
-      <td align="left"  class="nob"><xsl:value-of select="date"/></td>
+      <td align="left"><xsl:value-of select="date"/></td>
+
+      <td class="nob" align="left">
+      <xsl:if test="count(labels/label)=0">(none)</xsl:if>
+      <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
+      <!-- <xsl:if test="count(labels/label)>1">(multiple)</xsl:if> -->
+      </td>
    </tr>
   </xsl:for-each>
 </tbody>
@@ -914,7 +921,7 @@
           <h3><a href="#" class="grouptrigger">Dynamic Analysis</a></h3>
       </td>
       <!-- quick links -->
-  <td colspan="4" align="right" class="nob">
+  <td colspan="5" align="right" class="nob">
    <div id="DynamicAnalysis"></div>
    <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
@@ -928,10 +935,11 @@
    </tr>
    <tr class="table-heading">
       <th align="center" width="20%" id="sortdynanalysissort_0">Site</th>
-      <th align="center" width="30%" id="sortdynanalysissort_1">Build Name</th>
+      <th align="center" width="25%" id="sortdynanalysissort_1">Build Name</th>
       <th align="center" width="20%" id="sortdynanalysissort_2">Checker</th>
       <th align="center" width="10%" id="sortdynanalysissort_3">Defect Count</th>
-      <th align="center" class="nob" width="20%" id="sortdynanalysissort_4">Date</th>
+      <th align="center" width="15%" id="sortdynanalysissort_4">Date</th>
+      <th align="center" class="nob" width="10%">Labels</th>
    </tr>
 </thead>
 <tbody> 
@@ -956,7 +964,13 @@
         </xsl:attribute>
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
       </td>
-      <td align="left" class="nob"><xsl:value-of select="date"/></td>
+      <td align="left"><xsl:value-of select="date"/></td>
+
+      <td class="nob" align="left">
+      <xsl:if test="count(labels/label)=0">(none)</xsl:if>
+      <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
+      <!-- <xsl:if test="count(labels/label)>1">(multiple)</xsl:if> -->
+      </td>
    </tr>
   </xsl:for-each>
 </tbody>

@@ -850,9 +850,23 @@ function generate_main_dashboard_XML($projectid,$date)
       $submittimestamp = strtotime($build_array["submittime"]." UTC");
       $xml .= add_XML_value("date",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone         
       $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
+
+      // Are there labels for this build?
+      //
+      if(!empty($labels_array))
+        {
+        $xml .= '<labels>';
+        foreach($labels_array as $label)
+          {
+          $xml .= add_XML_value("label",$label);
+          }
+        $xml .= '</labels>';
+        }
+
       $xml .= "</coverage>";
       }  // end coverage
-    
+
+
     // Dynamic Analysis
     $dynanalysis = pdo_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
     while($dynanalysis_array = pdo_fetch_array($dynanalysis))
@@ -888,8 +902,21 @@ function generate_main_dashboard_XML($projectid,$date)
       $submittimestamp = strtotime($build_array["submittime"]." UTC");
       $xml .= add_XML_value("date",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
       $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
+
+      // Are there labels for this build?
+      //
+      if(!empty($labels_array))
+        {
+        $xml .= '<labels>';
+        foreach($labels_array as $label)
+          {
+          $xml .= add_XML_value("label",$label);
+          }
+        $xml .= '</labels>';
+        }
+
       $xml .= "</dynamicanalysis>";
-      }  // end coverage   
+      }  // end dynamicanalysis
     } // end looping through builds
 
   if(pdo_num_rows($builds)>0)
