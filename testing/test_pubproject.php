@@ -36,7 +36,7 @@ class ProjectInDbTestCase extends KWWebTestCase
     $this->setField('name','ProjectTest');
     $this->setField('description','This is a project test for cdash');
     $this->setField('public','1');
-    $this->clickSubmit('Create Project');
+    $this->clickSubmitByName('Submit');
 
 
     $query = "SELECT COUNT(*) FROM project";
