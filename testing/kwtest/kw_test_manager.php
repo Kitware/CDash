@@ -192,17 +192,23 @@ class CDashTestManager extends TestManager
     * @param string $svnroot
   */
    
-   function updateSVN($reporter,$svnroot){
+   function updateSVN($reporter,$svnroot,$type){
       if(!empty($svnroot))
        {
        $reporter->paintUpdateStart();
-       $execution_time = $this->__performSvnUpdate($reporter,$svnroot);
+       $execution_time = $this->__performSvnUpdate($reporter,$svnroot,$type);
+       // The project is up to date and the type is Continuous
+       if(!$execution_time)
+         {
+         return false;
+         }
        // We put in minute the execution time of the svn update
        if(is_numeric($execution_time))
          {
          $execution_time = round($execution_time / 60 , 3);
          }
        $reporter->paintUpdateEnd($execution_time);
+       return true;
        }
     }
   
@@ -214,7 +220,7 @@ class CDashTestManager extends TestManager
      *    @param string $svnroot
      *    @access private
      */
-    function __performSvnUpdate($reporter,$svnroot){
+    function __performSvnUpdate($reporter,$svnroot,$type){
       $time_start = (float) array_sum(explode(' ',microtime()));
       $raw_output = $this->__performSvnCommand(`svn info $svnroot 2>&1 | grep Revision`);
       // We catch the current revision of the repository
@@ -230,6 +236,10 @@ class CDashTestManager extends TestManager
         {
         $time_end = (float) array_sum(explode(' ',microtime()));
         $execution_time = $time_end - $time_start;
+        if(!strcmp($type,'Continuous'))
+          {
+          return false;
+          }
         echo "Old revision of repository is: $currentRevision\nCurrent revision of repository is: $currentRevision\n";
         echo "Project is up to date\n";
         return $execution_time;

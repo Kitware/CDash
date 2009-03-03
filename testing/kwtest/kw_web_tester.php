@@ -76,7 +76,7 @@ class KWWebTestCase extends WebTestCase {
       }
     else
       {
-      $this->assertResponse(200);
+      $this->assertResponse(200,"The following url $page is not reachable");
       $error = true;
       }
     if(isset($error))

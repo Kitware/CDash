@@ -121,7 +121,21 @@ class CDashXmlReporter extends XmlReporter
 
   function _paintSiteTag($resourcefile)
     {
-    fwrite($resourcefile,"<".$this->_namespace.'Site BuildName="'.$this->_configure['buildname'].'" BuildStamp="'.date("Ymd").'-0100-'.$this->_configure['type'].'" Name="'.$this->_configure['site'].'" Generator="simpletest1.0.1">'."\n");
+    $buildname    = 'BuildName="'.$this->_configure['buildname'].'"';
+    if(!strcmp($this->_configure['type'],'Nightly'))
+      {
+      $tag = '0100';
+      }
+    else
+      {
+      $tag = date("Hi");
+      }
+    $builtstamp   = 'BuildStamp="'.date("Ymd").'-'.$tag.'-';
+    $builtstamp  .= $this->_configure['type'].'"';
+    $name         = 'Name="'.$this->_configure['site'].'"';
+    $generator    = 'Generator="simpletest1.0.1"';
+    fwrite($resourcefile,"<".$this->_namespace."Site $buildname $builtstamp ");
+    fwrite($resourcefile,"$name $generator>\n");
     }
 
   /**
