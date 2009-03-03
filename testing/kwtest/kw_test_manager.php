@@ -234,12 +234,12 @@ class CDashTestManager extends TestManager
         }
       if(strpos($raw_output[0],'At revision') !== false)
         {
-        $time_end = (float) array_sum(explode(' ',microtime()));
-        $execution_time = $time_end - $time_start;
         if(!strcmp($type,'Continuous'))
           {
           return false;
           }
+        $time_end = (float) array_sum(explode(' ',microtime()));
+        $execution_time = $time_end - $time_start;
         echo "Old revision of repository is: $currentRevision\nCurrent revision of repository is: $currentRevision\n";
         echo "Project is up to date\n";
         return $execution_time;
