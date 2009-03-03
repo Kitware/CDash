@@ -421,7 +421,7 @@ function get_filterdata_from_request()
 
       case 'configureerrors':
       {
-        $sql_field = "(SELECT COUNT(buildid) FROM configureerror WHERE buildid=b.id AND type='0')";
+        $sql_field = "(SELECT SUM(status) FROM configure WHERE buildid=b.id AND status!='0')";
       }
       break;
 
