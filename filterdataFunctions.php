@@ -529,7 +529,7 @@ function get_filterdata_from_request()
 
       case 'testtimestatus':
       {
-        $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE projectid=b.projectid))";
+        $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)";
       }
       break;
 
@@ -541,7 +541,7 @@ function get_filterdata_from_request()
 
       case 'updateduration':
       {
-        $sql_field = "(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM buildupdate WHERE buildid=b.id)";
+        $sql_field = "IF((SELECT COUNT(*) FROM buildupdate WHERE buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM buildupdate WHERE buildid=b.id),0)";
       }
       break;
 
