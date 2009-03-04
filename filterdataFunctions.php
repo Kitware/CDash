@@ -48,7 +48,9 @@ function filterdefinitions_XML()
   $xml .= filterdefinition_XML('configurewarnings', 'Configure Warnings', 'number', '', '0');
   $xml .= filterdefinition_XML('expected', 'Expected', 'bool', '', '');
   $xml .= filterdefinition_XML('groupname', 'Group', 'string', '', 'Nightly');
+  $xml .= filterdefinition_XML('hascoverage', 'Has Coverage', 'bool', '', '');
   $xml .= filterdefinition_XML('hasctestnotes', 'Has CTest Notes', 'bool', '', '');
+  $xml .= filterdefinition_XML('hasdynamicanalysis', 'Has Dynamic Analysis', 'bool', '', '');
   $xml .= filterdefinition_XML('hasusernotes', 'Has User Notes', 'bool', '', '');
   $xml .= filterdefinition_XML('label', 'Label', 'string', '', '');
   $xml .= filterdefinition_XML('site', 'Site', 'string', '', '');
@@ -459,9 +461,21 @@ function get_filterdata_from_request()
       }
       break;
 
+      case 'hascoverage':
+      {
+        $sql_field = '(SELECT COUNT(*) FROM coveragesummary WHERE buildid=b.id)';
+      }
+      break;
+
       case 'hasctestnotes':
       {
         $sql_field = '(SELECT COUNT(*) FROM build2note WHERE buildid=b.id)';
+      }
+      break;
+
+      case 'hasdynamicanalysis':
+      {
+        $sql_field = '(SELECT COUNT(*) FROM dynamicanalysis WHERE buildid=b.id)';
       }
       break;
 
