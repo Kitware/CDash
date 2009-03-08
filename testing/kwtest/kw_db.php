@@ -240,7 +240,7 @@ class dbo_pgsql extends dbo
      $user     = $this->user;
      $password = $this->password;
      $conn  = "host='$host' dbname='$dbname' user='$user' password='$password'";
-     $this->dbconnect = pg_connect($conn, PGSQL_CONNECT_FORCE_NEW);
+     @$this->dbconnect = pg_connect($conn, PGSQL_CONNECT_FORCE_NEW);
      }
   
    function disconnect()
