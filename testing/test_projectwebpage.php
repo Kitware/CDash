@@ -267,7 +267,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $this->clickLink('Login');
     $this->setField('login','simpletest@localhost');
     $this->setField('passwd','simpletest');
-    return $this->clickSubmit('Login >>');
+    return $this->clickSubmitByName('sent');
     }
     
   function submission($projectname,$file)

@@ -23,7 +23,7 @@ class LoginTestCase extends KWWebTestCase
     $this->clickLink('Login');
     $this->setField('login','simpletest@localhost');
     $this->setField('passwd','simpletest');
-    $this->clickSubmit('Login >>');
+    $this->clickSubmitByName('sent');
     $this->assertNoText('Wrong email or password');
     }
 
@@ -37,7 +37,7 @@ class LoginTestCase extends KWWebTestCase
     $this->analyse($this->clickLink('Register'));
     $this->fillOutRegisterForm();
     $this->setField('url', 'catchbot');
-    $this->clickSubmit('Register');
+    $this->clickSubmitByName('sent');
     $this->assertText('Bots are not allowed to obtain CDash accounts!','Bots detected in test_login.php.42');
     }
   
@@ -50,7 +50,7 @@ class LoginTestCase extends KWWebTestCase
       return;
       }
     $this->fillOutRegisterForm();
-    $this->clickSubmit('Register',array('url' => 'catchbot'));
+    $this->clickSubmitByName('sent',array('url' => 'catchbot'));
     $this->assertText('Registration Complete. Please login with your email and password.');
     }
   

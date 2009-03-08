@@ -90,12 +90,12 @@ class PubProjectTestCase extends KWWebTestCase
     $this->clickLink('Login');
     $this->setField('login','simpletest@localhost');
     $this->setField('passwd','simpletest');
-    $this->clickSubmit('Login >>');
+    $this->clickSubmitByName('sent');
     $this->clickLink('[Create new project]');
     $this->setField('name','ProjectTest4Db');
     $this->setField('description','This is a project test for cdash');
     $this->setField('public','0');
-    return $this->clickSubmit('Create Project');
+    return $this->clickSubmitByName('Submit');
     }
   
 }
