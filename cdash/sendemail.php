@@ -199,7 +199,8 @@ function sendemail($handler,$projectid)
   include_once("cdash/common.php");
   include("cdash/config.php");
   require_once("cdash/pdo.php");
-
+  require_once("models/build.php");
+  
   // Check if we should send the email
   $project = pdo_query("SELECT name,emailbrokensubmission,emailredundantfailures,emailmaxitems,
                                emailmaxchars,emailtesttimingchanged,nightlytime,
@@ -269,19 +270,18 @@ function sendemail($handler,$projectid)
     {
     return;
     }
+    
+  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+  $build_array = pdo_fetch_array($build);
+  $buildtype = $build_array["type"];
+  $siteid = $build_array["siteid"];
+  $buildname = $build_array["name"];
+  $starttime = $build_array["starttime"];
   
   // look for the previous build only if necessary
   if($project_array["emailredundantfailures"]==0)
     {
     // Find the previous build
-    $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-    $build_array = pdo_fetch_array($build);
-    $buildtype = $build_array["type"];
-    $siteid = $build_array["siteid"];
-    $buildname = $build_array["name"];
-    $starttime = $build_array["starttime"];
-      
-      
     $previousbuild = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' 
                                  AND name='$buildname' AND type='$buildtype' 
                                  AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
@@ -336,7 +336,8 @@ function sendemail($handler,$projectid)
         }
       }
     } // end emailredundantfailures
-   
+ 
+     
   // Current URI of the dashboard
   $currentPort="";
   $httpprefix="http://";
@@ -579,15 +580,17 @@ function sendemail($handler,$projectid)
 
   if($email != "")
     {
-    $title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
-    $title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
-    
+    $Build = new Build();
+    $Build->Id = $buildid;
+
     $messagePlainText = "A submission to CDash for the project ".$project_array["name"]." has ";
+    $titleerrors = "(";
     
     $i=0;
     if($nbuilderrors>0)
       {
       $messagePlainText .= "build errors";
+      $titleerrors.="b=".$nbuilderrors;
       $i++;
       }
     
@@ -596,8 +599,10 @@ function sendemail($handler,$projectid)
       if($i>0)
          {
          $messagePlainText .= " and ";
+         $titleerrors.=", ";
          }
       $messagePlainText .= "build warnings";
+      $titleerrors.="w=".$nbuilderrors;
       $i++;
       } 
       
@@ -606,10 +611,25 @@ function sendemail($handler,$projectid)
       if($i>0)
          {
          $messagePlainText .= " and ";
+         $titleerrors.=", ";
          }
       $messagePlainText .= "failing tests";
+      $titleerrors.="t=".$nbuilderrors;
       $i++;
       }
+    
+    // Title
+    $titleerrors .= "):";
+    $title = "FAILED ".$titleerrors." ".$project_array["name"];
+    
+    if($Build->GetSubProjectName())
+      {
+      $title .= "/".$Build->GetSubProjectName();
+      }
+    $title .= " ".$buildname."-".$buildtype;
+    
+    //$title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
+    //$title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
      
     $messagePlainText .= ".\n";  
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
