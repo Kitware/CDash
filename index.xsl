@@ -835,7 +835,7 @@
       <th align="center"  width="10%" id="sortcoveragesort_3" >Passed</th>
       <th align="center"  width="10%" id="sortcoveragesort_4">Failed</th>
       <th align="center" width="15%" id="sortcoveragesort_5">Date</th>
-      <th align="center" class="nob"  width="10%">Labels</th>
+      <th align="center" class="nob" id="sortcoveragesort_6" width="10%">Labels</th>
    </tr>
 </thead>
 <tbody>   
@@ -939,7 +939,7 @@
       <th align="center" width="20%" id="sortdynanalysissort_2">Checker</th>
       <th align="center" width="10%" id="sortdynanalysissort_3">Defect Count</th>
       <th align="center" width="15%" id="sortdynanalysissort_4">Date</th>
-      <th align="center" class="nob" width="10%">Labels</th>
+      <th align="center" class="nob" id="sortdynanalysissort_5" width="10%">Labels</th>
    </tr>
 </thead>
 <tbody> 

@@ -271,9 +271,10 @@ $(document).ready(function() {
                 0: { sorter:'text'},
                 1: { sorter:'text'},
                 2: { sorter:'percentage'},
-                3: { sorter:'digit'},
-                4: { sorter:'digit'},
-                5: { sorter:'text'}
+                3: { sorter:'dynanalysismetric'},
+                4: { sorter:'dynanalysismetric'},
+                5: { sorter:'text'},
+                6: { sorter:'text'}
             },
           debug: false,
           widgets: ['zebra']
@@ -289,7 +290,8 @@ $(document).ready(function() {
                 1: { sorter:'text'},
                 2: { sorter:'text'},
                 3: { sorter:'dynanalysismetric'}, // not percent but same format
-                4: { sorter:'text'}
+                4: { sorter:'text'},
+                5: { sorter:'text'}
             },
           debug: false,
           widgets: ['zebra']
