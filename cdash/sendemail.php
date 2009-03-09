@@ -201,7 +201,7 @@ function sendemail($handler,$projectid)
   require_once("cdash/pdo.php");
 
   // Check if we should send the email
-  $project = pdo_query("SELECT name,emailbrokensubmission,emailmaxitems,
+  $project = pdo_query("SELECT name,emailbrokensubmission,emailredundantfailures,emailmaxitems,
                                emailmaxchars,emailtesttimingchanged,nightlytime,
                                testtimemaxstatus FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
@@ -214,9 +214,9 @@ function sendemail($handler,$projectid)
     return;
     }
   
-    $name = $handler->getBuildName();
-    $stamp = $handler->getBuildStamp();
-    $sitename = $handler->getSiteName();
+  $name = $handler->getBuildName();
+  $stamp = $handler->getBuildStamp();
+  $sitename = $handler->getSiteName();
 
   // Find the build id
   $buildid = get_build_id($name,$stamp,$projectid,$sitename);
@@ -270,68 +270,73 @@ function sendemail($handler,$projectid)
     return;
     }
   
-  // Find the previous build
-  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = pdo_fetch_array($build);
-  $buildtype = $build_array["type"];
-  $siteid = $build_array["siteid"];
-  $buildname = $build_array["name"];
-  $starttime = $build_array["starttime"];
-    
-  $previousbuild = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' 
-                               AND name='$buildname' AND type='$buildtype' 
-                               AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
-                               
-  add_last_sql_error("sendemail ".$projectname);
-                               
-  if(pdo_num_rows($previousbuild) > 0)
+  // look for the previous build only if necessary
+  if($project_array["emailredundantfailures"]==0)
     {
-    $previousbuild_array = pdo_fetch_array($previousbuild);
-    $previousbuildid = $previousbuild_array["id"];
+    // Find the previous build
+    $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+    $build_array = pdo_fetch_array($build);
+    $buildtype = $build_array["type"];
+    $siteid = $build_array["siteid"];
+    $buildname = $build_array["name"];
+    $starttime = $build_array["starttime"];
+      
+      
+    $previousbuild = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' 
+                                 AND name='$buildname' AND type='$buildtype' 
+                                 AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
+                                 
+    add_last_sql_error("sendemail ".$projectname);
+                                 
+    if(pdo_num_rows($previousbuild) > 0)
+      {
+      $previousbuild_array = pdo_fetch_array($previousbuild);
+      $previousbuildid = $previousbuild_array["id"];
+      
+      // Find if the build has any errors
+      $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
+      add_last_sql_error("sendemail ".$projectname);
+      $builderror_array = pdo_fetch_array($builderror);
+      $npreviousbuilderrors = $builderror_array[0];
+         
+      // Find if the build has any warnings
+      $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
+      add_last_sql_error("sendemail ".$projectname);
+      $buildwarning_array = pdo_fetch_array($buildwarning);
+      $npreviousbuildwarnings = $buildwarning_array[0];
     
-    // Find if the build has any errors
-    $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
-    add_last_sql_error("sendemail ".$projectname);
-    $builderror_array = pdo_fetch_array($builderror);
-    $npreviousbuilderrors = $builderror_array[0];
-       
-    // Find if the build has any warnings
-    $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
-    add_last_sql_error("sendemail ".$projectname);
-    $buildwarning_array = pdo_fetch_array($buildwarning);
-    $npreviousbuildwarnings = $buildwarning_array[0];
+      // Find if the build has any test failings
+      if($project_emailtesttimingchanged)
+        {
+        $sql = "SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND (status='failed' OR timestatus>".qnum($project_testtimemaxstatus).")";
+        }
+      else
+        {
+        $sql = "SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'";
+        }
+      $nfail_array = pdo_fetch_array(pdo_query($sql));
+      add_last_sql_error("sendmail");
+      $npreviousfailingtests = $nfail_array[0];
+      
+      
+      //add_log("previousbuildid=".$previousbuildid,"sendemail ".$projectname);
+      //add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail ".$projectname);
+      //add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail ".$projectname);
+      //add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail ".$projectname);
   
-    // Find if the build has any test failings
-    if($project_emailtesttimingchanged)
-      {
-      $sql = "SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND (status='failed' OR timestatus>".qnum($project_testtimemaxstatus).")";
+      // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
+      // we don't send any emails
+      if($npreviousfailingtests>=$nfailingtests
+         && $npreviousbuildwarnings>=$nbuildwarnings
+         && $npreviousbuilderrors==$nbuilderrors
+        ) 
+        {
+        add_log("returning","sendemail ".$projectname);
+        return;
+        }
       }
-    else
-      {
-      $sql = "SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'";
-      }
-    $nfail_array = pdo_fetch_array(pdo_query($sql));
-    add_last_sql_error("sendmail");
-    $npreviousfailingtests = $nfail_array[0];
-    
-    
-    //add_log("previousbuildid=".$previousbuildid,"sendemail ".$projectname);
-    //add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail ".$projectname);
-    //add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail ".$projectname);
-    //add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail ".$projectname);
-
-    // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
-    // we don't send any emails
-    if($npreviousfailingtests>=$nfailingtests
-       && $npreviousbuildwarnings>=$nbuildwarnings
-       && $npreviousbuilderrors==$nbuilderrors
-      ) 
-      {
-      add_log("returning","sendemail ".$projectname);
-      return;
-      }
-    }
- 
+    } // end emailredundantfailures
+   
   // Current URI of the dashboard
   $currentPort="";
   $httpprefix="http://";
