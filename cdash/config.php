@@ -61,4 +61,11 @@ $CDASH_GOOGLE_MAP_API_KEY = array();
 $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
 
 $CDASH_DEFAULT_GOOGLE_ANALYTICS='';
+
+/** DO NOT EDIT AFTER THIS LINE */
+$localConfig = dirname(__FILE__).'/config.local.php'; 
+if ( file_exists($localConfig) )
+  {
+  include($localConfig);
+  }
 ?>
