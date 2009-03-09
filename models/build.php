@@ -140,9 +140,9 @@ class Build
   function GetStamp()
     {
     return $this->Stamp;
-    }  
+    }
 
-
+  /** Set the subproject id */
   function SetSubProject($subproject)
     {
     if(!empty($this->SubProjectId))
@@ -183,6 +183,36 @@ class Build
     return false;
     }
 
+  /** Return the subproject id */
+  function GetSubProjectName()
+    {
+    if(empty($this->Id))
+      {
+      return false;
+      }
+      
+    if(!empty($this->SubProjectName))
+      {
+      return $this->SubProjectName;
+      }
+      
+    $query = pdo_query("SELECT name FROM subproject,subproject2build WHERE subproject.id=subproject2build.subprojectid 
+                        AND subproject2build.buildid=".qnum($this->Id));
+    if(!$query)
+      {
+      add_last_sql_error("Build:GetSubProjectName()");
+      return false;
+      }  
+
+    if(pdo_num_rows($query)>0)
+      {
+      $query_array = pdo_fetch_array($query);
+      $this->SubProjectName = $query_array['name'];
+      return $this->SubProjectName; 
+      }
+      
+    return false;
+    }
 
   /** Update the end time */
   function UpdateEndTime($end_time)
