@@ -51,7 +51,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT projectid FROM labelemail LIMIT 1"))
+  if(!pdo_query("SELECT includesubprojectotal FROM buildgroup LIMIT 1"))
     {  
     $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
     upgrade your database structure in the Administration/CDash maintenance panel of CDash.</upgradewarning>";

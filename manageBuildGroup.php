@@ -319,11 +319,17 @@ if(isset($_POST["groupid"]))
 {
   $Groupid = $_POST["groupid"];
   @$SummaryEmail = $_POST["summaryEmail"];
+  @$IncludeInSummary = $_POST["includeInSummary"];
+  
   if(!isset($SummaryEmail))
     {
     $SummaryEmail = 0;
     }
-  $sql = "UPDATE buildgroup SET summaryemail='$SummaryEmail' WHERE id='$Groupid'"; 
+   if(!isset($IncludeInSummary))
+    {
+    $IncludeInSummary = 0;
+    }  
+  $sql = "UPDATE buildgroup SET summaryemail='$SummaryEmail',includesubprojectotal='$IncludeInSummary' WHERE id='$Groupid'"; 
   if(!pdo_query("$sql"))
     {
     echo pdo_error();
@@ -400,8 +406,9 @@ if($projectid>0)
   $xml .= add_XML_value("name",$project_array['name']);
   
   // Display the current groups
-  
-  $groups = pdo_query("SELECT g.id,g.name,g.description,g.summaryemail,gp.position,g.starttime FROM buildgroup AS g, buildgroupposition AS gp 
+
+  $groups = pdo_query("SELECT g.id,g.name,g.description,g.summaryemail,g.includesubprojectotal,
+                              gp.position,g.starttime FROM buildgroup AS g, buildgroupposition AS gp 
                          WHERE g.id=gp.buildgroupid AND g.projectid='$projectid' 
                          AND g.endtime='1980-01-01 00:00:00' AND gp.endtime='1980-01-01 00:00:00'
                          ORDER BY gp.position ASC");
@@ -426,7 +433,8 @@ if($projectid>0)
     $xml .= add_XML_value("id",$group_array['id']);
     $xml .= add_XML_value("name",$group_array['name']);
     $xml .= add_XML_value("description",$group_array['description']);
-    $xml .= add_XML_value("summaryemail",$group_array['summaryemail']);  
+    $xml .= add_XML_value("summaryemail",$group_array['summaryemail']);
+    $xml .= add_XML_value("includeinsummary",$group_array['includesubprojectotal']); 
     $xml .= add_XML_value("position",$group_array['position']);
     $xml .= add_XML_value("startdate",$group_array['starttime']);
     $xml .= "</group>";

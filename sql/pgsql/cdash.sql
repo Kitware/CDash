@@ -35,6 +35,7 @@ CREATE TABLE "buildgroup" (
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "description" text DEFAULT '' NOT NULL,
   "summaryemail" smallint DEFAULT '0',
+  "includesubprojectotal" smallint DEFAULT '1',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "projectid2" on "buildgroup" ("projectid");
@@ -262,6 +263,7 @@ CREATE TABLE "project" (
   "emaillowcoverage" smallint DEFAULT '0' NOT NULL,
   "emailtesttimingchanged" smallint DEFAULT '0' NOT NULL,
   "emailbrokensubmission" smallint DEFAULT '1' NOT NULL,
+  "emailredundantfailures" smallint DEFAULT '0' NOT NULL,
   "cvsviewertype" character varying(10) DEFAULT NULL,
   "testtimestd" numeric(3,1) DEFAULT '4.0',
   "testtimestdthreshold" numeric(3,1) DEFAULT '1.0',

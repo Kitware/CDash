@@ -104,7 +104,7 @@ project page</a>
       </ul>
     <div id="fragment-1" class="tab_content" >
         <div class="tab_help"></div>
-          <table width="800"  border="0">
+          <table width="870"  border="0">
               <!-- List the current groups -->
              <tr>
                <td><div align="right"></div></td>
@@ -156,6 +156,12 @@ project page</a>
                 </xsl:if> 
                </input>
                No email
+               <input name="includeInSummary" onclick="form.submit();" type="checkbox" value="1">  
+               <xsl:if test="includeinsummary=1">
+                 <xsl:attribute name="checked">1</xsl:attribute> 
+                </xsl:if> 
+               </input>
+               In summary
                </form>
                </td>
                </tr>

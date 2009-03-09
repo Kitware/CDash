@@ -125,6 +125,7 @@ if($Submit)
     $Project->NightlyTime = $_POST["nightlyTime"];
     $Project->GoogleTracker = $_POST["googleTracker"]; 
     @$Project->EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
+    @$Project->EmailRedundantFailures = $_POST["emailRedundantFailures"];
     @$Project->EmailBuildMissing = $_POST["emailBuildMissing"];
     @$Project->EmailLowCoverage = $_POST["emailLowCoverage"];
     @$Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
@@ -238,6 +239,7 @@ if($Update || $AddRepository)
   $Project->NightlyTime = $_POST["nightlyTime"];
   $Project->GoogleTracker = $_POST["googleTracker"]; 
   @$Project->EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
+  @$Project->EmailRedundantFailures = $_POST["emailRedundantFailures"];
   @$Project->EmailBuildMissing = $_POST["emailBuildMissing"];
   @$Project->EmailLowCoverage = $_POST["emailLowCoverage"];
   @$Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
@@ -307,6 +309,7 @@ if($projectid>0)
   $xml .= add_XML_value("nightlytime",$Project->NightlyTime);
   $xml .= add_XML_value("googletracker",$Project->GoogleTracker);
   $xml .= add_XML_value("emailbrokensubmission",$Project->EmailBrokenSubmission);
+  $xml .= add_XML_value("emailredundantfailures",$Project->EmailRedundantFailures);
   $xml .= add_XML_value("emailbuildmissing",$Project->EmailBuildMissing);
   $xml .= add_XML_value("emaillowcoverage",$Project->EmailLowCoverage);
   $xml .= add_XML_value("emailtesttimingchanged",$Project->EmailTestTimingChanged);

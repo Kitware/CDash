@@ -521,7 +521,7 @@ edit the project</a><br/>
             <div id="fragment-5" class="tab_content">
               <div class="tab_help"></div>
               <table width="550">
-                <tr>
+              <tr>
                 <td></td>
                 <td><div align="right"><strong>Email broken submission:</strong></div></td>
                 <td><input onchange="saveChanges();" onfocus="showHelp('emailBroken_help');" type="checkbox" name="emailBrokenSubmission" value="1">
@@ -533,6 +533,22 @@ edit the project</a><br/>
                   <img onmouseover="showHelp('emailBroken_help');" src="images/help.gif" border="0"/></a>
                 <span class="help_content" id="emailBroken_help">
                 <b>Email broken submission</b><br/> Enable/Disable sending email for broken submissions for this project. This is a general feature.
+                  </span>
+                </td>
+              </tr>
+               <tr>
+                <td></td>
+                <td><div align="right"><strong>Email redundant failures:</strong></div></td>
+                <td><input onchange="saveChanges();" onfocus="showHelp('emailRedundant_help');" type="checkbox" name="emailRedundantFailures" value="1">
+                <xsl:if test="cdash/project/emailredundantfailures=1">
+                <xsl:attribute name="checked"></xsl:attribute>
+                </xsl:if>
+                </input>
+                <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelp('emailRedundant_help');" src="images/help.gif" border="0"/></a>
+                <span class="help_content" id="emailRedundant_help">
+                <b>Email redundant failures</b><br/> Enable/Disable sending email even if a build has been failing previously. If not checked, CDash sends an email
+                only on the first failure.
                   </span>
                 </td>
               </tr>
