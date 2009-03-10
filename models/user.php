@@ -162,5 +162,24 @@ class User
     $query_array = pdo_fetch_array($query);
     return $query_array['id'];
     }    
+    
+  /** Get the user id from the email */
+  function GetIdFromEmail($email)
+    {
+    $query = pdo_query("SELECT id FROM user WHERE email='".trim($email)."'");  
+    if(!$query)
+      {
+      add_last_sql_error("User:GetIdFromEmail");
+      return false;
+      }
+    
+    if(pdo_num_rows($query)==0)
+      {
+      return false;
+      }  
+      
+    $query_array = pdo_fetch_array($query);
+    return $query_array['id'];
+    }   
 }
 ?>

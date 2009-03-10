@@ -546,6 +546,7 @@
        </head>
        <body bgcolor="#ffffff">
 
+
 <xsl:choose>         
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
@@ -554,7 +555,7 @@
   <xsl:call-template name="header"/>
 </xsl:otherwise>
 </xsl:choose>
-
+<div id="index_content">
 <xsl:if test="cdash/dashboard/future=0">
 
 <xsl:if test="cdash/updates">
@@ -994,6 +995,7 @@ CDash cannot predict the future (yet)...
 <br/>
 </xsl:if> <!-- end dashboard is in the future -->
 
+</div>
 <!-- FOOTER -->
 <br/>
 

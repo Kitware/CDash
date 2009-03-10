@@ -413,8 +413,7 @@ $.fn.tabs = function(initial, settings) {
             } else if ($.browser.safari) {
 
                 // Simply setting location.hash puts Safari into the eternal load state... ugh! Submit a form instead.
-                var tempForm = $('<form action="' + hash + '"><div><input type="submit" value="h" /></div></form>').get(0); // no need to append it to the body
-                tempForm.submit(); // does not trigger the form's submit event...
+
                 $(this).trigger('click'); // ...thus do stuff here
                 if (settings.bookmarkable) {
                     $.ajaxHistory.update(hash);

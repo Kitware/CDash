@@ -64,6 +64,13 @@ if ($session_OK)
   // Go through the public projects
   $project = pdo_query("SELECT name,id FROM project WHERE id NOT IN (SELECT projectid as id FROM user2project WHERE userid='$userid') AND public='1'");
   $j = 0;
+  if($CDASH_USE_LOCAL_DIRECTORY=='1')
+    {
+    if(file_exists('local/user.php'))
+      {
+      include_once('local/user.php');
+      }
+    }
   while($project_array = pdo_fetch_array($project))
     {
     $xml .= "<publicproject>";
@@ -74,6 +81,10 @@ if ($session_OK)
     else
       {
       $xml .= add_XML_value("trparity","treven");
+      }
+    if(function_exists('getAdditionalPublicProject'))
+      {
+      $xml .= getAdditionalPublicProject($project_array["id"]);
       }
     $xml .= add_XML_value("id",$project_array["id"]);
     $xml .= add_XML_value("name",$project_array["name"]);

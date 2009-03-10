@@ -82,6 +82,19 @@ if($projectid == 0)
   <previousdate>".$previousdate."</previousdate> 
   <projectpublic>".$projectpublic."</projectpublic> 
   <nextdate>".$nextdate."</nextdate>";
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
+    {
+    include_once("local/models/proProject.php");
+    $pro= new proProject($projectid); 
+    if($pro->isActif()!=false)
+      {
+      if(strtotime($pro->getEnd()<strtotime(date("r"))))
+        {
+        $pro->setStatus(0, 0, 0);
+        }
+      $xml.="<prostatus>".$pro->getStatus()."</prostatus>";
+      }
+    }
  
   if($currentstarttime>time()) 
    {

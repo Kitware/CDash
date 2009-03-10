@@ -25,11 +25,16 @@ include("cdash/sendemail.php");
 // Open the database connection
 include("cdash/config.php");
 require_once("cdash/pdo.php");
+
+
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 set_time_limit(0);
-$fp = fopen('php://input', 'r');
-//$fp = fopen('backup/Insight_Experimental_Test.xml', 'r');
+
+$file_path='php://input';
+//$file_path='backup/Build.xml';
+$fp = fopen($file_path, 'r');
 
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
@@ -86,6 +91,11 @@ else // synchronously
   {
   include("cdash/dailyupdates.php");
   addDailyChanges($projectid);
+  }
+  
+if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/submit.php"))
+  {
+  include("local/submit.php");
   }
 
 // Parse the XML file
