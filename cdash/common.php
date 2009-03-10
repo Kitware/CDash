@@ -75,14 +75,14 @@ define("FMT_DATETIMEMS", "Y-m-d\TH:i:s.u");  // date and time with milliseconds
   
 /** Do the XSLT translation and look in the local directory if the file
  *  doesn't exist */
-function generate_XSLT($xml,$pageName)
+function generate_XSLT($xml,$pageName,$only_in_local=false)
 {
   // For common xsl pages not referenced directly
   // i.e. header, headerback, etc...
   // look if they are in the local directory, and set
   // an XML value accordingly
   include("config.php");
-  if($CDASH_USE_LOCAL_DIRECTORY)
+  if($CDASH_USE_LOCAL_DIRECTORY&&!$only_in_local)
     {
     $pos = strpos($xml,"</cdash>"); // this should be the last
     if($pos !== FALSE)
@@ -95,7 +95,7 @@ function generate_XSLT($xml,$pageName)
       $localphpfile = "local/".$pageName.".php";
       if(file_exists($localphpfile))
         {
-        include($localphpfile);
+        include_once($localphpfile);
         $xml .= getLocalXML();
         }
         
@@ -1841,7 +1841,21 @@ function get_cdash_dashboard_xml($projectname, $date)
   <projectpublic>".$project_array["public"]."</projectpublic>
   <previousdate>".$previousdate."</previousdate>
   <nextdate>".$nextdate."</nextdate>
-  <logoid>".getLogoID($projectid)."</logoid>
+  <logoid>".getLogoID($projectid)."</logoid>";
+    if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
+    {
+    include_once("local/models/proProject.php");
+    $pro= new proProject($projectid); 
+    if($pro->isActif()!=false)
+      {
+      if(strtotime($pro->getEnd()<strtotime(date("r"))))
+        {
+        $pro->setStatus(0, 0, 0);
+        }
+      $xml.="<prostatus>".$pro->getStatus()."</prostatus>";
+      }
+    }
+  $xml .="
   </dashboard>
   ";
   

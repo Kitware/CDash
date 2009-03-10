@@ -148,4 +148,75 @@ function ctest_parse($filehandler, $projectid)
   
   return $handler;
 }
+
+/** get handler (object)*/
+function getObjectHandler($filehandler, $projectid)
+  {
+  include 'cdash/config.php';
+  require_once 'cdash/common.php';
+
+  $content = fread($filehandler, 8192);
+  $handler = null;
+  $parser = xml_parser_create();
+  $file = "";
+
+  if(preg_match('/<Update/', $content)) // Should be first otherwise confused with Build
+    {
+    $handler = new UpdateHandler($projectid);
+    $file = "Update";
+    } 
+  else if(ereg('<Build', $content))
+    {
+    $handler = new BuildHandler($projectid);
+    $file = "Build";
+    }
+  else if(preg_match('/<Configure/', $content)) 
+    {
+    $handler = new ConfigureHandler($projectid);
+    $file = "Configure";
+    } 
+  else if(preg_match('/<Testing/', $content)) 
+    {
+    $handler = new TestingHandler($projectid);
+    $file = "Test";
+    } 
+  else if(preg_match('/<CoverageLog/', $content)) // Should be before coverage 
+    {
+    $handler = new CoverageLogHandler($projectid);
+    $file = "CoverageLog";
+    }   
+  else if(preg_match('/<Coverage/', $content)) 
+    {
+    $handler = new CoverageHandler($projectid);
+    $file = "Coverage";
+    } 
+  else if(preg_match('/<Notes/', $content)) 
+    {
+    $handler = new NoteHandler($projectid);
+    $file = "Notes";
+    }  
+  else if(preg_match('/<DynamicAnalysis/', $content)) 
+    {
+    $handler = new DynamicAnalysisHandler($projectid);
+    $file = "DynamicAnalysis";
+    }
+  else if(preg_match('/<Project/', $content)) 
+    {
+    $handler = new ProjectHandler($projectid);
+    $file = "Project";
+    }  
+
+  if($handler == NULL)
+    {
+    echo "no handler found";
+    add_log('error: could not create handler based on xml content', 'getObjectHandler');
+    exit();
+    }
+  
+  xml_set_element_handler($parser, array($handler, 'startElement'), array($handler, 'endElement'));
+  xml_set_character_data_handler($parser, array($handler, 'text'));
+  xml_parse($parser, $content, false);
+  return $handler;   
+  }
+  
 ?>
