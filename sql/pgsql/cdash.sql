@@ -743,7 +743,8 @@ CREATE INDEX "argument" on "buildfailureargument" ("argument");
 --
 CREATE TABLE "buildfailure2argument" (
   "buildfailureid" bigint NOT NULL,
-  "argumentid" bigint NOT NULL
+  "argumentid" bigint NOT NULL,
+  "place" bigint NOT NULL
 );
 CREATE INDEX "argumentid" on "buildfailure2argument" ("argumentid");
 CREATE INDEX "buildfailureid" on "buildfailure2argument" ("buildfailureid");

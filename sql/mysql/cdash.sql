@@ -793,6 +793,7 @@ CREATE TABLE  `buildfailureargument` (
 CREATE TABLE  `buildfailure2argument` (
   `buildfailureid` bigint(20) NOT NULL,
   `argumentid` bigint(20) NOT NULL,
+  `place` int(11) NOT NULL default '0',
   KEY `argumentid` (`argumentid`),
   KEY `buildfailureid` (`buildfailureid`)
 );

@@ -297,7 +297,21 @@ if(isset($_GET['upgrade-1-4']))
       pdo_query("ALTER TABLE project ADD emailredundantfailures tinyint(4) default '0'");
       }
     }
-      
+  
+  // Add the order field in the database
+  $buildargumentorder = pdo_query("SELECT place FROM buildfailure2argument LIMIT 1");
+  if(!$buildargumentorder)
+    {
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      pdo_query("ALTER TABLE \"buildfailure2argument\" ADD \"place\" bigint DEFAULT '0'");
+      }
+    else
+      {
+      pdo_query("ALTER TABLE buildfailure2argument ADD place int(11) default '0'");
+      }
+    }
+        
   // Remove duplicates in buildfailureargument
   //pdo_query("DELETE FROM buildfailureargument WHERE id NOT IN (SELECT buildfailureid as id FROM buildfailure2argument)");
    

@@ -165,7 +165,7 @@ class BuildFailure
       }
     
     // Insert the argument
-    $query = "INSERT INTO buildfailure2argument (buildfailureid,argumentid) VALUES ";
+    $query = "INSERT INTO buildfailure2argument (buildfailureid,argumentid,place) VALUES ";
     $i=0;
     foreach($argumentids as $argumentid)
       {
@@ -173,7 +173,7 @@ class BuildFailure
         {
         $query .= ",";
         }
-      $query .= "(".qnum($id).",".qnum($argumentid).")";   
+      $query .= "(".qnum($id).",".qnum($argumentid).",".qnum($i).")";   
       $i++;
       } 
 
