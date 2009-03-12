@@ -232,6 +232,181 @@ if(isset($_GET['upgrade-1-2']))
   exit();
 }
 
+// Helper function to alter a table
+function AddTableField($table,$field,$mySQLType,$pgSqlType,$default)
+{
+  include("cdash/config.php");
+  $query = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
+  if(!$query)
+    {
+    add_log("Adding $field to $table","AddTableField");
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      pdo_query("ALTER TABLE \"".$table."\" ADD \"".$field."\" ".$pgSqlType." DEFAULT '".$default."'");
+      }
+    else
+      {
+      pdo_query("ALTER TABLE ".$table." ADD ".$field." ".$mySQLType." DEFAULT '".$default."'");
+      }
+      
+    add_last_sql_error("AddTableField");
+    add_log("Done adding $field to $table","AddTableField");
+    }
+}
+
+/** Remove a table field */
+function RemoveTableField($table,$field)
+{
+  $query = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
+  if($query)
+    {
+    add_log("Droping $field from $table","DropTableField");
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      pdo_query("ALTER TABLE \"".$table."\" DROP COLUMN \"".$field."\"");
+      }
+    else
+      {
+      pdo_query("ALTER TABLE ".$table." DROP ".$field);
+      }
+    add_last_sql_error("DropTableField");
+    add_log("Done droping $field from $table","DropTableField");
+    }
+}
+
+// Helper function to add an index to a table
+function AddTableIndex($table,$field)
+{
+  include("cdash/config.php");
+  if(!pdo_check_index_exists($table,$field))
+    {
+    add_log("Adding index $field to $table","AddTableIndex");
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      pdo_query("CREATE INDEX ".$table."_".$field."_idx ON \"".$table."\" (\"".$field."\")");
+      }
+    else
+      {
+      pdo_query("ALTER TABLE ".$table." ADD INDEX ( ".$field." )");
+      }
+    add_last_sql_error("AddTableIndex");
+    add_log("Done adding index $field to $table","AddTableIndex");
+    }
+}
+
+// Helper function to remove an index to a table
+function RemoveTableIndex($table,$field)
+{  
+  include("cdash/config.php");
+  if(pdo_check_index_exists($table,$field))
+    {  
+    add_log("Removing index $field from $table","RemoveTableIndex");
+
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      pdo_query("DROP INDEX ".$table."_".$field."_idx");
+      }
+    else
+      {
+      pdo_query("ALTER TABLE ".$table." DROP INDEX ".$field);
+      }
+    add_log("Done removing index $field from $table","RemoveTableIndex");
+    add_last_sql_error("RemoveTableIndex");
+    }
+}
+
+// Helper function to modify a table
+function ModifyTableField($table,$field,$mySQLType,$pgSqlType,$default,$notnull,$autoincrement)
+{
+  include("cdash/config.php");
+  
+  //$check = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
+  //$type  = pdo_field_type($check,0); 
+  //add_log($type,"ModifyTableField");
+  if(1)
+    {
+    add_log("Modifying $field to $table","ModifyTableField");
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      // ALTER TABLE "buildfailureargument" ALTER COLUMN "argument" TYPE VARCHAR( 255 );
+      // ALTER TABLE "buildfailureargument" ALTER COLUMN "argument" SET NOT NULL;
+      // ALTER TABLE "dynamicanalysisdefect" ALTER COLUMN "value" SET DEFAULT 0;
+      pdo_query("ALTER TABLE \"".$table."\" ALTER COLUMN  \"".$field."\" TYPE ".$pgSqlType);
+      if($notnull)
+        {
+        pdo_query("ALTER TABLE \"".$table."\" ALTER COLUMN  \"".$field."\" SET NOT NULL");
+        }
+      if(strlen($default)>0)
+        {
+        pdo_query("ALTER TABLE \"".$table."\" ALTER COLUMN  \"".$field."\" SET DEFAULT ".$default);
+        }
+      if($autoincrement)
+        {
+        pdo_query("DROP INDEX \"".$table."_".$field."_idx\"");
+        pdo_query("ALTER TABLE \"".$table."\" ADD PRIMARY KEY (\"".$field."\")");
+        pdo_query("CREATE SEQUENCE \"".$table."_".$field."_seq\"");
+        pdo_query("ALTER TABLE  \"".$table."\" ALTER COLUMN \"".$field."\" SET DEFAULT nextval('".$table."_".$field."_seq')");
+        pdo_query("ALTER SEQUENCE \"".$table."_".$field."_seq\" OWNED BY \"".$table."\".\"".$field."\"");
+        }  
+      }
+    else
+      {
+      //ALTER TABLE dynamicanalysisdefect MODIFY value INT NOT NULL DEFAULT 0;
+      $sql = "ALTER TABLE ".$table." MODIFY ".$field." ".$mySQLType;
+      if($notnull)
+        {
+        $sql .= " NOT NULL";
+        }
+      if(strlen($default)>0)
+        {
+        $sql .= " DEFAULT '".$default."'";
+        }
+      if($autoincrement)
+        {
+        $sql .= " AUTO_INCREMENT";
+        }
+      pdo_query($sql);
+      }
+    add_last_sql_error("ModifyTableField");
+    add_log("Done modifying $field to $table","ModifyTableField");
+    }
+}
+
+// Helper function to add an index to a table
+function AddTablePrimaryKey($table,$field)
+{
+  include("cdash/config.php");
+  add_log("Adding primarykey $field to $table","AddTablePrimaryKey");
+  if($CDASH_DB_TYPE == "pgsql")
+    {
+    pdo_query("ALTER TABLE \"".$table."\" ADD PRIMARY KEY (\"".$field."\")");
+    }
+  else
+    {
+    pdo_query("ALTER TABLE ".$table." ADD PRIMARY KEY ( ".$field." )");
+    }
+  //add_last_sql_error("AddTablePrimaryKey");
+  add_log("Done adding primarykey $field to $table","AddTablePrimaryKey");
+}
+
+// Helper function to add an index to a table
+function RemoveTablePrimaryKey($table)
+{
+  include("cdash/config.php");
+  add_log("Removing primarykey from $table","RemoveTablePrimaryKey");
+  if($CDASH_DB_TYPE == "pgsql")
+    {
+    pdo_query("ALTER TABLE \"".$table."\" DROP CONSTRAINT \"value_pkey\"");
+    }
+  else
+    {
+    pdo_query("ALTER TABLE ".$table." DROP PRIMARY KEY");
+    }
+  //add_last_sql_error("RemoveTablePrimaryKey");
+  add_log("Removing adding primarykey from $table","RemoveTablePrimaryKey");
+}
+
+
 // 1.4 Upgrade
 if(isset($_GET['upgrade-1-4']))
 {    
@@ -244,15 +419,8 @@ if(isset($_GET['upgrade-1-4']))
     }
   
   // Create the right indexes if necessary  
-  if(!pdo_check_index_exists('buildfailure','buildid'))
-    {
-    pdo_query("ALTER TABLE buildfailure ADD INDEX ( buildid )");
-    }
-    
-  if(!pdo_check_index_exists('buildfailure','type'))
-    {
-    pdo_query("ALTER TABLE buildfailure ADD INDEX ( type )");
-    }
+  AddTableIndex('buildfailure','buildid');
+  AddTableIndex('buildfailure','type');
   
   // Create the new table buildfailure arguments if the old one is still there
   if(pdo_query("SELECT buildfailureid FROM buildfailureargument"))
@@ -265,53 +433,76 @@ if(isset($_GET['upgrade-1-4']))
               KEY `argument` (`argument`))");
     }
   
-  if(!pdo_check_index_exists('buildfailureargument','argument'))
-    {
-    pdo_query("ALTER TABLE buildfailureargument ADD INDEX ( argument )");
-    }
+  AddTableIndex('buildfailureargument','argument');
 
   //  Add fields in the buildgroup table 
-  $includesubprojectotal = pdo_query("SELECT includesubprojectotal FROM buildgroup LIMIT 1");
-  if(!$includesubprojectotal)
-    {
-    if($CDASH_DB_TYPE == "pgsql")
-      {
-      pdo_query("ALTER TABLE \"buildgroup\" ADD \"includesubprojectotal\" smallint DEFAULT '1'");
-      }
-    else
-      {
-      pdo_query("ALTER TABLE buildgroup ADD includesubprojectotal tinyint(4) default '1'");
-      }
-    }
+  AddTableField("buildgroup","includesubprojectotal","tinyint(4)","smallint","1");
+  AddTableField("project","emailredundantfailures","tinyint(4)","smallint","0");
+  AddTableField("buildfailure2argument","place","int(11)","bigint","0");
   
-  //  Add fields in the project table 
-  $includesubprojectotal = pdo_query("SELECT emailredundantfailures FROM project LIMIT 1");
-  if(!$includesubprojectotal)
-    {
-    if($CDASH_DB_TYPE == "pgsql")
-      {
-      pdo_query("ALTER TABLE \"project\" ADD \"emailredundantfailures\" smallint DEFAULT '0'");
-      }
-    else
-      {
-      pdo_query("ALTER TABLE project ADD emailredundantfailures tinyint(4) default '0'");
-      }
-    }
+  ModifyTableField("buildfailureargument","argument","VARCHAR( 255 )","VARCHAR( 255 )","",true,false);
+  ModifyTableField("buildfailure","exitcondition","VARCHAR( 255 )","VARCHAR( 255 )","",true,false);
+  ModifyTableField("buildfailure","language","VARCHAR( 64 )","VARCHAR( 64 )","",true,false);
+  ModifyTableField("buildfailure","sourcefile","VARCHAR( 512)","VARCHAR( 512 )","",true,false);
+  RemoveTableField("buildfailure","arguments");
+  ModifyTableField("configure","log","MEDIUMTEXT","TEXT","",true,false);
   
-  // Add the order field in the database
-  $buildargumentorder = pdo_query("SELECT place FROM buildfailure2argument LIMIT 1");
-  if(!$buildargumentorder)
-    {
-    if($CDASH_DB_TYPE == "pgsql")
-      {
-      pdo_query("ALTER TABLE \"buildfailure2argument\" ADD \"place\" bigint DEFAULT '0'");
-      }
-    else
-      {
-      pdo_query("ALTER TABLE buildfailure2argument ADD place int(11) default '0'");
-      }
-    }
-        
+  AddTableIndex('coverage','covered');
+  AddTableIndex('build2grouprule','starttime');
+  AddTableIndex('build2grouprule','endtime');
+  AddTableIndex('build2grouprule','buildtype');
+  AddTableIndex('build2grouprule','buildname');
+  AddTableIndex('build2grouprule','expected');
+  AddTableIndex('build2grouprule','siteid');
+  RemoveTableIndex("build2note","buildid");
+  AddTableIndex('build2note','buildid');
+  AddTableIndex('build2note','noteid');
+  AddTableIndex('user2project','cvslogin');
+  AddTableIndex('user2project','emailtype');
+  AddTableIndex('user','email');
+  AddTableIndex('project','public');
+  AddTableIndex('buildgroup','starttime');
+  AddTableIndex('buildgroup','endtime');
+  AddTableIndex('buildgroupposition','position');
+  AddTableIndex('buildgroupposition','starttime');
+  AddTableIndex('buildgroupposition','endtime');
+  AddTableIndex('dailyupdate','date');
+  AddTableIndex('dailyupdate','projectid');
+  AddTableIndex('builderror','type');
+  AddTableIndex('build','starttime');
+  AddTableIndex('build','submittime');
+  
+  RemoveTableIndex('build','siteid');
+  AddTableIndex('build','siteid');
+  AddTableIndex('build','name');
+  AddTableIndex('build','stamp');
+  AddTableIndex('build','type');
+  AddTableIndex('project','name');
+  AddTableIndex('site','name');
+  
+  ModifyTableField("image","id","BIGINT( 11 )","BIGINT","",true,false);
+  RemoveTableIndex("image"," id");
+  RemoveTablePrimaryKey("image");
+  AddTablePrimaryKey("image","id");
+  ModifyTableField("image","id","BIGINT( 11 )","BIGINT","",true,true);
+  
+  ModifyTableField("dailyupdate","id","BIGINT( 11 )","BIGINT","",true,false);
+  RemoveTableIndex("dailyupdate"," buildid");
+  RemoveTablePrimaryKey("dailyupdate");
+  AddTablePrimaryKey("dailyupdate","id");
+  ModifyTableField("dailyupdate","id","BIGINT( 11 )","BIGINT","",true,true);
+
+  ModifyTableField("dynamicanalysisdefect","value","INT","INT","0",true,false);
+
+  RemoveTablePrimaryKey("test2image");
+  ModifyTableField("test2image","imgid","INT","INT","",true,true);
+  AddTableIndex('test2image','testid');
+
+  ModifyTableField("image","checksum","BIGINT( 20 )","BIGINT","",true,false);
+  ModifyTableField("note ","crc32","BIGINT( 20 )","BIGINT","",true,false);
+  ModifyTableField("test ","crc32","BIGINT( 20 )","BIGINT","",true,false);
+  ModifyTableField("coveragefile ","crc32","BIGINT( 20 )","BIGINT","",true,false);
+  
   // Remove duplicates in buildfailureargument
   //pdo_query("DELETE FROM buildfailureargument WHERE id NOT IN (SELECT buildfailureid as id FROM buildfailure2argument)");
    
