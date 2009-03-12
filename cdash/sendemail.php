@@ -17,9 +17,13 @@
 =========================================================================*/
 
 /** */
-function checkEmailPreferences($emailcategory,$nwarnings,$nerrors,$nfailingtests)
+function checkEmailPreferences($emailcategory,$nconfigures,$nwarnings,$nerrors,$nfailingtests)
 {
   include_once("cdash/common.php");
+  if($nconfigures>0 && check_email_category("configure",$emailcategory))
+    {
+    return true;
+    }
   if($nwarnings>0 && check_email_category("warning",$emailcategory))
     {
     return true;
@@ -62,7 +66,7 @@ function checkEmailLabel($projectid, $userid, $buildid)
 
 /** Send a summary email */
 function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
-                          $nbuildwarnings,$nbuilderrors,$nfailingtests,$buildid)
+                          $nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests,$buildid)
 {
   include("config.php");
   
@@ -93,7 +97,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
       }
         
     // If the user doesn't want to receive email
-    if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
+    if(!checkEmailPreferences($user_array["emailcategory"],$nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests))
       {
       continue;
       }
@@ -196,6 +200,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
 /** Main function to send email if necessary */
 function sendemail($handler,$projectid)
 {
+  
   include_once("cdash/common.php");
   include("cdash/config.php");
   require_once("cdash/pdo.php");
@@ -241,17 +246,39 @@ function sendemail($handler,$projectid)
     {
     return;
     }
+    
+
+
+  // Find if the build has any configure errors
+  $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
+  add_last_sql_error("sendemail ".$projectname);
+  $nconfigures = 0;
+  if(pdo_num_rows($configure)>0)
+    {
+    $configure_array = pdo_fetch_array($configure);
+    if($configure_array["status"]>0)
+      {
+      $nconfigures = 1;
+      }
+    }
 
   // Find if the build has any errors
-  $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+  $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
   $builderror_array = pdo_fetch_array($builderror);
   $nbuilderrors = $builderror_array[0];
+  $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='0'");
+  $builderror_array = pdo_fetch_array($builderror);
+  $nbuilderrors += $builderror_array[0];
      
   // Find if the build has any warnings
-  $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+  $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
   $buildwarning_array = pdo_fetch_array($buildwarning);
   $nbuildwarnings = $buildwarning_array[0];
-
+  $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='1'");
+  $buildwarning_array = pdo_fetch_array($buildwarning);
+  $nbuildwarnings += $buildwarning_array[0];
+    
+    
   // Find if the build has any test failings
   if($project_emailtesttimingchanged)
     {
@@ -266,7 +293,7 @@ function sendemail($handler,$projectid)
   $nfailingtests = $nfail_array[0];
 
   // Green build we return
-  if($nfailingtests==0 && $nbuildwarnings==0 && $nbuilderrors==0) 
+  if($nconfigures == 0 && $nfailingtests==0 && $nbuildwarnings==0 && $nbuilderrors==0) 
     {
     return;
     }
@@ -293,17 +320,37 @@ function sendemail($handler,$projectid)
       $previousbuild_array = pdo_fetch_array($previousbuild);
       $previousbuildid = $previousbuild_array["id"];
       
+      $configure = pdo_query("SELECT status FROM configure WHERE buildid='$previousbuildid'");
+      add_last_sql_error("sendemail ".$projectname);
+      $npreviousconfigures = 0;
+      if(pdo_num_rows($configure)>0)
+        {
+        $configure_array = pdo_fetch_array($configure);
+        if($configure_array["status"]>0)
+          {
+          $npreviousconfigures = 1;
+          }
+        }
+      
       // Find if the build has any errors
-      $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
+      $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
       add_last_sql_error("sendemail ".$projectname);
       $builderror_array = pdo_fetch_array($builderror);
       $npreviousbuilderrors = $builderror_array[0];
+      $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='0'");
+      $builderror_array = pdo_fetch_array($builderror);
+      $npreviousbuilderrors += $builderror_array[0];
          
       // Find if the build has any warnings
-      $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
+      $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
       add_last_sql_error("sendemail ".$projectname);
       $buildwarning_array = pdo_fetch_array($buildwarning);
       $npreviousbuildwarnings = $buildwarning_array[0];
+      $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='1'");
+      add_last_sql_error("sendemail ".$projectname);
+       $buildwarning_array = pdo_fetch_array($buildwarning);
+       $npreviousbuildwarnings += $buildwarning_array[0];
+
     
       // Find if the build has any test failings
       if($project_emailtesttimingchanged)
@@ -326,7 +373,8 @@ function sendemail($handler,$projectid)
   
       // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
       // we don't send any emails
-      if($npreviousfailingtests>=$nfailingtests
+      if($npreviousconfigures>=$nconfigures
+         && $npreviousfailingtests>=$nfailingtests
          && $npreviousbuildwarnings>=$nbuildwarnings
          && $npreviousbuilderrors==$nbuilderrors
         ) 
@@ -402,7 +450,7 @@ function sendemail($handler,$projectid)
 
     // Send the summary email
     sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
-                     $nbuildwarnings,$nbuilderrors,$nfailingtests,$buildid);
+                     $nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests,$buildid);
     return;
     } // end summary email
 
@@ -507,7 +555,7 @@ function sendemail($handler,$projectid)
     $user_array = pdo_fetch_array($user);  
     
     // If the user doesn't want to receive email
-    if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
+    if(!checkEmailPreferences($user_array["emailcategory"],$nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests))
       {
       continue;
       }
@@ -544,7 +592,7 @@ function sendemail($handler,$projectid)
      }
   
    // If the user doesn't want to receive email
-   if(!checkEmailPreferences($user_array["emailcategory"],$nbuildwarnings,$nbuilderrors,$nfailingtests))
+   if(!checkEmailPreferences($user_array["emailcategory"],$nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests))
      {
      continue;
      }
@@ -587,8 +635,20 @@ function sendemail($handler,$projectid)
     $titleerrors = "(";
     
     $i=0;
+    if($nconfigures>0)
+      {
+      $messagePlainText .= "configure errors";
+      $titleerrors.="c=".$nconfigures;
+      $i++;
+      }
+      
     if($nbuilderrors>0)
       {
+      if($i>0)
+         {
+         $messagePlainText .= " and ";
+         $titleerrors.=", ";
+         }
       $messagePlainText .= "build errors";
       $titleerrors.="b=".$nbuilderrors;
       $i++;
@@ -605,7 +665,7 @@ function sendemail($handler,$projectid)
       $titleerrors.="w=".$nbuildwarnings;
       $i++;
       } 
-      
+
     if($nfailingtests>0)
       {
       if($i>0)
@@ -643,9 +703,14 @@ function sendemail($handler,$projectid)
     $messagePlainText .= "Project: ".$project_array["name"]."\n";
     $messagePlainText .= "Site: ".$site_array["name"]."\n";
     $messagePlainText .= "Build Name: ".$buildname."\n";
-    $messagePlainText .= "Build Time: ".date(FMT_DATETIMETZ,strtotime($starttime." UTC")."\n";
+    $messagePlainText .= "Build Time: ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"))."\n";
     $messagePlainText .= "Type: ".$buildtype."\n";
 
+    if($nconfigures>0)
+      {
+      $messagePlainText .= "Configure errors: ".$nconfigures."\n";
+      }
+      
     if($nbuilderrors>0)
       {
       $messagePlainText .= "Errors: ".$nbuilderrors."\n";
@@ -667,6 +732,8 @@ function sendemail($handler,$projectid)
     $messagePlainText .= $test_information; 
       
     $messagePlainText .= "\n-CDash on ".$serverName."\n";
+    
+    echo $title;
     
     // Send the email
     if(mail("$email", $title, $messagePlainText,
