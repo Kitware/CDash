@@ -1086,6 +1086,7 @@ class Build
       return false;
       }
     
+    $labelids = array();
     while($label_array = pdo_fetch_array($labels))
       {
       $labelids[] = $label_array['labelid'];
