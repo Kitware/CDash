@@ -602,7 +602,7 @@ function sendemail($handler,$projectid)
          $titleerrors.=", ";
          }
       $messagePlainText .= "build warnings";
-      $titleerrors.="w=".$nbuilderrors;
+      $titleerrors.="w=".$nbuildwarnings;
       $i++;
       } 
       
@@ -614,7 +614,7 @@ function sendemail($handler,$projectid)
          $titleerrors.=", ";
          }
       $messagePlainText .= "failing tests";
-      $titleerrors.="t=".$nbuilderrors;
+      $titleerrors.="t=".$nfailingtests;
       $i++;
       }
     
@@ -626,7 +626,7 @@ function sendemail($handler,$projectid)
       {
       $title .= "/".$Build->GetSubProjectName();
       }
-    $title .= " ".$buildname."-".$buildtype;
+    $title .= " - ".$buildname."-".$buildtype;
     
     //$title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
     //$title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
@@ -642,9 +642,10 @@ function sendemail($handler,$projectid)
     
     $messagePlainText .= "Project: ".$project_array["name"]."\n";
     $messagePlainText .= "Site: ".$site_array["name"]."\n";
-    $messagePlainText .= "BuildName: ".$buildname."\n";
+    $messagePlainText .= "Build Name: ".$buildname."\n";
+    $messagePlainText .= "Build Time: ".date(FMT_DATETIMETZ,strtotime($starttime." UTC")."\n";
     $messagePlainText .= "Type: ".$buildtype."\n";
-    
+
     if($nbuilderrors>0)
       {
       $messagePlainText .= "Errors: ".$nbuilderrors."\n";
