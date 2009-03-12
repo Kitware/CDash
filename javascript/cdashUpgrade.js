@@ -31,7 +31,11 @@ function sendAjax(divname,ajaxurl,text,nextstep)
       {
       $(divname).html("An error as occured");
       }
-   }
+   },
+   error:function (XMLHttpRequest, textStatus, errorThrown) {
+    alert(textStatus+' '+errorThrown);
+    }
+
    });
 }
 
