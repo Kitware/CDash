@@ -265,7 +265,6 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       }
     else if(strstr($log,"Locally modified file"))
       {
-
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $diff_url = XMLStrFormat($diff_url);
       $file['diff_url'] = $diff_url;  
@@ -273,13 +272,11 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       }
     else if(strstr($log,"Conflict while updating"))
       {
-
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $diff_url = XMLStrFormat($diff_url);
       $file['diff_url'] = $diff_url;  
       $conflictingfiles[] = $file;
       }
-      
     }
   
   // Updated files
