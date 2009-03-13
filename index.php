@@ -22,6 +22,7 @@ require_once("models/project.php");
 require_once("models/buildfailure.php");
 require_once("filterdataFunctions.php");
 
+
 /** Generate the index table */
 function generate_index_table()
 { 
@@ -519,25 +520,239 @@ function generate_main_dashboard_XML($projectid,$date)
                                                         
   $lastGroupPosition = $groupposition_array["position"];
 
-  while($build_array = pdo_fetch_array($builds))
+
+  // Fetch all the rows of builds into a php array.
+  // Compute additional fields for each row that we'll need to generate the xml.
+  //
+  while($build_row = pdo_fetch_array($builds))
+    {
+    // Fields that come from the initial query:
+    //  id
+    //  name
+    //  siteid
+    //  type
+    //  generator
+    //  starttime
+    //  endtime
+    //  submittime
+    //  groupname
+    //  position
+    //  groupid
+    //
+    // Fields that we add by doing further queries based on buildid:
+    //  sitename
+    //  countbuildnotes (added by users)
+    //  countnotes (sent with ctest -A)
+    //  labels
+    //  countupdatefiles
+    //  updatestatus
+    //  countupdatewarnings
+    //  countbuilderrors
+    //  countbuildwarnings
+    //  countbuilderrordiff
+    //  countbuildwarningdiff
+    //  configurestatus
+    //  countconfigurewarnings
+    //  countconfigurewarningdiff
+    //  test
+    //  counttestsnotrun
+    //  counttestsnotrundiff
+    //  counttestsfailed
+    //  counttestsfaileddiff
+    //  counttestspassed
+    //  counttestspasseddiff
+    //  countteststimestatusfailed
+    //  countteststimestatusfaileddiff
+    //  teststime
+    //
+
+    $buildid = $build_row["id"];
+    $groupid = $build_row["groupid"];
+    $siteid = $build_row["siteid"];
+
+    $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
+    $build_row['sitename'] = $site_array['name'];
+
+    $buildnote = pdo_query("SELECT count(*) FROM buildnote WHERE buildid='$buildid'");
+    $buildnote_array = pdo_fetch_row($buildnote);
+    $build_row['countbuildnotes'] = $buildnote_array[0];
+
+    $note = pdo_query("SELECT count(*) FROM build2note WHERE buildid='$buildid'");
+    $note_array = pdo_fetch_row($note);
+    $build_row['countnotes'] = $note_array[0];
+
+    $labels = pdo_query("SELECT text FROM label, label2build WHERE label2build.buildid='$buildid' AND label2build.labelid=label.id");
+    $labels_array = pdo_fetch_array($labels);
+    $build_row['labels'] = $labels_array;
+
+    $update = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
+    $update_array = pdo_fetch_row($update);
+    $build_row['countupdatefiles'] = $update_array[0];
+
+    $updatestatus = pdo_query("SELECT status,starttime,endtime FROM buildupdate WHERE buildid='$buildid'");
+    $updatestatus_array = pdo_fetch_array($updatestatus);
+    $build_row['updatestatus'] = $updatestatus_array;
+
+    $updatewarnings = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
+    $updatewarnings_array = pdo_fetch_row($updatewarnings);
+    $build_row['countupdatewarnings'] = $updatewarnings_array[0];
+
+    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
+    $nerrors = $builderror_array[0];
+    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
+    $nerrors += $builderror_array[0];
+    $build_row['countbuilderrors'] = $nerrors;
+
+    $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
+    $buildwarning_array = pdo_fetch_array($buildwarning);
+    $nwarnings = $buildwarning_array[0];
+    $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='1'");
+    $buildwarning_array = pdo_fetch_array($buildwarning);
+    $nwarnings += $buildwarning_array[0];
+    $build_row['countbuildwarnings'] = $nwarnings;
+
+    $diff = 0;
+    $builderrordiff = pdo_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='0'");
+    if(pdo_num_rows($builderrordiff)>0)
+      {
+      $builderrordiff_array = pdo_fetch_array($builderrordiff);
+      $diff = $builderrordiff_array["difference"];
+      }
+    $build_row['countbuilderrordiff'] = $diff;
+
+    $diff = 0;
+    $buildwarningdiff = pdo_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='1'");
+    if(pdo_num_rows($buildwarningdiff)>0)
+      {
+      $buildwarningdiff_array = pdo_fetch_array($buildwarningdiff);
+      $diff = $buildwarningdiff_array["difference"];
+      }
+    $build_row['countbuildwarningdiff'] = $diff;
+
+    $configure = pdo_query("SELECT status,starttime,endtime FROM configure WHERE buildid='$buildid'");
+    $configure_array = pdo_fetch_array($configure);
+    $build_row['configurestatus'] = $configure_array;
+
+    $build_row['countconfigurewarnings'] = 0;
+    $build_row['countconfigurewarningdiff'] = 0;
+    if(!empty($configure_array))
+      {
+      $configurewarnings = pdo_query("SELECT count(*) FROM configureerror WHERE buildid='$buildid' AND type='1'");
+      $configurewarnings_array = pdo_fetch_array($configurewarnings);
+      $build_row['countconfigurewarnings'] = $configurewarnings_array[0];
+
+      $configurewarning = pdo_query("SELECT difference FROM configureerrordiff WHERE buildid='$buildid' AND type='1'");
+      if(pdo_num_rows($configurewarning)>0)
+        {
+        $configurewarning_array = pdo_fetch_array($configurewarning);
+        $build_row['countconfigurewarningdiff'] = $configurewarning_array["difference"];
+        }
+      }
+
+    $test = pdo_query("SELECT * FROM build2test WHERE buildid='$buildid'");
+    $test_array = pdo_fetch_array($test);
+    $build_row['test'] = $test_array;
+
+    $build_row['counttestsnotrun'] = 0;
+    $build_row['counttestsnotrundiff'] = 0;
+    $build_row['counttestsfailed'] = 0;
+    $build_row['counttestsfaileddiff'] = 0;
+    $build_row['counttestspassed'] = 0;
+    $build_row['counttestspasseddiff'] = 0;
+    $build_row['countteststimestatusfailed'] = 0;
+    $build_row['countteststimestatusfaileddiff'] = 0;
+    if(!empty($test_array))
+      {
+      $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
+      $build_row['counttestsnotrun'] = $nnotrun_array[0];
+
+      $notrundiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='0'");
+      if(pdo_num_rows($notrundiff)>0)
+        {
+        $nnotrundiff_array = pdo_fetch_array($notrundiff);
+        $build_row['counttestsnotrundiff'] = $nnotrundiff_array['difference'];
+        }
+
+      $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='failed'";
+      $nfail_array = pdo_fetch_array(pdo_query($sql));
+      $build_row['counttestsfailed'] = $nfail_array[0];
+
+      $faildiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='1'");
+      if(pdo_num_rows($faildiff)>0)
+        {
+        $faildiff_array = pdo_fetch_array($faildiff);
+        $build_row['counttestsfaileddiff'] = $faildiff_array["difference"];
+        }
+
+      $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'";
+      $npass_array = pdo_fetch_array(pdo_query($sql));
+      $build_row['counttestspassed'] = $npass_array[0];
+
+      $passdiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='2'");
+      if(pdo_num_rows($passdiff)>0)
+        {
+        $passdiff_array = pdo_fetch_array($passdiff);
+        $build_row['counttestspasseddiff'] = $passdiff_array["difference"];
+        }
+
+      if($project_array["showtesttime"] == 1)
+        {
+        $testtimemaxstatus = $project_array["testtimemaxstatus"];
+        $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND timestatus>='$testtimemaxstatus'";
+        $ntimestatus_array = pdo_fetch_array(pdo_query($sql));
+        $build_row['countteststimestatusfailed'] = $ntimestatus_array[0];
+
+        $timediff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='3'");
+        if(pdo_num_rows($timediff)>0)
+          {
+          $timediff_array = pdo_fetch_array($timediff);
+          $build_row['countteststimestatusfaileddiff'] = $timediff_array["difference"];
+          }
+        }
+      }
+
+    $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
+    $build_row['teststime'] = $time_array[0];
+
+    //  Save the row in '$build_rows'
+    //
+    $build_rows[] = $build_row;
+    }
+
+
+  // Optionally coalesce rows with common build name, site and type.
+  // (But different subprojects/labels...)
+  //
+//  if(1)
+//    {
+//    }
+
+
+  // Generate the xml from the (possibly coalesced) rows of builds:
+  //
+  foreach($build_rows as $build_array)
     {
     $groupposition = $build_array["position"];
+
     if($previousgroupposition != $groupposition)
       {
-      $groupname = $build_array["groupname"];  
+      $groupname = $build_array["groupname"];
       if($previousgroupposition != -1)
         {
         if (!$filter_sql)
           {
           $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
           }
+
         if($previousgroupposition == $lastGroupPosition)
           {
           $xml .= "<last>1</last>";
           }
         $xml .= "</buildgroup>";
         }
-      
+
       // We assume that the group position are continuous in N
       // So we fill in the gap if we are jumping
       $prevpos = $previousgroupposition+1;
@@ -545,6 +760,7 @@ function generate_main_dashboard_XML($projectid,$date)
         {
         $prevpos = 1;
         }
+
       for($i=$prevpos;$i<$groupposition;$i++)
         {
         $group = pdo_fetch_array(pdo_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
@@ -568,57 +784,51 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= "</buildgroup>";  
         }  
 
+
       $xml .= "<buildgroup>";
       $xml .= add_default_buildgroup_sortlist($groupname);
-
-      $rowparity = 0;
-      $received_builds = array();
       $xml .= add_XML_value("name",$groupname);
       $xml .= add_XML_value("linkname",str_replace(" ","_",$groupname));
       $xml .= add_XML_value("id",$build_array["groupid"]);
+
+      $rowparity = 0;
+      $received_builds = array();
+
       $previousgroupposition = $groupposition;
       }
-    $groupid = $build_array["groupid"];
-    $buildid = $build_array["id"];
-    $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
-    $nconfigure = pdo_num_rows($configure);
-    $siteid = $build_array["siteid"];
-          
-    $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-    
-    // Get the site name
+
+
     $xml .= "<build>";
-        
-        if($rowparity%2==0)
-          {
-            $xml .= add_XML_value("rowparity","trodd");
-          }
-        else
-          {
-            $xml .= add_XML_value("rowparity","treven");
-            }
-        $rowparity++;
-        
-    $xml .= add_XML_value("type",strtolower($build_array["type"]));
-    $xml .= add_XML_value("site",$site_array["name"]);
-    $xml .= add_XML_value("siteid",$siteid);
-    $xml .= add_XML_value("buildname",$build_array["name"]);
-    $xml .= add_XML_value("buildid",$build_array["id"]);
-    $xml .= add_XML_value("generator",$build_array["generator"]);
-            
-    // Search if we have notes for that build
-    $buildnote = pdo_query("SELECT count(*) FROM buildnote WHERE buildid='$buildid'");
-    $buildnote_array = pdo_fetch_row($buildnote);
-    if($buildnote_array[0]>0)
+
+    $received_builds[] = $build_array["sitename"]."_".$build_array["name"];
+
+    $buildid = $build_array["id"];
+    $groupid = $build_array["groupid"];
+    $siteid = $build_array["siteid"];
+
+    if($rowparity%2==0)
+      {
+      $xml .= add_XML_value("rowparity","trodd");
+      }
+    else
+      {
+      $xml .= add_XML_value("rowparity","treven");
+      }
+    $rowparity++;
+
+    $xml .= add_XML_value("type", strtolower($build_array["type"]));
+    $xml .= add_XML_value("site", $build_array["sitename"]);
+    $xml .= add_XML_value("siteid", $siteid);
+    $xml .= add_XML_value("buildname", $build_array["name"]);
+    $xml .= add_XML_value("buildid", $build_array["id"]);
+    $xml .= add_XML_value("generator", $build_array["generator"]);
+
+    if($build_array['countbuildnotes']>0)
       {
       $xml .= add_XML_value("buildnote","1");
       }
-      
-    $received_builds[] = $site_array["name"]."_".$build_array["name"];
-    
-    $note = pdo_query("SELECT count(*) FROM build2note WHERE buildid='$buildid'");
-    $note_array = pdo_fetch_row($note);
-    if($note_array[0]>0)
+
+    if($build_array['countnotes']>0)
       {
       $xml .= add_XML_value("note","1");
       }
@@ -626,8 +836,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
     // Are there labels for this build?
     //
-    $labels = pdo_query("SELECT text FROM label, label2build WHERE label2build.buildid='$buildid' AND label2build.labelid=label.id");
-    $labels_array = pdo_fetch_array($labels);
+    $labels_array = $build_array['labels'];
     if(!empty($labels_array))
       {
       $xml .= '<labels>';
@@ -640,25 +849,23 @@ function generate_main_dashboard_XML($projectid,$date)
 
 
     $xml .= "<update>";
-    $update = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
-    $update_array = pdo_fetch_row($update);
-    $xml .= add_XML_value("files",$update_array[0]);
-  
-    $updatestatus = pdo_query("SELECT status,starttime,endtime FROM buildupdate WHERE buildid='$buildid'");
-    $updatestatus_array = pdo_fetch_array($updatestatus);
-    
-    if(strlen($updatestatus_array["status"]) > 0 && $updatestatus_array["status"]!="0")
+
+    $xml .= add_XML_value("files", $build_array['countupdatefiles']);
+
+    $updatestatus_array = $build_array['updatestatus'];
+
+    if(strlen($updatestatus_array["status"]) > 0 &&
+       $updatestatus_array["status"]!="0")
       {
-      $xml .= add_XML_value("errors",1);
+      $xml .= add_XML_value("errors", 1);
       }
     else
       {
-      $updateerrors = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
-      $updateerrors_array = pdo_fetch_row($updateerrors);
-      $xml .= add_XML_value("errors",0);
-      if($updateerrors_array[0]>0)
+      $xml .= add_XML_value("errors", 0);
+
+      if($build_array['countupdatewarnings']>0)
         {
-        $xml .= add_XML_value("warning",1);
+        $xml .= add_XML_value("warning", 1);
         }
       }
 
@@ -666,160 +873,118 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "<time>".round($diff,1)."</time>";
 
     $xml .= "</update>";
+
+
     $xml .= "<compilation>";
 
-    // Find the number of errors and warnings
-    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
-    $builderror_array = pdo_fetch_array($builderror);
-    $nerrors = $builderror_array[0];
-    $totalerrors += $nerrors;
-    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='0'");
-    $builderror_array = pdo_fetch_array($builderror);
-    $nerrors += $builderror_array[0];
+    $nerrors = $build_array['countbuilderrors'];
     $totalerrors += $nerrors;
     $xml .= add_XML_value("error",$nerrors);
-    
-    $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
-    $buildwarning_array = pdo_fetch_array($buildwarning);
-    $nwarnings = $buildwarning_array[0];
-    $totalwarnings += $nwarnings;
-    $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='1'");
-    $buildwarning_array = pdo_fetch_array($buildwarning);
-    $nwarnings += $buildwarning_array[0];
+
+    $nwarnings = $build_array['countbuildwarnings'];
     $totalwarnings += $nwarnings;
     $xml .= add_XML_value("warning",$nwarnings);
+
     $diff = (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;
     $xml .= "<time>".round($diff,1)."</time>";
-    
-    // Differences between number of errors and warnings
-    $builderrordiff = pdo_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='0'");
-    if(pdo_num_rows($builderrordiff)>0)
+
+    $diff = $build_array['countbuilderrordiff'];
+    if($diff>0)
       {
-      $builderrordiff_array = pdo_fetch_array($builderrordiff);
-      $xml .= add_XML_value("nerrordiff",$builderrordiff_array["difference"]);
+      $xml .= add_XML_value("nerrordiff", $diff);
       }
-    $buildwarningdiff = pdo_query("SELECT difference FROM builderrordiff WHERE buildid='$buildid' AND type='1'");
-    if(pdo_num_rows($buildwarningdiff)>0)
+
+    $diff = $build_array['countbuildwarningdiff'];
+    if($diff>0)
       {
-      $buildwarningdiff_array = pdo_fetch_array($buildwarningdiff);
-      $xml .= add_XML_value("nwarningdiff",$buildwarningdiff_array["difference"]);
+      $xml .= add_XML_value("nwarningdiff", $diff);
       }
+
     $xml .= "</compilation>";
 
-    // Get the Configure options
+
     $xml .= "<configure>";
-    $configure = pdo_query("SELECT status,starttime,endtime FROM configure WHERE buildid='$buildid'");
-    if($nconfigure)
+
+    $configure_array = $build_array['configurestatus'];
+    if(!empty($configure_array))
       {
-      $configure_array = pdo_fetch_array($configure);
-      $xml .= add_XML_value("error",$configure_array["status"]);
+      $xml .= add_XML_value("error", $configure_array["status"]);
       $totalConfigureError += $configure_array["status"];
 
-      // Put the configuration warnings here
-      $configurewarnings = pdo_query("SELECT count(*) AS num FROM configureerror WHERE buildid='$buildid' AND type='1'");
-      $configurewarnings_array = pdo_fetch_array($configurewarnings);
-      $nconfigurewarnings = $configurewarnings_array['num'];
-      $xml .= add_XML_value("warning",$nconfigurewarnings);
+      $nconfigurewarnings = $build_array['countconfigurewarnings'];
+      $xml .= add_XML_value("warning", $nconfigurewarnings);
       $totalConfigureWarning += $nconfigurewarnings;
-      
-      // Add the difference
-      $configurewarning = pdo_query("SELECT difference FROM configureerrordiff WHERE buildid='$buildid' AND type='1'");
-      if(pdo_num_rows($configurewarning)>0)
+
+      $diff = $build_array['countconfigurewarningdiff'];
+      if($diff>0)
         {
-        $configurewarning_array = pdo_fetch_array($configurewarning);
-        $nconfigurewarning = $configurewarning_array["difference"];
-        $xml .= add_XML_value("warningdiff",$nconfigurewarning);
+        $xml .= add_XML_value("warningdiff", $diff);
         }
       
       $diff = (strtotime($configure_array["endtime"])-strtotime($configure_array["starttime"]))/60;
       $xml .= "<time>".round($diff,1)."</time>";
       }
     $xml .= "</configure>";
-     
-    // Get the tests
-    $test = pdo_query("SELECT * FROM build2test WHERE buildid='$buildid'");
-    if(pdo_num_rows($test)>0)
+
+
+    $test_array = $build_array['test'];
+    if(!empty($test_array))
       {
-      $test_array = pdo_fetch_array($test);
       $xml .= "<test>";
-      // We might be able to do this in one request
-      $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
-      $nnotrun = $nnotrun_array[0];
-      
-      // Add the difference
-      $notrundiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='0'");
-      if(pdo_num_rows($notrundiff)>0)
+
+      $nnotrun = $build_array['counttestsnotrun'];
+
+      if( $build_array['counttestsnotrundiff']>0)
         {
-        $nnotrundiff_array = pdo_fetch_array($notrundiff);
-        $nnotrundiff = $nnotrundiff_array["difference"];
         $xml .= add_XML_value("nnotrundiff",$nnotrundiff);
         }
-      
-      $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='failed'";
-      $nfail_array = pdo_fetch_array(pdo_query($sql));
-      $nfail = $nfail_array[0];
-      
-      // Add the difference
-      $faildiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='1'");
-      if(pdo_num_rows($faildiff)>0)
+
+      $nfail = $build_array['counttestsfailed'];
+
+      if($build_array['counttestsfaileddiff']>0)
         {
-        $faildiff_array = pdo_fetch_array($faildiff);
-        $nfaildiff = $faildiff_array["difference"];
-        $xml .= add_XML_value("nfaildiff",$nfaildiff);
+        $xml .= add_XML_value("nfaildiff", $build_array['counttestsfaileddiff']);
         }
         
-      $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='passed'";
-      $npass_array = pdo_fetch_array(pdo_query($sql));
-      $npass = $npass_array[0];
-      
-      // Add the difference
-      $passdiff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='2'");
-      if(pdo_num_rows($passdiff)>0)
+      $npass = $build_array['counttestspassed'];
+
+      if($build_array['counttestspasseddiff']>0)
         {
-        $passdiff_array = pdo_fetch_array($passdiff);
-        $npassdiff = $passdiff_array["difference"];
-        $xml .= add_XML_value("npassdiff",$npassdiff);
+        $xml .= add_XML_value("npassdiff", $build_array['counttestspasseddiff']);
         }
-        
+
       if($project_array["showtesttime"] == 1)
         {
-        $testtimemaxstatus = $project_array["testtimemaxstatus"];
-        $sql = "SELECT count(*) FROM build2test WHERE buildid='$buildid' AND timestatus>='$testtimemaxstatus'";
-        $ntimestatus_array = pdo_fetch_array(pdo_query($sql));
-        $ntimestatus = $ntimestatus_array[0];
-        $xml .= add_XML_value("timestatus",$ntimestatus);
-        
-        // Add the difference
-        $timediff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='3'");
-        if(pdo_num_rows($timediff)>0)
+        $xml .= add_XML_value("timestatus", $build_array['countteststimestatusfailed']);
+
+        if($build_array['countteststimestatusfaileddiff']>0)
           {
-          $timediff_array = pdo_fetch_array($timediff);
-          $ntimediff = $timediff_array["difference"];
-          $xml .= add_XML_value("ntimediff",$ntimediff);
+          $xml .= add_XML_value("ntimediff", $build_array['countteststimestatusfaileddiff']);
           }
-        
-        }  
-      $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-      $time = $time_array[0];
-      
+        }
+
+      $time = $build_array['teststime'];
+
       $totalnotrun += $nnotrun;
       $totalfail += $nfail;
       $totalpass += $npass;
-      
+
       $xml .= add_XML_value("notrun",$nnotrun);
       $xml .= add_XML_value("fail",$nfail);
       $xml .= add_XML_value("pass",$npass);
       $xml .= add_XML_value("time",round($time/60,1));
       $xml .= "</test>";
       }
-     
-     $starttimestamp = strtotime($build_array["starttime"]." UTC");
-     $submittimestamp = strtotime($build_array["submittime"]." UTC");
-     $xml .= add_XML_value("builddate",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
-     $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
-     $xml .= "</build>";
-    
+
+    $starttimestamp = strtotime($build_array["starttime"]." UTC");
+    $submittimestamp = strtotime($build_array["submittime"]." UTC");
+    $xml .= add_XML_value("builddate",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
+    $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
+    $xml .= "</build>";
+
+
     // Coverage
+    //
     $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = pdo_fetch_array($coverages))
       {
@@ -834,17 +999,17 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       $coveragerowparity++;
                 
-      $xml .= "  <site>".$site_array["name"]."</site>";
+      $xml .= "  <site>".$build_array["sitename"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
-      
+
       @$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
-      
+
       $xml .= "  <percentage>".$percent."</percentage>";
       $xml .= "  <percentagegreen>".$project_array["coveragethreshold"]."</percentagegreen>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
-      
+
       // Compute the diff
       $coveragediff = pdo_query("SELECT * FROM coveragesummarydiff WHERE buildid='$buildid'");
       if(pdo_num_rows($coveragediff) >0)
@@ -858,10 +1023,10 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= "<faildiff>".$locuntesteddiff."</faildiff>";
         $xml .= "<passdiff>".$loctesteddiff."</passdiff>";
         }
-     
+
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
       $submittimestamp = strtotime($build_array["submittime"]." UTC");
-      $xml .= add_XML_value("date",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone         
+      $xml .= add_XML_value("date",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
       $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
 
       // Are there labels for this build?
@@ -881,6 +1046,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
 
     // Dynamic Analysis
+    //
     $dynanalysis = pdo_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
     while($dynanalysis_array = pdo_fetch_array($dynanalysis))
       {
@@ -894,7 +1060,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("rowparity","treven");
         }
       $dynanalysisrowparity++;
-      $xml .= "  <site>".$site_array["name"]."</site>";
+      $xml .= "  <site>".$build_array["sitename"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
       
@@ -932,6 +1098,7 @@ function generate_main_dashboard_XML($projectid,$date)
       }  // end dynamicanalysis
     } // end looping through builds
 
+
   if(pdo_num_rows($builds)>0)
     {
     if (!$filter_sql)
@@ -944,14 +1111,15 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $xml .= "</buildgroup>";
     }
-   
+
+
   // Fill in the rest of the info
   $prevpos = $previousgroupposition+1;
   if($prevpos == 0)
     {
     $prevpos = 1;
     }
-               
+
   for($i=$prevpos;$i<=$lastGroupPosition;$i++)
     {
     $group = pdo_fetch_array(pdo_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
@@ -974,6 +1142,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "</buildgroup>";  
     }
 
+
   $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
   $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
 
@@ -991,10 +1160,10 @@ function generate_main_dashboard_XML($projectid,$date)
   return $xml;
 } // end generate_main_dashboard_XML
 
+
 /** Generate the subprojects dashboard */
 function generate_subprojects_dashboard_XML($projectid,$date)
-{ 
- 
+{
   $start = microtime_float();
   $noforcelogin = 1;
   include_once("cdash/config.php");
@@ -1193,6 +1362,9 @@ function generate_subprojects_dashboard_XML($projectid,$date)
 
   return $xml;
 } // end
+
+
+
 
 // Check if we can connect to the database
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
