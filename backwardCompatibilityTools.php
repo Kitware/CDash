@@ -508,6 +508,10 @@ if(isset($_GET['upgrade-1-4']))
    
   // Set the database version
   setVersion();
+  
+  // Put that the upgrade is done in the log
+  add_log("Upgrade done.","upgrade-1-4");
+
   exit();
 }
 
