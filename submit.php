@@ -102,7 +102,9 @@ if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/submit.php"))
 $handler = ctest_parse($fp,$projectid);
   
 // Send the emails if necessary
-if($handler instanceof TestingHandler || $handler instanceof UpdateHandler )
+if($handler instanceof TestingHandler ||
+   $handler instanceof UpdateHandler ||
+   $handler instanceof ConfigureHandler)
   {
   sendemail($handler, $projectid);
   }
