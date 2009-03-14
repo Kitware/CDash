@@ -54,8 +54,7 @@ function generate_index_table()
   // Check if the database is up to date
   if(!pdo_query("SELECT place FROM buildfailure2argument LIMIT 1"))
     {  
-    $xml .= "<upgradewarning>The current database shema doesn't match the version of CDash you are running,
-    upgrade your database structure in the Administration/CDash maintenance panel of CDash.</upgradewarning>";
+    $xml .= "<upgradewarning>1</upgradewarning>";
     }
 
  $xml .= "<dashboard>
