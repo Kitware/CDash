@@ -463,6 +463,8 @@ function sendemail($handler,$projectid)
     {
     $info = "";
     $error_information .= "\n\n*Error*\n";
+    
+    // Old error format
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
     add_last_sql_error("sendmail");
     while($error_array = pdo_fetch_array($error_query))
@@ -478,6 +480,22 @@ function sendemail($handler,$projectid)
         }
       $error_information .= substr($info,0,$project_emailmaxchars);
       }
+      
+    // New error format
+    $info = "";
+    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
+    add_last_sql_error("sendmail");
+    while($error_array = pdo_fetch_array($error_query))
+      {
+      if(strlen($error_array["sourcefile"])>0)
+        {
+        $info .= $error_array["sourcefile"]." (".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
+        }
+      $info .= $error_array["stdoutput"]."\n";
+      $info .= $error_array["stderror"]."\n";  
+      $error_information .= substr($info,0,$project_emailmaxchars);
+      }
+      
     $error_information .= "\n";
     }
   
@@ -499,6 +517,21 @@ function sendemail($handler,$projectid)
         {
         $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";
         }
+      $warning_information .= substr($info,0,$project_emailmaxchars);
+      }
+    
+    // New error format
+    $info = "";
+    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
+    add_last_sql_error("sendmail");
+    while($error_array = pdo_fetch_array($error_query))
+      {
+      if(strlen($error_array["sourcefile"])>0)
+        {
+        $info .= $error_array["sourcefile"]." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
+        }
+      $info .= $error_array["stdoutput"]."\n";
+      $info .= $error_array["stderror"]."\n";  
       $warning_information .= substr($info,0,$project_emailmaxchars);
       }
     $warning_information .= "\n";  
