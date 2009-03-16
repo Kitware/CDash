@@ -743,7 +743,7 @@ function sendemail($handler,$projectid)
       {
       $title .= "/".$Build->GetSubProjectName();
       }
-    $title .= " - ".$buildname."-".$buildtype;
+    $title .= " - ".$buildname." - ".$buildtype;
     
     //$title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
     //$title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
@@ -758,6 +758,10 @@ function sendemail($handler,$projectid)
     $messagePlainText .= "\n\n";
     
     $messagePlainText .= "Project: ".$project_array["name"]."\n";
+    if($Build->GetSubProjectName())
+      {
+      $messagePlainText .= "SubProject: ".$Build->GetSubProjectName()."\n";
+      }
     $messagePlainText .= "Site: ".$site_array["name"]."\n";
     $messagePlainText .= "Build Name: ".$buildname."\n";
     $messagePlainText .= "Build Time: ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"))."\n";
