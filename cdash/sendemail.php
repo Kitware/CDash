@@ -491,8 +491,14 @@ function sendemail($handler,$projectid)
         {
         $info .= $error_array["sourcefile"]." (".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
         }
-      $info .= $error_array["stdoutput"]."\n";
-      $info .= $error_array["stderror"]."\n";  
+      if(strlen($error_array["stdoutput"])>0)
+        {  
+        $info .= $error_array["stdoutput"]."\n";
+        }
+      if(strlen($error_array["stderror"])>0)
+        {  
+        $info .= $error_array["stderror"]."\n";
+        }
       $error_information .= substr($info,0,$project_emailmaxchars);
       }
       
@@ -530,8 +536,14 @@ function sendemail($handler,$projectid)
         {
         $info .= $error_array["sourcefile"]." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
         }
-      $info .= $error_array["stdoutput"]."\n";
-      $info .= $error_array["stderror"]."\n";  
+      if(strlen($error_array["stdoutput"])>0)
+        {  
+        $info .= $error_array["stdoutput"]."\n";
+        }
+      if(strlen($error_array["stderror"])>0)
+        {  
+        $info .= $error_array["stderror"]."\n";
+        }
       $warning_information .= substr($info,0,$project_emailmaxchars);
       }
     $warning_information .= "\n";  
