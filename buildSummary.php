@@ -190,19 +190,25 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
  
   // Number of errors and warnings
-  $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
+  $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
   $builderror_array = pdo_fetch_array($builderror);
   $nerrors = $builderror_array[0];
+  $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='0'");
+  $builderror_array = pdo_fetch_array($builderror);
+  $nerrors += $builderror_array[0];
+  
   $xml .= add_XML_value("error",$nerrors);
-  $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
+  $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
   $buildwarning_array = pdo_fetch_array($buildwarning);
   $nwarnings = $buildwarning_array[0];
+  $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='1'");
+  $buildwarning_array = pdo_fetch_array($buildwarning);
+  $nwarnings += $buildwarning_array[0];
    
   $xml .= add_XML_value("nerrors",$nerrors);
   $xml .= add_XML_value("nwarnings",$nwarnings);
   
-  
-  // Display the errors
+  // Display the build errors
   $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='0'");
   while($error_array = pdo_fetch_array($errors))
     {
@@ -215,7 +221,18 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("postcontext",format_for_iphone($error_array["postcontext"]));
     $xml .= "</error>";
     }
-  
+    
+  // Display the build failure error
+  $errors = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid='$buildid' and type='0'");
+  while($error_array = pdo_fetch_array($errors))
+    {
+    $xml .= "<error>";
+    $xml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
+    $xml .= add_XML_value("stdoutput",format_for_iphone($error_array["stdoutput"]));
+    $xml .= add_XML_value("stderror",$error_array["stderror"]);
+    $xml .= "</error>";
+    }
+    
   // Display the warnings
   $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='1'");
   while($error_array = pdo_fetch_array($errors))
@@ -230,6 +247,17 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= "</warning>";
     }
   
+  // Display the build failure error
+  $errors = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid='$buildid' and type='1'");
+  while($error_array = pdo_fetch_array($errors))
+    {
+    $xml .= "<warning>";
+    $xml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
+    $xml .= add_XML_value("stdoutput",format_for_iphone($error_array["stdoutput"]));
+    $xml .= add_XML_value("stderror",$error_array["stderror"]);
+    $xml .= "</warning>";
+    }
+    
   $xml .= "</build>";
 
   // Update
@@ -313,14 +341,20 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("buildid",$previousbuildid);
     
     // Find if the build has any errors
-    $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
+    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
     $builderror_array = pdo_fetch_array($builderror);
     $npreviousbuilderrors = $builderror_array[0];
-       
+    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
+    $npreviousbuilderrors += $builderror_array[0];
+  
     // Find if the build has any warnings
-    $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
+    $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
     $buildwarning_array = pdo_fetch_array($buildwarning);
     $npreviousbuildwarnings = $buildwarning_array[0];
+    $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='1'");
+    $buildwarning_array = pdo_fetch_array($buildwarning);
+    $npreviousbuildwarnings += $buildwarning_array[0];
   
     // Find if the build has any test failings
     $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));

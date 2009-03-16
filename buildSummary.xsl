@@ -402,15 +402,21 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
   <br/>
   File: <b><xsl:value-of select="sourcefile"/></b>
   Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
-  <a href="">CVS</a>
 </xsl:if>
 <pre><xsl:value-of select="precontext"/></pre>
 <pre><xsl:value-of select="text"/></pre>
 <pre><xsl:value-of select="postcontext"/></pre>
+
+<xsl:if test="string-length(stdoutput)>0">
+  <br/>
+  File: <b><xsl:value-of select="sourcefile"/></b>
+  <pre><xsl:value-of select="stdoutput"/></pre>
+  <pre><xsl:value-of select="stderror"/></pre>
+</xsl:if>
+
 </xsl:for-each>
 
-
-        <div class="title-divider" id="Stage2Warnings"><div class="tracknav">
+<div class="title-divider" id="Stage2Warnings"><div class="tracknav">
 [<a href="#top">Top</a>]
 <xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
 [<a href="#Stage1">Configure</a>]
@@ -425,15 +431,20 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
   <br/>
   File: <b><xsl:value-of select="sourcefile"/></b>
   Line: <b><xsl:value-of select="sourceline"/></b><xsl:text>&#x20;</xsl:text>
-  <a href="">CVS</a>
 </xsl:if>
 <pre><xsl:value-of select="precontext"/></pre>
 <pre><xsl:value-of select="text"/></pre>
 <pre><xsl:value-of select="postcontext"/></pre>
-</xsl:for-each>      
-                   
-<br/>
 
+<xsl:if test="string-length(stdoutput)>0">
+  <br/>
+  File: <b><xsl:value-of select="sourcefile"/></b>
+  <pre><xsl:value-of select="stdoutput"/></pre>
+  <pre><xsl:value-of select="stderror"/></pre>
+</xsl:if>
+
+</xsl:for-each> 
+<br/>
 
 <!-- Test -->
 <div class="title-divider" id="Stage3">
