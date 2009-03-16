@@ -407,7 +407,7 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 <pre><xsl:value-of select="text"/></pre>
 <pre><xsl:value-of select="postcontext"/></pre>
 
-<xsl:if test="string-length(stdoutput)>0">
+<xsl:if test="string-length(stdoutput)>0 or string-length(stderror)>0">
   <br/>
   File: <b><xsl:value-of select="sourcefile"/></b>
   <pre><xsl:value-of select="stdoutput"/></pre>
@@ -436,7 +436,7 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 <pre><xsl:value-of select="text"/></pre>
 <pre><xsl:value-of select="postcontext"/></pre>
 
-<xsl:if test="string-length(stdoutput)>0">
+<xsl:if test="string-length(stdoutput)>0 or string-length(stderror)>0">
   <br/>
   File: <b><xsl:value-of select="sourcefile"/></b>
   <pre><xsl:value-of select="stdoutput"/></pre>
