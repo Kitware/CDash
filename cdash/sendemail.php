@@ -247,8 +247,6 @@ function sendemail($handler,$projectid)
     return;
     }
     
-
-
   // Find if the build has any configure errors
   $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
   add_last_sql_error("sendemail ".$projectname);
@@ -458,6 +456,21 @@ function sendemail($handler,$projectid)
   $project_emailmaxitems = $project_array["emailmaxitems"];
   $project_emailmaxchars = $project_array["emailmaxchars"];
   
+  // Configure information
+  $configure_information = "";
+  if($nconfigures>0)
+    {
+    $configure_information .= "\n\n*Configure*\n";
+ 
+    $configure = pdo_query("SELECT status,log FROM configure WHERE buildid=".qnum($buildid));
+    $configure_array = pdo_fetch_array($configure);
+  
+    $configure_information .= "Status: ".$configure_array["status"]." (".$currentURI."/viewConfigure.phpbuildid=".$buildid.")\n";
+    $configure_information .= "Output: ";
+    $configure_information .= substr($configure_array["log"],0,$project_emailmaxchars);
+    $configure_information .= "\n";
+    } // end $nconfigures > 0
+      
   $error_information = "";
   if($nbuilderrors>0)
     {
@@ -501,7 +514,6 @@ function sendemail($handler,$projectid)
         }
       $error_information .= substr($info,0,$project_emailmaxchars);
       }
-      
     $error_information .= "\n";
     }
   
@@ -772,6 +784,7 @@ function sendemail($handler,$projectid)
       }
      
     // Send the extra information
+    $messagePlainText .= $configure_information;
     $messagePlainText .= $error_information;
     $messagePlainText .= $warning_information;
     $messagePlainText .= $test_information; 
