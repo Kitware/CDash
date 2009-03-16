@@ -409,9 +409,13 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 
 <xsl:if test="string-length(stdoutput)>0 or string-length(stderror)>0">
   <br/>
-  File: <b><xsl:value-of select="sourcefile"/></b>
-  <pre><xsl:value-of select="stdoutput"/></pre>
-  <pre><xsl:value-of select="stderror"/></pre>
+  <b><xsl:value-of select="sourcefile"/></b>
+  <xsl:if test="string-length(stdoutput)>0">
+    <pre><xsl:value-of select="stdoutput"/></pre>
+  </xsl:if>
+  <xsl:if test="string-length(stderror)>0">
+    <pre><xsl:value-of select="stderror"/></pre>
+  </xsl:if>
 </xsl:if>
 
 </xsl:for-each>
@@ -438,9 +442,13 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 
 <xsl:if test="string-length(stdoutput)>0 or string-length(stderror)>0">
   <br/>
-  File: <b><xsl:value-of select="sourcefile"/></b>
-  <pre><xsl:value-of select="stdoutput"/></pre>
-  <pre><xsl:value-of select="stderror"/></pre>
+  <b><xsl:value-of select="sourcefile"/></b>
+  <xsl:if test="string-length(stdoutput)>0">
+    <pre><xsl:value-of select="stdoutput"/></pre>
+  </xsl:if>
+  <xsl:if test="string-length(stderror)>0">
+    <pre><xsl:value-of select="stderror"/></pre>
+  </xsl:if>
 </xsl:if>
 
 </xsl:for-each> 
