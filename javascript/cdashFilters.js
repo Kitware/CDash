@@ -129,7 +129,7 @@ function filters_toggle()
 function set_bool_compare_options(s)
 {
   s.options.length = 0;
-  s.options[0] = new Option("-- choose comparsion --", "0", true, true);
+  s.options[0] = new Option("-- choose comparison --", "0", true, true);
   s.options[1] = new Option("is true", "1", false, false);
   s.options[2] = new Option("is false", "2", false, false);
 }
@@ -138,7 +138,7 @@ function set_bool_compare_options(s)
 function set_number_compare_options(s)
 {
   s.options.length = 0;
-  s.options[0] = new Option("-- choose comparsion --", "40", true, true);
+  s.options[0] = new Option("-- choose comparison --", "40", true, true);
   s.options[1] = new Option("is", "41", false, false);
   s.options[2] = new Option("is not", "42", false, false);
   s.options[3] = new Option("is greater than", "43", false, false);
@@ -149,7 +149,7 @@ function set_number_compare_options(s)
 function set_string_compare_options(s)
 {
   s.options.length = 0;
-  s.options[0] = new Option("-- choose comparsion --", "60", true, true);
+  s.options[0] = new Option("-- choose comparison --", "60", true, true);
   s.options[1] = new Option("contains", "63", false, false);
   s.options[2] = new Option("does not contain", "64", false, false);
   s.options[3] = new Option("is", "61", false, false);
@@ -162,7 +162,7 @@ function set_string_compare_options(s)
 function set_date_compare_options(s)
 {
   s.options.length = 0;
-  s.options[0] = new Option("-- choose comparsion --", "80", true, true);
+  s.options[0] = new Option("-- choose comparison --", "80", true, true);
   s.options[1] = new Option("is", "81", false, false);
   s.options[2] = new Option("is not", "82", false, false);
   s.options[3] = new Option("is after", "83", false, false);
