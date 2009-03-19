@@ -691,6 +691,15 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
     }
 }
 
+/** Remove the buildemail that have been there from more than 48h */
+function cleanBuildEmail($projectid)
+{
+  include("cdash/config.php");
+  include_once("cdash/common.php");
+  $now = date(FMT_DATETIME,time()-3600*48);
+  pdo_query("DELETE from buildemail WHERE time<'$now'");
+}
+
 /** Add daily changes if necessary */
 function addDailyChanges($projectid)
 {
@@ -732,6 +741,9 @@ function addDailyChanges($projectid)
     
     // Send an email if some expected builds have not been submitting
     sendEmailExpectedBuilds($projectid,$currentstarttime);    
+    
+    // cleanBuildEmail
+    cleanBuildEmail($projectid);
     
     // If the status of daily update is set to 2 that means we should send an email
     $query = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");

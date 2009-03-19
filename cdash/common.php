@@ -502,6 +502,35 @@ function get_project_name($projectid)
   return "NA";
 }
 
+/** Get the current URI of the dashboard */
+function get_server_URI()
+{
+  include("cdash/config.php");
+  $currentPort="";
+  $httpprefix="http://";
+  if($_SERVER['SERVER_PORT']!=80)
+    {
+    $currentPort=":".$_SERVER['SERVER_PORT'];
+    if($_SERVER['SERVER_PORT']!=80 )
+      {
+      $httpprefix = "https://";
+      }
+    }
+  if($CDASH_USE_HTTPS === true)
+    {
+    $httpprefix = "https://";
+    }
+  $serverName = $CDASH_SERVER_NAME;
+  if(strlen($serverName) == 0)
+    {
+    $serverName = $_SERVER['SERVER_NAME'];
+    }
+    
+  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+}
+
+
 /** Send a coverage email */
 function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,$branchstested,$branchsuntested,
                              $functionstested,$functionsuntested)

@@ -17,22 +17,22 @@
 =========================================================================*/
 
 /** */
-function checkEmailPreferences($emailcategory,$nconfigures,$nwarnings,$nerrors,$nfailingtests)
+function checkEmailPreferences($emailcategory,$errors)
 {
   include_once("cdash/common.php");
-  if($nconfigures>0 && check_email_category("configure",$emailcategory))
+  if($errors['configure_errors']>0 && check_email_category("configure",$emailcategory))
     {
     return true;
     }
-  if($nwarnings>0 && check_email_category("warning",$emailcategory))
+  if($errors['build_warnings']>0 && check_email_category("warning",$emailcategory))
     {
     return true;
     }
-  if($nerrors>0 && check_email_category("error",$emailcategory))
+  if($errors['build_errors']>0 && check_email_category("error",$emailcategory))
     {
     return true;
     }
-  if($nfailingtests>0 && check_email_category("test",$emailcategory))
+  if($errors['test_errors']>0 && check_email_category("test",$emailcategory))
     {
     return true;
     }
@@ -64,12 +64,47 @@ function checkEmailLabel($projectid, $userid, $buildid)
   return false;
 } // end checkEmailLabel
 
+
 /** Send a summary email */
-function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
-                          $nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests,$buildid)
+function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$errors,$buildid)
 {
   include("config.php");
-  
+ 
+  // Check if the email has been sent
+  $date = ""; // now
+  list ($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date,$project_array["nightlytime"]);
+  $dashboarddate = gmdate(FMT_DATE, $currentstarttime);
+
+  // If we already have it we return
+  if(pdo_num_rows(pdo_query("SELECT buildid FROM summaryemail WHERE date='$dashboarddate' AND groupid=".qnum($groupid)))==1)
+    {
+    return;
+    }  
+
+  // Update the summaryemail table to specify that we have send the email
+  // We also delete any previous rows from that groupid
+  pdo_query("DELETE FROM summaryemail WHERE groupid=$groupid");
+  pdo_query("INSERT INTO summaryemail (buildid,date,groupid) VALUES ($buildid,'$dashboarddate',$groupid)");
+  add_last_sql_error("sendmail");
+    
+  // If the trigger for SVN/CVS diff is not done yet we specify that the asynchronous trigger should
+  // send an email
+  $dailyupdatequery = pdo_query("SELECT status FROM dailyupdate WHERE projectid=".qnum($projectid)." AND date='$dashboarddate'");
+  add_last_sql_error("sendmail");
+    
+  if(pdo_num_rows($dailyupdatequery) == 0)
+    {
+    return;
+    }
+      
+  $dailyupdate_array = pdo_fetch_array($dailyupdatequery);
+  $dailyupdate_status = $dailyupdate_array['status'];
+  if($dailyupdate_status == 0)
+    {
+    pdo_query("UPDATE dailyupdate SET status='2' WHERE projectid='$projectid' AND date='$dashboarddate'");
+    return;
+    }
+       
   // Find the current updaters from the night using the dailyupdatefile table
   $summaryEmail = "";
   $query = "SELECT ".qid("user").".email,user2project.emailcategory,".qid("user").".id FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
@@ -97,7 +132,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
       }
         
     // If the user doesn't want to receive email
-    if(!checkEmailPreferences($user_array["emailcategory"],$nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests))
+    if(!checkEmailPreferences($user_array["emailcategory"],$errors))
       {
       continue;
       }
@@ -151,30 +186,8 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
     $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
     $messagePlainText .= "or you are listed in the default contact list.\n\n";  
-    
-    
-    $currentPort="";
-    $httpprefix="http://";
-    if($_SERVER['SERVER_PORT']!=80)
-      {
-      $currentPort=":".$_SERVER['SERVER_PORT'];
-      if($_SERVER['SERVER_PORT']!=80 )
-        {
-        $httpprefix = "https://";
-        }
-      }
-    if($CDASH_USE_HTTPS === true)
-      {
-      $httpprefix = "https://";
-      }
-    $serverName = $CDASH_SERVER_NAME;
-    if(strlen($serverName) == 0)
-      {
-      $serverName = $_SERVER['SERVER_NAME'];
-      }
-      
-    $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
-    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+     
+    $currentURI = get_server_URI();
     
     $messagePlainText .= "To see this dashboard:\n";  
     $messagePlainText .= $currentURI;
@@ -196,395 +209,91 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
       }
     } // end $summaryEmail!=""
 }
-                          
-/** Main function to send email if necessary */
-function sendemail($handler,$projectid)
+
+/** Check for errors for a given build. Return false if no errors */
+function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus,$checkpreviousbuild)
 {
-  
-  include_once("cdash/common.php");
-  include("cdash/config.php");
-  require_once("cdash/pdo.php");
+  // Includes
+  require_once("models/buildconfigure.php");
   require_once("models/build.php");
+  require_once("models/buildtest.php");
   
-  // Check if we should send the email
-  $project = pdo_query("SELECT name,emailbrokensubmission,emailredundantfailures,emailmaxitems,
-                               emailmaxchars,emailtesttimingchanged,nightlytime,
-                               testtimemaxstatus FROM project WHERE id='$projectid'");
-  $project_array = pdo_fetch_array($project);
-  $project_emailtesttimingchanged = $project_array["emailtesttimingchanged"];
-  $project_testtimemaxstatus =  $project_array["testtimemaxstatus"];
-  $projectname = $project_array["name"];
-  
-  if($project_array["emailbrokensubmission"] == 0)
-    {
-    return;
-    }
-  
-  $name = $handler->getBuildName();
-  $stamp = $handler->getBuildStamp();
-  $sitename = $handler->getSiteName();
+  $errors = array();  
 
-  // Find the build id
-  $buildid = get_build_id($name,$stamp,$projectid,$sitename);
-  if($buildid<0)
-    {
-    return;
-    }
-  add_log("Buildid ".$buildid,"sendemail ".$projectname);
-
-  // Get the buildgroup
-  $buildgroup_array = pdo_fetch_array(pdo_query("SELECT groupid FROM build2group WHERE buildid=$buildid"));
-  add_last_sql_error("sendmail");
-  $groupid = $buildgroup_array["groupid"];
+  // Configure errors    
+  $BuildConfigure = new BuildConfigure();
+  $BuildConfigure->BuildId = $buildid;
+  $errors['configure_errors'] = $BuildConfigure->GetNumberOfErrors();
   
-  // Check if the group as summaryemail enable
-  $summaryemail_array = pdo_fetch_array(pdo_query("SELECT summaryemail FROM buildgroup WHERE id=$groupid"));
-  add_last_sql_error("sendmail");
-  
-  // If we specified no email we stop here
-  if($summaryemail_array["summaryemail"]==2)
-    {
-    return;
-    }
-    
-  // Find if the build has any configure errors
-  $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
-  add_last_sql_error("sendemail ".$projectname);
-  $nconfigures = 0;
-  if(pdo_num_rows($configure)>0)
-    {
-    $configure_array = pdo_fetch_array($configure);
-    if($configure_array["status"]>0)
-      {
-      $nconfigures = 1;
-      }
-    }
+  // Build errors and warnings
+  $Build = new Build();
+  $Build->BuildId = $buildid;
+  $errors['build_errors'] = $Build->GetNumberOfErrors();
+  $errors['build_warnings'] = $Build->GetNumberOfWarnings();
 
-  // Find if the build has any errors
-  $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
-  $builderror_array = pdo_fetch_array($builderror);
-  $nbuilderrors = $builderror_array[0];
-  $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='0'");
-  $builderror_array = pdo_fetch_array($builderror);
-  $nbuilderrors += $builderror_array[0];
-     
-  // Find if the build has any warnings
-  $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
-  $buildwarning_array = pdo_fetch_array($buildwarning);
-  $nbuildwarnings = $buildwarning_array[0];
-  $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='1'");
-  $buildwarning_array = pdo_fetch_array($buildwarning);
-  $nbuildwarnings += $buildwarning_array[0];
+  // Test errors
+  $BuildTest = new BuildTest();
+  $BuildTest->BuildId = $buildid;
+  $errors['test_errors'] = $BuildTest->GetNumberOfFailures($checktesttimeingchanged,$testtimemaxstatus);
     
-    
-  // Find if the build has any test failings
-  if($project_emailtesttimingchanged)
-    {
-    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>".qnum($project_testtimemaxstatus).")";
-    }
-  else
-    {
-    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'";
-    }  
-    
-  $nfail_array = pdo_fetch_array(pdo_query($sql));
-  $nfailingtests = $nfail_array[0];
-
   // Green build we return
-  if($nconfigures == 0 && $nfailingtests==0 && $nbuildwarnings==0 && $nbuilderrors==0) 
+  if(   $errors['configure_errors'] == 0 
+     && $errors['build_errors'] == 0
+     && $errors['build_warnings'] ==0 
+     && $errors['test_errors'] ==0) 
     {
-    return;
+    return false;
     }
-    
-  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = pdo_fetch_array($build);
-  $buildtype = $build_array["type"];
-  $siteid = $build_array["siteid"];
-  $buildname = $build_array["name"];
-  $starttime = $build_array["starttime"];
   
   // look for the previous build only if necessary
-  if($project_array["emailredundantfailures"]==0)
+  if($checkpreviousbuild)
     {
-    // Find the previous build
-    $previousbuild = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid' 
-                                 AND name='$buildname' AND type='$buildtype' 
-                                 AND starttime<'$starttime' ORDER BY starttime DESC  LIMIT 1");
-                                 
-    add_last_sql_error("sendemail ".$projectname);
-                                 
-    if(pdo_num_rows($previousbuild) > 0)
-      {
-      $previousbuild_array = pdo_fetch_array($previousbuild);
-      $previousbuildid = $previousbuild_array["id"];
-      
-      $configure = pdo_query("SELECT status FROM configure WHERE buildid='$previousbuildid'");
-      add_last_sql_error("sendemail ".$projectname);
-      $npreviousconfigures = 0;
-      if(pdo_num_rows($configure)>0)
-        {
-        $configure_array = pdo_fetch_array($configure);
-        if($configure_array["status"]>0)
-          {
-          $npreviousconfigures = 1;
-          }
-        }
-      
-      // Find if the build has any errors
-      $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
-      add_last_sql_error("sendemail ".$projectname);
-      $builderror_array = pdo_fetch_array($builderror);
-      $npreviousbuilderrors = $builderror_array[0];
-      $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='0'");
-      $builderror_array = pdo_fetch_array($builderror);
-      $npreviousbuilderrors += $builderror_array[0];
-         
-      // Find if the build has any warnings
-      $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
-      add_last_sql_error("sendemail ".$projectname);
-      $buildwarning_array = pdo_fetch_array($buildwarning);
-      $npreviousbuildwarnings = $buildwarning_array[0];
-      $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='1'");
-      add_last_sql_error("sendemail ".$projectname);
-       $buildwarning_array = pdo_fetch_array($buildwarning);
-       $npreviousbuildwarnings += $buildwarning_array[0];
-
+    $Build->FillFromId();
+    $previousbuildid = $Build->GetPreviousBuildId();
     
-      // Find if the build has any test failings
-      if($project_emailtesttimingchanged)
-        {
-        $sql = "SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND (status='failed' OR timestatus>".qnum($project_testtimemaxstatus).")";
-        }
-      else
-        {
-        $sql = "SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'";
-        }
-      $nfail_array = pdo_fetch_array(pdo_query($sql));
-      add_last_sql_error("sendmail");
-      $npreviousfailingtests = $nfail_array[0];
+    if($previousbuildid > 0)
+      {
+      // Configure errors    
+      $PreviousBuildConfigure = new BuildConfigure();
+      $PreviousBuildConfigure->BuildId = $previousbuildid;
+      $npreviousconfigures = $PreviousBuildConfigure->GetNumberOfErrors();
       
-      
-      //add_log("previousbuildid=".$previousbuildid,"sendemail ".$projectname);
-      //add_log("test=".$npreviousfailingtests."=".$nfailingtests,"sendemail ".$projectname);
-      //add_log("warning=".$npreviousbuildwarnings."=".$nbuildwarnings,"sendemail ".$projectname);
-      //add_log("error=".$npreviousbuilderrors."=".$nbuilderrors,"sendemail ".$projectname);
-  
+      // Build errors and warnings
+      $PreviousBuild = new Build();
+      $PreviousBuild->BuildId = $previousbuildid;
+      $npreviousbuilderrors = $PreviousBuild->GetNumberOfErrors();
+      $npreviousbuildwarnings = $PreviousBuild->GetNumberOfWarnings();
+    
+      // Test errors
+      $PreviousBuildTest = new BuildTest();
+      $PreviousBuildTest->BuildId = $previousbuildid;
+      $npreviousfailingtests = $PreviousBuildTest->GetNumberOfFailures($checktesttimeingchanged,$testtimemaxstatus);
+
       // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
       // we don't send any emails
-      if($npreviousconfigures>=$nconfigures
-         && $npreviousfailingtests>=$nfailingtests
-         && $npreviousbuildwarnings>=$nbuildwarnings
-         && $npreviousbuilderrors==$nbuilderrors
+      if($npreviousconfigures>=$errors['configure_errors']
+         && $npreviousbuilderrors==$errors['build_errors']
+         && $npreviousbuildwarnings>=$errors['build_warnings']
+         && $npreviousfailingtests>=$errors['test_errors']
         ) 
         {
-        add_log("returning","sendemail ".$projectname);
-        return;
+        return false;
         }
       }
     } // end emailredundantfailures
- 
-     
-  // Current URI of the dashboard
-  $currentPort="";
-  $httpprefix="http://";
-  if($_SERVER['SERVER_PORT']!=80)
-    {
-    $currentPort=":".$_SERVER['SERVER_PORT'];
-    if($_SERVER['SERVER_PORT']!=80 )
-      {
-      $httpprefix = "https://";
-      }
-    }
-  if($CDASH_USE_HTTPS === true)
-    {
-    $httpprefix = "https://";
-    }
-  $serverName = $CDASH_SERVER_NAME;
-  if(strlen($serverName) == 0)
-    {
-    $serverName = $_SERVER['SERVER_NAME'];
-    }
-    
-  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
-  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-  
-    
-  if($summaryemail_array["summaryemail"]==1)
-    {
-    // Check if the email has been sent
-    $date = ""; // now
-    list ($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date,$project_array["nightlytime"]);
-    $dashboarddate = gmdate(FMT_DATE, $currentstarttime);
 
-    // If we already have it we return
-    if(pdo_num_rows(pdo_query("SELECT buildid FROM summaryemail WHERE date='$dashboarddate' AND groupid=$groupid"))==1)
-      {
-      return;
-      }  
+  return $errors;
+}
 
-    // Update the summaryemail table to specify that we have send the email
-    // We also delete any previous rows from that groupid
-    pdo_query("DELETE FROM summaryemail WHERE groupid=$groupid");
-    pdo_query("INSERT INTO summaryemail (buildid,date,groupid) VALUES ($buildid,'$dashboarddate',$groupid)");
-    add_last_sql_error("sendmail");
+/** Return the list of user id who should get emails */
+function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
+{
+  require_once("models/userproject.php");
     
-    // If the trigger for SVN/CVS diff is not done yet we specify that the asynchronous trigger should
-    // send an email
-    $dailyupdatequery = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$dashboarddate'");
-    add_last_sql_error("sendmail");
-    
-    if(pdo_num_rows($dailyupdatequery) == 0)
-      {
-      return;
-      }
-      
-    $dailyupdate_array = pdo_fetch_array($dailyupdatequery);
-    $dailyupdate_status = $dailyupdate_array['status'];
-    if($dailyupdate_status == 0)
-      {
-      pdo_query("UPDATE dailyupdate SET status='2' WHERE projectid='$projectid' AND date='$dashboarddate'");
-      return;
-      }
-
-    // Send the summary email
-    sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,
-                     $nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests,$buildid);
-    return;
-    } // end summary email
-
-  // Send a summary of the errors/warnings and test failings
-  $project_emailmaxitems = $project_array["emailmaxitems"];
-  $project_emailmaxchars = $project_array["emailmaxchars"];
+  $userids = array();
   
-  // Configure information
-  $configure_information = "";
-  if($nconfigures>0)
-    {
-    $configure_information .= "\n\n*Configure*\n";
- 
-    $configure = pdo_query("SELECT status,log FROM configure WHERE buildid=".qnum($buildid));
-    $configure_array = pdo_fetch_array($configure);
-  
-    $configure_information .= "Status: ".$configure_array["status"]." (".$currentURI."/viewConfigure.phpbuildid=".$buildid.")\n";
-    $configure_information .= "Output: ";
-    $configure_information .= substr($configure_array["log"],0,$project_emailmaxchars);
-    $configure_information .= "\n";
-    } // end $nconfigures > 0
-      
-  $error_information = "";
-  if($nbuilderrors>0)
-    {
-    $info = "";
-    $error_information .= "\n\n*Error*\n";
-    
-    // Old error format
-    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
-    add_last_sql_error("sendmail");
-    while($error_array = pdo_fetch_array($error_query))
-      {
-      if(strlen($error_array["sourcefile"])>0)
-        {
-        $info .= $error_array["sourcefile"]." line ".sourceline." (".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
-        $info .= $error_array["text"]."\n";
-        }
-      else
-        {
-        $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";
-        }
-      $error_information .= substr($info,0,$project_emailmaxchars);
-      }
-      
-    // New error format
-    $info = "";
-    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $project_emailmaxitems");
-    add_last_sql_error("sendmail");
-    while($error_array = pdo_fetch_array($error_query))
-      {
-      if(strlen($error_array["sourcefile"])>0)
-        {
-        $info .= $error_array["sourcefile"]." (".$currentURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
-        }
-      if(strlen($error_array["stdoutput"])>0)
-        {  
-        $info .= $error_array["stdoutput"]."\n";
-        }
-      if(strlen($error_array["stderror"])>0)
-        {  
-        $info .= $error_array["stderror"]."\n";
-        }
-      $error_information .= substr($info,0,$project_emailmaxchars);
-      }
-    $error_information .= "\n";
-    }
-  
-  $warning_information = "";
-  if($nbuildwarnings>0)
-    {
-    $info = "";
-    $warning_information .= "\n\n*Warnings*\n";
-    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
-    add_last_sql_error("sendmail");
-    while($error_array = pdo_fetch_array($error_query))
-      {
-      if(strlen($error_array["sourcefile"])>0)
-        {
-        $info .= $error_array["sourcefile"]." line ".$error_array["sourceline"]." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
-        $info .= $error_array["text"]."\n";
-        }
-      else
-        {
-        $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";
-        }
-      $warning_information .= substr($info,0,$project_emailmaxchars);
-      }
-    
-    // New error format
-    $info = "";
-    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $project_emailmaxitems");
-    add_last_sql_error("sendmail");
-    while($error_array = pdo_fetch_array($error_query))
-      {
-      if(strlen($error_array["sourcefile"])>0)
-        {
-        $info .= $error_array["sourcefile"]." (".$currentURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
-        }
-      if(strlen($error_array["stdoutput"])>0)
-        {  
-        $info .= $error_array["stdoutput"]."\n";
-        }
-      if(strlen($error_array["stderror"])>0)
-        {  
-        $info .= $error_array["stderror"]."\n";
-        }
-      $warning_information .= substr($info,0,$project_emailmaxchars);
-      }
-    $warning_information .= "\n";  
-    }
-      
-  $test_information = "";
-  if($nfailingtests>0)
-    {
-    $test_information .= "\n\n*Tests failing*\n";
-    $sql = "";
-    if($project_emailtesttimingchanged)
-      {
-      $sql = "OR timestatus>".qnum($project_testtimemaxstatus);
-      }
-    $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid)." AND test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $project_emailmaxitems");
-    add_last_sql_error("sendmail");
-    while($test_array = pdo_fetch_array($test_query))
-      {
-      $info = $test_array["name"]."(".$currentURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
-      $test_information .= substr($info,0,$project_emailmaxchars);
-      }
-    $test_information .= "\n";
-    }
-
-  // We have a test failing so we send emails
-  $email = "";
-  
-  // Find the users
-  $authors = pdo_query("SELECT author FROM updatefile WHERE buildid='$buildid'");
+  // Check if we know to whom we should send the email
+  $authors = pdo_query("SELECT author FROM updatefile WHERE buildid=".qnum($buildid));
   add_last_sql_error("sendmail");
   while($authors_array = pdo_fetch_array($authors))
     {
@@ -594,218 +303,459 @@ function sendemail($handler,$projectid)
       continue;
       }
     
-    // Find a matching name in the database
-    $query = "SELECT ".qid("user").".email,user2project.emailcategory,".qid("user").".id
-                     FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
-                     AND user2project.userid=".qid("user").".id AND user2project.cvslogin='$author'
-                     AND user2project.emailtype>0
-                     ";
-    $user = pdo_query($query);
-    add_last_sql_error("sendmail");
+    $UserProject = new UserProject();
+    $UserProject->CvsLogin = $author;
+    $UserProject->ProjectId = $projectid;
     
-    if(pdo_num_rows($user)==0)
+    if(!$UserProject->FillFromCVSLogin())
       {
       // Should send an email to the project admin to let him know that this user is not registered
       continue;
       }
-    
-    $user_array = pdo_fetch_array($user);  
-    
+       
     // If the user doesn't want to receive email
-    if(!checkEmailPreferences($user_array["emailcategory"],$nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests))
+    if(!checkEmailPreferences($UserProject->EmailCategory,$errors))
       {
       continue;
       }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid))
       {
       continue;
       }
-       
-    // don't add the same user twice
-    if(strpos($email,$user_array["email"]) !== false)
-     {
-     continue;
-     }
-  
-    if($email != "")
+    
+    if(!in_array($UserProject->UserId,$userids))
       {
-      $email .= ", ";
+      $userids[] = $UserProject->UserId;
       }
-    $email .= $user_array["email"];
     } 
 
- // Select the users who want to receive all emails
- $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,user2project.emailcategory,".qid("user").".id FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
-                    AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
- add_last_sql_error("sendmail");
- while($user_array = pdo_fetch_array($user))
-   {
-   // If the user is already in the list we quit
-   if(strpos($email,$user_array["email"]) !== false)
-     {
-     continue;
-     }
-  
-   // If the user doesn't want to receive email
-   if(!checkEmailPreferences($user_array["emailcategory"],$nconfigures,$nbuildwarnings,$nbuilderrors,$nfailingtests))
-     {
-     continue;
-     }
-  
-   // Check if the labels are defined for this user
-   if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+  // Select the users who want to receive all emails
+  $user = pdo_query("SELECT emailtype,emailcategory,userid FROM user2project WHERE user2project.projectid=".qnum($projectid)." AND user2project.emailtype>1");
+  add_last_sql_error("sendmail");
+  while($user_array = pdo_fetch_array($user))
+    {
+    if(in_array($user_array["userid"],$userids))
       {
       continue;
       }
       
-  // Nightly build notification
-  if($user_array["emailtype"] == 2 && $buildtype=="Nightly")
-    {
-    if($email != "")
+    // If the user doesn't want to receive email
+    if(!checkEmailPreferences($user_array["emailcategory"],$errors))
       {
-      $email .= ", ";
+      continue;
       }
-    $email .= $user_array["email"];
-    }
-  else if($user_array["emailtype"] == 3) // want to receive all emails
-    {
-    if($email != "")
-      {
-      $email .= ", ";
-      }
-    $email .= $user_array["email"];
-    }
-  }
   
-  // Some variables we need for the email
-  $site = pdo_query("SELECT name FROM site WHERE id='$siteid'");
-  $site_array = pdo_fetch_array($site);
-
-  if($email != "")
-    {
-    $Build = new Build();
-    $Build->Id = $buildid;
-
-    $messagePlainText = "A submission to CDash for the project ".$project_array["name"]." has ";
-    $titleerrors = "(";
-    
-    $i=0;
-    if($nconfigures>0)
+    // Check if the labels are defined for this user
+    if(!checkEmailLabel($projectid,$user_array['userid'],$buildid))
       {
-      $messagePlainText .= "configure errors";
-      $titleerrors.="c=".$nconfigures;
-      $i++;
+      continue;
       }
-      
-    if($nbuilderrors>0)
-      {
-      if($i>0)
-         {
-         $messagePlainText .= " and ";
-         $titleerrors.=", ";
-         }
-      $messagePlainText .= "build errors";
-      $titleerrors.="b=".$nbuilderrors;
-      $i++;
-      }
-    
-    if($nbuildwarnings>0)
-      {
-      if($i>0)
-         {
-         $messagePlainText .= " and ";
-         $titleerrors.=", ";
-         }
-      $messagePlainText .= "build warnings";
-      $titleerrors.="w=".$nbuildwarnings;
-      $i++;
-      } 
-
-    if($nfailingtests>0)
-      {
-      if($i>0)
-         {
-         $messagePlainText .= " and ";
-         $titleerrors.=", ";
-         }
-      $messagePlainText .= "failing tests";
-      $titleerrors.="t=".$nfailingtests;
-      $i++;
-      }
-    
-    // Title
-    $titleerrors .= "):";
-    $title = "FAILED ".$titleerrors." ".$project_array["name"];
-    
-    if($Build->GetSubProjectName())
-      {
-      $title .= "/".$Build->GetSubProjectName();
-      }
-    $title .= " - ".$buildname." - ".$buildtype;
-    
-    //$title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
-    //$title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
-     
-    $messagePlainText .= ".\n";  
-    $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
-    $messagePlainText .= "or you are listed in the default contact list.\n\n";  
-    $messagePlainText .= "Details on the submission can be found at ";
-
-    $messagePlainText .= $currentURI;
-    $messagePlainText .= "/buildSummary.php?buildid=".$buildid;
-    $messagePlainText .= "\n\n";
-    
-    $messagePlainText .= "Project: ".$project_array["name"]."\n";
-    if($Build->GetSubProjectName())
-      {
-      $messagePlainText .= "SubProject: ".$Build->GetSubProjectName()."\n";
-      }
-    $messagePlainText .= "Site: ".$site_array["name"]."\n";
-    $messagePlainText .= "Build Name: ".$buildname."\n";
-    $messagePlainText .= "Build Time: ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"))."\n";
-    $messagePlainText .= "Type: ".$buildtype."\n";
-
-    if($nconfigures>0)
-      {
-      $messagePlainText .= "Configure errors: ".$nconfigures."\n";
-      }
-      
-    if($nbuilderrors>0)
-      {
-      $messagePlainText .= "Errors: ".$nbuilderrors."\n";
-      }
-      
-    if($nbuildwarnings>0)
-      {  
-      $messagePlainText .= "Warnings: ".$nbuildwarnings."\n";
-      }
-      
-    if($nfailingtests>0)
-      {
-      $messagePlainText .= "Tests failing: ".$nfailingtests."\n";
-      }
-     
-    // Send the extra information
-    $messagePlainText .= $configure_information;
-    $messagePlainText .= $error_information;
-    $messagePlainText .= $warning_information;
-    $messagePlainText .= $test_information; 
-      
-    $messagePlainText .= "\n-CDash on ".$serverName."\n";
         
-    // Send the email
-    if(mail("$email", $title, $messagePlainText,
-         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+    // Nightly build notification
+    if($user_array["emailtype"] == 2 && $buildtype=="Nightly")
       {
-      add_log("email sent to: ".$email,"sendemail ".$projectname);
+      $userids[] = $user_array["userid"];
       }
-    else
+    else if($user_array["emailtype"] == 3) // want to receive all emails
       {
-      add_log("cannot send email to: ".$email,"sendemail ".$projectname);
+      $userids[] = $user_array["userid"];
       }
+    }
+  
+  return $userids;
+    
+} // end lookup_emails_to_send
 
-    } // end $email!=""
+/** Return a summary for a category of error */
+function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testtimemaxstatus)
+{
+  $serverURI = get_server_URI();
+  
+  $information = "";
+     
+  // Configure information
+  if($errorkey == 'configure_errors')
+    {
+    $information = "\n\n*Configure*\n";
+ 
+    $configure = pdo_query("SELECT status,log FROM configure WHERE buildid=".qnum($buildid));
+    $configure_array = pdo_fetch_array($configure);
+  
+    $information .= "Status: ".$configure_array["status"]." (".$currentURI."/viewConfigure.phpbuildid=".$buildid.")\n";
+    $information .= "Output: ";
+    $information .= substr($configure_array["log"],0,$maxchars);
+    $information .= "\n";
+    } // endconfigure
+  else if($errorkey == 'build_errors')
+    {
+    $info = "";
+    $information .= "\n\n*Error*\n";
+    
+    // Old error format
+    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $maxitems");
+    add_last_sql_error("sendmail");
+    while($error_array = pdo_fetch_array($error_query))
+      {
+      if(strlen($error_array["sourcefile"])>0)
+        {
+        $info .= $error_array["sourcefile"]." line ".sourceline." (".$serverURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
+        $info .= $error_array["text"]."\n";
+        }
+      else
+        {
+        $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";
+        }
+      $information .= substr($info,0,$maxchars);
+      }
+      
+    // New error format
+    $info = "";
+    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $maxitems");
+    add_last_sql_error("sendmail");
+    while($error_array = pdo_fetch_array($error_query))
+      {
+      if(strlen($error_array["sourcefile"])>0)
+        {
+        $info .= $error_array["sourcefile"]." (".$serverURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
+        }
+      if(strlen($error_array["stdoutput"])>0)
+        {  
+        $info .= $error_array["stdoutput"]."\n";
+        }
+      if(strlen($error_array["stderror"])>0)
+        {  
+        $info .= $error_array["stderror"]."\n";
+        }
+      $information .= substr($info,0,$maxchars);
+      }
+    $information .= "\n";
+    }
+  else if($errorkey == 'build_warnings')
+    {
+    $info = "";
+    $information .= "\n\n*Warnings*\n";
+    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $maxitems");
+    add_last_sql_error("sendmail");
+    while($error_array = pdo_fetch_array($error_query))
+      {
+      if(strlen($error_array["sourcefile"])>0)
+        {
+        $info .= $error_array["sourcefile"]." line ".$error_array["sourceline"]." (".$serverURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
+        $info .= $error_array["text"]."\n";
+        }
+      else
+        {
+        $info .= $error_array["text"]."\n".$error_array["postcontext"]."\n";
+        }
+      $information .= substr($info,0,$maxchars);
+      }
+    
+    // New error format
+    $info = "";
+    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $maxitems");
+    add_last_sql_error("sendmail");
+    while($error_array = pdo_fetch_array($error_query))
+      {
+      if(strlen($error_array["sourcefile"])>0)
+        {
+        $info .= $error_array["sourcefile"]." (".$serverURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
+        }
+      if(strlen($error_array["stdoutput"])>0)
+        {  
+        $info .= $error_array["stdoutput"]."\n";
+        }
+      if(strlen($error_array["stderror"])>0)
+        {  
+        $info .= $error_array["stderror"]."\n";
+        }
+      $information .= substr($info,0,$maxchars);
+      }
+    $information .= "\n";  
+    }
+ else if($errorkey == 'test_errors')
+    {   
+    $information .= "\n\n*Tests failing*\n";
+    $sql = "";
+    if($project_emailtesttimingchanged)
+      {
+      $sql = "OR timestatus>".qnum($testtimemaxstatus);
+      }
+    $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid).
+                            " AND test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $maxitems");
+    add_last_sql_error("sendmail");
+    while($test_array = pdo_fetch_array($test_query))
+      {
+      $info = $test_array["name"]."(".$serverURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
+      $information .= substr($info,0,$maxchars);
+      }
+    $information .= "\n";
+    }
+
+  return $information;
+} // end get_email_summary
+
+/** Check if the email has already been sent for that category */
+function set_email_sent($userid,$buildid,$emailtext)
+{
+  foreach($emailtext['category'] as $key=>$value)
+    {
+    $category = 0;
+    switch($key)
+      {
+      case 'configure_errors': $category=1; break;
+      case 'build_warnings': $category=2; break;
+      case 'build_errors': $ategory=3; break;
+      case 'test_errors': $category=4; break;
+      }
+        
+   if($category>0)
+     {
+     $today = date(FMT_DATETIME);
+     pdo_query("INSERT INTO buildemail (userid,buildid,category,time) VALUES (".qnum($userid).",".qnum($buildid).",".qnum($category).",'".$today."')");
+     add_last_sql_error("sendmail");
+     }
+   }
+}
+
+/** Check if the email has already been sent for that category */
+function check_email_sent($userid,$buildid,$errorkey)
+{
+  $category = 0;
+  switch($errorkey)
+    {
+    case 'configure_errors': $category=1; break;
+    case 'build_warnings': $category=2; break;
+    case 'build_errors': $category=3; break;
+    case 'test_errors': $category=4; break;
+    }
+  
+  if($category == 0)
+    {
+    return false;
+    }
+  
+  $query = pdo_query("SELECT count(*) FROM buildemail WHERE userid=".qnum($userid)." AND buildid=".qnum($buildid)." AND category=".qnum($category));
+  $query_array = pdo_fetch_array($query);
+  if($query_array[0]>0)
+    {
+    return true;
+    }
+      
+  return false;
+}
+
+/** Send the email to a user */
+function send_email_to_user($userid,$emailtext,$Build,$Project)
+{
+  include("cdash/config.php");
+  include_once("cdash/common.php");  
+  require_once("models/site.php");
+  require_once("models/user.php");
+
+  //print_r($emailtext);
+  $serverURI = get_server_URI();
+  
+  $messagePlainText = "A submission to CDash for the project ".$Project->Name." has ";
+  $titleerrors = "(";
+    
+  $i=0;
+  foreach($emailtext['category'] as $key=>$value)
+    {
+    if($i>0)
+       {
+       $messagePlainText .= " and ";
+       $titleerrors.=", ";
+       }
+    
+    switch($key)
+      {
+      case 'configure_errors': $messagePlainText .= "configure errors";$titleerrors.="c=".$value; break;
+      case 'build_warnings': $messagePlainText .= "build warnings";$titleerrors.="w=".$value; break;
+      case 'build_errors': $messagePlainText .= "build errors";$titleerrors.="b=".$value; break;
+      case 'test_errors': $messagePlainText .= "failing tests";$titleerrors.="t=".$value; break;
+      }
+    
+    $i++;
+    }  
+    
+  // Title
+  $titleerrors .= "):";
+  $title = "FAILED ".$titleerrors." ".$Project->Name;
+    
+  if($Build->GetSubProjectName())
+    {
+    $title .= "/".$Build->GetSubProjectName();
+    }
+  $title .= " - ".$Build->Name." - ".$Build->Type;
+    
+  //$title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
+  //$title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
+     
+  $messagePlainText .= ".\n";  
+  $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
+  $messagePlainText .= "or you are listed in the default contact list.\n\n";  
+  $messagePlainText .= "Details on the submission can be found at ";
+
+  $messagePlainText .= $serverURI;
+  $messagePlainText .= "/buildSummary.php?buildid=".$Build->Id;
+  $messagePlainText .= "\n\n";
+    
+  $messagePlainText .= "Project: ".$Project->Name."\n";
+  if($Build->GetSubProjectName())
+    {
+    $messagePlainText .= "SubProject: ".$Build->GetSubProjectName()."\n";
+    }
+  
+  $Site  = new Site();
+  $Site->Id = $Build->SiteId;
+
+  $messagePlainText .= "Site: ".$Site->GetName()."\n";
+  $messagePlainText .= "Build Name: ".$Build->Name."\n";
+  $messagePlainText .= "Build Time: ".date(FMT_DATETIMETZ,strtotime($Build->StartTime." UTC"))."\n";
+  $messagePlainText .= "Type: ".$Build->Type."\n";
+  
+  foreach($emailtext['category'] as $key=>$value)
+    {
+    switch($key)
+      {
+      case 'configure_errors': $messagePlainText .= "Configure errors:".$value; break;
+      case 'build_warnings': $messagePlainText .= "Warnings:".$value; break;
+      case 'build_errors': $messagePlainText .= "Errors:".$value; break;
+      case 'test_errors': $messagePlainText .= "Tests failing: ".$value; break;
+      }
+    }  
+
+  foreach($emailtext['summary'] as $summary)
+    {
+    $messagePlainText .= $summary;
+    }  
+  
+  $serverName = $CDASH_SERVER_NAME;
+  if(strlen($serverName) == 0)
+    {
+    $serverName = $_SERVER['SERVER_NAME'];
+    }
+  $messagePlainText .= "\n-CDash on ".$serverName."\n";
+  
+  // Find the email
+  $User = new User();
+  $User->Id = $userid;
+  $email = $User->GetEmail();
+  
+  //echo $email."<br>";
+  //echo $title."<br>";
+  //echo $messagePlainText."<br>";
+
+  // Send the email
+  if(mail("$email", $title, $messagePlainText,
+     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+    {
+    add_log("email sent to: ".$email,"sendemail ".$Project->Name);
+    
+    // Record that we have send the email
+    set_email_sent($userid,$Build->Id,$emailtext);
+    }
+  else
+    {
+    add_log("cannot send email to: ".$email,"sendemail ".$Project->Name);
+    }  
+} // end send_email_to_user
+
+
+/** Main function to send email if necessary */
+function sendemail($handler,$projectid)
+{
+  include("cdash/config.php");
+  include_once("cdash/common.php");  
+  require_once("cdash/pdo.php");
+  require_once("models/build.php");
+  require_once("models/project.php");
+  
+  $Project = new Project();
+  $Project->Id = $projectid;
+  $Project->Fill();
+
+  // If we shouldn't sent any emails we stop
+  if($Project->EmailBrokenSubmission == 0)
+    {
+    return;
+    }
+  
+  // Get the build id
+  $name = $handler->getBuildName();
+  $stamp = $handler->getBuildStamp();
+  $sitename = $handler->getSiteName();
+  $buildid = get_build_id($name,$stamp,$projectid,$sitename);
+  if($buildid<0)
+    {
+    return;
+    }
+  
+  add_log("Buildid ".$buildid,"sendemail ".$Project->Name);
+      
+  //  Check if the group as no email
+  $Build = new Build();
+  $Build->Id = $buildid;
+  $groupid = $Build->GetGroup();
+  
+  $BuildGroup = new BuildGroup();
+  $BuildGroup->Id = $groupid;
+
+  // If we specified no email we stop here
+  if($BuildGroup->GetSummaryEmail()==2)
+    {
+    return;
+    }
+  
+  $errors = check_email_errors($buildid,$Project->EmailTestTimingChanged,
+                               $Project->TestTimeMaxStatus,!$Project->EmailRedundantFailures);
+  if(!$errors)
+    {
+    return;
+    }
+
+  // If we should send a summary email    
+  if($BuildGroup->GetSummaryEmail()==1)
+    {
+    // Send the summary email
+    sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$errors,$buildid);
+    return;
+    } // end summary email
+
+   $Build->FillFromId($Build->Id);
+  
+  // Get the list of person who should get the email
+  $userids = lookup_emails_to_send($errors, $buildid, $projectid,$Build->Type);
+
+  // Loop through the users
+  foreach($userids as $userid)
+    {
+    $emailtext = array();
+    $emailtext['nerror'] = 0;
+    
+    // Check if an email has been sent already for this user
+    foreach($errors as $errorkey => $nerrors)
+      {
+      if($nerrors == 0)
+        {
+        continue;
+        }
+
+      if(!check_email_sent($userid,$buildid,$errorkey))
+        {
+        $emailtext['summary'][$errorkey] = get_email_summary($buildid,$errors,$errorkey,$Project->EmailMaxItems,$Project->EmailMaxChars,$Project->TestTimeMaxStatus);
+        $emailtext['category'][$errorkey] = $nerrors;
+        $emailtext['nerror'] = 1;
+        }
+      }
+    
+    // Send the email
+    if($emailtext['nerror'] == 1)
+      {
+      send_email_to_user($userid,$emailtext,$Build,$Project);
+      }
+    }
 }
 ?>
