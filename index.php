@@ -487,7 +487,8 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     $date_clause = '';
     }
-
+    
+  $build_rows = array();
 
   $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql."
@@ -495,9 +496,7 @@ function generate_main_dashboard_XML($projectid,$date)
                          b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
                          ".$subprojectsql." ".$filter_sql." ORDER BY gp.position ASC,b.name ASC ";
-
                          
-    
   // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = pdo_query($sql);
   echo pdo_error();
