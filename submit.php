@@ -26,8 +26,6 @@ include("cdash/sendemail.php");
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 
-
-
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 set_time_limit(0);
@@ -102,8 +100,9 @@ if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/submit.php"))
 $handler = ctest_parse($fp,$projectid);
   
 // Send the emails if necessary
-if($handler instanceof TestingHandler ||
-   $handler instanceof UpdateHandler ||
+if($handler instanceof UpdateHandler ||
+   $handler instanceof TestingHandler ||
+   $handler instanceof BuildHandler ||
    $handler instanceof ConfigureHandler)
   {
   sendemail($handler, $projectid);
