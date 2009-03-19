@@ -83,7 +83,7 @@ class ProjectHandler extends AbstractHandler
       $User->Email = $email;
       $User->Password = md5($email); 
       $User->Admin = 0;
-      $userid = $User->GetIdFromName($email);
+      $userid = $User->GetIdFromEmail($email);
       if(!$userid) 
         {
         $User->Save();
