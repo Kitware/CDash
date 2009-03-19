@@ -51,9 +51,9 @@ class UserProject
     // If no id specify return false
     if(!$this->ProjectId || !$this->UserId)
       {
-      return false;    
+      return false;
       }
-      
+
     $query = pdo_query("SELECT count(*) FROM user2project WHERE userid='".$this->UserId."' AND projectid='".$this->ProjectId."'");  
     $query_array = pdo_fetch_array($query);
     if($query_array[0]>0)

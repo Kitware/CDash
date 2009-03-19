@@ -68,12 +68,25 @@ class User
     return false;  
     }
   
-  /** Return if a project exists */
+  /** Return if a user exists */
   function Exists()
     {
     // If no id specify return false
     if(!$this->Id)
       {
+      if(strlen($this->Email) == 0)
+        {
+        return false;
+        }
+      
+      // Check if the email is already there
+      $query = pdo_query("SELECT count(*) FROM user WHERE email='".$this->Email."'");  
+      $query_array = pdo_fetch_array($query);
+      if($query_array[0]>0)
+        {
+        return true;
+        }
+      
       return false;    
       }
       
