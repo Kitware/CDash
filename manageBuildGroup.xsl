@@ -64,7 +64,7 @@ project page</a>
 <b>Warning: <xsl:value-of select="cdash/warning"/></b><br/><br/>
 </xsl:if>
 
-<table   border="0">
+<table border="0">
   <tr>
     <td width="10%"><div align="right"><strong>Project:</strong></div></td>
     <td width="90%" >
@@ -103,7 +103,7 @@ project page</a>
             <a href="#fragment-3"><span>Global Move</span></a></li>
       </ul>
     <div id="fragment-1" class="tab_content" >
-        <div class="tab_help"></div>
+        <div class="tab_help_top"></div>
           <table width="870"  border="0">
               <!-- List the current groups -->
              <tr>
@@ -161,7 +161,8 @@ project page</a>
                  <xsl:attribute name="checked">1</xsl:attribute> 
                 </xsl:if> 
                </input>
-               In summary
+               In summary <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelpTop('summary_help');" src="images/help.gif" border="0"/></a>
                </form>
                </td>
                </tr>
@@ -170,7 +171,13 @@ project page</a>
                </td>
                </tr>
             <tr>
-              <td></td>
+              <td>
+              <span class="help_content" id="summary_help">
+               <strong>Summary email:</strong> sends only one email per day when the first build in the group fails.<br/>
+               <strong>No email:</strong> doesn't send any email for that group regardless of user's preferences.<br/>
+               <strong>In summary:</strong> when dealing with subproject, specifies if the group should be included in the summary page.<br/>
+               </span>
+               </td>
               <td></td>
             </tr>
           </table>          
