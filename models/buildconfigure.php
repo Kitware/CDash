@@ -201,6 +201,34 @@ class BuildConfigure
       add_last_sql_error("BuildConfigure ComputeErrors()");
       $position = strpos($this->Log,'Warning:',$position+1);
       }
-    } // end ComputeErrors()  
+    } // end ComputeErrors() 
+  
+  /** Get the number of configure error for a build */
+  function GetNumberOfErrors()
+    {
+    if(!$this->BuildId)
+      {
+      echo "BuildConfigure::GetNumberOfErrors(): BuildId not set";
+      return false;    
+      }
+   
+    $nerrors = 0;
+    $configure = pdo_query("SELECT status FROM configure WHERE buildid=".qnum($this->BuildId));
+    if(!$configure)
+      {
+      add_last_sql_error("BuildConfigure GetNumberOfErrors");
+      return false;
+      }  
+    $configure_array = pdo_fetch_array($configure);
+    if($configure_array["status"]>0)
+      {
+      $nerrors = 1;
+      }
+    
+    return $nerrors;  
+    } // end GetNumberOfErrors() 
+    
+    
+    
 }
 ?>

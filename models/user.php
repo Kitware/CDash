@@ -156,6 +156,21 @@ class User
     
     return $query_array['firstname']." ".$query_array['lastname'];
     }
+   
+  /** Get the email */
+  function GetEmail()
+    {
+    // If no id specify return false
+    if(!$this->Id)
+      {
+      return false;    
+      }
+      
+    $query = pdo_query("SELECT email FROM user WHERE id=".qnum($this->Id));  
+    $query_array = pdo_fetch_array($query);
+    
+    return $query_array['email'];
+    } 
     
   /** Get the user id from the name */
   function GetIdFromName($name)

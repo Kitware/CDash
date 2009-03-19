@@ -172,6 +172,25 @@ class BuildGroup
       return $buildgroup_array["id"];
       }
     }
+    
+  // Return the value of the summary eamil
+  function GetSummaryEmail()
+    {
+    if(!$this->Id)
+      {
+      echo "BuildGroup GetSummaryEmail(): Id not set";
+      return false;
+      }
+    $summaryemail = pdo_query("SELECT summaryemail FROM buildgroup WHERE id=".qnum($this->Id));
+    if(!$summaryemail)
+      {
+      add_last_sql_error("BuildGroup GetSummaryEmail");
+      return false;
+      }
+      
+    $summaryemail_array = pdo_fetch_array($summaryemail);
+    return $summaryemail_array["summaryemail"];
+    }  
 }
 
 ?>

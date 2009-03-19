@@ -230,8 +230,7 @@ class Build
       }  
     }
 
-
-  /** Fill the current build information from the build id */
+  /** Fill the current build information from the buildid */
   function FillFromId($buildid)
     {
     $query = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id=".qnum($buildid));
@@ -250,8 +249,7 @@ class Build
 
     $query2 = pdo_query(
       "SELECT id FROM subproject, subproject2build " .
-      "WHERE subproject.id=subproject2build.subprojectid AND subproject2build.buildid=" .
-      qnum($buildid));
+      "WHERE subproject.id=subproject2build.subprojectid AND subproject2build.buildid=".qnum($buildid));
     if(!$query2)
       {
       add_last_sql_error("Build:FillFromId()");
@@ -259,7 +257,6 @@ class Build
       }
     $subprojectid_array = pdo_fetch_array($query2);
     $this->SubProjectId = $subprojectid_array["id"];
-    add_log('info: subprojectid: ' . $this->SubProjectId, 'Build::FillFromId');
     }
 
 
@@ -1098,6 +1095,63 @@ class Build
 
     return $labelids;
     }
+
+  // Get the group for a build
+  function GetGroup()
+    {
+    if(!$this->Id)
+      {
+      echo "Build GetGroup(): Id not set";
+      return false;
+      }
+    $group = pdo_query("SELECT groupid FROM build2group WHERE buildid=".qnum($this->Id));
+    if(!$group)
+      {
+      add_last_sql_error("Build GetGroup");
+      return false;
+      }
+      
+    $buildgroup_array = pdo_fetch_array($group);
+    return $buildgroup_array["groupid"];
+    }
+
+  /** Get the number of errors for a build */
+  function GetNumberOfErrors()
+    {
+    if(!$this->BuildId)
+      {
+      echo "Build::GetNumberOfErrors(): BuildId not set";
+      return false;    
+      }
+   
+    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".qnum($this->BuildId)." AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
+    $nerrors = $builderror_array[0];
+    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid=".qnum($this->BuildId)." AND type='0'");
+    $builderror_array = pdo_fetch_array($builderror);
+    $nerrors += $builderror_array[0];
+    return $nerrors;  
+    } // end GetNumberOfErrors() 
+
+  /** Get the number of warnings for a build */
+  function GetNumberOfWarnings()
+    {
+    if(!$this->BuildId)
+      {
+      echo "Build::GetNumberOfWarnings(): BuildId not set";
+      return false;    
+      }
+   
+    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".qnum($this->BuildId)." AND type='1'");
+    $builderror_array = pdo_fetch_array($builderror);
+    $nerrors = $builderror_array[0];
+    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid=".qnum($this->BuildId)." AND type='1'");
+    $builderror_array = pdo_fetch_array($builderror);
+    $nerrors += $builderror_array[0];
+    return $nerrors;  
+    } // end GetNumberOfWarnings() 
+
+    
 
 } // end class Build
 ?>

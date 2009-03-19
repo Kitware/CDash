@@ -101,7 +101,7 @@ class Site
   /** Insert a new site */
   function Insert()
     {
-     if($this->Exists())
+    if($this->Exists())
       {
       return $this->Id;
       }
@@ -130,6 +130,27 @@ class Site
       return false;
       }
     } // end function save  
+
+  // Get the name of the size
+  function GetName()
+    {
+    if(!$this->Id)
+      {
+      echo "Site::GetName(): Id not set";
+      return false;    
+      }
+    
+    $query = pdo_query("SELECT name FROM site WHERE id=".qnum($this->Id));
+    if(!$query)
+      {
+      add_last_sql_error("Site GetName");
+      return false;
+      }  
+      
+    $site_array = pdo_fetch_array($query);
+    return $site_array['name'];
+    } // end GetName()
+
 }
 
 ?>

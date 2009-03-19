@@ -64,6 +64,36 @@ class BuildTest
       return false;
       }  
     return true;
-    }    
+    } 
+    
+  /** Get the number of tests that are failing */
+  function GetNumberOfFailures($checktesttiming,$testtimemaxstatus)
+    {
+    if(!$this->BuildId)
+      {
+      echo "BuildTest::GetNumberOfFailures(): BuildId not set";
+      return false;    
+      }
+    // Find if the build has any test failings
+    if($checktesttiming)
+      {
+      $sql = "SELECT count(testid) FROM build2test WHERE buildid=".qnum($this->BuildId)." AND (status='failed' OR timestatus>".qnum($testtimemaxstatus).")";
+      }
+    else
+      {
+      $sql = "SELECT count(testid) FROM build2test WHERE buildid=".qnum($this->BuildId)." AND status='failed'";
+      }  
+    
+    $query = pdo_query($sql);
+    if(!$query)
+      {
+      add_last_sql_error("BuildTest GetNumberOfFailures");
+      return false;
+      }  
+      
+    $nfail_array = pdo_fetch_array($query);
+    return $nfail_array[0];
+    } // end GetNumberOfFailures()   
+     
 }
 ?>

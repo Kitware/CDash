@@ -131,6 +131,45 @@ class UserProject
       }
     return $userids;
     }     
+   
+  /** Fill in the information given a projectid and a CVS login. 
+   *  This function expects the emailtype>0 */
+  function FillFromCVSLogin()
+    {
+    if(!$this->ProjectId)
+      {
+      echo "UserProject FillFromCVSLogin(): ProjectId not set";
+      return false;
+      }
+     
+    if(!$this->CvsLogin)
+      {
+      echo "UserProject FillFromCVSLogin(): ProjectId not set";
+      return false;
+      }
+     
+    $sql = "SELECT emailcategory,userid
+               FROM user2project WHERE user2project.projectid='$projectid' 
+               AND user2project.cvslogin='$author'
+               AND user2project.emailtype>0";
+               
+    $user = pdo_query($sql);
+    if(!$user)
+      {
+      add_last_sql_error("UserProject FillFromCVSLogin");
+      return false;
+      }
+
+    if(pdo_num_rows($user) == 0)
+      {
+      return false;
+      }   
+    $user_array = pdo_fetch_array($user);
+    $this->EmailCategory = $user_array['emailcategory'];
+    $this->UserId = $user_array['userid'];
+   
+    return true;
+    }
       
 } // end class UserProject
 ?>
