@@ -1,3 +1,13 @@
+CREATE TABLE IF NOT EXISTS `buildemail` (
+  `userid` int(11) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
+  `category` tinyint(4) NOT NULL,
+  `time` timestamp NOT NULL,
+  KEY `userid` (`userid`),
+  KEY `buildid` (`buildid`),
+  KEY `category` (`category`)
+);
+
 CREATE TABLE IF NOT EXISTS `buildfailure` (
   `id` bigint(20) NOT NULL auto_increment,
   `buildid` bigint(20) NOT NULL,

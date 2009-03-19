@@ -807,6 +807,17 @@ CREATE TABLE `labelemail` (
   KEY `userid` (`userid`)
 );
 
+
+CREATE TABLE `buildemail` (
+  `userid` int(11) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
+  `category` tinyint(4) NOT NULL,
+  `time` timestamp NOT NULL,
+  KEY `userid` (`userid`),
+  KEY `buildid` (`buildid`),
+  KEY `category` (`category`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 
