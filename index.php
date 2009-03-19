@@ -187,6 +187,21 @@ function add_default_buildgroup_sortlist($groupname)
 }
 
 
+function coalesce($row1, $row2)
+{
+  if(
+    ($row1['name'] == $row2['name'])
+    && ($row1['siteid'] == $row2['siteid'])
+    && ($row1['position'] == $row2['position'])
+    )
+    {
+    return true;
+    }
+
+  return false;
+}
+
+
 /** Generate the main dashboard XML */
 function generate_main_dashboard_XML($projectid,$date)
 {
@@ -522,6 +537,8 @@ function generate_main_dashboard_XML($projectid,$date)
   // Fetch all the rows of builds into a php array.
   // Compute additional fields for each row that we'll need to generate the xml.
   //
+  $iii = 1;
+  $build_rows = array();
   while($build_row = pdo_fetch_array($builds))
     {
     // Fields that come from the initial query:
@@ -538,20 +555,27 @@ function generate_main_dashboard_XML($projectid,$date)
     //  groupid
     //
     // Fields that we add by doing further queries based on buildid:
+    //  buildids (array of buildids for summary rows)
     //  sitename
     //  countbuildnotes (added by users)
     //  countnotes (sent with ctest -A)
     //  labels
     //  countupdatefiles
     //  updatestatus
+    //  updateduration
+    //  countupdateerrors
     //  countupdatewarnings
+    //  buildduration
     //  countbuilderrors
     //  countbuildwarnings
     //  countbuilderrordiff
     //  countbuildwarningdiff
     //  configurestatus
+    //  hasconfigurestatus
+    //  countconfigureerrors
     //  countconfigurewarnings
     //  countconfigurewarningdiff
+    //  configureduration
     //  test
     //  counttestsnotrun
     //  counttestsnotrundiff
@@ -561,15 +585,19 @@ function generate_main_dashboard_XML($projectid,$date)
     //  counttestspasseddiff
     //  countteststimestatusfailed
     //  countteststimestatusfaileddiff
-    //  teststime
+    //  testsduration
     //
 
-    $buildid = $build_row["id"];
-    $groupid = $build_row["groupid"];
-    $siteid = $build_row["siteid"];
+    $buildid = $build_row['id'];
+    $groupid = $build_row['groupid'];
+    $siteid = $build_row['siteid'];
+
+    $build_row['buildids'][] = $buildid;
 
     $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
     $build_row['sitename'] = $site_array['name'];
+    //$build_row['sitename'] = $site_array['name'] . ' (' . $iii . ')';
+    ++$iii;
 
     $buildnote = pdo_query("SELECT count(*) FROM buildnote WHERE buildid='$buildid'");
     $buildnote_array = pdo_fetch_row($buildnote);
@@ -591,9 +619,23 @@ function generate_main_dashboard_XML($projectid,$date)
     $updatestatus_array = pdo_fetch_array($updatestatus);
     $build_row['updatestatus'] = $updatestatus_array;
 
+    $build_row['updateduration'] = round((strtotime($updatestatus_array["endtime"])-strtotime($updatestatus_array["starttime"]))/60,1);
+
+    if(strlen($updatestatus_array["status"]) > 0 &&
+       $updatestatus_array["status"]!="0")
+      {
+      $build_row['countupdateerrors'] = 1;
+      }
+    else
+      {
+      $build_row['countupdateerrors'] = 0;
+      }
+
     $updatewarnings = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid' AND author='Local User' AND revision='-1'");
     $updatewarnings_array = pdo_fetch_row($updatewarnings);
     $build_row['countupdatewarnings'] = $updatewarnings_array[0];
+
+    $build_row['buildduration'] = round((strtotime($build_row["endtime"])-strtotime($build_row["starttime"]))/60,1);
 
     $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
     $builderror_array = pdo_fetch_array($builderror);
@@ -633,10 +675,18 @@ function generate_main_dashboard_XML($projectid,$date)
     $configure_array = pdo_fetch_array($configure);
     $build_row['configurestatus'] = $configure_array;
 
+    $build_row['hasconfigurestatus'] = 0;
+    $build_row['countconfigureerrors'] = 0;
     $build_row['countconfigurewarnings'] = 0;
     $build_row['countconfigurewarningdiff'] = 0;
+    $build_row['configureduration'] = 0;
+
     if(!empty($configure_array))
       {
+      $build_row['hasconfigurestatus'] = 1;
+
+      $build_row['countconfigureerrors'] = $configure_array['status'];
+
       $configurewarnings = pdo_query("SELECT count(*) FROM configureerror WHERE buildid='$buildid' AND type='1'");
       $configurewarnings_array = pdo_fetch_array($configurewarnings);
       $build_row['countconfigurewarnings'] = $configurewarnings_array[0];
@@ -647,12 +697,15 @@ function generate_main_dashboard_XML($projectid,$date)
         $configurewarning_array = pdo_fetch_array($configurewarning);
         $build_row['countconfigurewarningdiff'] = $configurewarning_array["difference"];
         }
+
+      $build_row['configureduration'] = round((strtotime($configure_array["endtime"])-strtotime($configure_array["starttime"]))/60, 1);
       }
 
     $test = pdo_query("SELECT * FROM build2test WHERE buildid='$buildid'");
     $test_array = pdo_fetch_array($test);
     $build_row['test'] = $test_array;
 
+    $build_row['hastest'] = 0;
     $build_row['counttestsnotrun'] = 0;
     $build_row['counttestsnotrundiff'] = 0;
     $build_row['counttestsfailed'] = 0;
@@ -663,6 +716,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $build_row['countteststimestatusfaileddiff'] = 0;
     if(!empty($test_array))
       {
+      $build_row['hastest'] = 1;
+
       $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $build_row['counttestsnotrun'] = $nnotrun_array[0];
 
@@ -712,7 +767,7 @@ function generate_main_dashboard_XML($projectid,$date)
       }
 
     $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-    $build_row['teststime'] = $time_array[0];
+    $build_row['testsduration'] = $time_array[0];
 
     //  Save the row in '$build_rows'
     //
@@ -720,12 +775,82 @@ function generate_main_dashboard_XML($projectid,$date)
     }
 
 
-  // Optionally coalesce rows with common build name, site and type.
+  // Optionally coalesce rows with common build name, site and group.
   // (But different subprojects/labels...)
   //
-//  if(1)
-//    {
-//    }
+  @$collapse = $_REQUEST['collapse'];
+  if($collapse)
+    {
+    $build_rows_condensed = array();
+
+    foreach($build_rows as $build_row)
+      {
+      $idx = count($build_rows_condensed) - 1;
+
+      if (($idx >= 0) &&
+        coalesce($build_rows_condensed[$idx], $build_row))
+        {
+        // Append to existing last row, $build_rows_condensed[$idx]:
+        //
+
+    //  id
+    //  name
+    //  siteid
+    //  type
+    //  generator
+    //  starttime
+    //  endtime
+    //  submittime
+    //  groupname
+    //  position
+    //  groupid
+    //  buildids (array of buildids for summary rows)
+        $build_rows_condensed[$idx]['buildids'][] = $build_row['id'];
+    //  sitename
+        $build_rows_condensed[$idx]['countbuildnotes'] += $build_row['countbuildnotes'];
+        $build_rows_condensed[$idx]['countnotes'] += $build_row['countnotes'];
+        $build_rows_condensed[$idx]['labels'] = array_merge($build_rows_condensed[$idx]['labels'], $build_row['labels']);
+
+        $build_rows_condensed[$idx]['countupdatefiles'] += $build_row['countupdatefiles'];
+    //  updatestatus
+        $build_rows_condensed[$idx]['updateduration'] += $build_row['updateduration'];
+        $build_rows_condensed[$idx]['countupdateerrors'] += $build_row['countupdateerrors'];
+        $build_rows_condensed[$idx]['countupdatewarnings'] += $build_row['countupdatewarnings'];
+
+        $build_rows_condensed[$idx]['buildduration'] += $build_row['buildduration'];
+        $build_rows_condensed[$idx]['countbuilderrors'] += $build_row['countbuilderrors'];
+        $build_rows_condensed[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'];
+        $build_rows_condensed[$idx]['countbuilderrordiff'] += $build_row['countbuilderrordiff'];
+        $build_rows_condensed[$idx]['countbuildwarningdiff'] += $build_row['countbuildwarningdiff'];
+
+        $build_rows_condensed[$idx]['hasconfigurestatus'] += $build_row['hasconfigurestatus'];
+        $build_rows_condensed[$idx]['countconfigureerrors'] += $build_row['countconfigureerrors'];
+        $build_rows_condensed[$idx]['countconfigurewarnings'] += $build_row['countconfigurewarnings'];
+        $build_rows_condensed[$idx]['countconfigurewarningdiff'] += $build_row['countconfigurewarningdiff'];
+        $build_rows_condensed[$idx]['configureduration'] += $build_row['configureduration'];
+
+        //  test
+        $build_rows_condensed[$idx]['hastest'] += $build_row['hastest'];
+        $build_rows_condensed[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'];
+        $build_rows_condensed[$idx]['counttestsnotrundiff'] += $build_row['counttestsnotrundiff'];
+        $build_rows_condensed[$idx]['counttestsfailed'] += $build_row['counttestsfailed'];
+        $build_rows_condensed[$idx]['counttestsfaileddiff'] += $build_row['counttestsfaileddiff'];
+        $build_rows_condensed[$idx]['counttestspassed'] += $build_row['counttestspassed'];
+        $build_rows_condensed[$idx]['counttestspasseddiff'] += $build_row['counttestspasseddiff'];
+        $build_rows_condensed[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'];
+        $build_rows_condensed[$idx]['countteststimestatusfaileddiff'] += $build_row['countteststimestatusfaileddiff'];
+        $build_rows_condensed[$idx]['testsduration'] += $build_row['testsduration'];
+        }
+      else
+        {
+        // Add new row:
+        //
+        $build_rows_condensed[] = $build_row;
+        }
+      }
+
+    $build_rows = $build_rows_condensed;
+    }
 
 
   // Generate the xml from the (possibly coalesced) rows of builds:
@@ -815,7 +940,18 @@ function generate_main_dashboard_XML($projectid,$date)
     $rowparity++;
 
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
-    $xml .= add_XML_value("site", $build_array["sitename"]);
+
+    $c = count($build_array['buildids']);
+    if ($c > 1)
+      {
+      $suffix = ' (' . $c . ' builds)';
+      }
+    else
+      {
+      $suffix = '';
+      }
+
+    $xml .= add_XML_value("site", $build_array["sitename"] . $suffix);
     $xml .= add_XML_value("siteid", $siteid);
     $xml .= add_XML_value("buildname", $build_array["name"]);
     $xml .= add_XML_value("buildid", $build_array["id"]);
@@ -850,10 +986,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
     $xml .= add_XML_value("files", $build_array['countupdatefiles']);
 
-    $updatestatus_array = $build_array['updatestatus'];
-
-    if(strlen($updatestatus_array["status"]) > 0 &&
-       $updatestatus_array["status"]!="0")
+    if($build_array['countupdateerrors']>0)
       {
       $xml .= add_XML_value("errors", 1);
       }
@@ -867,8 +1000,7 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       }
 
-    $diff = (strtotime($updatestatus_array["endtime"])-strtotime($updatestatus_array["starttime"]))/60;
-    $xml .= "<time>".round($diff,1)."</time>";
+    $xml .= add_XML_value("time", $build_array['updateduration']);
 
     $xml .= "</update>";
 
@@ -877,14 +1009,13 @@ function generate_main_dashboard_XML($projectid,$date)
 
     $nerrors = $build_array['countbuilderrors'];
     $totalerrors += $nerrors;
-    $xml .= add_XML_value("error",$nerrors);
+    $xml .= add_XML_value("error", $nerrors);
 
     $nwarnings = $build_array['countbuildwarnings'];
     $totalwarnings += $nwarnings;
-    $xml .= add_XML_value("warning",$nwarnings);
+    $xml .= add_XML_value("warning", $nwarnings);
 
-    $diff = (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;
-    $xml .= "<time>".round($diff,1)."</time>";
+    $xml .= add_XML_value("time", $build_array['buildduration']);
 
     $diff = $build_array['countbuilderrordiff'];
     if($diff>0)
@@ -903,11 +1034,10 @@ function generate_main_dashboard_XML($projectid,$date)
 
     $xml .= "<configure>";
 
-    $configure_array = $build_array['configurestatus'];
-    if(!empty($configure_array))
+    if($build_array['hasconfigurestatus'] != 0)
       {
-      $xml .= add_XML_value("error", $configure_array["status"]);
-      $totalConfigureError += $configure_array["status"];
+      $xml .= add_XML_value("error", $build_array['countconfigureerrors']);
+      $totalConfigureError += $build_array['countconfigureerrors'];
 
       $nconfigurewarnings = $build_array['countconfigurewarnings'];
       $xml .= add_XML_value("warning", $nconfigurewarnings);
@@ -918,15 +1048,14 @@ function generate_main_dashboard_XML($projectid,$date)
         {
         $xml .= add_XML_value("warningdiff", $diff);
         }
-      
-      $diff = (strtotime($configure_array["endtime"])-strtotime($configure_array["starttime"]))/60;
-      $xml .= "<time>".round($diff,1)."</time>";
+
+      $xml .= add_XML_value("time", $build_array['configureduration']);
       }
-    $xml .= "</configure>";
+
+      $xml .= "</configure>";
 
 
-    $test_array = $build_array['test'];
-    if(!empty($test_array))
+    if($build_array['hastest'] != 0)
       {
       $xml .= "<test>";
 
@@ -961,7 +1090,7 @@ function generate_main_dashboard_XML($projectid,$date)
           }
         }
 
-      $time = $build_array['teststime'];
+      $time = $build_array['testsduration'];
 
       $totalnotrun += $nnotrun;
       $totalfail += $nfail;
@@ -973,6 +1102,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("time",round($time/60,1));
       $xml .= "</test>";
       }
+
 
     $starttimestamp = strtotime($build_array["starttime"]." UTC");
     $submittimestamp = strtotime($build_array["submittime"]." UTC");
