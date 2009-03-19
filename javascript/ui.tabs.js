@@ -9,7 +9,12 @@ function showHelp(id_div)
   {
   $(".tab_help").html($("#"+id_div).html()).show();
   }
-
+  
+function showHelpTop(id_div)
+  {
+  $(".tab_help_top").html($("#"+id_div).html()).show();
+  }
+  
 function extractUrlParams(){  
   var t = location.search.substring(1).split('&');
   var f = [];
