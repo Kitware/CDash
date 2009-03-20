@@ -136,7 +136,12 @@
     <td align="center"><xsl:value-of select="nbuilds"/></td>
   <td align="center"><xsl:value-of select="firstbuild"/></td>
     <!-- <th align="center">Tests</th> <td align="right"><xsl:value-of select="ntests"/></td>-->
-    <td align="center" class="nob"><xsl:value-of select="lastbuild"/></td>
+    <td align="center" class="nob">
+    <a>
+    <xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
+    <xsl:value-of select="lastbuild"/>
+    </a>
+    </td>
     </tr>
    </xsl:for-each>
 
