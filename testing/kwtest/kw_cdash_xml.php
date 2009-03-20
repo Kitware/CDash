@@ -244,8 +244,14 @@ class CDashXmlReporter extends XmlReporter
     $this->__paintConfigureResult($result,'create');
     return;
     }
+    
+  function paintConfigureDeleteLogResult($result)
+    {
+    $this->__paintConfigureResult($result,'delete log file');
+    return;
+    }
   
-  function __paintConfigureResult($result,$action)
+/*  function __paintConfigureResult($result,$action)
     {
     fwrite($this->_configurefile, $this->_getIndent(2));
     if(!$result)
@@ -261,6 +267,35 @@ class CDashXmlReporter extends XmlReporter
       }
     $this->_configurestatus = 0;
     fwrite($this->_configurefile, "Process to $action database has succeeded\n");
+    return;
+    }*/
+  function __paintConfigureResult($result,$action)
+    {
+    fwrite($this->_configurefile, $this->_getIndent(2));
+    if(strcmp($action,'create') != 0 &&
+       strcmp($action,'drop')   != 0 &&
+       strcmp($result, $action) != 0)
+      {
+      $msg = "Process to $action";
+      }
+    else
+      {
+      $msg = "Process to $action database";  
+      }
+    if(!$result)
+      {
+      $this->_configurestatus = -1;
+      fwrite($this->_configurefile, "$msg has failed\n");
+      return;
+      }
+    // If a previous configure has been failed, we keep it to register after
+    if($this->_configurestatus == -1)
+      {
+      fwrite($this->_configurefile, "$msg has succeeded\n");
+      return;
+      }
+    $this->_configurestatus = 0;
+    fwrite($this->_configurefile, "$msg has succeeded\n");
     return;
     }
   
@@ -414,7 +449,24 @@ class CDashXmlReporter extends XmlReporter
       fwrite($this->_updatefile,"<".$this->_namespace."/Author>\n");
    }
 
-  
+  function paintServerFail($message)
+    {
+    if(strpos($message, "error:"))
+        {
+        $append = "Error detected in the log file on the server.";
+        $message = $append." ".$message;
+        $this->_paintErrorInfo($message);
+        return true;
+        }
+      if(strpos($message, "warning:"))
+        {
+        $append = "Warning detected in the log file on the server.";
+        $message = $append." ".$message;
+        $this->_paintWarningInfo($message);
+        return true;
+        }
+      return false;
+    }
   
   
   /**
@@ -609,15 +661,17 @@ class CDashXmlReporter extends XmlReporter
       fwrite($this->_buildfile, $this->_getIndent(1));
       fwrite($this->_buildfile, "<" . $this->_namespace . "Error>\n");
       fwrite($this->_buildfile, $this->_getIndent(2));
+      $context = " ";
       $errorpos = strrpos($message,"in [");
-      $errorline = substr($message,$errorpos+strlen("in ["),-1);
+      if($errorpos === false) {$errorline = "";}
+      else  {$errorline = substr($message,$errorpos+strlen("in ["),-1);}
       fwrite($this->_buildfile, "<" . $this->_namespace . "BuildLogLine>$errorline</BuildLogLine>\n");
       fwrite($this->_buildfile, $this->_getIndent(2));
       fwrite($this->_buildfile, "<" . $this->_namespace . "Text>".$this->toParsedXml($message)."</Text>\n");
       fwrite($this->_buildfile, $this->_getIndent(2));
-      fwrite($this->_buildfile, "<" . $this->_namespace . "PreContext></PreContext>\n");
+      fwrite($this->_buildfile, "<" . $this->_namespace . "PreContext>$context</PreContext>\n");
       fwrite($this->_buildfile, $this->_getIndent(2));
-      fwrite($this->_buildfile, "<" . $this->_namespace . "PostContext></PostContext>\n");
+      fwrite($this->_buildfile, "<" . $this->_namespace . "PostContext>$context</PostContext>\n");
       fwrite($this->_buildfile, $this->_getIndent(2));
       fwrite($this->_buildfile, "<" . $this->_namespace . "RepeatCount>0</RepeatCount>\n");
       fwrite($this->_buildfile, $this->_getIndent(1));
@@ -639,7 +693,8 @@ class CDashXmlReporter extends XmlReporter
         fwrite($this->_buildfile, "<" . $this->_namespace . "Warning>\n");
         fwrite($this->_buildfile, $this->_getIndent(2));
         $errorpos = strrpos($message,"at [");
-        $errorline = substr($message,$errorpos+strlen("at ["),-1);
+        if($errorpos === false){$errorline = "";}
+        else {$errorline = substr($message,$errorpos+strlen("at ["),-1);}
         fwrite($this->_buildfile, "<" . $this->_namespace . "BuildLogLine>$errorline</BuildLogLine>\n");
         fwrite($this->_buildfile, $this->_getIndent(2));
         fwrite($this->_buildfile, "<" . $this->_namespace . "Text>".$this->toParsedXml($message)."</Text>\n");

@@ -12,6 +12,7 @@ if(strcmp($CDASH_DB_NAME,'cdash4simpletest') != 0)
 if(!$web_report)
   {
   /*--- for testing inside the console and send to cdash ---*/
+  $logfilename = $cdashpath."/backup/cdash.log";
   $cdashreporter = new CDashXmlReporter($configure);
   $manager       = new CDashTestManager();
   $manager->setCDashServer($configure['cdash']);
@@ -20,9 +21,10 @@ if(!$web_report)
     return;
     }
   $manager->setDatabase($db);
-  $manager->configure($cdashreporter);
+  $manager->configure($cdashreporter,$logfilename);
   $manager->setTestDirectory(dirname(__FILE__));
   $manager->runAllTests($cdashreporter);
+  $manager->getErrorFromServer($logfilename,$cdashreporter);
   $manager->sendToCdash($cdashreporter,$configure['outputdirectory']);
   }
 else

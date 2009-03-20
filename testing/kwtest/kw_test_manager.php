@@ -274,7 +274,7 @@ class CDashTestManager extends TestManager
     * @param object $reporter
     * @param array $db
     */
-  function configure($reporter)
+  function configure($reporter, $logfilename)
    {
       if(!$this->database)
        {
@@ -298,6 +298,8 @@ class CDashTestManager extends TestManager
                                  $this->database['name'],
                                  $this->database['type']);
     $reporter->paintConfigureConnection($result);
+    $stdoutput = `rm -f $logfilename`;
+    $reporter->paintConfigureDeleteLogResult(empty($stdoutput));
     $result = $this->_installdb4test($this->database['host'],
                                       $this->database['login'],
                                       $this->database['pwd'],
@@ -316,7 +318,42 @@ class CDashTestManager extends TestManager
     $reporter->paintConfigureEnd($execution_time);
    }
   
- 
+  
+  /**
+   * Check the log file of the application testing
+   * @return false if there is no log file or no error into the log file
+   *         true if it caught some errors from the log file
+   * @param object $application
+   * @param object $reporter
+   */
+  function getErrorFromServer($filename, $reporter)
+    {
+    if(!file_exists($filename))
+      {
+      return false;
+      }
+    $content  = file_get_contents($filename);
+    if(empty($content))
+      {
+      return false;
+      }
+    // For midas cake: the log time looks like this: if it is not
+    // a cake midas application that you're testing, comment the following line
+    // and implement your own regex
+    //$regex = "([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})";
+    
+    // the regex to catch the date for cdash: model: [2009-02-25T18:24:56]
+    $regex = "([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{2}):([0-9]{2}):([0-9]{2})\]";
+    $fp = fopen($filename,'r');
+    $content = fread($fp,filesize($filename));
+    fclose($fp);
+    $output = split($regex,$content);
+    foreach($output as $message)
+      {
+      $reporter->paintServerFail($message);
+      }
+    return true;
+    }
     
   /**
      *    Send via a curl to the CDash server the xml reports     
