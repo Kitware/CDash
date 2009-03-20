@@ -117,10 +117,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$error
                            AND user2project.emailtype>0
                            ";
   $user = pdo_query($query);
-  if(strlen(pdo_error())>0)
-    {
-    add_log($query."\n".pdo_error(),"sendemail ".$projectname);
-    }
+  add_last_sql_error("sendmail");
       
   // Loop through the users and add them to the email array  
   while($user_array = pdo_fetch_array($user))
@@ -200,12 +197,12 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$error
     if(mail("$summaryEmail", $title, $messagePlainText,
          "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
       {
-      add_log("email sent to: ".$email,"sendemail ".$projectname);
+      add_log("email sent to: ".$email,"sendemail ".$projectname,LOG_INFO);
       return;
       }
     else
       {
-      add_log("cannot send email to: ".$email,"sendemail ".$projectname);
+      add_log("cannot send email to: ".$email,"sendemail ".$projectname,LOG_ERR);
       }
     } // end $summaryEmail!=""
 }
@@ -652,14 +649,14 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   if(mail("$email", $title, $messagePlainText,
      "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
     {
-    add_log("email sent to: ".$email,"sendemail ".$Project->Name);
+    add_log("email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
     
     // Record that we have send the email
     set_email_sent($userid,$Build->Id,$emailtext);
     }
   else
     {
-    add_log("cannot send email to: ".$email,"sendemail ".$Project->Name);
+    add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
     }  
 } // end send_email_to_user
 
@@ -694,7 +691,7 @@ function sendemail($handler,$projectid)
     return;
     }
   
-  add_log("Buildid ".$buildid,"sendemail ".$Project->Name);
+  add_log("Buildid ".$buildid,"sendemail ".$Project->Name,LOG_INFO);
       
   //  Check if the group as no email
   $Build = new Build();
