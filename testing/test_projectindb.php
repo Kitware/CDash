@@ -59,7 +59,7 @@ class PubProjectTestCase extends KWWebTestCase
   
   function testProjectInBuildGroupPosition()
     {
-    $query  = "SELECT COUNT(*) FROM buildgroupposition WHERE buildgroupid IN (SELECT id FROM buildgroup WHERE projectid =";
+    $query  = "SELECT COUNT(*) FROM buildgroupposition WHERE buildgroupid IN (SELECT id FROM buildgroup WHERE projectid=";
     $query .= $this->projecttestid.")";
     $result = $this->db->query($query);
     if(!strcmp($this->db->getType(),'pgsql'))
@@ -74,7 +74,7 @@ class PubProjectTestCase extends KWWebTestCase
   
   function testUser2Project()
     {
-    $query  = "SELECT userid, role, emailtype, emailcategory FROM user2project WHERE projectid =".$this->projecttestid;
+    $query  = "SELECT userid, role, emailtype, emailcategory FROM user2project WHERE projectid=".$this->projecttestid;
     $result = $this->db->query($query);
     $expected = array('userid'        => 1,
                       'role'          => 2,
