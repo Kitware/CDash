@@ -692,6 +692,7 @@ class CDashXmlReporter extends XmlReporter
         fwrite($this->_buildfile, $this->_getIndent(1));
         fwrite($this->_buildfile, "<" . $this->_namespace . "Warning>\n");
         fwrite($this->_buildfile, $this->_getIndent(2));
+        $context = " ";
         $errorpos = strrpos($message,"at [");
         if($errorpos === false){$errorline = "";}
         else {$errorline = substr($message,$errorpos+strlen("at ["),-1);}
@@ -699,9 +700,9 @@ class CDashXmlReporter extends XmlReporter
         fwrite($this->_buildfile, $this->_getIndent(2));
         fwrite($this->_buildfile, "<" . $this->_namespace . "Text>".$this->toParsedXml($message)."</Text>\n");
         fwrite($this->_buildfile, $this->_getIndent(2));
-        fwrite($this->_buildfile, "<" . $this->_namespace . "PreContext></PreContext>\n");
+        fwrite($this->_buildfile, "<" . $this->_namespace . "PreContext>$context</PreContext>\n");
         fwrite($this->_buildfile, $this->_getIndent(2));
-        fwrite($this->_buildfile, "<" . $this->_namespace . "PostContext></PostContext>\n");
+        fwrite($this->_buildfile, "<" . $this->_namespace . "PostContext>$context</PostContext>\n");
         fwrite($this->_buildfile, $this->_getIndent(2));
         fwrite($this->_buildfile, "<" . $this->_namespace . "RepeatCount>0</RepeatCount>\n");
         fwrite($this->_buildfile, $this->_getIndent(1));
