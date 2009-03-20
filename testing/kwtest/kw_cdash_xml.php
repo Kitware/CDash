@@ -451,14 +451,14 @@ class CDashXmlReporter extends XmlReporter
 
   function paintServerFail($message)
     {
-    if(strpos($message, "error:"))
+    if(strpos($message, "[ERROR]"))
         {
         $append = "Error detected in the log file on the server.";
         $message = $append." ".$message;
         $this->_paintErrorInfo($message);
         return true;
         }
-      if(strpos($message, "warning:"))
+      if(strpos($message, "[WARNING]"))
         {
         $append = "Warning detected in the log file on the server.";
         $message = $append." ".$message;
