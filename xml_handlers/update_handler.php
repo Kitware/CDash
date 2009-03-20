@@ -84,7 +84,15 @@ class UpdateHandler extends AbstractHandler
         add_build($this->Build);
         $buildid = $this->Build->Id;
         }
-      
+      else
+        {
+        $this->Build->Id = $buildid;
+        $this->Build->ProjectId = $this->projectid;
+        $this->Build->StartTime = $start_time;
+        $this->Build->EndTime = $end_time;
+        $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+        }
+        
       $this->Update->BuildId = $buildid;
       $this->Update->StartTime = $start_time;
       $this->Update->EndTime = $end_time;
@@ -93,7 +101,6 @@ class UpdateHandler extends AbstractHandler
       $this->Update->Insert();
       
       //Compute the update statistics
-      $this->Build->Id = $buildid;
       $this->Build->ComputeUpdateStatistics();
       }
     else if($name=='UPDATED' || $name=='CONFLICTING' || $name=='MODIFIED') 
