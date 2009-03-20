@@ -157,7 +157,7 @@ class Build
 
     if(empty($this->ProjectId))
       {
-      add_log('error: need ProjectId to fetch SubProjectId for ' . $subproject, 'Build::SetSubProject');
+      add_log('ProjectId not set' . $subproject, 'Build::SetSubProject',LOG_ERR);
       return false;
       }
 
@@ -179,7 +179,7 @@ class Build
       return $this->SubProjectId; 
       }
 
-    add_log('error: could not retrieve SubProjectId for subproject: ' . $subproject, 'Build::SetSubProject');
+    add_log('Could not retrieve SubProjectId for subproject: '.$subproject,'Build::SetSubProject',LOG_ERR);
     return false;
     }
 
@@ -357,7 +357,7 @@ class Build
       }
     }
 
-
+  /** Get the build id from it's name */
   function GetIdFromName($subproject)
     {
     $buildid = 0;
@@ -373,7 +373,6 @@ class Build
         {
         $rows = pdo_fetch_array($query);
         $subprojectid = $rows['id'];
-        //add_log('subprojectid='.$subprojectid, 'Build::GetIdFromName');
         }
       }
     else
@@ -404,12 +403,10 @@ class Build
       {
       $build_array = pdo_fetch_array($build);
       $buildid = $build_array["id"];
-      //add_log('returning '.$buildid, 'Build::GetIdFromName');
       return $buildid;
       }
 
-    echo pdo_error();
-    //add_log('returning 0 after pdo_error...', 'Build::GetIdFromName');
+    add_last_sql_error("GetIdFromName");
     return 0;  
     }
 
@@ -432,7 +429,7 @@ class Build
     else
       {
       add_log('No Build::Id - cannot call $label->Insert...',
-        'Build::InsertLabelAssociations');
+              'Build::InsertLabelAssociations',LOG_ERR);
       }
     }
 
@@ -542,7 +539,6 @@ class Build
       {
       if ($this->Append)
         {
-        //add_log("info: Append UPDATE into build id: " . $this->Id, 'Build::Save');
         $this->EndTime = pdo_real_escape_string($this->EndTime);
         $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
         $this->Command = pdo_real_escape_string(' '.$this->Command);
@@ -592,13 +588,13 @@ class Build
     {
     if(!$this->Id)
        {
-      add_log("BuildId is not set","Build::ComputeTestTiming");
+      add_log("BuildId is not set","Build::ComputeTestTiming",LOG_ERR);
       return false;
       }
 
     if(!$this->ProjectId)
       {
-      add_log("ProjectId is not set","Build::ComputeTestTiming");
+      add_log("ProjectId is not set","Build::ComputeTestTiming",LOG_ERR);
       return false;
       }
 
@@ -762,13 +758,13 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeUpdateStatistics");
+      add_log("BuildId is not set","Build::ComputeUpdateStatistics",LOG_ERR);
       return false;
       }
     
     if(!$this->ProjectId)
       {
-      add_log("ProjectId is not set","Build::ComputeUpdateStatistics");
+      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",LOG_ERR);
       return false;
       }
   
@@ -827,8 +823,6 @@ class Build
                                                 WHERE buildid=".qnum($this->Id)." GROUP BY author) AS test"));
     add_last_sql_error("compute_update_statistics"); 
     $nauthors = $nauthors_array[0];
-    
-    //add_log("Nauthors = ".$nauthors,"compute_update_statistics");
    
     $newbuild = 1;
     $previousauthor = "";
