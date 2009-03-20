@@ -506,7 +506,7 @@ function set_email_sent($userid,$buildid,$emailtext)
       {
       case 'configure_errors': $category=1; break;
       case 'build_warnings': $category=2; break;
-      case 'build_errors': $ategory=3; break;
+      case 'build_errors': $category=3; break;
       case 'test_errors': $category=4; break;
       }
         
