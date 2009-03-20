@@ -181,7 +181,7 @@ CREATE TABLE "buildemail" (
   "category" smallint NOT NULL,
   "time" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
 );
-CREATE INDEX "userid" on "buildemail" ("userid");
-CREATE INDEX "buildid" on "buildemail" ("buildid");
-CREATE INDEX "category" on "buildemail" ("category");
-CREATE INDEX "time" on "buildemail" ("time");
+CREATE INDEX "buildemail_userid" on "buildemail" ("userid");
+CREATE INDEX "buildemail_buildid" on "buildemail" ("buildid");
+CREATE INDEX "buildemail_category" on "buildemail" ("category");
+CREATE INDEX "buildemail_time" on "buildemail" ("time");
