@@ -93,6 +93,7 @@ class UpdateHandler extends AbstractHandler
       $this->Update->Insert();
       
       //Compute the update statistics
+      $this->Build->Id = $buildid;
       $this->Build->ComputeUpdateStatistics();
       }
     else if($name=='UPDATED' || $name=='CONFLICTING' || $name=='MODIFIED') 
