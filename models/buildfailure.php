@@ -94,7 +94,7 @@ class BuildFailure
     else
       {
       add_log('No BuildFailure id - cannot call $label->Insert...',
-        'BuildFailure::InsertLabelAssociations');
+              'BuildFailure::InsertLabelAssociations',LOG_ERR);
       }
     }
 

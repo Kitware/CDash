@@ -123,7 +123,7 @@ class Test
     else
       {
       add_log('No Test::Id or buildid - cannot call $label->Insert...',
-        'Test::InsertLabelAssociations');
+              'Test::InsertLabelAssociations',LOG_ERR);
       }
     }
 

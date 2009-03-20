@@ -73,7 +73,7 @@ class Coverage
     else
       {
       add_log('No Coverage::CoverageFile? - cannot call $label->Insert...',
-        'Coverage::InsertLabelAssociations');
+              'Coverage::InsertLabelAssociations',LOG_ERR);
       }
     }
 

@@ -137,7 +137,7 @@ class BuildConfigure
     else
       {
       add_log('No BuildConfigure::BuildId - cannot call $label->Insert...',
-        'BuildConfigure::InsertLabelAssociations');
+              'BuildConfigure::InsertLabelAssociations',LOG_ERR);
       }
     }
 

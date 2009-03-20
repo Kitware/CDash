@@ -107,7 +107,7 @@ class DynamicAnalysis
     else
       {
       add_log('No DynamicAnalysis::Id - cannot call $label->Insert...',
-        'DynamicAnalysis::InsertLabelAssociations');
+              'DynamicAnalysis::InsertLabelAssociations',LOG_ERR);
       }
     }
 
