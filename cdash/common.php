@@ -528,6 +528,7 @@ function get_server_URI()
     
   $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
   $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+  return $currentURI;
 }
 
 
