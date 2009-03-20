@@ -369,7 +369,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
 } // end lookup_emails_to_send
 
 /** Return a summary for a category of error */
-function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testtimemaxstatus)
+function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testtimemaxstatus,$emailtesttimingchanged)
 {
   $serverURI = get_server_URI();
   
@@ -478,7 +478,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     {   
     $information .= "\n\n*Tests failing*\n";
     $sql = "";
-    if($project_emailtesttimingchanged)
+    if($emailtesttimingchanged)
       {
       $sql = "OR timestatus>".qnum($testtimemaxstatus);
       }
@@ -672,6 +672,7 @@ function sendemail($handler,$projectid)
   require_once("cdash/pdo.php");
   require_once("models/build.php");
   require_once("models/project.php");
+  require_once("models/buildgroup.php");
   
   $Project = new Project();
   $Project->Id = $projectid;
@@ -745,7 +746,9 @@ function sendemail($handler,$projectid)
 
       if(!check_email_sent($userid,$buildid,$errorkey))
         {
-        $emailtext['summary'][$errorkey] = get_email_summary($buildid,$errors,$errorkey,$Project->EmailMaxItems,$Project->EmailMaxChars,$Project->TestTimeMaxStatus);
+        $emailtext['summary'][$errorkey] = get_email_summary($buildid,$errors,$errorkey,$Project->EmailMaxItems,
+                                                             $Project->EmailMaxChars,$Project->TestTimeMaxStatus,
+                                                             $Project->EmailTestTimingChanged);
         $emailtext['category'][$errorkey] = $nerrors;
         $emailtext['nerror'] = 1;
         }
