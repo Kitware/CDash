@@ -171,14 +171,23 @@ function add_XML_value($tag,$value)
 }
 
 /** Add information to the log file */
-function add_log($text,$function)
+function add_log($text,$function,$type=LOG_INFO)
 {
   if(strlen($text)==0)
     {
     return;
     }
   include("config.php");
-  $error = "[".date(FMT_DATETIME)."] (".$function."): ".$text."\n";  
+  
+  $error = "[".date(FMT_DATETIME)."]";
+  // This is parsed by the testing
+  switch($type)
+    {
+    case LOG_INFO: $error.="[INFO]"; break;
+    case LOG_WARNING: $error.="[WARNING]"; break;
+    case LOG_ERR: $error.="[ERROR]"; break;
+    }
+  $error .= "(".$function."): ".$text."\n";  
   error_log($error,3,$CDASH_LOG_FILE);
 }
 
@@ -188,10 +197,10 @@ function add_last_sql_error($functionname)
   $pdo_error = pdo_error();
  if(strlen($pdo_error)>0)
    {
-   add_log("SQL error: ".$pdo_error."\n",$functionname);
-    $text = "SQL error in $functionname():".$pdo_error."<br>";
-    echo $text;
-  }
+   add_log("SQL error: ".$pdo_error,$functionname,LOG_ERR);
+   $text = "SQL error in $functionname():".$pdo_error."<br>";
+   echo $text;
+   }
 }
 
 /** Set the CDash version number in the database */
