@@ -767,7 +767,6 @@ class Build
       add_log("ProjectId is not set","Build::ComputeUpdateStatistics",LOG_ERR);
       return false;
       }
-  
     $previousbuildid = $this->GetPreviousBuildId();
     
     // Find the errors, warnings and test failures
@@ -828,7 +827,8 @@ class Build
     $previousauthor = "";
     // Loop through the updated files
     $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile WHERE buildid=".qnum($this->Id)." 
-                              AND checkindate>'1980-01-0100:00:00' ORDER BY author ASC, checkindate ASC");
+                              AND checkindate>'1980-01-01T00:00:00' ORDER BY author ASC, checkindate ASC");
+    add_last_sql_error("compute_update_statistics"); 
     $nupdatedfiles = pdo_num_rows($updatefiles);
     
     while($updatefiles_array = pdo_fetch_array($updatefiles))
