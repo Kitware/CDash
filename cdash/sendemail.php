@@ -20,6 +20,10 @@
 function checkEmailPreferences($emailcategory,$errors)
 {
   include_once("cdash/common.php");
+  if($errors['update_errors']>0 && check_email_category("update",$emailcategory))
+    {
+    return true;
+    }
   if($errors['configure_errors']>0 && check_email_category("configure",$emailcategory))
     {
     return true;
@@ -211,11 +215,17 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$error
 function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus,$checkpreviousbuild)
 {
   // Includes
+  require_once("models/buildupdate.php");  
   require_once("models/buildconfigure.php");
   require_once("models/build.php");
   require_once("models/buildtest.php");
   
   $errors = array();  
+
+  // Update errors
+  $BuildUpdate = new BuildUpdate ();
+  $BuildUpdate ->BuildId = $buildid;
+  $errors['update_errors'] = $BuildUpdate ->GetNumberOfErrors();
 
   // Configure errors    
   $BuildConfigure = new BuildConfigure();
@@ -234,7 +244,8 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   $errors['test_errors'] = $BuildTest->GetNumberOfFailures($checktesttimeingchanged,$testtimemaxstatus);
     
   // Green build we return
-  if(   $errors['configure_errors'] == 0 
+  if(   $errors['update_errors'] == 0 
+     && $errors['configure_errors'] == 0
      && $errors['build_errors'] == 0
      && $errors['build_warnings'] ==0 
      && $errors['test_errors'] ==0) 
@@ -371,9 +382,21 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
   $serverURI = get_server_URI();
   
   $information = "";
-     
-  // Configure information
-  if($errorkey == 'configure_errors')
+  
+  // Update information
+  if($errorkey == 'update_errors')
+    {
+    $information = "\n\n*Update*\n";
+ 
+    $update = pdo_query("SELECT command,status FROM buildupdate WHERE buildid=".qnum($buildid));
+    $update_array = pdo_fetch_array($update);
+  
+    $information .= "Status: ".$update_array["status"]." (".$currentURI."/viewUpdate.phpbuildid=".$buildid.")\n";
+    $information .= "Command: ";
+    $information .= substr($update_array["command"],0,$maxchars);
+    $information .= "\n";
+    } // endconfigure   
+  else if($errorkey == 'configure_errors') // Configure information
     {
     $information = "\n\n*Configure*\n";
  
@@ -501,10 +524,11 @@ function set_email_sent($userid,$buildid,$emailtext)
     $category = 0;
     switch($key)
       {
-      case 'configure_errors': $category=1; break;
-      case 'build_warnings': $category=2; break;
-      case 'build_errors': $category=3; break;
-      case 'test_errors': $category=4; break;
+      case 'update_errors': $category=1; break;
+      case 'configure_errors': $category=2; break;
+      case 'build_warnings': $category=3; break;
+      case 'build_errors': $category=4; break;
+      case 'test_errors': $category=5; break;
       }
         
    if($category>0)
@@ -522,10 +546,11 @@ function check_email_sent($userid,$buildid,$errorkey)
   $category = 0;
   switch($errorkey)
     {
-    case 'configure_errors': $category=1; break;
-    case 'build_warnings': $category=2; break;
-    case 'build_errors': $category=3; break;
-    case 'test_errors': $category=4; break;
+    case 'update_errors': $category=1; break;
+    case 'configure_errors': $category=2; break;
+    case 'build_warnings': $category=3; break;
+    case 'build_errors': $category=4; break;
+    case 'test_errors': $category=5; break;
     }
   
   if($category == 0)
@@ -568,6 +593,7 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
     
     switch($key)
       {
+      case 'update_errors': $messagePlainText .= "update errors";$titleerrors.="u=".$value; break;
       case 'configure_errors': $messagePlainText .= "configure errors";$titleerrors.="c=".$value; break;
       case 'build_warnings': $messagePlainText .= "build warnings";$titleerrors.="w=".$value; break;
       case 'build_errors': $messagePlainText .= "build errors";$titleerrors.="b=".$value; break;
@@ -617,6 +643,7 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
     {
     switch($key)
       {
+      case 'update_errors': $messagePlainText .= "Update errors:".$value; break;
       case 'configure_errors': $messagePlainText .= "Configure errors:".$value; break;
       case 'build_warnings': $messagePlainText .= "Warnings:".$value; break;
       case 'build_errors': $messagePlainText .= "Errors:".$value; break;
