@@ -2416,7 +2416,6 @@ function check_email_category($name,$emailcategory)
       
   if($emailcategory >= 2)
     {
-
     if($name == "update")
       {
       return true;
