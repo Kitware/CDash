@@ -216,7 +216,7 @@ while($row = pdo_fetch_array($result))
     else
       {    
       $xml .= add_XML_value("timestatus", "Failed");
-      $xml .= add_XML_value("timestatusclass", "warning");
+      $xml .= add_XML_value("timestatusclass", "error");
       }
     } // end projectshowtesttime
     
@@ -229,12 +229,12 @@ while($row = pdo_fetch_array($result))
       break; 
     case "failed":
       $xml .= add_XML_value("status", "Failed");
-      $xml .= add_XML_value("statusclass", "warning");   
+      $xml .= add_XML_value("statusclass", "error");   
       $numFailed++;   
       break;
     case "notrun":
       $xml .= add_XML_value("status", "Not Run");
-      $xml .= add_XML_value("statusclass", "error");
+      $xml .= add_XML_value("statusclass", "warning");
       $numNotRun++;
       break;
     }

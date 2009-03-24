@@ -173,7 +173,7 @@
    <td align="center">
     <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="/cdash/project/ntestnotrun>0">error</xsl:when>
+          <xsl:when test="/cdash/project/ntestnotrun>0">warning</xsl:when>
           <xsl:otherwise><xsl:choose>
           <xsl:when test="/cdash/project/ntestfail=0 and /cdash/project/ntestpass=0 and /cdash/project/ntestnotrun=0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>

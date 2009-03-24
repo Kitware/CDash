@@ -297,7 +297,7 @@
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="test/notrun > 0">
-            error
+            warning
             </xsl:when>
             <xsl:when test="string-length(test/notrun)>0">
             normal
@@ -313,10 +313,10 @@
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="test/fail > 0">
-            warning
+            error
             </xsl:when>
           <xsl:when test="string-length(test/fail)>0">
-          normal  
+            normal  
           </xsl:when>  
         </xsl:choose>
       </xsl:attribute>
@@ -330,7 +330,7 @@
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="test/fail > 0">
-            warning
+             error
             </xsl:when>
              <xsl:when test="string-length(test/fail)>0">
              normal
@@ -346,7 +346,7 @@
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="test/timestatus > 0">
-            warning
+             error
             </xsl:when>
              <xsl:when test="string-length(test/timestatus)>0">
              normal
@@ -377,26 +377,6 @@
       <xsl:if test="count(labels/label)=0">(none)</xsl:if>
       <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
       </td>
-
-      <!--
-      <td>
-      <xsl:attribute name="class">
-       <xsl:choose>
-          <xsl:when test="expected=1">
-            warning
-            </xsl:when>
-          <xsl:otherwise>
-             <xsl:if test="clockskew=1">
-             error
-             </xsl:if>
-             <xsl:if test="clockskew=0">
-             tr-odd
-             </xsl:if>
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>
-      <xsl:value-of select="submitdate"/></td>
-      -->
    </tr>
   </xsl:for-each>
   </tbody>
@@ -460,7 +440,7 @@
             warning
             </xsl:when>
           <xsl:otherwise>
-           normal
+             normal
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>  
@@ -471,10 +451,10 @@
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalNotRun > 0">
-            error
+            warning
             </xsl:when>
           <xsl:otherwise>
-           normal
+            normal
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
@@ -484,10 +464,10 @@
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalFail > 0">
-            warning
+            error
             </xsl:when>
           <xsl:otherwise>
-           normal
+            normal
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>   
@@ -497,10 +477,10 @@
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/totalFail > 0">
-            warning
+            error
             </xsl:when>
           <xsl:otherwise>
-           normal
+            normal
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>   
