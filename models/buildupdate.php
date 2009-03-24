@@ -98,5 +98,27 @@ class BuildUpdate
       }
     return true;     
     }  // end function insert()
+    
+  /** Get the number of errors for a build */
+  function GetNumberOfErrors()
+    {
+    if(!$this->BuildId)
+      {
+      echo "BuildUpdate::GetNumberOfWarnings(): BuildId not set";
+      return false;    
+      }
+       
+    $builderror = pdo_query("SELECT status FROM buildupdate WHERE buildid=".qnum($this->BuildId));
+    $updatestatus_array = pdo_fetch_array($builderror);
+    
+    if(strlen($updatestatus_array["status"]) > 0 &&
+       $updatestatus_array["status"]!="0")
+      {
+     return 1;
+      }
+    
+    return 0;
+    } // end GetNumberOfErrors()   
+    
 }
 ?>

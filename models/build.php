@@ -1145,7 +1145,6 @@ class Build
     return $nerrors;  
     } // end GetNumberOfWarnings() 
 
-    
 
 } // end class Build
 ?>
