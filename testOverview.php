@@ -46,7 +46,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 $nightlytime = $project_array["nightlytime"];
 // We select the builds
-list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
+list ($previousdate,$currentstarttime,$nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
 $xml .= add_XML_value("previous","buildOverview.php?project=".$projectname."&date=".$previousdate);
 if($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE))
@@ -106,7 +106,13 @@ if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql")
    {
    $rlike = "~";
    }
-$buildQuery = "SELECT id FROM build,build2group as b2g WHERE stamp ".$rlike." '^$today-' AND projectid = '$projectid' AND b2g.buildid=build.id".$groupSelectionSQL; 
+
+// It seems that previous date is what should work
+$stamp = str_replace("-","",$previousdate);   
+   
+$buildQuery = "SELECT id FROM build,build2group as b2g WHERE projectid = '$projectid' 
+               AND build.stamp ".$rlike." '^$stamp-' AND b2g.buildid=build.id".$groupSelectionSQL; 
+
 $buildResult = pdo_query($buildQuery);
 $builds = array();
 while($buildRow = pdo_fetch_array($buildResult))
