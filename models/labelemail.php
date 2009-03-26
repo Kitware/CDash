@@ -158,13 +158,13 @@ class LabelEmail
   /** Get the labels given a projectid and userid */
   function GetLabels()
     {
-    if(!$this->ProjectId)
+    if(empty($this->ProjectId))
       {
       echo "LabelEmail GetLabels(): ProjectId not set";
       return false;
       } 
       
-    if(!$this->UserId)
+    if(empty($this->UserId))
       {
       echo "LabelEmail GetLabels(): UserId not set";
       return false;
