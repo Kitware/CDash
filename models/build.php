@@ -1084,10 +1084,6 @@ class Build
       }
    
     return array_unique($labelids);
-    
-    $labelids = array();
-
-    return $labelids;
     }
 
   // Get the group for a build
