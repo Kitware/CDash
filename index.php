@@ -188,18 +188,53 @@ function add_default_buildgroup_sortlist($groupname)
 }
 
 
-function coalesce($row1, $row2)
+function should_collapse_rows($row1, $row2)
 {
   if(
     ($row1['name'] == $row2['name'])
     && ($row1['siteid'] == $row2['siteid'])
     && ($row1['position'] == $row2['position'])
+    && ($row1['stamp'] == $row2['stamp'])
     )
     {
     return true;
     }
 
   return false;
+}
+
+
+function get_multiple_builds_hyperlink($build_row)
+{
+  //
+  // This function is closely related to the javascript function
+  // filters_create_hyperlink in cdashFilters.js.
+  //
+  // If you are making changes to this function, look over there and see if
+  // similar changes need to be made in javascript...
+  //
+  // javascript window.location and php $_SERVER['REQUEST_URI'] are equivalent,
+  // but the window.location property includes the 'http://server' whereas the
+  // $_SERVER['REQUEST_URI'] does not...
+  //
+
+  $baseurl = $_SERVER['REQUEST_URI'];
+
+  // If the current REQUEST_URI already has a &filtercount=... (and other
+  // filter stuff), trim it off and just use part that comes before that:
+  //
+  $idx = strpos($baseurl, "&filtercount=");
+  if ($idx !== FALSE)
+  {
+    $baseurl = substr($baseurl, 0, $idx);
+  }
+
+  // ...because we are building our own filters URL here:
+  //
+  return $baseurl .
+    '&filtercount=2&showfilters=1&filtercombine=and' .
+    '&field1=buildname/string&compare1=61&value1=' . $build_row['name'] .
+    '&field2=site/string&compare2=61&value2=' . $build_row['sitename'];
 }
 
 
@@ -214,7 +249,7 @@ function generate_main_dashboard_XML($projectid,$date)
   include('cdash/version.php');
   include_once("models/banner.php");
   include_once("models/subproject.php");
-      
+
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)
     {
@@ -506,7 +541,7 @@ function generate_main_dashboard_XML($projectid,$date)
     
   $build_rows = array();
 
-  $sql =  "SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid 
+  $sql =  "SELECT b.id,b.siteid,b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql."
                          WHERE ".$date_clause."
                          b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
@@ -538,12 +573,12 @@ function generate_main_dashboard_XML($projectid,$date)
   // Fetch all the rows of builds into a php array.
   // Compute additional fields for each row that we'll need to generate the xml.
   //
-  $iii = 1;
   $build_rows = array();
   while($build_row = pdo_fetch_array($builds))
     {
     // Fields that come from the initial query:
     //  id
+    //  stamp
     //  name
     //  siteid
     //  type
@@ -597,8 +632,6 @@ function generate_main_dashboard_XML($projectid,$date)
 
     $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
     $build_row['sitename'] = $site_array['name'];
-    //$build_row['sitename'] = $site_array['name'] . ' (' . $iii . ')';
-    ++$iii;
 
     $buildnote = pdo_query("SELECT count(*) FROM buildnote WHERE buildid='$buildid'");
     $buildnote_array = pdo_fetch_row($buildnote);
@@ -608,9 +641,15 @@ function generate_main_dashboard_XML($projectid,$date)
     $note_array = pdo_fetch_row($note);
     $build_row['countnotes'] = $note_array[0];
 
-    $labels = pdo_query("SELECT text FROM label, label2build WHERE label2build.buildid='$buildid' AND label2build.labelid=label.id");
-    $labels_array = pdo_fetch_array($labels);
-    $build_row['labels'] = $labels_array;
+    $build_row['labels'] = array();
+    $label_rows = pdo_all_rows_query(
+      "SELECT text FROM label, label2build ".
+      "WHERE label2build.buildid='$buildid' ".
+      "AND label2build.labelid=label.id");
+    foreach($label_rows as $label_row)
+      {
+      $build_row['labels'][] = $label_row['text'];
+      }
 
     $update = pdo_query("SELECT count(*) FROM updatefile WHERE buildid='$buildid'");
     $update_array = pdo_fetch_row($update);
@@ -776,22 +815,38 @@ function generate_main_dashboard_XML($projectid,$date)
     }
 
 
-  // Optionally coalesce rows with common build name, site and group.
+  // By default, collapse rows with common build name, site and group.
   // (But different subprojects/labels...)
   //
-  @$collapse = $_REQUEST['collapse'];
+  // Do not collapse if there are filters in effect or if explicitly
+  // requested via a 'nocollapse' parameter.
+  //
+  $collapse = 1;
+  if ($filter_sql != '')
+    {
+    // filters are in effect if there is a filter_sql clause:
+    $collapse = 0;
+    }
+  if (array_key_exists('nocollapse', $_REQUEST))
+    {
+    $collapse = 0;
+    }
+
+  // This loop assumes that only build rows that are originally next to each
+  // other in $build_rows are candidates for collapsing...
+  //
   if($collapse)
     {
-    $build_rows_condensed = array();
+    $build_rows_collapsed = array();
 
     foreach($build_rows as $build_row)
       {
-      $idx = count($build_rows_condensed) - 1;
+      $idx = count($build_rows_collapsed) - 1;
 
       if (($idx >= 0) &&
-        coalesce($build_rows_condensed[$idx], $build_row))
+        should_collapse_rows($build_rows_collapsed[$idx], $build_row))
         {
-        // Append to existing last row, $build_rows_condensed[$idx]:
+        // Append to existing last row, $build_rows_collapsed[$idx]:
         //
 
     //  id
@@ -806,55 +861,55 @@ function generate_main_dashboard_XML($projectid,$date)
     //  position
     //  groupid
     //  buildids (array of buildids for summary rows)
-        $build_rows_condensed[$idx]['buildids'][] = $build_row['id'];
+        $build_rows_collapsed[$idx]['buildids'][] = $build_row['id'];
     //  sitename
-        $build_rows_condensed[$idx]['countbuildnotes'] += $build_row['countbuildnotes'];
-        $build_rows_condensed[$idx]['countnotes'] += $build_row['countnotes'];
-        $build_rows_condensed[$idx]['labels'] = array_merge($build_rows_condensed[$idx]['labels'], $build_row['labels']);
+        $build_rows_collapsed[$idx]['countbuildnotes'] += $build_row['countbuildnotes'];
+        $build_rows_collapsed[$idx]['countnotes'] += $build_row['countnotes'];
+        $build_rows_collapsed[$idx]['labels'] = array_merge($build_rows_collapsed[$idx]['labels'], $build_row['labels']);
 
-        $build_rows_condensed[$idx]['countupdatefiles'] += $build_row['countupdatefiles'];
+        $build_rows_collapsed[$idx]['countupdatefiles'] += $build_row['countupdatefiles'];
     //  updatestatus
-        $build_rows_condensed[$idx]['updateduration'] += $build_row['updateduration'];
-        $build_rows_condensed[$idx]['countupdateerrors'] += $build_row['countupdateerrors'];
-        $build_rows_condensed[$idx]['countupdatewarnings'] += $build_row['countupdatewarnings'];
+        $build_rows_collapsed[$idx]['updateduration'] += $build_row['updateduration'];
+        $build_rows_collapsed[$idx]['countupdateerrors'] += $build_row['countupdateerrors'];
+        $build_rows_collapsed[$idx]['countupdatewarnings'] += $build_row['countupdatewarnings'];
 
-        $build_rows_condensed[$idx]['buildduration'] += $build_row['buildduration'];
-        $build_rows_condensed[$idx]['countbuilderrors'] += $build_row['countbuilderrors'];
-        $build_rows_condensed[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'];
-        $build_rows_condensed[$idx]['countbuilderrordiff'] += $build_row['countbuilderrordiff'];
-        $build_rows_condensed[$idx]['countbuildwarningdiff'] += $build_row['countbuildwarningdiff'];
+        $build_rows_collapsed[$idx]['buildduration'] += $build_row['buildduration'];
+        $build_rows_collapsed[$idx]['countbuilderrors'] += $build_row['countbuilderrors'];
+        $build_rows_collapsed[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'];
+        $build_rows_collapsed[$idx]['countbuilderrordiff'] += $build_row['countbuilderrordiff'];
+        $build_rows_collapsed[$idx]['countbuildwarningdiff'] += $build_row['countbuildwarningdiff'];
 
-        $build_rows_condensed[$idx]['hasconfigurestatus'] += $build_row['hasconfigurestatus'];
-        $build_rows_condensed[$idx]['countconfigureerrors'] += $build_row['countconfigureerrors'];
-        $build_rows_condensed[$idx]['countconfigurewarnings'] += $build_row['countconfigurewarnings'];
-        $build_rows_condensed[$idx]['countconfigurewarningdiff'] += $build_row['countconfigurewarningdiff'];
-        $build_rows_condensed[$idx]['configureduration'] += $build_row['configureduration'];
+        $build_rows_collapsed[$idx]['hasconfigurestatus'] += $build_row['hasconfigurestatus'];
+        $build_rows_collapsed[$idx]['countconfigureerrors'] += $build_row['countconfigureerrors'];
+        $build_rows_collapsed[$idx]['countconfigurewarnings'] += $build_row['countconfigurewarnings'];
+        $build_rows_collapsed[$idx]['countconfigurewarningdiff'] += $build_row['countconfigurewarningdiff'];
+        $build_rows_collapsed[$idx]['configureduration'] += $build_row['configureduration'];
 
         //  test
-        $build_rows_condensed[$idx]['hastest'] += $build_row['hastest'];
-        $build_rows_condensed[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'];
-        $build_rows_condensed[$idx]['counttestsnotrundiff'] += $build_row['counttestsnotrundiff'];
-        $build_rows_condensed[$idx]['counttestsfailed'] += $build_row['counttestsfailed'];
-        $build_rows_condensed[$idx]['counttestsfaileddiff'] += $build_row['counttestsfaileddiff'];
-        $build_rows_condensed[$idx]['counttestspassed'] += $build_row['counttestspassed'];
-        $build_rows_condensed[$idx]['counttestspasseddiff'] += $build_row['counttestspasseddiff'];
-        $build_rows_condensed[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'];
-        $build_rows_condensed[$idx]['countteststimestatusfaileddiff'] += $build_row['countteststimestatusfaileddiff'];
-        $build_rows_condensed[$idx]['testsduration'] += $build_row['testsduration'];
+        $build_rows_collapsed[$idx]['hastest'] += $build_row['hastest'];
+        $build_rows_collapsed[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'];
+        $build_rows_collapsed[$idx]['counttestsnotrundiff'] += $build_row['counttestsnotrundiff'];
+        $build_rows_collapsed[$idx]['counttestsfailed'] += $build_row['counttestsfailed'];
+        $build_rows_collapsed[$idx]['counttestsfaileddiff'] += $build_row['counttestsfaileddiff'];
+        $build_rows_collapsed[$idx]['counttestspassed'] += $build_row['counttestspassed'];
+        $build_rows_collapsed[$idx]['counttestspasseddiff'] += $build_row['counttestspasseddiff'];
+        $build_rows_collapsed[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'];
+        $build_rows_collapsed[$idx]['countteststimestatusfaileddiff'] += $build_row['countteststimestatusfaileddiff'];
+        $build_rows_collapsed[$idx]['testsduration'] += $build_row['testsduration'];
         }
       else
         {
         // Add new row:
         //
-        $build_rows_condensed[] = $build_row;
+        $build_rows_collapsed[] = $build_row;
         }
       }
 
-    $build_rows = $build_rows_condensed;
+    $build_rows = $build_rows_collapsed;
     }
 
 
-  // Generate the xml from the (possibly coalesced) rows of builds:
+  // Generate the xml from the (possibly collapsed) rows of builds:
   //
   foreach($build_rows as $build_array)
     {
@@ -940,19 +995,16 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $rowparity++;
 
+    $countbuildids = count($build_array['buildids']);
+    $xml .= add_XML_value("countbuildids", $countbuildids);
+
+    if ($countbuildids>1)
+      {
+      $xml .= add_XML_value("multiplebuildshyperlink", get_multiple_builds_hyperlink($build_array));
+      }
+
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
-
-    $c = count($build_array['buildids']);
-    if ($c > 1)
-      {
-      $suffix = ' (' . $c . ' builds)';
-      }
-    else
-      {
-      $suffix = '';
-      }
-
-    $xml .= add_XML_value("site", $build_array["sitename"] . $suffix);
+    $xml .= add_XML_value("site", $build_array["sitename"]);
     $xml .= add_XML_value("siteid", $siteid);
     $xml .= add_XML_value("buildname", $build_array["name"]);
     $xml .= add_XML_value("buildid", $build_array["id"]);

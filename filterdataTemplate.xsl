@@ -2,7 +2,6 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
 
-
 <!-- filterdata template -->
 
 <xsl:template name="filterdata">
@@ -37,13 +36,13 @@ Filter Definitions:<br/>
   <span id="Match_filter">
     <xsl:if test="count(cdash/filterdata/filters/filter) = 1">
       Match the following rule:
-      <input type="hidden" name="filtercombine">
+      <input type="hidden" name="filtercombine"  id="id_filtercombine">
         <xsl:attribute name="value"><xsl:value-of select="cdash/filterdata/filtercombine"/></xsl:attribute>
       </input>
     </xsl:if>
     <xsl:if test="count(cdash/filterdata/filters/filter) > 1">
       Match<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-      <select name="filtercombine">
+      <select name="filtercombine" id="id_filtercombine">
       <option value="and">
         <xsl:if test="cdash/filterdata/filtercombine != 'or'">
           <xsl:attribute name="selected">selected</xsl:attribute>
@@ -68,7 +67,8 @@ Filter Definitions:<br/>
   <xsl:attribute name="number"><xsl:value-of select="position()"/></xsl:attribute>
   <xsl:attribute name="id">filter<xsl:value-of select="position()"/></xsl:attribute>
   <td>
-      <select onchange="filters_field_changed(this)">
+      <select onchange="filters_field_onchange(this)" onfocus="filters_field_onfocus(this)" onblur="filters_onblur(this)">
+        <xsl:attribute name="id">id_field<xsl:value-of select="position()"/></xsl:attribute>
         <xsl:attribute name="name">field<xsl:value-of select="position()"/></xsl:attribute>
       <xsl:variable name="xv_field" select="field"/>
       <xsl:for-each select="../../filterdefinitions/def">
@@ -83,7 +83,7 @@ Filter Definitions:<br/>
       </select>
 
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-      <select>
+      <select onblur="filters_onblur(this)" onchange="filters_onchange(this)">
         <xsl:attribute name="id">id_compare<xsl:value-of select="position()"/></xsl:attribute>
         <xsl:attribute name="name">compare<xsl:value-of select="position()"/></xsl:attribute>
         <xsl:choose>
@@ -119,7 +119,7 @@ Filter Definitions:<br/>
       </select>
 
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-      <input type="text" size="30">
+      <input type="text" size="30" onblur="filters_onblur(this)" onchange="filters_onchange(this)">
         <xsl:attribute name="id">id_value<xsl:value-of select="position()"/></xsl:attribute>
         <xsl:attribute name="name">value<xsl:value-of select="position()"/></xsl:attribute>
         <xsl:attribute name="value"><xsl:value-of select="value"/></xsl:attribute>
@@ -139,6 +139,7 @@ Filter Definitions:<br/>
       </input>
   </td>
   </tr>
+
   <xsl:if test="../../debug != 0">
   <tr><xsl:attribute name="class"><xsl:if test="position() mod 2 = 0">treven</xsl:if><xsl:if test="position() mod 2 = 1">trodd</xsl:if></xsl:attribute>
   <td>
@@ -148,6 +149,7 @@ Filter Definitions:<br/>
   </td>
   </tr>
   </xsl:if>
+
   </xsl:for-each>
 
   <tr>
@@ -162,7 +164,19 @@ Filter Definitions:<br/>
       <input type="hidden" name="showfilters" value="1" />
       <input type="submit" name="apply" value="Apply" />
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-      <input type="button" onclick="clearFilter();" name="clear" value="Clear" />
+      <input type="submit" name="clear" value="Clear" />
+      <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+      <input type="button" onclick="filters_create_hyperlink()" name="create_hyperlink" value="Create Hyperlink"/>
+  </td>
+  </tr>
+
+  <tr>
+    <xsl:attribute name="class">
+      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 0">trodd</xsl:if>
+      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">treven</xsl:if>
+    </xsl:attribute>
+  <td>
+    <div id="div_filtersAsUrl"/>
   </td>
   </tr>
   </table>

@@ -29,7 +29,7 @@ function addFilter(indexSelected)
         }
     }
   // create html
-  string=string.replace("name=\"field"+index,"name=\"field"+(indexSelected+1));
+  string=string.replace("id=\"id_field"+index+"\" name=\"field"+index,"id=\"id_field"+(indexSelected+1)+"\" name=\"field"+(indexSelected+1));
   string=string.replace("id=\"id_compare"+index+"\" name=\"compare"+index+"\"","id=\"id_compare"+(indexSelected+1)+"\" name=\"compare"+(indexSelected+1)+"\"");
   string=string.replace("id=\"id_value"+index+"\" name=\"value"+index+"\"","id=\"id_value"+(indexSelected+1)+"\" name=\"value"+(indexSelected+1)+"\"");
   string=string.replace("name=\"remove"+index,"name=\"remove"+(indexSelected+1));
@@ -37,7 +37,7 @@ function addFilter(indexSelected)
   string=string.replace("disabled=\"disabled\"","");
   string=string.replace("disabled=\"\"","");
   string=string.replace("selected=\"selected\"","");
-  string=string.replace("selected=\"selected\"","");
+  string=string.replace("selected=\"\"","");
   string=string.replace("removeFilter("+index+")","removeFilter("+(indexSelected+1)+")");
   string=string.replace("addFilter("+index+")","addFilter("+(indexSelected+1)+")");
   class_filed='treven';
@@ -69,11 +69,14 @@ function addFilter(indexSelected)
 
   if(countFilters()==2)
     {
-    string=' Match <select name="filtercombine"><option value="and" selected="selected"> all</option';
+    string=' Match <select name="filtercombine" id="id_filtercombine"><option value="and" selected="selected"> all</option';
     string+='><option value="or">any </option></select> of the following rules:';
     $("#Match_filter").html(string);
+
+    $(".filterFields:first input[value='-']").removeAttr("disabled");
     }
 }
+
 
 function removeFilter(index)
 {
@@ -83,25 +86,17 @@ function removeFilter(index)
       $(this).remove();
       }
   });
-  if(countFilters()==1)
-    {
-    $(".filterFields:first input[value='-']").attr("disabled","disabled");
-    }
-  $("input[name='filtercount']").attr("value",countFilters());
+
   if(countFilters()==1)
     {
     $("#Match_filter").html('Match the following rule: ');
+
+    $(".filterFields:first input[value='-']").attr("disabled","disabled");
     }
+
+  $("input[name='filtercount']").attr("value",countFilters());
 }
 
-function clearFilter()
-{
-  $(".filterFields:gt(0)").remove();// keep only one element(this element will be empty)
-  $(".filterFields input[type='text']").attr("value","");
-  $(".filterFields input[value='-']").attr("disabled",true);
-  $("input[name='filtercount']").attr("value",1);
-  $("#Match_filter").html('Match the following rule: ');
-}
 
 function countFilters()
 {
@@ -111,6 +106,7 @@ function countFilters()
   });
   return i;
 }
+
 
 function filters_toggle()
 {
@@ -176,15 +172,16 @@ var cdf_last_data_type_value = '';
 
 
 // See http://wsabstract.com/javatutors/selectcontent.shtml for an article
-// on how to changs SELECT element content on the fly from javascript...
+// on how to change SELECT element content on the fly from javascript...
 //
-// And see http://www.throbs.net/web/articles/IE-SELECT-bugs/#ieInnerHTMLproperty
-// and http://support.microsoft.com/default.aspx?scid=kb;en-us;276228 for articles
-// explaining why you cannot use the select element's innerHTML to do it.
+// See http://www.throbs.net/web/articles/IE-SELECT-bugs/#ieInnerHTMLproperty
+// and http://support.microsoft.com/default.aspx?scid=kb;en-us;276228 for
+// articles explaining why you cannot use select's innerHTML to do it.
 //
 function update_compare_options(o)
 {
-  // Get current "name/type" value from o.value / o.options[o.selectedIndex].value:
+  // Get current "name/type" value from o.value
+  // (o.options[o.selectedIndex].value):
   //
   cmps = o.value.split('/');
   name = cmps[0];
@@ -250,27 +247,80 @@ function update_compare_options(o)
 
       // Also clear the corresponding 'value' input when data type changes:
       //
-      //valueElement = document.getElementById('id_value' + num);
       $("#id_value"+num).attr("value",'');
-      //valueElement.value = '';
       }
     }
 }
 
 
-//alert(o.name
-//  + ' ' + compareSelect.name
-//  + " num='" + num + "'"
-//  + " name='" + name + "'"
-//  + " type='" + type + "'"
-//  + " selectedIndex=" + o.selectedIndex
-//  + " value=" + o.value
-//  + " (" + o.options[o.selectedIndex].value + ")"
-//  + " (" + o.options[o.selectedIndex].innerHTML + ")"
-//  );
+function filters_create_hyperlink()
+{
+  //
+  // This function is closely related to the php function
+  // get_multiple_builds_hyperlink in index.php.
+  //
+  // If you are making changes to this function, look over there and see if
+  // similar changes need to be made in php...
+  //
+  // javascript window.location and php $_SERVER['REQUEST_URI'] are equivalent,
+  // but the window.location property includes the 'http://server' whereas the
+  // $_SERVER['REQUEST_URI'] does not...
+  //
+
+  n = countFilters();
+  s = new String(window.location);
+
+  // If the current window.location already has a &filtercount=... (and other
+  // filter stuff), trim it off and just use part that comes before that:
+  //
+  idx = s.indexOf("&filtercount=", 0);
+  if (idx > 0)
+  {
+    s = s.substr(0, idx);
+  }
+
+  s = s + "&filtercount=" + n;
+  s = s + "&showfilters=1";
+
+  if (n > 1)
+  {
+    s = s + "&filtercombine=" + $("#id_filtercombine").attr("value");
+  }
+
+  for (i=1; i<=n; ++i)
+  {
+    s = s + "&field" + i + "=" + escape($("#id_field"+i).attr("value"));
+    s = s + "&compare" + i + "=" + escape($("#id_compare"+i).attr("value"));
+    s = s + "&value" + i + "=" + escape($("#id_value"+i).attr("value"));
+  }
+
+  $("#div_filtersAsUrl").html("<a href=\"" + s + "\">" + s + "</a>");
+}
 
 
-function filters_field_changed(o)
+function filters_field_onblur(o)
+{
+}
+
+
+function filters_onchange(o)
+{
+}
+
+
+function filters_field_onchange(o)
 {
   update_compare_options(o);
+}
+
+
+function filters_field_onfocus(o)
+{
+  cmps = o.value.split('/');
+  cdf_last_data_type_value = cmps[1];
+}
+
+
+function filters_onload(o)
+{
 }
