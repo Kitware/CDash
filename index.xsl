@@ -464,12 +464,7 @@
       </td>
 
       <td>
-        <xsl:if test="countbuildids=1">
-          <xsl:value-of select="builddate"/>
-        </xsl:if>
-        <xsl:if test="countbuildids!=1">
-          (<xsl:value-of select="countbuildids"/> builds)
-        </xsl:if>
+        <xsl:value-of select="builddate"/>
       </td>
 
       <td class="nob" align="left">
@@ -602,7 +597,14 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "/cdash/totalPass"/></b>
       </td>
-      <td width="3%" align="center" class="normal">
+      <td width="3%" align="center">
+      <xsl:attribute name="class">
+        <xsl:choose>
+          <xsl:when test="/cdash/enableTestTiming != 0">
+          normal
+          </xsl:when>
+        </xsl:choose>
+      </xsl:attribute>
         <xsl:value-of select = "/cdash/totalTestsDuration"/>
       </td>
       <td width="10%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>

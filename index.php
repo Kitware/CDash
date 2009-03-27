@@ -868,7 +868,10 @@ function generate_main_dashboard_XML($projectid,$date)
     //  siteid
     //  type
     //  generator
-    //  starttime
+        if ($build_row['starttime'] < $build_rows_collapsed[$idx]['starttime'])
+          {
+          $build_rows_collapsed[$idx]['starttime'] = $build_row['starttime'];
+          }
     //  endtime
     //  submittime
     //  groupname
@@ -1367,6 +1370,8 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= add_XML_value("totalFail",$totalfail);
   $xml .= add_XML_value("totalPass",$totalpass); 
   $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);
+
+  $xml .= add_XML_value("enableTestTiming",$project_array["showtesttime"]);
 
   $end = microtime_float();
   $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";

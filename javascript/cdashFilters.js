@@ -270,6 +270,22 @@ function filters_create_hyperlink()
   n = countFilters();
   s = new String(window.location);
 
+  // Preserve any pre-existing '&collapse=0' or '&collapse=1':
+  //
+  collapse_str = '';
+
+  idx = s.indexOf('&collapse=1', 0);
+  if (idx > 0)
+  {
+    collapse_str = '&collapse=1';
+  }
+
+  idx = s.indexOf('&collapse=0', 0);
+  if (idx > 0)
+  {
+    collapse_str = '&collapse=0';
+  }
+
   // If the current window.location already has a &filtercount=... (and other
   // filter stuff), trim it off and just use part that comes before that:
   //
@@ -293,6 +309,8 @@ function filters_create_hyperlink()
     s = s + "&compare" + i + "=" + escape($("#id_compare"+i).attr("value"));
     s = s + "&value" + i + "=" + escape($("#id_value"+i).attr("value"));
   }
+
+  s = s + collapse_str;
 
   $("#div_filtersAsUrl").html("<a href=\"" + s + "\">" + s + "</a>");
 }
