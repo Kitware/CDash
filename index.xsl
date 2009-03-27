@@ -491,8 +491,20 @@
     <tr class="total">
       <td width="15%" align="left">Totals</td>
       <td width="15%" align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
-      <td width="2%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      <td width="3%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="2%">
+       <xsl:attribute name="class">
+       <xsl:choose>
+          <xsl:when test="/cdash/totalUpdateError!=0">
+            error
+            </xsl:when>
+          <xsl:otherwise>
+           normal
+           </xsl:otherwise>
+        </xsl:choose>
+        </xsl:attribute>
+      <xsl:value-of select = "/cdash/totalUpdatedFiles"/>
+      </td>
+      <td width="3%" align="right"><xsl:value-of select = "/cdash/totalUpdateDuration"/></td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
        <xsl:choose>
@@ -519,7 +531,9 @@
       </xsl:attribute>  
       <b><xsl:value-of select = "/cdash/totalConfigureWarning"/></b>
       </td>
-      <td width="5%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="5%" align="right">
+        <xsl:value-of select = "/cdash/totalConfigureDuration"/>
+      </td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
@@ -546,7 +560,9 @@
       </xsl:attribute>  
       <b><xsl:value-of select = "/cdash/totalWarning"/></b>
       </td>
-      <td width="5%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="5%" align="right">
+        <xsl:value-of select = "/cdash/totalBuildDuration"/>
+      </td>
       <td width="6%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
@@ -586,7 +602,9 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "/cdash/totalPass"/></b>
       </td>
-      <td width="3%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      <td width="3%" align="center" class="normal">
+        <xsl:value-of select = "/cdash/totalTestsDuration"/>
+      </td>
       <td width="10%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
       <td width="10%" class="nob"></td>
       <!-- <td bgcolor="#ffffff"></td> -->
@@ -602,7 +620,7 @@
    <xsl:include href="filterdataTemplate.xsl"/>
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
-   
+
    <!-- Include local common files -->
    <xsl:include href="local/header.xsl"/>
    <xsl:include href="local/footer.xsl"/>

@@ -191,7 +191,7 @@ function add_default_buildgroup_sortlist($groupname)
 function should_collapse_rows($row1, $row2)
 {
   if(
-    ($row1['name'] == $row2['name'])
+       ($row1['name'] == $row2['name'])
     && ($row1['siteid'] == $row2['siteid'])
     && ($row1['position'] == $row2['position'])
     && ($row1['stamp'] == $row2['stamp'])
@@ -234,7 +234,8 @@ function get_multiple_builds_hyperlink($build_row)
   return $baseurl .
     '&filtercount=2&showfilters=1&filtercombine=and' .
     '&field1=buildname/string&compare1=61&value1=' . $build_row['name'] .
-    '&field2=site/string&compare2=61&value2=' . $build_row['sitename'];
+    '&field2=site/string&compare2=61&value2=' . $build_row['sitename'] .
+    '&collapse=0';
 }
 
 
@@ -261,7 +262,7 @@ function generate_main_dashboard_XML($projectid,$date)
     echo "Error selecting CDash database<br>\n";
     exit(0);
     }
-    
+
   $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
   if(pdo_num_rows($project)>0)
     {
@@ -430,7 +431,7 @@ function generate_main_dashboard_XML($projectid,$date)
   if(pdo_num_rows($dailyupdate)>0)
     {
     $dailupdate_array = pdo_fetch_array($dailyupdate);
-    $dailyupdateid = $dailupdate_array["id"];    
+    $dailyupdateid = $dailupdate_array["id"];
     $dailyupdatefile = pdo_query("SELECT count(*) FROM dailyupdatefile
                                     WHERE dailyupdateid='$dailyupdateid'");
     $dailyupdatefile_array = pdo_fetch_array($dailyupdatefile);
@@ -477,13 +478,20 @@ function generate_main_dashboard_XML($projectid,$date)
 
   // Statistics:
   //
-  $totalerrors = 0;
-  $totalwarnings = 0;
+  $totalUpdatedFiles = 0;
+  $totalUpdateError = 0;
+  $totalUpdateWarning = 0;
+  $totalUpdateDuration = 0;
   $totalConfigureError = 0;
   $totalConfigureWarning = 0;
+  $totalConfigureDuration = 0;
+  $totalerrors = 0;
+  $totalwarnings = 0;
+  $totalBuildDuration = 0;
   $totalnotrun = 0;
   $totalfail= 0;
   $totalpass = 0;  
+  $totalTestsDuration = 0;
 
   // Local function to add expected builds
   function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
@@ -807,7 +815,7 @@ function generate_main_dashboard_XML($projectid,$date)
       }
 
     $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-    $build_row['testsduration'] = $time_array[0];
+    $build_row['testsduration'] = round($time_array[0]/60,1);
 
     //  Save the row in '$build_rows'
     //
@@ -815,22 +823,28 @@ function generate_main_dashboard_XML($projectid,$date)
     }
 
 
-  // By default, collapse rows with common build name, site and group.
-  // (But different subprojects/labels...)
+  // By default, do not collapse rows. But if the project has subprojects, then
+  // collapse rows with common build name, site and group. (But different
+  // subprojects/labels...)
   //
-  // Do not collapse if there are filters in effect or if explicitly
-  // requested via a 'nocollapse' parameter.
+  // Look for a '&collapse=0' or '&collapse=1' to override the default.
   //
-  $collapse = 1;
-  if ($filter_sql != '')
+  $collapse = 0;
+
+  global $Project;
+    // warning: tightly coupled to global $Project defined at the bottom of
+    // this script -- it would be better to refactor and pass $Project in to
+    // this function as a parameter...
+
+  if ($Project->GetNumberOfSubProjects()>0)
     {
-    // filters are in effect if there is a filter_sql clause:
-    $collapse = 0;
+    $collapse = 1;
     }
-  if (array_key_exists('nocollapse', $_REQUEST))
+  if (array_key_exists('collapse', $_REQUEST))
     {
-    $collapse = 0;
+    $collapse = $_REQUEST['collapse'];
     }
+
 
   // This loop assumes that only build rows that are originally next to each
   // other in $build_rows are candidates for collapsing...
@@ -1006,6 +1020,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
     $xml .= add_XML_value("site", $build_array["sitename"]);
     $xml .= add_XML_value("siteid", $siteid);
+    //$xml .= add_XML_value("buildname", $build_array["name"] . ' ' . $build_array['stamp']);
     $xml .= add_XML_value("buildname", $build_array["name"]);
     $xml .= add_XML_value("buildid", $build_array["id"]);
     $xml .= add_XML_value("generator", $build_array["generator"]);
@@ -1037,11 +1052,14 @@ function generate_main_dashboard_XML($projectid,$date)
 
     $xml .= "<update>";
 
-    $xml .= add_XML_value("files", $build_array['countupdatefiles']);
+    $countupdatefiles = $build_array['countupdatefiles'];
+    $totalUpdatedFiles += $countupdatefiles;
+    $xml .= add_XML_value("files", $countupdatefiles);
 
     if($build_array['countupdateerrors']>0)
       {
       $xml .= add_XML_value("errors", 1);
+      $totalUpdateError += 1;
       }
     else
       {
@@ -1050,10 +1068,13 @@ function generate_main_dashboard_XML($projectid,$date)
       if($build_array['countupdatewarnings']>0)
         {
         $xml .= add_XML_value("warning", 1);
+        $totalUpdateWarning += 1;
         }
       }
 
-    $xml .= add_XML_value("time", $build_array['updateduration']);
+    $duration = $build_array['updateduration'];
+    $totalUpdateDuration += $duration;
+    $xml .= add_XML_value("time", $duration);
 
     $xml .= "</update>";
 
@@ -1068,7 +1089,9 @@ function generate_main_dashboard_XML($projectid,$date)
     $totalwarnings += $nwarnings;
     $xml .= add_XML_value("warning", $nwarnings);
 
-    $xml .= add_XML_value("time", $build_array['buildduration']);
+    $duration = $build_array['buildduration'];
+    $totalBuildDuration += $duration;
+    $xml .= add_XML_value("time", $duration);
 
     $diff = $build_array['countbuilderrordiff'];
     if($diff>0)
@@ -1102,7 +1125,9 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("warningdiff", $diff);
         }
 
-      $xml .= add_XML_value("time", $build_array['configureduration']);
+      $duration = $build_array['configureduration'];
+      $totalConfigureDuration += $duration;
+      $xml .= add_XML_value("time", $duration);
       }
 
       $xml .= "</configure>";
@@ -1143,8 +1168,6 @@ function generate_main_dashboard_XML($projectid,$date)
           }
         }
 
-      $time = $build_array['testsduration'];
-
       $totalnotrun += $nnotrun;
       $totalfail += $nfail;
       $totalpass += $npass;
@@ -1152,7 +1175,11 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("notrun",$nnotrun);
       $xml .= add_XML_value("fail",$nfail);
       $xml .= add_XML_value("pass",$npass);
-      $xml .= add_XML_value("time",round($time/60,1));
+
+      $duration = $build_array['testsduration'];
+      $totalTestsDuration += $duration;
+      $xml .= add_XML_value("time", $duration);
+
       $xml .= "</test>";
       }
 
@@ -1323,16 +1350,23 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= "</buildgroup>";  
     }
 
+  $xml .= add_XML_value("totalUpdatedFiles",$totalUpdatedFiles);
+  $xml .= add_XML_value("totalUpdateError",$totalUpdateError);
+  $xml .= add_XML_value("totalUpdateWarning",$totalUpdateWarning);
+  $xml .= add_XML_value("totalUpdateDuration",$totalUpdateDuration);
 
+  $xml .= add_XML_value("totalConfigureDuration",$totalConfigureDuration);
   $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
   $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
 
   $xml .= add_XML_value("totalError",$totalerrors);
   $xml .= add_XML_value("totalWarning",$totalwarnings);
+  $xml .= add_XML_value("totalBuildDuration",$totalBuildDuration);
 
   $xml .= add_XML_value("totalNotRun",$totalnotrun);
   $xml .= add_XML_value("totalFail",$totalfail);
   $xml .= add_XML_value("totalPass",$totalpass); 
+  $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);
 
   $end = microtime_float();
   $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
@@ -1584,7 +1618,7 @@ else
   {
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
- 
+
   // Check if the project has any subproject 
   $Project = new Project();
   $Project->Id = $projectid;
@@ -1593,7 +1627,7 @@ else
     {
     $displayProject = true;
     }
-  
+
   if(!$displayProject && !isset($_GET["subproject"]) && $Project->GetNumberOfSubProjects() > 0)
     {  
     $xml = generate_subprojects_dashboard_XML($projectid,$date);
@@ -1606,5 +1640,7 @@ else
     // Now doing the xslt transition
     generate_XSLT($xml,"index");
     }
-  }  
+  }
+
+
 ?>
