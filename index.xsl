@@ -491,7 +491,7 @@
     <tr class="total">
       <td width="15%" align="left">Totals</td>
       <td width="15%" align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
-      <td width="2%">
+      <td width="2%" align="center">
        <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="/cdash/totalUpdateError!=0">
