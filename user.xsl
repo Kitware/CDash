@@ -36,7 +36,7 @@
     <td width="195" height="121" class="topbgleft">
     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
     <a href="http://www.cdash.org">
-    <img  border="0" alt="" src="images/cdash.gif"/>
+    <img border="0" alt="" src="images/cdash.gif"/>
     </a>
     </td>
     <td width="425" valign="top" class="insd">
