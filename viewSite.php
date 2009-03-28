@@ -21,6 +21,7 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once('cdash/common.php');
 include("cdash/version.php");
+include("models/project.php");
 
 @$siteid = $_GET["siteid"];
 // Checks
@@ -109,7 +110,7 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 @$projectid = $_GET["project"];
 if($projectid)
   {
-  $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));  
+  $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime,showipaddresses FROM project WHERE id='$projectid'"));  
   $xml .= "<backurl>index.php?project=".$project_array["name"];
   $xml .= "&#38;date=".get_dashboard_date_from_build_starttime(gmdate(FMT_DATETIME,$currenttime),$project_array["nightlytime"]);
   $xml .= "</backurl>";
@@ -154,9 +155,12 @@ $xml .= add_XML_value("totalvirtualmemory",getByteValueWithExtension($siteinform
 $xml .= add_XML_value("totalphysicalmemory",getByteValueWithExtension($siteinformation_array["totalphysicalmemory"]*1024*1024)."B");
 $xml .= add_XML_value("logicalprocessorsperphysical",$siteinformation_array["logicalprocessorsperphysical"]);
 $xml .= add_XML_value("processorclockfrequency",getByteValueWithExtension($siteinformation_array["processorclockfrequency"]*1024*1024)."Hz");
-$xml .= add_XML_value("ip",$site_array["ip"]);
-$xml .= add_XML_value("latitude",$site_array["latitude"]);
-$xml .= add_XML_value("longitude",$site_array["longitude"]);
+if($projectid && $project_array['showipaddresses'])
+  {
+  $xml .= add_XML_value("ip",$site_array["ip"]);
+  $xml .= add_XML_value("latitude",$site_array["latitude"]);
+  $xml .= add_XML_value("longitude",$site_array["longitude"]);
+  }
 $xml .= "</site>";
 
 // List the claimers of the site
