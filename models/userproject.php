@@ -109,7 +109,7 @@ class UserProject
     } 
   
   /** Get the users of the project */
-  function GetUsers()
+  function GetUsers($role=-1)
     {
     if(!$this->ProjectId)
       {
@@ -117,7 +117,13 @@ class UserProject
       return false;
       }
   
-    $project = pdo_query("SELECT userid FROM user2project WHERE projectid=".qnum($this->ProjectId));
+    $sql = "";
+    if($role != -1)
+      {
+      $sql = " AND role=".$role;
+      }
+  
+    $project = pdo_query("SELECT userid FROM user2project WHERE projectid=".qnum($this->ProjectId).$sql);
     if(!$project)
       {
       add_last_sql_error("UserProject GetUsers");

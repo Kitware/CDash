@@ -47,6 +47,8 @@ class Project
   var $TestTimeMaxStatus;
   var $EmailMaxItems;
   var $EmailMaxChars;
+  var $EmailAdministrator;
+  var $ShowIPAddresses;
 
   function __construct()
     {
@@ -55,6 +57,8 @@ class Project
     $this->EmailTestTimingChanged=0;
     $this->EmailBrokenSubmission=0;
     $this->EmailRedundantFailures=0;
+    $this->EmailAdministrator=1;
+    $this->ShowIPAddresses=1;
     }
 
   /** Add a build group */
@@ -90,6 +94,8 @@ class Project
       case "EMAILTESTTIMINGCHANGED": $this->EmailTestTimingChanged = $value;break;
       case "EMAILBROKENSUBMISSION": $this->EmailBrokenSubmission = $value;break;
       case "EMAILREDUNDANTFAILURES": $this->EmailRedundantFailures = $value;break;
+      case "EMAILADMINISTRATOR": $this->EmailAdministrator = $value;break;
+      case "SHOWIPADDRESSES": $this->ShowIPAddresses = $value;break;
       case "CVSVIEWERTYPE": $this->CvsViewerType = $value;break;
       case "TESTTIMESTD": $this->TestTimeStd = $value;break;
       case "TESTTIMESTDTHRESHOLD": $this->TestTimeStdThreshold = $value;break;
@@ -165,6 +171,8 @@ class Project
       $query .= ",emailtesttimingchanged=".qnum($this->EmailTestTimingChanged);
       $query .= ",emailbrokensubmission=".qnum($this->EmailBrokenSubmission);
       $query .= ",emailredundantfailures=".qnum($this->EmailRedundantFailures);
+      $query .= ",emailadministrator=".qnum($this->EmailAdministrator);
+      $query .= ",showipaddresses=".qnum($this->ShowIPAddresses);
       $query .= ",cvsviewertype='".$this->CvsViewerType."'";
       $query .= ",testtimestd=".qnum($this->TestTimeStd);
       $query .= ",testtimestdthreshold=".qnum($this->TestTimeStdThreshold);
@@ -201,13 +209,13 @@ class Project
       $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                     googletracker,emailbrokensubmission,emailredundantfailures,
                                     emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
-                                    testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime)
+                                    testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses)
                  VALUES (".$idvalue."'$this->Name','$this->Description','$this->HomeUrl','$this->CvsUrl','$this->BugTrackerUrl','$this->DocumentationUrl',
                  ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$this->NightlyTime',
                  '$this->GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).",".qnum($this->EmailBuildMissing).","
                  .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$this->CvsViewerType',".qnum($this->TestTimeStd)
                  .",".qnum($this->TestTimeStdThreshold).",".qnum($this->TestTimeMaxStatus).",".qnum($this->EmailMaxItems).",".qnum($this->EmailMaxChars).","
-                 .qnum($this->ShowTestTime).")";
+                 .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).")";
                     
        if(pdo_query($query))
          {
@@ -305,6 +313,8 @@ class Project
       $this->EmailTestTimingChanged = $project_array['emailtesttimingchanged'];
       $this->EmailBrokenSubmission = $project_array['emailbrokensubmission'];
       $this->EmailRedundantFailures = $project_array['emailredundantfailures'];
+      $this->EmailAdministrator = $project_array['emailadministrator'];
+      $this->ShowIPAddresses = $project_array['showipaddresses'];
       $this->CvsViewerType = $project_array['cvsviewertype'];
       $this->TestTimeStd = $project_array['testtimestd'];
       $this->TestTimeStdThreshold = $project_array['testtimestdthreshold'];
@@ -981,6 +991,76 @@ class Project
    
     return array_unique($labelids);
     } // end GetLabels()  
+   
+  /** Send an email to the administrator of the project */
+  function SendEmailToAdmin($subject,$body)
+    {
+    if(!$this->Id)
+      {
+      echo "Project SendEmailToAdmin(): Id not set";
+      return false;
+      }
+    
+    include('cdash/config.php');
+          
+    // Check if we should send emails
+    $project = pdo_query("SELECT emailadministrator,name FROM project WHERE id =".qnum($this->Id));
+    if(!$project)
+      {
+      add_last_sql_error("Project SendEmailToAdmin");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    
+    if($project_array['emailadministrator'] == 0)
+      {
+      return;
+      }
+    
+    // Find the site maintainers
+    include_once('models/userproject.php');
+    include_once('models/user.php');
+    $UserProject = new UserProject();
+    $UserProject->ProjectId = $this->Id;
+    
+    $userids = $UserProject->GetUsers(2); // administrators
+    $email = "";
+    foreach($userids as $userid)
+      {
+      $User = new User;
+      $User->Id = $userid;
+      if($email != "")
+        {
+        $email .= ", ";
+        }
+      $email .= $User->GetEmail();
+      }
+
+    if($email!="")
+      {
+      $projectname = $project_array['name'];
+      $emailtitle = "CDash [".$projectname."] - Administration "; 
+      $emailbody = "Object: ".$subject."\n";
+      $emailbody .= $body."\n";
+      $serverName = $CDASH_SERVER_NAME;
+      if(strlen($serverName) == 0)
+        {
+        $serverName = $_SERVER['SERVER_NAME'];
+        }
+      $emailbody .= "\n-CDash on ".$serverName."\n";
+    
+      if(mail("$email", $emailtitle, $emailbody,
+       "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+        {
+        add_log("email sent to: ".$email,"Project::SendEmailToAdmin");
+        return;
+        }
+      else
+        {
+        add_log("cannot send email to: ".$email,"Project::SendEmailToAdmin");
+        }
+      } // end if email
+    } // end SendEmailToAdmin
     
 }  // end class Project
 
