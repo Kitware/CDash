@@ -141,6 +141,19 @@
     <div id="fragment-3" class="tab_content" >
       <div class="tab_help"></div>
         <table width="800" >
+         <xsl:if test="/cdash/project/emailbrokensubmission=0">
+          <tr>
+            <td></td> 
+            <td><font color="#900000">*This project has not been configured to send emails.
+             <xsl:choose>
+               <xsl:when test="/cdash/role>1"><a>
+               <xsl:attribute name="href">createProject.php?edit=1&#38;projectid=<xsl:value-of select="/cdash/project/id"/>#fragment-5</xsl:attribute>Change the project settings.
+               </a></xsl:when>
+               <xsl:otherwise> Contact the project administrator.</xsl:otherwise>
+             </xsl:choose>
+            </font></td>
+          </tr>
+          </xsl:if>
           <xsl:if test="/cdash/edit=1">
            <tr>
             <td></td>
@@ -182,6 +195,19 @@
     <div id="fragment-4" class="tab_content" >
       <div class="tab_help"></div>
         <table width="800" >
+        <xsl:if test="/cdash/project/emailbrokensubmission=0">
+          <tr>
+            <td></td> 
+            <td><font color="#900000">*This project has not been configured to send emails.
+             <xsl:choose>
+               <xsl:when test="/cdash/role>1"><a>
+               <xsl:attribute name="href">createProject.php?edit=1&#38;projectid=<xsl:value-of select="/cdash/project/id"/>#fragment-5</xsl:attribute>Change the project settings.
+               </a></xsl:when>
+               <xsl:otherwise> Contact the project administrator.</xsl:otherwise>
+             </xsl:choose>
+            </font></td>
+          </tr>
+          </xsl:if>
           <tr>
             <td></td>
             <td ><input type="checkbox" onchange="saveChanges();" name="emailcategory_update" value="2">
@@ -231,9 +257,22 @@
     </div>
     <div id="fragment-5" class="tab_content">
       <div class="tab_help"></div>
-        Select the labels you want to subscribe to. You will receive only emails corresponding to these labels. <br/><br/>
-       
         <table width="800">
+        <xsl:if test="/cdash/project/emailbrokensubmission=0">
+          <tr>
+            <td colspan="2"><font color="#900000">*This project has not been configured to send emails.
+             <xsl:choose>
+               <xsl:when test="/cdash/role>1"><a>
+               <xsl:attribute name="href">createProject.php?edit=1&#38;projectid=<xsl:value-of select="/cdash/project/id"/>#fragment-5</xsl:attribute>Change the project settings.
+               </a></xsl:when>
+               <xsl:otherwise> Contact the project administrator.</xsl:otherwise>
+             </xsl:choose>
+            </font></td>
+          </tr>
+          </xsl:if>
+          <tr>
+          <td colspan="2">Select the labels you want to subscribe to. You will receive only emails corresponding to these labels.</td>
+          </tr>
           <tr>
             <td align="right">
              Available Labels (last 7 days)<br/>

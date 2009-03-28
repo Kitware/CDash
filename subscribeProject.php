@@ -64,7 +64,7 @@ if ($session_OK)
     $xml .= "<edit>0</edit>";
     }
  
-  $project = pdo_query("SELECT id,name,public FROM project WHERE id='$projectid'");
+  $project = pdo_query("SELECT id,name,public,emailbrokensubmission FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
   
   $Project = new Project;
@@ -203,7 +203,8 @@ if ($session_OK)
   $xml .= "<project>";
   $xml .= add_XML_value("id",$project_array['id']);
   $xml .= add_XML_value("name",$project_array['name']);
-  
+  $xml .= add_XML_value("emailbrokensubmission",$project_array['emailbrokensubmission']);
+   
   $labelavailableids = $Project->GetLabels(7); // Get the labels for the last 7 days
   $labelids = $LabelEmail->GetLabels();
 
