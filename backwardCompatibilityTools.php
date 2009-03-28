@@ -23,9 +23,6 @@ include("cdash/version.php");
 
 set_time_limit(0);
 
-@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
-
 checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
  
 $xml = "<cdash>";
@@ -35,7 +32,11 @@ $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Maintenance</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Maintenance</menusubtitle>";
-$xml .= "<minversion>".$CDASH_VERSION_MAJOR.".".$CDASH_VERSION_MINOR."</minversion>";
+
+// Should be the database version not the current on
+$version = pdo_query("SELECT major,minor FROM version");
+$version_array = pdo_fetch_array($version);
+$xml .= "<minversion>".$version_array['major'].".".$version_array['minor']."</minversion>";
 
 @$CreateDefaultGroups = $_POST["CreateDefaultGroups"];
 @$AssignBuildToDefaultGroups = $_POST["AssignBuildToDefaultGroups"];
