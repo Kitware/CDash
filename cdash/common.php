@@ -145,7 +145,8 @@ for($i=128;$i<256;$i++){
 }
 
 /** used to escape special XML characters */
-function XMLStrFormat($str){
+function XMLStrFormat($str)
+{
   global $asc2uni;
   $str = str_replace("&", "&amp;", $str);
   $str = str_replace("<", "&lt;", $str); 
@@ -195,12 +196,12 @@ function add_log($text,$function,$type=LOG_INFO)
 function add_last_sql_error($functionname)
 {
   $pdo_error = pdo_error();
- if(strlen($pdo_error)>0)
-   {
-   add_log("SQL error: ".$pdo_error,$functionname,LOG_ERR);
-   $text = "SQL error in $functionname():".$pdo_error."<br>";
-   echo $text;
-   }
+  if(strlen($pdo_error)>0)
+    {
+    add_log("SQL error: ".$pdo_error,$functionname,LOG_ERR);
+    $text = "SQL error in $functionname():".$pdo_error."<br>";
+    echo $text;
+    }
 }
 
 /** Set the CDash version number in the database */
