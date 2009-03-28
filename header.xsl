@@ -57,7 +57,7 @@
     <a>
     <xsl:attribute name="href">
     <xsl:value-of select="cdash/dashboard/home"/></xsl:attribute>
-    <img  border="0">
+    <img id="projectlogo" border="0">
     <xsl:attribute name="alt"></xsl:attribute>
     <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
     </img>

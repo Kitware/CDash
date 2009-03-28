@@ -266,12 +266,12 @@ edit the project</a><br/>
               <xsl:if test="cdash/edit=1">
               <tr>
                 <td></td>
-                <td><div align="right"><strong>Current logo:</strong></div></td>
+                <td><div valign="top" align="right"><strong>Current logo:</strong></div></td>
                 <td>
                 <xsl:if test="cdash/project/imageid=0">
                 [none]
                 </xsl:if>
-                <img border="0">
+                <img id="projectlogo" border="0">
                 <xsl:attribute name="alt"><xsl:value-of select="cdash/dashboard/project/name"/></xsl:attribute>
                 <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/project/imageid"/></xsl:attribute>
                 </img>

@@ -70,6 +70,12 @@ a:active{
  background-repeat: repeat-x;
 }
 
+#projectlogo {
+max-height : 110px;
+/* IE Image max-width */
+height: expression(this.height > 110 ? 110: true);
+}
+
 .paddr {
  margin: 0px;
  padding-top: 0px;
