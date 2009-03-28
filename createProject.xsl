@@ -256,8 +256,8 @@ edit the project</a><br/>
               <tr>
                 <td></td>
                 <td><div align="right"><strong>Logo:</strong></div></td>
-                <td><input onchange="saveChanges();"  type="file"   name="logo" size="40"/>
-                 <span class="help_content" id="logo_help">
+                <td><input onchange="saveChanges();"  type="file" name="logo" size="40"/>
+                 <xsl:text disable-output-escaping="yes"> </xsl:text><span class="help_content" id="logo_help">
                    <strong>Logo</strong> <br/> Small logo for this project. It is recommended to upload a transparent gif to blend with CDash’s banner. The height of the image shouldn’t be more than 100 pixels an optimized look. Project logos are stored in the database directly. </span>
                 <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" onmouseover="showHelp('logo_help');" target="blank">
                   <img src="images/help.gif" border="0"/></a>

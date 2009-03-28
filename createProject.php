@@ -193,21 +193,23 @@ if($Submit)
     // Add the repositories
     $Project->AddRepositories($CVSRepositories);
     
-    /** Add the logo if any */     
-    $handle = fopen($_FILES['logo']['tmp_name'],"r");
-    $contents = 0;
-    if($handle)
-      {
-      $contents = addslashes(fread($handle,$_FILES['logo']['size']));
-      $filetype = $_FILES['logo']['type'];
-      fclose($handle);
-      }
+    /** Add the logo if any */
+    if(strlen($_FILES['logo']['tmp_name'])>0)
+        {
+      $handle = fopen($_FILES['logo']['tmp_name'],"r");
+      $contents = 0;
+      if($handle)
+        {
+        $contents = addslashes(fread($handle,$_FILES['logo']['size']));
+        $filetype = $_FILES['logo']['type'];
+        fclose($handle);
+        }
 
-    if($contents)
-      {
-      $imageId = $Project->AddLogo($contents,$filetype);
-      } // end if contents
-      
+      if($contents)
+        {
+        $imageId = $Project->AddLogo($contents,$filetype);
+        } // end if contents
+      } // end if logo name
     }
   else
     {
