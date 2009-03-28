@@ -639,21 +639,6 @@ edit the project</a><br/>
                 </td>
               </tr>
               <tr>
-                <td></td>
-                <td><div align="right"><strong>Show site IP addresses:</strong></div></td>
-                <td><input onchange="saveChanges();" onfocus="showHelp('showSiteIPAddresses_help');" type="checkbox" name="showIPAddresses" value="1">
-                <xsl:if test="cdash/project/showipaddresses=1">
-                <xsl:attribute name="checked"></xsl:attribute>
-                </xsl:if>
-                </input>
-                <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
-                  <img onmouseover="showHelp('showSiteIPAddresses_help');" src="images/help.gif" border="0"/></a>
-                <span class="help_content" id="showSiteIPAddresses_help">
-                <b>Show Site IP Addresses</b><br/> Enable/Disable the display of IP addresses of the sites submitting to this project.
-                  </span>
-                </td>
-              </tr>
-              <tr>
                 <td>              
                 </td>
                 <td>              
@@ -706,6 +691,21 @@ edit the project</a><br/>
                   </span>
                     </td>
                 </tr>
+                 <tr>
+                <td></td>
+                <td><div align="right"><strong>Show site IP addresses:</strong></div></td>
+                <td><input onchange="saveChanges();" onfocus="showHelp('showSiteIPAddresses_help');" type="checkbox" name="showIPAddresses" value="1">
+                <xsl:if test="cdash/project/showipaddresses=1">
+                <xsl:attribute name="checked"></xsl:attribute>
+                </xsl:if>
+                </input>
+                <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelp('showSiteIPAddresses_help');" src="images/help.gif" border="0"/></a>
+                <span class="help_content" id="showSiteIPAddresses_help">
+                <b>Show Site IP Addresses</b><br/> Enable/Disable the display of IP addresses of the sites submitting to this project.
+                  </span>
+                </td>
+              </tr>
                 <tr>
                   <td>              
                 </td>
