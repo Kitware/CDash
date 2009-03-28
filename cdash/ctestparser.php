@@ -31,6 +31,7 @@ function ctest_parse($filehandler, $projectid)
 { 
   include 'cdash/config.php';
   require_once 'cdash/common.php';
+  require_once 'models/project.php';
 
   $content = fread($filehandler, 8192);
   $handler = null;
@@ -86,7 +87,12 @@ function ctest_parse($filehandler, $projectid)
   if($handler == NULL)
     {
     echo "no handler found";
-    add_log('error: could not create handler based on xml content', 'ctest_parse');
+    add_log('error: could not create handler based on xml content', 'ctest_parse',LOG_ERR);
+    add_log("Content = ".$content, 'ctest_parse');
+    $Project = new Project();
+    $Project->Id = $projectid;
+    $Project->SendEmailToAdmin('Cannot create handler based on XML content',
+                               'An XML submission to the project cannot be parsed. The content of the file is as follow: '.$content);
     exit();
     }
 
@@ -116,7 +122,7 @@ function ctest_parse($filehandler, $projectid)
   if(!$handle = fopen($filename, 'w')) 
     {
     echo "Cannot open file ($filename)";
-    add_log("Cannot open file ($filename)", "backup_xml_file");
+    add_log("Cannot open file ($filename)", "backup_xml_file",LOG_ERR);
     return $handler;
     }
   
@@ -124,7 +130,7 @@ function ctest_parse($filehandler, $projectid)
   if(fwrite($handle, $content) === FALSE)  
     {
     echo "Cannot write to file ($contents)";
-    add_log("Cannot write to file ($$contents)", "backup_xml_file");
+    add_log("Cannot write to file ($$contents)", "backup_xml_file",LOG_ERR);
     fclose($handle);
     return $handler;
     }
@@ -135,7 +141,7 @@ function ctest_parse($filehandler, $projectid)
     if (fwrite($handle, $content) === FALSE)  
       {
       echo "Cannot write to file ($contents)";
-      add_log("Cannot write to file ($$contents)", "backup_xml_file");
+      add_log("Cannot write to file ($$contents)", "backup_xml_file",LOG_ERR);
       fclose($handle);
       return $handler;
       }
@@ -148,75 +154,4 @@ function ctest_parse($filehandler, $projectid)
   
   return $handler;
 }
-
-/** get handler (object)*/
-function getObjectHandler($filehandler, $projectid)
-  {
-  include 'cdash/config.php';
-  require_once 'cdash/common.php';
-
-  $content = fread($filehandler, 8192);
-  $handler = null;
-  $parser = xml_parser_create();
-  $file = "";
-
-  if(preg_match('/<Update/', $content)) // Should be first otherwise confused with Build
-    {
-    $handler = new UpdateHandler($projectid);
-    $file = "Update";
-    } 
-  else if(ereg('<Build', $content))
-    {
-    $handler = new BuildHandler($projectid);
-    $file = "Build";
-    }
-  else if(preg_match('/<Configure/', $content)) 
-    {
-    $handler = new ConfigureHandler($projectid);
-    $file = "Configure";
-    } 
-  else if(preg_match('/<Testing/', $content)) 
-    {
-    $handler = new TestingHandler($projectid);
-    $file = "Test";
-    } 
-  else if(preg_match('/<CoverageLog/', $content)) // Should be before coverage 
-    {
-    $handler = new CoverageLogHandler($projectid);
-    $file = "CoverageLog";
-    }   
-  else if(preg_match('/<Coverage/', $content)) 
-    {
-    $handler = new CoverageHandler($projectid);
-    $file = "Coverage";
-    } 
-  else if(preg_match('/<Notes/', $content)) 
-    {
-    $handler = new NoteHandler($projectid);
-    $file = "Notes";
-    }  
-  else if(preg_match('/<DynamicAnalysis/', $content)) 
-    {
-    $handler = new DynamicAnalysisHandler($projectid);
-    $file = "DynamicAnalysis";
-    }
-  else if(preg_match('/<Project/', $content)) 
-    {
-    $handler = new ProjectHandler($projectid);
-    $file = "Project";
-    }  
-
-  if($handler == NULL)
-    {
-    echo "no handler found";
-    add_log('error: could not create handler based on xml content', 'getObjectHandler');
-    exit();
-    }
-  
-  xml_set_element_handler($parser, array($handler, 'startElement'), array($handler, 'endElement'));
-  xml_set_character_data_handler($parser, array($handler, 'text'));
-  xml_parse($parser, $content, false);
-  return $handler;   
-  }
-  
 ?>
