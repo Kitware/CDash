@@ -70,8 +70,11 @@
 <xsl:if test="cdash/onlyfailed=1">
   <xsl:value-of select="cdash/numFailed"/> tests failed.
 </xsl:if>
+<xsl:if test="cdash/onlynotrun=1">
+  <xsl:value-of select="cdash/numNotRun"/> tests not run.
+</xsl:if>
 <xsl:if test="cdash/onlytimestatus=1">
-  <xsl:value-of select="cdash/numTimeFailed"/> tests failed.
+  <xsl:value-of select="cdash/numTimeFailed"/> tests failed for timing reasons.
 </xsl:if>
 <xsl:if test="cdash/onlypassed!=1 and cdash/onlyfailed!=1">
   <xsl:value-of select="cdash/numPassed"/> passed, 

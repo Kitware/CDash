@@ -368,7 +368,7 @@
       </xsl:attribute>
         <xsl:if test="countbuildids=1">
         <a>
-        <xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="buildid"/>
+        <xsl:attribute name="href">viewTest.php?onlynotrun&#38;buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="test/notrun"/>
         </a>
