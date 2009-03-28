@@ -328,6 +328,8 @@ CREATE TABLE `project` (
   `emailtesttimingchanged` tinyint(4) NOT NULL default '0',
   `emailbrokensubmission` tinyint(4) NOT NULL default '1',
   `emailredundantfailures` tinyint(4) NOT NULL default '0',
+  `emailadministrator` tinyint(4) NOT NULL default '1',
+  `showipaddresses` tinyint(4) NOT NULL default '1',
   `cvsviewertype` varchar(10) default NULL,
   `testtimestd` float(3,1) default '4.0',
   `testtimestdthreshold` float(3,1) default '1.0',

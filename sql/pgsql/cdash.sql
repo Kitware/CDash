@@ -264,6 +264,8 @@ CREATE TABLE "project" (
   "emailtesttimingchanged" smallint DEFAULT '0' NOT NULL,
   "emailbrokensubmission" smallint DEFAULT '1' NOT NULL,
   "emailredundantfailures" smallint DEFAULT '0' NOT NULL,
+  "emailadministrator" smallint DEFAULT '1' NOT NULL, 
+  "showipaddresses" smallint DEFAULT '1' NOT NULL,
   "cvsviewertype" character varying(10) DEFAULT NULL,
   "testtimestd" numeric(3,1) DEFAULT '4.0',
   "testtimestdthreshold" numeric(3,1) DEFAULT '1.0',
