@@ -523,7 +523,7 @@ edit the project</a><br/>
               <table width="550">
               <tr>
                 <td></td>
-                <td><div align="right"><strong>Email broken submission:</strong></div></td>
+                <td><div align="right"><strong>Email submission failures:</strong></div></td>
                 <td><input onchange="saveChanges();" onfocus="showHelp('emailBroken_help');" type="checkbox" name="emailBrokenSubmission" value="1">
                 <xsl:if test="cdash/project/emailbrokensubmission=1">
                 <xsl:attribute name="checked"></xsl:attribute>
@@ -536,7 +536,7 @@ edit the project</a><br/>
                   </span>
                 </td>
               </tr>
-               <tr>
+              <tr>
                 <td></td>
                 <td><div align="right"><strong>Email redundant failures:</strong></div></td>
                 <td><input onchange="saveChanges();" onfocus="showHelp('emailRedundant_help');" type="checkbox" name="emailRedundantFailures" value="1">
@@ -549,6 +549,21 @@ edit the project</a><br/>
                 <span class="help_content" id="emailRedundant_help">
                 <b>Email redundant failures</b><br/> Enable/Disable sending email even if a build has been failing previously. If not checked, CDash sends an email
                 only on the first failure.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><div align="right"><strong>Email administrator:</strong></div></td>
+                <td><input onchange="saveChanges();" onfocus="showHelp('emailAdministrator_help');" type="checkbox" name="emailAdministrator" value="1">
+                <xsl:if test="cdash/project/emailadministrator=1">
+                <xsl:attribute name="checked"></xsl:attribute>
+                </xsl:if>
+                </input>
+                <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelp('emailAdministrator_help');" src="images/help.gif" border="0"/></a>
+                <span class="help_content" id="emailAdministrator_help">
+                <b>Email administator</b><br/> Enable/Disable sending email when the XML parsing fails or any issues related to the project administration.
                   </span>
                 </td>
               </tr>
@@ -621,6 +636,21 @@ edit the project</a><br/>
                   <xsl:value-of select="cdash/project/emailmaxchars"/>
                 </xsl:attribute>
                 </input>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><div align="right"><strong>Show site IP addresses:</strong></div></td>
+                <td><input onchange="saveChanges();" onfocus="showHelp('showSiteIPAddresses_help');" type="checkbox" name="showIPAddresses" value="1">
+                <xsl:if test="cdash/project/showipaddresses=1">
+                <xsl:attribute name="checked"></xsl:attribute>
+                </xsl:if>
+                </input>
+                <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelp('showSiteIPAddresses_help');" src="images/help.gif" border="0"/></a>
+                <span class="help_content" id="showSiteIPAddresses_help">
+                <b>Show Site IP Addresses</b><br/> Enable/Disable the display of IP addresses of the sites submitting to this project.
+                  </span>
                 </td>
               </tr>
               <tr>

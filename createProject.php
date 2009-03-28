@@ -137,6 +137,8 @@ if($Submit)
     @$Project->ShowTestTime = $_POST["showTestTime"];
     @$Project->EmailMaxItems = $_POST["emailMaxItems"];
     @$Project->EmailMaxChars = $_POST["emailMaxChars"];
+    @$Project->EmailAdministrator = $_POST["emailAdministrator"];
+    @$Project->ShowIPAddresses = $_POST["showIPAddresses"];
     $Project->Public = $Public;
     
     $projectid = -1;
@@ -253,7 +255,9 @@ if($Update || $AddRepository)
   @$Project->ShowTestTime = $_POST["showTestTime"];
   @$Project->EmailMaxItems = $_POST["emailMaxItems"];
   @$Project->EmailMaxChars = $_POST["emailMaxChars"];
-  
+  @$Project->EmailAdministrator = $_POST["emailAdministrator"];
+  @$Project->ShowIPAddresses = $_POST["showIPAddresses"];
+    
   $Project->Save();
   
   // Add the logo
@@ -322,6 +326,8 @@ if($projectid>0)
   $xml .= add_XML_value("showtesttime",$Project->ShowTestTime);
   $xml .= add_XML_value("emailmaxitems",$Project->EmailMaxItems);
   $xml .= add_XML_value("emailmaxchars",$Project->EmailMaxChars);
+  $xml .= add_XML_value("emailadministrator",$Project->EmailAdministrator);
+  $xml .= add_XML_value("showipaddresses",$Project->ShowIPAddresses);
   $xml .= "</project>";
   
   $repositories = $Project->GetRepositories();

@@ -435,7 +435,9 @@ if(isset($_GET['upgrade-1-4']))
   
   AddTableIndex('buildfailureargument','argument');
 
-  //  Add fields in the buildgroup table 
+  //  Add fields in the buildgroup table
+  AddTableField("project","emailadministrator","tinyint(4)","smallint","1");
+  AddTableField("project","showipaddresses","tinyint(4)","smallint","1");
   AddTableField("buildgroup","includesubprojectotal","tinyint(4)","smallint","1");
   AddTableField("project","emailredundantfailures","tinyint(4)","smallint","0");
   AddTableField("buildfailure2argument","place","int(11)","bigint","0");
