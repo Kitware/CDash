@@ -32,6 +32,21 @@
                  }
                  return false;
               }
+              
+              function generatePassword()
+                { 
+                var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+                var passwd = "";
+                for(x=0;x&lt;12;x++)
+                  {
+                  i = Math.floor(Math.random() * 62);
+                  passwd += chars.charAt(i);
+                  }
+                $("input#passwd").val(passwd);
+                $("input#passwd2").val(passwd);
+                $("#clearpasswd").html("("+passwd+")");
+                }
+              
               &lt;/script&gt;
         </xsl:text>
        </head>
@@ -53,8 +68,8 @@
 
 <div style="color: red;"><xsl:value-of select="cdash/error" /></div> 
 
-
-  <table width="100%"  border="0">  
+<form method="post" action="manageUsers.php" name="regform">
+<table width="100%"  border="0">  
   <tr>
     <td><div align="right"></div></td>
     <td  bgcolor="#DDDDDD"><strong>Search for already registered users</strong></td>
@@ -83,8 +98,46 @@
     <td><div align="right"></div></td>
     <td><div name="newuser" id="newuser"></div></td>
   </tr>
+  <tr>
+    <td></td>
+    <td  bgcolor="#DDDDDD"><strong>Add new user</strong></td>
+  </tr>
+  <tr class="treven">
+  <td width="20%" height="2" class="nob"><div align="right"> First Name: </div></td>
+  <td  width="80%" height="2" class="nob"><input class="textbox" name="fname" size="20"/></td>
+</tr>
+<tr class="trodd">
+  <td width="20%" height="2" class="nob"><div align="right"> Last Name: </div></td>
+  <td  width="80%" height="2" class="nob"><input class="textbox" name="lname" size="20"/></td>
+</tr>
+<tr class="treven">
+  <td width="20%" height="2" class="nob"><div align="right"> Email: </div></td>
+  <td  width="80%" height="2" class="nob"><input class="textbox"  name="email" size="20"/></td>
+</tr>
+<tr class="trodd">
+    <td width="20%" height="2" class="nob"><div align="right">Password: </div></td>
+    <td width="80%" height="2" class="nob"><input class="textbox" type="password"  id="passwd" name="passwd" size="20"/>
+    <input type="button" value="Generate Password" onclick="javascript:generatePassword();" name="generatepassword" class="textbox"/>
+    <span id="clearpasswd"></span>
+    </td>
+</tr>
+<tr class="treven">
+    <td width="20%" height="2" class="nob"><div align="right">Confirm Password: </div></td>
+    <td width="80%" height="2" class="nob"><input class="textbox" type="password" id="passwd2"  name="passwd2" size="20"/></td>
+</tr>
+<tr class="trodd">
+  <td width="20%" height="2" class="nob"><div align="right"> Institution: </div></td>
+  <td  width="80%" height="2" class="nob"><input class="textbox" name="institution" size="20"/></td>
+</tr>
+<tr>
+  <td width="20%" class="nob"></td>
+  <td width="80%" class="nob"><input type="submit" value="Add user >>" name="adduser" class="textbox"/>
+  (password will be display in clear upon addition)
+  </td>
+</tr> 
 </table>  
-  
+</form> 
+
 <!-- FOOTER -->
 <br/>
 

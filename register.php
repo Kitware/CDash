@@ -46,7 +46,7 @@ function register()
     $fname = $_POST["fname"];
     $lname = $_POST["lname"];
     $institution = $_POST["institution"];
-    if ($email and $passwd and $passwd2 and $fname and $lname and $institution)
+    if ($email && $passwd && $passwd2 && $fname && $lname && $institution)
       {
       $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
       pdo_select_db("$CDASH_DB_NAME",$db);

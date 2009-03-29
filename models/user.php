@@ -129,9 +129,15 @@ class User
         $id = "id,";
         $idvalue = "'".$this->Id."',";
         }
-        
+      
+      $email = pdo_real_escape_string($this->Email);
+      $passwd = pdo_real_escape_string($this->Password);
+      $fname = pdo_real_escape_string($this->FirstName);
+      $lname = pdo_real_escape_string($this->LastName);
+      $institution = pdo_real_escape_string($this->Institution);
+          
       $query = "INSERT INTO user (".$id."email,password,firstname,lastname,institution,admin)
-                 VALUES (".$idvalue."'$this->Email','$this->Password','$this->FirstName','$this->LastName','$this->Institution','$this->Admin')";                     
+                 VALUES (".$idvalue."'".$email."','".$passwd."','".$fname."','".$lname."','".$institution."','$this->Admin')";                     
        if(!pdo_query($query))
          {
          add_last_sql_error("User Create");
@@ -194,6 +200,7 @@ class User
   /** Get the user id from the email */
   function GetIdFromEmail($email)
     {
+    $email = pdo_real_escape_string($email);
     $query = pdo_query("SELECT id FROM user WHERE email='".trim($email)."'");  
     if(!$query)
       {
