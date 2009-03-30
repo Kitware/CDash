@@ -86,13 +86,13 @@ if($projectid == 0)
     {
     include_once("local/models/proProject.php");
     $pro= new proProject($projectid); 
-    if($pro->isActif()!=false)
+    if($pro->IsActif()!=false)
       {
-      if(strtotime($pro->getEnd()<strtotime(date("r"))))
+      if(strtotime($pro->GetEnd()<strtotime(date("r"))))
         {
-        $pro->setStatus(0, 0, 0);
+        $pro->SetStatus(0, 0, 0);
         }
-      $xml.="<prostatus>".$pro->getStatus()."</prostatus>";
+      $xml.="<prostatus>".$pro->GetStatus()."</prostatus>";
       }
     }
  

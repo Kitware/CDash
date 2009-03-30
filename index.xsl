@@ -615,6 +615,21 @@
   </xsl:if>
   <!-- end "Row displaying the totals" -->
 
+  <!-- footer for the group when build>0 -->
+  <xsl:choose>         
+  <xsl:when test="/cdash/uselocaldirectory=1">
+    <xsl:call-template name="groupfooter_local">
+      <xsl:with-param name="type" select="."/>
+    </xsl:call-template>
+  </xsl:when>
+  <xsl:otherwise>
+    <xsl:call-template name="groupfooter">
+      <xsl:with-param name="type" select="."/>
+    </xsl:call-template>
+  </xsl:otherwise>
+  </xsl:choose>
+
+  
 </xsl:template>
 <!-- end template -->
 
