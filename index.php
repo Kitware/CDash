@@ -190,6 +190,13 @@ function add_default_buildgroup_sortlist($groupname)
 
 function should_collapse_rows($row1, $row2)
 {
+  //
+  // The SQL query should return results that are ordered by these fields
+  // such that adjacent rows from the query results are candidates for
+  // collapsing according to this function. (i.e. - the "ORDER BY" clause of
+  // the SQL query is coupled to this function in terms of whether the
+  // "collapse" feature will work as expected...)
+  //
   if(
        ($row1['name'] == $row2['name'])
     && ($row1['siteid'] == $row2['siteid'])
@@ -554,9 +561,10 @@ function generate_main_dashboard_XML($projectid,$date)
                          WHERE ".$date_clause."
                          b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                          AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
-                         ".$subprojectsql." ".$filter_sql." ORDER BY gp.position ASC,b.name ASC ";
-                         
-  // We shoudln't get any builds for group that have been deleted (otherwise something is wrong)
+                         ".$subprojectsql." ".$filter_sql.
+                         " ORDER BY gp.position ASC,b.name ASC,b.siteid ASC,b.stamp DESC";
+
+  // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = pdo_query($sql);
   echo pdo_error();
   
