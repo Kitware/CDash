@@ -507,7 +507,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     add_last_sql_error("sendmail");
     while($test_array = pdo_fetch_array($test_query))
       {
-      $info = $test_array["name"]."(".$serverURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
+      $info = $test_array["name"]." (".$serverURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
       $information .= substr($info,0,$maxchars);
       }
     $information .= "\n";
