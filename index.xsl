@@ -597,10 +597,10 @@
       </xsl:attribute>   
       <b><xsl:value-of select = "$type/totalPass"/></b>
       </td>
-      <td width="3%" align="center">
+      <td width="3%" align="center">      
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="$type/enableTestTiming != 0">
+          <xsl:when test="/cdash/enableTestTiming != 0">
           normal
           </xsl:when>
         </xsl:choose>
@@ -614,25 +614,8 @@
   </tbody>
   </xsl:if>
   <!-- end "Row displaying the totals" -->
-
-  <!-- footer for the group when build>0 -->
-  <xsl:choose>         
-  <xsl:when test="/cdash/uselocaldirectory=1">
-    <xsl:call-template name="groupfooter_local">
-      <xsl:with-param name="type" select="."/>
-    </xsl:call-template>
-  </xsl:when>
-  <xsl:otherwise>
-    <xsl:call-template name="groupfooter">
-      <xsl:with-param name="type" select="."/>
-    </xsl:call-template>
-  </xsl:otherwise>
-  </xsl:choose>
-
-  
 </xsl:template>
 <!-- end template -->
-
 
    <xsl:include href="filterdataTemplate.xsl"/>
    <xsl:include href="header.xsl"/>
@@ -898,9 +881,7 @@
   </xsl:call-template>
   </table>
 </xsl:for-each>
-
-<br/>
-
+  
 <!-- COVERAGE -->
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
     <xsl:if test="count(cdash/buildgroup/coverage)=0">
@@ -1005,7 +986,6 @@
 </table>
 </xsl:if>
 
-<br/>
 
 <!-- Dynamic analysis -->
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable"> 
@@ -1101,6 +1081,10 @@
   </table>
 </xsl:if>
 
+<!-- footer  -->        
+<xsl:if test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="coverageheader_local"/>
+</xsl:if>
 
 </xsl:if> <!-- end dashboard is not in the future -->
 
@@ -1109,7 +1093,6 @@
 CDash cannot predict the future (yet)...
 <br/>
 </xsl:if> <!-- end dashboard is in the future -->
-
 </div>
 <!-- FOOTER -->
 <br/>
