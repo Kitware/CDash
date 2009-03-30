@@ -46,6 +46,13 @@ $(document).ready(function() {
               {
               i = s.indexOf("<A href");
               }
+            
+            // We don't have a <a href
+            if(i==-1)
+              {
+              return s;
+              }
+              
             var j = s.indexOf(">",i);
             var k = s.indexOf("</a>",j);
             if(k==-1) // IE
