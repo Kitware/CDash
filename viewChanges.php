@@ -166,7 +166,7 @@ function sort_by_directory_file_time($e1, $e2)
 function get_updates_xml_from_commits($projectname, $dates, $commits)
 {
   $xml = "<updates>\n";
-  $xml .= "<timestamp>" . date(FMT_DATETIMETZ, $dates['nightly-0']." GMT") ."</timestamp>";
+  $xml .= "<timestamp>".date(FMT_DATETIMETZ, $dates['nightly-0'])."</timestamp>";
   $xml .= "<javascript>\n";
 
   // Args to dbAdd : "true" means directory, "false" means file
@@ -195,7 +195,7 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
       {
       $revision = $commit['revision'];
       }
-    $time = gmdate(FMT_DATETIME, $commit['time']);
+    $time = gmdate(FMT_DATETIME, strtotime($commit['time']));
     $author = $commit['author'];
     
     // Only display email if the user is logged in
@@ -289,10 +289,10 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   $commit['filename'] = $current_filename;
   $commit['revision'] = $current_revision;
   $commit['priorrevision'] = $dailyupdate_array['priorrevision'];
-  $commit['time'] = $dailyupdate_array['time'];
+  $commit['time'] = $dailyupdate_array['checkindate'];
   $commit['author'] = $dailyupdate_array['author'];
   $commit['comment'] = $dailyupdate_array['log'];
-  $commit['buglink'] = '';
+  $commit['bugurl'] = '';
   
   $log = $commit['comment'];
   // If the log starts with BUG:
