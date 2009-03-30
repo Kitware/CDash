@@ -643,11 +643,11 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
     {
     switch($key)
       {
-      case 'update_errors': $messagePlainText .= "Update errors:".$value; break;
-      case 'configure_errors': $messagePlainText .= "Configure errors:".$value; break;
-      case 'build_warnings': $messagePlainText .= "Warnings:".$value; break;
-      case 'build_errors': $messagePlainText .= "Errors:".$value; break;
-      case 'test_errors': $messagePlainText .= "Tests failing: ".$value; break;
+      case 'update_errors': $messagePlainText .= "Update errors:".$value."\n"; break;
+      case 'configure_errors': $messagePlainText .= "Configure errors:".$value."\n"; break;
+      case 'build_warnings': $messagePlainText .= "Warnings:".$value."\n"; break;
+      case 'build_errors': $messagePlainText .= "Errors:".$value."\n"; break;
+      case 'test_errors': $messagePlainText .= "Tests failing: ".$value."\n"; break;
       }
     }  
 
