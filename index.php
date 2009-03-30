@@ -483,22 +483,6 @@ function generate_main_dashboard_XML($projectid,$date)
   $filter_sql = $filterdata['sql'];
   $xml .= $filterdata['xml'];
 
-  // Statistics:
-  //
-  $totalUpdatedFiles = 0;
-  $totalUpdateError = 0;
-  $totalUpdateWarning = 0;
-  $totalUpdateDuration = 0;
-  $totalConfigureError = 0;
-  $totalConfigureWarning = 0;
-  $totalConfigureDuration = 0;
-  $totalerrors = 0;
-  $totalwarnings = 0;
-  $totalBuildDuration = 0;
-  $totalnotrun = 0;
-  $totalfail= 0;
-  $totalpass = 0;  
-  $totalTestsDuration = 0;
 
   // Local function to add expected builds
   function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
@@ -936,6 +920,21 @@ function generate_main_dashboard_XML($projectid,$date)
 
   // Generate the xml from the (possibly collapsed) rows of builds:
   //
+  $totalUpdatedFiles = 0;
+  $totalUpdateError = 0;
+  $totalUpdateWarning = 0;
+  $totalUpdateDuration = 0;
+  $totalConfigureError = 0;
+  $totalConfigureWarning = 0;
+  $totalConfigureDuration = 0;
+  $totalerrors = 0;
+  $totalwarnings = 0;
+  $totalBuildDuration = 0;
+  $totalnotrun = 0;
+  $totalfail= 0;
+  $totalpass = 0;  
+  $totalTestsDuration = 0;
+  
   foreach($build_rows as $build_array)
     {
     $groupposition = $build_array["position"];
@@ -949,11 +948,24 @@ function generate_main_dashboard_XML($projectid,$date)
           {
           $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
           }
-
-        if($previousgroupposition == $lastGroupPosition)
-          {
-          $xml .= "<last>1</last>";
-          }
+          
+        $xml .= add_XML_value("totalUpdatedFiles",$totalUpdatedFiles);
+        $xml .= add_XML_value("totalUpdateError",$totalUpdateError);
+        $xml .= add_XML_value("totalUpdateWarning",$totalUpdateWarning);
+        $xml .= add_XML_value("totalUpdateDuration",$totalUpdateDuration);
+      
+        $xml .= add_XML_value("totalConfigureDuration",$totalConfigureDuration);
+        $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
+        $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
+      
+        $xml .= add_XML_value("totalError",$totalerrors);
+        $xml .= add_XML_value("totalWarning",$totalwarnings);
+        $xml .= add_XML_value("totalBuildDuration",$totalBuildDuration);
+      
+        $xml .= add_XML_value("totalNotRun",$totalnotrun);
+        $xml .= add_XML_value("totalFail",$totalfail);
+        $xml .= add_XML_value("totalPass",$totalpass); 
+        $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);  
         $xml .= "</buildgroup>";
         }
 
@@ -981,15 +993,25 @@ function generate_main_dashboard_XML($projectid,$date)
           {
           $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
           }
-        if($previousgroupposition == $lastGroupPosition)
-          {
-          $xml .= "<last>1</last>";
-          }
         $xml .= "</buildgroup>";  
         }  
 
 
       $xml .= "<buildgroup>";
+      $totalUpdatedFiles = 0;
+      $totalUpdateError = 0;
+      $totalUpdateWarning = 0;
+      $totalUpdateDuration = 0;
+      $totalConfigureError = 0;
+      $totalConfigureWarning = 0;
+      $totalConfigureDuration = 0;
+      $totalerrors = 0;
+      $totalwarnings = 0;
+      $totalBuildDuration = 0;
+      $totalnotrun = 0;
+      $totalfail= 0;
+      $totalpass = 0;  
+      $totalTestsDuration = 0;
       $xml .= add_default_buildgroup_sortlist($groupname);
       $xml .= add_XML_value("name",$groupname);
       $xml .= add_XML_value("linkname",str_replace(" ","_",$groupname));
@@ -1324,10 +1346,24 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
       }
-    if($previousgroupposition == $lastGroupPosition)
-      {
-      $xml .= "<last>1</last>";
-      }
+    
+    $xml .= add_XML_value("totalUpdatedFiles",$totalUpdatedFiles);
+    $xml .= add_XML_value("totalUpdateError",$totalUpdateError);
+    $xml .= add_XML_value("totalUpdateWarning",$totalUpdateWarning);
+    $xml .= add_XML_value("totalUpdateDuration",$totalUpdateDuration);
+  
+    $xml .= add_XML_value("totalConfigureDuration",$totalConfigureDuration);
+    $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
+    $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
+  
+    $xml .= add_XML_value("totalError",$totalerrors);
+    $xml .= add_XML_value("totalWarning",$totalwarnings);
+    $xml .= add_XML_value("totalBuildDuration",$totalBuildDuration);
+  
+    $xml .= add_XML_value("totalNotRun",$totalnotrun);
+    $xml .= add_XML_value("totalFail",$totalfail);
+    $xml .= add_XML_value("totalPass",$totalpass); 
+    $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);  
     $xml .= "</buildgroup>";
     }
 
@@ -1354,30 +1390,8 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
       }
-    if($i == $lastGroupPosition)
-      {
-      $xml .= "<last>1</last>";
-      }
     $xml .= "</buildgroup>";  
     }
-
-  $xml .= add_XML_value("totalUpdatedFiles",$totalUpdatedFiles);
-  $xml .= add_XML_value("totalUpdateError",$totalUpdateError);
-  $xml .= add_XML_value("totalUpdateWarning",$totalUpdateWarning);
-  $xml .= add_XML_value("totalUpdateDuration",$totalUpdateDuration);
-
-  $xml .= add_XML_value("totalConfigureDuration",$totalConfigureDuration);
-  $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
-  $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
-
-  $xml .= add_XML_value("totalError",$totalerrors);
-  $xml .= add_XML_value("totalWarning",$totalwarnings);
-  $xml .= add_XML_value("totalBuildDuration",$totalBuildDuration);
-
-  $xml .= add_XML_value("totalNotRun",$totalnotrun);
-  $xml .= add_XML_value("totalFail",$totalfail);
-  $xml .= add_XML_value("totalPass",$totalpass); 
-  $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);
 
   $xml .= add_XML_value("enableTestTiming",$project_array["showtesttime"]);
 

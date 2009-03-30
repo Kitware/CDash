@@ -481,11 +481,11 @@
 
 
   <!-- Row displaying the totals -->
-  <xsl:if test="count(/cdash/buildgroup/build/buildid)>0 and $type/last=1">
+  <xsl:if test="count($type/build/buildid)>0">
   <tbody>
     <tr class="total">
       <td width="15%" align="left">Totals</td>
-      <td width="15%" align="center"><b><xsl:value-of select = "count(/cdash/buildgroup/build/buildid)" /> Builds</b></td>
+      <td width="15%" align="center"><b><xsl:value-of select = "count($type/build/buildid)" /> Builds</b></td>
       <td width="2%" align="center">
        <xsl:attribute name="class">
        <xsl:choose>
@@ -497,13 +497,13 @@
            </xsl:otherwise>
         </xsl:choose>
         </xsl:attribute>
-      <xsl:value-of select = "/cdash/totalUpdatedFiles"/>
+      <xsl:value-of select = "$type/totalUpdatedFiles"/>
       </td>
-      <td width="3%" align="right"><xsl:value-of select = "/cdash/totalUpdateDuration"/></td>
+      <td width="3%" align="right"><xsl:value-of select = "$type/totalUpdateDuration"/></td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
        <xsl:choose>
-          <xsl:when test="/cdash/totalConfigureError!=0">
+          <xsl:when test="$type/totalConfigureError!=0">
             error
             </xsl:when>
           <xsl:otherwise>
@@ -511,12 +511,12 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <b><xsl:value-of select = "/cdash/totalConfigureError"/></b>  
+      <b><xsl:value-of select = "$type/totalConfigureError"/></b>  
       </td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="/cdash/totalConfigureWarning > 0">
+          <xsl:when test="$type/totalConfigureWarning > 0">
             warning
             </xsl:when>
           <xsl:otherwise>
@@ -524,15 +524,15 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>  
-      <b><xsl:value-of select = "/cdash/totalConfigureWarning"/></b>
+      <b><xsl:value-of select = "$type/totalConfigureWarning"/></b>
       </td>
       <td width="5%" align="right">
-        <xsl:value-of select = "/cdash/totalConfigureDuration"/>
+        <xsl:value-of select = "$type/totalConfigureDuration"/>
       </td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="/cdash/totalError > 0">
+          <xsl:when test="$type/totalError > 0">
             error
             </xsl:when>
           <xsl:otherwise>
@@ -540,12 +540,12 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <b><xsl:value-of select = "/cdash/totalError"/></b>
+      <b><xsl:value-of select = "$type/totalError"/></b>
       </td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="/cdash/totalWarning > 0">
+          <xsl:when test="$type/totalWarning > 0">
             warning
             </xsl:when>
           <xsl:otherwise>
@@ -553,15 +553,15 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>  
-      <b><xsl:value-of select = "/cdash/totalWarning"/></b>
+      <b><xsl:value-of select = "$type/totalWarning"/></b>
       </td>
       <td width="5%" align="right">
-        <xsl:value-of select = "/cdash/totalBuildDuration"/>
+        <xsl:value-of select = "$type/totalBuildDuration"/>
       </td>
       <td width="6%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="/cdash/totalNotRun > 0">
+          <xsl:when test="$type/totalNotRun > 0">
             warning
             </xsl:when>
           <xsl:otherwise>
@@ -569,12 +569,12 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <b><xsl:value-of select = "/cdash/totalNotRun"/></b>
+      <b><xsl:value-of select = "$type/totalNotRun"/></b>
       </td>
       <td width="3%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="/cdash/totalFail > 0">
+          <xsl:when test="$type/totalFail > 0">
             error
             </xsl:when>
           <xsl:otherwise>
@@ -582,12 +582,12 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>   
-      <b><xsl:value-of select = "/cdash/totalFail"/></b>  
+      <b><xsl:value-of select = "$type/totalFail"/></b>  
       </td>
       <td width="3%" align="center">
        <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="/cdash/totalFail > 0">
+          <xsl:when test="$type/totalFail > 0">
             error
             </xsl:when>
           <xsl:otherwise>
@@ -595,17 +595,17 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>   
-      <b><xsl:value-of select = "/cdash/totalPass"/></b>
+      <b><xsl:value-of select = "$type/totalPass"/></b>
       </td>
       <td width="3%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="/cdash/enableTestTiming != 0">
+          <xsl:when test="$type/enableTestTiming != 0">
           normal
           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
-        <xsl:value-of select = "/cdash/totalTestsDuration"/>
+        <xsl:value-of select = "$type/totalTestsDuration"/>
       </td>
       <td width="10%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
       <td width="10%" class="nob"></td>
