@@ -28,7 +28,7 @@ if(!isset($projectname))
   die("Error: project not specified<br>\n");
   }
 @$date = $_GET["date"];
- 
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -106,11 +106,10 @@ if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql")
    $rlike = "~";
    }
 
-// It seems that previous date is what should work
-$stamp = str_replace("-","",$date);   
-   
-$buildQuery = "SELECT id FROM build,build2group as b2g WHERE projectid = '$projectid' 
-               AND build.stamp ".$rlike." '^$stamp-' AND b2g.buildid=build.id".$groupSelectionSQL; 
+$stamp = str_replace("-","",$today);
+
+$buildQuery = "SELECT id FROM build,build2group as b2g WHERE projectid = '$projectid'
+               AND build.stamp ".$rlike." '^$stamp-' AND b2g.buildid=build.id".$groupSelectionSQL;
 
 $buildResult = pdo_query($buildQuery);
 $builds = array();
