@@ -1,3 +1,69 @@
+CDash 1.4.0, 2009-04-01
+------------------------
+
+- 0008670 Failed tests shown in orange instead of red                              
+- 0008643 Email summary lines sent out by CDash not very good for Trilinos                              
+- 0008117 disallow public registration                              
+- 0006631 Logos that are too big (tall) make index.php?project=blah page look bad                              
+- 0007736 Root directory in websvn URL must have trailing slash for websvn paths to be generated correctly                              
+- 0007771 Nightly changes should store previous revision                              
+- 0008103 Timing test did not fail                              
+- 0008127 Prevent spamming                              
+- 0007920 ViewChanges crashes ViewCVS on newly created files                              
+- 0008663 'Dynamic Analysis' field 'Labels' is not sorting                              
+- 0007570 Test submission silently fails when test output is quite large.                              
+- 0008616 Sending subproject email address regression lists in XML and updating CDash email lists                              
+- 0008615 Sorting the 'Min' columns is not a numeric sort.                              
+- 0008191 pdo_query() does not work if it is not MySQL                              
+- 0008469 Coverage broken in SVN                              
+- 0008462 Only 412 test results shown                              
+- 0008662 'Coverage' fields 'passed', 'failed', and 'Labels' are not sorting                             
+- 0008740 NotRun/Fail/Pass tests reports don't report what they should report                              
+- 0007713 Upgrading Database should now use previous version                              
+- 0007884 Ask CDash not to fill IP addressrd                              
+- 0008679 XML Parsing problem should send email                           
+- 0008783 Email Preference not greyed out on subscription page when ""Email Broken Submission"" is unchecked                            
+- 0007724 Configure warnings and errors should trigger email                              
+- 0008810 When Editing a project, createProject.php get an error calling fopen."                              
+- 0008119 use admin email address as sender address in password emails                              
+- 0008610 content of coverage differs to Coverage.xml                              
+- 0007855 CDash sends duplicate emails for the same build                              
+- 0008760 build failures not being sent out for all dashboard reported build errors                              
+- 0008730 Not sending out email notifications for failed configure?                              
+- 0008708 Add config.local.php                              
+- 0008592 Main project/subproject page should be able to filter only Nightly tests                              
+- 0008645 Coverage testing link times out                              
+- 0008318 viewUpdate.php with PosgreSQL fails                              
+- 0008638 'Dynamic Analsysis' columns can not be sorted                              
+- 0008368 XAMPP flaws                           
+- 0007908 Make possible to sort Code Coverage rows by submission time                              
+- 0008468 Help not closable on small screen                              
+- 0008484 Configure log field is too small                              
+- 0006468 go to a bug reference from a commit log                              
+- 0007778 User can register with the same email address                              
+- 0008460 Upgrade to jquery 1.3                              
+- 0007861 Upgrade from 1.0.2 to 1.2.1 breaks Groups                              
+- 0007907 Time units missing in detailed test report                              
+- 0008125 multiple users can share the same email address                              
+- 0008451 Coverage should be sorted by status by default                              
+- 0008448 cannot set CVS/SVN ViewerURL - CDash SVN trunk                              
+- 0008287 Project name should be trimmed                              
+- 0008254 User subscription public project                              
+- 0008160 Performance issue when submiting test                              
+- 0007916 Check that backup and rss directories are writable                              
+- 0008202 Project logo not displayed with PostgreSQL                              
+- 0008118 password recovery email seems to be bad html                              
+- 0008113 Wrong SQL query leads to not storing results                              
+- 0008084 Database name cannot contain minus (-)                              
+- 0007848 CDash admin privileges lacking some key actions                              
+- 0007847 Admin/users account can become permanently inaccessible                              
+- 0007853 Builds sent from differnt sites can clobber each other                              
+- 0007582 Charset encoding issues                              
+- 0007806 MySQL error creating build groups                              
+- 0007871 Installation check for php5-gd                              
+- 0007805 The same image can't have multiple roles for a given test                              
+
+
 CDash 1.2.1, 2008-10-23
 ------------------------
 
