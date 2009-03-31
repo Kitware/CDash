@@ -177,7 +177,23 @@ class User
     
     return $query_array['email'];
     } 
-    
+   
+  /** Set a password */
+  function SetPassword($newPassword)
+    {
+    if(!$this->Id || !is_numeric($this->Id))
+      {
+      return false;
+      }
+    $query = pdo_query("UPDATE ".qid("user")." SET password='".$newPassword."' WHERE id='".$this->Id."'");
+    if(!$query)
+      {
+      add_last_sql_error("User:SetPassword");
+      return false;
+      }
+    return true;  
+    }
+     
   /** Get the user id from the name */
   function GetIdFromName($name)
     {
