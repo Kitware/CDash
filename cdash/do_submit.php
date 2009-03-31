@@ -22,9 +22,11 @@ include_once("cdash/common.php");
 include_once("cdash/createRSS.php");
 include("cdash/sendemail.php");
 
-
 function do_submit($filehandle, $projectid)
 {
+
+  include('cdash/config.php');
+  
 // We find the daily updates
 // If we have php curl we do it asynchronously
   if(function_exists("curl_init") == TRUE)
