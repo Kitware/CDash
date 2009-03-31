@@ -37,7 +37,6 @@ pdo_select_db("$CDASH_DB_NAME",$db);
   
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
-$date = date(FMT_DATE, strtotime($build_array["starttime"]));
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
@@ -53,6 +52,7 @@ $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
+$date = get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]);
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 $siteid = $build_array["siteid"];
@@ -62,7 +62,7 @@ $starttime = $build_array["starttime"];
 
 // Menu
 $xml .= "<menu>";
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]));
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$date);
 $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($previousbuildid>0)
   {

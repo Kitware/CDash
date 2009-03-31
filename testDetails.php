@@ -64,7 +64,7 @@ $siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
 $siteResult = pdo_query($siteQuery);
 $siteRow = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id = '$siteid'"));
 
-$date = date(FMT_DATE, strtotime($buildRow["starttime"]));
+$date = get_dashboard_date_from_build_starttime($buildRow["starttime"], $project_array["nightlytime"]);
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
 

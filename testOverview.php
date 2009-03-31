@@ -43,6 +43,7 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 $nightlytime = $project_array["nightlytime"];
+
 // We select the builds
 list ($previousdate,$currentstarttime,$nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
@@ -106,7 +107,7 @@ if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql")
    }
 
 // It seems that previous date is what should work
-$stamp = str_replace("-","",$previousdate);   
+$stamp = str_replace("-","",$date);   
    
 $buildQuery = "SELECT id FROM build,build2group as b2g WHERE projectid = '$projectid' 
                AND build.stamp ".$rlike." '^$stamp-' AND b2g.buildid=build.id".$groupSelectionSQL; 

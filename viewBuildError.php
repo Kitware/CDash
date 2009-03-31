@@ -37,7 +37,6 @@ pdo_select_db("$CDASH_DB_NAME",$db);
   
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
-$date = date(FMT_DATE, strtotime($build_array["starttime"]));
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
@@ -60,10 +59,11 @@ $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
 $starttime = $build_array["starttime"];
 
+$date = get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]);
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 $xml .= "<menu>";
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]));
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$date);
 $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($previousbuildid>0)
   {

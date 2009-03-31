@@ -57,9 +57,11 @@ $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
 $starttime = $build_array["starttime"];
 
+$date = get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]);
+
 // Menu
 $xml .= "<menu>";
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]));
+$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$date);
 $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($previousbuildid>0)
   {
@@ -81,7 +83,6 @@ else
   }
 $xml .= "</menu>";
 
-$date = date(FMT_DATE, strtotime($build_array["starttime"]));
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
   // Build
