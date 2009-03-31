@@ -55,6 +55,12 @@ $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 // when using forwarding script
 $CDASH_FORWARDING_IP='192.%'; // should be an SQL format 
 $CDASH_DEFAULT_IP_LOCATIONS = array();
+// Use LDAP
+$CDASH_USE_LDAP='0';
+$CDASH_LDAP_HOSTNAME='localhost';
+$CDASH_LDAP_BASEDN='ou=people,dc=organization,dc=com';
+$CDASH_LDAP_PROTOCOL_VERSION='3';
+
 
 // Google Map API
 $CDASH_GOOGLE_MAP_API_KEY = array();
