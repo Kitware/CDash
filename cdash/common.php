@@ -1539,7 +1539,7 @@ function time2second($time)
 function get_dates($date,$nightlytime)
 {
   $nightlytime = strtotime($nightlytime);
-  
+
   $nightlyhour = date("H",$nightlytime);
   $nightlyminute = date("i",$nightlytime);
   $nightlysecond = date("s",$nightlytime);
@@ -1551,10 +1551,24 @@ function get_dates($date,$nightlytime)
     if(date(FMT_TIME)>date(FMT_TIME,$nightlytime))
       {
       $date = date(FMT_DATE,time()+3600*24); //next day
-      } 
+      }
     }
-
+  else
+    {  
+     // If the $nightlytime is in the morning it's actually the day after
+    if(date(FMT_TIME,$nightlytime)<'12:00:00')
+      {
+      $date = date(FMT_DATE,strtotime($date)+3600*24); // previous date
+      }  
+     }
+    
   $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,date2month($date),date2day($date),date2year($date))-3600*24; // starting time
+
+  // If the $nightlytime is in the morning it's actually the day after
+  if(date(FMT_TIME,$nightlytime)<'12:00:00')
+    {
+    $date = date(FMT_DATE,strtotime($date)-3600*24); // previous date
+    }  
 
   $todaydate = mktime(0,0,0,date2month($date),date2day($date),date2year($date)); 
   $previousdate = date(FMT_DATE,$todaydate-3600*24);
@@ -1792,13 +1806,20 @@ function get_last_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildna
 function get_dashboard_date_from_build_starttime($starttime,$nightlytime)
 {
   $nightlytime = strtotime($nightlytime)-1; // in case it's midnight
-  $starttime = strtotime($starttime);
-  
+  $starttime = strtotime($starttime." GMT");
+
+  $date = date(FMT_DATE,$starttime);
   if(date(FMT_TIME,$starttime)>date(FMT_TIME,$nightlytime))
     {
-    return date(FMT_DATE,$starttime+3600*24); //next day
+    $date = date(FMT_DATE,$starttime+3600*24); //next day
+    }
+    
+  // If the $nightlytime is in the morning it's actually the day after
+  if(date(FMT_TIME,$nightlytime)<'12:00:00')
+    {
+    $date = date(FMT_DATE,strtotime($date)-3600*24); // previous date
     } 
-  return date(FMT_DATE,$starttime);
+  return $date;
 }
 
 function get_dashboard_date_from_project($projectname, $date)
@@ -1810,7 +1831,7 @@ function get_dashboard_date_from_project($projectname, $date)
   $nightlyhour = date("H",$nightlytime);
   $nightlyminute = date("i",$nightlytime);
   $nightlysecond = date("s",$nightlytime);
- 
+
   if(!isset($date) || strlen($date)==0)
     { 
     $date = date(FMT_DATE); // the date is always the date of the server
@@ -1820,6 +1841,7 @@ function get_dashboard_date_from_project($projectname, $date)
       $date = date(FMT_DATE,time()+3600*24); //next day
       } 
     }
+  
   return $date;  
 }
 
