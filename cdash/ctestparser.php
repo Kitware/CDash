@@ -91,8 +91,12 @@ function ctest_parse($filehandler, $projectid)
     add_log("Content = ".$content, 'ctest_parse');
     $Project = new Project();
     $Project->Id = $projectid;
+    
+    // Try to get the IP of the build
+    $ip = $_SERVER['REMOTE_ADDR'];
+    
     $Project->SendEmailToAdmin('Cannot create handler based on XML content',
-                               'An XML submission to the project cannot be parsed. The content of the file is as follow: '.$content);
+                               'An XML submission from '.$ip.' to the project'.get_project_name($projectid).' cannot be parsed. The content of the file is as follow: '.$content);
     exit();
     }
 
