@@ -410,7 +410,6 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     } // endconfigure
   else if($errorkey == 'build_errors')
     {
-    $info = "";
     $information .= "\n\n*Error*\n";
     
     // Old error format
@@ -418,6 +417,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     add_last_sql_error("sendmail");
     while($error_array = pdo_fetch_array($error_query))
       {
+      $info = "";
       if(strlen($error_array["sourcefile"])>0)
         {
         $info .= $error_array["sourcefile"]." line ".sourceline." (".$serverURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
@@ -431,11 +431,11 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
       }
       
     // New error format
-    $info = "";
     $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $maxitems");
     add_last_sql_error("sendmail");
     while($error_array = pdo_fetch_array($error_query))
       {
+      $info = "";
       if(strlen($error_array["sourcefile"])>0)
         {
         $info .= $error_array["sourcefile"]." (".$serverURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
@@ -454,12 +454,12 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     }
   else if($errorkey == 'build_warnings')
     {
-    $info = "";
     $information .= "\n\n*Warnings*\n";
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $maxitems");
     add_last_sql_error("sendmail");
     while($error_array = pdo_fetch_array($error_query))
-      {
+      {    
+      $info = "";
       if(strlen($error_array["sourcefile"])>0)
         {
         $info .= $error_array["sourcefile"]." line ".$error_array["sourceline"]." (".$serverURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
@@ -473,11 +473,11 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
       }
     
     // New error format
-    $info = "";
     $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $maxitems");
     add_last_sql_error("sendmail");
     while($error_array = pdo_fetch_array($error_query))
       {
+      $info = "";
       if(strlen($error_array["sourcefile"])>0)
         {
         $info .= $error_array["sourcefile"]." (".$serverURI."/viewBuildError.php?type=1&buildid=".$buildid.")\n";
