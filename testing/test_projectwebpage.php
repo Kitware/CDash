@@ -195,7 +195,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
   
   function testProjectExperimentalLinkMachineName()
     {
-    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
+    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
     if(!$content)
       {
       return;
@@ -215,7 +215,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
   
   function testProjectExperimentalLinkBuildSummary()
     {
-    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
+    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
     if(!$content)
       {
       return;
@@ -236,7 +236,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
   
   function testProjectExperimentalLinkNotes()
     {
-    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-24');
+    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
     if(!$content)
       {
       return;
