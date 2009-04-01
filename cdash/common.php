@@ -981,20 +981,20 @@ function get_geolocation($ip)
     $location['latitude'] = $lat;
     $location['longitude'] = $long;
     }
- else// Check if we have a list of default locations
-   {
-  foreach($CDASH_DEFAULT_IP_LOCATIONS as $defaultlocation)
+  else// Check if we have a list of default locations
     {
-    $defaultip = $defaultlocation["IP"];
-   $defaultlatitude = $defaultlocation["latitude"];
-   $defaultlongitude = $defaultlocation["longitude"];
-   if(preg_match("#^".strtr(preg_quote($defaultip, '#'), array('\*' => '.*', '\?' => '.'))."$#i", $ip))
-     {
-    $location['latitude'] =  $defaultlocation["latitude"];
+    foreach($CDASH_DEFAULT_IP_LOCATIONS as $defaultlocation)
+      {
+      $defaultip = $defaultlocation["IP"];
+      $defaultlatitude = $defaultlocation["latitude"];
+      $defaultlongitude = $defaultlocation["longitude"];
+      if(preg_match("#^".strtr(preg_quote($defaultip, '#'), array('\*' => '.*', '\?' => '.'))."$#i", $ip))
+        {
+        $location['latitude'] =  $defaultlocation["latitude"];
         $location['longitude'] = $defaultlocation["longitude"];
+        }
+      }
     }
-    }
-   }
   
   return $location;
 } 
