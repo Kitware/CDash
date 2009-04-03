@@ -248,7 +248,7 @@
       <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="configure/error>0">
+          <xsl:when test="configure/error!=0">
             error
             </xsl:when>
            <xsl:when test="string-length(configure/error)>0">
