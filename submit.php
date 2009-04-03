@@ -17,11 +17,15 @@
 =========================================================================*/
 //error_reporting(0); // disable error reporting
 
-include("cdash/do_submit.php");
+/** Uncomment this line if you are accessing submit.php through a different
+ *  web redirection and the includes are not found */
+//$path = dirname(__FILE__);
+//set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 // Open the database connection
 include("cdash/config.php");
 require_once("cdash/pdo.php");
+include("cdash/do_submit.php");
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
