@@ -154,7 +154,7 @@ if ($session_OK)
       
       if(date(FMT_TIME,$nightlytime)<'12:00:00')
         {
-        builddate -=3600*24; // previous date
+        $builddate -= 3600*24; // previous date
         }    
 
       $date = date(FMT_DATE,$builddate);
