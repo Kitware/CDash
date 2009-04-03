@@ -135,6 +135,7 @@ if ($session_OK)
   function ReportLastBuild($type,$projectid,$siteid,$projectname,$nightlytime)
     {
     $xml = "<".strtolower($type).">";
+    $nightlytime = strtotime($nightlytime);
     
     // Find the last build 
     $build = pdo_query("SELECT starttime,id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$type' ORDER BY submittime DESC LIMIT 1");
@@ -147,7 +148,7 @@ if ($session_OK)
       $buildtime = strtotime($build_array["starttime"]." UTC");
       $builddate = $buildtime;
       
-      if(date(FMT_TIME,$buildtime)>date(FMT_TIME,strtotime($nightlytime)))
+      if(date(FMT_TIME,$buildtime)>date(FMT_TIME,$nightlytime))
         {
         $builddate += 3600*24; //next day
         }
