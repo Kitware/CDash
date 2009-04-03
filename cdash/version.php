@@ -17,7 +17,7 @@
 =========================================================================*/
 // Current version 
 $CDASH_VERSION_MAJOR = '1';
-$CDASH_VERSION_MINOR = '3';
+$CDASH_VERSION_MINOR = '5';
 $CDASH_VERSION_PATCH = '0';
 $CDASH_VERSION = $CDASH_VERSION_MAJOR.".".$CDASH_VERSION_MINOR.".".$CDASH_VERSION_PATCH;
 ?>
