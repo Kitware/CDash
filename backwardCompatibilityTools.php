@@ -498,8 +498,7 @@ if(isset($_GET['upgrade-1-4']))
   ModifyTableField("dynamicanalysisdefect","value","INT","INT","0",true,false);
 
   RemoveTablePrimaryKey("test2image");
-  AddTablePrimaryKey("test2image","imgid");
-  ModifyTableField("test2image","imgid","INT","INT","",true,true);
+  AddTableIndex('test2image','imgid');
   AddTableIndex('test2image','testid');
 
   ModifyTableField("image","checksum","BIGINT( 20 )","BIGINT","",true,false);
