@@ -220,7 +220,7 @@ class BuildConfigure
       return false;
       }  
     $configure_array = pdo_fetch_array($configure);
-    if($configure_array["status"]>0)
+    if($configure_array["status"]!=0)
       {
       $nerrors = 1;
       }
