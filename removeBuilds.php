@@ -155,6 +155,24 @@ function remove_builds($builds)
   pdo_query("DELETE FROM build2note WHERE ".$buildsql); 
   pdo_query("DELETE FROM build2test WHERE ".$buildsql); 
   
+  // If we have the buildfailure tables
+  if(pdo_query("SELECT id FROM buildfailure LIMIT 1"))
+    {
+    pdo_query("DELETE FROM buildfailure WHERE ".$buildsql); 
+    pdo_query("DELETE FROM buildfailure2argument WHERE buildfailureid NOT IN (SELECT id as buildfailureid FROM buildfailure)");
+    }
+    
+  // If we have the label tables
+  if(pdo_query("SELECT buildid FROM label2build LIMIT 1"))
+    {
+    pdo_query("DELETE FROM label2build WHERE ".$buildsql);
+    pdo_query("DELETE FROM label2coveragefile WHERE ".$buildsql);
+    pdo_query("DELETE FROM label2test WHERE ".$buildsql);
+    
+    pdo_query("DELETE FROM label2buildfailure WHERE buildfailureid NOT IN (SELECT id as buildfailureid FROM buildfailure)");
+    pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid NOT IN (SELECT id as dynamicanalysisid FROM dynamicanalysis)");
+    }
+  
   // coverage file are kept unless they are shared
   pdo_query("DELETE FROM coveragefile WHERE id NOT IN (SELECT fileid as id FROM coverage)");
 

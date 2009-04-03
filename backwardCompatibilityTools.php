@@ -404,7 +404,7 @@ function RemoveTablePrimaryKey($table)
     pdo_query("ALTER TABLE ".$table." DROP PRIMARY KEY");
     }
   //add_last_sql_error("RemoveTablePrimaryKey");
-  add_log("Removing adding primarykey from $table","RemoveTablePrimaryKey");
+  add_log("Done removing primarykey from $table","RemoveTablePrimaryKey");
 }
 
 
@@ -498,6 +498,7 @@ if(isset($_GET['upgrade-1-4']))
   ModifyTableField("dynamicanalysisdefect","value","INT","INT","0",true,false);
 
   RemoveTablePrimaryKey("test2image");
+  AddTablePrimaryKey("test2image","imgid");
   ModifyTableField("test2image","imgid","INT","INT","",true,true);
   AddTableIndex('test2image','testid');
 
