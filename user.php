@@ -157,16 +157,15 @@ if ($session_OK)
         {
         $builddate -= 3600*24; // previous date
         }    
-
+      
       $date = date(FMT_DATE,$builddate);
-      
-      $days = round((time()-strtotime($date))/(3600*24));
-      
+      $days = ((time()-strtotime($date))/(3600*24));
+
       if($days<1)
         {
         $day = "today";
         }
-      else if($days==1)
+      else if($days>1 && $days<2)
         {
         $day = "yesterday";
         }
