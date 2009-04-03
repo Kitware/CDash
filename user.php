@@ -160,7 +160,7 @@ if ($session_OK)
 
       $date = date(FMT_DATE,$builddate);
       
-      $days = round((time()-$builddate)/(3600*24));
+      $days = round((time()-strtotime($date))/(3600*24));
       
       if($days<1)
         {
