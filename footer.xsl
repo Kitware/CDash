@@ -10,7 +10,7 @@
    <table style="float:right">
     <tr>
      <td><a href="http://www.cdash.org"><img src="images/logo2.gif" border="0" height="66" alt="CDash logo"/></a></td>
-   <td>CDash <xsl:value-of select="/cdash/version"/><xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text> 2008-2009 
+   <td>CDash <xsl:value-of select="/cdash/version"/><xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text> 2009 
    <a href="http://www.kitware.com">Kitware Inc.</a>
    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><br/>
   <a href="http://www.cdash.org/Bug">[report problems]</a>
