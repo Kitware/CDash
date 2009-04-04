@@ -17,10 +17,9 @@
 =========================================================================*/
 //error_reporting(0); // disable error reporting
 
-/** Uncomment this line if you are accessing submit.php through a different
- *  web redirection and the includes are not found */
-//$path = dirname(__FILE__);
-//set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+/** Adding some PHP include path */
+$path = dirname(__FILE__);
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 // Open the database connection
 include("cdash/config.php");

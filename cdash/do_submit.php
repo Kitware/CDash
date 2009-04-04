@@ -24,11 +24,10 @@ include("cdash/sendemail.php");
 
 function do_submit($filehandle, $projectid)
 {
-
   include('cdash/config.php');
   
-// We find the daily updates
-// If we have php curl we do it asynchronously
+  // We find the daily updates
+  // If we have php curl we do it asynchronously
   if(function_exists("curl_init") == TRUE)
     {
     $currentPort="";
@@ -38,15 +37,17 @@ function do_submit($filehandle, $projectid)
       $currentPort=":".$_SERVER['SERVER_PORT'];
       }
     
-    /** Server should be local */
-    /*
-  $serverName = $CDASH_SERVER_NAME;
-  if(strlen($serverName) == 0)
-    {
-    $serverName = $_SERVER['SERVER_NAME'];
-    }*/
-  
-    $serverName = "localhost";  
+    // Where to send to curl request
+    $serverName = "localhost";     
+    if(!$CDASH_CURL_REQUEST_LOCALHOST)
+      {
+      $serverName = $CDASH_SERVER_NAME;
+      if(strlen($serverName) == 0)
+        {
+        $serverName = $_SERVER['SERVER_NAME'];
+        }
+      }
+      
     $prefix =  "http://";
     if($CDASH_USE_HTTPS)
       {
@@ -55,10 +56,7 @@ function do_submit($filehandle, $projectid)
     
     $currentURI =  $prefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-    echo $currentURI;
-    echo "<br>";
     $request = $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
-    echo "$request <br>";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $request);
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
