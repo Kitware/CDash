@@ -443,6 +443,12 @@ if(isset($_GET['upgrade-1-4']))
   AddTableField("project","emailredundantfailures","tinyint(4)","smallint","0");
   AddTableField("buildfailure2argument","place","int(11)","bigint","0");
   
+  if($CDASH_DB_TYPE != "pgsql")
+    {
+    pdo_query("ALTER TABLE `builderror` CHANGE `precontext` `precontext` TEXT NULL");
+    pdo_query("ALTER TABLE `builderror` CHANGE `postcontext` `postcontext` TEXT NULL");
+    }
+  
   ModifyTableField("buildfailureargument","argument","VARCHAR( 255 )","VARCHAR( 255 )","",true,false);
   ModifyTableField("buildfailure","exitcondition","VARCHAR( 255 )","VARCHAR( 255 )","",true,false);
   ModifyTableField("buildfailure","language","VARCHAR( 64 )","VARCHAR( 64 )","",true,false);
