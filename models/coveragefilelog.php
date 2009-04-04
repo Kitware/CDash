@@ -31,11 +31,17 @@ class CoverageFileLog
     {
     if(!$this->BuildId || !is_numeric($this->BuildId))
       {
-      echo "CoverageFileLog::Insert(): BuildId not set";
+      add_log("BuildId not set","CoverageFileLog::Insert()",LOG_ERR);
       return false;    
       }
-    
-     $sql = "INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ";
+   
+    if(!$this->FileId || !is_numeric($this->FileId))
+      {
+      add_log("FileId not set for buildid=".$this->BuildId,"CoverageFileLog::Insert()",LOG_ERR);
+      return false;    
+      }
+      
+    $sql = "INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ";
   
     $i=0;
     foreach($this->Lines as $lineNumber=>$code)

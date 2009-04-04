@@ -869,7 +869,7 @@ class Build
 
   /** Helper function for compute_update_statistics */
   private function AddUpdateStatistics($author,$checkindate,$firstbuild,
-                                        $warningdiff,$errordiff,$testdiff)
+                                       $warningdiff,$errordiff,$testdiff)
     {
     // Find the userid from the author name
     $user2project = pdo_query("SELECT userid FROM user2project WHERE cvslogin='$author' AND projectid=".qnum($this->ProjectId));
@@ -989,7 +989,7 @@ class Build
                  nfixederrors=nfixederrors+'$nfixederrors',
                  nfailederrors=nfailederrors+'$nfailederrors',
                  nfixedtests=nfixedtests+'$nfixedtests',
-                 nfailedtests=nfailedtests+'$nfailedtests' WHERE userid='$userid' AND projectid='$projectid' AND checkindate>'$checkindate'");
+                 nfailedtests=nfailedtests+'$nfailedtests' WHERE userid=".qnum($userid)." AND projectid=".qnum($this->ProjectId)." AND checkindate>'$checkindate'");
              
       add_last_sql_error("add_update_statistics");            
              
@@ -1011,8 +1011,9 @@ class Build
         }
   
       pdo_query("INSERT INTO userstatistics (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
-                    nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests)
-                    VALUES ($userid,$projectid,'$checkindate',$totalupdatedfiles,$totalbuilds,$nfixedwarnings,$nfailedwarnings,$nfixederrors,$nfailederrors,$nfixedtests,$nfailedtests)
+                 nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests)
+                 VALUES (".qnum($userid).",".qnum($this->ProjectId).",'$checkindate',$totalupdatedfiles,$totalbuilds,$nfixedwarnings,
+                         $nfailedwarnings,$nfixederrors,$nfailederrors,$nfixedtests,$nfailedtests)
                     ");
       add_last_sql_error("add_update_statistics");
       } 
