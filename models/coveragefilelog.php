@@ -52,15 +52,14 @@ class CoverageFileLog
         }  
         
       $sql.= "(".qnum($this->BuildId).",".qnum($this->FileId).",".qnum($lineNumber).",'$code')";
-       
-      if($i==0)
-        {
-        $i++;
-        }
+      $i++;
       }
-      
-    pdo_query($sql);
-    add_last_sql_error("CoverageFileLog::Insert()");
+    
+    if($i>0)
+      {  
+      pdo_query($sql);
+      add_last_sql_error("CoverageFileLog::Insert()");
+      }
     return true;
     }
 }
