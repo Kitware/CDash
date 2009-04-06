@@ -139,6 +139,7 @@ if($Submit)
     @$Project->EmailMaxChars = $_POST["emailMaxChars"];
     @$Project->EmailAdministrator = $_POST["emailAdministrator"];
     @$Project->ShowIPAddresses = $_POST["showIPAddresses"];
+    @$Project->DisplayLabels = $_POST["displayLabels"];
     $Project->Public = $Public;
     
     $projectid = -1;
@@ -257,6 +258,7 @@ if($Update || $AddRepository)
   @$Project->EmailMaxChars = $_POST["emailMaxChars"];
   @$Project->EmailAdministrator = $_POST["emailAdministrator"];
   @$Project->ShowIPAddresses = $_POST["showIPAddresses"];
+  @$Project->DisplayLabels = $_POST["displayLabels"];
     
   $Project->Save();
   
@@ -328,6 +330,7 @@ if($projectid>0)
   $xml .= add_XML_value("emailmaxchars",$Project->EmailMaxChars);
   $xml .= add_XML_value("emailadministrator",$Project->EmailAdministrator);
   $xml .= add_XML_value("showipaddresses",$Project->ShowIPAddresses);
+  $xml .= add_XML_value("displaylabels",$Project->DisplayLabels);
   $xml .= "</project>";
   
   $repositories = $Project->GetRepositories();

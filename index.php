@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT emailadministrator FROM project LIMIT 1"))
+  if(!pdo_query("SELECT displaylabels FROM project LIMIT 1"))
     {  
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -332,6 +332,7 @@ function generate_main_dashboard_XML($projectid,$date)
   <projectname>".$projectname."</projectname> 
   <previousdate>".$previousdate."</previousdate> 
   <projectpublic>".$projectpublic."</projectpublic> 
+  <displaylabels>".$project_array["displaylabels"]."</displaylabels> 
   <nextdate>".$nextdate."</nextdate>";
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {

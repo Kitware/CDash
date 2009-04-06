@@ -67,6 +67,7 @@
 <div id="Upgrade-1-0-Status"></div>
 <div id="Upgrade-1-2-Status"></div>
 <div id="Upgrade-1-4-Status"></div>
+<div id="Upgrade-1-6-Status"></div>
 <br/><div id="DoneStatus"></div><br/>
 
 <br/>
