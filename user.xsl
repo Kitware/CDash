@@ -108,7 +108,7 @@
         index.php?project=<xsl:value-of select="name"/>
         </xsl:attribute>
         <xsl:value-of select="name"/></a> </td>      
-       <td align="center"  bgcolor="#DDDDDD" ><a class="tooltip" title="Edit Subscription" >
+       <td align="center"  bgcolor="#DDDDDD" ><a class="tooltip" title="Edit subscription" >
         <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>
         <img src="images/edit.png" border="0" alt="subscribe" />
         </a>
@@ -124,9 +124,12 @@
           <a class="tooltip" title="Manage project groups" >
           <xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
             <img src="images/edit_group.png" border="0" alt="managegroups" /></a>
-          <a class="tooltip" title="Manage project roles" >
+          <a class="tooltip" title="Manage project users" >
           <xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-           <img src="images/users.png" border="0" alt="manageroles" /></a>
+           <img src="images/users.png" border="0" alt="manageusers" /></a>
+          <a class="tooltip" title="Manage project coverage" >
+          <xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
+           <img src="images/filecoverage.png" border="0" alt="managecoverage" /></a>  
         </xsl:if>
       </td>  
       <td align="center"  bgcolor="#DDDDDD">
