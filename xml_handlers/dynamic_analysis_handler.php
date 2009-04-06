@@ -152,6 +152,19 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->DynamicAnalysis->AddLabel($this->Label);
         }
       }
+    else if($name == 'DYNAMICANALYSIS')
+      {
+      // If everything is perfect CTest doesn't send any <test>
+      // But we still want a line showing the current dynamic analysis
+      if(!isset($this->DynamicAnalysis))
+        {
+        $this->DynamicAnalysis = new DynamicAnalysis();
+        $this->DynamicAnalysis->BuildId = $this->BuildId;
+        $this->DynamicAnalysis->Status='passed';
+        $this->DynamicAnalysis->Checker = $this->Checker;
+        $this->DynamicAnalysis->Insert();
+        }
+      }  
     } // end endElement
 
 
