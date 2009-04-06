@@ -256,7 +256,7 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   // look for the previous build only if necessary
   if($checkpreviousbuild)
     {
-    $Build->FillFromId();
+    $Build->FillFromId($buildid);
     $previousbuildid = $Build->GetPreviousBuildId();
     
     if($previousbuildid > 0)
@@ -749,7 +749,7 @@ function sendemail($handler,$projectid)
     return;
     } // end summary email
 
-   $Build->FillFromId($Build->Id);
+  $Build->FillFromId($Build->Id);
   
   // Get the list of person who should get the email
   $userids = lookup_emails_to_send($errors, $buildid, $projectid,$Build->Type);
