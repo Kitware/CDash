@@ -337,6 +337,7 @@ CREATE TABLE `project` (
   `testtimemaxstatus` tinyint(4) default '3',
   `emailmaxitems` tinyint(4) default '5',
   `emailmaxchars` int(11) default '255',
+  `displaylabels` tinyint(4) default '1',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)

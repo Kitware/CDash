@@ -273,6 +273,7 @@ CREATE TABLE "project" (
   "testtimemaxstatus" smallint DEFAULT '3',
   "emailmaxitems" smallint DEFAULT '5',
   "emailmaxchars" bigint DEFAULT '255',
+  "displaylabels" smallint default '1',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name2" on "project" ("name");
