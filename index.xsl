@@ -965,8 +965,16 @@
       <th align="center" width="10%" id="sortcoveragesort_2">Percentage</th>
       <th align="center"  width="10%" id="sortcoveragesort_3" >Passed</th>
       <th align="center"  width="10%" id="sortcoveragesort_4">Failed</th>
-      <th align="center" width="15%" id="sortcoveragesort_5">Date</th>
-      <th align="center" class="nob" id="sortcoveragesort_6" width="10%">Labels</th>
+      <th align="center" width="15%" id="sortcoveragesort_5">
+      <xsl:if test="/cdash/dashboard/displaylabels=0">
+       <xsl:attribute name="class">nob</xsl:attribute>
+      </xsl:if>
+      Date</th>
+      
+      <!-- display the labels -->
+      <xsl:if test="/cdash/dashboard/displaylabels=1">
+        <th align="center" class="nob" id="sortcoveragesort_6" width="10%">Labels</th>
+      </xsl:if>  
    </tr>
 </thead>
 <tbody>   
@@ -998,13 +1006,18 @@
       <xsl:if test="faildiff > 0"><sub>+<xsl:value-of select="faildiff"/></sub></xsl:if>
       <xsl:if test="faildiff &lt; 0"><sub><xsl:value-of select="faildiff"/></sub></xsl:if>    
       </td>
-      <td align="left"><xsl:value-of select="date"/></td>
+      <td align="left">
+      <xsl:if test="/cdash/dashboard/displaylabels=0">
+       <xsl:attribute name="class">nob</xsl:attribute>
+      </xsl:if>
+      <xsl:value-of select="date"/></td>
 
-      <td class="nob" align="left">
-      <xsl:if test="count(labels/label)=0">(none)</xsl:if>
-      <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
-      <!-- <xsl:if test="count(labels/label)>1">(multiple)</xsl:if> -->
-      </td>
+      <xsl:if test="/cdash/dashboard/displaylabels=1">
+        <td class="nob" align="left">
+        <xsl:if test="count(labels/label)=0">(none)</xsl:if>
+        <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
+        </td>
+      </xsl:if>  
    </tr>
   </xsl:for-each>
 </tbody>
@@ -1068,8 +1081,14 @@
       <th align="center" width="25%" id="sortdynanalysissort_1">Build Name</th>
       <th align="center" width="20%" id="sortdynanalysissort_2">Checker</th>
       <th align="center" width="10%" id="sortdynanalysissort_3">Defect Count</th>
-      <th align="center" width="15%" id="sortdynanalysissort_4">Date</th>
-      <th align="center" class="nob" id="sortdynanalysissort_5" width="10%">Labels</th>
+      <th align="center" width="15%" id="sortdynanalysissort_4">
+      <xsl:if test="/cdash/dashboard/displaylabels=0">
+        <xsl:attribute name="class">nob</xsl:attribute>
+      </xsl:if>
+      Date</th>
+      <xsl:if test="/cdash/dashboard/displaylabels=1">
+        <th align="center" class="nob" id="sortdynanalysissort_5" width="10%">Labels</th>
+      </xsl:if>
    </tr>
 </thead>
 <tbody> 
@@ -1094,13 +1113,19 @@
         </xsl:attribute>
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
       </td>
-      <td align="left"><xsl:value-of select="date"/></td>
+      <td align="left">
+      <xsl:if test="/cdash/dashboard/displaylabels=0"> 
+        <xsl:attribute name="class">nob</xsl:attribute>
+      </xsl:if>
+      
+      <xsl:value-of select="date"/></td>
 
-      <td class="nob" align="left">
-      <xsl:if test="count(labels/label)=0">(none)</xsl:if>
-      <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
-      <!-- <xsl:if test="count(labels/label)>1">(multiple)</xsl:if> -->
-      </td>
+      <xsl:if test="/cdash/dashboard/displaylabels=1"> 
+        <td class="nob" align="left">
+        <xsl:if test="count(labels/label)=0">(none)</xsl:if>
+        <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
+        </td>
+      </xsl:if>  
    </tr>
   </xsl:for-each>
 </tbody>
