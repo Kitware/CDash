@@ -601,15 +601,16 @@ class Build
     // TEST TIMING
     $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
     $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id=".qnum($this->Id));
-      
     echo pdo_error();
+    
+    $buildid = $this->Id;
     $build_array = pdo_fetch_array($build);                           
     $buildname = $build_array["name"];
     $buildtype = $build_array["type"];
     $starttime = $build_array["starttime"];
     $siteid = $build_array["siteid"];
     $projectid = $build_array["projectid"];
-  
+
     $project = pdo_query("SELECT testtimestd,testtimestdthreshold,testtimemaxstatus FROM project WHERE id=".qnum($this->ProjectId));
     $project_array = pdo_fetch_array($project);
     $projecttimestd = $project_array["testtimestd"]; 
@@ -625,7 +626,7 @@ class Build
   
     // If we have one
     if($previousbuildid>0)
-      {      
+      {
       compute_error_difference($buildid,$previousbuildid,0); // errors
       compute_error_difference($buildid,$previousbuildid,1); // warnings
       compute_configure_difference($buildid,$previousbuildid,1); // warnings
