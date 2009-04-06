@@ -12,7 +12,15 @@
       </td>
 
       <!-- quick links -->
-      <td colspan="15" align="right" class="nob">
+      <td align="right" class="nob">
+      <xsl:choose>
+      <xsl:when test="/cdash/dashboard/displaylabels=1">
+        <xsl:attribute name="colspan">15</xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:attribute name="colspan">14</xsl:attribute>
+      </xsl:otherwise>
+      </xsl:choose>
       <div>
       <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
       </div> 
@@ -38,7 +46,15 @@
       <td colspan="1" class="nob">
           <h3><a href="#" class="grouptrigger"><xsl:value-of select="$type/name"/></a></h3>
       </td>
-      <td colspan="15" align="right" class="nob">
+      <td align="right" class="nob">
+      <xsl:choose>
+      <xsl:when test="/cdash/dashboard/displaylabels=1">
+        <xsl:attribute name="colspan">15</xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:attribute name="colspan">14</xsl:attribute>
+      </xsl:otherwise>
+      </xsl:choose>
    <div>
    <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
    </div> 
@@ -69,10 +85,15 @@
       <td align="center" colspan="4" width="10%" class="botl">Test</td>
       <th align="center" rowspan="2" width="20%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
+      <xsl:if test="/cdash/dashboard/displaylabels=0">
+        <xsl:attribute name="class">nob</xsl:attribute>
+      </xsl:if>
       Build Time</th>
-      <th align="center" rowspan="2" width="5%" class="nob">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_15</xsl:attribute>
-      Labels</th>
+      <xsl:if test="/cdash/dashboard/displaylabels=1">
+        <th align="center" rowspan="2" width="5%" class="nob">
+        <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_15</xsl:attribute>
+        Labels</th>
+      </xsl:if>
    </tr>
 
    <tr class="table-heading">
@@ -464,14 +485,20 @@
       </td>
 
       <td>
+        <xsl:if test="/cdash/dashboard/displaylabels=0">
+         <xsl:attribute name="class">nob</xsl:attribute>
+        </xsl:if>
         <xsl:value-of select="builddate"/>
       </td>
 
-      <td class="nob" align="left">
-      <xsl:if test="count(labels/label)=0">(none)</xsl:if>
-      <xsl:if test="count(labels/label)=1"><xsl:value-of select="labels/label"/></xsl:if>
-      <xsl:if test="count(labels/label)>1">(<xsl:value-of select="count(labels/label)"/> labels)</xsl:if>
-      </td>
+      <!-- display the labels -->
+      <xsl:if test="/cdash/dashboard/displaylabels=1">
+        <td class="nob" align="left">
+        <xsl:if test="count(labels/label)=0">(none)</xsl:if>
+        <xsl:if test="count(labels/label)=1"><xsl:value-of select="labels/label"/></xsl:if>
+        <xsl:if test="count(labels/label)>1">(<xsl:value-of select="count(labels/label)"/> labels)</xsl:if>
+        </td>
+      </xsl:if>
    </tr>
   </xsl:for-each>
   </tbody>
@@ -607,9 +634,16 @@
       </xsl:attribute>
         <xsl:value-of select = "$type/totalTestsDuration"/>
       </td>
-      <td width="10%"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      <td width="10%" class="nob"></td>
-      <!-- <td bgcolor="#ffffff"></td> -->
+      <td width="10%">
+      <xsl:if test="/cdash/dashboard/displaylabels=0">
+         <xsl:attribute name="class">nob</xsl:attribute>
+      </xsl:if>
+      <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
+      
+      <!-- display the labels -->
+      <xsl:if test="/cdash/dashboard/displaylabels=1">
+        <td width="10%" class="nob"></td>
+      </xsl:if>
     </tr>
   </tbody>
   </xsl:if>
