@@ -49,6 +49,7 @@ class Project
   var $EmailMaxChars;
   var $EmailAdministrator;
   var $ShowIPAddresses;
+  var $DisplayLabels;
 
   function __construct()
     {
@@ -59,6 +60,7 @@ class Project
     $this->EmailRedundantFailures=0;
     $this->EmailAdministrator=1;
     $this->ShowIPAddresses=1;
+    $this->DisplayLabels=1;
     }
 
   /** Add a build group */
@@ -96,6 +98,7 @@ class Project
       case "EMAILREDUNDANTFAILURES": $this->EmailRedundantFailures = $value;break;
       case "EMAILADMINISTRATOR": $this->EmailAdministrator = $value;break;
       case "SHOWIPADDRESSES": $this->ShowIPAddresses = $value;break;
+      case "DISPLAYLABELS": $this->DisplayLabels = $value;break;
       case "CVSVIEWERTYPE": $this->CvsViewerType = $value;break;
       case "TESTTIMESTD": $this->TestTimeStd = $value;break;
       case "TESTTIMESTDTHRESHOLD": $this->TestTimeStdThreshold = $value;break;
@@ -173,6 +176,7 @@ class Project
       $query .= ",emailredundantfailures=".qnum($this->EmailRedundantFailures);
       $query .= ",emailadministrator=".qnum($this->EmailAdministrator);
       $query .= ",showipaddresses=".qnum($this->ShowIPAddresses);
+      $query .= ",displaylabels=".qnum($this->DisplayLabels);
       $query .= ",cvsviewertype='".$this->CvsViewerType."'";
       $query .= ",testtimestd=".qnum($this->TestTimeStd);
       $query .= ",testtimestdthreshold=".qnum($this->TestTimeStdThreshold);
@@ -209,13 +213,14 @@ class Project
       $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                     googletracker,emailbrokensubmission,emailredundantfailures,
                                     emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
-                                    testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses)
+                                    testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
+                                    ,displaylabels)
                  VALUES (".$idvalue."'$this->Name','$this->Description','$this->HomeUrl','$this->CvsUrl','$this->BugTrackerUrl','$this->DocumentationUrl',
                  ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$this->NightlyTime',
                  '$this->GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).",".qnum($this->EmailBuildMissing).","
                  .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$this->CvsViewerType',".qnum($this->TestTimeStd)
                  .",".qnum($this->TestTimeStdThreshold).",".qnum($this->TestTimeMaxStatus).",".qnum($this->EmailMaxItems).",".qnum($this->EmailMaxChars).","
-                 .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).")";
+                 .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).",".qnum($this->DisplayLabels).")";
                     
        if(pdo_query($query))
          {
@@ -315,6 +320,7 @@ class Project
       $this->EmailRedundantFailures = $project_array['emailredundantfailures'];
       $this->EmailAdministrator = $project_array['emailadministrator'];
       $this->ShowIPAddresses = $project_array['showipaddresses'];
+      $this->DisplayLabels = $project_array['displaylabels'];
       $this->CvsViewerType = $project_array['cvsviewertype'];
       $this->TestTimeStd = $project_array['testtimestd'];
       $this->TestTimeStdThreshold = $project_array['testtimestdthreshold'];
