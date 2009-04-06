@@ -82,6 +82,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $i = 0;
   foreach($file_array as $line)
     {
+    $line = htmlentities($line);
     $coveragefilelog = pdo_query("SELECT line,code FROM coveragefilelog WHERE fileid='$fileid' AND buildid='$buildid' AND line='$i'");
     if(pdo_num_rows($coveragefilelog)>0)
       {
