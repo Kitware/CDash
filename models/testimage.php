@@ -56,7 +56,7 @@ class TestImage
       {
       add_last_sql_error("TestImage Insert");
       return false;
-      }  
+      }
     return true;
     }  // end Insert  
 }

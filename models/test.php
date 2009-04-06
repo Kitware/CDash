@@ -21,6 +21,8 @@ include_once('models/testmeasurement.php');
 include_once('models/buildtestdiff.php');
 include_once('models/buildtest.php');
 include_once('models/label.php');
+include_once('models/testimage.php');
+include_once('models/image.php');
 
 /** Test */
 class Test
@@ -132,7 +134,7 @@ class Test
   function Exists()
     {
     $crc32 = $this->GetCrc32();
-    $query = pdo_query("SELECT id FROM test WHERE crc32='".$crc32."'");  
+    $query = pdo_query("SELECT id FROM test WHERE crc32='".$crc32."'");
     if(pdo_num_rows($query)>0)
       {
       $query_array = pdo_fetch_array($query);
@@ -184,8 +186,40 @@ class Test
     // Add the images
     foreach($this->Images as $image)
       {
-      $image->TestId = $this->Id;
-      $image->Insert();
+      // Decode the data
+      $imgStr = base64_decode($image->Data);
+       $img = imagecreatefromstring($imgStr);
+      ob_start();
+      switch($image->Extension)
+        {
+        case "image/jpg":
+          imagejpeg($img);
+          break;
+        case "image/jpeg":
+          imagejpeg($img);
+          break;
+        case "image/gif":
+          imagegif($img);
+          break;
+        case "image/png":
+          imagepng($img);
+          break;
+        default:
+          echo "Unknown image type: $type";
+          return;
+        }
+      $imageVariable = addslashes(ob_get_contents());
+      ob_end_clean();
+
+      $image->Data = $imageVariable;
+      $image->Checksum = crc32($imageVariable);
+      $image->Save();
+            
+      $testImage = new TestImage();
+      $testImage->Id = $image->Id;
+      $testImage->TestId = $this->Id;
+      $testImage->Role =  $image->Name;
+      $testImage->Insert();
       }
 
     return true;

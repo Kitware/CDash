@@ -20,8 +20,8 @@ require_once('models/build.php');
 require_once('models/label.php');
 require_once('models/site.php');
 require_once('models/test.php');
+require_once('models/image.php');
 
-//TODO: images handling!!!!
 class TestingHandler extends AbstractHandler
 {
   private $StartTimeStamp;
@@ -178,8 +178,20 @@ class TestingHandler extends AbstractHandler
         }
       else // explicit measurement
         {
-        $this->Test->AddMeasurement($this->TestMeasurement);
-        }    
+        // If it's an image we add it as an image
+        if(strpos($this->TestMeasurement->Type,'image')!== false)
+          {
+          $image = new Image();
+          $image->Extension = $this->TestMeasurement->Type;
+          $image->Data = $this->TestMeasurement->Value;
+          $image->Name = $this->TestMeasurement->Name;
+          $this->Test->AddImage($image);
+          }
+        else
+          {
+          $this->Test->AddMeasurement($this->TestMeasurement);
+          }
+        }
       } // end named measurement
     else if($name == "SITE")
       {

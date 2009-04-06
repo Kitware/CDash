@@ -22,8 +22,17 @@ class Image
   var $Filename;
   var $Extension;
   var $Checksum;
+  
   var $Data; // In the file refered by Filename  
+  var $Name; // Use to track the role for test
 
+   
+  function __construct()
+    {
+    $this->Filename = '';
+    $this->Name = '';
+    }
+    
   function SetValue($tag,$value)  
     {
     switch($tag)
@@ -48,42 +57,38 @@ class Image
   function Exists()
     {
     // If no id specify return false
-    if(!$this->Id)
+    if($this->Id)
       {
-      return false;    
+      $query = pdo_query("SELECT count(*) FROM image WHERE id='".$this->Id."'");
+      $query_array = pdo_fetch_array($query);
+      if($query_array['count(*)']==0)
+        {
+        return false;
+        }
+      return true;
       }
-    
-    $query = pdo_query("SELECT count(*) FROM image WHERE id='".$this->Id."'");
-    $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']==0)
+    else
       {
+      // Check if the checksum exists
+      $query = pdo_query("SELECT id FROM image WHERE checksum='".$this->Checksum."'");
+      if(pdo_num_rows($query)>0)
+        {
+        $query_array = pdo_fetch_array($query);
+        $this->Id = $query_array['id'];
+        return true;
+        }
       return false;
       }
-    
     return true;  
     }
     
-  /** Save the group */
+  /** Save the image */
   function Save()
     {
     // Get the data from the file if necessary
     $this->GetData();
       
-    if($this->Exists())
-      {
-      $query = "UPDATE image SET";
-      $query .= " img='".$this->Data."'";
-      $query .= ",extension='".$this->Extension."'";
-      $query .= ",checksum='".$this->Checksum."'";
-      $query .= " WHERE id='".$this->Id."'";
-      
-      if(!pdo_query($query))
-        {
-        add_last_sql_error("Image Update");
-        return false;
-        }
-      }
-    else
+    if(!$this->Exists())
       {
       $id = "";
       $idvalue = "";
@@ -92,9 +97,9 @@ class Image
         $id = "id,";
         $idvalue = "'".$this->Id."',";
         }
-                                            
+
       if(pdo_query("INSERT INTO image (".$id."img,extension,checksum)
-                     VALUES (".$idvalue."'$this->Data','$this->Extension','$this->Checksum')"))
+                     VALUES (".$idvalue."'".$this->Data."','".$this->Extension."','".$this->Checksum."')"))
          {
          $this->Id = pdo_insert_id("image");
          }
