@@ -143,40 +143,22 @@ function register_user($projectid,$email,$firstName,$lastName,$cvslogin)
 
   pdo_query("INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution,admin) 
                  VALUES ('$email','$encrypted','$firstName','$lastName','','0')");
-  echo pdo_error();
+  add_last_sql_error("register_user");
   $userid = pdo_insert_id("user");
     
   // Insert the user into the project
   pdo_query("INSERT INTO user2project (userid,projectid,role,cvslogin,emailtype) 
                                 VALUES ('$userid','$projectid','0','$cvslogin','1')");
-  echo pdo_error();
-    
-  $currentPort="";
-  $httpprefix="http://";
-  if($_SERVER['SERVER_PORT']!=80)
-    {
-    $currentPort=":".$_SERVER['SERVER_PORT'];
-    if($_SERVER['SERVER_PORT']==443)
-      {
-      $httpprefix = "https://";
-      }
-    }
-    
-  $serverName = $CDASH_SERVER_NAME;
-  if(strlen($serverName) == 0)
-    {
-    $serverName = $_SERVER['SERVER_NAME'];
-    }
-    
-  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
-  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+  add_last_sql_error("register_user");
+   
+  $currentURI = get_server_URI();
     
   $prefix = "";
   if(strlen($firstName)>0)
     {
     $prefix = " ";
     }
-     
+    
   $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
   $projectname = $project_array['name'];
@@ -195,7 +177,6 @@ function register_user($projectid,$email,$firstName,$lastName,$cvslogin)
     }
   return true;
 }
-
 
 if(isset($_POST["sendEmailToSiteMaintainers"]))
   {
