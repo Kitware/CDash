@@ -521,10 +521,6 @@ function get_server_URI()
   if($_SERVER['SERVER_PORT']!=80)
     {
     $currentPort=":".$_SERVER['SERVER_PORT'];
-    if($_SERVER['SERVER_PORT']!=80 )
-      {
-      $httpprefix = "https://";
-      }
     }
   if($CDASH_USE_HTTPS === true)
     {
@@ -535,7 +531,6 @@ function get_server_URI()
     {
     $serverName = $_SERVER['SERVER_NAME'];
     }
-    
   $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
   $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
   return $currentURI;

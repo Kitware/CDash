@@ -31,7 +31,6 @@ function do_submit($filehandle, $projectid)
   if(function_exists("curl_init") == TRUE)
     {
     $currentPort="";
-    
     if($_SERVER['SERVER_PORT']!=80)
       {
       $currentPort=":".$_SERVER['SERVER_PORT'];
