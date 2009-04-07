@@ -94,7 +94,7 @@ while($project_array = pdo_fetch_array($projects))
 
 // Display the current builds who have coverage for the past 7 days
 $currentUTCTime =  gmdate(FMT_DATETIME);
-$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*300*24); // 7 days
+$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*7*24); // 7 days
 
 $CoverageFile2User = new CoverageFile2User();
 
@@ -288,11 +288,12 @@ if($projectid>0)
     {
     $Build = new Build();
     $Build->Id = $buildId;
+    $Build->FillFromId($Build->Id);
     $xml .= "<build>";
     $xml .= add_XML_value("id",$buildId);
     $Site = new Site();
-    $Site->Id = $Build->GetSiteId();
-    $xml .= add_XML_value("name",$Site->GetName()."-".$Build->GetName());
+    $Site->Id = $Build->SiteId;
+    $xml .= add_XML_value("name",$Site->GetName()."-".$Build->GetName()." [".gmdate(FMT_DATETIME,strtotime($Build->StartTime))."]");
     if($buildid>0 && $buildId==$buildid)
       {
       $xml .= add_XML_value("selected",1);
