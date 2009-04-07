@@ -590,29 +590,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
   $summary = "The following expected builds for the project *".$projectname."* didn't submit yesterday:\n";
   $missingbuilds = 0;
   
-  // Current URI of the dashboard
-  $currentPort="";
-  $httpprefix="http://";
-  if($_SERVER['SERVER_PORT']!=80)
-    {
-    $currentPort=":".$_SERVER['SERVER_PORT'];
-    if($_SERVER['SERVER_PORT']!=80 )
-      {
-      $httpprefix = "https://";
-      }
-    }
-  if($CDASH_USE_HTTPS === true)
-    {
-    $httpprefix = "https://";
-    }
-  $serverName = $CDASH_SERVER_NAME;
-  if(strlen($serverName) == 0)
-    {
-    $serverName = $_SERVER['SERVER_NAME'];
-    }
-    
-  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
-  $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+  $currentURI = get_server_URI();
   
   while($build2grouprule_array = pdo_fetch_array($build2grouprule))
     {

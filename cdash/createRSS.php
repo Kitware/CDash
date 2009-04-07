@@ -50,25 +50,20 @@ function CreateRSSFeed($projectid)
    return;
    }
    
-    $prefix =  "http://";
-  if($CDASH_USE_HTTPS)
-    {
-    $prefix =  "https://";
-    }
- $urlbase = $prefix.$_SERVER['HTTP_HOST'].dirname($_SERVER['SCRIPT_NAME']);
+  $currentURI = get_server_URI();
   
   fputs($fp,"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n");
   fputs($fp,"<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n");
   fputs($fp,"<channel>\n");
   fputs($fp,"<title>Recent CDash submissions for $projectname</title>\n");
-  fputs($fp,"<link>$urlbase/index.php?project=$projectname</link>\n");
+  fputs($fp,"<link>$currentURI/index.php?project=$projectname</link>\n");
   fputs($fp,"<description>CDash for $projectname</description>\n");
   fputs($fp,"<generator>CDash</generator>\n");
   fputs($fp,"<language>en-us</language>\n");
   fputs($fp,"<image>\n");
   fputs($fp," <title>Recent CDash submissions for $projectname</title>\n");
-  fputs($fp," <link>$urlbase/index.php?project=$projectname</link>\n");
-  fputs($fp," <url>$urlbase/images/cdash.gif</url>\n");
+  fputs($fp," <link>$currentURI/index.php?project=$projectname</link>\n");
+  fputs($fp," <url>$currentURI/images/cdash.gif</url>\n");
   fputs($fp,"</image>\n");
   $date = date('r');
   fputs($fp,"<lastBuildDate>$date</lastBuildDate>\n");
@@ -99,7 +94,7 @@ function CreateRSSFeed($projectid)
     $title .= " - ".$build_array["submittime"]." - ".$nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
     
     // Should link to the errors...
-    $link = $urlbase."/index.php?project=".$projectname;
+    $link = $currentURI."/index.php?project=".$projectname;
  
     $description = "A new ".$build_array["type"]." submission from ".$site_array["name"]." - ".$build_array["name"]." is available: ";
     $description .= $nerrors."errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail."failed.";

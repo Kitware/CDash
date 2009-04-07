@@ -63,29 +63,7 @@ if($recover)
       $password .= substr($keychars, rand(0, $max), 1);
       }
     
-    $httpprefix="http://";
-    $currentPort="";
-    if($_SERVER['SERVER_PORT']!=80)
-      {
-      $currentPort=":".$_SERVER['SERVER_PORT'];
-      if($_SERVER['SERVER_PORT']!=80 )
-        {
-        $httpprefix = "https://";
-        }
-      }
-    if($CDASH_USE_HTTPS === true)
-      {
-      $httpprefix = "https://";
-      }
-    $serverName = $CDASH_SERVER_NAME;
-    if(strlen($serverName) == 0)
-      {
-      $serverName = $_SERVER['SERVER_NAME'];
-      }
-    
-    $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
-    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-    
+    $currentURI = get_server_URI();
     $url = $currentURI."/user.php";
     
     $text = "Hello,\n\n You have asked to recover your password for CDash.\n\n";
