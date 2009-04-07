@@ -783,6 +783,6 @@ CREATE INDEX "buildemail_time" on "buildemail" ("time");
 CREATE TABLE "coveragefilepriority" (
   "fileid" bigint NOT NULL,
   "priority" smallint NOT NULL,
-  PRIMARY KEY ("fileid"),
+  PRIMARY KEY ("fileid")
 );
 CREATE INDEX "coveragefilepriority_priority" on "coveragefile2user" ("priority");

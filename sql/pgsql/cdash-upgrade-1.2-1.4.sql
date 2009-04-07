@@ -190,8 +190,12 @@ CREATE INDEX "buildemail_time" on "buildemail" ("time");
 -- Table: coveragefilepriority
 --
 CREATE TABLE "coveragefilepriority" (
-  "fileid" bigint NOT NULL,
+  "id" bigint NOT NULL,
   "priority" smallint NOT NULL,
-  PRIMARY KEY ("fileid"),
+  "fullpath" character varying(255) DEFAULT '' NOT NULL,
+  "projectid" bigint  NOT NULL,
+  PRIMARY KEY ("id")
 );
 CREATE INDEX "coveragefilepriority_priority" on "coveragefile2user" ("priority");
+CREATE INDEX "coveragefilepriority_fullpath" on "coveragefile2user" ("fullpath");
+CREATE INDEX "coveragefilepriority_projectid" on "coveragefile2user" ("projectid");
