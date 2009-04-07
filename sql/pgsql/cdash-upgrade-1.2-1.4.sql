@@ -190,7 +190,7 @@ CREATE INDEX "buildemail_time" on "buildemail" ("time");
 -- Table: coveragefilepriority
 --
 CREATE TABLE "coveragefilepriority" (
-  "id" bigint NOT NULL,
+  "id" serial NOT NULL,
   "priority" smallint NOT NULL,
   "fullpath" character varying(255) DEFAULT '' NOT NULL,
   "projectid" bigint  NOT NULL,
