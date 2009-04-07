@@ -821,6 +821,13 @@ CREATE TABLE `buildemail` (
   KEY `category` (`category`)
 );
 
+CREATE TABLE `coveragefilepriority` (
+  `fileid` bigint(20) NOT NULL,
+  `priority` tinyint(4) NOT NULL,
+  PRIMARY KEY  (`fileid`),
+  KEY `priority` (`priority`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 

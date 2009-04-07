@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT displaylabels FROM project LIMIT 1"))
+  if(!pdo_query("SELECT fileid FROM coveragefilepriority LIMIT 1"))
     {  
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -108,7 +108,6 @@ function generate_index_table()
     $xml .= add_XML_value("size","NA");
     $xml .= "</database>";
     }
-
  
   // User
   $userid = 0;

@@ -274,5 +274,66 @@ class CoverageFile2User
       
     return true;
     } // end AssignAllAuthors 
+  
+  // Function get the priority to a file
+  function GetPriority()
+    {
+    if(!isset($this->FileId))
+      {
+      echo "CoverageFile2User:GetPriority: FileId not set";
+      return false;
+      }
+    $query = pdo_query("SELECT priority FROM coveragefilepriority WHERE fileid=".qnum($this->FileId));                   
+    if(!$query)
+      {
+      add_last_sql_error("CoverageFile2User:GetPriority");
+      return false;
+      }
+    
+    if(pdo_num_rows($query) == 0)
+      {
+      return 0;
+      }   
+    $query_array = pdo_fetch_array($query);
+    return $query_array[0];
+    }
+      
+  // Function set the priority to a file
+  function SetPriority($priority)
+    {
+    if(!isset($this->FileId))
+      {
+      echo "CoverageFile2User:SetPriority: FileId not set";
+      return false;
+      }
+    $query = pdo_query("SELECT count(*) FROM coveragefilepriority WHERE fileid=".qnum($this->FileId));                   
+    if(!$query)
+      {
+      add_last_sql_error("CoverageFile2User:SetPriority");
+      return false;
+      }
+    
+    $sql = "";
+    $query_array = pdo_fetch_array($query);
+    if($query_array[0] == 0)
+      {
+      $sql = "INSERT INTO coveragefilepriority (fileid,priority) VALUES (".qnum($this->FileId).",".qnum($priority).")";
+      }
+    else
+      {
+      $sql = "UPDATE coveragefilepriority set priority=".qnum($priority)." WHERE fileid=".qnum($this->FileId);
+      }   
+      
+    $query = pdo_query($sql);                   
+    if(!$query)
+      {
+      add_last_sql_error("CoverageFile2User:SetPriority");
+      return false;
+      }   
+    return true;  
+    }
+    
+    
+    
 }
 ?>

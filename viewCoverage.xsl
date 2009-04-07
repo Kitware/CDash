@@ -117,7 +117,7 @@
       <th colspan="2">Coverage status  <xsl:choose>
         <xsl:when test="cdash/coverage/sortby='status'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
           <xsl:otherwise>
-          ( <a><xsl:attribute name="href">viewCoverage.php?sortby=status&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a> )
+          (<a><xsl:attribute name="href">viewCoverage.php?sortby=status&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a> )
           </xsl:otherwise>
       </xsl:choose>
       </th>
@@ -127,7 +127,7 @@
       <xsl:choose>
           <xsl:when test="cdash/coverage/sortby='filename'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
           <xsl:otherwise>
-          ( <a><xsl:attribute name="href">viewCoverage.php?sortby=filename&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a> )
+          (<a><xsl:attribute name="href">viewCoverage.php?sortby=filename&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a>)
           </xsl:otherwise>
       </xsl:choose>
       </th>
@@ -136,7 +136,7 @@
       <xsl:choose>
           <xsl:when test="cdash/coverage/sortby='percentage'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
           <xsl:otherwise>
-          ( <a><xsl:attribute name="href">viewCoverage.php?sortby=percentage&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a> )
+          (<a><xsl:attribute name="href">viewCoverage.php?sortby=percentage&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a>)
           </xsl:otherwise>
       </xsl:choose>
       </th>
@@ -147,7 +147,7 @@
         <xsl:choose>
           <xsl:when test="cdash/coverage/sortby='lines'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
           <xsl:otherwise>
-          ( <a><xsl:attribute name="href">viewCoverage.php?sortby=lines&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a> )
+          (<a><xsl:attribute name="href">viewCoverage.php?sortby=lines&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a>)
           </xsl:otherwise>
         </xsl:choose>
         </th>
@@ -159,7 +159,7 @@
         <xsl:choose>
           <xsl:when test="cdash/coverage/sortby='branches'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
           <xsl:otherwise>
-          ( <a><xsl:attribute name="href">viewCoverage.php?sortby=branches&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a> )
+          (<a><xsl:attribute name="href">viewCoverage.php?sortby=branches&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a>)
           </xsl:otherwise>
         </xsl:choose>
         </th>
@@ -167,15 +167,37 @@
         <xsl:choose>
           <xsl:when test="cdash/coverage/sortby='functions'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
           <xsl:otherwise>
-          ( <a><xsl:attribute name="href">viewCoverage.php?sortby=functions&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a> )
+          (<a><xsl:attribute name="href">viewCoverage.php?sortby=functions&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a>)
           </xsl:otherwise>
         </xsl:choose>
         </th>
       </xsl:if> 
+
+      <th>Priority
+      <xsl:choose>
+          <xsl:when test="cdash/coverage/sortby='priority'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
+          <xsl:otherwise>
+          (<a><xsl:attribute name="href">viewCoverage.php?sortby=priority&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a>)
+          </xsl:otherwise>
+       </xsl:choose>
+      </th>
       
+      <xsl:if test="/cdash/coverage/userid!=0">
+      <th>Author
+       <xsl:choose>
+          <xsl:when test="cdash/coverage/sortby='user'"><img border="0" src="images/DownBlack.gif"/></xsl:when>
+          <xsl:otherwise>
+          (<a><xsl:attribute name="href">viewCoverage.php?sortby=user&#38;buildid=<xsl:value-of select="cdash/coverage/buildid"/></xsl:attribute>sort by</a>)
+          </xsl:otherwise>
+       </xsl:choose>
+      </th>
+      </xsl:if> 
+      
+       
       <xsl:if test="count(//labels/label) > 0">
         <th>Labels</th>
       </xsl:if> 
+
    </tr>
    
    <xsl:for-each select="cdash/coveragefile">
@@ -289,6 +311,30 @@
      </td>
      </xsl:if>
 
+    <!-- Priority -->
+     <td align="center">
+     <xsl:attribute name="class">
+        <xsl:choose>
+           <xsl:when test="priority='Urgent' or priority='High'">
+             error
+           </xsl:when>
+           <xsl:when test="priority='Medium'">
+             warning
+           </xsl:when>  
+         </xsl:choose>
+       </xsl:attribute>
+    <xsl:value-of select="priority"/></td>
+    
+    <!-- Authors -->
+    <xsl:if test="/cdash/coverage/userid!=0">
+      <td align="center">
+      <xsl:for-each select="author">
+        <xsl:value-of select="."/>
+      </xsl:for-each>  
+      </td>
+    </xsl:if>
+    
+     <!-- Labels -->
      <xsl:if test="count(//labels/label) > 0">
       <td align="left" class="nob">
         <xsl:for-each select="labels/label">

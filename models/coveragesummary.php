@@ -227,7 +227,7 @@ class CoverageSummary
   /** Return the list of buildid which are contributing to the dashboard */
   function GetBuilds($projectid,$timestampbegin,$timestampend)
     {
-    $buildids = array();
+    $buildids = array();                           
     $coverage = pdo_query("SELECT buildid FROM coveragesummary,build WHERE coveragesummary.buildid=build.id 
                            AND build.projectid=".qnum($projectid)." AND build.starttime>'".$timestampbegin."'
                            AND endtime<'".$timestampend."'");
