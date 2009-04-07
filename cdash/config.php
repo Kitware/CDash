@@ -64,6 +64,10 @@ $CDASH_LDAP_HOSTNAME='localhost';
 $CDASH_LDAP_BASEDN='ou=people,dc=organization,dc=com';
 $CDASH_LDAP_PROTOCOL_VERSION='3';
 
+// Database auto-removal
+$CDASH_DATABASE_AUTOREMOVE_TIMEFRAME='0'; // in days 
+// Maximum number of builds that should be removed
+$CDASH_DATABASE_AUTOREMOVE_MAXBUILDS='200';
 
 // Google Map API
 $CDASH_GOOGLE_MAP_API_KEY = array();
