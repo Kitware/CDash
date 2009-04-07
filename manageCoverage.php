@@ -284,6 +284,7 @@ if($projectid>0)
   $CoverageSummary = new CoverageSummary();
   
   $buildids = $CoverageSummary->GetBuilds($Project->Id,$beginUTCTime,$currentUTCTime);
+  rsort($buildids);
   foreach($buildids as $buildId)
     {
     $Build = new Build();
