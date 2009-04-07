@@ -212,7 +212,8 @@ CREATE TABLE `coveragefilelog` (
   `line` int(11) NOT NULL default '0',
   `code` varchar(10) NOT NULL default '',
   KEY `fileid` (`fileid`),
-  KEY `buildid` (`buildid`)
+  KEY `buildid` (`buildid`),
+  KEY `line` (`line`)
 );
 
 -- --------------------------------------------------------
