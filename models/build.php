@@ -32,9 +32,9 @@ class Build
   var $Name;
   var $Type;
   var $Generator;
-  var $Starttime;
-  var $Endtime;
-  var $Submittime;
+  var $StartTime;
+  var $EndTime;
+  var $SubmitTime;
   var $Command;
   var $Log;
   var $Information;
