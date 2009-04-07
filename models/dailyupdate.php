@@ -112,7 +112,7 @@ class DailyUpdate
     $filename = pdo_real_escape_string($filename);
     
     // Remove
-    if(substr($filename,0,2) = './')
+    if(substr($filename,0,2) == './')
       {
       $filename = substr($filename,2);
       }
