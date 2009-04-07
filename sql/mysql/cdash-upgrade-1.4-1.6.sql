@@ -1,6 +1,10 @@
 CREATE TABLE IF NOT EXISTS `coveragefilepriority` (
-  `fileid` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL,
   `priority` tinyint(4) NOT NULL,
-  PRIMARY KEY  (`fileid`),
-  KEY `priority` (`priority`)
+  `fullpath` varchar(255) NOT NULL,
+  `projectid` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `priority` (`priority`),
+  KEY `fullpath` (`fullpath`),
+  KEY `projectid` (`projectid`)
 );
