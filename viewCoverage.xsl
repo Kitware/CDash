@@ -329,7 +329,7 @@
     <xsl:if test="/cdash/coverage/userid!=0">
       <td align="center">
       <xsl:for-each select="author">
-        <xsl:value-of select="."/>
+        <xsl:value-of select="name"/>
       </xsl:for-each>  
       </td>
     </xsl:if>
