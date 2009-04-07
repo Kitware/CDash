@@ -182,7 +182,8 @@ $xml .= "</menu>";
 
     // Add the priority
     $CoverageFile2User = new CoverageFile2User();
-    $CoverageFile2User->FileId = $covfile["fileid"];
+    $CoverageFile2User->ProjectId = $projectid;
+    $CoverageFile2User->FullPath = $covfile["fullpath"];
     $covfile["priority"] = $CoverageFile2User->GetPriority();
 
     // If the user is logged in we set the users
@@ -304,7 +305,7 @@ $xml .= "</menu>";
         $xml .= "<author>";
         $xml .= add_XML_value("id",$authorid);
         $User = new User();
-        $User->Id = $authorid;    
+        $User->Id = $authorid;
         $xml .= add_XML_value("name",$User->GetName());
         $xml .= "</author>";
         }

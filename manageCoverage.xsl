@@ -43,7 +43,6 @@
 </xsl:otherwise>
 </xsl:choose>    
 
-<br/>
 
 <xsl:choose>
  <xsl:when test="cdash/group_created=1">
@@ -55,7 +54,7 @@ project page</a>
 <xsl:otherwise>
 
 <xsl:if test="string-length(cdash/warning)>0">
-<b>Warning: <xsl:value-of select="cdash/warning"/></b><br/><br/>
+<br/><b><xsl:value-of select="cdash/warning"/></b><br/>
 </xsl:if>
 
 <table width="100%"  border="0">
@@ -134,7 +133,7 @@ project page</a>
            </xsl:otherwise>
         </xsl:choose>
         
-      <td><xsl:value-of select="name"/></td> 
+      <td><xsl:value-of select="fullpath"/></td> 
       <td>
       <form name="form_priority" method="post">
       <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="/cdash/project/id"/>&#38;buildid=<xsl:value-of select="/cdash/project/buildid"/></xsl:attribute>
@@ -145,7 +144,7 @@ project page</a>
       <option value="3"><xsl:if test="priority=3"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>High</option>
       <option value="4"><xsl:if test="priority=4"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Urgent</option>
       </select>
-      <input type="hidden" name="fileId"><xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute></input>
+      <input type="hidden" name="fullpath"><xsl:attribute name="value"><xsl:value-of select="fullpath"/></xsl:attribute></input>
       </form>
       </td>
       <td>
@@ -172,7 +171,7 @@ project page</a>
         </xsl:for-each>
         </select>
         <input type="submit" name="addAuthor" value="Add author"/>
-        <input type="hidden" name="fileId"><xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute></input>
+        <input type="hidden" name="fullpath"><xsl:attribute name="value"><xsl:value-of select="fullpath"/></xsl:attribute></input>
       </form>
       </td>
     </tr>

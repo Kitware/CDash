@@ -49,7 +49,13 @@ $xml .= "<menusubtitle>Coverage</menusubtitle>";
   
 @$projectid = $_GET["projectid"];
 $Project = new Project;
-     
+
+$buildid = 0;
+if(isset($_GET['buildid']))
+  {
+  $buildid = $_GET['buildid'];
+  }
+    
 // If the projectid is not set and there is only one project we go directly to the page
 if(isset($edit) && !isset($projectid))
   {
@@ -94,36 +100,37 @@ while($project_array = pdo_fetch_array($projects))
 
 // Display the current builds who have coverage for the past 7 days
 $currentUTCTime =  gmdate(FMT_DATETIME);
-$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*7*24); // 7 days
+$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*300*24); // 7 days
 
 $CoverageFile2User = new CoverageFile2User();
+$CoverageFile2User->ProjectId = $projectid;
 
 // Add an author manually
 if(isset($_POST["addAuthor"]))
   {
   $CoverageFile2User->UserId = $_POST["userSelection"];
-  $CoverageFile2User->FileId = $_POST["fileId"];
+  $CoverageFile2User->FullPath = $_POST["fullpath"];
   $CoverageFile2User->Insert();
-  } // end addAuthor
+  } // end add author
 
-// Add an author manually
+// Remove an author manually
 if(isset($_GET["removefileid"]))
   {
   $CoverageFile2User->UserId = $_GET["removeuserid"];
   $CoverageFile2User->FileId = $_GET["removefileid"];
   $CoverageFile2User->Remove();
-  } // end addAuthor
+  } // end remove author
 
 // Assign last author
 if(isset($_POST["assignLastAuthor"]))
   {
-  $CoverageFile2User->AssignLastAuthor($projectid,$beginUTCTime,$currentUTCTime);
+  $CoverageFile2User->AssignLastAuthor($buildid,$beginUTCTime,$currentUTCTime);
   } // end last author
   
 // Assign all authors
 if(isset($_POST["assignAllAuthors"]))
   {
-  $CoverageFile2User->AssignAllAuthors($projectid,$beginUTCTime,$currentUTCTime);
+  $CoverageFile2User->AssignAllAuthors($buildid,$beginUTCTime,$currentUTCTime);
   } // end Assign all authors
 
 // Upload file
@@ -157,17 +164,11 @@ if(isset($_POST["uploadAuthorsFile"]))
         
         $authors[] = trim(substr($line,$begauthor));
         
-        // Insert the user
-        // Last build
-        $CoverageSummary = new CoverageSummary();
-        $buildids = $CoverageSummary->GetBuilds($Project->Id,$beginUTCTime,$currentUTCTime);
- 
+        // Insert the user        
         $CoverageFile = new CoverageFile;
-        $CoverageFile2User->FileId = $CoverageFile->GetIdFromName($file,$buildids[0]);
-        
-        if($CoverageFile2User->FileId === false)
+        if($CoverageFile->GetIdFromName($file,$buildid) === false)
           {
-          echo "File not found for: ".$file."<br>";
+          $xml .= add_XML_value("warning","*File not found for: ".$file);
           }
         else
           {      
@@ -177,10 +178,11 @@ if(isset($_POST["uploadAuthorsFile"]))
             $CoverageFile2User->UserId = $User->GetIdFromName($author);
             if($CoverageFile2User->UserId === false)
               {
-              echo "User not found for: ".$author."<br>";
+              $xml .= add_XML_value("warning","*User not found for: ".$author);
               }
             else
               {
+              $CoverageFile2User->FullPath = $file;
               $CoverageFile2User->Insert();
               }
             }
@@ -198,7 +200,7 @@ if(isset($_POST["sendEmail"]))
   {
   $coverageThreshold = $Project->GetCoverageThreshold();
     
-  $userids = $CoverageFile2User->GetUsersFromProject($projectid);
+  $userids = $CoverageFile2User->GetUsersFromProject();
   foreach($userids as $userid)
     {
     $CoverageFile2User->UserId = $userid;
@@ -210,7 +212,8 @@ if(isset($_POST["sendEmail"]))
     foreach($fileids as $fileid)
       {
       $coveragefile = new CoverageFile;
-      $coveragefile->Id = $fileid;
+      $CoverageFile2User->FileId = $fileid;
+      $coveragefile->Id = $CoverageFile2User->GetCoverageFileId($buildid);
       $metric = $coveragefile->GetMetric();
       if($metric < ($coverageThreshold/100.0))
         {
@@ -236,11 +239,15 @@ if(isset($_POST["sendEmail"]))
         
       $messagePlainText .= "Details on the submission can be found at ";
     
-      $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
-      $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-      $messagePlainText .= $currentURI;
+      $messagePlainText .= get_server_URI();
       $messagePlainText .= "\n\n";  
-      $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
+      $serverName = $CDASH_SERVER_NAME;
+      if(strlen($serverName) == 0)
+        {
+        $serverName = $_SERVER['SERVER_NAME'];
+        }
+      
+      $messagePlainText .= "\n-CDash on ".$serverName."\n";
         
       // Send the email
       $title = "CDash [".$Project->GetName()."] - Low Coverage";
@@ -248,10 +255,16 @@ if(isset($_POST["sendEmail"]))
       $User = new User();
       $User->Id=$userid;
       $email = $User->GetEmail();
-      
+            
       mail("$email", $title, $messagePlainText,
           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+      
+      $xml .= add_XML_value("warning","*The email has been sent successfully.");
       }
+    else
+      {
+      $xml .= add_XML_value("warning","*No email sent because the coverage is green.");
+      }  
     }
   
   } // end sendEmail
@@ -260,7 +273,8 @@ if(isset($_POST["sendEmail"]))
 if(isset($_POST['prioritySelection']))
   {
   $CoverageFile2User = new CoverageFile2User();
-  $CoverageFile2User->FileId = $_POST['fileId'];
+  $CoverageFile2User->ProjectId = $projectid;
+  $CoverageFile2User->FullPath = $_POST['fullpath'];
   $CoverageFile2User->SetPriority($_POST['prioritySelection']);
   }  
   
@@ -274,10 +288,8 @@ if($projectid>0)
   $xml .= add_XML_value("id",$Project->Id);
   $xml .= add_XML_value("name",$Project->GetName());
   
-  $buildid = 0;
-  if(isset($_GET['buildid']))
+  if($buildid>0)
     {
-    $buildid = $_GET['buildid'];
     $xml.= add_XML_value("buildid",$buildid);
     }
     
@@ -310,13 +322,16 @@ if($projectid>0)
     $Coverage->BuildId = $buildid;
     $fileIds = $Coverage->GetFiles();
     $row = "0";
+    sort($fileIds);
     foreach($fileIds as $fileid)
       {
       $CoverageFile = new CoverageFile();
       $CoverageFile->Id = $fileid;
       $xml .= "<file>";
-      $xml .= add_XML_value("id",$fileid);
-      $xml .= add_XML_value("name",$CoverageFile->GetPath());
+      $CoverageFile2User->FullPath = $CoverageFile->GetPath();
+     
+      $xml .= add_XML_value("fullpath",$CoverageFile->GetPath());
+      $xml .= add_XML_value("id",$CoverageFile2User->GetId());
       
       if($row == 0)
         {
@@ -329,7 +344,7 @@ if($projectid>0)
       $xml .= add_XML_value("row",$row);
       
       // Get the authors
-      $CoverageFile2User->FileId = $fileid;
+      $CoverageFile2User->FullPath = $CoverageFile->GetPath();
       $authorids = $CoverageFile2User->GetAuthors();
       foreach($authorids as $authorid)
         {
@@ -337,6 +352,7 @@ if($projectid>0)
         $User = new User();
         $User->Id = $authorid;
         $xml .= add_XML_value("name",$User->GetName());
+        $xml .= add_XML_value("id",$authorid);
         $xml .= "</author>";
         }
       
