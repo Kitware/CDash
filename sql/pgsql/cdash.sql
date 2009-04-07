@@ -171,6 +171,7 @@ CREATE TABLE "coveragefilelog" (
 );
 CREATE INDEX "fileid2" on "coveragefilelog" ("fileid");
 CREATE INDEX "buildid5" on "coveragefilelog" ("buildid");
+CREATE INDEX "coveragefilelog_line" on "coveragefilelog" ("line");
 
 --
 -- Table: coveragesummary

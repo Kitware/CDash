@@ -458,6 +458,7 @@ if(isset($_GET['upgrade-1-4']))
   ModifyTableField("configure","log","MEDIUMTEXT","TEXT","",true,false);
   
   AddTableIndex('coverage','covered');
+  AddTableIndex('coveragefilelog','line');
   AddTableIndex('build2grouprule','starttime');
   AddTableIndex('build2grouprule','endtime');
   AddTableIndex('build2grouprule','buildtype');
