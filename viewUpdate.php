@@ -96,22 +96,19 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= "</build>";
 
   $xml .= "<updates>";
-
-  
- // Return the status
+  // Return the status
   $status_array = pdo_fetch_array(pdo_query("SELECT status FROM buildupdate WHERE buildid='$buildid'"));
- if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
-  {
+  if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
+    {
     $xml .= add_XML_value("status",$status_array["status"]);
-  }
+    }
   else
-  {
-  $xml .= add_XML_value("status",""); // empty status
-  }
-
+    {
+    $xml .= add_XML_value("status",""); // empty status
+    }
+    
   $xml .= "<javascript>";
-
- // This should work hopefully
+  // This should work hopefully
   $updatedfiles = pdo_query("SELECT * FROM updatefile WHERE buildid='$buildid'
                               ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
   
@@ -133,7 +130,6 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   // Create an array so we can sort it
   while($file_array = pdo_fetch_array($updatedfiles))
     {
-
     $file = array();
     $file['filename'] = $file_array["filename"];
     $file['author'] = $file_array["author"];
@@ -271,7 +267,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       $file['diff_url'] = $diff_url;  
       $locallymodified[] = $file;
       }
-    else if(strstr($log,"Conflict while updating"))
+    else
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $diff_url = XMLStrFormat($diff_url);
