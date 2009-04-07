@@ -219,10 +219,10 @@
       <xsl:if test="covered>0">
        <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="coveragemetric &lt; 0.5">
+          <xsl:when test="coveragemetric &lt; /cdash/coverage/metricerror">
             error
             </xsl:when>
-         <xsl:when test="coveragemetric >= 0.7">
+         <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
             normal
             </xsl:when>  
           <xsl:otherwise>
@@ -243,10 +243,10 @@
         <xsl:if test="covered>0">
        <xsl:attribute name="class">
          <xsl:choose>
-           <xsl:when test="coveragemetric &lt;  0.5">
+           <xsl:when test="coveragemetric &lt; /cdash/coverage/metricerror">
              error
              </xsl:when>
-          <xsl:when test="coveragemetric >= 0.7">
+          <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
              normal
              </xsl:when>  
            <xsl:otherwise>
@@ -269,10 +269,10 @@
         <xsl:if test="covered>0">
        <xsl:attribute name="class">
          <xsl:choose>
-           <xsl:when test="coveragemetric &lt;  0.5">
+           <xsl:when test="coveragemetric &lt;  /cdash/coverage/metricerror">
              error
              </xsl:when>
-          <xsl:when test="coveragemetric >= 0.7">
+          <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
              normal
              </xsl:when>  
            <xsl:otherwise>
@@ -292,10 +292,10 @@
         <xsl:if test="covered>0">
        <xsl:attribute name="class">
          <xsl:choose>
-           <xsl:when test="coveragemetric &lt;  0.5">
+           <xsl:when test="coveragemetric &lt;  /cdash/coverage/metricerror">
              error
              </xsl:when>
-          <xsl:when test="coveragemetric >= 0.7">
+          <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
              normal
              </xsl:when>  
            <xsl:otherwise>

@@ -115,7 +115,12 @@ $xml .= "</menu>";
   $xml .= add_XML_value("loc",$loc);
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
   $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
-  
+  // Above this number of the coverage is green
+  $xml .= add_XML_value("metricpass",$project_array["coveragethreshold"]/100);
+  // Below this number of the coverage is red
+  $xml .= add_XML_value("metricerror",0.7*($project_array["coveragethreshold"]/100));
+
+
   $coveredfiles = pdo_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
   $coveredfiles_array = pdo_fetch_array($coveredfiles);
   $ncoveredfiles = $coveredfiles_array[0];
