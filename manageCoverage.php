@@ -100,7 +100,7 @@ while($project_array = pdo_fetch_array($projects))
 
 // Display the current builds who have coverage for the past 7 days
 $currentUTCTime =  gmdate(FMT_DATETIME);
-$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*300*24); // 7 days
+$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*7*24); // 7 days
 
 $CoverageFile2User = new CoverageFile2User();
 $CoverageFile2User->ProjectId = $projectid;
