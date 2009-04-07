@@ -21,6 +21,8 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+include("models/coveragefile2user.php");
+include("models/user.php");
 
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
@@ -32,7 +34,13 @@ if(!isset($buildid) || !is_numeric($buildid))
   echo "Not a valid buildid!";
   return;
   }
-    
+
+@$userid = $_SESSION['cdash']['loginid'];
+if(!isset($userid))
+  {
+  $userid = 0;
+  }    
+  
 if(!$sortby)
   {
   $sortby = "status";
@@ -120,7 +128,7 @@ $xml .= "</menu>";
   $xml .= add_XML_value("totalfiles",$nfiles);
   $xml .= add_XML_value("buildid",$buildid);
   $xml .= add_XML_value("sortby",$sortby);
-  
+  $xml .= add_XML_value("userid",$userid);
   
   $nsatisfactorycoveredfiles = 0;
     
@@ -172,6 +180,17 @@ $xml .= "</menu>";
       $nsatisfactorycoveredfiles++;
       }
 
+    // Add the priority
+    $CoverageFile2User = new CoverageFile2User();
+    $CoverageFile2User->FileId = $covfile["fileid"];
+    $covfile["priority"] = $CoverageFile2User->GetPriority();
+
+    // If the user is logged in we set the users
+    if($userid>0)
+      {
+      $covfile["user"] = $CoverageFile2User->GetAuthors();
+      }
+
     $covfile_array[] = $covfile;
     }
     
@@ -211,7 +230,26 @@ $xml .= "</menu>";
       {
       return $a["functionsuntested"]<$b["functionsuntested"] ? 1:0;
       } 
-         
+    else if($sortby == "priority")
+      {
+      return $a["priority"]<$b["priority"] ? 1:0;
+      }
+    else if($sortby == "user")
+      {
+      if(isset($a["user"][0]) && !isset($b["user"][0]))
+        {
+        return 0;
+        }
+      if(!isset($a["user"][0]) && isset($b["user"][0]))
+        {
+        return 1;
+        }
+      if(!isset($a["user"][0]) && !isset($b["user"][0]))
+        {
+        return 0;
+        }
+      return $a["user"][0]<$b["user"][0] ? 1:0;
+      }   
     }
     
   usort($covfile_array,"sort_array");
@@ -223,7 +261,7 @@ $xml .= "</menu>";
     $covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
     $covfile["fullpath"] = $coveragefile_array["fullpath"];
     $covfile["fileid"] = 0;
-    $covfile["covered"] = 0;       
+    $covfile["covered"] = 0;    
     $covfile_array[] = $covfile;
     }
   
@@ -244,10 +282,37 @@ $xml .= "</menu>";
     $xml .= add_XML_value("percentcoverage",$covfile["percentcoverage"]);
     $xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
     $xml .= add_XML_value("functionsuntested",@$covfile["functionsuntested"]);
-    $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);    
-
+    $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);
+    
+    // Get the priority
+    $priority = "NA";
+    switch($covfile["priority"])
+      {
+      case 0: $priority = "None"; break;
+      case 1: $priority = "Low"; break;
+      case 2: $priority = "Medium"; break;
+      case 3: $priority = "High"; break;
+      case 4: $priority = "Urgent"; break;
+       }
+    $xml .= add_XML_value("priority",$priority);
+   
+    // Set the authors of the file
+    if($userid>0)
+      {
+      foreach(@$covfile["user"] as $authorid)
+        {
+        $xml .= "<author>";
+        $xml .= add_XML_value("id",$authorid);
+        $User = new User();
+        $User->Id = $authorid;    
+        $xml .= add_XML_value("name",$User->GetName());
+        $xml .= "</author>";
+        }
+      }
+    
+      
+    // Set the labels
     $fileid = $covfile['fileid'];
-
     $xml .= get_labels_xml_from_query_results(
       "SELECT text FROM label, label2coveragefile WHERE ".
       "label.id=label2coveragefile.labelid AND ".

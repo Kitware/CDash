@@ -24,6 +24,7 @@ include_once("models/project.php");
 include_once("models/coverage.php");
 include_once("models/build.php");
 include_once("models/user.php");
+include_once("models/site.php");
 
 if ($session_OK) 
 {
@@ -93,7 +94,7 @@ while($project_array = pdo_fetch_array($projects))
 
 // Display the current builds who have coverage for the past 7 days
 $currentUTCTime =  gmdate(FMT_DATETIME);
-$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*30*24); // 7 days
+$beginUTCTime = gmdate(FMT_DATETIME,time()-3600*300*24); // 7 days
 
 $CoverageFile2User = new CoverageFile2User();
 
@@ -230,7 +231,7 @@ if(isset($_POST["sendEmail"]))
       
       foreach($files as $file)
         {
-        $messagePlainText .= $file['path']." (".$file['percent']."%)\n";
+        $messagePlainText .= $file['path']." (".round($file['percent'],2)."%)\n";
         }  
         
       $messagePlainText .= "Details on the submission can be found at ";
@@ -244,14 +245,25 @@ if(isset($_POST["sendEmail"]))
       // Send the email
       $title = "CDash [".$Project->GetName()."] - Low Coverage";
       
-      echo $title."<br>";
-      echo $messagePlainText;   
-      //mail("$email", $title, $messagePlainText,
-      //    "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
+      $User = new User();
+      $User->Id=$userid;
+      $email = $User->GetEmail();
+      
+      mail("$email", $title, $messagePlainText,
+          "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
       }
     }
   
   } // end sendEmail
+  
+// If we change the priority
+if(isset($_POST['prioritySelection']))
+  {
+  $CoverageFile2User = new CoverageFile2User();
+  $CoverageFile2User->FileId = $_POST['fileId'];
+  $CoverageFile2User->SetPriority($_POST['prioritySelection']);
+  }  
+  
   
 /** We start generating the XML here */
 
@@ -262,24 +274,35 @@ if($projectid>0)
   $xml .= add_XML_value("id",$Project->Id);
   $xml .= add_XML_value("name",$Project->GetName());
   
+  $buildid = 0;
+  if(isset($_GET['buildid']))
+    {
+    $buildid = $_GET['buildid'];
+    $xml.= add_XML_value("buildid",$buildid);
+    }
+    
   $CoverageSummary = new CoverageSummary();
   
   $buildids = $CoverageSummary->GetBuilds($Project->Id,$beginUTCTime,$currentUTCTime);
-  foreach($buildids as $buildid)
+  foreach($buildids as $buildId)
     {
     $Build = new Build();
-    $Build->Id = $buildid;
+    $Build->Id = $buildId;
     $xml .= "<build>";
-    $xml .= add_XML_value("id",$buildid);
-    $xml .= add_XML_value("name",$Build->GetName());
+    $xml .= add_XML_value("id",$buildId);
+    $Site = new Site();
+    $Site->Id = $Build->GetSiteId();
+    $xml .= add_XML_value("name",$Site->GetName()."-".$Build->GetName());
+    if($buildid>0 && $buildId==$buildid)
+      {
+      $xml .= add_XML_value("selected",1);
+      }
     $xml .= "</build>";
     }
   
   // For now take the first one
-  if(count($buildids)>0)
+  if($buildid>0)
     {
-    $buildid = $buildids[0];
-    
     // Find the files associated with the build
     $Coverage = new Coverage();
     $Coverage->BuildId = $buildid;
@@ -311,10 +334,15 @@ if($projectid>0)
         $xml .= "<author>";
         $User = new User();
         $User->Id = $authorid;
-        $xml .= add_XML_value("id",$authorid);
         $xml .= add_XML_value("name",$User->GetName());
         $xml .= "</author>";
         }
+      
+      $priority = $CoverageFile2User->GetPriority(); 
+      if($priority>0)
+        {
+        $xml .= add_XML_value("priority",$priority);
+        }  
         
       $xml .= "</file>";
       }

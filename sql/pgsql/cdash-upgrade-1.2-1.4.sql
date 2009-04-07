@@ -185,3 +185,13 @@ CREATE INDEX "buildemail_userid" on "buildemail" ("userid");
 CREATE INDEX "buildemail_buildid" on "buildemail" ("buildid");
 CREATE INDEX "buildemail_category" on "buildemail" ("category");
 CREATE INDEX "buildemail_time" on "buildemail" ("time");
+
+--
+-- Table: coveragefilepriority
+--
+CREATE TABLE "coveragefilepriority" (
+  "fileid" bigint NOT NULL,
+  "priority" smallint NOT NULL,
+  PRIMARY KEY ("fileid"),
+);
+CREATE INDEX "coveragefilepriority_priority" on "coveragefile2user" ("priority");
