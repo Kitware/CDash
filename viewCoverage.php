@@ -263,6 +263,19 @@ $xml .= "</menu>";
     $covfile["fullpath"] = $coveragefile_array["fullpath"];
     $covfile["fileid"] = 0;
     $covfile["covered"] = 0;    
+    
+    // Add the priority
+    $CoverageFile2User = new CoverageFile2User();
+    $CoverageFile2User->ProjectId = $projectid;
+    $CoverageFile2User->FullPath = $covfile["fullpath"];
+    $covfile["priority"] = $CoverageFile2User->GetPriority();
+
+    // If the user is logged in we set the users
+    if($userid>0)
+      {
+      $covfile["user"] = $CoverageFile2User->GetAuthors();
+      }
+      
     $covfile_array[] = $covfile;
     }
   

@@ -111,6 +111,12 @@ class DailyUpdate
     // Check if the note already exists   
     $filename = pdo_real_escape_string($filename);
     
+    // Remove
+    if(substr($filename,0,2) == './')
+      {
+      $filename = substr($filename,2);
+      }
+    
     $sql = "";
     if($onlylast)
       {
@@ -120,7 +126,7 @@ class DailyUpdate
     $query = pdo_query("SELECT DISTINCT user2project.userid FROM user2project,dailyupdatefile,dailyupdate WHERE 
                         dailyupdatefile.dailyupdateid=dailyupdate.id AND dailyupdate.projectid=user2project.projectid
                         AND user2project.cvslogin=dailyupdatefile.author
-                        AND user2project.projectid=".qnum($this->ProjectId)." AND dailyupdatefile.filename='".$filename."'".$sql);                    
+                        AND user2project.projectid=".qnum($this->ProjectId)." AND dailyupdatefile.filename LIKE '%".$filename."'".$sql);                    
         
     if(!$query)
       {
