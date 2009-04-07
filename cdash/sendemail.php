@@ -195,6 +195,12 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$error
     $messagePlainText .= "/index.php?project=".$projectname."&date=".$dashboarddate;
     $messagePlainText .= "\n\n";
     
+    $serverName = $CDASH_SERVER_NAME;
+    if(strlen($serverName) == 0)
+      {
+      $serverName = $_SERVER['SERVER_NAME'];
+      }
+    
     $messagePlainText .= "\n-CDash on ".$serverName."\n";
       
     // Send the email
@@ -745,7 +751,7 @@ function sendemail($handler,$projectid)
   if($BuildGroup->GetSummaryEmail()==1)
     {
     // Send the summary email
-    sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$errors,$buildid);
+    sendsummaryemail($projectid,$Project->Name,$dashboarddate,$groupid,$errors,$buildid);
     return;
     } // end summary email
 
