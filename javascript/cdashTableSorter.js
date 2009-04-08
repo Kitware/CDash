@@ -113,7 +113,22 @@ $(document).ready(function() {
     {
     var nrows = document.getElementById('viewTestTable').getElementsByTagName('thead')[0].getElementsByTagName('th').length; 
     }
-
+ 
+ if(nrows==3)
+    {
+    $tabs.each(function(index) {          
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'buildname'},
+                1: { sorter:'buildname'},
+                2: { sorter:'digit'}
+            },
+          debug: false,
+          widgets: ['zebra'] 
+        });  
+      });
+    } 
+    
   if(nrows==4)
     {
     $tabs.each(function(index) {          
