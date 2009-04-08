@@ -153,34 +153,39 @@ $xml .= "</project>";
 
 if(isset($_GET["onlypassed"]))
   {
-  $xml .= "<onlypassed>1</onlypassed>";
+  $xml .= add_XML_value("displaydetails","0");
+  $xml .= add_XML_value("onlypassed","1");
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
            WHERE bt.buildid='$buildid' AND bt.status='passed' AND t.id=bt.testid ORDER BY t.name"; 
   }
 else if(isset($_GET["onlyfailed"]))
   {
-  $xml .= "<onlyfailed>1</onlyfailed>";
+  $xml .= add_XML_value("displaydetails","1");
+  $xml .= add_XML_value("onlyfailed","1");
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
          WHERE bt.buildid='$buildid' AND bt.status='failed' AND t.id=bt.testid ORDER BY t.name";
   }
 else if(isset($_GET["onlynotrun"]))
   {
-  $xml .= "<onlynotrun>1</onlynotrun>";
+  $xml .= add_XML_value("displaydetails","0");
+  $xml .= add_XML_value("onlynotrun","1");
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
          WHERE bt.buildid='$buildid' AND bt.status='notrun' AND t.id=bt.testid ORDER BY t.name";
   }  
 else if(isset($_GET["onlytimestatus"]))
   {
-  $xml .= "<onlytimestatus>1</onlytimestatus>";
+  $xml .= add_XML_value("displaydetails","1");
+  $xml .= add_XML_value("onlytimestatus","1");
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
             WHERE bt.buildid='$buildid' AND bt.timestatus>='$testtimemaxstatus' AND t.id=bt.testid ORDER BY t.name";
   }
 else
   {
-  $xml .= "<onlypassed>0</onlypassed>";
-  $xml .= "<onlyfailed>0</onlyfailed>";
-  $xml .= "<onlytimestatus>0</onlytimestatus>";
-  $xml .= "<onlynotrun>0</onlynotrun>";
+  $xml .= add_XML_value("displaydetails","1");
+  $xml .= add_XML_value("onlypassed","0");
+  $xml .= add_XML_value("onlyfailed","0");
+  $xml .= add_XML_value("onlytimestatus","0");
+  $xml .= add_XML_value("onlynotrun","0");
   $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
          WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,bt.timestatus DESC,t.name";
   }
