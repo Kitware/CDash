@@ -788,6 +788,6 @@ CREATE TABLE "coveragefilepriority" (
   "projectid" bigint  NOT NULL,
   PRIMARY KEY ("id")
 );
-CREATE INDEX "coveragefilepriority_priority" on "coveragefile2user" ("priority");
-CREATE INDEX "coveragefilepriority_fullpath" on "coveragefile2user" ("fullpath");
-CREATE INDEX "coveragefilepriority_projectid" on "coveragefile2user" ("projectid");
+CREATE INDEX "coveragefilepriority_priority" on "coveragefilepriority" ("priority");
+CREATE INDEX "coveragefilepriority_fullpath" on "coveragefilepriority" ("fullpath");
+CREATE INDEX "coveragefilepriority_projectid" on "coveragefilepriority" ("projectid");
