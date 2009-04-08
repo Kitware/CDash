@@ -213,7 +213,7 @@ CREATE TABLE `coveragefilelog` (
   `code` varchar(10) NOT NULL default '',
   KEY `fileid` (`fileid`),
   KEY `buildid` (`buildid`),
-  KEY `fileid` (`line`)
+  KEY `line` (`line`)
 );
 
 -- --------------------------------------------------------
@@ -339,6 +339,8 @@ CREATE TABLE `project` (
   `emailmaxitems` tinyint(4) default '5',
   `emailmaxchars` int(11) default '255',
   `displaylabels` tinyint(4) default '1',
+  `autoremovetimeframe` int(11) default '0',
+  `autoremovemaxbuilds` int(11) default '300',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)

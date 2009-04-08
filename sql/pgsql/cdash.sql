@@ -275,6 +275,8 @@ CREATE TABLE "project" (
   "emailmaxitems" smallint DEFAULT '5',
   "emailmaxchars" bigint DEFAULT '255',
   "displaylabels" smallint default '1',
+  "autoremovetimeframe" bigint default '0',
+  "autoremovemaxbuilds" bigint default '300',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name2" on "project" ("name");

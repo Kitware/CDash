@@ -442,6 +442,8 @@ if(isset($_GET['upgrade-1-4']))
   AddTableField("buildgroup","includesubprojectotal","tinyint(4)","smallint","1");
   AddTableField("project","emailredundantfailures","tinyint(4)","smallint","0");
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
+  AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
+  AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
   AddTableField("buildfailure2argument","place","int(11)","bigint","0");
   
   if($CDASH_DB_TYPE != "pgsql")

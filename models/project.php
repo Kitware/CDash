@@ -50,6 +50,8 @@ class Project
   var $EmailAdministrator;
   var $ShowIPAddresses;
   var $DisplayLabels;
+  var $AutoremoveTimeframe;
+  var $AutoremoveMaxBuilds;
 
   function __construct()
     {
@@ -61,6 +63,8 @@ class Project
     $this->EmailAdministrator=1;
     $this->ShowIPAddresses=1;
     $this->DisplayLabels=1;
+    $this->AutoremoveTimeframe=0;
+    $this->AutoremoveMaxBuilds=300;
     }
 
   /** Add a build group */
@@ -99,6 +103,8 @@ class Project
       case "EMAILADMINISTRATOR": $this->EmailAdministrator = $value;break;
       case "SHOWIPADDRESSES": $this->ShowIPAddresses = $value;break;
       case "DISPLAYLABELS": $this->DisplayLabels = $value;break;
+      case "AUTOREMOVETIMEFRAME": $this->AutoremoveTimeframe = $value;break;
+      case "AUTOREMOVEMAXBUILDS": $this->AutoremoveMaxBuilds = $value;break;
       case "CVSVIEWERTYPE": $this->CvsViewerType = $value;break;
       case "TESTTIMESTD": $this->TestTimeStd = $value;break;
       case "TESTTIMESTDTHRESHOLD": $this->TestTimeStdThreshold = $value;break;
@@ -177,6 +183,8 @@ class Project
       $query .= ",emailadministrator=".qnum($this->EmailAdministrator);
       $query .= ",showipaddresses=".qnum($this->ShowIPAddresses);
       $query .= ",displaylabels=".qnum($this->DisplayLabels);
+      $query .= ",autoremovetimeframe=".qnum($this->AutoremoveTimeframe);
+      $query .= ",autoremovemaxbuilds=".qnum($this->AutoremoveMaxBuilds);
       $query .= ",cvsviewertype='".$this->CvsViewerType."'";
       $query .= ",testtimestd=".qnum($this->TestTimeStd);
       $query .= ",testtimestdthreshold=".qnum($this->TestTimeStdThreshold);
@@ -214,13 +222,14 @@ class Project
                                     googletracker,emailbrokensubmission,emailredundantfailures,
                                     emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
-                                    ,displaylabels)
+                                    ,displaylabels,autoremovetimeframe,autoremovemaxbuilds)
                  VALUES (".$idvalue."'$this->Name','$this->Description','$this->HomeUrl','$this->CvsUrl','$this->BugTrackerUrl','$this->DocumentationUrl',
                  ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$this->NightlyTime',
                  '$this->GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).",".qnum($this->EmailBuildMissing).","
                  .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$this->CvsViewerType',".qnum($this->TestTimeStd)
                  .",".qnum($this->TestTimeStdThreshold).",".qnum($this->TestTimeMaxStatus).",".qnum($this->EmailMaxItems).",".qnum($this->EmailMaxChars).","
-                 .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).",".qnum($this->DisplayLabels).")";
+                 .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).",".qnum($this->DisplayLabels)
+                 .",".qnum($this->AutoremoveTimeframe).",".qnum($this->AutoremoveMaxBuilds).")";
                     
        if(pdo_query($query))
          {
@@ -321,6 +330,8 @@ class Project
       $this->EmailAdministrator = $project_array['emailadministrator'];
       $this->ShowIPAddresses = $project_array['showipaddresses'];
       $this->DisplayLabels = $project_array['displaylabels'];
+      $this->AutoremoveTimeframe = $project_array['autoremovetimeframe'];
+      $this->AutoremoveMaxBuilds = $project_array['autoremovemaxbuilds'];
       $this->CvsViewerType = $project_array['cvsviewertype'];
       $this->TestTimeStd = $project_array['testtimestd'];
       $this->TestTimeStdThreshold = $project_array['testtimestdthreshold'];
