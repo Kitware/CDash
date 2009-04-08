@@ -93,13 +93,24 @@
 <xsl:if test="cdash/project/showtesttime=1">    
     <th id="sort_2">Time Status</th>
     <th id="sort_3">Time</th>
-    <th id="sort_4">Details</th>
-    <th class="nob">Labels</th>
+    <xsl:if test="/cdash/build/displaylabels=0">
+      <th id="sort_4" class="nob">Details</th>
+    </xsl:if>
+    <xsl:if test="/cdash/build/displaylabels=1">
+      <th id="sort_4" >Details</th>
+      <th class="nob">Labels</th>
+    </xsl:if>
 </xsl:if>        
 <xsl:if test="cdash/project/showtesttime=0">    
     <th id="sort_2">Time (s)</th>
     <th id="sort_3">Details</th>
-    <th class="nob">Labels</th>
+    <xsl:if test="/cdash/build/displaylabels=0">
+      <th id="sort_3" class="nob">Details</th>
+    </xsl:if>
+    <xsl:if test="/cdash/build/displaylabels=1">
+      <th id="sort_3">Details</th>
+      <th class="nob">Labels</th>
+    </xsl:if>
 </xsl:if>        
   </tr>
 </thead>
@@ -143,6 +154,7 @@
     <td align="right">
       <xsl:value-of select="execTime"/>
     </td>
+    <xsl:if test="/cdash/build/displaylabels=1">
     <td>
       <xsl:value-of select="details"/>
     </td>
@@ -154,6 +166,7 @@
         <nobr><xsl:value-of select="."/></nobr>
       </xsl:for-each>
     </td>
+    </xsl:if>  
   </tr>
 </xsl:for-each>
 </table>
