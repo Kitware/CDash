@@ -144,13 +144,13 @@ class UserProject
     {
     if(!$this->ProjectId)
       {
-      echo "UserProject FillFromCVSLogin(): ProjectId not set";
+      add_log("ProjectId not set","UserProject FillFromCVSLogin()",LOG_ERR);
       return false;
       }
      
     if(!$this->CvsLogin)
       {
-      echo "UserProject FillFromCVSLogin(): ProjectId not set";
+      add_log("CvsLogin not set","UserProject FillFromCVSLogin()",LOG_ERR);
       return false;
       }
      
