@@ -156,7 +156,7 @@ class UserProject
      
     $sql = "SELECT emailcategory,userid
                FROM user2project WHERE user2project.projectid=".qnum($projectid)."
-               AND user2project.cvslogin='$author'
+               AND user2project.cvslogin='".$author."'
                AND user2project.emailtype>0";
                
     $user = pdo_query($sql);
