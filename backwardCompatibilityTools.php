@@ -441,7 +441,6 @@ if(isset($_GET['upgrade-1-4']))
   AddTableField("project","showipaddresses","tinyint(4)","smallint","1");
   AddTableField("buildgroup","includesubprojectotal","tinyint(4)","smallint","1");
   AddTableField("project","emailredundantfailures","tinyint(4)","smallint","0");
-  AddTableField("project","displaylabels","tinyint(4)","smallint","1");
   AddTableField("buildfailure2argument","place","int(11)","bigint","0");
   
   if($CDASH_DB_TYPE != "pgsql")
@@ -458,7 +457,6 @@ if(isset($_GET['upgrade-1-4']))
   ModifyTableField("configure","log","MEDIUMTEXT","TEXT","",true,false);
   
   AddTableIndex('coverage','covered');
-  AddTableIndex('coveragefilelog','line');
   AddTableIndex('build2grouprule','starttime');
   AddTableIndex('build2grouprule','endtime');
   AddTableIndex('build2grouprule','buildtype');
@@ -531,6 +529,8 @@ if(isset($_GET['upgrade-1-4']))
 if(isset($_GET['upgrade-1-6']))
 {  
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
+  AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
+  AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
   AddTableIndex('coveragefilelog','line');
   // Set the database version
   setVersion();

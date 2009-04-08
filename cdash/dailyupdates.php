@@ -670,27 +670,23 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
 }
 
 /** Remove the first builds that are at the beginning of the queue */
-function removeFirstBuilds($projectid)
+function removeFirstBuilds($projectid,$days,$maxbuilds)
 {
+  add_log("removeFirstBuilds",$projectid);
+  
   include("cdash/config.php");
   include_once("cdash/common.php");
- 
-  // If it's not set we return
-  if(!isset($CDASH_DATABASE_AUTOREMOVE_TIMEFRAME))
-    {
-    return;
-    }
-
-  if($CDASH_DATABASE_AUTOREMOVE_TIMEFRAME < 2)
+  
+  if($days < 2)
     {
     return;
     }
      
   // First remove the builds with the wrong date
-  $currentdate = time()-3600*24*$CDASH_DATABASE_AUTOREMOVE_TIMEFRAME; 
+  $currentdate = time()-3600*24*$days; 
   $startdate = date(FMT_DATETIME,$currentdate);
   
-  $builds = pdo_query("SELECT id FROM build WHERE starttime<'".$startdate."' AND projectid=".qnum($projectid)." LIMIT ".$CDASH_DATABASE_AUTOREMOVE_MAXBUILDS);
+  $builds = pdo_query("SELECT id FROM build WHERE starttime<'".$startdate."' AND projectid=".qnum($projectid)." ORDER BY starttime ASC LIMIT ".$maxbuilds);
   add_last_sql_error("dailyupdates::removeFirstBuilds");
   while($builds_array = pdo_fetch_array($builds))
     {
@@ -718,7 +714,7 @@ function addDailyChanges($projectid)
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME", $db);
 
-  $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name FROM project WHERE id='$projectid'"));
+  $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name,autoremovetimeframe,autoremovemaxbuilds FROM project WHERE id='$projectid'"));
   $date = ""; // now
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $date = gmdate(FMT_DATE, $currentstarttime);
@@ -797,7 +793,7 @@ function addDailyChanges($projectid)
     pdo_query("UPDATE dailyupdate SET status='1' WHERE projectid='$projectid' AND date='$date'");
     
     // Remove the first builds of the project
-    removeFirstBuilds($projectid);
+    removeFirstBuilds($projectid,$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"]);
     }
 }
 ?>

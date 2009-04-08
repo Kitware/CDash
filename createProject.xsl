@@ -678,7 +678,7 @@ edit the project</a><br/>
                     <td></td>
                     <td><div align="right"><strong>Google Analytics Tracker:</strong></div></td>
                     <td>
-                    <input onchange="saveChanges();" onfocus="showHelp('google_help');" name="googleTracker" type="text" id="googleTracker" size="50">
+                    <input onchange="saveChanges();" onfocus="showHelp('google_help');" name="googleTracker" type="text" id="googleTracker" size="30">
                     <xsl:attribute name="value">
                       <xsl:value-of select="cdash/project/googletracker"/>
                     </xsl:attribute>
@@ -721,7 +721,42 @@ edit the project</a><br/>
                   </span>
                 </td>
               </tr>
-                <tr>
+               <tr>
+                <td></td>
+                <td><div align="right"><strong>AutoRemove Timeframe (days):</strong></div></td>
+                <td>
+                <input onchange="saveChanges();" onfocus="showHelp('autoremoveTimeframe');" name="autoremoveTimeframe" type="text" id="autoremoveTimeframe" size="10">
+                 <xsl:attribute name="value">
+                   <xsl:value-of select="cdash/project/autoremovetimeframe"/>
+                 </xsl:attribute>
+                </input>
+                <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelp('autoremoveTimeframe_help');" src="images/help.gif" border="0"/></a>
+                <span class="help_content" id="autoremoveTimeframe_help">
+                <b>AutoRemove Timeframe</b><br/>On the first submission of the day, remove builds that are older than X number of days. 
+                   If this value is less than 2 days no builds are removed.
+                  </span>
+                </td>
+              </tr>
+               <tr>
+                <td></td>
+                <td><div align="right"><strong>AutoRemove Max Builds:</strong></div></td>
+                <td>
+                <input onchange="saveChanges();" onfocus="showHelp('autoremoveMaxBuilds');" name="autoremoveMaxBuilds" type="text" id="autoremoveMaxBuilds" size="10">
+                 <xsl:attribute name="value">
+                   <xsl:value-of select="cdash/project/autoremovemaxbuilds"/>
+                 </xsl:attribute>
+                </input>
+                <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelp('autoremoveMaxBuilds_help');" src="images/help.gif" border="0"/></a>
+                <span class="help_content" id="autoremoveMaxBuilds_help">
+                <b>AutoRemove max builds</b><br/>On the first submission of the day, remove builds that are older than X number of days. 
+                   The maximum number of builds that should be removed.</span>
+                </td>
+              </tr>
+              
+              
+              <tr>
                   <td>              
                 </td>
                 <td>              

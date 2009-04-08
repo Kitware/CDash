@@ -140,6 +140,8 @@ if($Submit)
     @$Project->EmailAdministrator = $_POST["emailAdministrator"];
     @$Project->ShowIPAddresses = $_POST["showIPAddresses"];
     @$Project->DisplayLabels = $_POST["displayLabels"];
+    @$Project->AutoremoveTimeframe = $_POST["autoremovetimeframe"];
+    @$Project->AutoremoveMaxBuilds = $_POST["autoremovemaxbuilds"];
     $Project->Public = $Public;
     
     $projectid = -1;
@@ -259,7 +261,8 @@ if($Update || $AddRepository)
   @$Project->EmailAdministrator = $_POST["emailAdministrator"];
   @$Project->ShowIPAddresses = $_POST["showIPAddresses"];
   @$Project->DisplayLabels = $_POST["displayLabels"];
-    
+  @$Project->AutoremoveTimeframe = $_POST["autoremoveTimeframe"];
+  @$Project->AutoremoveMaxBuilds = $_POST["autoremoveMaxBuilds"];
   $Project->Save();
   
   // Add the logo
@@ -331,6 +334,8 @@ if($projectid>0)
   $xml .= add_XML_value("emailadministrator",$Project->EmailAdministrator);
   $xml .= add_XML_value("showipaddresses",$Project->ShowIPAddresses);
   $xml .= add_XML_value("displaylabels",$Project->DisplayLabels);
+  $xml .= add_XML_value("autoremovetimeframe",$Project->AutoremoveTimeframe);
+  $xml .= add_XML_value("autoremovemaxbuilds",$Project->AutoremoveMaxBuilds);
   $xml .= "</project>";
   
   $repositories = $Project->GetRepositories();
