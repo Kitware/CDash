@@ -71,7 +71,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= "</build>";
   
   // coverage
-  $coveragefile_array = pdo_fetch_array(pdo_query("SELECT * FROM coveragefile WHERE id='$fileid'"));
+  $coveragefile_array = pdo_fetch_array(pdo_query("SELECT fullpath,file FROM coveragefile WHERE id='$fileid'"));
 
   $xml .= "<coverage>";
   $xml .= add_XML_value("fullpath",$coveragefile_array["fullpath"]);
@@ -80,22 +80,32 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   // Generating the html file
   $file_array = explode("<br>",$file);
   $i = 0;
+  
+  // Get the codes in an array
+  $linecodes = array();
+  $coveragefilelog = pdo_query("SELECT line,code FROM coveragefilelog WHERE fileid=".qnum($fileid)." AND buildid=".qnum($buildid));
+  if(pdo_num_rows($coveragefilelog)>0)
+    {
+    $coveragefilelog_array = pdo_fetch_array($coveragefilelog);
+    $linecodes[$coveragefilelog_array["line"]] = $coveragefilelog_array["code"];
+    }
+  
   foreach($file_array as $line)
     {
     $line = htmlentities($line);
-    $coveragefilelog = pdo_query("SELECT line,code FROM coveragefilelog WHERE fileid='$fileid' AND buildid='$buildid' AND line='$i'");
-    if(pdo_num_rows($coveragefilelog)>0)
+    
+    if(array_key_exists($i,$linecodes))
       {
-      $coveragefilelog_array = pdo_fetch_array($coveragefilelog);
+      $code = $linecodes[$i];
       $file_array[$i] = "";
-      if($coveragefilelog_array["code"]==0)
+      if($code==0)
         {
         $file_array[$i] .= "<font color=\"red\">";
         } 
         
-      $file_array[$i] .= str_pad($coveragefilelog_array["code"],8, "0", STR_PAD_LEFT)."&nbsp;&nbsp;&nbsp;".$line;
+      $file_array[$i] .= str_pad($code,8, "0", STR_PAD_LEFT)."&nbsp;&nbsp;&nbsp;".$line;
         
-      if($coveragefilelog_array["code"]==0)
+      if($code==0)
         {
         $file_array[$i] .= "</font>";
         } 
