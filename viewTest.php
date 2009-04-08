@@ -40,7 +40,7 @@ $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-$project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime FROM project WHERE id='$projectid'");
+$project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime,displaylabels FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
   $project_array = pdo_fetch_array($project);
@@ -109,6 +109,7 @@ $xml .= "</menu>";
 
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $xml .= "<build>\n";
+$xml .= add_XML_value("displaylabels",$project_array["displaylabels"]);
 $xml .= add_XML_value("site",$site_array["name"]);
 $xml .= add_XML_value("buildname",$build_array["name"]);
 $xml .= add_XML_value("buildid",$build_array["id"]);
