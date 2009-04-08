@@ -155,7 +155,7 @@ class UserProject
       }
      
     $sql = "SELECT emailcategory,userid
-               FROM user2project WHERE user2project.projectid=".qnum($projectid)."
+               FROM user2project WHERE user2project.projectid=".qnum($this->ProjectId)."
                AND user2project.cvslogin='".$this->CvsLogin."'
                AND user2project.emailtype>0";
                
