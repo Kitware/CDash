@@ -86,8 +86,10 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $coveragefilelog = pdo_query("SELECT line,code FROM coveragefilelog WHERE fileid=".qnum($fileid)." AND buildid=".qnum($buildid));
   if(pdo_num_rows($coveragefilelog)>0)
     {
-    $coveragefilelog_array = pdo_fetch_array($coveragefilelog);
-    $linecodes[$coveragefilelog_array["line"]] = $coveragefilelog_array["code"];
+    while($coveragefilelog_array = pdo_fetch_array($coveragefilelog))
+      {
+      $linecodes[$coveragefilelog_array["line"]] = $coveragefilelog_array["code"];
+      }
     }
   
   foreach($file_array as $line)
