@@ -1,5 +1,7 @@
 $(document).ready(function()
   {
+  tooltip();
+     
   if ($("#date_now").length > 0&&$("#date_now").html().length > 0) 
     {
     dateNow = $("#date_now").html();

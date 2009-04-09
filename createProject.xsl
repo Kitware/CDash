@@ -24,46 +24,7 @@
         <xsl:comment><![ endif]]></xsl:comment>
          <xsl:call-template name="headscripts"/>
          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
-         <script type="text/javascript">
-           function previousTab(i)
-            {
-            $('.tab_help').html('');
-            $('#wizard').triggerTab(parseInt(i)-1);
-            }
-          function nextTab(i)
-            {
-            if(i==1)
-              {
-              if ($("#name").attr("value") == '') 
-                {
-                alert('Please specify a name for the project.');
-                return false;
-                }
-              }            
-            $('.tab_help').html('');
-            $('#wizard').enableTab(parseInt(i)+1);
-            $('#wizard').triggerTab(parseInt(i)+1);
-            if(i==5)
-              {
-              $("input").removeAttr("disabled");
-              }
-            }
-          function saveChanges()
-            {
-              $("#changesmade").show();
-            }
-         </script>
-        <!-- Functions to confirm the remove -->
-  <xsl:text disable-output-escaping="yes">
-        &lt;script language="JavaScript"&gt;
-        function confirmDelete() {
-           if (window.confirm("Are you sure you want to delete this project?")){
-              return true;
-           }
-           return false;
-        }
-        &lt;/script&gt;
-  </xsl:text>
+         <script type="text/javascript" src="javascript/cdashCreateProject.js"></script>
        </head>
        <body bgcolor="#ffffff">
       
