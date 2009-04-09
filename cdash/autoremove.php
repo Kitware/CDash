@@ -34,7 +34,7 @@ function removeFirstBuilds($projectid,$days,$maxbuilds,$force=false)
   if(!$force && $CDASH_AUTOREMOVE_BUILDS!='1')
     {
     return;
-     }
+    }
   
   if($days < 2)
     {
