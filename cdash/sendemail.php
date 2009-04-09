@@ -417,11 +417,18 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     } // endconfigure
   else if($errorkey == 'build_errors')
     {
-    $information .= "\n\n*Error*\n";
+    $information .= "\n\n*Error*";
     
     // Old error format
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $maxitems");
     add_last_sql_error("sendmail");
+    
+    if(pdo_num_rows($error_query) == $maxitems)
+      {
+      $information .= " (first ".$maxitems.")";
+      }
+    $information .= "\n";
+    
     while($error_array = pdo_fetch_array($error_query))
       {
       $info = "";
@@ -461,9 +468,17 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     }
   else if($errorkey == 'build_warnings')
     {
-    $information .= "\n\n*Warnings*\n";
+    $information .= "\n\n*Warnings*";
+    
     $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $maxitems");
     add_last_sql_error("sendmail");
+    
+    if(pdo_num_rows($error_query) == $maxitems)
+      {
+      $information .= " (first ".$maxitems.")";
+      }
+    $information .= "\n";
+    
     while($error_array = pdo_fetch_array($error_query))
       {    
       $info = "";
@@ -503,7 +518,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     }
  else if($errorkey == 'test_errors')
     {   
-    $information .= "\n\n*Tests failing*\n";
+    $information .= "\n\n*Tests failing*";
     $sql = "";
     if($emailtesttimingchanged)
       {
@@ -512,6 +527,13 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid).
                             " AND test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $maxitems");
     add_last_sql_error("sendmail");
+    
+    if(pdo_num_rows($test_query) == $maxitems)
+      {
+      $information .= " (first ".$maxitems.")";
+      }
+    $information .= "\n";
+    
     while($test_array = pdo_fetch_array($test_query))
       {
       $info = $test_array["name"]." (".$serverURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
