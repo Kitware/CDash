@@ -17,11 +17,6 @@
     <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
     <script src="javascript/jquery.flot.js" type="text/javascript" charset="utf-8"></script>   
     <script src="javascript/tooltip.js" type="text/javascript" charset="utf-8"></script>   
-    <script type="text/javascript">
-     $(document).ready(function(){
-       tooltip();
-     });    
-    </script>
      
     <!-- Include Menu JavaScript -->
     <script src='javascript/menu.js' type='text/javascript'></script>
