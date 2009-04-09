@@ -35,10 +35,10 @@ $CDASH_AUTOREMOVE_BUILDS='1';
 
 $projectname=$argv[1];
 print "removing builds for $projectname \n";
-$sql="";
+$sql = " WHERE name='".$projectname."'";
 if($projectname == "all")
   {
-  $sql = " WHERE name='".$projectname."'";
+  $sql="";
   }
 
 $project = pdo_query("SELECT id,autoremovetimeframe,autoremovemaxbuilds FROM project".$sql);
