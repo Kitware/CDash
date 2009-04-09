@@ -22,16 +22,16 @@ include_once("cdash/common.php");
 set_time_limit(0);
 
 /** Remove the first builds that are at the beginning of the queue */
-function removeFirstBuilds($projectid,$days,$maxbuilds)
+function removeFirstBuilds($projectid,$days,$maxbuilds,$force=false)
 {
   add_log("removeFirstBuilds",$projectid);
     
-  if(!isset($CDASH_AUTOREMOVE_BUILDS))
+  if(!$force && !isset($CDASH_AUTOREMOVE_BUILDS))
     {
     return;
     }
   
-  if($CDASH_AUTOREMOVE_BUILDS!='1')
+  if(!$force && $CDASH_AUTOREMOVE_BUILDS!='1')
     {
     return;
      }

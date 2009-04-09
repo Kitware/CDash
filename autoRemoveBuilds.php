@@ -30,9 +30,6 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 set_time_limit(0);
 
-// Force to autoremove
-$CDASH_AUTOREMOVE_BUILDS='1';
-
 $projectname=$argv[1];
 print "removing builds for $projectname \n";
 $sql = " WHERE name='".$projectname."'";
@@ -49,7 +46,7 @@ if(!$project)
   }  
 while($project_array = pdo_fetch_array($project))
   {
-  removeFirstBuilds($project_array["id"],$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"]);
+  removeFirstBuilds($project_array["id"],$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"], true); // force the autoremove
   }
 
 exit(0);
