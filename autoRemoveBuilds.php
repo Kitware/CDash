@@ -49,7 +49,7 @@ if(!$project)
   }  
 while($project_array = pdo_fetch_array($project))
   {
-  $removeFirstBuilds($project_array["id"],$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"]);
+  removeFirstBuilds($project_array["id"],$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"]);
   }
 
 exit(0);
