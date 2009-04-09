@@ -669,33 +669,6 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
     }
 }
 
-/** Remove the first builds that are at the beginning of the queue */
-function removeFirstBuilds($projectid,$days,$maxbuilds)
-{
-  add_log("removeFirstBuilds",$projectid);
-  
-  include("cdash/config.php");
-  include_once("cdash/common.php");
-  
-  if($days < 2)
-    {
-    return;
-    }
-     
-  // First remove the builds with the wrong date
-  $currentdate = time()-3600*24*$days; 
-  $startdate = date(FMT_DATETIME,$currentdate);
-  
-  $builds = pdo_query("SELECT id FROM build WHERE starttime<'".$startdate."' AND projectid=".qnum($projectid)." ORDER BY starttime ASC LIMIT ".$maxbuilds);
-  add_last_sql_error("dailyupdates::removeFirstBuilds");
-  while($builds_array = pdo_fetch_array($builds))
-    {
-    $buildid = $builds_array["id"];
-    add_log("[REMOVE OLD BUILDS] for projectid: ".$projectid,$buildid);
-    //remove_build($buildid); 
-    }
-}
-
 /** Remove the buildemail that have been there from more than 48h */
 function cleanBuildEmail($projectid)
 {
@@ -711,6 +684,7 @@ function addDailyChanges($projectid)
   include("cdash/config.php");
   include_once("cdash/common.php");
   include_once("cdash/sendemail.php");
+  
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME", $db);
 
@@ -793,6 +767,7 @@ function addDailyChanges($projectid)
     pdo_query("UPDATE dailyupdate SET status='1' WHERE projectid='$projectid' AND date='$date'");
     
     // Remove the first builds of the project
+    include_once("cdash/autoremove.php");
     removeFirstBuilds($projectid,$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"]);
     }
 }

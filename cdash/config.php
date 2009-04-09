@@ -64,6 +64,9 @@ $CDASH_LDAP_HOSTNAME='localhost';
 $CDASH_LDAP_BASEDN='ou=people,dc=organization,dc=com';
 $CDASH_LDAP_PROTOCOL_VERSION='3';
 
+// Set to start the autoremoval on the first build of the day
+$CDASH_AUTOREMOVE_BUILDS='0';
+
 // Google Map API
 $CDASH_GOOGLE_MAP_API_KEY = array();
 $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
