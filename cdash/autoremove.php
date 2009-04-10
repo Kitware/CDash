@@ -23,9 +23,7 @@ set_time_limit(0);
 
 /** Remove the first builds that are at the beginning of the queue */
 function removeFirstBuilds($projectid,$days,$maxbuilds,$force=false)
-{
-  add_log("removeFirstBuilds",$projectid);
-    
+{   
   if(!$force && !isset($CDASH_AUTOREMOVE_BUILDS))
     {
     return;
@@ -50,8 +48,8 @@ function removeFirstBuilds($projectid,$days,$maxbuilds,$force=false)
   while($builds_array = pdo_fetch_array($builds))
     {
     $buildid = $builds_array["id"];
-    add_log("[REMOVE OLD BUILDS] for projectid: ".$projectid,$buildid);
-    //remove_build($buildid); 
+    //add_log("[REMOVE OLD BUILDS] for projectid: ".$projectid,$buildid);
+    remove_build($buildid); 
     }
 }
 
