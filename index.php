@@ -1174,7 +1174,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
       if( $build_array['counttestsnotrundiff']>0)
         {
-        $xml .= add_XML_value("nnotrundiff",$nnotrundiff);
+        $xml .= add_XML_value("nnotrundiff",$build_array['counttestsnotrundiff']);
         }
 
       $nfail = $build_array['counttestsfailed'];
