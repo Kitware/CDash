@@ -518,7 +518,6 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     }
  else if($errorkey == 'test_errors')
     {   
-    $information .= "\n\n*Tests failing*";
     $sql = "";
     if($emailtesttimingchanged)
       {
@@ -527,19 +526,47 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid).
                             " AND test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $maxitems");
     add_last_sql_error("sendmail");
+    $numrows = pdo_num_rows($test_query);
     
-    if(pdo_num_rows($test_query) == $maxitems)
+    if($numrows>0)
       {
-      $information .= " (first ".$maxitems.")";
-      }
-    $information .= "\n";
+      $information .= "\n\n*Tests failing*";
+      if(pdo_num_rows($test_query) == $maxitems)
+        {
+        $information .= " (first ".$maxitems.")";
+        }
+      $information .= "\n";
     
-    while($test_array = pdo_fetch_array($test_query))
+      while($test_array = pdo_fetch_array($test_query))
+        {
+        $info = $test_array["name"]." (".$serverURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
+        $information .= substr($info,0,$maxchars);
+        }
+      $information .= "\n";
+      } // end test failing > 0
+      
+    // Add the tests not run
+    $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid).
+                            " AND test.id=build2test.testid AND (build2test.status='notrun'".$sql.") LIMIT $maxitems");
+    add_last_sql_error("sendmail");
+    $numrows = pdo_num_rows($test_query);
+    
+    if($numrows>0)
       {
-      $info = $test_array["name"]." (".$serverURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
-      $information .= substr($info,0,$maxchars);
-      }
-    $information .= "\n";
+      $information .= "\n\n*Tests not run*";
+      if(pdo_num_rows($test_query) == $maxitems)
+        {
+        $information .= " (first ".$maxitems.")";
+        }
+      $information .= "\n";
+    
+      while($test_array = pdo_fetch_array($test_query))
+        {
+        $info = $test_array["name"]." (".$serverURI."/testDetails.php?test=".$test_array["id"]."&build=".$buildid.")\n";
+        $information .= substr($info,0,$maxchars);
+        }
+      $information .= "\n";
+      } // end test not run > 0
     }
 
   return $information;
