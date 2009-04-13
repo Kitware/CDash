@@ -81,7 +81,7 @@ class BuildTest
       }
     else
       {
-      $sql = "SELECT count(testid) FROM build2test WHERE buildid=".qnum($this->BuildId)." AND status='failed' OR status='notrun'";
+      $sql = "SELECT count(testid) FROM build2test WHERE buildid=".qnum($this->BuildId)." AND (status='failed' OR status='notrun')";
       }  
     
     $query = pdo_query($sql);
