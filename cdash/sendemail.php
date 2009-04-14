@@ -398,7 +398,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     $update = pdo_query("SELECT command,status FROM buildupdate WHERE buildid=".qnum($buildid));
     $update_array = pdo_fetch_array($update);
   
-    $information .= "Status: ".$update_array["status"]." (".$currentURI."/viewUpdate.phpbuildid=".$buildid.")\n";
+    $information .= "Status: ".$update_array["status"]." (".$serverURI."/viewUpdate.phpbuildid=".$buildid.")\n";
     $information .= "Command: ";
     $information .= substr($update_array["command"],0,$maxchars);
     $information .= "\n";
@@ -410,7 +410,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     $configure = pdo_query("SELECT status,log FROM configure WHERE buildid=".qnum($buildid));
     $configure_array = pdo_fetch_array($configure);
   
-    $information .= "Status: ".$configure_array["status"]." (".$currentURI."/viewConfigure.phpbuildid=".$buildid.")\n";
+    $information .= "Status: ".$configure_array["status"]." (".$serverURI."/viewConfigure.phpbuildid=".$buildid.")\n";
     $information .= "Output: ";
     $information .= substr($configure_array["log"],0,$maxchars);
     $information .= "\n";
