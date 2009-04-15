@@ -32,12 +32,20 @@ function ctest_parse($filehandler, $projectid)
   include 'cdash/config.php';
   require_once 'cdash/common.php';
   require_once 'models/project.php';
-
+  
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+    {
+    include("local/ctestparser.php");
+    $localParser = new LocalParser();
+    $localParser->SetProjectId($projectid);
+    $localParser->BufferSizeMB =8192/(1024*1024);
+    }
+    
   $content = fread($filehandler, 8192);
   $handler = null;
   $parser = xml_parser_create();
   $file = "";
-
+    
   if(preg_match('/<Update/', $content)) // Should be first otherwise confused with Build
     {
     $handler = new UpdateHandler($projectid);
@@ -103,7 +111,8 @@ function ctest_parse($filehandler, $projectid)
   xml_set_element_handler($parser, array($handler, 'startElement'), array($handler, 'endElement'));
   xml_set_character_data_handler($parser, array($handler, 'text'));
   xml_parse($parser, $content, false);
-  
+
+  // Clean the backup directory
   clean_backup_directory();
   
   if($file == "Project")
@@ -139,9 +148,21 @@ function ctest_parse($filehandler, $projectid)
     return $handler;
     }
   
+  // Set the handler
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+    {
+    $localParser->StartParsing();
+    }
+      
   while(!feof($filehandler))
     {
     $content = fread($filehandler, 8192);
+    
+    if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+      {
+      $localParser->ParseFile();
+      }
+    
     if (fwrite($handle, $content) === FALSE)  
       {
       echo "Cannot write to file ($contents)";
@@ -153,7 +174,12 @@ function ctest_parse($filehandler, $projectid)
     }
   xml_parse($parser, null, true);
   xml_parser_free($parser);
-      
+  
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+    {
+    $localParser->EndParsingFile();
+    }
+          
   fclose($handle);
   
   return $handler;
