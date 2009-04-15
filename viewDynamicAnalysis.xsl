@@ -50,6 +50,11 @@
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Uninitialized Memory Read<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Potential Memory Leak<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Uninitialized Memory Conditional<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+      <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Mismatched Deallocate<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+      <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Freeing Invalid Memory<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+      <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Invalid Pointer Read<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+      <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Invalid Pointer Write<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+      
       <th>Labels</th>
   </tr>
 
@@ -117,7 +122,50 @@
       </xsl:attribute>
       <xsl:value-of select="Uninitialized_Memory_Conditional"/>
       </td>
-
+      <!-- Mismatched deallocation -->
+      <td>
+      <xsl:attribute name="class">
+       <xsl:choose>
+          <xsl:when test="count(Mismatched_deallocation)>0">
+            warning
+          </xsl:when>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:value-of select="Mismatched_deallocation"/>
+      </td>
+      <!--FIM -->
+      <td>
+      <xsl:attribute name="class">
+       <xsl:choose>
+          <xsl:when test="count(FIM)>0">
+            warning
+          </xsl:when>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:value-of select="FIM"/>
+      </td>
+      <!-- IPR -->
+      <td>
+      <xsl:attribute name="class">
+       <xsl:choose>
+          <xsl:when test="count(IPR)>0">
+            warning
+          </xsl:when>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:value-of select="IPR"/>
+      </td>
+      <!-- IPW -->
+      <td>
+      <xsl:attribute name="class">
+       <xsl:choose>
+          <xsl:when test="count(IPW)>0">
+            warning
+          </xsl:when>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:value-of select="IPW"/>
+      </td>
       <!-- Labels -->
       <td>
         <xsl:for-each select="labels/label">
