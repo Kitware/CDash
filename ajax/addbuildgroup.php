@@ -68,9 +68,10 @@ if($markexpected)
 @$removebuild = $_POST["removebuild"];
 
 if($removebuild)
-{
+  {
+  add_log("Build #".$buildid." removed manualy","addbuildgroup");
   remove_build($buildid);
-}
+  }
 
 
 if($submit)
