@@ -110,7 +110,7 @@
 
   <tr class="table-heading">
      <td align="center"><b>Project</b></td>
-     <td align="center"width="20%"><b>Description</b></td>
+     <td align="center" width="20%"><b>Description</b></td>
      <td align="center"><b>Submissions</b></td>
     <!-- <td align="center">Tests</td> -->
   <td align="center"><b>First build</b></td>
