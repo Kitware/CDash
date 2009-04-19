@@ -1903,19 +1903,11 @@ function get_cdash_dashboard_xml($projectname, $date)
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {
     include_once("local/models/proProject.php");
-    $pro= new proProject($projectid); 
-    if($pro->IsActif()!=false)
-      {
-      if(strtotime($pro->GetEnd()<strtotime(date("r"))))
-        {
-        $pro->SetStatus(0, 0, 0);
-        }
-      $xml.="<prostatus>".$pro->GetStatus()."</prostatus>";
-      }
+    $pro= new proProject; 
+    $pro->ProjectId=$projectid;
+    $xml.="<proedition>".$pro->getEdition()."</proedition>";
     }
-  $xml .="
-  </dashboard>
-  ";
+  $xml .="</dashboard>";
   
   $userid = 0;
   if(isset($_SESSION['cdash']))
