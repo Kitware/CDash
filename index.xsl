@@ -199,7 +199,7 @@
       </xsl:if>
       
       <!-- If user is admin of the project propose to group this build -->
-      <xsl:if test="/cdash/user/admin=1 and countbuildids=1">
+      <xsl:if test="/cdash/user/admin=1 and (countbuildids=1 or expected=1)">
         <xsl:if test="string-length(buildid)>0">
         <a>
         <xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
@@ -220,7 +220,7 @@
       </div>
       </xsl:if>
 
-      <xsl:if test="string-length(expecteddivname)>0 and countbuildids=1">
+      <xsl:if test="string-length(expecteddivname)>0 and (countbuildids=1 or expected=1)">
       <div>
       <xsl:attribute name="id">infoexpected_<xsl:value-of select="expecteddivname"/></xsl:attribute>
       </div>
@@ -488,6 +488,11 @@
         <xsl:if test="/cdash/dashboard/displaylabels=0">
          <xsl:attribute name="class">nob</xsl:attribute>
         </xsl:if>
+        
+        <xsl:if test="string-length(builddate)=0">
+          Expected build
+        </xsl:if>
+        
         <xsl:value-of select="builddate"/>
       </td>
 
