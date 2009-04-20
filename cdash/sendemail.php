@@ -240,7 +240,7 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   
   // Build errors and warnings
   $Build = new Build();
-  $Build->BuildId = $buildid;
+  $Build->Id = $buildid;
   $errors['build_errors'] = $Build->GetNumberOfErrors();
   $errors['build_warnings'] = $Build->GetNumberOfWarnings();
 
