@@ -847,8 +847,8 @@ class Build
       // If we have more than one author we need to find who caused the error
       if($nauthors>1)
         {
-        $warningdiff = $this->FindRealErrors("WARNING",$author,$buildid,$filename);
-        $errordiff = $this->FindRealErrors("ERROR",$author,$buildid,$filename);
+        $warningdiff = $this->FindRealErrors("WARNING",$author,$this->Id,$filename);
+        $errordiff = $this->FindRealErrors("ERROR",$author,$this->Id,$filename);
         $testdiff = 0; // no idea how to find if the update file is responsible for the test failure
         }
       else

@@ -152,27 +152,27 @@ class UpdateHandler extends AbstractHandler
         }
       } 
           
-    else if($element=='FULLNAME') 
+    else if($parent != 'REVISIONS' && $element=='FULLNAME') 
       {
       $this->UpdateFile->Filename = $data;
       }
-    else if($element=='CHECKINDATE') 
+    else if($parent != 'REVISIONS' && $element=='CHECKINDATE') 
       {
       $this->UpdateFile->CheckinDate = $data;
       } 
-    else if($element=='AUTHOR') 
+    else if($parent != 'REVISIONS' && $element=='AUTHOR') 
       {
       $this->UpdateFile->Author = $data;
       } 
-    else if($element=='EMAIL') 
+    else if($parent != 'REVISIONS' && $element=='EMAIL') 
       {
       $this->UpdateFile->Email = $data;
       } 
-    else if($element=='LOG') 
+    else if($parent != 'REVISIONS' && $element=='LOG') 
       {
        $this->UpdateFile->Log = $data;
       }
-    else if($element=='REVISION') 
+    else if($parent != 'REVISIONS' && $element=='REVISION') 
       {
       if($data=='Unknown')
         {
@@ -180,7 +180,7 @@ class UpdateHandler extends AbstractHandler
         }
       $this->UpdateFile->Revision = $data;
       } 
-   else if($element=='PRIORREVISION') 
+   else if($parent != 'REVISIONS' && $element=='PRIORREVISION') 
      {
      if($data=='Unknown')
        {
