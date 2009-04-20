@@ -170,7 +170,7 @@ class UpdateHandler extends AbstractHandler
       } 
     else if($parent != 'REVISIONS' && $element=='LOG') 
       {
-       $this->UpdateFile->Log = $data;
+      $this->UpdateFile->Log .= $data;
       }
     else if($parent != 'REVISIONS' && $element=='REVISION') 
       {
