@@ -84,6 +84,11 @@
 </xsl:if>
 </h3><br/>
 
+<!-- Hide a div for javascript to know if time status is on -->
+<xsl:if test="/cdash/project/showtesttime=1">   
+<div id="showtesttimediv" style="display:none"></div>
+</xsl:if>  
+
 <table id="viewTestTable" cellspacing="0" class="tabb">
 <!-- <xsl:attribute name="id">project_<xsl:value-of select="/cdash/dashboard/projectid"/>_1</xsl:attribute> -->
 <thead> 
