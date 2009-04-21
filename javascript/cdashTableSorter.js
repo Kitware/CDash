@@ -129,7 +129,22 @@ $(document).ready(function() {
       });
     } 
     
-  if(nrows==4)
+  if(nrows==4 && document.getElementById('showtesttimediv'))
+    {
+    $tabs.each(function(index) {          
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'buildname'},
+                1: { sorter:'buildname'},
+                2: { sorter:'buildname'},
+                3: { sorter:'digit'}
+            },
+          debug: false,
+          widgets: ['zebra'] 
+        });  
+      });
+    } 
+  else if(nrows==4)
     {
     $tabs.each(function(index) {          
      $(this).tablesorter({
@@ -143,7 +158,7 @@ $(document).ready(function() {
           widgets: ['zebra'] 
         });  
       });
-    } 
+    }
   
   if(nrows==5)
     {
