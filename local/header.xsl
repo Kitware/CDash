@@ -7,4 +7,9 @@
 
     <xsl:template name="header_local" match="/">
     </xsl:template>
+
+    <!-- Group footer -->
+    <xsl:template name="coverageheader_local" match="/">
+    </xsl:template>
+
 </xsl:stylesheet>
