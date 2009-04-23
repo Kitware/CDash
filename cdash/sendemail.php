@@ -245,7 +245,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$error
     
     $messagePlainText .= "To see this dashboard:\n";  
     $messagePlainText .= $currentURI;
-    $messagePlainText .= "/index.php?project=".$projectname."&date=".$dashboarddate;
+    $messagePlainText .= "/index.php?project=".$projectname."&date=".$today;
     $messagePlainText .= "\n\n";
     
     $serverName = $CDASH_SERVER_NAME;
