@@ -73,7 +73,9 @@ function checkEmailLabel($projectid, $userid, $buildid)
 function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$errors,$buildid)
 {
   include("config.php");
- 
+  require_once("models/userproject.php");
+  require_once("models/user.php");
+     
   // Check if the email has been sent
   $date = ""; // now
   list ($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date,$project_array["nightlytime"]);
@@ -150,6 +152,57 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$error
       }
     $summaryEmail .= $user_array["email"];
     }
+  
+  // Select the users that are part of this build
+  $authors = pdo_query("SELECT author FROM updatefile WHERE buildid=".qnum($buildid));
+  add_last_sql_error("sendmail");
+  while($authors_array = pdo_fetch_array($authors))
+    { 
+    $author = $authors_array["author"];
+    if($author=="Local User")
+      {
+      continue;
+      }
+    
+    $UserProject = new UserProject();
+    $UserProject->CvsLogin = $author;
+    $UserProject->ProjectId = $projectid;
+    
+    if(!$UserProject->FillFromCVSLogin())
+      {
+      continue;
+      }
+       
+    // If the user doesn't want to receive email
+    if(!checkEmailPreferences($UserProject->EmailCategory,$errors))
+      {
+      continue;
+      }
+    
+    // Check if the labels are defined for this user
+    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid))
+      {
+      continue;
+      }
+    
+    // Find the email
+    $User = new User();
+    $User->Id = $UserProject->UserId;
+    $useremail = $User->GetEmail();
+    
+    // If the user is already in the list we quit
+    if(strpos($summaryEmail,$useremail) !== false)
+       {
+       continue;
+       }
+ 
+    if($summaryEmail != "")
+      {
+      $summaryEmail .= ", ";
+      }
+    $summaryEmail .= $useremail;
+    } 
+  
     
   // Select the users who want to receive all emails
   $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,".qid("user").".id  FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
@@ -173,7 +226,7 @@ function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$error
       {
       $summaryEmail .= ", ";
       }
-     $summaryEmail .= $user_array["email"];
+    $summaryEmail .= $user_array["email"];
     }
        
   // Send the email
