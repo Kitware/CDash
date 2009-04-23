@@ -62,7 +62,14 @@
     <xsl:value-of select="cdash/dashboard/home"/></xsl:attribute>
     <img id="projectlogo" border="0">
     <xsl:attribute name="alt"></xsl:attribute>
-    <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
+    <xsl:choose>
+    <xsl:when test="cdash/dashboard/logoid>0">
+      <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
+     </xsl:when>
+    <xsl:otherwise>
+     <xsl:attribute name="src">images/cdash.gif</xsl:attribute>
+    </xsl:otherwise>
+    </xsl:choose>
     </img>
     </a>
     
