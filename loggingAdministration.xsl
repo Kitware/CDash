@@ -25,19 +25,11 @@
 </xsl:if>
 <br/><br/>
 
-<form name="form1" enctype="multipart/form-data" method="post" action="">
-<table border="0">
- <xsl:for-each select="cdash/log">
-  <tr>
-    <td><div align="right"><b>CDash log</b></div></td>
-    <td><div align="left"><a>
-  <xsl:attribute name="href">
-  <xsl:value-of select="fullpath"/>
-  </xsl:attribute>
-  <xsl:value-of select="name"/></a></div></td>
-  </tr> 
- </xsl:for-each> 
-</table>
+<b>CDash log</b>
+<pre>
+<xsl:value-of select="cdash/log"/>
+</pre>
+
 <table border="0">
  <xsl:for-each select="cdash/file">
   <tr>
@@ -50,13 +42,14 @@
   </tr> 
  </xsl:for-each> 
 </table>
-</form>
+
+
 
 <br/>
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>
-        </body>
+       </body>
       </html>
     </xsl:template>
 </xsl:stylesheet>

@@ -34,9 +34,9 @@ $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Logging Administration</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Log Viewer</menusubtitle>";
+
 $xml .= "<log>";
-$xml .= "<name>cdash.log</name>";
-$xml .= "<fullpath>".$CDASH_BACKUP_DIRECTORY."/cdash.log</fullpath>";
+$xml .= file_get_contents($CDASH_BACKUP_DIRECTORY.'/cdash.log');
 $xml .= "</log>";
 // List of the file in the directory that have other*.xml
 foreach (glob($CDASH_BACKUP_DIRECTORY."/*_Other*.xml") as $filename) 
