@@ -235,12 +235,20 @@ function get_multiple_builds_hyperlink($build_row)
     $baseurl = substr($baseurl, 0, $idx);
   }
 
-  // ...because we are building our own filters URL here:
+  // Use the exact date range known from the times in build_row to add two
+  // build time clauses that more likely get the set of builds represented by
+  // $build_row... Use +/- 1 second for use with the "is before" and "is after"
+  // date comparison operators.
   //
+  $minstarttime = date(FMT_DATETIMETZ, strtotime($build_row['starttime'].' UTC-1 second'));
+  $maxstarttime = date(FMT_DATETIMETZ, strtotime($build_row['maxstarttime'].' UTC+1 second'));
+
   return $baseurl .
-    '&filtercount=2&showfilters=1&filtercombine=and' .
-    '&field1=buildname/string&compare1=61&value1=' . $build_row['name'] .
-    '&field2=site/string&compare2=61&value2=' . $build_row['sitename'] .
+    '&filtercount=4&showfilters=1&filtercombine=and' .
+    '&field1=buildname/string&compare1=61&value1=' . htmlspecialchars($build_row['name']) .
+    '&field2=site/string&compare2=61&value2=' . htmlspecialchars($build_row['sitename']) .
+    '&field3=buildstarttime/date&compare3=83&value3=' . htmlspecialchars($minstarttime) .
+    '&field4=buildstarttime/date&compare4=84&value4=' . htmlspecialchars($maxstarttime) .
     '&collapse=0';
 }
 
@@ -585,6 +593,7 @@ function generate_main_dashboard_XML($projectid,$date)
     //  groupid
     //
     // Fields that we add by doing further queries based on buildid:
+    //  maxstarttime
     //  buildids (array of buildids for summary rows)
     //  sitename
     //  countbuildnotes (added by users)
@@ -623,6 +632,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $siteid = $build_row['siteid'];
 
     $build_row['buildids'][] = $buildid;
+    $build_row['maxstarttime'] = $build_row['starttime'];
 
     $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
     $build_row['sitename'] = $site_array['name'];
@@ -857,6 +867,10 @@ function generate_main_dashboard_XML($projectid,$date)
         if ($build_row['starttime'] < $build_rows_collapsed[$idx]['starttime'])
           {
           $build_rows_collapsed[$idx]['starttime'] = $build_row['starttime'];
+          }
+        if ($build_row['maxstarttime'] > $build_rows_collapsed[$idx]['maxstarttime'])
+          {
+          $build_rows_collapsed[$idx]['maxstarttime'] = $build_row['maxstarttime'];
           }
     //  endtime
     //  submittime
