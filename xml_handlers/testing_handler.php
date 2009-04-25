@@ -170,11 +170,25 @@ class TestingHandler extends AbstractHandler
         } 
       else if($this->TestMeasurement->Name == 'Exit Code') 
         {
-        $this->Test->Details = $this->TestMeasurement->Value;
+        if(strlen($this->Test->Details)>0)
+          {
+          $this->Test->Details .= '('.$this->TestMeasurement->Value.')';
+          }
+        else
+          {
+          $this->Test->Details = $this->TestMeasurement->Value;
+          }     
         }
       else if($this->TestMeasurement->Name == 'Completion Status') 
         {
-        $this->Test->Details = $this->TestMeasurement->Value;
+        if(strlen($this->Test->Details)>0)
+          {
+          $this->Test->Details =  $this->TestMeasurement->Value.'('.$this->Test->Details.')';
+          }
+        else
+          {
+          $this->Test->Details = $this->TestMeasurement->Value;
+          } 
         }
       else // explicit measurement
         {
