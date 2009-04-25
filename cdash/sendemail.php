@@ -68,208 +68,6 @@ function checkEmailLabel($projectid, $userid, $buildid)
   return false;
 } // end checkEmailLabel
 
-
-/** Send a summary email */
-function sendsummaryemail($projectid,$projectname,$dashboarddate,$groupid,$errors,$buildid)
-{
-  include("config.php");
-  require_once("models/userproject.php");
-  require_once("models/user.php");
-     
-  // Check if the email has been sent
-  $date = ""; // now
-  list ($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date,$project_array["nightlytime"]);
-  $dashboarddate = gmdate(FMT_DATE, $currentstarttime);
-
-  // If we already have it we return
-  if(pdo_num_rows(pdo_query("SELECT buildid FROM summaryemail WHERE date='$dashboarddate' AND groupid=".qnum($groupid)))==1)
-    {
-    return;
-    }  
-
-  // Update the summaryemail table to specify that we have send the email
-  // We also delete any previous rows from that groupid
-  pdo_query("DELETE FROM summaryemail WHERE groupid=$groupid");
-  pdo_query("INSERT INTO summaryemail (buildid,date,groupid) VALUES ($buildid,'$dashboarddate',$groupid)");
-  add_last_sql_error("sendmail");
-    
-  // If the trigger for SVN/CVS diff is not done yet we specify that the asynchronous trigger should
-  // send an email
-  $dailyupdatequery = pdo_query("SELECT status FROM dailyupdate WHERE projectid=".qnum($projectid)." AND date='$dashboarddate'");
-  add_last_sql_error("sendmail");
-    
-  if(pdo_num_rows($dailyupdatequery) == 0)
-    {
-    return;
-    }
-      
-  $dailyupdate_array = pdo_fetch_array($dailyupdatequery);
-  $dailyupdate_status = $dailyupdate_array['status'];
-  if($dailyupdate_status == 0)
-    {
-    pdo_query("UPDATE dailyupdate SET status='2' WHERE projectid='$projectid' AND date='$dashboarddate'");
-    return;
-    }
-       
-  // Find the current updaters from the night using the dailyupdatefile table
-  $summaryEmail = "";
-  $query = "SELECT ".qid("user").".email,user2project.emailcategory,".qid("user").".id FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
-                           user2project.projectid=$projectid
-                           AND user2project.userid=".qid("user").".id 
-                           AND user2project.cvslogin=dailyupdatefile.author
-                           AND dailyupdatefile.dailyupdateid=dailyupdate.id
-                           AND dailyupdate.date='$dashboarddate'
-                           AND dailyupdate.projectid=$projectid
-                           AND user2project.emailtype>0
-                           ";
-  $user = pdo_query($query);
-  add_last_sql_error("sendmail");
-      
-  // Loop through the users and add them to the email array  
-  while($user_array = pdo_fetch_array($user))
-    {
-    // If the user is already in the list we quit
-    if(strpos($summaryEmail,$user_array["email"]) !== false)
-      {
-      continue;
-      }
-        
-    // If the user doesn't want to receive email
-    if(!checkEmailPreferences($user_array["emailcategory"],$errors))
-      {
-      continue;
-      }
-    
-    // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
-      {
-      continue;
-      }
-      
-    if($summaryEmail != "")
-      {
-      $summaryEmail .= ", ";
-      }
-    $summaryEmail .= $user_array["email"];
-    }
-  
-  // Select the users that are part of this build
-  $authors = pdo_query("SELECT author FROM updatefile WHERE buildid=".qnum($buildid));
-  add_last_sql_error("sendmail");
-  while($authors_array = pdo_fetch_array($authors))
-    { 
-    $author = $authors_array["author"];
-    if($author=="Local User")
-      {
-      continue;
-      }
-    
-    $UserProject = new UserProject();
-    $UserProject->CvsLogin = $author;
-    $UserProject->ProjectId = $projectid;
-    
-    if(!$UserProject->FillFromCVSLogin())
-      {
-      continue;
-      }
-       
-    // If the user doesn't want to receive email
-    if(!checkEmailPreferences($UserProject->EmailCategory,$errors))
-      {
-      continue;
-      }
-    
-    // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid))
-      {
-      continue;
-      }
-    
-    // Find the email
-    $User = new User();
-    $User->Id = $UserProject->UserId;
-    $useremail = $User->GetEmail();
-    
-    // If the user is already in the list we quit
-    if(strpos($summaryEmail,$useremail) !== false)
-       {
-       continue;
-       }
- 
-    if($summaryEmail != "")
-      {
-      $summaryEmail .= ", ";
-      }
-    $summaryEmail .= $useremail;
-    } 
-  
-    
-  // Select the users who want to receive all emails
-  $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,".qid("user").".id  FROM ".qid("user").",user2project WHERE user2project.projectid='$projectid' 
-                       AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
-  add_last_sql_error("sendsummaryemail");
-  while($user_array = pdo_fetch_array($user))
-    {
-    // If the user is already in the list we quit
-    if(strpos($summaryEmail,$user_array["email"]) !== false)
-       {
-       continue;
-       }
-    
-    // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
-      {
-      continue;
-      }   
-       
-    if($summaryEmail != "")
-      {
-      $summaryEmail .= ", ";
-      }
-    $summaryEmail .= $user_array["email"];
-    }
-       
-  // Send the email
-  if($summaryEmail != "")
-    {
-    $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name FROM buildgroup WHERE id=$groupid"));
-    add_last_sql_error("sendsummaryemail");
-
-    $title = "CDash [".$projectname."] - ".$summaryemail_array["name"]." Failures";
-      
-    $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
-    $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
-    $messagePlainText .= "or you are listed in the default contact list.\n\n";  
-     
-    $currentURI = get_server_URI();
-    
-    $messagePlainText .= "To see this dashboard:\n";  
-    $messagePlainText .= $currentURI;
-    $messagePlainText .= "/index.php?project=".$projectname."&date=".$today;
-    $messagePlainText .= "\n\n";
-    
-    $serverName = $CDASH_SERVER_NAME;
-    if(strlen($serverName) == 0)
-      {
-      $serverName = $_SERVER['SERVER_NAME'];
-      }
-    
-    $messagePlainText .= "\n-CDash on ".$serverName."\n";
-      
-    // Send the email
-    if(mail("$summaryEmail", $title, $messagePlainText,
-         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
-      {
-      add_log("email sent to: ".$email,"sendemail ".$projectname,LOG_INFO);
-      return;
-      }
-    else
-      {
-      add_log("cannot send email to: ".$email,"sendemail ".$projectname,LOG_ERR);
-      }
-    } // end $summaryEmail!=""
-}
-
 /** Check for errors for a given build. Return false if no errors */
 function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus,$checkpreviousbuild)
 {
@@ -625,6 +423,223 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
   return $information;
 } // end get_email_summary
 
+
+/** Send a summary email */
+function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
+{
+  include("config.php");
+  require_once("models/userproject.php");
+  require_once("models/user.php");
+     
+  $Project = new Project();
+  $Project->Id = $projectid;
+  $Project->Fill();
+  
+  // Check if the email has been sent
+  $date = ""; // now
+  list ($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date,$Project->NightlyTime);
+  $dashboarddate = gmdate(FMT_DATE, $currentstarttime);
+
+  // If we already have it we return
+  if(pdo_num_rows(pdo_query("SELECT buildid FROM summaryemail WHERE date='$dashboarddate' AND groupid=".qnum($groupid)))==1)
+    {
+    return;
+    }  
+
+  // Update the summaryemail table to specify that we have send the email
+  // We also delete any previous rows from that groupid
+  pdo_query("DELETE FROM summaryemail WHERE groupid=$groupid");
+  pdo_query("INSERT INTO summaryemail (buildid,date,groupid) VALUES ($buildid,'$dashboarddate',$groupid)");
+  add_last_sql_error("sendmail");
+    
+  // If the trigger for SVN/CVS diff is not done yet we specify that the asynchronous trigger should
+  // send an email
+  $dailyupdatequery = pdo_query("SELECT status FROM dailyupdate WHERE projectid=".qnum($projectid)." AND date='$dashboarddate'");
+  add_last_sql_error("sendmail");
+    
+  if(pdo_num_rows($dailyupdatequery) == 0)
+    {
+    return;
+    }
+      
+  $dailyupdate_array = pdo_fetch_array($dailyupdatequery);
+  $dailyupdate_status = $dailyupdate_array['status'];
+  if($dailyupdate_status == 0)
+    {
+    pdo_query("UPDATE dailyupdate SET status='2' WHERE projectid=".qnum($projectid)." AND date='$dashboarddate'");
+    return;
+    }
+       
+  // Find the current updaters from the night using the dailyupdatefile table
+  $summaryEmail = "";
+  $query = "SELECT ".qid("user").".email,user2project.emailcategory,".qid("user").".id FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE 
+                           user2project.projectid=".qnum($projectid)."
+                           AND user2project.userid=".qid("user").".id 
+                           AND user2project.cvslogin=dailyupdatefile.author
+                           AND dailyupdatefile.dailyupdateid=dailyupdate.id
+                           AND dailyupdate.date='$dashboarddate'
+                           AND dailyupdate.projectid=".qnum($projectid)."
+                           AND user2project.emailtype>0
+                           ";
+  $user = pdo_query($query);
+  add_last_sql_error("sendmail");
+      
+  // Loop through the users and add them to the email array  
+  while($user_array = pdo_fetch_array($user))
+    {
+    // If the user is already in the list we quit
+    if(strpos($summaryEmail,$user_array["email"]) !== false)
+      {
+      continue;
+      }
+        
+    // If the user doesn't want to receive email
+    if(!checkEmailPreferences($user_array["emailcategory"],$errors))
+      {
+      continue;
+      }
+    
+    // Check if the labels are defined for this user
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+      {
+      continue;
+      }
+      
+    if($summaryEmail != "")
+      {
+      $summaryEmail .= ", ";
+      }
+    $summaryEmail .= $user_array["email"];
+    }
+  
+  // Select the users that are part of this build
+  $authors = pdo_query("SELECT author FROM updatefile WHERE buildid=".qnum($buildid));
+  add_last_sql_error("sendmail");
+  while($authors_array = pdo_fetch_array($authors))
+    { 
+    $author = $authors_array["author"];
+    if($author=="Local User")
+      {
+      continue;
+      }
+    
+    $UserProject = new UserProject();
+    $UserProject->CvsLogin = $author;
+    $UserProject->ProjectId = $projectid;
+    
+    if(!$UserProject->FillFromCVSLogin())
+      {
+      continue;
+      }
+       
+    // If the user doesn't want to receive email
+    if(!checkEmailPreferences($UserProject->EmailCategory,$errors))
+      {
+      continue;
+      }
+    
+    // Check if the labels are defined for this user
+    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid))
+      {
+      continue;
+      }
+    
+    // Find the email
+    $User = new User();
+    $User->Id = $UserProject->UserId;
+    $useremail = $User->GetEmail();
+    
+    // If the user is already in the list we quit
+    if(strpos($summaryEmail,$useremail) !== false)
+       {
+       continue;
+       }
+ 
+    if($summaryEmail != "")
+      {
+      $summaryEmail .= ", ";
+      }
+    $summaryEmail .= $useremail;
+    } 
+  
+    
+  // Select the users who want to receive all emails
+  $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,".qid("user").".id  FROM ".qid("user").",user2project 
+                     WHERE user2project.projectid".qnum($projectid)." 
+                     AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
+  add_last_sql_error("sendsummaryemail");
+  while($user_array = pdo_fetch_array($user))
+    {
+    // If the user is already in the list we quit
+    if(strpos($summaryEmail,$user_array["email"]) !== false)
+       {
+       continue;
+       }
+    
+    // Check if the labels are defined for this user
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+      {
+      continue;
+      }   
+       
+    if($summaryEmail != "")
+      {
+      $summaryEmail .= ", ";
+      }
+    $summaryEmail .= $user_array["email"];
+    }
+       
+  // Send the email
+  if($summaryEmail != "")
+    {
+    $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name FROM buildgroup WHERE id=$groupid"));
+    add_last_sql_error("sendsummaryemail");
+
+    $title = "CDash [".$Project->Name."] - ".$summaryemail_array["name"]." Failures";
+      
+    $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
+    $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
+    $messagePlainText .= "or you are listed in the default contact list.\n\n";  
+     
+    $currentURI = get_server_URI();
+    
+    $messagePlainText .= "To see this dashboard:\n";  
+    $messagePlainText .= $currentURI;
+    $messagePlainText .= "/index.php?project=".$Project->Name."&date=".$today;
+    $messagePlainText .= "\n\n";
+    
+    $messagePlainText .= "Summary of the first build failure:\n";
+    // Check if an email has been sent already for this user
+    foreach($errors as $errorkey => $nerrors)
+      {
+       $messagePlainText .= get_email_summary($buildid,$errors,$errorkey,$Project->EmailMaxItems,
+                                             $Project->EmailMaxChars,$Project->TestTimeMaxStatus,
+                                             $Project->EmailTestTimingChanged);
+      }
+    $messagePlainText .= "\n\n";
+    
+    $serverName = $CDASH_SERVER_NAME;
+    if(strlen($serverName) == 0)
+      {
+      $serverName = $_SERVER['SERVER_NAME'];
+      }
+    
+    $messagePlainText .= "\n-CDash on ".$serverName."\n";
+      
+    // Send the email
+    if(mail("$summaryEmail", $title, $messagePlainText,
+         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+      {
+      add_log("email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
+      return;
+      }
+    else
+      {
+      add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
+      }
+    } // end $summaryEmail!=""
+}
+
 /** Check if the email has already been sent for that category */
 function set_email_sent($userid,$buildid,$emailtext)
 {
@@ -854,7 +869,7 @@ function sendemail($handler,$projectid)
   if($BuildGroup->GetSummaryEmail()==1)
     {
     // Send the summary email
-    sendsummaryemail($projectid,$Project->Name,$dashboarddate,$groupid,$errors,$buildid);
+    sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid);
     return;
     } // end summary email
 
