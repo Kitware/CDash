@@ -514,7 +514,12 @@ if(isset($_GET['upgrade-1-4']))
   
   // Remove duplicates in buildfailureargument
   //pdo_query("DELETE FROM buildfailureargument WHERE id NOT IN (SELECT buildfailureid as id FROM buildfailure2argument)");
-   
+  
+  AddTableField("project","displaylabels","tinyint(4)","smallint","1");
+  AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
+  AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
+  AddTableIndex('coveragefilelog','line');
+ 
   // Set the database version
   setVersion();
   
@@ -536,7 +541,7 @@ if(isset($_GET['upgrade-1-6']))
   setVersion();
 
   // Put that the upgrade is done in the log
-  add_log("Upgrade done.","upgrade-1-4");
+  add_log("Upgrade done.","upgrade-1-6");
 
   exit();
 }
