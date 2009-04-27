@@ -172,7 +172,7 @@ class TestingHandler extends AbstractHandler
         {
         if(strlen($this->Test->Details)>0)
           {
-          $this->Test->Details .= '('.$this->TestMeasurement->Value.')';
+          $this->Test->Details .= ' ('.$this->TestMeasurement->Value.')';
           }
         else
           {
@@ -183,12 +183,16 @@ class TestingHandler extends AbstractHandler
         {
         if(strlen($this->Test->Details)>0)
           {
-          $this->Test->Details =  $this->TestMeasurement->Value.'('.$this->Test->Details.')';
+          $this->Test->Details =  $this->TestMeasurement->Value.' ('.$this->Test->Details.')';
           }
         else
           {
           $this->Test->Details = $this->TestMeasurement->Value;
           } 
+        }
+      else if($this->TestMeasurement->Name == 'Command Line') 
+        {
+        // don't do anything since it should already be in the FullCommandLine
         }
       else // explicit measurement
         {
