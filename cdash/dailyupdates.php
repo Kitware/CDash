@@ -592,6 +592,12 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
   
   $currentURI = get_server_URI();
   
+  $serverName = $CDASH_SERVER_NAME;
+  if(strlen($serverName) == 0)
+    {
+    $serverName = $_SERVER['SERVER_NAME'];
+    }
+        
   while($build2grouprule_array = pdo_fetch_array($build2grouprule))
     {
     $builtype = $build2grouprule_array["buildtype"];
