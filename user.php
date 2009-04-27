@@ -171,7 +171,7 @@ if ($session_OK)
         }
       else
         {
-        $day = $days." days";
+        $day = round($days)." days";
         }  
       $xml .= add_XML_value("date",$day);
       $xml .= add_XML_value("datelink","index.php?project=".$projectname."&date=".$date);
