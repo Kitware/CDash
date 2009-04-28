@@ -261,7 +261,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     $configure = pdo_query("SELECT status,log FROM configure WHERE buildid=".qnum($buildid));
     $configure_array = pdo_fetch_array($configure);
   
-    $information .= "Status: ".$configure_array["status"]." (".$serverURI."/viewConfigure.phpbuildid=".$buildid.")\n";
+    $information .= "Status: ".$configure_array["status"]." (".$serverURI."/viewConfigure.php?buildid=".$buildid.")\n";
     $information .= "Output: ";
     $information .= substr($configure_array["log"],0,$maxchars);
     $information .= "\n";
