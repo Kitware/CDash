@@ -996,7 +996,7 @@ class Build
              
       // Find the previous userstatistics
       $previous = pdo_query("SELECT totalupdatedfiles,totalbuilds,nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests
-                             FROM userstatistics WHERE userid='$userid' AND projectid='$projectid' AND checkindate<'$checkindate' ORDER BY checkindate DESC LIMIT 1");
+                             FROM userstatistics WHERE userid='$userid' AND projectid=".qnum($this->ProjectId)." AND checkindate<'$checkindate' ORDER BY checkindate DESC LIMIT 1");
       add_last_sql_error("compute_update_statistics");             
       if(pdo_num_rows($previous)>0)
         {
