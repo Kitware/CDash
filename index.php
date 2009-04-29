@@ -1135,13 +1135,13 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("time", $duration);
 
     $diff = $build_array['countbuilderrordiff'];
-    if($diff>0)
+    if($diff!=0)
       {
       $xml .= add_XML_value("nerrordiff", $diff);
       }
 
     $diff = $build_array['countbuildwarningdiff'];
-    if($diff>0)
+    if($diff!=0)
       {
       $xml .= add_XML_value("nwarningdiff", $diff);
       }
@@ -1161,7 +1161,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $totalConfigureWarning += $nconfigurewarnings;
 
       $diff = $build_array['countconfigurewarningdiff'];
-      if($diff>0)
+      if($diff!=0)
         {
         $xml .= add_XML_value("warningdiff", $diff);
         }
@@ -1180,21 +1180,21 @@ function generate_main_dashboard_XML($projectid,$date)
 
       $nnotrun = $build_array['counttestsnotrun'];
 
-      if( $build_array['counttestsnotrundiff']>0)
+      if($build_array['counttestsnotrundiff']!=0)
         {
         $xml .= add_XML_value("nnotrundiff",$build_array['counttestsnotrundiff']);
         }
 
       $nfail = $build_array['counttestsfailed'];
 
-      if($build_array['counttestsfaileddiff']>0)
+      if($build_array['counttestsfaileddiff']!=0)
         {
         $xml .= add_XML_value("nfaildiff", $build_array['counttestsfaileddiff']);
         }
         
       $npass = $build_array['counttestspassed'];
 
-      if($build_array['counttestspasseddiff']>0)
+      if($build_array['counttestspasseddiff']!=0)
         {
         $xml .= add_XML_value("npassdiff", $build_array['counttestspasseddiff']);
         }
@@ -1203,7 +1203,7 @@ function generate_main_dashboard_XML($projectid,$date)
         {
         $xml .= add_XML_value("timestatus", $build_array['countteststimestatusfailed']);
 
-        if($build_array['countteststimestatusfaileddiff']>0)
+        if($build_array['countteststimestatusfaileddiff']!=0)
           {
           $xml .= add_XML_value("ntimediff", $build_array['countteststimestatusfaileddiff']);
           }
