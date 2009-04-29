@@ -53,7 +53,7 @@ function do_submit($filehandle, $projectid)
       $prefix =  "https://";
       }
     
-    $currentURI =  $prefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+    $currentURI =  $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $request = $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
     $ch = curl_init();
