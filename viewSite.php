@@ -127,6 +127,7 @@ $xml .= "<menusubtitle>$sitename</menusubtitle>";
 $xml .= "<dashboard>";
 $xml .= "<title>CDash</title>";
 
+$apikey = "";
 // Find the correct google map key
 foreach($CDASH_GOOGLE_MAP_API_KEY as $key=>$value)
   {
