@@ -1130,7 +1130,7 @@ class Build
     {
     if(!$this->Id)
       {
-      echo "Build::GetNumberOfErrors(): BuildId not set";
+      echo "Build::GetNumberOfErrors(): Id not set";
       return false;    
       }
    
@@ -1148,7 +1148,7 @@ class Build
     {
     if(!$this->Id)
       {
-      echo "Build::GetNumberOfWarnings(): BuildId not set";
+      echo "Build::GetNumberOfWarnings(): Id not set";
       return false;    
       }
    
