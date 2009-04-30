@@ -12,9 +12,20 @@
        <title><xsl:value-of select="cdash/title"/></title>
         <meta name="robots" content="noindex,nofollow" />
           <link rel="shortcut icon" href="favicon.ico"/> 
-     <link rel="StyleSheet" type="text/css">
+           <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+        <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>
+        <!-- Include the sorting -->
+        <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+        <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+        
+        <!-- include jqModal --> 
+        <script src="javascript/jqModal.js" type="text/javascript" charset="utf-8"></script>  
+        <link type="text/css" rel="stylesheet" media="all" href="javascript/jqModal.css" />
+    
+        <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
+        <script src="javascript/cdashIndexTable.js" type="text/javascript" charset="utf-8"></script>
        </head>
        <body>
  
@@ -102,40 +113,35 @@
     upgrade your database structure in the <a href="backwardCompatibilityTools.php">Administration/CDash maintenance panel of CDash</a></b></p>
 </xsl:if>
 
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
-<tbody>
+<table border="0" cellpadding="4" cellspacing="0" width="100%" id="indexTable" class="tabb">
+<thead>
 <tr class="table-heading1">
   <td colspan="5" align="left" class="nob"><h3>Available Dashboards</h3></td>
 </tr>
 
   <tr class="table-heading">
-     <td align="center"><b>Project</b></td>
-     <td align="center" width="20%"><b>Description</b></td>
-     <td align="center"><b>Submissions</b></td>
-    <!-- <td align="center">Tests</td> -->
-  <td align="center"><b>First build</b></td>
-     <td align="center" class="nob"><b>Last activity</b></td>
+     <th align="center" id="sort_0"><b>Project</b></th>
+     <td align="center"><b>Description</b></td>
+     <th align="center" id="sort_1"><b>Submissions</b></th>
+     <th align="center" id="sort_2"><b>First build</b></th>
+     <th align="center" id="sort_3" class="nob"><b>Last activity</b></th>
   </tr>
-
+ </thead>
+ <tbody>
    <xsl:for-each select="cdash/project">
    <tr>
-     <xsl:choose>
-          <xsl:when test="row=0">
-            <xsl:attribute name="class">trodd</xsl:attribute>
-           </xsl:when>
-          <xsl:otherwise>
-           <xsl:attribute name="class">treven</xsl:attribute>
-           </xsl:otherwise>
-        </xsl:choose>
+   <xsl:if test="active=0">
+   <xsl:attribute name="class">nonactive</xsl:attribute>
+   </xsl:if>
+   
    <td align="center" >
      <a>
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute>
      <xsl:value-of select="name"/>
      </a></td>
      <td align="center"><xsl:value-of select="description"/></td>
-    <td align="center"><xsl:value-of select="nbuilds"/></td>
-  <td align="center"><xsl:value-of select="firstbuild"/></td>
-    <!-- <th align="center">Tests</th> <td align="right"><xsl:value-of select="ntests"/></td>-->
+     <td align="center"><xsl:value-of select="nbuilds"/></td>
+     <td align="center"><xsl:value-of select="firstbuild"/></td>
     <td align="center" class="nob">
     <a>
     <xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
@@ -144,7 +150,6 @@
     </td>
     </tr>
    </xsl:for-each>
-
 </tbody>
 </table>
    
@@ -152,11 +157,17 @@
 <tr>
 <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
 </tr>
+<tr>
+<td height="1" colspan="14" align="right">
+<div id="showold"><a href="#" onclick="javascript:showoldproject()">[show all projects]</a></div>
+<div id="hideold"><a href="#" onclick="javascript:hideoldproject()">[hide old projects]</a></div>
+</td>
+</tr>
 </table>
 
 
 <br/>
-Database size: <b><xsl:value-of select="cdash/database/size"/></b>
+Currently hosting <b><xsl:value-of select="count(cdash/project)"/> projects</b> (<xsl:value-of select="cdash/database/size"/>)
 
 <br/>
 <!-- FOOTER -->
