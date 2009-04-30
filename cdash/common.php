@@ -126,7 +126,7 @@ function generate_XSLT($xml,$pageName,$only_in_local=false)
   $xslpage = $pageName.".xsl";
   
   // Check if the page exists in the local directory
-  if(file_exists("local/".$xslpage))
+  if($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/".$xslpage))
     {
     $xslpage = "local/".$xslpage;
     }
