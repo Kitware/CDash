@@ -149,6 +149,22 @@ function generate_index_table()
       $xml .= "<firstbuild>".date(FMT_DATETIMETZ,strtotime($project['first_build']. "UTC"))."</firstbuild>";
       }
 
+    // Display if the project is considered active or not
+    $dayssincelastsubmission = $CDASH_ACTIVE_PROJECT_DAYS+1;
+    if($project['last_build'] != 'NA')
+      {
+      $dayssincelastsubmission = (time()-strtotime($project['last_build']))/86400;
+      }
+      
+    if($dayssincelastsubmission > $CDASH_ACTIVE_PROJECT_DAYS)
+      {
+      $xml .= "<active>0</active>";
+      }
+    else
+      {
+      $xml .= "<active>1</active>";
+      }
+        
     $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
@@ -1584,7 +1600,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("lastsubmission","NA");
       }
     else
-      {  
+      {
       $xml .= add_XML_value("lastsubmission",$SubProject->GetLastSubmission());
       }
     $xml .= "</subproject>";
