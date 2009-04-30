@@ -105,6 +105,37 @@ $beginUTCTime = gmdate(FMT_DATETIME,time()-3600*7*24); // 7 days
 $CoverageFile2User = new CoverageFile2User();
 $CoverageFile2User->ProjectId = $projectid;
 
+// Change the priority of selected files
+if(isset($_POST["changePrioritySelected"]))
+  {
+  foreach($_POST['selectionFiles'] as $key => $value)
+    {
+    $CoverageFile2User->FullPath = $value;
+    $CoverageFile2User->SetPriority($_POST['prioritySelectedSelection']);
+    }
+  }
+  
+// Remove the selected authors
+if(isset($_POST["removeAuthorsSelected"]))
+  {
+  foreach($_POST['selectionFiles'] as $key => $value)
+    {
+    $CoverageFile2User->FullPath = $value;
+    $CoverageFile2User->RemoveAuthors();
+    }
+  }
+  
+// Add the selected authors
+if(isset($_POST["addAuthorsSelected"]))
+  {
+  foreach($_POST['selectionFiles'] as $key => $value)
+    {
+    $CoverageFile2User->UserId = $_POST["userSelectedSelection"];
+    $CoverageFile2User->FullPath = $value;
+    $CoverageFile2User->Insert();
+    }
+  }
+  
 // Add an author manually
 if(isset($_POST["addAuthor"]))
   {
@@ -332,6 +363,7 @@ if($projectid>0)
      
       $xml .= add_XML_value("fullpath",$CoverageFile->GetPath());
       $xml .= add_XML_value("id",$CoverageFile2User->GetId());
+      $xml .= add_XML_value("fileid",$fileid);
       
       if($row == 0)
         {
