@@ -103,6 +103,23 @@ class CoverageFile2User
     return false;
     } // function Insert
 
+  /** Remove authors */
+  function RemoveAuthors()
+    {
+    if($this->FullPath=='' || $this->ProjectId<1)
+      {
+      echo "CoverageFile2User:RemoveAuthors: FullPath or ProjectId not set";
+      return false;
+      }
+   
+    $query = "DELETE FROM coveragefile2user WHERE fileid=".qnum($this->GetId());                     
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("CoverageFile2User:RemoveAuthors");
+      echo $query;
+      return false;
+      }
+    } 
 
   /** Remove the new user */  
   function Remove()
@@ -202,7 +219,7 @@ class CoverageFile2User
       return 0;
       }  
     $query_array = pdo_fetch_array($query);
-    return $query_array['id'];;
+    return $query_array['id'];
     } // end function GetAuthors
     
   /** Get files given an author */  

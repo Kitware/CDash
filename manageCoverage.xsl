@@ -133,7 +133,11 @@ project page</a>
            </xsl:otherwise>
         </xsl:choose>
         
-      <td><xsl:value-of select="fullpath"/></td> 
+      <td><input type="checkbox">
+      <xsl:attribute name="name">selectionFiles[<xsl:value-of select="fileid"/>]</xsl:attribute>
+      <xsl:attribute name="value"><xsl:value-of select="fullpath"/></xsl:attribute>
+      </input>
+      <xsl:value-of select="fullpath"/></td> 
       <td>
       <form name="form_priority" method="post">
       <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="/cdash/project/id"/>&#38;buildid=<xsl:value-of select="/cdash/project/buildid"/></xsl:attribute>
@@ -179,7 +183,38 @@ project page</a>
     </table>
     </td>
   </tr>
-  
+  <tr>
+    <td><div align="right"></div></td>
+    <td><input type="submit" name="removeAuthorsSelected" value="Remove authors from selected files >>"/></td>
+  </tr>
+  <tr>
+    <td><div align="right"></div></td>
+    <td><select name="userSelectedSelection">
+      <option value="0">Choose author</option>
+        <xsl:for-each select="/cdash/project/user">
+        <option>
+        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+        <xsl:if test="selected=1">
+        <xsl:attribute name="selected"></xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="name"/>
+        </option>
+        </xsl:for-each>
+        </select>
+        <input type="submit" name="addAuthorsSelected" value="Add author to selected files >>"/></td>
+  </tr>
+  <tr>
+    <td><div align="right"></div></td>
+    <td>
+      <select name="prioritySelectedSelection">
+      <option value="0">Choose Priority</option>
+      <option value="1"><xsl:if test="priority=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Low</option>
+      <option value="2"><xsl:if test="priority=2"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Medium</option>
+      <option value="3"><xsl:if test="priority=3"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>High</option>
+      <option value="4"><xsl:if test="priority=4"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Urgent</option>
+      </select>
+      <input type="submit" name="changePrioritySelected" value="Change priority of selected files >>"/></td>
+  </tr>
   <tr>
     <td><div align="right"></div></td>
     <td><input type="submit" name="sendEmail" value="Send email to authors"/></td>
