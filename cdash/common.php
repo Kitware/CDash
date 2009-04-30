@@ -1905,7 +1905,7 @@ function get_cdash_dashboard_xml($projectname, $date)
     include_once("local/models/proProject.php");
     $pro= new proProject; 
     $pro->ProjectId=$projectid;
-    $xml.="<proedition>".$pro->getEdition()."</proedition>";
+    $xml.="<proedition>".$pro->GetEdition(1)."</proedition>";
     }
   $xml .="</dashboard>";
   
