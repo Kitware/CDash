@@ -245,7 +245,23 @@ $(document).ready(function() {
       });
     }
   
-
+  // Initialize the indextable table
+  if($tabs.length==0)
+    {
+    $tabs = $("#indexTable");
+     $tabs.each(function(index) {   
+    $(this).tablesorter({
+        headers: { 
+           0: { sorter:'buildname'},
+           1: { sorter:'digit'},
+           2: { sorter:'text'},
+           3: { sorter:'text'},
+          },
+          debug: false,
+          widgets: ['zebra'] 
+        });  
+      });
+    }
 
   // If all the above are not working then it should be the index table
   if($tabs.length==0)
