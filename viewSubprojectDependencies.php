@@ -87,7 +87,7 @@ if($projectid == 0)
     include_once("local/models/proProject.php");
     $pro= new proProject; 
     $pro->ProjectId=$projectid;
-    $xml.="<proedition>".$pro->GetEdition()."</proedition>";
+    $xml.="<proedition>".$pro->GetEdition(1)."</proedition>";
     }
  
   if($currentstarttime>time()) 

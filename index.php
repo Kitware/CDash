@@ -362,7 +362,7 @@ function generate_main_dashboard_XML($projectid,$date)
     include_once("local/models/proProject.php");
     $pro= new proProject; 
     $pro->ProjectId=$projectid;
-    $xml.="<proedition>".$pro->getEdition()."</proedition>";
+    $xml.="<proedition>".$pro->GetEdition(1)."</proedition>";
     }
  
   if($currentstarttime>time()) 
@@ -1507,7 +1507,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     include_once("local/models/proProject.php");
     $pro= new proProject; 
     $pro->ProjectId=$projectid;
-    $xml.="<proedition>".$pro->getEdition()."</proedition>";
+    $xml.="<proedition>".$pro->GetEdition(1)."</proedition>";
     }
  
   if($currentstarttime>time()) 
