@@ -74,6 +74,10 @@ $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSyS
 
 $CDASH_DEFAULT_GOOGLE_ANALYTICS='';
 
+// How long since the last submission before considering a project
+// non active
+$CDASH_ACTIVE_PROJECT_DAYS = '7'; // a week
+
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php'; 
 if ( file_exists($localConfig) )
