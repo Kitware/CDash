@@ -217,7 +217,10 @@ while($row = pdo_fetch_array($result))
   $value = $row["value"];
   if($row["type"] == "text/plain")
     {
-    $value = base64_decode($value);
+    if(substr($value,strlen($value)-2) == '==')
+      {
+      $value = base64_decode($value);
+      }
     }  
   $xml .= add_XML_value("value", $value);
   $xml .= "</measurement>";
