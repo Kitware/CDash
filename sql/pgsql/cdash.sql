@@ -400,6 +400,7 @@ CREATE TABLE "user" (
   "lastname" character varying(40) DEFAULT '' NOT NULL,
   "institution" character varying(255) DEFAULT '' NOT NULL,
   "admin" smallint DEFAULT '0' NOT NULL,
+  `cookiekey` character varying(40)  DEFAULT '' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "email" on "user" ("email");

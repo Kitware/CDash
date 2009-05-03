@@ -479,6 +479,7 @@ CREATE TABLE `user` (
   `lastname` varchar(40) NOT NULL default '',
   `institution` varchar(255) NOT NULL default '',
   `admin` tinyint(4) NOT NULL default '0',
+  `cookiekey` varchar(40) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
 );
