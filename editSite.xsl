@@ -236,7 +236,8 @@
   <tr>
     <td bgcolor="#FFFFFF">
      <input type="hidden" name="claimsiteid"><xsl:attribute name="value"><xsl:value-of select="cdash/user/site/id"/></xsl:attribute></input>
-     <input type="submit" name="updatesite" value="Update Site"/>
+     <input type="submit" name="updatesite" value="Update Site >>"/>
+     <input type="submit" name="unclaimsite" value="Unclaim Site >>"/>
     </td>
   </tr> 
 </table>

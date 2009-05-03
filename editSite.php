@@ -53,7 +53,7 @@ if ($session_OK)
         remove_site2user($siteid,$userid);
         }  
       }
-    $xml .= "<warning>Claimed sites updated.</warning>";
+    $xml .= add_XML_value("warning","Claimed sites updated.");  
     }
     
   @$claimsite = $_POST["claimsite"];
@@ -66,38 +66,45 @@ if ($session_OK)
   @$updatesite = $_POST["updatesite"];
   @$geolocation = $_POST["geolocation"];
   
+  if(isset($_POST['unclaimsite']) && isset($_GET['siteid']))
+    {
+    pdo_query("DELETE FROM site2user WHERE siteid=".qnum($_GET['siteid'])." AND userid=".qnum($userid));
+    echo "<script language=\"javascript\">window.location='user.php'</script>";
+     exit();
+    }
+  
   if($updatesite || $geolocation)
     {
-   $site_name = $_POST["site_name"];
-   $site_description = $_POST["site_description"];
-   $site_processoris64bits = $_POST["site_processoris64bits"];
-   $site_processorvendor = $_POST["site_processorvendor"];
-   $site_processorvendorid = $_POST["site_processorvendorid"];
-   $site_processorfamilyid = $_POST["site_processorfamilyid"];
-   $site_processormodelid = $_POST["site_processormodelid"];
-   $site_processorcachesize = $_POST["site_processorcachesize"];
-   $site_numberlogicalcpus = $_POST["site_numberlogicalcpus"];
-   $site_numberphysicalcpus = $_POST["site_numberphysicalcpus"];
-   $site_totalvirtualmemory = $_POST["site_totalvirtualmemory"];
+     $site_name = $_POST["site_name"];
+     $site_description = $_POST["site_description"];
+     $site_processoris64bits = $_POST["site_processoris64bits"];
+     $site_processorvendor = $_POST["site_processorvendor"];
+     $site_processorvendorid = $_POST["site_processorvendorid"];
+     $site_processorfamilyid = $_POST["site_processorfamilyid"];
+     $site_processormodelid = $_POST["site_processormodelid"];
+     $site_processorcachesize = $_POST["site_processorcachesize"];
+     $site_numberlogicalcpus = $_POST["site_numberlogicalcpus"];
+     $site_numberphysicalcpus = $_POST["site_numberphysicalcpus"];
+     $site_totalvirtualmemory = $_POST["site_totalvirtualmemory"];
     $site_totalphysicalmemory = $_POST["site_totalphysicalmemory"];  
     $site_logicalprocessorsperphysical = $_POST["site_logicalprocessorsperphysical"];  
     $site_processorclockfrequency = $_POST["site_processorclockfrequency"];  
     $site_ip = $_POST["site_ip"];
     $site_longitude = $_POST["site_longitude"];   
     $site_latitude = $_POST["site_latitude"];
-   if(isset($_POST["newdescription_revision"]))
-     {
-     $newdescription_revision=1;
-    }
+     if(isset($_POST["newdescription_revision"]))
+       {
+       $newdescription_revision=1;
+      }
     else
       {
-    $newdescription_revision=0;
+      $newdescription_revision=0;
       }
     }
  
   if($updatesite)
     {
-   update_site($claimsiteid,$site_name,
+    update_site($claimsiteid,$site_name,
          $site_processoris64bits,
          $site_processorvendor,
          $site_processorvendorid,
@@ -116,8 +123,8 @@ if ($session_OK)
   // If we should retrieve the geolocation
   if($geolocation)
     {
-   $location = get_geolocation($site_ip);
-   update_site($claimsiteid,$site_name,
+     $location = get_geolocation($site_ip);
+     update_site($claimsiteid,$site_name,
          $site_processoris64bits,
          $site_processorvendor,
          $site_processorvendorid,
@@ -131,7 +138,7 @@ if ($session_OK)
          $site_logicalprocessorsperphysical,
          $site_processorclockfrequency,
                $site_description,$site_ip,$location['latitude'],$location['longitude'],false);
-    }
+      }
     
   // If we have a projectid that means we should list all the sites
   @$projectid = $_GET["projectid"];
