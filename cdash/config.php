@@ -65,6 +65,9 @@ $CDASH_LDAP_HOSTNAME='localhost';
 $CDASH_LDAP_BASEDN='ou=people,dc=organization,dc=com';
 $CDASH_LDAP_PROTOCOL_VERSION='3';
 
+// Allow rememberme
+$CDASH_ALLOW_LOGIN_COOKIE='1';
+
 // Set to start the autoremoval on the first build of the day
 $CDASH_AUTOREMOVE_BUILDS='0';
 
