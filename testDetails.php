@@ -212,7 +212,14 @@ while($row = pdo_fetch_array($result))
   $xml .= "<measurement>";
   $xml .= add_XML_value("name", $row["name"]);
   $xml .= add_XML_value("type", $row["type"]);
-  $xml .= add_XML_value("value", $row["value"]);
+  
+  // ctest base64 encode the type text/plain...
+  $value = $row["value"];
+  if($row["type"] == "text/plain")
+    {
+    $value = base64_decode($value);
+    }  
+  $xml .= add_XML_value("value", $value);
   $xml .= "</measurement>";
   }
 $xml .= "</measurements>";
