@@ -222,6 +222,13 @@ while($row = pdo_fetch_array($result))
       $value = base64_decode($value);
       }
     }  
+  
+  // Add nl2br for type text/plain and text/string
+   if($row["type"] == "text/plain" || $row["type"] == "text/string")
+    {
+    $value = nl2br($value);  
+    }
+    
   $xml .= add_XML_value("value", $value);
   $xml .= "</measurement>";
   }
