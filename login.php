@@ -23,7 +23,7 @@ include_once("cdash/version.php");
 $loginerror = "";
 
 /** Database authentication */
-function databaseAuthenticate($email,$password,$SessionCachePolicy)
+function databaseAuthenticate($email,$password,$SessionCachePolicy,$rememberme)
 {
   global $loginerror;
   $loginerror = "";
@@ -56,6 +56,38 @@ function databaseAuthenticate($email,$password,$SessionCachePolicy)
     }
   else if(md5($password)==$pass)
     {
+    
+    if($rememberme)
+      {
+      $cookiename = "CDash-".$_SERVER['SERVER_NAME'];
+      $time = time()+60*60*24*30; // 30 days;
+      
+      // Create a new password
+      $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      $length = 32;
+              
+      // seed with microseconds
+      function make_seed_recoverpass()
+        {
+        list($usec, $sec) = explode(' ', microtime());
+        return (float) $sec + ((float) $usec * 100000);
+        }
+      srand(make_seed_recoverpass());
+                  
+      $key = "";
+      $max=strlen($keychars)-1;
+      for ($i=0;$i<=$length;$i++) 
+        {
+        $key .= substr($keychars, rand(0, $max), 1);
+        }
+      
+      $value = $user_array['id'].$key;
+      setcookie($cookiename,$value, $time);
+      
+      // Update the user key
+      pdo_query("UPDATE user SET cookiekey='".$key."' WHERE id=".qnum($user_array['id'])); 
+      }
+    
     session_name("CDash");
     session_cache_limiter($SessionCachePolicy);
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
@@ -193,7 +225,7 @@ function ldapAuthenticate($email,$password,$SessionCachePolicy)
 }
 
 /** authentication */
-function authenticate($email,$password,$SessionCachePolicy)
+function authenticate($email,$password,$SessionCachePolicy,$rememberme)
 {
   if(empty($email))
     {
@@ -212,14 +244,14 @@ function authenticate($email,$password,$SessionCachePolicy)
       $user_array = pdo_fetch_array($query); 
        if($user_array["id"] == 1)
         {
-        return databaseAuthenticate($email,$password,$SessionCachePolicy);
+        return databaseAuthenticate($email,$password,$SessionCachePolicy,$rememberme);
         }  
       }
     return ldapAuthenticate($email,$password,$SessionCachePolicy);
     }
   else
     {
-    return databaseAuthenticate($email,$password,$SessionCachePolicy);
+    return databaseAuthenticate($email,$password,$SessionCachePolicy,$rememberme);
     }  
 }
 
@@ -234,7 +266,7 @@ function auth($SessionCachePolicy='private_no_expire')
      && isset($_SERVER['REMOTE_USER'])) 
     {
     $login = $_SERVER['REMOTE_USER'];
-    return authenticate($login,NULL,$SessionCachePolicy);
+    return authenticate($login,NULL,$SessionCachePolicy,0); // we don't remember
     }
      
   if (@$_GET["logout"]) 
@@ -244,6 +276,19 @@ function auth($SessionCachePolicy='private_no_expire')
     @session_start(); 
     unset($_SESSION['cdash']);  
     session_destroy(); 
+    
+    // Remove the cookie if we have one  
+    $cookiename = "CDash-".$_SERVER['SERVER_NAME'];
+    if(isset($_COOKIE[$cookiename]))
+      {
+      $cookievalue = $_COOKIE[$cookiename];
+      $cookieuseridkey = substr($cookievalue,0,strlen($cookievalue)-33); 
+      $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+      pdo_select_db("$CDASH_DB_NAME",$db);
+        
+      pdo_query("UPDATE user SET cookiekey='' WHERE id=".qnum($cookieuseridkey)); 
+      setcookie ("CDash-".$_SERVER['SERVER_NAME'], "", time() - 3600);
+      }
     echo "<script language=\"javascript\">window.location='index.php'</script>";             
     return 0; 
     }
@@ -252,10 +297,38 @@ function auth($SessionCachePolicy='private_no_expire')
     {
     @$login = $_POST["login"];
     @$passwd = $_POST["passwd"];
-    return authenticate($login,$passwd,$SessionCachePolicy);
+    @$rememberme = $_POST["rememberme"];
+    return authenticate($login,$passwd,$SessionCachePolicy,$rememberme);
     }
   else
     {                                         // arrive from session var 
+    $cookiename = "CDash-".$_SERVER['SERVER_NAME'];
+    if(isset($_COOKIE[$cookiename]))
+      {
+      $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+      pdo_select_db("$CDASH_DB_NAME",$db);
+      
+      $cookievalue = $_COOKIE[$cookiename];
+      $cookiekey = substr($cookievalue,strlen($cookievalue)-33); 
+      $cookieuseridkey = substr($cookievalue,0,strlen($cookievalue)-33); 
+      $sql="SELECT email,password,id FROM ".qid("user")." WHERE cookiekey='$cookiekey' AND id='$cookieuseridkey'";
+
+      $result = pdo_query("$sql"); 
+      if(pdo_num_rows($result) == 1)
+        {
+        $user_array = pdo_fetch_array($result); 
+        session_name("CDash");
+        session_cache_limiter($SessionCachePolicy);
+        session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
+        @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
+        session_start();
+    
+        $sessionArray = array ("login" => $user_array['email'],"passwd" => $user_array['password'], "ID" => session_id(), "valid" => 1, "loginid" => $user_array['id']);  
+        $_SESSION['cdash'] = $sessionArray;
+        return true;
+        }
+      }
+      
     session_name("CDash");
     session_cache_limiter($SessionCachePolicy);
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
@@ -314,7 +387,11 @@ function LoginForm($loginerror)
     {
     $xml .= "<message>".$loginerror."</message>";
     }     
-    
+   
+  if($CDASH_ALLOW_LOGIN_COOKIE)
+    {  
+    $xml .= "<allowlogincookie>1</allowlogincookie>";
+    }
   $xml .= "</cdash>";
   generate_XSLT($xml,"login");
 }

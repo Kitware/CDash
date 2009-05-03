@@ -79,7 +79,11 @@
 </tr>
 <tr class="table-heading">
     <td width="10%" class="nob" ><div align="right">Password: </div></td>
-    <td width="70%" class="nob"><input class="textbox" type="password"  name="passwd" size="20"/></td>
+    <td width="70%" class="nob"><input class="textbox" type="password"  name="passwd" size="20"/> 
+    <xsl:if test="/cdash/allowlogincookie=1">
+      <input class="textbox" type="checkbox"  name="rememberme"/>Remember Me
+    </xsl:if>
+    </td>
     <td width="20%" align="right" class="nob"></td>
 </tr>
 <tr class="table-heading">

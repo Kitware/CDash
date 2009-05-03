@@ -537,6 +537,10 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
   AddTableIndex('coveragefilelog','line');
+  
+  // Add the cookiekey field
+  AddTableField("user","cookiekey","VARCHAR(40)","VARCHAR( 40 )","");
+
   // Set the database version
   setVersion();
 
