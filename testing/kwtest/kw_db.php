@@ -224,7 +224,7 @@ class dbo_mysql extends dbo
             }
           }
        } // end for each line
-     mysql_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '".md5('simpletest')."', 'administrator', '','Kitware Inc.', 1)");
+     mysql_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '".md5('simpletest')."', 'administrator', '','Kitware Inc.', 1, '')");
      echo mysql_error();
      $this->disconnect();
      return true;
