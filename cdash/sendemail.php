@@ -700,7 +700,6 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   require_once("models/site.php");
   require_once("models/user.php");
 
-  //print_r($emailtext);
   $serverURI = get_server_URI();
   
   $messagePlainText = "A submission to CDash for the project ".$Project->Name." has ";
@@ -821,10 +820,17 @@ function sendemail($handler,$projectid)
   require_once("models/build.php");
   require_once("models/project.php");
   require_once("models/buildgroup.php");
-  
+
   $Project = new Project();
   $Project->Id = $projectid;
   $Project->Fill();
+  
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
+    {
+    include("local/sendemail.php");
+    $sendEmail = new SendEmail();
+    $sendEmail->SetProjectId($projectid);
+    }
 
   // If we shouldn't sent any emails we stop
   if($Project->EmailBrokenSubmission == 0)
@@ -906,6 +912,14 @@ function sendemail($handler,$projectid)
     if($emailtext['nerror'] == 1)
       {
       send_email_to_user($userid,$emailtext,$Build,$Project);
+      
+      if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
+        {
+        $sendEmail->BuildId = $Build->Id;
+        $sendEmail->UserId = $userid;
+        $sendEmail->Text = $emailtext;
+        $sendEmail->SendToUser();
+        }
       }
     }
 }
