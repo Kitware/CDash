@@ -848,7 +848,7 @@ function sendemail($handler,$projectid)
     return;
     }
   
-  add_log("Buildid ".$buildid,"sendemail ".$Project->Name,LOG_INFO);
+  //add_log("Buildid ".$buildid,"sendemail ".$Project->Name,LOG_INFO);
       
   //  Check if the group as no email
   $Build = new Build();
@@ -871,16 +871,34 @@ function sendemail($handler,$projectid)
     return;
     }
 
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
+    {
+    $sendEmail->BuildId = $Build->Id;
+    $sendEmail->Errors = $errors;
+    }
+        
   // If we should send a summary email    
   if($BuildGroup->GetSummaryEmail()==1)
     {
     // Send the summary email
     sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid);
+    
+    if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
+      {
+      $sendEmail->SendSummary();
+      }
+    
     return;
     } // end summary email
 
   $Build->FillFromId($Build->Id);
   
+  // Send build error
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
+    {
+    $sendEmail->SendBuildError();
+    }
+      
   // Get the list of person who should get the email
   $userids = lookup_emails_to_send($errors, $buildid, $projectid,$Build->Type);
 
@@ -915,7 +933,6 @@ function sendemail($handler,$projectid)
       
       if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
         {
-        $sendEmail->BuildId = $Build->Id;
         $sendEmail->UserId = $userid;
         $sendEmail->Text = $emailtext;
         $sendEmail->SendToUser();
