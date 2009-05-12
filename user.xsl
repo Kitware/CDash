@@ -267,16 +267,16 @@
     <tr class="trodd"><td id="nob"><a href="createProject.php">[Create new project]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="createProject.php?edit=1">[Edit project]</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">[Manage project roles]</a></td></tr> 
-    <tr class="trodd"><td id="nob"><a href="manageSubproject.php">[Manage subproject]</a></td></tr> 
-    <tr class="treven"><td id="nob"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr> 
-    <tr class="trodd"><td id="nob"><a href="manageCoverage.php">[Manage project coverage]</a></td></tr> 
-    <tr class="treven"><td id="nob"><a href="manageBanner.php">[Manage banner message]</a></td></tr> 
-    <tr class="trodd"><td id="nob"><a href="manageUsers.php">[Manage users]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="backwardCompatibilityTools.php">[CDash maintenance]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="siteStatistics.php">[Site Statistics]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="userStatistics.php">[User Statistics]</a>  (beta)</td></tr>
-    <tr class="treven"><td id="nob"><a href="manageBackup.php">[Manage Backup]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="manageSubproject.php">[Manage subproject]</a></td></tr> 
+    <tr class="trodd"><td id="nob"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr> 
+    <tr class="treven"><td id="nob"><a href="manageCoverage.php">[Manage project coverage]</a></td></tr> 
+    <tr class="trodd"><td id="nob"><a href="manageBanner.php">[Manage banner message]</a></td></tr> 
+    <tr class="treven"><td id="nob"><a href="manageUsers.php">[Manage users]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="backwardCompatibilityTools.php">[CDash maintenance]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="siteStatistics.php">[Site Statistics]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="userStatistics.php">[User Statistics]</a>  (beta)</td></tr>
+    <tr class="trodd"><td id="nob"><a href="manageBackup.php">[Manage Backup]</a></td></tr>
   </tbody>
   </table>
 </xsl:if>
