@@ -262,7 +262,7 @@ if($Submit)
          } 
        } // end pgsql functions
 
-     pdo_query("INSERT INTO ".qid("user")." VALUES (1, '".$admin_email."', '".md5($admin_password)."', 'administrator', '','Kitware Inc.', 1)");
+     pdo_query("INSERT INTO ".qid("user")." (id,email,password,firstname,lastname,institution,admin) VALUES (1, '".$admin_email."', '".md5($admin_password)."', 'administrator', '','Kitware Inc.', 1)");
      echo pdo_error();
     
      $xml .= "<db_created>1</db_created>";
