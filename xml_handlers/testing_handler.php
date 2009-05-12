@@ -213,7 +213,7 @@ class TestingHandler extends AbstractHandler
       } // end named measurement
     else if($name == "SITE")
       {
-      if($this->UpdateEndTime)
+      if(strlen($this->EndTimeStamp)>0 && $this->UpdateEndTime)
         {
         $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
         $this->Build->UpdateEndTime($end_time);
