@@ -15,6 +15,10 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+/** Adding some PHP include path */
+$path = dirname(__FILE__);
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
 include("cdash/autoremove.php");
 // Open the database connection
 include("cdash/config.php");
