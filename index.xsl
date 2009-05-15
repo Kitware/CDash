@@ -715,8 +715,8 @@
          by <xsl:value-of select="cdash/updates/nauthors"/> author<xsl:if test="cdash/updates/nauthors>1">s</xsl:if>
     </xsl:if>
          as of
-         <xsl:value-of select="cdash/updates/timestamp"/></td>
-         <td><a href="#" class="keytrigger">Help</a>
+          <b><xsl:value-of select="cdash/updates/timestamp"/></b></td>
+          <td><a href="#" class="keytrigger">Help</a>
          <div class="jqmWindow" id="key">Loading key...</div>
          <div class="jqmWindow" id="groupsdescription">Loading key...</div>
          </td>

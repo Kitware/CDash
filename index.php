@@ -457,7 +457,7 @@ function generate_main_dashboard_XML($projectid,$date)
    {
    $xml .= "<nchanges>-1</nchanges>";
    }    
-  $xml .= "<timestamp>" . date(FMT_DATETIMETZ, $currentstarttime)."</timestamp>";
+  $xml .= add_XML_value("timestamp",date("l, F d Y H:i:s T",$currentstarttime));
   $xml .= "</updates>";
 
   // User
