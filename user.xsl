@@ -121,6 +121,9 @@
           <a class="tooltip" title="Edit project" >
           <xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>
           <img  src="images/edit2.png" border="0" alt="editproject" /></a>
+          <a class="tooltip" title="Manage subprojects" >
+          <xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
+          <img  src="images/subproject.png" border="0" alt="subproject" /></a>
           <a class="tooltip" title="Manage project groups" >
           <xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
             <img src="images/edit_group.png" border="0" alt="managegroups" /></a>
