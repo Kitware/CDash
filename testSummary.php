@@ -129,11 +129,11 @@ while($row = pdo_fetch_array($result))
       break; 
     case "failed":
       $xml .= add_XML_value("status", "Failed");
-      $xml .= add_XML_value("statusclass", "warning");
+      $xml .= add_XML_value("statusclass", "error");
       break;
     case "notrun":
       $xml .= add_XML_value("status", "Not Run");
-   $xml .= add_XML_value("statusclass", "error");
+   $xml .= add_XML_value("statusclass", "warning");
       break;
     }
   $xml .= "</build>\n";
