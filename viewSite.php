@@ -250,6 +250,10 @@ while($testtime_array = pdo_fetch_array($testtime))
 
 // Compute the idle time
 $idletime = 24*3600-$totalload;
+if($idletime<0)
+  {
+  $idletime = 0;
+  }
 $xml .= "<idle>".$idletime."</idle>";
 $xml .= "</siteload>";
 
