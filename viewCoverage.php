@@ -24,6 +24,8 @@ include("cdash/version.php");
 include("models/coveragefile2user.php");
 include("models/user.php");
 
+set_time_limit(0);
+
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
 @$sortby = $_GET["sortby"];
