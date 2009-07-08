@@ -249,7 +249,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     $update = pdo_query("SELECT command,status FROM buildupdate WHERE buildid=".qnum($buildid));
     $update_array = pdo_fetch_array($update);
   
-    $information .= "Status: ".$update_array["status"]." (".$serverURI."/viewUpdate.phpbuildid=".$buildid.")\n";
+    $information .= "Status: ".$update_array["status"]." (".$serverURI."/viewUpdate.php?buildid=".$buildid.")\n";
     $information .= "Command: ";
     $information .= substr($update_array["command"],0,$maxchars);
     $information .= "\n";
