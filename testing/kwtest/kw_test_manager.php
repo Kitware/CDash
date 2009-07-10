@@ -299,8 +299,19 @@ class CDashTestManager extends TestManager
                                  $this->database['name'],
                                  $this->database['type']);
     $reporter->paintConfigureConnection($result);
-    $result = unlink($logfilename);
+
+    if (file_exists($logfilename))
+      {
+      // delete the log file -- result is success/failure
+      $result = unlink($logfilename);
+      }
+    else
+      {
+      // file is already not there -- equivalent to successfully deleting it
+      $result = true;
+      }
     $reporter->paintConfigureDeleteLogResult($result, $logfilename);
+
     $result = $this->_installdb4test($this->database['host'],
                                       $this->database['login'],
                                       $this->database['pwd'],
