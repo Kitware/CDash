@@ -244,13 +244,14 @@ class CDashXmlReporter extends XmlReporter
     $this->__paintConfigureResult($result,'create');
     return;
     }
-    
-  function paintConfigureDeleteLogResult($result)
+
+  function paintConfigureDeleteLogResult($result, $logfilename)
     {
-    $this->__paintConfigureResult($result,'delete log file');
+    $this->__paintConfigureResult($result,
+      "delete log file '".$logfilename."'");
     return;
     }
-  
+
 /*  function __paintConfigureResult($result,$action)
     {
     fwrite($this->_configurefile, $this->_getIndent(2));
@@ -269,6 +270,7 @@ class CDashXmlReporter extends XmlReporter
     fwrite($this->_configurefile, "Process to $action database has succeeded\n");
     return;
     }*/
+
   function __paintConfigureResult($result,$action)
     {
     fwrite($this->_configurefile, $this->_getIndent(2));

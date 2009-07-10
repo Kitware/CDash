@@ -299,8 +299,8 @@ class CDashTestManager extends TestManager
                                  $this->database['name'],
                                  $this->database['type']);
     $reporter->paintConfigureConnection($result);
-    $stdoutput = `rm -f $logfilename`;
-    $reporter->paintConfigureDeleteLogResult(empty($stdoutput));
+    $result = unlink($logfilename);
+    $reporter->paintConfigureDeleteLogResult($result, $logfilename);
     $result = $this->_installdb4test($this->database['host'],
                                       $this->database['login'],
                                       $this->database['pwd'],
