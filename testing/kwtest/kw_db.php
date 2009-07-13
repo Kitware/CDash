@@ -1,4 +1,6 @@
 <?php
+require_once(dirname(dirname(__FILE__)) . '/config.test.php');
+
 /**
   *    db object to allow the user to interact with 
   *    a database

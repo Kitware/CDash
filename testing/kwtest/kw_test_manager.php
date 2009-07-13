@@ -1,4 +1,5 @@
 <?php
+require_once(dirname(dirname(__FILE__)) . '/config.test.php');
 require_once(dirname(__FILE__) . '/simpletest/unit_tester.php');
 require_once(dirname(__FILE__) . '/simpletest/mock_objects.php');
 require_once(dirname(__FILE__) . '/simpletest/web_tester.php');
@@ -223,10 +224,16 @@ class CDashTestManager extends TestManager
      */
     function __performSvnUpdate($reporter,$svnroot,$type){
       $time_start = (float) array_sum(explode(' ',microtime()));
-      $raw_output = $this->__performSvnCommand(`svn info $svnroot 2>&1 | grep Revision`);
+      $grepCmd = 'grep';
+      global $isWindows;
+      if ($isWindows)
+        {
+        $grepCmd = 'findstr';
+        }
+      $raw_output = $this->__performSvnCommand(`svn info $svnroot 2>&1 | $grepCmd Revision`);
       // We catch the current revision of the repository
       $currentRevision = str_replace('Revision: ','',$raw_output[0]);
-      $raw_output = $this->__performSvnCommand(`svn update $svnroot 2>&1 | grep revision`);
+      $raw_output = $this->__performSvnCommand(`svn update $svnroot 2>&1 | $grepCmd revision`);
       if(strpos($raw_output[0],'revision') === false)
         {
         $execution_time  = "Svn Error:\nsvn update did not return the right standard output.\n";
@@ -251,7 +258,7 @@ class CDashTestManager extends TestManager
       $reporter->paintUpdateFile($raw_output);
       $time_end = (float) array_sum(explode(' ',microtime()));
       $execution_time = $time_end - $time_start;
-      echo "Your Repository has just been updating from revision $currentRevision to revision $newRevision\n";
+      echo "Your Repository has just been updated from revision $currentRevision to revision $newRevision\n";
       echo "\tRepository concerned: $svnroot\n\tUse SVN repository type\n";
       echo "Project is up to date\n";
       return $execution_time;

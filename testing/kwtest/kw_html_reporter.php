@@ -1,4 +1,5 @@
 <?php
+require_once(dirname(dirname(__FILE__)) . '/config.test.php');
 require_once(dirname(__FILE__).'/simpletest/reporter.php');
     
 class KWHtmlReporter extends HtmlReporter {

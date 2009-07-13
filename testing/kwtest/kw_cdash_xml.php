@@ -1,4 +1,5 @@
 <?php
+require_once(dirname(dirname(__FILE__)) . '/config.test.php');
 /**
      *   XML reporter specific to use CDash
      *   Allows :
@@ -347,7 +348,15 @@ class CDashXmlReporter extends XmlReporter
       fwrite($this->_updatefile, $this->_getIndent(1));
       fwrite($this->_updatefile,"<".$this->_namespace."StartTime>".time()."</StartTime>\n");
       // We get the command line
-      $commandline = `which svn`;
+      global $isWindows;
+      if ($isWindows)
+        {
+        $commandline = 'svn';
+        }
+      else
+        {
+        $commandline = `which svn`;
+        }
       $commandline = explode("\n", $commandline);
       $commandline = '"'.$commandline[0].'"';
       $commandline .= ' info';
