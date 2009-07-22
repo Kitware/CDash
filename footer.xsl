@@ -3,7 +3,7 @@
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
-<xsl:template name="footer" match="/">
+<xsl:template name="footer">
 <table width="100%" cellpadding="0" cellspacing="0">
   <tr>
    <td height="66" align="left" valign="middle" class="footer">

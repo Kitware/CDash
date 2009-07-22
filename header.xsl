@@ -5,11 +5,11 @@
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
 <!-- Group footer -->
-<xsl:template name="groupfooter" match="/">
+<xsl:template name="groupfooter">
 </xsl:template>
 
 <!-- Main Header -->
-<xsl:template name="header" match="/">
+<xsl:template name="header">
 <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
     <td>
