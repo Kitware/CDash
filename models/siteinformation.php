@@ -60,14 +60,14 @@ class SiteInformation
     switch($tag)
       {
       case "DESCRIPTION": $this->Description = $value;break;
-      case "PROCESSORIS64BITS": $this->ProcessorIs64Bits = $value;break;
-      case "PROCESSORVENDOR": $this->ProcessorVendor = $value;break;
-      case "PROCESSORVENDORID": $this->ProcessorVendorId = $value;break;
-      case "PROCESSORFAMILYID": $this->ProcessorFamilyId = $value;break;
-      case "PROCESSORMODELID": $this->ProcessorModelId = $value;break;
+      case "IS64BITS": $this->ProcessorIs64Bits = $value;break;
+      case "VENDORSTRING": $this->ProcessorVendor = $value;break;
+      case "VENDORID": $this->ProcessorVendorId = $value;break;
+      case "FAMILYID": $this->ProcessorFamilyId = $value;break;
+      case "MODELID": $this->ProcessorModelId = $value;break;
       case "PROCESSORCACHESIZE": $this->ProcessorCacheSize = $value;break;
-      case "NUMBERLOGICALCPUS": $this->NumberLogicalCpus = $value;break;
-      case "NUMBERPHYSICALCPUS": $this->NumberPhysicalCpus = $value;break;
+      case "NUMBEROFLOGICALCPU": $this->NumberLogicalCpus = $value;break;
+      case "NUMBEROFPHYSICALCPU": $this->NumberPhysicalCpus = $value;break;
       case "TOTALVIRTUALMEMORY": $this->TotalVirtualMemory = $value;break;
       case "TOTALPHYSICALMEMORY": $this->TotalPhysicalMemory = $value;break;
       case "LOGICALPROCESSORSPERPHYSICAL": $this->LogicalProcessorsPerPhysical = $value;break;
