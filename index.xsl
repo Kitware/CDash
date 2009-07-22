@@ -432,10 +432,10 @@
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="test/fail > 0">
-             error
+             normal
             </xsl:when>
              <xsl:when test="string-length(test/fail)>0">
-             normal
+             error
              </xsl:when>       
         </xsl:choose>
       </xsl:attribute>
@@ -620,10 +620,10 @@
        <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="$type/totalFail > 0">
-            error
+            normal
             </xsl:when>
           <xsl:otherwise>
-            normal
+            error
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>   
