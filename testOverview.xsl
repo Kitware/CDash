@@ -70,7 +70,7 @@
 <a>
   <xsl:attribute name="href">
   <xsl:value-of select="summaryLink"/>
-  </xsl:attribute><xsl:value-of select="testName"/></a>
+  </xsl:attribute><xsl:value-of select="testName"/></a><br/>
 <xsl:text disable-output-escaping="yes"> </xsl:text>
 </xsl:for-each>
 </xsl:for-each>
