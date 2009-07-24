@@ -41,5 +41,4 @@ else
 
   generate_XSLT($xml, 'viewIssues');
   }
-
 ?>

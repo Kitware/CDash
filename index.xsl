@@ -904,7 +904,7 @@
 </tbody>
 </table>
 </xsl:if>
- 
+
 <!-- Filters? -->
 <xsl:if test="count(cdash/filterdata) = 1">
   <xsl:call-template name="filterdata" select="."/>
@@ -920,7 +920,7 @@
   </xsl:call-template>
   </table>
 </xsl:for-each>
-  
+
 <!-- COVERAGE -->
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
     <xsl:if test="count(cdash/buildgroup/coverage)=0">

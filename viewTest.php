@@ -21,6 +21,7 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+require_once("filterdataFunctions.php");
 
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
@@ -66,24 +67,33 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 // Menu
 $xml .= "<menu>";
 
+$onlypassed = 0;
+$onlyfailed = 0;
+$onlytimestatus = 0;
+$onlynotrun = 0;
 $extraquery = "";
+
 if(isset($_GET["onlypassed"]))
   {
+  $onlypassed = 1;
   $extraquery = "&onlypassed";
   }
 else if(isset($_GET["onlyfailed"]))
   {
+  $onlyfailed = 1;
   $extraquery = "&onlyfailed";
   }
 else if(isset($_GET["onlytimestatus"]))
   {
+  $onlytimestatus = 1;
   $extraquery = "&onlytimestatus";
   }
 else if(isset($_GET["onlynotrun"]))
   {
+  $onlynotrun = 1;
   $extraquery = "&onlynotrun";
   }
-  
+
 $nightlytime = get_project_property($projectname,"nightlytime");
 $xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
 $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
@@ -151,44 +161,54 @@ $xml .= "<project>";
 $xml .= add_XML_value("showtesttime", $projectshowtesttime);
 $xml .= "</project>";
 
-if(isset($_GET["onlypassed"]))
+
+$displaydetails = 1;
+$status = '';
+$order = 't.name';
+
+if($onlypassed)
   {
-  $xml .= add_XML_value("displaydetails","0");
-  $xml .= add_XML_value("onlypassed","1");
-  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-           WHERE bt.buildid='$buildid' AND bt.status='passed' AND t.id=bt.testid ORDER BY t.name"; 
+  $displaydetails = 0;
+  $status = "AND bt.status='passed'";
   }
-else if(isset($_GET["onlyfailed"]))
+else if($onlyfailed)
   {
-  $xml .= add_XML_value("displaydetails","1");
-  $xml .= add_XML_value("onlyfailed","1");
-  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-         WHERE bt.buildid='$buildid' AND bt.status='failed' AND t.id=bt.testid ORDER BY t.name";
+  $status = "AND bt.status='failed'";
   }
-else if(isset($_GET["onlynotrun"]))
+else if($onlynotrun)
   {
-  $xml .= add_XML_value("displaydetails","0");
-  $xml .= add_XML_value("onlynotrun","1");
-  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-         WHERE bt.buildid='$buildid' AND bt.status='notrun' AND t.id=bt.testid ORDER BY t.name";
-  }  
-else if(isset($_GET["onlytimestatus"]))
+  $displaydetails = 0;
+  $status = "AND bt.status='notrun'";
+  }
+else if($onlytimestatus)
   {
-  $xml .= add_XML_value("displaydetails","1");
-  $xml .= add_XML_value("onlytimestatus","1");
-  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-            WHERE bt.buildid='$buildid' AND bt.timestatus>='$testtimemaxstatus' AND t.id=bt.testid ORDER BY t.name";
+  $status = "AND bt.timestatus>='$testtimemaxstatus'";
   }
 else
   {
-  $xml .= add_XML_value("displaydetails","1");
-  $xml .= add_XML_value("onlypassed","0");
-  $xml .= add_XML_value("onlyfailed","0");
-  $xml .= add_XML_value("onlytimestatus","0");
-  $xml .= add_XML_value("onlynotrun","0");
-  $sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name FROM test as t,build2test as bt 
-         WHERE bt.buildid='$buildid' AND t.id=bt.testid ORDER BY bt.status,bt.timestatus DESC,t.name";
+  $order = 'bt.status,bt.timestatus DESC,t.name';
   }
+
+$xml .= add_XML_value("displaydetails", $displaydetails);
+$xml .= add_XML_value("onlypassed", $onlypassed);
+$xml .= add_XML_value("onlyfailed", $onlyfailed);
+$xml .= add_XML_value("onlytimestatus", $onlytimestatus);
+$xml .= add_XML_value("onlynotrun", $onlynotrun);
+
+
+// Filters:
+//
+$filterdata = get_filterdata_from_request();
+$filter_sql = $filterdata['sql'];
+$xml .= $filterdata['xml'];
+
+
+$sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name " .
+       "FROM test as t,build2test as bt " .
+       "WHERE bt.buildid='$buildid' AND t.id=bt.testid " . $status . " " .
+       $filter_sql . " " .
+       "ORDER BY " . $order;
+
 $result = pdo_query($sql);
 
 

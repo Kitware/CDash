@@ -1,15 +1,17 @@
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-  
+
+<xsl:include href="filterdataTemplate.xsl"/>
 <xsl:include href="header.xsl"/>
 <xsl:include href="footer.xsl"/>
 
 <!-- Local includes -->
 <xsl:include href="local/footer.xsl"/>
 <xsl:include href="local/header.xsl"/> 
-   
+
 <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
+
 <xsl:template match="/">
 <html>
 <head>
@@ -20,6 +22,7 @@
       <xsl:value-of select="cdash/cssfile"/>
     </xsl:attribute>
   </link>
+  <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
   <xsl:call-template name="headscripts"/>   
 </head>
 <body bgcolor="#ffffff">
@@ -63,6 +66,11 @@
 
 </table>
 
+<!-- Filters? -->
+<xsl:if test="count(cdash/filterdata) = 1">
+  <xsl:call-template name="filterdata" select="."/>
+</xsl:if>
+
 <h3>
 <xsl:if test="cdash/onlypassed=1">
   <xsl:value-of select="cdash/numPassed"/> tests passed.
@@ -76,7 +84,7 @@
 <xsl:if test="cdash/onlytimestatus=1">
   <xsl:value-of select="cdash/numTimeFailed"/> tests failed for timing reasons.
 </xsl:if>
-<xsl:if test="cdash/onlypassed!=1 and cdash/onlyfailed!=1">
+<xsl:if test="cdash/onlypassed!=1 and cdash/onlyfailed!=1 and cdash/onlynotrun!=1 and cdash/onlytimestatus!=1">
   <xsl:value-of select="cdash/numPassed"/> passed, 
   <xsl:value-of select="cdash/numFailed"/> failed,
   <xsl:value-of select="cdash/numTimeFailed"/> failed for timing,

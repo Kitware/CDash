@@ -17,7 +17,7 @@
 =========================================================================*/
 
 
-function filterdefinition_XML($key, $uitext, $type, $valuelist, $defaultvalue)
+function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
 {
   $xml = '<def>';
   $xml .= add_XML_value('key', $key);
@@ -33,42 +33,331 @@ function filterdefinition_XML($key, $uitext, $type, $valuelist, $defaultvalue)
 }
 
 
-function filterdefinitions_XML()
+interface PageSpecificFilters
 {
-  $xml = '<filterdefinitions>';
+  public function getFilterDefinitionsXML();
+  public function getSqlField($field, &$sql_field);
+}
 
-  $xml .= filterdefinition_XML('buildduration', 'Build Duration', 'number', '', '0');
-  $xml .= filterdefinition_XML('builderrors', 'Build Errors', 'number', '', '0');
-  $xml .= filterdefinition_XML('buildwarnings', 'Build Warnings', 'number', '', '0');
-  $xml .= filterdefinition_XML('buildname', 'Build Name', 'string', '', '');
-  $xml .= filterdefinition_XML('buildstarttime', 'Build Time', 'date', '', '');
-  $xml .= filterdefinition_XML('buildtype', 'Build Type', 'string', '', 'Nightly');
-  $xml .= filterdefinition_XML('configureduration', 'Configure Duration', 'number', '', '0');
-  $xml .= filterdefinition_XML('configureerrors', 'Configure Errors', 'number', '', '0');
-  $xml .= filterdefinition_XML('configurewarnings', 'Configure Warnings', 'number', '', '0');
-  $xml .= filterdefinition_XML('expected', 'Expected', 'bool', '', '');
-  $xml .= filterdefinition_XML('groupname', 'Group', 'string', '', 'Nightly');
-  $xml .= filterdefinition_XML('hascoverage', 'Has Coverage', 'bool', '', '');
-  $xml .= filterdefinition_XML('hasctestnotes', 'Has CTest Notes', 'bool', '', '');
-  $xml .= filterdefinition_XML('hasdynamicanalysis', 'Has Dynamic Analysis', 'bool', '', '');
-  $xml .= filterdefinition_XML('hasusernotes', 'Has User Notes', 'bool', '', '');
-  $xml .= filterdefinition_XML('label', 'Label', 'string', '', '');
-  $xml .= filterdefinition_XML('site', 'Site', 'string', '', '');
-  $xml .= filterdefinition_XML('buildgenerator', 'Submission Client', 'string', '', '2.6');
-  $xml .= filterdefinition_XML('subproject', 'SubProject', 'string', '', '');
-  $xml .= filterdefinition_XML('testsduration', 'Tests Duration', 'number', '', '', '0');
-  $xml .= filterdefinition_XML('testsfailed', 'Tests Failed', 'number', '', '0');
-  $xml .= filterdefinition_XML('testsnotrun', 'Tests Not Run', 'number', '', '0');
-  $xml .= filterdefinition_XML('testspassed', 'Tests Passed', 'number', '', '0');
-  $xml .= filterdefinition_XML('testtimestatus', 'Tests Timing Failed', 'number', '', '0');
-  $xml .= filterdefinition_XML('updateduration', 'Update Duration', 'number', '', '0');
-//  $xml .= filterdefinition_XML('updateerrors', 'Update Errors', 'number', '', '0');
-//  $xml .= filterdefinition_XML('updatewarnings', 'Update Warnings', 'number', '', '0');
-  $xml .= filterdefinition_XML('updatedfiles', 'Updated Files', 'number', '', '0');
 
-  $xml .= '</filterdefinitions>';
+class DefaultFilters implements PageSpecificFilters
+{
+  public function getFilterDefinitionsXML()
+  {
+    trigger_error(
+      'DefaultFilters::getFilterDefinitionsXML not implemented: subclass should override',
+      E_USER_WARNING);
+  }
 
-  return $xml;
+  public function getSqlField($field, &$sql_field)
+  {
+    trigger_error(
+      'DefaultFilters::getSqlField not implemented: subclass should override',
+      E_USER_WARNING);
+  }
+}
+
+
+class IndexPhpFilters extends DefaultFilters
+{
+  public function getFilterDefinitionsXML()
+  {
+    $xml = '';
+
+    $xml .= getFilterDefinitionXML('buildduration', 'Build Duration', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('builderrors', 'Build Errors', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('buildwarnings', 'Build Warnings', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
+    $xml .= getFilterDefinitionXML('buildstarttime', 'Build Time', 'date', '', '');
+    $xml .= getFilterDefinitionXML('buildtype', 'Build Type', 'string', '', 'Nightly');
+    $xml .= getFilterDefinitionXML('configureduration', 'Configure Duration', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('configureerrors', 'Configure Errors', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('configurewarnings', 'Configure Warnings', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('expected', 'Expected', 'bool', '', '');
+    $xml .= getFilterDefinitionXML('groupname', 'Group', 'string', '', 'Nightly');
+    $xml .= getFilterDefinitionXML('hascoverage', 'Has Coverage', 'bool', '', '');
+    $xml .= getFilterDefinitionXML('hasctestnotes', 'Has CTest Notes', 'bool', '', '');
+    $xml .= getFilterDefinitionXML('hasdynamicanalysis', 'Has Dynamic Analysis', 'bool', '', '');
+    $xml .= getFilterDefinitionXML('hasusernotes', 'Has User Notes', 'bool', '', '');
+    $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
+    $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
+    $xml .= getFilterDefinitionXML('buildgenerator', 'Submission Client', 'string', '', '2.6');
+    $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
+    $xml .= getFilterDefinitionXML('testsduration', 'Tests Duration', 'number', '', '', '0');
+    $xml .= getFilterDefinitionXML('testsfailed', 'Tests Failed', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('testsnotrun', 'Tests Not Run', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('testspassed', 'Tests Passed', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('testtimestatus', 'Tests Timing Failed', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('updateduration', 'Update Duration', 'number', '', '0');
+    //$xml .= getFilterDefinitionXML('updateerrors', 'Update Errors', 'number', '', '0');
+    //$xml .= getFilterDefinitionXML('updatewarnings', 'Update Warnings', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('updatedfiles', 'Updated Files', 'number', '', '0');
+
+    return $xml;
+  }
+
+  public function getSqlField($field, &$sql_field)
+  {
+  switch (strtolower($field))
+  {
+    case 'buildduration':
+    {
+      $sql_field = "ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)";
+    }
+    break;
+
+    case 'builderrors':
+    {
+      $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0'), IF((SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='0'), 0))";
+    }
+    break;
+
+    case 'buildgenerator':
+    {
+      $sql_field = 'b.generator';
+    }
+    break;
+
+    case 'buildname':
+    {
+      $sql_field = 'b.name';
+    }
+    break;
+
+    case 'buildstarttime':
+    {
+      $sql_field = 'b.starttime';
+    }
+    break;
+
+    case 'buildtype':
+    {
+      $sql_field = 'b.type';
+    }
+    break;
+
+    case 'buildwarnings':
+    {
+      $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1'), IF((SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='1'), 0))";
+    }
+    break;
+
+    case 'configureduration':
+    {
+      $sql_field = "(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM configure WHERE buildid=b.id)";
+    }
+    break;
+
+    case 'configureerrors':
+    {
+      $sql_field = "(SELECT SUM(status) FROM configure WHERE buildid=b.id AND status!='0')";
+    }
+    break;
+
+    case 'configurewarnings':
+    {
+      $sql_field = "(SELECT COUNT(buildid) FROM configureerror WHERE buildid=b.id AND type='1')";
+    }
+    break;
+
+    case 'expected':
+    {
+      $sql_field = "IF((SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid)>0,(SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid),0)";
+    }
+    break;
+
+    case 'groupname':
+    {
+      $sql_field = 'g.name';
+    }
+    break;
+
+    case 'hascoverage':
+    {
+      $sql_field = '(SELECT COUNT(*) FROM coveragesummary WHERE buildid=b.id)';
+    }
+    break;
+
+    case 'hasctestnotes':
+    {
+      $sql_field = '(SELECT COUNT(*) FROM build2note WHERE buildid=b.id)';
+    }
+    break;
+
+    case 'hasdynamicanalysis':
+    {
+      $sql_field = '(SELECT COUNT(*) FROM dynamicanalysis WHERE buildid=b.id)';
+    }
+    break;
+
+    case 'hasusernotes':
+    {
+      $sql_field = '(SELECT COUNT(*) FROM buildnote WHERE buildid=b.id)';
+    }
+    break;
+
+    case 'label':
+    {
+      $sql_field = "(SELECT text FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
+    }
+    break;
+
+    case 'site':
+    {
+      $sql_field = "(SELECT name FROM site WHERE site.id=b.siteid)";
+    }
+    break;
+
+    case 'subproject':
+    {
+      $sql_field = "(SELECT name FROM subproject, subproject2build WHERE subproject2build.subprojectid=subproject.id AND subproject2build.buildid=b.id)";
+    }
+    break;
+
+    case 'testsfailed':
+    {
+      $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='failed')";
+    }
+    break;
+
+    case 'testsnotrun':
+    {
+      $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='notrun')";
+    }
+    break;
+
+    case 'testspassed':
+    {
+      $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='passed')";
+    }
+    break;
+
+    case 'testsduration':
+    {
+      $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT ROUND(SUM(time)/60.0,1) FROM build2test WHERE buildid=b.id),0)";
+    }
+    break;
+
+    case 'testtimestatus':
+    {
+      $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)";
+    }
+    break;
+
+    case 'updatedfiles':
+    {
+      $sql_field = "(SELECT COUNT(buildid) FROM updatefile WHERE buildid=b.id)";
+    }
+    break;
+
+    case 'updateduration':
+    {
+      $sql_field = "IF((SELECT COUNT(*) FROM buildupdate WHERE buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM buildupdate WHERE buildid=b.id),0)";
+    }
+    break;
+
+    case 'updateerrors':
+    {
+    // this one is pretty complicated... save it for later...
+    //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
+      add_log(
+        'warning: updateerrors field not implemented yet...',
+        'get_sql_field');
+    }
+    break;
+
+    case 'updatewarnings':
+    {
+    // this one is pretty complicated... save it for later...
+    //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
+      add_log(
+        'warning: updatewarnings field not implemented yet...',
+        'get_sql_field');
+    }
+    break;
+
+    default:
+      trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
+    break;
+  }
+  }
+}
+
+
+class ViewTestPhpFilters extends DefaultFilters
+{
+  public function getFilterDefinitionsXML()
+  {
+    $xml = '';
+
+    $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
+    $xml .= getFilterDefinitionXML('name', 'Name', 'string', '', '');
+    $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
+    $xml .= getFilterDefinitionXML('timestatus', 'Time Status', 'string', '', '');
+    $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
+
+    return $xml;
+  }
+
+  public function getSqlField($field, &$sql_field)
+  {
+  switch (strtolower($field))
+  {
+    case 'details':
+    {
+      $sql_field = "t.details";
+    }
+    break;
+
+    case 'name':
+    {
+      $sql_field = "t.name";
+    }
+    break;
+
+    case 'status':
+    {
+      $sql_field = "bt.status";
+    }
+    break;
+
+    case 'timestatus':
+    {
+      $sql_field = "bt.timestatus";
+    }
+    break;
+
+    case 'time':
+    {
+      $sql_field = "bt.time";
+    }
+    break;
+
+    default:
+      trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
+    break;
+  }
+  }
+}
+
+
+// Factory method to create page specific filters:
+//
+function createPageSpecificFilters($page_id)
+{
+  if ($page_id == 'index.php')
+  {
+    return new IndexPhpFilters();
+  }
+  else if ($page_id == 'viewTest.php')
+  {
+    return new ViewTestPhpFilters();
+  }
+
+  trigger_error('unknown $page_id value: ' . $page_id .
+    ' Add a new subclass of DefaultFilters for ' . $page_id, E_USER_WARNING);
+
+  return new DefaultFilters();
 }
 
 
@@ -79,15 +368,20 @@ function filterdata_XML($filterdata)
   $debug = $filterdata['debug']; // '0' or '1' -- shows debug info in HTML output
   $filtercombine = $filterdata['filtercombine']; // 'OR' or 'AND'
   $filters = $filterdata['filters']; // an array
+  $pageId = $filterdata['pageId']; // id of the "calling page"...
+  $pageSpecificFilters = $filterdata['pageSpecificFilters']; // an instance of PageSpecificFilters
   $showfilters = $filterdata['showfilters']; // 0 or 1
 
   $xml = '<filterdata>';
   $xml .= add_XML_value('debug', $debug);
   $xml .= add_XML_value('filtercombine', $filtercombine);
+  $xml .= add_XML_value('pageId', $pageId);
   $xml .= add_XML_value('script', $_SERVER['SCRIPT_NAME']);
   $xml .= add_XML_value('showfilters', $showfilters);
 
-  $xml .= filterdefinitions_XML();
+  $xml .= '<filterdefinitions>';
+  $xml .= $pageSpecificFilters->getFilterDefinitionsXML();
+  $xml .= '</filterdefinitions>';
 
   $xml .= '<filters>';
 
@@ -124,15 +418,183 @@ function get_sql_date_value($value)
 }
 
 
-// Analyze parameter values given in the URL _REQUEST and fill up a php $filterdata structure
-// with them.
+// Translate "comparison operation" and "compare-to value" to SQL equivalents:
 //
-// http://arrakis.kitwarein.com/CDash/filters2.php?project=CMake&filtercount=1&showfilters=1&field1=buildname&compare1=65&value1=Linux
-//
-function get_filterdata_from_request()
+function get_sql_compare_and_value($compare, $value, &$sql_compare, &$sql_value)
 {
-  $echo_on = 0; // set to 1 for debugging only
+  switch ($compare)
+  {
+    case 0:
+      // bool do not compare
+      // explicitly skip adding a clause when $compare == 0 ( "--" in the GUI )
+    break;
 
+    case 1:
+    {
+      // bool is true
+      $sql_compare = '!=';
+      $sql_value = "0";
+    }
+    break;
+
+    case 2:
+    {
+      // bool is false
+      $sql_compare = '=';
+      $sql_value = "0";
+    }
+    break;
+
+    case 40:
+      // number do not compare
+      // explicitly skip adding a clause when $compare == 40 ( "--" in the GUI )
+    break;
+
+    case 41:
+    {
+      // number is equal
+      $sql_compare = '=';
+      $sql_value = "'$value'";
+    }
+    break;
+
+    case 42:
+    {
+      // number is not equal
+      $sql_compare = '!=';
+      $sql_value = "'$value'";
+    }
+    break;
+
+    case 43:
+    {
+      // number is greater than
+      $sql_compare = '>';
+      $sql_value = "'$value'";
+    }
+    break;
+
+    case 44:
+    {
+      // number is less than
+      $sql_compare = '<';
+      $sql_value = "'$value'";
+    }
+    break;
+
+    case 60:
+      // string do not compare
+      // explicitly skip adding a clause when $compare == 60 ( "--" in the GUI )
+    break;
+
+    case 61:
+    {
+      // string is equal
+      $sql_compare = '=';
+      $sql_value = "'$value'";
+    }
+    break;
+
+    case 62:
+    {
+      // string is not equal
+      $sql_compare = '!=';
+      $sql_value = "'$value'";
+    }
+    break;
+
+    case 63:
+    {
+      // string contains
+      $sql_compare = 'LIKE';
+      $sql_value = "'%$value%'";
+    }
+    break;
+
+    case 64:
+    {
+      // string does not contain
+      $sql_compare = 'NOT LIKE';
+      $sql_value = "'%$value%'";
+    }
+    break;
+
+    case 65:
+    {
+      // string starts with
+      $sql_compare = 'LIKE';
+      $sql_value = "'$value%'";
+    }
+    break;
+
+    case 66:
+    {
+      // string ends with
+      $sql_compare = 'LIKE';
+      $sql_value = "'%$value'";
+    }
+    break;
+
+    case 80:
+      // date do not compare
+      // explicitly skip adding a clause when $compare == 80 ( "--" in the GUI )
+    break;
+
+    case 81:
+    {
+      // date is equal
+      $sql_compare = '=';
+      $sql_value = get_sql_date_value($value);
+    }
+    break;
+
+    case 82:
+    {
+      // date is not equal
+      $sql_compare = '!=';
+      $sql_value = get_sql_date_value($value);
+    }
+    break;
+
+    case 83:
+    {
+      // date is after
+      $sql_compare = '>';
+      $sql_value = get_sql_date_value($value);
+    }
+    break;
+
+    case 84:
+    {
+      // date is before
+      $sql_compare = '<';
+      $sql_value = get_sql_date_value($value);
+    }
+    break;
+
+    default:
+      trigger_error('unknown $compare value: ' . $compare, E_USER_WARNING);
+    break;
+  }
+}
+
+
+// Analyze parameter values given in the URL _REQUEST and fill up a php
+// $filterdata structure with them.
+//
+// For example, an input URL may look like this:
+// http://www.cdash.org/CDash/index.php?project=CMake&filtercount=1
+//   &showfilters=1&field1=buildname/string&compare1=63&value1=linux
+//
+// The $page_id parameter is used to decide what set of filter
+// definitions to put in the returned $filterdata array. The default behavior
+// is to use the calling php script name as the id. Known $page_id
+// values include:
+//   index.php
+//   viewTest.php
+//
+function get_filterdata_from_request($page_id = '')
+{
   $sql = '';
   $xml = '';
   $clauses = 0;
@@ -142,25 +604,23 @@ function get_filterdata_from_request()
   $remove_filter = 0;
   $filterdata['hasdateclause'] = 0;
 
+  if (empty($page_id))
+  {
+    $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
+    $page_id = substr($_SERVER['SCRIPT_NAME'], $pos+1);
+  }
+  $filterdata['pageId'] = $page_id;
+
+  $pageSpecificFilters = createPageSpecificFilters($page_id);
+  $filterdata['pageSpecificFilters'] = $pageSpecificFilters;
+
   @$filtercount = $_REQUEST['filtercount'];
   @$showfilters = $_REQUEST['showfilters'];
 
   @$clear = $_REQUEST['clear'];
   if ($clear == 'Clear')
   {
-    if ($echo_on == 1)
-    {
-      echo 'info: Clear clicked... forcing $filtercount to 0<br/>';
-    }
-
     $filtercount = 0;
-  }
-  else
-  {
-    if ($echo_on == 1)
-    {
-      echo 'info: using $filtercount=' . $filtercount . '<br/>';
-    }
   }
 
   @$filtercombine = $_REQUEST['filtercombine'];
@@ -184,6 +644,7 @@ function get_filterdata_from_request()
       $offset++;
       continue;
       }
+
     $fieldinfo = $_REQUEST['field'.$i];
     $compare = $_REQUEST['compare'.$i];
     $value = $_REQUEST['value'.$i];
@@ -196,389 +657,25 @@ function get_filterdata_from_request()
 
     if ($add == '+')
     {
-      //echo 'add after filter ' . $i . '<br/>';
       $add_filter = $i;
     }
     else if ($remove == '-')
     {
-      //echo 'remove filter ' . $i . '<br/>';
       $remove_filter = $i;
     }
-
 
     $sql_field = '';
     $sql_compare = '';
     $sql_value = '';
 
+    get_sql_compare_and_value($compare, $value, &$sql_compare, &$sql_value);
 
-    // Translate "comparison operation" and "compare-to
-    // value" to SQL equivalents:
-    //
-    switch ($compare)
+    $pageSpecificFilters->getSqlField($field, &$sql_field);
+
+    if ($fieldtype == 'date')
     {
-      case 0:
-        // bool do not compare
-        // explicitly skip adding a clause when $compare == 0 ( "--" in the GUI )
-      break;
-
-      case 1:
-      {
-        // bool is true
-        $sql_compare = '!=';
-        $sql_value = "0";
-      }
-      break;
-
-      case 2:
-      {
-        // bool is false
-        $sql_compare = '=';
-        $sql_value = "0";
-      }
-      break;
-
-      case 40:
-        // number do not compare
-        // explicitly skip adding a clause when $compare == 40 ( "--" in the GUI )
-      break;
-
-      case 41:
-      {
-        // number is equal
-        $sql_compare = '=';
-        $sql_value = "'$value'";
-      }
-      break;
-
-      case 42:
-      {
-        // number is not equal
-        $sql_compare = '!=';
-        $sql_value = "'$value'";
-      }
-      break;
-
-      case 43:
-      {
-        // number is greater than
-        $sql_compare = '>';
-        $sql_value = "'$value'";
-      }
-      break;
-
-      case 44:
-      {
-        // number is less than
-        $sql_compare = '<';
-        $sql_value = "'$value'";
-      }
-      break;
-
-      case 60:
-        // string do not compare
-        // explicitly skip adding a clause when $compare == 60 ( "--" in the GUI )
-      break;
-
-      case 61:
-      {
-        // string is equal
-        $sql_compare = '=';
-        $sql_value = "'$value'";
-      }
-      break;
-
-      case 62:
-      {
-        // string is not equal
-        $sql_compare = '!=';
-        $sql_value = "'$value'";
-      }
-      break;
-
-      case 63:
-      {
-        // string contains
-        $sql_compare = 'LIKE';
-        $sql_value = "'%$value%'";
-      }
-      break;
-
-      case 64:
-      {
-        // string does not contain
-        $sql_compare = 'NOT LIKE';
-        $sql_value = "'%$value%'";
-      }
-      break;
-
-      case 65:
-      {
-        // string starts with
-        $sql_compare = 'LIKE';
-        $sql_value = "'$value%'";
-      }
-      break;
-
-      case 66:
-      {
-        // string ends with
-        $sql_compare = 'LIKE';
-        $sql_value = "'%$value'";
-      }
-      break;
-
-      case 80:
-        // date do not compare
-        // explicitly skip adding a clause when $compare == 80 ( "--" in the GUI )
-      break;
-
-      case 81:
-      {
-        // date is equal
-        $sql_compare = '=';
-        $sql_value = get_sql_date_value($value);
-      }
-      break;
-
-      case 82:
-      {
-        // date is not equal
-        $sql_compare = '!=';
-        $sql_value = get_sql_date_value($value);
-      }
-      break;
-
-      case 83:
-      {
-        // date is after
-        $sql_compare = '>';
-        $sql_value = get_sql_date_value($value);
-      }
-      break;
-
-      case 84:
-      {
-        // date is before
-        $sql_compare = '<';
-        $sql_value = get_sql_date_value($value);
-      }
-      break;
-
-      default:
-        // warn php caller : unknown $compare value...
-
-        add_log(
-          'warning: unknown $compare value: ' . $compare,
-          'get_filterdata_from_request');
-
-        if ($echo_on == 1)
-        {
-          echo 'warning: unknown $compare value: ' . $compare . '<br/>';
-        }
-      break;
+      $filterdata['hasdateclause'] = 1;
     }
-
-
-//  SELECT b.id,b.siteid,b.name,b.type,b.generator,b.starttime,
-//         b.endtime,b.submittime,g.name as groupname,gp.position,g.id as groupid
-//         FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp
-
-
-    // Translate field name to SQL field name:
-    //
-    switch (strtolower($field))
-    {
-      case 'buildduration':
-      {
-        $sql_field = "ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)";
-      }
-      break;
-
-      case 'builderrors':
-      {
-        $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0'), IF((SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='0'), 0))";
-      }
-      break;
-
-      case 'buildgenerator':
-      {
-        $sql_field = 'b.generator';
-      }
-      break;
-
-      case 'buildname':
-      {
-        $sql_field = 'b.name';
-      }
-      break;
-
-      case 'buildstarttime':
-      {
-        $sql_field = 'b.starttime';
-        $filterdata['hasdateclause'] = 1;
-      }
-      break;
-
-      case 'buildtype':
-      {
-        $sql_field = 'b.type';
-      }
-      break;
-
-      case 'buildwarnings':
-      {
-        $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1'), IF((SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='1'), 0))";
-      }
-      break;
-
-      case 'configureduration':
-      {
-        $sql_field = "(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM configure WHERE buildid=b.id)";
-      }
-      break;
-
-      case 'configureerrors':
-      {
-        $sql_field = "(SELECT SUM(status) FROM configure WHERE buildid=b.id AND status!='0')";
-      }
-      break;
-
-      case 'configurewarnings':
-      {
-        $sql_field = "(SELECT COUNT(buildid) FROM configureerror WHERE buildid=b.id AND type='1')";
-      }
-      break;
-
-      case 'expected':
-      {
-        $sql_field = "IF((SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid)>0,(SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid),0)";
-      }
-      break;
-
-      case 'groupname':
-      {
-        $sql_field = 'g.name';
-      }
-      break;
-
-      case 'hascoverage':
-      {
-        $sql_field = '(SELECT COUNT(*) FROM coveragesummary WHERE buildid=b.id)';
-      }
-      break;
-
-      case 'hasctestnotes':
-      {
-        $sql_field = '(SELECT COUNT(*) FROM build2note WHERE buildid=b.id)';
-      }
-      break;
-
-      case 'hasdynamicanalysis':
-      {
-        $sql_field = '(SELECT COUNT(*) FROM dynamicanalysis WHERE buildid=b.id)';
-      }
-      break;
-
-      case 'hasusernotes':
-      {
-        $sql_field = '(SELECT COUNT(*) FROM buildnote WHERE buildid=b.id)';
-      }
-      break;
-
-      case 'label':
-      {
-        $sql_field = "(SELECT text FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
-      }
-      break;
-
-      case 'site':
-      {
-        $sql_field = "(SELECT name FROM site WHERE site.id=b.siteid)";
-      }
-      break;
-
-      case 'subproject':
-      {
-        $sql_field = "(SELECT name FROM subproject, subproject2build WHERE subproject2build.subprojectid=subproject.id AND subproject2build.buildid=b.id)";
-      }
-      break;
-
-      case 'testsfailed':
-      {
-        $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='failed')";
-      }
-      break;
-
-      case 'testsnotrun':
-      {
-        $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='notrun')";
-      }
-      break;
-
-      case 'testspassed':
-      {
-        $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='passed')";
-      }
-      break;
-
-      case 'testsduration':
-      {
-        $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT ROUND(SUM(time)/60.0,1) FROM build2test WHERE buildid=b.id),0)";
-      }
-      break;
-
-      case 'testtimestatus':
-      {
-        $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)";
-      }
-      break;
-
-      case 'updatedfiles':
-      {
-        $sql_field = "(SELECT COUNT(buildid) FROM updatefile WHERE buildid=b.id)";
-      }
-      break;
-
-      case 'updateduration':
-      {
-        $sql_field = "IF((SELECT COUNT(*) FROM buildupdate WHERE buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM buildupdate WHERE buildid=b.id),0)";
-      }
-      break;
-
-      case 'updateerrors':
-      {
-      // this one is pretty complicated... save it for later...
-      //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
-        add_log(
-          'warning: updateerrors field not implemented yet...',
-          'get_filterdata_from_request');
-      }
-      break;
-
-      case 'updatewarnings':
-      {
-      // this one is pretty complicated... save it for later...
-      //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
-        add_log(
-          'warning: updatewarnings field not implemented yet...',
-          'get_filterdata_from_request');
-      }
-      break;
-
-      default:
-        // warn php caller : unknown $field value...
-
-        add_log(
-          'warning: unknown $field value: ' . $field,
-          'get_filterdata_from_request');
-
-        if ($echo_on == 1)
-        {
-          echo 'warning: unknown $field value: ' . $field . '<br/>';
-        }
-      break;
-    }
-
 
     if ($sql_field != '' && $sql_compare != '')
     {
@@ -609,12 +706,6 @@ function get_filterdata_from_request()
     $sql .= ')';
   }
 
-  if ($echo_on == 1)
-  {
-    echo 'filter sql: ' . $sql . '<br/>';
-    echo '<br/>';
-  }
-
   // If no filters were passed in as parameters,
   // then add one default filter so that the user sees
   // somewhere to enter filter queries in the GUI:
@@ -633,8 +724,6 @@ function get_filterdata_from_request()
   //
   if ($add_filter != 0)
   {
-    //echo 'adding filter after '.$add_filter.'<br/>';
-
     $idx = $add_filter-1;
 
     // Add a copy of the existing filter we are adding after:
@@ -648,13 +737,12 @@ function get_filterdata_from_request()
 
   if ($remove_filter != 0)
   {
-    //echo 'removing filter '.$remove_filter.'<br/>';
-
     $idx = $remove_filter-1;
 
     array_splice($filters, $idx, 1);
       //
-      // with $length=1, and no $replacement, array_splice is a "delete array element" call...
+      // with $length=1, and no $replacement, array_splice is a "delete array
+      // element" call...
   }
 
   // Fill up filterdata and return it:
