@@ -691,6 +691,7 @@ function get_filterdata_from_request($page_id = '')
 
     $filters[] = array(
       'field' => $field,
+      'fieldtype' => $fieldtype,
       'compare' => $compare,
       'value' => $value,
     );
@@ -714,6 +715,7 @@ function get_filterdata_from_request($page_id = '')
   {
     $filters[] = array(
       'field' => 'site',
+      'fieldtype' => 'string',
       'compare' => 63,
       'value' => '',
     );

@@ -226,7 +226,7 @@ function should_collapse_rows($row1, $row2)
 }
 
 
-function get_multiple_builds_hyperlink($build_row)
+function get_multiple_builds_hyperlink($build_row, $filterdata)
 {
   //
   // This function is closely related to the javascript function
@@ -259,12 +259,51 @@ function get_multiple_builds_hyperlink($build_row)
   $minstarttime = date(FMT_DATETIMETZ, strtotime($build_row['starttime'].' UTC-1 second'));
   $maxstarttime = date(FMT_DATETIMETZ, strtotime($build_row['maxstarttime'].' UTC+1 second'));
 
+  // Gather up string repersenting existing filters so that we simply apply
+  // some extra filters for buildname, site and buildstarttime to get the page
+  // that shows the builds the user expects. (Match his existing filter
+  // criteria in addition to adding our extra fields here. Do not allow user
+  // to override the fields we need to specify...)
+  //
+  // This can only be done effectively with the current filters implementation
+  // when the filtercombine parameter is 'and' -- hence the != 'or' test...
+  // (Because to specify our 4 filter parameters, we need to use 'and'...)
+  //
+  $existing_filter_params = '';
+  $n = 4;
+  if (strtolower($filterdata['filtercombine']) != 'or')
+  {
+    $count = count($filterdata['filters']);
+    for ($i = 0; $i<$count; $i++)
+    {
+      $filter = $filterdata['filters'][$i];
+
+      if ($filter['field'] != 'buildname' &&
+          $filter['field'] != 'site' &&
+          $filter['field'] != 'buildstarttime' &&
+          $filter['compare'] != 0 &&
+          $filter['compare'] != 20 &&
+          $filter['compare'] != 40 &&
+          $filter['compare'] != 60 &&
+          $filter['compare'] != 80)
+      {
+        $n++;
+
+        $existing_filter_params .= 
+          '&field' . $n . '=' . $filter['field'] . '/' . $filter['fieldtype'] .
+          '&compare' . $n . '=' . $filter['compare'] .
+          '&value' . $n . '=' . htmlspecialchars($filter['value']);
+      }
+    }
+  }
+
   return $baseurl .
-    '&filtercount=4&showfilters=1&filtercombine=and' .
+    '&filtercount=' . $n . '&showfilters=1&filtercombine=and' .
     '&field1=buildname/string&compare1=61&value1=' . htmlspecialchars($build_row['name']) .
     '&field2=site/string&compare2=61&value2=' . htmlspecialchars($build_row['sitename']) .
     '&field3=buildstarttime/date&compare3=83&value3=' . htmlspecialchars($minstarttime) .
     '&field4=buildstarttime/date&compare4=84&value4=' . htmlspecialchars($maxstarttime) .
+    $existing_filter_params .
     '&collapse=0';
 }
 
@@ -1071,7 +1110,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
     if ($countbuildids>1)
       {
-      $xml .= add_XML_value("multiplebuildshyperlink", get_multiple_builds_hyperlink($build_array));
+      $xml .= add_XML_value("multiplebuildshyperlink", get_multiple_builds_hyperlink($build_array, $filterdata));
       }
 
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
