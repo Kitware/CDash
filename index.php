@@ -1667,20 +1667,20 @@ function generate_subprojects_dashboard_XML($projectid,$date)
 
 // Check if we can connect to the database
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-if(!$db)
+if(!$db
+   || pdo_select_db("$CDASH_DB_NAME",$db) === FALSE
+   || pdo_query("SELECT id FROM ".qid("user")." LIMIT 1",$db) === FALSE)
   {
   // redirect to the install.php script
-  echo "<script language=\"javascript\">window.location='install.php'</script>";
-  return;
-  }
-if(pdo_select_db("$CDASH_DB_NAME",$db) === FALSE)
-  {
-  echo "<script language=\"javascript\">window.location='install.php'</script>";
-  return;
-  }
-if(pdo_query("SELECT id FROM ".qid("user")." LIMIT 1",$db) === FALSE)
-  {
-  echo "<script language=\"javascript\">window.location='install.php'</script>";
+  if($CDASH_PRODUCTION_MODE)
+    {
+    echo "CDash cannot connect to the database.";
+    return;
+    }
+  else  
+    {
+    echo "<script language=\"javascript\">window.location='install.php'</script>";
+    }
   return;
   }
 

@@ -33,6 +33,12 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 require_once("cdash/common.php"); 
 require_once("cdash/version.php"); 
+ 
+if($CDASH_PRODUCTION_MODE)
+  {
+  echo "CDash is in production mode. Install cannot be accessed. Change the variable in your config.php if you want to access the installation.";
+  return;
+  }
 
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
