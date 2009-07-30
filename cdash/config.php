@@ -25,6 +25,9 @@ $CDASH_DB_PASS = '';
 $CDASH_DB_NAME = 'cdash';
 // Database type (empty means mysql)
 $CDASH_DB_TYPE = 'mysql';
+// Turn this variable ON when CDash has been installed
+// Prevents from running the install.php again
+$CDASH_PRODUCTION_MODE = false;
 // Default from email
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
