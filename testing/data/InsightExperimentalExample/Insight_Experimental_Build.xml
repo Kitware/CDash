@@ -23,16 +23,16 @@
 <Build>
   <StartDateTime>Feb 23 02:10 EST</StartDateTime>
   <StartBuildTime>1235373038</StartBuildTime>
-<BuildCommand>/usr/bin/make -i -j4</BuildCommand>
+  <BuildCommand>\usr\bin\make -i -j4</BuildCommand>
   <Warning>
     <BuildLogLine>70</BuildLogLine>
-    <Text>/.../Sandbox/Testing/itkDescoteauxSheetnessImageFilterTest2.cxx:187: warning: converting to &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;main::InputPixelType&lt;-30&gt;&lt;-128&gt;&lt;-103&gt; from &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;double&lt;-30&gt;&lt;-128&gt;&lt;-103&gt;
+    <Text>\...\Sandbox\Testing\itkDescoteauxSheetnessImageFilterTest2.cxx:187: warning: converting to &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;main::InputPixelType&lt;-30&gt;&lt;-128&gt;&lt;-103&gt; from &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;double&lt;-30&gt;&lt;-128&gt;&lt;-103&gt;
 </Text>
-    <SourceFile>Testing/itkDescoteauxSheetnessImageFilterTest2.cxx</SourceFile>
+    <SourceFile>Testing\itkDescoteauxSheetnessImageFilterTest2.cxx</SourceFile>
     <SourceLineNumber>187</SourceLineNumber>
     <PreContext>[ 22%] Built target itkDescoteauxSheetnessFeatureGeneratorMultiScaleTest1
 Scanning dependencies of target itkDescoteauxSheetnessImageFilterTest2
-[ 23%] Building CXX object Testing/CMakeFiles/itkDescoteauxSheetnessImageFilterTest2.dir/itkDescoteauxSheetnessImageFilterTest2.cxx.o
+[ 23%] Building CXX object Testing\CMakeFiles\itkDescoteauxSheetnessImageFilterTest2.dir\itkDescoteauxSheetnessImageFilterTest2.cxx.o
 Scanning dependencies of target itkFeatureGeneratorTest1
 [ 25%] Building CXX object Testing/CMakeFiles/itkFeatureGeneratorTest1.dir/itkFeatureGeneratorTest1.cxx.o
 /.../Sandbox/Testing/itkDescoteauxSheetnessImageFilterTest2.cxx: In function &lt;-30&gt;&lt;-128&gt;&lt;-104&gt;int main(int, char**)&lt;-30&gt;&lt;-128&gt;&lt;-103&gt;:
