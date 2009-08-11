@@ -660,7 +660,7 @@ class SubProject
     $project_array = pdo_fetch_array($project);
     if($project_array[0]>0)
       {
-      echo "Dependency already exists";
+      //echo "Dependency already exists";
       return false;
       }
     
