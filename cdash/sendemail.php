@@ -44,7 +44,7 @@ function checkEmailPreferences($emailcategory,$errors)
 }
 
 /** Given a user check if we should send an email based on labels */
-function checkEmailLabel($projectid, $userid, $buildid)
+function checkEmailLabel($projectid, $userid, $buildid, $errors)
 {
   include_once("models/labelemail.php");
   include_once("models/build.php");
@@ -60,7 +60,31 @@ function checkEmailLabel($projectid, $userid, $buildid)
   
   $Build = new Build();
   $Build->Id = $buildid;
-  $buildlabels = $Build->GetLabels();
+  
+  $labelarray = array();
+  
+  if($errors['update_errors']>0)
+    {
+    $labelarray['update']['errors']=1;
+    }
+  if($errors['configure_errors']>0)
+    {
+    $labelarray['configure']['errors']=1;
+    }
+  if($errors['build_warnings']>0)
+    {
+    $labelarray['build']['warnings']=1;
+    }
+  if($errors['build_errors']>0)
+    {
+    $labelarray['build']['errors']=1;
+    }
+  if($errors['test_errors']>0)
+    {
+    $labelarray['test']['errors']=1;
+    }
+    
+  $buildlabels = $Build->GetLabels($labelarray);
   if(count(array_intersect($labels, $buildlabels))>0)
     {
     return true;
@@ -81,8 +105,8 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
 
   // Update errors
   $BuildUpdate = new BuildUpdate ();
-  $BuildUpdate ->BuildId = $buildid;
-  $errors['update_errors'] = $BuildUpdate ->GetNumberOfErrors();
+  $BuildUpdate->BuildId = $buildid;
+  $errors['update_errors'] = $BuildUpdate->GetNumberOfErrors();
 
   // Configure errors    
   $BuildConfigure = new BuildConfigure();
@@ -186,7 +210,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
       }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid))
+    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid, $errors))
       {
       continue;
       }
@@ -214,7 +238,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
       }
   
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid,$user_array['userid'],$buildid))
+    if(!checkEmailLabel($projectid,$user_array['userid'],$buildid, $errors))
       {
       continue;
       }
@@ -500,7 +524,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid, $errors))
       {
       continue;
       }
@@ -539,7 +563,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid))
+    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid, $errors))
       {
       continue;
       }
@@ -577,7 +601,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
        }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid, $errors))
       {
       continue;
       }   
@@ -790,10 +814,6 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   $User = new User();
   $User->Id = $userid;
   $email = $User->GetEmail();
-  
-  //echo $email."<br>";
-  //echo $title."<br>";
-  //echo $messagePlainText."<br>";
 
   // Send the email
   if(mail("$email", $title, $messagePlainText,
@@ -807,7 +827,7 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   else
     {
     add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
-    }  
+    }
 } // end send_email_to_user
 
 
@@ -866,11 +886,13 @@ function sendemail($handler,$projectid)
   
   $errors = check_email_errors($buildid,$Project->EmailTestTimingChanged,
                                $Project->TestTimeMaxStatus,!$Project->EmailRedundantFailures);
+      
   if(!$errors)
     {
     return;
     }
-
+  
+  
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
     {
     $sendEmail->BuildId = $Build->Id;
@@ -898,7 +920,7 @@ function sendemail($handler,$projectid)
     {
     $sendEmail->SendBuildError();
     }
-      
+  
   // Get the list of person who should get the email
   $userids = lookup_emails_to_send($errors, $buildid, $projectid,$Build->Type);
 
