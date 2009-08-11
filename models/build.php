@@ -1074,23 +1074,45 @@ class Build
     }
 
   /** Get all the labels for a given build */
-  function GetLabels()
+  function GetLabels($labelarray=array())
     {
     if(!$this->Id)
       {
       echo "Build GetLabels(): Id not set";
       return false;
+      }    
+    
+    $sql = "SELECT label.id as labelid FROM label WHERE 
+                         label.id IN (SELECT labelid AS id FROM label2build WHERE label2build.buildid=".qnum($this->Id).")";
+    
+    if(empty($labelarray) || isset($labelarray['test']['errors']))
+      {
+      $sql .= " OR label.id IN (SELECT labelid AS id FROM label2test WHERE label2test.buildid=".qnum($this->Id).")";  
       }
-
-    $labels = pdo_query("SELECT label.id as labelid FROM label WHERE 
-                         label.id IN (SELECT labelid AS id FROM label2build WHERE label2build.buildid=".qnum($this->Id).")
-                         OR label.id IN (SELECT labelid AS id FROM label2test WHERE label2test.buildid=".qnum($this->Id).")
-                         OR label.id IN (SELECT labelid AS id FROM label2coveragefile WHERE label2coveragefile.buildid=".qnum($this->Id).")
-                         OR label.id IN (SELECT labelid AS id FROM label2buildfailure,buildfailure 
-                            WHERE label2buildfailure.buildfailureid=buildfailure.id AND buildfailure.buildid=".qnum($this->Id).")
-                         OR label.id IN (SELECT labelid AS id FROM label2dynamicanalysis,dynamicanalysis 
-                            WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id AND dynamicanalysis.buildid=".qnum($this->Id).")
-                         ");           
+    if(empty($labelarray) || isset($labelarray['coverage']['errors']))
+      {
+      $sql .= " OR label.id IN (SELECT labelid AS id FROM label2coveragefile WHERE label2coveragefile.buildid=".qnum($this->Id).")";  
+      }
+    if(empty($labelarray) || isset($labelarray['build']['errors']))
+      {
+      $sql .= "  OR label.id IN (SELECT labelid AS id FROM label2buildfailure,buildfailure 
+                            WHERE label2buildfailure.buildfailureid=buildfailure.id AND buildfailure.type='0'
+                            AND buildfailure.buildid=".qnum($this->Id).")";  
+      }  
+    if(empty($labelarray) || isset($labelarray['build']['warnings']))
+      {
+      $sql .= "  OR label.id IN (SELECT labelid AS id FROM label2buildfailure,buildfailure 
+                            WHERE label2buildfailure.buildfailureid=buildfailure.id AND buildfailure.type='1'
+                            AND buildfailure.buildid=".qnum($this->Id).")";  
+      }  
+    if(empty($labelarray) || isset($labelarray['dynamicanalysis']['errors']))
+      {
+      $sql .= " OR label.id IN (SELECT labelid AS id FROM label2dynamicanalysis,dynamicanalysis 
+                            WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id AND dynamicanalysis.buildid=".qnum($this->Id).")";
+      }
+    
+    $labels = pdo_query($sql);
+      
     if(!$labels)
       {
       add_last_sql_error("Build GetLabels");
