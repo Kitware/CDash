@@ -81,7 +81,7 @@ function generate_XSLT($xml,$pageName,$only_in_local=false)
   // i.e. header, headerback, etc...
   // look if they are in the local directory, and set
   // an XML value accordingly
-  include("config.php");
+  include("cdash/config.php");
   if($CDASH_USE_LOCAL_DIRECTORY&&!$only_in_local)
     {
     $pos = strpos($xml,"</cdash>"); // this should be the last
@@ -178,7 +178,7 @@ function add_log($text,$function,$type=LOG_INFO)
     {
     return;
     }
-  include("config.php");
+  include("cdash/config.php");
   
   $error = "[".date(FMT_DATETIME)."]";
   // This is parsed by the testing
@@ -1134,7 +1134,7 @@ function remove_build($buildid)
     {
     return;
     }
-    
+
   pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderror WHERE buildid='$buildid'");
   
