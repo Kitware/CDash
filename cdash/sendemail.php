@@ -44,7 +44,7 @@ function checkEmailPreferences($emailcategory,$errors)
 }
 
 /** Given a user check if we should send an email based on labels */
-function checkEmailLabel($projectid, $userid, $buildid, $errors)
+function checkEmailLabel($projectid, $userid, $buildid, $emailcategory=62)
 {
   include_once("models/labelemail.php");
   include_once("models/build.php");
@@ -63,23 +63,23 @@ function checkEmailLabel($projectid, $userid, $buildid, $errors)
   
   $labelarray = array();
   
-  if($errors['update_errors']>0)
+  if(check_email_category("update",$emailcategory))
     {
     $labelarray['update']['errors']=1;
     }
-  if($errors['configure_errors']>0)
+  if(check_email_category("configure",$emailcategory))
     {
     $labelarray['configure']['errors']=1;
     }
-  if($errors['build_warnings']>0)
+  if(check_email_category("warning",$emailcategory))
     {
     $labelarray['build']['warnings']=1;
     }
-  if($errors['build_errors']>0)
+  if(check_email_category("error",$emailcategory))
     {
     $labelarray['build']['errors']=1;
     }
-  if($errors['test_errors']>0)
+  if(check_email_category("test",$emailcategory))
     {
     $labelarray['test']['errors']=1;
     }
@@ -210,7 +210,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
       }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid, $errors))
+    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid, $UserProject->EmailCategory))
       {
       continue;
       }
@@ -238,7 +238,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
       }
   
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid,$user_array['userid'],$buildid, $errors))
+    if(!checkEmailLabel($projectid,$user_array['userid'],$buildid, $user_array["emailcategory"]))
       {
       continue;
       }
@@ -524,7 +524,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid, $user_array["id"], $buildid, $errors))
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid, $user_array["emailcategory"]))
       {
       continue;
       }
@@ -563,7 +563,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid, $errors))
+    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid, $UserProject->EmailCategory))
       {
       continue;
       }
@@ -601,7 +601,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
        }
     
     // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid, $user_array["id"], $buildid, $errors))
+    if(!checkEmailLabel($projectid, $user_array["id"], $buildid))
       {
       continue;
       }   
@@ -649,17 +649,27 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       }
     
     $messagePlainText .= "\n-CDash on ".$serverName."\n";
-      
-    // Send the email
-    if(mail("$summaryEmail", $title, $messagePlainText,
-         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+    
+    // If this is the testing
+    if($CDASH_TESTING_MODE)
       {
-      add_log("email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
-      return;
+      add_log($summaryEmail,"TESTING: EMAIL",LOG_INFO);
+      add_log($title,"TESTING: EMAILTITLE",LOG_INFO);
+      add_log($messagePlainText,"TESTING: EMAILBODY",LOG_INFO);
       }
     else
       {
-      add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
+      // Send the email
+      if(mail("$summaryEmail", $title, $messagePlainText,
+           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+        {
+        add_log("email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
+        return;
+        }
+      else
+        {
+        add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
+        }
       }
     } // end $summaryEmail!=""
 }
@@ -815,19 +825,31 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   $User->Id = $userid;
   $email = $User->GetEmail();
 
-  // Send the email
-  if(mail("$email", $title, $messagePlainText,
-     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+  // If this is the testing
+  if($CDASH_TESTING_MODE)
     {
-    add_log("email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
-    
+    add_log($email,"TESTING: EMAIL",LOG_INFO);
+    add_log($title,"TESTING: EMAILTITLE",LOG_INFO);
+    add_log($messagePlainText,"TESTING: EMAILBODY",LOG_INFO);
     // Record that we have send the email
     set_email_sent($userid,$Build->Id,$emailtext);
     }
   else
     {
-    add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
-    }
+    // Send the email
+    if(mail("$email", $title, $messagePlainText,
+     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+      {
+      add_log("email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
+    
+      // Record that we have send the email
+      set_email_sent($userid,$Build->Id,$emailtext);
+      }
+    else
+      {
+      add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
+      }
+    } // end if testing
 } // end send_email_to_user
 
 
@@ -858,11 +880,21 @@ function sendemail($handler,$projectid)
     return;
     }
   
-  // Get the build id
-  $name = $handler->getBuildName();
-  $stamp = $handler->getBuildStamp();
-  $sitename = $handler->getSiteName();
-  $buildid = get_build_id($name,$stamp,$projectid,$sitename);
+  
+  // If the handler has a buildid (it should), we use it
+  if(isset($handler->BuildId) && $handler->BuildId>0)
+    {
+    $buildid = $handler->BuildId;
+    }
+  else
+    {
+    // Get the build id
+    $name = $handler->getBuildName();
+    $stamp = $handler->getBuildStamp();
+    $sitename = $handler->getSiteName();
+    $buildid = get_build_id($name,$stamp,$projectid,$sitename);
+    }
+    
   if($buildid<0)
     {
     return;
@@ -886,12 +918,11 @@ function sendemail($handler,$projectid)
   
   $errors = check_email_errors($buildid,$Project->EmailTestTimingChanged,
                                $Project->TestTimeMaxStatus,!$Project->EmailRedundantFailures);
-      
+  
   if(!$errors)
     {
     return;
     }
-  
   
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
     {
