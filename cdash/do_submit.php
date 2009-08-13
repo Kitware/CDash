@@ -75,10 +75,10 @@ function do_submit($filehandle, $projectid)
     include("local/submit.php");
     }
 
-// Parse the XML file
+  // Parse the XML file
   $handler = ctest_parse($filehandle,$projectid);
   
-// Send the emails if necessary
+  // Send the emails if necessary
   if($handler instanceof UpdateHandler ||
      $handler instanceof TestingHandler ||
      $handler instanceof BuildHandler ||
@@ -87,7 +87,7 @@ function do_submit($filehandle, $projectid)
     sendemail($handler, $projectid);
     }
   
-// Create the RSS feed
+  // Create the RSS feed
   CreateRSSFeed($projectid);
   fclose($filehandle);
 }
