@@ -653,9 +653,9 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     // If this is the testing
     if($CDASH_TESTING_MODE)
       {
-      add_log($summaryEmail,"TESTING: EMAIL",LOG_INFO);
-      add_log($title,"TESTING: EMAILTITLE",LOG_INFO);
-      add_log($messagePlainText,"TESTING: EMAILBODY",LOG_INFO);
+      add_log($summaryEmail,"TESTING: EMAIL",LOG_TESTING);
+      add_log($title,"TESTING: EMAILTITLE",LOG_TESTING);
+      add_log($messagePlainText,"TESTING: EMAILBODY",LOG_TESTING);
       }
     else
       {
@@ -828,9 +828,9 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   // If this is the testing
   if($CDASH_TESTING_MODE)
     {
-    add_log($email,"TESTING: EMAIL",LOG_INFO);
-    add_log($title,"TESTING: EMAILTITLE",LOG_INFO);
-    add_log($messagePlainText,"TESTING: EMAILBODY",LOG_INFO);
+    add_log($email,"TESTING: EMAIL",LOG_TESTING);
+    add_log($title,"TESTING: EMAILTITLE",LOG_TESTING);
+    add_log($messagePlainText,"TESTING: EMAILBODY",LOG_TESTING);
     // Record that we have send the email
     set_email_sent($userid,$Build->Id,$emailtext);
     }

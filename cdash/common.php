@@ -72,6 +72,7 @@ define("FMT_DATETIMESTD", "Y-m-d H:i:s");  // date and time standard
 define("FMT_DATETIME", "Y-m-d\TH:i:s");  // date and time
 define("FMT_DATETIMETZ", "Y-m-d\TH:i:s T");  // date and time with time zone
 define("FMT_DATETIMEMS", "Y-m-d\TH:i:s.u");  // date and time with milliseconds
+define("LOG_TESTING","log_testing");
   
 /** Do the XSLT translation and look in the local directory if the file
  *  doesn't exist */
@@ -180,13 +181,19 @@ function add_log($text,$function,$type=LOG_INFO)
     }
   include("cdash/config.php");
   
-  $error = "[".date(FMT_DATETIME)."]";
+  $error = "";
+  if($type != LOG_TESTING)
+    {
+    $error = "[".date(FMT_DATETIME)."]";
+    }
+    
   // This is parsed by the testing
   switch($type)
     {
     case LOG_INFO: $error.="[INFO]"; break;
     case LOG_WARNING: $error.="[WARNING]"; break;
     case LOG_ERR: $error.="[ERROR]"; break;
+    case LOG_TESTING: $error.="[TESTING]";break;
     }
   $error .= "(".$function."): ".$text."\n";  
   error_log($error,3,$CDASH_LOG_FILE);
