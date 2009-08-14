@@ -199,8 +199,8 @@ if($Submit)
     $Project->AddRepositories($CVSRepositories);
     
     /** Add the logo if any */
-    if(strlen($_FILES['logo']['tmp_name'])>0)
-        {
+    if(isset($_FILES['logo']) && strlen($_FILES['logo']['tmp_name'])>0)
+      {
       $handle = fopen($_FILES['logo']['tmp_name'],"r");
       $contents = 0;
       if($handle)
