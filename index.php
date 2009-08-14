@@ -416,7 +416,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
   // Menu definition
   $xml .= "<menu>";
-  if(!isset($date) || strlen($date)<8 || date(FMT_DATE, $currentstarttime)==date(FMT_DATE))
+  if(!has_next_date($date, $currentstarttime))
     {
     $xml .= add_XML_value("nonext","1");
     }
@@ -1561,7 +1561,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
 
   // Menu definition
   $xml .= "<menu>";
-  if(!isset($date) || strlen($date)<8 || date(FMT_DATE, $currentstarttime)==date(FMT_DATE))
+  if(!has_next_date($date, $currentstarttime))
     {
     $xml .= add_XML_value("nonext","1");
     }

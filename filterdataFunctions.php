@@ -35,6 +35,7 @@ function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
 
 interface PageSpecificFilters
 {
+  public function getDefaultFilter();
   public function getFilterDefinitionsXML();
   public function getSqlField($field, &$sql_field);
 }
@@ -42,6 +43,13 @@ interface PageSpecificFilters
 
 class DefaultFilters implements PageSpecificFilters
 {
+  public function getDefaultFilter()
+  {
+    trigger_error(
+      'DefaultFilters::getDefaultFilter not implemented: subclass should override',
+      E_USER_WARNING);
+  }
+
   public function getFilterDefinitionsXML()
   {
     trigger_error(
@@ -60,6 +68,16 @@ class DefaultFilters implements PageSpecificFilters
 
 class IndexPhpFilters extends DefaultFilters
 {
+  public function getDefaultFilter()
+  {
+    return array(
+      'field' => 'site',
+      'fieldtype' => 'string',
+      'compare' => 63,
+      'value' => '',
+    );
+  }
+
   public function getFilterDefinitionsXML()
   {
     $xml = '';
@@ -284,15 +302,106 @@ class IndexPhpFilters extends DefaultFilters
 }
 
 
+class QueryTestsPhpFilters extends DefaultFilters
+{
+  public function getDefaultFilter()
+  {
+    return array(
+      'field' => 'testname',
+      'fieldtype' => 'string',
+      'compare' => 63,
+      'value' => '',
+    );
+  }
+
+  public function getFilterDefinitionsXML()
+  {
+    $xml = '';
+
+    $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
+    $xml .= getFilterDefinitionXML('buildstarttime', 'Build Time', 'date', '', '');
+    $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
+    $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
+    $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
+    $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
+    $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
+
+    return $xml;
+  }
+
+  public function getSqlField($field, &$sql_field)
+  {
+  switch (strtolower($field))
+  {
+    case 'buildname':
+    {
+      $sql_field = "b.name";
+    }
+    break;
+
+    case 'buildstarttime':
+    {
+      $sql_field = "b.starttime";
+    }
+    break;
+
+    case 'details':
+    {
+      $sql_field = "test.details";
+    }
+    break;
+
+    case 'site':
+    {
+      $sql_field = "site.name";
+    }
+    break;
+
+    case 'status':
+    {
+      $sql_field = "build2test.status";
+    }
+    break;
+
+    case 'testname':
+    {
+      $sql_field = "test.name";
+    }
+    break;
+
+    case 'time':
+    {
+      $sql_field = "build2test.time";
+    }
+    break;
+
+    default:
+      trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
+    break;
+  }
+  }
+}
+
+
 class ViewTestPhpFilters extends DefaultFilters
 {
+  public function getDefaultFilter()
+  {
+    return array(
+      'field' => 'testname',
+      'fieldtype' => 'string',
+      'compare' => 63,
+      'value' => '',
+    );
+  }
+
   public function getFilterDefinitionsXML()
   {
     $xml = '';
 
     $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
-    $xml .= getFilterDefinitionXML('name', 'Name', 'string', '', '');
     $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
+    $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
     $xml .= getFilterDefinitionXML('timestatus', 'Time Status', 'string', '', '');
     $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
 
@@ -309,15 +418,15 @@ class ViewTestPhpFilters extends DefaultFilters
     }
     break;
 
-    case 'name':
-    {
-      $sql_field = "t.name";
-    }
-    break;
-
     case 'status':
     {
       $sql_field = "bt.status";
+    }
+    break;
+
+    case 'testname':
+    {
+      $sql_field = "t.name";
     }
     break;
 
@@ -345,19 +454,36 @@ class ViewTestPhpFilters extends DefaultFilters
 //
 function createPageSpecificFilters($page_id)
 {
-  if ($page_id == 'index.php')
+  switch ($page_id)
   {
-    return new IndexPhpFilters();
-  }
-  else if ($page_id == 'viewTest.php')
-  {
-    return new ViewTestPhpFilters();
-  }
+    case 'index.php':
+    {
+      return new IndexPhpFilters();
+    }
+    break;
 
-  trigger_error('unknown $page_id value: ' . $page_id .
-    ' Add a new subclass of DefaultFilters for ' . $page_id, E_USER_WARNING);
+    case 'queryTests.php':
+    {
+      return new QueryTestsPhpFilters();
+    }
+    break;
 
-  return new DefaultFilters();
+    case 'viewTest.php':
+    {
+      return new ViewTestPhpFilters();
+    }
+    break;
+
+    default:
+    {
+      trigger_error('unknown $page_id value: ' . $page_id .
+        ' Add a new subclass of DefaultFilters for ' . $page_id,
+        E_USER_WARNING);
+
+      return new DefaultFilters();
+    }
+    break;
+  }
 }
 
 
@@ -713,12 +839,7 @@ function get_filterdata_from_request($page_id = '')
   //
   if (0 == count($filters))
   {
-    $filters[] = array(
-      'field' => 'site',
-      'fieldtype' => 'string',
-      'compare' => 63,
-      'value' => '',
-    );
+    $filters[] = $pageSpecificFilters->getDefaultFilter();
   }
 
   // If adding or removing a filter, do it before saving the

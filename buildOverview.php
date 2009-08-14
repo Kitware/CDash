@@ -54,7 +54,7 @@ $nightlytime = $project_array["nightlytime"];
 list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
 $xml .= add_XML_value("previous","buildOverview.php?project=".$projectname."&date=".$previousdate);
-if($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE))
+if(has_next_date($date, $currentstarttime))
   {
   $xml .= add_XML_value("next","buildOverview.php?project=".$projectname."&date=".$nextdate);
   }

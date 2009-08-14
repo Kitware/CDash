@@ -128,7 +128,7 @@ $(document).ready(function() {
         });  
       });
     } 
-    
+
   if(nrows==4 && document.getElementById('showtesttimediv'))
     {
     $tabs.each(function(index) {          
@@ -196,7 +196,50 @@ $(document).ready(function() {
         });  
       });
     }
-    
+
+  // Initialize the queryTests tables
+  if($tabs.length==0)
+    {
+    $tabs = $("#queryTestsTable");
+    if (document.getElementById('showtesttimediv'))
+    {
+    $tabs.each(function(index) {
+        $(this).tablesorter({
+               headers: { 
+                   0: { sorter:'text'},
+                   1: { sorter:'buildname'},
+                   2: { sorter:'text'},
+                   3: { sorter:'buildname'},
+                   4: { sorter:'buildname'},
+                   5: { sorter:'digit'},
+                   6: { sorter:'text'},
+                   7: { sorter:'text'},
+               },
+             debug: false,
+             widgets: ['zebra'] 
+           });  
+         });
+    }
+    else
+    {
+    $tabs.each(function(index) {
+        $(this).tablesorter({
+               headers: { 
+                   0: { sorter:'text'},
+                   1: { sorter:'buildname'},
+                   2: { sorter:'text'},
+                   3: { sorter:'buildname'},
+                   4: { sorter:'digit'},
+                   5: { sorter:'text'},
+                   6: { sorter:'text'},
+               },
+             debug: false,
+             widgets: ['zebra'] 
+           });  
+         });
+    }
+    }
+
   // Initialize the userStatistics table
   if($tabs.length==0)
     {
@@ -314,8 +357,7 @@ $(document).ready(function() {
         $(this).trigger("sorton",[sortArray]);    
         }
       });
-    
-    
+
     // Initialize the coverage table 
     $tabs = $("#coveragetable");
     $tabs.each(function(index) {
@@ -352,4 +394,4 @@ $(document).ready(function() {
       });
     } // end indextable
 
-});   
+});

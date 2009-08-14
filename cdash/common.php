@@ -1579,6 +1579,15 @@ function get_dates($date,$nightlytime)
   return array($previousdate, $today, $nextdate, $date);
 }
 
+function has_next_date($date, $currentstarttime)
+{
+  return (
+    isset($date) &&
+    strlen($date)>=8 &&
+    date(FMT_DATE, $currentstarttime)<date(FMT_DATE)
+    );
+}
+
 /** Get the logo id */
 function getLogoID($projectid)
 {
