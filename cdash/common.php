@@ -1929,9 +1929,9 @@ function get_cdash_dashboard_xml($projectname, $date)
 }
 
 /** */
-function get_cdash_dashboard_xml_by_name($projectname, $dates)
+function get_cdash_dashboard_xml_by_name($projectname, $date)
 {
-  return get_cdash_dashboard_xml($projectname, $dates);
+  return get_cdash_dashboard_xml($projectname, $date);
 }
 
 function get_previous_revision($revision)
