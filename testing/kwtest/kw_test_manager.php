@@ -27,6 +27,19 @@ class TestManager
      $this->testDir = $dir;
   }
   
+  /** Delete the log file */
+  function removeLogAndBackupFiles($logfilename)
+    {
+    if (file_exists($logfilename))
+      {
+      unlink($logfilename);
+      }
+    $filenames = glob(dirname($logfilename)."/*.xml");
+    foreach($filenames as $filename)
+      {
+      unlink($filename);
+      }
+    }
 
   /**
      * run all the tests

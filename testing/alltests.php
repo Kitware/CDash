@@ -10,10 +10,12 @@ if(strcmp($CDASH_DB_NAME,'cdash4simpletest') != 0)
   {
   die("We cannot test cdash because test database is not cdash4simpletest\n");       
   }
+
+$logfilename = $cdashpath."/backup/cdash.log";
+  
 if(!$web_report)
   {
   /*--- for testing inside the console and send to cdash ---*/
-  $logfilename = $cdashpath."/backup/cdash.log";
   $cdashreporter = new CDashXmlReporter($configure);
   $manager       = new CDashTestManager();
   $manager->setCDashServer($configure['cdash']);
@@ -32,6 +34,7 @@ else
   {
   /*--- for testing inside our browser  ---*/
   $manager = new HtmlTestManager();
+  $manager->removeLogAndBackupFiles($logfilename);
   $manager->setTestDirectory(getcwd());
   $manager->setDatabase($db);
   $manager->runAllTests(new KWHtmlReporter());

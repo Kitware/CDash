@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-GCC-4.1.2-SERIAL_RELEASE"
+  BuildStamp="20090806-0600-Nightly"
+  Name="godel.sandia.gov"
+  Generator="ctest-2.7.20090311"
+  OSName="Linux"
+  Hostname="godel.sandia.gov"
+  OSRelease="2.6.18-92.el5"
+  OSVersion="#1 SMP Tue Apr 29 13:16:15 EDT 2008"
+  OSPlatform="x86_64"
+  Is64Bits="1"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="4096"
+  NumberOfLogicalCPU="8"
+  NumberOfPhysicalCPU="14"
+  TotalVirtualMemory="70001"
+  TotalPhysicalMemory="16045"
+  LogicalProcessorsPerPhysical="0"
+  ProcessorClockFrequency="2925.87"
+>
+<Subproject name="NOX">
+</Subproject>
+<Labels>
+  <Label>NOX</Label>
+</Labels>
+<Testing>
+  <StartDateTime>Aug 06 06:23 MDT</StartDateTime>
+  <StartTestTime>1249561409</StartTestTime>
+  <TestList>
+    <Test>./packages/nox/test/basic/NOX_PrintUtils</Test>
+    <Test>./packages/nox/test/basic/NOX_SharedObjectTemplate</Test>
+    <Test>./packages/nox/test/basic/NOX_FiniteValue</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1Dfem</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemScaled</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemScaledInexactTrustRegion</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemTransient</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemMLPreconditioner</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecReuse</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecRebuild</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecRecompute</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecPrecRebuild</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecPrecReuse</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackReuse</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackRecompute</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackRebuild</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemNonlinearCG</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemTensorBased</Test>
+    <Test>./packages/nox/test/epetra/1Dfem/NOX_1DfemWithModelEvaluator</Test>
+    <Test>./packages/nox/test/epetra/Brusselator/NOX_brusselator</Test>
+    <Test>./packages/nox/test/epetra/DS6.5.1/NOX_DS6_5_1</Test>
+    <Test>./packages/nox/test/epetra/DS6.5.1/NOX_DS6_5_1_TrustRegion</Test>
+    <Test>./packages/nox/test/epetra/FiniteDifferenceColoring/NOX_FiniteDifferenceColoring</Test>
+    <Test>./packages/nox/test/epetra/FiniteDifferenceColoring/NOX_FiniteDifferenceIsorropiaColoring</Test>
+    <Test>./packages/nox/test/epetra/NOX_Group/NOX_NOX_Epetra_Group</Test>
+    <Test>./packages/nox/test/epetra/NOX_NewTest/NOX_NOX_NewTest</Test>
+    <Test>./packages/nox/test/epetra/NOX_Operators/NOX_NOX_Operators</Test>
+    <Test>./packages/nox/test/epetra/NOX_Operators/NOX_BroydenOp</Test>
+    <Test>./packages/nox/test/epetra/NOX_Vector/NOX_Epetra_Vector</Test>
+    <Test>./packages/nox/test/epetra/NOX_Vector/NOX_Epetra_VectorSpace</Test>
+    <Test>./packages/nox/test/epetra/Thyra_2Dsim/NOX_Thyra_NonlinearSolver_NOX_2Dsim</Test>
+    <Test>./packages/nox/test/epetra/Thyra_2Dsim/NOX_Thyra_2Dsim</Test>
+    <Test>./packages/nox/test/epetra/LOCA_UnitTests/NOX_LOCA_HouseholderBorderedSolve</Test>
+    <Test>./packages/nox/test/epetra/LOCA_UnitTests/NOX_LOCA_HouseholderTransposeBorderedSolve</Test>
+    <Test>./packages/nox/test/epetra/LOCA_UnitTests/NOX_LOCA_TransposeSolve</Test>
+    <Test>./packages/nox/test/epetra/LOCA_UnitTests/NOX_LOCA_CompositeConstraint</Test>
+    <Test>./packages/nox/test/epetra/LOCA_UnitTests/NOX_LOCA_CompositeConstraintMVDX</Test>
+    <Test>./packages/nox/test/epetra/LOCA_UnitTests/NOX_LOCA_NaturalContResidualFills</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Tcubed/NOX_LOCA_Tcubed</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Tcubed/NOX_LOCA_TcubedConstraint</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Tcubed/NOX_LOCA_TcubedTP</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Pitchfork/NOX_LOCA_Pitchfork</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator/NOX_LOCA_Brusselator</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator/NOX_LOCA_BrusselatorHopf</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator_xyzt/NOX_LOCA_BrussXYZT_Ifpack</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator_xyzt/NOX_LOCA_BrussXYZT_Global</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator_xyzt/NOX_LOCA_BrussXYZT_Sequential</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator_xyzt/NOX_LOCA_BrussXYZT_SequentialIPS</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator_xyzt/NOX_LOCA_BrussXYZT_SequentialOPS</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator_xyzt/NOX_LOCA_BrussXYZT_Parallel</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator_xyzt/NOX_LOCA_BrussXYZT_BlockDiagonal</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Brusselator_xyzt/NOX_LOCA_BrussXYZT_bdsdt</Test>
+    <Test>./packages/nox/test/epetra/LOCA_EpetraExt_ModelEvaluator/NOX_LOCA_EpetraExt_ModelEvaluator_Test</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Thyra_ModelEvaluator/NOX_LOCA_Thyra_ModelEvaluator_Test</Test>
+    <Test>./packages/nox/test/epetra/LOCA_Thyra_ModelEvaluator/NOX_LOCA_Thyra_ModelEvaluator_TurningPoint_Test</Test>
+    <Test>./packages/nox/examples/epetra/NOX_1DFEMNonlinear/NOX_epetra_1DFEMNonlinear_Example</Test>
+    <Test>./packages/nox/examples/epetra/NOX_Sacado_FEApp/NOX_NOX_Sacado_FEApp_Brusselator_Example</Test>
+    <Test>./packages/nox/examples/epetra/LOCA_Tcubed/NOX_LOCA_Tcubed_Continuation_Example</Test>
+    <Test>./packages/nox/examples/epetra/LOCA_Tcubed/NOX_LOCA_Tcubed_TurningPoint_Example</Test>
+    <Test>./packages/nox/examples/epetra/LOCA_ContinuationManager/NOX_LOCA_ContinuationManager_Example</Test>
+    <Test>./packages/nox/examples/epetra/LOCA_ContinuationManager_xyzt/NOX_LOCA_ContinuationManager_XYZT_Example</Test>
+    <Test>./packages/nox/examples/epetra/LOCA_Sacado_FEApp/NOX_LOCA_Sacado_FEApp_Brusselator_Example</Test>
+    <Test>./packages/nox/examples/epetra/LOCA_Sacado_FEApp/NOX_LOCA_Sacado_FEApp_Bratu_Example</Test>
+  </TestList>
+  <Test Status="passed">
+    <Name>NOX_PrintUtils</Name>
+    <Path>./packages/nox/test/basic</Path>
+    <FullName>./packages/nox/test/basic/NOX_PrintUtils</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/basic/NOX_PrintUtils.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.023803</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/basic/NOX_PrintUtils.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test #1: ctor 1
+***************
+
+Building utils1 using ctor #1...Done!
+
+NOX::Utils Printing Object
+Output Information Level = 5
+My PID = 0
+Print Processor = 0
+Precision = 6
+
+Test #2: ctor 2 with plist
+**************************
+Building utils2 using ctor #2...Done!
+NOX::Utils Printing Object
+Output Information Level = 5
+My PID = 0
+Print Processor = 0
+Precision = 3
+
+Test #3: Testing copy ctor
+**************************
+Printing utils3 - should be copy of utils1
+NOX::Utils Printing Object
+Output Information Level = 5
+My PID = 0
+Print Processor = 0
+Precision = 6
+
+Test #4: Testing reset with plist
+*********************************
+Testing reset capability on utils3 - should be copy of utils2
+NOX::Utils Printing Object
+Output Information Level = 5
+My PID = 0
+Print Processor = 0
+Precision = 3
+
+Test #5: Testing the out() function
+***********************************
+Function out() works correctly
+
+Test #6: Testing the out(MsgType) function:
+******************************************
+Function out(MsgType) works correctly
+
+Test #7: Testing the pout() function:
+*************************************
+MyPID = 0  responded!
+
+Test #8: Testing the pout(MsgType) function:
+******************************************
+MyPID = 0  responded!
+Test #9: Testing the err() function
+***********************************
+Function err() works correctly
+MyPID = 0
+Test #10: Testing the perr() function:
+*************************************
+
+Test #11: Testing output to a file:
+******************************************
+  responded!
+Text output to file: Supercalifragilisticexpialidocious
+Text read from file: Supercalifragilisticexpialidocious
+File output works correctly!
+
+Test #12: ctor 2 with plist for Output Information
+**************************
+Building utils2 using ctor #2...Error Stream = Teuchos::RCP&lt;std::ostream&gt;{ptr=0x63d9b0,node=0x686b4a0,count=15}
+MyPID = 0
+Output Precision = 3
+Output Processor = 0
+Output Stream = Teuchos::RCP&lt;std::ostream&gt;{ptr=0x63d9b0,node=0x686b4a0,count=15}
+Output Information -&gt; 
+ Debug = 0   [default]
+ Details = 1
+ Error = 1
+ Inner Iteration = 0   [default]
+ Linear Solver Details = 0   [default]
+ Outer Iteration = 1
+ Outer Iteration StatusTest = 1
+ Parameters = 0   [default]
+ Stepper Details = 0   [default]
+ Stepper Iteration = 0   [default]
+ Stepper Parameters = 0   [default]
+ Test Details = 0   [default]
+ Warning = 0   [default]
+
+NOX::Utils Printing Object
+Output Information Level = 50
+My PID = 0
+Print Processor = 0
+Precision = 3
+
+Done!
+
+Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_SharedObjectTemplate</Name>
+    <Path>./packages/nox/test/basic</Path>
+    <FullName>./packages/nox/test/basic/NOX_SharedObjectTemplate</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/basic/NOX_SharedObjectTemplate.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.00670791</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/basic/NOX_SharedObjectTemplate.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_FiniteValue</Name>
+    <Path>./packages/nox/test/basic</Path>
+    <FullName>./packages/nox/test/basic/NOX_FiniteValue</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/basic/NOX_FiniteValue.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.00665808</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/basic/NOX_FiniteValue.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1Dfem</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1Dfem</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1Dfem.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.017328</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1Dfem.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+Status = 0
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemScaled</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemScaled</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemScaled.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.011543</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemScaled.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemScaledInexactTrustRegion</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemScaledInexactTrustRegion</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemScaledInexactTrustRegion.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.012325</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemScaledInexactTrustRegion.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemTransient</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemTransient</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemTransient.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0143869</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemTransient.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Time Step: 1,  Time: 0.1
+Time Step: 2,  Time: 0.2
+Time Step: 3,  Time: 0.3
+Time Step: 4,  Time: 0.4
+Time Step: 5,  Time: 0.5
+Time Step: 6,  Time: 0.6
+Time Step: 7,  Time: 0.7
+Time Step: 8,  Time: 0.8
+Time Step: 9,  Time: 0.9
+Time Step: 10,  Time: 1
+Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemMLPreconditioner</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemMLPreconditioner</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemMLPreconditioner.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0466089</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemMLPreconditioner.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemAztecSolverPrecReuse</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecReuse</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecReuse.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.011039</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecReuse.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemAztecSolverPrecRebuild</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecRebuild</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecRebuild.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.010922</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecRebuild.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemAztecSolverPrecRecompute</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecRecompute</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecRecompute.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.00945187</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecSolverPrecRecompute.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemAztecPrecRebuild</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecPrecRebuild</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecPrecRebuild.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.030617</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecPrecRebuild.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+Status = 0
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemAztecPrecReuse</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemAztecPrecReuse</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecPrecReuse.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0179651</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemAztecPrecReuse.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+Status = 0
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemIfpackReuse</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackReuse</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackReuse.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0165551</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackReuse.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+Status = 0
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemIfpackRecompute</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackRecompute</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackRecompute.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0310731</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackRecompute.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+Status = 0
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemIfpackRebuild</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackRebuild</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackRebuild.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.032721</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemIfpackRebuild.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+Status = 0
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemNonlinearCG</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemNonlinearCG</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemNonlinearCG.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0122299</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemNonlinearCG.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+Status = 0
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemTensorBased</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemTensorBased</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemTensorBased.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.021189</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemTensorBased.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+Status = 0
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_1DfemWithModelEvaluator</Name>
+    <Path>./packages/nox/test/epetra/1Dfem</Path>
+    <FullName>./packages/nox/test/epetra/1Dfem/NOX_1DfemWithModelEvaluator</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemWithModelEvaluator.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.016818</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/1Dfem/NOX_1DfemWithModelEvaluator.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_brusselator</Name>
+    <Path>./packages/nox/test/epetra/Brusselator</Path>
+    <FullName>./packages/nox/test/epetra/Brusselator/NOX_brusselator</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/Brusselator/NOX_brusselator.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.079994</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/Brusselator/NOX_brusselator.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_DS6_5_1</Name>
+    <Path>./packages/nox/test/epetra/DS6.5.1</Path>
+    <FullName>./packages/nox/test/epetra/DS6.5.1/NOX_DS6_5_1</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/DS6.5.1/NOX_DS6_5_1.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.023293</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/DS6.5.1/NOX_DS6_5_1.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Starting epetra/DS6.5.1/DS_6_5_1.exe
+Serial Run
+Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_DS6_5_1_TrustRegion</Name>
+    <Path>./packages/nox/test/epetra/DS6.5.1</Path>
+    <FullName>./packages/nox/test/epetra/DS6.5.1/NOX_DS6_5_1_TrustRegion</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/DS6.5.1/NOX_DS6_5_1_TrustRegion.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.00841999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/DS6.5.1/NOX_DS6_5_1_TrustRegion.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Starting epetra/DS6.5.1/DS_6_5_1.exe
+Serial Run
+Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="passed">
+    <Name>NOX_FiniteDifferenceColoring</Name>
+    <Path>./packages/nox/test/epetra/FiniteDifferenceColoring</Path>
+    <FullName>./packages/nox/test/epetra/FiniteDifferenceColoring/NOX_FiniteDifferenceColoring</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/FiniteDifferenceColoring/NOX_FiniteDifferenceColoring.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0111799</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/FiniteDifferenceColoring/NOX_FiniteDifferenceColoring.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed!
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <Test Status="failed">
+    <Name>NOX_FiniteDifferenceIsorropiaColoring</Name>
+    <Path>./packages/nox/test/epetra/FiniteDifferenceColoring</Path>
+    <FullName>./packages/nox/test/epetra/FiniteDifferenceColoring/NOX_FiniteDifferenceIsorropiaColoring</FullName>
+    <FullCommandLine>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/FiniteDifferenceColoring/NOX_FiniteDifferenceIsorropiaColoring.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0149961</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[Test passed!
+]</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/BUILD/packages/nox/test/epetra/FiniteDifferenceColoring/NOX_FiniteDifferenceIsorropiaColoring.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>[0] Zoltan WARNING in Zoltan_Set_Param_Vec (line 147 of /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/zoltan/src/params/set_param.c):  Parameter `DISTANCE&apos; not found; not reset to `2&apos;.
+
+
+
+  ***************************************************************
+
+  Warning: the GMRES Hessenberg matrix is ill-conditioned.  This may 
+  indicate that the application matrix is singular. In this case, GMRES
+  may have a least-squares solution.
+
+  ***************************************************************
+</Value>
+      </Measurement>
+    </Results>
+    <Labels>
+      <Label>NOX</Label>
+    </Labels>
+  </Test>
+  <EndDateTime>Aug 06 06:23 MDT</EndDateTime>
+  <EndTestTime>1249561428</EndTestTime>
+<ElapsedMinutes>0.3</ElapsedMinutes></Testing>
+</Site>

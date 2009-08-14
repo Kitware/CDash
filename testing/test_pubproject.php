@@ -59,6 +59,8 @@ class ProjectInDbTestCase extends KWWebTestCase
       $this->assertEqual($result,'1',$errormsg);
       return;
       }
+    
+    $this->checkErrors();
     $this->assertText('The project ProjectTest has been created successfully.');
     }
   

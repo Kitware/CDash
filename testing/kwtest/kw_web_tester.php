@@ -41,7 +41,110 @@ class KWWebTestCase extends WebTestCase {
     $page = $this->get($url);
     return $this->analyse($page);
     }
+  
+  /** Delete the log file */
+  function deleteLog($filename)
+    {
+    if(file_exists($filename))
+      {
+      unlink($filename);
+      }
+    }
+    
+  /** Look at the log file and return false if errors are found */
+  function checkLog($filename)
+    {
+    if(file_exists($filename))
+      {
+      $content = file_get_contents($filename);
+      if($this->findString($content,'ERROR')   ||
+         $this->findString($content,'WARNING'))
+        {
+        $this->fail("Log file as error or warnings");
+        return false;
+        }
+      return $content;  
+      }
+    return true;   
+    }
 
+  /** Compare the current log with a file */
+  function compareLog($logfilename,$template)
+    {
+    $log = $this->checkLog($logfilename);
+    $templateLog = file_get_contents($template);
+    
+    // Compare char by char
+    $il=0;
+    $it=0;
+    while($il<strlen($log) && $it<strlen($templateLog))
+      {
+      if($templateLog[$it] == '<')
+        {
+        $pos2 = strpos($templateLog,"<NA>",$it);
+        $pos3 = strpos($templateLog,"<NA>\n",$it);
+  
+        // We skip the line
+        if($pos3 == $it)
+          {
+          while(($it < strlen($templateLog)) && ($templateLog[$it] != '\n'))
+            {
+            $it++;
+            }
+          while(($il < strlen($log)) && ($log[$il] != '\n'))
+            {
+            $il++;
+            }
+          continue;
+          }
+        // if we have the tag we skip the word
+        else if($pos2 == $it)
+          {
+          while(($it < strlen($templateLog)) && ($templateLog[$it] != ' ') && ($templateLog[$it] != '/'))
+            {
+            $it++;
+            }  
+          while(($il < strlen($log)) && ($log[$il] != ' ') && ($log[$il] != '/'))
+            {
+            $il++;
+            }  
+          continue; 
+          }
+        }
+      
+      if($log[$il] != $templateLog[$it])
+        {  
+        $this->fail("Logs are different at char $it:".substr($templateLog,$it,10)." v.s.".substr($log,$il,10)."<br>");
+        return false;
+        }
+      $it++;
+      $il++;
+      }
+    return true;
+    }
+  
+  /** Check the current content for errors */
+  function checkErrors()
+    {
+    $content = $this->getBrowser()->getContent();
+    if($this->findString($content,'error:'))
+      {
+      $this->assertNoText('error');
+      return false;
+      }
+    if($this->findString($content,'Warning'))
+      {
+      $this->assertNoText('Warning');
+      return false;
+      }
+    if($this->findString($content,'Notice'))
+      {
+      $this->assertNoText('Notice');
+      return false;
+      }  
+    return true;  
+    }
+    
   /**
    * Analyse a website page
    * @return the content of the page if there is no errors

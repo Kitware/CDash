@@ -9,7 +9,7 @@ require($cdashpath."/cdash/config.php");
 
 $configure = array(
   // url of the cdash to test
-  'urlwebsite'       => 'http://localhost/CDashTesting',
+  'urlwebsite'       => 'http://10.9.0.2/CDash',
   // the directory to store the xml report for cdash
   'outputdirectory'  => '/tmp',
   // the kind of test: Experimental, Nightly, Continuous
@@ -39,7 +39,7 @@ $db = array( 'host'   => $CDASH_DB_HOST,
 // we think we are running in the browser. Otherwise, we must be running from
 // a php command line invocation.
 //
-$inBrowser = false;
+$inBrowser = true;
 
 if (array_key_exists('SERVER_ADDR', $_SERVER) &&
     array_key_exists('SERVER_NAME', $_SERVER) &&
