@@ -80,7 +80,7 @@ class User
         }
       
       // Check if the email is already there
-      $query = pdo_query("SELECT count(*) FROM user WHERE email='".$this->Email."'");  
+      $query = pdo_query("SELECT count(*) FROM ".qid("user")." WHERE email='".$this->Email."'");  
       $query_array = pdo_fetch_array($query);
       if($query_array[0]>0)
         {
@@ -90,7 +90,7 @@ class User
       return false;    
       }
       
-    $query = pdo_query("SELECT count(*) FROM user WHERE id='".$this->Id."' OR (firstname='".$this->FirstName."' AND lastname='".$this->LastName."')");  
+    $query = pdo_query("SELECT count(*) FROM ".qid("user")." WHERE id='".$this->Id."' OR (firstname='".$this->FirstName."' AND lastname='".$this->LastName."')");  
     $query_array = pdo_fetch_array($query);
     if($query_array[0]>0)
       {
@@ -157,7 +157,7 @@ class User
       return false;    
       }
       
-    $query = pdo_query("SELECT firstname,lastname FROM user WHERE id=".qnum($this->Id));  
+    $query = pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id=".qnum($this->Id));  
     $query_array = pdo_fetch_array($query);
     
     return $query_array['firstname']." ".$query_array['lastname'];
@@ -172,7 +172,7 @@ class User
       return false;    
       }
       
-    $query = pdo_query("SELECT email FROM user WHERE id=".qnum($this->Id));  
+    $query = pdo_query("SELECT email FROM ".qid("user")." WHERE id=".qnum($this->Id));  
     $query_array = pdo_fetch_array($query);
     
     return $query_array['email'];
@@ -197,7 +197,7 @@ class User
   /** Get the user id from the name */
   function GetIdFromName($name)
     {
-    $query = pdo_query("SELECT id FROM user WHERE firstname='".$name."' OR lastname='".$name."'");  
+    $query = pdo_query("SELECT id FROM ".qid("user")." WHERE firstname='".$name."' OR lastname='".$name."'");  
     if(!$query)
       {
       add_last_sql_error("User:GetIdFromName");
@@ -217,7 +217,7 @@ class User
   function GetIdFromEmail($email)
     {
     $email = pdo_real_escape_string($email);
-    $query = pdo_query("SELECT id FROM user WHERE email='".trim($email)."'");  
+    $query = pdo_query("SELECT id FROM ".qid("user")." WHERE email='".trim($email)."'");  
     if(!$query)
       {
       add_last_sql_error("User:GetIdFromEmail");
