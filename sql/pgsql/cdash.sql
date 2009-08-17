@@ -395,9 +395,9 @@ CREATE INDEX "buildid9" on "updatefile" ("buildid");
 CREATE TABLE "user" (
   "id" serial NOT NULL,
   "email" character varying(255) DEFAULT '' NOT NULL,
-  "password" character varying(40) DEFAULT '' NOT NULL,
-  "firstname" character varying(40) DEFAULT '' NOT NULL,
-  "lastname" character varying(40) DEFAULT '' NOT NULL,
+  "password" character varying(255) DEFAULT '' NOT NULL,
+  "firstname" character varying(255) DEFAULT '' NOT NULL,
+  "lastname" character varying(255) DEFAULT '' NOT NULL,
   "institution" character varying(255) DEFAULT '' NOT NULL,
   "admin" smallint DEFAULT '0' NOT NULL,
   "cookiekey" character varying(40)  DEFAULT '' NOT NULL,
