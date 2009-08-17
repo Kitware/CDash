@@ -106,7 +106,7 @@ class User
     if($this->Exists())
       {
       // Update the project
-      $query = "UPDATE user SET";
+      $query = "UPDATE ".qid("user")." SET";
       $query .= " email='".$this->Email."'";
       $query .= ",password='".$this->Password."'";
       $query .= ",firstname='".$this->FirstName."'";
@@ -136,7 +136,7 @@ class User
       $lname = pdo_real_escape_string($this->LastName);
       $institution = pdo_real_escape_string($this->Institution);
           
-      $query = "INSERT INTO user (".$id."email,password,firstname,lastname,institution,admin)
+      $query = "INSERT INTO ".qid("user")." (".$id."email,password,firstname,lastname,institution,admin)
                  VALUES (".$idvalue."'".$email."','".$passwd."','".$fname."','".$lname."','".$institution."','$this->Admin')";                     
        if(!pdo_query($query))
          {
