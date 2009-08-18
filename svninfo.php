@@ -45,6 +45,7 @@ if ($session_OK)
 
   if ($user_is_admin)
     {
+    echo_svn_output('--version');
     echo_svn_output('info');
     echo_svn_output('status');
     echo_svn_output('diff');
