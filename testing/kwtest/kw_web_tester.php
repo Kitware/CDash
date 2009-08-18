@@ -74,6 +74,9 @@ class KWWebTestCase extends WebTestCase {
     $log = $this->checkLog($logfilename);
     $templateLog = file_get_contents($template);
     
+    $templateLog = str_replace($templateLog,'\r','');
+    $log = str_replace($log,'\r','');
+    
     // Compare char by char
     $il=0;
     $it=0;
@@ -114,7 +117,7 @@ class KWWebTestCase extends WebTestCase {
       
       if($log[$il] != $templateLog[$it])
         {  
-        $this->fail("Logs are different at char $it:".substr($templateLog,$it,10)." v.s.".substr($log,$il,10)."<br>");
+        $this->fail("Logs are different at char $it: ".ord($templateLog[$it])."=".ord($log[$il])." *".substr($templateLog,$it,10)."* v.s. *".substr($log,$il,10)."*");
         return false;
         }
       $it++;
