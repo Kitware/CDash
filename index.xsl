@@ -431,11 +431,8 @@
       <td align="center">
       <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="test/fail > 0">
+             <xsl:when test="string-length(test/pass)>0">
              normal
-            </xsl:when>
-             <xsl:when test="string-length(test/fail)>0">
-             error
              </xsl:when>       
         </xsl:choose>
       </xsl:attribute>
