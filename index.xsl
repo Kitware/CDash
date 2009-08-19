@@ -614,16 +614,7 @@
       <b><xsl:value-of select = "$type/totalFail"/></b>  
       </td>
       <td width="3%" align="center">
-       <xsl:attribute name="class">
-        <xsl:choose>
-          <xsl:when test="$type/totalFail > 0">
-            normal
-            </xsl:when>
-          <xsl:otherwise>
-            error
-           </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>   
+       <xsl:attribute name="class">normal</xsl:attribute>   
       <b><xsl:value-of select = "$type/totalPass"/></b>
       </td>
       <td width="3%" align="center">      
