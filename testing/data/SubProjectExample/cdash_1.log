@@ -3,7 +3,7 @@
 [TESTING](TESTING: EMAILBODY): A submission to CDash for the project SubProjectExample has build warnings.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://10.171.2.198/CDash/buildSummary.php?buildid=3
+Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=3
 
 Project: SubProjectExample
 SubProject: NOX
@@ -15,12 +15,12 @@ Warnings: 21
 
 
 *Warnings*
-packages/epetraext/src/transform/EpetraExt_BlockAdjacencyGraph.cpp (http://10.171.2.198/CDash/viewBuildError.php?type=1&buildid=3)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/transform/EpetraExt_BlockAdjapackages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp (http://10.171.2.198/CDash/viewBuildError.php?type=1&buildid=3)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp: packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.cpp (http://10.171.2.198/CDash/viewBuildError.php?type=1&buildid=3)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointMopackages/galeri/src/Galeri_Utils.cpp (http://10.171.2.198/CDash/viewBuildError.php?type=1&buildid=3)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp: In function âvoid Galeri::Solve(const Epackages/galeri/src/Galeri_CrsMatrices.cpp (http://10.171.2.198/CDash/viewBuildError.php?type=1&buildid=3)
+packages/epetraext/src/transform/EpetraExt_BlockAdjacencyGraph.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=3)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/transform/EpetraExt_BlockAdjapackages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=3)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp: packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=3)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointMopackages/galeri/src/Galeri_Utils.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=3)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp: In function âvoid Galeri::Solve(const Epackages/galeri/src/Galeri_CrsMatrices.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=3)
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_UniFlow2D.h: In function âEpetra
 
--CDash on 10.171.2.198
+-CDash on <NA>
 
