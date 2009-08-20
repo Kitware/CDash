@@ -663,12 +663,12 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       if(mail("$summaryEmail", $title, $messagePlainText,
            "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
-        add_log("email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
+        add_log("summary email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
         return;
         }
       else
         {
-        add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
+        add_log("cannot send summary email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
         }
       }
     } // end $summaryEmail!=""
@@ -840,7 +840,7 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
     if(mail("$email", $title, $messagePlainText,
      "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
       {
-      add_log("email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
+      add_log("email sent to: ".$email." with errors ".$titleerrors." for build ".$Build->Id,"sendemail ".$Project->Name,LOG_INFO);
     
       // Record that we have send the email
       set_email_sent($userid,$Build->Id,$emailtext);
