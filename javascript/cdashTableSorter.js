@@ -41,6 +41,14 @@ $(document).ready(function() {
         }, 
         format: function(s) { 
             // format your data for normalization
+            // Remove the <sub></sub>
+            var i = s.indexOf("<sub>");
+            if(i!=-1)
+              {
+              j = s.indexOf("</sub>");
+              s = s.substr(0,i)+s.substr(j+6);
+              }
+            
             var i = s.indexOf("<a href");
             if(i==-1) // IE
               {
