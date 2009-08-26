@@ -176,15 +176,49 @@ class BuildConfigure
     }  // end insert            
 
 
-  /** Compute the errors from the log */
+  /** Extract the position of the next warning from $log */
+  function GetNextConfigureWarningPosition($log, $position)
+    {
+    // Use input $position as starting point:
+    //
+    $pos1 = strpos($log, 'CMake Warning', $position);
+
+    $pos2 = strpos($log, 'Warning:', $position);
+
+    // Return the smaller of the values as new $position value.
+    // (Or 'false' if both are false...)
+    //
+    if($pos1 !== false)
+      {
+      if($pos2 !== false)
+        {
+        $position = min($pos1, $pos2);
+        }
+      else
+        {
+        $position = $pos1;
+        }
+      }
+    else
+      {
+      $position = $pos2;
+      }
+
+    return $position;
+    }
+
+
+  /** Compute the warnings from the log */
   function ComputeErrors()
     {
     // Add the warnings in the configurewarningtable
-    $position = strpos($this->Log,'Warning:',0);
+    $position = GetNextConfigureWarningPosition($this->Log, 0);
+
     while($position !== false)
       {
       $warning = "";
       $endline = strpos($this->Log,'\n',$position);
+
       if($endline !== false)
         {
         $warning = substr($this->Log,$position,$endline-$position);
@@ -193,16 +227,18 @@ class BuildConfigure
         {
         $warning = substr($this->Log,$position);
         }
-        
+
       $warning = pdo_real_escape_string($warning);
-    
+
       pdo_query ("INSERT INTO configureerror (buildid,type,text) 
                   VALUES ('$this->BuildId','1','$warning')");
       add_last_sql_error("BuildConfigure ComputeErrors()");
-      $position = strpos($this->Log,'Warning:',$position+1);
+
+      $position = GetNextConfigureWarningPosition($this->Log, $position+1);
       }
     } // end ComputeErrors() 
-  
+
+
   /** Get the number of configure error for a build */
   function GetNumberOfErrors()
     {
