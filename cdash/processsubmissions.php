@@ -33,7 +33,7 @@ if(!$query)
   exit();
   } 
 $query_array = pdo_fetch_array($query);
-if($query['count(*)'] > 1) // if we do we quit
+if($query['count(*)'] > 0) // if we do we quit
   {
   exit();
   }
@@ -48,12 +48,14 @@ while(pdo_num_rows($query) > 0)
   $fullfilename = $path.DIRECTORY_SEPARATOR.$filename;    
 
   $fp = fopen($fullfilename, 'r');
-  if(!$fp)
+  if($fp)
     {
-    echo "Cannot open file: ".$fullfilename;
-    exit();
+    do_submit($fp,$projectid);
     }
-  do_submit($fp,$projectid);
+  else
+    {
+    add_log("ProcessSubmission","Cannot open file ".$fullfilename,LOG_ERR);
+    }
   pdo_query("DELETE FROM submission WHERE projectid='".$projectid."' AND status=1 AND filename='".$filename."'");
   $query = pdo_query("SELECT filename FROM submission WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1");
   }
