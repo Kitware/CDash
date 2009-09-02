@@ -27,7 +27,7 @@ require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandler, $projectid)
+function ctest_parse($filehandler, $projectid,$onlybackup=false)
 { 
   include 'cdash/config.php';
   require_once 'cdash/common.php';
@@ -151,38 +151,56 @@ function ctest_parse($filehandler, $projectid)
     return $handler;
     }
   
-  // Set the handler
-  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+  // If it's only the backup we write it
+  if($onlybackup)
     {
-    $localParser->StartParsing();
+    while(!feof($filehandler))
+      {
+      $content = fread($filehandler, 8192);
+      if (fwrite($handle, $content) === FALSE)  
+        {
+        echo "Cannot write to file ($contents)";
+        add_log("Cannot write to file ($$contents)", "backup_xml_file",LOG_ERR);
+        fclose($handle);
+        return $filename;
+        }
+      }
+    return $filename;  
     }
-      
-  while(!feof($filehandler))
+  else
     {
-    $content = fread($filehandler, 8192);
+    // Set the handler
+    if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+      {
+      $localParser->StartParsing();
+      }
+        
+    while(!feof($filehandler))
+      {
+      $content = fread($filehandler, 8192);
+      
+      if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+        {
+        $localParser->ParseFile();
+        }
+      
+      if (fwrite($handle, $content) === FALSE)  
+        {
+        echo "Cannot write to file ($contents)";
+        add_log("Cannot write to file ($$contents)", "backup_xml_file",LOG_ERR);
+        fclose($handle);
+        return $handler;
+        }
+      xml_parse($parser,$content, false);
+      }
+    xml_parse($parser, null, true);
+    xml_parser_free($parser);
     
     if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
       {
-      $localParser->ParseFile();
+      $localParser->EndParsingFile();
       }
-    
-    if (fwrite($handle, $content) === FALSE)  
-      {
-      echo "Cannot write to file ($contents)";
-      add_log("Cannot write to file ($$contents)", "backup_xml_file",LOG_ERR);
-      fclose($handle);
-      return $handler;
-      }
-    xml_parse($parser,$content, false);
     }
-  xml_parse($parser, null, true);
-  xml_parser_free($parser);
-  
-  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
-    {
-    $localParser->EndParsingFile();
-    }
-          
   fclose($handle);
   
   return $handler;

@@ -29,6 +29,8 @@ $CDASH_DB_TYPE = 'mysql';
 // Prevents from running the install.php again
 $CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = false;
+// Should we use asynchronous submission
+$CDASH_ASYNCHRONOUS_SUBMISSION = false;
 // Default from email
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';

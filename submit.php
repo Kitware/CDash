@@ -44,5 +44,14 @@ if($projectid == -1)
   add_log('Not a valid project. projectname: ' . $projectname, 'global:submit.php');
   exit();
   }
-do_submit($fp, $projectid);
+
+// If the submission is asynchronous we store in the database
+if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  {
+  do_submit_asynchronous($fp, $projectid);
+  }
+else  
+  {
+  do_submit($fp, $projectid);
+  }
 ?>

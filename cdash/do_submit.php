@@ -91,4 +91,62 @@ function do_submit($filehandle, $projectid)
   CreateRSSFeed($projectid);
   fclose($filehandle);
 }
+
+/** Asynchronous submission */
+function do_submit_asynchronous($filehandle, $projectid)
+{
+  include('cdash/config.php');
+ 
+  // Save the file in the backup directory
+  $filename = ctest_parse($filehandle, $projectid,true);
+  fclose($filehandle);
+  
+  // Insert the filename in the database
+  pdo_query("INSERT INTO submission (filename,projectid,status) VALUES ('".$filename."','".$projectid."','0')");
+  
+  // We find the daily updates
+  // If we have php curl we do it asynchronously
+  if(function_exists("curl_init") == TRUE)
+    {
+    $currentPort="";
+    if($_SERVER['SERVER_PORT']!=80)
+      {
+      $currentPort=":".$_SERVER['SERVER_PORT'];
+      }
+    
+    // Where to send to curl request
+    $serverName = "localhost";     
+    if(!$CDASH_CURL_REQUEST_LOCALHOST)
+      {
+      $serverName = $CDASH_SERVER_NAME;
+      if(strlen($serverName) == 0)
+        {
+        $serverName = $_SERVER['SERVER_NAME'];
+        }
+      }
+      
+    $prefix =  "http://";
+    if($CDASH_USE_HTTPS)
+      {
+      $prefix =  "https://";
+      }
+    
+    $currentURI =  $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
+    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+    $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid;
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $request);
+    curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    curl_exec($ch);
+    curl_close($ch);
+    }
+  else // synchronously
+    {
+    add_log("do_submit_asynchronous","Cannot submit asynchronously",LOG_ERR);
+    }
+}
+
 ?>
