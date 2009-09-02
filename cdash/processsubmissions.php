@@ -24,39 +24,37 @@ if(!is_numeric($projectid))
   echo "Wrong project id";
   exit();
   }
-  
-$max_files = 2; // 2 files max per submission
 
-for($i=0;$i<$max_files;$i++)
+// Check if someone is already processing the submission for this project
+$query = pdo_query("SELECT count(*) FROM submission WHERE projectid='".$projectid."' AND status=1");
+if(!$query)
   {
-  $query = pdo_query("SELECT filename FROM submission WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1");
-  if(!$query)
-    {
-    add_last_sql_error("ProcessSubmissions");
-    exit();
-    } 
-    
-  if($query_array = pdo_fetch_array($query))
-    {
-    $filename = $query_array['filename'];
-    pdo_query("UPDATE submission SET status=1 WHERE projectid='".$projectid."' AND status=0 AND filename='".$filename."'");   
-    
-    $fullfilename = $path.DIRECTORY_SEPARATOR.$filename;    
-
-    $fp = fopen($fullfilename, 'r');
-    if(!$fp)
-      {
-      echo "Cannot open file: ".$fullfilename;
-      exit();
-      }
-    do_submit($fp,$projectid);
-    pdo_query("DELETE FROM submission WHERE projectid='".$projectid."' AND status=1 AND filename='".$filename."'");
-    }
-  else
-    {
-    // Nothing else to do, we quit
-    exit();
-    }
+  add_last_sql_error("ProcessSubmissions");
+  exit();
+  } 
+$query_array = pdo_fetch_array($query);
+if($query['count(*)'] > 1) // if we do we quit
+  {
+  exit();
   }
   
+$query = pdo_query("SELECT filename FROM submission WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1");
+while(pdo_num_rows($query) > 0)
+  {
+  $query_array = pdo_fetch_array($query);
+  $filename = $query_array['filename'];
+  pdo_query("UPDATE submission SET status=1 WHERE projectid='".$projectid."' AND status=0 AND filename='".$filename."'");   
+    
+  $fullfilename = $path.DIRECTORY_SEPARATOR.$filename;    
+
+  $fp = fopen($fullfilename, 'r');
+  if(!$fp)
+    {
+    echo "Cannot open file: ".$fullfilename;
+    exit();
+    }
+  do_submit($fp,$projectid);
+  pdo_query("DELETE FROM submission WHERE projectid='".$projectid."' AND status=1 AND filename='".$filename."'");
+  $query = pdo_query("SELECT filename FROM submission WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1");
+  }
 ?>
