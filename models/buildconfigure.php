@@ -212,7 +212,7 @@ class BuildConfigure
   function ComputeErrors()
     {
     // Add the warnings in the configurewarningtable
-    $position = GetNextConfigureWarningPosition($this->Log, 0);
+    $position = $this->GetNextConfigureWarningPosition($this->Log, 0);
 
     while($position !== false)
       {
@@ -234,7 +234,7 @@ class BuildConfigure
                   VALUES ('$this->BuildId','1','$warning')");
       add_last_sql_error("BuildConfigure ComputeErrors()");
 
-      $position = GetNextConfigureWarningPosition($this->Log, $position+1);
+      $position = $this->GetNextConfigureWarningPosition($this->Log, $position+1);
       }
     } // end ComputeErrors() 
 
