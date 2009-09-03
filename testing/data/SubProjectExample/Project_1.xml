@@ -1,53 +1,53 @@
 <Project name="SubProjectExample">
   <SubProject name="Teuchos">
     <EmailAddresses>
-      <Email address="teuchos-regression@software.sandia.gov"/>
+      <Email address="teuchos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="ThreadPool">
     <EmailAddresses>
-      <Email address="threadpool-regression@software.sandia.gov"/>
+      <Email address="threadpool-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="RTOp">
     <Dependency name="Teuchos" type="LR"/>
     <EmailAddresses>
-      <Email address="rtop-regression@software.sandia.gov"/>
+      <Email address="rtop-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Kokkos">
     <Dependency name="Teuchos" type="LR"/>
     <Dependency name="ThreadPool" type="LO"/>
     <EmailAddresses>
-      <Email address="kokkos-regression@software.sandia.gov"/>
+      <Email address="kokkos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Epetra">
     <EmailAddresses>
-      <Email address="epetra-regression@software.sandia.gov"/>
+      <Email address="epetra-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Zoltan">
     <EmailAddresses>
-      <Email address="zoltan-regression@software.sandia.gov"/>
+      <Email address="zoltan-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Shards">
     <Dependency name="Teuchos" type="TO"/>
     <EmailAddresses>
-      <Email address="shards-regression@software.sandia.gov"/>
+      <Email address="shards-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="GlobiPack">
     <Dependency name="Teuchos" type="LR"/>
     <EmailAddresses>
-      <Email address="globipack-regression@software.sandia.gov"/>
+      <Email address="globipack-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Triutils">
     <Dependency name="Epetra" type="LR"/>
     <EmailAddresses>
-      <Email address="triutils-regression@software.sandia.gov"/>
+      <Email address="triutils-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Tpetra">
@@ -57,7 +57,7 @@
     <Dependency name="Epetra" type="ITO"/>
     <Dependency name="Triutils" type="TO"/>
     <EmailAddresses>
-      <Email address="tpetra-regression@software.sandia.gov"/>
+      <Email address="tpetra-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="EpetraExt">
@@ -66,7 +66,7 @@
     <Dependency name="Zoltan" type="LO"/>
     <Dependency name="Triutils" type="LO"/>
     <EmailAddresses>
-      <Email address="epetraext-regression@software.sandia.gov"/>
+      <Email address="epetraext-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Thyra">
@@ -77,7 +77,7 @@
     <Dependency name="Triutils" type="ILO"/>
     <Dependency name="EpetraExt" type="LO"/>
     <EmailAddresses>
-      <Email address="thyra-regression@software.sandia.gov"/>
+      <Email address="thyra-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="OptiPack">
@@ -90,7 +90,7 @@
     <Dependency name="EpetraExt" type="ILO"/>
     <Dependency name="Thyra" type="LR"/>
     <EmailAddresses>
-      <Email address="optipack-regression@software.sandia.gov"/>
+      <Email address="optipack-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Isorropia">
@@ -102,19 +102,19 @@
     <Dependency name="Triutils" type="ILO"/>
     <Dependency name="EpetraExt" type="LO"/>
     <EmailAddresses>
-      <Email address="isorropia-regression@software.sandia.gov"/>
+      <Email address="isorropia-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Pliris">
     <Dependency name="Epetra" type="LR"/>
     <EmailAddresses>
-      <Email address="pliris-regression@software.sandia.gov"/>
+      <Email address="pliris-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Claps">
     <Dependency name="Epetra" type="LR"/>
     <EmailAddresses>
-      <Email address="claps-regression@software.sandia.gov"/>
+      <Email address="claps-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="AztecOO">
@@ -122,7 +122,7 @@
     <Dependency name="Epetra" type="LR"/>
     <Dependency name="Triutils" type="LR"/>
     <EmailAddresses>
-      <Email address="aztecoo-regression@software.sandia.gov"/>
+      <Email address="aztecoo-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Galeri">
@@ -132,7 +132,7 @@
     <Dependency name="Triutils" type="ILO"/>
     <Dependency name="EpetraExt" type="LO"/>
     <EmailAddresses>
-      <Email address="galeri-regression@software.sandia.gov"/>
+      <Email address="galeri-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Amesos">
@@ -143,12 +143,12 @@
     <Dependency name="EpetraExt" type="LO"/>
     <Dependency name="Galeri" type="TO"/>
     <EmailAddresses>
-      <Email address="amesos-regression@software.sandia.gov"/>
+      <Email address="amesos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Pamgen">
     <EmailAddresses>
-      <Email address="pamgen-regression@software.sandia.gov"/>
+      <Email address="pamgen-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Ifpack">
@@ -161,7 +161,7 @@
     <Dependency name="Galeri" type="TO"/>
     <Dependency name="Amesos" type="LO"/>
     <EmailAddresses>
-      <Email address="ifpack-regression@software.sandia.gov"/>
+      <Email address="ifpack-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Komplex">
@@ -170,7 +170,7 @@
     <Dependency name="Triutils" type="ILR"/>
     <Dependency name="AztecOO" type="LR"/>
     <EmailAddresses>
-      <Email address="komplex-regression@software.sandia.gov"/>
+      <Email address="komplex-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="ML">
@@ -187,7 +187,7 @@
     <Dependency name="Amesos" type="LO"/>
     <Dependency name="Ifpack" type="LO"/>
     <EmailAddresses>
-      <Email address="ml-regression@software.sandia.gov"/>
+      <Email address="ml-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Belos">
@@ -206,7 +206,7 @@
     <Dependency name="Ifpack" type="TO"/>
     <Dependency name="ML" type="TO"/>
     <EmailAddresses>
-      <Email address="belos-regression@software.sandia.gov"/>
+      <Email address="belos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Stratimikos">
@@ -228,7 +228,7 @@
     <Dependency name="ML" type="LO"/>
     <Dependency name="Belos" type="LO"/>
     <EmailAddresses>
-      <Email address="stratimikos-regression@software.sandia.gov"/>
+      <Email address="stratimikos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Meros">
@@ -251,7 +251,7 @@
     <Dependency name="Belos" type="ITO"/>
     <Dependency name="Stratimikos" type="TR"/>
     <EmailAddresses>
-      <Email address="meros-regression@software.sandia.gov"/>
+      <Email address="meros-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="FEI">
@@ -269,7 +269,7 @@
     <Dependency name="Ifpack" type="LO"/>
     <Dependency name="ML" type="LO"/>
     <EmailAddresses>
-      <Email address="fei-regression@software.sandia.gov"/>
+      <Email address="fei-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="RBGen">
@@ -279,7 +279,7 @@
     <Dependency name="Triutils" type="ILO"/>
     <Dependency name="EpetraExt" type="LO"/>
     <EmailAddresses>
-      <Email address="rbgen-regression@software.sandia.gov"/>
+      <Email address="rbgen-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Anasazi">
@@ -298,7 +298,7 @@
     <Dependency name="Ifpack" type="TO"/>
     <Dependency name="Belos" type="TO"/>
     <EmailAddresses>
-      <Email address="anasazi-regression@software.sandia.gov"/>
+      <Email address="anasazi-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Stokhos">
@@ -316,7 +316,7 @@
     <Dependency name="Ifpack" type="ILO"/>
     <Dependency name="ML" type="LO"/>
     <EmailAddresses>
-      <Email address="stokhos-regression@software.sandia.gov"/>
+      <Email address="stokhos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Sacado">
@@ -335,7 +335,7 @@
     <Dependency name="ML" type="ILO"/>
     <Dependency name="Stokhos" type="LO"/>
     <EmailAddresses>
-      <Email address="sacado-regression@software.sandia.gov"/>
+      <Email address="sacado-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Intrepid">
@@ -357,7 +357,7 @@
     <Dependency name="Stokhos" type="ILO"/>
     <Dependency name="Sacado" type="LR"/>
     <EmailAddresses>
-      <Email address="intrepid-regression@software.sandia.gov"/>
+      <Email address="intrepid-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Phalanx">
@@ -381,12 +381,12 @@
     <Dependency name="Sacado" type="LR"/>
     <Dependency name="Intrepid" type="TO"/>
     <EmailAddresses>
-      <Email address="phalanx-regression@software.sandia.gov"/>
+      <Email address="phalanx-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Phdmesh">
     <EmailAddresses>
-      <Email address="phdmesh-regression@software.sandia.gov"/>
+      <Email address="phdmesh-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="NOX">
@@ -412,7 +412,7 @@
     <Dependency name="Stokhos" type="ILO"/>
     <Dependency name="Sacado" type="LO"/>
     <EmailAddresses>
-      <Email address="nox-regression@software.sandia.gov"/>
+      <Email address="nox-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Moertel">
@@ -430,7 +430,7 @@
     <Dependency name="Ifpack" type="ILO"/>
     <Dependency name="ML" type="LR"/>
     <EmailAddresses>
-      <Email address="moertel-regression@software.sandia.gov"/>
+      <Email address="moertel-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="TrilinosCouplings">
@@ -459,7 +459,7 @@
     <Dependency name="Intrepid" type="TO"/>
     <Dependency name="NOX" type="LO"/>
     <EmailAddresses>
-      <Email address="trilinoscouplings-regression@software.sandia.gov"/>
+      <Email address="trilinoscouplings-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Rythmos">
@@ -486,7 +486,7 @@
     <Dependency name="Sacado" type="TO"/>
     <Dependency name="NOX" type="TO"/>
     <EmailAddresses>
-      <Email address="rythmos-regression@software.sandia.gov"/>
+      <Email address="rythmos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="MOOCHO">
@@ -510,7 +510,7 @@
     <Dependency name="Stratimikos" type="TO"/>
     <Dependency name="Rythmos" type="TO"/>
     <EmailAddresses>
-      <Email address="moocho-regression@software.sandia.gov"/>
+      <Email address="moocho-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Aristos">
@@ -528,7 +528,7 @@
     <Dependency name="Ifpack" type="LO"/>
     <Dependency name="ML" type="LO"/>
     <EmailAddresses>
-      <Email address="aristos-regression@software.sandia.gov"/>
+      <Email address="aristos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Sundance">
@@ -558,7 +558,7 @@
     <Dependency name="NOX" type="LR"/>
     <Dependency name="MOOCHO" type="LO"/>
     <EmailAddresses>
-      <Email address="sundance-regression@software.sandia.gov"/>
+      <Email address="sundance-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="TriKota">
@@ -568,14 +568,14 @@
     <Dependency name="Triutils" type="ILO"/>
     <Dependency name="EpetraExt" type="LR"/>
     <EmailAddresses>
-      <Email address="trikota-regression@software.sandia.gov"/>
+      <Email address="trikota-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="CTrilinos">
     <Dependency name="Teuchos" type="LR"/>
     <Dependency name="Epetra" type="LR"/>
     <EmailAddresses>
-      <Email address="ctrilinos-regression@software.sandia.gov"/>
+      <Email address="ctrilinos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="ForTrilinos">
@@ -583,7 +583,7 @@
     <Dependency name="Epetra" type="TR"/>
     <Dependency name="CTrilinos" type="LR"/>
     <EmailAddresses>
-      <Email address="fortrilinos-regression@software.sandia.gov"/>
+      <Email address="fortrilinos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="PyTrilinos">
@@ -611,7 +611,7 @@
     <Dependency name="Sacado" type="ILO"/>
     <Dependency name="NOX" type="LO"/>
     <EmailAddresses>
-      <Email address="pytrilinos-regression@software.sandia.gov"/>
+      <Email address="pytrilinos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="WebTrilinos">
@@ -629,7 +629,7 @@
     <Dependency name="Ifpack" type="TR"/>
     <Dependency name="ML" type="TR"/>
     <EmailAddresses>
-      <Email address="webtrilinos-regression@software.sandia.gov"/>
+      <Email address="webtrilinos-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Didasko">
@@ -655,25 +655,25 @@
     <Dependency name="Sacado" type="ITO"/>
     <Dependency name="NOX" type="TO"/>
     <EmailAddresses>
-      <Email address="didasko-regression@software.sandia.gov"/>
+      <Email address="didasko-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="NewPackage">
     <Dependency name="Teuchos" type="LO"/>
     <Dependency name="Epetra" type="LR"/>
     <EmailAddresses>
-      <Email address="newpackage-regression@software.sandia.gov"/>
+      <Email address="newpackage-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Optika">
     <Dependency name="Teuchos" type="LR"/>
     <EmailAddresses>
-      <Email address="optika-regression@software.sandia.gov"/>
+      <Email address="optika-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
   <SubProject name="Mesquite">
     <EmailAddresses>
-      <Email address="mesquite-regression@software.sandia.gov"/>
+      <Email address="mesquite-noemail@noemail"/>
     </EmailAddresses>
   </SubProject>
 </Project>
