@@ -625,7 +625,7 @@ edit the project</a><br/>
                   <td><div align="right"><strong>Download CTestConfig:</strong></div></td>
                   <td><a>
                 <xsl:attribute name="href">generateCTestConfig.php?projectid= <xsl:value-of select="cdash/project/id"/>
-                </xsl:attribute>CTestConfig.php
+                </xsl:attribute>CTestConfig.cmake
                 </a>
                 <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
                   <img onmouseover="showHelp('ctestConfig_help');" src="images/help.gif" border="0"/></a>
