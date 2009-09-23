@@ -112,7 +112,7 @@ class ProjectInDbTestCase extends KWWebTestCase
       $this->assertEqual($public,'1');
       return;
       }
-    $content  = $this->analyse($this->clickLink('CTestConfig.php'));
+    $content  = $this->analyse($this->clickLink('CTestConfig.cmake'));
     $expected = '## This file should be placed in the root directory of your project.';
     if(!$this->findString($content,$expected))
       {
