@@ -280,35 +280,35 @@ if($DeleteGroup)
 
 if($GlobalMove)
 {
-  foreach($Movebuilds as $buildid)
-    {  
-    // Find information about the build
-    $build_array = pdo_fetch_array(pdo_query("SELECT type,name,siteid FROM build WHERE id='$buildid'"));
-    $buildtype = $build_array['type'];
-    $buildname = $build_array['name'];  
-    $siteid = $build_array['siteid']; 
-    
-    // Remove the group
-    $prevgroup = pdo_fetch_array(pdo_query("SELECT groupid FROM build2group WHERE buildid='$buildid'"));
-    $prevgroupid = $prevgroup["groupid"]; 
-                        
-  // Update the previous group          
-  pdo_query("UPDATE build2group SET groupid='$GroupSelection' WHERE groupid='$prevgroupid' AND buildid='$buildid'");
-  
-    // Define a new rule
-    // Mark any previous rule as done
-    /*$now = date(FMT_DATETIME);
-    pdo_query("UPDATE build2grouprule SET endtime='$now'
-                 WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
-                 AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");*/
-  
-  // Delete any previous rules       
-  pdo_query("DELETE FROM build2grouprule WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
-                 AND buildname='$buildname' AND siteid='$siteid'");
-           
-    // Add the new rule
-    pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
-                 VALUES ('$GroupSelection','$buildtype','$buildname','$siteid','$ExpectedMove','1980-01-01 00:00:00','1980-01-01 00:00:00')");
+  if($GroupSelection == 0)
+    {
+    $xml .= add_XML_value("warning","Please select a group to add these builds");
+    }
+  else
+    {
+    foreach($Movebuilds as $buildid)
+      {  
+      // Find information about the build
+      $build_array = pdo_fetch_array(pdo_query("SELECT type,name,siteid FROM build WHERE id='$buildid'"));
+      $buildtype = $build_array['type'];
+      $buildname = $build_array['name'];  
+      $siteid = $build_array['siteid']; 
+      
+      // Remove the group
+      $prevgroup = pdo_fetch_array(pdo_query("SELECT groupid FROM build2group WHERE buildid='$buildid'"));
+      $prevgroupid = $prevgroup["groupid"]; 
+                          
+      // Update the previous group          
+      pdo_query("UPDATE build2group SET groupid='$GroupSelection' WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+        
+      // Delete any previous rules       
+      pdo_query("DELETE FROM build2grouprule WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
+                   AND buildname='$buildname' AND siteid='$siteid'");
+             
+      // Add the new rule
+      pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
+            VALUES ('$GroupSelection','$buildtype','$buildname','$siteid','$ExpectedMove','1980-01-01 00:00:00','1980-01-01 00:00:00')");
+      }
     }
 } // end GlobalMove
 
