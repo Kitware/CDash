@@ -24,3 +24,9 @@ CREATE TABLE "submission" (
 );
 CREATE INDEX "submission_projectid" on "submission" ("projectid");
 CREATE INDEX "submission_status" on "submission" ("status");
+
+CREATE TABLE "build2testtime" (
+  "buildid" bigint DEFAULT '0' NOT NULL,
+  "time" numeric(7,2) DEFAULT '0.00' NOT NULL,
+  PRIMARY KEY ("buildid")
+);

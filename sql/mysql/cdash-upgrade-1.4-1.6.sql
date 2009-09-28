@@ -18,3 +18,9 @@ CREATE TABLE IF NOT EXISTS `submission` (
   KEY `projectid` (`projectid`),
   KEY `status` (`status`)
 );
+
+CREATE TABLE IF NOT EXISTS `build2testtime` (
+  `buildid` int(11) NOT NULL default '0',
+  `time` float(7,2) NOT NULL default '0.00',
+  PRIMARY KEY `buildid` (`buildid`)
+);

@@ -380,7 +380,7 @@ CREATE INDEX "timestatus" on "build2test" ("timestatus");
 CREATE TABLE "build2testtime" (
   "buildid" bigint DEFAULT '0' NOT NULL,
   "time" numeric(7,2) DEFAULT '0.00' NOT NULL,
-  PRIMARY KEY "buildid" ("buildid")
+  PRIMARY KEY ("buildid")
 );
 
 --
