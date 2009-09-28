@@ -59,7 +59,8 @@ $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
   $project_array = pdo_fetch_array($project);   
-  $projectname = $project_array["name"];  
+  $projectname = $project_array["name"];
+  $nightlytime = $project_array["nightlytime"];
   }
   
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
@@ -73,7 +74,18 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 $xml .="<testName>".$testName."</testName>";
   
 $xml .= "<menu>";
+list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$date);
+$xml .= add_XML_value("previous", "testSummary.php?project=$projectid&name=$testName&date=$previousdate");
+$xml .= add_XML_value("current", "testSummary.php?project=$projectid&name=$testName&date=".date(FMT_DATE));
+if($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE))
+  {
+  $xml .= add_XML_value("next","testSummary.php?project=$projectid&name=$testName&date=$nextdate");
+  }
+else
+  {
+  $xml .= add_XML_value("nonext","1");
+  }
 $xml .= "</menu>";
   
 //get information about all the builds for the given date and project
