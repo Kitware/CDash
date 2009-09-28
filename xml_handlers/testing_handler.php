@@ -124,7 +124,7 @@ class TestingHandler extends AbstractHandler
 
         add_build($this->Build);
 
-        $this->UpdateEndTime = true;  
+        $this->UpdateEndTime = true;
         $buildid = $this->Build->Id;
         }
       else
@@ -242,6 +242,10 @@ class TestingHandler extends AbstractHandler
     else if($parent == 'TESTING' && $element == 'ENDTESTTIME')
       {
       $this->EndTimeStamp = $data;
+      }
+    else if($parent == 'TESTING' && $element == 'ELAPSEDMINUTES')
+      {
+      $this->Build->SaveTotalTestsTime($data);
       }
     else if($parent == "TEST")
       {

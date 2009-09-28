@@ -108,8 +108,6 @@ CREATE TABLE `build2grouprule` (
   KEY `starttime` (`starttime`),
   KEY `endtime` (`endtime`)
 );
-        
-
 
 -- --------------------------------------------------------
 
@@ -446,6 +444,15 @@ CREATE TABLE `build2test` (
   KEY `timestatus` (`timestatus`)
 );
 
+--
+-- Table structure for table `build2testtime`
+--
+
+CREATE TABLE IF NOT EXISTS `build2testtime` (
+  `buildid` int(11) NOT NULL default '0',
+  `time` float(7,2) NOT NULL default '0.00',
+  PRIMARY KEY `buildid` (`buildid`)
+);
 
 -- --------------------------------------------------------
 

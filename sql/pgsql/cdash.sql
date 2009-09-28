@@ -375,6 +375,15 @@ CREATE INDEX "status" on "build2test" ("status");
 CREATE INDEX "timestatus" on "build2test" ("timestatus");
 
 --
+-- Table: build2testtime
+--
+CREATE TABLE "build2testtime" (
+  "buildid" bigint DEFAULT '0' NOT NULL,
+  "time" numeric(7,2) DEFAULT '0.00' NOT NULL,
+  PRIMARY KEY "buildid" ("buildid")
+);
+
+--
 -- Table: updatefile
 --
 CREATE TABLE "updatefile" (

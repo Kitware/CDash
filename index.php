@@ -864,10 +864,9 @@ function generate_main_dashboard_XML($projectid,$date)
           }
         }
       }
-
-    $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-    $build_row['testsduration'] = round($time_array[0]/60,1);
-
+    $time_array = pdo_fetch_array(pdo_query("SELECT time FROM build2testtime WHERE buildid='$buildid'"));
+    $build_row['testsduration'] = round($time_array[0],1);
+    
     //  Save the row in '$build_rows'
     //
     $build_rows[] = $build_row;

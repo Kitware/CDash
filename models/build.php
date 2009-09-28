@@ -134,7 +134,7 @@ class Build
       {
       $this->Type = extract_type_from_buildstamp($this->Stamp);
       }
-    }    
+    }
 
 
   function GetStamp()
@@ -212,6 +212,19 @@ class Build
       }
       
     return false;
+    }
+    
+  /** Save the total tests time */  
+  function SaveTotalTestsTime($time)
+    {
+    $time = pdo_real_escape_string($time);
+    $query = "INSERT INTO build2testtime (buildid, time) VALUES ('$this->Id', $time)";
+    
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("Build:SaveTotalTestsTime()");
+      return false;
+      }
     }
 
   /** Update the end time */
