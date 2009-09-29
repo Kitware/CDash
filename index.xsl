@@ -398,8 +398,22 @@
           <xsl:value-of select="test/notrun"/>
         </xsl:if>
       <xsl:if test="string-length(test/notrun)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      <xsl:if test="test/nnotrundiff > 0"><sub>+<xsl:value-of select="test/nnotrundiff"/></sub></xsl:if>
-      <xsl:if test="test/nnotrundiff &lt; 0"><sub><xsl:value-of select="test/nnotrundiff"/></sub></xsl:if>
+      <xsl:if test="test/nnotrundiff > 0"><sub>
+      <a>
+        <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
+        </xsl:attribute>
+        <xsl:attribute name="class">sub</xsl:attribute>
+          +<xsl:value-of select="test/nnotrundiff"/>
+      </a></sub>
+      </xsl:if>
+      <xsl:if test="test/nnotrundiff &lt; 0"><sub>
+      <a>
+        <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
+        </xsl:attribute>
+        <xsl:attribute name="class">sub</xsl:attribute>
+          <xsl:value-of select="test/nnotrundiff"/>
+      </a></sub>
+      </xsl:if>
       </td>
 
       <td align="center">
@@ -424,8 +438,22 @@
           <xsl:value-of select="test/fail"/>
         </xsl:if>
       <xsl:if test="string-length(test/fail)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
-      <xsl:if test="test/nfaildiff > 0"><sub>+<xsl:value-of select="test/nfaildiff"/></sub></xsl:if>
-      <xsl:if test="test/nfaildiff &lt; 0"><sub><xsl:value-of select="test/nfaildiff"/></sub></xsl:if>
+      <xsl:if test="test/nfaildiff > 0"><sub>
+      <a>
+        <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
+        </xsl:attribute>
+        <xsl:attribute name="class">sub</xsl:attribute>
+          +<xsl:value-of select="test/nfaildiff"/>
+      </a></sub>
+      </xsl:if>
+      <xsl:if test="test/nfaildiff &lt; 0"><sub>
+      <a>
+        <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
+        </xsl:attribute>
+        <xsl:attribute name="class">sub</xsl:attribute>
+          <xsl:value-of select="test/nfaildiff"/>
+      </a></sub>
+      </xsl:if>
       </td>
 
       <td align="center">
@@ -447,8 +475,23 @@
           <xsl:value-of select="test/pass"/>
         </xsl:if>
       <xsl:if test="string-length(test/fail)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
-      <xsl:if test="test/npassdiff > 0"><sub>+<xsl:value-of select="test/npassdiff"/></sub></xsl:if>
-      <xsl:if test="test/npassdiff &lt; 0"><sub><xsl:value-of select="test/npassdiff"/></sub></xsl:if>
+      <xsl:if test="test/npassdiff > 0"><sub>
+      <a>
+        <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
+        </xsl:attribute>
+        <xsl:attribute name="class">sub</xsl:attribute>
+          +<xsl:value-of select="test/npassdiff"/>
+      </a></sub>
+      </xsl:if>
+     
+      <xsl:if test="test/npassdiff &lt; 0"><sub>
+      <a>
+        <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
+        </xsl:attribute>
+        <xsl:attribute name="class">sub</xsl:attribute>
+          <xsl:value-of select="test/npassdiff"/>
+      </a></sub>
+      </xsl:if>
       </td>
 
       <td align="center">

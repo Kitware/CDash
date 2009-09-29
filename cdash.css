@@ -10,9 +10,8 @@ body {
  color: #000000;
 }
 
-
 sub { 
-font-size: 0.63em 
+ font-size: 0.63em;
 }
 
 .argument {
@@ -40,6 +39,12 @@ a:active{
  color:#0000ff;
  text-decoration: underline;
 }
+
+a.sub {
+ font-size: 1em;
+ text-decoration: none;
+}
+
 .toptable {
  padding: 1px;
  border: 1px solid #19262f;
@@ -107,12 +112,22 @@ height: expression(this.height > 110 ? 110: true);
 .normal {
  background-color : #92ca89;
 }
+.normalNew {
+ background-color : #92ff89;
+}
  .warning {
  background-color : #fdba76;
+}
+ .warningNew {
+ background-color : #ffbc30;
 }
  .error {
  background-color : #ff6666;
 }
+ .errorNew {
+ background-color : #ff1111;
+}
+
  .Passed { background-color : #92ca89; }
  .Failed { background-color : #fdba76; }
  .Not Run { background-color : #ff6666; }
