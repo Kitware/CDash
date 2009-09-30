@@ -15,12 +15,22 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
 
-        <xsl:if test="cdash/upgrade=1">        
-          <script type="text/javascript">
-          var version='<xsl:value-of select="cdash/minversion"/>';
-          </script>
-          <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
-          <script src="javascript/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>  
+        <xsl:if test="cdash/upgrade=1">
+          <xsl:if test="cdash/backupwritable=0">
+            <font color="#FF0000">Your backup directory is not writable, make sure that the web process can write into the directory.</font><br/>
+          </xsl:if>
+          <xsl:if test="cdash/rsswritable=0">
+            <font color="#FF0000">Your rss directory is not writable, make sure that the web process can write into the directory.</font><br/>
+          </xsl:if>
+          <xsl:if test="cdash/backupwritable=1">
+            <xsl:if test="cdash/rsswritable=1">
+              <script type="text/javascript">
+              var version='<xsl:value-of select="cdash/minversion"/>';
+              </script>
+              <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>
+              <script src="javascript/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>
+            </xsl:if>
+          </xsl:if>
         </xsl:if> 
          
        </head>

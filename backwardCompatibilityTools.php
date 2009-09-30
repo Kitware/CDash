@@ -554,7 +554,26 @@ if(isset($_GET['upgrade-1-6']))
 // and here as well
 if($Upgrade)
 {
-  $xml .= "<upgrade>1</upgrade>";  
+  // check if the backup directory is writable 
+  if(!is_writable($CDASH_BACKUP_DIRECTORY))
+    {  
+    $xml .= "<backupwritable>0</backupwritable>";
+    }
+  else
+    {
+    $xml .= "<backupwritable>1</backupwritable>";
+    }
+    
+  // check if the rss directory is writable 
+  if(!is_writable("rss"))
+    {  
+    $xml .= "<rsswritable>0</rsswritable>";
+    }
+  else
+    {
+    $xml .= "<rsswritable>1</rsswritable>";
+    }
+  $xml .= "<upgrade>1</upgrade>";
 }
 
 // Compute the testtime
@@ -1086,17 +1105,17 @@ if($FixNewTableTest)
             {
             $sql .= " OR";
             }
-            
+          
           $sql .= " imgid='$imagid' ";
-             
+          
           $i++;
           if($i==count($images))
             {
             $sql .= ")";
-            }   
+            }
           } // end for each image
         
-         $nimage_array = pdo_fetch_array(pdo_query($sql));  
+         $nimage_array = pdo_fetch_array(pdo_query($sql));
          $nimages = $nimage_array[0];
       
          if($nimages == count($images))
@@ -1104,14 +1123,14 @@ if($FixNewTableTest)
            $testid = $test_array["id"];
            $testexists = true;
            break;
-           } 
-         } // end while test_array  
-       }   
+           }
+         } // end while test_array
+       }
     
     if(!$testexists)
       {
       // Need to create a new test
-      $query = "INSERT INTO test2 (name,path,fullname,command,details, output) 
+      $query = "INSERT INTO test2 (name,path,fullname,command,details, output)
                 VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
       if(pdo_query("$query"))
         {
@@ -1131,8 +1150,8 @@ if($FixNewTableTest)
       else
         {
         echo pdo_error();
-        } 
-      }  
+        }
+      }
     
     // Add into build2test
     pdo_query("INSERT INTO build2test (buildid,testid,status,time) 
@@ -1162,7 +1181,7 @@ if($FixBuildBasedOnRule)
                                     WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
                                     AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
                                     AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
-    echo pdo_error();                              
+    echo pdo_error();
     if(pdo_num_rows($build2grouprule)>0)
       {
       $build2grouprule_array = pdo_fetch_array($build2grouprule);
