@@ -218,7 +218,7 @@ class Build
   function SaveTotalTestsTime($time)
     {
     $time = pdo_real_escape_string($time);
-    $query = "INSERT INTO build2testtime (buildid, time) VALUES ('$this->Id', $time)";
+    $query = "INSERT INTO buildtesttime (buildid, time) VALUES ('$this->Id', $time)";
     
     if(!pdo_query($query))
       {

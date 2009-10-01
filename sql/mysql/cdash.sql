@@ -445,10 +445,10 @@ CREATE TABLE `build2test` (
 );
 
 --
--- Table structure for table `build2testtime`
+-- Table structure for table `buildtesttime`
 --
 
-CREATE TABLE IF NOT EXISTS `build2testtime` (
+CREATE TABLE IF NOT EXISTS `buildtesttime` (
   `buildid` int(11) NOT NULL default '0',
   `time` float(7,2) NOT NULL default '0.00',
   PRIMARY KEY `buildid` (`buildid`)

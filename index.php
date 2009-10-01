@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT id FROM submission LIMIT 1"))
+  if(!pdo_query("SELECT buildid FROM buildtesttime LIMIT 1"))
     {  
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -864,7 +864,7 @@ function generate_main_dashboard_XML($projectid,$date)
           }
         }
       }
-    $time_array = pdo_fetch_array(pdo_query("SELECT time FROM build2testtime WHERE buildid='$buildid'"));
+    $time_array = pdo_fetch_array(pdo_query("SELECT time FROM buildtesttime WHERE buildid='$buildid'"));
     $build_row['testsduration'] = round($time_array[0],1);
     
     //  Save the row in '$build_rows'
