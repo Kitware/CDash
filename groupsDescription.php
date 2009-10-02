@@ -45,8 +45,6 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 ?>
 </table>
 <center><a href="#" class="jqmClose">Close</a></center>
-</body>
-</html>
 <?php
      return;
      }
@@ -75,7 +73,6 @@ pdo_select_db("$CDASH_DB_NAME",$db);
        <td align="center" width="30%"><b>Dynamic Analysis</b></td>
        <td align="left">Check if the current tests have memory defects</td>
     </tr>
-    
 </table>
 <center><a href="#" class="jqmClose">Close</a></center>
 </body>

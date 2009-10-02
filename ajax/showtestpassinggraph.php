@@ -68,7 +68,7 @@ ORDER BY build.starttime DESC
 
     
 <br>
-<script id="source" language="javascript" type="text/javascript">
+<script language="javascript" type="text/javascript">
 $(function () {
   var d1 = [];
   var ty = [];

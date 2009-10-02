@@ -49,7 +49,7 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime FROM build WHERE siteid
 
     
 <br>
-<script id="source" language="javascript" type="text/javascript">
+<script language="javascript" type="text/javascript">
 $(function () {
     var d1 = [];
     var buildids = [];

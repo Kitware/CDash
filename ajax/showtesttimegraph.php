@@ -69,7 +69,7 @@ ORDER BY build.starttime DESC
 ?>
 
 &nbsp;
-<script id="source" language="javascript" type="text/javascript">
+<script language="javascript" type="text/javascript">
 $(function () {
     var d1 = [];
     var buildids = [];

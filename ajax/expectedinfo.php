@@ -79,6 +79,5 @@ else
   </font></td>
   </tr>
 </table>
-  </form>
 </html>
 
