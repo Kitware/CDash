@@ -864,8 +864,17 @@ function generate_main_dashboard_XML($projectid,$date)
           }
         }
       }
-    $time_array = pdo_fetch_array(pdo_query("SELECT time FROM buildtesttime WHERE buildid='$buildid'"));
-    $build_row['testsduration'] = round($time_array[0],1);
+    $result = pdo_query("SELECT time FROM buildtesttime WHERE buildid='$buildid'");
+    if(pdo_num_rows($result) == 0)
+      {
+      $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
+      $build_row['testsduration'] = round($time_array[0]/60,1);
+      }
+    else
+      {
+      $time_array = pdo_fetch_array($result);
+      $build_row['testsduration'] = round($time_array[0],1); //already in minutes
+      } 
     
     //  Save the row in '$build_rows'
     //
