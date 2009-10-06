@@ -19,7 +19,16 @@
 require_once("../cdash/config.php");
 require_once("../cdash/pdo.php");
 include("../cdash/common.php");
+$noforcelogin = 1;
+include('../login.php');
+$userid = $_GET["userid"];
 
+if(!$userid && !isset($_SESSION['cdash']))
+  {
+  echo "Not a valid user id";
+  return;
+  }
+  
 $buildid = $_GET["buildid"];
 if(!isset($buildid) || !is_numeric($buildid))
   {
@@ -119,50 +128,6 @@ $group = pdo_query("SELECT name,id FROM buildgroup WHERE id NOT IN
   }
 </style>
 </head>
-
-<script type="text/javascript" charset="utf-8">
-function removebuild_click(buildid)
-{
-  if(confirm("Are you sure you want to remove this build?"))
-    {
-    var group = "#buildgroup_"+buildid;
-    $(group).html("updating...");
-    $.post("ajax/addbuildgroup.php?buildid="+buildid,{removebuild:"1",buildid:buildid});
-    $(group).html("deleted.");
-    $(group).fadeOut('slow');
-    window.location = "";
-    }
-}
-
-function markasexpected_click(buildid,groupid,expected)
-{
-  var group = "#buildgroup_"+buildid;
-  $(group).html("updating...");
-  $.post("ajax/addbuildgroup.php?buildid="+buildid,{markexpected:"1",groupid:groupid,expected:expected});
-  $(group).html("updated.");
-  $(group).fadeOut('slow');
-  window.location = "";
-}
-
-function addbuildgroup_click(buildid,groupid,definerule)
-{
-  var expected = "expected_"+buildid+"_"+groupid;
-  var t = document.getElementById(expected);
-  
-  var expectedbuild = 0;
-  if(t.checked)
-    {
-    expectedbuild = 1;
-    }
-
-  var group = "#buildgroup_"+buildid;
-  $(group).html("addinggroup");
-  $.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild,definerule:definerule});
-  $(group).html("added to group.");
-  $(group).fadeOut('slow');
-  window.location = "";
-}
-</script>
  <form method="post" action="">
 
   <table width="100%"  border="0">

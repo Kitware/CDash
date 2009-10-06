@@ -73,3 +73,45 @@ function expectedinfo_click(siteid,buildname,divname,projectid,buildtype,current
   $(group).load("ajax/expectedinfo.php?siteid="+siteid+"&buildname="+buildname+"&projectid="+projectid+"&buildtype="+buildtype+"&currenttime="+currentime,{},function(){$(this).fadeIn('slow');});
   return;
 }
+
+function removebuild_click(buildid)
+{
+  if(confirm("Are you sure you want to remove this build?"))
+    {
+    var group = "#buildgroup_"+buildid;
+    $(group).html("updating...");
+    $.post("ajax/addbuildgroup.php?buildid="+buildid,{removebuild:"1",buildid:buildid});
+    $(group).html("deleted.");
+    $(group).fadeOut('slow');
+    window.location = "";
+    }
+}
+
+function markasexpected_click(buildid,groupid,expected)
+{
+  var group = "#buildgroup_"+buildid;
+  $(group).html("updating...");
+  $.post("ajax/addbuildgroup.php?buildid="+buildid,{markexpected:"1",groupid:groupid,expected:expected});
+  $(group).html("updated.");
+  $(group).fadeOut('slow');
+  window.location = "";
+}
+
+function addbuildgroup_click(buildid,groupid,definerule)
+{
+  var expected = "expected_"+buildid+"_"+groupid;
+  var t = document.getElementById(expected);
+  
+  var expectedbuild = 0;
+  if(t.checked)
+    {
+    expectedbuild = 1;
+    }
+
+  var group = "#buildgroup_"+buildid;
+  $(group).html("addinggroup");
+  $.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild,definerule:definerule});
+  $(group).html("added to group.");
+  $(group).fadeOut('slow');
+  window.location = "";
+}
