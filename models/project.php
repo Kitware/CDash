@@ -55,18 +55,58 @@ class Project
 
   function __construct()
     {
-    $this->EmailBuildMissing=0;
-    $this->EmailLowCoverage=0;
-    $this->EmailTestTimingChanged=0;
-    $this->EmailBrokenSubmission=0;
-    $this->EmailRedundantFailures=0;
-    $this->EmailAdministrator=1;
-    $this->ShowIPAddresses=1;
-    $this->DisplayLabels=1;
-    $this->AutoremoveTimeframe=0;
-    $this->AutoremoveMaxBuilds=300;
+    $this->Initialize();
     }
 
+  /** Initialize non defined variables */
+  private function Initialize()
+    {
+    if(empty($this->EmailBuildMissing))
+      { 
+      $this->EmailBuildMissing=0;
+      } 
+    if(empty($this->EmailLowCoverage))
+      { 
+      $this->EmailLowCoverage=0;
+      } 
+    if(empty($this->EmailTestTimingChanged))
+      { 
+      $this->EmailTestTimingChanged=0;
+      } 
+    if(empty($this->EmailBrokenSubmission))
+      { 
+      $this->EmailBrokenSubmission=0;
+      } 
+    if(empty($this->EmailRedundantFailures))
+      { 
+      $this->EmailRedundantFailures=0;
+      } 
+    if(empty($this->EmailAdministrator))
+      { 
+      $this->EmailAdministrator=1;
+      } 
+    if(empty($this->ShowIPAddresses))
+      { 
+      $this->ShowIPAddresses=1;
+      }
+    if(empty($this->ShowTestTime))
+      { 
+      $this->ShowTestTime=1;
+      }   
+    if(empty($this->DisplayLabels))
+      { 
+      $this->DisplayLabels=1;
+      }
+    if(empty($this->AutoremoveTimeframe))
+      { 
+      $this->AutoremoveTimeframe=0;
+      }
+    if(empty($this->AutoremoveMaxBuilds))
+      { 
+      $this->AutoremoveMaxBuilds=300;
+      }
+    }  
+    
   /** Add a build group */
   function AddBuildGroup($buildgroup)
     {
@@ -163,7 +203,7 @@ class Project
       {
       // Trim the name
       $this->Name = trim($this->Name);
-      
+      $this->Initialize();
       // Update the project
       $query = "UPDATE project SET ";
       $query .= "description='".$this->Description."'";
@@ -217,7 +257,7 @@ class Project
       
       // Trim the name
       $this->Name = trim($this->Name);
-      
+      $this->Initialize();
       $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                     googletracker,emailbrokensubmission,emailredundantfailures,
                                     emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
