@@ -71,7 +71,16 @@ class BuildError
       {
       $postcontext = "'".addslashes($this->PostContext)."'";
       }
-      
+
+    if(empty($this->SourceLine))
+      {
+      $this->SourceLine = 0; 
+      }
+    if(empty($this->RepeatCount))
+      {
+      $this->RepeatCount = 0; 
+      }
+       
     $query = "INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount)
               VALUES (".qnum($this->BuildId).",".qnum($this->Type).",".qnum($this->LogLine).",'$text','$this->SourceFile',".qnum($this->SourceLine).",
               ".$precontext.",".$postcontext.",".qnum($this->RepeatCount).")";                     

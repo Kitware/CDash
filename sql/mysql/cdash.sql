@@ -241,7 +241,7 @@ CREATE TABLE `dynamicanalysis` (
   `name` varchar(255) NOT NULL default '',
   `path` varchar(255) NOT NULL default '',
   `fullcommandline` varchar(255) NOT NULL default '',
-  `log` text NOT NULL,
+  `log` longtext NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `buildid` (`buildid`)
 );

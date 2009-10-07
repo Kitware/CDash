@@ -540,7 +540,8 @@ if(isset($_GET['upgrade-1-6']))
   
   // Add the cookiekey field
   AddTableField("user","cookiekey","VARCHAR(40)","VARCHAR( 40 )","");
-
+  ModifyTableField("dynamicanalysis","log","MEDIUMTEXT","TEXT","",true,false);
+  
   // Set the database version
   setVersion();
 

@@ -100,10 +100,20 @@ class CoverageSummary
       return false;    
       }
     
-    if(!is_numeric($this->BuildId))
+    if(!is_numeric($this->BuildId) || !is_numeric($this->LocTested) || !is_numeric($this->LocUntested))
       {
       return;
       }
+    
+    if(empty($this->LocTested))
+      {
+      $this->LocTested = 0;
+      }  
+    
+   if(empty($this->LocUntested))
+      {
+      $this->LocUntested = 0;
+      } 
       
     $query = "INSERT INTO coveragesummary (buildid,loctested,locuntested) 
               VALUES (".qnum($this->BuildId).",".qnum($this->LocTested).",".qnum($this->LocUntested).")";                     
@@ -157,7 +167,36 @@ class CoverageSummary
           {
           $i=1;
           }
-           
+        
+        if(empty($covered))
+          {
+          $covered = 0;
+          } 
+        if(empty($loctested))
+          {
+          $loctested = 0;
+          } 
+        if(empty($locuntested))
+          {
+          $locuntested = 0;
+          } 
+        if(empty($branchstested))
+          {
+          $branchstested = 0;
+          } 
+        if(empty($branchsuntested))
+          {
+          $branchsuntested = 0;
+          } 
+        if(empty($functionstested))
+          {
+          $functionstested = 0;
+          } 
+        if(empty($functionsuntested))
+          {
+          $functionsuntested = 0;
+          }  
+          
         $sql .= "(".qnum($this->BuildId).",".qnum($fileid).",".qnum($covered).",".qnum($loctested).",".qnum($locuntested).",
                    ".qnum($branchstested).",".qnum($branchsuntested).
                   ",".qnum($functionstested).",".qnum($functionsuntested).")";    

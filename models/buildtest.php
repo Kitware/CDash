@@ -54,7 +54,24 @@ class BuildTest
       echo "BuildTest::Insert(): TestId is not set";
       return false;
       }
-      
+    
+    if(empty($this->Time))
+      {
+      $this->Time = 0;
+      } 
+    if(empty($this->TimeMean))
+      {
+      $this->TimeMean = 0;
+      } 
+    if(empty($this->TimeStd))
+      {
+      $this->TimeStd = 0;
+      } 
+    if(empty($this->TimeStatus))
+      {
+      $this->TimeStatus = 0;
+      } 
+        
     $query = "INSERT INTO build2test (buildid,testid,status,time,timemean,timestd,timestatus)
                  VALUES (".qnum($this->BuildId).",".qnum($this->TestId).",'$this->Status',".qnum($this->Time).","
                           .qnum($this->TimeMean).",".qnum($this->TimeStd).",".qnum($this->TimeStatus).")";                     
