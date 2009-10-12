@@ -22,8 +22,8 @@ class BuildInformation
   var $OSPlatform;
   var $OSRelease;
   var $OSVersion;
-  var $CompilerName;
-  var $CompilerVersion;
+  var $CompilerName = 'unknown';
+  var $CompilerVersion = 'unknown';
   
   function SetValue($tag,$value)  
     {
@@ -46,7 +46,7 @@ class BuildInformation
        {
        pdo_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion) 
                     VALUES (".qnum($this->BuildId).",'$this->OSName','$this->OSRelease',
-                            '$this->OSVersion','$this->OSPlatform','unknown','unknown')");
+                            '$this->OSVersion','$this->OSPlatform','$this->CompilerName','$this->CompilerVersion')");
        add_last_sql_error("BuildInformation Insert");
        }
     } // end function save  
