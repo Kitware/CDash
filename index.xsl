@@ -530,7 +530,10 @@
         </xsl:if>
         
         <xsl:if test="string-length(builddate)=0">
-          Expected build
+          Expected build<br />
+          <span style="font-size: 10px;">
+          Expected start: <xsl:value-of select="expectedstarttime" />
+          </span>
         </xsl:if>
         
         <xsl:value-of select="builddate"/>

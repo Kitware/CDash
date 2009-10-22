@@ -43,10 +43,6 @@ if(!isset($siteid) || !is_numeric($siteid))
 
 if($markexpected)
 {
-  $h = fopen("c:/test.txt","wb");
-  fwrite($h,"test");
-  fclose($h);
-
   if(!isset($groupid) || !is_numeric($groupid))
     {
     echo "Not a valid groupid!";
@@ -59,7 +55,7 @@ if($markexpected)
   // If a rule already exists we update it
   pdo_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
                       AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
-  return;                   
+  return;
 }
 
 if($submit)

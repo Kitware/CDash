@@ -549,19 +549,56 @@ function generate_main_dashboard_XML($projectid,$date)
     $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
                                   WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
                                   AND g.starttime<'$currentUTCTime' AND (g.endtime>'$currentUTCTime' OR g.endtime='1980-01-01 00:00:00')
-                                  ");                      
+                                  ");
     while($build2grouprule_array = pdo_fetch_array($build2grouprule))
       {
       $key = $build2grouprule_array["name"]."_".$build2grouprule_array["buildname"];
       if(array_search($key,$received_builds) === FALSE) // add only if not found
-        {      
-        $xml .= "<build>";                
-        $xml .= add_XML_value("site",$build2grouprule_array["name"]);
-        $xml .= add_XML_value("siteid",$build2grouprule_array["siteid"]);
-        $xml .= add_XML_value("buildname",$build2grouprule_array["buildname"]);
-        $xml .= add_XML_value("buildtype",$build2grouprule_array["buildtype"]);
+        {
+        $site = $build2grouprule_array["name"];
+        $siteid = $build2grouprule_array["siteid"];
+        $buildtype = $build2grouprule_array["buildtype"];
+        $buildname = $build2grouprule_array["buildname"];
+        $xml .= "<build>";
+        $xml .= add_XML_value("site",$site);
+        $xml .= add_XML_value("siteid",$siteid);
+        $xml .= add_XML_value("buildname",$buildname);
+        $xml .= add_XML_value("buildtype",$buildtype);
         $xml .= add_XML_value("buildgroupid",$groupid);
         $xml .= add_XML_value("expected","1");
+           
+        //compute historical average to get approximate expected time
+        $matches = pdo_query("SELECT starttime FROM build2grouprule
+                              WHERE siteid='$siteid' AND buildname='$buildname'
+                              AND buildtype='$buildtype' AND groupid='$groupid'
+                              ORDER BY starttime DESC");
+
+        $MAX_LOOKBACK = 10;
+        $mostRecent;
+        $sum = 0; //sum of time deltas
+        $count = 0;
+        $prev;
+        while($match = pdo_fetch_array($matches))
+          {
+          $startTime = strtotime($match["starttime"]);
+          $count++;
+          $prev = $startTime;
+          if(!isset($mostRecent)) //first iteration
+            {
+            $mostRecent = $startTime;
+            }
+          else //subsequent iterations
+            {
+            $sum += ($startTime - $prev);
+            }
+          
+          if($count >= $MAX_LOOKBACK)
+            {
+            break;
+            }
+          }
+        $avg = $sum / $count;
+        $nextExpected = time() + $avg;
 
         $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"]; 
         $divname = str_replace("+","_",$divname);
@@ -569,7 +606,8 @@ function generate_main_dashboard_XML($projectid,$date)
 
         $xml .= add_XML_value("expecteddivname",$divname);
         $xml .= add_XML_value("submitdate","No Submission");
-        $xml  .= "</build>";
+        $xml .= add_XML_value("expectedstarttime",gmdate(FMT_DATETIME,$nextExpected));
+        $xml .= "</build>";
         }
       }
     return $xml;
@@ -1064,7 +1102,7 @@ function generate_main_dashboard_XML($projectid,$date)
           {
           $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
           }
-        $xml .= "</buildgroup>";  
+        $xml .= "</buildgroup>";
         }  
 
 
