@@ -70,6 +70,12 @@ $CDASH_USE_LDAP='0';
 $CDASH_LDAP_HOSTNAME='localhost';
 $CDASH_LDAP_BASEDN='ou=people,dc=organization,dc=com';
 $CDASH_LDAP_PROTOCOL_VERSION='3';
+// For authentication against Active Directory, set CDASH_LDAP_AUTHENTICATED to '1' 
+// CDASH_LDAP_OPT_REFERRALS to '0', and specify a bind DN and password
+$CDASH_LDAP_OPT_REFERRALS='1';
+$CDASH_LDAP_AUTHENTICATED='0';
+$CDASH_LDAP_BIND_DN='cn=user,ou=people,dc=orgranization,dc=com';
+$CDASH_LDAP_BIND_PASSWORD='password';
 
 // Allow rememberme
 $CDASH_ALLOW_LOGIN_COOKIE='1';

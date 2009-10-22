@@ -120,6 +120,13 @@ function ldapAuthenticate($email,$password,$SessionCachePolicy)
   
   $ldap = ldap_connect($CDASH_LDAP_HOSTNAME);
   ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION,$CDASH_LDAP_PROTOCOL_VERSION);
+  ldap_set_option($ldap, LDAP_OPT_REFERRALS,$CDASH_LDAP_OPT_REFERRALS);
+  // Bind as the LDAP user if authenticated ldap is enabled
+  if($CDASH_LDAP_AUTHENTICATED)
+    {
+    ldap_bind($ldap, $CDASH_LDAP_BIND_DN, $CDASH_LDAP_BIND_PASSWORD);  
+    }
+
   if(isset($ldap) && $ldap != '')
     {
     /* search for pid dn */
