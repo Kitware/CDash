@@ -241,28 +241,32 @@ if($Update || $AddRepository)
   $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
   $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
   $Project->DocumentationUrl = stripHTTP($_POST["docURL"]);
-  @$Project->Public = $_POST["public"];
+  if(!isset($Project->Public))
+    {
+    $Project->Public = 0;
+    }
+
   $Project->CoverageThreshold = $_POST["coverageThreshold"];
   $Project->NightlyTime = $_POST["nightlyTime"];
   $Project->GoogleTracker = $_POST["googleTracker"]; 
-  @$Project->EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
-  @$Project->EmailRedundantFailures = $_POST["emailRedundantFailures"];
-  @$Project->EmailBuildMissing = $_POST["emailBuildMissing"];
-  @$Project->EmailLowCoverage = $_POST["emailLowCoverage"];
-  @$Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
-  @$Project->CvsViewerType = $_POST["cvsviewertype"]; 
-  @$Project->TestTimeStd = $_POST["testTimeStd"];
-  @$Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
-  @$Project->TestTimeMaxStatus = $_POST["testTimeMaxStatus"];  
-  @$Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
-  @$Project->ShowTestTime = $_POST["showTestTime"];
-  @$Project->EmailMaxItems = $_POST["emailMaxItems"];
-  @$Project->EmailMaxChars = $_POST["emailMaxChars"];
-  @$Project->EmailAdministrator = $_POST["emailAdministrator"];
-  @$Project->ShowIPAddresses = $_POST["showIPAddresses"];
-  @$Project->DisplayLabels = $_POST["displayLabels"];
-  @$Project->AutoremoveTimeframe = $_POST["autoremoveTimeframe"];
-  @$Project->AutoremoveMaxBuilds = $_POST["autoremoveMaxBuilds"];
+  $Project->EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
+  $Project->EmailRedundantFailures = $_POST["emailRedundantFailures"];
+  $Project->EmailBuildMissing = $_POST["emailBuildMissing"];
+  $Project->EmailLowCoverage = $_POST["emailLowCoverage"];
+  $Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
+  $Project->CvsViewerType = $_POST["cvsviewertype"]; 
+  $Project->TestTimeStd = $_POST["testTimeStd"];
+  $Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
+  $Project->TestTimeMaxStatus = $_POST["testTimeMaxStatus"];  
+  $Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
+  $Project->ShowTestTime = $_POST["showTestTime"];
+  $Project->EmailMaxItems = $_POST["emailMaxItems"];
+  $Project->EmailMaxChars = $_POST["emailMaxChars"];
+  $Project->EmailAdministrator = $_POST["emailAdministrator"];
+  $Project->ShowIPAddresses = $_POST["showIPAddresses"];
+  $Project->DisplayLabels = $_POST["displayLabels"];
+  $Project->AutoremoveTimeframe = $_POST["autoremoveTimeframe"];
+  $Project->AutoremoveMaxBuilds = $_POST["autoremoveMaxBuilds"];
   $Project->Save();
   
   // Add the logo
