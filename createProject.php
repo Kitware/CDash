@@ -110,7 +110,7 @@ if($Submit)
   if(!$Project->ExistsByName($Name))
     {    
     $Project->Name = $Name;
-    $Project->Description = addslashes($_POST["description"]);
+    $Project->Description = $_POST["description"];
     $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
     $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
     $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
@@ -236,7 +236,7 @@ if($Delete)
 @$AddRepository = $_POST["AddRepository"];
 if($Update || $AddRepository)
   {
-  $Project->Description = addslashes($_POST["description"]);
+  $Project->Description = $_POST["description"];
   $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
   $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
   $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);

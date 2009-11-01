@@ -26,7 +26,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $this->login();
     // first project necessary for testing
     $name = 'BatchmakeExample';
-    $description = 'Project Batchmake test for cdash testing';
+    $description = 'Project Batchmake\'s test for cdash testing';
     $this->createProject($name,$description);
     $name = 'InsightExample';
     $description = 'Project Insight test for cdash testing';
