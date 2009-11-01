@@ -40,7 +40,8 @@ if ($session_OK)
   $xml .= add_XML_value("user_is_admin",$user_array["admin"]);
     
   // Go through the list of project the user is part of
-  $project2user = pdo_query("SELECT projectid,role FROM user2project WHERE userid='$userid'");
+  $project2user = pdo_query("SELECT projectid,role FROM user2project,project WHERE project.id=user2project.projectid
+                             AND userid='$userid' ORDER BY project.name ASC");
   $condition_list_projects='';
   $Project= new Project();
   $start=gmdate(FMT_DATETIME,strtotime(date("r"))-(3600*24));
