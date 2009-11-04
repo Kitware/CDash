@@ -15,40 +15,50 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("cdash/config.php");
-require_once("cdash/pdo.php");
-include_once("cdash/common.php");
-
-set_time_limit(0);
 
 /** Remove the first builds that are at the beginning of the queue */
-function removeFirstBuilds($projectid,$days,$maxbuilds,$force=false)
-{   
+function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
+{
+  include("cdash/config.php");
+  require_once("cdash/pdo.php");
+  include_once("cdash/common.php");
+
+  set_time_limit(0);
+
   if(!$force && !isset($CDASH_AUTOREMOVE_BUILDS))
     {
+    add_log('early return: not forced and $CDASH_AUTOREMOVE_BUILDS not set',
+      'removeFirstBuilds');
     return;
     }
-  
+
   if(!$force && $CDASH_AUTOREMOVE_BUILDS!='1')
     {
+    add_log('early return: not forced and $CDASH_AUTOREMOVE_BUILDS != 1',
+      'removeFirstBuilds');
     return;
     }
-  
+
   if($days < 2)
     {
+    add_log('early return: $days < 2  $days=' . $days,
+      'removeFirstBuilds');
     return;
     }
-     
+
   // First remove the builds with the wrong date
   $currentdate = time()-3600*24*$days; 
   $startdate = date(FMT_DATETIME,$currentdate);
-  
+
+  add_log('about to query for builds to remove', 'removeFirstBuilds');
   $builds = pdo_query("SELECT id FROM build WHERE starttime<'".$startdate."' AND projectid=".qnum($projectid)." ORDER BY starttime ASC LIMIT ".$maxbuilds);
   add_last_sql_error("dailyupdates::removeFirstBuilds");
+
   while($builds_array = pdo_fetch_array($builds))
     {
     $buildid = $builds_array["id"];
-    //add_log("[REMOVE OLD BUILDS] for projectid: ".$projectid,$buildid);
+    add_log('removing old buildid: '.$buildid.' projectid: '.$projectid,
+      'removeFirstBuilds');
     remove_build($buildid); 
     }
 }
