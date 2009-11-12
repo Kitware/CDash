@@ -173,8 +173,20 @@ class Project
       }
    
     pdo_query("DELETE FROM buildgroup WHERE projectid=$this->Id");
-    pdo_query("DELETE FROM project WHERE id=$this->Id");
     pdo_query("DELETE FROM user2project WHERE projectid=$this->Id");
+    pdo_query("DELETE FROM labelemail WHERE projectid=$this->Id");
+    pdo_query("DELETE FROM labelemail WHERE projectid=$this->Id");
+    pdo_query("DELETE FROM project2repositories WHERE projectid=$this->Id");
+    
+    $dailyupdate = pdo_query("SELECT id FROM dailyupdate WHERE projectid=$this->Id");
+    while($dailyupdate_array = pdo_fetch_array($dailyupdate))
+      {
+      $dailyupdateid = $dailyupdate_array['id'];
+      pdo_query("DELETE FROM dailyupdatefile WHERE dailyupdateid='$dailyupdateid'");
+      }
+    
+    pdo_query("DELETE FROM dailyupdate WHERE projectid=$this->Id");  
+    pdo_query("DELETE FROM project WHERE id=$this->Id");
     }
       
   /** Return if a project exists */

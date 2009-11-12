@@ -1144,23 +1144,27 @@ function remove_build($buildid)
 
   pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
   pdo_query("DELETE FROM builderror WHERE buildid='$buildid'");
-  
+  pdo_query("DELETE FROM buildemail WHERE buildid='$buildid'");
+   
   pdo_query("DELETE FROM buildinformation WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");   
   pdo_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
+   
   pdo_query("DELETE FROM configure WHERE buildid='$buildid'");
   pdo_query("DELETE FROM configureerror WHERE buildid='$buildid'");
   pdo_query("DELETE FROM configureerrordiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM coveragesummarydiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM testdiff WHERE buildid='$buildid'");
-  
+  pdo_query("DELETE FROM summaryemail WHERE buildid='$buildid'");
+   
   // Remove the buildfailureargument
   $buildfailure = pdo_query("SELECT id FROM buildfailure WHERE buildid='$buildid'");
   while($buildfailure_array = pdo_fetch_array($buildfailure))
     {
     $buildfailureid = $buildfailure_array['id'];
     pdo_query("DELETE FROM buildfailure2argument WHERE buildfailureid='$buildfailureid'");
-    // Don't delete the arguments for now...
+    pdo_query("DELETE FROM label2buildfailure WHERE buildfailureid='$buildfailureid'");
+      // Don't delete the arguments for now...
     }
   
   pdo_query("DELETE FROM buildfailure WHERE buildid='$buildid'");      
@@ -1175,6 +1179,7 @@ function remove_build($buildid)
     if($numfiles[0]==1)
       {
       pdo_query("DELETE FROM coveragefile WHERE id='$fileid'"); 
+         pdo_query("DELETE FROM label2coveragefile WHERE id='$coveragefileid' AND buildid=".qnum($buildid)); 
       }
     }
   
@@ -1188,6 +1193,7 @@ function remove_build($buildid)
     {
     $dynid = $dynamicanalysis_array["id"];
     pdo_query("DELETE FROM dynamicanalysisdefect WHERE id='$dynid'"); 
+      pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid='$dynid'"); 
     }
    
   pdo_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
@@ -1228,10 +1234,17 @@ function remove_build($buildid)
       pdo_query("DELETE FROM testmeasurement WHERE testid='$testid'");
       pdo_query("DELETE FROM test WHERE id='$testid'");
       pdo_query("DELETE FROM test2image WHERE testid='$testid'");
-      }
+      pdo_query("DELETE FROM label2test WHERE testid='$testid' AND buildid='$buildid'");
+         }
     }
   pdo_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
+   
+   // Delete the subproject
+  pdo_query("DELETE FROM subproject2build WHERE buildid='$buildid'"); 
 
+   // Delete the labels
+  pdo_query("DELETE FROM label2build WHERE buildid='$buildid'");
+   
   // Only delete the buildid at the end so that no other build can get it in the meantime
   pdo_query("DELETE FROM build WHERE id='$buildid'");
 
