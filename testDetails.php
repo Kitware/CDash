@@ -44,9 +44,15 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
 $testRow = pdo_fetch_array(pdo_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$buildid' AND build2test.testid=test.id"));
-
 $buildRow = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id = '$buildid'"));
 $projectid = $buildRow["projectid"];
+
+if(!$projectid)
+{
+  echo "This build doesn't exist.";
+  exit();
+}
+
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 $siteid = $buildRow["siteid"];
 

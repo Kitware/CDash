@@ -15,7 +15,7 @@
 
     <!-- Include JQuery -->
     <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
-    <script src="javascript/jquery.flot.js" type="text/javascript" charset="utf-8"></script>   
+    <script src="javascript/jquery.flot.min.js" type="text/javascript" charset="utf-8"></script>   
     <script src="javascript/tooltip.js" type="text/javascript" charset="utf-8"></script>   
      
     <!-- Include Menu JavaScript -->
