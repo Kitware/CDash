@@ -68,7 +68,8 @@ $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
-  
+$xml .= "<buildid>".$buildid."</buildid>";
+
 $siteid = $build_array["siteid"];
 $buildtype = $build_array["type"];
 $buildname = $build_array["name"];

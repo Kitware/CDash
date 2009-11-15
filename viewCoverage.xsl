@@ -17,7 +17,8 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-      <xsl:call-template name="headscripts"/> 
+       <xsl:call-template name="headscripts"/> 
+       <script src="javascript/cdashCoverageGraph.js" type="text/javascript" charset="utf-8"></script> 
        </head>
        <body bgcolor="#ffffff">
    
@@ -109,6 +110,19 @@
    </tr>
 </table>
 
+<br/>
+
+<!-- Graph -->
+<img src="images/graph.png" title="graph"/>
+<a>
+<xsl:attribute name="href">javascript:showcoveragegraph_click(<xsl:value-of select="cdash/buildid"/>)</xsl:attribute>
+[Show coverage over time]
+</a>
+<div id="graphoptions"></div>
+<div id="graph"></div>
+<center>
+<div id="grapholder"></div>
+</center>
 <br/>
 
 <!--  Coverage table -->
