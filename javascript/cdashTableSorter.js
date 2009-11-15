@@ -247,7 +247,50 @@ $(document).ready(function() {
          });
     }
     }
-
+  
+  //Initialize the coverage table
+  if($tabs.length==0)
+    {
+    $tabs = $("#coverageTable");
+    if($("#coverageType").val() == "gcov")
+    {
+    $tabs.each(function(index) {
+        $(this).tablesorter({
+               headers: { 
+                   0: { sorter:'buildname'},
+                   1: { sorter:'text'},
+                   2: { sorter:'digit'},
+                   3: { sorter:'digit'},
+                   4: { sorter:'text'},
+                   5: { sorter:'text'},
+                   6: { sorter:'text'},
+               },
+             debug: false,
+             widgets: ['zebra'] 
+           });  
+         });
+    }
+    else //bull's eye
+      {
+      $tabs.each(function(index) {
+        $(this).tablesorter({
+             headers: { 
+             0: { sorter:'buildname'},
+               1: { sorter:'text'},
+               2: { sorter:'digit'},
+               3: { sorter:'digit'},
+               4: { sorter:'digit'},
+               5: { sorter:'text'},
+               6: { sorter:'text'},
+               7: { sorter:'text'},
+              },
+           debug: false,
+           widgets: ['zebra'] 
+           });  
+         });
+       }
+    } // end coverage
+   
   // Initialize the userStatistics table
   if($tabs.length==0)
     {
