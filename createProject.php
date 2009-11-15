@@ -241,11 +241,12 @@ if($Update || $AddRepository)
   $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
   $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
   $Project->DocumentationUrl = stripHTTP($_POST["docURL"]);
+  @$Project->Public  = $_POST["public"];
   if(!isset($Project->Public))
     {
     $Project->Public = 0;
     }
-
+  
   $Project->CoverageThreshold = $_POST["coverageThreshold"];
   $Project->NightlyTime = $_POST["nightlyTime"];
   $Project->GoogleTracker = $_POST["googleTracker"]; 
