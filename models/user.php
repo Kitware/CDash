@@ -101,7 +101,12 @@ class User
       
   // Save the project in the database
   function Save()
-    {
+    { 
+    if(empty($this->Admin))
+      {
+      $this->Admin = 0;
+      }
+      
     // Check if the project is already
     if($this->Exists())
       {

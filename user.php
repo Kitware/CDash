@@ -63,7 +63,9 @@ if ($session_OK)
     }
   
   // Go through the public projects
-  $project = pdo_query("SELECT name,id FROM project WHERE id NOT IN (SELECT projectid as id FROM user2project WHERE userid='$userid') AND public='1'");
+  $project = pdo_query("SELECT name,id FROM project WHERE id 
+                        NOT IN (SELECT projectid as id FROM user2project 
+                        WHERE userid='$userid') AND public='1' ORDER BY name");
   $j = 0;
   if($CDASH_USE_LOCAL_DIRECTORY=='1')
     {
