@@ -21,6 +21,12 @@ class CoverageFileLog
   var $FileId;
   var $Lines;
   
+  
+  function __construct()
+    {
+    $this->Lines = array();
+    }
+    
   function AddLine($number,$code)
     {
     $this->Lines[$number] = $code;

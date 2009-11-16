@@ -302,6 +302,10 @@ $xml .= "</menu>";
     $xml .= add_XML_value("covered",$covfile["covered"]);
     $xml .= add_XML_value("fileid",$covfile["fileid"]);
     $xml .= add_XML_value("percentcoverage",$covfile["percentcoverage"]);
+    // For display purposes
+    $roundedpercentage = round($covfile["percentcoverage"]);
+    if($roundedpercentage>98) {$roundedpercentage = 98;};
+    $xml .= add_XML_value("percentcoveragerounded",$roundedpercentage); // used for progress bar
     $xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
     $xml .= add_XML_value("functionsuntested",@$covfile["functionsuntested"]);
     $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);

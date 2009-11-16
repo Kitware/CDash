@@ -94,7 +94,31 @@ $(document).ready(function() {
         type: 'numeric' 
     }); 
   
-  /** numeric for dynalanisys */
+  /** Coverage percent table */
+  $.tablesorter.addParser({ 
+      // set a unique id 
+      id: 'coveragepercent', 
+      is: function(s) { 
+            // return false so this parser is not auto detected 
+            return false; 
+        }, 
+        format: function(s) {
+            // format your data for normalization
+            var i = s.indexOf("percentvalue");
+            if(i!=-1)
+              {
+              var j = s.indexOf(">",i);
+              var k = s.indexOf("</div>",j);
+              var t = s.substr(j+1,k-j-2);
+              return t.toLowerCase();
+              }
+           return false;
+        }, 
+        // set type, either numeric or text 
+        type: 'numeric' 
+    }); 
+  
+  /** numeric for dynamic analysis */
   $.tablesorter.addParser({ 
       // set a unique id 
       id: 'dynanalysismetric', 
@@ -259,7 +283,7 @@ $(document).ready(function() {
                headers: { 
                    0: { sorter:'buildname'},
                    1: { sorter:'text'},
-                   2: { sorter:'digit'},
+                   2: { sorter:'coveragepercent'},
                    3: { sorter:'digit'},
                    4: { sorter:'text'},
                    5: { sorter:'text'},
@@ -277,7 +301,7 @@ $(document).ready(function() {
              headers: { 
              0: { sorter:'buildname'},
                1: { sorter:'text'},
-               2: { sorter:'digit'},
+               2: { sorter:'coveragepercent'},
                3: { sorter:'digit'},
                4: { sorter:'digit'},
                5: { sorter:'text'},

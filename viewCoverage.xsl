@@ -31,15 +31,12 @@
 </xsl:otherwise>
 </xsl:choose>
 
-<br/>
-
 <h3>Coverage started on <xsl:value-of select="cdash/coverage/starttime"/></h3>
-<table cellpadding="30">
+<table width="100%">
    <tr>
       <td>
          <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" width="300">
             <tr>
-
                <th colspan="2" class="table-heading1">Coverage Summary</th>
             </tr>
             <tr class="treven">
@@ -56,7 +53,6 @@
                 </xsl:choose>
                 </xsl:attribute>
                <xsl:value-of select="cdash/coverage/percentcoverage"/>
-                  
                </td>
             </tr>
             <tr class="trodd">
@@ -85,7 +81,7 @@
          </table>
 
       </td>
-      <td valign="Top">
+      <td valign="Top" align="right">
          <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" width="350">
             <tr class="table-heading1">
                <th>Coverage Legend</th>
@@ -109,8 +105,6 @@
       </td>
    </tr>
 </table>
-
-<br/>
 
 <!-- Graph -->
 <img src="images/graph.png" title="graph"/>
@@ -196,22 +190,30 @@
            </xsl:otherwise>
         </xsl:choose>
     </td> 
-    <td align="center">
+    <td>
       <xsl:if test="covered>0">
-       <xsl:attribute name="class">
-        <xsl:choose>
+      <div style="position:relative; width: 190px;">
+       <div style="position:relative; float:left;
+       width: 123px; height: 12px; background: #bdbdbd url('images/progressbar.gif') top left no-repeat;">
+       <div>
+         <xsl:attribute name="style">height: 12px;margin-left:1px;
+         <xsl:choose>
           <xsl:when test="coveragemetric &lt; /cdash/coverage/metricerror">
-            error
+            background: #bdbdbd url('images/progressbg_red.gif') top left no-repeat;
             </xsl:when>
          <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
-            normal
+            background: #bdbdbd url('images/progressbg_green.gif') top left no-repeat;
             </xsl:when>  
           <xsl:otherwise>
-            warning
+            background: #bdbdbd url('images/progressbg_orange.gif') top left no-repeat;
            </xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>
-      <xsl:value-of select="percentcoverage"/>%
+         
+         width:<xsl:value-of select="percentcoveragerounded"/>%;</xsl:attribute>
+       </div>
+       </div>
+       <div class="percentvalue" style="position:relative; float:left; margin-left:10px"><xsl:value-of select="percentcoverage"/>%</div>
+      </div>
       </xsl:if>
       <xsl:if test="covered=0">
       UNTESTED

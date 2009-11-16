@@ -33,14 +33,11 @@
 <br/>
 
 <!-- Main -->
-
-<br/>
-<p><b>Site:</b><xsl:value-of select="cdash/build/site"/> 
-</p>
-<p><b>Build Name:</b><xsl:value-of select="cdash/build/buildname"/> 
-</p>
-<p><b>Coverage File:</b><xsl:value-of select="cdash/coverage/fullpath"/> 
-</p>
+<table border="0">
+<tr><td align="left"><b>Site: </b><xsl:value-of select="cdash/build/site"/></td></tr>
+<tr><td align="left"><b>Build Name: </b><xsl:value-of select="cdash/build/buildname"/></td></tr>
+<tr><td align="left"><b>Coverage File: </b><xsl:value-of select="cdash/coverage/fullpath"/></td></tr>
+</table>
 <hr/>
 
 <pre><xsl:value-of select="cdash/coverage/file" disable-output-escaping="yes"/></pre>
