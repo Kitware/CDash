@@ -32,14 +32,14 @@
 </xsl:choose>
 
 <br/>
-
-<p><b>Site:</b><xsl:value-of select="cdash/build/site"/></p>
-<p><b>Build Name:</b><xsl:value-of select="cdash/build/buildname"/></p>       
-<p><b>Configure Command:</b><xsl:value-of select="cdash/configure/command"/></p>    
-<p><b>Configure Return Value:</b><xsl:value-of select="cdash/configure/status"/></p>    
-<p><b>Configure Output:</b></p>
-<pre><xsl:value-of select="cdash/configure/output"/></pre>
-
+<table border="0">
+<tr><td align="left"><b>Site: </b><xsl:value-of select="cdash/build/site"/></td></tr>
+<tr><td align="left"><b>Build Name: </b><xsl:value-of select="cdash/build/buildname"/></td></tr>   
+<tr><td align="left"><b>Configure Command: </b><xsl:value-of select="cdash/configure/command"/></td></tr>
+<tr><td align="left"><b>Configure Return Value: </b><xsl:value-of select="cdash/configure/status"/></td></tr>
+<tr><td align="left"><b>Configure Output:</b></td></tr>
+<tr><td align="left"><pre><xsl:value-of select="cdash/configure/output"/></pre></td></tr>
+</table>
 <!-- FOOTER -->
 <br/>
 

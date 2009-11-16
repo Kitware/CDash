@@ -100,7 +100,8 @@
                </xsl:choose>
        </xsl:attribute>
        
-        <b><xsl:value-of select="cdash/update/nerrors"/></b></td>
+        <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
+        <xsl:value-of select="cdash/update/nerrors"/></a></b></td>
         <td align="right">
               <xsl:attribute name="class">
           <xsl:choose>
@@ -115,7 +116,8 @@
                </xsl:choose>
        </xsl:attribute>
         
-        <b><xsl:value-of select="cdash/update/nwarnings"/></b></td>
+        <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
+        <xsl:value-of select="cdash/update/nwarnings"/></a></b></td>
         </tr>
         <tr class="tr-even">
         <td><a href="#Stage1"><b>Configure</b></a></td>
@@ -128,7 +130,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/configure/nerrors"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
+       <xsl:value-of select="cdash/configure/nerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
           <xsl:when test="cdash/configure/nwarnings > 0">error
@@ -138,7 +142,8 @@
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-       <b><xsl:value-of select="cdash/configure/nwarnings"/></b></td>
+       <b><a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
+       <xsl:value-of select="cdash/configure/nwarnings"/></a></b></td>
        </tr>
         <tr class="tr-odd">
         <td><a href="#Stage2"><b>Build</b></a></td>
@@ -150,7 +155,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/build/nerrors"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="cdash/build/id"/>
+       </xsl:attribute><xsl:value-of select="cdash/build/nerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
           <xsl:when test="cdash/build/nwarnings > 0">error
@@ -159,7 +166,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/build/nwarnings"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
+       <xsl:value-of select="cdash/build/nwarnings"/></a></b></td>
        </tr>
        <tr class="tr-even">
         <td><a href="#Stage3"><b>Test</b></a></td>
@@ -171,7 +180,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/test/nfailed"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewTest.php?onlyfailed&#38;buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
+       <xsl:value-of select="cdash/test/nfailed"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
           <xsl:when test="cdash/test/nnotrun> 0">error
@@ -180,11 +191,14 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/test/nnotrun"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewTest.php?onlynotrun&#38;buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
+       <xsl:value-of select="cdash/test/nnotrun"/></a></b></td>
        </tr>
       </table>
       </td>
       <td>
+      
       <!-- Previous build -->
       <xsl:if test="cdash/previousbuild">
       <table class="dart">
@@ -214,7 +228,8 @@
                </xsl:choose>
        </xsl:attribute>
        
-        <b><xsl:value-of select="cdash/previousbuild/nupdateerrors"/></b></td>
+        <b><a><xsl:attribute name="href">viewUpdate?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <xsl:value-of select="cdash/previousbuild/nupdateerrors"/></a></b></td>
         <td align="right">
               <xsl:attribute name="class">
           <xsl:choose>
@@ -229,7 +244,8 @@
                </xsl:choose>
        </xsl:attribute>
         
-        <b><xsl:value-of select="cdash/previousbuild/nupdatewarnings"/></b></td>
+        <b><a><xsl:attribute name="href">viewUpdate?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+        <xsl:value-of select="cdash/previousbuild/nupdatewarnings"/></a></b></td>
         </tr>
         <tr class="tr-even">
         <td><b>Configure</b></td>
@@ -242,7 +258,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nconfigureerrors"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewConfigure?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <xsl:value-of select="cdash/previousbuild/nconfigureerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
           <xsl:when test="cdash/previousbuild/nconfigurewarnings > 0">error
@@ -252,7 +270,8 @@
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-       <b><xsl:value-of select="cdash/previousbuild/nconfigurewarnings"/></b></td>
+       <b><a><xsl:attribute name="href">viewConfigure?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <xsl:value-of select="cdash/previousbuild/nconfigurewarnings"/></a></b></td>
        </tr>
         <tr class="tr-odd">
         <td><b>Build</b></td>
@@ -264,7 +283,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nerrors"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <xsl:value-of select="cdash/previousbuild/nerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
           <xsl:when test="cdash/previousbuild/nwarnings > 0">error
@@ -273,7 +294,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/nwarnings"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <xsl:value-of select="cdash/previousbuild/nwarnings"/></a></b></td>
        </tr>
        <tr class="tr-even">
         <td><b>Test</b></td>
@@ -285,7 +308,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/ntestfailed"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewTest.php?onlyfailed&#38;buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <xsl:value-of select="cdash/previousbuild/ntestfailed"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
           <xsl:when test="cdash/previousbuild/ntestnotrun> 0">error
@@ -294,7 +319,9 @@
                   normal
                   </xsl:otherwise>
                </xsl:choose>
-       </xsl:attribute><b><xsl:value-of select="cdash/previousbuild/ntestnotrun"/></b></td>
+       </xsl:attribute>
+       <b><a><xsl:attribute name="href">viewTest.php?onlynotrun&#38;buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <xsl:value-of select="cdash/previousbuild/ntestnotrun"/></a></b></td>
        </tr>
       </table>
       </xsl:if>
@@ -376,9 +403,9 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 <br/><b>Configure Return Value: </b> <xsl:value-of select="cdash/configure/status"/> 
 <br/><b>Configure Output: </b>
 <br/><pre><xsl:value-of select="cdash/configure/output"/></pre>      
-
+<br/>
+<a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>[View Configure Summary]</a>
 <br/><br/>
-
 <!-- Build -->
 <div class="title-divider" id="Stage2">
 <div class="tracknav">
@@ -392,8 +419,7 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
         <br/><b>Start Time: </b><xsl:value-of select="cdash/build/starttime"/>
         <br/><b>End Time: </b><xsl:value-of select="cdash/build/endtime"/>
         <br/>
-        <br/>
-
+<br/>
 <!-- Show the errors -->
 <xsl:for-each select="cdash/build/error">
 <xsl:if test="sourceline>0">
@@ -419,7 +445,10 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 </xsl:if>
 
 </xsl:for-each>
-
+<a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>[View Errors Summary]</a>
+<br/>
+<br/>
+<!--  Warnings -->
 <div class="title-divider" id="Stage2Warnings"><div class="tracknav">
 [<a href="#top">Top</a>]
 <xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
@@ -453,7 +482,9 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 
 </xsl:for-each> 
 <br/>
-
+<a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>[View Warnings Summary]</a>
+<br/>
+<br/>
 <!-- Test -->
 <div class="title-divider" id="Stage3">
 <div class="tracknav">
