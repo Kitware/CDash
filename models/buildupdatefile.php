@@ -25,6 +25,7 @@ class BuildUpdateFile
   var $Log;  
   var $Revision;  
   var $PriorRevision;
+  var $Status; //MODIFIED | CONFLICTING | UPDATED
   var $BuildId;
   
   function SetValue($tag,$value)  
@@ -65,9 +66,9 @@ class BuildUpdateFile
       $this->CheckinDate = "1980-01-01";
       }
     
-    $query = "INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision)
+    $query = "INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision,status)
               VALUES (".qnum($this->BuildId).",'$this->Filename','$this->CheckinDate','$this->Author','$this->Email',
-                      '$this->Log','$this->Revision','$this->PriorRevision')";
+                      '$this->Log','$this->Revision','$this->PriorRevision','$this->Status')";
     
     
     if(!pdo_query($query))

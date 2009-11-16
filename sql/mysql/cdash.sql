@@ -448,7 +448,7 @@ CREATE TABLE `build2test` (
 -- Table structure for table `buildtesttime`
 --
 
-CREATE TABLE IF NOT EXISTS `buildtesttime` (
+CREATE TABLE `buildtesttime` (
   `buildid` int(11) NOT NULL default '0',
   `time` float(7,2) NOT NULL default '0.00',
   PRIMARY KEY `buildid` (`buildid`)
@@ -469,6 +469,7 @@ CREATE TABLE `updatefile` (
   `log` text NOT NULL,
   `revision` varchar(20) NOT NULL default '0',
   `priorrevision` varchar(20) NOT NULL default '0',
+  `status` varchar(12) NOT NULL default '',
   KEY `buildid` (`buildid`)
 );
 

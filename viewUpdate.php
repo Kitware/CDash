@@ -133,6 +133,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $file = array();
     $file['filename'] = $file_array["filename"];
     $file['author'] = $file_array["author"];
+    $file['status'] = $file_array["status"];
     
     // Only display email if the user is logged int
     if(isset($_SESSION['cdash']))
@@ -194,6 +195,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $author = $file['author'];
     $email = $file['email'];
     $log = $file['log'];
+    $status = $file['status'];
     $revision = $file['revision'];
     $log = str_replace("\r"," ",$log);
     $log = str_replace("\n", " ", $log);
@@ -253,21 +255,21 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
         }
       }
 
-    if($revision != "-1" && $log!="Locally modified file" && $log!="Conflict while updating")
+    if($status == "UPDATED")
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename, $revision);
       $diff_url = XMLStrFormat($diff_url);
       $file['diff_url'] = $diff_url;  
       $updatedfiles[] = $file;
       }
-    else if(strstr($log,"Locally modified file"))
+    else if($status == "MODIFIED")
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $diff_url = XMLStrFormat($diff_url);
       $file['diff_url'] = $diff_url;  
       $locallymodified[] = $file;
       }
-    else
+    else //CONFLICTED
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $diff_url = XMLStrFormat($diff_url);

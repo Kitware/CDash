@@ -536,6 +536,7 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
   AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
+  AddTableField("updatefile","status","VARCHAR(12)","VARCHAR( 12 )","");
   AddTableIndex('coveragefilelog','line');
   
   // Add the cookiekey field

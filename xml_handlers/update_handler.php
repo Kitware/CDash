@@ -49,6 +49,7 @@ class UpdateHandler extends AbstractHandler
    else if($name=='UPDATED' || $name=='CONFLICTING' || $name=='MODIFIED') 
      {
      $this->UpdateFile = new BuildUpdateFile();
+     $this->UpdateFile->Status = $name;
      }
     }
   

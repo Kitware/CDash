@@ -394,7 +394,8 @@ CREATE TABLE "updatefile" (
   "email" character varying(255) DEFAULT '' NOT NULL,
   "log" text NOT NULL,
   "revision" character varying(20) DEFAULT '0' NOT NULL,
-  "priorrevision" character varying(20) DEFAULT '0' NOT NULL
+  "priorrevision" character varying(20) DEFAULT '0' NOT NULL,
+  "status" character varying(12) DEFAULT '' NOT NULL
 );
 CREATE INDEX "buildid9" on "updatefile" ("buildid");
 
