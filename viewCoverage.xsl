@@ -128,7 +128,7 @@
       
 <table id="coverageTable" cellspacing="0" cellpadding="3">
  <xsl:attribute name="class">
-   tabb {sortlist: [[1,0]]}
+   tabb {sortlist: [[1,0],[2,0]]}
 </xsl:attribute>
 
 <thead> 

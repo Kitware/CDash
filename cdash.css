@@ -115,7 +115,7 @@ height: expression(this.height > 110 ? 110: true);
 .normalNew {
  background-color : #92ff89;
 }
- .warning {
+.warning {
  background-color : #fdba76;
 }
  .warningNew {
@@ -912,4 +912,16 @@ span.help_content{
 
 div#key {
   position: absolute;
+}
+
+span.lineNoCov {
+  background-color : #ff6666;
+}
+
+span.lineCov {
+  background-color: #92ca89;
+}
+
+span.lineNum {
+  background-color : #fdba76;
 }
