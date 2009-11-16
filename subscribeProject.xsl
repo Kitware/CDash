@@ -306,10 +306,15 @@
  </div>
  
  <xsl:if test="/cdash/edit=1">
-  <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;"><br/>
-  <span id="changesmade" style="color:red;display:none;">*Changes need to be updated </span>
-  <input type="submit" onclick="SubmitForm()" name="updatesubscription" value="Update Subscription"/>
-  <input type="submit" name="unsubscribe" value="Unsubscribe"/>
+  <br/>
+  <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;">
+  <table width="100%" border="0">
+  <tr>
+    <td style="text-align:left;" ><input type="submit" onclick="return confirm('Are you sure you want to unsubscribe?')" name="unsubscribe" value="Unsubscribe"/></td>
+    <td><span id="changesmade" style="color:red;display:none;">*Changes need to be updated </span>
+    <input type="submit" onclick="SubmitForm()" name="updatesubscription" value="Update Subscription"/></td>
+   </tr>
+  </table>
   </div>
   </xsl:if>
   <xsl:if test="/cdash/edit=0">
