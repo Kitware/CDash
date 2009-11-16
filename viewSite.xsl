@@ -129,7 +129,7 @@
 <br/>
 
 <!-- Timing per project -->
-<b>Time spent per project (computed from data collected in the past 24h):</b><br/><br/>
+<b>Time spent per project (computed from average data over one week):</b><br/><br/>
 
 <center><div id="placeholder" style="width:850px;height:300px"></div></center>
     

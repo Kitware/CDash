@@ -219,7 +219,7 @@ else
   $timestampadd = "TIMESTAMPADD(".qiv("HOUR").", -167, NOW())";
   }
 
-$testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, AVG(".$timediff.") AS elapsed
+$testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, SUM(".$timediff.") AS elapsed
               FROM build, buildupdate
               WHERE
                 build.submittime > ".$timestampadd."
@@ -227,8 +227,7 @@ $testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS 
                 AND build.siteid = '$siteid'    
                 GROUP BY projectid,buildname,buildtype
                 ORDER BY elapsed    
-                ");          
-
+                ");
 $xml .= "<siteload>";
                 
 echo pdo_error();
@@ -238,12 +237,13 @@ while($testtime_array = pdo_fetch_array($testtime))
   $projectid = $testtime_array["projectid"];
   if(checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid,1))
      {
+     $timespent = $testtime_array["elapsed"]/7.0; // average over 7 days  
      $xml .= "<build>";
      $xml .= add_XML_value("name",$testtime_array["buildname"]);
      $xml .= add_XML_value("project",get_project_name($projectid));
      $xml .= add_XML_value("type",$testtime_array["buildtype"]);
-     $xml .= add_XML_value("time",$testtime_array["elapsed"]);
-     $totalload += $testtime_array["elapsed"];
+     $xml .= add_XML_value("time",$timespent);
+     $totalload += $timespent;
      $xml .= "</build>"; 
      }
   }
