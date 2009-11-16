@@ -309,7 +309,7 @@ function auth($SessionCachePolicy='private_no_expire')
     }
   else
     {                                         // arrive from session var 
-    $cookiename = "CDash-".$_SERVER['SERVER_NAME'];
+    $cookiename = str_replace('.','_',"CDash-".$_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
     if(isset($_COOKIE[$cookiename]))
       {
       $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
@@ -319,7 +319,6 @@ function auth($SessionCachePolicy='private_no_expire')
       $cookiekey = substr($cookievalue,strlen($cookievalue)-33); 
       $cookieuseridkey = substr($cookievalue,0,strlen($cookievalue)-33); 
       $sql="SELECT email,password,id FROM ".qid("user")." WHERE cookiekey='$cookiekey' AND id='$cookieuseridkey'";
-
       $result = pdo_query("$sql"); 
       if(pdo_num_rows($result) == 1)
         {
