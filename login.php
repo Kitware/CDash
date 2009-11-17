@@ -285,7 +285,7 @@ function auth($SessionCachePolicy='private_no_expire')
     session_destroy(); 
     
     // Remove the cookie if we have one  
-    $cookiename = "CDash-".$_SERVER['SERVER_NAME'];
+    $cookiename = str_replace('.','_',"CDash-".$_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
     if(isset($_COOKIE[$cookiename]))
       {
       $cookievalue = $_COOKIE[$cookiename];
