@@ -579,7 +579,7 @@ CREATE TABLE `dailyupdatefile` (
   `log` text NOT NULL,
   `revision` varchar(10) NOT NULL default '0',
   `priorrevision` varchar(10) NOT NULL default '0',
-  KEY `dailyupdateid` (`dailyupdateid`)
+  KEY `dailyupdateid` (`dailyupdateid`),
   KEY `author` (`author`)
 );
 
