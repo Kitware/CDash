@@ -492,11 +492,27 @@ class Build
       $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
       $this->Command = pdo_real_escape_string($this->Command);
       $this->Log = pdo_real_escape_string($this->Log);
+      
+      // Compute the number of errors and warnings (this speeds up the display of the main table)
+      $nbuilderrors = 0;
+      $nbuildwarnings = 0;
+      foreach($this->Errors as $error)
+        {
+        if($error->Type == 0)
+          {
+          $nbuilderrors++;
+          }
+        else
+          {
+          $nbuildwarnings++;
+          }  
+        }
 
-      $query = "INSERT INTO build (".$id."siteid,projectid,stamp,name,type,generator,starttime,endtime,submittime,command,log)
+      $query = "INSERT INTO build (".$id."siteid,projectid,stamp,name,type,generator,starttime,endtime,submittime,command,log,
+                                   builderrors,buildwarnings)
                 VALUES (".$idvalue."'$this->SiteId','$this->ProjectId','$this->Stamp','$this->Name',
                         '$this->Type','$this->Generator','$this->StartTime',
-                        '$this->EndTime','$this->SubmitTime','$this->Command','$this->Log')";                     
+                        '$this->EndTime','$this->SubmitTime','$this->Command','$this->Log',$nbuilderrors,$nbuildwarnings)";                     
       if(!pdo_query($query))
         {
         add_last_sql_error("Build Insert");
@@ -593,6 +609,18 @@ class Build
     return true;
     }
 
+  /** Update the test numbers */
+  function UpdateTestNumbers($numberTestsPassed,$numberTestsFailed,$numberTestsNotRun)
+    {
+    if(!is_numeric($numberTestsPassed) ||!is_numeric($numberTestsFailed) || !is_numeric($numberTestsNotRun) ) 
+      {
+      return;
+      }
+    pdo_query("UPDATE build SET testnotrun='$numberTestsNotRun',
+                                testfailed='$numberTestsFailed',
+                                testpassed='$numberTestsPassed' WHERE id=".qnum($this->Id));
+    echo pdo_error();
+    }
 
   /** Compute the test timing as a weighted average of the previous test.
    *  Also compute the difference in errors and tests between builds.
@@ -611,6 +639,8 @@ class Build
       return false;
       }
 
+    $testtimestatusfailed = 0;
+      
     // TEST TIMING
     $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
     $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id=".qnum($this->Id));
@@ -743,8 +773,12 @@ class Build
             
         pdo_query("UPDATE build2test SET timemean=".qnum($timemean).",timestd=".qnum($timestd).",timestatus=".qnum($timestatus)."
                    WHERE buildid=".qnum($this->Id)." AND testid=".qnum($testid));
-         
-        }  // end loop through the test  
+
+        if($timestatus>=$projecttestmaxstatus)
+          {
+          $testtimestatusfailed++;  
+          }
+        }  // end loop through the test   
       }
     else // this is the first build
       {
@@ -760,9 +794,16 @@ class Build
           
         pdo_query("UPDATE build2test SET timemean=".qnum($timemean).",timestd=".qnum($timestd).",timestatus=".qnum($timestatus)." 
                     WHERE buildid=".qnum($this->Id)." AND testid=".qnum($testid));
+        
+        if($timestatus>=$projecttestmaxstatus)
+          {
+          $testtimestatusfailed++;  
+          }
         } // loop through the tests          
       } // end if first build
-      
+
+    pdo_query("UPDATE build SET testtimestatusfailed=".qnum($testtimestatusfailed)." WHERE id=".$this->Id);   
+    echo pdo_error();  
     return true;  
     } // end function compute_test_timing
 

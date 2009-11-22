@@ -544,6 +544,46 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("user","cookiekey","VARCHAR(40)","VARCHAR( 40 )","");
   ModifyTableField("dynamicanalysis","log","MEDIUMTEXT","TEXT","",true,false);
   
+  // New build, buildupdate and configure fields to speedup reading
+  if(!pdo_query("SELECT builderrors FROM build LIMIT 1") )
+    {
+    AddTableField("build","builderrors","smallint(6)","smallint","-1");
+    AddTableField("build","buildwarnings","smallint(6)","smallint","-1");
+    AddTableField("build","testnotrun","smallint(6)","smallint","-1");
+    AddTableField("build","testfailed","smallint(6)","smallint","-1");
+    AddTableField("build","testpassed","smallint(6)","smallint","-1");
+    AddTableField("build","testtimestatusfailed","smallint(6)","smallint","-1");
+    
+    AddTableField("buildupdate","nfiles","smallint(6)","smallint","-1");
+    AddTableField("buildupdate","warnings","smallint(6)","smallint","-1");
+    AddTableField("configure","warnings","smallint(6)","smallint","-1");
+    
+    pdo_query("UPDATE configure SET warnings=(SELECT count(buildid) FROM configureerror WHERE buildid=configure.buildid AND type='1') 
+                 WHERE warnings=-1");
+    pdo_query("UPDATE buildupdate SET 
+                warnings=(SELECT count(buildid) FROM updatefile WHERE buildid=buildupdate.buildid AND revision='-1' AND author='Local User'), 
+                nfiles=(SELECT count(buildid) FROM updatefile WHERE buildid=buildupdate.buildid) 
+                WHERE warnings=-1");
+    
+    pdo_query("UPDATE build SET 
+                 builderrors=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='0'), 
+                 buildwarnings=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='1'),
+                 testpassed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='passed'),
+                 testfailed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='failed'), 
+                 testnotrun=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='notrun'), 
+                 testtimestatusfailed=(SELECT count(buildid) FROM build2test,project WHERE project.id=build.id 
+                                       AND buildid=build.id AND timestatus>=project.testtimemaxstatus)
+                 WHERE builderrors=-1");
+    
+    echo pdo_error();
+    } // end new table build
+  
+  if($CDASH_DB_TYPE != "pgsql")
+    {
+    pdo_query("ALTER TABLE `configure` CHANGE `starttime` `starttime` TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    pdo_query("ALTER TABLE `buildupdate` CHANGE `starttime` `starttime` TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    }
+    
   // Set the database version
   setVersion();
 

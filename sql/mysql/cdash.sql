@@ -28,6 +28,12 @@ CREATE TABLE `build` (
   `submittime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `command` text NOT NULL,
   `log` text NOT NULL,
+  `builderrors` smallint(6) DEFAULT '-1',
+  `buildwarnings` smallint(6) DEFAULT '-1',
+  `testnotrun` smallint(6) DEFAULT '-1',
+  `testfailed` smallint(6) DEFAULT '-1',
+  `testpassed` smallint(6) DEFAULT '-1',
+  `testtimestatusfailed` smallint(6) DEFAULT '-1',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),
@@ -137,11 +143,13 @@ CREATE TABLE `builderror` (
 
 CREATE TABLE `buildupdate` (
   `buildid` int(11) NOT NULL default '0',
-  `starttime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `command` text NOT NULL,
   `type` varchar(4) NOT NULL default '',
   `status` text NOT NULL,
+  `nfiles` smallint(6) DEFAULT '-1',
+  `warnings` smallint(6) DEFAULT '-1',
   KEY `buildid` (`buildid`)
 );
 
@@ -153,11 +161,12 @@ CREATE TABLE `buildupdate` (
 
 CREATE TABLE `configure` (
   `buildid` int(11) NOT NULL default '0',
-  `starttime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `command` text NOT NULL,
   `log` MEDIUMTEXT NOT NULL,
   `status` tinyint(4) NOT NULL default '0',
+  `warnings` smallint(6) DEFAULT '-1',
   KEY `buildid` (`buildid`)
 );
 

@@ -161,12 +161,11 @@ class BuildConfigure
     $log = pdo_real_escape_string($this->Log);
     $status = pdo_real_escape_string($this->Status);
 
-
     $query = "INSERT INTO configure (buildid,starttime,endtime,command,log,status)
               VALUES (".qnum($this->BuildId).",'$this->StartTime','$this->EndTime','$command','$log','$status')";                     
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildConfigure Insert()");
+      add_last_sql_error("BuildConfigure Insert");
       return false;
       }  
 
@@ -208,9 +207,10 @@ class BuildConfigure
     }
 
 
-  /** Compute the warnings from the log */
+  /** Compute the warnings from the log. In the future we might want to add errors */
   function ComputeErrors()
     {
+    $nwarnings = 0;  
     // Add the warnings in the configurewarningtable
     $position = $this->GetNextConfigureWarningPosition($this->Log, 0);
 
@@ -230,12 +230,15 @@ class BuildConfigure
 
       $warning = pdo_real_escape_string($warning);
 
-      pdo_query ("INSERT INTO configureerror (buildid,type,text) 
+      pdo_query("INSERT INTO configureerror (buildid,type,text) 
                   VALUES ('$this->BuildId','1','$warning')");
-      add_last_sql_error("BuildConfigure ComputeErrors()");
-
+      add_last_sql_error("BuildConfigure ComputeErrors");
+      $nwarnings++;
       $position = $this->GetNextConfigureWarningPosition($this->Log, $position+1);
       }
+   
+    pdo_query("UPDATE configure SET warnings=".qnum($nwarnings)." WHERE buildid=".qnum($this->BuildId));
+    add_last_sql_error("BuildConfigure ComputeErrors");
     } // end ComputeErrors() 
 
 

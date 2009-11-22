@@ -36,6 +36,12 @@ class TestingHandler extends AbstractHandler
   private $TestMeasurement;
   private $Label;
   private $Append;
+  
+  // Keep a record of the number of tests passed, failed and notrun
+  // This works only because we have one test file per submission
+  private $NumberTestsFailed;
+  private $NumberTestsNotRun;
+  private $NumberTestsPassed;
 
   /** Constructor */
   public function __construct($projectID)
@@ -44,6 +50,9 @@ class TestingHandler extends AbstractHandler
     $this->Build = new Build();
     $this->Site = new Site();
     $this->UpdateEndTime = false;
+    $this->NumberTestsFailed=0;
+    $this->NumberTestsNotRun=0;
+    $this->NumberTestsPassed=0;
     }
 
   /** Destructor */
@@ -95,6 +104,19 @@ class TestingHandler extends AbstractHandler
       $this->Test = new Test();
       $this->BuildTest = new BuildTest();
       $this->BuildTest->Status = $attributes['STATUS'];
+      
+      if($attributes['STATUS'] == "passed")
+        {
+        $this->NumberTestsPassed++;
+        }
+      else if($attributes['STATUS'] == "failed")
+        {
+        $this->NumberTestsFailed++; 
+        }
+      else if($attributes['STATUS'] == "notrun")
+        {
+        $this->NumberTestsNotRun++;  
+        }
       }
     else if($name == "NAMEDMEASUREMENT")
       {
@@ -218,6 +240,11 @@ class TestingHandler extends AbstractHandler
         $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
         $this->Build->UpdateEndTime($end_time);
         }
+
+      // Update the number of tests in the Build table
+      $this->Build->UpdateTestNumbers($this->NumberTestsPassed,
+                                      $this->NumberTestsFailed,
+                                      $this->NumberTestsNotRun); 
       }
     } // end endElement
   

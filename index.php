@@ -52,8 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT buildid FROM buildtesttime LIMIT 1") ||
-     !pdo_query("SELECT status FROM updatefile LIMIT 1"))
+  if(!pdo_query("SELECT builderrors FROM build LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -609,14 +608,18 @@ function generate_main_dashboard_XML($projectid,$date)
     
   $build_rows = array();
 
+           
   $sql =  "SELECT b.id,b.siteid,
                   bn.buildid AS countbuildnotes,
                   bu.status AS updatestatus,
                   bu.starttime AS updatestarttime,
                   bu.endtime AS updateendtime, 
+                  bu.nfiles AS countupdatefiles,
+                  bu.warnings AS countupdatewarnings,
                   c.status AS configurestatus,
                   c.starttime AS configurestarttime,
                   c.endtime AS configureendtime,
+                  c.warnings AS countconfigurewarnings,
                   be_diff.difference AS countbuilderrordiff,
                   bw_diff.difference AS countbuildwarningdiff,
                   ce_diff.difference AS countconfigurewarningdiff,
@@ -624,12 +627,16 @@ function generate_main_dashboard_XML($projectid,$date)
                   tnotrun_diff.difference AS counttestsnotrundiff,
                   tfailed_diff.difference AS counttestsfaileddiff,
                   tpassed_diff.difference AS counttestspasseddiff,
-                  (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,
-                  (SELECT count(buildid) FROM updatefile WHERE buildid=b.id)  AS countupdatefiles,
-                  (SELECT count(buildid) FROM updatefile WHERE buildid=b.id AND revision='-1' AND author='Local User')  AS countupdatewarnings, 
-                  (SELECT count(buildid) FROM configureerror WHERE buildid=b.id AND type='1')  AS countconfigurewarnings ,
+                  tstatusfailed_diff.difference AS countteststimestatusfaileddiff,
+                  (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes, 
                   s.name AS sitename,
                   b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
+                  b.builderrors AS countbuilderrors,
+                  b.buildwarnings AS countbuildwarnings,
+                  b.testnotrun AS counttestsnotrun,
+                  b.testfailed AS counttestsfailed,
+                  b.testpassed AS counttestspassed,
+                  b.testtimestatusfailed AS countteststimestatusfailed,
                   g.name as groupname,gp.position,g.id as groupid
                   FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql.",
                   build AS b
@@ -643,12 +650,13 @@ function generate_main_dashboard_XML($projectid,$date)
                   LEFT JOIN testdiff AS tnotrun_diff ON (tnotrun_diff.buildid=b.id AND tnotrun_diff.type=0)
                   LEFT JOIN testdiff AS tfailed_diff ON (tfailed_diff.buildid=b.id AND tfailed_diff.type=1)
                   LEFT JOIN testdiff AS tpassed_diff ON (tpassed_diff.buildid=b.id AND tpassed_diff.type=2)
+                  LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
                   WHERE s.id=b.siteid AND ".$date_clause."
                    b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
                    AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
                   ".$subprojectsql." ".$filter_sql." ORDER BY gp.position ASC,b.name ASC,b.siteid ASC,b.stamp DESC";
 
-    
+      
   // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = pdo_query($sql);
   echo pdo_error();
@@ -782,8 +790,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $build_row['hasconfigurestatus'] = 0;
     $build_row['countconfigureerrors'] = 0;
     $build_row['configureduration'] = 0;
-
-    if(!empty($build_row['configurestatus']))
+        
+    if(strlen($build_row['configurestatus'])>0)
       {
       $build_row['hasconfigurestatus'] = 1;
       $build_row['countconfigureerrors'] = $build_row['configurestatus'];
@@ -799,72 +807,12 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $build_row['countconfigurewarningdiff'] = 0;
       } 
-      
-    // Get the number of tests
-    $build_row['counttestspassed'] = 0;
-    $build_row['counttestsfailed'] = 0;
-    $build_row['counttestsnotrun'] = 0;
-    
-    $sql = "SELECT status,count(status) FROM build2test WHERE buildid='$buildid' GROUP BY status";
-    $query = pdo_query($sql);
-    while($teststatus_array = pdo_fetch_array($query))
-      {
-      switch($teststatus_array[0])
-        {
-        case 'passed': $build_row['counttestspassed'] = $teststatus_array[1]; break;
-        case 'failed': $build_row['counttestsfailed'] = $teststatus_array[1]; break;
-        case 'notrun': $build_row['counttestsnotrun'] = $teststatus_array[1]; break;
-        }
-      }
-    
-    // Get the number of errors
-    $build_row['countbuilderrors'] = 0;
-    $build_row['countbuildwarnings'] = 0;
-    
-    $sql = "SELECT type,count(buildid) FROM builderror WHERE buildid='$buildid' GROUP BY type";
-    $query = pdo_query($sql);
-    while($errorstatus_array = pdo_fetch_array($query))
-      {
-      switch($errorstatus_array[0])
-        {
-        case 0: $build_row['countbuilderrors'] = $errorstatus_array[1]; break;
-        case 1: $build_row['countbuildwarnings'] = $errorstatus_array[1]; break;
-        }
-      }
 
-    // Get the number of failures
-    $build_row['countbuildbuildfailureerrors'] = 0;
-    $build_row['countbuildbuildfailurewarnings'] = 0;
-    $sql = "SELECT type,count(buildid) FROM buildfailure WHERE buildid='$buildid' GROUP BY type";
-    $query = pdo_query($sql);
-    while($errorstatus_array = pdo_fetch_array($query))
-      {
-      switch($errorstatus_array[0])
-        {
-        case 0: $build_row['countbuildbuildfailureerrors'] = $errorstatus_array[1]; break;
-        case 1: $build_row['countbuildbuildfailurewarnings'] = $errorstatus_array[1]; break;
-        }
-      }
       
     $build_row['hastest'] = 0;
-    if($build_row['counttestsfailed']+$build_row['counttestspassed']+$build_row['counttestsnotrun']>0)
+    if($build_row['counttestsfailed']!=-1)
       {
       $build_row['hastest'] = 1;
-      
-      if($project_array["showtesttime"] == 1)
-        {
-        $testtimemaxstatus = $project_array["testtimemaxstatus"];
-        $sql = "SELECT count(buildid) FROM build2test WHERE buildid='$buildid' AND timestatus>='$testtimemaxstatus'";
-        $ntimestatus_array = pdo_fetch_array(pdo_query($sql));
-        $build_row['countteststimestatusfailed'] = $ntimestatus_array[0];
-
-        $timediff = pdo_query("SELECT difference FROM testdiff WHERE buildid='$buildid' AND type='3'");
-        if(pdo_num_rows($timediff)>0)
-          {
-          $timediff_array = pdo_fetch_array($timediff);
-          $build_row['countteststimestatusfaileddiff'] = $timediff_array["difference"];
-          }
-        }
       }
       
     if(empty($build_row['testduration']))
@@ -1115,7 +1063,6 @@ function generate_main_dashboard_XML($projectid,$date)
 
     $countbuildids = count($build_array['buildids']);
     $xml .= add_XML_value("countbuildids", $countbuildids);
-
     if ($countbuildids>1)
       {
       $xml .= add_XML_value("multiplebuildshyperlink", get_multiple_builds_hyperlink($build_array, $filterdata));
@@ -1162,57 +1109,57 @@ function generate_main_dashboard_XML($projectid,$date)
     if(!empty($build_array['updatestarttime']))
       {
       $xml .= add_XML_value("defined",1);
-      }
-    
-    if($build_array['countupdateerrors']>0)
-      {
-      $xml .= add_XML_value("errors", 1);
-      $totalUpdateError += 1;
-      }
-    else
-      {
-      $xml .= add_XML_value("errors", 0);
 
-      if($build_array['countupdatewarnings']>0)
+      if($build_array['countupdateerrors']>0)
         {
-        $xml .= add_XML_value("warning", 1);
-        $totalUpdateWarning += 1;
+        $xml .= add_XML_value("errors", 1);
+        $totalUpdateError += 1;
         }
-      }
+      else
+        {
+        $xml .= add_XML_value("errors", 0);
+  
+        if($build_array['countupdatewarnings']>0)
+          {
+          $xml .= add_XML_value("warning", 1);
+          $totalUpdateWarning += 1;
+          }
+        }
 
-    $duration = $build_array['updateduration'];
-    $totalUpdateDuration += $duration;
-    $xml .= add_XML_value("time", $duration);
-
+      $duration = $build_array['updateduration'];
+      $totalUpdateDuration += $duration;
+      $xml .= add_XML_value("time", $duration);
+      } // end if we have an update
     $xml .= "</update>";
 
 
     $xml .= "<compilation>";
 
-    $nerrors = $build_array['countbuilderrors'];
-    $totalerrors += $nerrors;
-    $xml .= add_XML_value("error", $nerrors);
-
-    $nwarnings = $build_array['countbuildwarnings'];
-    $totalwarnings += $nwarnings;
-    $xml .= add_XML_value("warning", $nwarnings);
-
-    $duration = $build_array['buildduration'];
-    $totalBuildDuration += $duration;
-    $xml .= add_XML_value("time", $duration);
-
-    $diff = $build_array['countbuilderrordiff'];
-    if($diff!=0)
+    if($build_array['countbuilderrors']>=0)
       {
-      $xml .= add_XML_value("nerrordiff", $diff);
+      $nerrors = $build_array['countbuilderrors'];
+      $totalerrors += $nerrors;
+      $xml .= add_XML_value("error", $nerrors);
+    
+      $nwarnings = $build_array['countbuildwarnings'];
+      $totalwarnings += $nwarnings;
+      $xml .= add_XML_value("warning", $nwarnings);
+      $duration = $build_array['buildduration'];
+      $totalBuildDuration += $duration;
+      $xml .= add_XML_value("time", $duration);
+      
+      $diff = $build_array['countbuilderrordiff'];
+      if($diff!=0)
+        {
+        $xml .= add_XML_value("nerrordiff", $diff);
+        }
+  
+      $diff = $build_array['countbuildwarningdiff'];
+      if($diff!=0)
+        {
+        $xml .= add_XML_value("nwarningdiff", $diff);
+        }
       }
-
-    $diff = $build_array['countbuildwarningdiff'];
-    if($diff!=0)
-      {
-      $xml .= add_XML_value("nwarningdiff", $diff);
-      }
-
     $xml .= "</compilation>";
 
 
@@ -1237,8 +1184,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $totalConfigureDuration += $duration;
       $xml .= add_XML_value("time", $duration);
       }
-
-      $xml .= "</configure>";
+    $xml .= "</configure>";
 
 
     if($build_array['hastest'] != 0)

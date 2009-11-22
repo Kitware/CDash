@@ -14,6 +14,12 @@ CREATE TABLE "build" (
   "submittime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "command" text NOT NULL,
   "log" text NOT NULL,
+  "builderrors" smallint DEFAULT '-1',
+  "builwarnings" smallint DEFAULT '-1',
+  "testnotrun" smallint DEFAULT '-1',
+  "testfailed" smallint DEFAULT '-1',
+  "testpassed" smallint DEFAULT '-1',
+  "testtimestatusfailed" smallint DEFAULT '-1',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "projectid" on "build" ("projectid");
@@ -112,7 +118,9 @@ CREATE TABLE "buildupdate" (
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "command" text NOT NULL,
   "type" character varying(4) DEFAULT '' NOT NULL,
-  "status" text NOT NULL
+  "status" text NOT NULL,
+  "nfiles" smallint DEFAULT '-1',
+  "warnings" smallint DEFAULT '-1'
 );
 CREATE INDEX "buildid2" on "buildupdate" ("buildid");
 
@@ -125,7 +133,8 @@ CREATE TABLE "configure" (
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "command" text NOT NULL,
   "log" text NOT NULL,
-  "status" smallint DEFAULT '0' NOT NULL
+  "status" smallint DEFAULT '0' NOT NULL,
+  "warnings" smallint DEFAULT '-1'
 );
 CREATE INDEX "buildid3" on "configure" ("buildid");
 

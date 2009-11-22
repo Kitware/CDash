@@ -273,7 +273,7 @@
             error
             </xsl:when>
            <xsl:when test="string-length(configure/error)>0">
-           normal 
+           normal
            </xsl:when>
         </xsl:choose>
       </xsl:attribute>
@@ -287,7 +287,7 @@
         <xsl:if test="countbuildids!=1">
           <xsl:value-of select="configure/error"/>
         </xsl:if>
-      <xsl:if test="string-length(configure/error)=0"><xsl:text disable-output-escaping="yes">0</xsl:text></xsl:if>
+      <xsl:if test="string-length(configure/error)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
       <td align="center">
@@ -311,14 +311,14 @@
         <xsl:if test="countbuildids!=1">
           <xsl:value-of select="configure/warning"/>
         </xsl:if>
-      <xsl:if test="string-length(configure/warning)=0"><xsl:text disable-output-escaping="yes">0</xsl:text></xsl:if>   
+      <xsl:if test="string-length(configure/warning)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>   
       <xsl:if test="configure/nwarningdiff > 0"><sub>+<xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       <xsl:if test="configure/nwarningdiff &lt; 0"><sub><xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       </td>
 
       <td align="right">
       <xsl:value-of select="configure/time"/>
-      <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">0</xsl:text></xsl:if> 
+      <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if> 
       </td>
 
       <td align="center">
@@ -1002,8 +1002,8 @@
       <th align="center" width="20%" id="sortcoveragesort_0">Site</th>
       <th align="center" width="25%" id="sortcoveragesort_1">Build Name</th>
       <th align="center" width="10%" id="sortcoveragesort_2">Percentage</th>
-      <th align="center"  width="10%" id="sortcoveragesort_3" >Passed</th>
-      <th align="center"  width="10%" id="sortcoveragesort_4">Failed</th>
+      <th align="center"  width="10%" id="sortcoveragesort_3" >LOC Tested</th>
+      <th align="center"  width="10%" id="sortcoveragesort_4">LOC Untested</th>
       <th align="center" width="15%" id="sortcoveragesort_5">
       <xsl:if test="/cdash/dashboard/displaylabels=0">
        <xsl:attribute name="class">nob</xsl:attribute>

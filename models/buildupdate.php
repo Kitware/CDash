@@ -28,6 +28,11 @@ class BuildUpdate
   var $Status;
   var $BuildId;
   
+  public function __construct()
+    {
+    $this->Files = array();
+    }
+    
   function AddFile($file)
     {
     $this->Files[] = $file;
@@ -75,21 +80,26 @@ class BuildUpdate
     $this->Type = pdo_real_escape_string($this->Type);
     $this->Status = pdo_real_escape_string($this->Status);
     $this->BuildId = pdo_real_escape_string($this->BuildId);
+
+    $nfiles = count($this->Files);
+    $nwarnings = 0;
+    
+    foreach($this->Files as $file)
+      {
+      if($file->Author == 'Local User' && $file->Revision==-1)
+        {
+        $nwarnings++;
+        }   
+      }  
         
-    $query = "INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status)
+    $query = "INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status,nfiles,warnings)
               VALUES (".qnum($this->BuildId).",'$this->StartTime','$this->EndTime','$this->Command',
-                      '$this->Type','$this->Status')";                     
+                      '$this->Type','$this->Status',$nfiles,$nwarnings)";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildUpdate Insert");
       return false;
       }  
- 
-    // Add errors/warnings
-    if(!isset($this->Files))
-        {
-        return;
-        }
     
     foreach($this->Files as $file)
       {

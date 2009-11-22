@@ -76,9 +76,10 @@ class ConfigureHandler extends AbstractHandler
 
     if($name=='CONFIGURE')
       {
+        
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
-
+      
       $this->Build->ProjectId = $this->projectid;
       $buildid = $this->Build->GetIdFromName($this->SubProjectName);
 

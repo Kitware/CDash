@@ -1155,6 +1155,7 @@ function remove_build($buildid)
   pdo_query("DELETE FROM configureerrordiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM coveragesummarydiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM testdiff WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM buildtesttime WHERE buildid='$buildid'");
   pdo_query("DELETE FROM summaryemail WHERE buildid='$buildid'");
    
   // Remove the buildfailureargument
@@ -1192,8 +1193,8 @@ function remove_build($buildid)
   while($dynamicanalysis_array = pdo_fetch_array($dynamicanalysis))
     {
     $dynid = $dynamicanalysis_array["id"];
-    pdo_query("DELETE FROM dynamicanalysisdefect WHERE id='$dynid'"); 
-      pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid='$dynid'"); 
+    pdo_query("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid='$dynid'"); 
+    pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid='$dynid'"); 
     }
    
   pdo_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
@@ -1235,7 +1236,7 @@ function remove_build($buildid)
       pdo_query("DELETE FROM test WHERE id='$testid'");
       pdo_query("DELETE FROM test2image WHERE testid='$testid'");
       pdo_query("DELETE FROM label2test WHERE testid='$testid' AND buildid='$buildid'");
-         }
+      }
     }
   pdo_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
    
