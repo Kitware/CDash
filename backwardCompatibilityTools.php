@@ -568,6 +568,8 @@ if(isset($_GET['upgrade-1-6']))
     pdo_query("UPDATE build SET 
                  builderrors=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='0'), 
                  buildwarnings=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='1'),
+                 builderrors=builderrors+(SELECT count(buildid) FROM buildfailure WHERE buildid=build.id AND type='0'), 
+                 buildwarnings=buildwarnings+(SELECT count(buildid) FROM buildfailure WHERE buildid=build.id AND type='1'),
                  testpassed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='passed'),
                  testfailed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='failed'), 
                  testnotrun=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='notrun'), 
