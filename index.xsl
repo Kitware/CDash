@@ -240,7 +240,7 @@
             warning
             </xsl:when>
             <xsl:otherwise>
-            <xsl:if test="string-length(update/files)>0">
+            <xsl:if test="update/defined=1">
             normal
             </xsl:if>
             </xsl:otherwise>
@@ -258,7 +258,7 @@
         <xsl:if test="countbuildids!=1">
           <xsl:value-of select="update/files"/>
         </xsl:if>
-      <xsl:if test="string-length(update/files)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
+      <xsl:if test="update/defined=1"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
       </td>
 
       <td align="right">
@@ -532,7 +532,7 @@
         <xsl:if test="string-length(builddate)=0">
           Expected build<br />
           <span style="font-size: 10px;">
-          Expected start: <xsl:value-of select="expectedstarttime" />
+          Expected submit time: <xsl:value-of select="expectedstarttime" />
           </span>
         </xsl:if>
         
@@ -1134,8 +1134,6 @@
   <xsl:for-each select="cdash/buildgroup/dynamicanalysis">
    
    <tr>
-     <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
-
       <td align="left"><xsl:value-of select="site"/></td>
       <td align="left"><xsl:value-of select="buildname"/></td>
       <td align="center"><xsl:value-of select="checker"/></td>
