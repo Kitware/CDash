@@ -538,6 +538,7 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
   AddTableField("updatefile","status","VARCHAR(12)","VARCHAR( 12 )","");
   AddTableIndex('coveragefilelog','line');
+  AddTableIndex('dailyupdatefile','author');
   
   // Add the cookiekey field
   AddTableField("user","cookiekey","VARCHAR(40)","VARCHAR( 40 )","");

@@ -499,6 +499,7 @@ CREATE TABLE "dailyupdatefile" (
   "priorrevision" character varying(10) DEFAULT '0' NOT NULL
 );
 CREATE INDEX "buildid11" on "dailyupdatefile" ("dailyupdateid");
+CREATE INDEX "buildid11_2" on "dailyupdatefile" ("author");
 
 --
 -- Table: builderrordiff
