@@ -120,12 +120,12 @@ else
   if($buildfailingdays>1)
     {
     $date = date2year($datefirstbuildfailing).date2month($datefirstbuildfailing).date2day($datefirstbuildfailing);
-    echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." days)";
+    echo "<a href=\"index.php?project=".urlencode($project_array["name"])."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." days)";
     }
   else if($buildfailingdays==1)
     {
     $date = date2year($datefirstbuildfailing).date2month($datefirstbuildfailing).date2day($datefirstbuildfailing);
-    echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." day)";
+    echo "<a href=\"index.php?project=".urlencode($project_array["name"])."&date=".$date."\">".$datefirstbuildfailing."</a> (".$buildfailingdays." day)";
     }
   else 
     {   
@@ -145,7 +145,7 @@ else
   if($testfailingdays>1)
     {
     $date = date2year($datefirsttestfailing).date2month($datefirsttestfailing).date2day($datefirsttestfailing);
-    echo "<a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".$datefirsttestfailing."</a> (".$testfailingdays." days)";
+    echo "<a href=\"index.php?project=".urlencode($project_array["name"])."&date=".$date."\">".$datefirsttestfailing."</a> (".$testfailingdays." days)";
     }
   else if($testfailingdays==1)
     {

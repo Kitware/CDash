@@ -75,7 +75,7 @@ $xml .="<testName>".$testName."</testName>";
   
 $xml .= "<menu>";
 list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$date);
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".$date);
 $xml .= add_XML_value("previous", "testSummary.php?project=$projectid&name=$testName&date=$previousdate");
 $xml .= add_XML_value("current", "testSummary.php?project=$projectid&name=$testName&date=".date(FMT_DATE));
 if($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE))

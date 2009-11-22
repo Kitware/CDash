@@ -54,6 +54,7 @@ if ($session_OK)
     $xml .= add_XML_value("id",$projectid);
     $xml .= add_XML_value("role",$project2user_array["role"]); // 0 is normal user, 1 is maintainer, 2 is administrator
     $xml .= add_XML_value("name",$project_array["name"]);
+    $xml .= add_XML_value("name_encoded",urlencode($project_array["name"]));
     $xml .= add_XML_value("nbuilds",$Project->GetTotalNumberOfBuilds());
     $xml .= add_XML_value("average_builds",round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME,time()-(3600*24*7)),gmdate(FMT_DATETIME),2)));
     $xml .= add_XML_value("success",$Project->GetNumberOfPassingBuilds($start,gmdate(FMT_DATETIME)));
@@ -177,7 +178,7 @@ if ($session_OK)
         $day = round($days)." days";
         }  
       $xml .= add_XML_value("date",$day);
-      $xml .= add_XML_value("datelink","index.php?project=".$projectname."&date=".$date);
+      $xml .= add_XML_value("datelink","index.php?project=".urlencode($projectname)."&date=".$date);
      
       // Configure
       $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
@@ -310,6 +311,7 @@ if ($session_OK)
     $xml .= "<claimedsiteproject>";
     $xml .= add_XML_value("id",$project["id"]);
     $xml .= add_XML_value("name",$project["name"]);
+    $xml .= add_XML_value("name_encoded",urlencode($project["name"]));
     $xml .= "</claimedsiteproject>";
     }
   

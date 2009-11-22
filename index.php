@@ -128,6 +128,7 @@ function generate_index_table()
     {
     $xml .= "<project>";
     $xml .= add_XML_value("name",$project['name']);
+    $xml .= add_XML_value("name_encoded",urlencode($project['name']));
     $xml .= add_XML_value("description",$project['description']);
     if($project['last_build'] == "NA")
       {
@@ -392,6 +393,7 @@ function generate_main_dashboard_XML($projectid,$date)
   <logoid>".$logoid."</logoid> 
   <projectid>".$projectid."</projectid> 
   <projectname>".$projectname."</projectname> 
+  <projectname_encoded>".urlencode($projectname)."</projectname_encoded> 
   <previousdate>".$previousdate."</previousdate> 
   <projectpublic>".$projectpublic."</projectpublic> 
   <displaylabels>".$project_array["displaylabels"]."</displaylabels> 
@@ -487,7 +489,7 @@ function generate_main_dashboard_XML($projectid,$date)
   $xml .= "<updates>";
   
   $gmdate = gmdate(FMT_DATE, $currentstarttime);
-  $xml .= "<url>viewChanges.php?project=" . $projectname . "&amp;date=" .$gmdate. "</url>";
+  $xml .= "<url>viewChanges.php?project=".urlencode($projectname)."&amp;date=".$gmdate."</url>";
   
   $dailyupdate = pdo_query("SELECT count(ds.dailyupdateid),count(distinct ds.author) 
                             FROM dailyupdate AS d LEFT JOIN dailyupdatefile AS ds ON (ds.dailyupdateid = d.id)

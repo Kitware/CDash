@@ -102,7 +102,7 @@ else if(isset($_GET["onlydelta"]))
   }
 
 $nightlytime = get_project_property($projectname,"nightlytime");
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
 $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($previousbuildid>0)
   {

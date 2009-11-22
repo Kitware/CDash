@@ -156,6 +156,7 @@ if($Submit)
     if($projectid>0)
       {
       $xml .= "<project_name>$Name</project_name>";
+      $xml .= "<project_name_encoded>".urlencode($Name)."</project_name_encoded>";
       $xml .= "<project_id>$projectid</project_id>";
       $xml .= "<project_created>1</project_created>";
       }

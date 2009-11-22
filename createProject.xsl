@@ -44,7 +44,7 @@
  <xsl:when test="cdash/project_created=1">
  The project <b><xsl:value-of select="cdash/project_name"/></b> has been created successfully.<br/> <br/>          
  Click here to access the  <a>
- <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/project_name"/></xsl:attribute>
+ <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/project_name_encoded"/></xsl:attribute>
  CDash project page</a><br/> 
  Click here to <a>
  <xsl:attribute name="href">createProject.php?projectid=<xsl:value-of select="cdash/project_id"/></xsl:attribute>

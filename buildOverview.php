@@ -53,18 +53,18 @@ $nightlytime = $project_array["nightlytime"];
 // We select the builds
 list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
-$xml .= add_XML_value("previous","buildOverview.php?project=".$projectname."&date=".$previousdate);
+$xml .= add_XML_value("previous","buildOverview.php?project=".urlencode($projectname)."&date=".$previousdate);
 if(has_next_date($date, $currentstarttime))
   {
-  $xml .= add_XML_value("next","buildOverview.php?project=".$projectname."&date=".$nextdate);
+  $xml .= add_XML_value("next","buildOverview.php?project=".urlencode($projectname)."&date=".$nextdate);
   }
 else
   {
   $xml .= add_XML_value("nonext","1");
   }
-$xml .= add_XML_value("current","buildOverview.php?project=".$projectname."&date=");
+$xml .= add_XML_value("current","buildOverview.php?project=".urlencode($projectname)."&date=");
 
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$today);
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".$today);
 $xml .= "</menu>";
 
 // Return the available groups

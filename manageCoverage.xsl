@@ -44,15 +44,6 @@
 </xsl:choose>    
 
 
-<xsl:choose>
- <xsl:when test="cdash/group_created=1">
- The group <b><xsl:value-of select="cdash/group_name"/></b> has been created successfully.<br/>          
- Click here to access the  <a>
- <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/project_name"/></xsl:attribute>
-project page</a>
- </xsl:when>
-<xsl:otherwise>
-
 <xsl:if test="string-length(cdash/warning)>0">
 <br/><b><xsl:value-of select="cdash/warning"/></b><br/>
 </xsl:if>
@@ -244,10 +235,6 @@ project page</a>
 
 </xsl:if>
 
-
-<br/>
-</xsl:otherwise>
-</xsl:choose>
 
 <br/>
 

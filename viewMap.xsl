@@ -46,7 +46,7 @@
         <a><xsl:attribute name="href">index.php</xsl:attribute>Home</a>
       </li>
       <li>
-        <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&#x26;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Project</a>
+        <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#x26;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Project</a>
       </li>  
 </ul>
 </td>

@@ -259,20 +259,20 @@ $nightlytime = $project_array["nightlytime"];
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
-$xml .= add_XML_value("previous","viewChanges.php?project=".$projectname."&date=".$previousdate);
+$xml .= add_XML_value("previous","viewChanges.php?project=".urlencode($projectname)."&date=".$previousdate);
 if($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE))
   {
-  $xml .= add_XML_value("next","viewChanges.php?project=".$projectname."&date=".$nextdate);
+  $xml .= add_XML_value("next","viewChanges.php?project=".urlencode($projectname)."&date=".$nextdate);
   }
 else
   {
   $xml .= add_XML_value("nonext","1");
   }
-$xml .= add_XML_value("current","viewChanges.php?project=".$projectname."&date=");
+$xml .= add_XML_value("current","viewChanges.php?project=".urlencode($projectname)."&date=");
 
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$today);
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".$today);
 
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_project($projectname,$date));
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_project($projectname,$date));
 $xml .= "</menu>";
 
 $dailyupdate = pdo_query("SELECT * FROM dailyupdatefile,dailyupdate 

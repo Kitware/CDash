@@ -136,7 +136,7 @@
    
    <td align="center" >
      <a>
-     <xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute>
+     <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
      <xsl:value-of select="name"/>
      </a></td>
      <td align="center"><xsl:value-of select="description"/></td>
@@ -144,7 +144,7 @@
      <td align="center"><xsl:value-of select="firstbuild"/></td>
     <td align="center" class="nob">
     <a>
-    <xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
+    <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
     <xsl:value-of select="lastbuild"/>
     </a>
     </td>

@@ -42,7 +42,7 @@ $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : Sites map for ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
-$xml .= "<backurl>index.php?project=$projectname&#38;date=$date</backurl>";
+$xml .= "<backurl>index.php?project=urlencode($projectname)&#38;date=$date</backurl>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Build location</menusubtitle>";
 
@@ -61,6 +61,7 @@ foreach($CDASH_GOOGLE_MAP_API_KEY as $key=>$value)
   } 
 $xml .=  add_XML_value("googlemapkey",$apikey);
 $xml .=  add_XML_value("projectname",$projectname);
+$xml .=  add_XML_value("projectname_encoded",urlencode($projectname));
 $xml .= "</dashboard>";
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");

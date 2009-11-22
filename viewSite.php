@@ -111,7 +111,7 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 if($projectid)
   {
   $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime,showipaddresses FROM project WHERE id='$projectid'"));  
-  $xml .= "<backurl>index.php?project=".$project_array["name"];
+  $xml .= "<backurl>index.php?project=".urlencode($project_array["name"]);
   $xml .= "&#38;date=".get_dashboard_date_from_build_starttime(gmdate(FMT_DATETIME,$currenttime),$project_array["nightlytime"]);
   $xml .= "</backurl>";
   }
@@ -192,6 +192,7 @@ while($site2project_array = pdo_fetch_array($site2project))
      $xml .= add_XML_value("id",$projectid);
      $xml .= add_XML_value("submittime",$site2project_array["maxtime"]);
      $xml .= add_XML_value("name",$project_array["name"]);
+     $xml .= add_XML_value("name_encoded",urlencode($project_array["name"]));
      $xml .= "</project>";
      $displayPage=1; // if we have at least a valid project we display the page
      $projects[] = $projectid;

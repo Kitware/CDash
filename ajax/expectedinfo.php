@@ -73,7 +73,7 @@ else
   else if($lastsbuilddays>=0)
     {
     $date = date2year($datelastbuild).date2month($datelastbuild).date2day($datelastbuild);
-    echo "This build has not been submitting since <b><a href=\"index.php?project=".$project_array["name"]."&date=".$date."\">".date('M j, Y ',strtotime($datelastbuild))."</a> (".$lastsbuilddays." days)</b>";
+    echo "This build has not been submitting since <b><a href=\"index.php?project=".urlencode($project_array["name"])."&date=".$date."\">".date('M j, Y ',strtotime($datelastbuild))."</a> (".$lastsbuilddays." days)</b>";
     }
   ?>
   </font></td>

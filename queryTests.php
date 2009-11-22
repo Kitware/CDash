@@ -64,25 +64,25 @@ $xml .= "<menu>";
 
 if ($date == '')
   {
-  $back = "index.php?project=".$project['name'];
+  $back = "index.php?project=".urlencode($project['name']);
   }
 else
   {
-  $back = "index.php?project=".$project['name']."&date=".$date;
+  $back = "index.php?project=".urlencode($project['name'])."&date=".$date;
   }
 
 $xml .= add_XML_value("back",$back);
 
 $xml .= add_XML_value("previous",
-  "queryTests.php?project=".$project['name']."&date=".$previousdate);
+  "queryTests.php?project=".urlencode($project['name'])."&date=".$previousdate);
 
 $xml .= add_XML_value("current",
-  "queryTests.php?project=".$project['name']);
+  "queryTests.php?project=".urlencode($project['name']));
 
 if(has_next_date($date, $currentstarttime))
   {
   $xml .= add_XML_value("next",
-    "queryTests.php?project=".$project['name']."&date=".$nextdate);
+    "queryTests.php?project=".urlencode($project['name'])."&date=".$nextdate);
   }
 else
   {

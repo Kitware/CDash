@@ -105,7 +105,7 @@
         <td align="center" >
         <a>
         <xsl:attribute name="href">
-        index.php?project=<xsl:value-of select="name"/>
+        index.php?project=<xsl:value-of select="name_encoded"/>
         </xsl:attribute>
         <xsl:value-of select="name"/></a> </td>      
        <td align="center"  bgcolor="#DDDDDD" ><a class="tooltip" title="Edit subscription" >
@@ -180,7 +180,7 @@
       <td align="center"><b><i>Site\Project</i></b></td>
       
       <xsl:for-each select="cdash/claimedsiteproject">
-        <td align="center" id="nob"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name"/></xsl:attribute><xsl:value-of select="name"/></a></td>
+        <td align="center" id="nob"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute><xsl:value-of select="name"/></a></td>
       </xsl:for-each>
     </tr>
     

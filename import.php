@@ -161,7 +161,7 @@ if($Submit)
       ob_flush();
       }
     } // end strlen(directory)>0
-  echo("<a href=index.php?project=$projName>Back to $projName dashboard</a>\n");
+  echo("<a href=index.php?project=".urlencode($projName)">Back to $projName dashboard</a>\n");
   exit(0);
 }
 

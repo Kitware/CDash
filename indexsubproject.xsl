@@ -80,11 +80,11 @@
    <tr class="treven">
    <td align="center">
      <a>
-     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;display=project<xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
+     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>&amp;display=project<xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
      <xsl:value-of select="/cdash/dashboard/projectname"/>
      </a>
      <a>
-     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;display=project<xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if>&amp;showfilters=1</xsl:attribute>
+     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>&amp;display=project<xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if>&amp;showfilters=1</xsl:attribute>
      <img border="0" src="images/filter.gif"/>
      </a>
 
@@ -243,7 +243,7 @@
    <tr>
    <td align="center" >
      <a>
-     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;subproject=<xsl:value-of select="name"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
+     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>&amp;subproject=<xsl:value-of select="name"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
      <xsl:value-of select="name"/>
      </a></td>
     <td align="center">
@@ -382,7 +382,7 @@
 <br/>
 <!-- Add link to view the subproject dependencies -->
 <a>
-<xsl:attribute name="href">viewSubprojectDependencies.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
+<xsl:attribute name="href">viewSubprojectDependencies.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
 [View Subproject Dependencies]
 </a>
 

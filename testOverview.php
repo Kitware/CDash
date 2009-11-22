@@ -47,17 +47,17 @@ $nightlytime = $project_array["nightlytime"];
 // We select the builds
 list ($previousdate,$currentstarttime,$nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= "<menu>";
-$xml .= add_XML_value("previous","testOverview.php?project=".$projectname."&date=".$previousdate);
+$xml .= add_XML_value("previous","testOverview.php?project=".urlencode($projectname)."&date=".$previousdate);
 if($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE))
   {
-  $xml .= add_XML_value("next","testOverview.php?project=".$projectname."&date=".$nextdate);
+  $xml .= add_XML_value("next","testOverview.php?project=".urlencode($projectname)."&date=".$nextdate);
   }
 else
   {
   $xml .= add_XML_value("nonext","1");
   }
-$xml .= add_XML_value("current","testOverview.php?project=".$projectname."&date=");
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_project($projectname,$date));
+$xml .= add_XML_value("current","testOverview.php?project=".urlencode($projectname)."&date=");
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_project($projectname,$date));
 $xml .= "</menu>";
 
 // Get some information about the specified project

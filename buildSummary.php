@@ -81,7 +81,7 @@ else
 
 $xml .= "<menu>";
 $nightlytime = get_project_property($projectname,"nightlytime");
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
 if(isset($previousbuild_array))
   {
   $xml .= add_XML_value("previous","buildSummary.php?buildid=".$previousbuild_array["id"]);

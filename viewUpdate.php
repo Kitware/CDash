@@ -61,7 +61,7 @@ $date = get_dashboard_date_from_build_starttime($build_array["starttime"],$proje
 
 // Menu
 $xml .= "<menu>";
-$xml .= add_XML_value("back","index.php?project=".$projectname."&date=".$date);
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".$date);
 $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($previousbuildid>0)
   {
