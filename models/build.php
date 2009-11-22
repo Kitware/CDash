@@ -826,40 +826,20 @@ class Build
     
     // Find the errors, warnings and test failures
     // Find the current number of errors
-    $errors = pdo_query("SELECT count(*) FROM builderror WHERE type='0' 
-                           AND buildid=".qnum($this->Id));
-    $errors_array  = pdo_fetch_array($errors);
+    $errors = pdo_query("SELECT builderrors,buildwarnings,testnotrun,testfailed FROM build WHERE buildid=".qnum($this->Id));
+    $errors_array = pdo_fetch_array($errors);
     $nerrors = $errors_array[0]; 
-     
-    // Number of warnings
-    $warnings = pdo_query("SELECT count(*) FROM builderror WHERE type='1' 
-                             AND buildid=".qnum($this->Id));
-    $warnings_array  = pdo_fetch_array($warnings);
-    $nwarnings = $warnings_array[0]; 
-          
-    // Number of tests failing
-    $tests = pdo_query("SELECT count(*) FROM build2test WHERE (status='failed' OR status='notrun')
-                         AND buildid=".qnum($this->Id));
-    $tests_array  = pdo_fetch_array($tests);
-    $ntests = $tests_array[0];
+    $nwarnings = $errors_array[1]; 
+    $ntests = $errors_array[2]+$errors_array[3];
           
     // If we have a previous build
     if($previousbuildid>0)
       {
-      $previouserrors = pdo_query("SELECT count(*) FROM builderror WHERE type='0' 
-                                     AND buildid=".qnum($previousbuildid));
+      $previouserrors = pdo_query("SELECT builderrors,buildwarnings,testnotrun,testfailed FROM build WHERE buildid=".qnum($previousbuildid));
       $previouserrors_array  = pdo_fetch_array($previouserrors);
-      $npreviouserrors = $previouserrors_array[0];
-            
-      $previouswarnings = pdo_query("SELECT count(*) FROM builderror WHERE type='1' 
-                                       AND buildid=".qnum($previousbuildid));
-      $previouswarnings_array  = pdo_fetch_array($previouswarnings);
-      $npreviouswarnings = $previouswarnings_array[0];
-            
-      $previoustests = pdo_query("SELECT count(*) FROM build2test WHERE (status='failed' OR status='notrun') 
-                                        AND buildid=".qnum($previousbuildid));
-      $previoustests_array  = pdo_fetch_array($previoustests);
-      $nprevioustests = $previoustests_array[0];
+      $npreviouserrors = $previouserrors_array[0];   
+      $npreviouswarnings = $previouserrors_array[1];
+      $nprevioustests = $previouserrors_array[2]+$previouserrors_array[3];
             
       $warningdiff = $nwarnings-$npreviouswarnings;
       $errordiff = $nerrors-$npreviouserrors;
@@ -1210,13 +1190,9 @@ class Build
       return false;    
       }
    
-    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".qnum($this->Id)." AND type='0'");
+    $builderror = pdo_query("SELECT builderrors FROM build WHERE buildid=".qnum($this->Id));
     $builderror_array = pdo_fetch_array($builderror);
-    $nerrors = $builderror_array[0];
-    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid=".qnum($this->Id)." AND type='0'");
-    $builderror_array = pdo_fetch_array($builderror);
-    $nerrors += $builderror_array[0];
-    return $nerrors;  
+    return $builderror_array[0];  
     } // end GetNumberOfErrors() 
 
   /** Get the number of warnings for a build */
@@ -1228,13 +1204,9 @@ class Build
       return false;    
       }
    
-    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".qnum($this->Id)." AND type='1'");
+    $builderror = pdo_query("SELECT buildwarnings FROM build WHERE buildid=".qnum($this->Id));
     $builderror_array = pdo_fetch_array($builderror);
-    $nerrors = $builderror_array[0];
-    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid=".qnum($this->Id)." AND type='1'");
-    $builderror_array = pdo_fetch_array($builderror);
-    $nerrors += $builderror_array[0];
-    return $nerrors;  
+    return $builderror_array[0];  
     } // end GetNumberOfWarnings() 
 
 
