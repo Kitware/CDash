@@ -727,13 +727,13 @@ class Project
       return false;
       }
   
-    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM build,builderror,buildgroup,build2group
-                          WHERE  builderror.buildid=build.id  AND build.projectid=".qnum($this->Id).
-                         " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                          AND buildgroup.includesubprojectotal=1 
-                          AND build.starttime>'$startUTCdate' 
-                          AND build.starttime<='$endUTCdate' AND builderror.type='1'
-                          GROUP BY build.id) as c");
+    $project = pdo_query("SELECT count(*) FROM build,build2group,buildgroup
+                          WHERE build.projectid=".qnum($this->Id).
+                          " AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'
+                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
+                           AND buildgroup.includesubprojectotal=1
+                           AND build.buildwarnings>0");
     
     if(!$project)
       {
@@ -742,24 +742,6 @@ class Project
       }  
     $project_array = pdo_fetch_array($project);
     $count = $project_array[0];
-    
-    // Warning failures
-    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM build,buildfailure,build2group,buildgroup
-                          WHERE  buildfailure.buildid=build.id  AND build.projectid=".qnum($this->Id).
-                         " AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND buildfailure.type='1'
-                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                          AND buildgroup.includesubprojectotal=1 
-                          GROUP BY build.id) as c");
-    
-    if(!$project)
-      {
-      add_last_sql_error("Project GetNumberOfWarningBuilds");
-      return false;
-      }  
-    $project_array = pdo_fetch_array($project);
-    $count += $project_array[0];
-    
     return $count;
     }
   
@@ -771,14 +753,15 @@ class Project
       echo "Project GetNumberOfErrorBuilds(): Id not set";
       return false;
       }
-
-    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM build,builderror,build2group,buildgroup
-                          WHERE  builderror.buildid=build.id  AND build.projectid=".qnum($this->Id).
-                         " AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND builderror.type='0'
+    
+    // build failures
+    $project = pdo_query("SELECT count(*) FROM build,build2group,buildgroup
+                          WHERE build.projectid=".qnum($this->Id).
+                          " AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'
                            AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                          AND buildgroup.includesubprojectotal=1 
-                          GROUP BY build.id) as c");
+                           AND buildgroup.includesubprojectotal=1
+                           AND build.builderrors>0");
   
     if(!$project)
       {
@@ -787,23 +770,6 @@ class Project
       }
     $project_array = pdo_fetch_array($project);
     $count = $project_array[0];
-    
-    // build failures
-    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM build,buildfailure,build2group,buildgroup
-                          WHERE  buildfailure.buildid=build.id  AND build.projectid=".qnum($this->Id).
-                         " AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND buildfailure.type='0'
-                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                           AND buildgroup.includesubprojectotal=1 
-                          GROUP BY build.id) as c");
-  
-    if(!$project)
-      {
-      add_last_sql_error("Project GetNumberOfErrorBuilds");
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    $count += $project_array[0];
     return $count;
     }
       
@@ -816,16 +782,15 @@ class Project
       return false;
       }
   
-    $project = pdo_query("SELECT count(*) FROM (SELECT count(be.buildid) as c,count(bf.buildid) as cf FROM build2group,buildgroup,build
-                          LEFT JOIN builderror as be ON be.buildid=build.id 
-                          LEFT JOIN buildfailure as bf ON bf.buildid=build.id 
+    $project = pdo_query("SELECT count(*) FROM build,build2group,buildgroup
                           WHERE build.projectid=".qnum($this->Id).
-                         " AND build.starttime>'$startUTCdate' 
+                          " AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate'
                            AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
                            AND buildgroup.includesubprojectotal=1
-                          GROUP BY build.id
-                          ) as t WHERE t.c=0 AND t.cf=0");
+                           AND build.builderrors=0
+                           AND build.buildwarnings=0
+                           ");
   
     if(!$project)
       {
@@ -868,13 +833,14 @@ class Project
       return false;
       }
       
-    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM build,configureerror,build2group,buildgroup
-                          WHERE  configureerror.buildid=build.id  AND build.projectid=".qnum($this->Id).
+    $project = pdo_query("SELECT count(*) FROM build,configure,build2group,buildgroup
+                          WHERE  configure.buildid=build.id  AND build.projectid=".qnum($this->Id).
                          " AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND configureerror.type='1'
+                           AND build.starttime<='$endUTCdate'
                            AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
                            AND buildgroup.includesubprojectotal=1 
-                          GROUP BY build.id) as c");
+                           AND  configure.warnings>0 
+                           ");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfWarningConfigures");
@@ -893,14 +859,13 @@ class Project
       return false;
       }
       
-    $project = pdo_query("SELECT count(*) FROM (SELECT build.id FROM build,configure,buildgroup,build2group
+    $project = pdo_query("SELECT count(*) FROM build,configure,buildgroup,build2group
                           WHERE  configure.buildid=build.id  AND build.projectid=".qnum($this->Id).
                          " AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate' 
                            AND configure.status='1'
                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                          AND buildgroup.includesubprojectotal=1 
-                          GROUP BY build.id) as c");
+                          AND buildgroup.includesubprojectotal=1");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfErrorConfigures");
@@ -965,11 +930,11 @@ class Project
       return false;
       }
   
-    $project = pdo_query("SELECT count(*) FROM build2test,build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
+    $project = pdo_query("SELECT SUM(build.testpassed) FROM build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
                          " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                          AND buildgroup.includesubprojectotal=1 
-                         AND build2test.buildid=build.id AND build.starttime>'$startUTCdate' 
-                         AND build.starttime<='$endUTCdate' AND build2test.status='passed'");
+                         AND buildgroup.includesubprojectotal=1 
+                         AND build.starttime>'$startUTCdate' 
+                         AND build.starttime<='$endUTCdate'");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfPassingTests");
@@ -988,11 +953,11 @@ class Project
       return false;
       }
   
-    $project = pdo_query("SELECT count(*) FROM build2test,build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
+    $project = pdo_query("SELECT SUM(build.testfailed) FROM build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
                          " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                           AND buildgroup.includesubprojectotal=1 
-                           AND build2test.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND build2test.status='failed'");
+                         AND buildgroup.includesubprojectotal=1 
+                         AND build.starttime>'$startUTCdate' 
+                         AND build.starttime<='$endUTCdate'");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfFailingTests");
@@ -1011,10 +976,11 @@ class Project
       return false;
       }
   
-    $project = pdo_query("SELECT count(*) FROM build2test,build,buildgroup,build2group WHERE build.projectid=".qnum($this->Id).
+    $project = pdo_query("SELECT SUM(build.testnotrun) FROM build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
                          " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                           AND build2test.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate' AND build2test.status='notrun'");
+                         AND buildgroup.includesubprojectotal=1 
+                         AND build.starttime>'$startUTCdate' 
+                         AND build.starttime<='$endUTCdate'");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfNotRunTests");
