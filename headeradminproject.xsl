@@ -2,7 +2,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
         
     <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="iso-8859-1"/>
-    <xsl:template name="headerback" match="/">
+    <xsl:template name="headeradminproject" match="/">
 <link rel="shortcut icon" href="favicon.ico"/>
 <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
@@ -41,7 +41,17 @@
   <td width="631" align="left" class="bgtm">
 <ul id="Nav" class="nav">
 <li id="Dartboard">
-<a><xsl:attribute name="href"><xsl:value-of select="/cdash/backurl"/></xsl:attribute>BACK</a>
+<a><xsl:attribute name="href"><xsl:value-of select="/cdash/backurl"/></xsl:attribute>MY CDASH</a>
+</li>
+<li id="admin">
+<a href="#">ADMINISTRATION</a><ul>
+<li><a class="submm"><xsl:attribute name="href">createProject.php?edit=1&#x26;projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>Project</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>Users</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>Groups</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>Coverage</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageBanner.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>Banner</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>SubProjects</a></li>
+</ul>
 </li>
 </ul>
 </td>

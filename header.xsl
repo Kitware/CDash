@@ -25,12 +25,10 @@
           <xsl:otherwise>Login</xsl:otherwise>
         </xsl:choose>  
         </a>
-        
-        <xsl:if test="cdash/user/id>0">
+        | <a href="index.php">All Dashboards</a>
+         <xsl:if test="cdash/user/id>0">
           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>|<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="user.php?logout=1">Log Out</a>  
-        </xsl:if>
-        | <a href="index.php">Dashboards</a>
-                  
+        </xsl:if>          
         </td>
         <td width="34%" class="topdate">
           <span style="float:right">
@@ -193,13 +191,27 @@ Map</a></li>
 </xsl:if>
 
 <li>
-<a href="#" id="activem">PROJECT</a><ul>
+<a href="#">PROJECT</a><ul>
 <li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
 <li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/documentation"/> </xsl:attribute>Doxygen</a></li>
 <li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>Repository</a></li>
 <li><a class="submm"><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/bugtracker"/> </xsl:attribute>Bugs</a></li>
 </ul>
 </li>
+
+<xsl:if test="cdash/user/projectrole>2 or cdash/user/admin=1">
+<li id="admin">
+<a href="#">ADMINISTRATION</a><ul>
+<li><a class="submm"><xsl:attribute name="href">createProject.php?edit=1&#x26;projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Project</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Users</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Groups</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Coverage</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageBanner.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Banner</a></li>
+<li><a class="submm"><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>SubProjects</a></li>
+</ul>
+</li>
+</xsl:if>
+
 </ul>
 </td>
   <td height="28" class="insd3">

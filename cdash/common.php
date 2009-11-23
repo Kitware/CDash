@@ -256,7 +256,7 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
     }
   else if(@$projectid > 0)
     {
-    $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+    $project = pdo_query("SELECT public FROM project WHERE id='$projectid'");
     $project_array = pdo_fetch_array($project);
     
     // If the project is public we quit
@@ -1946,6 +1946,17 @@ function get_cdash_dashboard_xml($projectname, $date)
     $xml .= "<user>";
     $userid = $_SESSION['cdash']['loginid'];
     $xml .= add_XML_value("id",$userid);
+    
+    // Is the user super administrator
+    $userquery = pdo_query("SELECT admin FROM user WHERE id='$userid'");
+    $user_array = pdo_fetch_array($userquery);
+    $xml .= add_XML_value("admin",$user_array[0]);
+    
+    // Is the user administrator of the project
+    $userquery = pdo_query("SELECT role FROM user2project WHERE userid=".qnum($userid)." AND projectid=".qnum($projectid));
+    $user_array = pdo_fetch_array($userquery);
+    $xml .= add_XML_value("projectrole",$user_array[0]);
+    
     $xml .= "</user>";
     }
     

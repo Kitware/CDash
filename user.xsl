@@ -12,7 +12,7 @@
       <head>
         <title><xsl:value-of select="cdash/title"/></title>
         <meta name="robots" content="noindex,nofollow" />
-    <link rel="shortcut icon" href="favicon.ico"/> 
+        <link rel="shortcut icon" href="favicon.ico"/> 
         <link rel="StyleSheet" type="text/css">
           <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
         </link>
@@ -21,10 +21,21 @@
 
  <body>
  
-    <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
+ <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
     <td>
   <table width="100%" align="center" cellpadding="0" cellspacing="0" >
+  <tr>
+    <td height="30" valign="middle">
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="66%" class="paddl">
+        <a href="index.php">All Dashboards</a> | <a href="user.php?logout=1">Log Out</a>
+        </td>        
+      </tr>
+    </table>    
+    </td>
+  </tr> 
   <tr>
     <td height="22" class="topline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
   </tr>
@@ -54,13 +65,9 @@
     <td align="left" class="topbg2"><table width="100%" height="28" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
-<li id="Dartboard">
-<a href="index.php">HOME</a>
-</li>
 <li>
 <a href="editUser.php">MY PROFILE</a>
 </li>
-<li><a href="user.php?logout=1">LOGOUT</a></li>
 </ul>
 </td>
   <td height="28" class="insd3"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
