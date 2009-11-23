@@ -118,20 +118,15 @@ $(function () {
            $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
     
     });
-   
-    $("#timegrapholder").bind("plotclick", function (e, pos) {
-        if (!pos.selected) { return; }
-        plot.highlightSelected( pos.selected );
-        x = pos.selected.x;
-        buildid = buildids[x];
-        testid = testids[x];
-        window.location = "testDetails.php?test="+testid+"&build="+buildid;
-    });
 
-    $("#timegrapholder").bind("plotmousemove", function (e, pos) {
-        if (!pos.selected) { return; }
-        plot.highlightSelected( pos.selected );
-    });
+    $("#timegrapholder").bind("plotclick", function (e, pos, item) {
+        if (item) {
+            plot.highlight(item.series, item.datapoint);
+            buildid = buildids[item.datapoint[0]];
+            testid = testids[item.datapoint[0]];
+            window.location = "testDetails.php?test="+testid+"&build="+buildid;
+            }      
+     });
 
 <?php if(isset($zoomout))
 {

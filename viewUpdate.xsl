@@ -19,7 +19,9 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-       <xsl:call-template name="headscripts"/>          
+       <xsl:call-template name="headscripts"/>
+         <!-- Include JavaScript -->
+         <script src="javascript/cdashUpdateGraph.js" type="text/javascript" charset="utf-8"></script>  
        </head>
        <body bgcolor="#ffffff">
    
@@ -41,6 +43,27 @@ Files changed <xsl:value-of select="cdash/build/site"/> -- <xsl:value-of select=
 Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 </xsl:if>
 </h3>
+
+<!-- Graph -->
+
+<xsl:if test="cdash/build/site">
+<a>
+<xsl:attribute name="href">javascript:showbuildgraph_click(<xsl:value-of select="cdash/build/buildid"/>)</xsl:attribute>
+[Show Activity Graph]
+</a>
+</xsl:if>
+<xsl:if test="cdash/updates/timestamp">
+<a>
+<xsl:attribute name="href">javascript:showprojectgraph_click(<xsl:value-of select="cdash/dashboard/projectid"/>,<xsl:value-of select="cdash/dashboard/unixtimestamp"/>)</xsl:attribute>
+[Show Activity Graph]
+</a>
+</xsl:if>
+
+<div id="graphoptions"></div>
+<div id="graph"></div>
+<center>
+<div id="grapholder"></div>
+</center>
 
 <h3>
 <font style="background-color: #C22b25">

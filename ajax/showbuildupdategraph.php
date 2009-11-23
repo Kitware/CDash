@@ -39,31 +39,29 @@ $siteid = $build_array["siteid"];
 $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
+$project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
+$project_array = pdo_fetch_array($project);
+
 // Find the other builds
-$previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested FROM build,coveragesummary as cs WHERE cs.buildid=build.id AND siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC");
+$previousbuilds = pdo_query("SELECT b.id,b.starttime,bu.nfiles FROM build as b,buildupdate as bu WHERE bu.buildid=b.id
+                               AND b.siteid='$siteid' AND b.type='$buildtype' AND b.name='$buildname'
+                               AND b.projectid='$projectid' AND b.starttime<='$starttime' ORDER BY b.starttime ASC");
 ?>
 
     
 <br>
 <script language="javascript" type="text/javascript">
 $(function () {
-    var percent_array = [];
-    var loctested_array = [];
-    var locuntested_array = [];
+    var d1 = [];
     var buildids = [];
     <?php
     $i=0;
     while($build_array = pdo_fetch_array($previousbuilds))
       {
       $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
-      @$percent = round($build_array["loctested"]/($build_array["loctested"]+$build_array["locuntested"])*100,2);
-      
     ?>
-    percent_array.push([<?php echo $t; ?>,<?php echo $percent; ?>]);
-    loctested_array.push([<?php echo $t; ?>,<?php echo $build_array["loctested"]; ?>]);
-    locuntested_array.push([<?php echo $t; ?>,<?php echo $build_array["locuntested"]; ?>]);
-    buildids[<?php echo $t; ?>] = <?php echo $build_array["id"]; ?>;
+      d1.push([<?php echo $t; ?>,<?php echo $build_array["nfiles"]; ?>]);
+      buildids[<?php echo $t; ?>] = <?php echo $build_array["id"]; ?>;
     <?php
     $i++;
       }
@@ -73,7 +71,6 @@ $(function () {
       lines: { show: true },
       points: { show: true },
       xaxis: { mode: "time" }, 
-      yaxis: { min: 0, max: 100 },
       grid: {backgroundColor: "#fffaff",
       clickable: true,
       hoverable: true,
@@ -84,23 +81,17 @@ $(function () {
     };
   
     $("#grapholder").bind("selected", function (event, area) {
-    plot = $.plot($("#grapholder"), 
-          [{label: "% coverage",  data: percent_array},
-           {label: "loc tested",  data: loctested_array , yaxis: 2},
-           {label: "loc untested",  data: locuntested_array, yaxis: 2}], 
-           $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
-     });
-
-    $("#grapholder").bind("plotclick", function (e, pos, item) {
-        if (item) {
-            plot.highlight(item.series, item.datapoint);
-            buildid = buildids[item.datapoint[0]];
-            window.location = "buildSummary.php?buildid="+buildid;
-            }      
+    plot = $.plot($("#grapholder"), [{label: "Number of changed files",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
      });
   
-  plot = $.plot($("#grapholder"), [{label: "% coverage",  data: percent_array},
-                                   {label: "loc tested",  data: loctested_array, yaxis: 2},
-                                   {label: "loc untested",  data: locuntested_array, yaxis: 2}],options);
+   $("#grapholder").bind("plotclick", function (e, pos, item) {
+       if (item) {
+           plot.highlight(item.series, item.datapoint);
+           buildid = buildids[item.datapoint[0]];
+           window.location = "buildSummary.php?buildid="+buildid;
+           }      
+    });
+   
+  plot = $.plot($("#grapholder"), [{label: "Number of changed files",  data: d1}],options);
 });
 </script>

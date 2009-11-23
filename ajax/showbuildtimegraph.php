@@ -82,20 +82,15 @@ $(function () {
     $("#grapholder").bind("selected", function (event, area) {
     plot = $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
      });
-  
-   $("#grapholder").bind("plotclick", function (e, pos) {
-        if (!pos.selected) { return; }
-        plot.highlightSelected( pos.selected );
-        x = pos.selected.x;
-        buildid = buildids[x];
-        window.location = "buildSummary.php?buildid="+buildid;
-    });
 
-    $("#grapholder").bind("plotmousemove", function (e, pos) {
-        if (!pos.selected) { return; }
-        plot.highlightSelected( pos.selected );
-    });
-     
+    $("#grapholder").bind("plotclick", function (e, pos, item) {
+        if (item) {
+            plot.highlight(item.series, item.datapoint);
+            buildid = buildids[item.datapoint[0]];
+            window.location = "buildSummary.php?buildid="+buildid;
+            }      
+     });
+       
   plot = $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}],options);
 });
 </script>
