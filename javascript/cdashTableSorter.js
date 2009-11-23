@@ -160,8 +160,7 @@ $(document).ready(function() {
         });  
       });
     } 
-
-  if(nrows==4 && document.getElementById('showtesttimediv'))
+ else if(nrows==4 && document.getElementById('showtesttimediv'))
     {
     $tabs.each(function(index) {          
      $(this).tablesorter({
@@ -191,8 +190,7 @@ $(document).ready(function() {
         });  
       });
     }
-  
-  if(nrows==5)
+  else if(nrows==5)
     {
     $tabs.each(function(index) {          
      $(this).tablesorter({
@@ -208,7 +206,23 @@ $(document).ready(function() {
         });  
       });
     }
- 
+  else if(nrows==6)
+    {
+    $tabs.each(function(index) {          
+     $(this).tablesorter({
+            headers: { 
+                0: { sorter:'buildname'},
+                1: { sorter:'buildname'},
+                2: { sorter:'buildname'},
+                3: { sorter:'digit'},
+                4: { sorter:'text'},
+                5: { sorter:'text'}
+            },
+          debug: false,
+          widgets: ['zebra'] 
+        });  
+      });
+    }
   // Initialize the testSummary tables
   if($tabs.length==0)
     {
