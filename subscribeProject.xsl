@@ -34,7 +34,7 @@
          <script type="text/javascript" src="javascript/cdashUserLabels.js"></script>
          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
        </head>
-       <body bgcolor="#ffffff" onLoad="opt.init(document.forms[0])">
+       <body bgcolor="#ffffff" onLoad="opt.init(document.forms[1])">
 
 <xsl:choose>         
 <xsl:when test="/cdash/uselocaldirectory=1">
@@ -51,8 +51,29 @@
 <xsl:value-of select="cdash/warning"/>
 </xsl:if>
 
-<b>Project:</b> <xsl:value-of select="cdash/project/name"/><br/>
-
+<table width="100%"  border="0">
+<tr>
+    <td width="10%"><div align="right"><strong>Project:</strong></div></td>
+    <td width="90%" >
+    <form name="form1" method="post">
+    <xsl:attribute name="action">subscribeProject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
+    <select onchange="location = 'subscribeProject.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
+        <option value="0">Choose project</option>
+        <xsl:for-each select="cdash/availableproject">
+        <option>
+        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+        <xsl:if test="selected=1">
+        <xsl:attribute name="selected"></xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="name"/>
+        </option>
+        </xsl:for-each>
+        </select>
+      </form>
+    </td>
+  </tr>
+<tr>
+<td colspan="2">
 <form name="form1" enctype="multipart/form-data" method="post" action="">
   <div id="wizard">
       <ul>
@@ -324,7 +345,9 @@
 </xsl:if> 
     
 </form>
-<br/>
+</td>
+</tr>
+</table>
 
 <br/>
 <!-- FOOTER -->

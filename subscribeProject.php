@@ -230,6 +230,24 @@ if ($session_OK)
   
   $xml .= "</project>";  
   
+  $sql = "SELECT id,name FROM project";
+  if($User->IsAdmin() == false)
+    {
+    $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
+    }
+  $projects = pdo_query($sql);
+  while($project_array = pdo_fetch_array($projects))
+     {
+     $xml .= "<availableproject>";
+     $xml .= add_XML_value("id",$project_array['id']);
+     $xml .= add_XML_value("name",$project_array['name']);
+     if($project_array['id']==$projectid)
+        {
+        $xml .= add_XML_value("selected","1");
+        }
+     $xml .= "</availableproject>";
+     }
+   
   $xml .= "</cdash>";
   
   // Now doing the xslt transition
