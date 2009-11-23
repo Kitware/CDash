@@ -1643,7 +1643,7 @@ if(isset($NoXSLGenerate))
   return;
   }
 
-if(!isset($projectname )) // if the project name is not set we display the table of projects
+if(!isset($projectname)) // if the project name is not set we display the table of projects
   {
   $xml = generate_index_table();
   // Now doing the xslt transition

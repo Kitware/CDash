@@ -3,9 +3,8 @@
 
    <xsl:include href="footer.xsl"/>
    <xsl:include href="headeradminproject.xsl"/> 
-   <xsl:include href="headscripts.xsl"/>
-   
-    <!-- Local includes -->
+
+   <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
    <xsl:include href="local/headeradminproject.xsl"/>  
      
@@ -20,11 +19,11 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-          <xsl:comment><![CDATA[[if IE]></xsl:comment>
+         <xsl:comment><![CDATA[[if IE]></xsl:comment>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
           <xsl:comment><![ endif]]></xsl:comment>
-         <xsl:call-template name="headscripts"/>
-         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
+          <script src="javascript/jquery.js"></script>
+          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
              
        <!-- Functions to confirm the remove -->
   <xsl:text disable-output-escaping="yes">

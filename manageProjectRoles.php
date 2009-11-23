@@ -397,6 +397,7 @@ $project_array = pdo_fetch_array($project);
 $xml .= "<project>";
 $xml .= add_XML_value("id",$project_array['id']);
 $xml .= add_XML_value("name",$project_array['name']);
+$xml .= add_XML_value("name_encoded",urlencode($project_array['name']));
 $xml .= "</project>";
 
 // List the users for that project

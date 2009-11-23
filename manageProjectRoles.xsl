@@ -22,10 +22,10 @@
          <xsl:comment><![CDATA[[if IE]></xsl:comment>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
           <xsl:comment><![ endif]]></xsl:comment>
-                  <!-- Include project roles -->
+          <!-- Include project roles -->
           <script src="javascript/jquery.js"></script>
           <script src="javascript/cdashProjectRole.js"></script>
-         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
+          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
    
 
         <!-- Functions to confirm the email -->

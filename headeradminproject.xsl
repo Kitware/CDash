@@ -40,7 +40,10 @@
  <tr>
   <td width="631" align="left" class="bgtm">
 <ul id="Nav" class="nav">
-<li id="Dartboard">
+<li id="Dashboard">
+<a><xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/project/name_encoded"/></xsl:attribute>DASHBOARD</a>
+</li>
+<li>
 <a><xsl:attribute name="href"><xsl:value-of select="/cdash/backurl"/></xsl:attribute>MY CDASH</a>
 </li>
 <li id="admin">

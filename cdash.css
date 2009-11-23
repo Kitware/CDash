@@ -476,6 +476,10 @@ background-color: #999999;
  border-left-color: #000;
 }
 
+#admin ul li a {
+   width: 116px;
+}
+
 .nav ul li a:hover {
   background: #ccc;
   color: #000;

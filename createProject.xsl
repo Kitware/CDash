@@ -3,7 +3,6 @@
 
    <xsl:include href="footer.xsl"/>
    <xsl:include href="headeradminproject.xsl"/> 
-   <xsl:include href="headscripts.xsl"/>
    
    <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
@@ -20,10 +19,10 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
          <xsl:comment><![CDATA[[if IE]></xsl:comment>
-        <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
-        <xsl:comment><![ endif]]></xsl:comment>
-         <xsl:call-template name="headscripts"/>
-         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
+          <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
+          <xsl:comment><![ endif]]></xsl:comment>
+          <script src="javascript/jquery.js"></script>
+          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
          <script type="text/javascript" src="javascript/cdashCreateProject.js"></script>
        </head>
        <body bgcolor="#ffffff">

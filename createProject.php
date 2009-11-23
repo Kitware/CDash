@@ -315,6 +315,7 @@ if($projectid>0)
   $xml .= "<project>";
   $xml .= add_XML_value("id",$Project->Id);
   $xml .= add_XML_value("name",$Project->Name);
+  $xml .= add_XML_value("name_encoded",urlencode($Project->Name));
   $xml .= add_XML_value("description",$Project->Description);
   $xml .= add_XML_value("homeurl",$Project->HomeUrl);  
   $xml .= add_XML_value("cvsurl",$Project->CvsUrl);

@@ -126,6 +126,7 @@ if($projectid>=0)
   if($projectid>0)
     {
     $xml .= add_XML_value("name",$Project->GetName());
+    $xml .= add_XML_value("name_encoded",urlencode($Project->GetName()));
     }
   $xml .= add_XML_value("id",$Project->Id);
   $xml .= "</project>";

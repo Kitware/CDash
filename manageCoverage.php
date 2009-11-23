@@ -318,6 +318,7 @@ if($projectid>0)
   $xml .= "<project>";
   $xml .= add_XML_value("id",$Project->Id);
   $xml .= add_XML_value("name",$Project->GetName());
+  $xml .= add_XML_value("name_encoded",urlencode($Project->GetName()));
   
   if($buildid>0)
     {
