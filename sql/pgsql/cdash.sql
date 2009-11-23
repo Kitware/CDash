@@ -15,7 +15,7 @@ CREATE TABLE "build" (
   "command" text NOT NULL,
   "log" text NOT NULL,
   "builderrors" smallint DEFAULT '-1',
-  "builwarnings" smallint DEFAULT '-1',
+  "buildwarnings" smallint DEFAULT '-1',
   "testnotrun" smallint DEFAULT '-1',
   "testfailed" smallint DEFAULT '-1',
   "testpassed" smallint DEFAULT '-1',
