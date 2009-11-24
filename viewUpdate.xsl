@@ -33,19 +33,19 @@
   <xsl:call-template name="header"/>
 </xsl:otherwise>
 </xsl:choose>
-<br/>
 
-<h3>
+<h4>
 <xsl:if test="cdash/build/site">
-Files changed <xsl:value-of select="cdash/build/site"/> -- <xsl:value-of select="cdash/build/buildname"/> as of <xsl:value-of select="cdash/build/buildtime"/>
+Files changed on <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="cdash/build/siteid"/></xsl:attribute>
+<xsl:value-of select="cdash/build/site"/></a> 
+(<xsl:value-of select="cdash/build/buildname"/>) as of <xsl:value-of select="cdash/build/buildtime"/>
 </xsl:if>
 <xsl:if test="cdash/updates/timestamp">
 Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 </xsl:if>
-</h3>
+</h4>
 
 <!-- Graph -->
-
 <xsl:if test="cdash/build/site">
 <a>
 <xsl:attribute name="href">javascript:showbuildgraph_click(<xsl:value-of select="cdash/build/buildid"/>)</xsl:attribute>

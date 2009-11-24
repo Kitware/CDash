@@ -128,6 +128,7 @@ $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid
 $xml .= "<build>\n";
 $xml .= add_XML_value("displaylabels",$project_array["displaylabels"]);
 $xml .= add_XML_value("site",$site_array["name"]);
+$xml .= add_XML_value("siteid",$siteid);
 $xml .= add_XML_value("buildname",$build_array["name"]);
 $xml .= add_XML_value("buildid",$build_array["id"]);
 $xml .= add_XML_value("testtime", $build_array["endtime"]);

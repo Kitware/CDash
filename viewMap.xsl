@@ -20,6 +20,10 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+       <script language="javascript" type="text/javascript" src="javascript/jquery.js" charset="utf-8"></script>   
+       <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+       <script language="javascript" type="text/javascript" src="javascript/cdashSiteSorter.js"></script> 
+       
        </head>
    <body onload="load()" onunload="GUnload()">
 
@@ -31,33 +35,9 @@
   <xsl:call-template name="headerback"/>
 </xsl:otherwise>
 </xsl:choose>
-
-<!--
-<table border="0" cellpadding="0" cellspacing="2" width="100%">
-<tr>
-<td align="center"><a href="index.php"><img alt="Logo/Homepage link" height="100" src="images/cdash.gif" border="0"/></a>
-</td>
-<td bgcolor="#6699cc" valign="top" width="100%">
-<font color="#ffffff"><h2>CDash - Sites Map for <xsl:value-of select="cdash/dashboard/projectname"/></h2>
-<h3>Where are the builds located?</h3></font>
-</td></tr><tr><td></td><td>
-<ul id="Nav" class="nav">
-   <li>
-        <a><xsl:attribute name="href">index.php</xsl:attribute>Home</a>
-      </li>
-      <li>
-        <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#x26;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>Project</a>
-      </li>  
-</ul>
-</td>
-</tr>
-</table>
--->
-
 <br/>
 
-<!-- Display the map --> 
-  <script type="text/javascript">
+ <script type="text/javascript">
       <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
    </script>
   <xsl:text disable-output-escaping="yes">
@@ -90,17 +70,49 @@
     }
     &lt;/script&gt;
     </xsl:text>
-  <center><div id="map" style="width: 700px; height: 400px"></div></center>
+    
+<div style="position:relative;">
+<div style="float:left; padding-right:20px;">
+<!-- Display the table of maintainers --> 
+<table id="maintainerTable" witdh="100%" cellspacing="0" class="tabb">
+<thead> 
+  <tr class="table-heading1">
+    <th id="sort_0">Site Name</th>
+    <th id="sort_1" >Maintainer</th>  
+    <th id="sort_2" >Processor Speed</th> 
+    <th id="sort_3" class="nob"># Processors</th>      
+  </tr>
+</thead>
+<xsl:for-each select="cdash/site">
+<tr>
+<td><center>
+<a>
+<xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute>
+<xsl:value-of select="name"/></a></center></td>
+<td><center>
+<xsl:if test="string-length(maintainer_name)>1">
+<xsl:value-of select="maintainer_name"/>
+</xsl:if>
+<xsl:if test="string-length(maintainer_name)=1">
+<a>
+<xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute>
+[claim this site]
+</a>
+</xsl:if>
+</center></td>
+<td><center><xsl:value-of select="processor_speed"/>Hz</center></td>
+<td><center><xsl:value-of select="numberphysicalcpus"/></center></td>
+</tr>
+</xsl:for-each>
+</table>
+</div>
 
-<xsl:text disable-output-escaping="yes">
-&lt;script type="text/javascript"&gt;
-  Rounded('rounded', 15, 15,0,0);
-&lt;/script&gt;
-</xsl:text>
+<!-- Display the map -->
+<div id="map" style="width: 700px; height: 400px; float:left;"></div>
+</div>
 
 <!-- FOOTER -->
-<br/>
-
+<div style="clear:both; padding-top:20px"></div>
 <xsl:choose>         
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>

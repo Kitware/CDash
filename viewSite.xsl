@@ -39,6 +39,14 @@
      
 <br/>
 
+<!-- Site manager -->
+<xsl:if test="cdash/user/sitemanager=1">
+<a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="cdash/site/id"/></xsl:attribute>
+<xsl:if test="cdash/user/siteclaimed=0">Are you maitaining this site? [claim this site]</xsl:if><xsl:if test="cdash/user/siteclaimed=1">[edit site description]</xsl:if></a>
+<br/>
+<br/>
+</xsl:if>
+
 <!-- Main -->         
 <b>Processor Speed: </b><xsl:if test="string-length(cdash/site/processorclockfrequency)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>   
 <b>64 Bits: </b><xsl:if test="string-length(cdash/site/processoris64bits)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processoris64bits"/><br/>    
@@ -108,14 +116,6 @@
   </body>
 </xsl:if>
 <br/>
-
-<!-- Site manager -->
-<xsl:if test="cdash/user/sitemanager=1">
-<a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="cdash/site/id"/></xsl:attribute>
-<xsl:if test="cdash/user/siteclaimed=0">[claim this site]</xsl:if><xsl:if test="cdash/user/siteclaimed=1">[edit site description]</xsl:if></a>
-<br/>
-<br/>
-</xsl:if>
 
 <!-- Projects -->
 <b>This site belongs to the following projects:</b><br/>

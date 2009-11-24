@@ -42,7 +42,7 @@ $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : Sites map for ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
-$xml .= "<backurl>index.php?project=urlencode($projectname)&#38;date=$date</backurl>";
+$xml .= "<backurl>index.php?project=".urlencode($projectname)."&#38;date=$date</backurl>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Build location</menusubtitle>";
 
@@ -86,25 +86,36 @@ if($end_timestamp<$beginning_timestamp)
 $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);            
   
-$build = pdo_query("SELECT siteid FROM build 
-                     WHERE starttime<'$end_UTCDate' AND starttime>'$beginning_UTCDate'
-                     AND projectid='$projectid' GROUP BY siteid");
+$site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
+                     si.description,
+                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude, 
+                     user.firstname,user.lastname,user.id AS userid
+                     FROM build AS b, siteinformation AS si, site as s
+                     LEFT JOIN site2user ON (site2user.siteid=s.id)
+                     LEFT JOIN user ON (site2user.userid=user.id)
+                     WHERE s.id=b.siteid 
+                     AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
+                     AND si.siteid=s.id
+                     AND b.projectid='$projectid' GROUP BY b.siteid");
 
-while($buildarray  = pdo_fetch_array($build))
+echo pdo_error();
+
+while($site_array = pdo_fetch_array($site))
   {
-  $siteid = $buildarray["siteid"];
-  $site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'"));
   $xml .= "<site>";
   $xml .= add_XML_value("name",$site_array["name"]);
+  $xml .= add_XML_value("id",$site_array["id"]);
   $xml .= add_XML_value("description",$site_array["description"]);
-  $xml .= add_XML_value("processor",$site_array["processor"]);
-  $xml .= add_XML_value("numprocessors",$site_array["numprocessors"]);
-  $xml .= add_XML_value("ip",$site_array["ip"]);
+  $xml .= add_XML_value("processor_speed",getByteValueWithExtension($site_array["processorclockfrequency"]*1024*1024));
+  $xml .= add_XML_value("numberphysicalcpus",$site_array["numberphysicalcpus"]);
   $xml .= add_XML_value("latitude",$site_array["latitude"]);
   $xml .= add_XML_value("longitude",$site_array["longitude"]);
+  $xml .= add_XML_value("longitude",$site_array["longitude"]);
+  $xml .= add_XML_value("maintainer_name",$site_array["firstname"]." ".$site_array["lastname"]);
+  $xml .= add_XML_value("maintainer_id",$site_array["userid"]);
   $xml .= "</site>";
   }
-  
+
 $xml .= "</cdash>";
 
 // Now doing the xslt transition

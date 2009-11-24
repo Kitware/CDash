@@ -34,7 +34,9 @@
 <br/>
 
 <table border="0">
-<tr><td align="left"><b>Site: </b><xsl:value-of select="cdash/build/site"/></td></tr>
+<tr><td align="left"><b>Site: </b><a>
+<xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="cdash/build/siteid"/></xsl:attribute>
+<xsl:value-of select="cdash/build/site"/></a></td></tr>
 <tr><td align="left"><b>Build Name: </b><xsl:value-of select="cdash/build/buildname"/></td></tr>
 <tr><td align="left"><b>Build Time: </b><xsl:value-of select="cdash/build/starttime"/></td></tr>
 <tr><td align="left">&#x20;</td></tr>

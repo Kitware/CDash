@@ -134,7 +134,7 @@ Tests</a></li>
 Tests Query</a></li>
 <li><a class="submm">
 <xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
-Map</a></li>
+Sites</a></li>
 </ul>
 </li>
 </xsl:otherwise>

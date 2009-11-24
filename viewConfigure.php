@@ -88,6 +88,7 @@ $xml .= "</menu>";
   $xml .= "<build>";
   $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
+  $xml .= add_XML_value("siteid",$siteid);
   $xml .= add_XML_value("buildname",$build_array["name"]);
   $xml .= add_XML_value("buildid",$build_array["id"]);
   $xml .= "</build>";
