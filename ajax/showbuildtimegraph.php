@@ -30,7 +30,8 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
 // Find the project variables
-$build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
+$build = pdo_query("SELECT name,type,siteid,projectid,starttime
+                    FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
 
 $buildtype = $build_array["type"];
@@ -43,15 +44,19 @@ $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
 
 // Find the other builds
-$previousbuilds = pdo_query("SELECT id,starttime,endtime FROM build WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                               AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC");
+$previousbuilds = pdo_query("SELECT id,starttime,endtime,buildwarnings,builderrors,testfailed
+                             FROM build WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
+                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC");
 ?>
 
     
 <br>
 <script language="javascript" type="text/javascript">
 $(function () {
-    var d1 = [];
+    var buildtime = [];
+    var builderrors = [];
+    var buildwarnings = [];
+    var testfailed = [];
     var buildids = [];
     <?php
     $i=0;
@@ -59,7 +64,10 @@ $(function () {
       {
       $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
     ?>
-      d1.push([<?php echo $t; ?>,<?php echo (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60; ?>]);
+      buildtime.push([<?php echo $t; ?>,<?php echo (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60; ?>]);
+      builderrors.push([<?php echo $t; ?>,<?php echo $build_array["builderrors"] ?>]);
+      buildwarnings.push([<?php echo $t; ?>,<?php echo $build_array["buildwarnings"] ?>]);
+      testfailed.push([<?php echo $t; ?>,<?php echo $build_array["testfailed"] ?>]);
       buildids[<?php echo $t; ?>] = <?php echo $build_array["id"]; ?>;
     <?php
     $i++;
@@ -69,7 +77,9 @@ $(function () {
     var options = {
       lines: { show: true },
       points: { show: true },
-      xaxis: { mode: "time" }, 
+      xaxis: { mode: "time" },
+      yaxis: { tickFormatter: function (v, axis) { return v.toFixed(axis.tickDecimals) +" mins" }},
+      y2axis: { min: 0 },
       grid: {backgroundColor: "#fffaff",
       clickable: true,
       hoverable: true,
@@ -80,7 +90,10 @@ $(function () {
     };
   
     $("#grapholder").bind("selected", function (event, area) {
-    plot = $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
+    plot = $.plot($("#grapholder"), [{label: "Build Time",  data: buildtime},
+                                     {label: "# warnings",  data: buildwarnings, yaxis: 2},
+                                     {label: "# errors",  data:  builderrors, yaxis: 2},
+                                     {label: "# tests failed",  data: testfailed, yaxis: 2}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
      });
 
     $("#grapholder").bind("plotclick", function (e, pos, item) {
@@ -91,6 +104,10 @@ $(function () {
             }      
      });
        
-  plot = $.plot($("#grapholder"), [{label: "Build Time (minutes)",  data: d1}],options);
+  plot = $.plot($("#grapholder"), [{label: "Build Time",  data: buildtime},
+                                   {label: "# warnings",  data: buildwarnings, yaxis: 2},
+                                   {label: "# errors",  data:  builderrors, yaxis: 2},
+                                   {label: "# tests failed",  data: testfailed, yaxis: 2}],
+                                   options);
 });
 </script>
