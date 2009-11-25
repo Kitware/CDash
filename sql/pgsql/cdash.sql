@@ -263,6 +263,7 @@ CREATE TABLE "project" (
   "homeurl" character varying(255) DEFAULT '' NOT NULL,
   "cvsurl" character varying(255) DEFAULT '' NOT NULL,
   "bugtrackerurl" character varying(255) DEFAULT '' NOT NULL,
+  "bugtrackerfileurl" character varying(255) DEFAULT '' NOT NULL,
   "documentationurl" character varying(255) DEFAULT '' NOT NULL,
   "imageid" bigint DEFAULT '0' NOT NULL,
   "public" smallint DEFAULT '1' NOT NULL,

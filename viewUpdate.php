@@ -230,25 +230,12 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
         {
         // For now we assume we are using mantis in the future we might want 
         // to support other bug trackers
-        $url = $project_array["bugtrackerurl"];
-
-        // Sometimes administrators are putting more information in the bug tracker
-        // URL. Let's trim that
-        $posslash = strrpos($url,"/");
-        if($posslash !== false)
+        $url = $project_array["bugtrackerfileurl"];
+        if(empty($url))
           {
-          $substr = substr($url,$posslash);
-          if(strpos($substr,"?") !== FALSE || strpos($substr,"&") !== FALSE)
-            {
-            $url = substr($url,0,$posslash);
-            }
+          $url = $project_array["bugtrackerurl"];
           }
-        
-        if($url[strlen($url)-1] != "/")
-          {
-          $url .= "/";
-          }
-        $file['bugurl'] = XMLStrFormat("http://".$url."view.php?id=".$bugid);
+        $file['bugurl'] = XMLStrFormat($url.$bugid);
         } // end have bugid
       else
         {

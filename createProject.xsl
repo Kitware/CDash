@@ -168,7 +168,17 @@ edit the project</a><br/>
                     </xsl:attribute>
                     </input>
                     <xsl:text disable-output-escaping="yes"> </xsl:text>
-
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><div align="right"><strong>Bug Tracker File URL:</strong></div></td>
+                    <td><input name="bugFileURL" onchange="saveChanges();" onfocus="$('.tab_help').html('');"  type="text" id="bugFileURL" size="50"> 
+                    <xsl:attribute name="value">
+                    <xsl:value-of select="cdash/project/bugfileurl"/>
+                    </xsl:attribute>
+                    </input>
+                    <xsl:text disable-output-escaping="yes"> </xsl:text>
                     </td>
                   </tr>
                  <tr>

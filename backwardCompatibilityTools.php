@@ -537,6 +537,7 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
   AddTableField("updatefile","status","VARCHAR(12)","VARCHAR( 12 )","");
+  AddTableField("project","bugtrackerfileurl","VARCHAR(255)","VARCHAR( 255 )","");
   AddTableIndex('coveragefilelog','line');
   AddTableIndex('dailyupdatefile','author');
   

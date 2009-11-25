@@ -98,7 +98,7 @@
     </tr>
 
    <tr class="table-heading">
-      <td align="center" class="botl">Project Name</td>   
+      <td align="center" width="100px" class="botl">Project Name</td>   
       <td align="center" width="240px" class="botl">Actions</td>   
       <td align="center" width="130px" class="botl">Builds</td>
       <td align="center" width="130px" class="botl">Builds per day</td>

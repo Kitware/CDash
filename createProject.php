@@ -114,6 +114,7 @@ if($Submit)
     $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
     $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
     $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
+    $Project->BugTrackerFileUrl = $_POST["bugFileURL"];
     $Project->DocumentationUrl = stripHTTP($_POST["docURL"]);
     @$Public = $_POST["public"];
     if(!isset($Public))
@@ -241,6 +242,7 @@ if($Update || $AddRepository)
   $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
   $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
   $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
+  $Project->BugTrackerFileUrl = $_POST["bugFileURL"];
   $Project->DocumentationUrl = stripHTTP($_POST["docURL"]);
   @$Project->Public  = $_POST["public"];
   if(!isset($Project->Public))
@@ -320,6 +322,7 @@ if($projectid>0)
   $xml .= add_XML_value("homeurl",$Project->HomeUrl);  
   $xml .= add_XML_value("cvsurl",$Project->CvsUrl);
   $xml .= add_XML_value("bugurl",$Project->BugTrackerUrl);
+  $xml .= add_XML_value("bugfileurl",$Project->BugTrackerFileUrl);
   $xml .= add_XML_value("docurl",$Project->DocumentationUrl); 
   $xml .= add_XML_value("public",$Project->Public);
   $xml .= add_XML_value("imageid",$Project->ImageId);
@@ -411,9 +414,9 @@ $xml .= AddCVSViewer("viewvc","ViewVC",$Project->CvsViewerType);
 $xml .= AddCVSViewer("viewvc1.1","ViewVC1.1",$Project->CvsViewerType);
 $xml .= AddCVSViewer("websvn","WebSVN",$Project->CvsViewerType);
 $xml .= AddCVSViewer("loggerhead","Loggerhead",$Project->CvsViewerType);
- 
+
 $xml .= add_XML_value("nrepositories",$nRepositories); // should be at the end
-  
+
 $xml .= "</cdash>";
 
 // Now doing the xslt transition

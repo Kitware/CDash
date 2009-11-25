@@ -325,6 +325,7 @@ CREATE TABLE `project` (
   `homeurl` varchar(255) NOT NULL default '',
   `cvsurl` varchar(255) NOT NULL default '',
   `bugtrackerurl` varchar(255) NOT NULL default '',
+  `bugtrackerfileurl` varchar(255) NOT NULL DEFAULT '',
   `documentationurl` varchar(255) NOT NULL default '',
   `imageid` int(11) NOT NULL default '0',
   `public` tinyint(4) NOT NULL default '1',

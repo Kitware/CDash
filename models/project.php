@@ -30,6 +30,7 @@ class Project
   var $CvsUrl;
   var $DocumentationUrl;
   var $BugTrackerUrl;
+  var $BugTrackerFileUrl;
   var $ImageId;
   var $Public;
   var $CoverageThreshold;
@@ -128,8 +129,9 @@ class Project
       case "DESCRIPTION": $this->Description = $value;break;
       case "HOMEURL": $this->HomeUrl = $value;break;
       case "CVSURL": $this->CvsUrl = $value;break;
-      case "BUGTRACKERURL": $this->DocumentationUrl = $value;break;
-      case "DOCUMENTATIONURL": $this->BugTrackerUrl = $value;break;
+      case "DOCUMENTATIONURL": $this->DocumentationUrl = $value;break;
+      case "BUGTRACKERURL": $this->BugTrackerUrl = $value;break;
+      case "BUGTRACKERFILEURL": $this->BugTrackerFileUrl = $value;break;
       case "IMAGEID": $this->ImageId = $value;break;
       case "PUBLIC": $this->Public = $value;break;
       case "COVERAGETHRESHOLD": $this->CoverageThreshold = $value;break;
@@ -223,6 +225,7 @@ class Project
       $query .= ",cvsurl='".$this->CvsUrl."'";
       $query .= ",documentationurl='".$this->DocumentationUrl."'";
       $query .= ",bugtrackerurl='".$this->BugTrackerUrl."'";
+      $query .= ",bugtrackerfileurl='".$this->BugTrackerFileUrl."'";
       $query .= ",public=".qnum($this->Public);
       $query .= ",coveragethreshold=".qnum($this->CoverageThreshold);
       $query .= ",nightlytime='".$this->NightlyTime."'";
@@ -270,12 +273,12 @@ class Project
       // Trim the name
       $this->Name = trim($this->Name);
       $this->Initialize();
-      $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
+      $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                     googletracker,emailbrokensubmission,emailredundantfailures,
                                     emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
                                     ,displaylabels,autoremovetimeframe,autoremovemaxbuilds)
-                 VALUES (".$idvalue."'$this->Name','$this->Description','$this->HomeUrl','$this->CvsUrl','$this->BugTrackerUrl','$this->DocumentationUrl',
+                 VALUES (".$idvalue."'$this->Name','$this->Description','$this->HomeUrl','$this->CvsUrl','$this->BugTrackerUrl','$this->BugTrackerFileUrl','$this->DocumentationUrl',
                  ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$this->NightlyTime',
                  '$this->GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).",".qnum($this->EmailBuildMissing).","
                  .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$this->CvsViewerType',".qnum($this->TestTimeStd)
@@ -369,6 +372,7 @@ class Project
       $this->CvsUrl = $project_array['cvsurl'];
       $this->DocumentationUrl = $project_array['documentationurl'];
       $this->BugTrackerUrl = $project_array['bugtrackerurl'];
+      $this->BugTrackerFileUrl = $project_array['bugtrackerfileurl'];
       $this->ImageId = $project_array['imageid'];
       $this->Public = $project_array['public'];
       $this->CoverageThreshold = $project_array['coveragethreshold'];

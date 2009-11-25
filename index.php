@@ -1482,7 +1482,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
   <date>".$date."</date>
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <svn>".$Project->CvsUrl."</svn>
-  <bugtracker>".$Project->BugTrackerUrl."</bugtracker> 
+  <bugtracker>".$Project->BugTrackerUrl."</bugtracker>
   <googletracker>".$Project->GoogleTracker."</googletracker> 
   <documentation>".$Project->DocumentationUrl."</documentation>
   <home>".$Project->HomeUrl."</home>
