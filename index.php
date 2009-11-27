@@ -610,6 +610,14 @@ function generate_main_dashboard_XML($projectid,$date)
     
   $build_rows = array();
 
+  // If the user is logged in we display if the build has some changes for him
+  $userupdatesql = "";
+  if(isset($_SESSION['cdash']))
+    {
+    $userupdatesql = "(SELECT count(updatefile.buildid) FROM updatefile,user2project
+                      WHERE buildid=b.id AND user2project.projectid=b.projectid 
+                      AND user2project.cvslogin=updatefile.author) AS userupdates,";
+    }
            
   $sql =  "SELECT b.id,b.siteid,
                   bn.buildid AS countbuildnotes,
@@ -630,7 +638,8 @@ function generate_main_dashboard_XML($projectid,$date)
                   tfailed_diff.difference AS counttestsfaileddiff,
                   tpassed_diff.difference AS counttestspasseddiff,
                   tstatusfailed_diff.difference AS countteststimestatusfaileddiff,
-                  (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes, 
+                  (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,"
+                  .$userupdatesql."
                   s.name AS sitename,
                   b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
                   b.builderrors AS countbuilderrors,
@@ -1073,8 +1082,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
     $xml .= add_XML_value("site", $build_array["sitename"]);
     $xml .= add_XML_value("siteid", $siteid);
-    //$xml .= add_XML_value("buildname", $build_array["name"] . ' ' . $build_array['stamp']);
     $xml .= add_XML_value("buildname", $build_array["name"]);
+    $xml .= add_XML_value("userupdates", $build_array["userupdates"]);    
     $xml .= add_XML_value("buildid", $build_array["id"]);
     $xml .= add_XML_value("generator", $build_array["generator"]);
 

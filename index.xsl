@@ -249,7 +249,7 @@
         </xsl:choose>
       </xsl:attribute>
         <xsl:if test="countbuildids=1">
-        <a>
+        <xsl:if test="userupdates>0"><img src="images/star.png" alt="finger"/></xsl:if><a>
         <xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="update/files"/>
@@ -561,7 +561,7 @@
     <tr class="total">
       <td width="15%" align="left">Totals</td>
       <td width="15%" align="center"><b><xsl:value-of select = "count($type/build/buildid)" /> Builds</b></td>
-      <td width="2%" align="center">
+      <td width="5%" align="center">
        <xsl:attribute name="class">
        <xsl:choose>
           <xsl:when test="/cdash/totalUpdateError!=0">
