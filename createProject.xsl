@@ -85,14 +85,14 @@ edit the project</a><br/>
         <div id="wizard">
             <ul>
                 <li>                 
-                  <a href="#fragment-1"><span>General information</span></a></li>                
+                  <a href="#fragment-1"><span>Information</span></a></li>                
                 <li>
                   <xsl:if test="cdash/edit=0">
                     <xsl:attribute name="class">
                      tabs-disabled
                     </xsl:attribute>
                   </xsl:if> 
-                  <a href="#fragment-2"><span>Upload logo</span></a></li>
+                  <a href="#fragment-2"><span>Logo</span></a></li>
                 <li>
                   <xsl:if test="cdash/edit=0">
                     <xsl:attribute name="class">
@@ -107,20 +107,26 @@ edit the project</a><br/>
                      tabs-disabled
                     </xsl:attribute>
                   </xsl:if> 
-                  <a href="#fragment-4"><span>Testing Configuration</span></a></li>
+                  <a href="#fragment-4"><span>Testing</span></a></li>
                 <li>
                   <xsl:if test="cdash/edit=0">
                     <xsl:attribute name="class">
                      tabs-disabled
                     </xsl:attribute>
                   </xsl:if> 
-                  <a href="#fragment-5"><span>E-mail Configuration</span></a></li>
+                  <a href="#fragment-5"><span>E-mail</span></a></li>
                 <li>
                   <xsl:if test="cdash/edit=0">
                     <xsl:attribute name="class">
                      tabs-disabled
                     </xsl:attribute>
-                  </xsl:if> <a href="#fragment-6"><span>Miscellaneous</span></a></li>
+                  </xsl:if> <a href="#fragment-6"><span>Spam</span></a></li>
+                <li>
+                  <xsl:if test="cdash/edit=0">
+                    <xsl:attribute name="class">
+                     tabs-disabled
+                    </xsl:attribute>
+                  </xsl:if> <a href="#fragment-7"><span>Miscellaneous</span></a></li>
             </ul>  
   
      
@@ -624,6 +630,65 @@ edit the project</a><br/>
             </div>
             
             <div id="fragment-6" class="tab_content">
+              <div class="tab_help"></div>
+              <table width="550">
+               <tr>
+                  <td></td>
+                  <td><div align="right"><strong>Block List <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelp('ctestConfig_help');" src="images/help.gif" border="0"/></a>
+                  </strong></div></td>
+                  <td>
+                  <table width="100%" border="0">
+                  <xsl:for-each select="/cdash/blockedbuild">
+                    <tr>
+                      <td><xsl:value-of select="name"/></td>
+                      <td><xsl:value-of select="site"/></td>
+                      <td><xsl:value-of select="ip"/></td>
+                      <td><input type="checkbox" value="1">
+                       <xsl:attribute name="name">removespam[<xsl:value-of select="id"/>]</xsl:attribute>
+                      </input></td>
+                    </tr>
+                  </xsl:for-each>
+                  
+                  </table>
+                  </td>
+               <span class="help_content" id="ctestConfig_help">
+                <b>Block List</b><br/>Submission to CDash can be block given a sitename, buildname and IP address in order to prevent submissions from unwanted host.
+                </span>
+                </tr>
+                <xsl:if test="count(/cdash/blockedbuild) >0">
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td><input type="submit" name="RemoveSpamFilter" value="Remove Selected"/></td>
+               </tr> 
+               </xsl:if>
+               <tr>
+                  <td></td>
+                  <td><div align="right"><strong>Build Name:</strong></div></td>
+                  <td><input type="text" name="spambuildname" /></td>
+               </tr> 
+               <tr>
+                  <td></td>
+                  <td><div align="right"><strong>Site Name:</strong></div></td>
+                  <td><input type="text" name="spamsitename"/></td>
+               </tr> 
+               <tr>
+                  <td></td>
+                  <td><div align="right"><strong>IP Address:</strong></div></td>
+                  <td><input type="text" name="spamip"/></td>
+               </tr> 
+               <tr>
+                  <td></td>
+                  <td></td>
+                  <td><input type="submit" name="SpamFilter" value="Add filter"/></td>
+               </tr> 
+               
+              </table>
+            </div>
+            
+            
+            <div id="fragment-7" class="tab_content">
               <div class="tab_help"></div>
               <table width="550">
                  

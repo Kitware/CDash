@@ -836,3 +836,16 @@ CREATE TABLE "submission" (
 );
 CREATE INDEX "submission_projectid" on "submission" ("projectid");
 CREATE INDEX "submission_status" on "submission" ("status");
+
+
+CREATE TABLE "blockbuild" (
+  "id" serial NOT NULL,
+  "projectid" bigint  NOT NULL,
+  "buildname" character varying(255) DEFAULT '' NOT NULL,
+  "sitename"  character varying(255) DEFAULT '' NOT NULL,
+  "ipaddress" character varying(255) DEFAULT '' NOT NULL,
+);
+CREATE INDEX "blockbuild_projectid" on "blocklist" ("projectid");
+CREATE INDEX "blockbuild_buildname" on "blocklist" ("buildname");
+CREATE INDEX "blockbuild_sitename" on "blocklist" ("sitename");
+CREATE INDEX "blockbuild_ipaddress" on "blocklist" ("ipaddress");

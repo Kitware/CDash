@@ -506,7 +506,7 @@ class Project
    function GetRepositories()
      {
      $repositories = array();
-     $repository = pdo_query("SELECT url from repositories,project2repositories
+     $repository = pdo_query("SELECT url FROM repositories,project2repositories
                                WHERE repositories.id=project2repositories.repositoryid
                                AND project2repositories.projectid=".qnum($this->Id));
      while($repository_array = pdo_fetch_array($repository))
@@ -517,6 +517,18 @@ class Project
      return $repositories;   
      } // end GetRepositories
 
+  /** Get the list of block builds */ 
+  function GetBlockedBuilds()
+    {
+    $sites = array();
+    $site = pdo_query("SELECT id,buildname,sitename,ipaddress FROM blockbuild
+                             WHERE projectid=".qnum($this->Id));
+     while($site_array = pdo_fetch_array($site))
+       {
+       $sites[] = $site_array;
+       }
+    return $sites;     
+    }
 
   /** Get Ids of all the project registered
    *  Maybe this function should go somewhere else but for now here */

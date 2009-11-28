@@ -224,6 +224,36 @@ if($Submit)
     }
   } // end submit
   
+// If we should add a spam filter
+@$SpamFilter = $_POST["SpamFilter"];
+if($SpamFilter)
+  {
+  @$spambuildname = pdo_real_escape_string($_POST["spambuildname"]);
+  @$spamsitename = pdo_real_escape_string($_POST["spamsitename"]);  
+  @$spamip = pdo_real_escape_string($_POST["spamip"]);  
+  
+  if(!empty($spambuildname) || !empty($spamsitename) || !empty($spamip))
+    {
+    pdo_query("INSERT INTO blockbuild (projectid,buildname,sitename,ipaddress) VALUES (".qnum($projectid).
+              ",'".$spambuildname."','".$spamsitename."','".$spamip."')");
+    }
+  } // end spam filter
+  
+  
+// If we should remove a spam filter
+@$RemoveSpamFilter = $_POST["RemoveSpamFilter"];
+if($RemoveSpamFilter)
+  {
+  @$removespam = $_POST["removespam"];
+  foreach($removespam as $key => $value)
+    {
+    if($value == 1)
+      {
+      pdo_query("DELETE FROM blockbuild WHERE id=".qnum($key));
+      }
+    }
+  } // end spam filter  
+  
 // If we should delete the project
 @$Delete = $_POST["Delete"];
 if($Delete)
@@ -347,6 +377,18 @@ if($projectid>0)
   $xml .= add_XML_value("autoremovetimeframe",$Project->AutoremoveTimeframe);
   $xml .= add_XML_value("autoremovemaxbuilds",$Project->AutoremoveMaxBuilds);
   $xml .= "</project>";
+  
+  // Get the spam list
+  $spambuilds = $Project->GetBlockedBuilds();
+  foreach($spambuilds as $spambuild)
+    {
+    $xml .= "<blockedbuild>";
+    $xml .= add_XML_value("name",$spambuild['buildname']);
+    $xml .= add_XML_value("site",$spambuild['sitename']);
+    $xml .= add_XML_value("ip",$spambuild['ipaddress']);
+    $xml .= add_XML_value("id",$spambuild['id']);
+    $xml .= "</blockedbuild>";
+    }
   
   $repositories = $Project->GetRepositories();
   $nRegisteredRepositories = 0;

@@ -30,3 +30,15 @@ CREATE TABLE "buildtesttime" (
   "time" numeric(7,2) DEFAULT '0.00' NOT NULL,
   PRIMARY KEY ("buildid")
 );
+
+CREATE TABLE "blockbuild" (
+  "id" serial NOT NULL,
+  "projectid" bigint  NOT NULL,
+  "buildname" character varying(255) DEFAULT '' NOT NULL,
+  "sitename"  character varying(255) DEFAULT '' NOT NULL,
+  "ipaddress" character varying(255) DEFAULT '' NOT NULL,
+);
+CREATE INDEX "blockbuild_projectid" on "blocklist" ("projectid");
+CREATE INDEX "blockbuild_buildname" on "blocklist" ("buildname");
+CREATE INDEX "blockbuild_sitename" on "blocklist" ("sitename");
+CREATE INDEX "blockbuild_ipaddress" on "blocklist" ("ipaddress");

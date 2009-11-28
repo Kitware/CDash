@@ -115,23 +115,42 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false)
   // Clean the backup directory
   clean_backup_directory();
   
+  
+  $projectname = get_project_name($projectid);
+  $sitename = $handler->getSiteName();
+  $buildname = $handler->getBuildName();
+  
+  // Check if the build is in the block list
+  $query = pdo_query("SELECT id FROM blockbuild WHERE projectid=".qnum($projectid)." 
+                         AND (buildname='' OR buildname='".$buildname."')
+                         AND (sitename='' OR sitename='".$sitename."')
+                         AND (ipaddress='' OR ipaddress='".$_SERVER['REMOTE_ADDR']."')");
+  
+  if(pdo_num_rows($query)>0)
+    {
+    echo $query_array['id']; 
+    echo "The submission is banned from this CDash server.";  
+    add_log("Submission is banned from this CDash server","ctestparser");  
+    exit();  
+    }
+  
   // Append a timestamp for the file
   $currenttimestamp = microtime(true)*100;
   
   if($file == "Project")
     {
-    $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$currenttimestamp."_".$file.".xml";
+    $filename = $CDASH_BACKUP_DIRECTORY."/".$projectname."_".$currenttimestamp."_".$file.".xml";
     }
   else
     {  
-    $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$handler->getSiteName()."_".$handler->getBuildName()."_".$handler->getBuildStamp()."_".$currenttimestamp.'_'.$file.".xml";
+    $filename = $CDASH_BACKUP_DIRECTORY."/".$projectname."_".$sitename."_".$buildname."_".$handler->getBuildStamp()."_".$currenttimestamp.'_'.$file.".xml";
     }
     
   // If the file is other we append a number until we get a non existing file
   $i=1;
   while(file_exists($filename))
     {
-    $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$handler->getSiteName()."_".$handler->getBuildName()."_".$handler->getBuildStamp().'_'.$currenttimestamp."_".$file."_".$i.".xml";
+    $filename = $CDASH_BACKUP_DIRECTORY."/".$projectname."_".$sitename."_".$buildname."_".$handler->getBuildStamp().'_'.$currenttimestamp."_".$file."_".$i.".xml";
     $i++;
     }
    

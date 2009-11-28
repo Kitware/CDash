@@ -874,6 +874,19 @@ CREATE TABLE IF NOT EXISTS `submission` (
   KEY `status` (`status`)
 );
 
+CREATE TABLE IF NOT EXISTS `blockbuild` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectid` int(11) NOT NULL,
+  `buildname` varchar(255) NOT NULL,
+  `sitename` varchar(255) NOT NULL,
+  `ipaddress` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `projectid` (`projectid`),
+  KEY `buildname` (`buildname`),
+  KEY `sitename` (`sitename`),
+  KEY `ipaddress` (`ipaddress`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 
