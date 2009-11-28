@@ -138,12 +138,14 @@
     <xsl:attribute name="class">
       <xsl:value-of select="class"/>
     </xsl:attribute>
-    <td><a>
+    <td><xsl:if test="new=1"><img src="images/flag.png" title="flag"/></xsl:if>
+    <a>
       <xsl:attribute name="href">
         <xsl:value-of select="summaryLink"/>
       </xsl:attribute>
       <xsl:value-of select="name"/>
-    </a></td>
+    </a>
+    </td>
     <td>
       <xsl:attribute name="align">center</xsl:attribute>
       <xsl:attribute name="class">

@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT builderrors FROM build LIMIT 1") )
+  if(!pdo_query("SELECT projecitd FROM test LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -634,10 +634,14 @@ function generate_main_dashboard_XML($projectid,$date)
                   bw_diff.difference AS countbuildwarningdiff,
                   ce_diff.difference AS countconfigurewarningdiff,
                   btt.time AS testsduration,
-                  tnotrun_diff.difference AS counttestsnotrundiff,
-                  tfailed_diff.difference AS counttestsfaileddiff,
-                  tpassed_diff.difference AS counttestspasseddiff,
-                  tstatusfailed_diff.difference AS countteststimestatusfaileddiff,
+                  tnotrun_diff.difference_positive AS counttestsnotrundiffp,
+                  tnotrun_diff.difference_negative AS counttestsnotrundiffn,
+                  tfailed_diff.difference_positive AS counttestsfaileddiffp,
+                  tfailed_diff.difference_negative AS counttestsfaileddiffn,
+                  tpassed_diff.difference_positive AS counttestspasseddiffp,
+                  tpassed_diff.difference_negative AS counttestspasseddiffn,
+                  tstatusfailed_diff.difference_positive AS countteststimestatusfaileddiffp,
+                  tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,
                   (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,"
                   .$userupdatesql."
                   s.name AS sitename,
@@ -927,13 +931,17 @@ function generate_main_dashboard_XML($projectid,$date)
         //  test
         $build_rows_collapsed[$idx]['hastest'] += $build_row['hastest'];
         $build_rows_collapsed[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'];
-        $build_rows_collapsed[$idx]['counttestsnotrundiff'] += $build_row['counttestsnotrundiff'];
+        $build_rows_collapsed[$idx]['counttestsnotrundiffp'] += $build_row['counttestsnotrundiffp'];
+        $build_rows_collapsed[$idx]['counttestsnotrundiffn'] += $build_row['counttestsnotrundiffn'];
         $build_rows_collapsed[$idx]['counttestsfailed'] += $build_row['counttestsfailed'];
-        $build_rows_collapsed[$idx]['counttestsfaileddiff'] += $build_row['counttestsfaileddiff'];
+        $build_rows_collapsed[$idx]['counttestsfaileddiffp'] += $build_row['counttestsfaileddiffp'];
+        $build_rows_collapsed[$idx]['counttestsfaileddiffn'] += $build_row['counttestsfaileddiffn'];
         $build_rows_collapsed[$idx]['counttestspassed'] += $build_row['counttestspassed'];
-        $build_rows_collapsed[$idx]['counttestspasseddiff'] += $build_row['counttestspasseddiff'];
+        $build_rows_collapsed[$idx]['counttestspasseddiffp'] += $build_row['counttestspasseddiffp'];
+        $build_rows_collapsed[$idx]['counttestspasseddiffn'] += $build_row['counttestspasseddiffn'];
         $build_rows_collapsed[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'];
-        $build_rows_collapsed[$idx]['countteststimestatusfaileddiff'] += $build_row['countteststimestatusfaileddiff'];
+        $build_rows_collapsed[$idx]['countteststimestatusfaileddiffp'] += $build_row['countteststimestatusfaileddiffp'];
+        $build_rows_collapsed[$idx]['countteststimestatusfaileddiffn'] += $build_row['countteststimestatusfaileddiffn'];
         $build_rows_collapsed[$idx]['testsduration'] += $build_row['testsduration'];
         }
       else
@@ -1204,33 +1212,49 @@ function generate_main_dashboard_XML($projectid,$date)
 
       $nnotrun = $build_array['counttestsnotrun'];
 
-      if($build_array['counttestsnotrundiff']!=0)
+      if($build_array['counttestsnotrundiffp']!=0)
         {
-        $xml .= add_XML_value("nnotrundiff",$build_array['counttestsnotrundiff']);
+        $xml .= add_XML_value("nnotrundiffp",$build_array['counttestsnotrundiffp']);
         }
-
+      if($build_array['counttestsnotrundiffn']!=0)
+        {
+        $xml .= add_XML_value("nnotrundiffn",$build_array['counttestsnotrundiffn']);
+        }
+ 
       $nfail = $build_array['counttestsfailed'];
 
-      if($build_array['counttestsfaileddiff']!=0)
+      if($build_array['counttestsfaileddiffp']!=0)
         {
-        $xml .= add_XML_value("nfaildiff", $build_array['counttestsfaileddiff']);
+        $xml .= add_XML_value("nfaildiffp", $build_array['counttestsfaileddiffp']);
         }
-        
+      if($build_array['counttestsfaileddiffn']!=0)
+        {
+        $xml .= add_XML_value("nfaildiffn", $build_array['counttestsfaileddiffn']);
+        }
+          
       $npass = $build_array['counttestspassed'];
 
-      if($build_array['counttestspasseddiff']!=0)
+      if($build_array['counttestspasseddiffp']!=0)
         {
-        $xml .= add_XML_value("npassdiff", $build_array['counttestspasseddiff']);
+        $xml .= add_XML_value("npassdiffp", $build_array['counttestspasseddiffp']);
         }
-
+      if($build_array['counttestspasseddiffn']!=0)
+        {
+        $xml .= add_XML_value("npassdiffn", $build_array['counttestspasseddiffn']);
+        }
+        
       if($project_array["showtesttime"] == 1)
         {
         $xml .= add_XML_value("timestatus", $build_array['countteststimestatusfailed']);
 
-        if($build_array['countteststimestatusfaileddiff']!=0)
+        if($build_array['countteststimestatusfaileddiffp']!=0)
           {
-          $xml .= add_XML_value("ntimediff", $build_array['countteststimestatusfaileddiff']);
+          $xml .= add_XML_value("ntimediffp", $build_array['countteststimestatusfaileddiffp']);
           }
+        if($build_array['countteststimestatusfaileddiffn']!=0)
+          {
+          $xml .= add_XML_value("ntimediffn", $build_array['countteststimestatusfaileddiffn']);
+          }  
         }
 
       $totalnotrun += $nnotrun;

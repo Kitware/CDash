@@ -275,6 +275,28 @@ function RemoveTableField($table,$field)
     }
 }
 
+// Rename a table vield
+function RenameTableField($table,$field,$newfield,$mySQLType,$pgSqlType,$default)
+{
+  include("cdash/config.php");
+  $query = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
+  if($query)
+    {
+    add_log("Changing $field to $newfield for $table","RenameTableField");
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      pdo_query("ALTER TABLE \"".$table."\" CHANGE \"".$field."\" \"".$newfield."\" ".$pgSqlType." DEFAULT '".$default."'");
+      }
+    else
+      {
+      pdo_query("ALTER TABLE ".$table." CHANGE ".$field." ".$newfield." ".$mySQLType." DEFAULT '".$default."'");
+      }
+      
+    add_last_sql_error("RenameTableField");
+    add_log("Done renaming $field to $newfield for $table","RenameTableField");
+    }
+}
+
 // Helper function to add an index to a table
 function AddTableIndex($table,$field)
 {
@@ -541,6 +563,21 @@ if(isset($_GET['upgrade-1-6']))
   AddTableIndex('coveragefilelog','line');
   AddTableIndex('dailyupdatefile','author');
   
+  RenameTableField("testdiff","difference","difference_positive","int(11)","bigint","0");
+  AddTableField("testdiff","difference_negative","int(11)","bigint","0");
+  AddTableField("build2test","newstatus","tinyint(4)","smallint","0");
+  
+  if(!pdo_query("SELECT projectid FROM test LIMIT 1"))
+    {
+    AddTableField("test","projectid","int(11)","bigint","0");
+    
+    // Set the project id
+    pdo_query("UPDATE test SET projectid=(SELECT projectid FROM build,build2test 
+               WHERE build2test.testid=test.id AND build2test.buildid=build.id LIMIT 1)");
+    
+    echo pdo_error();
+    }
+    
   // Add the cookiekey field
   AddTableField("user","cookiekey","VARCHAR(40)","VARCHAR( 40 )","");
   ModifyTableField("dynamicanalysis","log","MEDIUMTEXT","TEXT","",true,false);

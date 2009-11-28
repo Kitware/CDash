@@ -29,6 +29,7 @@ class Test
 {
   var $Id;
   var $Crc32;
+  var $ProjectId;
   var $Name;
   var $Path;
   var $Command;
@@ -77,6 +78,7 @@ class Test
     switch($tag)
       {
       case "CRC32": $this->Crc32 = $value;break;
+      case "PROJECTID": $this->ProjectId = $value;break;
       case "NAME": $this->Name = $value;break;
       case "PATH": $this->Path = $value;break;
       case "COMMAND": $this->Command = $value;break;
@@ -134,7 +136,7 @@ class Test
   function Exists()
     {
     $crc32 = $this->GetCrc32();
-    $query = pdo_query("SELECT id FROM test WHERE crc32='".$crc32."'");
+    $query = pdo_query("SELECT id FROM test WHERE projectid=".qnum($this->ProjectId)." AND crc32='".$crc32."'");
     if(pdo_num_rows($query)>0)
       {
       $query_array = pdo_fetch_array($query);
@@ -166,8 +168,9 @@ class Test
       $idvalue = "'".$this->Id."',";
       }
 
-    $query = "INSERT INTO test (".$id."crc32,name,path,command,details,output)
-              VALUES (".$idvalue."'$this->Crc32','$name','$path','$command','$details','$output')";                     
+    $query = "INSERT INTO test (".$id."projectid,crc32,name,path,command,details,output)
+              VALUES (".$idvalue."'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";                     
+
     if(!pdo_query($query))
       {
       add_last_sql_error("Test Insert");

@@ -356,6 +356,7 @@ CREATE INDEX "userid" on "site2user" ("userid");
 --
 CREATE TABLE "test" (
   "id" serial NOT NULL,
+  "projectid" bigint NOT NULL,
   "crc32" bigint NOT NULL,
   "name" character varying(255) DEFAULT '' NOT NULL,
   "path" character varying(255) DEFAULT '' NOT NULL,
@@ -365,6 +366,7 @@ CREATE TABLE "test" (
   PRIMARY KEY ("id")
 );
 CREATE INDEX "crc323" on "test" ("crc32");
+CREATE INDEX "testprojectid" on "test" ("projectid");
 CREATE INDEX "name4" on "test" ("name");
 
 --
@@ -377,12 +379,14 @@ CREATE TABLE "build2test" (
   "time" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timemean" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timestd" numeric(7,2) DEFAULT '0.00' NOT NULL,
-  "timestatus" smallint DEFAULT '0' NOT NULL
+  "timestatus" smallint DEFAULT '0' NOT NULL,
+  "newstatus" smallint DEFAULT '0' NOT NULL,
 );
 CREATE INDEX "buildid8" on "build2test" ("buildid");
 CREATE INDEX "testid2" on "build2test" ("testid");
 CREATE INDEX "status" on "build2test" ("status");
 CREATE INDEX "timestatus" on "build2test" ("timestatus");
+CREATE INDEX "newstatus" on "build2test" ("newstatus");
 
 --
 -- Table: buildtesttime
@@ -527,9 +531,12 @@ CREATE INDEX "buildid12" on "builderrordiff" ("buildid");
 CREATE TABLE "testdiff" (
   "buildid" bigint NOT NULL,
   "type" smallint NOT NULL,
-  "difference" bigint NOT NULL
+  "difference_positive" bigint NOT NULL,
+  "difference_negative" bigint NOT NULL
 );
 CREATE INDEX "buildid13" on "testdiff" ("buildid", "type");
+CREATE INDEX "testdiff_difference_positive" on "testdiff" ("difference_positive");
+CREATE INDEX "testdiff_difference_negative" on "testdiff" ("difference_negative");
 
 --
 -- Table: build2note

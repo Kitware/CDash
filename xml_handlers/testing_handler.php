@@ -28,7 +28,7 @@ class TestingHandler extends AbstractHandler
   private $EndTimeStamp;
   private $UpdateEndTime; // should we update the end time of the build
 
-  private $BuildId;  
+  private $BuildId; 
   private $Test;
   private $BuildTest;
   private $BuildTestDiff;
@@ -102,6 +102,7 @@ class TestingHandler extends AbstractHandler
     else if($name == "TEST" && count($attributes) > 0)
       {
       $this->Test = new Test();
+      $this->Test->ProjectId = $this->projectid;
       $this->BuildTest = new BuildTest();
       $this->BuildTest->Status = $attributes['STATUS'];
       

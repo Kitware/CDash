@@ -197,23 +197,38 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
     $sql = " AND timestatus>".$projecttestmaxstatus;
     }
       
-  // Look at the number of errors and warnings differences
-  $errors = pdo_query("SELECT count(*) FROM build2test WHERE status='$status' 
-                                         AND buildid='$buildid'".$sql);
-  $errors_array  = pdo_fetch_array($errors);
-  $nerrors = $errors_array[0]; 
-    
-  $previouserrors = pdo_query("SELECT count(*) FROM build2test WHERE status='$status' 
-                                   AND buildid='$previousbuildid'".$sql);
-  $previouserrors_array  = pdo_fetch_array($previouserrors);
-  $npreviouserrors = $previouserrors_array[0];
-    
+  // Look at the difference positive and negative test errors
+  $sqlquery = "UPDATE build2test SET newstatus=1 WHERE buildid=".$buildid." AND testid=
+               (SELECT testid FROM (SELECT test.id AS testid,name FROM build2test,test WHERE build2test.buildid=".$buildid."
+               AND build2test.testid=test.id AND build2test.status=".$status.$sql.") AS testa 
+               LEFT JOIN (SELECT name as name2 FROM build2test,test WHERE build2test.buildid=".$previousbuildid." 
+               AND build2test.testid=test.id AND build2test.status=".$status.$sql.")
+               AS testb ON testa.name=testb.name2 WHERE testb.name2 IS NULL)";
+  pdo_query($sqlquery);
+  
+  // Maybe we can get that from the query (don't know).
+  $positives = pdo_query("SELECT count(*) FROM build2test WHERE buildid=".$buildid." AND newstatus=1");
+  $positives_array  = pdo_fetch_array($positives);
+  $npositives = $positives_array[0];
+  
+  // Count the difference between the number of tests that were passing (or failing)
+  // and now that have a different one
+  $sqlquery = "SELECT count(*)
+               FROM (SELECT name FROM build2test,test WHERE build2test.buildid=".$previousbuildid."
+               AND build2test.testid=test.id AND build2test.status=".$status.$sql.") AS testa 
+               LEFT JOIN (SELECT name as name2 FROM build2test,test WHERE build2test.buildid=".$buildid." 
+               AND build2test.testid=test.id AND build2test.status=".$status.$sql.")
+               AS testb ON testa.name=testb.name2 WHERE testb.name2 IS NULL";
+  
+  $negatives = pdo_query($sqlquery);
+  $negatives_array  = pdo_fetch_array($negatives);
+  $nnegatives = $negatives_array[0]; 
+  
   // Don't log if no diff
-  $diff = $nerrors-$npreviouserrors;
-  if($diff != 0)
+  if($npositives != 0 || $negatives != 0)
     {
-    pdo_query("INSERT INTO testdiff (buildid,type,difference) 
-                 VALUES('$buildid','$testtype','$diff')");
+    pdo_query("INSERT INTO testdiff (buildid,type,difference_positive,difference_negative) 
+                 VALUES('$buildid','$testtype','$npositives','$nnegatives')");
     add_last_sql_error("compute_test_difference");
     }
 }

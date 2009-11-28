@@ -426,6 +426,7 @@ CREATE TABLE `site2user` (
 -- 
 CREATE TABLE `test` (
   `id` int(11) NOT NULL auto_increment,
+  `projectid` int(11) NOT NULL,
   `crc32` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL default '',
   `path` varchar(255) NOT NULL default '',
@@ -433,6 +434,7 @@ CREATE TABLE `test` (
   `details` text NOT NULL,
   `output` MEDIUMTEXT NOT NULL,
   PRIMARY KEY  (`id`),
+  KEY `projectid` (`projectid`),
   KEY `crc32` (`crc32`),
   KEY `name` (`name`)
 );
@@ -448,10 +450,12 @@ CREATE TABLE `build2test` (
   `timemean` float(7,2) NOT NULL default '0.00',
   `timestd` float(7,2) NOT NULL default '0.00',
   `timestatus` tinyint(4) NOT NULL default '0',
+  `newstatus` tinyint(4) NOT NULL default '0',
   KEY `buildid` (`buildid`),
   KEY `testid` (`testid`),
   KEY `status` (`status`),
-  KEY `timestatus` (`timestatus`)
+  KEY `timestatus` (`timestatus`),
+  KEY `newstatus` (`newstatus`)
 );
 
 --
@@ -604,8 +608,11 @@ CREATE TABLE `builderrordiff` (
 CREATE TABLE `testdiff` (
   `buildid` bigint(20) NOT NULL,
   `type` tinyint(4) NOT NULL,
-  `difference` int(11) NOT NULL,
-  KEY `buildid` (`buildid`,`type`)
+  `difference_positive` int(11) NOT NULL,
+  `difference_negative` int(11) NOT NULL,
+  KEY `buildid` (`buildid`,`type`),
+  KEY `difference_positive` (`difference_positive`),
+  KEY `difference_negative` (`difference_negative`)
 );
 
 CREATE TABLE `build2note` (

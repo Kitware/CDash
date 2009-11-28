@@ -9,11 +9,8 @@ body {
  font-weight: normal;
  color: #000000;
 }
-
-sub { 
- font-size: 0.63em;
-}
-
+ 
+  
 .argument {
  background-color: #eeeeee;
  font-family: Courier;
@@ -38,11 +35,6 @@ a:hover{
 a:active{
  color:#0000ff;
  text-decoration: underline;
-}
-
-a.sub {
- font-size: 1em;
- text-decoration: none;
 }
 
 .toptable {
@@ -112,20 +104,13 @@ height: expression(this.height > 110 ? 110: true);
 .normal {
  background-color : #92ca89;
 }
-.normalNew {
- background-color : #92ff89;
-}
+
 .warning {
  background-color : #fdba76;
 }
- .warningNew {
- background-color : #ffbc30;
-}
- .error {
+
+.error {
  background-color : #ff6666;
-}
- .errorNew {
- background-color : #ff1111;
 }
 
  .Passed { background-color : #92ca89; }
@@ -926,4 +911,26 @@ span.lineCov {
 
 span.lineNum {
   background-color : #fdba76;
+}
+
+.valuewithsub{
+  position: relative;
+  min-width: 40px;
+  left: -5px;
+}
+
+.sub {
+ position: absolute;
+ font-size: 0.6em;
+ text-decoration: none;
+ bottom: -0.4em;
+ margin-left: 2px;
+}
+
+a.sup {
+ position: absolute;
+ font-size: 0.6em;
+ text-decoration: none;
+ top: -0.3em;
+ margin-left: 1px;
 }

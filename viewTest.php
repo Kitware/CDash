@@ -95,12 +95,13 @@ else if(isset($_GET["onlynotrun"]))
   $onlynotrun = 1;
   $extraquery = "&onlynotrun";
   }
-else if(isset($_GET["onlydelta"]))
+else if(isset($_GET["onlydelta"])) // new test that are showing up for this category
   {
   $onlydelta = 1;
   $extraquery = "&onlydelta";
   }
 
+  
 $nightlytime = get_project_property($projectname,"nightlytime");
 $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
 $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
@@ -203,26 +204,25 @@ $xml .= add_XML_value("onlyfailed", $onlyfailed);
 $xml .= add_XML_value("onlytimestatus", $onlytimestatus);
 $xml .= add_XML_value("onlynotrun", $onlynotrun);
 
-
 // Filters:
 //
 $filterdata = get_filterdata_from_request();
 $filter_sql = $filterdata['sql'];
 $xml .= $filterdata['xml'];
 
-$build = new Build();
-$build->Id = $buildid;
-$build->FillFromId($buildid);
-$previousBuildId = $build->GetPreviousBuildId();
- 
-$sql = "SELECT bt.status,bt.timestatus,t.id,bt.time,t.details,t.name " .
+$limitnew = "";
+if($onlydelta)
+  {
+  $limitnew = " AND newstatus=1 ";
+  }
+  
+$sql = "SELECT bt.status,bt.newstatus,bt.timestatus,t.id,bt.time,t.details,t.name " .
        "FROM test as t,build2test as bt " .
        "WHERE bt.buildid='$buildid' AND t.id=bt.testid " . $status . " " .
-       $filter_sql . " " .
+       $filter_sql . " " .$limitnew.
        "ORDER BY " . $order;
 
 $result = pdo_query($sql);
-
 
 $numPassed = 0;
 $numFailed = 0;
@@ -241,37 +241,14 @@ while($row = pdo_fetch_array($result))
   {
   $currentStatus = $row["status"];
   $previousStatus;
-  $newClass = '';
-  $newText = '';
   $testName = $row["name"];
-  
-  if($previousBuildId)
-    {
-    //fetch the previous test status
-    $testName = pdo_real_escape_string($testName);
-    $sql = "SELECT bt.status FROM test as t,build2test as bt " .
-       "WHERE bt.buildid='$previousBuildId' AND t.id=bt.testid ".
-       "AND t.name='$testName'";
 
-    $res = pdo_query($sql);
-    if($arr = pdo_fetch_array($res))
-      {
-      $previousStatus = $arr["status"];
-      }
-    }
-  
-  if(isset($previousStatus) && $previousStatus != $currentStatus)
-    {
-    $newClass = 'New';
-    $newText = ' (New)';
-    }
-  else if($onlydelta)
-    {
-    continue;
-    }
-  
   $xml .= "<test>\n";
   $xml .= add_XML_value("name", $testName);
+  if($row["newstatus"])
+    {
+    $xml .= add_XML_value("new","1");
+    }
   $xml .= add_XML_value("execTime", $row["time"]);
   $xml .= add_XML_value("details", $row["details"]); 
   $testdate = get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime);
@@ -298,18 +275,18 @@ while($row = pdo_fetch_array($result))
   switch($currentStatus)
     {
     case "passed":
-      $xml .= add_XML_value("status", "Passed$newText");
-      $xml .= add_XML_value("statusclass", "normal$newClass");
+      $xml .= add_XML_value("status", "Passed");
+      $xml .= add_XML_value("statusclass", "normal");
       $numPassed++;
       break;
     case "failed":
-      $xml .= add_XML_value("status", "Failed$newText");
-      $xml .= add_XML_value("statusclass", "error$newClass");
+      $xml .= add_XML_value("status", "Failed");
+      $xml .= add_XML_value("statusclass", "error");
       $numFailed++;
       break;
     case "notrun":
-      $xml .= add_XML_value("status", "Not Run$newText");
-      $xml .= add_XML_value("statusclass", "warning$newClass");
+      $xml .= add_XML_value("status", "Not Run");
+      $xml .= add_XML_value("statusclass", "warning");
       $numNotRun++;
       break;
     }
