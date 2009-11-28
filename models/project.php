@@ -175,6 +175,7 @@ class Project
       }
    
     pdo_query("DELETE FROM buildgroup WHERE projectid=$this->Id");
+    pdo_query("DELETE FROM blockbuild WHERE projectid=$this->Id");
     pdo_query("DELETE FROM user2project WHERE projectid=$this->Id");
     pdo_query("DELETE FROM labelemail WHERE projectid=$this->Id");
     pdo_query("DELETE FROM labelemail WHERE projectid=$this->Id");
