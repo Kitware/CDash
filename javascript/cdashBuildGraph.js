@@ -22,3 +22,19 @@ function showgraph_click(buildid,zoomout)
 $("#graphoptions").show();
 });
 }
+
+/** Display the build build history */
+function showbuildhistory_click(buildid)
+{  
+  if($("#buildhistory").html() != "")
+    {
+    $("#buildhistory").hide();
+    $("#buildhistory").html("");
+    return;
+    }
+  
+  $("#buildhistory").load("ajax/showbuildhistory.php?buildid="+buildid,{},
+   function(){
+     $("#buildhistory").show();
+   });
+}

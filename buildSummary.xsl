@@ -107,7 +107,7 @@
         <td align="right">
               <xsl:attribute name="class">
           <xsl:choose>
-          <xsl:when test="cdash/update/nwarnings > 0">error
+          <xsl:when test="cdash/update/nwarnings > 0">warning
                </xsl:when>
                  <xsl:otherwise>
                   <xsl:choose>
@@ -137,7 +137,7 @@
        <xsl:value-of select="cdash/configure/nerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
-          <xsl:when test="cdash/configure/nwarnings > 0">error
+          <xsl:when test="cdash/configure/nwarnings > 0">warning
                </xsl:when>
                  <xsl:otherwise>
                   normal
@@ -162,7 +162,7 @@
        </xsl:attribute><xsl:value-of select="cdash/build/nerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
-          <xsl:when test="cdash/build/nwarnings > 0">error
+          <xsl:when test="cdash/build/nwarnings > 0">warning
                </xsl:when>
                  <xsl:otherwise>
                   normal
@@ -187,7 +187,7 @@
        <xsl:value-of select="cdash/test/nfailed"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
-          <xsl:when test="cdash/test/nnotrun> 0">error
+          <xsl:when test="cdash/test/nnotrun> 0">warning
                </xsl:when>
                  <xsl:otherwise>
                   normal
@@ -330,10 +330,20 @@
       </td>
       </tr>
       </table>
-      
       <br/>
 
+<!-- Display the history table -->
+<div class="title-divider">History</div>
+<a>
+<xsl:attribute name="href">javascript:showbuildhistory_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
+[Show Build History]
+</a>
+<div id="buildhistory"></div>
+<br/>
+
 <!-- Display notes for that build -->
+<div class="title-divider">Notes</div>
+
 <xsl:if test="count(cdash/note)>0">
 <div class="title-divider">Users notes (<xsl:value-of select="count(cdash/note)"/>)</div>
   <xsl:for-each select="cdash/note">
@@ -356,7 +366,7 @@
 
 <a>
 <xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
-[Show Build Time Graph]
+[Show Build Graphs]
 </a>
 <div id="graphoptions"></div>
 <div id="graph"></div>

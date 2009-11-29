@@ -114,7 +114,7 @@ class BuildUpdate
     {
     if(!$this->BuildId)
       {
-      echo "BuildUpdate::GetNumberOfWarnings(): BuildId not set";
+      echo "BuildUpdate::GetNumberOfErrors(): BuildId not set";
       return false;    
       }
        
