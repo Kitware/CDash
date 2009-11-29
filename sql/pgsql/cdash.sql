@@ -380,7 +380,7 @@ CREATE TABLE "build2test" (
   "timemean" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timestd" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timestatus" smallint DEFAULT '0' NOT NULL,
-  "newstatus" smallint DEFAULT '0' NOT NULL,
+  "newstatus" smallint DEFAULT '0' NOT NULL
 );
 CREATE INDEX "buildid8" on "build2test" ("buildid");
 CREATE INDEX "testid2" on "build2test" ("testid");
@@ -844,8 +844,9 @@ CREATE TABLE "blockbuild" (
   "buildname" character varying(255) DEFAULT '' NOT NULL,
   "sitename"  character varying(255) DEFAULT '' NOT NULL,
   "ipaddress" character varying(255) DEFAULT '' NOT NULL,
+  PRIMARY KEY ("id")
 );
-CREATE INDEX "blockbuild_projectid" on "blocklist" ("projectid");
-CREATE INDEX "blockbuild_buildname" on "blocklist" ("buildname");
-CREATE INDEX "blockbuild_sitename" on "blocklist" ("sitename");
-CREATE INDEX "blockbuild_ipaddress" on "blocklist" ("ipaddress");
+CREATE INDEX "blockbuild_projectid" on "blockbuild" ("projectid");
+CREATE INDEX "blockbuild_buildname" on "blockbuild" ("buildname");
+CREATE INDEX "blockbuild_sitename" on "blockbuild" ("sitename");
+CREATE INDEX "blockbuild_ipaddress" on "blockbuild" ("ipaddress");
