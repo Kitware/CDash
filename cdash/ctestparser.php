@@ -117,9 +117,14 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false)
   
   
   $projectname = get_project_name($projectid);
-  $sitename = $handler->getSiteName();
-  $buildname = $handler->getBuildName();
   
+  $sitename = "";
+  $buildname = "";
+  if($handler)
+    {
+    $sitename = $handler->getSiteName();
+    $buildname = $handler->getBuildName();
+    }
   // Check if the build is in the block list
   $query = pdo_query("SELECT id FROM blockbuild WHERE projectid=".qnum($projectid)." 
                          AND (buildname='' OR buildname='".$buildname."')
