@@ -1801,7 +1801,7 @@ function get_cdash_dashboard_xml($projectname, $date)
   <previousdate>".$previousdate."</previousdate>
   <nextdate>".$nextdate."</nextdate>
   <logoid>".getLogoID($projectid)."</logoid>";
-  
+    
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {
     include_once("local/models/proProject.php");
@@ -1817,12 +1817,12 @@ function get_cdash_dashboard_xml($projectname, $date)
     $xml .= "<user>";
     $userid = $_SESSION['cdash']['loginid'];
     $xml .= add_XML_value("id",$userid);
-    
+   
     // Is the user super administrator
-    $userquery = pdo_query("SELECT admin FROM user WHERE id='$userid'");
+    $userquery = pdo_query("SELECT admin FROM ".qid(user)." WHERE id='$userid'");
     $user_array = pdo_fetch_array($userquery);
     $xml .= add_XML_value("admin",$user_array[0]);
-    
+
     // Is the user administrator of the project
     $userquery = pdo_query("SELECT role FROM user2project WHERE userid=".qnum($userid)." AND projectid=".qnum($projectid));
     $user_array = pdo_fetch_array($userquery);
@@ -1830,7 +1830,7 @@ function get_cdash_dashboard_xml($projectname, $date)
     
     $xml .= "</user>";
     }
-    
+
   return $xml;
 }
 
