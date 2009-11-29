@@ -587,8 +587,8 @@ class CDashXmlReporter extends XmlReporter
             }
           elseif(strpos($message,"Text [Notice]") !== false)
             {
-            $warningmessage = $message;
-            $message = "Warnings (cf build)";
+            //$warningmessage = $message;
+            //$message = "Warnings (cf build)";
             $warnings = true;
             }
           $this->_paintTestInfo($message);
@@ -604,7 +604,7 @@ class CDashXmlReporter extends XmlReporter
           $this->_extractWarning($warningmessage);
           }
       echo "... **** Failed\n";
-    }
+      }
 
 
   /**
@@ -613,13 +613,13 @@ class CDashXmlReporter extends XmlReporter
      *    @access protected
      */
   function _extractError($message)
-  {
+    {
     $errors = explode('[String:',$message);
     for($i=1;$i<sizeof($errors);$i++)
       {
       $this->paintError(strstr($errors[$i],' '));
       }
-  }
+    }
 
   /**
      *    Extract an error from a warning (useful with web test cases)
@@ -627,13 +627,13 @@ class CDashXmlReporter extends XmlReporter
      *    @access protected
      */
   function _extractWarning($message)
-  {
+    {
     $warnings = explode('Notice (',$message);
     for($i=1;$i<sizeof($warnings);$i++)
     {
       $this->paintWarning(strstr($warnings[$i],' '));
     }
-  }
+    }
 
   /**
      *    Paints error as CDAsh XML format.
