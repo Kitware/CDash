@@ -24,6 +24,7 @@
        </script>
        <![endif]]]></xsl:comment>
        <script language="javascript" type="text/javascript" src="javascript/jquery.js" charset="utf-8"></script> 
+       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.min.js" charset="utf-8"></script> 
        <script language="javascript" type="text/javascript" src="javascript/jquery.flot.pie.js" charset="utf-8"></script>      
        </head>
        <body bgcolor="#ffffff">
@@ -132,7 +133,6 @@
 <b>Time spent per project (computed from average data over one week):</b><br/><br/>
 
 <center><div id="placeholder" style="width:850px;height:300px"></div></center>
-    
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     $.plot($("#placeholder"), [
@@ -143,34 +143,23 @@ $(function () {
  { label: "Non-CDash",  data: <xsl:value-of select="cdash/siteload/idle"/>}
   ], 
   {
-    pie: { 
-      show: true, 
-      pieStrokeLineWidth: 0, 
-      pieStrokeColor: '#FFF', 
-      //pieChartRadius: 100,       // by default it calculated by 
-      //centerOffsetTop:30,
-      //centerOffsetLeft:30,       // if 'auto' and legend position is "nw" then centerOffsetLeft is equal a width of legend.
-      showLabel: true,        //use ".pieLabel div" to format looks of labels
-      labelOffsetFactor: 5/6,     // part of radius (default 5/6)
-      //labelOffset: 0            // offset in pixels if > 0 then labelOffsetFactor is ignored
-      labelBackgroundOpacity: 0.55,   // default is 0.85
-      labelFormatter: function(serie){// default formatter is "serie.label"
-        //return serie.label;
-        //return serie.data;
-        return Math.round(serie.percent)+'%';
+   series: {
+      pie: { 
+        show: true,
+        radius: 1,
+        label: {
+          show: true,
+          radius: 3/4,
+          formatter: function(label, series){
+            return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+          },
+          background: { opacity: 0.5 }
+        }
       }
     },
-    legend: {
-      show: true, 
-      position: "ne", 
-      backgroundOpacity: 0
-    }
   })
 });
 </script>
-
-
-
 
 <!-- FOOTER -->
 <br/>
