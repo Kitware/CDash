@@ -120,7 +120,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false)
   
   $sitename = "";
   $buildname = "";
-  if($handler)
+  if($file != "Project") // projects don't have site and build name
     {
     $sitename = $handler->getSiteName();
     $buildname = $handler->getBuildName();
