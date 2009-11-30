@@ -207,7 +207,7 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
   pdo_query($sqlquery);
   
   // Maybe we can get that from the query (don't know).
-  $positives = pdo_query("SELECT count(*) FROM build2test WHERE buildid=".$buildid." AND newstatus=1");
+  $positives = pdo_query("SELECT count(*) FROM build2test WHERE buildid=".$buildid." AND newstatus=1 AND status=".$status.$sql);
   $positives_array  = pdo_fetch_array($positives);
   $npositives = $positives_array[0];
   
