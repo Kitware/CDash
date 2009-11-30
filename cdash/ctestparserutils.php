@@ -181,19 +181,19 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
   $sql="";
   if($testtype == 0)
     {
-    $status="notrun";
+    $status="'notrun'";
     }
   else if($testtype == 1)
     {
-    $status="failed";
+    $status="'failed'";
     }
   else if($testtype == 2)
     {
-    $status="passed";
+    $status="'passed'";
     }
   else if($testtype == 3)
     {
-    $status="passed";
+    $status="'passed'";
     $sql = " AND timestatus>".$projecttestmaxstatus;
     }
       
