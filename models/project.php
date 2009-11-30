@@ -474,11 +474,11 @@ class Project
           {
           pdo_query("DELETE FROM repositories WHERE id='$repositoryid'");
           }
-        pdo_query("DELETE FROM project2repositories WHERE projectid=".qnum($this->Id)." AND repositoryid=.".qnum($repositoryid));  
+        pdo_query("DELETE FROM project2repositories WHERE projectid=".qnum($this->Id)." AND repositoryid=".qnum($repositoryid));  
         }
       else
         {
-        pdo_query("UPDATE repositories SET url='$repositories[$currentRepository]' WHERE id=".qnum($repositoryid));
+        pdo_query("UPDATE repositories SET url='$repositories[$currentRepository]', username='$usernames[$currentRepository]', password='$passwords[$currentRepository]' WHERE id=".qnum($repositoryid));
         }  
       $currentRepository++;
       }
