@@ -238,7 +238,7 @@ while($testtime_array = pdo_fetch_array($testtime))
   $projectid = $testtime_array["projectid"];
   if(checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid,1))
      {
-     $timespent = $testtime_array["elapsed"]/7.0; // average over 7 days  
+     $timespent = round($testtime_array["elapsed"]/7.0); // average over 7 days  
      $xml .= "<build>";
      $xml .= add_XML_value("name",$testtime_array["buildname"]);
      $xml .= add_XML_value("project",get_project_name($projectid));
