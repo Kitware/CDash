@@ -132,6 +132,8 @@ if($Submit)
     @$Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
     @$Project->CvsViewerType = $_POST["cvsviewertype"];
     @$CVSRepositories = $_POST["cvsRepository"];
+    @$CVSUsernames = $_POST["cvsUsername"];
+    @$CVSPasswords = $_POST["cvsPassword"];
     @$Project->TestTimeStd = $_POST["testTimeStd"];
     @$Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
     @$Project->TestTimeMaxStatus = $_POST["testTimeMaxStatus"];
@@ -198,7 +200,7 @@ if($Submit)
       }
     
     // Add the repositories
-    $Project->AddRepositories($CVSRepositories);
+    $Project->AddRepositories($CVSRepositories, $CVSUsernames, $CVSPasswords);
     
     /** Add the logo if any */
     if(isset($_FILES['logo']) && strlen($_FILES['logo']['tmp_name'])>0)
@@ -318,7 +320,8 @@ if($Update || $AddRepository)
     }
   
   // Add repositories
-  $Project->AddRepositories($_POST["cvsRepository"]);
+
+  $Project->AddRepositories($_POST["cvsRepository"], $_POST["cvsUsername"], $_POST["cvsPassword"]);
   }
   
 // List the available projects
@@ -398,6 +401,8 @@ if($projectid>0)
     $xml .= "<cvsrepository>";
     $xml .= add_XML_value("id",$nRepositories);
     $xml .= add_XML_value("url",$repository['url']);
+    $xml .= add_XML_value("username",$repository['username']);
+    $xml .= add_XML_value("password",$repository['password']);
     $xml .= "</cvsrepository>";
     $nRegisteredRepositories++;
     $nRepositories++;

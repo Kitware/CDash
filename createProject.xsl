@@ -521,21 +521,27 @@
                             the anonymous access, for instance
                             :pserver:anoncvs@myproject.org:/cvsroot/MyProject. If the
                             project needs ssh access, make sure that the user running
-                            the webserver running CDash as the proper ssh keys. CDash
-                            doesn’t store any passwords.
+                            the webserver running CDash as the proper ssh keys.
                           </span>
-
+                          <span class="help_content" id="svnUsername_help">
+                            <b>Username</b>
+                            <br />
+                            Optional. Provide a username if you do not wish to use anonymous SVN access.
+                          </span>
+                          <span class="help_content" id="svnPassword_help">
+                            <b>Password</b>
+                            <br />
+                            The SVN password corresponding to the above user.  WARNING: this password will be stored in plaintext in the database.
+                          </span>
                         </td>
                       </tr>
                       <xsl:for-each select="/cdash/cvsrepository">
                         <tr>
                           <td></td>
                           <td>
-                            <xsl:if test="id=0">
-                              <div align="right">
-                                <strong>CVS/SVN Repository:</strong>
-                              </div>
-                            </xsl:if>
+                            <div align="right">
+                              <strong>CVS/SVN Repository:</strong>
+                            </div>
                           </td>
                           <td>
                             <input onchange="saveChanges();" onfocus="showHelp('svnRepository_help');"
@@ -554,6 +560,40 @@
                               <img onmouseover="showHelp('svnRepository_help');"
                                 src="images/help.gif" border="0" />
                             </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>
+                            <div align="right"><strong>Username:</strong></div>
+                          </td>
+                          <td>
+                            <input onchange="saveChanges();" onfocus="showHelp('svnUsername_help');" type="text" size="50">
+                              <xsl:attribute name="name">cvsUsername[<xsl:value-of select="id"/>]</xsl:attribute>
+                              <xsl:attribute name="value">
+                                <xsl:value-of select="username"/>
+                              </xsl:attribute>
+                            </input>
+                            <xsl:text disable-output-escaping="yes"> </xsl:text>
+                            <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                            <img onmouseover="showHelp('svnUsername_help');" src="images/help.gif" border="0"/></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>
+                            <div align="right"><strong>Password:</strong></div>
+                          </td>
+                          <td>
+                            <input onchange="saveChanges();" onfocus="showHelp('svnPassword_help');" type="password" size="50">
+                              <xsl:attribute name="name">cvsPassword[<xsl:value-of select="id"/>]</xsl:attribute>
+                              <xsl:attribute name="value">
+                                <xsl:value-of select="password"/>
+                              </xsl:attribute>
+                            </input>
+                            <xsl:text disable-output-escaping="yes"> </xsl:text>
+                            <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                            <img onmouseover="showHelp('svnUsername_help');" src="images/help.gif" border="0"/></a>
                           </td>
                         </tr>
                       </xsl:for-each>

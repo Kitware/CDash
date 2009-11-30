@@ -560,6 +560,8 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
   AddTableField("updatefile","status","VARCHAR(12)","VARCHAR( 12 )","");
   AddTableField("project","bugtrackerfileurl","VARCHAR(255)","VARCHAR( 255 )","");
+  AddTableField("repositories","username","VARCHAR(50)","VARCHAR( 50 )","");
+  AddTableField("repositories","password","VARCHAR(50)","VARCHAR( 50 )","");
   AddTableIndex('coveragefilelog','line');
   AddTableIndex('dailyupdatefile','author');
   

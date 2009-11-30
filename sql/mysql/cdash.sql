@@ -545,6 +545,8 @@ CREATE TABLE `buildnote` (
 CREATE TABLE `repositories` (
   `id` int(11) NOT NULL auto_increment,
   `url` varchar(255) NOT NULL,
+  `username` varchar(50) NOT NULL default '',
+  `password` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`id`)
 );
 

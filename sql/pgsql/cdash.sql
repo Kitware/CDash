@@ -462,6 +462,8 @@ CREATE INDEX "buildid10" on "buildnote" ("buildid");
 CREATE TABLE "repositories" (
   "id" serial NOT NULL,
   "url" character varying(255) NOT NULL,
+  "username" character varying(50) DEFAULT '' NOT NULL,
+  "password" character varying(50) DEFAULT '' NOT NULL,
   PRIMARY KEY ("id")
 );
 

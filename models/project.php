@@ -453,8 +453,14 @@ class Project
     }
   
   /** Add CVS/SVN repositories */
-  function AddRepositories($repositories)
+  function AddRepositories($repositories, $usernames, $passwords)
     {
+    if(!isset($repositories[0]) || strlen($repositories[0])==0)
+    {
+                $fh = fopen("C:/foo1.txt", 'w');
+          fwrite($fh, "add ".$repositories[0]." ".$usernames[0]." ".$passwords[0]);
+          fclose($fh);
+    }
     // First we update/delete any registered repositories
     $currentRepository = 0;
     $repositories_query = pdo_query("SELECT repositoryid from project2repositories WHERE projectid=".qnum($this->Id)." ORDER BY repositoryid");
@@ -481,6 +487,8 @@ class Project
     for($i=$currentRepository;$i<count($repositories);$i++)
       {
       $url = $repositories[$i];
+      $username = $usernames[$i];
+      $password = $passwords[$i];
       if(strlen($url) == 0)
         {
         continue;
@@ -490,7 +498,7 @@ class Project
       $repositories_query = pdo_query("SELECT id FROM repositories WHERE url='$url'");
       if(pdo_num_rows($repositories_query) == 0)
         {
-        pdo_query("INSERT INTO repositories (url) VALUES ('$url')");
+        pdo_query("INSERT INTO repositories (url, username, password) VALUES ('$url', '$username', '$password')");
         $repositoryid = pdo_insert_id("repositories");
         }
       else
@@ -507,12 +515,14 @@ class Project
    function GetRepositories()
      {
      $repositories = array();
-     $repository = pdo_query("SELECT url FROM repositories,project2repositories
+     $repository = pdo_query("SELECT url, username, password from repositories,project2repositories
                                WHERE repositories.id=project2repositories.repositoryid
                                AND project2repositories.projectid=".qnum($this->Id));
      while($repository_array = pdo_fetch_array($repository))
        {
        $rep['url'] = $repository_array['url'];
+       $rep['username'] = $repository_array['username'];
+       $rep['password'] = $repository_array['password'];
        $repositories[] = $rep;
        }
      return $repositories;   
