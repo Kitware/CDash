@@ -68,7 +68,7 @@ foreach($filelist as $filename)
   ++$i;
 
   # split on path separator
-  $pathParts = split("[/\\.]", $filename);
+  $pathParts = split("[/\\]", $filename);
   # split on cdash separator "_"
   $cdashParts = split("[_]", $pathParts[1]);
   $projectid = get_project_id($cdashParts[0]);
