@@ -145,11 +145,17 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $build_array = pdo_fetch_array($build); 
   $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
+  $xml .= add_XML_value("sitename_encoded",urlencode($site_array["name"]));
   $xml .= add_XML_value("siteid",$siteid);
   $xml .= add_XML_value("name",$build_array["name"]);
   $xml .= add_XML_value("id",$build_array["id"]);
   $xml .= add_XML_value("time",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]." UTC")));  
   $xml .= add_XML_value("type",$build_array["type"]);
+  
+  // For the filter (we display 1 week)
+  $xml .= add_XML_value("filterstarttime",date("Y-m-d",strtotime($build_array["starttime"]." UTC -7 days")));  
+  $xml .= add_XML_value("filterendtime",date("Y-m-d",strtotime($build_array["starttime"]." UTC")));  
+  
   
   // Find the OS and compiler information
   $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");

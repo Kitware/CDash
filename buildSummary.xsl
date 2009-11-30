@@ -337,6 +337,11 @@
 <a>
 <xsl:attribute name="href">javascript:showbuildhistory_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
 [Show Build History]
+</a><br/>
+<a><xsl:attribute name="href">
+index.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>&#38;filtercount=3&#38;showfilters=1&#38;filtercombine=and&#38;field1=site/string&#38;compare1=63&#38;value1=<xsl:value-of select="/cdash/build/sitename_encoded"/>&#38;field2=buildstarttime/date&#38;compare2=83&#38;value2=<xsl:value-of select="/cdash/build/filterstarttime"/>&#38;field3=buildstarttime/date&#38;compare3=84&#38;value3=<xsl:value-of select="/cdash/build/filterendtime"/>
+</xsl:attribute>
+[Build History Filter]
 </a>
 <div id="buildhistory"></div>
 <br/>
