@@ -2,7 +2,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
         
     <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="iso-8859-1"/>
-    <xsl:template name="headerback" match="/">
+    <xsl:template name="headerback">
 <link rel="shortcut icon" href="favicon.ico"/>
 <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
