@@ -334,13 +334,15 @@ background-color: #999999;
  text-transform: uppercase;
  color: #fcdb34;
 }
+
 .inn2 {
  font-family: Arial, Helvetica, sans-serif;
  font-size: 24px;
  font-weight: bold;
  color: #FFFFFF;
- padding-left: 72px;
+ padding-left: 20px;
 }
+
 .insd2 {
  background-image: url(images/top_03.jpg);
  background-repeat: no-repeat;
