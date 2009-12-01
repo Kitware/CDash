@@ -587,7 +587,7 @@ class CDashXmlReporter extends XmlReporter
             }
           elseif(strpos($message,"Text [Notice]") !== false)
             {
-            //$warningmessage = $message;
+            $warningmessage = $message;
             //$message = "Warnings (cf build)";
             $warnings = true;
             }
