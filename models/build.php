@@ -222,7 +222,7 @@ class Build
     
     if(!pdo_query($query))
       {
-      add_last_sql_error("Build:SaveTotalTestsTime()");
+      add_last_sql_error("Build:SaveTotalTestsTime");
       return false;
       }
     }
@@ -238,7 +238,7 @@ class Build
     $query = "UPDATE build SET endtime='$end_time' WHERE id='$this->Id'";
     if(!pdo_query($query))
       {
-      add_last_sql_error("Build:UpdateEndTime()");
+      add_last_sql_error("Build:UpdateEndTime");
       return false;
       }  
     }
@@ -265,7 +265,7 @@ class Build
       "WHERE subproject.id=subproject2build.subprojectid AND subproject2build.buildid=".qnum($buildid));
     if(!$query2)
       {
-      add_last_sql_error("Build:FillFromId()");
+      add_last_sql_error("Build:FillFromId");
       return false;
       }
     $subprojectid_array = pdo_fetch_array($query2);
@@ -287,7 +287,7 @@ class Build
                          ORDER BY starttime DESC LIMIT 1");
     if(!$query)
       {
-      add_last_sql_error("Build:GetPreviousBuildId()");
+      add_last_sql_error("Build:GetPreviousBuildId");
       return false;
       }  
       
@@ -315,7 +315,7 @@ class Build
     
     if(!$query)
       {
-      add_last_sql_error("Build:GetNextBuildId()");
+      add_last_sql_error("Build:GetNextBuildId");
       return false;
       }  
       
