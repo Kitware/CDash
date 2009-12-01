@@ -227,8 +227,19 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
   // Don't log if no diff
   if($npositives != 0 || $negatives != 0)
     {
-    pdo_query("INSERT INTO testdiff (buildid,type,difference_positive,difference_negative) 
+    // Check that we don't have any duplicates (this messes up the first page)
+    $query = pdo_query("SELECT count(*) FROM testdiff WHERE buildid=".qnum($buildid)."AND type=".qnum($testtype));
+    $query_array  = pdo_fetch_array($query);
+    if($query_array[0]>0)
+      {
+      pdo_query("UPDATE testdiff SET difference_positive=".qnum($npositives).",difference_negative=".qnum($nnegatives)." 
+                 WHERE buildid=".qnum($buildid)."AND type=".qnum($testtype));
+      }
+    else
+      {     
+      pdo_query("INSERT INTO testdiff (buildid,type,difference_positive,difference_negative) 
                  VALUES('$buildid','$testtype','$npositives','$nnegatives')");
+      }
     add_last_sql_error("compute_test_difference");
     }
 }
