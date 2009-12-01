@@ -455,12 +455,6 @@ class Project
   /** Add CVS/SVN repositories */
   function AddRepositories($repositories, $usernames, $passwords)
     {
-    if(!isset($repositories[0]) || strlen($repositories[0])==0)
-    {
-                $fh = fopen("C:/foo1.txt", 'w');
-          fwrite($fh, "add ".$repositories[0]." ".$usernames[0]." ".$passwords[0]);
-          fclose($fh);
-    }
     // First we update/delete any registered repositories
     $currentRepository = 0;
     $repositories_query = pdo_query("SELECT repositoryid from project2repositories WHERE projectid=".qnum($this->Id)." ORDER BY repositoryid");
