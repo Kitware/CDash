@@ -19,18 +19,13 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-      
-       <!-- Functions to confirm the remove -->
-  <xsl:text disable-output-escaping="yes">
-        &lt;script language="javascript" type="text/javascript" &gt;
-        function confirmDelete() {
-           if (window.confirm("Are you sure you want to delete this group? If the group is not empty, builds will be put in their original group.")){
-              return true;
-           }
-           return false;
-        }
-        &lt;/script&gt;
-  </xsl:text>
+   
+        <!-- Include JQuery -->
+        <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
+        <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>  
+        <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+        <script src="javascript/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
+
        </head>
        <body bgcolor="#ffffff">
        
@@ -95,9 +90,9 @@
 <!-- If a project has been selected -->
 <xsl:if test="count(cdash/project)>0">
  
-
 <form name="formnewgroup" method="post">
 <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="cdash/project/id"/>&#38;buildid=<xsl:value-of select="cdash/project/buildid"/></xsl:attribute>
+
 <table width="100%"  border="0">
   <tr>
     <td><div align="right"></div></td>
@@ -106,24 +101,19 @@
   <tr>
     <td width="10%"></td>
     <td width="90%">
-    <table width="100%"  border="0">
-    <tr bgcolor="#DDDDDD">
-      <td width="40%">Filename</td>
-      <td width="20%">Priority</td>
-      <td width="20%">Authors</td>
-      <td width="20%">Add author</td>
+    
+    <table id="manageCoverageTable" cellspacing="0" class="tabb">
+    <thead>
+    <tr class="table-heading1">
+      <th id="sort_0" width="40%">Filename</th>
+      <th id="sort_1" width="20%">Priority</th>
+      <th id="sort_2" width="20%">Authors</th>
+      <th width="20%" class="nob" >Add author</th>
     </tr>
+    </thead>
+    <tbody>
     <xsl:for-each select="cdash/project/file">
-    <tr>
-       <xsl:choose>
-          <xsl:when test="row=0">
-            <xsl:attribute name="class">trodd</xsl:attribute>
-           </xsl:when>
-          <xsl:otherwise>
-           <xsl:attribute name="class">treven</xsl:attribute>
-           </xsl:otherwise>
-        </xsl:choose>
-        
+    <tr> 
       <td><input type="checkbox">
       <xsl:attribute name="name">selectionFiles[<xsl:value-of select="fileid"/>]</xsl:attribute>
       <xsl:attribute name="value"><xsl:value-of select="fullpath"/></xsl:attribute>
@@ -150,7 +140,7 @@
       </xsl:attribute>x</a>]
       </xsl:for-each>
       </td>
-      <td>
+      <td class="nob">
       <form name="form_add_author" method="post">
       <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="/cdash/project/id"/>&#38;buildid=<xsl:value-of select="/cdash/project/buildid"/></xsl:attribute>
       <select name="userSelection">
@@ -171,6 +161,7 @@
       </td>
     </tr>
     </xsl:for-each>
+    </tbody>
     </table>
     </td>
   </tr>
