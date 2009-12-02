@@ -1967,20 +1967,22 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
 /** Return the Trac URL */
 function get_trac_diff_url($projecturl, $directory, $file, $revision)
 {
-  if ($directory == "")
+  $filename = $file;
+  
+  if($directory != "")
     {
-    $diff_url = $projecturl."/".$file;
+    $filename = $directory."/".$file;
     }
-  else
-    {
-    $diff_url = $projecturl."/".$directory."/".$file;
-    }
-
+ 
   if($revision != '')
     {
-    $diff_url .= "?rev=".$revision;
+    $diff_url = $projecturl."/changeset/".$revision."/".$filename;
     }
-
+  else // no revision
+    {
+    $diff_url = $projecturl."/browser/".$filename;
+    }
+    
   return make_cdash_url($diff_url);
 }
 
