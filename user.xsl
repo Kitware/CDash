@@ -18,7 +18,6 @@
         </link>
         <xsl:call-template name="headscripts"/>
       </head>
-
  <body>
  
  <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
@@ -125,6 +124,11 @@
           <img src="images/systemtray.png" border="0" alt="claimsite" /></a>
         </xsl:if>
         <xsl:if test="role>1">
+          <xsl:if test="/cdash/manageclient=1">
+          <a class="tooltip" title="Manage Client" >
+            <xsl:attribute name="href">manageClient.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
+            <img src="images/manageclient.png" border="0" alt="manageclient" /></a>
+          </xsl:if>
           <a class="tooltip" title="Edit project" >
           <xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>
           <img  src="images/edit2.png" border="0" alt="editproject" /></a>
@@ -172,6 +176,47 @@
   </tbody>
 </table>
 <br/>
+</xsl:if>
+
+<!-- Job Submission -->
+<xsl:if test="/cdash/manageclient=1">
+<xsl:if test="count(cdash/job)>0">    
+ <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+<tbody>
+    <tr class="table-heading1">
+      <td colspan="7" id="nob"><h3>My Jobs</h3></td>
+    </tr>
+
+   <tr class="table-heading">
+      <td align="center" class="botl">Project</td>   
+      <td align="center" class="botl">Status</td>   
+      <td align="center" class="botl">Date</td>
+      <td align="center" class="botl">Actions</td>
+      
+   </tr>
+    <xsl:for-each select="cdash/job">
+      <tr class="table-heading">
+        <td align="center" >
+        <a>
+        <xsl:attribute name="href">
+        index.php?project=<xsl:value-of select="projectname"/>
+        </xsl:attribute>
+        <xsl:value-of select="projectname"/></a> </td>  
+        <td align="center" >
+        <xsl:value-of select="status"/></td>  
+         <td align="center" >
+        <xsl:value-of select="date"/></td>  
+        <td align="center" >
+        <a><xsl:attribute name="href">
+        manageClient.php?removejob=<xsl:value-of select="id"/>
+        </xsl:attribute><img src="images/delete.png" border="0" alt="remove job" /></a>
+        </td>     
+    </tr>
+  </xsl:for-each>
+  </tbody>
+</table>
+<br/>
+</xsl:if>
 </xsl:if>
 
 <!-- My Sites -->

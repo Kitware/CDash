@@ -22,14 +22,17 @@ include('login.php');
 include_once('cdash/common.php');
 include("cdash/version.php");
 include_once('models/project.php');
+include_once('models/clientjob.php');
+include_once('models/clientsite.php');
 
 if ($session_OK) 
   {
   $userid = $_SESSION['cdash']['loginid'];
   $xml = "<cdash>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
-  
+  $xml .= add_XML_value("cssfile",$CDASH_CSS_FILE);
+  $xml .= add_XML_value("version",$CDASH_VERSION);
+  $xml .= add_XML_value("manageclient",$CDASH_MANAGE_CLIENTS);
+    
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
   $xml .= add_XML_value("title","CDash - My Profile");
@@ -63,6 +66,47 @@ if ($session_OK)
     $xml .= "</project>";
     }
   
+    
+  // Go through the jobs
+  if($CDASH_MANAGE_CLIENTS)
+    {
+    $ClientJob = new ClientJob();
+    $userJobs = $ClientJob->getAll($userid,5);
+    foreach($userJobs as $jobid)
+      {    
+      $ClientJob = new ClientJob();
+      $ClientJob->Id = $jobid;
+      $projectid=$ClientJob->GetProjectId();
+      $Project->Id=$projectid;
+      switch($ClientJob->GetStatus())
+        {
+        case CDASH_JOB_SCHEDULED:
+          $status = "Scheduled";
+          $date = $ClientJob->GetScheduledDate();
+          break;
+        case CDASH_JOB_RUNNING:
+          $status = "Running";
+          $ClientSite = new ClientSite(); 
+          $ClientSite->Id = $ClientJob->GetSite();
+          $status .= " (".$ClientSite->GetName().")";
+          $date = $ClientJob->GetStartingDate();
+          break;
+        case CDASH_JOB_FINISHED:
+          $status = "Finished";
+          $date = $ClientJob->GetFinishDate();
+          break;
+        }
+        
+      $xml .= "<job>";
+      $xml .= add_XML_value("id",$jobid);
+      $xml .= add_XML_value("projectid",$Project->Id);
+      $xml .= add_XML_value("projectname",$Project->GetName());
+      $xml .= add_XML_value("status",$status);
+      $xml .= add_XML_value("date",$date);
+      $xml .= "</job>";
+      }  
+    } // end if $CDASH_MANAGE_CLIENTS
+    
   // Go through the public projects
   $project = pdo_query("SELECT name,id FROM project WHERE id 
                         NOT IN (SELECT projectid as id FROM user2project 
@@ -327,9 +371,12 @@ if ($session_OK)
     
   $xml .= "</cdash>";
   
-  
   // Now doing the xslt transition
-  generate_XSLT($xml,"user");
+  if(!isset($NoXSLGenerate))
+    {
+    generate_XSLT($xml,"user");
+    }
+
   }
 
 ?>
