@@ -76,22 +76,22 @@ $CDASH_LDAP_OPT_REFERRALS='1';
 $CDASH_LDAP_AUTHENTICATED='0';
 $CDASH_LDAP_BIND_DN='cn=user,ou=people,dc=orgranization,dc=com';
 $CDASH_LDAP_BIND_PASSWORD='password';
-
 // Allow rememberme
 $CDASH_ALLOW_LOGIN_COOKIE='1';
-
 // Set to start the autoremoval on the first build of the day
 $CDASH_AUTOREMOVE_BUILDS='0';
-
 // Google Map API
 $CDASH_GOOGLE_MAP_API_KEY = array();
 $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
-
+// Enable Google Analytics
 $CDASH_DEFAULT_GOOGLE_ANALYTICS='';
-
 // How long since the last submission before considering a project
 // non active
 $CDASH_ACTIVE_PROJECT_DAYS = '7'; // a week
+// Use CDash to manage build submissions
+// This feature is currently experimental
+$CDASH_MANAGE_CLIENTS = '0';
+
 
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php'; 
