@@ -368,11 +368,8 @@ index.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>&
 
 <!-- Graph -->
 <div class="title-divider">Graph</div>
-
-<a>
-<xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
-[Show Build Graphs]
-</a>
+<img src="images/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
+[Show Build Graphs]</a>
 <div id="graphoptions"></div>
 <div id="graph"></div>
 <center>
