@@ -18,7 +18,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     <a href="http://cdash.org/iphone" class="home"></a>
     <a class="showPage button" href="#loginForm">Login</a>
     <a class="showPage title">CDash by Kitware Inc.</a>
-
+    <xsl:if test="cdash/showlogin=1">
+      Wrong login or password
+    </xsl:if>
+    
     <ul id="projects" title="Project" selection="true">
        <xsl:for-each select="cdash/project"> 
         <li style="background: url(iPhoneArrow.png) no-repeat right center;">
@@ -30,7 +33,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
    </xsl:for-each>
     </ul>
        
-    <form id="loginForm" class="dialog" method="post" action="user.php">
+   <form id="loginForm" class="dialog" method="post" action="user.php">
         <fieldset>
             <h1>Login</h1>
             <label class="inside" id="username-label" for="username">Email...</label> 

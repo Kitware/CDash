@@ -219,15 +219,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     <form id="loginForm" class="dialog" method="post" action="/login">
         <fieldset>
             <h1>Login</h1>
-            <label class="inside" id="username-label" for="username">Username...</label> 
-            <input id="username" name="side-username" type="text"/>
+            <label class="inside" id="username-label" for="username">Email...</label> 
+            <input id="username" name="login" type="text"/>
 
             <label class="inside" id="password-label" for="password">Password...</label>
-            <input id="password" name="side-password" type="password"/>
+            <input id="password" name="passwd" type="password"/>
             
-            <input class="submitButton" value="Login" type="submit"/>
-            <input name="processlogin" value="1" type="hidden"/>
-            <input name="returnpage" value="/iphone" type="hidden"/>
+            <input class="submitButton" name="sent"  value="Login" type="submit"/>
         </fieldset>
     </form>
     
