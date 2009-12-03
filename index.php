@@ -1091,7 +1091,10 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("site", $build_array["sitename"]);
     $xml .= add_XML_value("siteid", $siteid);
     $xml .= add_XML_value("buildname", $build_array["name"]);
-    $xml .= add_XML_value("userupdates", $build_array["userupdates"]);    
+    if(isset($build_array["userupdates"]))
+      {
+      $xml .= add_XML_value("userupdates", $build_array["userupdates"]);    
+      } 
     $xml .= add_XML_value("buildid", $build_array["id"]);
     $xml .= add_XML_value("generator", $build_array["generator"]);
 
