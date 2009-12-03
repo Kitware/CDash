@@ -457,6 +457,7 @@ function createPageSpecificFilters($page_id)
   switch ($page_id)
   {
     case 'index.php':
+    case 'project.php':
     {
       return new IndexPhpFilters();
     }
@@ -479,7 +480,6 @@ function createPageSpecificFilters($page_id)
       trigger_error('unknown $page_id value: ' . $page_id .
         ' Add a new subclass of DefaultFilters for ' . $page_id,
         E_USER_WARNING);
-
       return new DefaultFilters();
     }
     break;
@@ -731,10 +731,10 @@ function get_filterdata_from_request($page_id = '')
   $filterdata['hasdateclause'] = 0;
 
   if (empty($page_id))
-  {
+    {
     $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
     $page_id = substr($_SERVER['SCRIPT_NAME'], $pos+1);
-  }
+    }
   $filterdata['pageId'] = $page_id;
 
   $pageSpecificFilters = createPageSpecificFilters($page_id);
