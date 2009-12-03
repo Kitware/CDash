@@ -174,7 +174,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
      <ul id="projects" title="Project" selection="true" class="nobg">
         <li>   
         <div id="gotop"></div>      
-          <h3><a href="http://www.itk.org"><xsl:value-of select="cdash/dashboard/projectname"/></a></h3>
+          <h3><a>
+          <xsl:attribute name="href">
+            <xsl:value-of select="cdash/dashboard/home"/>
+          </xsl:attribute>
+          
+          <xsl:value-of select="cdash/dashboard/projectname"/></a></h3>
           
                 <div class="news-details">
                 <div><xsl:value-of select="cdash/dashboard/datetime"/></div>
@@ -184,12 +189,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                 <tr>
                 <td style="text-align: left;font-size: 14;">
                 <a>
-                <xsl:attribute name="href">project.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&amp;date=<xsl:value-of select="cdash/dashboard/previousdate"/>
+                <xsl:attribute name="href">project.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&amp;date=<xsl:value-of select="cdash/dashboard/previousdate"/>
                 </xsl:attribute><b>[Previous]</b></a>
                 </td>
                  <td  style="text-align: right;font-size: 14;">
                  <a>
-                <xsl:attribute name="href">project.php?project=<xsl:value-of select="cdash/dashboard/projectname"/>&amp;date=<xsl:value-of select="cdash/dashboard/nextdate"/>
+                <xsl:attribute name="href">project.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&amp;date=<xsl:value-of select="cdash/dashboard/nextdate"/>
                 </xsl:attribute><b>[Next]</b></a>
                 </td>
                 </tr>

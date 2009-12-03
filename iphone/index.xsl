@@ -23,14 +23,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
        <xsl:for-each select="cdash/project"> 
         <li style="background: url(iPhoneArrow.png) no-repeat right center;">
            <a class="link">
-           <xsl:attribute name="href">project.php?project=<xsl:value-of select="name"/></xsl:attribute>
+           <xsl:attribute name="href">project.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
            <xsl:value-of select="name"/>
            </a> 
         </li>
    </xsl:for-each>
     </ul>
        
-    <form id="loginForm" class="dialog" method="post" action="/login">
+    <form id="loginForm" class="dialog" method="post" action="user.php">
         <fieldset>
             <h1>Login</h1>
             <label class="inside" id="username-label" for="username">Username...</label> 
@@ -41,7 +41,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
             
             <input class="submitButton" value="Login" type="submit"/>
             <input name="processlogin" value="1" type="hidden"/>
-            <input name="returnpage" value="/iphone" type="hidden"/>
         </fieldset>
     </form>
     
