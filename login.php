@@ -399,7 +399,11 @@ function LoginForm($loginerror)
     $xml .= "<allowlogincookie>1</allowlogincookie>";
     }
   $xml .= "</cdash>";
-  generate_XSLT($xml,"login");
+  
+  if(!isset($NoXSLGenerate))
+    {
+    generate_XSLT($xml,"login");
+    }
 }
 
 // -------------------------------------------------------------------------------------- 
