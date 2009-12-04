@@ -32,7 +32,7 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 set_time_limit(0);
 
 // Send to the client submit
-client_submit($fp, $projectid);
+client_submit();
 
 $file_path='php://input';
 //$file_path='backup/coverage/CoverageLog.xml';
