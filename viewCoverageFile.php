@@ -122,7 +122,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   
   $file = implode("<br>",$file_array);
   
-  $xml .= "<file>".htmlspecialchars($file)."</file>";
+  $xml .= "<file>".utf8_encode(htmlspecialchars($file))."</file>";
   $xml .= "</coverage>";
   $xml .= "</cdash>";
 
