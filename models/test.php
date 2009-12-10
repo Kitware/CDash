@@ -149,13 +149,15 @@ class Test
   // Save in the database
   function Insert()
     {
+      
     if($this->Exists())
       {
       return true;
       }
-
+      
+    include("cdash/config.php");
     $command = pdo_real_escape_string($this->Command);
-    $output = pdo_real_escape_string($this->Output);
+
     $name = pdo_real_escape_string($this->Name);
     $path = pdo_real_escape_string($this->Path);
     $details = pdo_real_escape_string($this->Details);
@@ -168,6 +170,20 @@ class Test
       $idvalue = "'".$this->Id."',";
       }
 
+    if($CDASH_USE_COMPRESSION)
+      {
+      $output = gzcompress($this->Output);
+      if($output === false)
+        {
+        $output = $this->Output;
+        }
+      }
+    else
+      {
+      $output = $this->Output;
+      }
+    
+    $output = pdo_real_escape_string($output);
     $query = "INSERT INTO test (".$id."projectid,crc32,name,path,command,details,output)
               VALUES (".$idvalue."'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";                     
 

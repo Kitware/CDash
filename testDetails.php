@@ -56,7 +56,7 @@ if(!$projectid)
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 $siteid = $buildRow["siteid"];
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+$project = pdo_query("SELECT name,nightlytime,showtesttime FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
   $project_array = pdo_fetch_array($project); 
@@ -162,7 +162,24 @@ $xml .= add_XML_value("test", $testName);
 $xml .= add_XML_value("time", $testRow["time"]);
 $xml .= add_XML_value("command", $testRow["command"]);
 $xml .= add_XML_value("details", $testRow["details"]);
-$xml .= add_XML_value("output", $testRow["output"]);
+
+if($CDASH_USE_COMPRESSION)
+  {
+  @$uncompressedrow = gzuncompress($testRow["output"]);
+  if($uncompressedrow !== false)
+    {
+    $xml .= add_XML_value("output",$uncompressedrow);
+    }
+  else
+    {
+    $xml .= add_XML_value("output", $testRow["output"]);
+    }
+  }
+else
+  {
+  $xml .= add_XML_value("output", $testRow["output"]);
+  }
+      
 $xml .= add_XML_value("summaryLink", $summaryLink);
 switch($testRow["status"])
   {

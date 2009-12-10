@@ -674,6 +674,31 @@ if($Upgrade)
   $xml .= "<upgrade>1</upgrade>";
 }
 
+// Compress the test output
+if(isset($_POST["CompressTestOutput"]))
+{ 
+  // Do it slowly so we don't take all the memory
+  $query = pdo_query("SELECT count(*) FROM test");
+  $query_array = pdo_fetch_array($query);
+  $ntests = $query_array[0];  
+  $ngroup = 1024;
+  for($i=0;$i<$ntests;$i+=$ngroup)
+    {
+    $query = pdo_query("SELECT id,output FROM test ORDER BY id ASC LIMIT ".$ngroup." OFFSET ".$i);
+    while($query_array = pdo_fetch_array($query))
+      {
+      // Try uncompressing to see if it's already compressed
+      if(@gzuncompress($query_array['output']) === false)
+        {
+        $compressed = pdo_real_escape_string(gzcompress($query_array['output']));
+        pdo_query("UPDATE test SET output='".$compressed."' WHERE id=".$query_array['id']);
+        echo pdo_error();
+        }
+      } 
+    }
+}
+
+
 // Compute the testtime
 if($ComputeTestTiming)
 { 

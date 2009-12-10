@@ -65,6 +65,8 @@ $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 // when using forwarding script
 $CDASH_FORWARDING_IP='192.%'; // should be an SQL format 
 $CDASH_DEFAULT_IP_LOCATIONS = array();
+// Use compression (default on)
+$CDASH_USE_COMPRESSION='1';
 // Use LDAP
 $CDASH_USE_LDAP='0';
 $CDASH_LDAP_HOSTNAME='localhost';
