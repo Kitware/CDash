@@ -102,8 +102,12 @@ foreach($osids as $key=>$osid)
 if(!empty($osids[0])) {$extrasql.=")";}
 
 // Libraries (should have all of them)
-$tables .= ",client_site2library ";
-if(!empty($libraryids[0])) {$extrasql.=" AND client_site2library.siteid=s.id AND (";}
+
+if(!empty($libraryids[0])) 
+  {
+  $tables .= ",client_site2library ";
+  $extrasql.=" AND client_site2library.siteid=s.id AND (";
+  }
 foreach($libraryids as $key=>$libraryid)
   {
   if(!empty($libraryid))
@@ -115,8 +119,11 @@ foreach($libraryids as $key=>$libraryid)
 if(!empty($libraryids[0])) {$extrasql.=")";}
 
 // Toolkits (should have all of them)
-$tables .= ",client_toolkitconfiguration2os ";
-if(!empty($toolkitids[0])) {$extrasql.=" AND client_toolkitconfiguration2os.osid=s.osid  AND (";}
+if(!empty($toolkitids[0])) 
+  {
+  $tables .= ",client_toolkitconfiguration2os ";  
+  $extrasql.=" AND client_toolkitconfiguration2os.osid=s.osid  AND (";
+  }
 foreach($toolkitids as $key=>$toolkitid)
   {
   if(!empty($toolkitid))
