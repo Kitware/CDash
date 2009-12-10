@@ -787,7 +787,7 @@ class ClientJobSchedule
     // Get the repository (for now only the first one)
     $repositories = $Project->GetRepositories();
     // Set the checkout command
-    $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "cvs -d :pserver:anoncvs@'.$repositories[0]['url'].' checkout '.$sourceName.'")'."\n";
+    $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "cvs -d '.$repositories[0]['url'].' checkout '.$sourceName.'")'."\n";
     $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "cvs")'."\n";
     
     $ctest_script .= 'ctest_start('.$buildtype.')'."\n";
