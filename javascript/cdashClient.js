@@ -1,74 +1,110 @@
-function changeCompiler()
+function clearOS()
   {
-  selected=$("#system_select").attr("value");
-  $("#result_compiler1").html('<img src="images/loading.gif"/>');
-  $.ajax(
-    {
-    type: "POST",
-    url: "ajax/manageclient.php",
-    dataType: 'html',
-    timeout: 100000000000,
-    data:'osid='+selected,
-    success: function(html)
-      {
-      $("#result_compiler2").html(html);
-      $("#result_compiler1").html('<b>Compiler:</b>');
-      }
-    });
+  $("#system_select").each(function(){
+      $("#system_select option").removeAttr("selected");});
+  checkSystem();
   }
-   
- function changeCMake()
-   {
-   selected=$("#system_select").attr("value");
-   selected2=$("#select_compiler").attr("value");
-   $("#result_cmake1").html('<img src="images/loading.gif"/>');
-   $.ajax(
-     {
-     type: "POST",
-     url: "ajax/manageclient.php",
-     dataType: 'html',
-     timeout: 100000000000,
-     data:'osid='+selected+'&compiler='+selected2,
-     success: function(html)
-       {
-       $("#result_cmake2").html(html);
-       $("#result_cmake1").html('<b>CMake Version:</b>');
-       }
-      });
-    }
-  
-function changeLibrary()
+
+function clearCompiler()
   {
-  selected=$("#system_select").attr("value");
-  selected2=$("#select_compiler").attr("value");
-  selected3=$("#select_cmake").attr("value");
-  $("#result_library1").html('<img src="images/loading.gif"/>');
-  $.ajax(
-    {
-    type: "POST",
-    url: "ajax/manageclient.php",
-    dataType: 'html',
-    timeout: 100000000000,
-    data:'osid='+selected+'&compiler='+selected2+'&cmake='+selected3,
-    success: function(html)
+  $("#compiler_select").each(function(){
+      $("#compiler_select option").removeAttr("selected");});
+  checkSystem();
+  }
+
+function clearCMake()
+  {
+  $("#cmake_select").each(function(){
+      $("#cmake_select option").removeAttr("selected");});
+  checkSystem();
+  }
+
+function clearSite()
+  {
+  $("#site_select").each(function(){
+      $("#site_select option").removeAttr("selected");});
+  checkSystem();
+  }
+
+function clearToolkit()
+  {
+  $("#toolkit_select").each(function(){
+      $("#toolkit_select option").removeAttr("selected");});
+  checkSystem();
+  }
+
+function clearLibrary()
+  {
+  $("#library_select").each(function(){
+      $("#library_select option").removeAttr("selected");});
+  checkSystem();
+  }
+
+/** Check how many machines are currently available */
+function checkSystem()
+  {
+  var os='';  
+  $('#system_select :selected').each(function(i, selected){
+  if(os != '')
       {
-      $("#result_library2").html(html);
-      $("#result_library1").html('<b>Libraries:</b>');
-      $("#result_library1").attr('valgin','top');
-      }
-    });
-  $.ajax(
-    {
-    type: "POST",
-    url: "ajax/manageclient.php",
-    dataType: 'html',
-    timeout: 100000000000,
-    data:'gettoolkits=1&osid='+selected,
-    success: function(html)
+    os += ',';
+    }
+  os += $(selected).val();
+  });
+ 
+  var compiler='';  
+  $('#compiler_select :selected').each(function(i, selected){
+  if(compiler != '')
       {
-      $("#result_toolkit2").html(html);
-      $("#result_toolkit1").html('<b>Toolkits:</b>');
-      $("#result_toolkit1").attr('valgin','top');
-      }
-    });  
+    compiler += ',';
+    }
+  compiler += $(selected).val();
+  });
+  
+  var cmake='';  
+  $('#cmake_select :selected').each(function(i, selected){
+  if(cmake != '')
+      {
+    cmake += ',';
+    }
+  cmake += $(selected).val();
+  });
+  
+  var site='';  
+  $('#site_select :selected').each(function(i, selected){
+  if(site != '')
+      {
+    site += ',';
+    }
+  site += $(selected).val();
+  });
+  
+  var library='';  
+  $('#library_select :selected').each(function(i, selected){
+  if(library != '')
+      {
+    library += ',';
+    }
+  library += $(selected).val();
+  });
+  
+  var toolkit='';  
+  $('#site_select :selected').each(function(i, selected){
+  if(toolkit != '')
+      {
+  toolkit += ',';
+    }
+  toolkit += $(selected).val();
+  });
+  
+  $.ajax({
+      type: "POST",
+      url: "ajax/clientchecksystem.php",
+      dataType: 'html',
+      timeout: 100000000,
+      data: "os="+os+"&compiler="+compiler+"&cmake="+cmake+"&site="+site+"&toolkit="+toolkit+"&library="+library,
+      success: function(html){
+    $("#check").html(html);
+        }
+       });
   }
