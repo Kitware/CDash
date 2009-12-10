@@ -609,7 +609,7 @@ CREATE TABLE `builderrordiff` (
   `type` tinyint(4) NOT NULL,
   `difference_positive` int(11) NOT NULL,
   `difference_negative` int(11) NOT NULL,
-  KEY `buildid` (`buildid`)
+  KEY `buildid` (`buildid`),
   KEY `difference_positive` (`difference_positive`),
   KEY `difference_negative` (`difference_negative`)
 );
