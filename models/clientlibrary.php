@@ -45,7 +45,19 @@ class ClientLibrary
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
-    
+  
+  /** Get all  */  
+  function GetAll()
+    {
+    $ids = array();
+    $sql = "SELECT id FROM client_library ORDER BY name";
+    $query = pdo_query($sql);
+    while($query_array = pdo_fetch_array($query))
+      {
+      $ids[] = $query_array['id'];
+      }
+    return $ids;    
+    } 
       
   /** Save */
   function Save()

@@ -44,7 +44,7 @@ class ClientToolkit
     {
     if(!$this->Id)
       {
-      add_log("clientToolkit::GetName()","Id not set");
+      add_log("ClientToolkit::GetName","Id not set");
       return;
       }
     $sys = pdo_query("SELECT name FROM client_toolkit WHERE id=".qnum($this->Id));
@@ -57,7 +57,7 @@ class ClientToolkit
     {
     if(!$this->Id)
       {
-      add_log("clientToolkit::GetVersion()","Id not set");
+      add_log("ClientToolkit::GetVersion","Id not set");
       return;
       }
     $versions = array();  
@@ -92,13 +92,13 @@ class ClientToolkit
       $sql = "INSERT INTO client_toolkit (name,clientjectid) VALUES ('".$this->Name."',".qnum($this->ProjectId).")";
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_toolkit');
-      add_last_sql_error("clientToolkit::Save()");
+      add_last_sql_error("ClientToolkit::Save");
       }
     else // update
       {
       $query_array = pdo_fetch_array($query);
       $this->Id = $query_array['id'];
-      add_last_sql_error("clientToolkit::Save()");
+      add_last_sql_error("ClientToolkit::Save");
       }
     return true;  
     }  
@@ -108,7 +108,7 @@ class ClientToolkit
     {
     if(!$this->Id)
       {
-      add_log("clientToolkit::Remove()","Id not set");
+      add_log("ClientToolkit::Remove","Id not set");
       return;
       }
     

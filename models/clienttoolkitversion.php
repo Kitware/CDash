@@ -40,13 +40,13 @@ class ClientToolkitVersion
     {
     $this->OSArray[] = $osid;
     }
-
+    
   /** Get name */
   function GetName()
     {
     if(!$this->Id)
       {
-      add_log("clientToolkitVersion::GetName()","Id not set");
+      add_log("ClientToolkitVersion::GetName","Id not set");
       return;
       }
     $sys = pdo_query("SELECT name FROM client_toolkitversion WHERE id=".qnum($this->Id));
@@ -60,7 +60,7 @@ class ClientToolkitVersion
     {
     if(!$this->Id)
       {
-      add_log("clientToolkitVersion::GetRepositoryURL()","Id not set");
+      add_log("ClientToolkitVersion::GetRepositoryURL","Id not set");
       return;
       }
     $sys = pdo_query("SELECT repositoryurl FROM client_toolkitversion WHERE id=".qnum($this->Id));
@@ -73,7 +73,7 @@ class ClientToolkitVersion
     {
     if(!$this->Id)
       {
-      add_log("clientToolkitVersion::GetRepositoryType()","Id not set");
+      add_log("ClientToolkitVersion::GetRepositoryType","Id not set");
       return;
       }
     $sys = pdo_query("SELECT repositorytype FROM  client_toolkitversion WHERE id=".qnum($this->Id));
@@ -86,7 +86,7 @@ class ClientToolkitVersion
     {
     if(!$this->Id)
       {
-      add_log("clientToolkitVersion::GetRepositoryModule()","Id not set");
+      add_log("ClientToolkitVersion::GetRepositoryModule","Id not set");
       return;
       }
     $sys = pdo_query("SELECT repositorymodule FROM client_toolkitversion WHERE id=".qnum($this->Id));
@@ -99,11 +99,11 @@ class ClientToolkitVersion
     {
     if(!$this->Id)
       {
-      add_log("clientToolkitVersion::GetRepositoryURL()","Id not set");
+      add_log("ClientToolkitVersion::GetSourcePath","Id not set");
       return;
       }
     $sys = pdo_query("SELECT sourcepath FROM client_toolkitversion WHERE id=".qnum($this->Id));
-    add_last_sql_error("clientToolkit::GetSourcePath()");
+    add_last_sql_error("ClientToolkitVersion::GetSourcePath");
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
@@ -113,11 +113,11 @@ class ClientToolkitVersion
     {
     if(!$this->Id)
       {
-      add_log("clientToolkitVersion::GetCTestProjectName()","Id not set");
+      add_log("ClientToolkitVersion::GetCTestProjectName","Id not set");
       return;
       }
-    $sys = pdo_query("SELECT ctestclientjectname FROM client_toolkitversion WHERE id=".qnum($this->Id));
-    add_last_sql_error("clientToolkit::GetCTestProjectName()");
+    $sys = pdo_query("SELECT ctestprojectname FROM client_toolkitversion WHERE id=".qnum($this->Id));
+    add_last_sql_error("ClientToolkitVersion::GetCTestProjectName");
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
@@ -127,11 +127,11 @@ class ClientToolkitVersion
     {
     if(!$this->Id)
       {
-      add_log("clientToolkitVersion::GetToolkitId()","Id not set");
+      add_log("ClientToolkitVersion::GetToolkitId","Id not set");
       return;
       }
     $sys = pdo_query("SELECT toolkitid FROM client_toolkitversion WHERE id=".qnum($this->Id));
-    add_last_sql_error("clientToolkit::GetToolkitId()");
+    add_last_sql_error("ClientToolkitVersion::GetToolkitId");
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
@@ -194,7 +194,7 @@ class ClientToolkitVersion
 
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_toolkitversion');
-      add_last_sql_error("clientToolkitVersion::Save()");
+      add_last_sql_error("ClientToolkitVersion::Save");
       }
     else // update
       {
@@ -204,7 +204,7 @@ class ClientToolkitVersion
               .",tag='".$this->Tag.",repositorymodule=".qnum($this->RepositoryModule)
               ."',sourcepath='".$this->SourcePath.",ctestclientjectname='".$this->CTestProjectName."' WHERE id=".qnum($this->Id);
       pdo_query($sql);
-      add_last_sql_error("clientToolkitVersion::Save()");
+      add_last_sql_error("ClientToolkitVersion::Save");
       }
     
     // Insert in the toolkit2os
@@ -216,7 +216,7 @@ class ClientToolkitVersion
         $sql = "INSERT INTO client_toolkit2os (toolkitversionid,osid) 
                 VALUES (".qnum($this->Id).",".qnum($osid).")";
         pdo_query($sql);
-        add_last_sql_error("clientToolkitVersion::Save os");
+        add_last_sql_error("ClientToolkitVersion::Save os");
         }
       } // end foreach os
     // Delete the OS that are not in the array
@@ -227,7 +227,7 @@ class ClientToolkitVersion
       }
       
     pdo_query($sql);
-    add_last_sql_error("clientToolkitVersion::Save os");
+    add_last_sql_error("ClientToolkitVersion::Save os");
       
     return true;  
     }  
@@ -237,7 +237,7 @@ class ClientToolkitVersion
     {
     if(!$this->Id)
       {
-      add_log("clientToolkitVersion::Remove()","Id not set");
+      add_log("ClientToolkitVersion::Remove","Id not set");
       return;
       }
     

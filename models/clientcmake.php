@@ -35,6 +35,19 @@ class ClientCMake
     return $row['version'];
     }
 
+  /** Get all the cmake */  
+  function GetAll()
+    {
+    $ids = array();
+    $sql = "SELECT id FROM client_cmake ORDER BY version";
+    $query = pdo_query($sql);
+    while($query_array = pdo_fetch_array($query))
+      {
+      $ids[] = $query_array['id'];
+      }
+    return $ids;    
+    }    
+    
   /** Save */
   function Save()
     {

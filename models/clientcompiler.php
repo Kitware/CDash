@@ -49,8 +49,22 @@ class ClientCompiler
     $row = pdo_fetch_array($sys);
     return $row['name'];
     }
+
+  /** Get all the compilers */  
+  function GetAll()
+    {
+    $ids = array();
+    $sql = "SELECT id FROM client_compiler ORDER BY name";
+    $query = pdo_query($sql);
+    while($query_array = pdo_fetch_array($query))
+      {
+      $ids[] = $query_array['id'];
+      }
+    return $ids;    
+    }    
+      
     
-   /** Get version */
+  /** Get version */
   function GetVersion()
     {
     if(!$this->Id)
