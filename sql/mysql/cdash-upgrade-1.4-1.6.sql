@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2cmake (
   scheduleid bigint(20) NOT NULL,
   cmakeid int(11) NOT NULL,
   UNIQUE KEY scheduleid (scheduleid,cmakeid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2compiler (
   scheduleid bigint(20) NOT NULL,
   compilerid int(11) NOT NULL,
   UNIQUE KEY scheduleid (scheduleid,compilerid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2library (
   scheduleid bigint(20) NOT NULL,
   libraryid int(11) NOT NULL,
   UNIQUE KEY scheduleid (scheduleid,libraryid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2os (
   scheduleid bigint(20) NOT NULL,
   osid int(11) NOT NULL,
   UNIQUE KEY scheduleid (scheduleid,osid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2site (
   scheduleid bigint(20) NOT NULL,
   siteid int(11) NOT NULL,
   UNIQUE KEY scheduleid (scheduleid,siteid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2toolkit (
   scheduleid bigint(20) NOT NULL,
   toolkitconfigurationid int(11) NOT NULL,
   UNIQUE KEY scheduleid (scheduleid,toolkitconfigurationid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS client_site2cmake (
   path varchar(512) DEFAULT NULL,
   KEY siteid (siteid),
   KEY version (cmakeid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS client_site2compiler (
   command varchar(512) DEFAULT NULL,
   generator varchar(255) NOT NULL,
   KEY siteid (siteid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS client_site2library (
   path varchar(512) DEFAULT NULL,
   include varchar(512) NOT NULL,
   KEY siteid (siteid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
@@ -320,7 +320,7 @@ CREATE TABLE IF NOT EXISTS client_toolkitconfiguration2os (
   osid int(11) NOT NULL,
   KEY toolkitconfigurationid (toolkitconfigurationid),
   KEY osid (osid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- --------------------------------------------------------
 
