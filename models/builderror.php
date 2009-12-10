@@ -81,9 +81,21 @@ class BuildError
       $this->RepeatCount = 0; 
       }
        
-    $query = "INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount)
+    $crc32 = 0;
+    // Compute the crc32
+    if($this->SourceLine==0)
+      {
+      $crc32 = crc32($text.$precontext.$postcontext);
+      }
+    else
+      {
+      $crc32 = crc32($this->SourceFile.$this->SourceLine);
+      }
+      
+    $query = "INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,
+                                      postcontext,repeatcount,newstatus,crc32)
               VALUES (".qnum($this->BuildId).",".qnum($this->Type).",".qnum($this->LogLine).",'$text','$this->SourceFile',".qnum($this->SourceLine).",
-              ".$precontext.",".$postcontext.",".qnum($this->RepeatCount).")";                     
+              ".$precontext.",".$postcontext.",".qnum($this->RepeatCount).",0,".qnum($crc32).")";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildError Insert");
