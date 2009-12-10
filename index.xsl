@@ -332,6 +332,11 @@
            </xsl:when>     
         </xsl:choose>
       </xsl:attribute>
+
+       <div>
+       <xsl:if test="compilation/nerrordiffp > 0 or compilation/nerrordiffn > 0">
+          <xsl:attribute name="class">valuewithsub</xsl:attribute>
+       </xsl:if> 
         <xsl:if test="countbuildids=1">
         <a>
         <xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/>
@@ -343,8 +348,19 @@
           <xsl:value-of select="compilation/error"/>
         </xsl:if>
       <xsl:if test="string-length(compilation/error)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>   
-      <xsl:if test="compilation/nerrordiff > 0"><sub>+<xsl:value-of select="compilation/nerrordiff"/></sub></xsl:if>
-      <xsl:if test="compilation/nerrordiff &lt; 0"><sub><xsl:value-of select="compilation/nerrordiff"/></sub></xsl:if>
+      <xsl:if test="compilation/nerrordiffp > 0">
+      <a class="sup">
+        <xsl:attribute name="href">viewBuildError.php?onlydeltap&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
+        +<xsl:value-of select="compilation/nerrordiffp"/>
+      </a>
+      </xsl:if>
+      <xsl:if test="compilation/nerrordiffn > 0">
+      <a>
+      <xsl:attribute name="href">viewBuildError.php?onlydeltan&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
+      <span class="sub">-<xsl:value-of select="compilation/nerrordiffn"/></span>
+      </a>
+      </xsl:if>
+      </div>
       </td>
       <td align="center">
       <xsl:attribute name="class">
@@ -357,6 +373,11 @@
            </xsl:when>   
         </xsl:choose>
       </xsl:attribute>
+       <div>
+       <xsl:if test="compilation/nwarningdiffp > 0 or compilation/nwarningdiffn > 0">
+          <xsl:attribute name="class">valuewithsub</xsl:attribute>
+       </xsl:if> 
+      
         <xsl:if test="countbuildids=1">
         <a>
         <xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/>
@@ -368,8 +389,20 @@
           <xsl:value-of select="compilation/warning"/>
         </xsl:if>
       <xsl:if test="string-length(compilation/warning)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      <xsl:if test="compilation/nwarningdiff > 0"><sub>+<xsl:value-of select="compilation/nwarningdiff"/></sub></xsl:if>
-      <xsl:if test="compilation/nwarningdiff &lt; 0"><sub><xsl:value-of select="compilation/nwarningdiff"/></sub></xsl:if>
+      <xsl:if test="compilation/nwarningdiffp > 0">
+      <a class="sup">
+        <xsl:attribute name="href">viewBuildError.php?type=1&#38;onlydeltap&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
+        +<xsl:value-of select="compilation/nwarningdiffp"/>
+      </a>
+      </xsl:if>
+      <xsl:if test="compilation/nwarningdiffn > 0">
+      <a>
+      <xsl:attribute name="href">viewBuildError.php?type=1&#38;onlydeltan&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
+      <span class="sub">-<xsl:value-of select="compilation/nwarningdiffn"/></span>
+      </a>
+      </xsl:if>
+      </div>
+      
       </td>
 
       <td align="right"><xsl:value-of select="compilation/time"/>
@@ -388,7 +421,7 @@
         </xsl:choose>
       </xsl:attribute>
       <div>
-       <xsl:if test="test/nnotrundiffp > 0 or test/nnotrundiffpn > 0">
+       <xsl:if test="test/nnotrundiffp > 0 or test/nnotrundiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
        </xsl:if> 
         <xsl:if test="countbuildids=1">

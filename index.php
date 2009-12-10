@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT username FROM repositories LIMIT 1") )
+  if(!pdo_query("SELECT id FROM client_cmake LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -630,8 +630,10 @@ function generate_main_dashboard_XML($projectid,$date)
                   c.starttime AS configurestarttime,
                   c.endtime AS configureendtime,
                   c.warnings AS countconfigurewarnings,
-                  be_diff.difference AS countbuilderrordiff,
-                  bw_diff.difference AS countbuildwarningdiff,
+                  be_diff.difference_positive AS countbuilderrordiffp,
+                  be_diff.difference_negative AS countbuilderrordiffn,
+                  bw_diff.difference_positive AS countbuildwarningdiffp,
+                  bw_diff.difference_negative AS countbuildwarningdiffn,
                   ce_diff.difference AS countconfigurewarningdiff,
                   btt.time AS testsduration,
                   tnotrun_diff.difference_positive AS counttestsnotrundiffp,
@@ -792,16 +794,24 @@ function generate_main_dashboard_XML($projectid,$date)
     $build_row['buildduration'] = round((strtotime($build_row['endtime'])-strtotime($build_row['starttime']))/60,1);
     
     // Error/Warnings differences
-    if(empty($build_row['countbuilderrordiff']))
+    if(empty($build_row['countbuilderrordiffp']))
       {
-      $build_row['countbuilderrordiff'] = 0;
+      $build_row['countbuilderrordiffp'] = 0;
       } 
-        
-    if(empty($build_row['countbuildwarningdiff']))
+    if(empty($build_row['countbuilderrordiffn']))
       {
-      $build_row['countbuildwarningdiff'] = 0;
+      $build_row['countbuilderrordiffn'] = 0;
+      } 
+         
+    if(empty($build_row['countbuildwarningdiffp']))
+      {
+      $build_row['countbuildwarningdiffp'] = 0;
       }
-    
+    if(empty($build_row['countbuildwarningdiffn']))
+      {
+      $build_row['countbuildwarningdiffn'] = 0;
+      }
+      
     $build_row['hasconfigurestatus'] = 0;
     $build_row['countconfigureerrors'] = 0;
     $build_row['configureduration'] = 0;
@@ -919,9 +929,11 @@ function generate_main_dashboard_XML($projectid,$date)
         $build_rows_collapsed[$idx]['buildduration'] += $build_row['buildduration'];
         $build_rows_collapsed[$idx]['countbuilderrors'] += $build_row['countbuilderrors'];
         $build_rows_collapsed[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'];
-        $build_rows_collapsed[$idx]['countbuilderrordiff'] += $build_row['countbuilderrordiff'];
-        $build_rows_collapsed[$idx]['countbuildwarningdiff'] += $build_row['countbuildwarningdiff'];
-
+        $build_rows_collapsed[$idx]['countbuilderrordiffp'] += $build_row['countbuilderrordiffp'];
+        $build_rows_collapsed[$idx]['countbuilderrordiffn'] += $build_row['countbuilderrordiffn'];
+        $build_rows_collapsed[$idx]['countbuildwarningdiffp'] += $build_row['countbuildwarningdiffp'];
+        $build_rows_collapsed[$idx]['countbuildwarningdiffn'] += $build_row['countbuildwarningdiffn'];
+        
         $build_rows_collapsed[$idx]['hasconfigurestatus'] += $build_row['hasconfigurestatus'];
         $build_rows_collapsed[$idx]['countconfigureerrors'] += $build_row['countconfigureerrors'];
         $build_rows_collapsed[$idx]['countconfigurewarnings'] += $build_row['countconfigurewarnings'];
@@ -1170,17 +1182,27 @@ function generate_main_dashboard_XML($projectid,$date)
       $totalBuildDuration += $duration;
       $xml .= add_XML_value("time", $duration);
       
-      $diff = $build_array['countbuilderrordiff'];
+      $diff = $build_array['countbuilderrordiffp'];
       if($diff!=0)
         {
-        $xml .= add_XML_value("nerrordiff", $diff);
+        $xml .= add_XML_value("nerrordiffp", $diff);
         }
-  
-      $diff = $build_array['countbuildwarningdiff'];
+      $diff = $build_array['countbuilderrordiffn'];
       if($diff!=0)
         {
-        $xml .= add_XML_value("nwarningdiff", $diff);
+        $xml .= add_XML_value("nerrordiffn", $diff);
         }
+        
+      $diff = $build_array['countbuildwarningdiffp'];
+      if($diff!=0)
+        {
+        $xml .= add_XML_value("nwarningdiffp", $diff);
+        }
+      $diff = $build_array['countbuildwarningdiffn'];
+      if($diff!=0)
+        {
+        $xml .= add_XML_value("nwarningdiffn", $diff);
+        }  
       }
     $xml .= "</compilation>";
 

@@ -567,7 +567,20 @@ if(isset($_GET['upgrade-1-6']))
   
   RenameTableField("testdiff","difference","difference_positive","int(11)","bigint","0");
   AddTableField("testdiff","difference_negative","int(11)","bigint","0");
+  AddTableIndex('testdiff','difference_positive');
+  AddTableIndex('testdiff','difference_negative');
   AddTableField("build2test","newstatus","tinyint(4)","smallint","0");
+  AddTableIndex('build2test','newstatus');
+
+  RenameTableField("builderrordiff","difference","difference_positive","int(11)","bigint","0");
+  AddTableField("builderrordiff","difference_negative","int(11)","bigint","0");
+  AddTableIndex('builderrordiff','difference_positive');
+  AddTableIndex('builderrordiff','difference_negative');
+ 
+  AddTableField("builderror","crc32","bigint(20)","BIGINT","0");
+  AddTableField("builderror","newstatus","tinyint(4)","smallint","0");
+  AddTableIndex('builderror','crc32');
+  AddTableIndex('builderror','newstatus');
   
   if(!pdo_query("SELECT projectid FROM test LIMIT 1"))
     {

@@ -53,22 +53,12 @@
 <xsl:if test="sourceline">
 <tr style="background-color: #b0c4de; font-weight: bold">
 <th colspan="2" align="left">
-<pre> </pre>
+<xsl:if test="new=-1"><img src="images/flaggreen.gif" title="flag"/></xsl:if>
+<xsl:if test="new=1"><img src="images/flag.png" title="flag"/></xsl:if>
+<xsl:if test="new=0"><pre> </pre></xsl:if>
 </th>
 </tr>
 </xsl:if>
-
-<!--
-<div style="margin-left: 200px">
-<xsl:if test="sourceline>0">
-<xsl:value-of select="/cdash/errortypename"/> while building file <xsl:value-of select="sourcefile"/>
-at line <xsl:value-of select="sourceline"/>
-</xsl:if>
-<xsl:if test="sourceline=0">
-<xsl:value-of select="/cdash/errortypename"/>
-</xsl:if>
-</div>
--->
 
 <xsl:if test="targetname">
 <tr style="background-color: #b0c4de; font-weight: bold">
@@ -100,7 +90,7 @@ at line <xsl:value-of select="sourceline"/>
 
 <xsl:if test="logline">
 <tr>
-<th class="measurement"><nobr> Build Log Line </nobr></th>
+<th class="measurement"><nobr>Build Log Line </nobr></th>
 <td>
 <xsl:value-of select="logline"/>
 </td>
