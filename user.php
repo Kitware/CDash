@@ -22,8 +22,9 @@ include('login.php');
 include_once('cdash/common.php');
 include("cdash/version.php");
 include_once('models/project.php');
-include_once('models/clientjob.php');
+include_once('models/clientjobschedule.php');
 include_once('models/clientsite.php');
+include_once('models/clientjob.php');
 
 if ($session_OK) 
   {
@@ -66,44 +67,49 @@ if ($session_OK)
     $xml .= "</project>";
     }
   
-    
   // Go through the jobs
   if($CDASH_MANAGE_CLIENTS)
     {
-    $ClientJob = new ClientJob();
-    $userJobs = $ClientJob->getAll($userid,5);
-    foreach($userJobs as $jobid)
+    $ClientJobSchedule = new ClientJobSchedule();
+    $userJobSchedules = $ClientJobSchedule->getAll($userid,5);
+    foreach($userJobSchedules as $scheduleid)
       {    
-      $ClientJob = new ClientJob();
-      $ClientJob->Id = $jobid;
-      $projectid=$ClientJob->GetProjectId();
+      $ClientJobSchedule = new ClientJobSchedule();
+      $ClientJobSchedule->Id = $scheduleid;
+      $projectid=$ClientJobSchedule->GetProjectId();
       $Project->Id=$projectid;
-      switch($ClientJob->GetStatus())
+      
+      $status = "Scheduled";
+      $lastrun = "NA";
+      
+      $lastjobid = $ClientJobSchedule->GetLastJobId();
+      if($lastjobid)
         {
-        case CDASH_JOB_SCHEDULED:
-          $status = "Scheduled";
-          $date = $ClientJob->GetScheduledDate();
-          break;
-        case CDASH_JOB_RUNNING:
-          $status = "Running";
-          $ClientSite = new ClientSite(); 
-          $ClientSite->Id = $ClientJob->GetSite();
-          $status .= " (".$ClientSite->GetName().")";
-          $date = $ClientJob->GetStartingDate();
-          break;
-        case CDASH_JOB_FINISHED:
-          $status = "Finished";
-          $date = $ClientJob->GetFinishDate();
-          break;
+        $ClientJob = new ClientJob();
+        $ClientJob->Id = $lastjobid;   
+        switch($ClientJob->GetStatus())
+          {
+          case CDASH_JOB_RUNNING:
+            $status = "Running";
+            $ClientSite = new ClientSite(); 
+            $ClientSite->Id = $ClientJob->GetSite();
+            $status .= " (".$ClientSite->GetName().")";
+            $lastrun = $ClientJob->GetStartDate();
+            break;
+          case CDASH_JOB_FINISHED:
+            $status = "Finished";
+            $lastrun = $ClientJob->GetEndDate();
+            break;
+          }
         }
-        
-      $xml .= "<job>";
-      $xml .= add_XML_value("id",$jobid);
+      
+      $xml .= "<jobschedule>";
+      $xml .= add_XML_value("id",$scheduleid);
       $xml .= add_XML_value("projectid",$Project->Id);
       $xml .= add_XML_value("projectname",$Project->GetName());
       $xml .= add_XML_value("status",$status);
-      $xml .= add_XML_value("date",$date);
-      $xml .= "</job>";
+      $xml .= add_XML_value("lastrun",$lastrun);
+      $xml .= "</jobschedule>";
       }  
     } // end if $CDASH_MANAGE_CLIENTS
     

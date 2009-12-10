@@ -127,26 +127,40 @@ function str_to_time($str,$stamp)
 /** Add the difference between the numbers of errors and warnings
  *  for the previous and current build */
 function compute_error_difference($buildid,$previousbuildid,$warning)
-{
-  // Look at the number of errors and warnings differences
-  $errors = pdo_query("SELECT count(*) FROM builderror WHERE type='$warning' 
-                                   AND buildid='$buildid'");
-  $errors_array  = pdo_fetch_array($errors);
-  $nerrors = $errors_array[0]; 
-    
-  $previouserrors = pdo_query("SELECT count(*) FROM builderror WHERE type='$warning' 
-                                   AND buildid='$previousbuildid'");
-  $previouserrors_array  = pdo_fetch_array($previouserrors);
-  $npreviouserrors = $previouserrors_array[0];
-    
+{   
+  // Look at the difference positive and negative test errors
+  $sqlquery = "UPDATE builderror SET newstatus=1 WHERE buildid=".$buildid." AND type=".$warning." AND crc32=
+               (SELECT crc32 FROM (SELECT crc32 FROM builderror WHERE buildid=".$buildid." 
+               AND type=".$warning.") AS builderrora 
+               LEFT JOIN (SELECT crc32 as crc32b FROM builderror WHERE buildid=".$previousbuildid." 
+               AND type=".$warning.") AS builderrorb ON builderrora.crc32=builderrorb.crc32b
+               WHERE builderrorb.crc32b IS NULL)";
+  pdo_query($sqlquery);
+  
+  // Maybe we can get that from the query (don't know).
+  $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".$buildid." AND type=".$warning." AND newstatus=1");
+  $positives_array  = pdo_fetch_array($positives);
+  $npositives = $positives_array[0];
+  
+  // Count the difference between the number of tests that were passing (or failing)
+  // and now that have a different one
+  $sqlquery = "SELECT count(*)
+               FROM (SELECT crc32 FROM builderror WHERE buildid=".$previousbuildid."
+               AND type=".$warning.") AS builderrora 
+               LEFT JOIN (SELECT crc32 as crc32b FROM builderror WHERE buildid=".$buildid." 
+               AND type=".$warning.") AS builderrorb 
+               ON builderrora.crc32=builderrorb.crc32b WHERE builderrorb.crc32b IS NULL";
+  $negatives = pdo_query($sqlquery);
+  $negatives_array  = pdo_fetch_array($negatives);
+  $nnegatives = $negatives_array[0]; 
+
   // Don't log if no diff
-  $errordiff = $nerrors-$npreviouserrors;
-  if($errordiff != 0)
-    {
-    pdo_query("INSERT INTO builderrordiff (buildid,type,difference) 
-                           VALUES('$buildid','$warning','$errordiff')");
+  if($npositives != 0 || $nnegatives != 0)
+    {   
+    pdo_query("INSERT INTO builderrordiff (buildid,type,difference_positive,difference_negative) 
+                 VALUES('$buildid','$warning','$npositives','$nnegatives')");
     add_last_sql_error("compute_error_difference");
-    }
+    }  
 }
 
 /** Add the difference between the numbers of configure warnings
@@ -225,7 +239,7 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
   $nnegatives = $negatives_array[0]; 
   
   // Don't log if no diff
-  if($npositives != 0 || $negatives != 0)
+  if($npositives != 0 || $nnegatives != 0)
     {
     // Check that we don't have any duplicates (this messes up the first page)
     $query = pdo_query("SELECT count(*) FROM testdiff WHERE buildid=".qnum($buildid)."AND type=".qnum($testtype));

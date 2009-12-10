@@ -17,6 +17,7 @@
           <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
         </link>
         <xsl:call-template name="headscripts"/>
+        <script src="javascript/cdashUser.js" type="text/javascript" charset="utf-8"></script>
       </head>
  <body>
  
@@ -125,7 +126,7 @@
         </xsl:if>
         <xsl:if test="role>1">
           <xsl:if test="/cdash/manageclient=1">
-          <a class="tooltip" title="Manage Client" >
+          <a class="tooltip" title="Schedule Build" >
             <xsl:attribute name="href">manageClient.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
             <img src="images/manageclient.png" border="0" alt="manageclient" /></a>
           </xsl:if>
@@ -180,21 +181,21 @@
 
 <!-- Job Submission -->
 <xsl:if test="/cdash/manageclient=1">
-<xsl:if test="count(cdash/job)>0">    
+<xsl:if test="count(cdash/jobschedule)>0">    
  <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
     <tr class="table-heading1">
-      <td colspan="7" id="nob"><h3>My Jobs</h3></td>
+      <td colspan="7" id="nob"><h3>My Build Schedules</h3></td>
     </tr>
 
    <tr class="table-heading">
       <td align="center" class="botl">Project</td>   
       <td align="center" class="botl">Status</td>   
-      <td align="center" class="botl">Date</td>
+      <td align="center" class="botl">Last run</td>
       <td align="center" class="botl">Actions</td>
       
    </tr>
-    <xsl:for-each select="cdash/job">
+    <xsl:for-each select="cdash/jobschedule">
       <tr class="table-heading">
         <td align="center" >
         <a>
@@ -205,11 +206,13 @@
         <td align="center" >
         <xsl:value-of select="status"/></td>  
          <td align="center" >
-        <xsl:value-of select="date"/></td>  
+        <xsl:value-of select="lastrun"/></td>  
         <td align="center" >
-        <a><xsl:attribute name="href">
-        manageClient.php?removejob=<xsl:value-of select="id"/>
-        </xsl:attribute><img src="images/delete.png" border="0" alt="remove job" /></a>
+        <a><xsl:attribute name="href">manageClient.php?scheduleid=<xsl:value-of select="id"/>
+        </xsl:attribute><img src="images/advanced.png" border="0" alt="edit schedule" /></a>
+        <a onclick="return VerifyDeleteSchedule()"><xsl:attribute name="href">manageClient.php?removeschedule=<xsl:value-of select="id"/>
+        </xsl:attribute><img src="images/delete.png" border="0" alt="remove schedule" /></a>
+        
         </td>     
     </tr>
   </xsl:for-each>

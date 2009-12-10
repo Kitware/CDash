@@ -23,12 +23,13 @@ function client_submit()
     return;
     }
  
-  include_once ("models/clientsite.php");
-  include_once ("models/clientos.php");
-  include_once ("models/clientjob.php");
-  include_once ("models/clientcmake.php");
-  include_once ("models/clientcompiler.php");
-  include_once ("models/clientlibrary.php");
+  include_once("models/clientsite.php");
+  include_once("models/clientos.php");
+  include_once("models/clientjob.php");
+  include_once("models/clientjobschedule.php");
+  include_once("models/clientcmake.php");
+  include_once("models/clientcompiler.php");
+  include_once("models/clientlibrary.php");
 
   include 'cdash/config.php';
   require_once 'cdash/common.php';
@@ -60,13 +61,13 @@ function client_submit()
       echo "0";
       }
     
-    $ClientJob = new ClientJob();
-    $ClientJob->SiteId = $_GET['siteid'];
+    $ClientJobSchedule = new ClientJobSchedule();
+    $ClientJobSchedule->SiteId = $_GET['siteid'];
     
-    $jobid = $ClientJob->HasJob();
+    $jobid = $ClientJobSchedule->HasJob();
     if($jobid>0) // if we have something to do
       {
-      echo $ClientJob->GetCTestScript();
+      echo $ClientJobSchedule->GetCTestScript();
       }
     else
       {
