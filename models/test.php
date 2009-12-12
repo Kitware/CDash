@@ -171,19 +171,30 @@ class Test
       }
 
     if($CDASH_USE_COMPRESSION)
-      {
+      { 
       $output = gzcompress($this->Output);
       if($output === false)
         {
         $output = $this->Output;
         }
+      else
+        {
+        if($CDASH_DB_TYPE == "pgsql")
+          { 
+          if(strlen($this->Output)<2000) // compression doesn't help for small chunk
+            {
+            $output = $this->Output; 
+            } 
+          $output = pg_escape_bytea(base64_encode($output)); // hopefully does the escaping correctly   
+          }
+        }  
       }
     else
       {
       $output = $this->Output;
       }
     
-    $output = pdo_real_escape_string($output);
+    $output = pdo_real_escape_string($output);  
     $query = "INSERT INTO test (".$id."projectid,crc32,name,path,command,details,output)
               VALUES (".$idvalue."'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";                     
 

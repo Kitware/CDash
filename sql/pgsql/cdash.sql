@@ -367,7 +367,7 @@ CREATE TABLE "test" (
   "path" character varying(255) DEFAULT '' NOT NULL,
   "command" text NOT NULL,
   "details" text NOT NULL,
-  "output" text NOT NULL,
+  "output" bytea NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "crc323" on "test" ("crc32");

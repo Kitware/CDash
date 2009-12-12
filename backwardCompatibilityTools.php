@@ -285,7 +285,8 @@ function RenameTableField($table,$field,$newfield,$mySQLType,$pgSqlType,$default
     add_log("Changing $field to $newfield for $table","RenameTableField");
     if($CDASH_DB_TYPE == "pgsql")
       {
-      pdo_query("ALTER TABLE \"".$table."\" CHANGE \"".$field."\" \"".$newfield."\" ".$pgSqlType." DEFAULT '".$default."'");
+      pdo_query("ALTER TABLE \"".$table."\" RENAME \"".$field."\" TO \"".$newfield."\"");
+      pdo_query("ALTER TABLE \"".$table."\" ALTER COLUMN \"".$newfield."\" SET DEFAULT \"".$default."\"");
       }
     else
       {
@@ -551,10 +552,9 @@ if(isset($_GET['upgrade-1-4']))
   exit();
 }
 
-
 // 1.6 Upgrade
 if(isset($_GET['upgrade-1-6']))
-{  
+{    
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
   AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
@@ -580,8 +580,8 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("builderror","crc32","bigint(20)","BIGINT","0");
   AddTableField("builderror","newstatus","tinyint(4)","smallint","0");
   AddTableIndex('builderror','crc32');
-  AddTableIndex('builderror','newstatus');
-  
+  AddTableIndex('builderror','newstatus');  
+    
   if(!pdo_query("SELECT projectid FROM test LIMIT 1"))
     {
     AddTableField("test","projectid","int(11)","bigint","0");
@@ -635,8 +635,9 @@ if(isset($_GET['upgrade-1-6']))
   
   if($CDASH_DB_TYPE != "pgsql")
     {
-    pdo_query("ALTER TABLE `configure` CHANGE `starttime` `starttime` TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
-    pdo_query("ALTER TABLE `buildupdate` CHANGE `starttime` `starttime` TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    pdo_query("ALTER TABLE configure CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    pdo_query("ALTER TABLE buildupdate CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    pdo_query("ALTER TABLE test CHANGE output output MEDIUMBLOB NOT NULL "); // change it to blob (cannot do that in PGSQL)
     }
     
   // Set the database version

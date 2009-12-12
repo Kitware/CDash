@@ -165,6 +165,17 @@ $xml .= add_XML_value("details", $testRow["details"]);
 
 if($CDASH_USE_COMPRESSION)
   {
+  if($CDASH_DB_TYPE == "pgsql")
+    { 
+    if(is_resource($testRow["output"]))
+      {
+      $testRow["output"] = base64_decode(stream_get_contents($testRow["output"]));
+      }
+    else
+      {  
+      $testRow["output"] = base64_decode($testRow["output"]);
+      }
+    }       
   @$uncompressedrow = gzuncompress($testRow["output"]);
   if($uncompressedrow !== false)
     {

@@ -436,7 +436,7 @@ CREATE TABLE `test` (
   `path` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
   `details` text NOT NULL,
-  `output` MEDIUMTEXT NOT NULL,
+  `output` MEDIUMBLOB NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `crc32` (`crc32`),
