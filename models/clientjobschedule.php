@@ -808,7 +808,7 @@ class ClientJobSchedule
     
     $ctest_script .= 'set(CTEST_DROP_SITE_CDASH  TRUE)'."\n";
     $ctest_script .= 'set(CTEST_DROP_SITE "'.$serverName.'")'."\n";
-    $ctest_script .= 'set(CTEST_DROP_LOCATION "/cdash/submit.php?project='.$Project->Name.'")'."\n";
+    $ctest_script .= 'set(CTEST_DROP_LOCATION "/CDash/submit.php?project='.$Project->Name.'")'."\n";
     $ctest_script .= 'set(CTEST_DROP_SITE_CDASH  TRUE)'."\n";
     $ctest_script .= 'ctest_submit(RETURN_VALUE res)'."\n";
 
