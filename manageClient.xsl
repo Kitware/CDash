@@ -49,16 +49,55 @@ No site are currently available. You should run the CTest script in order to reg
       <tr>
         <td align="right" valign="top"><xsl:if test="count(cdash/project/repository)=1">
           <b>Repository:</b>
+         <td>
+           <xsl:value-of select="/cdash/project/repository/url"/>
+         </td>
         </xsl:if>   
         <xsl:if test="count(cdash/project/repository)>1">
           <b>Repositories:</b>
         </xsl:if>   
         </td>
         <td>
+         <select name="repository" id="repository_select">
           <xsl:for-each select="/cdash/project/repository">
-            <xsl:value-of select="url"/><br/>
+              <option>
+                <xsl:attribute name="value"><xsl:value-of select="url"/></xsl:attribute>
+                <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>
+                <xsl:value-of select="url"/>
+              </option>
           </xsl:for-each>
+          </select>
         </td>
+      </tr>
+      <tr>
+        <td align="right" valign="top">
+          <b>Other Repository:</b>
+         </td>
+         <td>
+           <input name="otherrepository" type="text" size="60">
+           <xsl:attribute name="value"><xsl:value-of select="/cdash/otherrepository"/></xsl:attribute>
+           </input>
+         </td>
+      </tr>
+      <tr>
+        <td align="right" valign="top">
+          <b>CVS Module:</b>
+         </td>
+         <td>
+           <input name="module" type="text" size="60">
+           <xsl:attribute name="value"><xsl:value-of select="/cdash/module"/></xsl:attribute>
+           </input>
+         </td>
+      </tr>
+      <tr>
+        <td align="right" valign="top">
+          <b>BuildName Suffix:</b>
+         </td>
+         <td>
+           <input name="buildnamesuffix" type="text" size="60">
+           <xsl:attribute name="value"><xsl:value-of select="/cdash/buildnamesuffix"/></xsl:attribute>
+           </input>
+         </td>
       </tr>
       <tr>
         <td valign="top" align="right"><b>Operating System:</b><br/><a href="#" onclick="clearOS()">[clear all]</a></td>

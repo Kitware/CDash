@@ -32,6 +32,9 @@ class ClientJobSchedule
   var $RepeatTime;
   var $Enable;
   var $CMakeCache;
+  var $Repository;
+  var $Module;
+  var $BuildNameSuffix;
 
   /** Get ProjectId */
   function GetProjectId()
@@ -136,6 +139,45 @@ class ClientJobSchedule
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
+
+  /** Get repository */
+  function GetRepository()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule::GetRepository","Id not set");
+      return;
+      }
+    $sys = pdo_query("SELECT repository FROM client_jobschedule WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($sys);
+    return $row[0];
+    }
+ 
+  /** Get Buildname suffix */
+  function GetBuildNameSuffix()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule::GetBuildNameSuffix","Id not set");
+      return;
+      }
+    $sys = pdo_query("SELECT buildnamesuffix FROM client_jobschedule WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($sys);
+    return $row[0];
+    }
+    
+  /** Get Module */
+  function GetModule()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule::GetModule","Id not set");
+      return;
+      }
+    $sys = pdo_query("SELECT module FROM client_jobschedule WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($sys);
+    return $row[0];
+    }
     
   /** Get Enable */
   function GetEnable()
@@ -156,9 +198,11 @@ class ClientJobSchedule
     $cmakecache = pdo_real_escape_string($this->CMakeCache); 
     if(!$this->Id)
       {
-      $sql = "INSERT INTO client_jobschedule (userid,projectid,startdate,enddate,starttime,enable,type,repeattime,cmakecache) 
+      $sql = "INSERT INTO client_jobschedule (userid,projectid,startdate,enddate,starttime,enable,type,
+                                              repeattime,cmakecache,repository,module,buildnamesuffix) 
               VALUES ('".$this->UserId."','".$this->ProjectId."','".$this->StartDate."','".$this->EndDate.
-              "','".$this->StartTime."','".$this->Enable."','".$this->Type."','".$this->RepeatTime."','".$cmakecache."')";
+              "','".$this->StartTime."','".$this->Enable."','".$this->Type."','".$this->RepeatTime.
+              "','".$cmakecache."','".$this->Repository."','".$this->Module."','".$this->BuildNameSuffix."')";
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_jobschedule');
       add_last_sql_error("ClientJobSchedule::Save");
@@ -171,6 +215,9 @@ class ClientJobSchedule
              starttime='".$this->StartTime."',
              repeattime='".$this->RepeatTime."',
              cmakecache='".$cmakecache."',
+             repository='".$this->Repository."',
+             module='".$this->Module."',
+             buildnamesuffix='".$this->BuildNameSuffix."',
              type='".$this->Type."' WHERE id=".qnum($this->Id);
       pdo_query($sql);
       add_last_sql_error("ClientJobSchedule::Save");
@@ -710,7 +757,10 @@ class ClientJobSchedule
     $os = new ClientOS();
     $os->Id = $job->OsId; 
     $buildname = $os->GetName()."-".$os->GetVersion()."-".$os->GetBits()."-".$compiler->GetName()."-".$compiler->GetVersion();
-        
+    if(strlen($this->GetBuildNameSuffix())>0)
+      {
+      $buildname .= "-".$this->GetBuildNameSuffix();
+      }    
     $ctest_script .= 'set(CTEST_SITE "'.$ClientSite->GetName().'")'."\n";
     $ctest_script .= 'set(CTEST_BUILD_NAME "'.$buildname.'")'."\n";
     
@@ -784,12 +834,17 @@ class ClientJobSchedule
       $ctest_script .= 'MESSAGE("Done installing toolkit: '.$ClientToolkitConfigure->GetName().'")'."\n";
       }
     
-    // Get the repository (for now only the first one)
-    $repositories = $Project->GetRepositories();
     // Set the checkout command
-    $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "cvs -d '.$repositories[0]['url'].' checkout '.$sourceName.'")'."\n";
-    $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "cvs")'."\n";
-    
+    if(strlen($this->GetModule())>0)
+      {
+      $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "cvs -d '.$this->GetRepository().' checkout '.$this->GetModule().'")'."\n";
+      $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "cvs")'."\n";
+      }
+    else
+      {
+      $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "svn co '.$this->GetRepository().'")'."\n";
+      $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "svn")'."\n";  
+      }  
     $ctest_script .= 'ctest_start('.$buildtype.')'."\n";
     $ctest_script .= 'ctest_update(SOURCE ${CTEST_SOURCE_DIRECTORY})'."\n";
     $ctest_script .= 'ctest_configure(BUILD  "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";

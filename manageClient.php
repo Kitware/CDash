@@ -107,12 +107,15 @@ if ($session_OK)
     $xml .= add_XML_value("repeat",$ClientJobSchedule->GetRepeatTime());
     $xml .= add_XML_value("cmakecache",$ClientJobSchedule->GetCMakeCache());
     $xml .= add_XML_value("enable",$ClientJobSchedule->GetEnable());
+    $xml .= add_XML_value("module",$ClientJobSchedule->GetModule());
+    $xml .= add_XML_value("buildnamesuffix",$ClientJobSchedule->GetBuildNameSuffix());
     $libraries = $ClientJobSchedule->GetLibraries();
     $toolkits = $ClientJobSchedule->GetToolkitConfigurations();
     $cmakes = $ClientJobSchedule->GetCMakes();
     $compilers = $ClientJobSchedule->GetCompilers();
     $sites = $ClientJobSchedule->GetSites();
     $systems = $ClientJobSchedule->GetSystems();
+    $repository = $ClientJobSchedule->GetRepository();
     }
   else
     {
@@ -123,8 +126,10 @@ if ($session_OK)
     $xml .= add_XML_value("cmakecache","");
     $xml .= add_XML_value("repeat","0");
     $xml .= add_XML_value("enable","1");
+    $repository = "";
     }  
-    
+
+  $inprojectrepository = false;  
   $Project = new Project();
   $Project->Id = $projectid;
   $repositories = $Project->GetRepositories();
@@ -132,13 +137,25 @@ if ($session_OK)
   $xml .= add_XML_value("name", $Project->getName());
   $xml .= add_XML_value("name_encoded", urlencode($Project->getName()));
   $xml .= add_XML_value("id", $Project->Id);
-  foreach ($repositories as $repository)
+  foreach ($repositories as $projectrepository)
     {
     $xml .= '<repository>';
-    $xml .= add_XML_value("url", $repository['url']);
+    $xml .= add_XML_value("url", $projectrepository['url']);
+    
+    if(isset($scheduleid) && $repository==$projectrepository['url']) 
+      {
+      $inprojectrepository = true;
+      $xml .= add_XML_value("selected",1);
+      }
+    
     $xml .= '</repository>';
     }
   $xml .= '</project>';
+  
+  if(isset($scheduleid) && !$inprojectrepository)
+    {
+    $xml .= add_XML_value("otherrepository",$repository);  
+    }
   
   // OS versions
   $clientOS = new ClientOS();
@@ -258,6 +275,21 @@ if ($session_OK)
     $clientJobSchedule = new ClientJobSchedule();
     $clientJobSchedule->UserId = $userid;
     $clientJobSchedule->ProjectId = $Project->Id;
+    $clientJobSchedule->BuildNameSuffix = $_POST['buildnamesuffix'] ;
+    if(strlen($_POST['module'])>0)
+      {
+      $clientJobSchedule->Module = $_POST['module'];  
+      }
+      
+    if(strlen($_POST['otherrepository'])>0)
+      {
+      $clientJobSchedule->Repository = $_POST['otherrepository'];   
+      }   
+    else
+      {
+      $clientJobSchedule->Repository = $_POST['repository']; 
+      } 
+       
     if(isset($_POST['enable']))
       {
       $clientJobSchedule->Enable = 1;
