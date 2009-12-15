@@ -138,7 +138,17 @@
     <xsl:attribute name="class">
       <xsl:value-of select="class"/>
     </xsl:attribute>
-    <td><xsl:if test="new=1"><img src="images/flag.png" title="flag"/></xsl:if>
+    <td>
+    <xsl:if test="new=1">
+    <xsl:choose>
+    <xsl:when test="timestatus=Passed and status=Passed">
+      <img src="images/flaggreen.png" title="flag"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <img src="images/flag.png" title="flag"/>
+    </xsl:otherwise>
+    </xsl:choose>
+    </xsl:if>
     <a>
       <xsl:attribute name="href">
         <xsl:value-of select="summaryLink"/>
