@@ -733,7 +733,18 @@ class ClientJobSchedule
     $Project = new Project();
     $Project->Id = $this->GetProjectId();
     $Project->Fill();
-    $sourceName = $Project->Name;
+    if(strlen($this->GetModule())>0)
+      {
+      $sourceName = $this->GetModule();  
+      }
+    else
+      { 
+      $sourceName = $Project->Name;
+      if(strlen($this->GetBuildNameSuffix())>0)
+        {
+        $sourceName.="-".$this->GetBuildNameSuffix();
+        }
+      }
     $binaryName = $sourceName."-bin";
     
     // these are the the name of the source and binary directory on disk. 
@@ -842,7 +853,7 @@ class ClientJobSchedule
       }
     else
       {
-      $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "svn co '.$this->GetRepository().'")'."\n";
+      $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "svn co '.$this->GetRepository().' '.$sourceName.'")'."\n";
       $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "svn")'."\n";  
       }  
     $ctest_script .= 'ctest_start('.$buildtype.')'."\n";

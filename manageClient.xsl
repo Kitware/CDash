@@ -47,15 +47,8 @@ No site are currently available. You should run the CTest script in order to reg
         <td><xsl:value-of select="cdash/project/name" /></td>    
       </tr>
       <tr>
-        <td align="right" valign="top"><xsl:if test="count(cdash/project/repository)=1">
+        <td align="right" valign="top">
           <b>Repository:</b>
-         <td>
-           <xsl:value-of select="/cdash/project/repository/url"/>
-         </td>
-        </xsl:if>   
-        <xsl:if test="count(cdash/project/repository)>1">
-          <b>Repositories:</b>
-        </xsl:if>   
         </td>
         <td>
          <select name="repository" id="repository_select">
