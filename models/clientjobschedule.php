@@ -867,7 +867,7 @@ class ClientJobSchedule
       $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "cvs -d '.$this->GetRepository().' checkout ';
       if(strlen($this->GetTag())>0)
         {
-        $ctest_script .= ' -r '.$this->GetTag.' ';
+        $ctest_script .= ' -r '.$this->GetTag().' ';
         }
       $ctest_script .= $this->GetModule().'")'."\n";
       $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "cvs")'."\n";
