@@ -751,7 +751,11 @@ class ClientJobSchedule
     $Project->Fill();
     if(strlen($this->GetModule())>0)
       {
-      $sourceName = $this->GetModule();  
+      $sourceName = $this->GetModule(); 
+      if(strlen($this->GetTag())>0)
+        {
+        $sourceName.="-".$this->GetTag(); 
+        }
       }
     else
       { 
@@ -869,6 +873,7 @@ class ClientJobSchedule
         {
         $ctest_script .= ' -r '.$this->GetTag().' ';
         }
+      $ctest_script .= ' -d '.$sourceName.' ';
       $ctest_script .= $this->GetModule().'")'."\n";
       $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "cvs")'."\n";
       }
