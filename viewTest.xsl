@@ -141,8 +141,8 @@
     <td>
     <xsl:if test="new=1">
     <xsl:choose>
-    <xsl:when test="timestatus=Passed and status=Passed">
-      <img src="images/flaggreen.png" title="flag"/>
+    <xsl:when test="timestatus='Passed' and status='Passed'">
+      <img src="images/flaggreen.gif" title="flag"/>
     </xsl:when>
     <xsl:otherwise>
       <img src="images/flag.png" title="flag"/>
