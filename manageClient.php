@@ -108,6 +108,7 @@ if ($session_OK)
     $xml .= add_XML_value("cmakecache",$ClientJobSchedule->GetCMakeCache());
     $xml .= add_XML_value("enable",$ClientJobSchedule->GetEnable());
     $xml .= add_XML_value("module",$ClientJobSchedule->GetModule());
+    $xml .= add_XML_value("tag",$ClientJobSchedule->GetTag());
     $xml .= add_XML_value("buildnamesuffix",$ClientJobSchedule->GetBuildNameSuffix());
     $libraries = $ClientJobSchedule->GetLibraries();
     $toolkits = $ClientJobSchedule->GetToolkitConfigurations();
@@ -275,7 +276,9 @@ if ($session_OK)
     $clientJobSchedule = new ClientJobSchedule();
     $clientJobSchedule->UserId = $userid;
     $clientJobSchedule->ProjectId = $Project->Id;
-    $clientJobSchedule->BuildNameSuffix = $_POST['buildnamesuffix'] ;
+    $clientJobSchedule->BuildNameSuffix = $_POST['buildnamesuffix'];
+    $clientJobSchedule->Tag = $_POST['tag'];
+    
     if(strlen($_POST['module'])>0)
       {
       $clientJobSchedule->Module = $_POST['module'];  

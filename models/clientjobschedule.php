@@ -34,6 +34,7 @@ class ClientJobSchedule
   var $CMakeCache;
   var $Repository;
   var $Module;
+  var $Tag;
   var $BuildNameSuffix;
 
   /** Get ProjectId */
@@ -152,7 +153,20 @@ class ClientJobSchedule
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
- 
+
+  /** Get Tag */
+  function GetTag()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule::GetTag","Id not set");
+      return;
+      }
+    $sys = pdo_query("SELECT tag FROM client_jobschedule WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($sys);
+    return $row[0];
+    }
+    
   /** Get Buildname suffix */
   function GetBuildNameSuffix()
     {
@@ -199,10 +213,11 @@ class ClientJobSchedule
     if(!$this->Id)
       {
       $sql = "INSERT INTO client_jobschedule (userid,projectid,startdate,enddate,starttime,enable,type,
-                                              repeattime,cmakecache,repository,module,buildnamesuffix) 
+                                              repeattime,cmakecache,repository,module,buildnamesuffix,tag) 
               VALUES ('".$this->UserId."','".$this->ProjectId."','".$this->StartDate."','".$this->EndDate.
               "','".$this->StartTime."','".$this->Enable."','".$this->Type."','".$this->RepeatTime.
-              "','".$cmakecache."','".$this->Repository."','".$this->Module."','".$this->BuildNameSuffix."')";
+              "','".$cmakecache."','".$this->Repository."','".$this->Module."','".$this->BuildNameSuffix.
+              "','".$this->Tag."')";
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_jobschedule');
       add_last_sql_error("ClientJobSchedule::Save");
@@ -218,6 +233,7 @@ class ClientJobSchedule
              repository='".$this->Repository."',
              module='".$this->Module."',
              buildnamesuffix='".$this->BuildNameSuffix."',
+             tag='".$this->Tag."',
              type='".$this->Type."' WHERE id=".qnum($this->Id);
       pdo_query($sql);
       add_last_sql_error("ClientJobSchedule::Save");
@@ -848,7 +864,12 @@ class ClientJobSchedule
     // Set the checkout command
     if(strlen($this->GetModule())>0)
       {
-      $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "cvs -d '.$this->GetRepository().' checkout '.$this->GetModule().'")'."\n";
+      $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "cvs -d '.$this->GetRepository().' checkout ';
+      if(strlen($this->GetTag())>0)
+        {
+        $ctest_script .= ' -r '.$this->GetTag.' ';
+        }
+      $ctest_script .= $this->GetModule().'")'."\n";
       $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "cvs")'."\n";
       }
     else

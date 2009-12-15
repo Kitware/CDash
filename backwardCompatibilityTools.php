@@ -577,7 +577,6 @@ if(isset($_GET['upgrade-1-6']))
   AddTableIndex('builderrordiff','difference_positive');
   AddTableIndex('builderrordiff','difference_negative');
  
- 
   AddTableField("builderror","crc32","bigint(20)","BIGINT","0");
   AddTableField("builderror","newstatus","tinyint(4)","smallint","0");
   AddTableIndex('builderror','crc32');
@@ -586,6 +585,7 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("client_jobschedule","repository","VARCHAR(512)","VARCHAR(512)","");
   AddTableField("client_jobschedule","module","VARCHAR(255)","VARCHAR(255)","");
   AddTableField("client_jobschedule","buildnamesuffix","VARCHAR(255)","VARCHAR(255)","");
+  AddTableField("client_jobschedule","tag","VARCHAR(255)","VARCHAR(255)","");
   
   if(!pdo_query("SELECT projectid FROM test LIMIT 1"))
     {

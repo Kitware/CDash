@@ -84,6 +84,16 @@ No site are currently available. You should run the CTest script in order to reg
       </tr>
       <tr>
         <td align="right" valign="top">
+          <b>TAG:</b>
+         </td>
+         <td>
+           <input name="tag" type="text" size="60">
+           <xsl:attribute name="value"><xsl:value-of select="/cdash/tag"/></xsl:attribute>
+           </input>
+         </td>
+      </tr>
+      <tr>
+        <td align="right" valign="top">
           <b>BuildName Suffix:</b>
          </td>
          <td>
