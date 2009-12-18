@@ -125,10 +125,17 @@ class TestingHandler extends AbstractHandler
       $this->TestMeasurement->Name = $attributes['NAME'];
       $this->TestMeasurement->Type = $attributes['TYPE'];
       }
+    else if($name == "VALUE" && $parent== "MEASUREMENT" )
+      {
+      if(isset($attributes['COMPRESSION']) && $attributes['COMPRESSION']=="gzip")
+        {
+        $this->Test->CompressedOutput = true;
+        }
+      }  
     else if($name == 'LABEL' && $parent == 'LABELS')
       {
       $this->Label = new Label();
-      }
+      } 
     else if($name == "TESTLIST" && $parent == 'TESTING')
       {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
@@ -290,7 +297,7 @@ class TestingHandler extends AbstractHandler
           break;
         case "FULLCOMMANDLINE":
           $this->Test->Command .= $data;
-          break;
+          break;          
         }
       }
     else if($parent == "NAMEDMEASUREMENT" && $element == "VALUE")

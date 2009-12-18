@@ -35,6 +35,7 @@ class Test
   var $Command;
   var $Details;
   var $Output;
+  var $CompressedOutput;
   
   var $Images;
   var $Labels;
@@ -45,6 +46,7 @@ class Test
     $this->Images = array();
     $this->Labels = array();
     $this->Measurements = array();
+    $this->CompressedOutput = false;
     }
 
   function AddMeasurement($measurement)
@@ -130,8 +132,7 @@ class Test
               'Test::InsertLabelAssociations',LOG_ERR);
       }
     }
-
-
+    
   /** Return if exists */
   function Exists()
     {
@@ -149,12 +150,11 @@ class Test
   // Save in the database
   function Insert()
     {
-      
     if($this->Exists())
       {
       return true;
       }
-      
+          
     include("cdash/config.php");
     $command = pdo_real_escape_string($this->Command);
 
@@ -170,7 +170,11 @@ class Test
       $idvalue = "'".$this->Id."',";
       }
 
-    if($CDASH_USE_COMPRESSION)
+    if($this->CompressedOutput)
+      {
+      $output = base64_decode($this->Output);
+      }
+    else if($CDASH_USE_COMPRESSION)
       { 
       $output = gzcompress($this->Output);
       if($output === false)
