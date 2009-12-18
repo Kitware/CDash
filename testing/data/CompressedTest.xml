@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-VCExpress"
+  BuildStamp="20091218-1414-Experimental"
+  Name="HOME"
+  Generator="ctest-2.9.20091218"
+  CompilerName=""
+  OSName="Windows"
+  Hostname="Home"
+  OSRelease="Vista"
+  OSVersion=" (Build 7600)"
+  OSPlatform="x86"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="7"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="2"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="3325"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2981"
+>
+<Testing>
+  <StartDateTime>Dec 18 09:19 Eastern Standard Time</StartDateTime>
+  <StartTestTime>1261145951</StartTestTime>
+  <TestList>
+    <Test>./Source/kwsys/kwsys.testEncode</Test>
+    <Test>./Source/kwsys/kwsys.testTerminal</Test>
+    <Test>./Source/kwsys/kwsys.testAutoPtr</Test>
+    <Test>./Source/kwsys/kwsys.testHashSTL</Test>
+    <Test>./Source/kwsys/kwsys.testRegistry</Test>
+    <Test>./Source/kwsys/kwsys.testIOS</Test>
+    <Test>./Source/kwsys/kwsys.testSystemTools</Test>
+    <Test>./Source/kwsys/kwsys.testCommandLineArguments</Test>
+    <Test>./Source/kwsys/kwsys.testCommandLineArguments1</Test>
+    <Test>./Source/kwsys/kwsys.testSystemInformation</Test>
+    <Test>./Source/kwsys/kwsys.testDynamicLoader</Test>
+    <Test>./Source/kwsys/kwsys.testProcess-1</Test>
+    <Test>./Source/kwsys/kwsys.testProcess-2</Test>
+    <Test>./Source/kwsys/kwsys.testProcess-3</Test>
+    <Test>./Source/kwsys/kwsys.testProcess-4</Test>
+    <Test>./Source/kwsys/kwsys.testProcess-5</Test>
+    <Test>./Source/kwsys/kwsys.testProcess-6</Test>
+    <Test>./Source/kwsys/kwsys.testProcess-7</Test>
+    <Test>./Source/kwsys/kwsys.testSharedForward</Test>
+    <Test>./Tests/kwsys</Test>
+  </TestList>
+  <Test Status="passed">
+    <Name>kwsys.testEncode</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testEncode</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsC.exe testEncode</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0180001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsC.exe testEncode</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJyNzT0KhDAQQOHeU+QITmby51XEYpKZbBUUjODxLWwUFnZf//iauP1oBiaj56alq5g5ViDPlbwKVetDspBzwiAk6MaxLIN591n7P1e7Lfu02LIAhhzIA8bKSupYCqcSnSDrd+v3dQELBDqw====</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testTerminal</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testTerminal</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsC.exe testTerminal</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0780001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsC.exe testTerminal</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Hello World!
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testAutoPtr</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testAutoPtr</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testAutoPtr</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0190001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testAutoPtr</Value></NamedMeasurement>
+      <Measurement>
+        <Value></Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testHashSTL</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testHashSTL</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testHashSTL</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.066</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testHashSTL</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJxzyy/NS1FIzSspqlSILs8vyknRMYrlckMWzUjNycnXMUQTRecDdQEACnYaGw==</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testRegistry</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testRegistry</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testRegistry</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.03</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testRegistry</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Test passed
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testIOS</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testIOS</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testIOS</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0380001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testIOS</Value></NamedMeasurement>
+      <Measurement>
+        <Value>IOS tests passed
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testSystemTools</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testSystemTools</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testSystemTools</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0320001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testSystemTools</Value></NamedMeasurement>
+      <Measurement>
+        <Value></Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testCommandLineArguments</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testCommandLineArguments</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testCommandLineArguments --another-bool-variable --long3=opt --set-bool-arg1 -SSS ken brad bill andy --some-bool-variable=true --some-double-variable12.5 --some-int-variable 14 &quot;--some-string-variable=test string with space&quot; --some-multi-argument 5 1 8 3 7 1 3 9 7 1 -N 12.5 -SS=andy -N 1.31 -N 22 -SS=bill -BBtrue -SS=brad -BBtrue -BBfalse -SS=ken -A -C=test --long2 hello</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.043</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testCommandLineArguments --another-bool-variable --long3=opt --set-bool-arg1 -SSS ken brad bill andy --some-bool-variable=true --some-double-variable12.5 --some-int-variable 14 &quot;--some-string-variable=test string with space&quot; --some-multi-argument 5 1 8 3 7 1 3 9 7 1 -N 12.5 -SS=andy -N 1.31 -N 22 -SS=bill -BBtrue -SS=brad -BBtrue -BBfalse -SS=ken -A -C=test --long2 hello</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJydlV1vmzAUhu/5FUe5Wi9AhbTaGqkXIZW6SdN2Qe4jA06wauwIm2b79zu2Q/gIkHaOEEn8nPd8+Nh+lRpIdahLKvQKFr7PpTgsF/BOeE3xD3nUC+91AK3b+S+i5vzuGtm0iKZqRMM6ilqqoJzLhfed8uMKPADfJ0LqglZ+KiX330nFSMopNCOhGpQsKVRE5LIEQ8GFCj0rYZN5xhxgbCQEzYkCfwNpjdFByjTkbL+nFQbpFBTVLgCMPbxS2GJqsM7zGAlKxPqcX+O+axx92Dg6G2Ny/dy7icym3xHIZY1/XCRahaGAA8ckmNBt+bu1HEogOGZf1lwzv1l7q2CeIAhQwphb4GidYy+oMQ2lOT4VE4dBNYYxIAgOHJcZkRhLZVTCdNN1DzTDIOvJWefFeECfTApkA9gWTDW/C2xE4krBmaDevJIZmSxNQQP4gbEXsuY55LSUAmMnmkIhT4D7B7H8I2rqyJlWYHyroM03gqndY5B4ctaO3+dUY9DkDRf20gMnpgv0SDJX2TielbFlo38wwAw36Hy3mJgfJtUMspk8D3oxb4Yxk72mFTxbNy+zEr11dSqZFBnRTODC5BdJK/VrvoSfyD1JZjP7lFLS36b/p2S57qEAJ2xyPBRByxWEDw4YHDx9JgoeHTXYkD3KXDAN0OksUZcprdSuXcHmCxqu4BFC+AZL+IrvJTyZt+dimTQx4UAYLEOIIs+cuNMkfu49F9MkhEfNX7xzOIe0Ijm8UYEWfHfDCjHHW0uj4SqUbH9CMlMlR/WvyV6tbwNmbmcvwhtANA7ce94/sNeCxw==</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testCommandLineArguments1</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testCommandLineArguments1</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testCommandLineArguments1 --ignored -n 24 --second-ignored &quot;-m=test value&quot; third-ignored -p some junk at the end</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.013</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testCommandLineArguments1 --ignored -n 24 --second-ignored &quot;-m=test value&quot; third-ignored -p some junk at the end</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJx9jrsOwjAMRfd+hX+gEinloUgMiBUQC12qDhExJYU4Uh58PzQEMQQYfc+5thtxCwjmDHsOVV0073HHwaPzcB+DT3zgwIojBYcShO2DRvLtpIMVtKO+MVoLkltFuE7UsS4rsFgoS9WTsShzoUqCw5Mh+dubvi5flP0j1VFyRmPOZpENga45m0cmfE4W6eyXhcuIkJ5/PAAC4XgY====</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testSystemInformation</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testSystemInformation</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testSystemInformation</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0899999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testSystemInformation</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJxdkM12gjAQhfc+xSztoj2AVoWdYlVOi3KKpesIo+Y0JDYJrfTpm4Da6i5zv5s7P3PUq3RJSgzgnfJCfKvOHPVCKM0bcSFKtMoqfUWGRBkpo0qTVstQKip4ANCdVJQVMBw4zl3LEkb0VsgygONoYKUMTb5MtaR8F8AceUU5Rlwj+6PRNIBGglDIg5BEm3iL1/UBLXRsMSMlZbUtm+BYFMhsNbTV01GbKCwSKXJUSsh2uwS5plUJURRB13nwHqGkuRS8mfbiTVFSwpZVuUEZwBUKSb7HlP6YrHsXnicWvogdzQm7eFSCMtnXyooBeNf/mcg/ZhI/K+R5bag/8iBe/HQiNehPqFan5drmq+0pO0zeAnD/g3ODhnidqUBlnml1MPfS5mUv4V61HidReDneWmjCMip1RViMpZB2Fqc/hLhZafxFKCMbhjcW1/dHJ0uTcJ7izHs9c9KbiFuP6/i+9fwChAXVnw==</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testDynamicLoader</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testDynamicLoader</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testDynamicLoader</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.128</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestsCxx.exe testDynamicLoader</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJwLSS0uycxLt1JIrEotKqmM5wqBCThb6aekluk7+yZmp+oH55cWJafqZ5cXVxbrlwCVBFcWl6TmhuTn5xTrJWXmYdcWD5RB1RqUmpOaWJyqn5wL5IH0uFTm5eQnpuil5OSMmoFmBgBm2Jbi====</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testProcess-1</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testProcess-1</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.05</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 1</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJzzLy0pKC1RyM9TKC5JyQeyklLT8otSFUpSi0sUDPW4/JHlU4uK8MqD9KcV5edCZItSS0qL8jLz0hUMsJiDQ51zRmZOikJqRWZJaopCeWZJhkJZYk5pqoKtggHV7cJQl5hWkloE9xpJTkHVCgAEnXkR====</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testProcess-2</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testProcess-2</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 2</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0339999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 2</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJzzLy0pKC1RyM9TKC5JyQeyklLT8otSFUpSi0sUjPS4/JHlU4uK8MqD9KcV5edCZItSS0qL8jLz0hUMjYyxmIRTpXNGZk6KQmpFZklqikJ5ZkmGQlliTmmqgi1IGtPGxLSS1CLcDkaVBgAjO1Pp====</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testProcess-3</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testProcess-3</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 3</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>10.009</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 3</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJx9j9ENgCAMRP+dohP44wgOwAwajkhEIaVExxcSY9Cof9e+3uWqkoQk5FeKon1WI4xnkCAKdW2jag7mD35uowNCFWbYLyR2QRmK5c9Q0l8M/WSdpm2INFvnkOWE9brBHixDP4oWMhgBf/9xxwdL0F7U====</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testProcess-4</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testProcess-4</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 4</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.00800014</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 4</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJx9T0sKhDAM3XuKnMCVK3eDB/AMsU2x0DaSRGFubwsulMHZPd4vL/Nu227ABdQ8V7RQYCEwUoOh7+a7TiIv+sU6QV1vZUE4X2QL/LO37h/7tMbkK5YcCxp5wKWwZEzpO8LHOVKFI3JCi1yeW9t5DDX6/spTPgFLVV/j====</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testProcess-5</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testProcess-5</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 5</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0190001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 5</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJyFkTEOwjAMRXdO4RMgFhYkBsQBegY3cVVLSYwcp8DtadUORSV0s/yf/9eXm2KPYiAJsnkZp5Y6UQKjbHA+Hpq1Tqp/9dW9kiuaeZjJuk+FW1SnmPuVeacSl+UePmVs8HvPwY+zRk5o5AHbJBoxhPcFbs5RzjCwBDSWtO2G3Xi6X+03NmfTi6fcJ1sPA4ZCcIVTLan6hG/5A2BFpC4=</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testProcess-6</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testProcess-6</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 6</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>10.046</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 6</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJzzLy0pKC1RyM9TKC5JyQeyklLT8otSFUpSi0sUzPS4/JHlU4uK0OWdMzJzUhTKE4sVsjNzclKBzIzUPIWSzNxUkGGpFQWZRakpaMaAZBLTSlKLcNuCKg0AOpo6jw==</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testProcess-7</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testProcess-7</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 7</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.373</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestProcess.exe 7</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJzVkbEKAjEQRHu/Yr9A7KysFNsrrVczRxaiOTYT9fNVsLg7yfV2A499CzNd5VAp+SaFIb/TGX12CFEo2/WqG3O4z/lJjcfsB6UK7YqPwqGXiDA7HslLAoa2+4sX1f8Ff4rQnvBmDxO6KN5HS0HwNCLIwxjlrqlCdrJpPW0uO8Uv4OfAwQ==</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys.testSharedForward</Name>
+    <Path>./Source/kwsys</Path>
+    <FullName>./Source/kwsys/kwsys.testSharedForward</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestSharedForward.exe 1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0480001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\Source\kwsys\Release\cmsysTestSharedForward.exe 1</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">eJzzLy0pKC1RyM9TKC5JyQeyklLT8otSFUpSi0sUDPW4/JHlU4uK8MqD9KcV5edCZItSS0qL8jLz0hUMsJiDQ51zRmZOikJqRWZJaopCeWZJhkJZYk5pqoKtgsHA2pWYVpJahDtYUKUB97x5EQ==</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>kwsys</Name>
+    <Path>./Tests</Path>
+    <FullName>./Tests/kwsys</FullName>
+    <FullCommandLine>C:\dev\CMake_bin\bin\Release\ctest.exe --build-and-test C:/dev/CMake/Source/kwsys C:/dev/CMake_bin/Tests/kwsys --build-generator &quot;Visual Studio 9 2008&quot; --build-makeprogram C:/PROGRA~1/MICROS~1.0/Common7/IDE/VCExpress.exe --build-project kwsys --test-command kwsysTestsCxx testIOS</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>49.777</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>C:\dev\CMake_bin\bin\Release\ctest.exe --build-and-test C:/dev/CMake/Source/kwsys C:/dev/CMake_bin/Tests/kwsys --build-generator &quot;Visual Studio 9 2008&quot; --build-makeprogram C:/PROGRA~1/MICROS~1.0/Common7/IDE/VCExpress.exe --build-project kwsys --test-command kwsysTestsCxx testIOS</Value></NamedMeasurement>
+      <Measurement>
+        <Value encoding="base64" compression="gzip">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==</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <EndDateTime>Dec 18 09:20 Eastern Standard Time</EndDateTime>
+  <EndTestTime>1261146023</EndTestTime>
+<ElapsedMinutes>1.2</ElapsedMinutes></Testing>
+</Site>

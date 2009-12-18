@@ -3,7 +3,7 @@
 require_once('kwtest/kw_web_tester.php');
 require_once('kwtest/kw_db.php');
 
-class ProjectInDbTestCase extends KWWebTestCase
+class PubProjectTestCase extends KWWebTestCase
 {
   var $url = null;
   var $db  = null;
@@ -137,13 +137,6 @@ class ProjectInDbTestCase extends KWWebTestCase
       }
     }
 
-  function login()
-    {
-    $this->clickLink('Login');
-    $this->setField('login','simpletest@localhost');
-    $this->setField('passwd','simpletest');
-    return $this->clickSubmitByName('sent');
-    }
 }
 
 ?>

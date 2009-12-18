@@ -3,7 +3,7 @@
 require_once('kwtest/kw_web_tester.php');
 require_once('kwtest/kw_db.php');
 
-class PubProjectTestCase extends KWWebTestCase
+class ProjectInDbTestCase extends KWWebTestCase
 {
   var $url           = null;
   var $db            = null;
