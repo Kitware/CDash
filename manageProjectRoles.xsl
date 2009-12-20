@@ -160,6 +160,24 @@
          
           <table width="800"  border="0">
             <tr>
+            <td><div align="right"></div></td>
+            <td>
+            <span style="color: #ff0000;">
+              <xsl:for-each select="cdash/baduser">
+              <xsl:choose>
+                <xsl:when test="emailtype>0">
+                * <b><xsl:value-of select="author"/></b> (<xsl:value-of select="email"/>) doesn't want to receive emails but has been submitting in the past month.
+                </xsl:when>
+                <xsl:otherwise>
+                * <b><xsl:value-of select="author"/></b> is not registered for this project but has been submitting in the past month.
+                </xsl:otherwise>
+              </xsl:choose>
+              <br/>
+              </xsl:for-each>
+              </span>
+            </td>
+            </tr>
+            <tr>
              <td><div align="right"></div></td>
              <td>
              <table>

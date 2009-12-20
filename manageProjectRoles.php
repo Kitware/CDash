@@ -391,47 +391,69 @@ while($project_array = pdo_fetch_array($projects))
 // If we have a project id
 if($projectid>0)
   {
+  $project = pdo_query("SELECT id,name FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
+  $xml .= "<project>";
+  $xml .= add_XML_value("id",$project_array['id']);
+  $xml .= add_XML_value("name",$project_array['name']);
+  $xml .= add_XML_value("name_encoded",urlencode($project_array['name']));
+  $xml .= "</project>";
   
-$project = pdo_query("SELECT id,name FROM project WHERE id='$projectid'");
-$project_array = pdo_fetch_array($project);
-$xml .= "<project>";
-$xml .= add_XML_value("id",$project_array['id']);
-$xml .= add_XML_value("name",$project_array['name']);
-$xml .= add_XML_value("name_encoded",urlencode($project_array['name']));
-$xml .= "</project>";
-
-// List the users for that project
-$user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.cvslogin,up.role
-                     FROM user2project AS up, ".qid("user")." as u  
-                     WHERE u.id=up.userid  AND up.projectid='$projectid' 
-                     ORDER BY u.firstname ASC");
-                         
-$i=0;                         
-while($user_array = pdo_fetch_array($user))
-  {
-  $userid = $user_array["id"];
-  $xml .= "<user>";
- 
-  if($i%2==0)
+  // List the users for that project
+  $user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.cvslogin,up.role
+                       FROM user2project AS up, ".qid("user")." as u  
+                       WHERE u.id=up.userid  AND up.projectid='$projectid' 
+                       ORDER BY u.firstname ASC");
+                           
+  $i=0;                         
+  while($user_array = pdo_fetch_array($user))
     {
-    $xml .= add_XML_value("bgcolor","#CADBD9");
+    $userid = $user_array["id"];
+    $xml .= "<user>";
+   
+    if($i%2==0)
+      {
+      $xml .= add_XML_value("bgcolor","#CADBD9");
+      }
+    else
+      {
+      $xml .= add_XML_value("bgcolor","#FFFFFF");
+      }
+    $i++;
+    $xml .= add_XML_value("id",$userid);
+    $xml .= add_XML_value("firstname",$user_array['firstname']);
+    $xml .= add_XML_value("lastname",$user_array['lastname']);
+    $xml .= add_XML_value("email",$user_array['email']);   
+    $xml .= add_XML_value("cvslogin",$user_array['cvslogin']); 
+    $xml .= add_XML_value("role",$user_array['role']);  
+    $xml .= "</user>";
     }
-  else
+
+  // Check if a user is committing without being registered to CDash or with email disabled
+  $date = date(FMT_DATETIME,strtotime(date(FMT_DATETIME)." -30 days"));
+  $sql = "SELECT DISTINCT author,emailtype,email FROM dailyupdate,dailyupdatefile
+            LEFT JOIN user2project ON (dailyupdatefile.author=user2project.cvslogin
+            AND user2project.projectid=".qnum($project_array['id'])."
+            )
+            LEFT JOIN user ON (user2project.userid=user.id)
+            WHERE 
+             dailyupdatefile.dailyupdateid=dailyupdate.id 
+             AND dailyupdate.projectid=".qnum($project_array['id']).
+            " AND dailyupdatefile.checkindate>'".$date."' AND (emailtype=0 OR emailtype IS NULL)";
+  
+  $query = pdo_query($sql);
+  while($query_array = pdo_fetch_array($query))
     {
-    $xml .= add_XML_value("bgcolor","#FFFFFF");
+    $xml .= "<baduser>";
+    $xml .= add_XML_value("author",$query_array['author']);
+    $xml .= add_XML_value("emailtype",$query_array['emailtype']);
+    $xml .= add_XML_value("email",$query_array['email']);
+    $xml .= "</baduser>";
     }
-  $i++;
-  $xml .= add_XML_value("id",$userid);
-  $xml .= add_XML_value("firstname",$user_array['firstname']);
-  $xml .= add_XML_value("lastname",$user_array['lastname']);
-  $xml .= add_XML_value("email",$user_array['email']);   
-  $xml .= add_XML_value("cvslogin",$user_array['cvslogin']); 
-  $xml .= add_XML_value("role",$user_array['role']);  
-  $xml .= "</user>";
-  }
+  } // end project=0
 
-} // end project=0
 
+  
 if(isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1)
   {
   $xml .= add_XML_value("fullemail","1");
