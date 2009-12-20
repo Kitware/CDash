@@ -52,7 +52,8 @@ class BuildUpdateFile
       }
 
     $this->Filename = pdo_real_escape_string($this->Filename);
-    $this->CheckinDate = pdo_real_escape_string($this->CheckinDate);
+    
+    $this->CheckinDate = date(FMT_DATETIME,strtotime($this->CheckinDate));
     $this->Author = pdo_real_escape_string($this->Author);
     $this->Email = pdo_real_escape_string($this->Email);
     $this->Log = pdo_real_escape_string($this->Log);

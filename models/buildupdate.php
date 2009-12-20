@@ -26,6 +26,9 @@ class BuildUpdate
   var $Command;
   var $Type;
   var $Status;
+  var $Revision;
+  var $PriorRevision;
+  var $Path;
   var $BuildId;
   
   public function __construct()
@@ -47,13 +50,16 @@ class BuildUpdate
       case "COMMAND": $this->Command = $value;break;
       case "TYPE": $this->Type = $value;break;
       case "STATUS": $this->Status = $value;break;
+      case "REVISION": $this->Revision = $value;break;
+      case "PRIORREVISION": $this->PriorRevision = $value;break;
+      case "PATH": $this->Path = $value;break;
       }
     } 
     
   // Insert the update
   function Insert()
     {
-    if(strlen($this->BuildId)==0)
+    if(strlen($this->BuildId)==0 || !is_numeric($this->BuildId))
       {
       echo "BuildUpdate:Insert BuildId not set";
       return false;
@@ -79,7 +85,9 @@ class BuildUpdate
     $this->Command = pdo_real_escape_string($this->Command);
     $this->Type = pdo_real_escape_string($this->Type);
     $this->Status = pdo_real_escape_string($this->Status);
-    $this->BuildId = pdo_real_escape_string($this->BuildId);
+    $this->Revision = pdo_real_escape_string($this->Revision);
+    $this->PriorRevision = pdo_real_escape_string($this->PriorRevision);
+    $this->Path = pdo_real_escape_string($this->Path);
 
     $nfiles = count($this->Files);
     $nwarnings = 0;
@@ -92,9 +100,11 @@ class BuildUpdate
         }   
       }  
         
-    $query = "INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status,nfiles,warnings)
+    $query = "INSERT INTO buildupdate (buildid,starttime,endtime,command,type,status,nfiles,warnings,
+                                       revision,priorrevision,path)
               VALUES (".qnum($this->BuildId).",'$this->StartTime','$this->EndTime','$this->Command',
-                      '$this->Type','$this->Status',$nfiles,$nwarnings)";                     
+                      '$this->Type','$this->Status',$nfiles,$nwarnings,
+                      '$this->Revision','$this->PriorRevision','$this->Path')";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildUpdate Insert");

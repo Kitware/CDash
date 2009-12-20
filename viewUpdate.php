@@ -39,7 +39,8 @@ $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
   
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+$project = pdo_query("SELECT cvsurl,name,nightlytime,bugtrackerfileurl,bugtrackerurl
+                      FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
   $project_array = pdo_fetch_array($project);
@@ -93,12 +94,12 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= add_XML_value("buildname",$build_array["name"]);
   $xml .= add_XML_value("buildid",$build_array["id"]);
   $xml .= add_XML_value("buildtime",date("D, d M Y H:i:s T",strtotime($build_array["starttime"]." UTC")));  
-   
   $xml .= "</build>";
 
   $xml .= "<updates>";
   // Return the status
-  $status_array = pdo_fetch_array(pdo_query("SELECT status FROM buildupdate WHERE buildid='$buildid'"));
+  $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
+                                  FROM buildupdate WHERE buildid='$buildid'"));
   if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
     {
     $xml .= add_XML_value("status",$status_array["status"]);
@@ -107,7 +108,12 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     {
     $xml .= add_XML_value("status",""); // empty status
     }
-    
+  $xml .= add_XML_value("revision",$status_array["revision"]);
+  $xml .= add_XML_value("priorrevision",$status_array["priorrevision"]);  
+  $xml .= add_XML_value("path",$status_array["path"]);
+  $xml .= add_XML_value("revisionurl",get_revision_url($projectid,$status_array["revision"]));
+  $xml .= add_XML_value("revisiondiff",get_revision_url($projectid,$status_array["priorrevision"]));
+  
   $xml .= "<javascript>";
   // This should work hopefully
   $updatedfiles = pdo_query("SELECT * FROM updatefile WHERE buildid='$buildid'
@@ -170,9 +176,6 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       }
     }
 
-  //$xml .= "dbAdd (true, \"".$projectname." Updated files  (".pdo_num_rows($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
-  
-  //$previousdir = "";
   $projecturl = $svnurl;
   
   $locallymodified = array();

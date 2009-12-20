@@ -154,6 +154,9 @@ CREATE TABLE `buildupdate` (
   `status` text NOT NULL,
   `nfiles` smallint(6) DEFAULT '-1',
   `warnings` smallint(6) DEFAULT '-1',
+  `revision` varchar(60) NOT NULL default '0',
+  `priorrevision` varchar(60) NOT NULL default '0',
+  `path` varchar(255) NOT NULL default '',
   KEY `buildid` (`buildid`)
 );
 
@@ -485,8 +488,8 @@ CREATE TABLE `updatefile` (
   `author` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `log` text NOT NULL,
-  `revision` varchar(20) NOT NULL default '0',
-  `priorrevision` varchar(20) NOT NULL default '0',
+  `revision` varchar(60) NOT NULL default '0',
+  `priorrevision` varchar(60) NOT NULL default '0',
   `status` varchar(12) NOT NULL default '',
   KEY `buildid` (`buildid`)
 );

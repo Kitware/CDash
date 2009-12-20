@@ -125,7 +125,10 @@ CREATE TABLE "buildupdate" (
   "type" character varying(4) DEFAULT '' NOT NULL,
   "status" text NOT NULL,
   "nfiles" smallint DEFAULT '-1',
-  "warnings" smallint DEFAULT '-1'
+  "warnings" smallint DEFAULT '-1',
+  "revision" character varying(60) DEFAULT '0' NOT NULL,
+  "priorrevision" character varying(60) DEFAULT '0' NOT NULL,
+  "path" character varying(255) DEFAULT '' NOT NULL
 );
 CREATE INDEX "buildid2" on "buildupdate" ("buildid");
 
@@ -412,8 +415,8 @@ CREATE TABLE "updatefile" (
   "author" character varying(255) DEFAULT '' NOT NULL,
   "email" character varying(255) DEFAULT '' NOT NULL,
   "log" text NOT NULL,
-  "revision" character varying(20) DEFAULT '0' NOT NULL,
-  "priorrevision" character varying(20) DEFAULT '0' NOT NULL,
+  "revision" character varying(60) DEFAULT '0' NOT NULL,
+  "priorrevision" character varying(60) DEFAULT '0' NOT NULL,
   "status" character varying(12) DEFAULT '' NOT NULL
 );
 CREATE INDEX "buildid9" on "updatefile" ("buildid");

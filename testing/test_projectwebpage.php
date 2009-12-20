@@ -183,7 +183,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     {
     $query  = "SELECT id, stamp, name, type, generator,command FROM build WHERE id=2";
     $result = $this->db->query($query);
-    $expected = array('id'        => '2',
+    $expected = array('id'        => '3',
                       'stamp'     => '20090223-0100-Nightly',
                       'name'      => 'Win32-MSVC2009',
                       'type'      => 'Nightly',

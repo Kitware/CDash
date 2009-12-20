@@ -26,7 +26,8 @@ class CompressedTestCase extends KWWebTestCase
     // first project necessary for testing
     $name = 'TestCompressionExample';
     $description = 'Project compression example';
-    $this->createProject($name,$description);
+    $svnviewerurl = 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample';
+    $this->createProject($name,$description,$svnviewerurl);
     $content = $this->connect($this->url.'/index.php?project=TestCompressionExample');
     if(!$content)
       {
@@ -37,7 +38,7 @@ class CompressedTestCase extends KWWebTestCase
     if(!$this->submission('TestCompressionExample',$file))
       {
       return;
-      }   
+      }
     }
 
   function testCheckCompressedTest()
@@ -107,5 +108,37 @@ class CompressedTestCase extends KWWebTestCase
        return;
        }   
      } 
- }
+
+   /** */
+   function testGITUpdate()
+    { 
+    $file = dirname(__FILE__)."/data/git-Update.xml";
+    if(!$this->submission('TestCompressionExample',$file))
+      {
+      return;
+      }
+   
+    $content = $this->connect($this->url.'?project=TestCompressionExample&date=2009-12-18');
+    if(!$content)
+      {
+      return;
+      } 
+    $content = $this->analyse($this->clickLink('5'));
+    $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample&amp;rev=23a41258921e1cba8581ee2fa5add00f817f39fe';
+    if(!$this->findString($content,$expected))
+       {
+       $this->fail('The webpage does not match right the content exepected');
+       return;
+       }
+    
+    $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample&amp;rev=0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4';
+    if(!$this->findString($content,$expected))
+       {
+       $this->fail('The webpage does not match right the content exepected');
+       return;
+       }
+    $this->pass('Test passed'); 
+    }   
+     
+} // end class
 ?>

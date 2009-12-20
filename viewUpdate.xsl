@@ -45,6 +45,21 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 </xsl:if>
 </h4>
 
+<xsl:if test="string-length(cdash/updates/revision)>0">
+<b>Revision: </b>
+<a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/revisionurl"/></xsl:attribute>
+<xsl:value-of select="cdash/updates/revision"/>
+</a>
+</xsl:if>
+<xsl:if test="string-length(cdash/updates/priorrevision)>0">
+<br/><b>Prior Revision: </b>
+<a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/revisiondiff"/></xsl:attribute>
+<xsl:value-of select="cdash/updates/priorrevision"/>
+</a>
+<br/>
+</xsl:if>
+<br/>
+
 <!-- Graph -->
 <xsl:if test="cdash/build/site">
 <a>

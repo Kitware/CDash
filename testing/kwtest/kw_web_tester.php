@@ -233,11 +233,12 @@ class KWWebTestCase extends WebTestCase {
     }   
     
   // In case of the project does not exist yet
-  function createProject($name,$description)
+  function createProject($name,$description,$svnviewerurl="")
     {
     $this->clickLink('[Create new project]');
     $this->setField('name',$name);
     $this->setField('description',$description);
+    $this->setField('cvsURL',$svnviewerurl);
     $this->setField('public','1');
     $this->clickSubmitByName('Submit');
     return $this->clickLink('BACK');

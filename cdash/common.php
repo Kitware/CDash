@@ -1883,7 +1883,6 @@ function get_previous_revision($revision)
       $i = $i + 1;
     }
   }
-
   return $previous_revision;
 }
 
@@ -2207,6 +2206,107 @@ function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
   else // default is viewcvs
     {
     return get_viewcvs_diff_url($projecturl, $directory, $file, $revision);
+    }
+}
+
+/** Return the ViewCVS URL */
+function get_viewcvs_revision_url($projecturl, $revision)
+{
+  $revision_url = $projecturl."&rev=".$revision;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the Trac URL */
+function get_trac_revision_url($projecturl, $revision)
+{
+  $revision_url = $projecturl."/changeset/".$revision;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the Fisheye URL */
+function get_fisheye_revision_url($projecturl, $revision)
+{
+  $revision_url = $projecturl."?r=".$revision;;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the CVSTrac URL */
+function get_cvstrac_revision_url($projecturl, $revision)
+{
+  $revision_url = ""; // not implemented
+  return make_cdash_url($revision_url);
+}
+
+/** Return the ViewVC URL */
+function get_viewvc_revision_url($projecturl, $revision)
+{
+  $revision_url = $projecturl."?view=rev&revision=".$revision;
+  return make_cdash_url($diff_url);
+}
+
+/** Return the viewVC 1-1 url */
+function get_viewvc_1_1_revision_url($projecturl, $revision)
+{
+  $revision_url = ""; // not implemented
+  return make_cdash_url($revision_url);
+}
+
+/** Return the WebSVN URL */
+function get_websvn_revision_url($projecturl, $revision)
+{
+  $revision_url = $projecturl."?view=revision&revision=".$revision;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the Loggerhead URL */
+function get_loggerhead_revision_url($projecturl, $revision)
+{
+  $revision_url = ""; // not implemented
+  return make_cdash_url($revision_url);
+}
+
+/** Return the global revision URL (not file based) for a repository */
+function get_revision_url($projectid,$revision)
+{
+  if(!is_numeric($projectid))
+    {
+    return;
+    }
+  
+  $project = pdo_query("SELECT cvsviewertype,cvsurl FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
+  $projecturl = $project_array['cvsurl'];
+  if($project_array["cvsviewertype"] == "trac")
+    {
+    return get_trac_revision_url($projecturl,$revision);
+    }
+  elseif($project_array["cvsviewertype"] == "fisheye")
+    {
+    return get_fisheye_revision_url($projecturl,$revision);
+    }
+  elseif($project_array["cvsviewertype"] == "cvstrac")
+    {
+    return get_cvstrac_revision_url($projecturl,$revision);
+    }
+  elseif($project_array["cvsviewertype"] == "viewvc")
+    {
+    return get_viewvc_revision_url($projecturl,$revision);
+    }
+  elseif($project_array["cvsviewertype"] == "viewvc1.1")
+    {
+    return get_viewvc_1_1_revision_url($projecturl,$revision);
+    }
+  elseif($project_array["cvsviewertype"] == "websvn")
+    {
+    return get_websvn_revision_url($projecturl,$revision);
+    }
+  elseif($project_array["cvsviewertype"] == "loggerhead")
+    {
+    return get_loggerhead_revision_url($projecturl,$revision);
+    }
+  else // default is viewcvs
+    {
+    return get_viewcvs_revision_url($projecturl,$revision);
     }
 }
 

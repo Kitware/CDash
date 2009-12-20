@@ -147,6 +147,15 @@ class UpdateHandler extends AbstractHandler
         case 'UPDATETYPE':
           $this->Update->Type = $data;
           break;
+        case 'REVISION':
+          $this->Update->Revision = $data;
+          break;
+        case 'PRIORREVISION':
+          $this->Update->PriorRevision = $data;
+          break;
+        case 'PATH':
+          $this->Update->Path = $data;
+          break; 
         case 'UPDATERETURNSTATUS':
           $this->Update->Status = $data;
           break;

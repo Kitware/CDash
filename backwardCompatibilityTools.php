@@ -587,6 +587,12 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("client_jobschedule","buildnamesuffix","VARCHAR(255)","VARCHAR(255)","");
   AddTableField("client_jobschedule","tag","VARCHAR(255)","VARCHAR(255)","");
   
+  ModifyTableField("updatefile","revision","VARCHAR(60)","VARCHAR(60)","",true,false);
+  ModifyTableField("updatefile","priorrevision","VARCHAR(60)","VARCHAR(60)","",true,false);
+  AddTableField("buildupdate","revision","VARCHAR(60)","VARCHAR(60)","0");
+  AddTableField("buildupdate","priorrevision","VARCHAR(60)","VARCHAR(60)","0");
+  AddTableField("buildupdate","path","VARCHAR(255)","VARCHAR(255)","");
+  
   if(!pdo_query("SELECT projectid FROM test LIMIT 1"))
     {
     AddTableField("test","projectid","int(11)","bigint","0");
