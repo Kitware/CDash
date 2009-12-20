@@ -936,9 +936,9 @@
    <td align="center">
     <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="ntestnotrun>0">error</xsl:when>
+          <xsl:when test="ntestnotrun>0">warning</xsl:when>
           <xsl:otherwise><xsl:choose>
-          <xsl:when test="ntestfail=0 and ntestpass=0 and ntestnotrun=0"></xsl:when>
+          <xsl:when test="string-length(ntestnotrun)>0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
@@ -952,7 +952,7 @@
         <xsl:choose>
           <xsl:when test="ntestfail>0">error</xsl:when>
           <xsl:otherwise><xsl:choose>
-          <xsl:when test="ntestfail=0 and ntestpass=0 and ntestnotrun=0"></xsl:when>
+          <xsl:when test="string-length(ntestfail)>0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
@@ -972,10 +972,7 @@
     <xsl:value-of select="ntestpass"/>
     </xsl:if>
     </td>
-      
-      
-      
-      <td align="center"  class="nob"><xsl:value-of select="lastsubmission"/></td>
+   <td align="center"  class="nob"><xsl:value-of select="lastsubmission"/></td>
    </tr>
   </xsl:for-each>
 </tbody>

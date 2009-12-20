@@ -1533,20 +1533,28 @@ function generate_subprojects_dashboard_XML($projectid,$date)
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$Project->NightlyTime);
   
+  
+  $svnurl = make_cdash_url(htmlentities($Project->CvsUrl));
+  $homeurl = make_cdash_url(htmlentities($Project->HomeUrl));
+  $bugurl = make_cdash_url(htmlentities($Project->BugTrackerUrl));
+  $googletracker = htmlentities($Project->GoogleTracker);  
+  $docurl = make_cdash_url(htmlentities($Project->DocumentationUrl));  
+  
   // Main dashboard section 
   $xml .=
   "<dashboard>
   <datetime>".date("l, F d Y H:i:s T",time())."</datetime>
   <date>".$date."</date>
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
-  <svn>".$Project->CvsUrl."</svn>
-  <bugtracker>".$Project->BugTrackerUrl."</bugtracker>
-  <googletracker>".$Project->GoogleTracker."</googletracker> 
-  <documentation>".$Project->DocumentationUrl."</documentation>
-  <home>".$Project->HomeUrl."</home>
+  <svn>".$svnurl."</svn>
+  <bugtracker>".$bugurl."</bugtracker>
+  <googletracker>".$googletracker."</googletracker> 
+  <documentation>".$docurl."</documentation>
+  <home>".$homeurl."</home>
   <logoid>".$Project->getLogoID()."</logoid> 
   <projectid>".$projectid."</projectid> 
   <projectname>".$Project->Name."</projectname> 
+  <projectname_encoded>".urlencode($Project->Name)."</projectname_encoded> 
   <previousdate>".$previousdate."</previousdate> 
   <projectpublic>".$Project->Public."</projectpublic> 
   <nextdate>".$nextdate."</nextdate>";
