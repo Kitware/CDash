@@ -217,9 +217,30 @@ class Build
   /** Save the total tests time */  
   function SaveTotalTestsTime($time)
     {
-    $time = pdo_real_escape_string($time);
-    $query = "INSERT INTO buildtesttime (buildid, time) VALUES ('$this->Id', $time)";
+    if(!$this->Id || !is_numeric($this->Id))
+      {
+      return false;
+      }  
+      
     
+    // Check if already exists
+    $query = pdo_query("SELECT buildid FROM buildtesttime WHERE buildid=".qnum($this->Id));
+    if(!$query)
+      {
+      add_last_sql_error("SaveTotalTestsTime()");
+      return false;
+      }  
+    
+    $time = pdo_real_escape_string($time);  
+    if(pdo_num_rows($query)>0)
+      {
+      $query = "UPDATE buildtesttime SET time='".$time."' WHERE buildid=".qnum($this->Id); 
+      }
+    else
+      {
+      $query = "INSERT INTO buildtesttime (buildid, time) VALUES ('".$this->Id."','".$time."')";
+      }
+       
     if(!pdo_query($query))
       {
       add_last_sql_error("Build:SaveTotalTestsTime");
@@ -230,11 +251,11 @@ class Build
   /** Update the end time */
   function UpdateEndTime($end_time)
     {
-    if(!$this->Id)
+    if(!$this->Id || !is_numeric($this->Id))
       {
       return false;
       }
-
+    
     $query = "UPDATE build SET endtime='$end_time' WHERE id='$this->Id'";
     if(!pdo_query($query))
       {

@@ -172,7 +172,14 @@ class Test
 
     if($this->CompressedOutput)
       {
-      $output = base64_decode($this->Output);
+      if($CDASH_DB_TYPE == "pgsql")
+        { 
+        $output = pg_escape_bytea($this->Output);
+        }
+      else
+        {  
+        $output = base64_decode($this->Output);
+        }
       }
     else if($CDASH_USE_COMPRESSION)
       { 
