@@ -287,15 +287,9 @@ $xml .= "</menu>";
     $covfile_array[] = $covfile;
     }
   
-  $i=0;
   foreach($covfile_array as $covfile)
     {   
     $xml .= "<coveragefile>";   
-    // Backgroung color of the lines
-    if($i%2==0)
-      {
-      $xml .= add_XML_value("bgcolor","#b0c4de");
-      } 
     $xml .= add_XML_value("filename",$covfile["filename"]);
     $xml .= add_XML_value("fullpath",$covfile["fullpath"]);
     $xml .= add_XML_value("locuntested",$covfile["locuntested"]);
@@ -335,8 +329,7 @@ $xml .= "</menu>";
         $xml .= "</author>";
         }
       }
-    
-      
+     
     // Set the labels
     $fileid = $covfile['fileid'];
     $xml .= get_labels_xml_from_query_results(
@@ -345,13 +338,11 @@ $xml .= "</menu>";
       "label2coveragefile.coveragefileid='$fileid' AND ".
       "label2coveragefile.buildid='$buildid' ".
       "ORDER BY text ASC");
-
     $xml .= "</coveragefile>";
-    $i++;
     }
     
   $xml .= "</cdash>";
-
+  
 // Now doing the xslt transition
 generate_XSLT($xml,"viewCoverage");
 ?>
