@@ -39,6 +39,7 @@ class CompressedTestCase extends KWWebTestCase
       {
       return;
       }
+    $this->pass('Test passed');   
     }
 
   function testCheckCompressedTest()
@@ -72,7 +73,8 @@ class CompressedTestCase extends KWWebTestCase
       {
       $this->assertTrue(false,'The webpage does not match right the content exepected');
       return;
-      }  
+      }
+    $this->pass('Test passed');   
     }
      
   function testCheckUnCompressedTest()
@@ -106,7 +108,8 @@ class CompressedTestCase extends KWWebTestCase
        {
        $this->assertTrue(false,'The webpage does not match right the content exepected');
        return;
-       }   
+       } 
+     $this->pass('Test passed');    
      } 
 
    /** */
