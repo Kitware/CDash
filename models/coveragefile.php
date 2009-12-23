@@ -32,15 +32,21 @@ class CoverageFile
       {
       return;
       }
+      
+    include("cdash/config.php");
     
     // Compute the crc32 of the file
     $this->Crc32 = crc32($this->FullPath.$this->File);
     
     $this->FullPath = pdo_real_escape_string($this->FullPath);
+    if($CDASH_DB_TYPE == "pgsql")
+      {
+      $this->File = pg_escape_bytea($this->File);
+      }
     $this->File = pdo_real_escape_string($this->File);
       
     $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE crc32=".qnum($this->Crc32));
-    add_last_sql_error("CoverageFile:Update()");
+    add_last_sql_error("CoverageFile:Update");
       
     if(pdo_num_rows($coveragefile)>0) // we have the same crc32
       {
@@ -55,18 +61,18 @@ class CoverageFile
       $prevfileid = $coverage_array["fileid"];
 
       pdo_query("UPDATE coverage SET fileid=".qnum($this->Id)." WHERE buildid=".qnum($buildid)." AND fileid=".qnum($prevfileid));
-      add_last_sql_error("CoverageFile:Update()");
+      add_last_sql_error("CoverageFile:Update");
 
       $row = pdo_single_row_query("SELECT COUNT(*) FROM label2coveragefile WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
       if ($row['COUNT(*)']>0)
       {
         pdo_query("UPDATE label2coveragefile SET coveragefileid=".qnum($this->Id)." WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
-        add_last_sql_error("CoverageFile:Update()");
+        add_last_sql_error("CoverageFile:Update");
       }
 
       // Remove the file if the crc32 is NULL
       pdo_query("DELETE FROM coveragefile WHERE id=".qnum($prevfileid)." AND file IS NULL and crc32 IS NULL");
-      add_last_sql_error("CoverageFile:Update()");
+      add_last_sql_error("CoverageFile:Update");
       }
     else // The file doesn't exist in the database
       {
@@ -77,7 +83,7 @@ class CoverageFile
       $coveragefile_array = pdo_fetch_array($coveragefile);
       $this->Id = $coveragefile_array["id"];
       pdo_query("UPDATE coveragefile SET file='$this->File',crc32='$this->Crc32' WHERE id=".qnum($this->Id)); 
-      add_last_sql_error("CoverageFile:Update()");
+      add_last_sql_error("CoverageFile:Update");
       }
     return true;
     }

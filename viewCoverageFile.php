@@ -76,6 +76,11 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= "<coverage>";
   $xml .= add_XML_value("fullpath",$coveragefile_array["fullpath"]);
   $file = $coveragefile_array["file"];
+
+  if($CDASH_DB_TYPE == "pgsql")
+    {
+    $file = stream_get_contents($file);
+    }
   
   // Generating the html file
   $file_array = explode("<br>",$file);
