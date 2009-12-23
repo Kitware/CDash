@@ -223,7 +223,7 @@ if($Submit)
        
        // Create the language. PgSQL has no way to know if the language already 
        // exists
-       @pg_query("CREATE LANGUAGE plpgsql");
+       @pdo_query("CREATE LANGUAGE plpgsql");
        
        $file_content = file($sqlfile);
        $query = "";
@@ -233,7 +233,8 @@ if($Submit)
          if (($sql_line != "") && (substr($tsl, 0, 2) != "--")) 
            {
            $query .= $sql_line;
-           if(strpos("CREATE ", $sql_line) !== false) 
+           $possemicolon = strrpos($query,";");
+           if($possemicolon !== false && substr_count($query,'\'',0,$possemicolon)%2==0) 
              {
              // We need to remove only the last semicolon
              $pos = strrpos($query,";");
@@ -241,7 +242,6 @@ if($Submit)
                {
                $query = substr($query,0,$pos).substr($query,$pos+1);
                }
-               
              $result = pdo_query($query);
              if (!$result)
                { 
@@ -252,20 +252,6 @@ if($Submit)
              }
            }
          } // end foreach line
-           
-       // Run the last query
-       $pos = strrpos($query,";");
-       if($pos !== false)
-        {
-        $query = substr($query,0,$pos).substr($query,$pos+1);
-        }
-               
-       $result = pdo_query($query);
-       if (!$result)
-         { 
-         $xml .= "<db_created>0</db_created>";
-         die(pdo_error());
-         } 
        } // end pgsql functions
 
      pdo_query("INSERT INTO ".qid("user")." (id,email,password,firstname,lastname,institution,admin) VALUES (1, '".$admin_email."', '".md5($admin_password)."', 'administrator', '','Kitware Inc.', 1)");
