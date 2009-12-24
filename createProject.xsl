@@ -154,7 +154,7 @@
                     </xsl:attribute>
                       </xsl:if>
                       <a href="#fragment-3">
-                        <span>CVS/SVN</span>
+                        <span>Repository</span>
                       </a>
                     </li>
 
@@ -440,7 +440,7 @@
                         <td></td>
                         <td>
                           <div align="right">
-                            <strong>CVS/SVN ViewerURL:</strong>
+                            <strong>Repository ViewerURL:</strong>
                           </div>
                         </td>
                         <td>
@@ -458,8 +458,8 @@
                               border="0" />
                           </a>
                           <span class="help_content" id="svnViewer_help">
-                            <b>CVS/SVN Viewer URL</b>
-                            URL of the CVS/SVN viewer
+                            <b>Repository Viewer URL</b>
+                            URL of the Repository viewer
                             <ul>
                               <li> ViewCVS:
                                 public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=CMake
@@ -482,7 +482,7 @@
                         <td></td>
                         <td>
                           <div align="right">
-                            <strong>CVS/SVN Viewer Type:</strong>
+                            <strong>Repository Viewer Type:</strong>
                           </div>
                         </td>
                         <td>
@@ -506,15 +506,15 @@
                               src="images/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="svnViewerType_help">
-                            <b>CVS/SVN View Type</b>
+                            <b>Repository View Type</b>
                             <br />
                             Current CDash supports ViewCVS, Trac, Fisheye, ViewVC,
-                            WebSVN and CVSTrac as CVS/SVN viewers. Select the
+                            WebSVN and CVSTrac as repository viewers. Select the
                             appropriate viewer depending on your current
                             configuration.
                           </span>
                           <span class="help_content" id="svnRepository_help">
-                            <b>CVS/SVN repository</b>
+                            <b>Repository</b>
                             <br />
                             In order to get the daily updates, CDash should be able to
                             access the current repository. It is recommended to use
@@ -535,12 +535,48 @@
                           </span>
                         </td>
                       </tr>
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
+                            <strong>Repository Robot:</strong>
+                          </div>
+                        </td>
+                        <td>
+                         <input onchange="saveChanges();" onfocus="showHelp('cvsrobot_help');"
+                            name="robotname" type="text" id="robotname" size="15">
+                            <xsl:attribute name="value">
+                               <xsl:value-of select="cdash/project/robotname" />
+                             </xsl:attribute>
+                          </input> regex:
+                          <input onchange="saveChanges();" onfocus="showHelp('cvsrobot_help');"
+                            name="robotregex" type="text" id="robotregex" size="22">
+                            <xsl:attribute name="value">
+                               <xsl:value-of select="cdash/project/robotregex" />
+                             </xsl:attribute>
+                          </input> 
+                          <a
+                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            target="blank">
+                            <img onmouseover="showHelp('cvsrobot_help');"
+                              src="images/help.gif" border="0" />
+                          </a>
+                          <span class="help_content" id="cvsrobot_help">
+                            <b>Repository Robot</b>
+                            <br />
+                            Some repositories have a robot in charge of checking in files
+                            from another repository. For CDash to be able to assign an author to the checkin
+                            files a regular expression must be defined to allow extraction of the author name
+                            from the robot checkin.
+                          </span>
+                        </td>
+                      </tr> 
                       <xsl:for-each select="/cdash/cvsrepository">
                         <tr>
                           <td></td>
                           <td>
                             <div align="right">
-                              <strong>CVS/SVN Repository:</strong>
+                              <strong>Repository:</strong>
                             </div>
                           </td>
                           <td>

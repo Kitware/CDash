@@ -342,3 +342,15 @@ CREATE TABLE IF NOT EXISTS client_toolkitversion (
   KEY toolkitid (toolkitid),
   KEY version (`name`)
 );
+
+--
+-- Table structure for table `projectrobot`
+--
+
+CREATE TABLE IF NOT EXISTS `projectrobot` (
+  `projectid` int(11) NOT NULL,
+  `robotname` varchar(255) NOT NULL,
+  `authorregex` varchar(512) NOT NULL,
+  KEY `projectid` (`projectid`),
+  KEY `robotname` (`robotname`)
+);

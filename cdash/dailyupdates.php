@@ -723,6 +723,21 @@ function addDailyChanges($projectid)
       $revision= $commit['revision'];
       $priorrevision = $commit['priorrevision'];
       
+      // Check if we have a robot file for this build
+      $robot = pdo_query("SELECT authorregex FROM projectrobot 
+                  WHERE projectid=".qnum($projectid)." AND robotname='".$author."'");
+  
+      if(pdo_num_rows($robot)>0)
+        {
+        $robot_array = pdo_fetch_array($robot);
+        $regex = $robot_array['authorregex'];
+        preg_match($regex,$commit['comment'],$matches);
+        if(isset($matches[1]))
+          {
+          $author = addslashes($matches[1]);
+          }
+        }
+      
       pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
                    VALUES ($updateid,'$filename','$checkindate','$author','$log','$revision','$priorrevision')");
       } // end foreach commit

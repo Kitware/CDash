@@ -131,6 +131,8 @@ if($Submit)
     @$Project->EmailLowCoverage = $_POST["emailLowCoverage"];
     @$Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
     @$Project->CvsViewerType = $_POST["cvsviewertype"];
+    @$Project->RobotName = $_POST["robotname"];
+    @$Project->RobotRegex = $_POST["robotregex"];
     @$CVSRepositories = $_POST["cvsRepository"];
     @$CVSUsernames = $_POST["cvsUsername"];
     @$CVSPasswords = $_POST["cvsPassword"];
@@ -291,6 +293,8 @@ if($Update || $AddRepository)
   $Project->EmailLowCoverage = $_POST["emailLowCoverage"];
   $Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
   $Project->CvsViewerType = $_POST["cvsviewertype"]; 
+  $Project->RobotName = $_POST["robotname"]; 
+  $Project->RobotRegex = $_POST["robotregex"]; 
   $Project->TestTimeStd = $_POST["testTimeStd"];
   $Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
   $Project->TestTimeMaxStatus = $_POST["testTimeMaxStatus"];  
@@ -368,6 +372,8 @@ if($projectid>0)
   $xml .= add_XML_value("emaillowcoverage",$Project->EmailLowCoverage);
   $xml .= add_XML_value("emailtesttimingchanged",$Project->EmailTestTimingChanged);
   $xml .= add_XML_value("cvsviewertype",$Project->CvsViewerType);
+  $xml .= add_XML_value("robotname",$Project->RobotName);
+  $xml .= add_XML_value("robotregex",$Project->RobotRegex);
   $xml .= add_XML_value("testtimestd",$Project->TestTimeStd);
   $xml .= add_XML_value("testtimestdthreshold",$Project->TestTimeStdThreshold);
   $xml .= add_XML_value("testtimemaxstatus",$Project->TestTimeMaxStatus);  

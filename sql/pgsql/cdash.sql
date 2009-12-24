@@ -1124,3 +1124,18 @@ CREATE TABLE "client_toolkitversion" (
 );
 CREATE INDEX "client_toolkitversion_toolkitid" on "client_toolkitversion" ("toolkitid");
 CREATE INDEX "client_toolkitversion_version" on "client_toolkitversion" ("name");
+
+
+
+--
+-- Table structure for table projectrobot
+--
+CREATE TABLE "projectrobot" (
+  "projectid" bigint NOT NULL,
+  "robotname" character varying(255) NOT NULL,
+  "authorregex" character varying(512) NOT NULL
+);
+CREATE INDEX "projectrobot_projectid" on "projectrobot" ("projectid");
+CREATE INDEX "projectrobot_robotname" on "projectrobot" ("robotname");
+
+

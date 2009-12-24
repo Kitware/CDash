@@ -53,6 +53,8 @@ class Project
   var $DisplayLabels;
   var $AutoremoveTimeframe;
   var $AutoremoveMaxBuilds;
+  var $RobotName;
+  var $RobotRegex;
 
   function __construct()
     {
@@ -154,6 +156,8 @@ class Project
       case "TESTTIMEMAXSTATUS": $this->TestTimeMaxStatus = $value;break;
       case "EMAILMAXITEMS": $this->EmailMaxItems = $value;break;
       case "EMAILMAXCHARS": $this->EmailMaxChars = $value;break;
+      case "ROBOTNAME": $this->RobotName = $value;break;
+      case "ROBOTREGEX": $this->RobotRegex = $value;break;
       }
     }    
   
@@ -189,6 +193,7 @@ class Project
       }
     
     pdo_query("DELETE FROM dailyupdate WHERE projectid=$this->Id");  
+    pdo_query("DELETE FROM projectrobot WHERE projectid=$this->Id");  
     pdo_query("DELETE FROM project WHERE id=$this->Id");
     }
       
@@ -255,6 +260,31 @@ class Project
         add_last_sql_error("Project Update");
         return false;
         }
+        
+       if($this->RobotName != '')
+         {
+         // Check if it exists  
+         $robot = pdo_query("SELECT projectid FROM projectrobot WHERE projectid=".qnum($this->Id));
+         if(pdo_num_rows($robot)>0)
+          {
+          $query = "UPDATE projectrobot SET robotname='".$this->RobotName."',authorregex='".$this->RobotRegex.
+                   "' WHERE projectid=".qnum($this->Id);
+           if(!pdo_query($query))
+             {
+             return false;
+             }
+          } 
+         else
+           { 
+           $query = "INSERT INTO projectrobot(projectid,robotname,authorregex) 
+                    VALUES (".qnum($this->Id).",'".$this->RobotName."','".$this->RobotRegex."')";
+           if(!pdo_query($query))
+             {
+             return false;
+             }
+           } 
+         }      
+        
       }
     else // insert the project
       {      
@@ -295,7 +325,17 @@ class Project
          {
          add_last_sql_error("Project Create");
          return false;
-         }  
+         } 
+
+       if($this->RobotName != '')
+         {
+         $query = "INSERT INTO projectrobot(projectid,robotname,authorregex) 
+                    VALUES (".qnum($this->Id).",'".$this->RobotName."','".$this->RobotRegex."')";
+         if(!pdo_query($query))
+           {
+           return false;
+           } 
+         }    
        }
       
     return true;
@@ -396,6 +436,20 @@ class Project
       $this->TestTimeMaxStatus = $project_array['testtimemaxstatus'];
       $this->EmailMaxItems = $project_array['emailmaxitems'];
       $this->EmailMaxChars = $project_array['emailmaxchars'];
+      }
+
+    // Check if we have a robot
+    $robot = pdo_query("SELECT * FROM projectrobot WHERE projectid=".$this->Id);
+    if(!$robot)
+      {
+      add_last_sql_error("Project Fill");
+      return;
+      }
+    
+    if($robot_array = pdo_fetch_array($robot))
+      {
+      $this->RobotName = $robot_array['robotname'];
+      $this->RobotRegex = $robot_array['authorregex'];
       }
     }  
     

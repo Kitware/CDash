@@ -55,6 +55,24 @@ class BuildUpdateFile
     
     $this->CheckinDate = date(FMT_DATETIME,strtotime($this->CheckinDate));
     $this->Author = pdo_real_escape_string($this->Author);
+    
+    
+    // Check if we have a robot file for this build
+    $robot = pdo_query("SELECT authorregex FROM projectrobot,build 
+                WHERE projectrobot.projectid=build.projectid
+                AND build.id=".qnum($this->BuildId)." AND robotname='".$this->Author."'");
+
+    if(pdo_num_rows($robot)>0)
+      {
+      $robot_array = pdo_fetch_array($robot);
+      $regex = $robot_array['authorregex'];
+      preg_match($regex,$this->Log,$matches);
+      if(isset($matches[1]))
+        {
+        $this->Author = $matches[1];
+        }
+      }
+
     $this->Email = pdo_real_escape_string($this->Email);
     $this->Log = pdo_real_escape_string($this->Log);
     $this->Revision = pdo_real_escape_string($this->Revision);
