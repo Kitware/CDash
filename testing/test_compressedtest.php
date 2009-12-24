@@ -39,6 +39,31 @@ class CompressedTestCase extends KWWebTestCase
       {
       return;
       }
+      
+    // Test the robot submission
+    $query  = "SELECT id FROM project WHERE name = '".$name."'";
+    $result = $this->db->query($query);
+    $projectid = $result[0]['id'];
+      
+    $content = $this->connect($this->url.'/createProject.php?edit=1&projectid='.$projectid);
+    if(!$content) {$this->fail('Cannot connect to edit project page'); return;} 
+    $this->setField('robotname','itkrobot');
+    $this->setField('robotregex','^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
+    $this->clickSubmitByName('Update');
+    
+    $query  = "SELECT robotname,authorregex FROM projectrobot WHERE projectid=".$projectid;
+    $result = $this->db->query($query);
+        
+    if($result[0]['robotname'] != 'itkrobot')
+      {
+      $this->fail('Robot name not set correctly');  
+      return;
+      }
+    if($result[0]['authorregex'] != '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^')
+      {
+      $this->fail('Robot regex not set correctly');  
+      return;
+      }
     $this->pass('Test passed');   
     }
 
@@ -140,6 +165,15 @@ class CompressedTestCase extends KWWebTestCase
        $this->fail('The webpage does not match right the content exepected');
        return;
        }
+
+    // Test if the robot worked
+    $expected = '"1","jjomier","","r883 jjomier';
+    if(!$this->findString($content,$expected))
+      {
+      $this->fail('Robot did not convert the author name correctly');
+      return;
+      }
+       
     $this->pass('Test passed'); 
     }   
      

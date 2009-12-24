@@ -240,7 +240,7 @@ class KWWebTestCase extends WebTestCase {
     $this->setField('description',$description);
     $this->setField('cvsURL',$svnviewerurl);
     $this->setField('public','1');
-    $this->clickSubmitByName('Submit');
+    $this->clickSubmitByName('Submit');  
     return $this->clickLink('BACK');
     }
 }

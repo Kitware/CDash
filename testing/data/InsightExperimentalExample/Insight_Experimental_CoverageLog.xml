@@ -21,7 +21,31 @@
   ProcessorClockFrequency="2992.84"
 >
 <CoverageLog>
-  <StartDateTime>Feb 23 03:10 EST</StartDateTime>  <StartTime>1235376645</StartTime>
+  <StartDateTime>Feb 23 03:10 EST</StartDateTime>  
+  <StartTime>1235376645</StartTime>
+  <File Name="itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h" FullPath="./Source/itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h">
+   <Report>
+    <Line Number="0" Count="-1">/*=========================================================================</Line>
+    <Line Number="1" Count="-1"></Line>
+    <Line Number="2" Count="-1">  Program:   Insight Segmentation &amp; Registration Toolkit</Line>
+    <Line Number="3" Count="-1">  Module:    $RCSfile: itkNormalVectorDiffusionFunction.txx,v $</Line>
+    <Line Number="4" Count="-1">  Language:  C++</Line>
+    <Line Number="5" Count="-1">  Date:      $Date: 2008-10-16 19:33:45 $</Line>
+    <Line Number="6" Count="-1">  Version:   $Revision: 1.9 $</Line>
+    <Line Number="7" Count="-1"></Line>
+    <Line Number="8" Count="-1">  Copyright (c) Insight Software Consortium. All rights reserved.</Line>
+    <Line Number="9" Count="-1">  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.</Line>
+    <Line Number="10" Count="-1"></Line>
+    <Line Number="11" Count="-1">     This software is distributed WITHOUT ANY WARRANTY; without even </Line>
+    <Line Number="12" Count="-1">     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR </Line>
+    <Line Number="13" Count="-1">     PURPOSE.  See the above copyright notices for more information.</Line>
+    <Line Number="14" Count="-1"></Line>
+    <Line Number="15" Count="-1">     =========================================================================*/</Line>
+    <Line Number="16" Count="1">#ifndef __itkNormalVectorDiffusionFunction_txx</Line>
+    <Line Number="17" Count="2">#define __itkNormalVectorDiffusionFunction_txx</Line>
+    </Report>
+  </File>
+  
   <EndDateTime>Feb 23 03:10 EST</EndDateTime>
   <EndTime>1235376645</EndTime>
 </CoverageLog>

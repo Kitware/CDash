@@ -118,6 +118,18 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
+
+  function testSubmissionInsightCoverage()
+    {
+    $url  = $this->url.'/submit.php?project=InsightExample';
+    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+    $file = "$rep/Insight_Experimental_Coverage.xml";
+    if(!$this->submission('InsightExample',$file))
+      {
+      return;
+      }
+    $this->assertTrue(true,"Submission of $file has succeeded");
+    }
     
   function testSubmissionInsightCoverageLog()
     {
@@ -128,18 +140,18 @@ class ProjectWebPageTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->assertTrue(true,"Submission of $file has succeeded");
-    }
-  
-  function testSubmissionInsightCoverage()
-    {
-    $url  = $this->url.'/submit.php?project=InsightExample';
-    $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
-    $file = "$rep/Insight_Experimental_Coverage.xml";
-    if(!$this->submission('InsightExample',$file))
-      {
-      return;
-      }
+
+    // Testing if it actually worked
+    $content = $this->connect($this->url.'/index.php?project=InsightExample&date=20090223');
+    $content = $this->analyse($this->clickLink('76.43%'));
+    $content = $this->analyse($this->clickLink('./Source/itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h')); 
+    $expected = '<span class="lineCov">    1 | #ifndef __itkNormalVectorDiffusionFunction_txx</span><br><span class="lineNum">   18</span><span class="lineCov">    2 | #define __itkNormalVectorDiffusionFunction_txx</span><br>';
+      
+    if(!$this->findString($content,$expected))
+       {
+       $this->fail('Coverage log is wrong');
+       return;
+       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
   

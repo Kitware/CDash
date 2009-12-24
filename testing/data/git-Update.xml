@@ -52,9 +52,10 @@
       <Directory>subdir</Directory>
       <FullName>subdir/bar.txt</FullName>
       <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
-      <Author>Test Author</Author>
-      <Log>Changed content
-</Log>
+      <Author>itkrobot</Author>
+      <Log>r883 jjomier | 2009-11-16T16:33:10.766198Z
+      BUG: 9320: MetaImageIO itkLargeImageWriterReadTests fails on apple
+      </Log>
       <Revision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</Revision>
       <PriorRevision>0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4</PriorRevision>
     </Updated>
