@@ -1,7 +1,7 @@
  $(function()
   {
   params=extractUrlParams();
-  $('#wizard').tabs(parseInt(params['fragment']),{  fxFade: true, fxSpeed: 'fast' });
+  $('#wizard').tabs(parseInt(params['fragment']),{  fxFade: false, fxSpeed: 'fast' });
   });
 
 
