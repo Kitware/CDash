@@ -1138,4 +1138,14 @@ CREATE TABLE "projectrobot" (
 CREATE INDEX "projectrobot_projectid" on "projectrobot" ("projectid");
 CREATE INDEX "projectrobot_robotname" on "projectrobot" ("robotname");
 
+--
+-- Table structure for table `filesum`
+--
 
+CREATE TABLE "filesum" (
+  "id" serial NOT NULL,
+  "md5sum" character varying(32) NOT NULL,
+  "contents" bytea,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "filesum_md5sum" on "filesum" ("md5sum");

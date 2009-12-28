@@ -1218,6 +1218,18 @@ CREATE TABLE IF NOT EXISTS `projectrobot` (
 );
 
 --
+-- Table structure for table `filesum`
+--
+
+CREATE TABLE IF NOT EXISTS `filesum` (
+  `id` int(11) NOT NULL auto_increment,
+  `md5sum` varchar(32) NOT NULL,
+  `contents` longblob,
+  PRIMARY KEY `id` (`id`),
+  KEY `md5sum` (`md5sum`)
+);
+
+--
 -- Change the table maximum size to be more than 4GB
 -- 
 alter table test max_rows = 200000000000 avg_row_length = 3458;

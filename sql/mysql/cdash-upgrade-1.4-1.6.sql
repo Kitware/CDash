@@ -354,3 +354,14 @@ CREATE TABLE IF NOT EXISTS `projectrobot` (
   KEY `projectid` (`projectid`),
   KEY `robotname` (`robotname`)
 );
+
+--
+-- Table structure for table `filesum`
+--
+CREATE TABLE IF NOT EXISTS `filesum` (
+  `id` int(11) NOT NULL auto_increment,
+  `md5sum` varchar(32) NOT NULL,
+  `contents` longblob,
+  PRIMARY KEY `id` (`id`),
+  KEY `md5sum` (`md5sum`)
+);
