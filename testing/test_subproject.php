@@ -36,7 +36,6 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->assertText('SubProjectExample Dashboard');
     $this->checkLog($this->logfilename);
     }
     
@@ -48,7 +47,6 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->assertTrue(true,"Submission of $file has succeeded");
     $this->checkLog($this->logfilename);
     }
     
@@ -61,7 +59,6 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->assertTrue(true,"Submission of $file has succeeded");
     $this->compareLog($this->logfilename,$rep."/cdash_1.log");
     }
   
@@ -74,7 +71,6 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->assertTrue(true,"Submission of $file has succeeded");
     $this->compareLog($this->logfilename,$rep."/cdash_2.log");
     }
     

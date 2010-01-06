@@ -373,7 +373,8 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     {
     $information .= "\n\n*Warnings*";
     
-    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $maxitems");
+    $error_query = pdo_query("SELECT sourcefile,text,sourceline,postcontext FROM builderror 
+                              WHERE buildid=".qnum($buildid)." AND type=1 ORDER BY id LIMIT $maxitems");
     add_last_sql_error("sendmail");
     
     if(pdo_num_rows($error_query) == $maxitems)
@@ -398,7 +399,8 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
       }
     
     // New error format
-    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=1 LIMIT $maxitems");
+    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid).
+                             " AND type=1 ORDER BY id LIMIT $maxitems");
     add_last_sql_error("sendmail");
     while($error_array = pdo_fetch_array($error_query))
       {
