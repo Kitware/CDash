@@ -1067,13 +1067,12 @@ class Project
     
   /** Get the labels ids for a given project */
   function GetLabels($days)
-    {
-    $today = time();
-    $today -= 3600*24*$days;
+    { 
+    $todaytime = time();
+    $todaytime -= 3600*24*$days;
+    $today = date(FMT_DATETIMESTD,$todaytime);
     
     $labelids = array();
-    
-    
     $labels = pdo_query("SELECT label.id as labelid FROM label WHERE 
                          label.id IN (SELECT labelid AS id FROM label2build,build 
                             WHERE label2build.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
