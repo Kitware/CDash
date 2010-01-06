@@ -3,7 +3,7 @@
 [TESTING](TESTING: EMAILBODY): Congratulations, a submission to CDash for the project EmailProjectExample has fixed build warnings.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/CDash/buildSummary.php?buildid=5
+Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=5
 
 Project: EmailProjectExample
 Site: Dash20.kitware
