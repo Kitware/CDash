@@ -48,7 +48,6 @@ class EmailTestCase extends KWWebTestCase
       {
       return;  
       }
-    $this->pass("Passed");
     }
   
   function testRegisterUser()
@@ -84,7 +83,6 @@ class EmailTestCase extends KWWebTestCase
       {
       return;  
       }
-    $this->pass("Passed");
     }
 
   function testSubmissionFirstBuild()
