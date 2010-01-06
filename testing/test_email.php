@@ -45,7 +45,11 @@ class EmailTestCase extends KWWebTestCase
       return;
       }
     $this->assertText('EmailProjectExample Dashboard');
-    $this->checkLog($this->logfilename);
+    if(!$this->checkLog($this->logfilename))
+      {
+      return;  
+      }
+    $this->pass("Passed");
     }
   
   function testRegisterUser()
@@ -77,7 +81,11 @@ class EmailTestCase extends KWWebTestCase
     $this->setField('cvslogin','user1kw');
     $this->setField('emailsuccess','1');
     $this->clickSubmitByName('subscribe');
-    $this->checkLog($this->logfilename);
+    if(!$this->checkLog($this->logfilename))
+      {
+      return;  
+      }
+    $this->pass("Passed");
     }
 
   function testSubmissionFirstBuild()
