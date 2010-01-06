@@ -99,8 +99,11 @@ class EmailTestCase extends KWWebTestCase
       {
       return;
       }
+    if(!$this->checkLog($this->logfilename))
+      {
+      return; 
+      }
     $this->pass("Submission of $file has succeeded");  
-    $this->checkLog($this->logfilename);
     }  
     
   function testSubmissionEmailBuild()
@@ -119,7 +122,7 @@ class EmailTestCase extends KWWebTestCase
       return;
       }  
       
-    //if(!$this->compareLog($this->logfilename,$rep."/cdash_1.log")) {return;};
+    if(!$this->compareLog($this->logfilename,$rep."/cdash_1.log")) {return;}
     $this->pass("Passed");
     }
   
@@ -132,7 +135,7 @@ class EmailTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->compareLog($this->logfilename,$rep."/cdash_2.log");
+    if(!$this->compareLog($this->logfilename,$rep."/cdash_2.log")) {return;}
     $this->pass("Passed");
     }  
 }
