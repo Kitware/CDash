@@ -37,8 +37,7 @@ class EmailTestCase extends KWWebTestCase
     $this->setField('emailBrokenSubmission','1');
     $this->setField('emailRedundantFailures','0');  
     $this->clickSubmitByName('Submit');
-    return $this->clickLink('BACK');
-    
+        
     $content = $this->connect($this->url.'/index.php?project=EmailProjectExample');
     if(!$content)
       {
