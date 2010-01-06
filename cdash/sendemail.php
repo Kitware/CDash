@@ -165,7 +165,7 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
       // If the builderroddiff positive and configureerrordiff and testdiff positive are zero we don't send an email
       // we don't send any emails
       if($error_differences['buildwarningspositive']<=0
-         && $error_differences['buildwerrorspositive']<=0
+         && $error_differences['builderrorspositive']<=0
          && $error_differences['configurewarnings']<=0
          && $error_differences['configureerrors']<=0
          && $error_differences['testfailedpositive']<=0
@@ -177,7 +177,7 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
       } // end checking previous errors
      
     if($error_differences['buildwarningsnegative']>0
-       || $error_differences['buildwerrorsnegative']>0
+       || $error_differences['builderrorsnegative']>0
        || $error_differences['configurewarnings']<0
        || $error_differences['configureerrors']<0
        || $error_differences['testfailednegative']>0

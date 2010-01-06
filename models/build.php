@@ -709,6 +709,22 @@ class Build
         $diff['testnotrunnegative'] = $query_array['testerrorsnegative'];
         }      
       }
+
+    // If some of the errors are not set default to zero
+    $variables = array('builderrorspositive','builderrorsnegative',
+                       'buildwarningspositive','buildwarningsnegative',
+                       'configureerrors','configurewarnings',
+                       'testpassedpositive','testpassednegative',
+                       'testfailedpositive','testfailednegative',
+                       'testnotrunpositive','testnotrunnegative');
+    foreach($variables as $var)
+      {
+      if(!isset($diff[$var]))
+        {
+        $diff[$var] = 0;  
+        }    
+      }
+
     return $diff;  
     }
     
