@@ -21,6 +21,7 @@ class SubProjectTestCase extends KWWebTestCase
     $this->db->setUser($db['login']);
     $this->db->setPassword($db['pwd']);
     $this->logfilename = $cdashpath."/backup/cdash.log";
+    $this->deleteLog($this->logfilename);
     }
    
   function testAccessToWebPageProjectTest()

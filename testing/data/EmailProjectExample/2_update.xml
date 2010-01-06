@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.6-patch 0">
+  <Site>Dash20.kitware</Site>
+  <BuildName>Win32-MSVC2009</BuildName>
+  <BuildStamp>20090224-0100-Nightly</BuildStamp>
+  <StartDateTime>Feb 24 05:01 Eastern Standard Time</StartDateTime>
+  <StartTime>1235383324</StartTime>
+  <UpdateCommand>"F:/Program Files/TortoiseCVS/cvs.exe" -z3 update -d -A -P -D "2009-02-23 01:00:00 UTC"</UpdateCommand>
+  <UpdateType>CVS</UpdateType>
+  <Directory>
+    <Name></Name>
+    <Updated>
+      <File>bar.txt</File>
+      <Directory></Directory>
+      <FullName>bar.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>user1kw</Author>
+      <Log>Changed content</Log>
+      <Revision>3</Revision>
+      <PriorRevision>2</PriorRevision>
+    </Updated>
+  </Directory>  
+  <EndDateTime>Feb 24 05:02 Eastern Standard Time</EndDateTime>
+  <EndTime>1235383332</EndTime>
+  <ElapsedMinutes>0.1</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>

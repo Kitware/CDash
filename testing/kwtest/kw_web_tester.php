@@ -44,7 +44,7 @@ class KWWebTestCase extends WebTestCase {
   
   /** Delete the log file */
   function deleteLog($filename)
-    {
+    {  
     if(file_exists($filename))
       {
       unlink($filename);
@@ -71,12 +71,12 @@ class KWWebTestCase extends WebTestCase {
   /** Compare the current log with a file */
   function compareLog($logfilename,$template)
     {
-    $log = $this->checkLog($logfilename);
+    $log = file_get_contents($logfilename);
+    $log = str_replace("\r",'',$log);
+    
     $templateLog = file_get_contents($template);
-    
-    $templateLog = str_replace($templateLog,'\r','');
-    $log = str_replace($log,'\r','');
-    
+    $templateLog = str_replace("\r",'',$templateLog);
+
     // Compare char by char
     $il=0;
     $it=0;
@@ -90,11 +90,11 @@ class KWWebTestCase extends WebTestCase {
         // We skip the line
         if($pos3 == $it)
           {
-          while(($it < strlen($templateLog)) && ($templateLog[$it] != '\n'))
+          while(($it < strlen($templateLog)) && ($templateLog[$it] != "\n"))
             {
             $it++;
             }
-          while(($il < strlen($log)) && ($log[$il] != '\n'))
+          while(($il < strlen($log)) && ($log[$il] != "\n"))
             {
             $il++;
             }
@@ -218,7 +218,8 @@ class KWWebTestCase extends WebTestCase {
     }
     
   function uploadfile($url,$filename)
-    {    
+    {
+    set_time_limit(0); // sometimes this is slow when access the local webserver from external URL
     $fp = fopen($filename, 'r');
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
