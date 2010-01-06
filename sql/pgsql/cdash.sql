@@ -447,10 +447,14 @@ CREATE TABLE "user2project" (
   "cvslogin" character varying(50) DEFAULT '' NOT NULL,
   "emailtype" smallint DEFAULT '0' NOT NULL,
   "emailcategory" smallint DEFAULT '62' NOT NULL,
+  "emailsuccess" smallint DEFAULT '0' NOT NULL,
+  "emailmissingsites" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("userid", "projectid")
 );
 CREATE INDEX "cvslogin" on "user2project" ("cvslogin");
 CREATE INDEX "emailtype" on "user2project" ("emailtype");
+CREATE INDEX "emailsuccess" on "user2project" ("emailsuccess");
+CREATE INDEX "emailmissingsites" on "user2project" ("emailmissingsites");
 
 --
 -- Table: buildnote

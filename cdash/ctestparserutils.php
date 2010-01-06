@@ -212,13 +212,14 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
     }
       
   // Look at the difference positive and negative test errors
-  $sqlquery = "UPDATE build2test SET newstatus=1 WHERE buildid=".$buildid." AND testid=
+  $sqlquery = "UPDATE build2test SET newstatus=1 WHERE buildid=".$buildid." AND testid IN
                (SELECT testid FROM (SELECT test.id AS testid,name FROM build2test,test WHERE build2test.buildid=".$buildid."
                AND build2test.testid=test.id AND build2test.status=".$status.$sql.") AS testa 
                LEFT JOIN (SELECT name as name2 FROM build2test,test WHERE build2test.buildid=".$previousbuildid." 
                AND build2test.testid=test.id AND build2test.status=".$status.$sql.")
                AS testb ON testa.name=testb.name2 WHERE testb.name2 IS NULL)";
   pdo_query($sqlquery);
+  add_last_sql_error("compute_test_difference");
   
   // Maybe we can get that from the query (don't know).
   $positives = pdo_query("SELECT count(*) FROM build2test WHERE buildid=".$buildid." AND newstatus=1 AND status=".$status.$sql);

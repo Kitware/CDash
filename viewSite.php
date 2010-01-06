@@ -165,14 +165,17 @@ if($projectid && $project_array['showipaddresses'])
 $xml .= "</site>";
 
 // List the claimers of the site
-
-$siteclaimer = pdo_query("SELECT firstname,lastname FROM ".qid("user").",site2user 
+$siteclaimer = pdo_query("SELECT firstname,lastname,email FROM ".qid("user").",site2user 
                           WHERE ".qid("user").".id=site2user.userid AND site2user.siteid='$siteid' ORDER BY firstname");
 while($siteclaimer_array = pdo_fetch_array($siteclaimer))
    {
    $xml .= "<claimer>";
    $xml .= add_XML_value("firstname",$siteclaimer_array["firstname"]);
    $xml .= add_XML_value("lastname",$siteclaimer_array["lastname"]);
+   if(isset($_SESSION['cdash']))
+     {
+     $xml .= add_XML_value("email",$siteclaimer_array["email"]);
+     }
    $xml .= "</claimer>";
    }
 

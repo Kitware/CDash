@@ -36,7 +36,7 @@ class BuildHandler extends AbstractHandler
     $this->Site = new Site();
     $this->Append = false;
     }
-
+  
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
@@ -105,7 +105,6 @@ class BuildHandler extends AbstractHandler
       }
     }
 
-
   public function endElement($parser, $name)
     {
     parent::endElement($parser, $name);
@@ -124,6 +123,7 @@ class BuildHandler extends AbstractHandler
       $this->Build->Append = $this->Append;
 
       add_build($this->Build);
+      $this->Build->ComputeDifferences();
       }
     else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE') 
       {
@@ -142,7 +142,6 @@ class BuildHandler extends AbstractHandler
         }
       }
     }
-
 
   public function text($parser, $data)
     {

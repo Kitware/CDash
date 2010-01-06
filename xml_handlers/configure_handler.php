@@ -75,8 +75,7 @@ class ConfigureHandler extends AbstractHandler
     parent::endElement($parser, $name);
 
     if($name=='CONFIGURE')
-      {
-        
+      { 
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
       
@@ -106,8 +105,8 @@ class ConfigureHandler extends AbstractHandler
         }
       $this->Configure->Insert();
       // Insert errors from the log file 
-      // Note: The diff should also be computed here at some point
       $this->Configure->ComputeErrors();
+      $this->Build->ComputeConfigureDifferences();
       }
     else if($name == 'LABEL')
       {

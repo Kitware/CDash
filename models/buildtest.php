@@ -91,25 +91,36 @@ class BuildTest
       echo "BuildTest::GetNumberOfFailures(): BuildId not set";
       return false;    
       }
-    // Find if the build has any test failings
-    if($checktesttiming)
-      {
-      $sql = "SELECT count(testid) FROM build2test WHERE buildid=".qnum($this->BuildId)." AND (status='failed' OR status='notrun' OR timestatus>".qnum($testtimemaxstatus).")";
-      }
-    else
-      {
-      $sql = "SELECT count(testid) FROM build2test WHERE buildid=".qnum($this->BuildId)." AND (status='failed' OR status='notrun')";
-      }  
-    
+      
+    $sql = "SELECT testfailed,testnotrun,testtimestatusfailed FROM build WHERE id=".qnum($this->BuildId);
     $query = pdo_query($sql);
     if(!$query)
       {
       add_last_sql_error("BuildTest GetNumberOfFailures");
       return false;
       }  
-      
+
     $nfail_array = pdo_fetch_array($query);
-    return $nfail_array[0];
+    
+    $sumerrors = 0;
+    if($nfail_array['testfailed']>0)
+      {
+      $sumerrors += $nfail_array['testfailed'];
+      }
+    if($nfail_array['testnotrun']>0)
+      {
+      $sumerrors += $nfail_array['testnotrun'];
+      }
+        
+    // Find if the build has any test failings
+    if($checktesttiming)
+      {
+      if($nfail_array['testtimestatusfailed']>0)
+        {
+        $sumerrors +=  $nfail_array['testtimestatusfailed'];
+        }
+      }
+    return $sumerrors;
     } // end GetNumberOfFailures()   
 }
 ?>

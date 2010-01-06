@@ -16,27 +16,45 @@
 
 =========================================================================*/
 
-/** */
-function checkEmailPreferences($emailcategory,$errors)
+/** Check the email preferences for errors */
+function checkEmailPreferences($emailcategory,$errors,$fixes=false)
 {
   include_once("cdash/common.php");
-  if($errors['update_errors']>0 && check_email_category("update",$emailcategory))
+  
+  if($fixes)
+    {
+    $updates=$errors['fixes']['update_fixes'];
+    $configures=$errors['fixes']['configure_fixes'];
+    $builderrors=$errors['fixes']['builderror_fixes'];
+    $buildwarnings=$errors['fixes']['buildwarning_fixes'];
+    $tests=$errors['fixes']['test_fixes'];  
+    }
+  else
+    {
+    $updates=$errors['update_errors'];
+    $configures=$errors['configure_errors'];
+    $builderrors=$errors['build_errors'];
+    $buildwarnings=$errors['build_warnings'];
+    $tests=$errors['test_errors'];
+    }
+  
+  if($updates>0 && check_email_category("update",$emailcategory))
     {
     return true;
     }
-  if($errors['configure_errors']>0 && check_email_category("configure",$emailcategory))
+  if($configures>0 && check_email_category("configure",$emailcategory))
     {
     return true;
     }
-  if($errors['build_warnings']>0 && check_email_category("warning",$emailcategory))
+  if($buildwarnings>0 && check_email_category("warning",$emailcategory))
     {
     return true;
     }
-  if($errors['build_errors']>0 && check_email_category("error",$emailcategory))
+  if($builderrors>0 && check_email_category("error",$emailcategory))
     {
     return true;
     }
-  if($errors['test_errors']>0 && check_email_category("test",$emailcategory))
+  if($tests>0 && check_email_category("test",$emailcategory))
     {
     return true;
     }
@@ -93,7 +111,7 @@ function checkEmailLabel($projectid, $userid, $buildid, $emailcategory=62)
 } // end checkEmailLabel
 
 /** Check for errors for a given build. Return false if no errors */
-function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus,$checkpreviousbuild)
+function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus,$checkpreviouserrors)
 {
   // Includes
   require_once("models/buildupdate.php");  
@@ -102,9 +120,11 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   require_once("models/buildtest.php");
   
   $errors = array();  
+  $errors['errors'] = true;
+  $errors['hasfixes'] = false;
 
   // Update errors
-  $BuildUpdate = new BuildUpdate ();
+  $BuildUpdate = new BuildUpdate();
   $BuildUpdate->BuildId = $buildid;
   $errors['update_errors'] = $BuildUpdate->GetNumberOfErrors();
 
@@ -116,6 +136,7 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   // Build errors and warnings
   $Build = new Build();
   $Build->Id = $buildid;
+  $Build->FillFromId($buildid);
   $errors['build_errors'] = $Build->GetNumberOfErrors();
   $errors['build_warnings'] = $Build->GetNumberOfWarnings();
 
@@ -125,57 +146,57 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   $errors['test_errors'] = $BuildTest->GetNumberOfFailures($checktesttimeingchanged,$testtimemaxstatus);
     
   // Green build we return
-  if(   $errors['update_errors'] == 0 
+  if( $errors['update_errors'] == 0 
      && $errors['configure_errors'] == 0
      && $errors['build_errors'] == 0
      && $errors['build_warnings'] ==0 
      && $errors['test_errors'] ==0) 
     {
-    return false;
+    $errors['errors'] = false;
     }
   
-  // look for the previous build only if necessary
-  if($checkpreviousbuild)
+  // look for the previous build
+  $previousbuildid = $Build->GetPreviousBuildId();
+  if($previousbuildid > 0)
     {
-    $Build->FillFromId($buildid);
-    $previousbuildid = $Build->GetPreviousBuildId();
-    
-    if($previousbuildid > 0)
-      {
-      // Configure errors    
-      $PreviousBuildConfigure = new BuildConfigure();
-      $PreviousBuildConfigure->BuildId = $previousbuildid;
-      $npreviousconfigures = $PreviousBuildConfigure->GetNumberOfErrors();
-      
-      // Build errors and warnings
-      $PreviousBuild = new Build();
-      $PreviousBuild->BuildId = $previousbuildid;
-      $npreviousbuilderrors = $PreviousBuild->GetNumberOfErrors();
-      $npreviousbuildwarnings = $PreviousBuild->GetNumberOfWarnings();
-    
-      // Test errors
-      $PreviousBuildTest = new BuildTest();
-      $PreviousBuildTest->BuildId = $previousbuildid;
-      $npreviousfailingtests = $PreviousBuildTest->GetNumberOfFailures($checktesttimeingchanged,$testtimemaxstatus);
-
-      // If we have exactly the same number of (or less) test failing, errors and warnings has the previous build
+    $error_differences = $Build->GetErrorDifferences($buildid);
+    if($errors['errors'] && $checkpreviouserrors)
+      { 
+      // If the builderroddiff positive and configureerrordiff and testdiff positive are zero we don't send an email
       // we don't send any emails
-      if($npreviousconfigures>=$errors['configure_errors']
-         && $npreviousbuilderrors==$errors['build_errors']
-         && $npreviousbuildwarnings>=$errors['build_warnings']
-         && $npreviousfailingtests>=$errors['test_errors']
+      if($error_differences['buildwarningspositive']<=0
+         && $error_differences['buildwerrorspositive']<=0
+         && $error_differences['configurewarnings']<=0
+         && $error_differences['configureerrors']<=0
+         && $error_differences['testfailedpositive']<=0
+         && $error_differences['testnotrunpositive']<=0
         ) 
         {
-        return false;
+        $errors['errors'] = false;
         }
+      } // end checking previous errors
+     
+    if($error_differences['buildwarningsnegative']>0
+       || $error_differences['buildwerrorsnegative']>0
+       || $error_differences['configurewarnings']<0
+       || $error_differences['configureerrors']<0
+       || $error_differences['testfailednegative']>0
+       || $error_differences['testnotrunnegative']>0
+       ) 
+      {
+      $errors['hasfixes'] = true;
+      $errors['fixes']['configure_fixes'] = $error_differences['configurewarnings']+$error_differences['configureerrors'];
+      $errors['fixes']['builderror_fixes'] =  $error_differences['buildwerrorsnegative'];
+      $errors['fixes']['buildwarning_fixes'] = $error_differences['buildwarningsnegative'];
+      $errors['fixes']['test_fixes'] = $error_differences['testfailednegative']+$error_differences['testnotrunnegative'];   
       }
-    } // end emailredundantfailures
+    } // end has previous build
 
   return $errors;
 }
 
 /** Return the list of user id who should get emails */
-function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
+function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=false)
 {
   require_once("models/userproject.php");
     
@@ -202,9 +223,9 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
       add_log("User: ".$author." is not registered (or has no email) for the project ".$projectid,"SendEmail",LOG_WARNING);
       continue;
       }
-       
+          
     // If the user doesn't want to receive email
-    if(!checkEmailPreferences($UserProject->EmailCategory,$errors))
+    if(!checkEmailPreferences($UserProject->EmailCategory,$errors,$fixes))
       {
       continue;
       }
@@ -221,6 +242,12 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
       }
     } 
 
+  // If it's fixes only concerned users should get the email
+  if($fixes)
+    {
+    return $userids;  
+    }  
+    
   // Select the users who want to receive all emails
   $user = pdo_query("SELECT emailtype,emailcategory,userid FROM user2project WHERE user2project.projectid=".qnum($projectid)." AND user2project.emailtype>1");
   add_last_sql_error("sendmail");
@@ -257,6 +284,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype)
   return $userids;
     
 } // end lookup_emails_to_send
+
 
 /** Return a summary for a category of error */
 function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testtimemaxstatus,$emailtesttimingchanged)
@@ -687,6 +715,11 @@ function set_email_sent($userid,$buildid,$emailtext)
       case 'build_warnings': $category=3; break;
       case 'build_errors': $category=4; break;
       case 'test_errors': $category=5; break;
+      case 'update_fixes': $category=6; break;
+      case 'configure_fixes': $category=7; break;
+      case 'buildwarning_fixes': $category=8; break;
+      case 'builderror_fixes': $category=9; break;
+      case 'test_fixes': $category=10; break;
       }
         
    if($category>0)
@@ -709,6 +742,11 @@ function check_email_sent($userid,$buildid,$errorkey)
     case 'build_warnings': $category=3; break;
     case 'build_errors': $category=4; break;
     case 'test_errors': $category=5; break;
+    case 'update_fixes': $category=6; break;
+    case 'configure_fixes': $category=7; break;
+    case 'buildwarning_fixes': $category=8; break;
+    case 'builderror_fixes': $category=9; break;
+    case 'test_fixes': $category=10; break;
     }
   
   if($category == 0)
@@ -726,6 +764,124 @@ function check_email_sent($userid,$buildid,$errorkey)
   return false;
 }
 
+/** Send the email to the user when he fixed something */
+function send_email_fix_to_user($userid,$emailtext,$Build,$Project)
+{
+  include("cdash/config.php");
+  include_once("cdash/common.php");  
+  require_once("models/site.php");
+  require_once("models/user.php");
+
+  $serverURI = get_server_URI();
+  
+  $messagePlainText = "Congratulations, a submission to CDash for the project ".$Project->Name." has ";
+  $titleerrors = "(";
+    
+  $i=0;
+  foreach($emailtext['category'] as $key=>$value)
+    {
+    if($i>0)
+       {
+       $messagePlainText .= " and ";
+       $titleerrors.=", ";
+       }
+    
+    switch($key)
+      {
+      case 'update_fixes': $messagePlainText .= "fixed update errors";$titleerrors.="u=".$value; break;
+      case 'configure_fixes': $messagePlainText .= "fixed configure errors";$titleerrors.="c=".$value; break;
+      case 'buildwarning_fixes': $messagePlainText .= "fixed build warnings";$titleerrors.="w=".$value; break;
+      case 'builderror_fixes': $messagePlainText .= "fixed build errors";$titleerrors.="b=".$value; break;
+      case 'test_fixes': $messagePlainText .= "fixed failing tests";$titleerrors.="t=".$value; break;
+      }
+    
+    $i++;
+    }  
+    
+  // Title
+  $titleerrors .= "):";
+  $title = "PASSED ".$titleerrors." ".$Project->Name;
+    
+  if($Build->GetSubProjectName())
+    {
+    $title .= "/".$Build->GetSubProjectName();
+    }
+  $title .= " - ".$Build->Name." - ".$Build->Type;
+         
+  $messagePlainText .= ".\n";  
+  $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
+  $messagePlainText .= "or you are listed in the default contact list.\n\n";  
+  $messagePlainText .= "Details on the submission can be found at ";
+
+  $messagePlainText .= $serverURI;
+  $messagePlainText .= "/buildSummary.php?buildid=".$Build->Id;
+  $messagePlainText .= "\n\n";
+    
+  $messagePlainText .= "Project: ".$Project->Name."\n";
+  if($Build->GetSubProjectName())
+    {
+    $messagePlainText .= "SubProject: ".$Build->GetSubProjectName()."\n";
+    }
+  
+  $Site  = new Site();
+  $Site->Id = $Build->SiteId;
+
+  $messagePlainText .= "Site: ".$Site->GetName()."\n";
+  $messagePlainText .= "Build Name: ".$Build->Name."\n";
+  $messagePlainText .= "Build Time: ".date(FMT_DATETIMETZ,strtotime($Build->StartTime." UTC"))."\n";
+  $messagePlainText .= "Type: ".$Build->Type."\n";
+  
+  foreach($emailtext['category'] as $key=>$value)
+    {
+    switch($key)
+      {
+      case 'update_fixes': $messagePlainText .= "Update error fixed: ".$value."\n"; break;
+      case 'configure_fixes': $messagePlainText .= "Configure error fixed: ".$value."\n"; break;
+      case 'buildwarning_fixes': $messagePlainText .= "Warning fixed: ".$value."\n"; break;
+      case 'builderror_fixes': $messagePlainText .= "Error fixed: ".$value."\n"; break;
+      case 'test_fixes': $messagePlainText .= "Tests fixed: ".$value."\n"; break;
+      }
+    }
+
+  $serverName = $CDASH_SERVER_NAME;
+  if(strlen($serverName) == 0)
+    {
+    $serverName = $_SERVER['SERVER_NAME'];
+    }
+  $messagePlainText .= "\n-CDash on ".$serverName."\n";
+  
+  // Find the email
+  $User = new User();
+  $User->Id = $userid;
+  $email = $User->GetEmail();
+
+  // If this is the testing
+  if($CDASH_TESTING_MODE)
+    {
+    add_log($email,"TESTING: EMAIL",LOG_TESTING);
+    add_log($title,"TESTING: EMAILTITLE",LOG_TESTING);
+    add_log($messagePlainText,"TESTING: EMAILBODY",LOG_TESTING);
+    // Record that we have send the email
+    set_email_sent($userid,$Build->Id,$emailtext);
+    }
+  else
+    {
+    // Send the email
+    if(mail("$email", $title, $messagePlainText,
+     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+      {
+      add_log("email sent to: ".$email." with errors ".$titleerrors." for build ".$Build->Id,"sendemail ".$Project->Name,LOG_INFO);
+    
+      // Record that we have send the email
+      set_email_sent($userid,$Build->Id,$emailtext);
+      }
+    else
+      {
+      add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
+      }
+    } // end if testing
+} // end send_email_fix_to_user
+
 /** Send the email to a user */
 function send_email_to_user($userid,$emailtext,$Build,$Project)
 {
@@ -738,10 +894,19 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   
   $messagePlainText = "A submission to CDash for the project ".$Project->Name." has ";
   $titleerrors = "(";
-    
+
   $i=0;
   foreach($emailtext['category'] as $key=>$value)
     {
+    if($key != 'update_errors'
+       && $key != 'configure_errors'
+       && $key != 'build_warnings'
+       && $key != 'build_errors'
+       && $key != 'test_errors')
+      {
+      continue;  
+      }
+      
     if($i>0)
        {
        $messagePlainText .= " and ";
@@ -756,7 +921,7 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
       case 'build_errors': $messagePlainText .= "build errors";$titleerrors.="b=".$value; break;
       case 'test_errors': $messagePlainText .= "failing tests";$titleerrors.="t=".$value; break;
       }
-    
+        
     $i++;
     }  
     
@@ -880,7 +1045,6 @@ function sendemail($handler,$projectid)
     return;
     }
   
-  
   // If the handler has a buildid (it should), we use it
   if(isset($handler->BuildId) && $handler->BuildId>0)
     {
@@ -915,11 +1079,46 @@ function sendemail($handler,$projectid)
     {
     return;
     }
-  
+
   $errors = check_email_errors($buildid,$Project->EmailTestTimingChanged,
-                               $Project->TestTimeMaxStatus,!$Project->EmailRedundantFailures);
+                               $Project->TestTimeMaxStatus,!$Project->EmailRedundantFailures);                             
   
-  if(!$errors)
+  // We have some fixes                               
+  if($errors['hasfixes'])
+    {
+    $Build->FillFromId($Build->Id);
+    // Get the list of person who should get the email
+    $userids = lookup_emails_to_send($errors, $buildid, $projectid,$Build->Type,true);
+    foreach($userids as $userid)
+      {
+      $emailtext = array();
+      $emailtext['nfixes'] = 0;
+    
+      // Check if an email has been sent already for this user
+      foreach($errors['fixes'] as $fixkey => $nfixes)
+        {
+        if($nfixes == 0)
+          {
+          continue;
+          }
+  
+        if(!check_email_sent($userid,$buildid,$fixkey))
+          {
+          $emailtext['category'][$fixkey] = $nfixes;
+          $emailtext['nfixes'] = 1;
+          }
+        }
+      
+      // Send the email
+      if($emailtext['nfixes'] == 1)
+        {
+        send_email_fix_to_user($userid,$emailtext,$Build,$Project);
+        }
+      }
+    } 
+                               
+  // No error we return
+  if(!$errors['errors'])
     {
     return;
     }
@@ -945,7 +1144,7 @@ function sendemail($handler,$projectid)
     } // end summary email
 
   $Build->FillFromId($Build->Id);
-  
+    
   // Send build error
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
     {

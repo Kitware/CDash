@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT id FROM filesum LIMIT 1") )
+  if(!pdo_query("SELECT emailmissingsites FROM user2project LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -616,6 +616,7 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     $userupdatesql = "(SELECT count(updatefile.buildid) FROM updatefile,user2project
                       WHERE buildid=b.id AND user2project.projectid=b.projectid 
+                      AND user2project.userid='".$_SESSION['cdash']['loginid']."'
                       AND user2project.cvslogin=updatefile.author) AS userupdates,";
     }
            

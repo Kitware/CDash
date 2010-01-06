@@ -306,6 +306,7 @@ class Build
                         WHERE siteid=".qnum($this->SiteId)." AND type='$this->Type' AND name='$this->Name'
                          AND projectid=".qnum($this->ProjectId)." AND starttime<'$this->StartTime'
                          ORDER BY starttime DESC LIMIT 1");
+      
     if(!$query)
       {
       add_last_sql_error("Build:GetPreviousBuildId");
@@ -643,13 +644,116 @@ class Build
     echo pdo_error();
     }
 
+  /** Get the errors differences for the build */  
+  function GetErrorDifferences()
+    {
+    if(!$this->Id)
+      {
+      add_log("BuildId is not set","Build::GetErrorDifferences",LOG_ERR);
+      return false;
+      }
+
+    $diff = array();
+
+    $sqlquery = "SELECT id,builderrordiff.type AS builderrortype,
+              builderrordiff.difference_positive AS builderrorspositive,
+              builderrordiff.difference_negative AS builderrorsnegative,
+              configureerrordiff.type AS configureerrortype,
+              configureerrordiff.difference AS configureerrors,
+              testdiff.type AS testerrortype,
+              testdiff.difference_positive AS testerrorspositive,
+              testdiff.difference_negative AS testerrorsnegative
+              FROM build 
+              LEFT JOIN builderrordiff ON builderrordiff.buildid=build.id
+              LEFT JOIN configureerrordiff ON configureerrordiff.buildid=build.id
+              LEFT JOIN testdiff ON testdiff.buildid=build.id 
+              WHERE id=".qnum($this->Id);
+    $query = pdo_query($sqlquery);
+    add_last_sql_error("Build:GetErrorDifferences");
+    
+    while($query_array = pdo_fetch_array($query))
+      {
+      if($query_array['builderrortype'] == 0)
+        {
+        $diff['builderrorspositive'] = $query_array['builderrorspositive'];
+        $diff['builderrorsnegative'] = $query_array['builderrorsnegative'];
+        }  
+      else
+        {
+        $diff['buildwarningspositive'] = $query_array['builderrorspositive'];    
+        $diff['buildwarningsnegative'] = $query_array['builderrorsnegative'];
+        }
+        
+      if($query_array['configureerrortype'] == 0)
+        {
+        $diff['configureerrors'] = $query_array['configureerrors'];  
+        }
+      else
+        {
+        $diff['configurewarnings'] = $query_array['configureerrors'];    
+        }
+      
+      if($query_array['testerrortype'] == 2)
+        {
+        $diff['testpassedpositive'] = $query_array['testerrorspositive'];  
+        $diff['testpassednegative'] = $query_array['testerrorsnegative'];  
+        }
+      else if($query_array['testerrortype'] == 1)
+        {
+        $diff['testfailedpositive'] = $query_array['testerrorspositive'];   
+        $diff['testfailednegative'] = $query_array['testerrorsnegative'];    
+        }
+      else if($query_array['testerrortype'] == 0)
+        {
+        $diff['testnotrunpositive'] = $query_array['testerrorspositive'];    
+        $diff['testnotrunnegative'] = $query_array['testerrorsnegative'];
+        }      
+      }
+    return $diff;  
+    }
+    
+  /** Compute the build errors differences */
+  function ComputeDifferences()
+    {
+    if(!$this->Id)
+      {
+      add_log("BuildId is not set","Build::ComputeDifferences",LOG_ERR);
+      return false;
+      }
+
+    $previousbuildid = $this->GetPreviousBuildId();
+    if($previousbuildid == 0)
+      {
+      return;
+      }     
+    compute_error_difference($this->Id,$previousbuildid,0); // errors
+    compute_error_difference($this->Id,$previousbuildid,1); // warnings
+    }   
+
+  /** Compute the build errors differences */
+  function ComputeConfigureDifferences()
+    {
+    if(!$this->Id)
+      {
+      add_log("BuildId is not set","Build::ComputeDifferences",LOG_ERR);
+      return false;
+      }
+
+    $previousbuildid = $this->GetPreviousBuildId();
+    if($previousbuildid == 0)
+      {
+      return;
+      }      
+    compute_configure_difference($this->Id,$previousbuildid,1); // warnings
+    } 
+     
   /** Compute the test timing as a weighted average of the previous test.
    *  Also compute the difference in errors and tests between builds.
    *  We do that in one shot for speed reasons. */
   function ComputeTestTiming()
     {
     if(!$this->Id)
-       {
+      {
       add_log("BuildId is not set","Build::ComputeTestTiming",LOG_ERR);
       return false;
       }
@@ -691,9 +795,6 @@ class Build
     // If we have one
     if($previousbuildid>0)
       {
-      compute_error_difference($buildid,$previousbuildid,0); // errors
-      compute_error_difference($buildid,$previousbuildid,1); // warnings
-      compute_configure_difference($buildid,$previousbuildid,1); // warnings
       compute_test_difference($buildid,$previousbuildid,0,$projecttestmaxstatus); // not run
       compute_test_difference($buildid,$previousbuildid,1,$projecttestmaxstatus); // fail
       compute_test_difference($buildid,$previousbuildid,2,$projecttestmaxstatus); // pass
@@ -1213,6 +1314,10 @@ class Build
    
     $builderror = pdo_query("SELECT builderrors FROM build WHERE id=".qnum($this->Id));
     $builderror_array = pdo_fetch_array($builderror);
+    if($builderror_array[0] == -1)
+      {
+      return 0;
+      }
     return $builderror_array[0];  
     } // end GetNumberOfErrors() 
 
@@ -1227,6 +1332,10 @@ class Build
    
     $builderror = pdo_query("SELECT buildwarnings FROM build WHERE id=".qnum($this->Id));
     $builderror_array = pdo_fetch_array($builderror);
+    if($builderror_array[0] == -1)
+      {
+      return 0;
+      }
     return $builderror_array[0];  
     } // end GetNumberOfWarnings() 
 

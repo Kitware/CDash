@@ -22,6 +22,8 @@ class UserProject
   var $CvsLogin;
   var $EmailType;
   var $EmailCategory;
+  var $EmailMissingSites; // send email when a site is missing for the project (expected builds)
+  var $EmailSuccess; // email when my checkin are fixing something
   var $UserId;
   var $ProjectId;
   
@@ -32,6 +34,8 @@ class UserProject
     $this->ProjectId = 0;
     $this->UserId = 0;
     $this->EmailCategory=62;
+    $this->EmailMissingSites=0;
+    $this->EmailSuccess=0;
     }
   
   function SetValue($tag,$value)  
@@ -42,6 +46,8 @@ class UserProject
       case "CVSLOGIN": $this->CvsLogin = $value;break;
       case "EMAILTYPE": $this->EmailType = $value;break;
       case "EMAILCATEGORY": $this->EmailCategory = $value;break;
+      case "EMAILMISSINGSITES": $this->EmailMissingSites = $value;break;
+      case "EMAILSUCCESS": $this->EmailSuccess = $value;break;
       }
     }
   
@@ -87,6 +93,8 @@ class UserProject
       $query .= ",cvslogin='".$this->CvsLogin."'";
       $query .= ",emailtype='".$this->EmailType."'";
       $query .= ",emailcategory='".$this->EmailCategory."'";
+      $query .= ",emailsuccess='".$this->EmailSuccess."'";
+      $query .= ",emailmissingsites='".$this->EmailMissingSites."'";
       $query .= " WHERE userid='".$this->UserId."' AND projectid='".$this->ProjectId."'";
       if(!pdo_query($query))
         {
@@ -96,8 +104,10 @@ class UserProject
       }
     else // insert
       {    
-      $query = "INSERT INTO user2project (userid,projectid,role,cvslogin,emailtype,emailcategory)
-                VALUES ($this->UserId,$this->ProjectId,$this->Role,'$this->CvsLogin',$this->EmailType,$this->EmailCategory)";                     
+      $query = "INSERT INTO user2project (userid,projectid,role,cvslogin,emailtype,emailcategory,
+                                          emailsuccess,emailmissingsites)
+                VALUES ($this->UserId,$this->ProjectId,$this->Role,'$this->CvsLogin',
+                        $this->EmailType,$this->EmailCategory,$this->EmailSuccess,$this->EmailMissingSites)";                     
        if(!pdo_query($query))
          {
          add_last_sql_error("User2Project Create");

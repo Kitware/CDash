@@ -526,9 +526,13 @@ CREATE TABLE `user2project` (
   `cvslogin` varchar(50) NOT NULL default '',
   `emailtype` tinyint(4) NOT NULL default '0',
   `emailcategory` tinyint(4) NOT NULL default '62',
+  `emailsuccess` tinyint(4) NOT NULL default '0',
+  `emailmissingsites` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`userid`,`projectid`),
   KEY `cvslogin` (`cvslogin`),
-  KEY `emailtype` (`emailtype`)
+  KEY `emailtype` (`emailtype`),
+  KEY `emailsucess` (`emailsuccess`),
+  KEY `emailmissingsites` (`emailmissingsites`)
 );
 
 -- 

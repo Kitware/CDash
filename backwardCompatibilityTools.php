@@ -593,6 +593,11 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("buildupdate","priorrevision","VARCHAR(60)","VARCHAR(60)","0");
   AddTableField("buildupdate","path","VARCHAR(255)","VARCHAR(255)","");
   
+  AddTableField("user2project","emailsuccess","tinyint(4)","smallint","0");
+  AddTableIndex('user2project','emailsuccess');
+  AddTableField("user2project","emailmissingsites","tinyint(4)","smallint","0");
+  AddTableIndex('user2project','emailmissingsites');
+  
   if(!pdo_query("SELECT projectid FROM test LIMIT 1"))
     {
     AddTableField("test","projectid","int(11)","bigint","0");

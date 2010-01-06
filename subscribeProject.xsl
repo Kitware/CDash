@@ -55,6 +55,7 @@
 <tr>
     <td width="10%"><div align="right"><strong>Project:</strong></div></td>
     <td width="90%" >
+    <xsl:if test="count(cdash/availableproject)>0">
     <form name="form1" method="post">
     <xsl:attribute name="action">subscribeProject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
     <select onchange="location = 'subscribeProject.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
@@ -70,6 +71,10 @@
         </xsl:for-each>
         </select>
       </form>
+     </xsl:if>
+    <xsl:if test="count(cdash/availableproject)=0">
+      <xsl:value-of select="cdash/project/name"/>
+    </xsl:if>  
     </td>
   </tr>
 <tr>
@@ -211,6 +216,24 @@
              </input> Email me when <b>any builds</b> are breaking the dashboard
            </td>
           </tr>
+         <tr>
+            <td></td>
+            <td ><input type="checkbox" onchange="saveChanges();" name="emailsuccess" value="1">
+             <xsl:if test="/cdash/emailsuccess=1">
+             <xsl:attribute name="checked"></xsl:attribute>
+             </xsl:if>
+             </input> Email me when my checkins are fixing build errors, warnings or tests
+           </td>
+         </tr>
+         <tr>
+            <td></td>
+            <td ><input type="checkbox" onchange="saveChanges();" name="emailmissingsites" value="1">
+             <xsl:if test="/cdash/emailmissingsites=1">
+             <xsl:attribute name="checked"></xsl:attribute>
+             </xsl:if>
+             </input> Email me when expected sites are not submitting
+           </td>
+          </tr>  
         </table>
     </div>
     <div id="fragment-4" class="tab_content" >

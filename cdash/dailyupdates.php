@@ -642,16 +642,18 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
     $missingbuilds = 1;
     }
   
-  // Send a summary email to the project administrator
+  // Send a summary email to the project administrator or users who want to receive notification
+  // of missing builds
   if($missingbuilds == 1)
     {
     $summary .= "\n-CDash on ".$serverName."\n";
     
     $title = "CDash [".$projectname."] - Missing Builds"; 
     
-    // Find the site administrators
+    // Find the site administrators or users who want to receive the builds
     $email = "";
-    $emails = pdo_query("SELECT email FROM ".qid("user").",user2project WHERE ".qid("user").".id=user2project.userid AND user2project.role='2' AND user2project.projectid='$projectid'");
+    $emails = pdo_query("SELECT email FROM ".qid("user").",user2project WHERE ".qid("user").".id=user2project.userid 
+                         AND user2project.projectid='$projectid' AND (user2project.role='2' OR user2project.emailmissingsites=1)");
     while($emails_array = pdo_fetch_array($emails))
       {
       if($email != "")

@@ -58,7 +58,6 @@ class TestingHandler extends AbstractHandler
   /** Destructor */
   public function __destruct()
     {
-    $this->Build->ComputeTestTiming();
     }
   
   /** Start Element */
@@ -183,7 +182,7 @@ class TestingHandler extends AbstractHandler
         $this->BuildTest->Insert();
 
         $this->Test->InsertLabelAssociations($this->BuildId);
-        }
+        }  
       }
     else if($name == 'LABEL' && $parent == 'LABELS')
       {
@@ -253,6 +252,7 @@ class TestingHandler extends AbstractHandler
       $this->Build->UpdateTestNumbers($this->NumberTestsPassed,
                                       $this->NumberTestsFailed,
                                       $this->NumberTestsNotRun); 
+      $this->Build->ComputeTestTiming();
       }
     } // end endElement
   

@@ -204,8 +204,7 @@ class BuildConfigure
       }
 
     return $position;
-    }
-
+    } 
 
   /** Compute the warnings from the log. In the future we might want to add errors */
   function ComputeErrors()

@@ -81,14 +81,16 @@ if ($session_OK)
     }
   
   // Check if the user is not already in the database
-  $user2project = pdo_query("SELECT cvslogin,role,emailtype,emailcategory FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+  $user2project = pdo_query("SELECT cvslogin,role,emailtype,emailcategory,emailmissingsites,emailsuccess
+                             FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
   if(pdo_num_rows($user2project)>0)
     {
     $user2project_array = pdo_fetch_array($user2project);
     $xml .= add_XML_value("cvslogin",$user2project_array["cvslogin"]);
     $xml .= add_XML_value("role",$user2project_array["role"]);
     $xml .= add_XML_value("emailtype",$user2project_array["emailtype"]);
-    
+    $xml .= add_XML_value("emailmissingsites",$user2project_array["emailmissingsites"]);
+    $xml .= add_XML_value("emailsuccess",$user2project_array["emailsuccess"]);
     $emailcategory = $user2project_array["emailcategory"];
     $xml .= add_XML_value("emailcategory_update",check_email_category("update",$emailcategory));
     $xml .= add_XML_value("emailcategory_configure",check_email_category("configure",$emailcategory));
@@ -112,8 +114,23 @@ if ($session_OK)
   @$Role = $_POST["role"];
   @$CVSLogin = $_POST["cvslogin"];
   @$EmailType = $_POST["emailtype"];
-  @$EmailType = $_POST["emailtype"];
-
+  if(!isset($_POST["emailmissingsites"]))
+    {
+    $EmailMissingSites = 0;  
+    }
+  else
+    {
+    $EmailMissingSites = $_POST["emailmissingsites"];
+    }
+  if(!isset($_POST["emailsuccess"]))
+    {
+    $EmailSuccess = 0;  
+    }
+  else
+    {
+    $EmailSuccess = $_POST["emailsuccess"];
+    }
+  
   // Deals with label email
   $LabelEmail = new LabelEmail();
   $Label = new Label();
@@ -143,7 +160,10 @@ if ($session_OK)
     $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test;    
     if(pdo_num_rows($user2project)>0)
       {
-      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',emailcategory='$EmailCategory' 
+      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',
+                         emailcategory='$EmailCategory',
+                         emailmissingsites='$EmailMissingSites',
+                         emailsuccess='$EmailSuccess' 
                          WHERE userid='$userid' AND projectid='$projectid'");
       if($Role==0)
         { 
@@ -178,7 +198,10 @@ if ($session_OK)
     $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test;    
     if(pdo_num_rows($user2project)>0)
       {
-      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',emailcategory='$EmailCategory' 
+      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',
+                         emailcategory='$EmailCategory'.
+                         emailmissingsites='$EmailMissingSites',
+                         emailsuccess='$EmailSuccess'  
                          WHERE userid='$userid' AND projectid='$projectid'");
       if($Role==0)
         { 
@@ -192,8 +215,10 @@ if ($session_OK)
       }
     else
       {
-      pdo_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype,emailcategory) 
-                 VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType','$EmailCategory ')");
+      pdo_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype,emailcategory,emailsuccess,
+                                           emailmissingsites) 
+                 VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType','$EmailCategory',
+                         '$EmailSuccess','$EmailMissingSites')");
       }
     header( 'location: user.php?note=subscribedtoproject' );
     }

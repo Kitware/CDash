@@ -68,6 +68,12 @@
 <b>Claimed by: </b>
 <xsl:for-each select="cdash/claimer">
   <xsl:value-of select="firstname"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="lastname"/>
+  <xsl:if test="email">
+  <a>
+  <xsl:attribute name="href">mailto:<xsl:value-of select="email"/></xsl:attribute>
+  <img src="images/mail.png" border="0"/>
+  </a>
+  </xsl:if>
 </xsl:for-each>
 <br/><br/>
 </xsl:if>
