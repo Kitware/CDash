@@ -415,7 +415,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
         {  
         $info .= $error_array["stderror"]."\n";
         }
-      $information .= substr($info,0,$maxchars);
+      $information .= substr($info,0,$maxchars)."\n";
       }
     $information .= "\n";  
     }
