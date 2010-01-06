@@ -186,7 +186,7 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
       {
       $errors['hasfixes'] = true;
       $errors['fixes']['configure_fixes'] = $error_differences['configurewarnings']+$error_differences['configureerrors'];
-      $errors['fixes']['builderror_fixes'] =  $error_differences['buildwerrorsnegative'];
+      $errors['fixes']['builderror_fixes'] =  $error_differences['builderrorsnegative'];
       $errors['fixes']['buildwarning_fixes'] = $error_differences['buildwarningsnegative'];
       $errors['fixes']['test_fixes'] = $error_differences['testfailednegative']+$error_differences['testnotrunnegative'];   
       }
