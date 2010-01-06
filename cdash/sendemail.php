@@ -23,7 +23,7 @@ function checkEmailPreferences($emailcategory,$errors,$fixes=false)
   
   if($fixes)
     {
-    $updates=$errors['fixes']['update_fixes'];
+    $updates = 0; // for fixes we don't use update 
     $configures=$errors['fixes']['configure_fixes'];
     $builderrors=$errors['fixes']['builderror_fixes'];
     $buildwarnings=$errors['fixes']['buildwarning_fixes'];
