@@ -817,7 +817,8 @@ class Build
       compute_test_difference($buildid,$previousbuildid,3,$projecttestmaxstatus); // time
   
       // Loop through the tests
-      $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name,build2test.status
+      $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name,build2test.status,
+                            build2test.timestatus
                             FROM build2test,test WHERE build2test.buildid=".qnum($this->Id)."
                             AND build2test.testid=test.id
                             ");
@@ -843,7 +844,8 @@ class Build
         $teststatus = $test_array['status'];
         $testname = $test_array['name'];
         $previoustestid = 0;
-  
+        $timestatus = $test_array['timestatus'];
+        
         foreach($testarray as $test)
           {
           if($test['name']==$testname)
