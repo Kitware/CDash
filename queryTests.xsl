@@ -76,13 +76,16 @@
 
 <xsl:for-each select="cdash/builds/build">
   <tr>
-    <td>
+    <td><a>
+      <xsl:attribute name="href">
+        <xsl:value-of select="siteLink"/>
+      </xsl:attribute>
       <xsl:value-of select="site"/>
-    </td>
+    </a></td>
 
     <td><a>
       <xsl:attribute name="href">
-        <xsl:value-of select="buildLink"/>
+        <xsl:value-of select="buildSummaryLink"/>
       </xsl:attribute>
       <xsl:value-of select="buildName"/>
     </a></td>
@@ -97,7 +100,7 @@
       </xsl:attribute>
       <a>
       <xsl:attribute name="href">
-        <xsl:value-of select="testLink"/>
+        <xsl:value-of select="testDetailsLink"/>
       </xsl:attribute>
       <xsl:value-of select="status"/>
       </a>
@@ -110,7 +113,7 @@
       </xsl:attribute>
       <a>
       <xsl:attribute name="href">
-        <xsl:value-of select="testLink"/>
+        <xsl:value-of select="testDetailsLink"/>
       </xsl:attribute>
       <xsl:value-of select="timestatus"/>
       </a>

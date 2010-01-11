@@ -128,7 +128,7 @@ if (!$filterdata['hasdateclause'])
 
 
 $query = "SELECT
-            b.id, b.name, b.starttime,
+            b.id, b.name, b.starttime, b.siteid,
             build2test.testid AS testid, build2test.status, build2test.time, build2test.timestatus,
             site.name AS sitename,
             test.name AS testname, test.details
@@ -162,11 +162,14 @@ while ($row = pdo_fetch_array($result))
   $xml .= add_XML_value("time", $row["time"]);
   $xml .= add_XML_value("details", $row["details"]) . "\n";
 
-  $buildLink = "viewTest.php?buildid=$buildid";
-  $xml .= add_XML_value("buildLink", $buildLink);
+  $siteLink = "viewSite.php?siteid=".$row["siteid"];
+  $xml .= add_XML_value("siteLink", $siteLink);
 
-  $testLink = "testDetails.php?test=$testid&build=$buildid";
-  $xml .= add_XML_value("testLink", $testLink);
+  $buildSummaryLink = "buildSummary.php?buildid=$buildid";
+  $xml .= add_XML_value("buildSummaryLink", $buildSummaryLink);
+
+  $testDetailsLink = "testDetails.php?test=$testid&build=$buildid";
+  $xml .= add_XML_value("testDetailsLink", $testDetailsLink);
 
   switch($row["status"])
     {

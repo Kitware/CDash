@@ -37,9 +37,17 @@
 </xsl:choose>
 
 <br/>
-<b>Site Name: </b><xsl:value-of select="cdash/test/site"/>
+<b>Site Name: </b><a>
+  <xsl:attribute name="href">
+    viewSite.php?siteid=<xsl:value-of select="cdash/test/siteid"/>
+  </xsl:attribute>
+  <xsl:value-of select="cdash/test/site"/></a>
 <br/>
-<b>Build Name: </b><xsl:value-of select="cdash/test/build"/>
+<b>Build Name: </b><a>
+  <xsl:attribute name="href">
+    buildSummary.php?buildid=<xsl:value-of select="cdash/test/buildid"/>
+  </xsl:attribute>
+  <xsl:value-of select="cdash/test/build"/></a>
 <br/>
 <b>Build Date: </b><xsl:value-of select="cdash/test/buildstarttime"/>
 

@@ -43,7 +43,10 @@
 <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="cdash/build/siteid"/></xsl:attribute>
 <xsl:value-of select="cdash/build/site"/></a>
 </td></tr>
-<tr><td align="right"><b>Build Name:</b></td><td><xsl:value-of select="cdash/build/buildname"/></td></tr>
+<tr><td align="right"><b>Build Name:</b></td><td>
+<a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/buildid"/></xsl:attribute>
+<xsl:value-of select="cdash/build/buildname"/></a>
+</td></tr>
 <tr><td align="right"><b>Total time:</b></td><td><xsl:value-of select="cdash/tests/totaltime"/></td></tr>
 <!-- Display Operating System information  -->
 <xsl:if test="cdash/build/osname">

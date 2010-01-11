@@ -158,6 +158,7 @@ $xml .= add_XML_value("buildid", $buildid);
 $xml .= add_XML_value("build", $buildname);
 $xml .= add_XML_value("buildstarttime", date(FMT_DATETIMESTD, strtotime($starttime." UTC")));
 $xml .= add_XML_value("site", $siteRow["name"]);
+$xml .= add_XML_value("siteid", $siteid);
 $xml .= add_XML_value("test", $testName);
 $xml .= add_XML_value("time", $testRow["time"]);
 $xml .= add_XML_value("command", $testRow["command"]);
