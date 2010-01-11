@@ -555,6 +555,15 @@ if(isset($_GET['upgrade-1-4']))
 // 1.6 Upgrade
 if(isset($_GET['upgrade-1-6']))
 {    
+  if($CDASH_DB_TYPE != "pgsql")
+    {
+    pdo_query("ALTER TABLE configure CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    pdo_query("ALTER TABLE buildupdate CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    pdo_query("ALTER TABLE test CHANGE output output MEDIUMBLOB NOT NULL "); // change it to blob (cannot do that in PGSQL)
+    pdo_query("ALTER TABLE updatefile CHANGE checkindate checkindate TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    pdo_query("ALTER TABLE build2note CHANGE time time TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    }
+  
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
   AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
@@ -648,14 +657,7 @@ if(isset($_GET['upgrade-1-6']))
     
     echo pdo_error();
     } // end new table build
-  
-  if($CDASH_DB_TYPE != "pgsql")
-    {
-    pdo_query("ALTER TABLE configure CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
-    pdo_query("ALTER TABLE buildupdate CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
-    pdo_query("ALTER TABLE test CHANGE output output MEDIUMBLOB NOT NULL "); // change it to blob (cannot do that in PGSQL)
-    }
-    
+ 
   // Set the database version
   setVersion();
 
