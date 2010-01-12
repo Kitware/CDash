@@ -484,7 +484,7 @@ CREATE TABLE `buildtesttime` (
 CREATE TABLE `updatefile` (
   `buildid` int(11) NOT NULL default '0',
   `filename` varchar(255) NOT NULL default '',
-  `checkindate` timestamp NOT NULL default '1980-01-01 00:00:00',,
+  `checkindate` timestamp NOT NULL default '1980-01-01 00:00:00',
   `author` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `log` text NOT NULL,
