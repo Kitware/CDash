@@ -30,13 +30,26 @@ class SubProjectTestCase extends KWWebTestCase
     // first project necessary for testing
     $name = 'SubProjectExample';
     $description = 'Project SubProjectExample test for cdash testing';
-    $this->createProject($name,$description);
+     
+    // Create the project
+    $this->clickLink('[Create new project]');
+    $this->setField('name',$name);
+    $this->setField('description',$description);
+    $this->setField('public','1');
+    $this->setField('emailBrokenSubmission','1');
+    $this->setField('emailRedundantFailures','1');  
+    $this->clickSubmitByName('Submit');
+    
     $content = $this->connect($this->url.'/index.php?project=SubProjectExample');
     if(!$content)
       {
       return;
       }
-    $this->checkLog($this->logfilename);
+    if(!$this->checkLog($this->logfilename))
+      {
+      return;
+      }
+    $this->pass('Test passed'); 
     }
     
   function testSubmissionProjectDependencies()
@@ -47,7 +60,11 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->checkLog($this->logfilename);
+    if(!$this->checkLog($this->logfilename))
+      {
+      return;
+      }
+    $this->pass('Test passed');
     }
     
   function testSubmissionSubProjectBuild()
@@ -59,7 +76,11 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->compareLog($this->logfilename,$rep."/cdash_1.log");
+    if(!$this->compareLog($this->logfilename,$rep."/cdash_1.log"))
+      {
+      return;
+      }
+    $this->pass('Test passed');  
     }
   
   function testSubmissionSubProjectTest()
@@ -71,59 +92,12 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->compareLog($this->logfilename,$rep."/cdash_2.log");
-    }
-    
-  // In case of the project does not exist yet
-  function createProject($name,$description)
-    {
-    $this->clickLink('[Create new project]');
-    $this->setField('name',$name);
-    $this->setField('description',$description);
-    $this->setField('public','1');
-    $this->setField('emailBrokenSubmission','1');
-    $this->setField('emailRedundantFailures','1');  
-    $this->clickSubmitByName('Submit');
-    return $this->clickLink('BACK');
-    }
-    
-  function login()
-    {
-    $this->get($this->url);
-    $this->clickLink('Login');
-    $this->setField('login','simpletest@localhost');
-    $this->setField('passwd','simpletest');
-    return $this->clickSubmitByName('sent');
-    }
-    
-  function submission($projectname,$file)
-    {
-    $url = $this->url."/submit.php?project=$projectname";
-    $result = $this->uploadfile($url,$file);
-    if($this->findString($result,'error')   ||
-       $this->findString($result,'Warning') ||
-       $this->findString($result,'Notice'))
+    if(!$this->compareLog($this->logfilename,$rep."/cdash_2.log"))
       {
-      $this->assertEqual($result,"\n");
-      return false;
+      return;  
       }
-    return true;
+    $this->pass('Test passed');  
     }
-    
-  function uploadfile($url,$filename)
-    {    
-    $fp = fopen($filename, 'r');
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-    curl_setopt($ch, CURLOPT_UPLOAD, 1);
-    curl_setopt($ch, CURLOPT_INFILE, $fp);
-    curl_setopt ($ch, CURLOPT_RETURNTRANSFER,true);
-    curl_setopt($ch, CURLOPT_INFILESIZE, filesize($filename));
-    $page = curl_exec($ch);
-    curl_close($ch);
-    fclose($fp);
-    return $page;
-    } 
 }
 
 ?>

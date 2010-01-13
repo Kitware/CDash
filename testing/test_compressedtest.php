@@ -169,7 +169,7 @@ class CompressedTestCase extends KWWebTestCase
     $expected = '"1","jjomier","","r883 jjomier';
     if(!$this->findString($content,$expected))
       {
-      $this->fail('Robot did not convert the author name correctly');
+      $this->fail('Robot did not convert the author name correctly: got'.$content.' instead of '.$expected);
       return;
       }
        

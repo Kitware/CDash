@@ -245,7 +245,7 @@ function pdo_query($query, $link_identifier = NULL)
 function pdo_real_escape_string($unescaped_string, $link_identifier = NULL)
 {
   global $CDASH_DB_TYPE;
-
+    
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") 
     {
     $str = get_link_identifier($link_identifier)->quote($unescaped_string);
@@ -256,6 +256,10 @@ function pdo_real_escape_string($unescaped_string, $link_identifier = NULL)
     }
   else 
     {
+    if(get_magic_quotes_gpc())
+      {
+      $unescaped_string = stripslashes($unescaped_string); 
+      } 
     return mysql_real_escape_string($unescaped_string, get_link_identifier($link_identifier));
     }
 }
