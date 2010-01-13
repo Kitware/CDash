@@ -230,6 +230,7 @@ class Project
     $RobotName = pdo_real_escape_string($this->RobotName);  
     $RobotRegex = pdo_real_escape_string($this->RobotRegex);  
     $Name = pdo_real_escape_string($this->Name); 
+    $CvsViewerType = pdo_real_escape_string($this->CvsViewerType); 
 
     // Check if the project is already
     if($this->Exists())
@@ -259,7 +260,7 @@ class Project
       $query .= ",displaylabels=".qnum($this->DisplayLabels);
       $query .= ",autoremovetimeframe=".qnum($this->AutoremoveTimeframe);
       $query .= ",autoremovemaxbuilds=".qnum($this->AutoremoveMaxBuilds);
-      $query .= ",cvsviewertype='".$this->CvsViewerType."'";
+      $query .= ",cvsviewertype='".$CvsViewerType."'";
       $query .= ",testtimestd=".qnum($this->TestTimeStd);
       $query .= ",testtimestdthreshold=".qnum($this->TestTimeStdThreshold);
       $query .= ",showtesttime=".qnum($this->ShowTestTime);

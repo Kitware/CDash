@@ -55,12 +55,12 @@ class CompressedTestCase extends KWWebTestCase
     $result = $this->db->query($query);
     if($result[0]['robotname'] != 'itkrobot')
       {
-      $this->fail('Robot name not set correctly');  
+      $this->fail('Robot name not set correctly got'.$result[0]['robotname'].' instead of itkrobot');  
       return;
       }
     if($result[0]['authorregex'] != '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^')
       {
-      $this->fail('Robot regex not set correctly');  
+      $this->fail('Robot regex not set correctly got '.$result[0]['authorregex'].' instead of ^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');  
       return;
       }
     $this->pass('Test passed');   
