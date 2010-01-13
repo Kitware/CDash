@@ -71,9 +71,12 @@ class KWWebTestCase extends WebTestCase {
   /** Compare the current log with a file */
   function compareLog($logfilename,$template)
     {
-    $log = file_get_contents($logfilename);
-    $log = str_replace("\r",'',$log);
-    
+    $log = "";  
+    if(file_exists($logfilename))
+      {
+      $log = file_get_contents($logfilename);
+      $log = str_replace("\r",'',$log);
+      }
     $templateLog = file_get_contents($template);
     $templateLog = str_replace("\r",'',$templateLog);
 

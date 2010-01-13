@@ -218,6 +218,19 @@ class Project
   // Save the project in the database
   function Save()
     {
+    // Escape the values
+    $Description = pdo_real_escape_string($this->Description);
+    $HomeUrl = pdo_real_escape_string($this->HomeUrl);
+    $CvsUrl = pdo_real_escape_string($this->CvsUrl);
+    $DocumentationUrl = pdo_real_escape_string($this->DocumentationUrl);  
+    $BugTrackerUrl = pdo_real_escape_string($this->BugTrackerUrl);  
+    $BugTrackerFileUrl = pdo_real_escape_string($this->BugTrackerFileUrl);  
+    $NightlyTime = pdo_real_escape_string($this->NightlyTime);  
+    $GoogleTracker = pdo_real_escape_string($this->GoogleTracker);  
+    $RobotName = pdo_real_escape_string($this->RobotName);  
+    $RobotRegex = pdo_real_escape_string($this->RobotRegex);  
+    $Name = pdo_real_escape_string($this->Name); 
+
     // Check if the project is already
     if($this->Exists())
       {
@@ -226,16 +239,16 @@ class Project
       $this->Initialize();
       // Update the project
       $query = "UPDATE project SET ";
-      $query .= "description='".$this->Description."'";
-      $query .= ",homeurl='".$this->HomeUrl."'";
-      $query .= ",cvsurl='".$this->CvsUrl."'";
-      $query .= ",documentationurl='".$this->DocumentationUrl."'";
-      $query .= ",bugtrackerurl='".$this->BugTrackerUrl."'";
-      $query .= ",bugtrackerfileurl='".$this->BugTrackerFileUrl."'";
+      $query .= "description='".$Description."'";
+      $query .= ",homeurl='".$HomeUrl."'";
+      $query .= ",cvsurl='".$CvsUrl."'";
+      $query .= ",documentationurl='".$DocumentationUrl."'";
+      $query .= ",bugtrackerurl='".$BugTrackerUrl."'";
+      $query .= ",bugtrackerfileurl='".$BugTrackerFileUrl."'";
       $query .= ",public=".qnum($this->Public);
       $query .= ",coveragethreshold=".qnum($this->CoverageThreshold);
-      $query .= ",nightlytime='".$this->NightlyTime."'";
-      $query .= ",googletracker='".$this->GoogleTracker."'";
+      $query .= ",nightlytime='".$NightlyTime."'";
+      $query .= ",googletracker='".$GoogleTracker."'";
       $query .= ",emailbuildmissing=".qnum($this->EmailBuildMissing);
       $query .= ",emaillowcoverage=".qnum($this->EmailLowCoverage);
       $query .= ",emailtesttimingchanged=".qnum($this->EmailTestTimingChanged);
@@ -267,7 +280,7 @@ class Project
          $robot = pdo_query("SELECT projectid FROM projectrobot WHERE projectid=".qnum($this->Id));
          if(pdo_num_rows($robot)>0)
           {
-          $query = "UPDATE projectrobot SET robotname='".$this->RobotName."',authorregex='".$this->RobotRegex.
+          $query = "UPDATE projectrobot SET robotname='".$RobotName."',authorregex='".$RobotRegex.
                    "' WHERE projectid=".qnum($this->Id);
            if(!pdo_query($query))
              {
@@ -277,7 +290,7 @@ class Project
          else
            { 
            $query = "INSERT INTO projectrobot(projectid,robotname,authorregex) 
-                    VALUES (".qnum($this->Id).",'".$this->RobotName."','".$this->RobotRegex."')";
+                    VALUES (".qnum($this->Id).",'".$RobotName."','".$RobotRegex."')";
            if(!pdo_query($query))
              {
              return false;
@@ -309,10 +322,10 @@ class Project
                                     emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
                                     ,displaylabels,autoremovetimeframe,autoremovemaxbuilds)
-                 VALUES (".$idvalue."'$this->Name','$this->Description','$this->HomeUrl','$this->CvsUrl','$this->BugTrackerUrl','$this->BugTrackerFileUrl','$this->DocumentationUrl',
-                 ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$this->NightlyTime',
-                 '$this->GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).",".qnum($this->EmailBuildMissing).","
-                 .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$this->CvsViewerType',".qnum($this->TestTimeStd)
+                 VALUES (".$idvalue."'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
+                 ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$NightlyTime',
+                 '$GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).",".qnum($this->EmailBuildMissing).","
+                 .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$CvsViewerType',".qnum($this->TestTimeStd)
                  .",".qnum($this->TestTimeStdThreshold).",".qnum($this->TestTimeMaxStatus).",".qnum($this->EmailMaxItems).",".qnum($this->EmailMaxChars).","
                  .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).",".qnum($this->DisplayLabels)
                  .",".qnum($this->AutoremoveTimeframe).",".qnum($this->AutoremoveMaxBuilds).")";
@@ -330,7 +343,7 @@ class Project
        if($this->RobotName != '')
          {
          $query = "INSERT INTO projectrobot(projectid,robotname,authorregex) 
-                    VALUES (".qnum($this->Id).",'".$this->RobotName."','".$this->RobotRegex."')";
+                    VALUES (".qnum($this->Id).",'".$RobotName."','".$RobotRegex."')";
          if(!pdo_query($query))
            {
            return false;

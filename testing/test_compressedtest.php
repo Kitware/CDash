@@ -53,7 +53,6 @@ class CompressedTestCase extends KWWebTestCase
     
     $query  = "SELECT robotname,authorregex FROM projectrobot WHERE projectid=".$projectid;
     $result = $this->db->query($query);
-        
     if($result[0]['robotname'] != 'itkrobot')
       {
       $this->fail('Robot name not set correctly');  
