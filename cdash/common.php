@@ -953,10 +953,11 @@ function get_geolocation($ip)
   curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
       
   ob_start();
+  curl_setopt($ch, CURLOPT_TIMEOUT, 5); // if we cannot get the geolocation in 5 seconds we quit
   curl_exec($curl);
   $httpReply = ob_get_contents();
   ob_end_clean();
-    
+  
   $pos = strpos($httpReply,"Latitude: ");
   if($pos !== FALSE)
     {
