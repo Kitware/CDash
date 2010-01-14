@@ -100,53 +100,66 @@ function stripHTTP($url)
   return $url;
   }
 
+/** strip slashes from the post if magic quotes are on */
+function stripslashes_if_gpc_magic_quotes( $string ) 
+{
+  if(get_magic_quotes_gpc()) 
+    {
+    return stripslashes($string);
+    } 
+  else 
+    {
+    return $string;
+    }
+}
+
 // If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
   {
-  $Name = $_POST["name"];
+  $Name = stripslashes_if_gpc_magic_quotes($_POST["name"]);
   
   // Check that the name are different
   if(!$Project->ExistsByName($Name))
     {    
     $Project->Name = $Name;
-    $Project->Description = $_POST["description"];
-    $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
-    $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
-    $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
-    $Project->BugTrackerFileUrl = $_POST["bugFileURL"];
-    $Project->DocumentationUrl = stripHTTP($_POST["docURL"]);
+    $Project->Description = stripslashes_if_gpc_magic_quotes($_POST["description"]);
+    $Project->HomeUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["homeURL"]));
+    $Project->CvsUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["cvsURL"]));
+    $Project->BugTrackerUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["bugURL"]));
+    $Project->BugTrackerFileUrl = stripslashes_if_gpc_magic_quotes($_POST["bugFileURL"]);
+    $Project->DocumentationUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["docURL"]));
     @$Public = $_POST["public"];
     if(!isset($Public))
       {
       $Public = 0;
       }
     
-    $Project->CoverageThreshold = $_POST["coverageThreshold"];
-    $Project->NightlyTime = $_POST["nightlyTime"];
-    $Project->GoogleTracker = $_POST["googleTracker"]; 
-    @$Project->EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
-    @$Project->EmailRedundantFailures = $_POST["emailRedundantFailures"];
-    @$Project->EmailBuildMissing = $_POST["emailBuildMissing"];
-    @$Project->EmailLowCoverage = $_POST["emailLowCoverage"];
-    @$Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
-    @$Project->CvsViewerType = $_POST["cvsviewertype"];
-    @$Project->RobotName = $_POST["robotname"];
-    @$Project->RobotRegex = $_POST["robotregex"];
-    @$CVSRepositories = $_POST["cvsRepository"];
-    @$CVSUsernames = $_POST["cvsUsername"];
-    @$CVSPasswords = $_POST["cvsPassword"];
-    @$Project->TestTimeStd = $_POST["testTimeStd"];
-    @$Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
-    @$Project->TestTimeMaxStatus = $_POST["testTimeMaxStatus"];
-    @$Project->ShowTestTime = $_POST["showTestTime"];
-    @$Project->EmailMaxItems = $_POST["emailMaxItems"];
-    @$Project->EmailMaxChars = $_POST["emailMaxChars"];
-    @$Project->EmailAdministrator = $_POST["emailAdministrator"];
-    @$Project->ShowIPAddresses = $_POST["showIPAddresses"];
-    @$Project->DisplayLabels = $_POST["displayLabels"];
-    @$Project->AutoremoveTimeframe = $_POST["autoremovetimeframe"];
-    @$Project->AutoremoveMaxBuilds = $_POST["autoremovemaxbuilds"];
+    $Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
+    $Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
+    $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
+    @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
+    @$Project->EmailRedundantFailures = stripslashes_if_gpc_magic_quotes($_POST["emailRedundantFailures"]);
+    @$Project->EmailBuildMissing = stripslashes_if_gpc_magic_quotes($_POST["emailBuildMissing"]);
+    @$Project->EmailLowCoverage = stripslashes_if_gpc_magic_quotes($_POST["emailLowCoverage"]);
+    @$Project->EmailTestTimingChanged = stripslashes_if_gpc_magic_quotes($_POST["emailTestTimingChanged"]);
+    @$Project->CvsViewerType = stripslashes_if_gpc_magic_quotes($_POST["cvsviewertype"]);
+    @$Project->RobotName = stripslashes_if_gpc_magic_quotes($_POST["robotname"]);
+    @$Project->RobotRegex = stripslashes_if_gpc_magic_quotes($_POST["robotregex"]);
+    @$CVSRepositories = stripslashes_if_gpc_magic_quotes($_POST["cvsRepository"]);
+    @$CVSUsernames = stripslashes_if_gpc_magic_quotes($_POST["cvsUsername"]);
+    @$CVSPasswords = stripslashes_if_gpc_magic_quotes($_POST["cvsPassword"]);
+    @$Project->TestTimeStd = stripslashes_if_gpc_magic_quotes($_POST["testTimeStd"]);
+    @$Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
+    @$Project->TestTimeMaxStatus = stripslashes_if_gpc_magic_quotes($_POST["testTimeMaxStatus"]);
+    @$Project->ShowTestTime = stripslashes_if_gpc_magic_quotes($_POST["showTestTime"]);
+    @$Project->EmailMaxItems = stripslashes_if_gpc_magic_quotes($_POST["emailMaxItems"]);
+    @$Project->EmailMaxChars = stripslashes_if_gpc_magic_quotes($_POST["emailMaxChars"]);
+    @$Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST["emailAdministrator"]);
+    @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
+    @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
+    @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremovetimeframe"]);
+    @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremovemaxbuilds"]);
     $Project->Public = $Public;
     
     $projectid = -1;
@@ -229,12 +242,12 @@ if($Submit)
   } // end submit
   
 // If we should add a spam filter
-@$SpamFilter = $_POST["SpamFilter"];
+@$SpamFilter = stripslashes_if_gpc_magic_quotes($_POST["SpamFilter"]);
 if($SpamFilter)
   {
-  @$spambuildname = pdo_real_escape_string($_POST["spambuildname"]);
-  @$spamsitename = pdo_real_escape_string($_POST["spamsitename"]);  
-  @$spamip = pdo_real_escape_string($_POST["spamip"]);  
+  @$spambuildname = pdo_real_escape_string(stripslashes_if_gpc_magic_quotes($_POST["spambuildname"]));
+  @$spamsitename = pdo_real_escape_string(stripslashes_if_gpc_magic_quotes($_POST["spamsitename"]));  
+  @$spamip = pdo_real_escape_string(stripslashes_if_gpc_magic_quotes($_POST["spamip"]));  
   
   if(!empty($spambuildname) || !empty($spamsitename) || !empty($spamip))
     {
@@ -272,41 +285,41 @@ if($Delete)
 @$AddRepository = $_POST["AddRepository"];
 if($Update || $AddRepository)
   {
-  $Project->Description = $_POST["description"];
-  $Project->HomeUrl = stripHTTP($_POST["homeURL"]);
-  $Project->CvsUrl = stripHTTP($_POST["cvsURL"]);
-  $Project->BugTrackerUrl = stripHTTP($_POST["bugURL"]);
-  $Project->BugTrackerFileUrl = $_POST["bugFileURL"];
-  $Project->DocumentationUrl = stripHTTP($_POST["docURL"]);
-  @$Project->Public  = $_POST["public"];
+  $Project->Description = stripslashes_if_gpc_magic_quotes($_POST["description"]);
+  $Project->HomeUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["homeURL"]));
+  $Project->CvsUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["cvsURL"]));
+  $Project->BugTrackerUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["bugURL"]));
+  $Project->BugTrackerFileUrl = stripslashes_if_gpc_magic_quotes($_POST["bugFileURL"]);
+  $Project->DocumentationUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["docURL"]));
+  @$Project->Public = stripslashes_if_gpc_magic_quotes($_POST["public"]);
   if(!isset($Project->Public))
     {
     $Project->Public = 0;
     }
   
-  $Project->CoverageThreshold = $_POST["coverageThreshold"];
-  $Project->NightlyTime = $_POST["nightlyTime"];
-  $Project->GoogleTracker = $_POST["googleTracker"]; 
-  $Project->EmailBrokenSubmission = $_POST["emailBrokenSubmission"];
-  $Project->EmailRedundantFailures = $_POST["emailRedundantFailures"];
-  $Project->EmailBuildMissing = $_POST["emailBuildMissing"];
-  $Project->EmailLowCoverage = $_POST["emailLowCoverage"];
-  $Project->EmailTestTimingChanged = $_POST["emailTestTimingChanged"];
-  $Project->CvsViewerType = $_POST["cvsviewertype"]; 
-  $Project->RobotName = $_POST["robotname"]; 
-  $Project->RobotRegex = $_POST["robotregex"]; 
-  $Project->TestTimeStd = $_POST["testTimeStd"];
-  $Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
-  $Project->TestTimeMaxStatus = $_POST["testTimeMaxStatus"];  
-  $Project->TestTimeStdThreshold = $_POST["testTimeStdThreshold"];
-  $Project->ShowTestTime = $_POST["showTestTime"];
-  $Project->EmailMaxItems = $_POST["emailMaxItems"];
-  $Project->EmailMaxChars = $_POST["emailMaxChars"];
-  $Project->EmailAdministrator = $_POST["emailAdministrator"];
-  $Project->ShowIPAddresses = $_POST["showIPAddresses"];
-  $Project->DisplayLabels = $_POST["displayLabels"];
-  $Project->AutoremoveTimeframe = $_POST["autoremoveTimeframe"];
-  $Project->AutoremoveMaxBuilds = $_POST["autoremoveMaxBuilds"];
+  $Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
+  $Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
+  $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
+  $Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
+  $Project->EmailRedundantFailures = stripslashes_if_gpc_magic_quotes($_POST["emailRedundantFailures"]);
+  $Project->EmailBuildMissing = stripslashes_if_gpc_magic_quotes($_POST["emailBuildMissing"]);
+  $Project->EmailLowCoverage = stripslashes_if_gpc_magic_quotes($_POST["emailLowCoverage"]);
+  $Project->EmailTestTimingChanged = stripslashes_if_gpc_magic_quotes($_POST["emailTestTimingChanged"]);
+  $Project->CvsViewerType = stripslashes_if_gpc_magic_quotes($_POST["cvsviewertype"]); 
+  $Project->RobotName = stripslashes_if_gpc_magic_quotes($_POST["robotname"]); 
+  $Project->RobotRegex = stripslashes_if_gpc_magic_quotes($_POST["robotregex"]); 
+  $Project->TestTimeStd = stripslashes_if_gpc_magic_quotes($_POST["testTimeStd"]);
+  $Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
+  $Project->TestTimeMaxStatus = stripslashes_if_gpc_magic_quotes($_POST["testTimeMaxStatus"]);  
+  $Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
+  $Project->ShowTestTime = stripslashes_if_gpc_magic_quotes($_POST["showTestTime"]);
+  $Project->EmailMaxItems = stripslashes_if_gpc_magic_quotes($_POST["emailMaxItems"]);
+  $Project->EmailMaxChars = stripslashes_if_gpc_magic_quotes($_POST["emailMaxChars"]);
+  $Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST["emailAdministrator"]);
+  $Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
+  $Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
+  $Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
+  $Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
   $Project->Save();
   
   // Add the logo
@@ -325,7 +338,9 @@ if($Update || $AddRepository)
   
   // Add repositories
 
-  $Project->AddRepositories($_POST["cvsRepository"], $_POST["cvsUsername"], $_POST["cvsPassword"]);
+  $Project->AddRepositories(stripslashes_if_gpc_magic_quotes($_POST["cvsRepository"]), 
+                            stripslashes_if_gpc_magic_quotes($_POST["cvsUsername"]), 
+                            stripslashes_if_gpc_magic_quotes($_POST["cvsPassword"]));
   }
   
 // List the available projects

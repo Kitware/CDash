@@ -255,11 +255,7 @@ function pdo_real_escape_string($unescaped_string, $link_identifier = NULL)
     return substr($str, 1, strlen($str) - 2);
     }
   else 
-    {
-    if(get_magic_quotes_gpc())
-      {
-      $unescaped_string = stripslashes($unescaped_string); 
-      } 
+    { 
     return mysql_real_escape_string($unescaped_string, get_link_identifier($link_identifier));
     }
 }
