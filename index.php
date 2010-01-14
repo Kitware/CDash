@@ -498,8 +498,8 @@ function generate_main_dashboard_XML($projectid,$date)
   if(pdo_num_rows($dailyupdate)>0)
     {
     $dailupdate_array = pdo_fetch_array($dailyupdate);
-    $xml .= "<nchanges>".$dailyupdatefile_array[0]."</nchanges>";
-    $xml .= "<nauthors>".$dailyupdatefile_array[1]."</nauthors>";
+    $xml .= "<nchanges>".$dailupdate_array[0]."</nchanges>";
+    $xml .= "<nauthors>".$dailupdate_array[1]."</nauthors>";
     }
   else
    {
