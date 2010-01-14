@@ -512,17 +512,8 @@ class Build
       $this->StartTime = pdo_real_escape_string($this->StartTime);
       $this->EndTime = pdo_real_escape_string($this->EndTime);
       $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
-      
-      $h = fopen("C:/Julien/tdash.txt",'a');
-      fwrite($h,$this->Command);
-      fclose($h);
-      
       $this->Command = pdo_real_escape_string($this->Command);
       $this->Log = pdo_real_escape_string($this->Log);
-      
-      $h = fopen("C:/Julien/tdash2.txt",'a');
-      fwrite($h,$this->Command);
-      fclose($h);
       
       // Compute the number of errors and warnings (this speeds up the display of the main table)
       $nbuilderrors = 0;
