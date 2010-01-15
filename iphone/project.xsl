@@ -43,14 +43,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
               <b><xsl:value-of select="buildname"/></b></td>
               </tr>
             <tr  class="sectionbuildeven" valign="middle">
-              <td width="15%"><xsl:value-of select="update"/></td>
+              <td width="15%"><xsl:value-of select="update/files"/></td>
               <td width="15%">
                <xsl:attribute name="class">
                <xsl:choose>
-                 <xsl:when test="configure > 0">
+                 <xsl:when test="configure/error > 0">
                    error
                    </xsl:when>
-                  <xsl:when test="string-length(configure)=0">
+                  <xsl:when test="string-length(configure/error)=0">
                    tr-odd
                    </xsl:when>     
                  <xsl:otherwise>
@@ -58,7 +58,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                   </xsl:otherwise>
                </xsl:choose>
              </xsl:attribute>
-              <xsl:value-of select="configure"/></td>
+              <xsl:value-of select="configure/error"/></td>
               <td width="14%">
                <xsl:attribute name="class">
                 <xsl:choose>
