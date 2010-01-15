@@ -17,7 +17,7 @@
    <xsl:if test="count(/cdash/user/admin)!=1 or /cdash/user/admin=0">
      <xsl:value-of select="/cdash/version"/>
    </xsl:if>
-   <xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text> 2009
+   <xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text> 2010
    <a href="http://www.kitware.com">Kitware Inc.</a>
    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><br/>
   <a href="http://www.cdash.org/Bug">[report problems]</a>
