@@ -62,7 +62,10 @@ function upgrade_tables()
    {
    nextstep = upgrade_1_6;
    }
- 
+  else if(version < 1.8)
+   {
+   nextstep = upgrade_1_8;
+   }
   sendAjax("#Upgrade-Tables-Status","backwardCompatibilityTools.php?upgrade-tables=1",text,nextstep);  
 }
 
@@ -100,6 +103,14 @@ function upgrade_1_6()
   $("#Upgrade-1-6-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-1-6-Status","backwardCompatibilityTools.php?upgrade-1-6=1",text,done);  
 }
+
+function upgrade_1_8()
+{
+  var text = "Applying 1.8 patches";
+  $("#Upgrade-1-8-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  sendAjax("#Upgrade-1-8-Status","backwardCompatibilityTools.php?upgrade-1-8=1",text,done);  
+}
+
 // empty function needed
 function done()
 {
