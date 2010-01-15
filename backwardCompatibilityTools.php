@@ -562,6 +562,7 @@ if(isset($_GET['upgrade-1-6']))
     pdo_query("ALTER TABLE test CHANGE output output MEDIUMBLOB NOT NULL "); // change it to blob (cannot do that in PGSQL)
     pdo_query("ALTER TABLE updatefile CHANGE checkindate checkindate TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
     pdo_query("ALTER TABLE build2note CHANGE time time TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
+    pdo_query("ALTER TABLE buildemail CHANGE time time TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
     }
   
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
