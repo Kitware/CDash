@@ -861,7 +861,7 @@ CREATE TABLE `buildemail` (
   `userid` int(11) NOT NULL,
   `buildid` bigint(20) NOT NULL,
   `category` tinyint(4) NOT NULL,
-  `time` timestamp NOT NULL,
+  `time` timestamp NOT NULL default '1980-01-01 00:00:00',
   KEY `userid` (`userid`),
   KEY `buildid` (`buildid`),
   KEY `category` (`category`)
