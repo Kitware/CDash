@@ -625,7 +625,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     
   // Select the users who want to receive all emails
   $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,".qid("user").".id  FROM ".qid("user").",user2project 
-                     WHERE user2project.projectid".qnum($projectid)." 
+                     WHERE user2project.projectid=".qnum($projectid)." 
                      AND user2project.userid=".qid("user").".id AND user2project.emailtype>1");
   add_last_sql_error("sendsummaryemail");
   while($user_array = pdo_fetch_array($user))
