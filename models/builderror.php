@@ -89,7 +89,7 @@ class BuildError
       }
     else
       {
-      $crc32 = crc32($this->SourceFile.$this->SourceLine);
+      $crc32 = crc32($text.$this->SourceFile.$this->SourceLine); // some warning can be on the same line
       }
       
     $query = "INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,
