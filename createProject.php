@@ -290,7 +290,7 @@ if($Update || $AddRepository)
   $Project->BugTrackerUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["bugURL"]));
   $Project->BugTrackerFileUrl = stripslashes_if_gpc_magic_quotes($_POST["bugFileURL"]);
   $Project->DocumentationUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["docURL"]));
-  @$Project->Public = stripslashes_if_gpc_magic_quotes($_POST["public"]);
+  @$Project->Public = $_POST["public"];
   if(!isset($Project->Public))
     {
     $Project->Public = 0;
@@ -335,10 +335,9 @@ if($Update || $AddRepository)
     }
   
   // Add repositories
-
-  $Project->AddRepositories(stripslashes_if_gpc_magic_quotes($_POST["cvsRepository"]), 
-                            stripslashes_if_gpc_magic_quotes($_POST["cvsUsername"]), 
-                            stripslashes_if_gpc_magic_quotes($_POST["cvsPassword"]));
+  $Project->AddRepositories($_POST["cvsRepository"], 
+                            $_POST["cvsUsername"], 
+                            $_POST["cvsPassword"]);
   }
   
 // List the available projects
