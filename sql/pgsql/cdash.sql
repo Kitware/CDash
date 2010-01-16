@@ -278,7 +278,6 @@ CREATE TABLE "project" (
   "coveragethreshold" smallint DEFAULT '70' NOT NULL,
   "nightlytime" character varying(50) DEFAULT '00:00:00' NOT NULL,
   "googletracker" character varying(50) DEFAULT '' NOT NULL,
-  "emailbuildmissing" smallint DEFAULT '0' NOT NULL,
   "emaillowcoverage" smallint DEFAULT '0' NOT NULL,
   "emailtesttimingchanged" smallint DEFAULT '0' NOT NULL,
   "emailbrokensubmission" smallint DEFAULT '1' NOT NULL,

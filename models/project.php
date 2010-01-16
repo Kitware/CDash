@@ -36,7 +36,6 @@ class Project
   var $CoverageThreshold;
   var $NightlyTime;
   var $GoogleTracker;
-  var $EmailBuildMissing;
   var $EmailLowCoverage;
   var $EmailTestTimingChanged;
   var $EmailBrokenSubmission;
@@ -64,10 +63,6 @@ class Project
   /** Initialize non defined variables */
   private function Initialize()
     {
-    if(empty($this->EmailBuildMissing))
-      { 
-      $this->EmailBuildMissing=0;
-      } 
     if(empty($this->EmailLowCoverage))
       { 
       $this->EmailLowCoverage=0;
@@ -139,7 +134,6 @@ class Project
       case "COVERAGETHRESHOLD": $this->CoverageThreshold = $value;break;
       case "NIGHTLYTIME": $this->NightlyTime = $value;break;
       case "GOOGLETRACKER": $this->GoogleTracker = $value;break;
-      case "EMAILBUILDMISSING": $this->EmailBuildMissing = $value;break;
       case "EMAILLOWCOVERAGE": $this->EmailLowCoverage = $value;break;
       case "EMAILTESTTIMINGCHANGED": $this->EmailTestTimingChanged = $value;break;
       case "EMAILBROKENSUBMISSION": $this->EmailBrokenSubmission = $value;break;
@@ -250,7 +244,6 @@ class Project
       $query .= ",coveragethreshold=".qnum($this->CoverageThreshold);
       $query .= ",nightlytime='".$NightlyTime."'";
       $query .= ",googletracker='".$GoogleTracker."'";
-      $query .= ",emailbuildmissing=".qnum($this->EmailBuildMissing);
       $query .= ",emaillowcoverage=".qnum($this->EmailLowCoverage);
       $query .= ",emailtesttimingchanged=".qnum($this->EmailTestTimingChanged);
       $query .= ",emailbrokensubmission=".qnum($this->EmailBrokenSubmission);
@@ -320,12 +313,12 @@ class Project
       $this->Initialize();
       $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
                                     googletracker,emailbrokensubmission,emailredundantfailures,
-                                    emailbuildmissing,emaillowcoverage,emailtesttimingchanged,cvsviewertype,
+                                    emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
                                     ,displaylabels,autoremovetimeframe,autoremovemaxbuilds)
                  VALUES (".$idvalue."'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
                  ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$NightlyTime',
-                 '$GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).",".qnum($this->EmailBuildMissing).","
+                 '$GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).","
                  .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$CvsViewerType',".qnum($this->TestTimeStd)
                  .",".qnum($this->TestTimeStdThreshold).",".qnum($this->TestTimeMaxStatus).",".qnum($this->EmailMaxItems).",".qnum($this->EmailMaxChars).","
                  .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).",".qnum($this->DisplayLabels)
@@ -433,7 +426,6 @@ class Project
       $this->CoverageThreshold = $project_array['coveragethreshold'];
       $this->NightlyTime = $project_array['nightlytime'];
       $this->GoogleTracker = $project_array['googletracker'];
-      $this->EmailBuildMissing = $project_array['emailbuildmissing'];
       $this->EmailLowCoverage = $project_array['emaillowcoverage'];
       $this->EmailTestTimingChanged = $project_array['emailtesttimingchanged'];
       $this->EmailBrokenSubmission = $project_array['emailbrokensubmission'];

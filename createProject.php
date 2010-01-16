@@ -140,7 +140,6 @@ if($Submit)
     $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
     @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
     @$Project->EmailRedundantFailures = stripslashes_if_gpc_magic_quotes($_POST["emailRedundantFailures"]);
-    @$Project->EmailBuildMissing = stripslashes_if_gpc_magic_quotes($_POST["emailBuildMissing"]);
     @$Project->EmailLowCoverage = stripslashes_if_gpc_magic_quotes($_POST["emailLowCoverage"]);
     @$Project->EmailTestTimingChanged = stripslashes_if_gpc_magic_quotes($_POST["emailTestTimingChanged"]);
     @$Project->CvsViewerType = stripslashes_if_gpc_magic_quotes($_POST["cvsviewertype"]);
@@ -302,7 +301,6 @@ if($Update || $AddRepository)
   $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
   $Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
   $Project->EmailRedundantFailures = stripslashes_if_gpc_magic_quotes($_POST["emailRedundantFailures"]);
-  $Project->EmailBuildMissing = stripslashes_if_gpc_magic_quotes($_POST["emailBuildMissing"]);
   $Project->EmailLowCoverage = stripslashes_if_gpc_magic_quotes($_POST["emailLowCoverage"]);
   $Project->EmailTestTimingChanged = stripslashes_if_gpc_magic_quotes($_POST["emailTestTimingChanged"]);
   $Project->CvsViewerType = stripslashes_if_gpc_magic_quotes($_POST["cvsviewertype"]); 
@@ -383,7 +381,6 @@ if($projectid>0)
   $xml .= add_XML_value("googletracker",$Project->GoogleTracker);
   $xml .= add_XML_value("emailbrokensubmission",$Project->EmailBrokenSubmission);
   $xml .= add_XML_value("emailredundantfailures",$Project->EmailRedundantFailures);
-  $xml .= add_XML_value("emailbuildmissing",$Project->EmailBuildMissing);
   $xml .= add_XML_value("emaillowcoverage",$Project->EmailLowCoverage);
   $xml .= add_XML_value("emailtesttimingchanged",$Project->EmailTestTimingChanged);
   $xml .= add_XML_value("cvsviewertype",$Project->CvsViewerType);
