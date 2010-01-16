@@ -561,19 +561,18 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("expected","1");
            
         // compute historical average to get approximate expected time
-        $query = pdo_query("SELECT AVG(TIME_TO_SEC(TIME(submittime))) FROM build,build2group
+        $query = pdo_query("SELECT AVG(TIME_TO_SEC(TIME(submittime))) FROM (SELECT submittime FROM build,build2group
                               WHERE build2group.buildid=build.id AND siteid='$siteid' AND name='$buildname'
                               AND type='$buildtype' AND build2group.groupid='$groupid'
-                              ORDER BY id DESC LIMIT 5");
-        
+                              ORDER BY id DESC LIMIT 5) as t");
         $query_array = pdo_fetch_array($query);
-        $time = $query_array[0]; 
+        $time = $query_array[0];
         $hours = floor($time/3600);
         $time = ($time%3600);
         $minutes = floor($time/60);
         $seconds = ($time%60);
 
-        $nextExpected = strtotime($hours.":".$minutes.":".$seconds);
+        $nextExpected = strtotime($hours.":".$minutes.":".$seconds." UTC");
 
         $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"]; 
         $divname = str_replace("+","_",$divname);
@@ -581,7 +580,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
         $xml .= add_XML_value("expecteddivname",$divname);
         $xml .= add_XML_value("submitdate","No Submission");
-        $xml .= add_XML_value("expectedstarttime",gmdate(FMT_TIME,$nextExpected));
+        $xml .= add_XML_value("expectedstarttime",date(FMT_TIME,$nextExpected));
         $xml .= "</build>";
         }
       }
