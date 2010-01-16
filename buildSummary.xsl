@@ -235,7 +235,7 @@
         <td align="right">
               <xsl:attribute name="class">
           <xsl:choose>
-          <xsl:when test="cdash/previousbuild/nupdatewarnings > 0">error
+          <xsl:when test="cdash/previousbuild/nupdatewarnings > 0">warning
                </xsl:when>
                  <xsl:otherwise>
                   <xsl:choose>
@@ -265,7 +265,7 @@
        <xsl:value-of select="cdash/previousbuild/nconfigureerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
-          <xsl:when test="cdash/previousbuild/nconfigurewarnings > 0">error
+          <xsl:when test="cdash/previousbuild/nconfigurewarnings > 0">warning
                </xsl:when>
                  <xsl:otherwise>
                   normal
@@ -290,7 +290,7 @@
        <xsl:value-of select="cdash/previousbuild/nerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
-          <xsl:when test="cdash/previousbuild/nwarnings > 0">error
+          <xsl:when test="cdash/previousbuild/nwarnings > 0">warning
                </xsl:when>
                  <xsl:otherwise>
                   normal
@@ -315,7 +315,7 @@
        <xsl:value-of select="cdash/previousbuild/ntestfailed"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
-          <xsl:when test="cdash/previousbuild/ntestnotrun> 0">error
+          <xsl:when test="cdash/previousbuild/ntestnotrun> 0">warning
                </xsl:when>
                  <xsl:otherwise>
                   normal
