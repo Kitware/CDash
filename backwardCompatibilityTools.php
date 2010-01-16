@@ -565,6 +565,7 @@ if(isset($_GET['upgrade-1-6']))
     pdo_query("ALTER TABLE buildemail CHANGE time time TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
     }
   
+  RemoveTableField("project","emailbuildmissing");
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
   AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");

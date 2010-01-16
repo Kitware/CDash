@@ -164,7 +164,6 @@ function backup_projects($file)
     add_backup_value($file,"coveragethreshold",$project_array['coveragethreshold']);
     add_backup_value($file,"nightlytime",$project_array['nightlytime']);
     add_backup_value($file,"googletracker",$project_array['googletracker']);
-    add_backup_value($file,"emailbuildmissing",$project_array['emailbuildmissing']);
     add_backup_value($file,"emaillowcoverage",$project_array['emaillowcoverage']);
     add_backup_value($file,"emailtesttimingchanged",$project_array['emailtesttimingchanged']);
     add_backup_value($file,"emailbrokensubmission",$project_array['emailbrokensubmission']);

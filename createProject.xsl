@@ -992,34 +992,6 @@
                         <td></td>
                         <td>
                           <div align="right">
-                            <strong>Email build missing:</strong>
-                          </div>
-                        </td>
-                        <td>
-                          <input onchange="saveChanges();" onfocus="showHelp('emailBuild_help');"
-                            type="checkbox" name="emailBuildMissing" value="1">
-                            <xsl:if test="cdash/project/emailbuildmissing=1">
-                              <xsl:attribute name="checked"></xsl:attribute>
-                            </xsl:if>
-                          </input>
-                          <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
-                            target="blank">
-                            <img onmouseover="showHelp('emailBuild_help');" src="images/help.gif"
-                              border="0" />
-                          </a>
-                          <span class="help_content" id="emailBuild_help">
-                            <b>Email build missing</b>
-                            <br />
-                            Enable/Disable sending email when a build has not
-                            submitted. This feature is currently not implemented.
-                          </span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td></td>
-                        <td>
-                          <div align="right">
                             <strong>Email low coverage:</strong>
                           </div>
                         </td>
