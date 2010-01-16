@@ -751,7 +751,7 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeDifferences",LOG_ERR);
+      add_log("BuildId is not set","Build::ComputeConfigureDifferences",LOG_ERR);
       return false;
       }
 
