@@ -922,11 +922,16 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
       case 'build_warnings': $messagePlainText .= "build warnings";$titleerrors.="w=".$value; break;
       case 'build_errors': $messagePlainText .= "build errors";$titleerrors.="b=".$value; break;
       case 'test_errors': $messagePlainText .= "failing tests";$titleerrors.="t=".$value; break;
-      }
-        
+      }  
     $i++;
     }  
-    
+
+  // Nothing to send we stop  
+  if($i==0)
+    {
+    return;  
+    }  
+
   // Title
   $titleerrors .= "):";
   $title = "FAILED ".$titleerrors." ".$Project->Name;
