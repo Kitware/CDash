@@ -58,7 +58,6 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 </a>
 <br/>
 </xsl:if>
-<br/>
 
 <!-- Graph -->
 <xsl:if test="cdash/build/site">
