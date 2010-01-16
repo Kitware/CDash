@@ -129,13 +129,14 @@ function str_to_time($str,$stamp)
 function compute_error_difference($buildid,$previousbuildid,$warning)
 {   
   // Look at the difference positive and negative test errors
-  $sqlquery = "UPDATE builderror SET newstatus=1 WHERE buildid=".$buildid." AND type=".$warning." AND crc32=
+  $sqlquery = "UPDATE builderror SET newstatus=1 WHERE buildid=".$buildid." AND type=".$warning." AND crc32 IN
                (SELECT crc32 FROM (SELECT crc32 FROM builderror WHERE buildid=".$buildid." 
                AND type=".$warning.") AS builderrora 
                LEFT JOIN (SELECT crc32 as crc32b FROM builderror WHERE buildid=".$previousbuildid." 
                AND type=".$warning.") AS builderrorb ON builderrora.crc32=builderrorb.crc32b
                WHERE builderrorb.crc32b IS NULL)";
   pdo_query($sqlquery);
+  add_last_sql_error("compute_error_difference");
   
   // Maybe we can get that from the query (don't know).
   $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".$buildid." AND type=".$warning." AND newstatus=1");
