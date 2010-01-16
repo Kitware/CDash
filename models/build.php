@@ -301,6 +301,19 @@ class Build
       {
       return false;    
       }
+
+    // If StartTime is not set we set it
+    if($this->StartTime=='')
+      {
+      $query = pdo_query("SELECT starttime FROM build WHERE id=".qnum($this->Id));
+      if(!$query)
+        {
+        add_last_sql_error("Build:GetPreviousBuildId");
+        return false;
+        }
+      $query_array = pdo_fetch_array($query);              
+      $this->StartTime = $query_array['starttime'];
+      }
       
     $query = pdo_query("SELECT id FROM build
                         WHERE siteid=".qnum($this->SiteId)." AND type='$this->Type' AND name='$this->Name'
@@ -311,7 +324,7 @@ class Build
       {
       add_last_sql_error("Build:GetPreviousBuildId");
       return false;
-      }  
+      }
       
     if(pdo_num_rows($query)>0)
       {
