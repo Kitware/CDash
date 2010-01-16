@@ -691,6 +691,83 @@ function cleanBuildEmail($projectid)
   pdo_query("DELETE from buildemail WHERE time<'$now'");
 }
 
+/** Send an email to administrator of the project for users who are not registered */
+function sendEmailUnregisteredUsers($projectid,$cvsauthors)
+{ 
+  include("cdash/config.php");
+  require_once("models/userproject.php");
+  include_once("cdash/common.php");
+  
+  $unregisteredusers = array();
+  foreach($cvsauthors as $author)
+    {
+    if($author=="Local User")
+      {
+      continue;
+      }
+    
+    $UserProject = new UserProject();
+    $UserProject->CvsLogin = $author;
+    $UserProject->ProjectId = $projectid;
+    
+    if(!$UserProject->FillFromCVSLogin())
+      {
+      $unregisteredusers[] = $author;  
+      }
+    }
+
+  // Send the email if any   
+  if(count($unregisteredusers)>0)
+    {
+    // Find the project administrators
+    $email = "";
+    $emails = pdo_query("SELECT email FROM ".qid("user").",user2project WHERE ".qid("user").".id=user2project.userid 
+                         AND user2project.projectid=".qnum($projectid)." AND user2project.role='2'");
+    while($emails_array = pdo_fetch_array($emails))
+      {
+      if($email != "")
+        {
+        $email .= ", ";
+        }
+      $email .= $emails_array["email"];
+      }
+      
+    // Send the email
+    if($email != "")
+      {
+      $projectname = get_project_name($projectid);
+      $serverName = $CDASH_SERVER_NAME;
+      if(strlen($serverName) == 0)
+        {
+        $serverName = $_SERVER['SERVER_NAME'];
+        }
+
+      $title = "CDash [".$projectname."] - Unregistered users"; 
+      $body = "The following users are checking in code but are not registered for the project ".$projectname.":\n";
+      
+      foreach($unregisteredusers as $unreg)
+        {
+        $body .= "* ".$unreg."\n";
+        }
+      $body .= "\n You should register these users to your project. They are currently not receiving any emails from CDash.\n";
+      $body .= "\n-CDash on ".$serverName."\n";
+
+      add_log($title." : ".$body." : ".$email,"sendEmailUnregisteredUsers");
+        
+      /*if(mail("$email", $title, $body,
+         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+        {
+        add_log("email sent to: ".$email,"sendEmailUnregisteredUsers");
+        return;
+        }
+      else
+        {
+        add_log("cannot send email to: ".$email,"sendEmailUnregisteredUsers");
+        }*/
+      }
+    } // end count()
+}
+
 /** Add daily changes if necessary */
 function addDailyChanges($projectid)
 {
@@ -701,7 +778,8 @@ function addDailyChanges($projectid)
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME", $db);
 
-  $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name,autoremovetimeframe,autoremovemaxbuilds FROM project WHERE id='$projectid'"));
+  $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name,autoremovetimeframe,autoremovemaxbuilds,emailadministrator
+                                              FROM project WHERE id='$projectid'"));
   $date = ""; // now
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $date = gmdate(FMT_DATE, $currentstarttime);
@@ -710,6 +788,8 @@ function addDailyChanges($projectid)
   $query = pdo_query("SELECT id FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
   if(pdo_num_rows($query)==0)
     {
+    $cvsauthors = array();
+      
     pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status) 
                VALUES ($projectid,'$date','NA','NA','0')");
     
@@ -742,10 +822,20 @@ function addDailyChanges($projectid)
           }
         }
       
+      if(!in_array(stripslashes($author),$cvsauthors))
+        {  
+        $cvsauthors[] = stripslashes($author);
+        }
       pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
                    VALUES ($updateid,'$filename','$checkindate','$author','$log','$revision','$priorrevision')");
       } // end foreach commit
     
+    // If the project has the option to send an email to the author
+    if($project_array['emailadministrator'])
+      {
+      sendEmailUnregisteredUsers($projectid,$cvsauthors);
+      }
+      
     // Send an email if some expected builds have not been submitting
     sendEmailExpectedBuilds($projectid,$currentstarttime);    
     
