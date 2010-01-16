@@ -164,7 +164,7 @@ class UserProject
       return false;
       }
      
-    $sql = "SELECT emailcategory,userid
+    $sql = "SELECT emailcategory,userid,emailsuccess
                FROM user2project WHERE user2project.projectid=".qnum($this->ProjectId)."
                AND user2project.cvslogin='".$this->CvsLogin."'
                AND user2project.emailtype>0";
@@ -183,6 +183,7 @@ class UserProject
     $user_array = pdo_fetch_array($user);
     $this->EmailCategory = $user_array['emailcategory'];
     $this->UserId = $user_array['userid'];
+    $this->EmailSuccess = $user_array['emailsuccess'];
    
     return true;
     }

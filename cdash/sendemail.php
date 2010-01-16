@@ -223,8 +223,14 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
       add_log("User: ".$author." is not registered (or has no email) for the project ".$projectid,"SendEmail",LOG_WARNING);
       continue;
       }
-          
+ 
     // If the user doesn't want to receive email
+    if(!$UserProject->EmailSuccess)
+      {
+      continue;  
+      }
+      
+    // Check the categories  
     if(!checkEmailPreferences($UserProject->EmailCategory,$errors,$fixes))
       {
       continue;
