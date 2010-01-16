@@ -93,7 +93,6 @@ class ConfigureHandler extends AbstractHandler
         add_build($this->Build);
         $buildid = $this->Build->Id;
         }
-      
       $this->Configure->BuildId = $buildid;
       $this->Configure->StartTime = $start_time;
       $this->Configure->EndTime = $end_time;
@@ -106,6 +105,8 @@ class ConfigureHandler extends AbstractHandler
       $this->Configure->Insert();
       // Insert errors from the log file 
       $this->Configure->ComputeErrors();
+      
+      $this->Build->Id = $buildid;
       $this->Build->ComputeConfigureDifferences();
       }
     else if($name == 'LABEL')
