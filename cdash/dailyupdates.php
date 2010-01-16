@@ -290,7 +290,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
 }
 
 
-function get_svn_repository_commits($svnroot, $username, $password, $dates)
+function get_svn_repository_commits($svnroot, $dates, $username='', $password='')
 {
   $commits = array();
 
@@ -523,14 +523,12 @@ function get_repository_commits($projectid, $dates)
   $roots = array();
  
   // Find the repository 
-  $repositories = pdo_query("SELECT repositories.url FROM repositories,project2repositories 
+  $repositories = pdo_query("SELECT repositories.url,repositories.username,repositories.password
+                        FROM repositories,project2repositories 
                         WHERE repositories.id=project2repositories.repositoryid
                         AND project2repositories.projectid='$projectid'");
 
-  while($repositories_array = pdo_fetch_array($repositories))
-    {
-    $roots[] = $repositories_array["url"];
-    } 
+  
 
   $cvsviewers = pdo_query("SELECT cvsviewertype FROM project 
                         WHERE id='$projectid'");
@@ -541,8 +539,12 @@ function get_repository_commits($projectid, $dates)
   // Start with an empty array:
   $commits = array();
 
-  foreach($roots as $root)
+  while($repositories_array = pdo_fetch_array($repositories))
     {
+    $root = $repositories_array["url"];
+    $username = $repositories_array["username"];
+    $password = $repositories_array["password"];
+
     if (is_cvs_root($root))
       {
       $new_commits = get_cvs_repository_commits($root, $dates);
@@ -555,7 +557,7 @@ function get_repository_commits($projectid, $dates)
         }
       else
         {
-        $new_commits = get_svn_repository_commits($root, $dates);
+        $new_commits = get_svn_repository_commits($root, $dates, $username, $password);
         }       
       }
 
@@ -728,7 +730,7 @@ function addDailyChanges($projectid)
       // Check if we have a robot file for this build
       $robot = pdo_query("SELECT authorregex FROM projectrobot 
                   WHERE projectid=".qnum($projectid)." AND robotname='".$author."'");
-  
+      
       if(pdo_num_rows($robot)>0)
         {
         $robot_array = pdo_fetch_array($robot);
