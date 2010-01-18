@@ -169,7 +169,10 @@ $xml .= "</menu>";
         $metric /= 2.0;
         }
       $covfile["branchesuntested"] = $coveragefile_array["branchsuntested"];
+      $covfile["branchestested"] = $coveragefile_array["branchstested"];
       $covfile["functionsuntested"] = $coveragefile_array["functionsuntested"];
+      $covfile["functionstested"] = $coveragefile_array["functionstested"];
+      
         
       $covfile["percentcoverage"] = sprintf("%3.2f",$metric*100);
       $covfile["coveragemetric"] = $metric;
@@ -270,8 +273,16 @@ $xml .= "</menu>";
     $covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
     $covfile["fullpath"] = $coveragefile_array["fullpath"];
     $covfile["fileid"] = 0;
-    $covfile["covered"] = 0;    
-    
+    $covfile["covered"] = 0;
+    $covfile["locuntested"] = 0;
+    $covfile["loctested"] = 0;
+    $covfile["branchesuntested"] = 0;
+    $covfile["branchestested"] = 0;
+    $covfile["functionsuntested"] = 0;
+    $covfile["functionstested"] = 0;
+    $covfile["percentcoverage"] = 0;
+    $covfile["coveragemetric"] = 0;
+      
     // Add the priority
     $CoverageFile2User = new CoverageFile2User();
     $CoverageFile2User->ProjectId = $projectid;
@@ -293,6 +304,7 @@ $xml .= "</menu>";
     $xml .= add_XML_value("filename",$covfile["filename"]);
     $xml .= add_XML_value("fullpath",$covfile["fullpath"]);
     $xml .= add_XML_value("locuntested",$covfile["locuntested"]);
+    $xml .= add_XML_value("totalloc",$covfile["loctested"]+$covfile["locuntested"]);
     $xml .= add_XML_value("covered",$covfile["covered"]);
     $xml .= add_XML_value("fileid",$covfile["fileid"]);
     $xml .= add_XML_value("percentcoverage",$covfile["percentcoverage"]);
@@ -302,7 +314,9 @@ $xml .= "</menu>";
     $xml .= add_XML_value("percentcoveragerounded",$roundedpercentage); // used for progress bar
     $xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
     $xml .= add_XML_value("functionsuntested",@$covfile["functionsuntested"]);
+    $xml .= add_XML_value("totalfunctions",@$covfile["functionstested"]+@$covfile["functionsuntested"]);
     $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);
+    $xml .= add_XML_value("totalbranches",@$covfile["branchestested"]+@$covfile["branchesuntested"]);
     
     // Get the priority
     $priority = "NA";

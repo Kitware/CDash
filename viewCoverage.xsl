@@ -57,7 +57,7 @@
             </tr>
             <tr class="trodd">
 
-               <td align="left"> Tested lines</td>
+               <td align="left">Tested lines</td>
                <td align="right"><xsl:value-of select="cdash/coverage/loctested"/></td>
             </tr>
             <tr class="treven">
@@ -179,10 +179,10 @@
     </td>
     <td align="center">
       <xsl:choose>
-          <xsl:when test="coveragemetric &lt; /cdash/coverage/metricerror">
+          <xsl:when test="covered=0 or coveragemetric &lt; /cdash/coverage/metricerror">
              Low
            </xsl:when>
-         <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
+         <xsl:when test="covered=1 and coveragemetric >= /cdash/coverage/metricpass">
             Satisfactory
             </xsl:when>  
           <xsl:otherwise>
@@ -191,7 +191,6 @@
         </xsl:choose>
     </td> 
     <td>
-      <xsl:if test="covered>0">
       <div style="position:relative; width: 190px;">
        <div style="position:relative; float:left;
        width: 123px; height: 12px; background: #bdbdbd url('images/progressbar.gif') top left no-repeat;">
@@ -214,10 +213,6 @@
        </div>
        <div class="percentvalue" style="position:relative; float:left; margin-left:10px"><xsl:value-of select="percentcoverage"/>%</div>
       </div>
-      </xsl:if>
-      <xsl:if test="covered=0">
-      UNTESTED
-      </xsl:if>
     </td>
       
        <!-- gcov -->
@@ -237,10 +232,11 @@
             </xsl:otherwise>
          </xsl:choose>
        </xsl:attribute>
-       <xsl:value-of select="locuntested"/>
+       <xsl:value-of select="locuntested"/>/<xsl:value-of select="totalloc"/>
       </xsl:if>
        <xsl:if test="covered=0">
-       UNTESTED
+         <xsl:attribute name="class">error</xsl:attribute>
+         <xsl:value-of select="locuntested"/>
        </xsl:if>
      </td>
      </xsl:if>
@@ -263,16 +259,16 @@
             </xsl:otherwise>
          </xsl:choose>
        </xsl:attribute>
-       <xsl:value-of select="branchesuntested"/>
+       <xsl:value-of select="branchesuntested"/>/<xsl:value-of select="totalbranches"/>
       </xsl:if>
        <xsl:if test="covered=0">
-       UNTESTED
+       <xsl:attribute name="class">error</xsl:attribute><xsl:value-of select="branchesuntested"/>
        </xsl:if>
      </td>
 
       <!-- functions -->
        <td align="center">
-        <xsl:if test="covered>0">
+       <xsl:if test="covered>0">
        <xsl:attribute name="class">
          <xsl:choose>
            <xsl:when test="coveragemetric &lt;  /cdash/coverage/metricerror">
@@ -286,10 +282,10 @@
             </xsl:otherwise>
          </xsl:choose>
        </xsl:attribute>
-       <xsl:value-of select="functionsuntested"/>
+       <xsl:value-of select="functionsuntested"/>/<xsl:value-of select="totalfunctions"/>
       </xsl:if>
        <xsl:if test="covered=0">
-       UNTESTED
+         <xsl:attribute name="class">error</xsl:attribute>0
        </xsl:if>
      </td>
      </xsl:if>
