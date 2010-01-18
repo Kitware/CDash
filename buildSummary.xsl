@@ -40,6 +40,8 @@
 <xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="cdash/build/siteid"/></xsl:attribute>
 <xsl:value-of select="cdash/build/site"/></a>
     <br/><b>Build Name: </b><xsl:value-of select="cdash/build/name"/>
+    <br/><b>Stamp: </b><xsl:value-of select="cdash/build/stamp"/>
+    (<a><xsl:attribute name="href"><xsl:value-of select="cdash/build/relatedBuildsLink"/></xsl:attribute>related builds</a>)
     <br/><b>Time: </b><xsl:value-of select="cdash/build/time"/>
     <br/><b>Type: </b><xsl:value-of select="cdash/build/type"/>
     <br/>
