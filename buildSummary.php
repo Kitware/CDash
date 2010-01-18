@@ -38,7 +38,7 @@ $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid
 $projectid = $build_array["projectid"];
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
-  
+
 // Format the text to fit the iPhone
 function format_for_iphone($text)
 {
@@ -149,14 +149,36 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("siteid",$siteid);
   $xml .= add_XML_value("name",$build_array["name"]);
   $xml .= add_XML_value("id",$build_array["id"]);
-  $xml .= add_XML_value("time",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]." UTC")));  
+  $xml .= add_XML_value("stamp",$build_array["stamp"]);
+  $xml .= add_XML_value("time",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]." UTC")));
   $xml .= add_XML_value("type",$build_array["type"]);
-  
+
+  // Compute a related builds link. Most useful in projects with sub-projects
+  // defined, but maybe still useful for monolithic projects. Displays all
+  // builds (using filters) that share the same build name, site name *and*
+  // build stamp. (Other "related" links that might be useful: all with same
+  // (or similar?) build name, all with same site name, all with same stamp.)
+  //
+  $filterString =
+    "&filtercount=3&showfilters=1&filtercombine=and" .
+    "&field1=buildname/string&compare1=61&value1=" .
+      urlencode($build_array["name"]) .
+    "&field2=site/string&compare2=61&value2=" .
+      urlencode($site_array["name"]) .
+    "&field3=buildstamp/string&compare3=61&value3=" .
+      urlencode($build_array["stamp"]) .
+    "&collapse=0";
+
+  $relatedBuildsLink = "index.php?project=" . urlencode($projectname) .
+    "&display=project" . $filterString;
+
+  $xml .= add_XML_value("relatedBuildsLink", $relatedBuildsLink);
+
   // For the filter (we display 1 week)
   $xml .= add_XML_value("filterstarttime",date("Y-m-d",strtotime($build_array["starttime"]." UTC -7 days")));  
   $xml .= add_XML_value("filterendtime",date("Y-m-d",strtotime($build_array["starttime"]." UTC")));  
-  
-  
+
+
   // Find the OS and compiler information
   $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
   if(pdo_num_rows($buildinformation)>0)

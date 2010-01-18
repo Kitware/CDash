@@ -86,6 +86,7 @@ class IndexPhpFilters extends DefaultFilters
     $xml .= getFilterDefinitionXML('builderrors', 'Build Errors', 'number', '', '0');
     $xml .= getFilterDefinitionXML('buildwarnings', 'Build Warnings', 'number', '', '0');
     $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
+    $xml .= getFilterDefinitionXML('buildstamp', 'Build Stamp', 'string', '', '');
     $xml .= getFilterDefinitionXML('buildstarttime', 'Build Time', 'date', '', '');
     $xml .= getFilterDefinitionXML('buildtype', 'Build Type', 'string', '', 'Nightly');
     $xml .= getFilterDefinitionXML('configureduration', 'Configure Duration', 'number', '', '0');
@@ -99,7 +100,7 @@ class IndexPhpFilters extends DefaultFilters
     $xml .= getFilterDefinitionXML('hasusernotes', 'Has User Notes', 'bool', '', '');
     $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
     $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
-    $xml .= getFilterDefinitionXML('buildgenerator', 'Submission Client', 'string', '', '2.6');
+    $xml .= getFilterDefinitionXML('buildgenerator', 'Submission Client', 'string', '', '2.8');
     $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
     $xml .= getFilterDefinitionXML('testsduration', 'Tests Duration', 'number', '', '', '0');
     $xml .= getFilterDefinitionXML('testsfailed', 'Tests Failed', 'number', '', '0');
@@ -139,6 +140,12 @@ class IndexPhpFilters extends DefaultFilters
     case 'buildname':
     {
       $sql_field = 'b.name';
+    }
+    break;
+
+    case 'buildstamp':
+    {
+      $sql_field = 'b.stamp';
     }
     break;
 
@@ -799,6 +806,14 @@ function get_filterdata_from_request($page_id = '')
     $pageSpecificFilters->getSqlField($field, &$sql_field);
 
     if ($fieldtype == 'date')
+    {
+      $filterdata['hasdateclause'] = 1;
+    }
+
+    // Treat the buildstamp field as if it were a date clause so that the
+    // default date clause of "builds from today only" is not used...
+    //
+    if ($field == 'buildstamp')
     {
       $filterdata['hasdateclause'] = 1;
     }
