@@ -44,7 +44,7 @@ $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
 
 // Find the other builds
-$previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build.buildwarnings,
+$previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build.builderrors,
                              build.buildwarnings,build.testfailed,
                              buildupdate.status as updatestatus,
                              buildupdate.warnings AS updatewarnings,
