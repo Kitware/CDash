@@ -249,7 +249,7 @@
         </xsl:choose>
       </xsl:attribute>
         <xsl:if test="countbuildids=1">
-        <xsl:if test="userupdates>0"><img src="images/star.png" alt="finger"/></xsl:if><a>
+        <xsl:if test="userupdates>0"><img src="images/yellowled.png" alt="star" title="I checked in some code for this build!"/></xsl:if><a>
         <xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="update/files"/>
