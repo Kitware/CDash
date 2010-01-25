@@ -612,6 +612,7 @@ if(isset($_GET['upgrade-1-6']))
   if(!pdo_query("SELECT projectid FROM test LIMIT 1"))
     {
     AddTableField("test","projectid","int(11)","bigint","0");
+    AddTableIndex('test','projectid');
     
     // Set the project id
     pdo_query("UPDATE test SET projectid=(SELECT projectid FROM build,build2test 
