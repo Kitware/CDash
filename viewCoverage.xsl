@@ -119,6 +119,12 @@
 </center>
 <br/>
 
+<!-- Links -->
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/></xsl:attribute>Low Coverage (<xsl:value-of select="cdash/coveragefilestatus/low"/>)</a> | 
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=1</xsl:attribute>Medium Coverage (<xsl:value-of select="cdash/coveragefilestatus/medium"/>)</a> | 
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=2</xsl:attribute>Statisfactory Coverage (<xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>)</a>
+<br/>
+
 <!--  Coverage table -->
 <input type="hidden" name="coverageType" id="coverageType">
 <xsl:attribute name="value">
