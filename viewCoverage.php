@@ -119,9 +119,11 @@ $xml .= "</menu>";
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
   $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
   // Above this number of the coverage is green
-  $xml .= add_XML_value("metricpass",$project_array["coveragethreshold"]/100);
+  $metricpass = $project_array["coveragethreshold"]/100;
+  $xml .= add_XML_value("metricpass",$metricpass);
   // Below this number of the coverage is red
-  $xml .= add_XML_value("metricerror",0.7*($project_array["coveragethreshold"]/100));
+  $metricerror = 0.7*($project_array["coveragethreshold"]/100);
+  $xml .= add_XML_value("metricerror",$metricerror);
 
 
   $coveredfiles = pdo_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
@@ -297,9 +299,40 @@ $xml .= "</menu>";
       
     $covfile_array[] = $covfile;
     }
-  
+
+  $ncoveragefiles = array();
+  $ncoveragefiles[0] = 0;
+  $ncoveragefiles[1] = 0;
+  $ncoveragefiles[2] = 0;
+
   foreach($covfile_array as $covfile)
-    {   
+    {
+    // Show only the low coverage  
+    if($covfile["covered"]==0 || $covfile["coveragemetric"] < $metricerror)
+      {
+      $ncoveragefiles[0]++;  
+      $coveragestatus = 0; // low 
+      }
+    else if($covfile["covered"]==1 && $covfile["coveragemetric"] >= $metricpass)
+      {
+      $ncoveragefiles[2]++;   
+      $coveragestatus = 2; // satisfactory 
+      }
+    else
+      {
+      $ncoveragefiles[1]++; // medium
+      $coveragestatus = 1;
+      }
+
+    if(isset($_GET['status']) && $_GET['status'] != $coveragestatus)
+      {
+      continue;  
+      }
+    else if(!isset($_GET['status']) && $coveragestatus!=0) // low by default
+      {
+      continue;  
+      }
+      
     $xml .= "<coveragefile>";   
     $xml .= add_XML_value("filename",$covfile["filename"]);
     $xml .= add_XML_value("fullpath",$covfile["fullpath"]);
@@ -354,7 +387,15 @@ $xml .= "</menu>";
       "ORDER BY text ASC");
     $xml .= "</coveragefile>";
     }
+
     
+  // Show the number of files covered by status  
+  $xml .= "<coveragefilestatus>";
+  $xml .= add_XML_value("low",$ncoveragefiles[0]);
+  $xml .= add_XML_value("medium",$ncoveragefiles[1]);
+  $xml .= add_XML_value("satisfactory",$ncoveragefiles[2]);
+  $xml .= "</coveragefilestatus>";  
+  
   $xml .= "</cdash>";
   
 // Now doing the xslt transition
