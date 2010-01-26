@@ -157,8 +157,8 @@ if($Submit)
     @$Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST["emailAdministrator"]);
     @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
     @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
-    @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremovetimeframe"]);
-    @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremovemaxbuilds"]);
+    @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
+    @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
     $Project->Public = $Public;
     
     $projectid = -1;
