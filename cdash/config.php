@@ -15,6 +15,12 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+/** WARNING: It's recommended to create a config.local.php file and leave
+ * this file as is.
+ * If creating the config.local.php from config.php make sure you DELETE
+ * any text after the 'DO NOT EDIT AFTER THIS LINE' otherwise your
+ * configuration file will be referencing each other. */
+
 // Hostname of the database server
 $CDASH_DB_HOST = 'localhost';
 // Login for database access
