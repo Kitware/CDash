@@ -144,6 +144,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     // Testing if it actually worked
     $content = $this->connect($this->url.'/index.php?project=InsightExample&date=20090223');
     $content = $this->analyse($this->clickLink('76.43%'));
+    $content = $this->analyse($this->clickLink('Statisfactory (75)'));
     $content = $this->analyse($this->clickLink('./Source/itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h')); 
     $expected = '<span class="lineCov">    1 | #ifndef __itkNormalVectorDiffusionFunction_txx</span><br><span class="lineNum">   18</span><span class="lineCov">    2 | #define __itkNormalVectorDiffusionFunction_txx</span><br>';
       
