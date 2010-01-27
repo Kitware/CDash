@@ -103,7 +103,7 @@ $CDASH_MANAGE_CLIENTS = '0';
 
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php'; 
-if ( file_exists($localConfig) )
+if ((strpos(__FILE__,'config.local.php') === FALSE) && file_exists($localConfig) )
   {
   include($localConfig);
   }
