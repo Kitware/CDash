@@ -225,7 +225,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
       }
  
     // If the user doesn't want to receive email
-    if(!$UserProject->EmailSuccess)
+    if($fixes && !$UserProject->EmailSuccess)
       {
       continue;  
       }
