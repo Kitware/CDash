@@ -7,11 +7,11 @@ function add_build($build)
     {
     return;
     }  
-
+     
   //add_log('subprojectname: '.$build->SubProjectName, 'add_build');
   $buildid = $build->GetIdFromName($build->SubProjectName);
   if($buildid > 0 && !$build->Append)
-    {
+    { 
     remove_build($buildid);
     }
 
@@ -21,13 +21,12 @@ function add_build($build)
     {
     $build->Id = $buildid;
     }
-
+ 
   // Find the groupid
   $buildGroup = new BuildGroup();
   $build->GroupId = $buildGroup->GetGroupIdFromRule($build);
-
-  $build->Save();
-
+  
+  $build->Save(); 
   return $build->Id;
 }
 
@@ -137,12 +136,25 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
                WHERE builderrorb.crc32b IS NULL)";
   pdo_query($sqlquery);
   add_last_sql_error("compute_error_difference");
+
+  // Same for buildfailure
+  $sqlquery = "UPDATE buildfailure SET newstatus=1 WHERE buildid=".$buildid." AND type=".$warning." AND crc32 IN
+               (SELECT crc32 FROM (SELECT crc32 FROM buildfailure WHERE buildid=".$buildid." 
+               AND type=".$warning.") AS builderrora 
+               LEFT JOIN (SELECT crc32 as crc32b FROM buildfailure WHERE buildid=".$previousbuildid." 
+               AND type=".$warning.") AS builderrorb ON builderrora.crc32=builderrorb.crc32b
+               WHERE builderrorb.crc32b IS NULL)";
+  pdo_query($sqlquery);
+  add_last_sql_error("compute_error_difference");
   
   // Maybe we can get that from the query (don't know).
   $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".$buildid." AND type=".$warning." AND newstatus=1");
   $positives_array  = pdo_fetch_array($positives);
   $npositives = $positives_array[0];
-  
+  $positives = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid=".$buildid." AND type=".$warning." AND newstatus=1");
+  $positives_array  = pdo_fetch_array($positives);
+  $npositives += $positives_array[0];
+ 
   // Count the difference between the number of tests that were passing (or failing)
   // and now that have a different one
   $sqlquery = "SELECT count(*)
@@ -155,6 +167,16 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
   $negatives_array  = pdo_fetch_array($negatives);
   $nnegatives = $negatives_array[0]; 
 
+  $sqlquery = "SELECT count(*)
+               FROM (SELECT crc32 FROM buildfailure WHERE buildid=".$previousbuildid."
+               AND type=".$warning.") AS builderrora 
+               LEFT JOIN (SELECT crc32 as crc32b FROM buildfailure WHERE buildid=".$buildid." 
+               AND type=".$warning.") AS builderrorb 
+               ON builderrora.crc32=builderrorb.crc32b WHERE builderrorb.crc32b IS NULL";
+  $negatives = pdo_query($sqlquery);
+  $negatives_array  = pdo_fetch_array($negatives);
+  $nnegatives += $negatives_array[0]; 
+  
   // Don't log if no diff
   if($npositives != 0 || $nnegatives != 0)
     {   

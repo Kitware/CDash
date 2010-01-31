@@ -825,9 +825,13 @@ CREATE TABLE `buildfailure` (
   `outputfile` varchar(255) NOT NULL,
   `outputtype` varchar(255) NOT NULL,
   `sourcefile` varchar(512) NOT NULL,
+  `crc32` bigint(20) NOT NULL default '0',
+  `newstatus` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `buildid` (`buildid`),
-  KEY `type` (`type`)
+  KEY `type` (`type`),
+  KEY `crc32` (`crc32`),
+  KEY `newstatus` (`newstatus`)
 );
 
 

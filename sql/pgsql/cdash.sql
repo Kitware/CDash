@@ -774,10 +774,14 @@ CREATE TABLE "buildfailure" (
   "outputfile" character varying(255) NOT NULL,
   "outputtype" character varying(255) NOT NULL,
   "sourcefile" character varying(512) NOT NULL,
+  "crc32" bigint DEFAULT '0' NOT NULL,
+  "newstatus" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "buildid17" on "buildfailure" ("buildid");
 CREATE INDEX "type5" on "buildfailure" ("type");
+CREATE INDEX "buildfailure_newstatus" on "buildfailure" ("newstatus");
+CREATE INDEX "buildfailure_crc32" on "buildfailure" ("crc32");
 
 --
 -- Table: buildfailureargument

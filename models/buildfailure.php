@@ -116,12 +116,14 @@ class BuildFailure
     $outputFile = pdo_real_escape_string($this->OutputFile);
     $outputType = pdo_real_escape_string($this->OutputType);
     $sourceFile = pdo_real_escape_string($this->SourceFile);
-     
+
+    // Compute the crc32
+    $crc32 = crc32($outputFile.$stdOutput.$stdError.$sourceFile); 
     $query = "INSERT INTO buildfailure (buildid,type,workingdirectory,stdoutput,stderror,exitcondition,
-              language,targetname,outputfile,outputtype,sourcefile)
+              language,targetname,outputfile,outputtype,sourcefile,newstatus,crc32)
               VALUES (".qnum($this->BuildId).",".qnum($this->Type).",'$workingDirectory',
               '$stdOutput','$stdError',".qnum($exitCondition).",
-              '$language','$targetName','$outputFile','$outputType','$sourceFile')";                     
+              '$language','$targetName','$outputFile','$outputType','$sourceFile',0,".qnum($crc32).")";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildFailure Insert");

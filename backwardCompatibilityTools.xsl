@@ -65,9 +65,13 @@
     <td><div align="right">Compute update statistics:</div></td>
     <td><div align="left">for the last <input type="text" name="UpdateStatisticsDays" size="2" value="4"/> days <input type="submit" name="ComputeUpdateStatistics" value="Compute update statistics"/></div></td>
   </tr> 
-   <tr>
-    <td><div align="right">Compress test output:</div></td>
+  <tr>
+    <td><div align="right">Compress test output (can take a long time):</div></td>
     <td><input type="submit" name="CompressTestOutput" value="Compress test output"/></td>
+  </tr>  
+  <tr>
+    <td><div align="right">Cleanup CDash (can take a long time):</div></td>
+    <td><input type="submit" name="Cleanup" value="Cleanup database"/></td>
   </tr> 
   <tr>
     <td><div align="right">Upgrade CDash: (this might take some time)</div></td>

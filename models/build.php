@@ -221,8 +221,7 @@ class Build
       {
       return false;
       }  
-      
-    
+
     // Check if already exists
     $query = pdo_query("SELECT buildid FROM buildtesttime WHERE buildid=".qnum($this->Id));
     if(!$query)
@@ -302,8 +301,8 @@ class Build
       return false;    
       }
 
-    // If StartTime is not set we set it
-    if($this->StartTime=='')
+    // If StartTime is not set or if we are appending we set it
+    if($this->StartTime=='' || $this->Append)
       {
       $query = pdo_query("SELECT starttime FROM build WHERE id=".qnum($this->Id));
       if(!$query)
@@ -319,7 +318,6 @@ class Build
                         WHERE siteid=".qnum($this->SiteId)." AND type='$this->Type' AND name='$this->Name'
                          AND projectid=".qnum($this->ProjectId)." AND starttime<'$this->StartTime'
                          ORDER BY starttime DESC LIMIT 1");
-      
     if(!$query)
       {
       add_last_sql_error("Build:GetPreviousBuildId");
@@ -504,7 +502,7 @@ class Build
   function Save()
     {
     if(!$this->Exists())
-      {
+      {       
       $id = "";
       $idvalue = "";
       if($this->Id)
@@ -608,8 +606,26 @@ class Build
         $this->Command = pdo_real_escape_string(' '.$this->Command);
         $this->Log = pdo_real_escape_string(' '.$this->Log);
 
-        $query = "UPDATE build SET endtime='$this->EndTime', submittime='$this->SubmitTime'," .
-          "command=CONCAT(command, '$this->Command'), log=CONCAT(log, '$this->Log')" .
+        // Compute the number of errors and warnings (this speeds up the display of the main table)
+        $nbuilderrors = 0;
+        $nbuildwarnings = 0;
+        foreach($this->Errors as $error)
+          {
+          if($error->Type == 0)
+            {
+            $nbuilderrors++;
+            }
+          else
+            {
+            $nbuildwarnings++;
+            }  
+          }
+
+        $query = "UPDATE build SET 
+                  endtime='$this->EndTime',submittime='$this->SubmitTime',
+                  builderrors='$nbuilderrors',buildwarnings='$nbuildwarnings'," .
+                  "command=CONCAT(command, '$this->Command'), 
+                  log=CONCAT(log, '$this->Log')" .
           "WHERE id=".qnum($this->Id);
         if(!pdo_query($query))
           {
@@ -749,12 +765,12 @@ class Build
       add_log("BuildId is not set","Build::ComputeDifferences",LOG_ERR);
       return false;
       }
-
+      
     $previousbuildid = $this->GetPreviousBuildId();
     if($previousbuildid == 0)
       {
       return;
-      }     
+      }
     compute_error_difference($this->Id,$previousbuildid,0); // errors
     compute_error_difference($this->Id,$previousbuildid,1); // warnings
     }   

@@ -48,6 +48,7 @@ $xml .= "<minversion>".$version_array['major'].".".$version_array['minor']."</mi
 @$ComputeUpdateStatistics = $_POST["ComputeUpdateStatistics"];
 
 @$Upgrade = $_POST["Upgrade"];
+@$Cleanup = $_POST["Cleanup"];
 
 if(!isset($CDASH_DB_TYPE))
   {
@@ -593,6 +594,11 @@ if(isset($_GET['upgrade-1-6']))
   AddTableIndex('builderror','crc32');
   AddTableIndex('builderror','newstatus');  
  
+  AddTableField("buildfailure","crc32","bigint(20)","BIGINT","0");
+  AddTableField("buildfailure","newstatus","tinyint(4)","smallint","0");
+  AddTableIndex('buildfailure','crc32');
+  AddTableIndex('buildfailure','newstatus');
+  
   AddTableField("client_jobschedule","repository","VARCHAR(512)","VARCHAR(512)","");
   AddTableField("client_jobschedule","module","VARCHAR(255)","VARCHAR(255)","");
   AddTableField("client_jobschedule","buildnamesuffix","VARCHAR(255)","VARCHAR(255)","");
@@ -1059,6 +1065,73 @@ function ComputeUpdateStatistics($days = 4)
       $i++;
       } // end looping through builds 
     } // end looping through projects
+}
+
+/** Delete unused rows */
+function delete_unused_rows($table,$field,$targettable,$selectfield='id')
+{
+  echo "Deleting rows in ".$table." without ".$field."..."; flush();
+  pdo_query("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)"); 
+  echo pdo_error();
+  echo "Done.<br>"; flush();
+}
+
+/** Cleanup the database */
+if($Cleanup)
+{
+  echo "Starting cleanup.<br>"; flush();
+  delete_unused_rows('banner','projectid','project');
+  delete_unused_rows('blockbuild','projectid','project');
+  delete_unused_rows('build','projectid','project');
+  delete_unused_rows('buildgroup','projectid','project');
+  delete_unused_rows('labelemail','projectid','project');
+  delete_unused_rows('project2repositories','projectid','project');
+  delete_unused_rows('dailyupdate','projectid','project');
+  delete_unused_rows('projectrobot','projectid','project');
+  delete_unused_rows('submission','projectid','project');
+  delete_unused_rows('subproject','projectid','project');
+  delete_unused_rows('coveragefilepriority','projectid','project');
+  delete_unused_rows('test','projectid','project');
+  delete_unused_rows('user2project','projectid','project');
+  delete_unused_rows('userstatistics','projectid','project');
+  
+  delete_unused_rows('build2note','buildid','build');
+  delete_unused_rows('build2test','buildid','build');
+  delete_unused_rows('buildemail','buildid','build');
+  delete_unused_rows('builderror','buildid','build');
+  delete_unused_rows('builderrordiff','buildid','build');
+  delete_unused_rows('buildfailure','buildid','build');
+  delete_unused_rows('buildinformation','buildid','build');
+  delete_unused_rows('buildnote','buildid','build');
+  delete_unused_rows('buildtesttime','buildid','build');
+  delete_unused_rows('buildupdate','buildid','build');
+  delete_unused_rows('configure','buildid','build');
+  delete_unused_rows('configureerror','buildid','build');
+  delete_unused_rows('configureerrordiff','buildid','build');
+  delete_unused_rows('coverage','buildid','build');
+  delete_unused_rows('coveragefilelog','buildid','build');
+  delete_unused_rows('coveragesummary','buildid','build');
+  delete_unused_rows('coveragesummarydiff','buildid','build');
+  delete_unused_rows('dynamicanalysis','buildid','build');
+  delete_unused_rows('label2build','buildid','build');
+  delete_unused_rows('subproject2build','buildid','build');
+  delete_unused_rows('summaryemail','buildid','build');
+  delete_unused_rows('testdiff','buildid','build');
+  delete_unused_rows('updatefile','buildid','build');
+  
+  delete_unused_rows('dynamicanalysisdefect','dynamicanalysisid','dynamicanalysis');
+  delete_unused_rows('subproject2subproject','subprojectid','subproject');
+
+  delete_unused_rows('dailyupdatefile','dailyupdateid','dailyupdate');
+  delete_unused_rows('coveragefile','id','coverage','fileid');
+  delete_unused_rows('coveragefile2user','fileid','coveragefile');
+  
+  delete_unused_rows('dailyupdatefile','dailyupdateid','dailyupdate');
+  delete_unused_rows('test2image','testid','test');
+  delete_unused_rows('testmeasurement','testid','test');
+  delete_unused_rows('label2test','testid','test');
+
+  echo "Cleanup done.<br>"; flush();
 }
 
 
