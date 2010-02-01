@@ -537,6 +537,8 @@ function generate_main_dashboard_XML($projectid,$date)
   // Local function to add expected builds
   function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
     {
+    include('cdash/config.php');  
+    
     $currentUTCTime =  gmdate(FMT_DATETIME,$currentstarttime+3600*24);
     $xml = "";
     $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
@@ -561,19 +563,41 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("expected","1");
            
         // compute historical average to get approximate expected time
-        $query = pdo_query("SELECT AVG(TIME_TO_SEC(TIME(submittime))) FROM (SELECT submittime FROM build,build2group
+        // PostgreSQL doesn't have the necessary functions for this
+        if($CDASH_DB_TYPE == 'pgsql')
+          {
+          $query = pdo_query("SELECT submittime FROM build,build2group
                               WHERE build2group.buildid=build.id AND siteid='$siteid' AND name='$buildname'
                               AND type='$buildtype' AND build2group.groupid='$groupid'
-                              ORDER BY id DESC LIMIT 5) as t");
-        $query_array = pdo_fetch_array($query);
-        $time = $query_array[0];
-        $hours = floor($time/3600);
-        $time = ($time%3600);
-        $minutes = floor($time/60);
-        $seconds = ($time%60);
-
-        $nextExpected = strtotime($hours.":".$minutes.":".$seconds." UTC");
-
+                              ORDER BY id DESC LIMIT 5");
+          $time = 0;
+          while($query_array = pdo_fetch_array($query))
+            {
+            $time += strtotime(date("H:i:s",strtotime($query_array['submittime']))); 
+            }
+          if(pdo_num_rows($query)>0)
+            {  
+            $time /= pdo_num_rows($query);
+            }
+          $nextExpected = strtotime(date("H:i:s",$time)." UTC");
+          }
+        else
+          {   
+          $query = pdo_query("SELECT AVG(TIME_TO_SEC(TIME(submittime))) FROM (SELECT submittime FROM build,build2group
+                                WHERE build2group.buildid=build.id AND siteid='$siteid' AND name='$buildname'
+                                AND type='$buildtype' AND build2group.groupid='$groupid'
+                                ORDER BY id DESC LIMIT 5) as t");
+          $query_array = pdo_fetch_array($query);
+          $time = $query_array[0];  
+          $hours = floor($time/3600);
+          $time = ($time%3600);
+          $minutes = floor($time/60);
+          $seconds = ($time%60);
+          $nextExpected = strtotime($hours.":".$minutes.":".$seconds." UTC");
+          }
+        
+        
+          
         $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"]; 
         $divname = str_replace("+","_",$divname);
         $divname = str_replace(".","_",$divname);
