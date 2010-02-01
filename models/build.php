@@ -487,10 +487,9 @@ class Build
       {
       return false;    
       }
-
     $query = pdo_query("SELECT count(*) FROM build WHERE id='".$this->Id."'");
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']>0)
+    if($query_array[0]>0)
       {
       return true;
       }
@@ -545,7 +544,7 @@ class Build
                                    builderrors,buildwarnings)
                 VALUES (".$idvalue."'$this->SiteId','$this->ProjectId','$this->Stamp','$this->Name',
                         '$this->Type','$this->Generator','$this->StartTime',
-                        '$this->EndTime','$this->SubmitTime','$this->Command','$this->Log',$nbuilderrors,$nbuildwarnings)";                     
+                        '$this->EndTime','$this->SubmitTime','$this->Command','$this->Log',$nbuilderrors,$nbuildwarnings)";
       if(!pdo_query($query))
         {
         add_last_sql_error("Build Insert");
@@ -621,12 +620,26 @@ class Build
             }  
           }
 
-        $query = "UPDATE build SET 
+        include('cdash/config.php');
+        if($CDASH_DB_TYPE == 'pgsql') // pgsql doesn't have concat...
+          {
+          $query = "UPDATE build SET 
+                  endtime='$this->EndTime',submittime='$this->SubmitTime',
+                  builderrors='$nbuilderrors',buildwarnings='$nbuildwarnings'," .
+                  "command=command || '$this->Command', 
+                  log=log || '$this->Log'" .
+          "WHERE id=".qnum($this->Id);  
+          }
+        else
+          {
+          $query = "UPDATE build SET 
                   endtime='$this->EndTime',submittime='$this->SubmitTime',
                   builderrors='$nbuilderrors',buildwarnings='$nbuildwarnings'," .
                   "command=CONCAT(command, '$this->Command'), 
                   log=CONCAT(log, '$this->Log')" .
-          "WHERE id=".qnum($this->Id);
+          "WHERE id=".qnum($this->Id);  
+          }    
+
         if(!pdo_query($query))
           {
           add_last_sql_error("Build Insert (Append)");
