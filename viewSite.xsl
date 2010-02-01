@@ -25,6 +25,7 @@
        <![endif]]]></xsl:comment>
        <script language="javascript" type="text/javascript" src="javascript/jquery.js" charset="utf-8"></script> 
        <script language="javascript" type="text/javascript" src="javascript/jquery.flot.min.js" charset="utf-8"></script> 
+       <script src="javascript/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
        <script language="javascript" type="text/javascript" src="javascript/jquery.flot.pie.js" charset="utf-8"></script>      
        </head>
        <body bgcolor="#ffffff">
