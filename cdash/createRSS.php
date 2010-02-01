@@ -52,7 +52,7 @@ function CreateRSSFeed($projectid)
    
   $currentURI = get_server_URI();
   
-  fputs($fp,"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n");
+  fputs($fp,"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
   fputs($fp,"<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n");
   fputs($fp,"<channel>\n");
   fputs($fp,"<title>Recent CDash submissions for $projectname</title>\n");

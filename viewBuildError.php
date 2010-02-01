@@ -35,6 +35,8 @@ if(!isset($buildid) || !is_numeric($buildid))
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
   
+echo "mysql_client_encoding: " . mysql_client_encoding() . "<br/>";
+
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
 
@@ -178,7 +180,10 @@ $xml .= "</menu>";
         "label.id=label2buildfailure.labelid AND ".
         "label2buildfailure.buildfailureid='$buildfailureid' ".
         "ORDER BY text ASC");
-  
+
+      //echo "stderror: [" . $error_array["stderror"] . "]";
+      $xml2 = add_XML_value("stderror",$error_array["stderror"]);
+      echo "xml2: " . $xml2;
       $xml .= add_XML_value("stderror",$error_array["stderror"]);
       $rows = substr_count($error_array["stderror"],"\n")+1;
       if ($rows > 10)
@@ -266,6 +271,9 @@ $xml .= "</menu>";
         "label2buildfailure.buildfailureid='$buildfailureid' ".
         "ORDER BY text ASC");
   
+      //echo "stderror: [" . $error_array["stderror"] . "]";
+      $xml2 = add_XML_value("stderror",$error_array["stderror"]);
+      echo "xml2: " . $xml2;
       $xml .= add_XML_value("stderror",$error_array["stderror"]);
       $rows = substr_count($error_array["stderror"],"\n")+1;
       if ($rows > 10)
