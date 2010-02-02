@@ -841,7 +841,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $build_row['hastest'] = 1;
       }
       
-    if(empty($build_row['testduration']))
+    if(empty($build_row['testsduration']))
       {
       $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
       $build_row['testsduration'] = round($time_array[0]/60,1);
