@@ -291,7 +291,7 @@ function pdo_select_db($database_name, &$link_identifier)
         {
         $link_identifier->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         }
-      pg_set_client_encoding('UTF8');
+      pdo_query("SET client_encoding to 'UTF8'");
       return true;
       }
     catch(PDOException $e) 
