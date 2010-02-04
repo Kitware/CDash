@@ -215,6 +215,7 @@ class CDashTestManager extends TestManager
        // The project is up to date and the type is Continuous
        if(!$execution_time)
          {
+         echo "error: updateSVN: false execution_time, no paintUpdateEnd\n";
          return false;
          }
        // We put in minute the execution time of the svn update
@@ -225,6 +226,9 @@ class CDashTestManager extends TestManager
        $reporter->paintUpdateEnd($execution_time);
        return true;
        }
+
+      echo "error: updateSVN: empty svnroot\n";
+      return false;
     }
   
    
@@ -243,20 +247,22 @@ class CDashTestManager extends TestManager
         {
         $grepCmd = 'findstr';
         }
-      $raw_output = $this->__performSvnCommand(`svn info $svnroot 2>&1 | $grepCmd Revision`);
+      $raw_output = $this->__performSvnCommand(`svn info "$svnroot" 2>&1 | $grepCmd Revision`);
       // We catch the current revision of the repository
       $currentRevision = str_replace('Revision: ','',$raw_output[0]);
-      $raw_output = $this->__performSvnCommand(`svn update $svnroot 2>&1 | $grepCmd revision`);
+      $raw_output = $this->__performSvnCommand(`svn update "$svnroot" 2>&1 | $grepCmd revision`);
       if(strpos($raw_output[0],'revision') === false)
         {
         $execution_time  = "Svn Error:\nsvn update did not return the right standard output.\n";
-        $execution_time .= "svn update should not work on your repository\n";
+        $execution_time .= "svn update did not work on your repository\n";
+        echo "error: __performSvnUpdate: svn update failed\n";
         return $execution_time;
         }
       if(strpos($raw_output[0],'At revision') !== false)
         {
         if(!strcmp($type,'Continuous'))
           {
+          echo "__performSvnUpdate: type=[$type], returning false\n";
           return false;
           }
         $time_end = (float) array_sum(explode(' ',microtime()));
@@ -267,12 +273,13 @@ class CDashTestManager extends TestManager
         }
       $newRevision = str_replace('Updated to revision ','',$raw_output[0]);
       $newRevision = strtok($newRevision,'.');
-      $raw_output = `svn log $svnroot -r $currentRevision:$newRevision -v --xml 2>&1`;
+      $raw_output = `svn log "$svnroot" -r $currentRevision:$newRevision -v --xml 2>&1`;
       $reporter->paintUpdateFile($raw_output);
       $time_end = (float) array_sum(explode(' ',microtime()));
       $execution_time = $time_end - $time_start;
       echo "Your Repository has just been updated from revision $currentRevision to revision $newRevision\n";
-      echo "\tRepository concerned: $svnroot\n\tUse SVN repository type\n";
+      echo "\tRepository concerned: [$svnroot]\n";
+      echo "\tUse SVN repository type\n";
       echo "Project is up to date\n";
       return $execution_time;
     }
