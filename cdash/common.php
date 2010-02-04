@@ -2157,17 +2157,43 @@ function get_loggerhead_diff_url($projecturl, $directory, $file, $revision)
   return make_cdash_url($diff_url);
 }
 
+/** Return the GitWeb diff URL */
+function get_gitweb_diff_url($projecturl, $directory, $file, $revision)
+{
+  $diff_url = $projecturl . ";a=commitdiff;h=" . $revision;
+  return make_cdash_url($diff_url);
+}
+
+/** Return the Gitorious/GitHub diff URL */
+function get_gitorious_diff_url($projecturl, $directory, $file, $revision)
+{
+  $diff_url = $projecturl . "/commit/" . $revision;
+  return make_cdash_url($diff_url);
+}
+
+/** Return the cgit diff URL */
+function get_cgit_diff_url($projecturl, $directory, $file, $revision)
+{
+  $diff_url = $projecturl . "/diff/";
+  if($directory)
+  {
+    $diff_url .= $directory . "/";
+  }
+  $diff_url .= $file . "?id=" . $revision;
+  return make_cdash_url($diff_url);
+}
+
 /** Get the diff url based on the type of viewer */
-function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
+function get_diff_url($projectid, $projecturl, $directory, $file, $revision='')
 {
   if(!is_numeric($projectid))
     {
     return;
     }
-  
+
   $project = pdo_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
-   
+
   if($project_array["cvsviewertype"] == "trac")
     {
     return get_trac_diff_url($projecturl, $directory, $file, $revision);
@@ -2195,6 +2221,23 @@ function get_diff_url($projectid,$projecturl, $directory, $file, $revision='')
   elseif($project_array["cvsviewertype"] == "loggerhead")
     {
     return get_loggerhead_diff_url($projecturl, $directory, $file, $revision);
+    }
+  elseif($project_array["cvsviewertype"] == "gitweb")
+    {
+    return get_gitweb_diff_url($projecturl, $directory, $file, $revision);
+    }
+  elseif($project_array["cvsviewertype"] == "gitorious")
+    {
+    return get_gitorious_diff_url($projecturl, $directory, $file, $revision);
+    }
+  elseif($project_array["cvsviewertype"] == "github")
+    {
+    // GitHub uses same URL structure as Gitorious, so:
+    return get_gitorious_diff_url($projecturl, $directory, $file, $revision);
+    }
+  elseif($project_array["cvsviewertype"] == "cgit")
+    {
+    return get_cgit_diff_url($projecturl, $directory, $file, $revision);
     }
   else // default is viewcvs
     {
@@ -2258,14 +2301,40 @@ function get_loggerhead_revision_url($projecturl, $revision)
   return make_cdash_url($revision_url);
 }
 
+/** Return the GitWeb revision URL */
+function get_gitweb_revision_url($projecturl, $revision)
+{
+  $revision_url = $projecturl . ";a=shortlog;h=" . $revision;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the Gitorious revision URL */
+function get_gitorious_revision_url($projecturl, $revision, $priorrevision)
+{
+  $revision_url = $projecturl . "/commits/";
+  if ($priorrevision)
+  {
+    $revision_url .= $priorrevision . "..";
+  }
+  $revision_url .= $revision;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the cgit revision URL */
+function get_cgit_revision_url($projecturl, $revision)
+{
+  $revision_url = $projecturl . "/log/?id=" . $revision;
+  return make_cdash_url($revision_url);
+}
+
 /** Return the global revision URL (not file based) for a repository */
-function get_revision_url($projectid,$revision)
+function get_revision_url($projectid, $revision, $priorrevision)
 {
   if(!is_numeric($projectid))
     {
     return;
     }
-  
+
   $project = pdo_query("SELECT cvsviewertype,cvsurl FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
   $projecturl = $project_array['cvsurl'];
@@ -2296,6 +2365,23 @@ function get_revision_url($projectid,$revision)
   elseif($project_array["cvsviewertype"] == "loggerhead")
     {
     return get_loggerhead_revision_url($projecturl,$revision);
+    }
+  elseif($project_array["cvsviewertype"] == "gitweb")
+    {
+    return get_gitweb_revision_url($projecturl,$revision);
+    }
+  elseif($project_array["cvsviewertype"] == "gitorious")
+    {
+    return get_gitorious_revision_url($projecturl,$revision,$priorrevision);
+    }
+  elseif($project_array["cvsviewertype"] == "github")
+    {
+    // GitHub uses same URL structure as Gitorious, so:
+    return get_gitorious_revision_url($projecturl,$revision,$priorrevision);
+    }
+  elseif($project_array["cvsviewertype"] == "cgit")
+    {
+    return get_cgit_revision_url($projecturl,$revision);
     }
   else // default is viewcvs
     {

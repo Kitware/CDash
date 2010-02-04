@@ -111,9 +111,11 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= add_XML_value("revision",$status_array["revision"]);
   $xml .= add_XML_value("priorrevision",$status_array["priorrevision"]);  
   $xml .= add_XML_value("path",$status_array["path"]);
-  $xml .= add_XML_value("revisionurl",get_revision_url($projectid,$status_array["revision"]));
-  $xml .= add_XML_value("revisiondiff",get_revision_url($projectid,$status_array["priorrevision"]));
-  
+  $xml .= add_XML_value("revisionurl",
+    get_revision_url($projectid, $status_array["revision"], $status_array["priorrevision"]));
+  $xml .= add_XML_value("revisiondiff",
+    get_revision_url($projectid, $status_array["priorrevision"], '')); // no prior prior revision...
+
   $xml .= "<javascript>";
   // This should work hopefully
   $updatedfiles = pdo_query("SELECT * FROM updatefile WHERE buildid='$buildid'
