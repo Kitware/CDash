@@ -99,8 +99,8 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/transform/EpetraExt_BlockAdjacencyGraph.cpp: In member function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_CrsGraph&gt; EpetraExt::BlockAdjacencyGraph::compute(Epetra_CrsGraph&amp;, int, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&amp;, bool)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/transform/EpetraExt_BlockAdjacencyGraph.cpp:92: warning: &#xe2;&#x80;&#x98;ns&#xe2;&#x80;&#x99; may be used uninitialized in this function</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/transform/EpetraExt_BlockAdjacencyGraph.cpp: In member function ‘Teuchos::RCP&lt;Epetra_CrsGraph&gt; EpetraExt::BlockAdjacencyGraph::compute(Epetra_CrsGraph&amp;, int, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&amp;, bool)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/transform/EpetraExt_BlockAdjacencyGraph.cpp:92: warning: ‘ns’ may be used uninitialized in this function</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -177,8 +177,8 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp: In member function &#xe2;&#x80;&#x98;virtual void EpetraExt_BlockDiagMatrix::Print(std::ostream&amp;) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp:260: warning: &#xe2;&#x80;&#x98;FirstPointInElementList1&#xe2;&#x80;&#x99; may be used uninitialized in this function</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp: In member function ‘virtual void EpetraExt_BlockDiagMatrix::Print(std::ostream&amp;) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp:260: warning: ‘FirstPointInElementList1’ may be used uninitialized in this function</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -255,12 +255,12 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h: In constructor &#xe2;&#x80;&#x98;EpetraExt::MultiPointModelEvaluator::MultiPointModelEvaluator(Teuchos::RCP&lt;EpetraExt::ModelEvaluator&gt;, const Teuchos::RCP&lt;EpetraExt::MultiComm&gt;&amp;, std::vector&lt;Epetra_Vector*, std::allocator&lt;Epetra_Vector*&gt; &gt;, Teuchos::RCP&lt;std::vector&lt;Teuchos::RCP&lt;Epetra_Vector&gt;, std::allocator&lt;Teuchos::RCP&lt;Epetra_Vector&gt; &gt; &gt; &gt;, Teuchos::RCP&lt;std::vector&lt;Teuchos::RCP&lt;Epetra_Vector&gt;, std::allocator&lt;Teuchos::RCP&lt;Epetra_Vector&gt; &gt; &gt; &gt;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h:147: warning: &#xe2;&#x80;&#x98;EpetraExt::MultiPointModelEvaluator::rowIndex&#xe2;&#x80;&#x99; will be initialized after
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h:127: warning:   &#xe2;&#x80;&#x98;int EpetraExt::MultiPointModelEvaluator::underlyingNg&#xe2;&#x80;&#x99;
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h: In constructor ‘EpetraExt::MultiPointModelEvaluator::MultiPointModelEvaluator(Teuchos::RCP&lt;EpetraExt::ModelEvaluator&gt;, const Teuchos::RCP&lt;EpetraExt::MultiComm&gt;&amp;, std::vector&lt;Epetra_Vector*, std::allocator&lt;Epetra_Vector*&gt; &gt;, Teuchos::RCP&lt;std::vector&lt;Teuchos::RCP&lt;Epetra_Vector&gt;, std::allocator&lt;Teuchos::RCP&lt;Epetra_Vector&gt; &gt; &gt; &gt;, Teuchos::RCP&lt;std::vector&lt;Teuchos::RCP&lt;Epetra_Vector&gt;, std::allocator&lt;Teuchos::RCP&lt;Epetra_Vector&gt; &gt; &gt; &gt;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h:147: warning: ‘EpetraExt::MultiPointModelEvaluator::rowIndex’ will be initialized after
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h:127: warning:   ‘int EpetraExt::MultiPointModelEvaluator::underlyingNg’
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.cpp:11: warning:   when initialized here
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h:127: warning: &#xe2;&#x80;&#x98;EpetraExt::MultiPointModelEvaluator::underlyingNg&#xe2;&#x80;&#x99; will be initialized after
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h:80: warning:   &#xe2;&#x80;&#x98;Teuchos::RCP&lt;std::vector&lt;Teuchos::RCP&lt;Epetra_Vector&gt;, std::allocator&lt;Teuchos::RCP&lt;Epetra_Vector&gt; &gt; &gt; &gt; EpetraExt::MultiPointModelEvaluator::q_vec&#xe2;&#x80;&#x99;
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h:127: warning: ‘EpetraExt::MultiPointModelEvaluator::underlyingNg’ will be initialized after
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.h:80: warning:   ‘Teuchos::RCP&lt;std::vector&lt;Teuchos::RCP&lt;Epetra_Vector&gt;, std::allocator&lt;Teuchos::RCP&lt;Epetra_Vector&gt; &gt; &gt; &gt; EpetraExt::MultiPointModelEvaluator::q_vec’
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.cpp:11: warning:   when initialized here</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
@@ -343,10 +343,10 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp: In function &#xe2;&#x80;&#x98;void Galeri::Solve(const Epetra_RowMatrix*, const Epetra_MultiVector*, const Epetra_MultiVector*)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp:84: warning: unused variable &#xe2;&#x80;&#x98;ierr&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp: In function &#xe2;&#x80;&#x98;Epetra_MultiVector* Galeri::CreateCartesianCoordinates(std::string, const Epetra_BlockMap*, Teuchos::ParameterList&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp:156: warning: unused variable &#xe2;&#x80;&#x98;length&#xe2;&#x80;&#x99;</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp: In function ‘void Galeri::Solve(const Epetra_RowMatrix*, const Epetra_MultiVector*, const Epetra_MultiVector*)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp:84: warning: unused variable ‘ierr’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp: In function ‘Epetra_MultiVector* Galeri::CreateCartesianCoordinates(std::string, const Epetra_BlockMap*, Teuchos::ParameterList&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp:156: warning: unused variable ‘length’</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -428,26 +428,26 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_UniFlow2D.h: In function &#xe2;&#x80;&#x98;Epetra_CrsMatrix* Galeri::Matrices::UniFlow2D(const Epetra_Map*, int, int, double, double, double, double, double)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_UniFlow2D.h:53: warning: unused variable &#xe2;&#x80;&#x98;Matrix&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_BentPipe2D.h: In function &#xe2;&#x80;&#x98;Epetra_CrsMatrix* Galeri::Matrices::BentPipe2D(const Epetra_Map*, int, int, double, double, double, double)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_BentPipe2D.h:49: warning: unused variable &#xe2;&#x80;&#x98;Matrix&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp: In function &#xe2;&#x80;&#x98;Epetra_CrsMatrix* Galeri::CreateCrsMatrix(std::string, const Epetra_Map*, Teuchos::ParameterList&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:202: warning: unused variable &#xe2;&#x80;&#x98;a&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:203: warning: unused variable &#xe2;&#x80;&#x98;b&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:204: warning: unused variable &#xe2;&#x80;&#x98;c&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:205: warning: unused variable &#xe2;&#x80;&#x98;d&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:206: warning: unused variable &#xe2;&#x80;&#x98;e&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:207: warning: unused variable &#xe2;&#x80;&#x98;z1&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:208: warning: unused variable &#xe2;&#x80;&#x98;z2&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:209: warning: unused variable &#xe2;&#x80;&#x98;z3&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:210: warning: unused variable &#xe2;&#x80;&#x98;z4&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:211: warning: unused variable &#xe2;&#x80;&#x98;bb&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:212: warning: unused variable &#xe2;&#x80;&#x98;cc&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:213: warning: unused variable &#xe2;&#x80;&#x98;dd&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:214: warning: unused variable &#xe2;&#x80;&#x98;ee&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:309: warning: unused variable &#xe2;&#x80;&#x98;lx&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:310: warning: unused variable &#xe2;&#x80;&#x98;ly&#xe2;&#x80;&#x99;</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_UniFlow2D.h: In function ‘Epetra_CrsMatrix* Galeri::Matrices::UniFlow2D(const Epetra_Map*, int, int, double, double, double, double, double)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_UniFlow2D.h:53: warning: unused variable ‘Matrix’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_BentPipe2D.h: In function ‘Epetra_CrsMatrix* Galeri::Matrices::BentPipe2D(const Epetra_Map*, int, int, double, double, double, double)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_BentPipe2D.h:49: warning: unused variable ‘Matrix’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp: In function ‘Epetra_CrsMatrix* Galeri::CreateCrsMatrix(std::string, const Epetra_Map*, Teuchos::ParameterList&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:202: warning: unused variable ‘a’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:203: warning: unused variable ‘b’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:204: warning: unused variable ‘c’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:205: warning: unused variable ‘d’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:206: warning: unused variable ‘e’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:207: warning: unused variable ‘z1’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:208: warning: unused variable ‘z2’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:209: warning: unused variable ‘z3’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:210: warning: unused variable ‘z4’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:211: warning: unused variable ‘bb’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:212: warning: unused variable ‘cc’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:213: warning: unused variable ‘dd’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:214: warning: unused variable ‘ee’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:309: warning: unused variable ‘lx’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_CrsMatrices.cpp:310: warning: unused variable ‘ly’</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -528,32 +528,32 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_RowMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_RowMatrix&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:485: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:424)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_RowMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_RowMatrix&amp;, const Epetra_Vector&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:502: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:424)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_RowMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_RowMatrix&amp;, const Teuchos::ParameterList&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:514: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:424)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_CrsMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsMatrix&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:548: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:317)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_CrsMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsMatrix&amp;, const Epetra_Vector&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:569: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:317)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_CrsMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsMatrix&amp;, const Teuchos::ParameterList&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:581: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:317)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_CrsGraph&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsGraph&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:615: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:530)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_CrsGraph&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsGraph&amp;, const Epetra_Vector&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:636: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:530)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_CrsGraph&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsGraph&amp;, const Teuchos::ParameterList&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:648: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:530)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_LinearProblem&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_LinearProblem&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:682: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:637)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_LinearProblem&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_LinearProblem&amp;, const Epetra_Vector&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:702: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:637)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_LinearProblem&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_LinearProblem&amp;, const Teuchos::ParameterList&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:714: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:637)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function &#xe2;&#x80;&#x98;Teuchos::RCP&lt;Epetra_MultiVector&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_MultiVector&amp;, const Teuchos::ParameterList&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:762: warning: &#xe2;&#x80;&#x98;create_balanced_copy&#xe2;&#x80;&#x99; is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:646)</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_RowMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_RowMatrix&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:485: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:424)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_RowMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_RowMatrix&amp;, const Epetra_Vector&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:502: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:424)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_RowMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_RowMatrix&amp;, const Teuchos::ParameterList&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:514: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:424)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_CrsMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsMatrix&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:548: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:317)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_CrsMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsMatrix&amp;, const Epetra_Vector&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:569: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:317)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_CrsMatrix&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsMatrix&amp;, const Teuchos::ParameterList&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:581: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:317)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_CrsGraph&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsGraph&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:615: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:530)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_CrsGraph&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsGraph&amp;, const Epetra_Vector&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:636: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:530)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_CrsGraph&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_CrsGraph&amp;, const Teuchos::ParameterList&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:648: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:530)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_LinearProblem&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_LinearProblem&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:682: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:637)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_LinearProblem&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_LinearProblem&amp;, const Epetra_Vector&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:702: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:637)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_LinearProblem&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_LinearProblem&amp;, const Teuchos::ParameterList&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:714: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:637)
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp: In function ‘Teuchos::RCP&lt;Epetra_MultiVector&gt; Isorropia::Epetra::create_balanced_copy(const Epetra_MultiVector&amp;, const Teuchos::ParameterList&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.cpp:762: warning: ‘create_balanced_copy’ is deprecated (declared at /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/isorropia/src/epetra/Isorropia_Epetra.hpp:646)</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -645,10 +645,10 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ifpack/src/Ifpack_LocalFilter.cpp: In constructor &#xe2;&#x80;&#x98;Ifpack_LocalFilter::Ifpack_LocalFilter(const Teuchos::RCP&lt;const Epetra_RowMatrix&gt;&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ifpack/src/Ifpack_LocalFilter.cpp:93: warning: &#xe2;&#x80;&#x98;Nnz&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ifpack/src/Ifpack_LocalFilter.cpp: In constructor &#xe2;&#x80;&#x98;Ifpack_LocalFilter::Ifpack_LocalFilter(const Teuchos::RCP&lt;const Epetra_RowMatrix&gt;&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ifpack/src/Ifpack_LocalFilter.cpp:93: warning: &#xe2;&#x80;&#x98;Nnz&#xe2;&#x80;&#x99; may be used uninitialized in this function</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ifpack/src/Ifpack_LocalFilter.cpp: In constructor ‘Ifpack_LocalFilter::Ifpack_LocalFilter(const Teuchos::RCP&lt;const Epetra_RowMatrix&gt;&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ifpack/src/Ifpack_LocalFilter.cpp:93: warning: ‘Nnz’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ifpack/src/Ifpack_LocalFilter.cpp: In constructor ‘Ifpack_LocalFilter::Ifpack_LocalFilter(const Teuchos::RCP&lt;const Epetra_RowMatrix&gt;&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ifpack/src/Ifpack_LocalFilter.cpp:93: warning: ‘Nnz’ may be used uninitialized in this function</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -761,18 +761,18 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function &#xe2;&#x80;&#x98;ML_Operator_Init&#xe2;&#x80;&#x99;:
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function ‘ML_Operator_Init’:
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c:54: warning: dereferencing type-punned pointer will break strict-aliasing rules
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c:62: warning: dereferencing type-punned pointer will break strict-aliasing rules
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function &#xe2;&#x80;&#x98;ML_Operator_Clean&#xe2;&#x80;&#x99;:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function ‘ML_Operator_Clean’:
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c:281: warning: dereferencing type-punned pointer will break strict-aliasing rules
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c:282: warning: dereferencing type-punned pointer will break strict-aliasing rules
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function &#xe2;&#x80;&#x98;ML_Operator_halfClone_Clean&#xe2;&#x80;&#x99;:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function ‘ML_Operator_halfClone_Clean’:
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c:402: warning: dereferencing type-punned pointer will break strict-aliasing rules
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c:407: warning: dereferencing type-punned pointer will break strict-aliasing rules
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function &#xe2;&#x80;&#x98;ML_Operator_UnAmalgamateAndDropWeak&#xe2;&#x80;&#x99;:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function ‘ML_Operator_UnAmalgamateAndDropWeak’:
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c:1132: warning: dereferencing type-punned pointer will break strict-aliasing rules
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function &#xe2;&#x80;&#x98;ML_Operator_AmalgamateAndDropWeak&#xe2;&#x80;&#x99;:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c: In function ‘ML_Operator_AmalgamateAndDropWeak’:
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Operator/ml_operator.c:1285: warning: dereferencing type-punned pointer will break strict-aliasing rules</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
@@ -887,8 +887,8 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_ifpack_wrap.cpp: In function &#xe2;&#x80;&#x98;int ML_Gen_Smoother_Ifpack(ML*, const char*, int, int, int, void*, void*)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_ifpack_wrap.cpp:107: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_ifpack_wrap.cpp: In function ‘int ML_Gen_Smoother_Ifpack(ML*, const char*, int, int, int, void*, void*)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_ifpack_wrap.cpp:107: warning: deprecated conversion from string constant to ‘char*’'</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -1002,10 +1002,10 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_epetra_utils.cpp: In function &#xe2;&#x80;&#x98;void ML_Build_Epetra_Maps(ML_Operator*, Epetra_Map**, Epetra_Map**, Epetra_Map**, int)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_epetra_utils.cpp:820: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_epetra_utils.cpp: In function &#xe2;&#x80;&#x98;int ML_Operator2EpetraCrsMatrix(ML_Operator*, Epetra_CrsMatrix*&amp;, int&amp;, bool, double&amp;, int, bool)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_epetra_utils.cpp:2025: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_epetra_utils.cpp: In function ‘void ML_Build_Epetra_Maps(ML_Operator*, Epetra_Map**, Epetra_Map**, Epetra_Map**, int)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_epetra_utils.cpp:820: warning: deprecated conversion from string constant to ‘char*’'
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_epetra_utils.cpp: In function ‘int ML_Operator2EpetraCrsMatrix(ML_Operator*, Epetra_CrsMatrix*&amp;, int&amp;, bool, double&amp;, int, bool)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_epetra_utils.cpp:2025: warning: deprecated conversion from string constant to ‘char*’'</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -1119,8 +1119,8 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_self_wrap.cpp: In function &#xe2;&#x80;&#x98;int ML_Gen_Smoother_Self(ML*, int, int, int, int, Teuchos::ParameterList&amp;, const Epetra_Comm&amp;)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_self_wrap.cpp:77: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_self_wrap.cpp: In function ‘int ML_Gen_Smoother_Self(ML*, int, int, int, int, Teuchos::ParameterList&amp;, const Epetra_Comm&amp;)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_self_wrap.cpp:77: warning: deprecated conversion from string constant to ‘char*’'</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -1234,8 +1234,8 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner_Smoothers.cpp: In member function &#xe2;&#x80;&#x98;int ML_Epetra::MultiLevelPreconditioner::SetSmoothers()&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner_Smoothers.cpp:904: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner_Smoothers.cpp: In member function ‘int ML_Epetra::MultiLevelPreconditioner::SetSmoothers()’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner_Smoothers.cpp:904: warning: deprecated conversion from string constant to ‘char*’'
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner_Smoothers.cpp:916: warning: ISO C++ forbids casting between pointer-to-function and pointer-to-object
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner_Smoothers.cpp:922: warning: ISO C++ forbids casting between pointer-to-function and pointer-to-object
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner_Smoothers.cpp:952: warning: ISO C++ forbids casting between pointer-to-function and pointer-to-object
@@ -1355,12 +1355,12 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp: In constructor &#xe2;&#x80;&#x98;ML_Epetra::MultiLevelPreconditioner::MultiLevelPreconditioner(ML_Operator*, const Teuchos::ParameterList&amp;, Epetra_RowMatrix**, Teuchos::ParameterList*, int, bool)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:369: warning: unused variable &#xe2;&#x80;&#x98;MaxNumNonzeros&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:370: warning: unused variable &#xe2;&#x80;&#x98;CPUTime&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp: In member function &#xe2;&#x80;&#x98;int ML_Epetra::MultiLevelPreconditioner::ComputePreconditioner(bool)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:1190: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp: In member function &#xe2;&#x80;&#x98;int ML_Epetra::MultiLevelPreconditioner::SetCoarse()&#xe2;&#x80;&#x99;:
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp: In constructor ‘ML_Epetra::MultiLevelPreconditioner::MultiLevelPreconditioner(ML_Operator*, const Teuchos::ParameterList&amp;, Epetra_RowMatrix**, Teuchos::ParameterList*, int, bool)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:369: warning: unused variable ‘MaxNumNonzeros’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:370: warning: unused variable ‘CPUTime’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp: In member function ‘int ML_Epetra::MultiLevelPreconditioner::ComputePreconditioner(bool)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:1190: warning: deprecated conversion from string constant to ‘char*’'
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp: In member function ‘int ML_Epetra::MultiLevelPreconditioner::SetCoarse()’:
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:2302: warning: ISO C++ forbids casting between pointer-to-function and pointer-to-object
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:2307: warning: ISO C++ forbids casting between pointer-to-function and pointer-to-object
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/Utils/ml_MultiLevelPreconditioner.cpp:2319: warning: ISO C++ forbids casting between pointer-to-function and pointer-to-object
@@ -1478,11 +1478,11 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp: In function &#xe2;&#x80;&#x98;int MLAPI::ML_Operator_Add2(ML_Operator*, ML_Operator*, ML_Operator*, int, double, double)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp:392: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp:395: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp:485: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp:559: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp: In function ‘int MLAPI::ML_Operator_Add2(ML_Operator*, ML_Operator*, ML_Operator*, int, double, double)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp:392: warning: deprecated conversion from string constant to ‘char*’'
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp:395: warning: deprecated conversion from string constant to ‘char*’'
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp:485: warning: deprecated conversion from string constant to ‘char*’'
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Operator_Utils.cpp:559: warning: deprecated conversion from string constant to ‘char*’'</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -1596,9 +1596,9 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Aggregation.cpp: In function &#xe2;&#x80;&#x98;void MLAPI::GetPtent(const MLAPI::Operator&amp;, Teuchos::ParameterList&amp;, const MLAPI::MultiVector&amp;, MLAPI::Operator&amp;, MLAPI::MultiVector&amp;)&#xe2;&#x80;&#x99;:
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Aggregation.cpp: In function ‘void MLAPI::GetPtent(const MLAPI::Operator&amp;, Teuchos::ParameterList&amp;, const MLAPI::MultiVector&amp;, MLAPI::Operator&amp;, MLAPI::MultiVector&amp;)’:
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Aggregation.cpp:58: warning: dereferencing type-punned pointer will break strict-aliasing rules
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Aggregation.cpp:58: warning: deprecated conversion from string constant to &#xe2;&#x80;&#x98;char*&#xe2;&#x80;&#x99;'
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Aggregation.cpp:58: warning: deprecated conversion from string constant to ‘char*’'
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/ml/src/MLAPI/MLAPI_Aggregation.cpp:129: warning: dereferencing type-punned pointer will break strict-aliasing rules</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
@@ -1715,10 +1715,10 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stokhos/src/Stokhos_KLMatrixFreeEpetraOp.cpp: In member function &#xe2;&#x80;&#x98;virtual int Stokhos::KLMatrixFreeEpetraOp::Apply(const Epetra_MultiVector&amp;, Epetra_MultiVector&amp;) const&#xe2;&#x80;&#x99;:
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stokhos/src/Stokhos_KLMatrixFreeEpetraOp.cpp: In member function ‘virtual int Stokhos::KLMatrixFreeEpetraOp::Apply(const Epetra_MultiVector&amp;, Epetra_MultiVector&amp;) const’:
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stokhos/src/Stokhos_KLMatrixFreeEpetraOp.cpp:122: warning: comparison between signed and unsigned integer expressions
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stokhos/src/Stokhos_KLMatrixFreeEpetraOp.cpp:135: warning: comparison between signed and unsigned integer expressions
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stokhos/src/Stokhos_KLMatrixFreeEpetraOp.cpp:128: warning: unused variable &#xe2;&#x80;&#x98;j&#xe2;&#x80;&#x99;</StdErr>
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stokhos/src/Stokhos_KLMatrixFreeEpetraOp.cpp:128: warning: unused variable ‘j’</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -1873,9 +1873,9 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stratimikos/adapters/aztecoo/src/Thyra_AztecOOLinearOpWithSolveFactory.cpp: In member function &#xe2;&#x80;&#x98;void Thyra::AztecOOLinearOpWithSolveFactory::initializeOp_impl(const Teuchos::RCP&lt;const Thyra::LinearOpSourceBase&lt;double, double&gt; &gt;&amp;, const Teuchos::RCP&lt;const Thyra::PreconditionerBase&lt;double, double&gt; &gt;&amp;, const Teuchos::RCP&lt;const Thyra::LinearOpSourceBase&lt;double, double&gt; &gt;&amp;, bool, Thyra::LinearOpWithSolveBase&lt;double, double&gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stratimikos/adapters/aztecoo/src/Thyra_AztecOOLinearOpWithSolveFactory.cpp:577: warning: &#xe2;&#x80;&#x98;overall_epetra_epetraPrecOpTransp&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stratimikos/adapters/aztecoo/src/Thyra_AztecOOLinearOpWithSolveFactory.cpp:665: warning: &#xe2;&#x80;&#x98;localPrecType&#xe2;&#x80;&#x99; may be used uninitialized in this function</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stratimikos/adapters/aztecoo/src/Thyra_AztecOOLinearOpWithSolveFactory.cpp: In member function ‘void Thyra::AztecOOLinearOpWithSolveFactory::initializeOp_impl(const Teuchos::RCP&lt;const Thyra::LinearOpSourceBase&lt;double, double&gt; &gt;&amp;, const Teuchos::RCP&lt;const Thyra::PreconditionerBase&lt;double, double&gt; &gt;&amp;, const Teuchos::RCP&lt;const Thyra::LinearOpSourceBase&lt;double, double&gt; &gt;&amp;, bool, Thyra::LinearOpWithSolveBase&lt;double, double&gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stratimikos/adapters/aztecoo/src/Thyra_AztecOOLinearOpWithSolveFactory.cpp:577: warning: ‘overall_epetra_epetraPrecOpTransp’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/stratimikos/adapters/aztecoo/src/Thyra_AztecOOLinearOpWithSolveFactory.cpp:665: warning: ‘localPrecType’ may be used uninitialized in this function</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -2048,8 +2048,8 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_MultiContinuation_MultiVecConstraint.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::MultiContinuation::MultiVecConstraint::computeDP(const std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, Teuchos::SerialDenseMatrix&lt;int, double&gt;&amp;, bool)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_MultiContinuation_MultiVecConstraint.C:148: warning: &#xe2;&#x80;&#x98;status&#xe2;&#x80;&#x99; may be used uninitialized in this function</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_MultiContinuation_MultiVecConstraint.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::MultiContinuation::MultiVecConstraint::computeDP(const std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, Teuchos::SerialDenseMatrix&lt;int, double&gt;&amp;, bool)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_MultiContinuation_MultiVecConstraint.C:148: warning: ‘status’ may be used uninitialized in this function</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -2222,26 +2222,26 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestMagnitude::sort(int, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:51: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestMagnitude::sort(int, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:123: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestMagnitude::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:87: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestImaginary::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:384: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestImaginary::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:342: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestReal::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:300: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestReal::sort(int, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:265: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestReal::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:231: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestReal::sort(int, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:196: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function &#xe2;&#x80;&#x98;virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestMagnitude::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:159: warning: &#xe2;&#x80;&#x98;tempord&#xe2;&#x80;&#x99; may be used uninitialized in this function</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestMagnitude::sort(int, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:51: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestMagnitude::sort(int, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:123: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestMagnitude::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:87: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestImaginary::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:384: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestImaginary::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:342: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestReal::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:300: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestReal::sort(int, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:265: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestReal::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:231: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::LargestReal::sort(int, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:196: warning: ‘tempord’ may be used uninitialized in this function
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C: In member function ‘virtual NOX::Abstract::Group::ReturnType LOCA::EigenvalueSort::SmallestMagnitude::sort(int, double*, double*, std::vector&lt;int, std::allocator&lt;int&gt; &gt;*) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src/LOCA_EigenvalueSort_Strategies.C:159: warning: ‘tempord’ may be used uninitialized in this function</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 
@@ -2416,9 +2416,9 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_Interface_xyzt.H: In constructor &#xe2;&#x80;&#x98;LOCA::Epetra::Interface::xyzt::xyzt(const Teuchos::RCP&lt;LOCA::Epetra::Interface::TimeDependent&gt;&amp;, const Epetra_MultiVector&amp;, const Teuchos::RCP&lt;Epetra_RowMatrix&gt;&amp;, const Teuchos::RCP&lt;EpetraExt::MultiComm&gt;&amp;, const Epetra_Vector&amp;, double, Teuchos::ParameterList*, Teuchos::ParameterList*)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_Interface_xyzt.H:267: warning: &#xe2;&#x80;&#x98;LOCA::Epetra::Interface::xyzt::floquetFillFlag&#xe2;&#x80;&#x99; will be initialized after
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_Interface_xyzt.H:258: warning:   &#xe2;&#x80;&#x98;Epetra_RowMatrix* LOCA::Epetra::Interface::xyzt::savedSplitMassForFloquet&#xe2;&#x80;&#x99;
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_Interface_xyzt.H: In constructor ‘LOCA::Epetra::Interface::xyzt::xyzt(const Teuchos::RCP&lt;LOCA::Epetra::Interface::TimeDependent&gt;&amp;, const Epetra_MultiVector&amp;, const Teuchos::RCP&lt;Epetra_RowMatrix&gt;&amp;, const Teuchos::RCP&lt;EpetraExt::MultiComm&gt;&amp;, const Epetra_Vector&amp;, double, Teuchos::ParameterList*, Teuchos::ParameterList*)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_Interface_xyzt.H:267: warning: ‘LOCA::Epetra::Interface::xyzt::floquetFillFlag’ will be initialized after
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_Interface_xyzt.H:258: warning:   ‘Epetra_RowMatrix* LOCA::Epetra::Interface::xyzt::savedSplitMassForFloquet’
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_Interface_xyzt.C:54: warning:   when initialized here</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
@@ -2594,16 +2594,16 @@
     <!-- Result of command -->
     <Result>
       <StdOut></StdOut>
-      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C: In member function &#xe2;&#x80;&#x98;virtual int LOCA::Epetra::xyztPrec::ApplyInverse(const Epetra_MultiVector&amp;, Epetra_MultiVector&amp;) const&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:226: warning: unused variable &#xe2;&#x80;&#x98;stat&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:269: warning: unused variable &#xe2;&#x80;&#x98;stat&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:301: warning: unused variable &#xe2;&#x80;&#x98;stat&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:323: warning: unused variable &#xe2;&#x80;&#x98;stat&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:385: warning: unused variable &#xe2;&#x80;&#x98;stat&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:427: warning: unused variable &#xe2;&#x80;&#x98;stat&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:462: warning: unused variable &#xe2;&#x80;&#x98;stat&#xe2;&#x80;&#x99;
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C: In member function &#xe2;&#x80;&#x98;virtual bool LOCA::Epetra::xyztPrec::computePreconditioner(const Epetra_Vector&amp;, Epetra_Operator&amp;, Teuchos::ParameterList*)&#xe2;&#x80;&#x99;:
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:585: warning: unused variable &#xe2;&#x80;&#x98;ierr&#xe2;&#x80;&#x99;</StdErr>
+      <StdErr>/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C: In member function ‘virtual int LOCA::Epetra::xyztPrec::ApplyInverse(const Epetra_MultiVector&amp;, Epetra_MultiVector&amp;) const’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:226: warning: unused variable ‘stat’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:269: warning: unused variable ‘stat’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:301: warning: unused variable ‘stat’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:323: warning: unused variable ‘stat’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:385: warning: unused variable ‘stat’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:427: warning: unused variable ‘stat’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:462: warning: unused variable ‘stat’
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C: In member function ‘virtual bool LOCA::Epetra::xyztPrec::computePreconditioner(const Epetra_Vector&amp;, Epetra_Operator&amp;, Teuchos::ParameterList*)’:
+/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/nox/src-loca/src-epetra/LOCA_Epetra_xyztPrec.C:585: warning: unused variable ‘ierr’</StdErr>
       <ExitCondition>0</ExitCondition>
     </Result>
 

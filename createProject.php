@@ -469,7 +469,7 @@ if(strlen($Project->CvsViewerType)==0)
   {
   $Project->CvsViewerType = "viewcvs";
   }
-  
+
 $xml .= AddCVSViewer("viewcvs","ViewCVS",$Project->CvsViewerType); // first should be lower case
 $xml .= AddCVSViewer("trac","Trac",$Project->CvsViewerType);
 $xml .= AddCVSViewer("fisheye","Fisheye",$Project->CvsViewerType);
@@ -478,6 +478,10 @@ $xml .= AddCVSViewer("viewvc","ViewVC",$Project->CvsViewerType);
 $xml .= AddCVSViewer("viewvc1.1","ViewVC1.1",$Project->CvsViewerType);
 $xml .= AddCVSViewer("websvn","WebSVN",$Project->CvsViewerType);
 $xml .= AddCVSViewer("loggerhead","Loggerhead",$Project->CvsViewerType);
+$xml .= AddCVSViewer("gitweb","GitWeb",$Project->CvsViewerType);
+$xml .= AddCVSViewer("gitorious","Gitorious",$Project->CvsViewerType);
+$xml .= AddCVSViewer("github","GitHub",$Project->CvsViewerType);
+$xml .= AddCVSViewer("cgit","cgit",$Project->CvsViewerType);
 
 $xml .= add_XML_value("nrepositories",$nRepositories); // should be at the end
 
