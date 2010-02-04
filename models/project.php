@@ -81,19 +81,19 @@ class Project
       } 
     if(empty($this->EmailAdministrator))
       { 
-      $this->EmailAdministrator=1;
+      $this->EmailAdministrator=0;
       } 
     if(empty($this->ShowIPAddresses))
       { 
-      $this->ShowIPAddresses=1;
+      $this->ShowIPAddresses=0;
       }
     if(empty($this->ShowTestTime))
       { 
-      $this->ShowTestTime=1;
+      $this->ShowTestTime=0;
       }   
     if(empty($this->DisplayLabels))
       { 
-      $this->DisplayLabels=1;
+      $this->DisplayLabels=0;
       }
     if(empty($this->AutoremoveTimeframe))
       { 
