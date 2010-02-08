@@ -1,3 +1,80 @@
+CDash 1.6.2, 2010-02-08
+------------------------
+
+- Support for persistent login
+- Better database compression
+- New graphs and reports
+- Improved coverage visualization
+- Better CTest communication
+- Expected submission time based on historic average
+- Faster load of the main dashboard page
+- Improved navigation links
+- Remote build management (beta) 
+- 0009174 tracing regressions
+- 0009276 Postgres does not like the build warnings with '\\' in them
+- 0010106 Marking "new" test failures on dashboard "view-failed-only" page.
+- 0008735 add ability to get email for missing builds on sites you do not own
+- 0008126 Improve Morale
+- 0009991 show which failures are new
+- 0010027 Feature Request: Compression of test output in the database
+- 0008341 itkrobot doesn't trigger message
+- 0010071 Empty iphone project page
+- 0009790 URL into Trac svn browser wrong
+- 0008854 Sort columns in "Manage Coverage Page"
+- 0009279 Allow --username for subversion
+- 0008171 Display longer history for a single build
+- 0008036 Filter out submissions based on IP address
+- 0007670 Delta on tests is nice but can mask actual status change.
+- 0008965 identify builds that my commit first appear in
+- 0007731 Graph of warnings and errors over time
+- 0009933 Configurable Tracker URL
+- 0007398 groups have "issues"
+- 0009928 Updated file count is always 0 for new submissions
+- 0008585 Maintainer page
+- 0008271 Activity graph
+- 0009848 "Edit subscription" should have a project-selection combo box
+- 0009820 Links/navigation are partly confusing
+- 0008367 Warnings and Errors are set to zero by default
+- 0009138 Project names with chars that must be escaped generate incorrect URLs
+- 0009295 "Time spent per project" only tracks last build
+- 0008948 Update.xml parsing should classify updated/modified/conflicting based on xpath
+- 0008736 better looking coverage
+- 0009856 "Dashboard" doesn't take me to dashboard for the project
+- 0009823 Build summary page should link to pieces
+- 0009855 Unsubscribing as project admin
+- 0009857 list of "Show public projects" not sorted
+- 0009034 Please add a "Show Coverage Percentage Graph" link to the buildSummary page for coverage builds
+- 0009669 Coverage page sorting is slow
+- 0008425 Flot doesn't work with IE 8 beta
+- 0008204 submission should not process files
+- 0009891 Build::GetIdFromName() doesn't check projectid for subproject
+- 0009890 Deleting project doesn't delete subprojects and labels
+- 0009818 Description is escaped for project
+- 0009815 projects not sorted on "My CDash" page
+- 0009794 CDash "forgets" me very fast...
+- 0009788 Dynamic Anyalsis truncated
+- 0009063 Display expected submission time based on historical average for expected builds that have not submitted yet
+- 0009706 Non-anonymous LDAP authentication (e.g. for Active Directory) - feature request and example implementation
+- 0009677 MySQL with STRICT_TRANS_TABLES fails
+- 0009668 Cannot move builds from index page on Chrome
+- 0009644 Only test timings after last database upgrade are shown
+- 0009338 Showing updates files does not work with PostgreSQL
+- 0009630 r1964 broke CDash when using PostgreSQL
+- 0009322 Show changes in test results
+- 0009154 build errors not issuing emails
+- 0009522 Persistent login
+- 0009359 Unable to invite users
+- 0009277 Database update is always needed
+- 0009340 Production mode shouldn't display install.php
+- 0009120 CDash generates wrong diff URLs for ViewVC (at least on NITRC.org)
+- 0009296 Passed test should not have "error" table background
+- 0009294 Processor information of build host is not parsed correctly
+- 0009266 Cannot remove Site
+- 0008957 Remember me login
+- 0008931 Need a way to "unclaim" a site that no longer submits
+- 0008881 Improve support for white spaces to NamedMeasurement with type text/string and/or text/plain types
+
+
 CDash 1.4.0, 2009-04-01
 ------------------------
 
