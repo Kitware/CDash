@@ -392,7 +392,7 @@ class Project
     
     if($query_array = pdo_fetch_array($query))
       {
-      return qnum($query_array["imageid"]);
+      return $query_array["imageid"];
       }
     return 0;  
     }
