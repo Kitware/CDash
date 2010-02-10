@@ -49,6 +49,10 @@ if ($session_OK)
     echo_svn_output('info');
     echo_svn_output('status');
     echo_svn_output('diff');
+
+    echo '<h3>phpinfo</h3>';
+    phpinfo();
+    echo '<br/>';
     }
   else
     {
