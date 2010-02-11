@@ -149,7 +149,7 @@ function ldapAuthenticate($email,$password,$SessionCachePolicy)
             @$givenname = $entries[0]['cn'][0];
             if(!isset($givenname))
               {
-              $loginerror = 'No givenname (cn) set in LDAP, cannot register user into MIDAS';
+              $loginerror = 'No givenname (cn) set in LDAP, cannot register user into CDash';
               return false;
               }
             $names = explode(" ",$givenname);
