@@ -90,6 +90,7 @@ class ConfigureHandler extends AbstractHandler
         $this->Build->EndTime = $end_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         $this->Build->SetSubProject($this->SubProjectName);
+        $this->Build->InsertErrors = false;
         add_build($this->Build);
         $buildid = $this->Build->Id;
         }

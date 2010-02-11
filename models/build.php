@@ -50,12 +50,16 @@ class Build
   var $Append;
   var $Labels;
 
+  // Only the build.xml has information about errors and warnings
+  // when the InsertErrors is false the build is created but not the errors and warnings
+  var $InsertErrors;
 
   function __construct()
     {
     $this->Errors = array();
     $this->ErrorDiffs = array();
     $this->Append = false;
+    $this->InsertErrors = true;
     }
 
 
@@ -526,20 +530,28 @@ class Build
       $this->Log = pdo_real_escape_string($this->Log);
       
       // Compute the number of errors and warnings (this speeds up the display of the main table)
-      $nbuilderrors = 0;
-      $nbuildwarnings = 0;
-      foreach($this->Errors as $error)
+      if($this->InsertErrors)
         {
-        if($error->Type == 0)
+        $nbuilderrors = 0;
+        $nbuildwarnings = 0;
+        foreach($this->Errors as $error)
           {
-          $nbuilderrors++;
+          if($error->Type == 0)
+            {
+            $nbuilderrors++;
+            }
+          else
+            {
+            $nbuildwarnings++;
+            }  
           }
-        else
-          {
-          $nbuildwarnings++;
-          }  
         }
-
+      else
+        {
+        $nbuilderrors = -1;
+        $nbuildwarnings = -1;  
+        }
+        
       $query = "INSERT INTO build (".$id."siteid,projectid,stamp,name,type,generator,starttime,endtime,submittime,command,log,
                                    builderrors,buildwarnings)
                 VALUES (".$idvalue."'$this->SiteId','$this->ProjectId','$this->Stamp','$this->Name',
@@ -606,20 +618,28 @@ class Build
         $this->Log = pdo_real_escape_string(' '.$this->Log);
 
         // Compute the number of errors and warnings (this speeds up the display of the main table)
-        $nbuilderrors = 0;
-        $nbuildwarnings = 0;
-        foreach($this->Errors as $error)
+        if($this->InsertErrors)
           {
-          if($error->Type == 0)
+          $nbuilderrors = 0;
+          $nbuildwarnings = 0;
+          foreach($this->Errors as $error)
             {
-            $nbuilderrors++;
+            if($error->Type == 0)
+              {
+              $nbuilderrors++;
+              }
+            else
+              {
+              $nbuildwarnings++;
+              }  
             }
-          else
-            {
-            $nbuildwarnings++;
-            }  
           }
-
+        else
+          {
+          $nbuilderrors = -1;
+          $nbuildwarnings = -1;  
+          }
+          
         include('cdash/config.php');
         if($CDASH_DB_TYPE == 'pgsql') // pgsql doesn't have concat...
           {

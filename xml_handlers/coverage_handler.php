@@ -108,6 +108,7 @@ class CoverageHandler extends AbstractHandler
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $end_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+        $this->Build->InsertErrors = false;
         add_build($this->Build);
         $buildid = $this->Build->Id;
         }

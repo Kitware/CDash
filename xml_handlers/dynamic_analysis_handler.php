@@ -113,6 +113,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $start_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+        $this->Build->InsertErrors = false;
         add_build($this->Build);
         $this->UpdateEndTime = true;  
         $buildid = $this->Build->Id;

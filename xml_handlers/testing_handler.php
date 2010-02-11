@@ -150,7 +150,7 @@ class TestingHandler extends AbstractHandler
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         $this->Build->SetSubProject($this->SubProjectName);
         $this->Build->Append = $this->Append;
-
+        $this->Build->InsertErrors = false;
         add_build($this->Build);
 
         $this->UpdateEndTime = true;
