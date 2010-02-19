@@ -53,10 +53,16 @@ class BuildUpdateFile
 
     $this->Filename = pdo_real_escape_string($this->Filename);
     
+    // Sometimes the checkin date is not found in that case we put the usual date
+    if($this->CheckinDate == "Unknown")
+      {
+      $this->CheckinDate = "1980-01-01";
+      }
+
     $this->CheckinDate = date(FMT_DATETIME,strtotime($this->CheckinDate));
     $this->Author = pdo_real_escape_string($this->Author);
-    
-    
+
+
     // Check if we have a robot file for this build
     $robot = pdo_query("SELECT authorregex FROM projectrobot,build 
                 WHERE projectrobot.projectid=build.projectid
@@ -78,13 +84,7 @@ class BuildUpdateFile
     $this->Revision = pdo_real_escape_string($this->Revision);
     $this->PriorRevision = pdo_real_escape_string($this->PriorRevision);
     $this->BuildId = pdo_real_escape_string($this->BuildId);
-    
-    // Sometimes the checkin date is not found in that case we put the usual date
-    if($this->CheckinDate == "Unknown")
-      {
-      $this->CheckinDate = "1980-01-01";
-      }
-    
+
     $query = "INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision,status)
               VALUES (".qnum($this->BuildId).",'$this->Filename','$this->CheckinDate','$this->Author','$this->Email',
                       '$this->Log','$this->Revision','$this->PriorRevision','$this->Status')";
