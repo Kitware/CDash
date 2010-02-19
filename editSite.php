@@ -75,26 +75,26 @@ if ($session_OK)
   
   if($updatesite || $geolocation)
     {
-     $site_name = $_POST["site_name"];
-     $site_description = $_POST["site_description"];
-     $site_processoris64bits = $_POST["site_processoris64bits"];
-     $site_processorvendor = $_POST["site_processorvendor"];
-     $site_processorvendorid = $_POST["site_processorvendorid"];
-     $site_processorfamilyid = $_POST["site_processorfamilyid"];
-     $site_processormodelid = $_POST["site_processormodelid"];
-     $site_processorcachesize = $_POST["site_processorcachesize"];
-     $site_numberlogicalcpus = $_POST["site_numberlogicalcpus"];
-     $site_numberphysicalcpus = $_POST["site_numberphysicalcpus"];
-     $site_totalvirtualmemory = $_POST["site_totalvirtualmemory"];
+    $site_name = $_POST["site_name"];
+    $site_description = $_POST["site_description"];
+    $site_processoris64bits = $_POST["site_processoris64bits"];
+    $site_processorvendor = $_POST["site_processorvendor"];
+    $site_processorvendorid = $_POST["site_processorvendorid"];
+    $site_processorfamilyid = $_POST["site_processorfamilyid"];
+    $site_processormodelid = $_POST["site_processormodelid"];
+    $site_processorcachesize = $_POST["site_processorcachesize"];
+    $site_numberlogicalcpus = $_POST["site_numberlogicalcpus"];
+    $site_numberphysicalcpus = $_POST["site_numberphysicalcpus"];
+    $site_totalvirtualmemory = $_POST["site_totalvirtualmemory"];
     $site_totalphysicalmemory = $_POST["site_totalphysicalmemory"];  
     $site_logicalprocessorsperphysical = $_POST["site_logicalprocessorsperphysical"];  
     $site_processorclockfrequency = $_POST["site_processorclockfrequency"];  
     $site_ip = $_POST["site_ip"];
     $site_longitude = $_POST["site_longitude"];   
     $site_latitude = $_POST["site_latitude"];
-     if(isset($_POST["newdescription_revision"]))
-       {
-       $newdescription_revision=1;
+    if(isset($_POST["newdescription_revision"]))
+      {
+      $newdescription_revision=1;
       }
     else
       {
@@ -247,7 +247,7 @@ if ($session_OK)
 
     $xml .= add_XML_value("id",$siteid);
     $xml .= add_XML_value("name",$site_array["name"]);
-    $xml .= add_XML_value("description",$siteinformation_array["description"]);
+    $xml .= add_XML_value("description",stripslashes($siteinformation_array["description"]));
     $xml .= add_XML_value("processoris64bits",$siteinformation_array["processoris64bits"]);
     $xml .= add_XML_value("processorvendor",$siteinformation_array["processorvendor"]);
     $xml .= add_XML_value("processorvendorid",$siteinformation_array["processorvendorid"]);
