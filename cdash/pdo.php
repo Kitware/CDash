@@ -304,7 +304,14 @@ function pdo_select_db($database_name, &$link_identifier)
     {
     $ln = get_link_identifier($link_identifier);
     $db = mysql_select_db($database_name, $ln);
-    mysql_set_charset('utf8', $ln);
+    if (PHP_VERSION >= 5.3)
+      {
+      mysql_set_charset('utf8', $ln);
+      }
+    else
+      {
+      mysql_query("SET NAMES 'utf8'");  
+      }  
     return $db;
     }
 }
