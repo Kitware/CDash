@@ -99,10 +99,6 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       {
       $file = $uncompressedrow;
       }
-    else
-      {
-      $file = $coveragefile_array["file"];
-      }
     }
   else
     {
