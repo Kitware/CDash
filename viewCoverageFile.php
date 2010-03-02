@@ -80,7 +80,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     {
     if($CDASH_DB_TYPE == "pgsql")
       { 
-      if(is_resource($testRow["output"]))
+      if(is_resource($coveragefile_array["file"]))
         {
         $file = base64_decode(stream_get_contents($coveragefile_array["file"]));
         }
