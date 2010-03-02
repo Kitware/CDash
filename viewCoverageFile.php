@@ -115,7 +115,15 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   if(pdo_num_rows($coveragefilelog)>0)
     {
     $coveragefilelog_array = pdo_fetch_array($coveragefilelog);
-    $linecode = explode(';',$coveragefilelog_array['log']);
+    if($CDASH_DB_TYPE == "pgsql")
+      { 
+      $log = stream_get_contents($coveragefilelog_array['log']);
+      } 
+    else
+      {
+      $log = $coveragefilelog_array['log']; 
+      }  
+    $linecode = explode(';',$log);
     foreach($linecode as $value)
       {
       if(!empty($value))
