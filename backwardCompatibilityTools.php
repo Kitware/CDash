@@ -691,7 +691,7 @@ if(isset($_GET['upgrade-1-8']))
   // If the new coveragefilelog is not set
   if(!pdo_query("SELECT log FROM coveragefilelog LIMIT 1"))
     {
-    AddTableField("coveragefilelog","log","LONGBLOB","LONGBLOB",false);
+    AddTableField("coveragefilelog","log","LONGBLOB","bytea",false);
     
     // Get the lines for each buildid/fileid
     $query = pdo_query("SELECT DISTINCT buildid,fileid FROM coveragefilelog ORDER BY buildid,fileid");
