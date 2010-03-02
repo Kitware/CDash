@@ -21,7 +21,7 @@ require_once("../cdash/pdo.php");
 include("../cdash/common.php");
 $noforcelogin = 1;
 include('../login.php');
-$userid = $_GET["userid"];
+@$userid = $_GET["userid"];
 
 if(!$userid && !isset($_SESSION['cdash']))
   {
