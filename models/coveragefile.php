@@ -35,16 +35,39 @@ class CoverageFile
       
     include("cdash/config.php");
     
-    // Compute the crc32 of the file
+    // Compute the crc32 of the file (before compression for backward compatibility)
     $this->Crc32 = crc32($this->FullPath.$this->File);
     
     $this->FullPath = pdo_real_escape_string($this->FullPath);
-    if($CDASH_DB_TYPE == "pgsql")
-      {
-      $this->File = pg_escape_bytea($this->File);
+    if($CDASH_USE_COMPRESSION)
+      { 
+      $file = gzcompress($this->File);
+      if($file === false)
+        {
+        $file = $this->File;
+        }
+      else
+        {
+        if($CDASH_DB_TYPE == "pgsql")
+          { 
+          if(strlen($this->File)<2000) // compression doesn't help for small chunk
+            {
+            $file = $this->File; 
+            } 
+          $file = pg_escape_bytea(base64_encode($file)); // hopefully does the escaping correctly   
+          }
+        }  
       }
-    $this->File = pdo_real_escape_string($this->File);
-      
+    else
+      {
+      $file = $this->File;
+      if($CDASH_DB_TYPE == "pgsql")
+        {
+        $file = pg_escape_bytea($file);
+        }
+      }
+    $file = pdo_real_escape_string($file);
+    
     $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE crc32=".qnum($this->Crc32));
     add_last_sql_error("CoverageFile:Update");
       
@@ -82,7 +105,7 @@ class CoverageFile
                                    AND cf.fullpath='$this->FullPath' ORDER BY cf.id ASC");
       $coveragefile_array = pdo_fetch_array($coveragefile);
       $this->Id = $coveragefile_array["id"];
-      pdo_query("UPDATE coveragefile SET file='$this->File',crc32='$this->Crc32' WHERE id=".qnum($this->Id)); 
+      pdo_query("UPDATE coveragefile SET file='$file',crc32='$this->Crc32' WHERE id=".qnum($this->Id)); 
       add_last_sql_error("CoverageFile:Update");
       }
     return true;

@@ -223,11 +223,9 @@ CREATE TABLE `coveragefile` (
 CREATE TABLE `coveragefilelog` (
   `buildid` int(11) NOT NULL default '0',
   `fileid` int(11) NOT NULL default '0',
-  `line` int(11) NOT NULL default '0',
-  `code` varchar(10) NOT NULL default '',
+  `log` LONGBLOB NOT NULL,
   KEY `fileid` (`fileid`),
-  KEY `buildid` (`buildid`),
-  KEY `line` (`line`)
+  KEY `buildid` (`buildid`)
 );
 
 -- --------------------------------------------------------

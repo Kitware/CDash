@@ -47,22 +47,16 @@ class CoverageFileLog
       return false;    
       }
       
-    $sql = "INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ";
-  
-    $i=0;
+    $log = '';
     foreach($this->Lines as $lineNumber=>$code)
       {
-      if($i>0)
-        {
-        $sql .= ",";
-        }  
-        
-      $sql.= "(".qnum($this->BuildId).",".qnum($this->FileId).",".qnum($lineNumber).",'$code')";
-      $i++;
+      $log .= $lineNumber.':'.$code.';';
       }
     
-    if($i>0)
-      {  
+    if($log != '')
+      { 
+      $sql = "INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ";
+      $sql.= "(".qnum($this->BuildId).",".qnum($this->FileId).",'".$log."')";  
       pdo_query($sql);
       add_last_sql_error("CoverageFileLog::Insert()");
       }

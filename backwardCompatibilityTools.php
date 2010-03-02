@@ -238,17 +238,24 @@ if(isset($_GET['upgrade-1-2']))
 function AddTableField($table,$field,$mySQLType,$pgSqlType,$default)
 {
   include("cdash/config.php");
+  
+  $sql = '';  
+  if($default !== false)
+    {
+    $sql = " DEFAULT '".$default."'";      
+    }  
+        
   $query = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
   if(!$query)
     {
     add_log("Adding $field to $table","AddTableField");
     if($CDASH_DB_TYPE == "pgsql")
       {
-      pdo_query("ALTER TABLE \"".$table."\" ADD \"".$field."\" ".$pgSqlType." DEFAULT '".$default."'");
+      pdo_query("ALTER TABLE \"".$table."\" ADD \"".$field."\" ".$pgSqlType.$sql);
       }
     else
       {
-      pdo_query("ALTER TABLE ".$table." ADD ".$field." ".$mySQLType." DEFAULT '".$default."'");
+      pdo_query("ALTER TABLE ".$table." ADD ".$field." ".$mySQLType.$sql);
       }
       
     add_last_sql_error("AddTableField");
@@ -259,6 +266,7 @@ function AddTableField($table,$field,$mySQLType,$pgSqlType,$default)
 /** Remove a table field */
 function RemoveTableField($table,$field)
 {
+  include("cdash/config.php");
   $query = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
   if($query)
     {
@@ -676,6 +684,59 @@ if(isset($_GET['upgrade-1-6']))
   exit();
 }
 
+
+// 1.8 Upgrade
+if(isset($_GET['upgrade-1-8']))
+{  
+  // If the new coveragefilelog is not set
+  if(!pdo_query("SELECT log FROM coveragefilelog LIMIT 1"))
+    {
+    AddTableField("coveragefilelog","log","LONGBLOB","LONGBLOB",false);
+    
+    // Get the lines for each buildid/fileid
+    $query = pdo_query("SELECT DISTINCT buildid,fileid FROM coveragefilelog ORDER BY buildid,fileid");
+    while($query_array = pdo_fetch_array($query))
+      {
+      $buildid = $query_array['buildid'];
+      $fileid = $query_array['fileid'];
+      
+      // Get the lines
+      $firstline = false;
+      $log = '';
+      $lines = pdo_query("SELECT line,code FROM coveragefilelog WHERE buildid='".$buildid."' AND fileid='".$fileid."' ORDER BY line");
+      while($lines_array = pdo_fetch_array($lines))
+        {
+        $line = $lines_array['line'];
+        $code = $lines_array['code'];
+        
+        if($firstline === false)
+          {
+          $firstline = $line;  
+          }
+        $log .= $line.':'.$code.';';
+        }
+        
+      // Update the first line
+      pdo_query("UPDATE coveragefilelog SET log='".$log."' 
+                WHERE buildid='".$buildid."' AND fileid='".$fileid."' AND line='".$firstline."'");
+       
+      // Delete the other lines
+      pdo_query("DELETE FROM coveragefilelog 
+                 WHERE buildid='".$buildid."' AND fileid='".$fileid."' AND line!='".$firstline."'");
+      } // end looping through buildid/fileid
+
+    RemoveTableField("coveragefilelog","line");
+    RemoveTableField("coveragefilelog","code");
+    } 
+    
+  // Set the database version
+  setVersion();
+
+  // Put that the upgrade is done in the log
+  add_log("Upgrade done.","upgrade-1-8");
+
+  exit();
+}
 // When adding new tables they should be added to the SQL installation file
 // and here as well
 if($Upgrade)

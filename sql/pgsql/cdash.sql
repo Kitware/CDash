@@ -183,12 +183,10 @@ CREATE INDEX "crc32" on "coveragefile" ("crc32");
 CREATE TABLE "coveragefilelog" (
   "buildid" bigint DEFAULT '0' NOT NULL,
   "fileid" bigint DEFAULT '0' NOT NULL,
-  "line" bigint DEFAULT '0' NOT NULL,
-  "code" character varying(10) DEFAULT '' NOT NULL
+  "log" LONGBLOG NOT NULL
 );
 CREATE INDEX "fileid2" on "coveragefilelog" ("fileid");
 CREATE INDEX "buildid5" on "coveragefilelog" ("buildid");
-CREATE INDEX "coveragefilelog_line" on "coveragefilelog" ("line");
 
 --
 -- Table: coveragesummary

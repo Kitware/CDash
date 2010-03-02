@@ -75,28 +75,61 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
   $xml .= "<coverage>";
   $xml .= add_XML_value("fullpath",$coveragefile_array["fullpath"]);
-  $file = $coveragefile_array["file"];
-
-  if($CDASH_DB_TYPE == "pgsql")
-    {
-    $file = stream_get_contents($file);
-    }
   
-  // Generating the html file
+  if($CDASH_USE_COMPRESSION)
+    {
+    if($CDASH_DB_TYPE == "pgsql")
+      { 
+      if(is_resource($testRow["output"]))
+        {
+        $file = base64_decode(stream_get_contents($coveragefile_array["file"]));
+        }
+      else
+        {  
+        $file = base64_decode($coveragefile_array["file"]);
+        }
+      }    
+    else
+      {
+      $file = $coveragefile_array["file"];
+      }  
+      
+    @$uncompressedrow = gzuncompress($file);
+    if($uncompressedrow !== false)
+      {
+      $file = $uncompressedrow;
+      }
+    else
+      {
+      $file = $coveragefile_array["file"];
+      }
+    }
+  else
+    {
+    $file = $coveragefile_array["file"];
+    }
+
+    // Generating the html file
   $file_array = explode("<br>",$file);
   $i = 0;
   
   // Get the codes in an array
   $linecodes = array();
-  $coveragefilelog = pdo_query("SELECT line,code FROM coveragefilelog WHERE fileid=".qnum($fileid)." AND buildid=".qnum($buildid));
+  $coveragefilelog = pdo_query("SELECT log FROM coveragefilelog WHERE fileid=".qnum($fileid)." AND buildid=".qnum($buildid));
   if(pdo_num_rows($coveragefilelog)>0)
     {
-    while($coveragefilelog_array = pdo_fetch_array($coveragefilelog))
+    $coveragefilelog_array = pdo_fetch_array($coveragefilelog);
+    $linecode = explode(';',$coveragefilelog_array['log']);
+    foreach($linecode as $value)
       {
-      $linecodes[$coveragefilelog_array["line"]] = $coveragefilelog_array["code"];
+      if(!empty($value))
+        {
+        $code = explode(':',$value);
+        $linecodes[$code[0]] = $code[1];  
+        }
       }
     }
-  
+    
   foreach($file_array as $line)
     {
     $linenumber = $i+1;  
