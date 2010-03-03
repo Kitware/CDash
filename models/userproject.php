@@ -184,7 +184,6 @@ class UserProject
     $this->EmailCategory = $user_array['emailcategory'];
     $this->UserId = $user_array['userid'];
     $this->EmailSuccess = $user_array['emailsuccess'];
-   
     return true;
     }
       
@@ -212,6 +211,24 @@ class UserProject
     return $projectids;
     }
       
+  /** Get the email category from the user id */
+  function GetEmailCategory()
+    {  
+    if(!$this->UserId)
+      {
+      echo "UserProject GetEmailCategory(): UserId not set";
+      return false;
+      }
       
+    $category = pdo_query("SELECT emailcategory FROM user2project WHERE userid=".qnum($this->UserId));
+    if(!$category)
+      {
+      add_last_sql_error("UserProject GetEmailCategory");
+      return false;
+      } 
+    $category_array = pdo_fetch_array($category);
+    return $category_array['emailcategory'];    
+    }
+
 } // end class UserProject
 ?>

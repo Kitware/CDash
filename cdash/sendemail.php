@@ -1173,6 +1173,14 @@ function sendemail($handler,$projectid)
     $emailtext = array();
     $emailtext['nerror'] = 0;
     
+    
+    // Tune the error array based on the preferences of the user to make sure he
+    // doesn't get email that are unecessary
+    $UserProject = new UserProject();
+    $UserProject->UserId = $userid;
+    $UserProject->ProjectId = $projectid;
+    $useremailcategory = $UserProject->GetEmailCategory();
+
     // Check if an email has been sent already for this user
     foreach($errors as $errorkey => $nerrors)
       {
@@ -1180,7 +1188,17 @@ function sendemail($handler,$projectid)
         {
         continue;
         }
-
+        
+      // If the user doesn't want to get the email
+      switch($errorkey)
+        {
+        case 'update_errors': if(!check_email_category("update",$useremailcategory)) {continue;} break;
+        case 'configure_errors': if(!check_email_category("configure",$useremailcategory)) {continue;} break;
+        case 'build_errors': if(!check_email_category("error",$useremailcategory)) {continue;} break;
+        case 'build_warnings': if(!check_email_category("warning",$useremailcategory)) {continue;} break;
+        case 'test_errors': if(!check_email_category("test",$useremailcategory)) {continue;} break;
+        } 
+           
       if(!check_email_sent($userid,$buildid,$errorkey))
         {
         $emailtext['summary'][$errorkey] = get_email_summary($buildid,$errors,$errorkey,$Project->EmailMaxItems,
