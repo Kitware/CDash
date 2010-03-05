@@ -343,7 +343,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
       $info = "";
       if(strlen($error_array["sourcefile"])>0)
         {
-        $info .= $error_array["sourcefile"]." line ".sourceline." (".$serverURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
+        $info .= $error_array["sourcefile"]." line ".$error_array["sourceline"]." (".$serverURI."/viewBuildError.php?type=0&buildid=".$buildid.")\n";
         $info .= $error_array["text"]."\n";
         }
       else
@@ -1166,14 +1166,13 @@ function sendemail($handler,$projectid)
   
   // Get the list of person who should get the email
   $userids = lookup_emails_to_send($errors, $buildid, $projectid,$Build->Type);
-
+  
   // Loop through the users
   foreach($userids as $userid)
     {
     $emailtext = array();
     $emailtext['nerror'] = 0;
-    
-    
+
     // Tune the error array based on the preferences of the user to make sure he
     // doesn't get email that are unecessary
     $UserProject = new UserProject();
@@ -1184,21 +1183,27 @@ function sendemail($handler,$projectid)
     // Check if an email has been sent already for this user
     foreach($errors as $errorkey => $nerrors)
       {
-      if($nerrors == 0)
+      if($nerrors == 0 || $errorkey=='errors')
         {
         continue;
         }
         
       // If the user doesn't want to get the email
+      $stop = false;
       switch($errorkey)
         {
-        case 'update_errors': if(!check_email_category("update",$useremailcategory)) {continue;} break;
-        case 'configure_errors': if(!check_email_category("configure",$useremailcategory)) {continue;} break;
-        case 'build_errors': if(!check_email_category("error",$useremailcategory)) {continue;} break;
-        case 'build_warnings': if(!check_email_category("warning",$useremailcategory)) {continue;} break;
-        case 'test_errors': if(!check_email_category("test",$useremailcategory)) {continue;} break;
-        } 
-           
+        case 'update_errors': if(!check_email_category("update",$useremailcategory)) {$stop=true;} break;
+        case 'configure_errors': if(!check_email_category("configure",$useremailcategory)) {$stop=true;} break;
+        case 'build_errors': if(!check_email_category("error",$useremailcategory)) {$stop=true;} break;
+        case 'build_warnings': if(!check_email_category("warning",$useremailcategory)) {$stop=true;} break;
+        case 'test_errors': if(!check_email_category("test",$useremailcategory)) {$stop=true;} break;
+        }
+        
+      if($stop)
+        {
+        continue;  
+        }  
+        
       if(!check_email_sent($userid,$buildid,$errorkey))
         {
         $emailtext['summary'][$errorkey] = get_email_summary($buildid,$errors,$errorkey,$Project->EmailMaxItems,
@@ -1208,7 +1213,8 @@ function sendemail($handler,$projectid)
         $emailtext['nerror'] = 1;
         }
       }
-    
+
+      
     // Send the email
     if($emailtext['nerror'] == 1)
       {
