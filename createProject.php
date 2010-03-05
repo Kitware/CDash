@@ -296,28 +296,28 @@ if($Update || $AddRepository)
     $Project->Public = 0;
     }
   
-  $Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
-  $Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
-  $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
-  $Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
-  $Project->EmailRedundantFailures = stripslashes_if_gpc_magic_quotes($_POST["emailRedundantFailures"]);
-  $Project->EmailLowCoverage = stripslashes_if_gpc_magic_quotes($_POST["emailLowCoverage"]);
-  $Project->EmailTestTimingChanged = stripslashes_if_gpc_magic_quotes($_POST["emailTestTimingChanged"]);
-  $Project->CvsViewerType = stripslashes_if_gpc_magic_quotes($_POST["cvsviewertype"]); 
-  $Project->RobotName = stripslashes_if_gpc_magic_quotes($_POST["robotname"]); 
-  $Project->RobotRegex = stripslashes_if_gpc_magic_quotes($_POST["robotregex"]); 
-  $Project->TestTimeStd = stripslashes_if_gpc_magic_quotes($_POST["testTimeStd"]);
-  $Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
-  $Project->TestTimeMaxStatus = stripslashes_if_gpc_magic_quotes($_POST["testTimeMaxStatus"]);  
-  $Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
-  $Project->ShowTestTime = stripslashes_if_gpc_magic_quotes($_POST["showTestTime"]);
-  $Project->EmailMaxItems = stripslashes_if_gpc_magic_quotes($_POST["emailMaxItems"]);
-  $Project->EmailMaxChars = stripslashes_if_gpc_magic_quotes($_POST["emailMaxChars"]);
-  $Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST["emailAdministrator"]);
-  $Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
-  $Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
-  $Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
-  $Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
+  @$Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
+  @$Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
+  @$Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
+  @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
+  @$Project->EmailRedundantFailures = stripslashes_if_gpc_magic_quotes($_POST["emailRedundantFailures"]);
+  @$Project->EmailLowCoverage = stripslashes_if_gpc_magic_quotes($_POST["emailLowCoverage"]);
+  @$Project->EmailTestTimingChanged = stripslashes_if_gpc_magic_quotes($_POST["emailTestTimingChanged"]);
+  @$Project->CvsViewerType = stripslashes_if_gpc_magic_quotes($_POST["cvsviewertype"]); 
+  @$Project->RobotName = stripslashes_if_gpc_magic_quotes($_POST["robotname"]); 
+  @$Project->RobotRegex = stripslashes_if_gpc_magic_quotes($_POST["robotregex"]); 
+  @$Project->TestTimeStd = stripslashes_if_gpc_magic_quotes($_POST["testTimeStd"]);
+  @$Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
+  @$Project->TestTimeMaxStatus = stripslashes_if_gpc_magic_quotes($_POST["testTimeMaxStatus"]);  
+  @$Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
+  @$Project->ShowTestTime = stripslashes_if_gpc_magic_quotes($_POST["showTestTime"]);
+  @$Project->EmailMaxItems = stripslashes_if_gpc_magic_quotes($_POST["emailMaxItems"]);
+  @$Project->EmailMaxChars = stripslashes_if_gpc_magic_quotes($_POST["emailMaxChars"]);
+  @$Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST["emailAdministrator"]);
+  @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
+  @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
+  @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
+  @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
   $Project->Save();
   
   // Add the logo
