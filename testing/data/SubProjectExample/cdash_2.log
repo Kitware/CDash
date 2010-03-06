@@ -21,7 +21,7 @@ NOX_FiniteDifferenceIsorropiaColoring (http://<NA>/<NA>/testDetails.php?test=<NA
 -CDash on <NA>
 
 [TESTING](TESTING: EMAIL): nox-noemail@noemail
-[TESTING](TESTING: EMAILTITLE): FAILED (w=21, t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly
+[TESTING](TESTING: EMAILTITLE): FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly
 [TESTING](TESTING: EMAILBODY): A submission to CDash for the project SubProjectExample has build warnings and failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -33,23 +33,7 @@ Site: godel.sandia.gov
 Build Name: Linux-GCC-4.1.2-SERIAL_RELEASE
 Build Time: 2009-08-06T08:19:56 EDT
 Type: Nightly
-Warnings: 21
 Tests failing: 1
-
-
-*Warnings*
-packages/epetraext/src/transform/EpetraExt_BlockAdjacencyGraph.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=<NA>)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/transform/<NA>
-packages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=<NA>)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/Epetr<NA>
-packages/epetraext/src/block/EpetraExt_MultiPointModelEvaluator.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=<NA>)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/block/Epe<NA>
-packages/galeri/src/Galeri_Utils.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=<NA>)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/Galeri_Utils.cpp: In <NA>
-packages/galeri/src/Galeri_CrsMatrices.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=<NA>)
-/home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/galeri/src/CrsMatrices/Galeri_<NA>
-
-
 
 *Tests failing*
 NOX_FiniteDifferenceIsorropiaColoring (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
