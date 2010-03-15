@@ -85,7 +85,7 @@ class BuildError
     // Compute the crc32
     if($this->SourceLine==0)
       {
-      $crc32 = crc32($text.$precontext.$postcontext);
+      $crc32 = crc32($text); // no need for precontext or postcontext, this doesn't work for parallel build
       }
     else
       {
