@@ -1,5 +1,5 @@
 [TESTING](TESTING: EMAIL): user1@kw
-[TESTING](TESTING: EMAILTITLE): PASSED (w=7): EmailProjectExample - Win32-MSVC2009 - Nightly
+[TESTING](TESTING: EMAILTITLE): PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly
 [TESTING](TESTING: EMAILBODY): Congratulations, a submission to CDash for the project EmailProjectExample has fixed build warnings.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
