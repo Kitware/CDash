@@ -94,25 +94,28 @@ CREATE TABLE IF NOT EXISTS client_job (
 --
 -- Table structure for table 'client_jobschedule'
 --
-
 CREATE TABLE IF NOT EXISTS client_jobschedule (
-  id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  userid int(11) DEFAULT NULL,
-  projectid int(11) DEFAULT NULL,
-  cmakecache mediumtext NOT NULL,
-  startdate timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  enddate timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `userid` int(11) default NULL,
+  `projectid` int(11) default NULL,
+  `cmakecache` mediumtext NOT NULL,
+  `startdate` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `enddate` timestamp NOT NULL default '1980-01-01 00:00:00',
   `type` tinyint(4) NOT NULL,
-  starttime time NOT NULL DEFAULT '00:00:00',
-  repeattime decimal(3,2) NOT NULL DEFAULT '0.00',
+  `starttime` time NOT NULL default '00:00:00',
+  `repeattime` decimal(3,2) NOT NULL default '0.00',
   `enable` tinyint(4) NOT NULL,
-  lastrun timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  UNIQUE KEY id (id),
-  KEY userid (userid),
-  KEY projectid (projectid),
+  `lastrun` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `repository` varchar(512) default '',
+  `module` varchar(255) default '',
+  `buildnamesuffix` varchar(255) default '',
+  `tag` varchar(255) default '',
+  UNIQUE KEY `id` (`id`),
+  KEY `userid` (`userid`),
+  KEY `projectid` (`projectid`),
   KEY `enable` (`enable`),
-  KEY starttime (starttime),
-  KEY repeattime (repeattime)
+  KEY `starttime` (`starttime`),
+  KEY `repeattime` (`repeattime`)
 );
 
 -- --------------------------------------------------------

@@ -928,7 +928,11 @@ CREATE TABLE "client_jobschedule" (
   "starttime" time DEFAULT '00:00:00' NOT NULL,
   "repeattime" numeric(3,2) DEFAULT '0.00' NOT NULL,
   "enable" smallint NOT NULL,
-  "lastrun" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
+  "lastrun" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "repository" character varying(512) default '',
+  "module" character varying(255) default '',
+  "buildnamesuffix" character varying(255) default '',
+  "tag" character varying(255) default ''
 );
 CREATE INDEX "client_jobschedule_userid" on "client_jobschedule" ("userid");
 CREATE INDEX "client_jobschedule_projectid" on "client_jobschedule" ("projectid");
