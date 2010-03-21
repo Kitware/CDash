@@ -220,7 +220,14 @@ class UserProject
       return false;
       }
       
-    $category = pdo_query("SELECT emailcategory FROM user2project WHERE userid=".qnum($this->UserId));
+    if(!$this->ProjectId)
+      {
+      echo "UserProject GetEmailCategory(): ProjectId not set";
+      return false;
+      }
+        
+    $category = pdo_query("SELECT emailcategory FROM user2project WHERE 
+                          userid=".qnum($this->UserId)." AND projectid=".qnum($this->ProjectId));
     if(!$category)
       {
       add_last_sql_error("UserProject GetEmailCategory");
