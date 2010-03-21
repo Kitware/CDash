@@ -728,6 +728,15 @@ if(isset($_GET['upgrade-1-8']))
     RemoveTableField("coveragefilelog","line");
     RemoveTableField("coveragefilelog","code");
     } 
+
+  // Missing fields in the client_jobschedule table
+  if(!pdo_query("SELECT repository FROM client_jobschedule LIMIT 1"))
+    {
+    AddTableField("client_jobschedule","repository","varchar(512)","character varying(512)","");
+    AddTableField("client_jobschedule","module","varchar(255)","character varying(255)","");
+    AddTableField("client_jobschedule","buildnamesuffix","varchar(255)","character varying(255)","");
+    AddTableField("client_jobschedule","tag","varchar(255)","character varying(255)","");
+    }
     
   // Set the database version
   setVersion();
