@@ -737,7 +737,10 @@ if(isset($_GET['upgrade-1-8']))
     AddTableField("client_jobschedule","buildnamesuffix","varchar(255)","character varying(255)","");
     AddTableField("client_jobschedule","tag","varchar(255)","character varying(255)","");
     }
-    
+
+  ModifyTableField("dailyupdatefile","revision","VARCHAR(60)","VARCHAR(60)","",true,false);
+  ModifyTableField("dailyupdatefile","priorrevision","VARCHAR(60)","VARCHAR(60)","",true,false);
+  
   // Set the database version
   setVersion();
 

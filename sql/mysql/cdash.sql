@@ -601,8 +601,8 @@ CREATE TABLE `dailyupdatefile` (
   `checkindate` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `author` varchar(255) NOT NULL default '',
   `log` text NOT NULL,
-  `revision` varchar(10) NOT NULL default '0',
-  `priorrevision` varchar(10) NOT NULL default '0',
+  `revision` varchar(60) NOT NULL default '0',
+  `priorrevision` varchar(60) NOT NULL default '0',
   KEY `dailyupdateid` (`dailyupdateid`),
   KEY `author` (`author`)
 );
