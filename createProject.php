@@ -55,12 +55,20 @@ if ($session_OK)
   $User = new User;
   $User->Id = $userid;
   $Project->Id = $projectid;
-  
+
   $role = $Project->GetUserRole($userid);
-     
-  if(!(isset($_SESSION['cdash']['user_can_create_project']) && 
+
+  // If we are editing a project make sure we have the right to do so
+  if(!isset($projectid) 
+     && !(isset($_SESSION['cdash']['user_can_create_project']) && 
      $_SESSION['cdash']['user_can_create_project'] == 1)
-     && ($User->IsAdmin()===FALSE && $role<=1))
+     && !$User->IsAdmin()
+     )
+    {
+    echo "You don't have the permissions to access this page";
+    return; 
+    }
+  else if(isset($projectid) && (!$User->IsAdmin() || $role<=1))
     {
     echo "You don't have the permissions to access this page";
     return;

@@ -72,9 +72,7 @@ $Project->Id = $projectid;
   
 $role = $Project->GetUserRole($userid);
      
-if(!(isset($_SESSION['cdash']['user_can_create_project']) && 
-   $_SESSION['cdash']['user_can_create_project'] == 1)
-   && ($User->IsAdmin()===FALSE && $role<=1))
+if($User->IsAdmin()===FALSE && $role<=1)
   {
   echo "You don't have the permissions to access this page";
   return;

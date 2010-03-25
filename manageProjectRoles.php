@@ -58,11 +58,9 @@ if ($session_OK)
       $user2project_array = pdo_fetch_array($user2project);
       $role = $user2project_array["role"];
       }  
-    }  
+    }
 
-  if(!(isset($_SESSION['cdash']['user_can_create_project']) && 
-     $_SESSION['cdash']['user_can_create_project'] == 1)
-     && ($user_array["admin"]!=1 && $role<=1))
+  if($user_array["admin"]!=1 && $role<=1)
     {
     echo "You don't have the permissions to access this page";
     return;
