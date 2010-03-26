@@ -532,7 +532,22 @@ class Project
         }
       else
         {
-        pdo_query("UPDATE repositories SET url='$repositories[$currentRepository]', username='$usernames[$currentRepository]', password='$passwords[$currentRepository]' WHERE id=".qnum($repositoryid));
+        // If the repository is not shared by any other project we update
+        $count_query = pdo_query("SELECT count(*) as c FROM project2repositories WHERE repositoryid=".qnum($repositoryid));
+        $count_array = pdo_fetch_array($count_query);
+        if($count_array['c']==1)
+          {
+          pdo_query("UPDATE repositories SET url='$repositories[$currentRepository]', 
+                          username='$usernames[$currentRepository]', 
+                          password='$passwords[$currentRepository]' WHERE id=".qnum($repositoryid));  
+          }
+        else // Otherwise we remove it from the current project and add it to the queue to be created
+          {
+          pdo_query("DELETE FROM project2repositories WHERE projectid=".qnum($this->Id)." AND repositoryid=".qnum($repositoryid));   
+          $repositories[] = $repositories[$currentRepository];
+          $usernames[] = $usernames[$currentRepository];
+          $passwords[] = $passwords[$currentRepository];
+          }
         }  
       $currentRepository++;
       }
