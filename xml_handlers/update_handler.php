@@ -83,6 +83,10 @@ class UpdateHandler extends AbstractHandler
         $this->Build->EndTime = $end_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         $this->Build->InsertErrors = false;
+        if(isset($attributes['GENERATOR']))
+          {
+          $this->Build->Generator = $attributes['GENERATOR'];
+          }
         add_build($this->Build); 
         $buildid = $this->Build->Id;
         }
