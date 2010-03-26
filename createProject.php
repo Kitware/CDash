@@ -68,7 +68,7 @@ if ($session_OK)
     echo "You don't have the permissions to access this page";
     return; 
     }
-  else if(isset($projectid) && (!$User->IsAdmin() || $role<=1))
+  else if(isset($projectid) && (!$User->IsAdmin() && $role<=1))
     {
     echo "You don't have the permissions to access this page";
     return;
