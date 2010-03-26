@@ -354,6 +354,7 @@ if(!$User->IsAdmin())
   {
   $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
   }
+$sql .= " ORDER by name ASC";  
 $projects = pdo_query($sql);
 while($projects_array = pdo_fetch_array($projects))
    {
