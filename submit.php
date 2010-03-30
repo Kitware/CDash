@@ -35,7 +35,6 @@ set_time_limit(0);
 client_submit();
 
 $file_path='php://input';
-//$file_path='backup/coverage/CoverageLog.xml';
 $fp = fopen($file_path, 'r');
 
 $projectname = $_GET["project"];

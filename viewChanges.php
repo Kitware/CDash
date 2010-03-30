@@ -205,6 +205,12 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
       }
     else
       {
+      // If the author is an email (git for instance) we remove everything after the @
+      $posat = strpos($author,'@');
+      if($posat !== false)
+        {
+        $author = substr($author,0,$posat);
+        }
       $email = "";
       }  
     $comment = $commit['comment'];
@@ -217,8 +223,6 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
         
     $diff_url = get_diff_url(get_project_id($projectname),$projecturl, $directory, $filename, $revision);
     $diff_url = XMLStrFormat($diff_url);
-
-
 
     $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\",\"".$commit['bugurl']."\")\n";
     }
@@ -285,6 +289,12 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   $current_directory = dirname($dailyupdate_array['filename']);
   $current_filename = basename($dailyupdate_array['filename']);
   $current_revision = $dailyupdate_array['revision'];
+  
+  if($current_directory == '\\')
+    {
+    $current_directory = '/';  
+    }
+  
   $commit['directory'] = $current_directory;
   $commit['filename'] = $current_filename;
   $commit['revision'] = $current_revision;

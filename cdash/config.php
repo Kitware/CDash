@@ -99,7 +99,10 @@ $CDASH_ACTIVE_PROJECT_DAYS = '7'; // a week
 // Use CDash to manage build submissions
 // This feature is currently experimental
 $CDASH_MANAGE_CLIENTS = '0';
-
+// Define the git command
+$CDASH_GIT_COMMAND = 'git';
+// The default git directory where the bare repositories should be created
+$CDASH_DEFAULT_GIT_DIRECTORY = 'git';
 
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php'; 

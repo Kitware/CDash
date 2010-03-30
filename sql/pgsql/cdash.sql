@@ -522,8 +522,8 @@ CREATE TABLE "dailyupdatefile" (
   "checkindate" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
   "author" character varying(255) DEFAULT '' NOT NULL,
   "log" text NOT NULL,
-  "revision" character varying(10) DEFAULT '0' NOT NULL,
-  "priorrevision" character varying(10) DEFAULT '0' NOT NULL
+  "revision" character varying(60) DEFAULT '0' NOT NULL,
+  "priorrevision" character varying(60) DEFAULT '0' NOT NULL
 );
 CREATE INDEX "buildid11" on "dailyupdatefile" ("dailyupdateid");
 CREATE INDEX "buildid11_2" on "dailyupdatefile" ("author");

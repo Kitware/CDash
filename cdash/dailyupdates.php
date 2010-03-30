@@ -123,20 +123,19 @@ function is_cvs_root($root)
 {
   $npos = strpos($root, ":pserver:");
   if ($npos !== FALSE && $npos === 0)
-  {
+    {
     return TRUE;
-  }
+    }
 
   $npos = strpos($root, ":ext:");
   if ($npos !== FALSE && $npos === 0)
-  {
+    {
     return TRUE;
-  }
-
+    }
   return FALSE;
 }
 
-/** */
+/** Get the CVS repository commits */
 function get_cvs_repository_commits($cvsroot, $dates)
 {
   $commits = array();
@@ -287,9 +286,109 @@ function get_cvs_repository_commits($cvsroot, $dates)
   }
 
  return $commits;
-}
+} // end get_cvs_repository_commits
 
+/** Get the GIT repository commits */
+function get_git_repository_commits($gitroot, $dates)
+{
+  include('cdash/config.php');
+  $commits = array();
+  
+  $gitcommand = $CDASH_GIT_COMMAND;
+  $gitlocaldirectory = $CDASH_DEFAULT_GIT_DIRECTORY;
+  
+  // Check that the default git directory exists
+  if(empty($gitlocaldirectory) || !file_exists($gitlocaldirectory))
+    {
+    add_log("CDASH_DEFAULT_GIT_DIRECTORY is not set in config or not writable.","get_git_repository_commits");  
+    return $commits;  
+    }
+  
+  $pos = strrpos($gitroot,'/');
+  $gitdirectory = substr($gitroot,$pos+1);
+  $gitdir = $gitlocaldirectory.'/'.$gitdirectory;
+  
+  // Update the current bare repository
+  $command = $gitcommand.' --git-dir="'.$gitdir.'" fetch '.$gitroot;
+  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+    {
+    $command = '"'.$command.'"';  
+    }
+  system($command,$retval);
+  if($retval != 0)
+    {
+    // If the bare repository doesn't exist we clone it   
+    $command = 'cd "'.$gitlocaldirectory.'" && '.$gitcommand.' clone --bare '.$gitroot.' '.$gitdirectory;
+    if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+      {
+      $command = '"'.$command.'"';  
+      }
+    $raw_output = `$command`;
+    }
+ 
+  $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
+  $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
 
+  $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --pretty=medium';
+  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+    {
+    $command = '"'.$command.'"';  
+    }
+  $raw_output = `$command`;
+
+  $lines = explode("\n", $raw_output);
+    
+  foreach($lines as $line)
+    {
+    if(substr($line,0,6) == 'commit')
+      {
+      if(isset($commit['filename']) && $commit['filename'] != '')
+        {
+        $commits[$commit['directory']."/".$commit['filename'].";".$commit['revision']] = $commit; 
+        }
+      $commit = array();
+      $commit['revision'] = substr($line,7);
+      $commit['priorrevision'] = '';
+      }
+    else if(substr($line,0,7) == 'Author:')
+      {
+      $pos = strpos($line,'<');
+      $pos2 = strpos($line,'>',$pos);  
+      $commit['author'] = substr($line,$pos+1,$pos2-$pos-1);
+      }
+    else if(substr($line,0,5) == 'Date:')
+      {
+      $commit['time'] = gmdate(FMT_DATETIME,strtotime(substr($line,7))); 
+      } 
+    else if(strlen($line)>0 && $line[0] == ':')
+      {
+      $pos = strrpos($line,"\t");  
+      $filename = substr($line,$pos+1);
+      $posdir = strrpos($filename,'/');
+      $commit['directory'] = '';
+      $commit['filename'] = $filename;  
+      if($posdir !== false)
+        {
+        $commit['directory'] = substr($filename,0,$posdir);
+        $commit['filename'] = substr($filename,$posdir+1);  
+        }
+      }
+    else if(strlen($line)>0 && $line[0] == ' ')
+      {
+      $commit['comment'] = trim($line);
+      }     
+    }
+  
+  // Add the last commit
+  if(isset($commit['filename']) && $commit['filename'] != '')
+    {
+    $commits[$commit['directory']."/".$commit['filename'].";".$commit['revision']] = $commit; 
+    }
+        
+  return $commits;
+} // end get_git_repository_commits
+
+/** Get the SVN repository commits */
 function get_svn_repository_commits($svnroot, $dates, $username='', $password='')
 {
   $commits = array();
@@ -316,7 +415,6 @@ function get_svn_repository_commits($svnroot, $dates, $username='', $password=''
   //$raw_output = `svn help log`;
 
   $lines = explode("\n", $raw_output);
-
 
   $gathered_file_lines = array();
   $current_author = "";
@@ -470,7 +568,7 @@ function get_svn_repository_commits($svnroot, $dates, $username='', $password=''
   return $commits;
 }
 
-
+/** Get BZR repository commits */
 function get_bzr_repository_commits($bzrroot, $dates)
 {
   $commits = array();
@@ -519,7 +617,6 @@ function get_bzr_repository_commits($bzrroot, $dates)
 function get_repository_commits($projectid, $dates)
 {
   global $xml;
-
   $roots = array();
  
   // Find the repository 
@@ -527,8 +624,6 @@ function get_repository_commits($projectid, $dates)
                         FROM repositories,project2repositories 
                         WHERE repositories.id=project2repositories.repositoryid
                         AND project2repositories.projectid='$projectid'");
-
-  
 
   $cvsviewers = pdo_query("SELECT cvsviewertype FROM project 
                         WHERE id='$projectid'");
@@ -548,13 +643,17 @@ function get_repository_commits($projectid, $dates)
     if (is_cvs_root($root))
       {
       $new_commits = get_cvs_repository_commits($root, $dates);
-      }
+      } 
     else
       {
       if ($cvsviewer == "loggerhead")
         {
         $new_commits = get_bzr_repository_commits($root, $dates);
         }
+      else if($cvsviewer == "gitweb" || $cvsviewer == "gitorious" || $cvsviewer == "github")
+        {
+        $new_commits = get_git_repository_commits($root, $dates);    
+        }  
       else
         {
         $new_commits = get_svn_repository_commits($root, $dates, $username, $password);
@@ -789,14 +888,14 @@ function addDailyChanges($projectid)
   if(pdo_num_rows($query)==0)
     {
     $cvsauthors = array();
-      
+     
     pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status) 
                VALUES ($projectid,'$date','NA','NA','0')");
     
     $updateid = pdo_insert_id("dailyupdate");    
-    
     $dates = get_related_dates($project_array["nightlytime"],$date);
     $commits = get_repository_commits($projectid, $dates);
+    
     // Insert the commits
     foreach($commits as $commit)
       {
@@ -826,8 +925,11 @@ function addDailyChanges($projectid)
         {  
         $cvsauthors[] = stripslashes($author);
         }
+ 
       pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
                    VALUES ($updateid,'$filename','$checkindate','$author','$log','$revision','$priorrevision')");
+      echo pdo_error();
+      
       } // end foreach commit
     
     // If the project has the option to send an email to the author
