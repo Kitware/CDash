@@ -308,19 +308,31 @@ function get_git_repository_commits($gitroot, $dates)
   $gitdir = $gitlocaldirectory.'/'.substr($gitroot,$pos+1);
   
   // Update the current bare repository
-  $command = '"'.$gitcommand.' --git-dir="'.$gitdir.'" fetch '.$gitroot.'"';
+  $command = $gitcommand.' --git-dir="'.$gitdir.'" fetch '.$gitroot;
+  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+    {
+    $command = '"'.$command.'"';  
+    }
   system($command,$retval);
   if($retval != 0)
     {
     // If the bare repository doesn't exist we clone it   
-    $command = '"cd "'.$gitlocaldirectory.'" && '.$gitcommand.' clone --bare '.$gitroot.'"';
+    $command = 'cd "'.$gitlocaldirectory.'" && '.$gitcommand.' clone --bare '.$gitroot;
+    if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+      {
+      $command = '"'.$command.'"';  
+      }
     $raw_output = `$command`;
     }
  
   $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
   $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
 
-  $command = '"'.$gitcommand.' --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --format=medium"';
+  $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --format=medium';
+  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+    {
+    $command = '"'.$command.'"';  
+    }
   $raw_output = `$command`;
 
   $lines = explode("\n", $raw_output);
