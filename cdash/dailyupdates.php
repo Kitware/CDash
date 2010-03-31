@@ -326,6 +326,7 @@ function get_git_repository_commits($gitroot, $dates)
     $raw_output = `$command`;
     }
  
+  // Get what changed during that time
   $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
   $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
 
@@ -335,20 +336,17 @@ function get_git_repository_commits($gitroot, $dates)
     $command = '"'.$command.'"';  
     }
   $raw_output = `$command`;
-
+  
   $lines = explode("\n", $raw_output);
     
   foreach($lines as $line)
     {
     if(substr($line,0,6) == 'commit')
       {
-      if(isset($commit['filename']) && $commit['filename'] != '')
-        {
-        $commits[$commit['directory']."/".$commit['filename'].";".$commit['revision']] = $commit; 
-        }
       $commit = array();
       $commit['revision'] = substr($line,7);
       $commit['priorrevision'] = '';
+      $commit['comment'] = '';
       }
     else if(substr($line,0,7) == 'Author:')
       {
@@ -372,18 +370,18 @@ function get_git_repository_commits($gitroot, $dates)
         $commit['directory'] = substr($filename,0,$posdir);
         $commit['filename'] = substr($filename,$posdir+1);  
         }
+      // add the current commit
+      if(isset($commit['filename']) && $commit['filename'] != '')
+        {
+        $commits[$commit['directory']."/".$commit['filename'].";".$commit['revision']] = $commit; 
+        }
       }
     else if(strlen($line)>0 && $line[0] == ' ')
       {
-      $commit['comment'] = trim($line);
+      $commit['comment'] .= trim($line).'\n';
       }     
     }
   
-  // Add the last commit
-  if(isset($commit['filename']) && $commit['filename'] != '')
-    {
-    $commits[$commit['directory']."/".$commit['filename'].";".$commit['revision']] = $commit; 
-    }
         
   return $commits;
 } // end get_git_repository_commits
@@ -891,7 +889,6 @@ function addDailyChanges($projectid)
      
     pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status) 
                VALUES ($projectid,'$date','NA','NA','0')");
-    
     $updateid = pdo_insert_id("dailyupdate");    
     $dates = get_related_dates($project_array["nightlytime"],$date);
     $commits = get_repository_commits($projectid, $dates);
