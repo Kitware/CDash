@@ -19,6 +19,7 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
          <xsl:call-template name="headscripts"/> 
+         <script src="javascript/cdashBuildError.js" type="text/javascript" charset="utf-8"></script>  
        </head>
        <body bgcolor="#ffffff">
    
@@ -136,9 +137,20 @@
 <th class="measurement" style="width: 1%">Command</th>
 <td>
 <div style="margin-left: 25px; text-indent: -25px;">
+<nobr>"<font class="argument"><xsl:value-of select="argumentfirst"/></font>"</nobr><xsl:text disable-output-escaping="yes"> </xsl:text>
+<a href="#">
+<xsl:attribute name="id">showarguments_<xsl:value-of select="id"/></xsl:attribute>
+<xsl:attribute name="onclick">return showArguments(<xsl:value-of select="id"/>);</xsl:attribute>
+[+]</a>
+<span style="display:none">
+<xsl:attribute name="id">argumentlist_<xsl:value-of select="id"/></xsl:attribute>
 <xsl:for-each select="argument">
 <nobr>"<font class="argument"><xsl:value-of select="."/></font>"</nobr><xsl:text disable-output-escaping="yes"> </xsl:text>
 </xsl:for-each>
+<a href="#">
+<xsl:attribute name="onclick">return hideArguments(<xsl:value-of select="id"/>);</xsl:attribute>
+[-]</a>
+</span>
 </div>
 </td>
 </tr>
