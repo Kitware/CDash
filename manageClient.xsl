@@ -35,7 +35,8 @@
   project repository</a> before starting.<br/>
 </xsl:if>  
 <xsl:if test="count(cdash/os)=0">
-No site are currently available. You should run the CTest script in order to register a couple of clients.
+No site are currently available. You should run the CTest script in order to register at least one client.<br/>
+Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki page</a> for more information on how to set this up.
 </xsl:if>   
 
 <xsl:if test="count(cdash/os)>0">
@@ -103,7 +104,7 @@ No site are currently available. You should run the CTest script in order to reg
          </td>
       </tr>
       <tr>
-        <td valign="top" align="right"><b>Operating System:</b><br/><a href="#" onclick="clearOS()">[clear all]</a></td>
+        <td valign="top" align="right"><b>Operating System:</b><br/><a href="#" onclick="return clearOS();">[clear all]</a></td>
         <td>
           <select multiple="true" name="system[]" id="system_select" onchange="checkSystem();">
             <xsl:for-each select="/cdash/os">             
@@ -117,7 +118,7 @@ No site are currently available. You should run the CTest script in order to reg
         </td>
       </tr>
       <tr>
-        <td valign="top" align="right"><b>Compiler:</b><br/><a href="#" onclick="clearCompiler()">[clear all]</a></td>
+        <td valign="top" align="right"><b>Compiler:</b><br/><a href="#" onclick="return clearCompiler();">[clear all]</a></td>
         <td>
           <select multiple="true" name="compiler[]" id="compiler_select" onchange="checkSystem();">
             <xsl:for-each select="/cdash/compiler">              
@@ -131,7 +132,7 @@ No site are currently available. You should run the CTest script in order to reg
         </td>
       </tr> 
       <tr>
-        <td valign="top" align="right"><b>CMake:</b><br/><a href="#" onclick="clearCMake()">[clear all]</a></td>
+        <td valign="top" align="right"><b>CMake:</b><br/><a href="#" onclick="return clearCMake()">[clear all]</a></td>
         <td>
           <select multiple="true" name="cmake[]" id="cmake_select" onchange="checkSystem();">
             <xsl:for-each select="/cdash/cmake">              
@@ -145,7 +146,7 @@ No site are currently available. You should run the CTest script in order to reg
         </td>
       </tr> 
       <tr>
-        <td valign="top" align="right"><b>Libraries:</b><br/><a href="#" onclick="clearLibrary()">[clear all]</a></td>
+        <td valign="top" align="right"><b>Libraries:</b><br/><a href="#" onclick="return clearLibrary()">[clear all]</a></td>
         <td>
           <select multiple="true" name="library[]" id="library_select" onchange="checkSystem();">
             <xsl:for-each select="/cdash/library">              
@@ -159,7 +160,7 @@ No site are currently available. You should run the CTest script in order to reg
         </td>
       </tr>
       <tr>
-        <td valign="top" align="right"><b>Toolkits:</b><br/><a href="#" onclick="clearToolkit()">[clear all]</a></td>
+        <td valign="top" align="right"><b>Toolkits:</b><br/><a href="#" onclick="return clearToolkit()">[clear all]</a></td>
         <td>
           <select multiple="true" name="toolkitconfiguration[]" id="toolkit_select" onchange="checkSystem();">
             <xsl:for-each select="/cdash/toolkit">              
@@ -173,7 +174,7 @@ No site are currently available. You should run the CTest script in order to reg
         </td>
       </tr>
       <tr>
-        <td valign="top" align="right"><b>Site:</b><br/><a href="#" onclick="clearSite()">[clear all]</a></td>
+        <td valign="top" align="right"><b>Site:</b><br/><a href="#" onclick="return clearSite()">[clear all]</a></td>
         <td>
           <select multiple="true" name="site[]" id="site_select" onchange="checkSystem();">
             <xsl:for-each select="/cdash/site">              
