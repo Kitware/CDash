@@ -3,6 +3,7 @@ function clearOS()
   $("#system_select").each(function(){
       $("#system_select option").removeAttr("selected");});
   checkSystem();
+  return false;
   }
 
 function clearCompiler()
@@ -10,6 +11,7 @@ function clearCompiler()
   $("#compiler_select").each(function(){
       $("#compiler_select option").removeAttr("selected");});
   checkSystem();
+  return false;
   }
 
 function clearCMake()
@@ -17,6 +19,7 @@ function clearCMake()
   $("#cmake_select").each(function(){
       $("#cmake_select option").removeAttr("selected");});
   checkSystem();
+  return false;
   }
 
 function clearSite()
@@ -24,6 +27,7 @@ function clearSite()
   $("#site_select").each(function(){
       $("#site_select option").removeAttr("selected");});
   checkSystem();
+  return false;
   }
 
 function clearToolkit()
@@ -31,6 +35,7 @@ function clearToolkit()
   $("#toolkit_select").each(function(){
       $("#toolkit_select option").removeAttr("selected");});
   checkSystem();
+  return false;
   }
 
 function clearLibrary()
@@ -38,6 +43,7 @@ function clearLibrary()
   $("#library_select").each(function(){
       $("#library_select option").removeAttr("selected");});
   checkSystem();
+  return false;
   }
 
 /** Check how many machines are currently available */
@@ -89,7 +95,7 @@ function checkSystem()
   });
   
   var toolkit='';  
-  $('#site_select :selected').each(function(i, selected){
+  $('#toolkit_select :selected').each(function(i, selected){
   if(toolkit != '')
       {
   toolkit += ',';
