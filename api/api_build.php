@@ -41,7 +41,8 @@ class BuildAPI extends CDashAPI
 
     $builds = array();
     $query = pdo_query("SELECT YEAR(starttime) AS y ,MONTH(starttime) AS m,DAY(starttime) AS d,
-                AVG(builderrors),AVG(buildwarnings),AVG(testnotrun),AVG(testfailed)
+                AVG(builderrors) AS builderrors,AVG(buildwarnings) AS buildwarnings,
+                AVG(testnotrun) AS testnotrun,AVG(testfailed) AS testfailed
                 FROM build WHERE projectid=".$projectid." GROUP BY YEAR(starttime),MONTH(starttime),DAY(starttime) ORDER BY YEAR(starttime),MONTH(starttime),DAY(starttime) ASC LIMIT 1000"); // limit the request
     echo pdo_error();
      
