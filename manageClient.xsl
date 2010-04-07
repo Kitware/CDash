@@ -65,7 +65,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
       </tr>
       <tr>
         <td align="right" valign="top">
-          <b>Other Repository:</b>
+          <b>Alternative Repository:</b>
          </td>
          <td>
            <input name="otherrepository" type="text" size="60">
@@ -75,7 +75,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
       </tr>
       <tr>
         <td align="right" valign="top">
-          <b>CVS Module:</b>
+          <b>Module/Branch:</b>
          </td>
          <td>
            <input name="module" type="text" size="60">
@@ -85,7 +85,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
       </tr>
       <tr>
         <td align="right" valign="top">
-          <b>TAG:</b>
+          <b>Tag:</b>
          </td>
          <td>
            <input name="tag" type="text" size="60">
@@ -150,20 +150,6 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
         <td>
           <select multiple="true" name="library[]" id="library_select" onchange="checkSystem();">
             <xsl:for-each select="/cdash/library">              
-              <option>
-                <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
-                <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>
-                <xsl:value-of select="name"/>
-              </option>
-            </xsl:for-each>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td valign="top" align="right"><b>Toolkits:</b><br/><a href="#" onclick="return clearToolkit()">[clear all]</a></td>
-        <td>
-          <select multiple="true" name="toolkitconfiguration[]" id="toolkit_select" onchange="checkSystem();">
-            <xsl:for-each select="/cdash/toolkit">              
               <option>
                 <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
                 <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>

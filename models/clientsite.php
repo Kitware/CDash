@@ -297,6 +297,76 @@ class ClientSite
       $ids[] = $query_array['id'];
       }
     return $ids;  
-    }   
+    }
+
+  /** Get the programs */
+  function GetPrograms()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientSite::GetPrograms()","Id not set");
+      return;
+      }
+      
+    $programs = array();  
+    $query = pdo_query("SELECT name,version,path FROM client_site2program WHERE siteid=".qnum($this->Id)." ORDER BY NAME,VERSION DESC");
+    while($query_array = pdo_fetch_array($query))
+      {
+      $programs[] = $query_array;
+      }
+    return $programs;
+    }
+    
+  /** Update the list of program for a site */
+  function UpdatePrograms($programs)
+    { 
+    foreach($programs as $program)
+      {
+      $program_name = pdo_real_escape_string($program['name']);
+      $program_version = pdo_real_escape_string($program['version']);
+      $program_path = pdo_real_escape_string($program['path']);
+        
+      // Check if the name or system already exists
+      $query = pdo_query("SELECT siteid FROM client_site2program 
+                WHERE name='".$program_name."' AND version='".$program_version."' AND siteid=".qnum($this->Id));
+      add_last_sql_error("clientSite::UpdatePrograms()");
+      if(pdo_num_rows($query) == 0)
+        {
+        $sql = "INSERT INTO client_site2program (siteid,name,version,path) 
+                VALUES ('".$this->Id."','".$program_name."','".$program_version."','".$program_path."')";
+        pdo_query($sql);
+        add_last_sql_error("clientSite::UpdatePrograms()");
+        }
+      else // update
+        {
+        $sql = "UPDATE client_site2program SET path='".$program_path.
+             "' WHERE name='".$program_name."' AND version='".$program_version."' AND siteid=".qnum($this->Id);
+        pdo_query($sql);
+        add_last_sql_error("clientSite::UpdatePrograms()");
+        }
+      }
+ 
+    // Delete the old programs
+    $query = pdo_query("SELECT name,version FROM client_site2program WHERE siteid=".qnum($this->Id));
+    
+    add_last_sql_error("clientSite::UpdatePrograms()");
+    while($query_array = pdo_fetch_array($query))
+      {
+      $delete = 1;  
+      foreach($programs as $program)
+        {
+        if($program['name'] == $query_array['name'] && $program['version'] == $query_array['version'])
+          {
+          $delete = 0;
+          break;    
+          }
+        }
+      if($delete)  
+        {
+        pdo_query("DELETE FROM client_site2program WHERE name='".$query_array['name']."' AND version='".$query_array['version']."' AND siteid=".qnum($this->Id)); 
+        add_last_sql_error("clientSite::UpdatePrograms()");
+        }
+      } 
+    } 
 }
 ?>

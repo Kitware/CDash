@@ -103,7 +103,7 @@
             <xsl:attribute name="checked"></xsl:attribute>
             </xsl:if>
             </input>
-             Normal user <i>(you are working on or using this toolkit)</i></td>
+             Normal user <i>(you are working on or using this project)</i></td>
           </tr>
            <tr>
             <td></td>

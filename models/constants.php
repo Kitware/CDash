@@ -20,6 +20,7 @@ define("CDASH_JOB_SCHEDULED","0");
 define("CDASH_JOB_RUNNING","2");
 define("CDASH_JOB_FINISHED","3");
 define("CDASH_JOB_ABORTED","4");
+define("CDASH_JOB_FAILED","5");
 
 define("CDASH_JOB_EXPERIMENTAL","0");
 define("CDASH_JOB_NIGHTLY","1");

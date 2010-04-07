@@ -741,6 +741,13 @@ if(isset($_GET['upgrade-1-8']))
   ModifyTableField("dailyupdatefile","revision","VARCHAR(60)","VARCHAR(60)","",true,false);
   ModifyTableField("dailyupdatefile","priorrevision","VARCHAR(60)","VARCHAR(60)","",true,false);
   
+  // Remove the toolkits tables
+  pdo_query("DROP TABLE IF EXISTS client_toolkit");
+  pdo_query("DROP TABLE IF EXISTS client_toolkitconfiguration");
+  pdo_query("DROP TABLE IF EXISTS client_toolkitconfiguration2os");
+  pdo_query("DROP TABLE IF EXISTS client_toolkitversion");
+  pdo_query("DROP TABLE IF EXISTS client_jobschedule2toolkit");
+  
   // Set the database version
   setVersion();
 

@@ -80,6 +80,7 @@ $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<backurl>user.php</backurl>";
+$xml .= add_XML_value("manageclient",$CDASH_MANAGE_CLIENTS);
 
 if($edit || isset($projectid))
   {
@@ -166,8 +167,14 @@ if($Submit)
     @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
     @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
     @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
-    @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
+    @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);     
     $Project->Public = $Public;
+        
+    /** If we are managing clients */
+    if($CDASH_MANAGE_CLIENTS)
+      {
+      @$Project->CTestTemplateScript = stripslashes_if_gpc_magic_quotes($_POST["ctestTemplateScript"]); 
+      } 
     
     $projectid = -1;
     $Project->Id = '';
@@ -326,6 +333,13 @@ if($Update || $AddRepository)
   @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
   @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
   @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
+      
+  /** If we are managing clients */
+  if($CDASH_MANAGE_CLIENTS)
+    {
+    $Project->CTestTemplateScript = stripslashes_if_gpc_magic_quotes($_POST["ctestTemplateScript"]); 
+    } 
+    
   $Project->Save();
   
   // Add the logo
@@ -405,6 +419,14 @@ if($projectid>0)
   $xml .= add_XML_value("displaylabels",$Project->DisplayLabels);
   $xml .= add_XML_value("autoremovetimeframe",$Project->AutoremoveTimeframe);
   $xml .= add_XML_value("autoremovemaxbuilds",$Project->AutoremoveMaxBuilds);
+  if(strlen($Project->CTestTemplateScript)>0)
+    {
+    $xml .= add_XML_value("ctesttemplatescript",$Project->CTestTemplateScript);
+    }
+  else
+    {
+    $xml .= add_XML_value("ctesttemplatescript",$Project->getDefaultJobTemplateScript());
+    }
   $xml .= "</project>";
   
   // Get the spam list

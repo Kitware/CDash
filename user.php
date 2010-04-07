@@ -100,6 +100,14 @@ if ($session_OK)
             $status = "Finished";
             $lastrun = $ClientJob->GetEndDate();
             break;
+          case CDASH_JOB_FAILED:
+            $status = "Failed";
+            $lastrun = $ClientJob->GetEndDate();
+            break;
+          case CDASH_JOB_ABORTED:
+            $status = "Aborted";
+            $lastrun = $ClientJob->GetEndDate();
+            break;  
           }
         }
       

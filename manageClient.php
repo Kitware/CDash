@@ -23,8 +23,6 @@ include_once ("models/clientos.php");
 include_once ("models/clientcmake.php");
 include_once ("models/clientcompiler.php");
 include_once ("models/clientlibrary.php");
-include_once ("models/clienttoolkit.php");
-include_once ("models/clienttoolkitversion.php");
 require_once ("models/project.php");
 require_once ("models/constants.php");
 require_once ("models/user.php");
@@ -111,7 +109,6 @@ if ($session_OK)
     $xml .= add_XML_value("tag",$ClientJobSchedule->GetTag());
     $xml .= add_XML_value("buildnamesuffix",$ClientJobSchedule->GetBuildNameSuffix());
     $libraries = $ClientJobSchedule->GetLibraries();
-    $toolkits = $ClientJobSchedule->GetToolkitConfigurations();
     $cmakes = $ClientJobSchedule->GetCMakes();
     $compilers = $ClientJobSchedule->GetCompilers();
     $sites = $ClientJobSchedule->GetSites();
@@ -237,37 +234,7 @@ if ($session_OK)
       $xml .= add_XML_value("selected","1");  
       }
     $xml .= '</library>';  
-    }     
-    
-  // Toolkits 
-  $Toolkit = new ClientToolkit();
-  $toolkitids = $Toolkit->getAll();
-  foreach($toolkitids as $toolkitid)
-    {
-    $Toolkit->Id = $toolkitid;
-    $versionids = $Toolkit->GetVersions();
-    foreach($versionids as $versionid)
-      { 
-      $ToolkitVersion = new ClientToolkitVersion();
-      $ToolkitVersion->Id = $versionid;
-      $configurationids = $ToolkitVersion->GetConfigurations();
-      foreach($configurationids as $configurationid)
-        { 
-        $ToolkitConfiguration = new ClientToolkitConfigure();
-        $ToolkitConfiguration->Id = $configurationid;
-      
-        $xml .= '<toolkit>';
-        $Toolkit->Id = $toolkitid;
-        $xml .= add_XML_value("name",$Toolkit->GetName()."-".$ToolkitVersion->GetName()."-".$ToolkitConfiguration->GetName());
-        $xml .= add_XML_value("id",$configurationid);
-        if(isset($toolkits) && array_search($toolkitid,$toolkits) !== false)
-          {
-          $xml .= add_XML_value("selected","1");  
-          }
-        $xml .= '</toolkit>';
-        }
-      }
-    }    
+    }        
   $xml .= "</cdash>";
   
   // Schedule the build
@@ -366,14 +333,6 @@ if ($session_OK)
         }
       }
       
-    // Add the toolkit
-    if(isset($_POST['toolkitconfiguration']))
-      {
-      foreach($_POST['toolkitconfiguration'] as $toolkitconfigurationid)
-        {
-        $clientJobSchedule->AddToolkitConfiguration($toolkitconfigurationid);
-        }
-      }  
     echo "<script language=\"javascript\">window.location='user.php'</script>";
     }
   generate_XSLT($xml, "manageClient", true);

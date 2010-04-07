@@ -193,9 +193,24 @@
                         <xsl:if test="cdash/edit=0">#fragment-6</xsl:if>
                         <xsl:if test="cdash/edit=1">#fragment-7</xsl:if>
                         </xsl:attribute>
+                        <span>Clients</span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <xsl:if test="cdash/edit=0">
+                        <xsl:attribute name="class">
+                     tabs-disabled
+                    </xsl:attribute>
+                      </xsl:if>
+                      <a><xsl:attribute name="href">
+                        <xsl:if test="cdash/edit=0">#fragment-7</xsl:if>
+                        <xsl:if test="cdash/edit=1">#fragment-8</xsl:if>
+                        </xsl:attribute>
                         <span>Miscellaneous</span>
                       </a>
                     </li>
+
                   </ul>
                   
                   <div id="fragment-1" class="tab_content">
@@ -1217,10 +1232,47 @@
                   </div>
                   </xsl:if> <!--  end if edit mode -->
 
-                  <div id="fragment-7" class="tab_content">
+
+         <div class="tab_content">
                    <xsl:attribute name="id">
                      <xsl:if test="cdash/edit=0">fragment-6</xsl:if>
                      <xsl:if test="cdash/edit=1">fragment-7</xsl:if>
+                     </xsl:attribute>
+                     
+                    <div class="tab_help"></div>
+                    <table width="100%">
+                        <tr>
+                          <td valign="top" align="righ"><strong>CTest Template Script:</strong>
+                          </td>
+                          <td >
+                           <textarea name="ctestTemplateScript" onchange="saveChanges();"
+                            onfocus="$('.ctesttemplatescript_help').html('');" id="description" cols="80"
+                            rows="30" wrap="off">
+                            <xsl:value-of select="cdash/project/ctesttemplatescript" />
+                          </textarea>
+                          </td>
+                        </tr>
+
+            <tr>
+                        <td>
+                        </td>
+                        <td align="right">
+                            <img src="images/previous.png" style="cursor:pointer;"
+                              onclick="previousTab(7);" alt="previous" class="tooltip"
+                              title="Previous Step" />
+                            <img src="images/next.png" style="cursor:pointer;"
+                              onclick="nextTab(7);" alt="next" class="tooltip" title="Next Step" />
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+
+
+
+                  <div class="tab_content">
+                   <xsl:attribute name="id">
+                     <xsl:if test="cdash/edit=0">fragment-7</xsl:if>
+                     <xsl:if test="cdash/edit=1">fragment-8</xsl:if>
                      </xsl:attribute>
                      
                     <div class="tab_help"></div>
@@ -1437,6 +1489,7 @@
                       </tr>
                     </table>
                   </div>
+
                 </div>
 
 

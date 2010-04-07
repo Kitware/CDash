@@ -1045,17 +1045,6 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2site (
   UNIQUE KEY scheduleid (scheduleid,siteid)
 );
 
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule2toolkit'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule2toolkit (
-  scheduleid bigint(20) NOT NULL,
-  toolkitconfigurationid int(11) NOT NULL,
-  UNIQUE KEY scheduleid (scheduleid,toolkitconfigurationid)
-);
 
 -- --------------------------------------------------------
 
@@ -1147,72 +1136,13 @@ CREATE TABLE IF NOT EXISTS client_site2library (
   KEY siteid (siteid)
 );
 
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_toolkit'
---
-
-CREATE TABLE IF NOT EXISTS client_toolkit (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  projectid bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (id),
-  KEY projectid (projectid)
+CREATE TABLE IF NOT EXISTS `client_site2program` (
+  `siteid` int(11) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `version` varchar(30) NOT NULL,
+  `path` varchar(512) NOT NULL,
+  KEY `siteid` (`siteid`)
 );
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_toolkitconfiguration'
---
-
-CREATE TABLE IF NOT EXISTS client_toolkitconfiguration (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  toolkitversionid bigint(20) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  cmakecache text,
-  environment text,
-  binarypath varchar(512) NOT NULL,
-  PRIMARY KEY (id),
-  KEY `name` (`name`),
-  KEY binarypath (binarypath)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_toolkitconfiguration2os'
---
-
-CREATE TABLE IF NOT EXISTS client_toolkitconfiguration2os (
-  toolkitconfigurationid bigint(20) NOT NULL,
-  osid int(11) NOT NULL,
-  KEY toolkitconfigurationid (toolkitconfigurationid),
-  KEY osid (osid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_toolkitversion'
---
-
-CREATE TABLE IF NOT EXISTS client_toolkitversion (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  toolkitid int(11) NOT NULL,
-  `name` varchar(10) NOT NULL,
-  repositoryurl varchar(255) NOT NULL,
-  repositorytype tinyint(4) NOT NULL,
-  repositorymodule varchar(100) NOT NULL,
-  tag varchar(30) DEFAULT NULL,
-  sourcepath varchar(512) NOT NULL,
-  ctestprojectname varchar(50) DEFAULT NULL,
-  PRIMARY KEY (id),
-  KEY toolkitid (toolkitid),
-  KEY version (`name`)
-);
-
 
 --
 -- Table structure for table `projectrobot`
@@ -1236,6 +1166,15 @@ CREATE TABLE IF NOT EXISTS `filesum` (
   `contents` longblob,
   PRIMARY KEY `id` (`id`),
   KEY `md5sum` (`md5sum`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `projectjobscript` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectid` int(11) NOT NULL,
+  `script` longtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `projectid` (`projectid`)
 );
 
 --

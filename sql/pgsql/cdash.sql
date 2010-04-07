@@ -987,18 +987,6 @@ CREATE TABLE "client_jobschedule2site" (
 );
 
 
-
---
--- Table: client_jobschedule2toolkit
---
-CREATE TABLE "client_jobschedule2toolkit" (
-  "scheduleid" bigint NOT NULL,
-  "toolkitconfigurationid" bigint NOT NULL,
-  Constraint "scheduleid7" UNIQUE ("scheduleid", "toolkitconfigurationid")
-);
-
-
-
 --
 -- Table: client_library
 --
@@ -1078,63 +1066,15 @@ CREATE TABLE "client_site2library" (
 CREATE INDEX "client_site2library_siteid" on "client_site2library" ("siteid");
 
 --
--- Table: client_toolkit
+-- Table: client_site2program
 --
-CREATE TABLE "client_toolkit" (
-  "id" serial NOT NULL,
-  "name" character varying(255) NOT NULL,
-  "projectid" bigint DEFAULT '0' NOT NULL,
-  PRIMARY KEY ("id")
+CREATE TABLE "client_site2program" (
+  "siteid" bigint  NOT NULL,
+  "name" character varying(30) NOT NULL,
+  "version" character varying(30) NOT NULL,
+  "path" character varying(512) NOT NULL
 );
-CREATE INDEX "client_toolkit_projectid" on "client_toolkit" ("projectid");
-
-
---
--- Table: client_toolkitconfiguration
---
-CREATE TABLE "client_toolkitconfiguration" (
-  "id" serial NOT NULL,
-  "toolkitversionid" bigint NOT NULL,
-  "name" character varying(255) NOT NULL,
-  "cmakecache" text,
-  "environment" text,
-  "binarypath" character varying(512) NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "client_toolkitconfiguration_name" on "client_toolkitconfiguration" ("name");
-CREATE INDEX "client_toolkitconfiguration_binarypath" on "client_toolkitconfiguration" ("binarypath");
-
-
---
--- Table: client_toolkitconfiguration2os
---
-CREATE TABLE "client_toolkitconfiguration2os" (
-  "toolkitconfigurationid" bigint NOT NULL,
-  "osid" bigint NOT NULL
-);
-CREATE INDEX "client_toolkitconfiguration2os_toolkitconfigurationid" on "client_toolkitconfiguration2os" ("toolkitconfigurationid");
-CREATE INDEX "client_toolkitconfiguration2os_osid" on "client_toolkitconfiguration2os" ("osid");
-
-
---
--- Table: client_toolkitversion
---
-CREATE TABLE "client_toolkitversion" (
-  "id" serial NOT NULL,
-  "toolkitid" bigint NOT NULL,
-  "name" character varying(10) NOT NULL,
-  "repositoryurl" character varying(255) NOT NULL,
-  "repositorytype" smallint NOT NULL,
-  "repositorymodule" character varying(100) NOT NULL,
-  "tag" character varying(30) DEFAULT NULL,
-  "sourcepath" character varying(512) NOT NULL,
-  "ctestprojectname" character varying(50) DEFAULT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "client_toolkitversion_toolkitid" on "client_toolkitversion" ("toolkitid");
-CREATE INDEX "client_toolkitversion_version" on "client_toolkitversion" ("name");
-
-
+CREATE INDEX "client_site2program_siteid" on "client_site2program" ("siteid");
 
 --
 -- Table structure for table projectrobot
@@ -1158,3 +1098,14 @@ CREATE TABLE "filesum" (
   PRIMARY KEY ("id")
 );
 CREATE INDEX "filesum_md5sum" on "filesum" ("md5sum");
+
+--
+-- Table: projectjobscript
+--
+CREATE TABLE "projectjobscript" (
+  "id" serial NOT NULL,
+  "projectid" bigint NOT NULL,
+  "script" text NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "projectjobscript_projectid" on "projectjobscript" ("projectid");

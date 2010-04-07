@@ -28,6 +28,7 @@ class ClientJob
   var $Status;
   var $CMakeId;
   var $CompilerId;
+  var $Output;
 
   /** Get ScheduleId */
   function GetScheduleId()
@@ -128,7 +129,16 @@ class ClientJob
     pdo_query($sql);
     add_last_sql_error("ClientJob::SetFinished");
     }
-      
+
+  /** Set the job has failed */
+  function SetFailed()
+    {
+    $now = date('Y-m-d H:i:s');
+    $sql = "UPDATE client_job SET status=".CDASH_JOB_FAILED.",enddate='".$now."' WHERE siteid=".$this->SiteId." AND status=".CDASH_JOB_RUNNING;
+    pdo_query($sql);
+    add_last_sql_error("ClientJob::SetFailed");
+    }
+    
   /** Save a job */  
   function Save()
     {     

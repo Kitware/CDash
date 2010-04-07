@@ -30,14 +30,6 @@ function clearSite()
   return false;
   }
 
-function clearToolkit()
-  {
-  $("#toolkit_select").each(function(){
-      $("#toolkit_select option").removeAttr("selected");});
-  checkSystem();
-  return false;
-  }
-
 function clearLibrary()
   {
   $("#library_select").each(function(){
@@ -93,22 +85,13 @@ function checkSystem()
     }
   library += $(selected).val();
   });
-  
-  var toolkit='';  
-  $('#toolkit_select :selected').each(function(i, selected){
-  if(toolkit != '')
-      {
-  toolkit += ',';
-    }
-  toolkit += $(selected).val();
-  });
-  
+    
   $.ajax({
       type: "POST",
       url: "ajax/clientchecksystem.php",
       dataType: 'html',
       timeout: 100000000,
-      data: "os="+os+"&compiler="+compiler+"&cmake="+cmake+"&site="+site+"&toolkit="+toolkit+"&library="+library,
+      data: "os="+os+"&compiler="+compiler+"&cmake="+cmake+"&site="+site+"&library="+library,
       success: function(html){
     $("#check").html(html);
         }

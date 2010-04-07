@@ -16,9 +16,6 @@
 
 =========================================================================*/
 include_once('models/constants.php');
-include_once('models/clienttoolkit.php');
-include_once('models/clienttoolkitversion.php');
-include_once('models/clienttoolkitconfigure.php');
 
 class ClientJobSchedule
 {
@@ -253,7 +250,6 @@ class ClientJobSchedule
     pdo_query("DELETE FROM client_jobschedule2library WHERE scheduleid=".qnum($this->Id));
     pdo_query("DELETE FROM client_jobschedule2os WHERE scheduleid=".qnum($this->Id));
     pdo_query("DELETE FROM client_jobschedule2site WHERE scheduleid=".qnum($this->Id));
-    pdo_query("DELETE FROM client_jobschedule2toolkit WHERE scheduleid=".qnum($this->Id));
     add_last_sql_error("ClientJobSchedule::RemoveDependencies");
     }  // end RemoveDependencies
       
@@ -271,7 +267,6 @@ class ClientJobSchedule
     pdo_query("DELETE FROM client_jobschedule2library WHERE scheduleid=".qnum($this->Id));
     pdo_query("DELETE FROM client_jobschedule2os WHERE scheduleid=".qnum($this->Id));
     pdo_query("DELETE FROM client_jobschedule2site WHERE scheduleid=".qnum($this->Id));
-    pdo_query("DELETE FROM client_jobschedule2toolkit WHERE scheduleid=".qnum($this->Id));
     pdo_query("DELETE FROM client_jobschedule WHERE id=".qnum($this->Id));
 
     add_last_sql_error("ClientJobSchedule::Remove");
@@ -320,25 +315,6 @@ class ClientJobSchedule
       }
     return $result;
     }
-  
-  /** Add a toolkit configuration */  
-  function AddToolkitConfiguration($toolkitconfigurationid)
-    {
-    if(!$this->Id)
-      {
-      add_log("ClientJob::AddToolkitConfiguration","Id not set");
-      return;
-      }
-      
-    $query = pdo_query("INSERT INTO client_jobschedule2toolkit (scheduleid,toolkitconfigurationid) VALUES(".qnum($this->Id).",".qnum($toolkitconfigurationid).")");
-    if(!$query)
-      {
-      add_last_sql_error("ClientJobSchedule::AddToolkitConfiguration");
-      return false;
-      }
-    return true;  
-    }
-    
     
   /** Add a library */  
   function AddLibrary($libraryid)
@@ -559,30 +535,6 @@ class ClientJobSchedule
     return $libraryids;
     }
 
-  /** Get the toolkits */  
-  function GetToolkitConfigurations()
-    {
-    if(!$this->Id)
-      {
-      add_log("ClientJobSchedule::GetToolkitConfigurations","Id not set");
-      return;
-      }
-      
-    $query = pdo_query("SELECT toolkitconfigurationid FROM client_jobschedule2toolkit WHERE scheduleid=".qnum($this->Id));
-    if(!$query)
-      {
-      add_last_sql_error("ClientJobSchedule::GetToolkitConfigurations");
-      return false;
-      }
-    
-    $configurationids = array();  
-    while($query_array = pdo_fetch_array($query))
-      {
-      $configurationids[] = $query_array['toolkitconfigurationid']; 
-      }    
-      
-    return $configurationids;
-    }
     
   /** Return the job id if we have a job for the current siteid */
   function HasJob()
@@ -592,14 +544,13 @@ class ClientJobSchedule
     $currenttime = date(FMT_TIME);
     $currentday = date(FMT_DATE);
     
-    $sql = "SELECT js.id,js.lastrun,js.starttime,js.repeattime,count(library.libraryid),count(toolkit.toolkitconfigurationid) 
+    $sql = "SELECT js.id,js.lastrun,js.starttime,js.repeattime,count(library.libraryid)
      FROM client_jobschedule AS js 
      LEFT JOIN client_jobschedule2cmake AS cmake ON (cmake.scheduleid=js.id) 
      LEFT JOIN client_jobschedule2compiler AS compiler ON (compiler.scheduleid=js.id)
      LEFT JOIN client_jobschedule2os AS os ON (os.scheduleid=js.id)
      LEFT JOIN client_jobschedule2site AS site ON (site.scheduleid=js.id)
      LEFT JOIN client_jobschedule2library AS library ON (library.scheduleid=js.id)
-     LEFT JOIN client_jobschedule2toolkit AS toolkit ON (toolkit.scheduleid=js.id)
      ,client_site2cmake,client_site2compiler,client_site AS s
      WHERE s.id=".qnum($this->SiteId)." 
       AND client_site2cmake.siteid=s.id  AND (cmake.scheduleid IS NULL OR cmake.cmakeid=client_site2cmake.cmakeid)
@@ -621,7 +572,7 @@ class ClientJobSchedule
       return 0;
       }
     
-    // For each job schedule make sure we have the right toolkits and libraries 
+    // For each job schedule make sure we have the right libraries 
     while($row = pdo_fetch_array($query))
       {
       // Make sure the time is right  
@@ -663,7 +614,6 @@ class ClientJobSchedule
         
       $scheduleid = $row[0];
       $nlibraries = $row[4];
-      $ntoolkits = $row[5];
       
       // Check if we have the right libraries for this job
       $library=pdo_query("SELECT count(sl.libraryid) FROM client_jobschedule2library AS jsl,
@@ -678,28 +628,14 @@ class ClientJobSchedule
       $library_array = pdo_fetch_array($library);
       if($library_array[0] == $nlibraries)
         {
-        // Check if we have the right toolkits for this job
-        $toolkit=pdo_query("SELECT count(jst.toolkitconfigurationid) FROM client_jobschedule2toolkit AS jst,
-                            client_toolkitconfiguration2os AS tc, client_site AS s 
-                            WHERE jst.scheduleid=".qnum($scheduleid)."
-                            AND tc.osid=s.osid AND jst.toolkitconfigurationid=tc.toolkitconfigurationid
-                            AND s.id=".qnum($this->SiteId));
-        if(!$toolkit)
-          { 
-          add_last_sql_error("ClientJobSchedule::HasJob-Toolkit");
-          return 0;  
-          }
-                
-        $toolkit_array = pdo_fetch_array($toolkit);
-        if($toolkit_array[0] == $ntoolkits)
-          {
-          $this->Id = $scheduleid;
-          return $scheduleid;
-          }
+        $this->Id = $scheduleid;   
+        return $scheduleid;
         }
       }
     return 0;
     }
+      
+    
      
   // Return the ctest script
   function GetCTestScript()
@@ -710,6 +646,8 @@ class ClientJobSchedule
       return; 
       }
     
+    include('cdash/config.php');
+      
     // Update the current run
     pdo_query("UPDATE client_jobschedule SET lastrun='".date(FMT_DATETIMESTD)."' WHERE id=".qnum($this->Id));
         
@@ -730,44 +668,26 @@ class ClientJobSchedule
                       LEFT JOIN client_jobschedule2cmake AS jc ON (jc.cmakeid=sc.cmakeid) 
                       ORDER BY cmakeid DESC LIMIT 1");
     $cmake_array = pdo_fetch_array($cmake);
-    $job->CMakeId =  $cmake_array[0];
+    $job->CMakeId = $cmake_array[0];
     
     // Determine the appropriate compiler
     $compiler=pdo_query("SELECT sc.compilerid FROM client_site2compiler AS sc
                       LEFT JOIN client_jobschedule2compiler AS jc ON (jc.compilerid=sc.compilerid) 
                       ORDER BY compilerid DESC LIMIT 1");
     $compiler_array = pdo_fetch_array($compiler);
-    $job->CompilerId =  $compiler_array[0];
-    
+    $job->CompilerId =  $compiler_array[0];  
     $job->Save();
-    
-    
-    $baseDirectory = $ClientSite->GetBaseDirectory();
-    $ctestExecutable = $ClientSite->GetCMakePath($job->CMakeId)."/ctest";
-    $cmakeExecutable = $ClientSite->GetCMakePath($job->CMakeId)."/cmake";
     
     $Project = new Project();
     $Project->Id = $this->GetProjectId();
     $Project->Fill();
-    if(strlen($this->GetModule())>0)
-      {
-      $sourceName = $this->GetModule(); 
-      if(strlen($this->GetTag())>0)
-        {
-        $sourceName.="-".$this->GetTag(); 
-        }
-      }
-    else
-      { 
-      $sourceName = $Project->Name;
-      if(strlen($this->GetBuildNameSuffix())>0)
-        {
-        $sourceName.="-".$this->GetBuildNameSuffix();
-        }
-      }
-    $binaryName = $sourceName."-bin";
     
-    // these are the the name of the source and binary directory on disk. 
+    $compiler = new ClientCompiler();
+    $compiler->Id = $job->CompilerId;
+    $os = new ClientOS();
+    $os->Id = $job->OsId; 
+    
+    // Initialize the variables
     $buildtype = "Experimental"; //default
     switch($this->GetType())
       {
@@ -775,123 +695,56 @@ class ClientJobSchedule
       case CDASH_JOB_NIGHTLY: $buildtype="Nightly";break;
       case CDASH_JOB_CONTINUOUS: $buildtype="Continuous";break;
       }
-    $ctest_script = 'SET(CTEST_SOURCE_NAME '.$sourceName.')'."\n";
-    $ctest_script .= 'SET(CTEST_BINARY_NAME '.$binaryName.')'."\n";
-    $ctest_script .= 'SET(CTEST_DASHBOARD_ROOT "'.$baseDirectory.'")'."\n";
-    $ctest_script .= 'SET(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}")'."\n";
-    $ctest_script .= 'SET(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}")'."\n";
-    $ctest_script .= 'SET(CTEST_CMAKE_GENERATOR "'.$ClientSite->GetCompilerGenerator($job->CompilerId).'")'."\n";
-    
-    // Construct the buildname
-    $compiler = new ClientCompiler();
-    $compiler->Id = $job->CompilerId;
-    $os = new ClientOS();
-    $os->Id = $job->OsId; 
-    $buildname = $os->GetName()."-".$os->GetVersion()."-".$os->GetBits()."-".$compiler->GetName()."-".$compiler->GetVersion();
-    if(strlen($this->GetBuildNameSuffix())>0)
-      {
-      $buildname .= "-".$this->GetBuildNameSuffix();
-      }    
-    $ctest_script .= 'set(CTEST_SITE "'.$ClientSite->GetName().'")'."\n";
-    $ctest_script .= 'set(CTEST_BUILD_NAME "'.$buildname.'")'."\n";
-    
-    $ctest_script .= 'file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "'.$this->GetCMakeCache().'\n")'."\n";
-    //$ctest_script .= 'file(APPEND "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" SITE:STRING='.$ClientSite->GetName().'\n)'."\n";
-    //$ctest_script .= 'file(APPEND "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" BUILDNAME:STRING='.$buildname.'\n)'."\n";
-    
-    // Deal with the toolkits
-    $toolkitconfigurationids = $this->GetToolkitConfigurations();
-    foreach($toolkitconfigurationids as $toolkitconfigurationid)
-      {      
-      $ClientToolkitConfigure = new ClientToolkitConfigure();
-      $ClientToolkitConfigure->Id = $toolkitconfigurationid;
-      
-      $ClientToolkitVersion = new ClientToolkitVersion();
-      $ClientToolkitVersion->Id = $ClientToolkitConfigure->GetToolkitVersionId();
-
-      $ClientToolkit = new ClientToolkit();
-      $ClientToolkit->Id = $ClientToolkitVersion->GetToolkitId();
-
-      $buildname = $ClientToolkit->GetName().'-'.$ClientToolkitVersion->GetName()."-".$ClientToolkitConfigure->GetName();
-      $ctest_script .= 'set(CDASH_TOOLKIT_SCRIPT "'.$baseDirectory."/CDash-".$buildname.'.cmake")'."\n";
-      
-      $toolkitSourcePath = $baseDirectory.'/'.$ClientToolkitVersion->GetSourcePath();
-      $toolkitBinaryPath = $baseDirectory.'/'.$ClientToolkitConfigure->GetBinaryPath();
-      $toolkitRepositoryType = $ClientToolkitVersion->GetRepositoryType();
-      $toolkitRepositoryURL = $ClientToolkitVersion->GetRepositoryURL();
-      $repositoryModule = $ClientToolkitVersion->GetRepositoryModule();
-      $ctestprojectname = $ClientToolkitVersion->GetCTestProjectName();      
-      $cmakecache = $ClientToolkitConfigure->GetCMakeCache();
-      
-      $ctest_toolkit_script = 'SET(CTEST_COMMAND \"'.$ctestExecutable.'\")'."\n";
-      $ctest_toolkit_script .= 'SET(CTEST_SOURCE_DIRECTORY \"'.$toolkitSourcePath.'\")'."\n";
-      $ctest_toolkit_script .= 'SET(CTEST_BINARY_DIRECTORY \"'.$toolkitBinaryPath.'\")'."\n";
-      $ctest_toolkit_script .= 'SET(CTEST_CMAKE_GENERATOR \"'.$ClientSite->GetCompilerGenerator($job->CompilerId).'\")'."\n";
-      $ctest_toolkit_script .= 'SET(CTEST_DASHBOARD_ROOT "'.$baseDirectory.'")'."\n";
-      $ctest_toolkit_script .= 'SET(CTEST_SITE "'.$ClientSite->GetName().'")'."\n";
-      $ctest_toolkit_script .= 'set(CTEST_BUILD_NAME \"'.$buildname.'\")'."\n";
-      $ctest_toolkit_script .= 'file(WRITE '.$toolkitBinaryPath.'/CMakeCache.txt \"'.$cmakecache.'\")'."\n";
-
-      $ctest_toolkit_script .= 'ctest_start('.$buildtype.')'."\n";
-      $ctest_toolkit_script .= 'SET(CTEST_PROJECT_NAME \"'.$ctestprojectname.'\")'."\n"; // for ITK we need this...
-
-  
-      $ctest_toolkit_script .= 'if(NOT EXISTS \${CTEST_SOURCE_DIRECTORY})'."\n";
-      if($toolkitRepositoryType == CDASH_REPOSITORY_CVS)
-        {
-        $ctest_toolkit_script .= ' execute_process(COMMAND \"cvs\" \"-d\" \"'.$toolkitRepositoryURL.'\" \"checkout\" \"-d\" \"'.$toolkitSourcePath.'\" \"'.$repositoryModule.'\" WORKING_DIRECTORY \${CTEST_DASHBOARD_ROOT})'."\n";
-        }
-      else if($toolkitRepositoryType == CDASH_REPOSITORY_SVN)
-        {
-        $ctest_toolkit_script .= ' execute_process(COMMAND \"svn\" \"co\" \"'.$toolkitRepositoryURL.'\" \"'.$toolkitSourcePath.'\" WORKING_DIRECTORY \${CTEST_DASHBOARD_ROOT})'."\n";
-        }    
-      $ctest_toolkit_script .= 'else(NOT EXISTS \${CTEST_SOURCE_DIRECTORY})'."\n";
-      if($toolkitRepositoryType == CDASH_REPOSITORY_CVS)
-        {
-        $ctest_toolkit_script .= ' execute_process(COMMAND \"cvs\" \"-d\" \"'.$toolkitRepositoryURL.'\" \"update\" \"-dAP\" \"'.$proToolkitVersion->GetSourcePath().'\" WORKING_DIRECTORY \${CTEST_DASHBOARD_ROOT})'."\n";
-        }
-      else if($toolkitRepositoryType == CDASH_REPOSITORY_SVN)
-        {
-        $ctest_toolkit_script .= ' execute_process(COMMAND \"svn\" \"update\" \"'.$toolkitRepositoryURL.'\" WORKING_DIRECTORY \${CTEST_DASHBOARD_ROOT})'."\n";
-        }    
-      $ctest_toolkit_script .= 'endif()'."\n";
-      
-      $ctest_toolkit_script .= 'ctest_configure(BUILD  \"\${CTEST_BINARY_DIRECTORY}\" RETURN_VALUE res)'."\n";
-      $ctest_toolkit_script .= 'ctest_build(BUILD  \"\${CTEST_BINARY_DIRECTORY}\" RETURN_VALUE res)'."\n";
-     
-      // Run the script
-      $ctest_script .= 'file(WRITE ${CDASH_TOOLKIT_SCRIPT} "'.$ctest_toolkit_script.'")'."\n";
-      $ctest_script .= 'ctest_run_script(${CDASH_TOOLKIT_SCRIPT})'."\n";
-      $ctest_script .= 'MESSAGE("Done installing toolkit: '.$ClientToolkitConfigure->GetName().'")'."\n";
-      }
-    
-    // Set the checkout command
+    $ctest_script = 'SET(JOB_BUILDTYPE '.$buildtype.')'."\n";
+    $ctest_script .= 'SET(PROJECT_NAME "'.$Project->Name.'")'."\n";  
     if(strlen($this->GetModule())>0)
       {
-      $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "cvs -d '.$this->GetRepository().' checkout ';
-      if(strlen($this->GetTag())>0)
-        {
-        $ctest_script .= ' -r '.$this->GetTag().' ';
-        }
-      $ctest_script .= ' -d '.$sourceName.' ';
-      $ctest_script .= $this->GetModule().'")'."\n";
-      $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "cvs")'."\n";
+      $ctest_script .= 'SET(JOB_MODULE "'.$this->GetModule().'")'."\n";
       }
-    else
+    if(strlen($this->GetTag())>0)
       {
-      $ctest_script .= 'SET(CTEST_CHECKOUT_COMMAND "svn co '.$this->GetRepository().' '.$sourceName.'")'."\n";
-      $ctest_script .= 'SET(CTEST_UPDATE_COMMAND "svn")'."\n";  
-      }  
-    $ctest_script .= 'ctest_start('.$buildtype.')'."\n";
-    $ctest_script .= 'ctest_update(SOURCE ${CTEST_SOURCE_DIRECTORY})'."\n";
-    $ctest_script .= 'ctest_configure(BUILD  "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
-    $ctest_script .= 'ctest_build(BUILD  "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
-    $ctest_script .= 'ctest_test(BUILD  "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
+      $ctest_script .= 'SET(JOB_TAG "'.$this->GetTag().'")'."\n";
+      }
+    if(strlen($this->GetBuildNameSuffix())>0)
+      {
+      $ctest_script .= 'SET(JOB_BUILDNAME_SUFFIX "'.$this->GetBuildNameSuffix().'")'."\n";
+      }
+    $ctest_script .= 'SET(JOB_CMAKE_GENERATOR "'.$ClientSite->GetCompilerGenerator($job->CompilerId).'")'."\n";  
+      
+    $ctest_script .= 'SET(CLIENT_BASE_DIRECTORY "'.$ClientSite->GetBaseDirectory().'")'."\n";
+    $ctest_script .= 'SET(CLIENT_CMAKE_PATH "'.$ClientSite->GetCMakePath($job->CMakeId).'")'."\n";
+    $ctest_script .= 'SET(CLIENT_SITE "'.$ClientSite->GetName().'")'."\n";  
+    
+    $ctest_script .= 'SET(JOB_OS_NAME "'.$os->GetName().'")'."\n";  
+    $ctest_script .= 'SET(JOB_OS_VERSION "'.$os->GetVersion().'")'."\n";  
+    $ctest_script .= 'SET(JOB_OS_BITS "'.$os->GetBits().'")'."\n";
+    $ctest_script .= 'SET(JOB_COMPILER_NAME "'.$compiler->GetName().'")'."\n";
+    $ctest_script .= 'SET(JOB_COMPILER_VERSION "'.$compiler->GetVersion().'")'."\n";
+    $ctest_script .= 'SET(JOB_REPOSITORY "'.$this->GetRepository().'")'."\n";
+     
+    // Set the program variables
+    $programs = $ClientSite->GetPrograms();
+    $currentname = '';
+    foreach($programs as $program)
+      {
+      $program_name = strtoupper($program['name']);
+      $program_version = str_replace('.','_',strtoupper($program['version']));
+      if($program['name'] != $currentname)
+        {
+        $ctest_script .= 'SET(CLIENT_EXECUTABLE_'.$program_name.' "'.$program['path'].'")'."\n"; 
+        $currentname = $program['name']; 
+        }
+      $ctest_script .= 'SET(CLIENT_EXECUTABLE_'.$program_name.'_'.$program_version.' "'.$program['path'].'")'."\n";
+      }
     
     if($CDASH_USE_HTTPS === true)
       {
-      $ctest_script .= 'set(CTEST_DROP_METHOD "https")';
+      $ctest_script .= 'set(CTEST_DROP_METHOD "https")'."\n";
       }
+    else
+      {
+      $ctest_script .= 'set(CTEST_DROP_METHOD "http")'."\n";
+      }  
     $serverName = $CDASH_SERVER_NAME;
     if(strlen($serverName) == 0)
       {
@@ -902,11 +755,26 @@ class ClientJobSchedule
     $ctest_script .= 'set(CTEST_DROP_SITE "'.$serverName.'")'."\n";
     $ctest_script .= 'set(CTEST_DROP_LOCATION "/CDash/submit.php?project='.$Project->Name.'")'."\n";
     $ctest_script .= 'set(CTEST_DROP_SITE_CDASH  TRUE)'."\n";
-    $ctest_script .= 'ctest_submit(RETURN_VALUE res)'."\n";
 
-    //$ctest_script .= 'ctest_sleep(20)'."\n";
-    $ctest_script .= 'MESSAGE("DONE")'."\n";
-        
+    // Write the cache file
+    $ctest_script .= 'file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "'.$this->GetCMakeCache().'\n")'."\n";            
+    
+    // Set the macro to warn CDash that the script failed
+    $ctest_script .= "\n".'MACRO(JOB_FAILED)'."\n";
+    
+    $uri = $_SERVER['REQUEST_URI'];
+    $pos = strpos($uri,'submit.php');
+    if($pos !== false)
+      {
+      $uri = substr($uri,0,$pos+10);
+      }
+    
+    $ctest_script .= '  file(DOWNLOAD "${CTEST_DROP_METHOD}://${CTEST_DROP_SITE}'.$uri.'?siteid='.$this->SiteId.'&jobfailed=1" "${CLIENT_BASE_DIRECTORY}/scriptfailed.txt")'."\n";
+    $ctest_script .= '  return()'."\n";
+    $ctest_script .= 'ENDMACRO(JOB_FAILED)'."\n\n";
+    
+    $ctest_script .= $Project->CTestTemplateScript;
+     
     return $ctest_script;
     }
     

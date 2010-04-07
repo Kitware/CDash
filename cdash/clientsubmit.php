@@ -30,7 +30,7 @@ function client_submit()
   include_once("models/clientcmake.php");
   include_once("models/clientcompiler.php");
   include_once("models/clientlibrary.php");
-
+  
   include 'cdash/config.php';
   require_once 'cdash/common.php';
   
@@ -139,6 +139,18 @@ function client_submit()
       $ClientLibrary->Save();
       }
 
+    // Add/Update Programs
+    $programs = array();
+    foreach($xml->program as $program)
+      {
+      $prog = array();
+      $prog['name'] = $program->name;
+      $prog['path'] = $program->path;
+      $prog['version'] = $program->version;
+      $programs[] = $prog;
+      }
+    $ClientSite->UpdatePrograms($programs);
+      
     exit(); 
     }
   else if(isset($_GET['jobdone'])) // Mark the job has finished
@@ -150,6 +162,17 @@ function client_submit()
     $ClientJob = new ClientJob();
     $ClientJob->SiteId = $_GET['siteid'];
     $ClientJob->SetFinished();
+    exit();
+    }  
+  else if(isset($_GET['jobfailed'])) // Mark the job has failed
+    {
+    if(!isset($_GET['siteid']))
+      {
+      echo "0";
+      }
+    $ClientJob = new ClientJob();
+    $ClientJob->SiteId = $_GET['siteid'];
+    $ClientJob->SetFailed();
     exit();
     }   
 }

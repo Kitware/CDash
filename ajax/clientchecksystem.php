@@ -32,11 +32,10 @@ $cmakeids = $_POST["cmake"];
 $compilerids = $_POST["compiler"];
 $osids = $_POST["os"];
 $libraryids = $_POST["library"];
-$toolkitids = $_POST["toolkit"];
 
 // Checks
 if(!isset($siteids) || !isset($cmakeids) || !isset($compilerids) || !isset($osids)
-   || !isset($toolkitids) || !isset($libraryids))
+   || !isset($libraryids))
   {
   echo "Not a valid request!";
   return;
@@ -50,7 +49,6 @@ $cmakeids = explode(",",$cmakeids);
 $compilerids = explode(",",$compilerids);
 $osids = explode(",",$osids);
 $libraryids = explode(",",$libraryids);
-$toolkitids = explode(",",$toolkitids);
 
 $extrasql = "";
 $tables = "";
@@ -117,22 +115,6 @@ foreach($libraryids as $key=>$libraryid)
     }
   }
 if(!empty($libraryids[0])) {$extrasql.=")";}
-
-// Toolkits (should have all of them)
-if(!empty($toolkitids[0])) 
-  {
-  $tables .= ",client_toolkitconfiguration2os ";  
-  $extrasql.=" AND client_toolkitconfiguration2os.osid=s.osid  AND (";
-  }
-foreach($toolkitids as $key=>$toolkitid)
-  {
-  if(!empty($toolkitid))
-    {
-    if($key>0) {$extrasql.=" AND ";}  
-    $extrasql .= "client_toolkitconfiguration2os.toolkitconfigurationid =".qnum($toolkitid);
-    }
-  }
-if(!empty($toolkitids[0])) {$extrasql.=")";}
 
 // Contruct the query
 $sql = "SELECT COUNT(DISTINCT s.id) FROM client_site AS s, client_os AS os, 
