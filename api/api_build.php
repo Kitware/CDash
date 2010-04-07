@@ -38,14 +38,19 @@ class BuildAPI extends CDashAPI
       echo "Project not found";
       exit();
       }
-      
-    $query = pdo_query("SELECT starttime,builderrors,buildwarnings,testnotrun,testfailed
-                FROM build WHERE projectid=".$projectid." ORDER BY starttime ASC");
+
+    $builds = array();
+    $query = pdo_query("SELECT YEAR(starttime) AS y ,MONTH(starttime) AS m,DAY(starttime) AS d,builderrors,buildwarnings,testnotrun,testfailed
+                FROM build WHERE projectid=".$projectid." GROUP BY YEAR(starttime),MONTH(starttime),DAY(starttime) ORDER BY YEAR(starttime),MONTH(starttime),DAY(starttime) ASC LIMIT 1000"); // limit the request
     echo pdo_error();
      
     while($query_array = pdo_fetch_array($query))
       {
-      $build['starttime'] = strtotime($query_array['starttime']);
+      $build['month'] = $query_array['m'];
+      $build['day'] = $query_array['d'];
+      $build['year'] = $query_array['y'];
+      $build['time'] = strtotime($query_array['y'].'-'.$query_array['m'].'-'.$query_array['d']);
+      
       $build['builderrors'] = 0;
       if($query_array['builderrors']>=0)
         {
