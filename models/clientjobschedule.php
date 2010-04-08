@@ -755,7 +755,8 @@ class ClientJobSchedule
     $ctest_script .= 'set(CTEST_DROP_SITE "'.$serverName.'")'."\n";
     $ctest_script .= 'set(CTEST_DROP_LOCATION "/CDash/submit.php?project='.$Project->Name.'")'."\n";
     $ctest_script .= 'set(CTEST_DROP_SITE_CDASH  TRUE)'."\n";
-
+    $ctest_script .= 'set(CTEST_NOTES_FILES ${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME})'."\n";
+    
     // Write the cache file
     $ctest_script .= 'file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "'.$this->GetCMakeCache().'\n")'."\n";            
     
