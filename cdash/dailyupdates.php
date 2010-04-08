@@ -308,14 +308,8 @@ function get_git_repository_commits($gitroot, $dates)
   $gitdirectory = substr($gitroot,$pos+1);
   $gitdir = $gitlocaldirectory.'/'.$gitdirectory;
   
-  // Update the current bare repository
-  $command = $gitcommand.' --git-dir="'.$gitdir.'" fetch '.$gitroot;
-  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
-    {
-    $command = '"'.$command.'"';  
-    }
-  system($command,$retval);
-  if($retval != 0)
+  // If the current directory doesn't exist we create it 
+  if(!file_exists($gitdir))
     {
     // If the bare repository doesn't exist we clone it   
     $command = 'cd "'.$gitlocaldirectory.'" && '.$gitcommand.' clone --bare '.$gitroot.' '.$gitdirectory;
@@ -325,12 +319,20 @@ function get_git_repository_commits($gitroot, $dates)
       }
     $raw_output = `$command`;
     }
- 
+    
+  // Update the current bare repository
+  $command = $gitcommand.' --git-dir="'.$gitdir.'" fetch '.$gitroot;
+  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+    {
+    $command = '"'.$command.'"';  
+    }
+   
   // Get what changed during that time
   $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
   $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
 
-  $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --pretty=medium';
+  // Compare with the fetch head for now
+  $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --pretty=medium FETCH_HEAD';
   if(DIRECTORY_SEPARATOR == '\\') // we are on windows
     {
     $command = '"'.$command.'"';  
