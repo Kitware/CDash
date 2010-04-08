@@ -39,7 +39,10 @@ class ClientOS
       6 => "CentOS",
       7 => "Tiger",
       8 => "Leopard", 
-      9 => "SnowLeopard", 
+      9 => "SnowLeopard",
+      10 => "XP",
+      11 => "NT",
+      12 => "2000",
       );
     }
   
