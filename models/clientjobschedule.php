@@ -690,17 +690,19 @@ class ClientJobSchedule
     $job->SiteId = $this->SiteId;
     $job->OsId = $ClientSite->GetOS();
     
-    // Determine the appropriate CMake id
-    $cmake=pdo_query("SELECT sc.cmakeid FROM client_site2cmake AS sc
-                      LEFT JOIN client_jobschedule2cmake AS jc ON (jc.cmakeid=sc.cmakeid) 
-                      ORDER BY cmakeid DESC LIMIT 1");
+    // Determine the appropriate CMake id (get the newest version)
+    $cmake=pdo_query("SELECT sc.cmakeid FROM client_cmake,client_site2cmake AS sc
+                      LEFT JOIN client_jobschedule2cmake AS jc ON (jc.cmakeid=sc.cmakeid)
+                      WHERE client_cmake.id=sc.cmakeid AND sc.siteid=".$this->SiteId." 
+                      ORDER BY client_cmake.version DESC LIMIT 1");
     $cmake_array = pdo_fetch_array($cmake);
     $job->CMakeId = $cmake_array[0];
     
     // Determine the appropriate compiler
-    $compiler=pdo_query("SELECT sc.compilerid FROM client_site2compiler AS sc
-                      LEFT JOIN client_jobschedule2compiler AS jc ON (jc.compilerid=sc.compilerid) 
-                      ORDER BY compilerid DESC LIMIT 1");
+    $compiler=pdo_query("SELECT sc.compilerid FROM client_compiler,client_site2compiler AS sc
+                         LEFT JOIN client_jobschedule2compiler AS jc ON (jc.compilerid=sc.compilerid) 
+                         WHERE client_compiler.id=sc.compilerid AND sc.siteid=".$this->SiteId." 
+                         ORDER BY client_compiler.version DESC LIMIT 1");
     $compiler_array = pdo_fetch_array($compiler);
     $job->CompilerId =  $compiler_array[0];  
     $job->Save();
