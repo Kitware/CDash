@@ -124,6 +124,8 @@ function client_submit()
       $comp['generator'] = $compiler->generator;
       $compilers[] = $comp;
       }
+    $ClientCompiler = new ClientCompiler();
+    $ClientCompiler->SiteId = $siteid;
     $ClientCompiler->DeleteUnused($compilers);
     
     // Add/Update CMake
@@ -140,7 +142,9 @@ function client_submit()
       $cm['path'] = $cmake->path;
       $cm['version'] = $cmake->version;
       $cmakes[] = $cm;
-      }  
+      }
+    $ClientCMake = new ClientCMake();
+    $ClientCMake->SiteId = $siteid;
     $ClientCMake->DeleteUnused($cmakes); 
     
     // Add/Update Libraries
@@ -162,6 +166,8 @@ function client_submit()
       $lib['include'] = $library->include;
       $libraries[] = $lib;
       }
+    $ClientLibrary = new ClientLibrary();
+    $ClientLibrary->SiteId = $siteid;
     $ClientLibrary->DeleteUnused($libraries);  
 
     // Add/Update Programs
