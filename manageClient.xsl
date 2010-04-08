@@ -189,6 +189,22 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
           </td>
       </tr>
       <tr>
+        <td align="right" valign="top">
+          <b>Build Configuration:</b>
+        </td>
+        <td>
+         <select name="buildconfiguration" id="buildconfiguration_select">
+          <xsl:for-each select="/cdash/buildconfiguration">
+              <option>
+                <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>
+                <xsl:value-of select="name"/>
+              </option>
+          </xsl:for-each>
+          </select>
+        </td>
+      </tr>
+      <tr>
         <td align="right" valign="top"><b>Start date:</b></td> 
         <td><input name="startdate" type="text" size="19" maxlength="19">
         <xsl:attribute name="value"><xsl:value-of select="/cdash/startdate" /></xsl:attribute>

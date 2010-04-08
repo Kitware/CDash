@@ -33,7 +33,19 @@ class ClientJobSchedule
   var $Module;
   var $Tag;
   var $BuildNameSuffix;
+  var $BuildConfigurations;
+  var $BuildConfiguration;
 
+  function __construct()
+    {
+    $this->BuildConfigurations = array(
+      0 => "Debug",
+      1 => "Release",
+      2 => "RelWithDebInfo",
+      3 => "MinSizeRel",
+      );
+    }
+    
   /** Get ProjectId */
   function GetProjectId()
     {
@@ -176,7 +188,20 @@ class ClientJobSchedule
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
-    
+
+  /** Get the build configuration */
+  function GetBuildConfiguration()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule::GetBuildConfiguration","Id not set");
+      return;
+      }
+    $sys = pdo_query("SELECT buildconfiguration FROM client_jobschedule WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($sys);
+    return $row[0];
+    }
+      
   /** Get Module */
   function GetModule()
     {
@@ -210,11 +235,12 @@ class ClientJobSchedule
     if(!$this->Id)
       {
       $sql = "INSERT INTO client_jobschedule (userid,projectid,startdate,enddate,starttime,enable,type,
-                                              repeattime,cmakecache,repository,module,buildnamesuffix,tag) 
+                                              repeattime,cmakecache,repository,module,buildnamesuffix,tag,
+                                              buildconfiguration) 
               VALUES ('".$this->UserId."','".$this->ProjectId."','".$this->StartDate."','".$this->EndDate.
               "','".$this->StartTime."','".$this->Enable."','".$this->Type."','".$this->RepeatTime.
               "','".$cmakecache."','".$this->Repository."','".$this->Module."','".$this->BuildNameSuffix.
-              "','".$this->Tag."')";
+              "','".$this->Tag."','".$this->BuildConfiguration."')";
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_jobschedule');
       add_last_sql_error("ClientJobSchedule::Save");
@@ -230,6 +256,7 @@ class ClientJobSchedule
              repository='".$this->Repository."',
              module='".$this->Module."',
              buildnamesuffix='".$this->BuildNameSuffix."',
+             buildconfiguration='".$this->BuildConfiguration."',
              tag='".$this->Tag."',
              type='".$this->Type."' WHERE id=".qnum($this->Id);
       pdo_query($sql);
@@ -710,6 +737,7 @@ class ClientJobSchedule
       $ctest_script .= 'SET(JOB_BUILDNAME_SUFFIX "'.$this->GetBuildNameSuffix().'")'."\n";
       }
     $ctest_script .= 'SET(JOB_CMAKE_GENERATOR "'.$ClientSite->GetCompilerGenerator($job->CompilerId).'")'."\n";  
+    $ctest_script .= 'SET(JOB_BUILD_CONFIGURATION "'.$this->BuildConfigurations[$this->GetBuildConfiguration()].'")'."\n";  
       
     $ctest_script .= 'SET(CLIENT_BASE_DIRECTORY "'.$ClientSite->GetBaseDirectory().'")'."\n";
     $ctest_script .= 'SET(CLIENT_CMAKE_PATH "'.$ClientSite->GetCMakePath($job->CMakeId).'")'."\n";

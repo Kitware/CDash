@@ -36,7 +36,7 @@ if ($session_OK)
     }   
   
   $userid = $_SESSION['cdash']['loginid'];
-    
+
   /** If we should remove a job */  
   if(isset($_GET['removeschedule']))
     { 
@@ -108,6 +108,7 @@ if ($session_OK)
     $xml .= add_XML_value("module",$ClientJobSchedule->GetModule());
     $xml .= add_XML_value("tag",$ClientJobSchedule->GetTag());
     $xml .= add_XML_value("buildnamesuffix",$ClientJobSchedule->GetBuildNameSuffix());
+    $xml .= add_XML_value("builconfiguration",$ClientJobSchedule->GetBuildConfiguration());
     $libraries = $ClientJobSchedule->GetLibraries();
     $cmakes = $ClientJobSchedule->GetCMakes();
     $compilers = $ClientJobSchedule->GetCompilers();
@@ -124,6 +125,7 @@ if ($session_OK)
     $xml .= add_XML_value("cmakecache","");
     $xml .= add_XML_value("repeat","0");
     $xml .= add_XML_value("enable","1");
+    $xml .= add_XML_value("builconfiguration","0"); // debug
     $repository = "";
     }  
 
@@ -155,6 +157,20 @@ if ($session_OK)
     $xml .= add_XML_value("otherrepository",$repository);  
     }
   
+  // Build configurations
+  $jobschedule = new ClientJobSchedule();
+  foreach($jobschedule->BuildConfigurations as $key => $value)
+    {
+    $xml .= '<buildconfiguration>';
+    $xml .= add_XML_value("name",$value);
+    $xml .= add_XML_value("id",$key);
+    if(isset($scheduleid) && $key == $ClientJobSchedule->GetBuildConfiguration())
+      {
+      $xml .= add_XML_value("selected","1");  
+      }
+    $xml .= '</buildconfiguration>';  
+    }
+    
   // OS versions
   $clientOS = new ClientOS();
   $osids = $clientOS->getAll();
@@ -244,6 +260,7 @@ if ($session_OK)
     $clientJobSchedule->UserId = $userid;
     $clientJobSchedule->ProjectId = $Project->Id;
     $clientJobSchedule->BuildNameSuffix = $_POST['buildnamesuffix'];
+    $clientJobSchedule->BuildConfiguration = $_POST['buildconfiguration'];
     $clientJobSchedule->Tag = $_POST['tag'];
     
     if(strlen($_POST['module'])>0)

@@ -741,6 +741,8 @@ if(isset($_GET['upgrade-1-8']))
   ModifyTableField("dailyupdatefile","revision","VARCHAR(60)","VARCHAR(60)","",true,false);
   ModifyTableField("dailyupdatefile","priorrevision","VARCHAR(60)","VARCHAR(60)","",true,false);
   
+  AddTableField("client_jobschedule","buildconfiguration","tinyint(4)","smallint","0");
+  
   // Remove the toolkits tables
   pdo_query("DROP TABLE IF EXISTS client_toolkit");
   pdo_query("DROP TABLE IF EXISTS client_toolkitconfiguration");
