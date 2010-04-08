@@ -1270,7 +1270,8 @@ class Project
     $ctest_script .= 'SET(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}")'."\n";
     $ctest_script .= 'SET(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}")'."\n";
     $ctest_script .= 'SET(CTEST_CMAKE_GENERATOR "${JOB_CMAKE_GENERATOR}")'."\n";
-    
+    $ctest_script .= 'SET(CTEST_BUILD_CONFIGURATION "${JOB_BUILD_CONFIGURATION}")'."\n";
+       
     // Construct the buildname
     $ctest_script .= 'set(CTEST_SITE "${CLIENT_SITE}")'."\n";
     $ctest_script .= 'set(CTEST_BUILD_NAME "${JOB_OS_NAME}-${JOB_OS_VERSION}-${JOB_OS_BITS}-${JOB_COMPILER_NAME}-${JOB_COMPILER_VERSION}")'."\n";
