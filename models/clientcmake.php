@@ -87,5 +87,45 @@ class ClientCMake
       add_last_sql_error("clientCMake::Save()");
       }
     }  
+    
+  /** Delete unused cmakes */
+  function DeleteUnused($cmakes)
+    {  
+    if(!$this->SiteId)
+      {
+      add_log("clientCMake::DeleteUnused()","SiteId not set");
+      return;
+      }
+
+    // Delete the old cmakes
+    $query = pdo_query("SELECT path,version,cmakeid FROM client_cmake,client_site2cmake 
+              WHERE client_cmake.id=client_site2cmake.cmakeid
+              AND siteid=".qnum($this->SiteId));
+    
+    add_last_sql_error("clientCMake::DeleteUnused()");
+    while($query_array = pdo_fetch_array($query))
+      {
+      $delete = 1;  
+      foreach($cmakes as $cmake)
+        {
+        if($cmake['path'] == $query_array['path'] && $cmake['version'] == $query_array['version'])
+          {
+          $delete = 0;
+          break;    
+          }
+        }
+      if($delete)  
+        {
+        pdo_query("DELETE FROM client_site2cmake WHERE path='".$query_array['path'].
+              "' AND cmakeid='".$query_array['cmakeid'].
+              "' AND siteid=".qnum($this->SiteId)); 
+        add_last_sql_error("clientCMake::DeleteUnused()");
+        }
+      }
+
+    // Delete the client_compiler not attached to anything
+    pdo_query("DELETE FROM client_cmake WHERE id NOT IN(SELECT cmakeid AS id FROM client_site2cmake)");  
+    } // end DeleteUnused 
+    
 }    
 ?>

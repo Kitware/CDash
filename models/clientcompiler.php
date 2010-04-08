@@ -116,6 +116,48 @@ class ClientCompiler
       pdo_query($sql);
       add_last_sql_error("clientCompiler::Save3");
       }
-    }  
+    } 
+
+  /** Delete unused compilers */
+  function DeleteUnused($compilers)
+    {  
+    if(!$this->SiteId)
+      {
+      add_log("clientCompiler::DeleteUnused()","SiteId not set");
+      return;
+      }
+
+    // Delete the old libraries
+    $query = pdo_query("SELECT name,command,version,generator,compilerid FROM client_compiler,client_site2compiler 
+              WHERE client_site2compiler.compilerid=client_compiler.id
+              AND siteid=".qnum($this->SiteId));
+    
+    add_last_sql_error("clientCompiler::DeleteUnused()");
+    while($query_array = pdo_fetch_array($query))
+      {
+      $delete = 1;  
+      foreach($compilers as $compiler)
+        {
+        if($compiler['name'] == $query_array['name'] && $compiler['version'] == $query_array['version'] 
+           && $compiler['command'] == $query_array['command'] && $compiler['generator'] == $query_array['generator'])
+          {
+          $delete = 0;
+          break;    
+          }
+        }
+      if($delete)  
+        {
+        pdo_query("DELETE FROM client_site2compiler WHERE compilerid='".$query_array['compilerid'].
+              "' AND command='".$query_array['command'].
+              "' AND generator='".$query_array['generator'].
+              "' AND siteid=".qnum($this->SiteId)); 
+        add_last_sql_error("clientCompiler::DeleteUnused()");       
+        }   
+      } 
+    
+    // Delete the client_compiler not attached to anything
+    pdo_query("DELETE FROM client_compiler WHERE id NOT IN(SELECT compilerid AS id FROM client_site2compiler)");
+
+    }  // end DeleteUnused
 }    
 ?>

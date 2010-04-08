@@ -106,6 +106,7 @@ function client_submit()
     $siteid = $ClientSite->Id;
     
     // Add/Update the compiler
+    $compilers = array();
     foreach($xml->compiler as $compiler)
       {
       $ClientCompiler = new ClientCompiler();
@@ -115,9 +116,18 @@ function client_submit()
       $ClientCompiler->Generator = $compiler->generator;
       $ClientCompiler->SiteId = $siteid; 
       $ClientCompiler->Save();
-      }
       
+      $comp = array();
+      $comp['name'] = $compiler->name;
+      $comp['version'] = $compiler->version;
+      $comp['command'] = $compiler->command;
+      $comp['generator'] = $compiler->generator;
+      $compilers[] = $comp;
+      }
+    $ClientCompiler->DeleteUnused($compilers);
+    
     // Add/Update CMake
+    $cmakes = array();
     foreach($xml->cmake as $cmake)
       {
       $ClientCMake = new ClientCMake();
@@ -125,9 +135,16 @@ function client_submit()
       $ClientCMake->Path = $cmake->path;
       $ClientCMake->SiteId = $siteid; 
       $ClientCMake->Save();
+      
+      $cm = array();
+      $cm['path'] = $cmake->path;
+      $cm['version'] = $cmake->version;
+      $cmakes[] = $cm;
       }  
+    $ClientCMake->DeleteUnused($cmakes); 
     
     // Add/Update Libraries
+    $libraries = array();
     foreach($xml->library as $library)
       {
       $ClientLibrary = new ClientLibrary();
@@ -137,7 +154,15 @@ function client_submit()
       $ClientLibrary->Version = $library->version;
       $ClientLibrary->SiteId = $siteid; 
       $ClientLibrary->Save();
+      
+      $lib = array();
+      $lib['name'] = $library->name;
+      $lib['path'] = $library->path;
+      $lib['version'] = $library->version;
+      $lib['include'] = $library->include;
+      $libraries[] = $lib;
       }
+    $ClientLibrary->DeleteUnused($libraries);  
 
     // Add/Update Programs
     $programs = array();

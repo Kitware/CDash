@@ -99,5 +99,45 @@ class ClientLibrary
       }
     }  
 
+  /** Delete unused libraries */
+  function DeleteUnused($libraries)
+    {  
+    if(!$this->SiteId)
+      {
+      add_log("ClientLibrary::DeleteUnused()","SiteId not set");
+      return;
+      }
+
+    // Delete the old libraries
+    $query = pdo_query("SELECT name,path,version,include,libraryid FROM client_library,client_site2library 
+              WHERE client_library.id=client_site2library.libraryid 
+              AND siteid=".qnum($this->SiteId));
+    
+    add_last_sql_error("ClientLibrary::DeleteUnused()");
+    while($query_array = pdo_fetch_array($query))
+      {
+      $delete = 1;  
+      foreach($libraries as $library)
+        {
+        if($library['name'] == $query_array['name'] && $library['version'] == $query_array['version'] 
+           && $library['path'] == $query_array['path'] && $library['include'] == $query_array['include'])
+          {
+          $delete = 0;
+          break;    
+          }
+        }
+      if($delete)  
+        {
+        pdo_query("DELETE FROM client_site2library WHERE libraryid='".$query_array['libraryid'].
+              "' AND path='".$query_array['path'].
+              "' AND include='".$query_array['include'].
+              "' AND siteid=".qnum($this->SiteId)); 
+        add_last_sql_error("ClientLibrary::DeleteUnused()");
+        }
+      } 
+      
+    // Delete the client_compiler not attached to anything
+    pdo_query("DELETE FROM client_library WHERE id NOT IN(SELECT libraryid AS id FROM client_site2library)");  
+    } // end DeleteUnused 
 }    
 ?>
