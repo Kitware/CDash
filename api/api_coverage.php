@@ -90,7 +90,8 @@ class CoverageAPI extends CDashAPI
             }
           else
             {
-            $current = &$current[$paths[$i]];    
+            $current[$paths[$i]] = array();
+            $current = &$current[$paths[$i]];  
             }
           }  
         }
