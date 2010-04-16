@@ -1,3 +1,13 @@
+CDash 1.6.4, 2010-14-16
+------------------------
+- 0010290 CDash sends failed-test emails, even when this is disabled
+- 0010426 ClientJobSchedule::Save fails because of missing client_jobschedule table columns
+- 0010463 Shared project repositories not updated correctly
+- 0010332 cdash does not properly handle large xml files
+- 0010439 Command Lines in Build Error/Warning Display
+- 0010460 Subscription can be altered even if not admin
+- 0010313 Site description repeatedly escapes special characters
+
 CDash 1.6.2, 2010-02-08
 ------------------------
 
