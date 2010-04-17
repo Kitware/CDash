@@ -55,8 +55,22 @@ class ClientSite
       return false;  
       }
     return true;
-    }  
+    } 
+     
+  /** Return the last ping */
+  function GetLastPing()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientSite::GetLastPing()","Id not set");
+      return false;
+      }
     
+    $lastping = pdo_query("SELECT lastping FROM client_site WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($lastping);
+    return $row[0];
+    }  
+     
   /** get name*/
   function GetSystemName()
     {

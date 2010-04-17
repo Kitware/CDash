@@ -226,12 +226,49 @@ if ($session_OK)
     {
     $xml .= '<site>';
     $Site->Id = $siteid;
-    $xml .= add_XML_value("name",$Site->GetName()."-".$Site->GetSystemName());
+    
+    $lastping = $Site->GetLastPing();
+    $time = time()-(5*60);
+    if(strtotime($lastping)<$time)  
+      {
+      $lastseen = 0;
+      }
+    else 
+      {
+      $lastseen = 1;
+      }  
+    
+    // Check when the site was last seen
+    $lastpingtime = '';
+    $diff = time()-strtotime($lastping);
+    $days = $diff/(3600*24);
+    if(floor($days)>0)
+      {   
+      $lastpingtime .= floor($days)." days";
+      $diff = $diff-floor($days);
+      }
+    $hours = $diff/(3600);
+    if(floor($hours)>0)
+      {
+      if($lastpingtime != '')
+        {
+        $lastpingtime .= ', '; 
+        }
+      $lastpingtime .= floor($hours)." hours";
+      $diff = $diff-floor($hours);
+      }  
+    $minutes = $diff/(60);
+    if($minutes>0)
+      {
+      if($lastpingtime != '')
+        {
+        $lastpingtime .= ', '; 
+        }  
+      $lastpingtime .= floor($minutes)." minutes";
+      }   
+      
+    $xml .= add_XML_value("name",$Site->GetName()."-".$Site->GetSystemName()." (".$lastpingtime." ago)");
     $xml .= add_XML_value("id",$siteid);
-    $lastseen = $Site->GetLastSeen(5);
-    if(!$lastseen) 
-      {$lastseen = 0;} 
-    else {$lastseen=1;}
     $xml .= add_XML_value("availablenow",$lastseen); // Have we seen it in the past 5 minutes
     if(isset($sites) && array_search($siteid,$sites) !== false)
       {
