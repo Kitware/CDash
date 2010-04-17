@@ -37,25 +37,6 @@ class ClientSite
     $row = pdo_fetch_array($name);
     return $row[0];
     }
-
-  /** Get if a site was last seen in the last X minutes */
-  function GetLastSeen($minutes)
-    {
-    if(!$this->Id)
-      {
-      add_log("ClientSite::GetLastSeen()","Id not set");
-      return false;
-      }
-    
-    $lastping = pdo_query("SELECT lastping FROM client_site WHERE id=".qnum($this->Id));
-    $row = pdo_fetch_array($lastping);
-    $time = time()-($minutes*60);
-    if(strtotime($row[0])<$time)  
-      {
-      return false;  
-      }
-    return true;
-    } 
      
   /** Return the last ping */
   function GetLastPing()
