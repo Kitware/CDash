@@ -566,10 +566,19 @@ class ClientJobSchedule
   /** Return the job id if we have a job for the current siteid */
   function HasJob()
     {    
+    if(!$this->SiteId)
+      {
+      add_log("ClientJobSchedule:HasJob","SiteId not set");
+      return 0; 
+      }
+   
     $jobid = 0;
-    $now = date(FMT_DATETIMETZ);
+    $now = date(FMT_DATETIMESTD);
     $currenttime = date(FMT_TIME);
     $currentday = date(FMT_DATE);
+    
+    // Update the lastping
+    pdo_query("UPDATE client_site SET lastping='".$now."' WHERE id=".qnum($this->SiteId));
     
     $sql = "SELECT js.id,js.lastrun,js.starttime,js.repeattime,count(library.libraryid)
      FROM client_jobschedule AS js 

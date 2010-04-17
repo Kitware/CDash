@@ -228,6 +228,11 @@ if ($session_OK)
     $Site->Id = $siteid;
     $xml .= add_XML_value("name",$Site->GetName()."-".$Site->GetSystemName());
     $xml .= add_XML_value("id",$siteid);
+    $lastseen = $Site->GetLastSeen(5);
+    if(!$lastseen) 
+      {$lastseen = 0;} 
+    else {$lastseen=1;}
+    $xml .= add_XML_value("availablenow",$lastseen); // Have we seen it in the past 5 minutes
     if(isset($sites) && array_search($siteid,$sites) !== false)
       {
       $xml .= add_XML_value("selected","1");  

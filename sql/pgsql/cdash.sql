@@ -1025,11 +1025,12 @@ CREATE TABLE "client_site" (
   "systemname" character varying(255) DEFAULT NULL,
   "host" character varying(255) DEFAULT NULL,
   "basedirectory" character varying(512) NOT NULL,
+  "lastping" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "client_site_name" on "client_site" ("name");
 CREATE INDEX "client_site_system" on "client_site" ("osid");
-
+CREATE INDEX "client_site_lastping" on "client_site" ("lastping");
 
 --
 -- Table: client_site2cmake

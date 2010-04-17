@@ -1,3 +1,7 @@
+$(document).ready(function() {
+  checkSystem();
+});
+
 function clearOS()
   {
   $("#system_select").each(function(){

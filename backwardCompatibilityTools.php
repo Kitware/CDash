@@ -750,6 +750,10 @@ if(isset($_GET['upgrade-1-8']))
   pdo_query("DROP TABLE IF EXISTS client_toolkitversion");
   pdo_query("DROP TABLE IF EXISTS client_jobschedule2toolkit");
   
+  // Add lastping to the client_site table
+  AddTableField("client_site","lastping","timestamp","timestamp(0)","1980-01-01 00:00:00");
+  AddTableIndex('client_site','lastping');
+   
   // Set the database version
   setVersion();
 

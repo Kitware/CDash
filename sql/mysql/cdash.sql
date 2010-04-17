@@ -1086,12 +1086,14 @@ CREATE TABLE IF NOT EXISTS client_os (
 CREATE TABLE IF NOT EXISTS client_site (
   id int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  osid int(11) DEFAULT NULL,
-  systemname varchar(255) DEFAULT NULL,
+  `osid` int(11) DEFAULT NULL,
+  `systemname` varchar(255) DEFAULT NULL,
   `host` varchar(255) DEFAULT NULL,
-  basedirectory varchar(512) NOT NULL,
+  `basedirectory` varchar(512) NOT NULL,
+  `lastping` timestamp NOT NULL default '1980-01-01 00:00:00',
   PRIMARY KEY (id),
   KEY `name` (`name`),
+  KEY `lastping` (`lastping`),
   KEY system (osid)
 );
 

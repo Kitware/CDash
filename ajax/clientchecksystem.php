@@ -116,23 +116,48 @@ foreach($libraryids as $key=>$libraryid)
   }
 if(!empty($libraryids[0])) {$extrasql.=")";}
 
-// Contruct the query
+// Check for the last 5 minutes
+$now = date(FMT_DATETIMESTD,time()-5*60);
 $sql = "SELECT COUNT(DISTINCT s.id) FROM client_site AS s, client_os AS os, 
                     client_site2cmake,client_site2compiler".$tables."
                     WHERE s.osid=os.id AND client_site2cmake.siteid=s.id 
-                    AND client_site2compiler.siteid=s.id ".$extrasql;
+                    AND client_site2compiler.siteid=s.id ".$extrasql." AND s.lastping>'".$now."'";
 
 $query = pdo_query($sql);
 echo pdo_error();
 $query_array = pdo_fetch_array($query);
 if($query_array[0] == 0)
   {
-  echo "<br/><b>No site currently match these settings. Please modify the settings unless you know what you are doing.</b><br/>";  
+  echo "<br/><b>* No site matching these settings is currently available.</b><br/>";  
   }
 else
   {
-  echo "<br/><b>".$query_array[0]."</b> site";
-  if($query_array[0]>1) {echo 's';}
-  echo " currently match these settings.<br/>";
+  echo "<br/><b>* ".$query_array[0]."</b> site";
+  $word = "is";
+  if($query_array[0]>1) {echo 's'; $word = "are";}
+  echo " matching these settings ".$word." currently available.<br/>";
   }
+
+// Check for the last 24 hours
+$now = date(FMT_DATETIMESTD,time()-24*60);
+$sql = "SELECT COUNT(DISTINCT s.id) FROM client_site AS s, client_os AS os, 
+                    client_site2cmake,client_site2compiler".$tables."
+                    WHERE s.osid=os.id AND client_site2cmake.siteid=s.id 
+                    AND client_site2compiler.siteid=s.id ".$extrasql." AND s.lastping>'".$now."'";
+
+$query = pdo_query($sql);
+echo pdo_error();
+$query_array = pdo_fetch_array($query);
+if($query_array[0] == 0)
+  {
+  echo "<b>* No site matching these settings has been responding in the last 24 hours.</b><br/>";  
+  }
+else
+  {
+  echo "<b>* ".$query_array[0]."</b> site";
+  $word = "has";
+  if($query_array[0]>1) {echo 's'; $word = "have";}
+  echo " matching these settings ".$word." been responding in the last 24 hours.<br/>";
+  }
+  
 exit();

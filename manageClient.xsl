@@ -165,13 +165,16 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
           <select multiple="true" name="site[]" id="site_select" onchange="checkSystem();">
             <xsl:for-each select="/cdash/site">              
               <option>
+                <xsl:if test="availablenow=0"><xsl:attribute name="style">color:red</xsl:attribute></xsl:if>
                 <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
                 <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>
                 <xsl:value-of select="name"/>
               </option>
             </xsl:for-each>
-          </select>
-        <div id="check"></div>  
+          </select><br/>
+        Sites marked in <font color="red">red</font> have not been responding in the last 5 minutes.  
+        <div id="check"></div> 
+        <br/> 
         </td>
       </tr>
        

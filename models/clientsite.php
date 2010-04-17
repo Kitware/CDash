@@ -37,13 +37,32 @@ class ClientSite
     $row = pdo_fetch_array($name);
     return $row[0];
     }
-  
+
+  /** Get if a site was last seen in the last X minutes */
+  function GetLastSeen($minutes)
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientSite::GetLastSeen()","Id not set");
+      return false;
+      }
+    
+    $lastping = pdo_query("SELECT lastping FROM client_site WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($lastping);
+    $time = time()-($minutes*60);
+    if(strtotime($row[0])<$time)  
+      {
+      return false;  
+      }
+    return true;
+    }  
+    
   /** get name*/
   function GetSystemName()
     {
     if(!$this->Id)
       {
-      add_log("ProSite::Name()","Id not set");
+      add_log("ClientSite::Name()","Id not set");
       return;
       }
     $name = pdo_query("SELECT systemname FROM client_site WHERE id=".qnum($this->Id));
@@ -56,7 +75,7 @@ class ClientSite
     {
     if(!$this->Id)
       {
-      add_log("ProSite::GetOS()","Id not set");
+      add_log("ClientSite::GetOS()","Id not set");
       return;
       }
     $sys = pdo_query("SELECT osid FROM client_site WHERE id=".qnum($this->Id));
@@ -69,7 +88,7 @@ class ClientSite
     {
     if(!$this->Id)
       {
-      add_log("ProSite::GetName()","Id not set");
+      add_log("ClientSite::GetHost()","Id not set");
       return;
       }
     $sys = pdo_query("SELECT host FROM client_site WHERE id=".qnum($this->Id));
@@ -82,7 +101,7 @@ class ClientSite
     {
     if(!$this->Id)
       {
-      add_log("ProSite::GetBaseDirectory()","Id not set");
+      add_log("ClientSite::GetBaseDirectory()","Id not set");
       return;
       }
     $sys = pdo_query("SELECT basedirectory FROM client_site WHERE id=".qnum($this->Id));
@@ -102,7 +121,7 @@ class ClientSite
     {
     if(!$this->Id)
       {
-      add_log("ProSite::GetCompilerIds()","Id not set");
+      add_log("ClientSite::GetCompilerIds()","Id not set");
       return;
       }
       
@@ -120,7 +139,7 @@ class ClientSite
     {
     if(!$this->Id)
       {
-      add_log("ProSite::GetCompilerGenerator()","Id not set");
+      add_log("ClientSite::GetCompilerGenerator()","Id not set");
       return;
       }
     $name = pdo_query("SELECT generator FROM client_site2compiler WHERE siteid=".qnum($this->Id)." AND compilerid='".$compilerid."'");
@@ -133,7 +152,7 @@ class ClientSite
     {
     if(!$this->Id)
       {
-      add_log("ProSite::GetCMakePath()","Id not set");
+      add_log("ClientSite::GetCMakePath()","Id not set");
       return;
       }
     $sys = pdo_query("SELECT path FROM client_site2cmake WHERE siteid=".qnum($this->Id)." AND cmakeid=".qnum($cmakeid));
@@ -199,7 +218,7 @@ class ClientSite
     {
     if(!$this->Id)
       {
-      add_log("ProSite::GetCMakeIds()","Id not set");
+      add_log("ClientSite::GetCMakeIds()","Id not set");
       return;
       }
       
@@ -217,7 +236,7 @@ class ClientSite
     {
     if(!$this->Id)
       {
-      add_log("ProSite::GetLibraryIds()","Id not set");
+      add_log("ClientSite::GetLibraryIds()","Id not set");
       return;
       }
       
