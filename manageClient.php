@@ -245,7 +245,7 @@ if ($session_OK)
     if(floor($days)>0)
       {   
       $lastpingtime .= floor($days)." days";
-      $diff = $diff-floor($days);
+      $diff = $diff-(floor($days)*3600*24);
       }
     $hours = $diff/(3600);
     if(floor($hours)>0)
@@ -255,7 +255,7 @@ if ($session_OK)
         $lastpingtime .= ', '; 
         }
       $lastpingtime .= floor($hours)." hours";
-      $diff = $diff-floor($hours);
+      $diff = $diff-(floor($hours)*3600);
       }  
     $minutes = $diff/(60);
     if($minutes>0)
