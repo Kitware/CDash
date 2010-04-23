@@ -155,9 +155,9 @@ class BuildAPI extends CDashAPI
       echo "Project not found";
       exit();
       }   
- 
+
     $group = 'Nightly';      
-    if(isset($this->Parameters['group']));
+    if(isset($this->Parameters['dsfdsgroup']))
       {
       $group = pdo_real_escape_string($this->Parameters['group']);
       }
@@ -169,6 +169,7 @@ class BuildAPI extends CDashAPI
     $date = date("Y-m-d");
     list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]); 
 
+
     // Get all the unique builds for the section of the dashboard
     $query = pdo_query("SELECT max(b.id) AS buildid,CONCAT(s.name,'-',b.name) AS fullname,s.name AS sitename,b.name,
                si.totalphysicalmemory,si.processorclockfrequency
@@ -176,7 +177,7 @@ class BuildAPI extends CDashAPI
                WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id AND bg.projectid=b.projectid
                AND bg.name='".$group."' AND b.testfailed>0
                AND b.starttime>$currentstarttime AND b.starttime<NOW() GROUP BY fullname ORDER BY buildid");
-    
+
     $sites = array();
     $buildids = '';
     while($query_array = pdo_fetch_array($query))
@@ -193,11 +194,10 @@ class BuildAPI extends CDashAPI
       $site['memory'] = $query_array['totalphysicalmemory'];
       $sites[$query_array['buildid']] = $site;
       } 
-    
+
     $query = pdo_query("SELECT bt.buildid AS buildid,t.name AS testname,t.id AS testid
               FROM build2test AS bt,test as t
               WHERE bt.buildid IN (".$buildids.") AND bt.testid=t.id AND bt.status='failed'");
-    echo pdo_error();
 
     $tests = array();
     
