@@ -79,18 +79,24 @@ class CoverageAPI extends CDashAPI
             { 
             if(isset($current[$paths[$i]]))
               {
-              $v = $current[$paths[$i]];
-              $current[$paths[$i]] = (integer)$v+$query_array['locuntested'];
+              $v = $current[$paths[$i]]['locuntested'];
+              $current[$paths[$i]]['locuntested'] = (integer)$v+$query_array['locuntested'];
+              $v = $current[$paths[$i]]['loctested'];
+              $current[$paths[$i]]['loctested'] = (integer)$v+$query_array['loctested'];
+              
               }
             else
               {
-              @$current[$paths[$i]] = $query_array['locuntested'];  
+              @$current[$paths[$i]]['locuntested'] = $query_array['locuntested'];  
+              @$current[$paths[$i]]['loctested'] = $query_array['loctested']; 
               } 
             unset($current);
             }
           else
             {
             $current[$paths[$i]] = array();
+            $current[$paths[$i]]['locuntested'] = 0;
+            $current[$paths[$i]]['loctested'] = 0;
             $current = &$current[$paths[$i]];  
             }
           }  
