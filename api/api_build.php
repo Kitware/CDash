@@ -155,53 +155,61 @@ class BuildAPI extends CDashAPI
       echo "Project not found";
       exit();
       }   
+ 
+    $group = 'Nightly';      
+    if(isset($this->Parameters['group']));
+      {
+      $group = pdo_real_escape_string($this->Parameters['group']);
+      }
+      
+    // Get first all the unique builds for today's dashboard and group
+    $query = pdo_query("SELECT nightlytime FROM project WHERE id=".qnum($projectid));
+    $project_array = pdo_fetch_array($query);
     
-    $query = pdo_query("SELECT s.name AS sitename,b.name,si.totalphysicalmemory,si.processorclockfrequency,
-              t.name AS testname
-              FROM site AS s, test AS t, build AS b, build2test AS bt, siteinformation AS si
-              WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id
-              AND bt.buildid=b.id AND bt.testid=t.id AND bt.status='failed'
-              AND b.starttime<NOW()
-                    ORDER BY b.starttime DESC LIMIT 10"); // limit the request
+    $date = date("Y-m-d");
+    list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]); 
+
+    // Get all the unique builds for the section of the dashboard
+    $query = pdo_query("SELECT max(b.id) AS buildid,CONCAT(s.name,'-',b.name) AS fullname,s.name AS sitename,b.name,
+               si.totalphysicalmemory,si.processorclockfrequency
+               FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg
+               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id AND bg.projectid=b.projectid
+               AND bg.name='".$group."' AND b.testfailed>0
+               AND b.starttime>$currentstarttime AND b.starttime<NOW() GROUP BY fullname ORDER BY buildid");
+    
+    $sites = array();
+    $buildids = '';
+    while($query_array = pdo_fetch_array($query))
+      {
+      if($buildids != '')
+        {
+        $buildids.=",";
+        }  
+      $buildids .= $query_array['buildid'];    
+      $site = array();
+      $site['name'] = $query_array['sitename'];
+      $site['buildname'] = $query_array['name'];
+      $site['cpu'] = $query_array['processorclockfrequency'];
+      $site['memory'] = $query_array['totalphysicalmemory'];
+      $sites[$query_array['buildid']] = $site;
+      } 
+    
+    $query = pdo_query("SELECT bt.buildid AS buildid,t.name AS testname,t.id AS testid
+              FROM build2test AS bt,test as t
+              WHERE bt.buildid IN (".$buildids.") AND bt.testid=t.id AND bt.status='failed'");
     echo pdo_error();
 
-    $sites = array();
     $tests = array();
     
     while($query_array = pdo_fetch_array($query))
       {
-      $sitename = $query_array['sitename'];
-      $buildname = $query_array['name'];
-        
-      // Check if the sites is not already there
-      $siteid = false;
-      foreach($sites as $key => $site)
-        {
-        if($site['name']==$sitename && $site['buildname']==$buildname)
-          {
-          $siteid = $key;
-          break;  
-          }
-        }
-
-      if($siteid === false)
-        {
-        $site = array();
-        $site['name'] = $sitename;
-        $site['buildname'] = $buildname;
-        $site['cpu'] = $query_array['processorclockfrequency'];
-        $site['memory'] = $query_array['totalphysicalmemory'];
-        $sites[] = $site;
-        $siteid = count($sites)-1;    
-        }
-      $tests[$siteid][] = $query_array['testname'];
+      $test = array();
+      $test['id'] = $query_array['testid']; 
+      $test['name'] = $query_array['testname'];  
+      $sites[$query_array['buildid']]['tests'][] = $test;
       }
 
-    $returnarray = array();
-    $returnarray['sites'] = $sites;
-    $returnarray['tests'] = $tests;
-
-    return $returnarray;
+    return $sites;
     } // end function ListCheckinsDefects 
     
     
