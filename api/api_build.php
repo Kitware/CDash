@@ -103,10 +103,11 @@ class BuildAPI extends CDashAPI
     $query = pdo_query("SELECT nfiles, builderrors, buildwarnings, testnotrun, testfailed
                 FROM build,buildupdate WHERE build.projectid=".$projectid." 
                 AND buildupdate.buildid=build.id
+                AND nfiles>0
                 AND build.starttime<NOW()
                 ORDER BY build.starttime DESC LIMIT 1000"); // limit the request
     echo pdo_error();
-     
+    
     while($query_array = pdo_fetch_array($query))
       {
       $build['nfiles'] = $query_array['nfiles'];   
@@ -139,7 +140,7 @@ class BuildAPI extends CDashAPI
   /** Return an array with two sub arrays:
    *  array1: id, buildname, os, bits, memory, frequency 
    *  array2: array1_id, test_fullname */
-  private function ListMachineTestFailure()
+  private function ListSiteTestFailure()
     { 
     include_once('../cdash/common.php');  
     if(!isset($this->Parameters['project']))  
@@ -159,8 +160,9 @@ class BuildAPI extends CDashAPI
               t.name AS testname
               FROM site AS s, test AS t, build AS b, build2test AS bt, siteinformation AS si
               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id
-              AND bt.buildid=b.id AND bt.testid=t.id AND bt.status='failed' 
-                    ORDER BY b.starttime DESC LIMIT 3000"); // limit the request
+              AND bt.buildid=b.id AND bt.testid=t.id AND bt.status='failed'
+              AND b.starttime<NOW()
+                    ORDER BY b.starttime DESC LIMIT 10"); // limit the request
     echo pdo_error();
 
     $sites = array();
@@ -210,7 +212,7 @@ class BuildAPI extends CDashAPI
       {
       case 'defects': return $this->ListDefects();
       case 'checkinsdefects': return $this->ListCheckinsDefects();
-      case 'machinetestfailures': return $this->ListMachineTestFailure();
+      case 'sitetestfailures': return $this->ListSiteTestFailure();
       }
     } 
 }
