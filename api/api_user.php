@@ -46,7 +46,7 @@ class UserAPI extends CDashAPI
             COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
             FROM build2group AS b2g, buildgroup AS bg,updatefile AS u,builderrordiff AS bed, build AS b
             WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
-            AND bed.buildid=b.id AND (bed.difference_positive>0 AND bed.difference_negative!=bed.difference_positive
+            AND bed.buildid=b.id AND bed.difference_positive>0 AND bed.difference_negative!=bed.difference_positive
             AND b.starttime<NOW()
             GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
      echo pdo_error();
@@ -64,7 +64,7 @@ class UserAPI extends CDashAPI
             COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
             FROM build2group AS b2g, buildgroup AS bg,updatefile AS u,builderrordiff AS bed, build AS b
             WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
-            AND bed.buildid=b.id bed.difference_negative>0 AND bed.difference_positive<bed.difference_negative
+            AND bed.buildid=b.id AND bed.difference_negative>0 AND bed.difference_positive<bed.difference_negative
             AND b.starttime<NOW()
             GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
      echo pdo_error();
