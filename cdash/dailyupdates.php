@@ -326,6 +326,7 @@ function get_git_repository_commits($gitroot, $dates)
     {
     $command = '"'.$command.'"';  
     }
+  $raw_output = `$command`;
    
   // Get what changed during that time
   $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
