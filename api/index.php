@@ -27,6 +27,7 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 include("api_coverage.php");
 include("api_project.php");
 include("api_build.php");
+include("api_user.php");
 
 if(!isset($_GET['method']))
   {
