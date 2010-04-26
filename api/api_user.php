@@ -45,7 +45,7 @@ class UserAPI extends CDashAPI
             SELECT b.id,bed.difference_positive AS errors,bed.difference_negative AS fixes,u.author,
             COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
             FROM build2group AS b2g, buildgroup AS bg,updatefile AS u,builderrordiff AS bed, build AS b
-            WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
+            WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
             AND bed.buildid=b.id AND bed.difference_positive>0 AND bed.difference_negative!=bed.difference_positive
             AND b.starttime<NOW()
             GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
@@ -63,7 +63,7 @@ class UserAPI extends CDashAPI
             SELECT b.id,bed.difference_positive AS errors,bed.difference_negative AS fixes,u.author,
             COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
             FROM build2group AS b2g, buildgroup AS bg,updatefile AS u,builderrordiff AS bed, build AS b
-            WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
+            WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
             AND bed.buildid=b.id AND bed.difference_negative>0 AND bed.difference_positive<bed.difference_negative
             AND b.starttime<NOW()
             GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
@@ -79,7 +79,7 @@ class UserAPI extends CDashAPI
      $query = pdo_query("SELECT SUM(testerrors) AS ntesterrors,SUM(nfiles) AS nfiles,author FROM(SELECT b.id, td.difference_positive AS testerrors,
               u.author,COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
               FROM build2group AS b2g, buildgroup AS bg,updatefile AS u, build AS b, testdiff AS td
-              WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
+              WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
               AND td.buildid=b.id AND td.difference_positive>0 AND td.type=1
               AND b.starttime<NOW()
               GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
@@ -94,7 +94,7 @@ class UserAPI extends CDashAPI
      $query = pdo_query("SELECT SUM(testfixes) AS ntestfixes,SUM(nfiles) AS nfiles,author FROM(SELECT b.id, td.difference_positive AS testfixes,
               u.author,COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
               FROM build2group AS b2g, buildgroup AS bg,updatefile AS u, build AS b, testdiff AS td
-              WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
+              WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
               AND td.buildid=b.id AND td.difference_positive>0 AND td.type=2 AND td.difference_negative=0
               AND b.starttime<NOW()
               GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
@@ -111,7 +111,7 @@ class UserAPI extends CDashAPI
          FROM build2group AS b2g, buildgroup AS bg,updatefile AS u, build AS b
          LEFT JOIN builderrordiff AS bed ON (bed.buildid=b.id AND difference_positive!=difference_negative)
          LEFT JOIN testdiff AS t ON (t.buildid=b.id)
-         WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
+         WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
          AND bed.difference_positive IS NULL
          AND t.difference_positive IS NULL
          AND b.starttime<NOW() GROUP BY u.author");
