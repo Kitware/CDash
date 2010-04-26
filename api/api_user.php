@@ -39,15 +39,14 @@ class UserAPI extends CDashAPI
       }
  
     // We need multiple queries (4 to be exact) 
-    // First for the build failures/fixes
+    // First for the build failures
     $users = array();
-    $query = pdo_query("SELECT SUM(errors) AS nerrors,SUM(fixes) AS nfixes,SUM(nfiles) AS nfiles,author FROM(
+    $query = pdo_query("SELECT SUM(errors) AS nerrors,SUM(nfiles) AS nfiles,author FROM(
             SELECT b.id,bed.difference_positive AS errors,bed.difference_negative AS fixes,u.author,
             COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
             FROM build2group AS b2g, buildgroup AS bg,updatefile AS u,builderrordiff AS bed, build AS b
             WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
-            AND bed.buildid=b.id AND ((bed.difference_positive>0 AND bed.difference_negative!=bed.difference_positive) 
-            OR (bed.difference_negative>0 AND bed.difference_positive<bed.difference_negative))
+            AND bed.buildid=b.id AND (bed.difference_positive>0 AND bed.difference_negative!=bed.difference_positive
             AND b.starttime<NOW()
             GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
      echo pdo_error();
@@ -55,10 +54,27 @@ class UserAPI extends CDashAPI
      while($query_array = pdo_fetch_array($query))
        {
        $users[$query_array['author']]['builderrors'] = $query_array['nerrors'];
-       $users[$query_array['author']]['buildfixes'] = $query_array['nfixes'];
-       $users[$query_array['author']]['buildnfiles'] = $query_array['nfiles'];
+       $users[$query_array['author']]['builderrorsfiles'] = $query_array['nfiles'];
        }
-      
+    
+    // Then for the build fixes
+    $users = array();
+    $query = pdo_query("SELECT SUM(fixes) AS nfixes,SUM(nfiles) AS nfiles,author FROM(
+            SELECT b.id,bed.difference_positive AS errors,bed.difference_negative AS fixes,u.author,
+            COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
+            FROM build2group AS b2g, buildgroup AS bg,updatefile AS u,builderrordiff AS bed, build AS b
+            WHERE b.projectid=1 AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
+            AND bed.buildid=b.id bed.difference_negative>0 AND bed.difference_positive<bed.difference_negative
+            AND b.starttime<NOW()
+            GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
+     echo pdo_error();
+     
+     while($query_array = pdo_fetch_array($query))
+       {
+       $users[$query_array['author']]['buildfixes'] = $query_array['nfixes'];
+       $users[$query_array['author']]['buildfixesfiles'] = $query_array['nfiles'];
+       }
+         
      // Then for the test failures
      $query = pdo_query("SELECT SUM(testerrors) AS ntesterrors,SUM(nfiles) AS nfiles,author FROM(SELECT b.id, td.difference_positive AS testerrors,
               u.author,COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
@@ -71,7 +87,7 @@ class UserAPI extends CDashAPI
      while($query_array = pdo_fetch_array($query))
        {
        $users[$query_array['author']]['testerrors'] = $query_array['ntesterrors'];
-       $users[$query_array['author']]['testerrorsnfiles'] = $query_array['nfiles'];
+       $users[$query_array['author']]['testerrorsfiles'] = $query_array['nfiles'];
        }
        
      // Then for the test fixes        
@@ -86,7 +102,7 @@ class UserAPI extends CDashAPI
      while($query_array = pdo_fetch_array($query))
        {
        $users[$query_array['author']]['testfixes'] = $query_array['ntestfixes'];
-       $users[$query_array['author']]['testfixesnfiles'] = $query_array['nfiles'];
+       $users[$query_array['author']]['testfixesfiles'] = $query_array['nfiles'];
        }
                
      // Another select for neutral
@@ -103,7 +119,7 @@ class UserAPI extends CDashAPI
     
     while($query_array = pdo_fetch_array($query))
        {
-       $users[$query_array['author']]['neutralnfiles'] = $query_array['nfiles'];
+       $users[$query_array['author']]['neutralfiles'] = $query_array['nfiles'];
        }        
     return $users;
     } // end function ListDefects 
