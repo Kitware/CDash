@@ -173,9 +173,9 @@ class BuildAPI extends CDashAPI
     // Get all the unique builds for the section of the dashboard
     $query = pdo_query("SELECT max(b.id) AS buildid,CONCAT(s.name,'-',b.name) AS fullname,s.name AS sitename,b.name,
                si.totalphysicalmemory,si.processorclockfrequency
-               FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg
-               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id AND bg.projectid=b.projectid
-               AND bg.name='".$group."' AND b.testfailed>0
+               FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg, build2group AS b2g
+               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id 
+               AND bg.name='".$group."' AND b.testfailed>0 AND b2g.buildid=b.id AND b2g.groupid=bg.id
                AND b.starttime>$currentstarttime AND b.starttime<NOW() GROUP BY fullname ORDER BY buildid");
 
     $sites = array();
