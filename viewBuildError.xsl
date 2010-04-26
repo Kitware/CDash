@@ -77,7 +77,7 @@
 
 <xsl:if test="string-length(cvsurl) > 0">
 <tr>
-<th class="measurement"><nobr> CVS/SVN </nobr></th>
+<th class="measurement"><nobr> Repository </nobr></th>
 <td>
 <a>
   <xsl:attribute name="href">
