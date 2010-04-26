@@ -41,7 +41,7 @@ class UserAPI extends CDashAPI
     // We need multiple queries (4 to be exact) 
     // First for the build failures/fixes
     $users = array();
-    $query = pdo_query("SELECT SUM(errors) AS serrors,SUM(fixes) AS nfixes,SUM(nfiles) AS nfiles,author FROM(
+    $query = pdo_query("SELECT SUM(errors) AS nerrors,SUM(fixes) AS nfixes,SUM(nfiles) AS nfiles,author FROM(
             SELECT b.id,bed.difference_positive AS errors,bed.difference_negative AS fixes,u.author,
             COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
             FROM build2group AS b2g, buildgroup AS bg,updatefile AS u,builderrordiff AS bed, build AS b
