@@ -42,7 +42,7 @@ class UserAPI extends CDashAPI
     // First for the build failures
     $users = array();
     $query = pdo_query("SELECT SUM(errors) AS nerrors,SUM(nfiles) AS nfiles,author FROM(
-            SELECT b.id,bed.difference_positive AS errors,bed.difference_negative AS fixes,u.author,
+            SELECT b.id,bed.difference_positive AS errors,u.author,
             COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
             FROM build2group AS b2g, buildgroup AS bg,updatefile AS u,builderrordiff AS bed, build AS b
             WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
@@ -58,7 +58,6 @@ class UserAPI extends CDashAPI
        }
     
     // Then for the build fixes
-    $users = array();
     $query = pdo_query("SELECT SUM(fixes) AS nfixes,SUM(nfiles) AS nfiles,author FROM(
             SELECT b.id,bed.difference_positive AS errors,bed.difference_negative AS fixes,u.author,
             COUNT(u.author) AS nfiles, COUNT(DISTINCT u.author) AS dauthor
