@@ -177,11 +177,11 @@ class UpdateHandler extends AbstractHandler
       } 
     else if($parent != 'REVISIONS' && $element=='AUTHOR') 
       {
-      $this->UpdateFile->Author = $data;
+      $this->UpdateFile->Author .= $data;
       } 
     else if($parent != 'REVISIONS' && $element=='EMAIL') 
       {
-      $this->UpdateFile->Email = $data;
+      $this->UpdateFile->Email .= $data;
       } 
     else if($parent != 'REVISIONS' && $element=='LOG') 
       {

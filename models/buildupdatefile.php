@@ -58,10 +58,16 @@ class BuildUpdateFile
       {
       $this->CheckinDate = "1980-01-01";
       }
-
-    $this->CheckinDate = date(FMT_DATETIME,strtotime($this->CheckinDate));
+      
+    if(strtotime($this->CheckinDate) === false)
+      {
+      $this->CheckinDate = date(FMT_DATETIME,$this->CheckinDate);
+      }
+    else
+      {  
+      $this->CheckinDate = date(FMT_DATETIME,strtotime($this->CheckinDate));
+      }
     $this->Author = pdo_real_escape_string($this->Author);
-
 
     // Check if we have a robot file for this build
     $robot = pdo_query("SELECT authorregex FROM projectrobot,build 
