@@ -1384,13 +1384,13 @@ function date2year($date)
 /** Get month from formatted date */
 function date2month($date)
 {
-  return ctype_digit(substr($date,4,1)) ? substr($date,4,2) : substr($date,5,2);
+  return is_numeric(substr($date,4,1)) ? substr($date,4,2) : substr($date,5,2);
 }
 
 /** Get day from formatted date */
 function date2day($date)
 {
-  return ctype_digit(substr($date,4,1)) ? substr($date,6,2) : substr($date,8,2);
+  return is_numeric(substr($date,4,1)) ? substr($date,6,2) : substr($date,8,2);
 }
 
 /** Get hour from formatted time */
@@ -1402,13 +1402,13 @@ function time2hour($time)
 /** Get minute from formatted time */
 function time2minute($time)
 {
-  return ctype_digit(substr($time,2,1)) ? substr($time,2,2) : substr($time,3,2);
+  return is_numeric(substr($time,2,1)) ? substr($time,2,2) : substr($time,3,2);
 }
 
 /** Get second from formatted time */
 function time2second($time)
 {
-  return ctype_digit(substr($time,2,1)) ? substr($time,4,2) : substr($time,6,2);
+  return is_numeric(substr($time,2,1)) ? substr($time,4,2) : substr($time,6,2);
 }
 
 /** Get dates 
