@@ -597,12 +597,8 @@
                           <td>
                             <input onchange="saveChanges();" onfocus="showHelp('svnRepository_help');"
                               type="text" size="50">
-                              <xsl:attribute name="name">
-                    cvsRepository[<xsl:value-of select="id" />]
-                  </xsl:attribute>
-                              <xsl:attribute name="value">
-                  <xsl:value-of select="url" />
-                  </xsl:attribute>
+                              <xsl:attribute name="name">cvsRepository[<xsl:value-of select="id" />]</xsl:attribute>
+                              <xsl:attribute name="value"><xsl:value-of select="url" /></xsl:attribute>
                             </input>
                             <xsl:text disable-output-escaping="yes"> </xsl:text>
                             <a
