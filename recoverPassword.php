@@ -78,7 +78,6 @@ if($recover)
       $md5pass = md5($password);
       // If we can send the email we update the database
       pdo_query("UPDATE ".qid("user")." SET password='$md5pass' WHERE email='$email'");
-      echo pdo_error();
       add_last_sql_error("recoverPassword");
       
       $xml .= "<message>A confirmation message has been sent to your inbox.</message>";

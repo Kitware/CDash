@@ -1180,6 +1180,24 @@ CREATE TABLE IF NOT EXISTS `projectjobscript` (
   KEY `projectid` (`projectid`)
 );
 
+
+CREATE TABLE IF NOT EXISTS `errorlog` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `projectid` int(11) NOT NULL,
+  `buildid` bigint(20) NOT NULL,
+  `date` timestamp NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `description` mediumtext NOT NULL,
+  `resourcetype` tinyint(4) NOT NULL DEFAULT '0',
+  `resourceid` bigint(20) NOT NULL, 
+  PRIMARY KEY (`id`),
+  KEY `resourceid` (`resourceid`),
+  KEY `date` (`date`),
+  KEY `resourcetype` (`resourcetype`),
+  KEY `projectid` (`projectid`),
+  KEY `buildid` (`buildid`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 

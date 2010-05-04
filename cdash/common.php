@@ -167,13 +167,15 @@ function add_XML_value($tag,$value)
 }
 
 /** Add information to the log file */
-function add_log($text,$function,$type=LOG_INFO)
+function add_log($text,$function,$projectid=0,$buildid=0,$resourcetype=0,$resourceid=0,$type=LOG_INFO)
 {
   if(strlen($text)==0)
     {
     return;
     }
   include("cdash/config.php");
+  include_once("models/constants.php");
+  include_once("models/errorlog.php");
   
   $error = "";
   if($type != LOG_TESTING)
@@ -191,15 +193,31 @@ function add_log($text,$function,$type=LOG_INFO)
     }
   $error .= "(".$function."): ".$text."\n";  
   error_log($error,3,$CDASH_LOG_FILE);
+  
+  // Insert in the database
+  if($type == LOG_WARNING || $type==LOG_ERR)
+    {
+    $ErrorLog = new ErrorLog;
+    $ErrorLog->ProjectId = $projectid;
+    $ErrorLog->BuildId = $buildid;
+    $ErrorLog->Type = $type;
+    $ErrorLog->Description = "(".$function."): ".$text;
+    $ErrorLog->ResourceType = $resourcetype;
+    $ErrorLog->ResourceId = $resourceid;
+    $ErrorLog->Insert();
+    
+    // Clean the log more than 10 days
+    $ErrorLog->Clean(10);
+    }
 }
 
 /** Report last my SQL error */
-function add_last_sql_error($functionname)
+function add_last_sql_error($functionname,$projectid=0,$buildid=0,$resourcetype=0,$resourceid=0)
 {
   $pdo_error = pdo_error();
   if(strlen($pdo_error)>0)
     {
-    add_log("SQL error: ".$pdo_error,$functionname,LOG_ERR);
+    add_log("SQL error: ".$pdo_error,$functionname,$resourcetype,$resourceid,$projectid,$buildid,LOG_ERR);
     $text = "SQL error in $functionname():".$pdo_error."<br>";
     echo $text;
     }
@@ -650,7 +668,7 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
   $crc32 = crc32($fullpath.$filecontent);
   
   $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE crc32='$crc32'");
-  add_last_sql_error("add_coveragefile");
+  add_last_sql_error("add_coveragefile",0,$buildid);
     
   if(pdo_num_rows($coveragefile)>0) // we have the same crc32
     {
@@ -665,11 +683,11 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
     $prevfileid = $coverage_array["fileid"];
 
     pdo_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$prevfileid'");
-    add_last_sql_error("add_coveragefile");
+    add_last_sql_error("add_coveragefile",0,$buildid);
 
     // Remove the file if the crc32 is NULL
     pdo_query ("DELETE FROM coveragefile WHERE id='$prevfileid' AND file IS NULL and crc32 IS NULL");
-    add_last_sql_error("add_coveragefile");
+    add_last_sql_error("add_coveragefile",0,$buildid);
     }
   else // The file doesn't exist in the database
     {
@@ -680,7 +698,7 @@ function add_coveragefile($buildid,$fullpath,$filecontent)
     $coveragefile_array = pdo_fetch_array($coveragefile);
     $fileid = $coveragefile_array["id"];
     pdo_query ("UPDATE coveragefile SET file='$filecontent',crc32='$crc32' WHERE id='$fileid'"); 
-    add_last_sql_error("add_coveragefile");
+    add_last_sql_error("add_coveragefile",0,$buildid);
     }
     
   return $fileid;
@@ -717,7 +735,7 @@ function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
      }
  
   pdo_query ($sql);
-  add_last_sql_error("add_coveragelogfile");
+  add_last_sql_error("add_coveragelogfile",0,$buildid);
 }
 
 /** add a user to a site */
@@ -1271,7 +1289,7 @@ function add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$precon
   pdo_query ("INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount) 
                VALUES ('$buildid','$type','$logline','$text','$sourcefile','$sourceline','$precontext',
                        '$postcontext','$repeatcount')");
-  add_last_sql_error("add_error");
+  add_last_sql_error("add_error",0,$buildid);
 }
 
 /** Add dynamic analysis */
@@ -1325,12 +1343,12 @@ function add_note($buildid,$text,$timestamp,$name)
   
   $crc32 = crc32($text.$name);  
   $notecrc32 =  pdo_query("SELECT id FROM note WHERE crc32='$crc32'");
-  add_last_sql_error("add_note");
+  add_last_sql_error("add_note",0,$buildid);
   if(pdo_num_rows($notecrc32) == 0)
     {
     pdo_query("INSERT INTO note (text,name,crc32) VALUES ('$text','$name','$crc32')");
     add_last_sql_error("add_note");
-    $noteid = pdo_insert_id("note");
+    $noteid = pdo_insert_id("note",0,$buildid);
     }
   else // already there
     {
@@ -1339,7 +1357,7 @@ function add_note($buildid,$text,$timestamp,$name)
     }
 
   pdo_query("INSERT INTO build2note (buildid,noteid,time) VALUES ('$buildid','$noteid','$timestamp')");
-  add_last_sql_error("add_note");
+  add_last_sql_error("add_note",0,$buildid);
 }
 
 /**

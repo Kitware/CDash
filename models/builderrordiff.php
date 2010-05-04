@@ -60,7 +60,7 @@ class BuildErrorDiff
       $query .= " WHERE buildid='".$this->BuildId."'";
       if(!pdo_query($query))
         {
-        add_last_sql_error("BuildErrorDiff Update");
+        add_last_sql_error("BuildErrorDiff Update",0,$this->BuildId);
         return false;
         }
       }
@@ -70,7 +70,7 @@ class BuildErrorDiff
                  VALUES ('$this->BuildId','$this->Type','$this->Difference')";                     
        if(!pdo_query($query))
          {
-         add_last_sql_error("BuildErrorDiff Create");
+         add_last_sql_error("BuildErrorDiff Create",0,$this->BuildId);
          return false;
          }  
        }

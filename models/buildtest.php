@@ -45,13 +45,13 @@ class BuildTest
     {
     if(!$this->BuildId)
       {
-      echo "BuildTest::Insert(): BuildId is not set";
+      add_log('BuildId is not set','BuildTest::Insert()',0,$buildid,0,0,LOG_ERR);
       return false;
       }
 
     if(!$this->TestId)
       {
-      echo "BuildTest::Insert(): TestId is not set";
+      add_log('TestId is not set','BuildTest::Insert()',0,$buildid,0,0,LOG_ERR);
       return false;
       }
     
@@ -77,7 +77,7 @@ class BuildTest
                           .qnum($this->TimeMean).",".qnum($this->TimeStd).",".qnum($this->TimeStatus).")";                     
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildTest Insert");
+      add_last_sql_error("BuildTest:Insert",0,$this->BuildId);
       return false;
       }  
     return true;
@@ -96,7 +96,7 @@ class BuildTest
     $query = pdo_query($sql);
     if(!$query)
       {
-      add_last_sql_error("BuildTest GetNumberOfFailures");
+      add_last_sql_error("BuildTest:GetNumberOfFailures",0,$this->BuildId);
       return false;
       }  
 

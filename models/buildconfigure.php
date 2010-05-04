@@ -29,20 +29,17 @@ class BuildConfigure
   var $BuildId;
   var $Labels;
 
-
   function AddError($error)
     {
     $error->BuildId = $this->BuildId;
     $error->Save();
     }
 
-
   function AddErrorDifference($diff)
     {
     $diff->BuildId = $this->BuildId;
     $diff->Save();
     }
-
 
   function AddLabel($label)
     {
@@ -55,7 +52,6 @@ class BuildConfigure
     $this->Labels[] = $label;
     }
 
-
   function SetValue($tag,$value)
     {
     switch($tag)
@@ -67,7 +63,6 @@ class BuildConfigure
       case "STATUS": $this->Status = $value;break;
       }
     }
-
 
   /** Check if the configure exists */ 
   function Exists()
@@ -87,7 +82,7 @@ class BuildConfigure
     $query = pdo_query("SELECT COUNT(*) FROM configure WHERE buildid=".qnum($this->BuildId));                     
     if(!$query)
       {
-      add_last_sql_error("BuildConfigure Exists()");
+      add_last_sql_error("BuildConfigure Exists()",0,$this->BuildId);
       return false;
       }
     
@@ -98,7 +93,6 @@ class BuildConfigure
       }
     return false;
     } 
-
 
   /** Delete a current configure given a buildid */ 
   function Delete()
@@ -112,12 +106,11 @@ class BuildConfigure
     $query = pdo_query("DELETE FROM configure WHERE buildid=".qnum($this->BuildId));                     
     if(!$query)
       {
-      add_last_sql_error("BuildConfigure Delete()");
+      add_last_sql_error("BuildConfigure Delete()",0,$this->BuildId);
       return false;
       }
     return true;
     }
-
 
   function InsertLabelAssociations()
     {
@@ -137,10 +130,12 @@ class BuildConfigure
     else
       {
       add_log('No BuildConfigure::BuildId - cannot call $label->Insert...',
-              'BuildConfigure::InsertLabelAssociations',LOG_ERR);
+              'BuildConfigure::InsertLabelAssociations',
+              0,$this->BuildId,
+              CDASH_OBJECT_CONFIGURE,$this->BuildId,
+              LOG_ERR);
       }
     }
-
 
   // Save in the database
   function Insert()
@@ -165,7 +160,7 @@ class BuildConfigure
               VALUES (".qnum($this->BuildId).",'$this->StartTime','$this->EndTime','$command','$log','$status')";                     
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildConfigure Insert");
+      add_last_sql_error("BuildConfigure Insert",0,$this->BuildId);
       return false;
       }  
 
@@ -231,13 +226,13 @@ class BuildConfigure
 
       pdo_query("INSERT INTO configureerror (buildid,type,text) 
                   VALUES ('$this->BuildId','1','$warning')");
-      add_last_sql_error("BuildConfigure ComputeErrors");
+      add_last_sql_error("BuildConfigure ComputeErrors",0,$this->BuildId);
       $nwarnings++;
       $position = $this->GetNextConfigureWarningPosition($this->Log, $position+1);
       }
    
     pdo_query("UPDATE configure SET warnings=".qnum($nwarnings)." WHERE buildid=".qnum($this->BuildId));
-    add_last_sql_error("BuildConfigure ComputeErrors");
+    add_last_sql_error("BuildConfigure ComputeErrors",0,$this->BuildId);
     } // end ComputeErrors() 
 
 
@@ -254,7 +249,7 @@ class BuildConfigure
     $configure = pdo_query("SELECT status FROM configure WHERE buildid=".qnum($this->BuildId));
     if(!$configure)
       {
-      add_last_sql_error("BuildConfigure GetNumberOfErrors");
+      add_last_sql_error("BuildConfigure GetNumberOfErrors",0,$this->BuildId);
       return false;
       }  
     $configure_array = pdo_fetch_array($configure);

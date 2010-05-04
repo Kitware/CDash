@@ -60,7 +60,7 @@ class BuildConfigureErrorDiff
       $query .= " WHERE buildid=".qnum($this->BuildId);
       if(!pdo_query($query))
         {
-        add_last_sql_error("BuildConfigureErrorDiff Update");
+        add_last_sql_error("BuildConfigureErrorDiff:Update",0,$this->BuildId);
         return false;
         }
       }
@@ -70,7 +70,7 @@ class BuildConfigureErrorDiff
                  VALUES (".qnum($this->BuildId).",".qnum($this->Type).",".qnum($this->Difference).")";                     
       if(!pdo_query($query))
         {
-        add_last_sql_error("BuildConfigureErrorDiff Create");
+        add_last_sql_error("BuildConfigureErrorDiff:Create",0,$this->BuildId);
         return false;
         }  
       }

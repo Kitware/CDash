@@ -75,14 +75,14 @@ class DynamicAnalysis
     
     if(!pdo_query($query))
       {
-      add_last_sql_error("DynamicAnalysis RemoveAll");
+      add_last_sql_error("DynamicAnalysis RemoveAll",0,$this->BuildId);
       return false;
       }
 
     $query = "DELETE FROM dynamicanalysis WHERE buildid=".qnum($this->BuildId);
     if(!pdo_query($query))
       {
-      add_last_sql_error("DynamicAnalysis RemoveAll");
+      add_last_sql_error("DynamicAnalysis RemoveAll",0,$this->BuildId);
       return false;
       }
         
@@ -107,7 +107,9 @@ class DynamicAnalysis
     else
       {
       add_log('No DynamicAnalysis::Id - cannot call $label->Insert...',
-              'DynamicAnalysis::InsertLabelAssociations',LOG_ERR);
+              'DynamicAnalysis::InsertLabelAssociations'.
+              0,$this->BuildId,
+              CDASH_OBJECT_DYNAMICANALYSIS,$this->Id,LOG_ERR);
       }
     }
 
@@ -141,7 +143,7 @@ class DynamicAnalysis
                       '".substr($this->FullCommandLine,0,255)."','$this->Log')";                     
     if(!pdo_query($query))
       {
-      add_last_sql_error("DynamicAnalysis Insert");
+      add_last_sql_error("DynamicAnalysis Insert",0,$this->BuildId);
       return false;
       }
     

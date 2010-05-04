@@ -82,7 +82,7 @@ class Banner
       $query .= " WHERE projectid='".$this->ProjectId."'";
       if(!pdo_query($query))
         {
-        add_last_sql_error("Banner:SetText");
+        add_last_sql_error("Banner:SetText",$this->ProjectId);
         echo $query;
         return false;
         }
@@ -93,7 +93,7 @@ class Banner
                 VALUES (".qnum($this->ProjectId).",'".$this->Text."')";                     
       if(!pdo_query($query))
         {
-        add_last_sql_error("Banner:SetText");
+        add_last_sql_error("Banner:SetText",$this->ProjectId);
         echo $query;
         return false;
          }  

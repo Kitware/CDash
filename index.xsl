@@ -198,6 +198,13 @@
       </a>
       </xsl:if>
       
+      <!-- If we have error logs -->
+      <xsl:if test="nerrorlog>0 and countbuildids=1">
+      <a class="tooltip">
+      <xsl:attribute name="title"><xsl:value-of select="nerrorlog"/> errors in the CDash log</xsl:attribute>
+      <xsl:attribute name="href">viewErrorLog.php?buildid=<xsl:value-of select="buildid"/>&amp;projectid=<xsl:value-of select="/cdash/dashboard/projectid"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute><img src="images/warningsmall.png" alt="errorlogs" border="0"/></a>
+      </xsl:if>
+      
       <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1 and (countbuildids=1 or expected=1)">
         <xsl:if test="string-length(buildid)>0">
@@ -214,6 +221,8 @@
         </xsl:if>
       </xsl:if> <!-- end admin -->
 
+     
+      
       <xsl:if test="string-length(buildid)>0 and countbuildids=1">
       <div>
       <xsl:attribute name="id">buildgroup_<xsl:value-of select="buildid"/></xsl:attribute>
@@ -226,6 +235,8 @@
       </div>
      </xsl:if>
 
+       
+      
       </td>
 
       <td align="center">

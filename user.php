@@ -44,8 +44,12 @@ if ($session_OK)
   $xml .= add_XML_value("user_is_admin",$user_array["admin"]);
     
   // Go through the list of project the user is part of
-  $project2user = pdo_query("SELECT projectid,role FROM user2project,project WHERE project.id=user2project.projectid
-                             AND userid='$userid' ORDER BY project.name ASC");
+  $project2user = pdo_query("SELECT user2project.projectid AS projectid,role,name,count(errorlog.projectid) AS errors
+                             FROM user2project,project
+                             LEFT JOIN errorlog ON (errorlog.projectid=project.id) 
+                             WHERE project.id=user2project.projectid
+                             AND userid='$userid' GROUP BY projectid ORDER BY project.name ASC");
+    
   $condition_list_projects='';
   $Project= new Project();
   $start=gmdate(FMT_DATETIME,strtotime(date("r"))-(3600*24));
@@ -53,13 +57,14 @@ if ($session_OK)
     {
     $Project->Id=$project2user_array["projectid"];      
     $projectid = $project2user_array["projectid"];
-    $project_array = pdo_fetch_array(pdo_query("SELECT name FROM project WHERE id='$projectid'"));
+    $projectname = $project2user_array["name"];
     $xml .= "<project>";
     $xml .= add_XML_value("id",$projectid);
     $xml .= add_XML_value("role",$project2user_array["role"]); // 0 is normal user, 1 is maintainer, 2 is administrator
-    $xml .= add_XML_value("name",$project_array["name"]);
-    $xml .= add_XML_value("name_encoded",urlencode($project_array["name"]));
+    $xml .= add_XML_value("name",$projectname);
+    $xml .= add_XML_value("name_encoded",urlencode($projectname));
     $xml .= add_XML_value("nbuilds",$Project->GetTotalNumberOfBuilds());
+    $xml .= add_XML_value("nerrorlogs",$project2user_array["errors"]);
     $xml .= add_XML_value("average_builds",round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME,time()-(3600*24*7)),gmdate(FMT_DATETIME),2)));
     $xml .= add_XML_value("success",$Project->GetNumberOfPassingBuilds($start,gmdate(FMT_DATETIME)));
     $xml .= add_XML_value("error",$Project->GetNumberOfErrorBuilds($start,gmdate(FMT_DATETIME)));

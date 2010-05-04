@@ -37,6 +37,7 @@ class BuildConfigureError
     {
     $query = pdo_query("SELECT count(*) FROM configureerror WHERE buildid='".$this->BuildId."'
                          AND type='".$this->Type."' AND text='".$this->Text."'");  
+    add_last_sql_error("BuildConfigureError:Exists",0,$this->BuildId);
     $query_array = pdo_fetch_array($query);
     if($query_array['count(*)']>0)
       {
@@ -61,7 +62,7 @@ class BuildConfigureError
                 VALUES (".qnum($this->BuildId).",".qnum($this->Type).",'$text')";                     
       if(!pdo_query($query))
         {
-        add_last_sql_error("BuildConfigureError Save");
+        add_last_sql_error("BuildConfigureError:Save",0,$this->BuildId);
         return false;
         }  
       }

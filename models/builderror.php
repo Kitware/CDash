@@ -98,7 +98,7 @@ class BuildError
               ".$precontext.",".$postcontext.",".qnum($this->RepeatCount).",0,".qnum($crc32).")";                     
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildError Insert");
+      add_last_sql_error("BuildError Insert",0,$this->BuildId);
       return false;
       }  
     return true;

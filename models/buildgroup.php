@@ -84,6 +84,7 @@ class BuildGroup
       }
     
     $query = pdo_query("SELECT count(*) FROM buildgroup WHERE id='".$this->Id."' AND projectid='".$this->ProjectId."'");
+    add_last_sql_error("BuildGroup:Exists",$this->ProjectId);
     $query_array = pdo_fetch_array($query);
     if($query_array['count(*)']==0)
       {
@@ -110,7 +111,7 @@ class BuildGroup
       
       if(!pdo_query($query))
         {
-        add_last_sql_error("BuildGroup Update");
+        add_last_sql_error("BuildGroup:Update",$this->ProjectId);
         return false;
         }
       }
@@ -131,7 +132,7 @@ class BuildGroup
          }
        else
          {
-         add_last_sql_error("Buildgroup Insert");
+         add_last_sql_error("Buildgroup Insert",$this->ProjectId);
          return false;
          }
     
@@ -184,7 +185,7 @@ class BuildGroup
     $summaryemail = pdo_query("SELECT summaryemail FROM buildgroup WHERE id=".qnum($this->Id));
     if(!$summaryemail)
       {
-      add_last_sql_error("BuildGroup GetSummaryEmail");
+      add_last_sql_error("BuildGroup GetSummaryEmail",$this->ProjectId);
       return false;
       }
       

@@ -56,6 +56,7 @@ class Build
 
   function __construct()
     {
+    $this->ProjectId = 0;  
     $this->Errors = array();
     $this->ErrorDiffs = array();
     $this->Append = false;
@@ -161,7 +162,9 @@ class Build
 
     if(empty($this->ProjectId))
       {
-      add_log('ProjectId not set' . $subproject, 'Build::SetSubProject',LOG_ERR);
+      add_log('ProjectId not set' . $subproject, 'Build::SetSubProject',
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,LOG_ERR);
       return false;
       }
 
@@ -171,7 +174,7 @@ class Build
         );
     if(!$query)
       {
-      add_last_sql_error("Build:SetSubProject()");
+      add_last_sql_error("Build:SetSubProject()",$this->ProjectId);
       return false;
       }  
 
@@ -183,7 +186,10 @@ class Build
       return $this->SubProjectId; 
       }
 
-    add_log('Could not retrieve SubProjectId for subproject: '.$subproject,'Build::SetSubProject',LOG_ERR);
+    add_log('Could not retrieve SubProjectId for subproject: '.$subproject,'Build::SetSubProject',
+            $this->ProjectId,$this->Id,
+            CDASH_OBJECT_BUILD,$this->Id,
+            LOG_ERR);
     return false;
     }
 
@@ -204,7 +210,7 @@ class Build
                         AND subproject2build.buildid=".qnum($this->Id));
     if(!$query)
       {
-      add_last_sql_error("Build:GetSubProjectName()");
+      add_last_sql_error("Build:GetSubProjectName()",$this->ProjectId,$this->Id);
       return false;
       }  
 
@@ -230,7 +236,7 @@ class Build
     $query = pdo_query("SELECT buildid FROM buildtesttime WHERE buildid=".qnum($this->Id));
     if(!$query)
       {
-      add_last_sql_error("SaveTotalTestsTime()");
+      add_last_sql_error("SaveTotalTestsTime",$this->ProjectId,$this->Id);
       return false;
       }  
     
@@ -246,7 +252,7 @@ class Build
        
     if(!pdo_query($query))
       {
-      add_last_sql_error("Build:SaveTotalTestsTime");
+      add_last_sql_error("Build:SaveTotalTestsTime",$this->ProjectId,$this->Id);
       return false;
       }
     }
@@ -262,7 +268,7 @@ class Build
     $query = "UPDATE build SET endtime='$end_time' WHERE id='$this->Id'";
     if(!pdo_query($query))
       {
-      add_last_sql_error("Build:UpdateEndTime");
+      add_last_sql_error("Build:UpdateEndTime",$this->ProjectId,$this->Id);
       return false;
       }  
     }
@@ -273,7 +279,7 @@ class Build
     $query = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id=".qnum($buildid));
     if(!$query)
       {
-      add_last_sql_error("Build:FillFromId()");
+      add_last_sql_error("Build:FillFromId()",$this->ProjectId,$this->Id);
       return false;
       }  
       
@@ -289,7 +295,7 @@ class Build
       "WHERE subproject.id=subproject2build.subprojectid AND subproject2build.buildid=".qnum($buildid));
     if(!$query2)
       {
-      add_last_sql_error("Build:FillFromId");
+      add_last_sql_error("Build:FillFromId",$this->ProjectId,$this->Id);
       return false;
       }
     $subprojectid_array = pdo_fetch_array($query2);
@@ -311,7 +317,7 @@ class Build
       $query = pdo_query("SELECT starttime FROM build WHERE id=".qnum($this->Id));
       if(!$query)
         {
-        add_last_sql_error("Build:GetPreviousBuildId");
+        add_last_sql_error("Build:GetPreviousBuildId",$this->ProjectId,$this->Id);
         return false;
         }
       $query_array = pdo_fetch_array($query);              
@@ -324,7 +330,7 @@ class Build
                          ORDER BY starttime DESC LIMIT 1");
     if(!$query)
       {
-      add_last_sql_error("Build:GetPreviousBuildId");
+      add_last_sql_error("Build:GetPreviousBuildId",$this->ProjectId,$this->Id);
       return false;
       }
       
@@ -352,7 +358,7 @@ class Build
     
     if(!$query)
       {
-      add_last_sql_error("Build:GetNextBuildId");
+      add_last_sql_error("Build:GetNextBuildId",$this->ProjectId,$this->Id);
       return false;
       }  
       
@@ -376,7 +382,7 @@ class Build
     $query = pdo_query("SELECT id FROM build
                         WHERE siteid=".qnum($this->SiteId)." AND type='$this->Type' AND name='$this->Name'
                         AND projectid=".qnum($this->ProjectId)." ORDER BY starttime DESC LIMIT 1");
-  
+    add_last_sql_error("Build:GetLastBuildId",$this->ProjectId,$this->Id);   
     if(pdo_num_rows($query)>0)
       {
       $nextbuild_array = pdo_fetch_array($query);              
@@ -425,10 +431,6 @@ class Build
         $subprojectid = $rows['id'];
         }
       }
-    else
-      {
-      //add_log('still no subproject... WT*?', 'Build::GetIdFromName');
-      }
 
     if($subprojectid != 0)
       {
@@ -456,7 +458,7 @@ class Build
       return $buildid;
       }
 
-    add_last_sql_error("GetIdFromName");
+    add_last_sql_error("GetIdFromName",$this->ProjectId);
     return 0;  
     }
 
@@ -478,8 +480,10 @@ class Build
       }
     else
       {
-      add_log('No Build::Id - cannot call $label->Insert...',
-              'Build::InsertLabelAssociations',LOG_ERR);
+      add_log('No Build::Id - cannot call $label->Insert...','Build::InsertLabelAssociations',
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,
+              LOG_ERR);
       }
     }
 
@@ -492,6 +496,8 @@ class Build
       return false;    
       }
     $query = pdo_query("SELECT count(*) FROM build WHERE id='".$this->Id."'");
+    add_last_sql_error("Build::Exists",$this->ProjectId,$this->Id);
+    
     $query_array = pdo_fetch_array($query);
     if($query_array[0]>0)
       {
@@ -559,7 +565,7 @@ class Build
                         '$this->EndTime','$this->SubmitTime','$this->Command','$this->Log',$nbuilderrors,$nbuildwarnings)";
       if(!pdo_query($query))
         {
-        add_last_sql_error("Build Insert");
+        add_last_sql_error("Build Insert",$this->ProjectId,$this->Id);
         return false;
         }  
       
@@ -571,7 +577,7 @@ class Build
         $query = "INSERT INTO build2group (groupid,buildid) VALUES ('$this->GroupId','$this->Id')";                     
         if(!pdo_query($query))
           {
-          add_last_sql_error("Build Insert");
+          add_last_sql_error("Build Insert",$this->ProjectId,$this->Id);
           return false;
           }  
         }
@@ -582,7 +588,7 @@ class Build
         $query = "INSERT INTO subproject2build (subprojectid,buildid) VALUES ('$this->SubProjectId','$this->Id')";
         if(!pdo_query($query))
           {
-          add_last_sql_error("Build Insert");
+          add_last_sql_error("Build Insert",$this->ProjectId,$this->Id);
           return false;
           }  
         }
@@ -662,7 +668,7 @@ class Build
 
         if(!pdo_query($query))
           {
-          add_last_sql_error("Build Insert (Append)");
+          add_last_sql_error("Build Insert (Append)",$this->ProjectId,$this->Id);
           return false;
           }
 
@@ -703,7 +709,8 @@ class Build
     pdo_query("UPDATE build SET testnotrun='$numberTestsNotRun',
                                 testfailed='$numberTestsFailed',
                                 testpassed='$numberTestsPassed' WHERE id=".qnum($this->Id));
-    echo pdo_error();
+    
+    add_last_sql_error("Build:UpdateTestNumbers",$this->ProjectId,$this->Id);
     }
 
   /** Get the errors differences for the build */  
@@ -711,7 +718,10 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::GetErrorDifferences",LOG_ERR);
+      add_log("BuildId is not set","Build::GetErrorDifferences",
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,
+              LOG_ERR);      
       return false;
       }
 
@@ -731,7 +741,7 @@ class Build
               LEFT JOIN testdiff ON testdiff.buildid=build.id 
               WHERE id=".qnum($this->Id);
     $query = pdo_query($sqlquery);
-    add_last_sql_error("Build:GetErrorDifferences");
+    add_last_sql_error("Build:GetErrorDifferences",$this->ProjectId,$this->Id);
     
     while($query_array = pdo_fetch_array($query))
       {
@@ -795,7 +805,10 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeDifferences",LOG_ERR);
+      add_log("BuildId is not set","Build::ComputeDifferences",
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,
+              LOG_ERR);
       return false;
       }
       
@@ -813,7 +826,10 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeConfigureDifferences",LOG_ERR);
+      add_log("BuildId is not set","Build::ComputeConfigureDifferences",
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,
+              LOG_ERR);
       return false;
       }
 
@@ -832,13 +848,19 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeTestTiming",LOG_ERR);
+      add_log("BuildId is not set","Build::ComputeTestTiming",
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,
+              LOG_ERR);
       return false;
       }
 
     if(!$this->ProjectId)
       {
-      add_log("ProjectId is not set","Build::ComputeTestTiming",LOG_ERR);
+      add_log("ProjectId is not set","Build::ComputeTestTiming",
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,
+              LOG_ERR);
       return false;
       }
 
@@ -847,7 +869,7 @@ class Build
     // TEST TIMING
     $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
     $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id=".qnum($this->Id));
-    echo pdo_error();
+    add_last_sql_error("Build:ComputeTestTiming",$this->ProjectId,$this->Id);
     
     $buildid = $this->Id;
     $build_array = pdo_fetch_array($build);                           
@@ -858,6 +880,8 @@ class Build
     $projectid = $build_array["projectid"];
 
     $project = pdo_query("SELECT testtimestd,testtimestdthreshold,testtimemaxstatus FROM project WHERE id=".qnum($this->ProjectId));
+    add_last_sql_error("Build:ComputeTestTiming",$this->ProjectId,$this->Id);
+    
     $project_array = pdo_fetch_array($project);
     $projecttimestd = $project_array["testtimestd"]; 
     $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
@@ -884,12 +908,15 @@ class Build
                             FROM build2test,test WHERE build2test.buildid=".qnum($this->Id)."
                             AND build2test.testid=test.id
                             ");
+      add_last_sql_error("Build:ComputeTestTiming",$this->ProjectId,$this->Id);
       
       // Find the previous test
       $previoustest = pdo_query("SELECT build2test.testid,test.name FROM build2test,test
                                    WHERE build2test.buildid=".qnum($previousbuildid)."
                                    AND test.id=build2test.testid 
-                                   ");    
+                                   ");
+      add_last_sql_error("Build:ComputeTestTiming",$this->ProjectId,$this->Id);
+      
       $testarray = array();
       while($test_array = pdo_fetch_array($previoustest))
         {
@@ -923,7 +950,8 @@ class Build
                                        WHERE buildid=".qnum($previousbuildid)." 
                                        AND build2test.testid=".qnum($previoustestid)
                                     );
-  
+          add_last_sql_error("Build:ComputeTestTiming",$this->ProjectId,$this->Id);
+          
           $previoustest_array = pdo_fetch_array($previoustest);
           $previoustimemean = $previoustest_array["timemean"];
           $previoustimestd = $previoustest_array["timestd"];
@@ -975,7 +1003,7 @@ class Build
             
         pdo_query("UPDATE build2test SET timemean=".qnum($timemean).",timestd=".qnum($timestd).",timestatus=".qnum($timestatus)."
                    WHERE buildid=".qnum($this->Id)." AND testid=".qnum($testid));
-
+        add_last_sql_error("Build:ComputeTestTiming",$this->ProjectId,$this->Id);
         if($timestatus>=$projecttestmaxstatus)
           {
           $testtimestatusfailed++;  
@@ -996,7 +1024,7 @@ class Build
           
         pdo_query("UPDATE build2test SET timemean=".qnum($timemean).",timestd=".qnum($timestd).",timestatus=".qnum($timestatus)." 
                     WHERE buildid=".qnum($this->Id)." AND testid=".qnum($testid));
-        
+        add_last_sql_error("Build:ComputeTestTiming",$this->ProjectId,$this->Id);
         if($timestatus>=$projecttestmaxstatus)
           {
           $testtimestatusfailed++;  
@@ -1005,7 +1033,7 @@ class Build
       } // end if first build
 
     pdo_query("UPDATE build SET testtimestatusfailed=".qnum($testtimestatusfailed)." WHERE id=".$this->Id);   
-    echo pdo_error();  
+    add_last_sql_error("Build:ComputeTestTiming",$this->ProjectId,$this->Id); 
     return true;  
     } // end function compute_test_timing
 
@@ -1015,13 +1043,19 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeUpdateStatistics",LOG_ERR);
+      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,
+              LOG_ERR);
       return false;
       }
     
     if(!$this->ProjectId)
       {
-      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",LOG_ERR);
+      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",
+              $this->ProjectId,$this->Id,
+              CDASH_OBJECT_BUILD,$this->Id,
+              LOG_ERR);
       return false;
       }
     $previousbuildid = $this->GetPreviousBuildId();
@@ -1029,6 +1063,7 @@ class Build
     // Find the errors, warnings and test failures
     // Find the current number of errors
     $errors = pdo_query("SELECT builderrors,buildwarnings,testnotrun,testfailed FROM build WHERE id=".qnum($this->Id));
+    add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
     $errors_array = pdo_fetch_array($errors);
     $nerrors = $errors_array[0]; 
     $nwarnings = $errors_array[1]; 
@@ -1038,6 +1073,7 @@ class Build
     if($previousbuildid>0)
       {
       $previouserrors = pdo_query("SELECT builderrors,buildwarnings,testnotrun,testfailed FROM build WHERE id=".qnum($previousbuildid));
+      add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
       $previouserrors_array  = pdo_fetch_array($previouserrors);
       $npreviouserrors = $previouserrors_array[0];   
       $npreviouswarnings = $previouserrors_array[1];
@@ -1057,7 +1093,7 @@ class Build
     // Find the number of different users  
     $nauthors_array = pdo_fetch_array(pdo_query("SELECT count(author) FROM (SELECT author FROM updatefile
                                                 WHERE buildid=".qnum($this->Id)." GROUP BY author) AS test"));
-    add_last_sql_error("compute_update_statistics"); 
+    add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
     $nauthors = $nauthors_array[0];
    
     $newbuild = 1;
@@ -1065,7 +1101,7 @@ class Build
     // Loop through the updated files
     $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile WHERE buildid=".qnum($this->Id)." 
                               AND checkindate>'1980-01-01T00:00:00' ORDER BY author ASC, checkindate ASC");
-    add_last_sql_error("compute_update_statistics"); 
+    add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
     $nupdatedfiles = pdo_num_rows($updatefiles);
     
     while($updatefiles_array = pdo_fetch_array($updatefiles))
@@ -1121,7 +1157,7 @@ class Build
     // Check if we already have a checkin date for this user
     $userstatistics = pdo_query("SELECT totalupdatedfiles
                                  FROM userstatistics WHERE userid=".qnum($userid)." AND projectid=".qnum($this->ProjectId)." AND checkindate='$checkindate'");
-    add_last_sql_error("add_update_statistics");
+    add_last_sql_error("Build:AddUpdateStatistics",$this->ProjectId,$this->Id);
                                             
     if(pdo_num_rows($userstatistics)>0)
       {                 
@@ -1173,9 +1209,8 @@ class Build
                   nfixederrors=nfixederrors+'$nfixederrors',
                   nfailederrors=nfailederrors+'$nfailederrors',
                   nfixedtests=nfixedtests+'$nfixedtests',
-                  nfailedtests=nfailedtests+'$nfailedtests' WHERE userid=".qnum($userid)." AND projectid=".qnum($this->ProjectId)." AND checkindate>='$checkindate'");
-             
-      add_last_sql_error("add_update_statistics");
+                  nfailedtests=nfailedtests+'$nfailedtests' WHERE userid=".qnum($userid)." AND projectid=".qnum($this->ProjectId)." AND checkindate>='$checkindate'");     
+      add_last_sql_error("Build:AddUpdateStatistics",$this->ProjectId,$this->Id);
       }
     else // insert into the database
       {
@@ -1228,12 +1263,12 @@ class Build
                  nfixedtests=nfixedtests+'$nfixedtests',
                  nfailedtests=nfailedtests+'$nfailedtests' WHERE userid=".qnum($userid)." AND projectid=".qnum($this->ProjectId)." AND checkindate>'$checkindate'");
              
-      add_last_sql_error("add_update_statistics");            
+      add_last_sql_error("Build:AddUpdateStatistics",$this->ProjectId,$this->Id);
              
       // Find the previous userstatistics
       $previous = pdo_query("SELECT totalupdatedfiles,totalbuilds,nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests
                              FROM userstatistics WHERE userid='$userid' AND projectid=".qnum($this->ProjectId)." AND checkindate<'$checkindate' ORDER BY checkindate DESC LIMIT 1");
-      add_last_sql_error("compute_update_statistics");             
+      add_last_sql_error("Build:AddUpdateStatistics",$this->ProjectId,$this->Id);
       if(pdo_num_rows($previous)>0)
         {
         $previous_array = pdo_fetch_array($previous);
@@ -1252,7 +1287,7 @@ class Build
                  VALUES (".qnum($userid).",".qnum($this->ProjectId).",'$checkindate',$totalupdatedfiles,$totalbuilds,$nfixedwarnings,
                          $nfailedwarnings,$nfixederrors,$nfailederrors,$nfixedtests,$nfailedtests)
                     ");
-      add_last_sql_error("add_update_statistics");
+      add_last_sql_error("Build:AddUpdateStatistics",$this->ProjectId,$this->Id);
       } 
     } // end add_update_statistics
 
@@ -1283,7 +1318,7 @@ class Build
     $build = pdo_query("SELECT siteid FROM build WHERE id=".qnum($this->Id));
     if(!$build)
       {
-      add_last_sql_error("Build GetSiteId");
+      add_last_sql_error("Build:GetSiteId",$this->ProjectId,$this->Id);
       return false;
       }
     $build_array = pdo_fetch_array($build);
@@ -1302,7 +1337,7 @@ class Build
     $build = pdo_query("SELECT name FROM build WHERE id=".qnum($this->Id));
     if(!$build)
       {
-      add_last_sql_error("Build GetName");
+      add_last_sql_error("Build:GetName",$this->ProjectId,$this->Id);
       return false;
       }
     $build_array = pdo_fetch_array($build);
@@ -1351,7 +1386,7 @@ class Build
       
     if(!$labels)
       {
-      add_last_sql_error("Build GetLabels");
+      add_last_sql_error("Build:GetLabels",$this->ProjectId,$this->Id);
       return false;
       }
     
@@ -1375,7 +1410,7 @@ class Build
     $group = pdo_query("SELECT groupid FROM build2group WHERE buildid=".qnum($this->Id));
     if(!$group)
       {
-      add_last_sql_error("Build GetGroup");
+      add_last_sql_error("Build:GetGroup",$this->ProjectId,$this->Id);
       return false;
       }
       
@@ -1393,6 +1428,7 @@ class Build
       }
    
     $builderror = pdo_query("SELECT builderrors FROM build WHERE id=".qnum($this->Id));
+    add_last_sql_error("Build:GetNumberOfErrors",$this->ProjectId,$this->Id);
     $builderror_array = pdo_fetch_array($builderror);
     if($builderror_array[0] == -1)
       {
@@ -1411,6 +1447,7 @@ class Build
       }
    
     $builderror = pdo_query("SELECT buildwarnings FROM build WHERE id=".qnum($this->Id));
+    add_last_sql_error("Build:GetNumberOfWarnings",$this->ProjectId,$this->Id);
     $builderror_array = pdo_fetch_array($builderror);
     if($builderror_array[0] == -1)
       {

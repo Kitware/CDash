@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT lastping FROM client_site LIMIT 1") )
+  if(!pdo_query("SELECT id FROM errorlog LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -311,7 +311,7 @@ function get_multiple_builds_hyperlink($build_row, $filterdata)
 
 /** Generate the main dashboard XML */
 function generate_main_dashboard_XML($projectid,$date)
-{
+{  
   $start = microtime_float();
   $noforcelogin = 1;
   include_once("cdash/config.php");
@@ -535,7 +535,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
 
   // Local function to add expected builds
-  function add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity)
+  function add_expected_builds($groupid,$currentstarttime,$received_builds)
     {
     include('cdash/config.php');  
     
@@ -678,7 +678,8 @@ function generate_main_dashboard_XML($projectid,$date)
                   b.testfailed AS counttestsfailed,
                   b.testpassed AS counttestspassed,
                   b.testtimestatusfailed AS countteststimestatusfailed,
-                  g.name as groupname,gp.position,g.id as groupid
+                  g.name as groupname,gp.position,g.id as groupid,
+                  (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog
                   FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql.",
                   build AS b
                   LEFT JOIN buildnote AS bn ON (bn.buildid=b.id)
@@ -707,9 +708,6 @@ function generate_main_dashboard_XML($projectid,$date)
   $previousgroupposition = -1;
   
   $received_builds = array();
-  $rowparity = 0;
-  $dynanalysisrowparity = 0;
-  $coveragerowparity = 0;
 
   // Find the last position of the group
   $groupposition_array = pdo_fetch_array(pdo_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
@@ -1020,7 +1018,7 @@ function generate_main_dashboard_XML($projectid,$date)
         {
         if (!$filter_sql)
           {
-          $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
+          $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds);
           }
           
         $xml .= add_XML_value("totalUpdatedFiles",$totalUpdatedFiles);
@@ -1059,13 +1057,12 @@ function generate_main_dashboard_XML($projectid,$date)
                                                 "));
         $xml .= "<buildgroup>";
         $xml .= add_default_buildgroup_sortlist($group['name']);
-        $rowparity = 0;
         $xml .= add_XML_value("name",$group["name"]);
         $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
         $xml .= add_XML_value("id",$group["id"]);
         if (!$filter_sql)
           {
-          $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
+          $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds);
           }
         $xml .= "</buildgroup>";
         }  
@@ -1091,7 +1088,6 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("linkname",str_replace(" ","_",$groupname));
       $xml .= add_XML_value("id",$build_array["groupid"]);
 
-      $rowparity = 0;
       $received_builds = array();
 
       $previousgroupposition = $groupposition;
@@ -1105,17 +1101,6 @@ function generate_main_dashboard_XML($projectid,$date)
     $buildid = $build_array["id"];
     $groupid = $build_array["groupid"];
     $siteid = $build_array["siteid"];
-
-    if($rowparity%2==0)
-      {
-      $xml .= add_XML_value("rowparity","trodd");
-      }
-    else
-      {
-      $xml .= add_XML_value("rowparity","treven");
-      }
-    $rowparity++;
-
     $countbuildids = count($build_array['buildids']);
     $xml .= add_XML_value("countbuildids", $countbuildids);
     if ($countbuildids>1)
@@ -1326,6 +1311,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $submittimestamp = strtotime($build_array["submittime"]." UTC");
     $xml .= add_XML_value("builddate",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
     $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
+    $xml .= add_XML_value("nerrorlog",$build_array["nerrorlog"]);// use the default timezone
     $xml .= "</build>";
 
 
@@ -1334,17 +1320,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = pdo_fetch_array($coverages))
       {
-      $xml .= "<coverage>";
-      if($coveragerowparity%2==0)
-        {
-        $xml .= add_XML_value("rowparity","trodd");
-        }
-      else
-        {
-        $xml .= add_XML_value("rowparity","treven");
-        }
-      $coveragerowparity++;
-                
+      $xml .= "<coverage>";          
       $xml .= "  <site>".$build_array["sitename"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
@@ -1440,7 +1416,7 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     if (!$filter_sql)
       {
-      $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds,$rowparity);
+      $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds);
       }
     
     $xml .= add_XML_value("totalUpdatedFiles",$totalUpdatedFiles);
@@ -1484,7 +1460,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
     if (!$filter_sql)
       {
-      $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds,$rowparity);
+      $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds);
       }
     $xml .= "</buildgroup>";  
     }

@@ -72,8 +72,10 @@ class Coverage
       }
     else
       {
-      add_log('No Coverage::CoverageFile? - cannot call $label->Insert...',
-              'Coverage::InsertLabelAssociations',LOG_ERR);
+      add_log('No BuildFailure id - cannot call $label->Insert...',
+              'BuildFailure::InsertLabelAssociations',
+              0,$buildid,
+              CDASH_OBJECT_COVERAGE,$this->CoverageFile->Id,LOG_ERR);   
       }
     }
 

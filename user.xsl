@@ -144,9 +144,16 @@
            <img src="images/users.png" border="0" alt="manageusers" /></a>
           <a class="tooltip" title="Manage project coverage" >
           <xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-           <img src="images/filecoverage.png" border="0" alt="managecoverage" /></a>  
+           <img src="images/filecoverage.png" border="0" alt="managecoverage" /></a>
+           
+          <xsl:if test="nerrorlogs>0">
+          <a class="tooltip">
+          <xsl:attribute name="title"><xsl:value-of select="nerrorlogs"/> errors in the CDash log</xsl:attribute>
+          <xsl:attribute name="href">viewErrorLog.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
+           <img src="images/warning.png" border="0" alt="erro logs" /></a> 
+          </xsl:if>
         </xsl:if>
-      </td>  
+      </td>
       <td align="center"  bgcolor="#DDDDDD">
         <xsl:value-of select="nbuilds"/>
       </td>

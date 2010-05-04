@@ -69,14 +69,14 @@ class BuildUpdate
     $query = "DELETE FROM buildupdate WHERE buildid=".qnum($this->BuildId);
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildUpdate Insert");
+      add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
       return false;
       }  
   
     $query = "DELETE FROM updatefile WHERE buildid=".qnum($this->BuildId);
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildUpdate Insert");
+      add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
       return false;
       } 
           
@@ -107,7 +107,7 @@ class BuildUpdate
                       '$this->Revision','$this->PriorRevision','$this->Path')";                     
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildUpdate Insert");
+      add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
       return false;
       }  
     

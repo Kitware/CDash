@@ -154,13 +154,17 @@ class UserProject
     {
     if(!$this->ProjectId)
       {
-      add_log("ProjectId not set","UserProject FillFromCVSLogin()",LOG_ERR);
+      add_log('ProjectId not set',"UserProject FillFromCVSLogin()",
+              $this->ProjectId,0,
+              CDASH_OBJECT_USER,$this->UserId,LOG_ERR);
       return false;
       }
      
     if(!$this->CvsLogin)
       {
-      add_log("CvsLogin not set","UserProject FillFromCVSLogin()",LOG_ERR);
+      add_log("CvsLogin not set","UserProject FillFromCVSLogin()",
+              $this->ProjectId,0,
+              CDASH_OBJECT_USER,$this->UserId,LOG_ERR);
       return false;
       }
      

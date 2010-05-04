@@ -47,7 +47,7 @@ class BuildInformation
        pdo_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion) 
                     VALUES (".qnum($this->BuildId).",'$this->OSName','$this->OSRelease',
                             '$this->OSVersion','$this->OSPlatform','$this->CompilerName','$this->CompilerVersion')");
-       add_last_sql_error("BuildInformation Insert");
+       add_last_sql_error("BuildInformation Insert",0,$this->BuildId);
        }
     } // end function save  
 }

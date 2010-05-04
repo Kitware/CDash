@@ -182,6 +182,10 @@ class TestingHandler extends AbstractHandler
         $this->BuildTest->Insert();
 
         $this->Test->InsertLabelAssociations($this->BuildId);
+        }
+      else
+        {
+        add_log("Cannot insert test","Test XML parser",$this->projectid,$this->BuildId,CDASH_OBJECT_TEST,0,LOG_ERR);
         }  
       }
     else if($name == 'LABEL' && $parent == 'LABELS')

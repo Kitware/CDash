@@ -82,7 +82,7 @@ class BuildNote
         }
       if(!pdo_query($query))
         {
-        add_last_sql_error("BuildUserNote Insert");
+        add_last_sql_error("BuildUserNote:Insert",0,$this->BuildId);
         return false;
         }  
       $this->Id = pdo_insert_id("note");
@@ -103,7 +103,7 @@ class BuildNote
               VALUES ('$this->BuildId','$this->Id','$this->Time')";                    
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildUserNote Insert");
+      add_last_sql_error("BuildUserNote:Insert",0,$this->BuildId);
       return false;
       }  
     return true;

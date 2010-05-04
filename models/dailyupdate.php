@@ -80,7 +80,7 @@ class DailyUpdate
       
       if(!pdo_query($query))
         {
-        add_last_sql_error("DailyUpdate Update");
+        add_last_sql_error("DailyUpdate Update",$this->ProjectId);
         return false;
         }
       }
@@ -93,7 +93,7 @@ class DailyUpdate
          }
        else
          {
-         add_last_sql_error("DailyUpdate Insert");
+         add_last_sql_error("DailyUpdate Insert",$this->ProjectId);
          return false;
          }
       }
@@ -130,7 +130,7 @@ class DailyUpdate
         
     if(!$query)
       {
-      add_last_sql_error("DailyUpdate GetAuthors");
+      add_last_sql_error("DailyUpdate GetAuthors",$this->ProjectId);
       return false;
       }
     

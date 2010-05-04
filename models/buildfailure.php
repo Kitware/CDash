@@ -94,7 +94,9 @@ class BuildFailure
     else
       {
       add_log('No BuildFailure id - cannot call $label->Insert...',
-              'BuildFailure::InsertLabelAssociations',LOG_ERR);
+              'BuildFailure::InsertLabelAssociations',
+              0,$this->BuildId,
+              CDASH_OBJECT_BUILD,$this->BuildId,LOG_ERR);
       }
     }
 
@@ -126,7 +128,7 @@ class BuildFailure
               '$language','$targetName','$outputFile','$outputType','$sourceFile',0,".qnum($crc32).")";                     
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildFailure Insert");
+      add_last_sql_error("BuildFailure Insert",0,$this->BuildId);
       return false;
       }  
    
@@ -144,7 +146,7 @@ class BuildFailure
       $query = pdo_query("SELECT id FROM buildfailureargument WHERE argument='".$argumentescaped."'");
       if(!$query)
         {
-        add_last_sql_error("BuildFailure Insert");
+        add_last_sql_error("BuildFailure Insert",0,$this->BuildId);
         return false;
         }
 
@@ -158,7 +160,7 @@ class BuildFailure
         $query = "INSERT INTO buildfailureargument (argument) VALUES ('".$argumentescaped."')";                     
         if(!pdo_query($query))
           {
-          add_last_sql_error("BuildFailure Insert");
+          add_last_sql_error("BuildFailure Insert",0,$this->BuildId);
           return false;
           }  
         
@@ -181,7 +183,7 @@ class BuildFailure
 
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildFailure Insert");
+      add_last_sql_error("BuildFailure Insert",0,$this->BuildId);
       return false;
       }
 

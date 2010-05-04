@@ -98,7 +98,7 @@ class BuildUpdateFile
     
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildUpdateFile Insert");
+      add_last_sql_error("BuildUpdateFile Insert",0,$this->BuildId);
       return false;
       }
     } // end function insert

@@ -135,7 +135,7 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
                AND type=".$warning.") AS builderrorb ON builderrora.crc32=builderrorb.crc32b
                WHERE builderrorb.crc32b IS NULL)";
   pdo_query($sqlquery);
-  add_last_sql_error("compute_error_difference");
+  add_last_sql_error("compute_error_difference",0,$buildid);
 
   // Same for buildfailure
   $sqlquery = "UPDATE buildfailure SET newstatus=1 WHERE buildid=".$buildid." AND type=".$warning." AND crc32 IN
@@ -145,7 +145,7 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
                AND type=".$warning.") AS builderrorb ON builderrora.crc32=builderrorb.crc32b
                WHERE builderrorb.crc32b IS NULL)";
   pdo_query($sqlquery);
-  add_last_sql_error("compute_error_difference");
+  add_last_sql_error("compute_error_difference",0,$buildid);
   
   // Maybe we can get that from the query (don't know).
   $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".$buildid." AND type=".$warning." AND newstatus=1");
@@ -182,7 +182,7 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
     {   
     pdo_query("INSERT INTO builderrordiff (buildid,type,difference_positive,difference_negative) 
                  VALUES('$buildid','$warning','$npositives','$nnegatives')");
-    add_last_sql_error("compute_error_difference");
+    add_last_sql_error("compute_error_difference",0,$buildid);
     }  
 }
 
@@ -207,7 +207,7 @@ function compute_configure_difference($buildid,$previousbuildid,$warning)
     {
     pdo_query("INSERT INTO configureerrordiff (buildid,type,difference) 
                            VALUES('$buildid','$warning','$errordiff')");
-    add_last_sql_error("compute_configure_difference");
+    add_last_sql_error("compute_configure_difference",0,$buildid);
     }
 }
 
@@ -242,7 +242,7 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
                AND build2test.testid=test.id AND build2test.status=".$status.$sql.")
                AS testb ON testa.name=testb.name2 WHERE testb.name2 IS NULL)";
   pdo_query($sqlquery);
-  add_last_sql_error("compute_test_difference");
+  add_last_sql_error("compute_test_difference",0,$buildid);
   
   // Maybe we can get that from the query (don't know).
   $positives = pdo_query("SELECT count(*) FROM build2test WHERE buildid=".$buildid." AND newstatus=1 AND status=".$status.$sql);
@@ -278,7 +278,7 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
       pdo_query("INSERT INTO testdiff (buildid,type,difference_positive,difference_negative) 
                  VALUES('$buildid','$testtype','$npositives','$nnegatives')");
       }
-    add_last_sql_error("compute_test_difference");
+    add_last_sql_error("compute_test_difference",0,$buildid);
     }
 }
 
@@ -323,7 +323,7 @@ function compute_coverage_difference($buildid)
       {
       pdo_query("INSERT INTO coveragesummarydiff (buildid,loctested,locuntested) 
                              VALUES('$buildid','$loctesteddiff','$locuntesteddiff')");
-      add_last_sql_error("compute_coverage_difference");
+      add_last_sql_error("compute_coverage_difference",0,$buildid);
       }
     }
 }

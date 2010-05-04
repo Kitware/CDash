@@ -129,7 +129,9 @@ class Test
     else
       {
       add_log('No Test::Id or buildid - cannot call $label->Insert...',
-              'Test::InsertLabelAssociations',LOG_ERR);
+              'Test::InsertLabelAssociations',
+              $this->ProjectId,$buildid,
+              CDASH_OBJECT_TEST,$this->Id,LOG_ERR);
       }
     }
     
@@ -169,7 +171,7 @@ class Test
       $id = "id,";
       $idvalue = "'".$this->Id."',";
       }
-
+ 
     if($this->CompressedOutput)
       {
       if($CDASH_DB_TYPE == "pgsql")
@@ -204,17 +206,29 @@ class Test
       {
       $output = $this->Output;
       }
-    
-    $output = pdo_real_escape_string($output);  
+
+    // We check for mysql that the 
+    if($CDASH_DB_TYPE=='' || $CDASH_DB_TYPE=='mysql')
+      {
+      $query = pdo_query("SHOW VARIABLES LIKE 'max_allowed_packet'");
+      $query_array = pdo_fetch_array($query);
+      $max = $query_array[1];
+      if(strlen($this->Output)>$max)
+        {
+        add_log("Output is bigger than max_allowed_packet","Test::Insert",$this->ProjectId,0,CDASH_OBJECT_TEST,0,LOG_ERR);
+        // We cannot truncate the output because it is compressed (too complicated)
+        }  
+      }
+      
+    $output = pdo_real_escape_string($output);    
     $query = "INSERT INTO test (".$id."projectid,crc32,name,path,command,details,output)
               VALUES (".$idvalue."'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";                     
-
     if(!pdo_query($query))
       {
-      add_last_sql_error("Test Insert");
+      add_last_sql_error("Cannot insert test: ".$name." into the database",$this->ProjectId);
       return false;
-      }  
-
+      }
+      
     $this->Id = pdo_insert_id("test");
 
     // Add the measurements

@@ -54,7 +54,7 @@ class BuildUserNote
               VALUES ('$this->BuildId','$this->UserId','$this->Note','$this->TimeStamp','$this->Status')";                     
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildUserNote Insert");
+      add_last_sql_error("BuildUserNote Insert",0,$this->BuildId);
       return false;
       }  
     return true;
