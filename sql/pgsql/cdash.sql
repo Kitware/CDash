@@ -1120,7 +1120,7 @@ CREATE TABLE "errorlog" (
   "type" smallint  NOT NULL,
   "description" text NOT NULL,
   "resourcetype" smallint NOT NULL DEFAULT '0',
-  "resourceid" bigint  NOT NULL, 
+  "resourceid" bigint  NOT NULL
 );
 CREATE INDEX "errorlog_resourceid" on "errorlog" ("resourceid");
 CREATE INDEX "errorlog_date" on "errorlog" ("date");
