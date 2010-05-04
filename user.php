@@ -44,12 +44,14 @@ if ($session_OK)
   $xml .= add_XML_value("user_is_admin",$user_array["admin"]);
     
   // Go through the list of project the user is part of
-  $project2user = pdo_query("SELECT user2project.projectid AS projectid,role,name,count(errorlog.projectid) AS errors
+  $project2user = pdo_query("SELECT user2project.projectid AS projectid,role,name,
+                            (SELECT count(errorlog.projectid) FROM errorlog WHERE errorlog.projectid=user2project.projectid)
+                             AS errors
                              FROM user2project,project
-                             LEFT JOIN errorlog ON (errorlog.projectid=project.id) 
                              WHERE project.id=user2project.projectid
-                             AND userid='$userid' GROUP BY projectid ORDER BY project.name ASC");
-    
+                             AND userid='$userid' ORDER BY project.name ASC");
+
+  echo pdo_error();
   $condition_list_projects='';
   $Project= new Project();
   $start=gmdate(FMT_DATETIME,strtotime(date("r"))-(3600*24));
