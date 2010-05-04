@@ -167,7 +167,7 @@ function add_XML_value($tag,$value)
 }
 
 /** Add information to the log file */
-function add_log($text,$function,$projectid=0,$buildid=0,$resourcetype=0,$resourceid=0,$type=LOG_INFO)
+function add_log($text,$function,$type=LOG_INFO,$projectid=0,$buildid=0,$resourcetype=0,$resourceid=0)
 {
   if(strlen($text)==0)
     {
@@ -217,7 +217,7 @@ function add_last_sql_error($functionname,$projectid=0,$buildid=0,$resourcetype=
   $pdo_error = pdo_error();
   if(strlen($pdo_error)>0)
     {
-    add_log("SQL error: ".$pdo_error,$functionname,$resourcetype,$resourceid,$projectid,$buildid,LOG_ERR);
+    add_log("SQL error: ".$pdo_error,$functionname,LOG_ERR,$resourcetype,$resourceid,$projectid,$buildid);
     $text = "SQL error in $functionname():".$pdo_error."<br>";
     echo $text;
     }

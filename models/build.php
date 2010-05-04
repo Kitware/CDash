@@ -162,9 +162,9 @@ class Build
 
     if(empty($this->ProjectId))
       {
-      add_log('ProjectId not set' . $subproject, 'Build::SetSubProject',
+      add_log('ProjectId not set' . $subproject, 'Build::SetSubProject',LOG_ERR,
               $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,LOG_ERR);
+              CDASH_OBJECT_BUILD,$this->Id);
       return false;
       }
 
@@ -186,10 +186,8 @@ class Build
       return $this->SubProjectId; 
       }
 
-    add_log('Could not retrieve SubProjectId for subproject: '.$subproject,'Build::SetSubProject',
-            $this->ProjectId,$this->Id,
-            CDASH_OBJECT_BUILD,$this->Id,
-            LOG_ERR);
+    add_log('Could not retrieve SubProjectId for subproject: '.$subproject,'Build::SetSubProject',LOG_ERR,
+            $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
     return false;
     }
 
@@ -480,10 +478,9 @@ class Build
       }
     else
       {
-      add_log('No Build::Id - cannot call $label->Insert...','Build::InsertLabelAssociations',
+      add_log('No Build::Id - cannot call $label->Insert...','Build::InsertLabelAssociations',LOG_ERR,
               $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,
-              LOG_ERR);
+              CDASH_OBJECT_BUILD,$this->Id);
       }
     }
 
@@ -718,10 +715,8 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::GetErrorDifferences",
-              $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,
-              LOG_ERR);      
+      add_log("BuildId is not set","Build::GetErrorDifferences",LOG_ERR,
+              $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);      
       return false;
       }
 
@@ -805,10 +800,9 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeDifferences",
+      add_log("BuildId is not set","Build::ComputeDifferences",LOG_ERR,
               $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,
-              LOG_ERR);
+              CDASH_OBJECT_BUILD,$this->Id);
       return false;
       }
       
@@ -826,10 +820,9 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeConfigureDifferences",
+      add_log("BuildId is not set","Build::ComputeConfigureDifferences",LOG_ERR,
               $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,
-              LOG_ERR);
+              CDASH_OBJECT_BUILD,$this->Id);
       return false;
       }
 
@@ -848,19 +841,15 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("BuildId is not set","Build::ComputeTestTiming",
-              $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,
-              LOG_ERR);
+      add_log("BuildId is not set","Build::ComputeTestTiming",LOG_ERR,
+              $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
       return false;
       }
 
     if(!$this->ProjectId)
       {
-      add_log("ProjectId is not set","Build::ComputeTestTiming",
-              $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,
-              LOG_ERR);
+      add_log("ProjectId is not set","Build::ComputeTestTiming",LOG_ERR,
+              $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
       return false;
       }
 
@@ -1043,19 +1032,14 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",
-              $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,
-              LOG_ERR);
+      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",LOG_ERR,
+              $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
       return false;
       }
     
     if(!$this->ProjectId)
       {
-      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",
-              $this->ProjectId,$this->Id,
-              CDASH_OBJECT_BUILD,$this->Id,
-              LOG_ERR);
+      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",LOG_ERR,0,$this->Id);
       return false;
       }
     $previousbuildid = $this->GetPreviousBuildId();

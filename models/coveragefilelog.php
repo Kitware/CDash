@@ -37,17 +37,15 @@ class CoverageFileLog
     {
     if(!$this->BuildId || !is_numeric($this->BuildId))
       {
-      add_log("BuildId not set","CoverageFileLog::Insert()",
-               0,$this->BuildId,
-               CDASH_OBJECT_COVERAGE,$this->FileId,LOG_ERR); 
+      add_log("BuildId not set","CoverageFileLog::Insert()",LOG_ERR,
+               0,$this->BuildId,CDASH_OBJECT_COVERAGE,$this->FileId); 
       return false;    
       }
    
     if(!$this->FileId || !is_numeric($this->FileId))
       {
-      add_log("FileId not set","CoverageFileLog::Insert()",
-               0,$this->BuildId,
-               CDASH_OBJECT_COVERAGE,$this->FileId,LOG_ERR);
+      add_log("FileId not set","CoverageFileLog::Insert()",LOG_ERR,
+               0,$this->BuildId,CDASH_OBJECT_COVERAGE,$this->FileId);
       return false;    
       }
       

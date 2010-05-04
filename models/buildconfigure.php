@@ -130,10 +130,8 @@ class BuildConfigure
     else
       {
       add_log('No BuildConfigure::BuildId - cannot call $label->Insert...',
-              'BuildConfigure::InsertLabelAssociations',
-              0,$this->BuildId,
-              CDASH_OBJECT_CONFIGURE,$this->BuildId,
-              LOG_ERR);
+              'BuildConfigure::InsertLabelAssociations',LOG_ERR,
+              0,$this->BuildId,CDASH_OBJECT_CONFIGURE,$this->BuildId);
       }
     }
 

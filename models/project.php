@@ -1254,8 +1254,7 @@ class Project
         }
       else
         {
-        add_log("cannot send email to: ".$email,"Project::SendEmailToAdmin",
-                $this->Id,0,CDASH_OBJECT_PROJECT,$this->Id,LOG_ERR);   
+        add_log("cannot send email to: ".$email,"Project::SendEmailToAdmin",LOG_ERR,$this->Id);   
         }
       } // end if email
     } // end SendEmailToAdmin

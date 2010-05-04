@@ -73,9 +73,9 @@ class Coverage
     else
       {
       add_log('No BuildFailure id - cannot call $label->Insert...',
-              'BuildFailure::InsertLabelAssociations',
+              'BuildFailure::InsertLabelAssociations',LOG_ERR,
               0,$buildid,
-              CDASH_OBJECT_COVERAGE,$this->CoverageFile->Id,LOG_ERR);   
+              CDASH_OBJECT_COVERAGE,$this->CoverageFile->Id);   
       }
     }
 

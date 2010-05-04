@@ -94,9 +94,7 @@ class BuildFailure
     else
       {
       add_log('No BuildFailure id - cannot call $label->Insert...',
-              'BuildFailure::InsertLabelAssociations',
-              0,$this->BuildId,
-              CDASH_OBJECT_BUILD,$this->BuildId,LOG_ERR);
+              'BuildFailure::InsertLabelAssociations',LOG_ERR,0,$this->BuildId);
       }
     }
 

@@ -129,9 +129,9 @@ class Test
     else
       {
       add_log('No Test::Id or buildid - cannot call $label->Insert...',
-              'Test::InsertLabelAssociations',
+              'Test::InsertLabelAssociations',LOG_ERR,
               $this->ProjectId,$buildid,
-              CDASH_OBJECT_TEST,$this->Id,LOG_ERR);
+              CDASH_OBJECT_TEST,$this->Id);
       }
     }
     
@@ -215,7 +215,7 @@ class Test
       $max = $query_array[1];
       if(strlen($this->Output)>$max)
         {
-        add_log("Output is bigger than max_allowed_packet","Test::Insert",$this->ProjectId,0,CDASH_OBJECT_TEST,0,LOG_ERR);
+        add_log("Output is bigger than max_allowed_packet","Test::Insert",LOG_ERR,$this->ProjectId);
         // We cannot truncate the output because it is compressed (too complicated)
         }  
       }

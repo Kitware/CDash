@@ -45,13 +45,13 @@ class BuildTest
     {
     if(!$this->BuildId)
       {
-      add_log('BuildId is not set','BuildTest::Insert()',0,$buildid,0,0,LOG_ERR);
+      add_log('BuildId is not set','BuildTest::Insert()',LOG_ERR,0,$buildid);
       return false;
       }
 
     if(!$this->TestId)
       {
-      add_log('TestId is not set','BuildTest::Insert()',0,$buildid,0,0,LOG_ERR);
+      add_log('TestId is not set','BuildTest::Insert()',LOG_ERR,0,$buildid);
       return false;
       }
     

@@ -185,7 +185,8 @@ class TestingHandler extends AbstractHandler
         }
       else
         {
-        add_log("Cannot insert test","Test XML parser",$this->projectid,$this->BuildId,CDASH_OBJECT_TEST,0,LOG_ERR);
+        add_log("Cannot insert test","Test XML parser",LOG_ERR,
+                $this->projectid,$this->BuildId);
         }  
       }
     else if($name == 'LABEL' && $parent == 'LABELS')

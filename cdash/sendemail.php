@@ -220,7 +220,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
     if(!$UserProject->FillFromCVSLogin())
       {
       // Daily updates send an email to tell adminsitrator that the user is not registered but we log anyway
-      add_log("User: ".$author." is not registered (or has no email) for the project ".$projectid,"SendEmail",$projectid,$buildid,0,0,LOG_WARNING);
+      add_log("User: ".$author." is not registered (or has no email) for the project ".$projectid,"SendEmail",LOG_WARNING,$projectid,$buildid);
       continue;
       }
  
