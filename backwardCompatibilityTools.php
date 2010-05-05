@@ -754,6 +754,11 @@ if(isset($_GET['upgrade-1-8']))
   AddTableField("client_site","lastping","timestamp","timestamp(0)","1980-01-01 00:00:00");
   AddTableIndex('client_site','lastping');
    
+  // Remove img index for table test2image
+  RenameTableField('test2image','imgid','imgid',"int(11)","bigint",0);
+  RemoveTablePrimaryKey('test2image');
+  AddTableIndex('test2image','imgid');
+  
   // Set the database version
   setVersion();
 

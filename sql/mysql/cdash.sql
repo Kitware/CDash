@@ -297,12 +297,12 @@ CREATE TABLE `image` (
 -- Table structure for table `test2image`
 -- 
 CREATE TABLE `test2image` (
-  `imgid` int(11) NOT NULL auto_increment,
-  `testid` int(11) NOT NULL default '0',
+  `imgid` int(11) NOT NULL,
+  `testid` int(11) NOT NULL,
   `role` tinytext NOT NULL,
-  PRIMARY KEY  (`imgid`),
+  KEY `testid` (`imgid`),
   KEY `testid` (`testid`)
-) AUTO_INCREMENT=1 ;
+);
 
 -- --------------------------------------------------------
 -- 

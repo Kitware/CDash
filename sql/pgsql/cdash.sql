@@ -240,11 +240,11 @@ CREATE INDEX "checksum" on "image" ("checksum");
 -- Table: test2image
 --
 CREATE TABLE "test2image" (
-  "imgid" serial NOT NULL,
-  "testid" bigint DEFAULT '0' NOT NULL,
-  "role" text NOT NULL,
-  PRIMARY KEY ("imgid")
+  "imgid" bigint NOT NULL,
+  "testid" bigint NOT NULL,
+  "role" text NOT NULL
 );
+CREATE INDEX "imgid" on "test2image" ("imgid");
 CREATE INDEX "testid" on "test2image" ("testid");
 
 --
