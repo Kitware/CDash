@@ -200,7 +200,12 @@ function add_log($text,$function,$type=LOG_INFO,$projectid=0,$buildid=0,$resourc
     $ErrorLog = new ErrorLog;
     $ErrorLog->ProjectId = $projectid;
     $ErrorLog->BuildId = $buildid;
-    $ErrorLog->Type = $type;
+    switch($type)
+      { 
+      case LOG_INFO: $ErrorLog->Type = 6;
+      case LOG_WARNING: $ErrorLog->Type = 5;
+      case LOG_ERR: $ErrorLog->Type = 4;
+      }
     $ErrorLog->Description = "(".$function."): ".$text;
     $ErrorLog->ResourceType = $resourcetype;
     $ErrorLog->ResourceId = $resourceid;

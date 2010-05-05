@@ -338,7 +338,15 @@
     <tr class="trodd"><td id="nob"><a href="manageBanner.php">[Manage banner message]</a></td></tr> 
     <tr class="treven"><td id="nob"><a href="manageUsers.php">[Manage users]</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="backwardCompatibilityTools.php">[CDash maintenance]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a>
+    
+    <xsl:if test="cdash/nerrorlogs>0">
+       <a class="tooltip">
+       <xsl:attribute name="title"><xsl:value-of select="cdash/nerrorlogs"/> errors in the CDash log</xsl:attribute>
+       <xsl:attribute name="href">viewErrorLog.php</xsl:attribute>
+       <img src="images/warning.png" border="0" alt="erro logs" /></a> 
+       </xsl:if>
+    </td></tr>
     <tr class="trodd"><td id="nob"><a href="siteStatistics.php">[Site Statistics]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="userStatistics.php">[User Statistics]</a>  (beta)</td></tr>
     <tr class="trodd"><td id="nob"><a href="manageBackup.php">[Manage Backup]</a></td></tr>

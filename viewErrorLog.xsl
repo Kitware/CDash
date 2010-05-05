@@ -49,6 +49,9 @@
    build #<xsl:value-of select="buildid"/>
    </a>
   </xsl:if> 
+  <xsl:if test="projectname">
+   (<xsl:value-of select="projectname"/>)
+  </xsl:if> 
   <br/>
   <i><xsl:value-of select="description"/></i><br/>
   

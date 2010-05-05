@@ -26,35 +26,52 @@ include("cdash/version.php");
 @$projectid = $_GET["projectid"];
 @$date = $_GET["date"];
 
-// Checks
-if(!isset($buildid) || !is_numeric($buildid))
+// Checks if the project id is set
+if(!isset($projectid) || !is_numeric($projectid))
   {
-  echo "Not a valid buildid!";
-  return;
+  checkUserPolicy(@$_SESSION['cdash']['loginid'],0);
   }
- 
+else
+  {
+  checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
+  } 
+  
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
-    
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if(pdo_num_rows($project)>0)
+if($projectid)
   {
-  $project_array = pdo_fetch_array($project);  
-  $projectname = $project_array["name"];  
+  $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+  if(pdo_num_rows($project)>0)
+    {
+    $project_array = pdo_fetch_array($project);  
+    $projectname = $project_array["name"];  
+    }
   }
-
+else
+  {
+  $projectname = 'Global';
+  }
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>Error Log - ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
-$xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
+if($projectid)
+  {
+  $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
  
-// Get the errors
-$query = pdo_query("SELECT resourcetype,date,resourceid,description,type,buildid 
-                    FROM errorlog WHERE projectid=".qnum($projectid)." AND date>'".$date."' ORDER BY date DESC");
+  // Get the errors
+  $query = pdo_query("SELECT resourcetype,date,resourceid,description,type,buildid,projectid
+                     FROM errorlog WHERE projectid=".qnum($projectid)." AND date>'".$date."' ORDER BY date DESC");
+  }
+else
+  { 
+  $query = pdo_query("SELECT resourcetype,date,resourceid,errorlog.description,type,buildid,projectid,project.name AS projectname
+                     FROM errorlog LEFT JOIN project ON (project.id=errorlog.projectid) WHERE date>'".$date."' ORDER BY date DESC");
+  echo pdo_error();
+  }
+
 while($query_array = pdo_fetch_array($query))
   {
   $xml .= "<error>";
@@ -64,6 +81,13 @@ while($query_array = pdo_fetch_array($query))
   $xml .= add_XML_value("description",$query_array["description"]);
   $xml .= add_XML_value("type",$query_array["type"]);
   $xml .= add_XML_value("buildid",$query_array["buildid"]);
+  $xml .= add_XML_value("projectid",$query_array["projectid"]);
+  
+  if(isset($query_array["projectname"]))
+    {
+    $xml .= add_XML_value("projectname",$query_array["projectname"]);  
+    }
+  
   $xml .= "</error>";
   }
 $xml .= "</cdash>";

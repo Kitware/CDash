@@ -390,6 +390,14 @@ if ($session_OK)
     $xml .= "<message>You have been unsubscribed from a project.</message>";
     }
     
+  // If the user is admin we show all the errors
+  if($user_array["admin"])
+    {
+    $errorlog = pdo_fetch_array(pdo_query("SELECT count(id) FROM errorlog"));
+    $xml .= add_XML_value("nerrorlogs", $errorlog[0]);
+    }
+    
+    
   $xml .= "</cdash>";
   
   // Now doing the xslt transition
