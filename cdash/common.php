@@ -222,7 +222,7 @@ function add_last_sql_error($functionname,$projectid=0,$buildid=0,$resourcetype=
   $pdo_error = pdo_error();
   if(strlen($pdo_error)>0)
     {
-    add_log("SQL error: ".$pdo_error,$functionname,LOG_ERR,$resourcetype,$resourceid,$projectid,$buildid);
+    add_log("SQL error: ".$pdo_error,$functionname,LOG_ERR,$projectid,$buildid,$resourcetype,$resourceid);
     $text = "SQL error in $functionname():".$pdo_error."<br>";
     echo $text;
     }
