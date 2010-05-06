@@ -132,14 +132,14 @@ class DynamicAnalysis
     $this->Status = pdo_real_escape_string($this->Status);
     $this->Checker = pdo_real_escape_string($this->Checker);
     $this->Name = pdo_real_escape_string($this->Name);
-    $this->Path = pdo_real_escape_string($this->Path);
-    $this->FullCommandLine = pdo_real_escape_string($this->FullCommandLine);
+    $path = pdo_real_escape_string(substr($this->Path,0,255));
+    $fullCommandLine = pdo_real_escape_string(substr($this->FullCommandLine,0,255));
     $this->Log = pdo_real_escape_string($this->Log);
     $this->BuildId = pdo_real_escape_string($this->BuildId);
     
     $query = "INSERT INTO dynamicanalysis (".$id."buildid,status,checker,name,path,fullcommandline,log)
-              VALUES (".$idvalue.qnum($this->BuildId).",'$this->Status','$this->Checker','$this->Name','".substr($this->Path,0,255)."',
-                      '".substr($this->FullCommandLine,0,255)."','$this->Log')";                     
+              VALUES (".$idvalue.qnum($this->BuildId).",'$this->Status','$this->Checker','$this->Name','".$path."',
+                      '".$fullCommandLine."','$this->Log')";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("DynamicAnalysis Insert",0,$this->BuildId);
