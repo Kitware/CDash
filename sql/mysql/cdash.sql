@@ -300,7 +300,7 @@ CREATE TABLE `test2image` (
   `imgid` int(11) NOT NULL,
   `testid` int(11) NOT NULL,
   `role` tinytext NOT NULL,
-  KEY `testid` (`imgid`),
+  KEY `imgid` (`imgid`),
   KEY `testid` (`testid`)
 );
 
