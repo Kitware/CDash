@@ -28,14 +28,17 @@ include("cdash/do_submit.php");
 include("cdash/clientsubmit.php");
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+if(!$db || !pdo_select_db("$CDASH_DB_NAME",$db))
+  {
+  echo "ERROR: Cannot connect to database.";
+  exit();
+  }
 set_time_limit(0);
-
+    
 // Send to the client submit
 client_submit();
 
 $file_path='php://input';
-//$file_path='backup/coverage/CoverageLog.xml';
 $fp = fopen($file_path, 'r');
 
 $projectname = $_GET["project"];
