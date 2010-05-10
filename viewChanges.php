@@ -243,7 +243,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
 $projectname = pdo_real_escape_string($projectname);
-$project = pdo_query("SELECT id,nightlytime,bugtrackerurl FROM project WHERE name='$projectname'");
+$project = pdo_query("SELECT id,nightlytime,bugtrackerurl,bugtrackerfileurl FROM project WHERE name='$projectname'");
 $project_array = pdo_fetch_array($project);
 
 $projectid = $project_array["id"];
@@ -326,10 +326,6 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
         }
       $commit['bugurl'] = XMLStrFormat($url.$bugid);
       } // end have bugid
-    else
-      {
-      //$file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"]);
-      }
     }
 
   $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;

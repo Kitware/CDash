@@ -135,7 +135,7 @@ if($Submit)
     $Project->Description = stripslashes_if_gpc_magic_quotes($_POST["description"]);
     $Project->HomeUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["homeURL"]));
     $Project->CvsUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["cvsURL"]));
-    $Project->BugTrackerUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["bugURL"]));
+    $Project->BugTrackerUrl = stripslashes_if_gpc_magic_quotes($_POST["bugURL"]);
     $Project->BugTrackerFileUrl = stripslashes_if_gpc_magic_quotes($_POST["bugFileURL"]);
     $Project->DocumentationUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["docURL"]));
     @$Public = $_POST["public"];
@@ -302,7 +302,7 @@ if($Update || $AddRepository)
   $Project->Description = stripslashes_if_gpc_magic_quotes($_POST["description"]);
   $Project->HomeUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["homeURL"]));
   $Project->CvsUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["cvsURL"]));
-  $Project->BugTrackerUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["bugURL"]));
+  $Project->BugTrackerUrl = stripslashes_if_gpc_magic_quotes($_POST["bugURL"]);
   $Project->BugTrackerFileUrl = stripslashes_if_gpc_magic_quotes($_POST["bugFileURL"]);
   $Project->DocumentationUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["docURL"]));
   @$Project->Public = $_POST["public"];
