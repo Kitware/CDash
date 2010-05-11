@@ -355,7 +355,8 @@ function get_git_repository_commits($gitroot, $dates)
       {
       $pos = strpos($line,'<');
       $pos2 = strpos($line,'>',$pos);  
-      $commit['author'] = substr($line,$pos+1,$pos2-$pos-1);
+      $commit['author'] = trim(substr($line,7,$pos-7));
+      $commit['email'] = substr($line,$pos+1,$pos2-$pos-1);
       }
     else if(substr($line,0,5) == 'Date:')
       {
@@ -902,6 +903,11 @@ function addDailyChanges($projectid)
       $filename = $commit['directory']."/".$commit['filename'];
       $checkindate = $commit['time'];
       $author = addslashes($commit['author']);
+      $email = '';
+      if(isset($commit['email']))
+        {
+        $email = addslashes($commit['email']);
+        }
       $log= addslashes($commit['comment']);
       $revision= $commit['revision'];
       $priorrevision = $commit['priorrevision'];
@@ -926,8 +932,8 @@ function addDailyChanges($projectid)
         $cvsauthors[] = stripslashes($author);
         }
  
-      pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
-                   VALUES ($updateid,'$filename','$checkindate','$author','$log','$revision','$priorrevision')");
+      pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,email,log,revision,priorrevision)
+                   VALUES ($updateid,'$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
       echo pdo_error();
       
       } // end foreach commit

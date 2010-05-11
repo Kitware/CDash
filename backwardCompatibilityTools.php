@@ -740,6 +740,8 @@ if(isset($_GET['upgrade-1-8']))
 
   ModifyTableField("dailyupdatefile","revision","VARCHAR(60)","VARCHAR(60)","",true,false);
   ModifyTableField("dailyupdatefile","priorrevision","VARCHAR(60)","VARCHAR(60)","",true,false);
+  AddTableField("dailyupdatefile","email","VARCHAR(255)","character varying(255)","");
+  AddTableIndex('dailyupdatefile','email');
   
   AddTableField("client_jobschedule","buildconfiguration","tinyint(4)","smallint","0");
   
@@ -758,6 +760,8 @@ if(isset($_GET['upgrade-1-8']))
   RenameTableField('test2image','imgid','imgid',"int(11)","bigint",0);
   RemoveTablePrimaryKey('test2image');
   AddTableIndex('test2image','imgid');
+  
+  
   
   // Set the database version
   setVersion();

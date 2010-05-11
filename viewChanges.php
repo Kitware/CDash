@@ -201,7 +201,14 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     // Only display email if the user is logged in
     if(isset($_SESSION['cdash']))
       {
-      $email = get_author_email($projectname, $author);
+      if(isset($commit['email']))
+        {
+        $email = $commit['email'];
+        }  
+      else
+        {
+        $email = get_author_email($projectname, $author);
+        }
       }
     else
       {
@@ -301,6 +308,7 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   $commit['priorrevision'] = $dailyupdate_array['priorrevision'];
   $commit['time'] = $dailyupdate_array['checkindate'];
   $commit['author'] = $dailyupdate_array['author'];
+  $commit['email'] = $dailyupdate_array['email'];
   $commit['comment'] = $dailyupdate_array['log'];
   $commit['bugurl'] = '';
   

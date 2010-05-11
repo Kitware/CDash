@@ -519,6 +519,7 @@ CREATE TABLE "dailyupdatefile" (
   "filename" character varying(255) DEFAULT '' NOT NULL,
   "checkindate" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
   "author" character varying(255) DEFAULT '' NOT NULL,
+  "email" character varying(255) DEFAULT '' NOT NULL,
   "log" text NOT NULL,
   "revision" character varying(60) DEFAULT '0' NOT NULL,
   "priorrevision" character varying(60) DEFAULT '0' NOT NULL
