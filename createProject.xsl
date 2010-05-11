@@ -181,7 +181,9 @@
                     
                     <xsl:if test="cdash/edit=1">
                       <li><a href="#fragment-6"><span>Spam</span></a></li>
+                      <li><a href="#fragment-7"><span>Clients</span></a></li>
                     </xsl:if>
+
                     
                     <li>
                       <xsl:if test="cdash/edit=0">
@@ -191,20 +193,6 @@
                       </xsl:if>
                       <a><xsl:attribute name="href">
                         <xsl:if test="cdash/edit=0">#fragment-6</xsl:if>
-                        <xsl:if test="cdash/edit=1">#fragment-7</xsl:if>
-                        </xsl:attribute>
-                        <span>Clients</span>
-                      </a>
-                    </li>
-                    
-                    <li>
-                      <xsl:if test="cdash/edit=0">
-                        <xsl:attribute name="class">
-                     tabs-disabled
-                    </xsl:attribute>
-                      </xsl:if>
-                      <a><xsl:attribute name="href">
-                        <xsl:if test="cdash/edit=0">#fragment-7</xsl:if>
                         <xsl:if test="cdash/edit=1">#fragment-8</xsl:if>
                         </xsl:attribute>
                         <span>Miscellaneous</span>
@@ -1217,11 +1205,13 @@
                         <td>
                         </td>
                         <td align="right">
+                        <xsl:if test="cdash/edit=0">
                             <img src="images/previous.png" style="cursor:pointer;"
                               onclick="previousTab(6);" alt="previous" class="tooltip"
                               title="Previous Step" />
                             <img src="images/next.png" style="cursor:pointer;"
                               onclick="nextTab(6);" alt="next" class="tooltip" title="Next Step" />
+                        </xsl:if>
                         </td>
                       </tr>
                     </table>
@@ -1229,12 +1219,7 @@
                   </xsl:if> <!--  end if edit mode -->
 
 
-         <div class="tab_content">
-                   <xsl:attribute name="id">
-                     <xsl:if test="cdash/edit=0">fragment-6</xsl:if>
-                     <xsl:if test="cdash/edit=1">fragment-7</xsl:if>
-                     </xsl:attribute>
-                     
+         <div class="tab_content" id="fragment-7">
                     <div class="tab_help"></div>
                     <table width="100%">
                         <tr>
@@ -1253,11 +1238,13 @@
                         <td>
                         </td>
                         <td align="right">
+                        <xsl:if test="cdash/edit=0">
                             <img src="images/previous.png" style="cursor:pointer;"
                               onclick="previousTab(7);" alt="previous" class="tooltip"
                               title="Previous Step" />
                             <img src="images/next.png" style="cursor:pointer;"
                               onclick="nextTab(7);" alt="next" class="tooltip" title="Next Step" />
+                        </xsl:if>
                         </td>
                       </tr>
                     </table>
@@ -1267,7 +1254,7 @@
 
                   <div class="tab_content">
                    <xsl:attribute name="id">
-                     <xsl:if test="cdash/edit=0">fragment-7</xsl:if>
+                     <xsl:if test="cdash/edit=0">fragment-6</xsl:if>
                      <xsl:if test="cdash/edit=1">fragment-8</xsl:if>
                      </xsl:attribute>
                      
