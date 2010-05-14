@@ -36,7 +36,7 @@ $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Log Viewer</menusubtitle>";
 
 $xml .= "<log>";
-$xml .= file_get_contents($CDASH_BACKUP_DIRECTORY.'/cdash.log');
+$xml .= htmlentities(file_get_contents($CDASH_BACKUP_DIRECTORY.'/cdash.log'));
 $xml .= "</log>";
 // List of the file in the directory that have other*.xml
 foreach (glob($CDASH_BACKUP_DIRECTORY."/*_Other*.xml") as $filename) 
