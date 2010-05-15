@@ -58,12 +58,24 @@ if($Submit && $filemask)
   foreach($filelist as $filename)
     {
     ++$i;
+    $projectid = -1;
 
     # split on path separator
-    $pathParts = split("[/\\.]", $filename);
+    $pathParts = split("[/\\]", $filename);
+
     # split on cdash separator "_"
-    $cdashParts = split("[_]", $pathParts[1]);
-    $projectid = get_project_id($cdashParts[0]);
+    if(count($pathParts)>=1)
+      {
+      $cdashParts = split("[_]", $pathParts[count($pathParts)-1]);
+      $projectid = get_project_id($cdashParts[0]);
+      }
+
+    //echo 'i: ' . print_r($i, true) . '<br/>';
+    //echo 'filename: ' . print_r($filename, true) . '<br/>';
+    //echo 'pathParts: ' . print_r($pathParts, true) . '<br/>';
+    //echo 'cdashParts: ' . print_r($cdashParts, true) . '<br/>';
+    //echo 'projectid: ' . print_r($projectid, true) . '<br/>';
+    //echo '<br/>';
 
     if($projectid != -1)
       {
