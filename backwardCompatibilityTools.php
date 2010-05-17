@@ -78,9 +78,9 @@ if(isset($_GET['upgrade-tables']))
            $query = str_replace(";", "", "$query");
            $result = pdo_query($query);
            if (!$result)
-             {
+             {       
              if($db_type != "pgsql") // postgresql doesn't know CREATE TABLE IF NOT EXITS so we don't die
-               {        
+               {
                die(pdo_error());
                }
              }
@@ -295,14 +295,14 @@ function RenameTableField($table,$field,$newfield,$mySQLType,$pgSqlType,$default
     if($CDASH_DB_TYPE == "pgsql")
       {
       pdo_query("ALTER TABLE \"".$table."\" RENAME \"".$field."\" TO \"".$newfield."\"");
-      pdo_query("ALTER TABLE \"".$table."\" ALTER COLUMN \"".$newfield."\" SET DEFAULT \"".$default."\"");
+      pdo_query("ALTER TABLE \"".$table."\" ALTER COLUMN \"".$newfield."\" TYPE ".$pgSqlType);
+      pdo_query("ALTER TABLE \"".$table."\" ALTER COLUMN \"".$newfield."\" SET DEFAULT ".$default);
       }
     else
       {
       pdo_query("ALTER TABLE ".$table." CHANGE ".$field." ".$newfield." ".$mySQLType." DEFAULT '".$default."'");
+      add_last_sql_error("RenameTableField");
       }
-      
-    add_last_sql_error("RenameTableField");
     add_log("Done renaming $field to $newfield for $table","RenameTableField");
     }
 }
@@ -316,13 +316,13 @@ function AddTableIndex($table,$field)
     add_log("Adding index $field to $table","AddTableIndex");
     if($CDASH_DB_TYPE == "pgsql")
       {
-      pdo_query("CREATE INDEX ".$table."_".$field."_idx ON \"".$table."\" (\"".$field."\")");
+      @pdo_query("CREATE INDEX ".$table."_".$field."_idx ON \"".$table."\" (\"".$field."\")");
       }
     else
       {
       pdo_query("ALTER TABLE ".$table." ADD INDEX ( ".$field." )");
+      add_last_sql_error("AddTableIndex");
       }
-    add_last_sql_error("AddTableIndex");
     add_log("Done adding index $field to $table","AddTableIndex");
     }
 }
@@ -430,6 +430,7 @@ function RemoveTablePrimaryKey($table)
   if($CDASH_DB_TYPE == "pgsql")
     {
     pdo_query("ALTER TABLE \"".$table."\" DROP CONSTRAINT \"value_pkey\"");
+    pdo_query("ALTER TABLE \"".$table."\" DROP CONSTRAINT \"".$table."_pkey\"");
     }
   else
     {
@@ -757,12 +758,11 @@ if(isset($_GET['upgrade-1-8']))
   AddTableIndex('client_site','lastping');
    
   // Remove img index for table test2image
-  RenameTableField('test2image','imgid','imgid',"int(11)","bigint",0);
+  RenameTableField('test2image','imgid','imgid',"int(11)","bigint","0");
   RemoveTablePrimaryKey('test2image');
   AddTableIndex('test2image','imgid');
   
-  
-  
+ 
   // Set the database version
   setVersion();
 
