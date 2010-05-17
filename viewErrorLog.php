@@ -57,18 +57,36 @@ $xml .= "<title>Error Log - ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
-if($projectid)
+if($buildid)
+  {
+  $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
+
+  // Get the errors
+  if($date)
+    {
+    $sql = "AND date>'".$date."'";
+    }
+  $query = pdo_query("SELECT resourcetype,date,resourceid,description,type,buildid,projectid
+                     FROM errorlog WHERE projectid=".qnum($projectid).$sql." AND buildid=".qnum($buildid)." ORDER BY date DESC");
+ 
+  }
+else if($projectid)
   {
   $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
  
+  $sql = '';
+  if($date)
+    {
+    $sql = "AND date>'".$date."'";
+    }
   // Get the errors
   $query = pdo_query("SELECT resourcetype,date,resourceid,description,type,buildid,projectid
-                     FROM errorlog WHERE projectid=".qnum($projectid)." AND date>'".$date."' ORDER BY date DESC");
-  }
+                     FROM errorlog WHERE projectid=".qnum($projectid).$sql." ORDER BY date DESC");
+  }  
 else
   { 
   $query = pdo_query("SELECT resourcetype,date,resourceid,errorlog.description,type,buildid,projectid,project.name AS projectname
-                     FROM errorlog LEFT JOIN project ON (project.id=errorlog.projectid) WHERE date>'".$date."' ORDER BY date DESC");
+                     FROM errorlog LEFT JOIN project ON (project.id=errorlog.projectid) ORDER BY date DESC");
   echo pdo_error();
   }
 
