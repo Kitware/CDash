@@ -179,9 +179,21 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
   
   // Don't log if no diff
   if($npositives != 0 || $nnegatives != 0)
-    {   
-    pdo_query("INSERT INTO builderrordiff (buildid,type,difference_positive,difference_negative) 
+    {  
+    // Check if it exists
+    $query = pdo_query("SELECT count(buildid) FROM builderrordiff WHERE buildid=".qnum($buildid)." AND type=".$warning);
+    $query_array  = pdo_fetch_array($query);
+
+    if($query_array[0] == 0)
+      {
+      pdo_query("INSERT INTO builderrordiff (buildid,type,difference_positive,difference_negative) 
                  VALUES('$buildid','$warning','$npositives','$nnegatives')");
+      }
+    else
+      {
+      pdo_query("UPDATE builderrordiff SET difference_positive='".$npositives."',
+                 difference_negative='".$nnegatives."' WHERE buildid=".qnum($buildid)." AND type=".$warning);
+      }  
     add_last_sql_error("compute_error_difference",0,$buildid);
     }  
 }
