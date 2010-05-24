@@ -78,8 +78,18 @@ class ProjectHandler extends AbstractHandler
       
       // Check if the user is in the database
       $User = new User();
-      $User->FirstName = $email;
-      $User->LastName = $email;
+      
+      $posat = strpos($email,'@');
+      if($posat !== false)
+        { 
+        $User->FirstName = substr($email,0,$posat);
+        $User->LastName = substr($email,$postat+1);
+        }
+      else
+        {
+        $User->FirstName = $email;
+        $User->LastName = $email;
+        }
       $User->Email = $email;
       $User->Password = md5($email); 
       $User->Admin = 0;
