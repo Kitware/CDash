@@ -293,8 +293,8 @@
         <xsl:choose>
           <xsl:when test="nbuilderror>0">error</xsl:when>
           <xsl:otherwise><xsl:choose>
-          <xsl:when test="nbuilderror=0 and nbuildwarning=0 and nbuildpass=0"></xsl:when>
-          <xsl:otherwise>normal</xsl:otherwise>
+          <xsl:when test="nbuilderror=0">normal</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>    
@@ -307,8 +307,8 @@
         <xsl:choose>
           <xsl:when test="nbuildwarning>0">warning</xsl:when>
           <xsl:otherwise><xsl:choose>
-          <xsl:when test="nbuilderror=0 and nbuildwarning=0 and nbuildpass=0"></xsl:when>
-          <xsl:otherwise>normal</xsl:otherwise>
+          <xsl:when test="nbuildwarning=0">normal</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>    
