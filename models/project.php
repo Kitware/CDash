@@ -1094,10 +1094,12 @@ class Project
       }
   
     $project = pdo_query("SELECT SUM(build.testpassed) FROM build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
-                         " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                         AND buildgroup.includesubprojectotal=1 
-                         AND build.starttime>'$startUTCdate' 
-                         AND build.starttime<='$endUTCdate'");
+                         " AND build2group.buildid=build.id 
+                           AND build.testpassed>=0
+                           AND build2group.groupid=buildgroup.id
+                           AND buildgroup.includesubprojectotal=1 
+                           AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfPassingTests",$this->Id);
@@ -1117,10 +1119,12 @@ class Project
       }
   
     $project = pdo_query("SELECT SUM(build.testfailed) FROM build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
-                         " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                         AND buildgroup.includesubprojectotal=1 
-                         AND build.starttime>'$startUTCdate' 
-                         AND build.starttime<='$endUTCdate'");
+                         " AND build2group.buildid=build.id 
+                           AND build.testfailed>=0
+                           AND build2group.groupid=buildgroup.id
+                           AND buildgroup.includesubprojectotal=1 
+                           AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfFailingTests",$this->Id);
@@ -1140,10 +1144,12 @@ class Project
       }
   
     $project = pdo_query("SELECT SUM(build.testnotrun) FROM build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
-                         " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                         AND buildgroup.includesubprojectotal=1 
-                         AND build.starttime>'$startUTCdate' 
-                         AND build.starttime<='$endUTCdate'");
+                         " AND build2group.buildid=build.id
+                           AND build.testnotrun>=0
+                           AND build2group.groupid=buildgroup.id
+                           AND buildgroup.includesubprojectotal=1 
+                           AND build.starttime>'$startUTCdate' 
+                           AND build.starttime<='$endUTCdate'");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfNotRunTests",$this->Id);

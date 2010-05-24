@@ -425,8 +425,9 @@ class SubProject
     $project = pdo_query("SELECT count(*) FROM build2test,build,subproject2build,build2group,buildgroup WHERE subprojectid=".qnum($this->Id).
                          " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate'
-                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                            AND buildgroup.includesubprojectotal=1");
+                           AND build2group.buildid=build.id 
+                           AND build2group.groupid=buildgroup.id
+                           AND buildgroup.includesubprojectotal=1");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfTests");
@@ -448,8 +449,10 @@ class SubProject
     $project = pdo_query("SELECT SUM(build.testpassed) FROM build,subproject2build,build2group,buildgroup WHERE subprojectid=".qnum($this->Id).
                          " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate'
-                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                          AND buildgroup.includesubprojectotal=1");
+                           AND build.testpassed>=0
+                           AND build2group.buildid=build.id 
+                           AND build2group.groupid=buildgroup.id
+                           AND buildgroup.includesubprojectotal=1");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfPassingTests");
@@ -471,8 +474,10 @@ class SubProject
     $project = pdo_query("SELECT SUM(build.testfailed) FROM build,subproject2build,build2group,buildgroup WHERE subprojectid=".qnum($this->Id).
                          " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate'
-                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                            AND buildgroup.includesubprojectotal=1");
+                           AND build.testfailed>=0
+                           AND build2group.buildid=build.id 
+                           AND build2group.groupid=buildgroup.id
+                           AND buildgroup.includesubprojectotal=1");
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfFailingTests");
@@ -495,6 +500,7 @@ class SubProject
                          " AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
                            AND build.starttime<='$endUTCdate'
                            AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
+                           AND build.testnotrun>=0
                            AND buildgroup.includesubprojectotal=1");
     if(!$project)
       {
