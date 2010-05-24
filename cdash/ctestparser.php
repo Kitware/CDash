@@ -96,7 +96,6 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false)
     {
     echo "no handler found";
     add_log('error: could not create handler based on xml content', 'ctest_parse',LOG_ERR);
-    add_log("Content = ".$content, 'ctest_parse');
     $Project = new Project();
     $Project->Id = $projectid;
     
