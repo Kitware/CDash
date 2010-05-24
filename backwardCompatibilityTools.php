@@ -762,6 +762,8 @@ if(isset($_GET['upgrade-1-8']))
   RemoveTablePrimaryKey('test2image');
   AddTableIndex('test2image','imgid');
   
+  ModifyTableField("buildfailure","stdoutput","MEDIUMTEXT","TEXT","",true,false);
+  ModifyTableField("buildfailure","stderror","MEDIUMTEXT","TEXT","",true,false);
  
   // Set the database version
   setVersion();
