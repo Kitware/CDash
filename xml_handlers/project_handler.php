@@ -83,7 +83,7 @@ class ProjectHandler extends AbstractHandler
       if($posat !== false)
         { 
         $User->FirstName = substr($email,0,$posat);
-        $User->LastName = substr($email,$postat+1);
+        $User->LastName = substr($email,$posat+1);
         }
       else
         {
