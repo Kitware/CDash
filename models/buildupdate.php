@@ -83,6 +83,11 @@ class BuildUpdate
     $this->StartTime = pdo_real_escape_string($this->StartTime);
     $this->EndTime = pdo_real_escape_string($this->EndTime);
     $this->Command = pdo_real_escape_string($this->Command);
+    
+    if(strlen($this->Type)>4)
+      {
+      $this->Type = 'NA';  
+      }
     $this->Type = pdo_real_escape_string($this->Type);
     $this->Status = pdo_real_escape_string($this->Status);
     $this->Revision = pdo_real_escape_string($this->Revision);
@@ -106,7 +111,7 @@ class BuildUpdate
                       '$this->Type','$this->Status',$nfiles,$nwarnings,
                       '$this->Revision','$this->PriorRevision','$this->Path')";                     
     if(!pdo_query($query))
-      {
+      { 
       add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
       return false;
       }  
