@@ -615,6 +615,7 @@ CREATE TABLE `builderrordiff` (
   `difference_positive` int(11) NOT NULL,
   `difference_negative` int(11) NOT NULL,
   KEY `buildid` (`buildid`),
+  KEY `type` (`type`),
   KEY `difference_positive` (`difference_positive`),
   KEY `difference_negative` (`difference_negative`)
 );
@@ -624,7 +625,8 @@ CREATE TABLE `testdiff` (
   `type` tinyint(4) NOT NULL,
   `difference_positive` int(11) NOT NULL,
   `difference_negative` int(11) NOT NULL,
-  KEY `buildid` (`buildid`,`type`),
+  KEY `buildid` (`buildid`),
+  KEY `type` (`type`),
   KEY `difference_positive` (`difference_positive`),
   KEY `difference_negative` (`difference_negative`)
 );
@@ -816,8 +818,8 @@ CREATE TABLE `buildfailure` (
   `buildid` bigint(20) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `workingdirectory` varchar(255) NOT NULL,
-  `stdoutput` text NOT NULL,
-  `stderror` text NOT NULL,
+  `stdoutput` mediumtext NOT NULL,
+  `stderror` mediumtext NOT NULL,
   `exitcondition` varchar(255) NOT NULL,
   `language` varchar(64) NOT NULL,
   `targetname` varchar(255) NOT NULL,

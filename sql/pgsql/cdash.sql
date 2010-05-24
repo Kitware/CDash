@@ -537,6 +537,7 @@ CREATE TABLE "builderrordiff" (
   "difference_negative" bigint NOT NULL
 );
 CREATE INDEX "builderrordiff_buildid" on "builderrordiff" ("buildid");
+CREATE INDEX "builderrordiff_type" on "builderrordiff" ("type");
 CREATE INDEX "builderrordiff_difference_positive" on "builderrordiff" ("difference_positive");
 CREATE INDEX "builderrordiff_difference_negative" on "builderrordiff" ("difference_negative");
 
@@ -550,6 +551,7 @@ CREATE TABLE "testdiff" (
   "difference_negative" bigint NOT NULL
 );
 CREATE INDEX "buildid13" on "testdiff" ("buildid", "type");
+CREATE INDEX "testdiff_type" on "testdiff" ("type");
 CREATE INDEX "testdiff_difference_positive" on "testdiff" ("difference_positive");
 CREATE INDEX "testdiff_difference_negative" on "testdiff" ("difference_negative");
 
