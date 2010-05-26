@@ -4,14 +4,17 @@ include(CTest)
 # set some cache variables that can be used
 # to configure the testing install
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
-set(CDASH_DIR_NAME CDashTesting CACHE STRING "Directory name for CDash")
-
+get_filename_component(CDASH_DIR_NAME ${CDash_SOURCE_DIR} NAME)
+message("CDASH_DIR_NAME = ${CDASH_DIR_NAME}")
+set(CDASH_TESTING_URL "http://${CDASH_SERVER}/${CDASH_DIR_NAME}")
+message("Using url: ${CDASH_TESTING_URL}")
+make_directory("${CDash_BINARY_DIR}/tmp")
 # turn the CDash into one that can be tested
 file(WRITE "${CDash_SOURCE_DIR}/testing/config.test.local.php"
 "<?php
 $configure = array(
-  'urlwebsite'       => 'http://${CDASH_SERVER}/CDashTesting',
-  'outputdirectory'  => 'C:/tmp',  // or /tmp or ~/tmp on a Linux/Mac server
+  'urlwebsite'       => '${CDASH_TESTING_URL}',
+  'outputdirectory'  => '${CDash_BINARY_DIR}/tmp', 
   'type'             => 'Nightly',
   'site'             => 'computername.companyname',
   'buildname'        => 'SVN-Win32-xampp',
