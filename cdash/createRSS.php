@@ -94,10 +94,10 @@ function CreateRSSFeed($projectid)
     $title .= " - ".$build_array["submittime"]." - ".$nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
     
     // Should link to the errors...
-    $link = $currentURI."/index.php?project=".$projectname;
+    $link = $currentURI."/buildSummary.php?buildid=".$buildid;
  
     $description = "A new ".$build_array["type"]." submission from ".$site_array["name"]." - ".$build_array["name"]." is available: ";
-    $description .= $nerrors."errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail."failed.";
+    $description .= $nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
  
     $pubDate = date('m/d/y h:i:s A');
     $date = date('m/d/y');
