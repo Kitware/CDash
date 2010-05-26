@@ -293,8 +293,8 @@
         <xsl:choose>
           <xsl:when test="nbuilderror>0">error</xsl:when>
           <xsl:otherwise><xsl:choose>
-          <xsl:when test="nbuilderror=0">normal</xsl:when>
-          <xsl:otherwise></xsl:otherwise>
+          <xsl:when test="nbuilderror=0 and nbuildwarning=0 and nbuildpass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>    
@@ -307,24 +307,24 @@
         <xsl:choose>
           <xsl:when test="nbuildwarning>0">warning</xsl:when>
           <xsl:otherwise><xsl:choose>
-          <xsl:when test="nbuildwarning=0">normal</xsl:when>
-          <xsl:otherwise></xsl:otherwise>
+          <xsl:when test="nbuilderror=0 and nbuildwarning=0 and nbuildpass=0"></xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>    
     <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">     
-    <xsl:value-of select="nbuildwarning"/>
+      <xsl:value-of select="nbuildwarning"/>
     </xsl:if>
     </td>
    <td align="center">
     <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="nbuildpass>0">normal</xsl:when>
+          <xsl:when test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">normal</xsl:when>
           <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>    
     <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">     
-    <xsl:value-of select="nbuildpass"/>
+      <xsl:value-of select="nbuildpass"/>
     </xsl:if>
     </td>
    <td align="center">
@@ -332,8 +332,8 @@
         <xsl:choose>
           <xsl:when test="ntestnotrun>0">warning</xsl:when>
           <xsl:otherwise><xsl:choose>
-          <xsl:when test="string-length(ntestnotrun)=0"></xsl:when>
-          <xsl:otherwise>normal</xsl:otherwise>
+          <xsl:when test="(ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0) and string-length(ntestnotrun)>0">normal</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
@@ -346,8 +346,8 @@
         <xsl:choose>
           <xsl:when test="ntestfail>0">error</xsl:when>
           <xsl:otherwise><xsl:choose>
-          <xsl:when test="string-length(ntestfail)=0"></xsl:when>
-          <xsl:otherwise>normal</xsl:otherwise>
+          <xsl:when test="(ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0) and string-length(ntestfail)>0">normal</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>  
@@ -358,7 +358,7 @@
   <td align="center">
     <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="ntestpass>0">normal</xsl:when>
+          <xsl:when test="(ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0) and string-length(ntestpass)>0">normal</xsl:when>
           <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute> 
