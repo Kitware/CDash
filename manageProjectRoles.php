@@ -431,16 +431,16 @@ if($projectid>0)
              
   // Check if a user is committing without being registered to CDash or with email disabled
   $date = date(FMT_DATETIME,strtotime(date(FMT_DATETIME)." -30 days"));
-  $sql = "SELECT DISTINCT author,emailtype,user.email FROM dailyupdate,dailyupdatefile
+  $sql = "SELECT DISTINCT author,emailtype,".qid("user").".email FROM dailyupdate,dailyupdatefile
             LEFT JOIN user2project ON (dailyupdatefile.author=user2project.cvslogin
             AND user2project.projectid=".qnum($project_array['id'])."
             )
-            LEFT JOIN user ON (user2project.userid=user.id)
+            LEFT JOIN ".qid("user")." ON (user2project.userid=".qid("user").".id)
             WHERE 
              dailyupdatefile.dailyupdateid=dailyupdate.id 
              AND dailyupdate.projectid=".qnum($project_array['id']).
             " AND dailyupdatefile.checkindate>'".$date."' AND (emailtype=0 OR emailtype IS NULL)";
-  
+    
   $query = pdo_query($sql);
   add_last_sql_error('ManageProjectRole');
   while($query_array = pdo_fetch_array($query))
