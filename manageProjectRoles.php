@@ -368,6 +368,7 @@ if($importUsers)
     }   
 } // end import users
 
+
 $sql = "SELECT id,name FROM project";
 if($user_array["admin"] != 1)
   {
@@ -385,7 +386,7 @@ while($project_array = pdo_fetch_array($projects))
       }
    $xml .= "</availableproject>";
    }
-  
+
 // If we have a project id
 if($projectid>0)
   {
@@ -397,12 +398,12 @@ if($projectid>0)
   $xml .= add_XML_value("name_encoded",urlencode($project_array['name']));
   $xml .= "</project>";
   
+
   // List the users for that project
   $user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.cvslogin,up.role
                        FROM user2project AS up, ".qid("user")." as u  
                        WHERE u.id=up.userid  AND up.projectid='$projectid' 
-                       ORDER BY u.firstname ASC");
-                           
+                       ORDER BY u.firstname ASC");                    
   $i=0;                         
   while($user_array = pdo_fetch_array($user))
     {
@@ -427,9 +428,10 @@ if($projectid>0)
     $xml .= "</user>";
     }
 
+             
   // Check if a user is committing without being registered to CDash or with email disabled
   $date = date(FMT_DATETIME,strtotime(date(FMT_DATETIME)." -30 days"));
-  $sql = "SELECT DISTINCT author,emailtype,email FROM dailyupdate,dailyupdatefile
+  $sql = "SELECT DISTINCT author,emailtype,user.email FROM dailyupdate,dailyupdatefile
             LEFT JOIN user2project ON (dailyupdatefile.author=user2project.cvslogin
             AND user2project.projectid=".qnum($project_array['id'])."
             )
@@ -440,6 +442,7 @@ if($projectid>0)
             " AND dailyupdatefile.checkindate>'".$date."' AND (emailtype=0 OR emailtype IS NULL)";
   
   $query = pdo_query($sql);
+  add_last_sql_error('ManageProjectRole');
   while($query_array = pdo_fetch_array($query))
     {
     $xml .= "<baduser>";
