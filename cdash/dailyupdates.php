@@ -345,7 +345,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     $command = '"'.$command.'"';  
     }
   $currentrevision = `$command`;    
-  $results['currentrevision'] = $currentrevision;
+  $results['currentrevision'] = trim($currentrevision);
       
   // Find the previous day version
   if($previousrevision != '')
@@ -703,7 +703,7 @@ function get_repository_commits($projectid, $dates)
           {
           $currentdate = gmdate(FMT_DATE, $dates['nightly']);  
           $prevrev = pdo_query("UPDATE dailyupdate SET revision='".$results['currentrevision']."' 
-                                WHERE projectid='$projectid' AND date=".$currentdate);
+                                WHERE projectid='$projectid' AND date='".$currentdate."'");
           add_last_sql_error("get_repository_commits");  
           }
         $new_commits = $results['commits'];
