@@ -348,7 +348,9 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
       $command = '"'.$command.'"';  
       }
     $currentrevision = `$command`; 
-
+    
+    $results['currentrevision'] = $currentrevision;
+    
     // Compare with the fetch head for now
     $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged '.$previousrevision.'..'.$currentrevision.' --pretty=medium '.$branch;
     }
@@ -413,8 +415,8 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
       }     
     }
   
-        
-  return $commits;
+  $results['commits'] = $commits;
+  return $results;
 } // end get_git_repository_commits
 
 /** Get the SVN repository commits */
@@ -694,10 +696,18 @@ function get_repository_commits($projectid, $dates)
           $prevrev_array = pdo_fetch_array($prevrev);
           $previousrevision = $prevrev_array[0];
           }
-        
-        
-        
-        $new_commits = get_git_repository_commits($root,$dates,$branch,$previousrevision);    
+            
+        $results = get_git_repository_commits($root,$dates,$branch,$previousrevision);
+
+        // Update the current revision
+        if(isset($results['currentrevision']))
+          {
+          $currentdate = gmdate(FMT_DATE, $dates['nightly']);  
+          $prevrev = pdo_query("UPDATE dailyupdate SET revision='".$results['currentrevision']."' 
+                                WHERE projectid='$projectid' AND date=".$currentdate);
+          add_last_sql_error("get_repository_commits");  
+          }
+        $new_commits = $results['commits'];
         }  
       else
         {
