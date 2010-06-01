@@ -338,19 +338,18 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     {
     $branch = 'FETCH_HEAD';  
     }
-    
+
+  $command = 'cd "'.$gitlocaldirectory.'" && '.$gitcommand.' rev-parse '.$branch;
+  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+    { 
+    $command = '"'.$command.'"';  
+    }
+  $currentrevision = `$command`;    
+  $results['currentrevision'] = $currentrevision;
+      
   // Find the previous day version
   if($previousrevision != '')
     {
-    $command = 'cd "'.$gitlocaldirectory.'" && '.$gitcommand.' rev-parse '.$branch;
-    if(DIRECTORY_SEPARATOR == '\\') // we are on windows
-      { 
-      $command = '"'.$command.'"';  
-      }
-    $currentrevision = `$command`; 
-    
-    $results['currentrevision'] = $currentrevision;
-    
     // Compare with the fetch head for now
     $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged '.$previousrevision.'..'.$currentrevision.' --pretty=medium '.$branch;
     }
