@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(CDash NONE)
 include(CTest)
-
+configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
+  ${CDash_BINARY_DIR}/CTestCustom.cmake)
 # set some cache variables that can be used
 # to configure the testing install
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
