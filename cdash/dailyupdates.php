@@ -339,7 +339,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     $branch = 'FETCH_HEAD';  
     }
 
-  $command = 'cd "'.$gitlocaldirectory.'" && '.$gitcommand.' rev-parse '.$branch;
+  $command = $gitcommand.' --git-dir="'.$gitdir.'" rev-parse '.$branch;
   if(DIRECTORY_SEPARATOR == '\\') // we are on windows
     { 
     $command = '"'.$command.'"';  
