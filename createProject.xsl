@@ -600,6 +600,20 @@
                         <tr>
                           <td></td>
                           <td>
+                            <div align="right"><strong>Branch:</strong></div>
+                          </td>
+                          <td>
+                            <input onchange="saveChanges();" type="text" size="50">
+                              <xsl:attribute name="name">cvsBranch[<xsl:value-of select="id"/>]</xsl:attribute>
+                              <xsl:attribute name="value">
+                                <xsl:value-of select="branch"/>
+                              </xsl:attribute>
+                            </input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>
                             <div align="right"><strong>Username:</strong></div>
                           </td>
                           <td>

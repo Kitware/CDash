@@ -570,11 +570,11 @@ class Project
     }
   
   /** Add CVS/SVN repositories */
-  function AddRepositories($repositories, $usernames, $passwords)
+  function AddRepositories($repositories, $usernames, $passwords,$branches)
     {
     // First we update/delete any registered repositories
     $currentRepository = 0;
-    $repositories_query = pdo_query("SELECT repositoryid from project2repositories WHERE projectid=".qnum($this->Id)." ORDER BY repositoryid");
+    $repositories_query = pdo_query("SELECT repositoryid FROM project2repositories WHERE projectid=".qnum($this->Id)." ORDER BY repositoryid");
     add_last_sql_error("Project AddRepositories",$this->Id);
     while($repository_array = pdo_fetch_array($repositories_query))
       {
@@ -600,7 +600,9 @@ class Project
           {
           pdo_query("UPDATE repositories SET url='$repositories[$currentRepository]', 
                           username='$usernames[$currentRepository]', 
-                          password='$passwords[$currentRepository]' WHERE id=".qnum($repositoryid));  
+                          password='$passwords[$currentRepository]',
+                          branch='$branches[$currentRepository]' 
+                          WHERE id=".qnum($repositoryid));  
           add_last_sql_error("Project AddRepositories",$this->Id);
           }
         else // Otherwise we remove it from the current project and add it to the queue to be created
@@ -610,6 +612,7 @@ class Project
           $repositories[] = $repositories[$currentRepository];
           $usernames[] = $usernames[$currentRepository];
           $passwords[] = $passwords[$currentRepository];
+          $branches[] = $branches[$currentRepository];
           }
         }  
       $currentRepository++;
@@ -621,6 +624,7 @@ class Project
       $url = $repositories[$i];
       $username = $usernames[$i];
       $password = $passwords[$i];
+      $branch = $branches[$i];
       if(strlen($url) == 0)
         {
         continue;
@@ -630,7 +634,7 @@ class Project
       $repositories_query = pdo_query("SELECT id FROM repositories WHERE url='$url'");
       if(pdo_num_rows($repositories_query) == 0)
         {
-        pdo_query("INSERT INTO repositories (url, username, password) VALUES ('$url', '$username', '$password')");
+        pdo_query("INSERT INTO repositories (url, username, password, branch) VALUES ('$url', '$username', '$password','$branch')");
         add_last_sql_error("Project AddRepositories",$this->Id);
         $repositoryid = pdo_insert_id("repositories");
         }
@@ -648,7 +652,7 @@ class Project
    function GetRepositories()
      {
      $repositories = array();
-     $repository = pdo_query("SELECT url, username, password from repositories,project2repositories
+     $repository = pdo_query("SELECT url,username,password,branch from repositories,project2repositories
                                WHERE repositories.id=project2repositories.repositoryid
                                AND project2repositories.projectid=".qnum($this->Id));
      add_last_sql_error("Project GetRepositories",$this->Id);
@@ -657,6 +661,7 @@ class Project
        $rep['url'] = $repository_array['url'];
        $rep['username'] = $repository_array['username'];
        $rep['password'] = $repository_array['password'];
+       $rep['branch'] = $repository_array['branch'];
        $repositories[] = $rep;
        }
      return $repositories;   

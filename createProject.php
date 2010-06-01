@@ -157,6 +157,8 @@ if($Submit)
     @$CVSRepositories = stripslashes_if_gpc_magic_quotes($_POST["cvsRepository"]);
     @$CVSUsernames = stripslashes_if_gpc_magic_quotes($_POST["cvsUsername"]);
     @$CVSPasswords = stripslashes_if_gpc_magic_quotes($_POST["cvsPassword"]);
+    @$CVSBranches = stripslashes_if_gpc_magic_quotes($_POST["cvsBranch"]);
+    
     @$Project->TestTimeStd = stripslashes_if_gpc_magic_quotes($_POST["testTimeStd"]);
     @$Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
     @$Project->TestTimeMaxStatus = stripslashes_if_gpc_magic_quotes($_POST["testTimeMaxStatus"]);
@@ -229,7 +231,7 @@ if($Submit)
       }
     
     // Add the repositories
-    $Project->AddRepositories($CVSRepositories, $CVSUsernames, $CVSPasswords);
+    $Project->AddRepositories($CVSRepositories, $CVSUsernames, $CVSPasswords,$CVSBranches);
     
     /** Add the logo if any */
     if(isset($_FILES['logo']) && strlen($_FILES['logo']['tmp_name'])>0)
@@ -359,7 +361,8 @@ if($Update || $AddRepository)
   // Add repositories
   $Project->AddRepositories($_POST["cvsRepository"], 
                             $_POST["cvsUsername"], 
-                            $_POST["cvsPassword"]);
+                            $_POST["cvsPassword"],
+                            $_POST["cvsBranch"]);
   }
   
 // List the available projects
@@ -451,6 +454,7 @@ if($projectid>0)
     $xml .= add_XML_value("url",$repository['url']);
     $xml .= add_XML_value("username",$repository['username']);
     $xml .= add_XML_value("password",$repository['password']);
+    $xml .= add_XML_value("branch",$repository['branch']);
     $xml .= "</cvsrepository>";
     $nRegisteredRepositories++;
     $nRepositories++;

@@ -555,6 +555,7 @@ CREATE TABLE `repositories` (
   `url` varchar(255) NOT NULL,
   `username` varchar(50) NOT NULL default '',
   `password` varchar(50) NOT NULL default '',
+  `branch` varchar(60) NOT NULL default '',
   PRIMARY KEY  (`id`)
 );
 
@@ -589,6 +590,7 @@ CREATE TABLE `dailyupdate` (
   `command` text NOT NULL,
   `type` varchar(4) NOT NULL default '',
   `status` tinyint(4) NOT NULL default '0',
+  `revision` varchar(60) NOT NULL default '0',
   PRIMARY KEY (`id`),
   KEY `date` (`date`),
   KEY `projectid` (`projectid`)

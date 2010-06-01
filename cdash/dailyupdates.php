@@ -289,7 +289,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
 } // end get_cvs_repository_commits
 
 /** Get the GIT repository commits */
-function get_git_repository_commits($gitroot, $dates)
+function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision)
 {
   include('cdash/config.php');
   $commits = array();
@@ -322,6 +322,11 @@ function get_git_repository_commits($gitroot, $dates)
     
   // Update the current bare repository
   $command = $gitcommand.' --git-dir="'.$gitdir.'" fetch '.$gitroot;
+  if($branch != '')
+    {
+    $command .= ' '.$branch.":".$branch;  
+    }
+    
   if(DIRECTORY_SEPARATOR == '\\') // we are on windows
     {
     $command = '"'.$command.'"';  
@@ -329,11 +334,33 @@ function get_git_repository_commits($gitroot, $dates)
   $raw_output = `$command`;
    
   // Get what changed during that time
-  $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
-  $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
+  if($branch == '')
+    {
+    $branch = 'FETCH_HEAD';  
+    }
+    
+  // Find the previous day version
+  if($previousrevision != '')
+    {
+    $command = 'cd "'.$gitlocaldirectory.'" && '.$gitcommand.' rev-parse '.$branch;
+    if(DIRECTORY_SEPARATOR == '\\') // we are on windows
+      { 
+      $command = '"'.$command.'"';  
+      }
+    $currentrevision = `$command`; 
 
-  // Compare with the fetch head for now
-  $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --pretty=medium FETCH_HEAD';
+    // Compare with the fetch head for now
+    $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged '.$previousrevision.'..'.$currentrevision.' --pretty=medium '.$branch;
+    }
+  else
+    {  
+    $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1) . " GMT";
+    $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
+
+    // Compare with the fetch head for now
+    $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --pretty=medium '.$branch;
+    }
+   
   if(DIRECTORY_SEPARATOR == '\\') // we are on windows
     {
     $command = '"'.$command.'"';  
@@ -622,7 +649,7 @@ function get_repository_commits($projectid, $dates)
   $roots = array();
  
   // Find the repository 
-  $repositories = pdo_query("SELECT repositories.url,repositories.username,repositories.password
+  $repositories = pdo_query("SELECT repositories.url,repositories.username,repositories.password,repositories.branch
                         FROM repositories,project2repositories 
                         WHERE repositories.id=project2repositories.repositoryid
                         AND project2repositories.projectid='$projectid'");
@@ -654,7 +681,23 @@ function get_repository_commits($projectid, $dates)
         }
       else if($cvsviewer == "gitweb" || $cvsviewer == "gitorious" || $cvsviewer == "github")
         {
-        $new_commits = get_git_repository_commits($root, $dates);    
+        $branch = $repositories_array["branch"];
+        
+        // Find the prior revision
+        $previousdate = gmdate(FMT_DATE, $dates['nightly-1']);
+        $prevrev = pdo_query("SELECT revision FROM dailyupdate 
+                              WHERE projectid='$projectid' AND date=".$previousdate);
+
+        $previousrevision = '';
+        if(pdo_num_rows($prevrev)>0)
+          {
+          $prevrev_array = pdo_fetch_array($prevrev);
+          $previousrevision = $prevrev_array[0];
+          }
+        
+        
+        
+        $new_commits = get_git_repository_commits($root,$dates,$branch,$previousrevision);    
         }  
       else
         {

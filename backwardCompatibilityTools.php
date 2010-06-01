@@ -764,9 +764,11 @@ if(isset($_GET['upgrade-1-8']))
   
   ModifyTableField("buildfailure","stdoutput","MEDIUMTEXT","TEXT","",true,false);
   ModifyTableField("buildfailure","stderror","MEDIUMTEXT","TEXT","",true,false);
- 
   AddTableIndex('builderrordiff','type');
   
+  AddTableField("dailyupdate","revision","varchar(60)","character varying(60)","");
+  AddTableField("repositories","branch","varchar(60)","character varying(60)","");
+ 
   // Set the database version
   setVersion();
 

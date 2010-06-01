@@ -473,6 +473,7 @@ CREATE TABLE "repositories" (
   "url" character varying(255) NOT NULL,
   "username" character varying(50) DEFAULT '' NOT NULL,
   "password" character varying(50) DEFAULT '' NOT NULL,
+  "branch" character varying(60) DEFAULT '' NOT NULL,
   PRIMARY KEY ("id")
 );
 
@@ -506,6 +507,7 @@ CREATE TABLE "dailyupdate" (
   "command" text NOT NULL,
   "type" character varying(4) DEFAULT '' NOT NULL,
   "status" smallint DEFAULT '0' NOT NULL,
+  "revision" character varying(60) DEFAULT '0' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "date" on "dailyupdate" ("date");
