@@ -701,7 +701,7 @@ function get_repository_commits($projectid, $dates)
         // Update the current revision
         if(isset($results['currentrevision']))
           {
-          $currentdate = gmdate(FMT_DATE, $dates['nightly']);  
+          $currentdate = gmdate(FMT_DATE, $dates['nightly-0']);  
           $prevrev = pdo_query("UPDATE dailyupdate SET revision='".$results['currentrevision']."' 
                                 WHERE projectid='$projectid' AND date='".$currentdate."'");
           add_last_sql_error("get_repository_commits");  
