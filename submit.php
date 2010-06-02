@@ -26,6 +26,7 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include("cdash/do_submit.php");
 include("cdash/clientsubmit.php");
+include("cdash/version.php");
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 if(!$db || !pdo_select_db("$CDASH_DB_NAME",$db))
@@ -38,8 +39,28 @@ set_time_limit(0);
 // Send to the client submit
 client_submit();
 
+$expected_md5 = isset($_GET['MD5']) ? $_GET['MD5'] : '';
 $file_path='php://input';
-$fp = fopen($file_path, 'r');
+$temp_path='backup/test.tmp';
+copy($file_path, $temp_path);
+$fp = fopen($temp_path, 'r');
+$contents = stream_get_contents($fp);
+$md5sum = md5($contents);
+rewind($fp);
+
+echo "<cdash version=\"$CDASH_VERSION\">\n";
+if($expected_md5 == '' || $expected_md5 == $md5sum)
+  {
+  echo "  <status>OK</status>\n";
+  echo "  <message></message>\n";
+  }
+else
+  {
+  echo "  <status>ERROR</status>\n";
+  echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
+  }
+echo "  <md5>$md5sum</md5>\n";
+echo "</cdash>\n";
 
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
@@ -51,7 +72,7 @@ if($projectid == -1)
   add_log('Not a valid project. projectname: ' . $projectname, 'global:submit.php');
   exit();
   }
-
+  
 // If the submission is asynchronous we store in the database
 if($CDASH_ASYNCHRONOUS_SUBMISSION)
   {

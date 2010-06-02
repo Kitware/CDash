@@ -96,7 +96,7 @@ function do_submit($filehandle, $projectid)
 function do_submit_asynchronous($filehandle, $projectid)
 {
   include('cdash/config.php');
- 
+
   // Save the file in the backup directory
   $filename = ctest_parse($filehandle, $projectid,true);
   fclose($filehandle);
