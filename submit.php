@@ -48,6 +48,7 @@ $contents = stream_get_contents($fp);
 $md5sum = md5($contents);
 rewind($fp);
 
+$md5error = false;
 echo "<cdash version=\"$CDASH_VERSION\">\n";
 if($expected_md5 == '' || $expected_md5 == $md5sum)
   {
@@ -58,9 +59,16 @@ else
   {
   echo "  <status>ERROR</status>\n";
   echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
+  $md5error = true;
   }
 echo "  <md5>$md5sum</md5>\n";
 echo "</cdash>\n";
+
+if($md5error)
+  {
+  add_log('Checksum failure on file: '.$_GET["filename"]);
+  exit();
+  }
 
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
