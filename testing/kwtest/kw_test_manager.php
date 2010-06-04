@@ -40,7 +40,14 @@ class TestManager
       unlink($filename);
       }
     }
-
+  function runFileTest(&$reporter, $file)
+  {
+    $test = &new GroupTest('All Tests');
+    $path = $this->testDir.  "/" . $file;
+    print "$path";
+    $test->addTestFile($path);
+    return $test->run($reporter);
+  }
   /**
      * run all the tests
      * @return the result the test running 
@@ -51,6 +58,7 @@ class TestManager
     $test = &new GroupTest('All Tests');
     foreach($testsFile as $path=>$file)
       {
+      print "$path";
       $test->addTestFile($path);
       }
     return $test->run($reporter);

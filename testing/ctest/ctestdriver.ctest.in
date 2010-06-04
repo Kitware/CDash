@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
+
 # Settings:
 set(CTEST_SITE                          "CDashTestingSite")
 set(CTEST_BUILD_NAME           "CDash-CTest-@TestName@")
@@ -14,12 +15,44 @@ set(CTEST_DROP_LOCATION "/@CDASH_DIR_NAME@/submit.php?project=InsightExample")
 set(CTEST_CMAKE_GENERATOR "@CMAKE_GENERATOR@")
 set(CTEST_PROJECT_NAME "@ProjectName@")
 
-
 ctest_start(Experimental)
 ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_submit()
+execute_process(COMMAND @PHP_EXE@ singletest.php @CDashVerifyScript@
+  WORKING_DIRECTORY  @CDash_SOURCE_DIR@/testing/
+  OUTPUT_VARIABLE OUTDATA
+  RESULT_VARIABLE res
+  )
 
-# execute_process(COMMAND ${PYTHON} @CDashVerifyScript@)
-#message(FATAL_ERROR "this test failed")
+set(EXPECTED_PASSED 1)
+string(REGEX REPLACE ".*strong>([0-9]+).*strong.*passes.*" "\\1"
+  PASSED "${OUTDATA}")
+if("${PASSED}" STREQUAL "")
+  set(PASSED 0)
+endif()
+string(REGEX REPLACE ".*strong>([0-9]+).*strong.*fails.*" "\\1" 
+  FAILED "${OUTDATA}")
+if("${FAILED}" STREQUAL "")
+  set(FAILED 0)
+endif()
+string(REGEX REPLACE ".*strong>([0-9]+).*strong.*exceptions.*" "\\1" 
+  EXCEPTIONS "${OUTDATA}")
+if("${EXCEPTIONS}" STREQUAL "")
+  set(EXCEPTIONS 0)
+endif()
+message("Passed = ${PASSED}")
+message("Failed = ${FAILED}")
+message("Exception = ${EXCEPTIONS}")
+if(${FAILED} GREATER 0  OR ${EXCEPTIONS} GREATER 0)
+  message(FATAL_ERROR "Test failures found: ${OUTDATA}")
+endif()
+if(${PASSED} LESS ${EXPECTED_PASSED})
+  message(FATAL_ERROR 
+    "Not enough passed tests found: ${PASSED},"
+    " expected ${EXPECTED_PASSED}):\n"
+    "Output from tests:\n${OUTDATA}")
+endif()
+message("Test Passed")
+message("${OUTDATA}")

@@ -10,7 +10,7 @@ add_test(UnitTests
 # Run the web unit tests as an "inner" dashboard using command line php so that
 # we can see individual test results on the dashboard...
 #
-find_program(PHP_EXE php)
+find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 message("PHP_EXE='${PHP_EXE}'")
 if(PHP_EXE)
   add_test(UnitTestsAsInnerDashboard
@@ -32,5 +32,5 @@ function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
   set_tests_properties(${TestName} PROPERTIES DEPENDS UnitTests)
 endfunction(add_ctest_test)
 
-add_ctest_test(simple2 Simple simple2 verify.php)
-add_ctest_test(simple Simple simple verify.php)
+add_ctest_test(simple2 Simple simple2 simple2.php)
+add_ctest_test(simple Simple simple simple.php)
