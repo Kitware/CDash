@@ -27,19 +27,19 @@ execute_process(COMMAND @PHP_EXE@ singletest.php @CDashVerifyScript@
   )
 
 set(EXPECTED_PASSED 1)
-string(REGEX REPLACE ".*strong>([0-9]+).*strong.*passes.*" "\\1"
+string(REGEX REPLACE ".*Passes: ([0-9]+).*" "\\1"
   PASSED "${OUTDATA}")
-if("${PASSED}" STREQUAL "")
+if("${PASSED}" STREQUAL "${OUTDATA}")
   set(PASSED 0)
 endif()
-string(REGEX REPLACE ".*strong>([0-9]+).*strong.*fails.*" "\\1" 
+string(REGEX REPLACE ".*Failures: ([0-9]+).*" "\\1" 
   FAILED "${OUTDATA}")
-if("${FAILED}" STREQUAL "")
+if("${FAILED}" STREQUAL "${OUTDATA}")
   set(FAILED 0)
 endif()
-string(REGEX REPLACE ".*strong>([0-9]+).*strong.*exceptions.*" "\\1" 
+string(REGEX REPLACE ".*Exceptions: ([0-9]+).*" "\\1" 
   EXCEPTIONS "${OUTDATA}")
-if("${EXCEPTIONS}" STREQUAL "")
+if("${EXCEPTIONS}" STREQUAL $"{OUTDATA}")
   set(EXCEPTIONS 0)
 endif()
 message("Passed = ${PASSED}")

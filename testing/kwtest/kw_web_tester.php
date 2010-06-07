@@ -197,13 +197,19 @@ class KWWebTestCase extends WebTestCase {
     return $content;
     }
     
-  function login()
+  function login($user='simpletest@localhost', $passwd='simpletest')
     {
     $this->get($this->url);
     $this->clickLink('Login');
-    $this->setField('login','simpletest@localhost');
-    $this->setField('passwd','simpletest');
+    $this->setField('login',$user);
+    $this->setField('passwd',$passwd);
     return $this->clickSubmitByName('sent');
+    }
+  
+  function logout()
+    {
+    $this->get($this->url);
+    return $this->clickLink('Log Out');
     }
     
   function submission($projectname,$file)
