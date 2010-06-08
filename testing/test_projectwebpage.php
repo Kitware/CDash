@@ -142,6 +142,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
 
     // Testing if it actually worked
+    $this->login();
     $content = $this->connect($this->url.'/index.php?project=InsightExample&date=20090223');
     $content = $this->analyse($this->clickLink('76.43%'));
     $content = $this->analyse($this->clickLink('Statisfactory (75)'));
