@@ -7,7 +7,7 @@ $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/builderrordiff.php');
 
-class BuildBuildErrorDiffCase extends KWWebTestCase
+class BuildErrorDiffTestCase extends KWWebTestCase
 {
   var $url           = null;
   var $db            = null;

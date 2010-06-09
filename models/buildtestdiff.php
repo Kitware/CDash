@@ -39,7 +39,7 @@ class BuildTestDiff
       return false;
       }
       
-    $query = "INSERT INTO testdiff (buildid,type,difference) VALUES ('$this->BuildId','$this->Type','$this->Difference')";                     
+    $query = "INSERT INTO testdiff (buildid,type,difference_positive) VALUES ('$this->BuildId','$this->Type','$this->Difference')";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildTestDiff Insert",0,$this->BuildId);

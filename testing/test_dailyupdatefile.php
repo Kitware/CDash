@@ -7,7 +7,7 @@ $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/dailyupdatefile.php');
 
-class BuildDailyUpdateFileCase extends KWWebTestCase
+class DailyUpdateFileTestCase extends KWWebTestCase
 {
   var $url           = null;
   var $db            = null;

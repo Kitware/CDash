@@ -7,7 +7,7 @@ $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/buildgroupposition.php');
 
-class BuildBuildGroupPositionCase extends KWWebTestCase
+class BuildGroupPositionTestCase extends KWWebTestCase
 {
   var $url           = null;
   var $db            = null;

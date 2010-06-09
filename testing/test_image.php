@@ -8,7 +8,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/image.php');
 require_once('models/testimage.php');
 
-class BuildImageCase extends KWWebTestCase
+class ImageTestCase extends KWWebTestCase
 {
   var $url           = null;
   var $db            = null;
