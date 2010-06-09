@@ -6,6 +6,7 @@ require_once('kwtest/kw_db.php');
 $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/image.php');
+require_once('models/testimage.php');
 
 class BuildImageCase extends KWWebTestCase
 {
@@ -29,7 +30,6 @@ class BuildImageCase extends KWWebTestCase
    
   function testImage()
     {
-
     $db = pdo_connect($this->db->dbo->host, $this->db->dbo->user, $this->db->dbo->password);
     pdo_select_db("cdash4simpletest", $db);
 
@@ -65,6 +65,31 @@ class BuildImageCase extends KWWebTestCase
     if(!$image->Save())
       {
       $this->fail("Save() call #2 returned false when it should be true.\n");
+      return 1;
+      }
+
+    //exercise the TestImage class as well
+    $testimage = new TestImage();
+    
+    $testimage->SetValue("IMAGE", "ValidImage");
+    $testimage->Id = 1;
+    $testimage->TestId = 1;
+
+    if($testimage->Exists())
+      {
+      $this->fail("testimage shouldn't exist yet.\n");
+      return 1;
+      }
+
+    if(!$testimage->Insert())
+      {
+      $this->fail("testimage::Insert() shouldn't have returned false.\n");
+      return 1;
+      }
+    
+    if(!$testimage->Exists())
+      {
+      $this->fail("testimage should exist at this point.\n");
       return 1;
       }
 
