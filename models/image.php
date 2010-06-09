@@ -109,6 +109,7 @@ class Image
          return false;
          }
       }
+    return true;
   } // end function save
       
 }

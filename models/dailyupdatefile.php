@@ -49,7 +49,7 @@ class DailyUpdateFile
       return false;    
       }
     
-    $query = pdo_query("SELECT count(*) FROM dailyupdate WHERE dailyupdateid='".$this->dailyupadteid."' AND filename='".$this->Filename."'");
+    $query = pdo_query("SELECT count(*) FROM dailyupdatefile WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'");
     $query_array = pdo_fetch_array($query);
     if($query_array['count(*)']==0)
       {
@@ -78,9 +78,9 @@ class DailyUpdateFile
       {
       // Update the project
       $query = "UPDATE dailyupdatefile SET";
-      $query .= " checkindate='".$this->Command."'";
-      $query .= ",author='".$this->Type."'";
-      $query .= ",log='".$this->Status."'";
+      $query .= " checkindate='".$this->CheckinDate."'";
+      $query .= ",author='".$this->Author."'";
+      $query .= ",log='".$this->Log."'";
       $query .= ",revision='".$this->Revision."'";
       $query .= ",priorrevision='".$this->PriorRevision."'";
       $query .= " WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'";
@@ -101,6 +101,7 @@ class DailyUpdateFile
          return false;
          }
       }
+    return true;
     } // end function save    
 }
 

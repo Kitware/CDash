@@ -7,11 +7,6 @@ $path = dirname(__FILE__)."/..";
 echo "PATH: " . $path . "\n";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/image.php');
-#require_once('models/buildconfigureerror.php');
-#require_once('models/buildconfigureerrordiff.php');
-#require_once('models/label.php');
-#require_once('cdash/pdo.php');
-#require_once('cdash/common.php');
 
 class BuildImageCase extends KWWebTestCase
 {
@@ -42,11 +37,19 @@ class BuildImageCase extends KWWebTestCase
     $image = new Image();
     
     //no id, no matching checksum
-    $image->Exists();
-    $image->Id = 1;
+    $image->Id = 0;
+    if($image->Exists())
+      {
+      $this->fail("Exists() should return false when Id is 0");
+      return 1;
+      }
 
     //id, no matching checksum
-    $image->Exists();
+    $image->Id = 1;
+    if($image->Exists())
+      {
+      $this->fail("Exists() should return false with no matching checksum\n");
+      }
 
     //cover the various SetValue options
     $pathToImage = dirname(__FILE__)."/data/smile.gif";
@@ -55,8 +58,16 @@ class BuildImageCase extends KWWebTestCase
     $image->SetValue("CHECKSUM", "12345");
 
     //call save twice to cover different execution paths
-    $image->Save();
-    $image->Save();
+    if(!$image->Save())
+      {
+      $this->fail("Save() call #1 returned false when it should be true.\n");
+      return 1;
+      }
+    if(!$image->Save())
+      {
+      $this->fail("Save() call #2 returned false when it should be true.\n");
+      return 1;
+      }
 
     $this->pass("Passed");
     return 0;
