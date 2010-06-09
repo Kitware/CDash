@@ -5,9 +5,9 @@ require_once('kwtest/kw_db.php');
 
 $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-require_once('models/image.php');
+require_once('models/builderrordiff.php');
 
-class BuildImageCase extends KWWebTestCase
+class BuildBuildErrorDiffCase extends KWWebTestCase
 {
   var $url           = null;
   var $db            = null;
@@ -27,42 +27,38 @@ class BuildImageCase extends KWWebTestCase
     $this->logfilename = $cdashpath."/backup/cdash.log";
     }
    
-  function testImage()
+  function testBuildErrorDiff()
     {
 
     $db = pdo_connect($this->db->dbo->host, $this->db->dbo->user, $this->db->dbo->password);
     pdo_select_db("cdash4simpletest", $db);
 
-    $image = new Image();
+    $builderrordiff = new BuildErrorDiff();
     
-    //no id, no matching checksum
-    $image->Id = 0;
-    if($image->Exists())
+    //no buildid
+    $builderrordiff->SetValue("BUILDID", 0);
+    ob_start();
+    $builderrordiff->Save();
+    $output = ob_get_contents();
+    ob_end_clean();
+    if(strpos($output, "BuildErrorDiff::Save(): BuildId not set") === false)
       {
-      $this->fail("Exists() should return false when Id is 0");
+      $this->fail("'BuildId not set' not found from Save()");
       return 1;
       }
-
-    //id, no matching checksum
-    $image->Id = 1;
-    if($image->Exists())
-      {
-      $this->fail("Exists() should return false with no matching checksum\n");
-      }
-
-    //cover the various SetValue options
-    $pathToImage = dirname(__FILE__)."/data/smile.gif";
-    $image->SetValue("FILENAME", $pathToImage);
-    $image->SetValue("EXTENSION", "gif");
-    $image->SetValue("CHECKSUM", "12345");
+   
+    $builderrordiff->SetValue("BUILDID", 1);
+    $builderrordiff->SetValue("TYPE", "type");
+    $builderrordiff->SetValue("DIFFERENCEPOSITIVE", 1);
+    $builderrordiff->SetValue("DIFFERENCENEGATIVE", -1);
 
     //call save twice to cover different execution paths
-    if(!$image->Save())
+    if(!$builderrordiff->Save())
       {
       $this->fail("Save() call #1 returned false when it should be true.\n");
       return 1;
       }
-    if(!$image->Save())
+    if(!$builderrordiff->Save())
       {
       $this->fail("Save() call #2 returned false when it should be true.\n");
       return 1;

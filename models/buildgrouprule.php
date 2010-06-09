@@ -55,7 +55,7 @@ class BuildGroupRule
       }
     
     $query = pdo_query("SELECT count(*) FROM build2grouprule WHERE 
-                        groupid='".$this->GroupId."' AND buildtype='".$this->Position."'
+                        groupid='".$this->GroupId."' AND buildtype='".$this->BuildType."'
                         AND buildname='".$this->BuildName."'
                         AND siteid='".$this->SiteId."'
                         AND starttime='".$this->StartTime."'
@@ -80,8 +80,10 @@ class BuildGroupRule
          add_last_sql_error("BuildGroupRule Insert()");
          return false;
          }
+       return true;
       }  
-    } // end function save    
+    return false;
+    } // end function add 
         
 }
 ?>

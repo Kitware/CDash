@@ -59,9 +59,9 @@ class BuildErrorDiff
     if($this->Exists())
       {
       // Update
-      $query = "UPDATE builderrordiff SET";
-      $query .= "difference_positive='".$this->DifferencePositive;
-      $query .= ",difference_negative='".$this->DifferenceNegative;
+      $query = "UPDATE builderrordiff SET ";
+      $query .= "difference_positive='".$this->DifferencePositive."'";
+      $query .= ", difference_negative='".$this->DifferenceNegative."'";
       $query .= " WHERE buildid='".$this->BuildId."' AND type='".$this->Type."'";
       if(!pdo_query($query))
         {

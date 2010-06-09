@@ -4,7 +4,6 @@ require_once('kwtest/kw_web_tester.php');
 require_once('kwtest/kw_db.php');
 
 $path = dirname(__FILE__)."/..";
-echo "PATH: " . $path . "\n";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/buildconfigure.php');
 require_once('models/buildconfigureerror.php');
