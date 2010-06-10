@@ -1,0 +1,68 @@
+cmake_minimum_required(VERSION 2.8)
+
+
+# Settings:
+set(CTEST_SITE                          "CDashTestingSite")
+set(CTEST_BUILD_NAME           "CDash-CTest-@TestName@")
+
+set(CTEST_SOURCE_DIRECTORY     "@CDash_SOURCE_DIR@/testing/ctest/@Directory@")
+set(CTEST_BINARY_DIRECTORY     "@CDash_BINARY_DIR@/testing/ctest/@Directory@")
+set(CTEST_CMAKE_GENERATOR      "@CMAKE_GENERATOR@")
+set(CTEST_BUILD_CONFIGURATION "Debug")
+set(CTEST_NOTES_FILES          "${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}")
+set(CTEST_DROP_METHOD "http")
+set(CTEST_DROP_SITE "@CDASH_SERVER@")
+set(CTEST_DROP_LOCATION "/@CDASH_DIR_NAME@/submit.php?project=InsightExample")
+set(CTEST_CMAKE_GENERATOR "@CMAKE_GENERATOR@")
+set(CTEST_PROJECT_NAME "@ProjectName@")
+
+#coverage stuff
+SET(ENV{CXXFLAGS}
+"-g -O0 -fprofile-arcs -ftest-coverage -Wno-deprecated -W -Wall")
+SET(ENV{CFLAGS} "-g -O0 -fprofile-arcs -ftest-coverage -W -Wall")
+SET(ENV{LDFLAGS} "-fprofile-arcs -ftest-coverage")
+SET(ENV{FFLAGS} "-g -O0 -fprofile-arcs -ftest-coverage -W -Wall")
+SET(CTEST_COVERAGE_COMMAND              "@COVERAGE_COMMAND@") 
+
+ctest_start(Experimental)
+ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
+ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
+ctest_coverage(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
+ctest_submit()
+execute_process(COMMAND @PHP_EXE@ singletest.php @CDashVerifyScript@
+  WORKING_DIRECTORY  @CDash_SOURCE_DIR@/testing/
+  OUTPUT_VARIABLE OUTDATA
+  RESULT_VARIABLE res
+  )
+
+set(EXPECTED_PASSED 1)
+string(REGEX REPLACE ".*Passes: ([0-9]+).*" "\\1"
+  PASSED "${OUTDATA}")
+if("${PASSED}" STREQUAL "${OUTDATA}")
+  set(PASSED 0)
+endif()
+string(REGEX REPLACE ".*Failures: ([0-9]+).*" "\\1" 
+  FAILED "${OUTDATA}")
+if("${FAILED}" STREQUAL "${OUTDATA}")
+  set(FAILED 0)
+endif()
+string(REGEX REPLACE ".*Exceptions: ([0-9]+).*" "\\1" 
+  EXCEPTIONS "${OUTDATA}")
+if("${EXCEPTIONS}" STREQUAL $"{OUTDATA}")
+  set(EXCEPTIONS 0)
+endif()
+message("Passed = ${PASSED}")
+message("Failed = ${FAILED}")
+message("Exception = ${EXCEPTIONS}")
+if(${FAILED} GREATER 0  OR ${EXCEPTIONS} GREATER 0)
+  message(FATAL_ERROR "Test failures found: ${OUTDATA}")
+endif()
+if(${PASSED} LESS ${EXPECTED_PASSED})
+  message(FATAL_ERROR 
+    "Not enough passed tests found: ${PASSED},"
+    " expected ${EXPECTED_PASSED}):\n"
+    "Output from tests:\n${OUTDATA}")
+endif()
+message("Test Passed")
+message("${OUTDATA}")
