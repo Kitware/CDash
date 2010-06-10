@@ -41,34 +41,7 @@ client_submit();
 
 $expected_md5 = isset($_GET['MD5']) ? $_GET['MD5'] : '';
 $file_path='php://input';
-$temp_path='backup/test.tmp';
-copy($file_path, $temp_path);
-$fp = fopen($temp_path, 'r');
-$contents = stream_get_contents($fp);
-$md5sum = md5($contents);
-rewind($fp);
-
-$md5error = false;
-echo "<cdash version=\"$CDASH_VERSION\">\n";
-if($expected_md5 == '' || $expected_md5 == $md5sum)
-  {
-  echo "  <status>OK</status>\n";
-  echo "  <message></message>\n";
-  }
-else
-  {
-  echo "  <status>ERROR</status>\n";
-  echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
-  $md5error = true;
-  }
-echo "  <md5>$md5sum</md5>\n";
-echo "</cdash>\n";
-
-if($md5error)
-  {
-  add_log('Checksum failure on file: '.$_GET["filename"]);
-  exit();
-  }
+$fp = fopen($file_path, 'r');
 
 $projectname = $_GET["project"];
 $projectid = get_project_id($projectname);
@@ -84,10 +57,10 @@ if($projectid == -1)
 // If the submission is asynchronous we store in the database
 if($CDASH_ASYNCHRONOUS_SUBMISSION)
   {
-  do_submit_asynchronous($fp, $projectid);
+  do_submit_asynchronous($fp, $projectid, $expected_md5);
   }
 else  
   {
-  do_submit($fp, $projectid);
+  do_submit($fp, $projectid, $expected_md5);
   }
 ?>

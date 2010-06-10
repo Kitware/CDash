@@ -22,7 +22,7 @@ include_once("cdash/common.php");
 include_once("cdash/createRSS.php");
 include("cdash/sendemail.php");
 
-function do_submit($filehandle, $projectid)
+function do_submit($filehandle, $projectid, $expected_md5)
 {
   include('cdash/config.php');
   
@@ -76,7 +76,7 @@ function do_submit($filehandle, $projectid)
     }
 
   // Parse the XML file
-  $handler = ctest_parse($filehandle,$projectid);
+  $handler = ctest_parse($filehandle,$projectid, false, $expected_md5);
   
   // Send the emails if necessary
   if($handler instanceof UpdateHandler ||
@@ -93,12 +93,12 @@ function do_submit($filehandle, $projectid)
 }
 
 /** Asynchronous submission */
-function do_submit_asynchronous($filehandle, $projectid)
+function do_submit_asynchronous($filehandle, $projectid, $expected_md5)
 {
   include('cdash/config.php');
 
   // Save the file in the backup directory
-  $filename = ctest_parse($filehandle, $projectid,true);
+  $filename = ctest_parse($filehandle, $projectid, true, $expected_md5);
   fclose($filehandle);
   
   // Insert the filename in the database

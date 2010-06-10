@@ -27,7 +27,7 @@ require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandler, $projectid,$onlybackup=false)
+function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5='')
 { 
   include 'cdash/config.php';
   require_once 'cdash/common.php';
@@ -197,7 +197,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false)
       {
       $localParser->StartParsing();
       }
-        
+
     while(!feof($filehandler))
       {
       $content = fread($filehandler, 8192);
@@ -218,7 +218,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false)
       }
     xml_parse($parser, null, true);
     xml_parser_free($parser);
-    
+
     if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
       {
       $localParser->EndParsingFile();
@@ -226,6 +226,27 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false)
     }
   fclose($handle);
   
+  $md5sum = md5_file($filename);
+  $md5error = false;
+  echo "<cdash version=\"$CDASH_VERSION\">\n";
+  if($expected_md5 == '' || $expected_md5 == $md5sum)
+    {
+    echo "  <status>OK</status>\n";
+    echo "  <message></message>\n";
+    }
+  else
+    {
+    echo "  <status>ERROR</status>\n";
+    echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
+    $md5error = true;
+    }
+  echo "  <md5>$md5sum</md5>\n";
+  echo "</cdash>\n";
+
+  if($md5error)
+    {
+    add_log('Checksum failure on file: '.$_GET["filename"]);
+    }
   return $handler;
 }
 ?>
