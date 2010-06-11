@@ -15,10 +15,6 @@ message("PHP_EXE='${PHP_EXE}'")
 if(PHP_EXE)
   add_test(UnitTestsAsInnerDashboard
     ${PHP_EXE} "${CDash_SOURCE_DIR}/testing/alltests.php")
-#  add_test(loginCoverage
-#    ${PHP_EXE} "${CDash_SOURCE_DIR}/testing/singletest.php"
-#               "${CDash_SOURCE_DIR}/testing/loginCoverage.php"
-#          )
 endif()
 
 # function to add a new ctest based test to CDash
