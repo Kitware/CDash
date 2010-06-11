@@ -44,17 +44,15 @@ while(pdo_num_rows($query) > 0)
   $query_array = pdo_fetch_array($query);
   $filename = $query_array['filename'];
   pdo_query("UPDATE submission SET status=1 WHERE projectid='".$projectid."' AND status=0 AND filename='".$filename."'");   
-    
-  $fullfilename = $path.DIRECTORY_SEPARATOR.$filename;    
 
-  $fp = fopen($fullfilename, 'r');
+  $fp = fopen($filename, 'r');
   if($fp)
     {
     do_submit($fp,$projectid);
     }
   else
     {
-    add_log("ProcessSubmission","Cannot open file ".$fullfilename,LOG_ERR);
+    add_log("ProcessSubmission","Cannot open file ".$filename,LOG_ERR);
     }
   pdo_query("DELETE FROM submission WHERE projectid='".$projectid."' AND status=1 AND filename='".$filename."'");
   $query = pdo_query("SELECT filename FROM submission WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1");
