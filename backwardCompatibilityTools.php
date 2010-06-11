@@ -934,7 +934,6 @@ function ComputeTestTiming($days = 4)
   while($project_array = pdo_fetch_array($project))
     {    
     $projectid = $project_array["id"];
-    echo "PROJECT id: ".$projectid."<br>";
     $testtimestd = $project_array["testtimestd"];
     $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
     
@@ -1109,7 +1108,6 @@ function ComputeUpdateStatistics($days = 4)
   while($project_array = pdo_fetch_array($project))
     {    
     $projectid = $project_array["id"];
-    echo "PROJECT id: ".$projectid."<br>";
     
     // only test a couple of days
     $now = gmdate(FMT_DATETIME,time()-3600*24*$days);
@@ -1171,16 +1169,13 @@ function ComputeUpdateStatistics($days = 4)
 /** Delete unused rows */
 function delete_unused_rows($table,$field,$targettable,$selectfield='id')
 {
-  echo "Deleting rows in ".$table." without ".$field."..."; flush();
   pdo_query("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)"); 
   echo pdo_error();
-  echo "Done.<br>"; flush();
 }
 
 /** Cleanup the database */
 if($Cleanup)
 {
-  echo "Starting cleanup.<br>"; flush();
   delete_unused_rows('banner','projectid','project');
   delete_unused_rows('blockbuild','projectid','project');
   delete_unused_rows('build','projectid','project');
@@ -1232,7 +1227,7 @@ if($Cleanup)
   delete_unused_rows('testmeasurement','testid','test');
   delete_unused_rows('label2test','testid','test');
 
-  echo "Cleanup done.<br>"; flush();
+  $xml .= add_XML_value("alert", "Database cleanup complete.");
 }
 
 
