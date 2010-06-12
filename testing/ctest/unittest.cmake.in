@@ -1,8 +1,8 @@
 set(EXPECTED_PASSED 40)
-set(OUTFILE @CDash_BINARY_DIR@/testing/ctest/alltests.out)
+set(OUTFILE "@CDash_BINARY_DIR@/testing/ctest/alltests.out")
 file(DOWNLOAD "@CDASH_TESTING_URL@/testing/alltests.php"
-  @CDash_BINARY_DIR@/TestData/alltests.out)
-file(READ @CDash_BINARY_DIR@/TestData/alltests.out OUTDATA)
+  "@CDash_BINARY_DIR@/TestData/alltests.out")
+file(READ "@CDash_BINARY_DIR@/TestData/alltests.out" OUTDATA)
 string(REGEX REPLACE ".*strong>([0-9]+).*strong.*passes.*" "\\1"
   PASSED "${OUTDATA}")
 if("${PASSED}" STREQUAL "")

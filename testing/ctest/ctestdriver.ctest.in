@@ -20,8 +20,8 @@ ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_submit()
-execute_process(COMMAND @PHP_EXE@ singletest.php @CDashVerifyScript@
-  WORKING_DIRECTORY  @CDash_SOURCE_DIR@/testing/
+execute_process(COMMAND "@PHP_EXE@" singletest.php "@CDashVerifyScript@"
+  WORKING_DIRECTORY  "@CDash_SOURCE_DIR@/testing"
   OUTPUT_VARIABLE OUTDATA
   RESULT_VARIABLE res
   )
