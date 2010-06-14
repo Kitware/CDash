@@ -25,6 +25,7 @@ require_once 'xml_handlers/coverage_log_handler.php';
 require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
+require_once 'cdash/version.php';
 
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5='')
