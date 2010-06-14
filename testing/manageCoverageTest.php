@@ -148,9 +148,6 @@ class ManageCoverageTestCase extends KWWebTestCase
     if($removeuserid === -1 || $removefileid === -1)
       {
       $this->fail("Couldn't find removeuserid or removefileid.");
-      $handle = fopen("/tmp/zackdebug.html", "w");
-      fwrite($handle, $content);
-      fclose($handle);
       return 1;
       }
     $removeAuthorUrl = $this->url."/manageCoverage.php?buildid=$buildid&projectid=$projectid&removeuserid=$removeuserid&removefileid=$removefileid";
