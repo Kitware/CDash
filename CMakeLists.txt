@@ -36,12 +36,13 @@ $configure = array(
 ?>
 ")
 
-file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
-  "<?php
-$CDASH_DB_NAME = 'cdash4simpletest';
-$CDASH_TESTING_MODE = true;
-?>
-")
+set(CDASH_DB_HOST "localhost" CACHE STRING "The hostname of the database server")
+set(CDASH_DB_LOGIN "root" CACHE STRING "Login for database access")
+set(CDASH_DB_PASS "" CACHE STRING "Password for database access")
+set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
+
+configure_file(${CDash_SOURCE_DIR}/config.local.php.in
+  ${CDash_SOURCE_DIR}/cdash/config.local.php)
 
 set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
 make_directory("${CDASH_COVERAGE_DIR}")
