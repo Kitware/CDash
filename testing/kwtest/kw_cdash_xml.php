@@ -34,6 +34,7 @@ class CDashXmlReporter extends XmlReporter
   var $_testN             = null;
   // The number of the method test
   var $_methodN           = null;
+  var $_nMethods          = null;
   // The time in sec at the begining of a test method
   // (required by CDash to compute the execution time)
   var $_start_method_time = null;
@@ -69,6 +70,7 @@ class CDashXmlReporter extends XmlReporter
     $this->_testpath       = dirname(dirname(__FILE__));
     $this->_testN          = 0;
     $this->_methodN        = 0;
+    $this->_nMethods       = 0;
     $this->_elapsedminutes = 0;
     $this->paintStartCDashTest();
     $this->paintGetDateTime();
@@ -216,12 +218,13 @@ class CDashXmlReporter extends XmlReporter
      */
    function paintTestFunction($path_to_test)
      {
-       $methods = $this->getTestFunction($path_to_test);
-       foreach($methods as $method)
-         {
-         fwrite($this->_testfile, $this->_getIndent(2));
-         fwrite($this->_testfile, "<".$this->_namespace."Test>$method</Test>\n");
-         }
+     $methods = $this->getTestFunction($path_to_test);
+     foreach($methods as $method)
+       {
+       $this->_nMethods++;  
+       fwrite($this->_testfile, $this->_getIndent(2));
+       fwrite($this->_testfile, "<".$this->_namespace."Test>$method</Test>\n");
+       }
      }
 
   function paintConfigureStart(){
@@ -531,7 +534,7 @@ class CDashXmlReporter extends XmlReporter
      *    @access public
      */
     function paintMethodStart($test_name) {
-      echo $this->_methodN."/ Testing $test_name";
+      echo $this->_methodN."/".$this->_nMethods." $test_name";
       $this->_testname       = $test_name;
       $this->_start_method_time = (float) array_sum(explode(' ',microtime()));
     }
