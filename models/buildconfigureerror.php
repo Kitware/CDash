@@ -35,6 +35,18 @@ class BuildConfigureError
   /** Return if exists */
   function Exists()
     {
+    if(!$this->BuildId)
+      {
+      echo "BuildConfigureError::Save(): BuildId not set";
+      return false;    
+      }
+      
+    if(!$this->Type)
+      {
+      echo "BuildConfigureError::Save(): Type not set";
+      return false;    
+      }
+        
     $query = pdo_query("SELECT count(*) AS c FROM configureerror WHERE buildid='".$this->BuildId."'
                          AND type='".$this->Type."' AND text='".$this->Text."'");  
     add_last_sql_error("BuildConfigureError:Exists",0,$this->BuildId);
@@ -55,6 +67,12 @@ class BuildConfigureError
       return false;    
       }
       
+    if(!$this->Type)
+      {
+      echo "BuildConfigureError::Save(): Type not set";
+      return false;    
+      }
+        
     if(!$this->Exists())
       {
       $text = pdo_real_escape_string($this->Text);
