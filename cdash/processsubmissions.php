@@ -26,14 +26,14 @@ if(!is_numeric($projectid))
   }
 
 // Check if someone is already processing the submission for this project
-$query = pdo_query("SELECT count(*) FROM submission WHERE projectid='".$projectid."' AND status=1");
+$query = pdo_query("SELECT count(*) AS c FROM submission WHERE projectid='".$projectid."' AND status=1");
 if(!$query)
   {
   add_last_sql_error("ProcessSubmissions");
   exit();
   } 
 $query_array = pdo_fetch_array($query);
-if($query['count(*)'] > 0) // if we do we quit
+if($query['c'] > 0) // if we do we quit
   {
   exit();
   }
