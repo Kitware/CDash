@@ -46,6 +46,8 @@ add_php_test(userstatistics projectwebpage)
 add_php_test(viewbuilderror projectwebpage)
 add_php_test(viewchanges projectwebpage)
 
+add_php_test(managesubproject subproject)
+
 add_subdirectory(ctest)
 
 #and this one should stay towards the end...

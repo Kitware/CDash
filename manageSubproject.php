@@ -57,6 +57,10 @@ if(isset($edit) && !isset($projectid))
     $projectid = $projectids[0];
     }
   }
+if(!isset($projectid))
+  {
+  $projectid = -1;
+  }
 
 $User = new User;
 $User->Id = $userid;
