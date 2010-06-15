@@ -534,7 +534,8 @@ class CDashXmlReporter extends XmlReporter
      *    @access public
      */
     function paintMethodStart($test_name) {
-      echo $this->_methodN."/".$this->_nMethods." $test_name";
+      $nMethods = $this->_nMethods+1;
+      echo $this->_methodN."/".$nMethods." $test_name";
       $this->_testname       = $test_name;
       $this->_start_method_time = (float) array_sum(explode(' ',microtime()));
     }
