@@ -61,6 +61,7 @@ if($buildid)
   {
   $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
 
+  $sql = '';
   // Get the errors
   if($date)
     {
