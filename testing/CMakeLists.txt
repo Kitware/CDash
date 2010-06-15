@@ -1,7 +1,7 @@
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 set(testing_dir "${CDash_SOURCE_DIR}/testing")
 
-add_test(ConfigureDatabase ${PHP_EXE} ${testing_dir}/ConfigureDatabase.php)
+add_test(install ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_install.php)
 
 # function to add a new PHP based coverage test to CDash
 #
@@ -18,7 +18,7 @@ function(add_php_test TestName PreviousTest)
 endfunction(add_php_test)
 
 #these four tests are picky about the order that they're run
-add_php_test(compressedtest ConfigureDatabase)
+add_php_test(compressedtest install)
 add_php_test(createpublicdashboard compressedtest)
 add_php_test(email createpublicdashboard)
 add_php_test(projectwebpage email)
@@ -32,6 +32,7 @@ add_php_test(buildgrouprule projectwebpage)
 add_php_test(buildtestdiff projectwebpage)
 add_php_test(buildusernote projectwebpage)
 add_php_test(dailyupdatefile projectwebpage)
+add_php_test(editsite projectwebpage)
 add_php_test(image projectwebpage)
 add_php_test(login projectwebpage)
 add_php_test(managebuildgroup projectwebpage)
