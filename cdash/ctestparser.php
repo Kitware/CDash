@@ -25,7 +25,6 @@ require_once 'xml_handlers/coverage_log_handler.php';
 require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
-require_once 'cdash/version.php';
 
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5='')
@@ -33,6 +32,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
   include 'cdash/config.php';
   require_once 'cdash/common.php';
   require_once 'models/project.php';
+  include 'cdash/version.php';
   
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
     {
