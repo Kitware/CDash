@@ -46,3 +46,6 @@ add_php_test(viewbuilderror projectwebpage)
 add_php_test(viewchanges projectwebpage)
 
 add_subdirectory(ctest)
+
+#and this one should stay towards the end...
+add_php_test(removebuilds viewchanges)
