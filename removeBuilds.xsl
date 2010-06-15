@@ -18,6 +18,11 @@
             <xsl:call-template name="headerback"/>
 <br/>
 
+<xsl:if test="string-length(cdash/alert)>0">
+<b><xsl:value-of select="cdash/alert"/></b>
+<br/><br/>
+</xsl:if>
+
 Project: 
 <select onchange="location = 'removeBuilds.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
         <option>

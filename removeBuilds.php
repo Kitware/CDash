@@ -104,7 +104,6 @@ $xml .= "<dayTo>".$dayTo."</dayTo>";
 $xml .= "<monthTo>".$monthTo."</monthTo>";
 $xml .= "<yearTo>".$yearTo."</yearTo>";
 
-$xml .= "</cdash>";
 @$submit = $_POST["Submit"];
 
 /** THIS SHOULD GO IN  common.php */
@@ -211,8 +210,9 @@ if(isset($submit))
     }
  
   remove_builds($builds);
-  echo "<br> Removed ".count($builds)." builds.<br>";
+  $xml .= add_XML_value("alert","Removed ".count($builds)." builds.");
   }
   
+$xml .= "</cdash>";
 generate_XSLT($xml,"removeBuilds");
 ?>
