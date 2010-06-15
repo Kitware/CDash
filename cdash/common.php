@@ -176,7 +176,6 @@ function add_log($text,$function,$type=LOG_INFO,$projectid=0,$buildid=0,$resourc
   include("cdash/config.php");
   include_once("models/constants.php");
   include_once("models/errorlog.php");
-  
   $error = "";
   if($type != LOG_TESTING)
     {
@@ -196,7 +195,7 @@ function add_log($text,$function,$type=LOG_INFO,$projectid=0,$buildid=0,$resourc
   
   // Insert in the database
   if($type == LOG_WARNING || $type==LOG_ERR)
-    {
+    { 
     $ErrorLog = new ErrorLog;
     $ErrorLog->ProjectId = $projectid;
     $ErrorLog->BuildId = $buildid;
@@ -227,6 +226,33 @@ function add_last_sql_error($functionname,$projectid=0,$buildid=0,$resourcetype=
     echo $text;
     }
 }
+
+/** Catch the PHP fatal error */ 
+global $PHP_ERROR_BUILD_ID;
+global $PHP_ERROR_RESOURCE_TYPE;
+global $PHP_ERROR_RESOURCE_ID;
+function PHPErrorHandler($projectid)
+{
+  if ($error = error_get_last())
+    {
+    switch($error['type'])
+      {
+      case E_ERROR:
+      case E_CORE_ERROR:
+      case E_COMPILE_ERROR:
+      case E_USER_ERROR:
+        if(strlen($GLOBALS['PHP_ERROR_RESOURCE_TYPE'])==0) {$GLOBALS['PHP_ERROR_RESOURCE_TYPE']=0;}
+        if(strlen($GLOBALS['PHP_ERROR_BUILD_ID'])==0) {$GLOBALS['PHP_ERROR_BUILD_ID']=0;}
+        if(strlen($GLOBALS['PHP_ERROR_RESOURCE_ID'])==0) {$GLOBALS['PHP_ERROR_RESOURCE_ID']=0;}
+      
+        add_log('Fatal error:'.$error['message'],$error['file'].' ('.$error['line'].')',
+                 LOG_ERR,$projectid,$GLOBALS['PHP_ERROR_BUILD_ID'],
+                 $GLOBALS['PHP_ERROR_RESOURCE_TYPE'],$GLOBALS['PHP_ERROR_RESOURCE_ID']);
+        exit();  // stop the script
+        break;
+      }
+    }  
+}  // end PHPErrorHandler()
 
 /** Set the CDash version number in the database */
 function setVersion()

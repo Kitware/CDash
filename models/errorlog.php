@@ -55,7 +55,7 @@ class ErrorLog
       {
       return false;  
       } 
-      
+
     $description = pdo_real_escape_string($this->Description);
 
     // If the projectid is not set but the buildid is we are trying to find

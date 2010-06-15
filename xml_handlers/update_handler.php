@@ -98,7 +98,8 @@ class UpdateHandler extends AbstractHandler
         $this->Build->EndTime = $end_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         }
-        
+
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->BuildId;  
       $this->Update->BuildId = $buildid;
       $this->Update->StartTime = $start_time;
       $this->Update->EndTime = $end_time;

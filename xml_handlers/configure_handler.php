@@ -94,6 +94,7 @@ class ConfigureHandler extends AbstractHandler
         add_build($this->Build);
         $buildid = $this->Build->Id;
         }
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid; 
       $this->Configure->BuildId = $buildid;
       $this->Configure->StartTime = $start_time;
       $this->Configure->EndTime = $end_time;

@@ -114,6 +114,7 @@ class CoverageHandler extends AbstractHandler
         }
 
       // Remove any previous coverage information
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid; 
       $this->CoverageSummary->BuildId=$buildid;
       $this->CoverageSummary->RemoveAll();
 

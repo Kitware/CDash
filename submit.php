@@ -53,6 +53,9 @@ if($projectid == -1)
   add_log('Not a valid project. projectname: ' . $projectname, 'global:submit.php');
   exit();
   }
+
+// Catch the fatal errors during submission
+register_shutdown_function('PHPErrorHandler',$projectid);
   
 // If the submission is asynchronous we store in the database
 if($CDASH_ASYNCHRONOUS_SUBMISSION)

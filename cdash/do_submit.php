@@ -25,7 +25,7 @@ include("cdash/sendemail.php");
 function do_submit($filehandle, $projectid, $expected_md5)
 {
   include('cdash/config.php');
-  
+   
   // We find the daily updates
   // If we have php curl we do it asynchronously
   if(function_exists("curl_init") == TRUE)

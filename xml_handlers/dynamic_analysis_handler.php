@@ -126,6 +126,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->DynamicAnalysis->RemoveAll();
         unset($this->DynamicAnalysis);
         }  
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;   
       $this->BuildId = $buildid;
       }
     else if($name == "TEST" && $parent == 'DYNAMICANALYSIS')

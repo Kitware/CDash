@@ -160,8 +160,9 @@ class TestingHandler extends AbstractHandler
         {
         $this->Build->Id = $buildid;
         }  
-        
-      $this->BuildId = $buildid;
+
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->BuildId;
+      $this->BuildId = $buildid; 
       }  
     } // end startElement
 
@@ -260,10 +261,10 @@ class TestingHandler extends AbstractHandler
       $this->Build->ComputeTestTiming();
       }
     } // end endElement
-  
+
   /** Text function */
   public function text($parser, $data)
-    {
+    { 
     $parent = $this->getParent();
     $element = $this->getElement();
 
