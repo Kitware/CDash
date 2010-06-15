@@ -44,10 +44,10 @@ class CoverageFile2User
       return false;
       }
       
-    $query = pdo_query("SELECT count(*) FROM coveragefile2user WHERE userid=".qnum($this->UserId)."
+    $query = pdo_query("SELECT count(*) AS c FROM coveragefile2user WHERE userid=".qnum($this->UserId)."
                         AND fileid=".qnum($fileid));  
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']>0)
+    if($query_array['c']>0)
       {
       return true;
       }
@@ -87,9 +87,9 @@ class CoverageFile2User
         }
       
       // Find the new position
-      $query = pdo_query("SELECT count(*) FROM coveragefile2user WHERE fileid=".qnum($this->FileId));
+      $query = pdo_query("SELECT count(*) AS c FROM coveragefile2user WHERE fileid=".qnum($this->FileId));
       $query_array = pdo_fetch_array($query);
-      $position = $query_array['count(*)']+1;
+      $position = $query_array['c']+1;
       
       $query = "INSERT INTO coveragefile2user (userid,fileid,position)
                 VALUES (".qnum($this->UserId).",".qnum($this->FileId).",".qnum($position).")";                     

@@ -54,7 +54,7 @@ class BuildGroupRule
       return false;    
       }
     
-    $query = pdo_query("SELECT count(*) FROM build2grouprule WHERE 
+    $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE 
                         groupid='".$this->GroupId."' AND buildtype='".$this->BuildType."'
                         AND buildname='".$this->BuildName."'
                         AND siteid='".$this->SiteId."'
@@ -62,7 +62,7 @@ class BuildGroupRule
                         AND endtime='".$this->EndTime."'"
                         );
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']==0)
+    if($query_array['c']==0)
       {
       return false;
       }

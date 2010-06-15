@@ -36,9 +36,9 @@ class TestImage
   /** Return if exists */
   function Exists()
     {
-    $query = pdo_query("SELECT count(*) FROM test2image WHERE imgid='".$this->Id."' AND testid='".$this->TestId."' AND role='".$this->Role."'");  
+    $query = pdo_query("SELECT count(*) AS c FROM test2image WHERE imgid='".$this->Id."' AND testid='".$this->TestId."' AND role='".$this->Role."'");  
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']>0)
+    if($query_array['c']>0)
       {
       return true;
       }

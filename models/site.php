@@ -55,9 +55,9 @@ class Site
     
     if($this->Id)
       {
-      $query = pdo_query("SELECT count(*) FROM site WHERE id=".qnum($this->Id));
+      $query = pdo_query("SELECT count(*) AS c FROM site WHERE id=".qnum($this->Id));
       $query_array = pdo_fetch_array($query);
-      if($query_array['count(*)']>0)
+      if($query_array['c']>0)
         {
         return true;
         }

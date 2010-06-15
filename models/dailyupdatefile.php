@@ -49,9 +49,9 @@ class DailyUpdateFile
       return false;    
       }
     
-    $query = pdo_query("SELECT count(*) FROM dailyupdatefile WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'");
+    $query = pdo_query("SELECT count(*) AS c FROM dailyupdatefile WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'");
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']==0)
+    if($query_array['c']==0)
       {
       return false;
       }

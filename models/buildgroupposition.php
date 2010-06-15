@@ -49,13 +49,13 @@ class BuildGroupPosition
       return false;    
       }
     
-    $query = pdo_query("SELECT count(*) FROM buildgroupposition WHERE 
+    $query = pdo_query("SELECT count(*) AS c FROM buildgroupposition WHERE 
                         buildgroupid='".$this->GroupId."' AND position='".$this->Position."'
                         AND starttime='".$this->StartTime."'
                         AND endtime='".$this->EndTime."'"
                         );
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']==0)
+    if($query_array['c']==0)
       {
       return false;
       }

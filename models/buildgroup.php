@@ -83,10 +83,10 @@ class BuildGroup
       return false;    
       }
     
-    $query = pdo_query("SELECT count(*) FROM buildgroup WHERE id='".$this->Id."' AND projectid='".$this->ProjectId."'");
+    $query = pdo_query("SELECT count(*) AS c FROM buildgroup WHERE id='".$this->Id."' AND projectid='".$this->ProjectId."'");
     add_last_sql_error("BuildGroup:Exists",$this->ProjectId);
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']==0)
+    if($query_array['c']==0)
       {
       return false;
       }

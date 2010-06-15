@@ -59,9 +59,9 @@ class Image
     // If no id specify return false
     if($this->Id)
       {
-      $query = pdo_query("SELECT count(*) FROM image WHERE id='".$this->Id."'");
+      $query = pdo_query("SELECT count(*) AS c FROM image WHERE id='".$this->Id."'");
       $query_array = pdo_fetch_array($query);
-      if($query_array['count(*)']==0)
+      if($query_array['c']==0)
         {
         return false;
         }

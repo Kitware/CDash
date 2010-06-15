@@ -38,9 +38,9 @@ class BuildErrorDiff
   /** Return if exists */
   function Exists()
     {
-    $query = pdo_query("SELECT count(*) FROM builderrordiff WHERE buildid='".$this->BuildId."' AND type='".$this->Type."'");  
+    $query = pdo_query("SELECT count(*) AS c FROM builderrordiff WHERE buildid='".$this->BuildId."' AND type='".$this->Type."'");  
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']>0)
+    if($query_array['c']>0)
       {
       return true;
       }
