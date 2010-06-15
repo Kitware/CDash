@@ -48,7 +48,7 @@ class BuildErrorDiffTestCase extends KWWebTestCase
       }
    
     $builderrordiff->SetValue("BUILDID", 1);
-    $builderrordiff->SetValue("TYPE", "type");
+    $builderrordiff->SetValue("TYPE", 1);
     $builderrordiff->SetValue("DIFFERENCEPOSITIVE", 1);
     $builderrordiff->SetValue("DIFFERENCENEGATIVE", -1);
 
