@@ -36,6 +36,10 @@ $configure = array(
 ?>
 ")
 
+if(NOT CDASH_DB_TYPE)
+  set(CDASH_DB_TYPE "mysql")
+endif(NOT CDASH_DB_TYPE)
+
 file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
 "<?php
 $CDASH_DB_NAME = 'cdash4simpletest';
