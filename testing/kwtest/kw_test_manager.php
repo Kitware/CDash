@@ -58,7 +58,6 @@ class TestManager
     $test = &new GroupTest('All Tests');
     foreach($testsFile as $path=>$file)
       {
-      print "$path";
       $test->addTestFile($path);
       }
     return $test->run($reporter);
