@@ -35,13 +35,13 @@ class BuildConfigureError
   /** Return if exists */
   function Exists()
     {
-    if(!$this->BuildId)
+    if(!$this->BuildId || !is_numeric($this->BuildId))
       {
       echo "BuildConfigureError::Save(): BuildId not set";
       return false;    
       }
       
-    if(!$this->Type)
+    if(!$this->Type || !is_numeric($this->Type) )
       {
       echo "BuildConfigureError::Save(): Type not set";
       return false;    
@@ -61,13 +61,13 @@ class BuildConfigureError
   /** Save in the database */
   function Save()
     {
-    if(!$this->BuildId)
+    if(!$this->BuildId || !is_numeric($this->BuildId))
       {
       echo "BuildConfigureError::Save(): BuildId not set";
       return false;    
       }
       
-    if(!$this->Type)
+    if(!$this->Type || !is_numeric($this->Type))
       {
       echo "BuildConfigureError::Save(): Type not set";
       return false;    
