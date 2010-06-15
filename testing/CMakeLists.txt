@@ -41,6 +41,7 @@ add_php_test(projectindb projectwebpage)
 add_php_test(pubproject projectwebpage)
 add_php_test(subproject projectwebpage)
 add_php_test(testenv projectwebpage)
+add_php_test(userstatistics projectwebpage)
 add_php_test(viewbuilderror projectwebpage)
 add_php_test(viewchanges projectwebpage)
 
