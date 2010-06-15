@@ -53,9 +53,9 @@ class Banner
   /** Return if exists */
   function Exists()
     {
-    $query = pdo_query("SELECT count(*) AS count FROM banner WHERE projectid=".qnum($this->ProjectId));  
+    $query = pdo_query("SELECT count(*) AS c FROM banner WHERE projectid=".qnum($this->ProjectId));  
     $query_array = pdo_fetch_array($query);
-    if($query_array['count']>0)
+    if($query_array['c']>0)
       {
       return true;
       }

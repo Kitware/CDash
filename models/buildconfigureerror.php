@@ -35,11 +35,11 @@ class BuildConfigureError
   /** Return if exists */
   function Exists()
     {
-    $query = pdo_query("SELECT count(*) FROM configureerror WHERE buildid='".$this->BuildId."'
+    $query = pdo_query("SELECT count(*) AS c FROM configureerror WHERE buildid='".$this->BuildId."'
                          AND type='".$this->Type."' AND text='".$this->Text."'");  
     add_last_sql_error("BuildConfigureError:Exists",0,$this->BuildId);
     $query_array = pdo_fetch_array($query);
-    if($query_array['count(*)']>0)
+    if($query_array['c']>0)
       {
       return true;
       }
