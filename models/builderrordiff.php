@@ -38,6 +38,18 @@ class BuildErrorDiff
   /** Return if exists */
   function Exists()
     {
+    if(!$this->BuildId || !is_numeric($this->BuildId))
+      {
+      echo "BuildErrorDiff::Save(): BuildId not set<br>";
+      return false;    
+      }
+
+    if(!$this->Type || !is_numeric($this->Type))
+      {
+      echo "BuildErrorDiff::Save(): Type not set<br>";
+      return false;    
+      }
+        
     $query = pdo_query("SELECT count(*) AS c FROM builderrordiff WHERE buildid='".$this->BuildId."' AND type='".$this->Type."'");  
     $query_array = pdo_fetch_array($query);
     if($query_array['c']>0)
@@ -50,12 +62,18 @@ class BuildErrorDiff
   // Save in the database
   function Save()
     {
-    if(!$this->BuildId)
+    if(!$this->BuildId || !is_numeric($this->BuildId))
       {
       echo "BuildErrorDiff::Save(): BuildId not set<br>";
       return false;    
       }
 
+    if(!$this->Type || !is_numeric($this->Type))
+      {
+      echo "BuildErrorDiff::Save(): Type not set<br>";
+      return false;    
+      }
+      
     if($this->Exists())
       {
       // Update
