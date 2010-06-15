@@ -12,10 +12,16 @@ if(strcmp($CDASH_DB_NAME,'cdash4simpletest') != 0)
   }
 
 $logfilename = $cdashpath."/backup/cdash.log";
-  
-$manager = new HtmlTestManager();
-$manager->removeLogAndBackupFiles($logfilename);
-//$manager->setTestDirectory(getcwd());
+$cdashreporter = new CDashXmlReporter($configure);
+$manager       = new CDashTestManager();
+$manager->setCDashServer($configure['cdash']);
 $manager->setDatabase($db);
-$manager->runFileTest(new TextReporter(), $argv[1] );
+if($manager->configure($cdashreporter,$logfilename))
+  {
+  echo "Passed.\n";
+  }
+else
+  {
+  echo "Failed.\n";
+  }
 ?>

@@ -6,6 +6,7 @@ require_once('kwtest/kw_db.php');
 $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/buildgrouprule.php');
+require_once('cdash/pdo.php');
 
 class BuildGroupRuleTestCase extends KWWebTestCase
 {

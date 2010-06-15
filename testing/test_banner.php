@@ -6,6 +6,8 @@ require_once('kwtest/kw_db.php');
 $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/banner.php');
+require_once('cdash/pdo.php');
+require_once('cdash/common.php');
 
 class BannerTestCase extends KWWebTestCase
 {
@@ -29,7 +31,6 @@ class BannerTestCase extends KWWebTestCase
    
   function testBanner()
     {
-
     $db = pdo_connect($this->db->dbo->host, $this->db->dbo->user, $this->db->dbo->password);
     pdo_select_db("cdash4simpletest", $db);
 

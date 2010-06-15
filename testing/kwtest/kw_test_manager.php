@@ -43,7 +43,14 @@ class TestManager
   function runFileTest(&$reporter, $file)
   {
     $test = &new GroupTest('All Tests');
-    $path = $this->testDir.  "/" . $file;
+    if($this->testDir !== null)
+      {
+      $path = $this->testDir.  "/" . $file;
+      }
+    else
+      {
+      $path = $file;
+      }
     print "$path";
     $test->addTestFile($path);
     return $test->run($reporter);
@@ -362,6 +369,7 @@ class CDashTestManager extends TestManager
                                  $this->database['type']);
     $reporter->paintConfigureConnection($result);
     $reporter->paintConfigureEnd($execution_time);
+    return $result;
    }
   
   
