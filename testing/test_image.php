@@ -54,7 +54,7 @@ class ImageTestCase extends KWWebTestCase
     //cover the various SetValue options
     $pathToImage = dirname(__FILE__)."/data/smile.gif";
     $image->SetValue("FILENAME", $pathToImage);
-    $image->SetValue("EXTENSION", "gif");
+    $image->SetValue("EXTENSION", "image/gif");
     $image->SetValue("CHECKSUM", "12345");
 
     //call save twice to cover different execution paths
