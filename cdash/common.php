@@ -1812,7 +1812,7 @@ function get_cdash_dashboard_xml($projectname, $date)
     $xml .= add_XML_value("id",$userid);
    
     // Is the user super administrator
-    $userquery = pdo_query("SELECT admin FROM ".qid(user)." WHERE id='$userid'");
+    $userquery = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
     $user_array = pdo_fetch_array($userquery);
     $xml .= add_XML_value("admin",$user_array[0]);
 
