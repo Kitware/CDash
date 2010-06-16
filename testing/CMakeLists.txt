@@ -49,6 +49,7 @@ add_php_test(testoverview projectwebpage)
 add_php_test(userstatistics projectwebpage)
 add_php_test(viewbuilderror projectwebpage)
 add_php_test(viewchanges projectwebpage)
+add_php_test(viewdynamicanalysis projectwebpage)
 add_php_test(viewdynamicanalysisfile projectwebpage)
 
 add_php_test(managesubproject subproject)
