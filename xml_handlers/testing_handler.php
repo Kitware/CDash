@@ -161,7 +161,7 @@ class TestingHandler extends AbstractHandler
         $this->Build->Id = $buildid;
         }  
 
-      $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->BuildId;
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
       $this->BuildId = $buildid; 
       }  
     } // end startElement
