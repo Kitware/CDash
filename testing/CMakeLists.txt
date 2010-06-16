@@ -2,6 +2,9 @@ find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 set(testing_dir "${CDash_SOURCE_DIR}/testing")
 
 add_test(install ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_install.php)
+set_tests_properties(
+  install PROPERTIES
+  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
 
 # function to add a new PHP based coverage test to CDash
 #
@@ -45,6 +48,7 @@ add_php_test(testoverview projectwebpage)
 add_php_test(userstatistics projectwebpage)
 add_php_test(viewbuilderror projectwebpage)
 add_php_test(viewchanges projectwebpage)
+add_php_test(viewdynamicanalysisfile projectwebpage)
 
 add_php_test(managesubproject subproject)
 
