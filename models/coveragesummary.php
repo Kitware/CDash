@@ -22,6 +22,11 @@ class CoverageSummary
   var $BuildId;
   private $Coverages;
   
+  function __construct()
+    {
+    $this->Coverages = array();
+    }
+  
   function AddCoverage($coverage)
     {
     $this->Coverages[] = $coverage;
