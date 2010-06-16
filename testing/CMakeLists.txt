@@ -38,6 +38,7 @@ add_php_test(buildusernote projectwebpage)
 add_php_test(dailyupdatefile projectwebpage)
 add_php_test(editsite projectwebpage)
 add_php_test(edituser projectwebpage)
+add_php_test(groupsdescription projectwebpage)
 add_php_test(image projectwebpage)
 add_php_test(login projectwebpage)
 add_php_test(managebanner projectwebpage)
@@ -63,5 +64,6 @@ add_php_test(viewsubprojectdependencies subproject)
 
 add_subdirectory(ctest)
 
-#and this one should stay towards the end...
+#and these ones should stay towards the end...
 add_php_test(removebuilds viewchanges)
+add_php_test(recoverpassword removebuilds)
