@@ -31,8 +31,13 @@ class InstallTestCase extends KWWebTestCase
       $this->fail("can only test on a database named 'cdash4simpletest'");
       return 1;
       }
+
     //drop any old testing database before testing install
-    $this->db->drop($this->databaseName);
+    if(!$this->db->drop($this->databaseName))
+      {
+      $this->fail("Failed to drop the database!");
+      return 1;
+      }
 
     $this->get($this->url."/install.php");
     if(!$this->setFieldByName("admin_email", "simpletest@localhost"))
