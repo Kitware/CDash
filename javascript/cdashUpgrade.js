@@ -94,14 +94,14 @@ function upgrade_1_4()
 {
   var text = "Applying 1.4 patches";
   $("#Upgrade-1-4-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-4-Status","backwardCompatibilityTools.php?upgrade-1-4=1",text,done);  
+  sendAjax("#Upgrade-1-4-Status","backwardCompatibilityTools.php?upgrade-1-4=1",text,upgrade_1_6);  
 }
 
 function upgrade_1_6()
 {
   var text = "Applying 1.6 patches";
   $("#Upgrade-1-6-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-6-Status","backwardCompatibilityTools.php?upgrade-1-6=1",text,done);  
+  sendAjax("#Upgrade-1-6-Status","backwardCompatibilityTools.php?upgrade-1-6=1",text,upgrade_1_8);  
 }
 
 function upgrade_1_8()
