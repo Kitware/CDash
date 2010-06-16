@@ -41,12 +41,13 @@ function sendAjax(divname,ajaxurl,text,nextstep)
 
 function upgrade_tables()
 {
-  var text = "Upgrading tables";
-  $("#Upgrade-Tables-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-
   // Go directly to the appropriate version
-  nextstep = upgrade_0_8;
-  if(version < 1.0)
+  nextstep = '';
+  if(version < 0.8)
+    {
+    nextstep = upgrade_0_8;
+    }
+  else if(version < 1.0)
     {
     nextstep = upgrade_1_0;
     }
@@ -66,7 +67,17 @@ function upgrade_tables()
    {
    nextstep = upgrade_1_8;
    }
-  sendAjax("#Upgrade-Tables-Status","backwardCompatibilityTools.php?upgrade-tables=1",text,nextstep);  
+  
+  if(nextstep != '')
+    {   
+    var text = "Upgrading tables";
+    $("#Upgrade-Tables-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+    sendAjax("#Upgrade-Tables-Status","backwardCompatibilityTools.php?upgrade-tables=1",text,nextstep); 
+    }
+  else
+    {
+    $("#Upgrade-Tables-Status").html("Your installation is already up to date");  
+    }
 }
 
 function upgrade_0_8()
