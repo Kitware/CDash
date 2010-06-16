@@ -52,6 +52,7 @@ add_php_test(viewchanges projectwebpage)
 add_php_test(viewdynamicanalysisfile projectwebpage)
 
 add_php_test(managesubproject subproject)
+add_php_test(viewsubprojectdependencies subproject)
 
 add_subdirectory(ctest)
 
