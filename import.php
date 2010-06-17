@@ -140,7 +140,7 @@ if($Submit)
           continue;
           }
         $handle = fopen($file,"r");
-        $contents = fread($handle,filesize($file));
+        //$contents = fread($handle,filesize($file));
         echo ".";
         flush();
         ob_flush();
@@ -152,8 +152,9 @@ if($Submit)
           ob_flush();
           $numDots = 0;
           }
-        $xml_array = parse_XML($contents);
-        ctest_parse($xml_array,$projectid);
+        //$xml_array = parse_XML($contents);
+        //ctest_parse($xml_array,$projectid);
+        ctest_parse($handle,$projectid, false);
         fclose($handle);
         }
       echo "<br>Done for the day".$currentDay."<br>\n";

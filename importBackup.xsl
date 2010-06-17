@@ -16,6 +16,11 @@
        </head>
        <body bgcolor="#ffffff">
             <xsl:call-template name="headerback"/>
+
+<xsl:if test="string-length(cdash/alert)>0">
+<b><xsl:value-of select="cdash/alert"/></b>
+</xsl:if>
+<br/>
 <br/>
 
 <form name="form1" method="post" action="">

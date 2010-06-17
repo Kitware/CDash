@@ -38,7 +38,7 @@ $xml .= "<title>CDash - Import Backups</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Backups</menusubtitle>";
 $xml .= "<backurl>manageBackup.php</backurl>";
-$xml .= "</cdash>";
+$alert = "";
 
 @$Submit = $_POST["Submit"];
 
@@ -70,38 +70,21 @@ if($Submit && $filemask)
       $projectid = get_project_id($cdashParts[0]);
       }
 
-    //echo 'i: ' . print_r($i, true) . '<br/>';
-    //echo 'filename: ' . print_r($filename, true) . '<br/>';
-    //echo 'pathParts: ' . print_r($pathParts, true) . '<br/>';
-    //echo 'cdashParts: ' . print_r($cdashParts, true) . '<br/>';
-    //echo 'projectid: ' . print_r($projectid, true) . '<br/>';
-    //echo '<br/>';
-
     if($projectid != -1)
       {
       $name = get_project_name($projectid);
-
-      echo 'Project ['.$name.'] importing file ('.$i.'/'.$n.'): '.$filename.'<br/>';
-      ob_flush();
-      flush();
-
       $handle = fopen($filename,"r");
       ctest_parse($handle,$projectid);
       fclose($handle);
       }
-    else
-      {
-      echo 'Project id not found - skipping file ('.$i.'/'.$n.'): '.$filename.'<br/>';
-      ob_flush();
-      flush();
-      }
     }
 
-  echo 'Import backup complete. '.$i.' files processed.<br/>';
-  echo '<br/>';
+  $alert = 'Import backup complete. '.$i.' files processed.';
+  $xml .= add_XML_value("alert",$alert);
   } // end submit
 
 // Now doing the xslt transition
+$xml .= "</cdash>";
 generate_XSLT($xml,"importBackup");
 
 } // end session

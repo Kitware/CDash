@@ -42,14 +42,14 @@ class ManageSubprojectTestCase extends KWWebTestCase
     $this->get($this->url."/manageSubproject.php?projectid=$this->projectid");
     if(strpos($this->getBrowser()->getContentAsText(), "Teuchos") === false)
       {
-      $this->fail("'Teuchos' not found when expected");
+      $this->fail("'Teuchos' not found when expected.  Here's what we found instead:\n".$this->getBrowser()->getContentAsText()."\n");
       return 1;
       }
     
     $this->get($this->url."/manageSubproject.php?projectid=$this->projectid&delete=1");
     if(strpos($this->getBrowser()->getContentAsText(), "Teuchos") !== false)
       {
-      $this->fail("'Teuchos' not found when expected");
+      $this->fail("'Teuchos' found when not expected");
       return 1;
       }
       

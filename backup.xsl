@@ -16,6 +16,9 @@
        </head>
        <body bgcolor="#ffffff">
             <xsl:call-template name="headerback"/>
+<xsl:if test="string-length(cdash/alert)>0">
+<b><xsl:value-of select="cdash/alert"/></b>
+</xsl:if>
 <br/>
 
 Export the database from the date range into the 'database' directory in your current backup directory.

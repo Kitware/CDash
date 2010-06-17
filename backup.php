@@ -572,8 +572,6 @@ $xml .= "<yearFrom>".$yearFrom."</yearFrom>";
 $xml .= "<dayTo>".$dayTo."</dayTo>";
 $xml .= "<monthTo>".$monthTo."</monthTo>";
 $xml .= "<yearTo>".$yearTo."</yearTo>";
-
-$xml .= "</cdash>";
 @$submit = $_POST["Submit"];
 
 if(isset($submit))
@@ -645,8 +643,9 @@ if(isset($submit))
   
   fwrite($h,'</cdash>');
   fclose($h);
-  echo "DONE";
+  $xml .= add_XML_value("alert","Backup complete");
   }
   
+$xml .= "</cdash>";
 generate_XSLT($xml,"backup");
 ?>
