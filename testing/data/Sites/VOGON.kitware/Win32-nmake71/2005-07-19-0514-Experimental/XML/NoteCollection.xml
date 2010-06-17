@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NoteCollection>
+<Site BuildName="Win32-nmake71" BuildStamp="20050719-0514-Experimental" Name="VOGON.kitware" Generator="ctest2.3-20050718">
+<Notes>
+<Note Name="c:/Hoffman/My Builds/DashboardScripts/vogon_paraview_nmake71.cmake">
+<DateTime>Jul 19 02:42 Eastern Standard Time</DateTime>
+<Text>
+# please see common.cmake for more documentation
+###################################################################
+# The values in this section must always be provided
+###################################################################
+# these are the the name of the source and binary directory on disk. 
+# They will be appended to DASHBOARD_ROOT
+SET (CTEST_SOURCE_NAME ParaView)
+SET (CTEST_BINARY_NAME ParaViewVSNMake71)
+
+# do an update each time
+SET (CTEST_CVS_COMMAND "C:/cygwin/bin/cvs.exe")
+SET (CTEST_EXTRA_UPDATES_1 "C:/Hoffman/BuildNoSpace/ParaView" "-dAP")
+
+# change this back to all tests after paraview is fixed
+# which ctest command to use for running the dashboard
+SET (CTEST_COMMAND 
+  "C:/Hoffman/My Builds/CMakeVSNMake71/bin/ctest.exe -D Experimental -A \"${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}\" -V"
+  )
+
+# what cmake command to use for configuring this dashboard
+SET (CTEST_CMAKE_COMMAND 
+  "C:/Hoffman/My Builds/CMakeVSNMake71/bin/cmake.exe"
+  )
+
+
+
+####################################################################
+# The values in this section are optional you can either
+# have them or leave them commented out
+####################################################################
+
+# should ctest wipe the binary tree before running
+SET (CTEST_START_WITH_EMPTY_BINARY_DIRECTORY FALSE)
+
+
+# this is the initial cache to use for the binary tree, be careful to escape
+# any quotes inside of this string if you use it
+SET (CTEST_INITIAL_CACHE "
+MAKECOMMAND:STRING=nmake -i
+DART_TESTING_TIMEOUT:STRING=120
+CMAKE_MAKE_PROGRAM:FILEPATH=nmake
+CMAKE_GENERATOR:INTERNAL=NMake Makefiles
+BUILDNAME:STRING=Win32-nmake71
+SITE:STRING=VOGON.kitware
+VTK_USE_MPI:BOOL=ON
+MPI_LIBRARY:FILEPATH=C:/Program Files/MPICH/SDK/Lib/mpichd.lib
+VTK_DEBUG_LEAKS:BOOL=ON
+CVSCOMMAND:FILEPATH=C:/cygwin/bin/cvs.exe
+BUILD_SHARED_LIBS:BOOL=ON
+CMAKE_CXX_FLAGS:STRING=  /W4 /Zm1000 /GX /GR
+CMAKE_C_FLAGS:STRING=  /W4 /Zm1000
+")
+
+# if you do not want to use the default location for a 
+# dashboard then set this variable to the directory
+# the dashboard should be in
+SET (CTEST_DASHBOARD_ROOT "C:/Hoffman/BuildNoSpace/")
+
+
+# set any extra envionment varibles here
+SET (CTEST_ENVIRONMENT
+)
+
+ 
+###################################################################
+# finally include the common code
+###################################################################
+INCLUDE ( ${CTEST_SCRIPT_DIRECTORY}/common.cmake )
+
+</Text>
+</Note>
+</Notes>
+</Site>
+
+</NoteCollection>

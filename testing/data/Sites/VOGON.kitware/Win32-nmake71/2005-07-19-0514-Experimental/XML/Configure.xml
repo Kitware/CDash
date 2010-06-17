@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-nmake71" BuildStamp="20050719-0514-Experimental" Name="VOGON.kitware" Generator="ctest2.3-20050718">
+<Configure>
+  <StartDateTime>Jul 19 01:14 Eastern Standard Time</StartDateTime>
+<ConfigureCommand>"C:/Hoffman/My Builds/CMakeVSNMake71/bin/cmake.exe" "C:/Hoffman/BuildNoSpace/ParaView"</ConfigureCommand>
+<Log>-- This is a CVS repository
+-- This is a CVS repository
+-- Finding Atomic Data Sizes
+-- Finding a 64 Bit Integer
+-- This is a CVS repository
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Hoffman/BuildNoSpace/ParaViewVSNMake71
+</Log>
+  <ConfigureStatus>0</ConfigureStatus>
+  <EndDateTime>Jul 19 01:15 Eastern Standard Time</EndDateTime>
+<ElapsedMinutes>1.6</ElapsedMinutes></Configure>
+</Site>

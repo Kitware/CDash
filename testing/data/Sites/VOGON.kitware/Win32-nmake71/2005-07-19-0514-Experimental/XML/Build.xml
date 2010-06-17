@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-nmake71" BuildStamp="20050719-0514-Experimental" Name="VOGON.kitware" Generator="ctest2.3-20050718">
+<Build>
+  <StartDateTime>Jul 19 01:15 Eastern Standard Time</StartDateTime>
+<BuildCommand>nmake -i</BuildCommand>
+  <Warning>
+    <BuildLogLine>1606</BuildLogLine>
+    <Text>c:\hoffman\buildnospace\paraview\gui\client\vtkpvlookmarkmanager.cxx(1810) : warning C4701: local variable 'mod' may be used without having been initialized
+</Text>
+    <SourceFile>c:/Hoffman/BuildNoSpace/ParaView/GUI/Client/vtkPVLookmarkManager.cxx</SourceFile>
+    <SourceLineNumber>1810</SourceLineNumber>
+    <PreContext>Building CXX object GUI/Client/vtkKWParaView.dir/vtkPVLineWidget.obj
+vtkPVLineWidget.cxx
+Building CXX object GUI/Client/vtkKWParaView.dir/vtkPVLookmark.obj
+vtkPVLookmark.cxx
+Building CXX object GUI/Client/vtkKWParaView.dir/vtkPVLookmarkManager.obj
+vtkPVLookmarkManager.cxx
+</PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>1607</BuildLogLine>
+    <Text>c:\hoffman\buildnospace\paraview\gui\client\vtkpvlookmarkmanager.cxx(1891) : warning C4701: local variable 'mod' may be used without having been initialized
+</Text>
+    <SourceFile>c:/Hoffman/BuildNoSpace/ParaView/GUI/Client/vtkPVLookmarkManager.cxx</SourceFile>
+    <SourceLineNumber>1891</SourceLineNumber>
+    <PreContext></PreContext>
+    <PostContext>Building CXX object GUI/Client/vtkKWParaView.dir/vtkPVMPIRenderModuleUI.obj
+vtkPVMPIRenderModuleUI.cxx
+Building CXX object GUI/Client/vtkKWParaView.dir/vtkPVMinMax.obj
+vtkPVMinMax.cxx
+Building CXX object GUI/Client/vtkKWParaView.dir/vtkPVMultiDisplayRenderModuleUI.obj
+vtkPVMultiDisplayRenderModuleUI.cxx</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Log Encoding="base64" Compression="/bin/gzip">
+  </Log>
+  <EndDateTime>Jul 19 01:32 Eastern Standard Time</EndDateTime>
+<ElapsedMinutes>17.2</ElapsedMinutes></Build>
+</Site>
