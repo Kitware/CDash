@@ -6,6 +6,11 @@ configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
 # set some cache variables that can be used
 # to configure the testing install
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
+set(CDASH_DB_LOGIN "root" CACHE STRING "Database user")
+set(CDASH_DB_PASS "" CACHE STRING "Password for database user")
+set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
+set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
+
 get_filename_component(CDASH_DIR_NAME ${CDash_SOURCE_DIR} NAME)
 message("CDASH_DIR_NAME = ${CDASH_DIR_NAME}")
 
