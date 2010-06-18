@@ -38,7 +38,6 @@ add_php_test(buildtestdiff projectwebpage)
 add_php_test(buildusernote projectwebpage)
 add_php_test(dailyupdatefile projectwebpage)
 add_php_test(displayimage image)
-add_php_test(editsite projectwebpage)
 add_php_test(edituser projectwebpage)
 add_php_test(errorlog projectwebpage)
 add_php_test(image projectwebpage)
@@ -80,6 +79,7 @@ add_php_test(viewsubprojectdependencies subproject)
 
 add_subdirectory(ctest)
 add_php_test(api simple)
+add_php_test(editsite simple)
 
 #and these ones should stay towards the end...
 add_php_test(removebuilds viewchanges)

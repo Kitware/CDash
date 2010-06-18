@@ -25,7 +25,14 @@ class EditSiteTestCase extends KWWebTestCase
   function testEditSite()
     {
     $this->login();
-    $this->get($this->url."/editSite.php");
+    $this->get($this->url."/editSite.php?projectid=5");
+    $content = $this->clickSubmitByName("claimsites");
+    if(strpos($content, "Claimed sites updated") === false)
+      {
+      $this->fail("expected output not found from editSite.php");
+      return 1;
+      }
+    $this->pass("Passed");
     }
 }
 ?>
