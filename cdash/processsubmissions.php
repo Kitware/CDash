@@ -57,4 +57,5 @@ while(pdo_num_rows($query) > 0)
   pdo_query("DELETE FROM submission WHERE projectid='".$projectid."' AND status=1 AND filename='".$filename."'");
   $query = pdo_query("SELECT filename FROM submission WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1");
   }
+echo "Done";
 ?>
