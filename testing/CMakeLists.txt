@@ -75,6 +75,7 @@ add_php_test(managesubproject subproject)
 add_php_test(viewsubprojectdependencies subproject)
 
 add_subdirectory(ctest)
+add_php_test(api simple)
 
 #and these ones should stay towards the end...
 add_php_test(removebuilds viewchanges)
