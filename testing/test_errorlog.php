@@ -5,10 +5,11 @@ require_once('kwtest/kw_db.php');
 
 $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-require_once('models/buildgrouprule.php');
+require_once('models/errorlog.php');
 require_once('cdash/pdo.php');
+require_once('cdash/common.php');
 
-class BuildGroupRuleTestCase extends KWWebTestCase
+class ErrorLogTestCase extends KWWebTestCase
 {
   var $url           = null;
   var $db            = null;
@@ -28,41 +29,25 @@ class BuildGroupRuleTestCase extends KWWebTestCase
     $this->logfilename = $cdashpath."/backup/cdash.log";
     }
    
-  function testBuildGroupRule()
+  function testErrorLog()
     {
     xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
-
     $db = pdo_connect($this->db->dbo->host, $this->db->dbo->user, $this->db->dbo->password);
     pdo_select_db("cdash4simpletest", $db);
 
-    $buildgrouprule = new BuildGroupRule();
-
-    $buildgrouprule->GroupId = 0;
-    if($buildgrouprule->Exists())
+    $errorlog = new ErrorLog();
+    $errorlog->Clean(7);
+    $errorlog->BuildId = "foo";
+    if($errorlog->Insert())
       {
-      $this->fail("Exists() should return false when GroupId is 0");
+      $this->fail("Insert() should return false when BuildId is non-numeric");
       return 1;
       }
 
-    $buildgrouprule->GroupId = 1;
-    $buildgrouprule->SetValue("BUILDTYPE", "Experimental");
-    $buildgrouprule->SetValue("BUILDNAME", "test");
-    $buildgrouprule->SetValue("SITEID", 1);
-    $buildgrouprule->SetValue("EXPECTED", 1);
-    $buildgrouprule->SetValue("STARTTIME", date("Y-m-d H:i:s", time() - 1));
-    $buildgrouprule->SetValue("ENDTIME", date("Y-m-d H:i:s"));
+    $errorlog->BuildId = 1;
+    $errorlog->Description = "example error description";
+    $errorlog->Insert();
 
-    //call save twice to cover different execution paths
-    if(!$buildgrouprule->Add())
-      {
-      $this->fail("Add() returned false when it should be true.\n");
-      return 1;
-      }
-    if($buildgrouprule->Add())
-      {
-      $this->fail("Add returned true when it should be false.\n");
-      return 1;
-      }
     $this->pass("Passed");
     if ( extension_loaded('xdebug'))
       {
@@ -71,11 +56,12 @@ class BuildGroupRuleTestCase extends KWWebTestCase
       $file = '/projects/CDash/bin/xdebugCoverage'.
           DIRECTORY_SEPARATOR . md5($_SERVER['SCRIPT_FILENAME']);
       file_put_contents(
-        $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . "test_buildgrouprule",
+        $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . "test_builderrorlog",
         serialize($data)
       );
       }
     return 0;
     }
 }
+
 ?>

@@ -30,6 +30,7 @@ class RouterTestCase extends KWWebTestCase
       {
       $this->fail("'Available' not found on router.php\n$content\n");
       }
+    $content = $this->get($this->url."/router.php?page=login");
     $this->pass("Passed");
     }
 }

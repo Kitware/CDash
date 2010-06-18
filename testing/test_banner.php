@@ -31,6 +31,7 @@ class BannerTestCase extends KWWebTestCase
    
   function testBanner()
     {
+    xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
     $db = pdo_connect($this->db->dbo->host, $this->db->dbo->user, $this->db->dbo->password);
     pdo_select_db("cdash4simpletest", $db);
 
@@ -67,6 +68,17 @@ class BannerTestCase extends KWWebTestCase
       }
 
     $this->pass("Passed");
+    if ( extension_loaded('xdebug'))
+      {
+      $data = xdebug_get_code_coverage();
+      xdebug_stop_code_coverage();
+      $file = '/projects/CDash/bin/xdebugCoverage'.
+          DIRECTORY_SEPARATOR . md5($_SERVER['SCRIPT_FILENAME']);
+      file_put_contents(
+        $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . "test_banner",
+        serialize($data)
+      );
+      }
     return 0;
     }
 }
