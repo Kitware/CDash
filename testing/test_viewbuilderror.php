@@ -15,42 +15,36 @@ class ViewBuildErrorTestCase extends KWWebTestCase
   
   function testViewBuildError()
     {
-    /*
-    $content = $this->get($this->url . "/index.php?project=InsightExample");
-    if($content == false)
-      {
-      $this->fail("Unable to retrieve InsightExample dashboard"); 
-      return 1;
-      }
-    
-    //get a buildid
-    $buildid = -1;
-    $lines = explode("\n", $content);
-    foreach($lines as $line)
-      {
-      if(strpos($line, "buildid") !== false)
-        {
-        preg_match('#buildid=([0-9]+)#', $line, $matches);
-        $buildid = $matches[1];
-        break;
-        }
-      }
-    if($buildid === -1)
-      {
-      $this->fail("Unable to find a buildid for InsightExamples");
-      return 1;
-      }
-    //connect to viewBuildError.php
-    $content = $this->get($this->url . "/viewBuildError.php?buildid=$buildid");
-     */
-    $content = $this->get($this->url . "/viewBuildError.php?buildid=12");
+    $content = $this->get($this->url . "/viewBuildError.php?buildid=8");
     if($content == false)
       {
       $this->fail("Unable to retrieve viewBuildError.php"); 
       return 1;
       }
-
-    $this->assertText('Errors');
+    if(strpos($content, "Errors") === false)
+      {
+      $this->fail("Expected output not found from viewBuildError.php");
+      return 1;
+      }
+    $content = $this->get($this->url . "/viewBuildError.php?buildid=8&type=1");
+    if(strpos($content, "warning") === false)
+      {
+      $this->fail("Expected output not found from viewBuildError.php");
+      return 1;
+      }
+    $content = $this->get($this->url . "/viewBuildError.php?buildid=8&onlydeltan=1");
+    if(strpos($content, "Errors") === false)
+      {
+      $this->fail("Expected output not found from viewBuildError.php");
+      return 1;
+      }
+    $content = $this->get($this->url . "/viewBuildError.php?buildid=8&onlydeltap=1");
+    if(strpos($content, "Errors") === false)
+      {
+      $this->fail("Expected output not found from viewBuildError.php");
+      return 1;
+      }
+    $this->pass("Passed");
     }
 }
 ?>
