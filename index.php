@@ -325,12 +325,12 @@ function generate_main_dashboard_XML($projectid,$date)
   if(!$db)
     {
     echo "Error connecting to CDash database server<br>\n";
-    exit(0);
+    return;
     }
   if(!pdo_select_db("$CDASH_DB_NAME",$db))
     {
     echo "Error selecting CDash database<br>\n";
-    exit(0);
+    return;
     }
 
   $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
@@ -1491,12 +1491,12 @@ function generate_subprojects_dashboard_XML($projectid,$date)
   if(!$db)
     {
     echo "Error connecting to CDash database server<br>\n";
-    exit(0);
+    return;
     }
   if(!pdo_select_db("$CDASH_DB_NAME",$db))
     {
     echo "Error selecting CDash database<br>\n";
-    exit(0);
+    return;
     }
   
   $Project = new Project();

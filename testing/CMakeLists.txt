@@ -27,7 +27,7 @@ add_php_test(email createpublicdashboard)
 add_php_test(projectwebpage email)
 
 add_php_test(backup projectwebpage)
-add_php_test(backwardcompabilitytools projectwebpage)
+add_php_test(backwardcompatibilitytools projectwebpage)
 add_php_test(banner projectwebpage)
 add_php_test(buildconfigure projectwebpage)
 add_php_test(builderrordiff projectwebpage)

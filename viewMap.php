@@ -33,7 +33,7 @@ $projectid = get_project_id($projectname);
 if($projectid == -1)
   {
   echo "Wrong project name";
-  exit();
+  return;
   }
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);

@@ -207,7 +207,7 @@ while($site2project_array = pdo_fetch_array($site2project))
 if(!$displayPage)
   {
   echo "You cannot access this page";
-  exit(0);
+  return;
   }
   
   

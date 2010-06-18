@@ -50,7 +50,7 @@ $projectid = $buildRow["projectid"];
 if(!$projectid)
 {
   echo "This build doesn't exist.";
-  exit();
+  return;
 }
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);

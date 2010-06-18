@@ -89,7 +89,7 @@ if(isset($_GET['upgrade-tables']))
          }
        } // end for each line
     } // end for each upgrade file
-  exit();
+  return;
 }
 
 if(isset($_GET['upgrade-0-8']))
@@ -105,7 +105,7 @@ if(isset($_GET['upgrade-0-8']))
   // Compression the coverage
   CompressCoverage();
   
-  exit();
+  return;
 }
 
 if(isset($_GET['upgrade-1-0']))
@@ -152,7 +152,7 @@ if(isset($_GET['upgrade-1-0']))
     {
     pdo_query("ALTER TABLE project ADD showtesttime tinyint(4) default '0'");
     }
-  exit();
+  return;
 }
 
 if(isset($_GET['upgrade-1-2']))
@@ -231,7 +231,7 @@ if(isset($_GET['upgrade-1-2']))
       pdo_query("ALTER TABLE user2project ADD emailcategory tinyint(4) default '62'");
       }
     }     
-  exit();
+  return;
 }
 
 // Helper function to alter a table
@@ -559,7 +559,7 @@ if(isset($_GET['upgrade-1-4']))
   // Put that the upgrade is done in the log
   add_log("Upgrade done.","upgrade-1-4");
 
-  exit();
+  return;
 }
 
 // 1.6 Upgrade
@@ -682,7 +682,7 @@ if(isset($_GET['upgrade-1-6']))
   // Put that the upgrade is done in the log
   add_log("Upgrade done.","upgrade-1-6");
 
-  exit();
+  return;
 }
 
 
@@ -775,7 +775,7 @@ if(isset($_GET['upgrade-1-8']))
   // Put that the upgrade is done in the log
   add_log("Upgrade done.","upgrade-1-8");
 
-  exit();
+  return;
 }
 // When adding new tables they should be added to the SQL installation file
 // and here as well

@@ -70,7 +70,7 @@ if ($session_OK)
     {
     pdo_query("DELETE FROM site2user WHERE siteid=".qnum($_GET['siteid'])." AND userid=".qnum($userid));
     echo "<script language=\"javascript\">window.location='user.php'</script>";
-     exit();
+    return;
     }
   
   if($updatesite || $geolocation)

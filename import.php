@@ -103,7 +103,7 @@ if($Submit)
     {
     echo("Use your browsers Back button, and select a valid project.<br>");
     ob_flush();
-    exit(0);
+    return;
     }
   echo("Import for Project: ");
   echo(get_project_name($projectid));
@@ -116,7 +116,7 @@ if($Submit)
       {
       echo("Error: $directory is not a valid path to Dart XML data on the server.<br>\n");
       generate_XSLT($xml,"import_dart_classic");
-      exit(0);
+      return;
       }
     $startDate = mktime(0,0,0,$monthFrom,$dayFrom,$yearFrom);
     $endDate = mktime(0,0,0,$monthTo,$dayTo,$yearTo);
@@ -163,7 +163,7 @@ if($Submit)
       }
     } // end strlen(directory)>0
   echo("<a href=index.php?project=".urlencode($projName).">Back to $projName dashboard</a>\n");
-  exit(0);
+  return;
 }
 
 // Now doing the xslt transition

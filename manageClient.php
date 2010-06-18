@@ -32,7 +32,7 @@ if ($session_OK)
   if(!$CDASH_MANAGE_CLIENTS)
     {
     echo "CDash has not been setup to allow client management";
-    exit();
+    return;
     }   
   
   $userid = $_SESSION['cdash']['loginid'];
@@ -48,7 +48,7 @@ if ($session_OK)
     if(!$User->IsAdmin() || $ClientJobSchedule->GetOwner()!=$userid)
       {
       echo "You cannot access this job";
-      exit();
+      return;
       }
     $ClientJobSchedule->Remove();
     echo "<script language=\"javascript\">window.location='user.php'</script>";
@@ -57,7 +57,7 @@ if ($session_OK)
   if(!isset($_GET['projectid']) && !isset($_GET['scheduleid']))
     {
     echo "Projectid or Schedule id not set";
-    exit();
+    return;
     }
 
   if(isset($_GET['projectid']))

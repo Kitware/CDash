@@ -49,7 +49,7 @@ switch($img_array["extension"])
   default:
     echo "Unknown image type: ";
     echo $img_array["extension"];
-    exit();
+    return;
   }
 
 if($CDASH_DB_TYPE == "pgsql")
@@ -66,5 +66,5 @@ else
   $buf = $img_array["img"];
   }
 echo $buf;
-exit();
+return;
 ?>

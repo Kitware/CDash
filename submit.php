@@ -32,7 +32,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 if(!$db || !pdo_select_db("$CDASH_DB_NAME",$db))
   {
   echo "ERROR: Cannot connect to database.";
-  exit();
+  return;
   }
 set_time_limit(0);
     
@@ -51,7 +51,7 @@ if($projectid == -1)
   {
   echo "Not a valid project";
   add_log('Not a valid project. projectname: ' . $projectname, 'global:submit.php');
-  exit();
+  return;
   }
 
 // Catch the fatal errors during submission
