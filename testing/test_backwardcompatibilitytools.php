@@ -124,9 +124,7 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
       {
       $this->fail("clicking Upgrade returned false");
       }
-      /*
     //fake the javascript calls...
-    //doesn't show up in the coverage anyway, for some reason...
     $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-tables=1");
     $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-0-8=1");
     $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-1-0=1");
@@ -137,7 +135,6 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
     //some of these upgrades pollute the log file
     //clear it out so that it doesn't cause subsequent tests to fail
     $this->deleteLog($this->logfilename);
-    */
 
     $this->pass("Passed");
     }
