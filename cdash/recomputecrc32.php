@@ -15,9 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include("cdash/config.php");
-require_once("cdash/pdo.php");
-include_once("cdash/common.php");
+include("config.php");
+require_once("pdo.php");
+include_once("common.php");
 
 // Change this to 1 to remove the duplicates.
 $removeduplicates = 0;
@@ -140,5 +140,7 @@ while($test_array = pdo_fetch_array($test))
     }
   }
 }
+
+echo "Done";
   
 ?>

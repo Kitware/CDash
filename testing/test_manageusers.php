@@ -23,7 +23,6 @@ class ManageUsersTestCase extends KWWebTestCase
 
   function testManageUsersTest()
     {
-    echo "Here's my url: $this->url\n\n";
     //make sure we can't visit the manageUsers page while logged out
     $this->logout();
     $content = $this->get($this->url."/manageUsers.php");
