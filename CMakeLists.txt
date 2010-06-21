@@ -50,6 +50,7 @@ make_directory("${CDASH_COVERAGE_DIR}")
 configure_file(${CDash_SOURCE_DIR}/append_coverage.php.in 
   ${CDash_BINARY_DIR}/append_coverage.php)
 
+find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
 file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
 "<?php
@@ -60,6 +61,7 @@ $CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
 $CDASH_DB_PASS = '${CDASH_DB_PASS}';
 $CDASH_DB_TYPE = '${CDASH_DB_TYPE}';
 $CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';
+$PHP_EXE = '${PHP_EXE}';
 $CDASH_MANAGE_CLIENTS = '1';
 ?>
 ")

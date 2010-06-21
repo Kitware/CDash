@@ -1,4 +1,3 @@
-find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 set(testing_dir "${CDash_SOURCE_DIR}/testing")
 
 add_test(install ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_install.php)
@@ -26,6 +25,7 @@ add_php_test(createpublicdashboard compressedtest)
 add_php_test(email createpublicdashboard)
 add_php_test(projectwebpage email)
 
+add_php_test(autoremovebuilds projectwebpage)
 add_php_test(backup projectwebpage)
 add_php_test(backwardcompatibilitytools projectwebpage)
 add_php_test(banner projectwebpage)

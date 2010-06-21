@@ -19,7 +19,7 @@
 $path = dirname(__FILE__);
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-include("cdash/autoremove.php");
+require_once("cdash/autoremove.php");
 // Open the database connection
 include("cdash/config.php");
 require_once("cdash/pdo.php");
@@ -27,7 +27,7 @@ require_once("cdash/pdo.php");
 if($argc != 2)
 {
   print "Usage: php $argv[0] project_name\n";
-  exit(-1);
+  return -1;
 }
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
@@ -53,5 +53,5 @@ while($project_array = pdo_fetch_array($project))
   removeFirstBuilds($project_array["id"],$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"], true); // force the autoremove
   }
 
-exit(0);
+return 0;
 ?>
