@@ -45,6 +45,12 @@ if(NOT CDASH_DB_TYPE)
   set(CDASH_DB_TYPE "mysql")
 endif(NOT CDASH_DB_TYPE)
 
+set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
+make_directory("${CDASH_COVERAGE_DIR}")
+configure_file(${CDash_SOURCE_DIR}/append_coverage.php.in 
+  ${CDash_BINARY_DIR}/append_coverage.php)
+
+
 file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
 "<?php
 $CDASH_DB_NAME = 'cdash4simpletest';
@@ -53,14 +59,10 @@ $CDASH_DB_HOST = '${CDASH_DB_HOST}';
 $CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
 $CDASH_DB_PASS = '${CDASH_DB_PASS}';
 $CDASH_DB_TYPE = '${CDASH_DB_TYPE}';
+$CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';
 $CDASH_MANAGE_CLIENTS = '1';
 ?>
 ")
-
-set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
-make_directory("${CDASH_COVERAGE_DIR}")
-configure_file(${CDash_SOURCE_DIR}/append_coverage.php.in 
-  ${CDash_BINARY_DIR}/append_coverage.php)
 
 # add the testing directory
 add_subdirectory(testing)

@@ -99,10 +99,11 @@ class DailyUpdateFileTestCase extends KWWebTestCase
     xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
     if ( extension_loaded('xdebug'))
       {
+      include('cdash/config.local.php');
       $data = xdebug_get_code_coverage();
       xdebug_stop_code_coverage();
-      $file = '/projects/CDash/bin/xdebugCoverage'.
-          DIRECTORY_SEPARATOR . md5($_SERVER['SCRIPT_FILENAME']);
+      $file = $CDASH_COVERAGE_DIR . DIRECTORY_SEPARATOR .
+        md5($_SERVER['SCRIPT_FILENAME']);
       file_put_contents(
         $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . "test_dailyupdatefile",
         serialize($data)
