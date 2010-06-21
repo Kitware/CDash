@@ -29,7 +29,7 @@ include_once("cdash/ctestparser.php");
 if($argc != 2)
 {
   print "Usage: php $argv[0] directory \n";
-  exit(-1);
+  return -1;
 }
 
 $directory=$argv[1];
@@ -95,5 +95,5 @@ foreach($filelist as $filename)
 echo 'Import backup complete. '.$i.' files processed.'."\n";
 echo "\n";
 
-exit(0);
+return 0;
 ?>
