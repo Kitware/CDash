@@ -33,14 +33,10 @@ class InstallTestCase extends KWWebTestCase
       }
 
     //drop any old testing database before testing install
-    if(!$this->db->drop($this->databaseName))
-      {
-      $this->fail("Failed to drop the database!");
-      return 1;
-      }
-
+    $this->db->drop($this->databaseName);
+    
     // Create the database  
-    if($db['type'] == 'pgsql')
+    if($this->db->type == 'pgsql')
       {
       if(!$this->db->create($this->databaseName))
         {
