@@ -144,6 +144,7 @@ class TestingHandler extends AbstractHandler
       // If the build doesn't exist we add it
       if($buildid==0)
         {
+        file_put_contents("/tmp/zackdebug.txt", "Build is new\n", FILE_APPEND);
         $this->Build->ProjectId = $this->projectid;
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $start_time;
@@ -159,6 +160,12 @@ class TestingHandler extends AbstractHandler
       else
         {
         $this->Build->Id = $buildid;
+        //if the build already exists factor the number of tests that have
+        //already been run into our running total
+        file_put_contents("/tmp/zackdebug.txt", "Build already exists: $buildid\n", FILE_APPEND);
+        $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
+        $this->NumberTestsNotRun += $this->Build->GetNumberOfNotRunTests();
+        $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();
         }  
 
       $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
