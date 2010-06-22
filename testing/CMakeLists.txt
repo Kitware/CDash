@@ -79,9 +79,15 @@ add_php_test(managesubproject subproject)
 add_php_test(viewsubprojectdependencies subproject)
 
 add_subdirectory(ctest)
+
 add_php_test(api simple)
 add_php_test(editsite simple)
 
 #and these ones should stay towards the end...
 add_php_test(removebuilds viewchanges)
 add_php_test(recoverpassword removebuilds)
+
+if(CDASH_USE_SELENIUM)
+  add_subdirectory(selenium)
+endif(CDASH_USE_SELENIUM)
+
