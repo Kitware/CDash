@@ -705,7 +705,6 @@ class Build
       {
       $build_array = pdo_fetch_array($result);
       $numTestsFailed = $build_array["testfailed"];
-      file_put_contents("/tmp/zackdebug.txt", "already failed: $numTestsFailed\n", FILE_APPEND);
       if($numTestsFailed < 0)
         {
         return 0;
@@ -724,7 +723,6 @@ class Build
       {
       $build_array = pdo_fetch_array($result);
       $numTestsPassed = $build_array["testpassed"];
-      file_put_contents("/tmp/zackdebug.txt", "already passed: $numTestsPassed\n", FILE_APPEND);
       if($numTestsPassed < 0)
         {
         return 0;
@@ -743,7 +741,6 @@ class Build
       {
       $build_array = pdo_fetch_array($result);
       $numTestsNotRun = $build_array["testnotrun"];
-      file_put_contents("/tmp/zackdebug.txt", "already notrun: $numTestsNotRun\n", FILE_APPEND);
       if($numTestsNotRun < 0)
         {
         return 0;

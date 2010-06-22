@@ -10,6 +10,7 @@ set(CDASH_DB_LOGIN "root" CACHE STRING "Database user")
 set(CDASH_DB_PASS "" CACHE STRING "Password for database user")
 set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
 set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
+option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
 
 get_filename_component(CDASH_DIR_NAME ${CDash_SOURCE_DIR} NAME)
 message("CDASH_DIR_NAME = ${CDASH_DIR_NAME}")
@@ -52,6 +53,10 @@ configure_file(${CDash_SOURCE_DIR}/append_coverage.php.in
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
+if(CDASH_USE_SELENIUM)
+  find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php)
+endif(CDASH_USE_SELENIUM)
+
 file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
 "<?php
 $CDASH_DB_NAME = 'cdash4simpletest';
@@ -62,6 +67,7 @@ $CDASH_DB_PASS = '${CDASH_DB_PASS}';
 $CDASH_DB_TYPE = '${CDASH_DB_TYPE}';
 $CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';
 $PHP_EXE = '${PHP_EXE}';
+$PHPUNIT_EXE = '${PHP_EXE}';
 $CDASH_MANAGE_CLIENTS = '1';
 ?>
 ")
