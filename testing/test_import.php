@@ -86,9 +86,9 @@ class ImportTestCase extends KWWebTestCase
     $content = $this->clickSubmitByName("Submit");
 
     //check for expected output
-    if(strpos($content, "Done for the day") === false)
+    if(strpos($content, "<status>OK</status>") === false)
       {
-      $this->fail("'Done for the day' not found on import.php\n$content\n");
+      $this->fail("'<status>OK</status>' not found on import.php\n$content\n");
       return 1;
       }
 

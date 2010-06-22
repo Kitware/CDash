@@ -60,7 +60,7 @@ class APITestCase extends KWWebTestCase
       }
 
     $coveragedirectory = $this->get($this->url."/api/?method=coverage&task=directory&project=InsightExample");
-    if($coveragedirectory != "[]")
+    if(strpos($coveragedirectory, "[]") === false)
       {
       $this->fail("Expected output not found when querying API for coveragedirectory");
       return 1;
