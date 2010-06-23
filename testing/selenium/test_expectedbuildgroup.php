@@ -35,8 +35,13 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("link=DASHBOARD");
     $this->waitForPageToLoad("30000");
     $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[4]/img");
+    sleep(1);
     $this->click("link=[remove this build]");
     $this->assertTrue((bool)preg_match('/^Are you sure you want to remove this build[\s\S]$/',$this->getConfirmation()));
+    sleep(1);
+    $this->click("//img[@alt='info']");
+    sleep(1);
+    $this->click("//img[@alt='info']");
     sleep(1);
     $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[2]/img");
     $this->click("expectednosubmission_99788765");

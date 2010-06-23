@@ -11,6 +11,7 @@ set(CDASH_DB_PASS "" CACHE STRING "Password for database user")
 set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
 set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
 option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
+option(CDASH_USE_APACHE2 "Is CDash using Apache2 for its web server?" OFF)
 
 get_filename_component(CDASH_DIR_NAME ${CDash_SOURCE_DIR} NAME)
 message("CDASH_DIR_NAME = ${CDASH_DIR_NAME}")

@@ -23,7 +23,7 @@ include_once("cdash/common.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$apacheaccesslog = "/var/log/apache/access.log";
+$apacheaccesslog = "/var/log/apache2/access.log";
 $contents = file_get_contents($apacheaccesslog);
 
 // Loop through the sites
