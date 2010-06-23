@@ -38,7 +38,12 @@
 </tr>
 <tr>
   <td>clickAndWait</td>
-  <td>link=[Manage users]</td>
+  <td>//tr[5]/td[2]/a[7]/img</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@id='wizard']/ul/li[2]/a/span</td>
   <td></td>
 </tr>
 <tr>
@@ -52,23 +57,28 @@
   <td>e</td>
 </tr>
 <tr>
-  <td>clickAndWait</td>
-  <td>makeadmin</td>
-  <td></td>
+  <td>select</td>
+  <td>//div[@id='newuser']/table/tbody/tr[1]/td[2]/font[1]/form/select</td>
+  <td>label=Site maintainer</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//div[@id='newuser']/table/tbody/tr[1]/td[2]/font[1]/form/select</td>
+  <td>label=Normal User</td>
 </tr>
 <tr>
   <td>type</td>
-  <td>search</td>
-  <td>simpl</td>
-</tr>
-<tr>
-  <td>keyUp</td>
-  <td>search</td>
-  <td>l</td>
+  <td>//div[@id='newuser']/table/tbody/tr[1]/td[2]/font[1]/form/input[2]</td>
+  <td>simple</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
-  <td>makenormaluser</td>
+  <td>adduser</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='fragment-1']/table/tbody/tr[2]/td[2]/table/tbody/tr[3]/td[6]/input[2]</td>
   <td></td>
 </tr>
 
