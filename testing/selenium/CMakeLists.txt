@@ -14,3 +14,4 @@ endfunction(add_selenium_test)
 
 add_selenium_test(addbuildgroup removebuilds)
 add_selenium_test(expectedbuildgroup addbuildgroup)
+add_selenium_test(buildinfogroup expectedbuildgroup)
