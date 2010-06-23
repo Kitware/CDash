@@ -32,6 +32,8 @@ file(WRITE "${CDash_SOURCE_DIR}/testing/config.test.local.php"
 "<?php
 $configure = array(
   'urlwebsite'       => '${CDASH_TESTING_URL}',
+  'webserver'        => 'http://${CDASH_SERVER}/',
+  'webpath'          => '/${CDASH_DIR_NAME}',
   'outputdirectory'  => '${CDash_BINARY_DIR}/tmp',
   'type'             => 'Nightly',
   'site'             => '${CDASH_SITE}',

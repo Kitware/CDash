@@ -6,13 +6,17 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected function setUp()
   {
+    $path = dirname(__FILE__)."/..";
+    set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+    require('config.test.php');
     $this->setBrowser("*chrome");
-    $this->setBrowserUrl("http://elysium/");
+    $this->setBrowserUrl($configure['webserver']);
+    $this->webPath = $configure['webpath'];
   }
 
-  public function testMyTestCase()
+  public function testAddBuildGroup()
   {
-    $this->open("/CDash/index.php");
+    $this->open($this->webPath."/index.php");
     $this->click("link=Login");
     $this->waitForPageToLoad("30000");
     $this->type("login", "simpletest@localhost");
@@ -21,6 +25,7 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=InsightExample");
     $this->waitForPageToLoad("30000");
+    sleep(1);
     $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[4]/img");
     sleep(1);
     $this->click("link=[mark as expected]");

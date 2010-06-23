@@ -13,3 +13,4 @@ function(add_selenium_test TestName PreviousTest)
 endfunction(add_selenium_test)
 
 add_selenium_test(addbuildgroup removebuilds)
+add_selenium_test(expectedbuildgroup addbuildgroup)
