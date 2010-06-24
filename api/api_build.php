@@ -29,14 +29,14 @@ class BuildAPI extends CDashAPI
     if(!isset($this->Parameters['project']))  
       {
       echo "Project not set";
-      exit();
+      return;
       }
       
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid))
       {
       echo "Project not found";
-      exit();
+      return;
       }
 
     $builds = array();
@@ -89,14 +89,14 @@ class BuildAPI extends CDashAPI
     if(!isset($this->Parameters['project']))  
       {
       echo "Project not set";
-      exit();
+      return;
       }
       
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid))
       {
       echo "Project not found";
-      exit();
+      return;
       }
 
     $builds = array();
@@ -146,14 +146,14 @@ class BuildAPI extends CDashAPI
     if(!isset($this->Parameters['project']))  
       {
       echo "Project not set";
-      exit();
+      return;
       }
       
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid))
       {
       echo "Project not found";
-      exit();
+      return;
       }   
 
     $group = 'Nightly';      

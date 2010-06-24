@@ -29,14 +29,14 @@ class CoverageAPI extends CDashAPI
     if(!isset($this->Parameters['project']))  
       {
       echo "Project not set";
-      exit();
+      return;
       }
       
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid))
       {
       echo "Project not found";
-      exit();
+      return;
       }
     
     // Select the last build that has coverage from the project  
@@ -47,7 +47,7 @@ class CoverageAPI extends CDashAPI
     if(pdo_num_rows($query) == 0)
       {
       echo "No coverage entries found for this project";
-      exit();   
+      return;
       }
     $query_array = pdo_fetch_array($query);
     $buildid = $query_array['buildid']; 

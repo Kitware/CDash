@@ -22,7 +22,7 @@ $projectid = $_GET['projectid'];
 if(!is_numeric($projectid))
   {
   echo "Wrong project id";
-  exit();
+  return;
   }
 
 // Check if someone is already processing the submission for this project
@@ -30,12 +30,12 @@ $query = pdo_query("SELECT count(*) AS c FROM submission WHERE projectid='".$pro
 if(!$query)
   {
   add_last_sql_error("ProcessSubmissions");
-  exit();
+  return;
   } 
 $query_array = pdo_fetch_array($query);
 if($query['c'] > 0) // if we do we quit
   {
-  exit();
+  return;
   }
   
 $query = pdo_query("SELECT filename FROM submission WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1");

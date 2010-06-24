@@ -32,7 +32,7 @@ include("api_user.php");
 if(!isset($_GET['method']))
   {
   echo "Method should be set: method=...";  
-  exit();
+  return;
   }
 $method = $_GET['method'];
 

@@ -105,7 +105,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
     
     $Project->SendEmailToAdmin('Cannot create handler based on XML content',
                                'An XML submission from '.$ip.' to the project '.get_project_name($projectid).' cannot be parsed. The content of the file is as follow: '.$content);
-    exit();
+    return;
     }
 
   xml_set_element_handler($parser, array($handler, 'startElement'), array($handler, 'endElement'));
@@ -136,7 +136,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
     echo $query_array['id']; 
     echo "The submission is banned from this CDash server.";  
     add_log("Submission is banned from this CDash server","ctestparser");  
-    exit();  
+    return;
     }
   
   // Append a timestamp for the file

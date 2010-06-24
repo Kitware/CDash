@@ -40,7 +40,7 @@ function client_submit()
     if(!isset($_GET['sitename']) || !isset($_GET['systemname']))
       {
       echo "ERROR: sitename or systemname not set";
-      exit();
+      return;
       }
       
     $sitename = $_GET['sitename'];
@@ -51,7 +51,7 @@ function client_submit()
     $siteid = $ClientSite->GetId($sitename,$systemname);
     
     echo $siteid;
-    exit();
+    return;
     }
   // If the client asks for something to build
   else if(isset($_GET['getjob']))
@@ -73,14 +73,14 @@ function client_submit()
       {
       echo "0"; // send zero to let the client know that nothing is there
       }
-    exit();
+    return;
     }
   else if(isset($_GET['submitinfo']))
     {      
     if(!isset($_GET['sitename']) || !isset($_GET['systemname']))
       {
       echo "0";
-      exit();
+      return;
       }
       
     $filehandle='php://input';
@@ -182,7 +182,7 @@ function client_submit()
       }
     $ClientSite->UpdatePrograms($programs);
       
-    exit(); 
+    return;
     }
   else if(isset($_GET['jobdone'])) // Mark the job has finished
     {
@@ -193,7 +193,7 @@ function client_submit()
     $ClientJob = new ClientJob();
     $ClientJob->SiteId = $_GET['siteid'];
     $ClientJob->SetFinished();
-    exit();
+    return;
     }  
   else if(isset($_GET['jobfailed'])) // Mark the job has failed
     {
@@ -204,7 +204,7 @@ function client_submit()
     $ClientJob = new ClientJob();
     $ClientJob->SiteId = $_GET['siteid'];
     $ClientJob->SetFailed();
-    exit();
+    return;
     }   
 }
 

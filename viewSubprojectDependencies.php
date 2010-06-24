@@ -34,7 +34,7 @@ $projectid = get_project_id($projectname);
 if($projectid == 0)
   {
   echo "Invalid project";
-  exit(); 
+  return;
   }
 
   
