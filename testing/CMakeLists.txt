@@ -75,7 +75,7 @@ add_php_test(viewissues projectwebpage)
 add_php_test(viewmap projectwebpage)
 if(CDASH_USE_APACHE2)
   add_php_test(getipfromapacheaccesslog projectwebpage)
-endif(CDASH_USE_APACHE2)
+endif()
 
 add_php_test(groupsdescription subproject)
 add_php_test(managesubproject subproject)
@@ -86,10 +86,32 @@ add_subdirectory(ctest)
 add_php_test(api simple)
 add_php_test(editsite simple)
 
+if(CDASH_USE_SELENIUM)
+  add_subdirectory(selenium)
+  if(CLIENT_TEST_SCRIPT1 AND CLIENT_TEST_SCRIPT2)
+    set(TEST_CLIENT_MANAGEMENT ON)
+  endif()
+endif()
+
+
+if(TEST_CLIENT_MANAGEMENT)
+  add_test(managebuild1 ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT1})
+  set_tests_properties(
+    managebuild1 PROPERTIES
+    DEPENDS projectwebpage
+    PASS_REGULAR_EXPRESSION ".*Nothing to do.*"
+  )
+
+  add_selenium_test(managebuild2 managebuild1)
+  
+  add_test(managebuild3 ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2})
+  set_tests_properties(
+    managebuild3 PROPERTIES
+    DEPENDS managebuild2
+    PASS_REGULAR_EXPRESSION ".*Test passed.*"
+  )
+endif()
+
 #and these ones should stay towards the end...
 add_php_test(removebuilds viewchanges)
 add_php_test(recoverpassword removebuilds)
-
-if(CDASH_USE_SELENIUM)
-  add_subdirectory(selenium)
-endif(CDASH_USE_SELENIUM)
