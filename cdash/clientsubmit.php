@@ -20,7 +20,7 @@ function client_submit()
   include('cdash/config.php');
   if(!$CDASH_MANAGE_CLIENTS)
     {
-    return;
+    return 0;
     }
  
   include_once("models/clientsite.php");
@@ -40,7 +40,7 @@ function client_submit()
     if(!isset($_GET['sitename']) || !isset($_GET['systemname']))
       {
       echo "ERROR: sitename or systemname not set";
-      return;
+      return 0;
       }
       
     $sitename = $_GET['sitename'];
@@ -51,7 +51,7 @@ function client_submit()
     $siteid = $ClientSite->GetId($sitename,$systemname);
     
     echo $siteid;
-    return;
+    return 1;
     }
   // If the client asks for something to build
   else if(isset($_GET['getjob']))
@@ -59,6 +59,7 @@ function client_submit()
     if(!isset($_GET['siteid']))
       {
       echo "0";
+      return 1;
       }
     
     $ClientJobSchedule = new ClientJobSchedule();
@@ -73,14 +74,14 @@ function client_submit()
       {
       echo "0"; // send zero to let the client know that nothing is there
       }
-    return;
+    return 1;
     }
   else if(isset($_GET['submitinfo']))
     {      
     if(!isset($_GET['sitename']) || !isset($_GET['systemname']))
       {
       echo "0";
-      return;
+      return 1;
       }
       
     $filehandle='php://input';
@@ -182,7 +183,7 @@ function client_submit()
       }
     $ClientSite->UpdatePrograms($programs);
       
-    return;
+    return 1;
     }
   else if(isset($_GET['jobdone'])) // Mark the job has finished
     {
@@ -193,7 +194,7 @@ function client_submit()
     $ClientJob = new ClientJob();
     $ClientJob->SiteId = $_GET['siteid'];
     $ClientJob->SetFinished();
-    return;
+    return 1;
     }  
   else if(isset($_GET['jobfailed'])) // Mark the job has failed
     {
@@ -204,8 +205,9 @@ function client_submit()
     $ClientJob = new ClientJob();
     $ClientJob->SiteId = $_GET['siteid'];
     $ClientJob->SetFailed();
-    return;
+    return 1;
     }   
+  return 0;
 }
 
 ?>

@@ -37,7 +37,10 @@ if(!$db || !pdo_select_db("$CDASH_DB_NAME",$db))
 set_time_limit(0);
     
 // Send to the client submit
-client_submit();
+if(client_submit())
+  {
+  return;
+  }
 
 $expected_md5 = isset($_GET['MD5']) ? $_GET['MD5'] : '';
 $file_path='php://input';
