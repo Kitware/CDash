@@ -44,6 +44,7 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("//img[@alt='info']");
     sleep(1);
     $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[2]/img");
+    sleep(1);
     $this->click("expectednosubmission_99788765");
     sleep(1);
     $this->click("link=[move to group]");
