@@ -77,12 +77,6 @@ function do_submit($filehandle, $projectid, $expected_md5)
 
   // Parse the XML file
   $handler = ctest_parse($filehandle,$projectid, false, $expected_md5);
-  //this is the md5 checksum fail case
-  if($handler == FALSE)
-    {
-    //no need to log an error since ctest_parse already did
-    return;
-    }
   
   // Send the emails if necessary
   if($handler instanceof UpdateHandler ||
@@ -107,13 +101,6 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5)
   $filename = ctest_parse($filehandle, $projectid, true, $expected_md5);
   fclose($filehandle);
   
-  //this is the md5 checksum fail case
-  if($filename == FALSE)
-    {
-    //no need to log an error since ctest_parse already did
-    return;
-    }
-
   // Insert the filename in the database
   pdo_query("INSERT INTO submission (filename,projectid,status) VALUES ('".$filename."','".$projectid."','0')");
   
