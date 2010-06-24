@@ -160,4 +160,5 @@ else
   echo " matching these settings ".$word." been responding in the last 24 hours.<br/>";
   }
   
-exit();
+//exit();
+return;
