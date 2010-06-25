@@ -45,10 +45,8 @@ add_ctest_test(login Simple simple loginCoverage.php)
 add_ctest_test(sameImage SameImage sameImage sameImage.php)
 
 if(CMake_SOURCE_DIR)
-
   #just so we don't pollute the CMake binary dir with our testing...
   set(CMake_BINARY_DIR ${CDash_BINARY_DIR})
-  message("Here's my generator yo: ${CMAKE_GENERATOR}")
   set(CMAKE_TEST_GENERATOR ${CMAKE_GENERATOR})
 
   function(add_cmake_test TestName)
