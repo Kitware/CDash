@@ -7,12 +7,16 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
   protected function setUp()
   {
     $this->setBrowser("*chrome");
-    $this->setBrowserUrl("http://elysium/");
+    $path = dirname(__FILE__)."/..";
+    set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+    require('config.test.php');
+    $this->setBrowserUrl($configure['webserver']);
+    $this->webPath = $configure['webpath'];
   }
 
-  public function testMyTestCase()
+  public function testManageBuild2()
   {
-    $this->open("/CDash/index.php");
+    $this->open($this->webPath."/index.php");
     $this->click("link=Login");
     $this->waitForPageToLoad("30000");
     $this->type("login", "simpletest@localhost");

@@ -18,7 +18,6 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
   public function testShowTestGraphs()
   {
     $this->open($this->webPath."/index.php?project=EmailProjectExample&date=2009-02-23");
-    $this->open("/CDash/index.php?project=EmailProjectExample&date=2009-02-23");
     $this->click("//table[@id='project_3_7']/tbody[1]/tr[1]/td[12]/div/a");
     $this->waitForPageToLoad("30000");
     $this->click("link=Failed");
