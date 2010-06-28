@@ -12,7 +12,7 @@ set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
 set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
 option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
 option(CDASH_USE_APACHE2 "Is CDash using Apache2 for its web server?" OFF)
-find_path(CMake_SOURCE_DIR CMake DOC "Path to CMake source dir.  Set this to import tests from CMake")
+set(CMake_SOURCE_DIR CACHE FILEPATH "Path to CMake source dir.  Set this to import tests from CMake")
 set(CLIENT_TEST_SCRIPT1 CACHE FILEPATH "Path to client management test script")
 set(CLIENT_TEST_SCRIPT2 CACHE FILEPATH "Path to client management test script")
 
