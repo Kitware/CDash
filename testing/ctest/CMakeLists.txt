@@ -59,62 +59,69 @@ if(CMake_SOURCE_DIR)
       --output-log "${CDash_BINARY_DIR}/Tests/${TestName}/output.log"
       )
   endfunction(add_cmake_test)
-  
-  add_cmake_test(CTestTestBadExe)
-  SET_TESTS_PROPERTIES(CTestTestBadExe PROPERTIES
-    PASS_REGULAR_EXPRESSION "BAD_COMMAND")
-  add_cmake_test(CTestTestCrash)
-  SET_TESTS_PROPERTIES(CTestTestCrash PROPERTIES
-    PASS_REGULAR_EXPRESSION "SegFault")
-  add_cmake_test(CTestTestParallel)
-  add_cmake_test(CTestTestResourceLock)
-  CONFIGURE_FILE(
-    "${CMake_SOURCE_DIR}/Tests/CTestTestRunScript/hello.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/CTestTestRunScript/hello.cmake"
-  )
-  add_cmake_test(CTestTestRunScript)
-  add_cmake_test(CTestTestScheduler)
-  SET_TESTS_PROPERTIES(CTestTestScheduler PROPERTIES
-    PASS_REGULAR_EXPRESSION "Start 1.*Start 2.*Start 3.*Start 4.*Start 4.*Start 3.*Start 2.*Start 1")
-  CONFIGURE_FILE(
-    "${CMake_SOURCE_DIR}/Tests/CTestTestStopTime/GetDate.cmake"
-    "${CDash_BINARY_DIR}/Tests/CTestTestStopTime/GetDate.cmake"
-    COPYONLY)
-  add_cmake_test(CTestTestStopTime)
-  SET_TESTS_PROPERTIES(CTestTestStopTime PROPERTIES
-      PASS_REGULAR_EXPRESSION "The stop time has been passed")
-  add_cmake_test(CTestTestSubdir)
-  SET_TESTS_PROPERTIES(CTestTestSubdir PROPERTIES
-    PASS_REGULAR_EXPRESSION "0 tests failed out of 3")
-  #Timeout wants -C Debug.  not sure if it really matters...
-  add_cmake_test(CTestTestTimeout)
-  SET_TESTS_PROPERTIES(CTestTestTimeout PROPERTIES
-    PASS_REGULAR_EXPRESSION "TestTimeout *\\.+ *\\*\\*\\*Timeout.*CheckChild *\\.+ *Passed")
 
-  #special cases:
-#  add_failed_submit_test
-#      CTestTestFailedSubmits
-#
-#  CONFIGURE_FILE(
-#    "${CMake_SOURCE_DIR}/Tests/CTestTestFailure/testNoBuild.cmake.in"
-#    "${CMake_BINARY_DIR}/Tests/CTestTestFailure/testNoBuild.cmake"
-#    @ONLY ESCAPE_QUOTES)
-#  ADD_TEST(CTestTestNoBuild ${CMAKE_CTEST_COMMAND}
-#    -S "${CMake_BINARY_DIR}/Tests/CTestTestFailure/testNoBuild.cmake" -V
-#    --output-log "${CMake_BINARY_DIR}/Tests/CTestTestFailure/testOut1.log"
-#    )
-#  SET_TESTS_PROPERTIES(CTestTestNoBuild PROPERTIES
-#    FAIL_REGULAR_EXPRESSION "Error" WILL_FAIL true)
-#
-#  CONFIGURE_FILE(
-#    "${CMake_SOURCE_DIR}/Tests/CTestTestFailure/testNoExe.cmake.in"
-#    "${CMake_BINARY_DIR}/Tests/CTestTestFailure/testNoExe.cmake"
-#    @ONLY ESCAPE_QUOTES)
-#  ADD_TEST(CTestTestNoExe ${CMAKE_CTEST_COMMAND}
-#    -S "${CMake_BINARY_DIR}/Tests/CTestTestFailure/testNoExe.cmake" -V
-#    --output-log "${CMake_BINARY_DIR}/Tests/CTestTestFailure/testOut2.log"
-#    )
-#  SET_TESTS_PROPERTIES(CTestTestNoExe PROPERTIES DEPENDS CTestTestNoBuild
-#    PASS_REGULAR_EXPRESSION "Could not find executable"
-#    FAIL_REGULAR_EXPRESSION "SegFault")
+  set(protocol "http")
+  set(server "${CDASH_SERVER}")
+  set(path "/${CDASH_DIR_NAME}")
+  add_cmake_test(CTestSubmitLargeOutput)
+  # This test only passes if it fails to submit properly...
+  #
+  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
+    PASS_REGULAR_EXPRESSION "Errors occurred during submission")
+
+  # Give this test plenty of time to run on slower machines:
+  # Use 1500 or CTEST_TEST_TIMEOUT for long test timeout value,
+  # whichever is greater.
+  SET(CMAKE_LONG_TEST_TIMEOUT 1500)
+  IF(CTEST_TEST_TIMEOUT)
+    SET(CMAKE_LONG_TEST_TIMEOUT ${CTEST_TEST_TIMEOUT})
+  ENDIF(CTEST_TEST_TIMEOUT)
+  IF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
+    SET(CMAKE_LONG_TEST_TIMEOUT 1500)
+  ENDIF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
+  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
+    TIMEOUT ${CMAKE_LONG_TEST_TIMEOUT})
+
+  macro(add_failed_submit_test name source build in out log regex)
+    # Have variables named source, build and drop_method because the
+    # configure_file call expects those variables to be defined.
+    #
+    set(source "${source}")
+    set(build "${build}")
+    configure_file("${in}" "${out}" @ONLY)
+    add_test(${name} ${CMAKE_CTEST_COMMAND} -S "${out}" -V --output-log "${log}")
+    set_tests_properties(${name} PROPERTIES PASS_REGULAR_EXPRESSION "${regex}")
+  endmacro()
+
+  set(regex "(Problems when submitting via S*CP")
+  set(regex "${regex}|Error message was: ")
+  set(regex "${regex}([Cc]ould *n.t resolve host")
+  set(regex "${regex}|[Cc]ould *n.t connect to host")
+  set(regex "${regex}|The requested URL returned error")
+  set(regex "${regex}|libcurl was built with SSL disabled. https: not supported)")
+  set(regex "${regex}|Submission method .xmlrpc. not compiled into CTest")
+  set(regex "${regex}|Submission successful)")
+
+  set(ctest_coverage_labels_args "")
+
+  foreach(drop_method cp ftp http https scp xmlrpc)
+    # Cycle through these values each time through the loop:
+    if(ctest_coverage_labels_args STREQUAL "")
+      set(ctest_coverage_labels_args "LABELS Everything")
+    elseif(ctest_coverage_labels_args STREQUAL "LABELS Everything")
+      set(ctest_coverage_labels_args "LABELS 0ArgTest")
+    else()
+      set(ctest_coverage_labels_args "")
+    endif()
+
+    add_failed_submit_test(CTestTestFailedSubmit-${drop_method}
+      "${CMake_SOURCE_DIR}/Tests/CTestTest/SmallAndFast"
+      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/${drop_method}"
+      "${CMake_SOURCE_DIR}/Tests/CTestTestFailedSubmits/test.cmake.in"
+      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/test-${drop_method}.cmake"
+      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/test-${drop_method}.log"
+      "${regex}"
+      )
+  endforeach()
 endif()
+
