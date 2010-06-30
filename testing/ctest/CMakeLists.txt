@@ -12,15 +12,14 @@ function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
   foreach(ctest_exe ${CMAKE_CTEST_COMMAND} ${CTEST_EXTRA_EXECUTABLES})
     add_test(${TestName}_${extra_test_count}
       ${ctest_exe} -S "${DriverScript}" -V)
-    set_tests_properties(${TestName}_${extra_test_count}
-      PROPERTIES DEPENDS projectwebpage)
     math(EXPR extra_test_count "${extra_test_count} + 1")
   endforeach(ctest_exe ${CMAKE_CTEST_COMMAND} ${CTEST_EXTRA_EXECUTABLES})
 endfunction(add_ctest_test)
 
 # function to add a new ctest based coverage test to CDash
 #
-function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
+function(add_coverage_test TestName ProjectName Directory CDashVerifyScript
+         PreviousTest)
   set(DriverScript
     "${CDash_BINARY_DIR}/testing/ctest/coveragedriver-${TestName}.ctest")
   configure_file(
@@ -30,40 +29,47 @@ function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
     )
   add_test(${TestName}
     ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V)
-  set_tests_properties(${TestName} PROPERTIES DEPENDS projectwebpage)
 endfunction(add_coverage_test)
 
 set(CTEST_EXTRA_EXECUTABLES "" CACHE STRING "List of other CTest executables to test")
 
 if(COVERAGE_COMMAND)
-  add_coverage_test(simple Simple simple manageCoverageTest.php)
+  add_coverage_test(simple Simple simple manageCoverageTest.php projectwebpage)
 else(COVERAGE_COMMAND)
-  add_ctest_test(simple Simple simple simple.php)
+  add_ctest_test(simple Simple simple simple.php projectwebpage)
 endif(COVERAGE_COMMAND)
-add_ctest_test(simple2 Simple simple2 simple2.php)
-add_ctest_test(login Simple simple loginCoverage.php)
-add_ctest_test(sameImage SameImage sameImage sameImage.php)
+add_php_test(api)
+add_php_test(editsite)
+
+if(TEST_CLIENT_MANAGEMENT)
+  add_ctest_test(simple2 Simple simple2 simple2.php deletedailyupdate)
+else()
+  add_ctest_test(simple2 Simple simple2 simple2.php projectwebpage)
+endif()
+add_ctest_test(login Simple simple loginCoverage.php projectwebpage)
+add_ctest_test(sameImage SameImage sameImage sameImage.php projectwebpage)
 
 if(CMake_SOURCE_DIR)
   #just so we don't pollute the CMake binary dir with our testing...
   set(CMake_BINARY_DIR ${CDash_BINARY_DIR})
   set(CMAKE_TEST_GENERATOR ${CMAKE_GENERATOR})
 
-  function(add_cmake_test TestName)
+  function(add_cmake_test TestName TestDir)
     CONFIGURE_FILE(
-      "${CMake_SOURCE_DIR}/Tests/${TestName}/test.cmake.in"
-      "${CDash_BINARY_DIR}/Tests/${TestName}/test.cmake"
+      "${CMake_SOURCE_DIR}/Tests/${TestDir}/test.cmake.in"
+      "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake"
       @ONLY ESCAPE_QUOTES)
     ADD_TEST(${TestName} ${CMAKE_CTEST_COMMAND}
-      -S "${CDash_BINARY_DIR}/Tests/${TestName}/test.cmake" -V
-      --output-log "${CDash_BINARY_DIR}/Tests/${TestName}/output.log"
+      -S "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake" -V
+      --output-log "${CDash_BINARY_DIR}/Tests/${TestDir}/output.log"
       )
   endfunction(add_cmake_test)
 
   set(protocol "http")
   set(server "${CDASH_SERVER}")
   set(path "/${CDASH_DIR_NAME}")
-  add_cmake_test(CTestSubmitLargeOutput)
+  add_cmake_test(CTestSubmitLargeOutput CTestSubmitLargeOutput)
+
   # This test only passes if it fails to submit properly...
   #
   SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
@@ -125,3 +131,54 @@ if(CMake_SOURCE_DIR)
   endforeach()
 endif()
 
+add_test(removebuilds 
+  ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_removebuilds.php)
+set_tests_properties(
+  removebuilds PROPERTIES
+  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
+add_test(recoverpassword 
+  ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_recoverpassword.php)
+set_tests_properties(
+  recoverpassword PROPERTIES
+  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
+
+add_test(enable_async
+  ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
+)
+
+if(COVERAGE_COMMAND)
+  add_coverage_test(simple_async Simple simple manageCoverageTest.php enable_async)
+else(COVERAGE_COMMAND)
+  add_ctest_test(simple_async Simple simple simple.php enable_async)
+endif(COVERAGE_COMMAND)
+add_ctest_test(simple2_async Simple simple2 simple2.php enable_async)
+
+if(CMake_SOURCE_DIR)
+  add_cmake_test(CTestSubmitLargeOutput_async CTestSubmitLargeOutput)
+
+  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
+    PASS_REGULAR_EXPRESSION "Submission successful")
+
+  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
+    TIMEOUT ${CMAKE_LONG_TEST_TIMEOUT})
+
+  foreach(drop_method cp ftp http https scp xmlrpc)
+    # Cycle through these values each time through the loop:
+    if(ctest_coverage_labels_args STREQUAL "")
+      set(ctest_coverage_labels_args "LABELS Everything")
+    elseif(ctest_coverage_labels_args STREQUAL "LABELS Everything")
+      set(ctest_coverage_labels_args "LABELS 0ArgTest")
+    else()
+      set(ctest_coverage_labels_args "")
+    endif()
+
+    add_failed_submit_test(CTestTestFailedSubmit-${drop_method}_async
+      "${CMake_SOURCE_DIR}/Tests/CTestTest/SmallAndFast"
+      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/${drop_method}"
+      "${CMake_SOURCE_DIR}/Tests/CTestTestFailedSubmits/test.cmake.in"
+      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/test-${drop_method}.cmake"
+      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/test-${drop_method}.log"
+      "${regex}"
+      )
+  endforeach()
+endif()

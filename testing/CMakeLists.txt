@@ -1,90 +1,79 @@
 set(testing_dir "${CDash_SOURCE_DIR}/testing")
 
-add_test(install ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_install.php)
-set_tests_properties(
-  install PROPERTIES
-  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
-
 # function to add a new PHP based coverage test to CDash
 #
-function(add_php_test TestName PreviousTest)
+function(add_php_test TestName)
   add_test(
     ${TestName}
     ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_${TestName}.php
   )
   set_tests_properties(
     ${TestName} PROPERTIES
-    DEPENDS ${PreviousTest}
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   )
 endfunction(add_php_test)
 
-#these four tests are picky about the order that they're run
-add_php_test(compressedtest install)
-add_php_test(createpublicdashboard compressedtest)
-add_php_test(email createpublicdashboard)
-add_php_test(projectwebpage email)
-
-add_php_test(autoremovebuilds projectwebpage)
-add_php_test(backup projectwebpage)
-add_php_test(backwardcompatibilitytools projectwebpage)
-add_php_test(banner projectwebpage)
-add_php_test(buildconfigure projectwebpage)
-add_php_test(builderrordiff projectwebpage)
-add_php_test(buildgroupposition projectwebpage)
-add_php_test(buildgrouprule projectwebpage)
-add_php_test(buildoverview projectwebpage)
-add_php_test(buildtestdiff projectwebpage)
-add_php_test(buildusernote projectwebpage)
-add_php_test(dailyupdatefile projectwebpage)
-add_php_test(displayimage image)
-add_php_test(edituser projectwebpage)
-add_php_test(errorlog projectwebpage)
-add_php_test(image projectwebpage)
-add_php_test(import projectwebpage)
-add_php_test(importbackup projectwebpage)
-add_php_test(importbuilds projectwebpage)
-add_php_test(iphone projectwebpage)
-add_php_test(loggingadministration projectwebpage)
-add_php_test(login projectwebpage)
-add_php_test(managebanner projectwebpage)
-add_php_test(managebackup projectwebpage)
-add_php_test(managebuildgroup projectwebpage)
-add_php_test(manageclient projectwebpage)
-add_php_test(manageprojectroles projectwebpage)
-add_php_test(manageusers projectwebpage)
-add_php_test(processsubmissions projectwebpage)
-add_php_test(projectindb projectwebpage)
-add_php_test(pubproject projectwebpage)
-add_php_test(querytests projectwebpage)
-add_php_test(recomputecrc32 image)
-add_php_test(router projectwebpage)
-add_php_test(sitestatistics projectwebpage)
-add_php_test(subproject projectwebpage)
-add_php_test(svninfo projectwebpage)
-add_php_test(testenv projectwebpage)
-add_php_test(testoverview projectwebpage)
-add_php_test(userstatistics projectwebpage)
-add_php_test(viewbuilderror projectwebpage)
-add_php_test(viewchanges projectwebpage)
-add_php_test(viewconfigure projectwebpage)
-add_php_test(viewdynamicanalysis projectwebpage)
-add_php_test(viewdynamicanalysisfile projectwebpage)
-add_php_test(viewerrorlog projectwebpage)
-add_php_test(viewissues projectwebpage)
-add_php_test(viewmap projectwebpage)
+add_php_test(install)
+add_php_test(compressedtest)
+add_php_test(createpublicdashboard)
+add_php_test(email)
+add_php_test(projectwebpage)
+add_php_test(autoremovebuilds)
+add_php_test(backup)
+add_php_test(backwardcompatibilitytools)
+add_php_test(banner)
+add_php_test(buildconfigure)
+add_php_test(builderrordiff)
+add_php_test(buildgroupposition)
+add_php_test(buildgrouprule)
+add_php_test(buildoverview)
+add_php_test(buildtestdiff)
+add_php_test(buildusernote)
+add_php_test(dailyupdatefile)
+add_php_test(edituser)
+add_php_test(errorlog)
+add_php_test(image)
+add_php_test(displayimage)
+add_php_test(recomputecrc32)
+add_php_test(import)
+add_php_test(importbackup)
+add_php_test(importbuilds)
+add_php_test(iphone)
+add_php_test(loggingadministration)
+add_php_test(login)
+add_php_test(managebanner)
+add_php_test(managebackup)
+add_php_test(managebuildgroup)
+add_php_test(manageclient)
+add_php_test(manageprojectroles)
+add_php_test(manageusers)
+add_php_test(processsubmissions)
+add_php_test(projectindb)
+add_php_test(pubproject)
+add_php_test(querytests)
+add_php_test(router)
+add_php_test(sitestatistics)
+add_php_test(svninfo)
+add_php_test(testenv)
+add_php_test(testoverview)
+add_php_test(userstatistics)
+add_php_test(viewbuilderror)
+add_php_test(viewchanges)
+add_php_test(viewconfigure)
+add_php_test(viewdynamicanalysis)
+add_php_test(viewdynamicanalysisfile)
+add_php_test(viewerrorlog)
+add_php_test(viewissues)
+add_php_test(viewmap)
 if(CDASH_USE_APACHE2)
-  add_php_test(getipfromapacheaccesslog projectwebpage)
+  add_php_test(getipfromapacheaccesslog)
 endif()
-
-add_php_test(groupsdescription subproject)
-add_php_test(managesubproject subproject)
-add_php_test(viewsubprojectdependencies subproject)
+add_php_test(subproject)
+add_php_test(groupsdescription)
+add_php_test(managesubproject)
+add_php_test(viewsubprojectdependencies)
 
 add_subdirectory(ctest)
-
-add_php_test(api simple)
-add_php_test(editsite simple)
 
 if(CDASH_USE_SELENIUM)
   add_subdirectory(selenium)
@@ -93,25 +82,18 @@ if(CDASH_USE_SELENIUM)
   endif()
 endif()
 
-
 if(TEST_CLIENT_MANAGEMENT)
   add_test(managebuild1 ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT1})
   set_tests_properties(
     managebuild1 PROPERTIES
-    DEPENDS projectwebpage
     PASS_REGULAR_EXPRESSION ".*Nothing to do.*"
   )
-
-  add_selenium_test(managebuild2 managebuild1)
-  
+  add_selenium_test(managebuild2)
   add_test(managebuild3 ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2})
   set_tests_properties(
     managebuild3 PROPERTIES
-    DEPENDS managebuild2
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
+  add_php_test(deletedailyupdate)
 endif()
 
-#and these ones should stay towards the end...
-add_php_test(removebuilds viewchanges)
-add_php_test(recoverpassword removebuilds)
