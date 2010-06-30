@@ -164,7 +164,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
   if(!$handle = fopen($filename, 'w'))
     {
     echo "Cannot open file ($filename)";
-    add_log("Cannot open file ($filename)", "backup_xml_file",LOG_ERR);
+    add_log("Cannot open file ($filename)", "ctest_parse",LOG_ERR);
     return $handler;
     }
 
@@ -172,7 +172,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
   if(fwrite($handle, $content) === FALSE)
     {
     echo "Cannot write to file ($filename)";
-    add_log("Cannot write to file ($filename)", "backup_xml_file",LOG_ERR);
+    add_log("Cannot write to file ($filename)", "ctest_parse",LOG_ERR);
     fclose($handle);
     return $handler;
     }
@@ -183,7 +183,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
     if (fwrite($handle, $content) === FALSE)
       {
       echo "ERROR: Cannot write to file ($filename)";
-      add_log("Cannot write to file ($filename)", "backup_xml_file",LOG_ERR);
+      add_log("Cannot write to file ($filename)", "ctest_parse",LOG_ERR);
       fclose($handle);
       return $filename;
       }
