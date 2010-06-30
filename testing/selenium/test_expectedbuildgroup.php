@@ -33,16 +33,17 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=DASHBOARD");
     $this->waitForPageToLoad("30000");
-    $this->click("//table[@id='project_5_15']/tbody[1]/tr[2]/td[2]/a[4]/img");
+
+    $this->click("//table[@id='project_5_15']/tbody[1]/tr[3]/td[2]/a[4]/img");
     $this->click("link=[remove this build]");
     $this->assertTrue((bool)preg_match('/^Are you sure you want to remove this build[\s\S]$/',$this->getConfirmation()));
+    $this->setSpeed("1000");
     sleep(2);
     $this->click("//img[@alt='info']");
-    sleep(2);
     $this->click("//img[@alt='info']");
     $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[2]/img");
+    sleep(2);
     $this->click("link=[mark as non expected]");
-    $this->waitForPageToLoad("30000");
   }
 }
 ?>
