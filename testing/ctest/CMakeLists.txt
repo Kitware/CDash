@@ -18,8 +18,7 @@ endfunction(add_ctest_test)
 
 # function to add a new ctest based coverage test to CDash
 #
-function(add_coverage_test TestName ProjectName Directory CDashVerifyScript
-         PreviousTest)
+function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
   set(DriverScript
     "${CDash_BINARY_DIR}/testing/ctest/coveragedriver-${TestName}.ctest")
   configure_file(
@@ -34,20 +33,19 @@ endfunction(add_coverage_test)
 set(CTEST_EXTRA_EXECUTABLES "" CACHE STRING "List of other CTest executables to test")
 
 if(COVERAGE_COMMAND)
-  add_coverage_test(simple Simple simple manageCoverageTest.php projectwebpage)
+  add_coverage_test(simple InsightExample simple manageCoverageTest.php)
 else(COVERAGE_COMMAND)
-  add_ctest_test(simple Simple simple simple.php projectwebpage)
+  add_ctest_test(simple InsightExample simple simple.php)
 endif(COVERAGE_COMMAND)
 add_php_test(api)
 add_php_test(editsite)
 
-if(TEST_CLIENT_MANAGEMENT)
-  add_ctest_test(simple2 Simple simple2 simple2.php deletedailyupdate)
-else()
-  add_ctest_test(simple2 Simple simple2 simple2.php projectwebpage)
-endif()
-add_ctest_test(login Simple simple loginCoverage.php projectwebpage)
-add_ctest_test(sameImage SameImage sameImage sameImage.php projectwebpage)
+add_ctest_test(simple2 InsightExample simple2 simple2.php)
+add_ctest_test(login InsightExample simple loginCoverage.php)
+add_ctest_test(sameImage InsightExample sameImage sameImage.php)
+  
+add_ctest_test(svnUpdates EmailProjectExample simple simple.php)
+add_ctest_test(gitUpdates PublicDashboard simple simple.php)
 
 if(CMake_SOURCE_DIR)
   #just so we don't pollute the CMake binary dir with our testing...

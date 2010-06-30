@@ -95,5 +95,6 @@ if(TEST_CLIENT_MANAGEMENT)
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
   add_php_test(deletedailyupdate)
+  add_selenium_test(setup_repositories)
 endif()
 
