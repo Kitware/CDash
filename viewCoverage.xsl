@@ -93,7 +93,7 @@
             </tr>
             <tr>
                <td class="warning" align="center">
-                  Unstatisfactory coverage           
+                  Unsatisfactory coverage           
                </td>
             </tr>
             <tr>
@@ -122,7 +122,7 @@
 <!-- Links -->
 <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/></xsl:attribute>Low (<xsl:value-of select="cdash/coveragefilestatus/low"/>)</a> | 
 <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=1</xsl:attribute>Medium (<xsl:value-of select="cdash/coveragefilestatus/medium"/>)</a> | 
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=2</xsl:attribute>Statisfactory (<xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>)</a>
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=2</xsl:attribute>Satisfactory (<xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>)</a>
 <br/>
 
 <!--  Coverage table -->
