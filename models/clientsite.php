@@ -79,6 +79,8 @@ class ClientSite
     }
     
   /** get host*/
+  // commenting out until it's actually used 
+  /*
   function GetHost()
     {
     if(!$this->Id)
@@ -90,6 +92,7 @@ class ClientSite
     $row = pdo_fetch_array($sys);
     return $row['host'];
     }
+  */
     
   /** get base directory */
   function GetBaseDirectory()
@@ -112,6 +115,8 @@ class ClientSite
     }
     
   /** Return a list of compiler ids */
+  // commenting out until it's actually used 
+  /*
   function GetCompilerIds()
     {
     if(!$this->Id)
@@ -128,6 +133,7 @@ class ClientSite
       }
     return $ids;  
     }
+  */
   
   /** get name*/
   function GetCompilerGenerator($compilerid)
@@ -156,6 +162,8 @@ class ClientSite
     }
   
   /** Get Library Source */
+  // commenting out until it's actually used 
+  /*
   function GetLibrarySource($libraryid)
     {
     if(!$this->Id)
@@ -167,8 +175,11 @@ class ClientSite
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
+  */
   
   /** Get Library Repository */
+  // commenting out until it's actually used 
+  /*
   function GetLibraryRepository($libraryid)
     {
     if(!$this->Id)
@@ -180,8 +191,11 @@ class ClientSite
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
+  */
   
   /** Get Library Path */
+  // commenting out until it's actually used 
+  /*
   function GetLibraryPath($libraryid)
     {
     if(!$this->Id)
@@ -193,8 +207,11 @@ class ClientSite
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
+  */
 
   /** Get Library Module */
+  // commenting out until it's actually used 
+  /*
   function GetLibraryModule($libraryid)
     {
     if(!$this->Id)
@@ -206,9 +223,11 @@ class ClientSite
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
+  */
     
-      
   /** Return a list of cmake ids */
+  // commenting out until it's actually used 
+  /*
   function GetCMakeIds()
     {
     if(!$this->Id)
@@ -225,8 +244,11 @@ class ClientSite
       }
     return $ids;  
     }
+  */
   
   /** Return a list of cmake ids */
+  // commenting out until it's actually used 
+  /*
   function GetLibraryIds()
     {
     if(!$this->Id)
@@ -243,6 +265,7 @@ class ClientSite
       }
     return $ids;  
     }
+  */
   
   /** Get the id of a site from the sitename and systemname */  
   function GetId($sitename,$systemname)
@@ -301,6 +324,8 @@ class ClientSite
     } 
     
   /** Return all the sites that match this os */
+  // commenting out until it's actually used 
+  /*
   function GetAllByOS($osid)
     {
     $ids = array();
@@ -312,6 +337,7 @@ class ClientSite
       }
     return $ids;  
     }
+  */
 
   /** Get the programs */
   function GetPrograms()
