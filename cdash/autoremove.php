@@ -59,7 +59,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
     $buildid = $builds_array["id"];
     $s = 'removing old buildid: '.$buildid.' projectid: '.$projectid;
     add_log($s, 'removeFirstBuilds');
-    print "  -- " . $s . "\n"; # for "interactive" command line feedback
+    print "  -- " . $s . "\n"; // for "interactive" command line feedback
     remove_build($buildid); 
     }
 }
