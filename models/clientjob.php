@@ -31,6 +31,8 @@ class ClientJob
   var $Output;
 
   /** Get ScheduleId */
+  // commenting out until it's actually used 
+  /*
   function GetScheduleId()
     {
     if(!$this->Id)
@@ -42,6 +44,7 @@ class ClientJob
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
+  */
     
   /** Get StartingDate */
   function GetStartDate()

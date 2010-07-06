@@ -27,6 +27,11 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("//div[@id='wizard']/ul/li[3]/a/span");
     $this->type("cvsRepository[0]", ":pserver:anoncvs@itk.org:/cvsroot/Insight");
+    $this->type("cvsUsername[0]", "anoncvs");
+    $this->click("Update");
+    $this->waitForPageToLoad("30000");
+    $this->click("//div[@id='wizard']/ul/li[7]/a/span");
+    $this->type("ctestTemplateScript", "client testing works");
     $this->click("Update");
     $this->waitForPageToLoad("30000");
     $this->select("projectSelection", "label=PublicDashboard");

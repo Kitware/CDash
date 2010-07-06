@@ -84,19 +84,49 @@ if(CDASH_USE_SELENIUM)
 endif()
 
 if(TEST_CLIENT_MANAGEMENT)
-  add_test(managebuild1 ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT1})
+  add_selenium_test(setup_repositories)
+  add_test(registerclient ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT1})
   set_tests_properties(
-    managebuild1 PROPERTIES
+    registerclient PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Nothing to do.*"
   )
-  add_selenium_test(managebuild2)
-  add_test(managebuild3 ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2})
+  add_test(requestwork_1 
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php
+  )
   set_tests_properties(
-    managebuild3 PROPERTIES
+    requestwork_1 PROPERTIES
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+  )
+  add_test(client_pass ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2},pass)
+  set_tests_properties(
+    client_pass PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
-  add_selenium_test(managebuild4)
+  add_test(requestwork_2 
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php
+  )
+  set_tests_properties(
+    requestwork_2 PROPERTIES
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+  )
+  add_test(client_fail ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2},fail)
+  set_tests_properties(
+    client_fail PROPERTIES
+    PASS_REGULAR_EXPRESSION ".*Test passed.*"
+  )
+  add_test(requestwork_3 
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php
+  )
+  set_tests_properties(
+    requestwork_3 PROPERTIES
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+  )
+  add_test(client_running ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2})
+  set_tests_properties(
+    client_running PROPERTIES
+    PASS_REGULAR_EXPRESSION ".*Test passed.*"
+  )
+  add_selenium_test(removescheduledbuild)
   add_php_test(deletedailyupdate)
-  add_selenium_test(setup_repositories)
 endif()
 
