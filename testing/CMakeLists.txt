@@ -76,6 +76,7 @@ add_php_test(viewsubprojectdependencies)
 add_subdirectory(ctest)
 
 if(CDASH_USE_SELENIUM)
+  file(MAKE_DIRECTORY ${CDash_BINARY_DIR}/cmake.git)
   add_subdirectory(selenium)
   if(CLIENT_TEST_SCRIPT1 AND CLIENT_TEST_SCRIPT2)
     set(TEST_CLIENT_MANAGEMENT ON)
