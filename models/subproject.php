@@ -217,30 +217,6 @@ class SubProject
     return $project_array['submittime'];
     }   
  
-  /** Get the number of builds given a date range */
-  function GetNumberOfBuilds($startUTCdate,$endUTCdate)
-    {
-    if(!$this->Id)
-      {
-      echo "SubProject GetNumberOfBuilds(): Id not set";
-      return false;
-      }
-  
-    $project = pdo_query("SELECT count(build.id) FROM build,subproject2build,build2group,buildgroup WHERE subprojectid=".qnum($this->Id).
-                         " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                           AND buildgroup.includesubprojectotal=1
-                           AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate'");
-                           
-    if(!$project)
-      {
-      add_last_sql_error("SubProject GetNumberOfBuilds");
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    return $project_array[0];
-    }
-    
   /** Get the number of warning builds given a date range */
   function GetNumberOfWarningBuilds($startUTCdate,$endUTCdate)
     {
@@ -317,30 +293,6 @@ class SubProject
     return $project_array[0];
     }
   
-  /** Get the number of configure given a date range */
-  function GetNumberOfConfigures($startUTCdate,$endUTCdate)
-    {
-    if(!$this->Id)
-      {
-      echo "SubProject GetNumberOfConfigures(): Id not set";
-      return false;
-      }
-  
-    $project = pdo_query("SELECT count(*) FROM configure,build,subproject2build,build2group,buildgroup WHERE subprojectid=".qnum($this->Id).
-                         " AND configure.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate'
-                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                            AND buildgroup.includesubprojectotal=1
-                           ");
-    if(!$project)
-      {
-      add_last_sql_error("SubProject GetNumberOfConfigures");
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    return $project_array[0];
-    } 
-  
   /** Get the number of failing configure given a date range */
   function GetNumberOfWarningConfigures($startUTCdate,$endUTCdate)
     {
@@ -407,30 +359,6 @@ class SubProject
     if(!$project)
       {
       add_last_sql_error("SubProject GetNumberOfPassingConfigures");
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    return $project_array[0];
-    }
-    
-  /** Get the number of tests given a date range */
-  function GetNumberOfTests($startUTCdate,$endUTCdate)
-    {
-    if(!$this->Id)
-      {
-      echo "SubProject GetNumberOfTests(): Id not set";
-      return false;
-      }
-  
-    $project = pdo_query("SELECT count(*) FROM build2test,build,subproject2build,build2group,buildgroup WHERE subprojectid=".qnum($this->Id).
-                         " AND build2test.buildid=build.id AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate'
-                           AND build2group.buildid=build.id 
-                           AND build2group.groupid=buildgroup.id
-                           AND buildgroup.includesubprojectotal=1");
-    if(!$project)
-      {
-      add_last_sql_error("SubProject GetNumberOfTests");
       return false;
       }
     $project_array = pdo_fetch_array($project);
@@ -532,38 +460,6 @@ class SubProject
     $this->Id = $project_array['id'];
     return $this->Id;
     }
-  
-  /** Get the subprojectids of the subprojects parent to this one */
-  function GetParents($date=NULL)
-    {
-    if(!$this->Id)
-      {
-      echo "SubProject GetParents(): Id not set";
-      return false;
-      }
-  
-    // If not set, the date is now
-    if($date == NULL)
-      {
-      $date = gmdate(FMT_DATETIME);
-      }
-  
-    $project = pdo_query("SELECT subprojectid  FROM subproject2subproject 
-                          WHERE dependsonid=".qnum($this->Id)." AND 
-                          starttime<='".$date."' AND (endtime>'".$date."' OR endtime='1980-01-01 00:00:00')"
-                          );
-    if(!$project)
-      {
-      add_last_sql_error("SubProject GetParents");
-      return false;
-      }
-    $ids = array();
-    while($project_array = pdo_fetch_array($project))
-      {
-      $ids[] = $project_array['subprojectid'];
-      } 
-    return $ids;
-    } // end GetDependencies
     
   /** Get the subprojectids of the subprojects depending on this one */
   function GetDependencies($date=NULL)
