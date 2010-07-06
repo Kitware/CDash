@@ -57,8 +57,9 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
   while($builds_array = pdo_fetch_array($builds))
     {
     $buildid = $builds_array["id"];
-    add_log('removing old buildid: '.$buildid.' projectid: '.$projectid,
-      'removeFirstBuilds');
+    $s = 'removing old buildid: '.$buildid.' projectid: '.$projectid;
+    add_log($s, 'removeFirstBuilds');
+    print "  -- " . $s . "\n"; # for "interactive" command line feedback
     remove_build($buildid); 
     }
 }
