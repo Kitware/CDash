@@ -38,7 +38,6 @@ else(COVERAGE_COMMAND)
   add_ctest_test(simple InsightExample simple simple.php)
 endif(COVERAGE_COMMAND)
 add_php_test(api)
-add_php_test(editsite)
 
 add_ctest_test(simple2 InsightExample simple2 simple2.php)
 add_ctest_test(login InsightExample simple loginCoverage.php)
