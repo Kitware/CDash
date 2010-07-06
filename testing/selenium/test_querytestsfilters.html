@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>queryTestsFilters</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">queryTestsFilters</td></tr>
+</thead><tbody>
+<tr>
+  <td>open</td>
+  <td>/CDash/index.php</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=InsightExample</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Tests Query</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>label_showfilters</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>CDash</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>simple</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_field1</td>
+  <td>label=Build Name</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>CDash</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_field1</td>
+  <td>label=Build Time</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_compare1</td>
+  <td>label=is</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>clear</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_field1</td>
+  <td>label=Details</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_compare1</td>
+  <td>label=is not</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>blah</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_field1</td>
+  <td>label=Site</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_compare1</td>
+  <td>label=contains</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>CDash</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_field1</td>
+  <td>label=Status</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_compare1</td>
+  <td>label=is</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>Passed</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>add1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>Failed</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>remove1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_field2</td>
+  <td>label=Test Name</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_compare2</td>
+  <td>label=is not</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value2</td>
+  <td>blah</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_field1</td>
+  <td>label=Time</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id_compare1</td>
+  <td>label=is not</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>id_value1</td>
+  <td>6</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>apply</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>clear</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>label_showfilters</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
