@@ -17,7 +17,6 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
   public function testSetupRepositories()
   {
     $this->open($this->webPath."/index.php");
-    $this->open("/CDash/index.php");
     $this->click("link=Login");
     $this->waitForPageToLoad("30000");
     $this->type("login", "simpletest@localhost");
