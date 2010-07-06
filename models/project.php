@@ -113,12 +113,6 @@ class Project
     $buildgroup->Save();
     }
 
-  function AddDailyUpdate($dailyupdate)
-    {
-    $dailyupdate->ProjectId = $this->Id;
-    $dailyupdate->Save();
-    }
-    
   function SetValue($tag,$value)  
     {
     switch($tag)
