@@ -95,6 +95,7 @@ if(TEST_CLIENT_MANAGEMENT)
     managebuild3 PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
+  add_selenium_test(managebuild4)
   add_php_test(deletedailyupdate)
   add_selenium_test(setup_repositories)
 endif()

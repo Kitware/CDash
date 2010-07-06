@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://elysium/" />
-<title>managebuild2</title>
+<title>test_managebuild2</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">managebuild2</td></tr>
+<tr><td rowspan="1" colspan="3">test_managebuild2</td></tr>
 </thead><tbody>
 <tr>
   <td>open</td>
@@ -82,8 +82,53 @@
   <td></td>
 </tr>
 <tr>
+  <td>addSelection</td>
+  <td>system_select</td>
+  <td>label=Linux-Ubuntu-64bits</td>
+</tr>
+<tr>
   <td>clickAndWait</td>
   <td>//tr[5]/td[2]/a[3]/img</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//option[@value='1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>addSelection</td>
+  <td>compiler_select</td>
+  <td>label=gcc-4.4.3</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//select[@id='compiler_select']/option</td>
+  <td></td>
+</tr>
+<tr>
+  <td>addSelection</td>
+  <td>cmake_select</td>
+  <td>label=2.8.1</td>
+</tr>
+<tr>
+  <td>addSelection</td>
+  <td>library_select</td>
+  <td>label=MySQLClient-16.0.0</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//select[@id='library_select']/option</td>
+  <td></td>
+</tr>
+<tr>
+  <td>addSelection</td>
+  <td>site_select</td>
+  <td>label=elysium.kitware-Ubuntu-10.04 (1 minutes ago)</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//select[@id='site_select']/option</td>
   <td></td>
 </tr>
 <tr>
