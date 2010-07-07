@@ -39,8 +39,8 @@ $(document).ready(function() {
             // return false so this parser is not auto detected 
             return false; 
         }, 
-        format: function(s) { 
-            // format your data for normalization
+        format: function(s) {
+          // format your data for normalization
             // Remove the <sub></sub>
             var i = s.indexOf("<sub>");
             if(i!=-1)
@@ -49,6 +49,19 @@ $(document).ready(function() {
               s = s.substr(0,i)+s.substr(j+6);
               }
             
+            // Remove the <div></div>
+            i = s.indexOf("<div");
+            if(i!=-1)
+              {
+              j = s.indexOf(">",i);
+              s = s.substr(0,i)+s.substr(j+1);
+              }
+            i = s.indexOf("</div>");
+            if(i!=-1)
+              {
+              s = s.substr(0,i)+s.substr(i+6);
+              }
+           
             var i = s.indexOf("<a href");
             if(i==-1) // IE
               {
@@ -415,14 +428,14 @@ $(document).ready(function() {
                   3: { sorter:'digit'},
                   4: { sorter:'numericvalue'},
                   5: { sorter:'numericvalue'},
-                  6: { sorter:'digit'},
+                  6: { sorter:'numericvalue'},
                   7: { sorter:'numericvalue'},
                   8: { sorter:'numericvalue'},
-                  9: { sorter:'digit'},
+                  9: { sorter:'numericvalue'},
                   10: { sorter:'numericvalue'},
                   11: { sorter:'numericvalue'},
                   12: { sorter:'numericvalue'},
-                  13: { sorter:'digit'},
+                  13: { sorter:'numericvalue'},
                   14: { sorter:'text'},
                   15: { sorter:'text'}
               },
