@@ -8,7 +8,7 @@
   <UpdateCommand>"D:/cygwin/bin/cvs.exe" -z3 update -d -A -P -D "2010-07-07 01:00:00 UTC"</UpdateCommand>
   <UpdateType>CVS</UpdateType>
   <EndDateTime>Jul 07 08:22 Eastern Daylight Time</EndDateTime>
-  <EndTime>1278505363</EndTime>
+  <EndTime>1278505358</EndTime>
 <ElapsedMinutes>0.1</ElapsedMinutes>
   <UpdateReturnStatus></UpdateReturnStatus>
 </Update>

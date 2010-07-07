@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApp-Win64-Vista-vs9-Release"
+  BuildStamp="20100707-0100-Nightly"
+  Name="redwall.kitware"
+  Generator="ctest2.6-patch 4"  OSName="Windows"
+  Hostname="Redwall"
+  OSRelease="Vista"
+  OSVersion="Service Pack 2 (Build 6002)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="16"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2660"
+>
+<Testing>
+  <StartDateTime>Jul 07 08:37 Eastern Daylight Time</StartDateTime>
+  <StartTestTime>1278506241</StartTestTime>
+  <TestList>
+    <Test>./ImageCalculator/ImageCalculator2DTest1</Test>
+    <Test>./ImageCalculator/ImageCalculator2DGaussianTest</Test>
+    <Test>./ImageCalculator/ImageCalculator2DTest2</Test>
+  </TestList>
+  <Test Status="passed">
+    <Name>ImageCalculator2DTest1</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DTest1</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png --intype UCHAR --outtype UCHAR --add --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0709999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png --intype UCHAR --outtype UCHAR --add --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 100,  MAX: 100,  MIN: 100,  NPX: 400,  SUM: 40000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="failed">
+    <Name>ImageCalculator2DGaussianTest</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DGaussianTest</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/GaussianIOFilteringTest.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png --intype UCHAR --outtype UCHAR --add --ifgaussiansigma 1 --ofgaussiansigma 1 --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0370002</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/GaussianIOFilteringTest.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png --intype UCHAR --outtype UCHAR --add --ifgaussiansigma 1 --ofgaussiansigma 1 --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png
+--Storage type effective  input filter options:  -ifgaussiansigma 1 
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  -ofgaussiansigma 1 
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 49.55,  MAX: 100,  MIN: 0,  NPX: 400,  SUM: 19820,  VAR: 2123.96,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalculator2DTest2</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DTest2</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFiveHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png --intype UCHAR --outtype USHORT --add --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0339999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFiveHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png --intype UCHAR --outtype USHORT --add --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <EndDateTime>Jul 07 08:37 Eastern Daylight Time</EndDateTime>
+  <EndTestTime>1278506242</EndTestTime>
+<ElapsedMinutes>0</ElapsedMinutes></Testing>
+</Site>

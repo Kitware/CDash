@@ -24,9 +24,34 @@
   <StartDateTime>Jul 07 08:26 EDT</StartDateTime>
   <StartBuildTime>1278505591</StartBuildTime>
 <BuildCommand>/usr/bin/make -i -j2</BuildCommand>
+
+  <Error>
+    <BuildLogLine>117</BuildLogLine>
+    <Text>LINK : fatal error LNK1181: cannot open input file "vtkRendering.lib"
+</Text>
+    <PreContext>Compiling...
+CannySegmentationLevelSetBase.cxx
+CannySegmentationLevelSet.cxx
+CannySegmentationLevelSetGUI.cxx
+Generating Code...
+Linking...
+</PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Error>
+
+  <Warning>
+    <BuildLogLine>1</BuildLogLine>
+    <Text>*** WARNING non-zero return value in ctest from: C:\PROGRA~1\MICROS~2\Common\MSDev98\Bin\MSDEV.COM
+</Text>
+    <PreContext></PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
   <Log Encoding="base64" Compression="/bin/gzip">
   </Log>
   <EndDateTime>Jul 07 08:40 EDT</EndDateTime>
-  <EndBuildTime>1278506427</EndBuildTime>
-<ElapsedMinutes>13.9</ElapsedMinutes></Build>
+  <EndBuildTime>1278505711</EndBuildTime>
+<ElapsedMinutes>2</ElapsedMinutes></Build>
 </Site>

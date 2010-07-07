@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.8.0">
+  <Site>dash13.kitware</Site>
+  <BuildName>zApps-Win32-vs60</BuildName>
+  <BuildStamp>20100707-0100-Nightly</BuildStamp>
+  <StartDateTime>Jul 07 08:26 Eastern Daylight Time</StartDateTime>
+  <StartTime>1278505574</StartTime>
+  <UpdateCommand>&quot;c:/Program Files/TortoiseCVS/cvs.exe&quot; &quot;-z3&quot; &quot;update&quot; &quot;-d&quot; &quot;-A&quot; &quot;-P&quot; &quot;-D2010-07-07 01:00:00 UTC&quot;</UpdateCommand>
+  <UpdateType>CVS</UpdateType>
+        <Directory>
+                <Name>Code/Algorithms</Name>
+        <Updated>
+                <File Directory="Code/Algorithms">itkVoronoiSegmentationRGBImageFilter.txx</File>
+                <Directory>Code/Algorithms</Directory>
+                <FullName>Code/Algorithms/itkVoronoiSegmentationRGBImageFilter.txx</FullName>
+                <CheckinDate>2010-07-07 12:21:43 +0000</CheckinDate>
+                <Author>lorensen</Author>
+                <Email>Unknown</Email>
+                <Log>BUG: floating point divide by zero in atan(). Use atan2() instead. Also check for atan2(0,0)
+</Log>
+                <Revision>1.37</Revision>
+                <PriorRevision>1.36</PriorRevision>
+                <Revisions>
+                        <Revision>1.37</Revision>
+                        <PreviousRevision>1.36</PreviousRevision>
+                        <Author>lorensen</Author>
+                        <Date>2010-07-07 12:21:43 +0000</Date>
+                        <Comment>BUG: floating point divide by zero in atan(). Use atan2() instead. Also check for atan2(0,0)
+</Comment>
+                        <Email>Unknown</Email>
+                </Revisions>
+                <Revisions>
+                        <Revision>1.36</Revision>
+                        <PreviousRevision>1.36</PreviousRevision>
+                        <Author>lorensen</Author>
+                        <Date>2009-01-27 19:30:17 +0000</Date>
+                        <Comment>STYLE: according to kwstyle.
+</Comment>
+                        <Email>Unknown</Email>
+                </Revisions>
+        </Updated>
+        </Directory>
+        <Directory>
+                <Name>Code/Review</Name>
+        <Updated>
+                <File Directory="Code/Review">itkAutoCropLabelMapFilter.h</File>
+                <Directory>Code/Review</Directory>
+                <FullName>Code/Review/itkAutoCropLabelMapFilter.h</FullName>
+                <CheckinDate>2010-07-07 12:31:09 +0000</CheckinDate>
+                <Author>glehmann</Author>
+                <Email>Unknown</Email>
+                <Log>ENH: GetRegion() from the superclass already return the cropped region, so there is no need for GetCropRegion().
+</Log>
+                <Revision>1.5</Revision>
+                <PriorRevision>1.4</PriorRevision>
+                <Revisions>
+                        <Revision>1.5</Revision>
+                        <PreviousRevision>1.4</PreviousRevision>
+                        <Author>glehmann</Author>
+                        <Date>2010-07-07 12:31:09 +0000</Date>
+                        <Comment>ENH: GetRegion() from the superclass already return the cropped region, so there is no need for GetCropRegion().
+</Comment>
+                        <Email>Unknown</Email>
+                </Revisions>
+                <Revisions>
+                        <Revision>1.4</Revision>
+                        <PreviousRevision>1.4</PreviousRevision>
+                        <Author>ibanez</Author>
+                        <Date>2010-06-19 21:21:43 +0000</Date>
+                        <Comment>BUG: Get methods for member variables of non basic types must use GetConstReferenceMacro() instead of GetMacro().
+</Comment>
+                        <Email>Unknown</Email>
+                </Revisions>
+        </Updated>
+        <Updated>
+                <File Directory="Code/Review">itkAutoCropLabelMapFilter.txx</File>
+                <Directory>Code/Review</Directory>
+                <FullName>Code/Review/itkAutoCropLabelMapFilter.txx</FullName>
+                <CheckinDate>2010-07-07 12:31:09 +0000</CheckinDate>
+                <Author>glehmann</Author>
+                <Email>Unknown</Email>
+                <Log>ENH: GetRegion() from the superclass already return the cropped region, so there is no need for GetCropRegion().
+</Log>
+                <Revision>1.5</Revision>
+                <PriorRevision>1.4</PriorRevision>
+                <Revisions>
+                        <Revision>1.5</Revision>
+                        <PreviousRevision>1.4</PreviousRevision>
+                        <Author>glehmann</Author>
+                        <Date>2010-07-07 12:31:09 +0000</Date>
+                        <Comment>ENH: GetRegion() from the superclass already return the cropped region, so there is no need for GetCropRegion().
+</Comment>
+                        <Email>Unknown</Email>
+                </Revisions>
+                <Revisions>
+                        <Revision>1.4</Revision>
+                        <PreviousRevision>1.4</PreviousRevision>
+                        <Author>navneeth</Author>
+                        <Date>2010-06-18 14:25:20 +0000</Date>
+                        <Comment>BUG: 0010513: Adding Get functions for calculated crop region in itkAutoCropLabelMapFilter (bug 0010513)
+</Comment>
+                        <Email>Unknown</Email>
+                </Revisions>
+        </Updated>
+       </Directory>
+        <Directory>
+                <Name>Testing/Code/Review</Name>
+        <Updated>
+                <File Directory="Testing/Code/Review">itkAutoCropLabelMapFilterTest1.cxx</File>
+                <Directory>Testing/Code/Review</Directory>
+                <FullName>Testing/Code/Review/itkAutoCropLabelMapFilterTest1.cxx</FullName>
+                <CheckinDate>2010-07-07 12:31:09 +0000</CheckinDate>
+                <Author>glehmann</Author>
+                <Email>Unknown</Email>
+                <Log>ENH: GetRegion() from the superclass already return the cropped region, so there is no need for GetCropRegion().
+</Log>
+                <Revision>1.9</Revision>
+                <PriorRevision>1.8</PriorRevision>
+                <Revisions>
+                        <Revision>1.9</Revision>
+                        <PreviousRevision>1.8</PreviousRevision>
+                        <Author>glehmann</Author>
+                        <Date>2010-07-07 12:31:09 +0000</Date>
+                        <Comment>ENH: GetRegion() from the superclass already return the cropped region, so there is no need for GetCropRegion().
+</Comment>
+                        <Email>Unknown</Email>
+                </Revisions>
+                <Revisions>
+                        <Revision>1.8</Revision>
+                        <PreviousRevision>1.8</PreviousRevision>
+                        <Author>ibanez</Author>
+                        <Date>2010-06-19 21:22:47 +0000</Date>
+                        <Comment>BUG: Added test that were missing for the new methods: GetMinIndex(), GetMaxIndex(), GetCropRegion().
+</Comment>
+                        <Email>Unknown</Email>
+                </Revisions>
+        </Updated>
+        </Directory>
+        <Author>
+                <Name>glehmann</Name>
+                <File Directory="Code/Review">itkAutoCropLabelMapFilter.h</File>
+                <File Directory="Code/Review">itkAutoCropLabelMapFilter.txx</File>
+                <File Directory="Testing/Code/Review">itkAutoCropLabelMapFilterTest1.cxx</File>
+        </Author>
+        <Author>
+                <Name>lorensen</Name>
+                <File Directory="Code/Algorithms">itkVoronoiSegmentationRGBImageFilter.txx</File>
+        </Author>
+  <EndDateTime>Jul 07 08:27 Eastern Daylight Time</EndDateTime>
+  <EndTime>1278505634</EndTime>
+<ElapsedMinutes>1</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApp-Win64-Vista-vs9-Release"
+  BuildStamp="20100707-0100-Nightly"
+  Name="redwall.kitware"
+  Generator="ctest2.6-patch 4"  OSName="Windows"
+  Hostname="Redwall"
+  OSRelease="Vista"
+  OSVersion="Service Pack 2 (Build 6002)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="16"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2660"
+>
+<Build>
+  <StartDateTime>Jul 07 08:22 Eastern Daylight Time</StartDateTime>
+  <StartBuildTime>1278505376</StartBuildTime>
+<BuildCommand>C:\PROGRA~2\MICROS~1.0\Common7\IDE\devenv.com InsightApplications.sln /build Release /project ALL_BUILD</BuildCommand>
+
+  <Log Encoding="base64" Compression="/bin/gzip">
+  </Log>
+  <EndDateTime>Jul 07 08:37 Eastern Daylight Time</EndDateTime>
+  <EndBuildTime>1278505436</EndBuildTime>
+<ElapsedMinutes>1</ElapsedMinutes></Build>
+</Site>

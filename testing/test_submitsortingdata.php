@@ -3,7 +3,7 @@
 require_once('kwtest/kw_web_tester.php');
 require_once('kwtest/kw_db.php');
 
-class SubmitTestTimingTestCase extends KWWebTestCase
+class SubmitSortingDataTestCase extends KWWebTestCase
 {
   var $url           = null;
   var $db            = null;
@@ -19,25 +19,24 @@ class SubmitTestTimingTestCase extends KWWebTestCase
     $this->db->setHost($db['host']);
     $this->db->setUser($db['login']);
     $this->db->setPassword($db['pwd']);
+    $this->logfilename = $cdashpath."/backup/cdash.log";
     }
 
   function submitFile($build, $type)
     {
-    $rep = dirname(__FILE__)."/data/SortTestTimingExample";
+    $rep = dirname(__FILE__)."/data/SortingExample";
     $file = "$rep/$build" . "_". "$type.xml";
     if(!$this->submission('InsightExample',$file))
       {
       return false;
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
-    echo "I just submitted $file\n";
     }
 
-  function testSubmitTestTiming()
+  function testSubmitSortingData()
     {
     $builds = array("short", "medium", "long");
     $types = array("Build", "Configure", "Test", "Update", "Notes");
-    //$types = array("Build", "Configure", "Notes", "Test", "Update");
     foreach($builds as $build)
       {
       foreach($types as $type)
@@ -45,6 +44,7 @@ class SubmitTestTimingTestCase extends KWWebTestCase
         $this->submitFile($build, $type);
         }
       }
+    $this->deleteLog($this->logfilename);
     }
 }
 ?>

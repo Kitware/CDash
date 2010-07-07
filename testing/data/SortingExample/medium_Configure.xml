@@ -26,13 +26,13 @@
 <ConfigureCommand>"/Applications/CMake 2.6-4.app/Contents/bin/cmake" "/Users/ibanez/Dashboards/src/InsightApplications"</ConfigureCommand>
 <Log>Warning: CMake is forcing CMAKE_CXX_COMPILER to "/usr/bin/c++" to match that imported from VTK.  This is required because C++ projects must use the same compiler.  If this message appears for more than one imported project, you have conflicting C++ compilers and will have to re-build one of those projects. Was set to /usr/bin/g++-4.0
 Fltk resources not found, GUI application will not respond to mouse events
-Warning: CMake is forcing CMAKE_CXX_COMPILER to "/usr/bin/g++-4.0" to match that imported from ITK.  This is required because C++ projects must use the same compiler.  If this message appears for more than one imported project, you have conflicting C++ compilers and will have to re-build one of those projects. Was set to /usr/bin/c++
+Error: example error #1
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /Users/ibanez/Dashboards/bin/InsightApplications
 </Log>
-  <ConfigureStatus>0</ConfigureStatus>
+  <ConfigureStatus>1</ConfigureStatus>
   <EndDateTime>Jul 07 08:26 EDT</EndDateTime>
-  <EndConfigureTime>1278505591</EndConfigureTime>
-<ElapsedMinutes>0</ElapsedMinutes></Configure>
+  <EndConfigureTime>1278505593</EndConfigureTime>
+<ElapsedMinutes>0.1</ElapsedMinutes></Configure>
 </Site>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.6-patch 4">
+  <Site>thurmite.kitware</Site>
+  <BuildName>zApps-Darwin-g++-4.0.1</BuildName>
+  <BuildStamp>20100707-0100-Nightly</BuildStamp>
+  <StartDateTime>Jul 07 08:26 EDT</StartDateTime>
+  <StartTime>1278505574</StartTime>
+  <UpdateCommand>"/usr/bin/cvs" -z3 update -d -A -P -D "2010-07-07 01:00:00 UTC"</UpdateCommand>
+  <UpdateType>CVS</UpdateType>
+  <Directory>
+          <Name>Code/Common</Name>
+  <Updated>
+          <File Directory="Code/Common">itkVersion.h</File>
+          <Directory>Code/Common</Directory>
+          <FullName>Code/Common/itkVersion.h</FullName>
+          <CheckinDate>2010-07-07 02:00:08 +0000</CheckinDate>
+          <Author>ibanez</Author>
+          <Email>Unknown</Email>
+          <Log>ENH: Version number update
+</Log>
+          <Revision>1.3439</Revision>
+          <PriorRevision>1.3438</PriorRevision>
+          <Revisions>
+                  <Revision>1.3439</Revision>
+                  <PreviousRevision>1.3438</PreviousRevision>
+                  <Author>ibanez</Author>
+                  <Date>2010-07-07 02:00:08 +0000</Date>
+                  <Comment>ENH: Version number update
+</Comment>
+                  <Email>Unknown</Email>
+          </Revisions>
+          <Revisions>
+                  <Revision>1.3438</Revision>
+                  <PreviousRevision>1.3438</PreviousRevision>
+                  <Author>ibanez</Author>
+                  <Date>2010-07-06 02:00:07 +0000</Date>
+                  <Comment>ENH: Version number update
+</Comment>
+                  <Email>Unknown</Email>
+          </Revisions>
+  </Updated>
+  </Directory>
+  <Author>
+          <Name>ibanez</Name>
+          <File Directory="Code/Common">itkVersion.h</File>
+  </Author>
+  <EndDateTime>Jul 07 08:26 EDT</EndDateTime>
+  <EndTime>1278505587</EndTime>
+<ElapsedMinutes>0.2</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>
