@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApps-Win32-vs60"
+  BuildStamp="20100707-0100-Nightly"
+  Name="dash13.kitware"
+  Generator="ctest-2.8.0"
+  CompilerName="cl"
+  OSName="Windows"
+  Hostname="dash13"
+  OSRelease="XP Professional"
+  OSVersion="Service Pack 2 (Build 2600)"
+  OSPlatform="x86"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="15"
+  ModelID="4"
+  ProcessorCacheSize="0"
+  NumberOfLogicalCPU="2"
+  NumberOfPhysicalCPU="1"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="20"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2800"
+>
+<Build>
+  <StartDateTime>Jul 07 08:26 Eastern Daylight Time</StartDateTime>
+  <StartBuildTime>1278505591</StartBuildTime>
+<BuildCommand>C:\PROGRA~1\MICROS~2\Common\MSDev98\Bin\MSDEV.COM InsightApplications.dsw /MAKE &quot;ALL_BUILD - Release&quot; /BUILD</BuildCommand>
+  <Error>
+    <BuildLogLine>117</BuildLogLine>
+    <Text>LINK : fatal error LNK1181: cannot open input file "vtkRendering.lib"
+</Text>
+    <PreContext>Compiling...
+CannySegmentationLevelSetBase.cxx
+CannySegmentationLevelSet.cxx
+CannySegmentationLevelSetGUI.cxx
+Generating Code...
+Linking...
+</PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Error>
+
+
+  <Error>
+    <BuildLogLine>118</BuildLogLine>
+    <Text>Error executing link.exe.
+</Text>
+    <PreContext></PreContext>
+    <PostContext>
+ALL_BUILD - 1 error(s), 0 warning(s)
+</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Error>
+
+
+  <Warning>
+    <BuildLogLine>1</BuildLogLine>
+    <Text>*** WARNING non-zero return value in ctest from: C:\PROGRA~1\MICROS~2\Common\MSDev98\Bin\MSDEV.COM
+</Text>
+    <PreContext></PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Log Encoding="base64" Compression="/bin/gzip">
+  </Log>
+  <EndDateTime>Jul 07 08:31 Eastern Daylight Time</EndDateTime>
+  <EndBuildTime>1278505885</EndBuildTime>
+<ElapsedMinutes>4.9</ElapsedMinutes></Build>
+</Site>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApps-Darwin-g++-4.0.1"
+  BuildStamp="20100707-0100-Nightly"
+  Name="thurmite.kitware"
+  Generator="ctest2.6-patch 4"  OSName="Darwin"
+  Hostname="thurmite-3.local"
+  OSRelease="9.8.0"
+  OSVersion="Darwin Kernel Version 9.8.0: Wed Jul 15 16:55:01 PDT 2009; root:xnu-1228.15.4~1/RELEASE_I386"
+  OSPlatform="i386"
+  Is64Bits="0"
+  VendorString=""
+  VendorID="Unknown Manufacturer"
+  FamilyID="0"
+  ModelID="0"
+  ProcessorCacheSize="0"
+  NumberOfLogicalCPU="0"
+  NumberOfPhysicalCPU="0"
+  TotalVirtualMemory="0"
+  TotalPhysicalMemory="0"
+  LogicalProcessorsPerPhysical="0"
+  ProcessorClockFrequency="0"
+>
+<Build>
+  <StartDateTime>Jul 07 08:26 EDT</StartDateTime>
+  <StartBuildTime>1278505591</StartBuildTime>
+<BuildCommand>/usr/bin/make -i -j2</BuildCommand>
+  <Log Encoding="base64" Compression="/bin/gzip">
+  </Log>
+  <EndDateTime>Jul 07 08:40 EDT</EndDateTime>
+  <EndBuildTime>1278506427</EndBuildTime>
+<ElapsedMinutes>13.9</ElapsedMinutes></Build>
+</Site>

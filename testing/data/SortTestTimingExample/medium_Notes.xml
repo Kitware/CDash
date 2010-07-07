@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="zApps-Darwin-g++-4.0.1" BuildStamp="20100707-0100-Nightly" Name="thurmite.kitware" Generator="ctest2.6-patch 4">
+<Notes>
+<Note Name="/Users/ibanez/src/Work/Luis/DashboardScripts/thurmite_itk_applications_Nightly.cmake">
+<Time>1.27851e+09</Time>
+<DateTime>Jul 07 08:40 EDT</DateTime>
+<Text>
+SET (CTEST_SOURCE_DIRECTORY "$ENV{HOME}/Dashboards/src/InsightApplications/")
+SET (CTEST_BINARY_DIRECTORY "$ENV{HOME}/Dashboards/bin/InsightApplications/")
+
+
+# which ctest command to use for running the dashboard
+SET (CTEST_COMMAND 
+  "/usr/bin/ctest -D Nightly  -A ${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME} -V"
+  )
+
+# what cmake command to use for configuring this dashboard
+SET (CTEST_CMAKE_COMMAND
+  "/usr/bin/cmake"
+  )
+
+# should ctest wipe the binary tree before running
+SET (CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
+
+
+# this is the initial cache to use for the binary tree, be careful to escape
+# any quotes inside of this string if you use it
+SET (CTEST_INITIAL_CACHE "
+BUILDNAME:STRING=zApps-Darwin-g++-4.0.1
+SITE:STRING=thurmite.kitware
+MAKECOMMAND:STRING=/usr/bin/make -i -j2
+CMAKE_MAKE_PROGRAM:FILEPATH=/usr/bin/make
+ITK_DIR:PATH=$ENV{HOME}/Dashboards/bin/Insight
+USE_VTK:BOOL=ON
+VTK_DIR:PATH=$ENV{HOME}/Dashboards/bin/VTK
+USE_FLTK:BOOL=OFF
+")
+
+# set any extra envionment variables here
+SET (CTEST_ENVIRONMENT
+  "CXX=/usr/bin/g++-4.0"
+  "CC=/usr/bin/gcc-4.0"
+  )
+</Text>
+</Note>
+</Notes>
+</Site>

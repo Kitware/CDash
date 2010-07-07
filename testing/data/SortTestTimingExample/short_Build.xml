@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApp-Win64-Vista-vs9-Release"
+  BuildStamp="20100707-0100-Nightly"
+  Name="redwall.kitware"
+  Generator="ctest2.6-patch 4"  OSName="Windows"
+  Hostname="Redwall"
+  OSRelease="Vista"
+  OSVersion="Service Pack 2 (Build 6002)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="16"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2660"
+>
+<Build>
+  <StartDateTime>Jul 07 08:22 Eastern Daylight Time</StartDateTime>
+  <StartBuildTime>1278505376</StartBuildTime>
+<BuildCommand>C:\PROGRA~2\MICROS~1.0\Common7\IDE\devenv.com InsightApplications.sln /build Release /project ALL_BUILD</BuildCommand>
+  <Warning>
+    <BuildLogLine>6</BuildLogLine>
+    <Text>1&gt;ITKFltkImageViewer : warning PRJ0009 : Build log could not be opened for writing.
+</Text>
+    <PreContext>
+Microsoft (R) Visual Studio Version 9.0.21022.8.
+Copyright (C) Microsoft Corp. All rights reserved.
+1&gt;------ Build started: Project: ITKFltkImageViewer, Configuration: Release x64 ------
+2&gt;------ Build started: Project: Example_ITKRegistrationLib, Configuration: Release x64 ------
+</PreContext>
+    <PostContext>1&gt;Make sure that the file is not open by another process and is not write-protected.
+3&gt;------ Build started: Project: Example_ITKFilterLib, Configuration: Release x64 ------
+</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>9</BuildLogLine>
+    <Text>2&gt;Example_ITKRegistrationLib : warning PRJ0009 : Build log could not be opened for writing.
+</Text>
+    <PreContext></PreContext>
+    <PostContext>2&gt;Make sure that the file is not open by another process and is not write-protected.
+</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Warning>
+    <BuildLogLine>11</BuildLogLine>
+    <Text>3&gt;Example_ITKFilterLib : warning PRJ0009 : Build log could not be opened for writing.
+</Text>
+    <PreContext></PreContext>
+    <PostContext>3&gt;Make sure that the file is not open by another process and is not write-protected.
+2&gt;Compiling...
+3&gt;Compiling...
+2&gt;ITKRegistrationLib.cxx
+3&gt;ITKFilterLib.cxx
+1&gt;Generating fltkClippingPlane3DDrawerGUI.h</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Log Encoding="base64" Compression="/bin/gzip">
+  </Log>
+  <EndDateTime>Jul 07 08:37 Eastern Daylight Time</EndDateTime>
+  <EndBuildTime>1278506241</EndBuildTime>
+<ElapsedMinutes>14.4</ElapsedMinutes></Build>
+</Site>

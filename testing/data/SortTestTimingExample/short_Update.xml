@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.6-patch 4">
+  <Site>redwall.kitware</Site>
+  <BuildName>zApp-Win64-Vista-vs9-Release</BuildName>
+  <BuildStamp>20100707-0100-Nightly</BuildStamp>
+  <StartDateTime>Jul 07 08:22 Eastern Daylight Time</StartDateTime>
+  <StartTime>1278505352</StartTime>
+  <UpdateCommand>"D:/cygwin/bin/cvs.exe" -z3 update -d -A -P -D "2010-07-07 01:00:00 UTC"</UpdateCommand>
+  <UpdateType>CVS</UpdateType>
+  <EndDateTime>Jul 07 08:22 Eastern Daylight Time</EndDateTime>
+  <EndTime>1278505363</EndTime>
+<ElapsedMinutes>0.1</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>

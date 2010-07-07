@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApps-Win32-vs60"
+  BuildStamp="20100707-0100-Nightly"
+  Name="dash13.kitware"
+  Generator="ctest-2.8.0"
+  CompilerName="cl"
+  OSName="Windows"
+  Hostname="dash13"
+  OSRelease="XP Professional"
+  OSVersion="Service Pack 2 (Build 2600)"
+  OSPlatform="x86"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="15"
+  ModelID="4"
+  ProcessorCacheSize="0"
+  NumberOfLogicalCPU="2"
+  NumberOfPhysicalCPU="1"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="0"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2800"
+>
+<Configure>
+  <StartDateTime>Jul 07 08:26 Eastern Daylight Time</StartDateTime>
+  <StartConfigureTime>1278505587</StartConfigureTime>
+<ConfigureCommand>"C:/Program Files/CMake 2.8/bin/cmake.exe" "C:/Dashboards/My Tests/InsightApplications"</ConfigureCommand>
+<Log>-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Dashboards/My Tests/InsightApplicationsVS60
+</Log>
+  <ConfigureStatus>0</ConfigureStatus>
+  <EndDateTime>Jul 07 08:26 Eastern Daylight Time</EndDateTime>
+  <EndConfigureTime>1278505599</EndConfigureTime>
+<ElapsedMinutes>0.2</ElapsedMinutes></Configure>
+</Site>

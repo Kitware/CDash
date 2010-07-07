@@ -72,6 +72,7 @@ add_php_test(subproject)
 add_php_test(groupsdescription)
 add_php_test(managesubproject)
 add_php_test(viewsubprojectdependencies)
+add_php_test(submittesttimingdata)
 
 add_subdirectory(ctest)
 

@@ -1,0 +1,1002 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApp-Win64-Vista-vs9-Release"
+  BuildStamp="20100707-0100-Nightly"
+  Name="redwall.kitware"
+  Generator="ctest2.6-patch 4"  OSName="Windows"
+  Hostname="Redwall"
+  OSRelease="Vista"
+  OSVersion="Service Pack 2 (Build 6002)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="16"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2660"
+>
+<Testing>
+  <StartDateTime>Jul 07 08:37 Eastern Daylight Time</StartDateTime>
+  <StartTestTime>1278506241</StartTestTime>
+  <TestList>
+    <Test>./ImageCalculator/ImageCalculator2DTest1</Test>
+    <Test>./ImageCalculator/ImageCalculator2DGaussianTest</Test>
+    <Test>./ImageCalculator/ImageCalculator2DTest2</Test>
+    <Test>./ImageCalculator/ImageCalculator2DTest3</Test>
+    <Test>./ImageCalculator/ImageCalc2DMult</Test>
+    <Test>./ImageCalculator/ImageCalc2DDiv</Test>
+    <Test>./ImageCalculator/ImageCalc2DAvg</Test>
+    <Test>./ImageCalculator/ImageCalc2DTestSquare</Test>
+    <Test>./ImageCalculator/ImageCalc2DTestSquareRoot</Test>
+    <Test>./ImageCalculator/ImageCalculator3DTest1</Test>
+    <Test>./ImageCalculator/ImageCalc3DTestOMult</Test>
+    <Test>./ImageCalculator/ImageCalc3DTestIMult</Test>
+    <Test>./ImageCalculator/ImageCalc3DTestODiv</Test>
+    <Test>./ImageCalculator/ImageCalc3DTestIDiv</Test>
+    <Test>./ImageCalculator/ImageCalc2DTestIAdd</Test>
+    <Test>./ImageCalculator/ImageCalc2DTestOAdd</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_png</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_jpg_unsigned_int</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_tiff</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_analyze75</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_bmp_unsigned_char</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_nrrd_float</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_vtk_long</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_gipl</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_nifti_test</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_png</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_jpg_unsigned_int</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_tiff</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_analyze75</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_nrrd_float</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_vtk_long</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_gipl</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_nifti</Test>
+    <Test>./ConvertBetweenFileFormats/compare_png</Test>
+    <Test>./ConvertBetweenFileFormats/compare_tiff</Test>
+    <Test>./ConvertBetweenFileFormats/compare_analyze75</Test>
+    <Test>./ConvertBetweenFileFormats/compare_nrrd_float</Test>
+    <Test>./ConvertBetweenFileFormats/compare_vtk_long</Test>
+    <Test>./ConvertBetweenFileFormats/compare_gipl</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_compare_nifti</Test>
+  </TestList>
+  <Test Status="passed">
+    <Name>ImageCalculator2DTest1</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DTest1</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png --intype UCHAR --outtype UCHAR --add --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0709999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png --intype UCHAR --outtype UCHAR --add --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 100,  MAX: 100,  MIN: 100,  NPX: 400,  SUM: 40000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalculator2DGaussianTest</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DGaussianTest</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/GaussianIOFilteringTest.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png --intype UCHAR --outtype UCHAR --add --ifgaussiansigma 1 --ofgaussiansigma 1 --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0370002</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/GaussianIOFilteringTest.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png --intype UCHAR --outtype UCHAR --add --ifgaussiansigma 1 --ofgaussiansigma 1 --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png
+--Storage type effective  input filter options:  -ifgaussiansigma 1 
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  -ofgaussiansigma 1 
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 49.55,  MAX: 100,  MIN: 0,  NPX: 400,  SUM: 19820,  VAR: 2123.96,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalculator2DTest2</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DTest2</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFiveHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png --intype UCHAR --outtype USHORT --add --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0339999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFiveHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png --intype UCHAR --outtype USHORT --add --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalculator2DTest3</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DTest3</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllZeroes.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png --intype UCHAR --outtype USHORT --sub --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.03</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllZeroes.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png --intype UCHAR --outtype USHORT --sub --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 0,  MAX: 0,  MIN: 0,  NPX: 400,  SUM: 0,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc2DMult</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DMult</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png --intype UCHAR --outtype UCHAR --mul --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0309999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png --intype UCHAR --outtype UCHAR --mul --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 100,  MAX: 100,  MIN: 100,  NPX: 400,  SUM: 40000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc2DDiv</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DDiv</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png --intype UCHAR --outtype UCHAR --div --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0300002</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png --intype UCHAR --outtype UCHAR --div --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 10,  MAX: 10,  MIN: 10,  NPX: 400,  SUM: 4000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc2DAvg</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DAvg</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFifties.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png --intype UCHAR --outtype UCHAR --avg --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.03</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFifties.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png --intype UCHAR --outtype UCHAR --avg --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/LowerHalfHundreds.png
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/UpperHalfHundreds.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 50,  MAX: 50,  MIN: 50,  NPX: 400,  SUM: 20000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc2DTestSquare</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DTestSquare</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllZeroes.png --ifsqr --intype UCHAR --outtype UCHAR --sub --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0320001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllZeroes.png --ifsqr --intype UCHAR --outtype UCHAR --sub --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png
+--Storage type effective  input filter options:  -ifsqr 
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllZeroes.png
+--Storage type effective  input filter options:  -ifsqr 
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 100,  MAX: 100,  MIN: 100,  NPX: 400,  SUM: 40000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc2DTestSquareRoot</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DTestSquareRoot</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllZeroes.png --ifsqrt --intype UCHAR --outtype USHORT --sub --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0310001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTens.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllZeroes.png --ifsqrt --intype UCHAR --outtype USHORT --sub --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png
+--Storage type effective  input filter options:  -ifsqrt 
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllZeroes.png
+--Storage type effective  input filter options:  -ifsqrt 
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 10,  MAX: 10,  MIN: 10,  NPX: 400,  SUM: 4000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalculator3DTest1</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator3DTest1</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTwos.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr --intype UCHAR --outtype UCHAR --div --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.hdr</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.089</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllTwos.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr --intype UCHAR --outtype UCHAR --div --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr
+--Storage type effective  input filter options:  
+Reading image.... D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr  AVG: 2,  MAX: 2,  MIN: 2,  NPX: 125,  SUM: 250,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc3DTestOMult</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc3DTestOMult</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ofmulc 2</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.hdr</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0320001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ofmulc 2</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr
+--Storage type effective output filter options:  -ofmulc 2 
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr  AVG: 200,  MAX: 200,  MIN: 200,  NPX: 125,  SUM: 25000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc3DTestIMult</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc3DTestIMult</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ifmulc 2</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.hdr</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.033</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ifmulc 2</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr
+--Storage type effective  input filter options:  -ifmulc 2 
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr  AVG: 200,  MAX: 200,  MIN: 200,  NPX: 125,  SUM: 25000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc3DTestODiv</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc3DTestODiv</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ofdivc 2</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.hdr</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0320001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ofdivc 2</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr
+--Storage type effective output filter options:  -ofdivc 2 
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr  AVG: 100,  MAX: 100,  MIN: 100,  NPX: 125,  SUM: 12500,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc3DTestIDiv</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc3DTestIDiv</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ifdivc 2</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.hdr</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.033</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/Hundred.hdr ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr -d 3 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ifdivc 2</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/TwoHundred.hdr
+--Storage type effective  input filter options:  -ifdivc 2 
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.hdr  AVG: 100,  MAX: 100,  MIN: 100,  NPX: 125,  SUM: 12500,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc2DTestIAdd</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DTestIAdd</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFifties.png --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ifaddc 50</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0319998</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFifties.png --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ifaddc 50</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFifties.png
+--Storage type effective  input filter options:  -ifaddc 50 
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 100,  MAX: 100,  MIN: 100,  NPX: 400,  SUM: 40000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ImageCalc2DTestOAdd</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DTestOAdd</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFifties.png --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ofaddc 50</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>Test.png</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.03</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ImageCalculator\Release\ImageCalculatorTests.exe --compare D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllHundreds.png ImageCalculatorTest --in D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFifties.png --intype UCHAR --outtype UCHAR --out D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png -d 2 --statNPX --statMIN --statAVG --statMAX --statVAR --statSUM --ofaddc 50</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Reading 1st Image...D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ImageCalculator/TestImages/AllFifties.png
+--Storage type effective  input filter options:  
+Before write...D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png
+--Storage type effective output filter options:  -ofaddc 50 
+Stats for D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ImageCalculator/Test.png  AVG: 100,  MAX: 100,  MIN: 100,  NPX: 400,  SUM: 40000,  VAR: 0,  
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_png</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_png</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.png</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.102</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.png</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.png":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_jpg_unsigned_int</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_jpg_unsigned_int</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.jpg unsigned_int</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0339999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.jpg unsigned_int</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.jpg":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_int
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_tiff</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_tiff</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.tiff</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0280001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.tiff</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.tiff":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_analyze75</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_analyze75</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/BigEndian.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.img</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.03</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/BigEndian.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.img</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/BigEndian.mhd":
+  dimension:    3
+  pixel type:   scalar
+  number of components: 1
+  component type:   short
+  size:     6 6 8 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.img":
+  dimension:    3
+  pixel type:   scalar
+  number of components: 1
+  component type:   short
+  size:     6 6 8 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_bmp_unsigned_char</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_bmp_unsigned_char</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.bmp unsigned_char</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0320001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.bmp unsigned_char</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.bmp":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_char
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_nrrd_float</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_nrrd_float</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nrrd float</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.049</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nrrd float</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nrrd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   float
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_vtk_long</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_vtk_long</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.vtk long</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.029</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.vtk long</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.vtk":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   long
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_gipl</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_gipl</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.gipl</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0279999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.gipl</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.gipl":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_to_nifti_test</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_nifti_test</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nii.gz</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0380001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nii.gz</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nii.gz":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_from_png</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_png</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.png D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in1.mhd</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0409999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.png D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in1.mhd</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.png":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in1.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_from_jpg_unsigned_int</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_jpg_unsigned_int</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.jpg D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in2.mhd unsigned_short</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0419998</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.jpg D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in2.mhd unsigned_short</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.jpg":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_char
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in2.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_from_tiff</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_tiff</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.tiff D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in3.mhd</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.04</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.tiff D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in3.mhd</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.tiff":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in3.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_from_analyze75</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_analyze75</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.hdr D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in4.mhd</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.029</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.hdr D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in4.mhd</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.hdr":
+  dimension:    3
+  pixel type:   scalar
+  number of components: 1
+  component type:   short
+  size:     6 6 8 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in4.mhd":
+  dimension:    3
+  pixel type:   scalar
+  number of components: 1
+  component type:   short
+  size:     6 6 8 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_from_nrrd_float</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_nrrd_float</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nrrd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in6.mhd unsigned_short</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0420001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nrrd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in6.mhd unsigned_short</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nrrd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   float
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in6.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_from_vtk_long</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_vtk_long</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.vtk D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in7.mhd unsigned_short</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.04</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.vtk D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in7.mhd unsigned_short</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.vtk":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   long
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in7.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_from_gipl</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_gipl</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.gipl D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0410001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.gipl D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.gipl":
+  dimension:    3
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 1 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd":
+  dimension:    3
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 1 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_from_nifti</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_nifti</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nii.gz D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.043</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ConvertBetweenFileFormats.exe D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nii.gz D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Information about the input image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_out.nii.gz":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+
+Information about the output image "D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd":
+  dimension:    2
+  pixel type:   scalar
+  number of components: 1
+  component type:   unsigned_short
+  size:     181 217 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>compare_png</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_png</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in1.mhd Dummy</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>image_in.mhd</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.049</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in1.mhd Dummy</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>compare_tiff</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_tiff</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in3.mhd Dummy</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>image_in.mhd</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0250001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in3.mhd Dummy</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>compare_analyze75</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_analyze75</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/BigEndian.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in4.mhd Dummy</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>BigEndian.mhd</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0249999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/BigEndian.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in4.mhd Dummy</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>compare_nrrd_float</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_nrrd_float</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in6.mhd Dummy</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>image_in.mhd</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0250001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in6.mhd Dummy</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>compare_vtk_long</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_vtk_long</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in7.mhd Dummy</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>image_in.mhd</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0250001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in7.mhd Dummy</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>compare_gipl</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_gipl</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd Dummy</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>image_in.mhd</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0250001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd Dummy</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>ccvnt_compare_nifti</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_compare_nifti</FullName>
+    <FullCommandLine>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd Dummy</FullCommandLine>
+    <Results>
+      <NamedMeasurement name="BaselineImageName" type="text/string"><Value>image_in.mhd</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0249999</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>D:\cygwin\home\ibanez\Dashboards\bin\zAppVS9Rel\ConvertBetweenFileFormats\Release\ImageCompareTests.exe --compare D:/cygwin/home/ibanez/Dashboards/src/InsightApplications/ConvertBetweenFileFormats/Testing/Data/image_in.mhd D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel/ConvertBetweenFileFormats/image_in8.mhd Dummy</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <EndDateTime>Jul 07 08:37 Eastern Daylight Time</EndDateTime>
+  <EndTestTime>1278506242</EndTestTime>
+<ElapsedMinutes>0</ElapsedMinutes></Testing>
+</Site>

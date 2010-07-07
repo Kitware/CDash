@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.6-patch 4">
+  <Site>thurmite.kitware</Site>
+  <BuildName>zApps-Darwin-g++-4.0.1</BuildName>
+  <BuildStamp>20100707-0100-Nightly</BuildStamp>
+  <StartDateTime>Jul 07 08:26 EDT</StartDateTime>
+  <StartTime>1278505574</StartTime>
+  <UpdateCommand>"/usr/bin/cvs" -z3 update -d -A -P -D "2010-07-07 01:00:00 UTC"</UpdateCommand>
+  <UpdateType>CVS</UpdateType>
+  <EndDateTime>Jul 07 08:26 EDT</EndDateTime>
+  <EndTime>1278505587</EndTime>
+<ElapsedMinutes>0.2</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>

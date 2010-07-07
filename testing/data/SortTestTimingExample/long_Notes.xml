@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="zApps-Win32-vs60" BuildStamp="20100707-0100-Nightly" Name="dash13.kitware" Generator="ctest2.8.0">
+<Notes>
+<Note Name="C:/Dashboards/DashboardScripts/dash13_itkApp_vs60.cmake">
+<Time>1.27848e+009</Time>
+<DateTime>Jul 07 08:40 Eastern Daylight Time</DateTime>
+<Text>
+# these are the the name of the source and binary directory on disk. 
+SET (CTEST_SOURCE_NAME InsightApplications)
+SET (CTEST_BINARY_NAME InsightApplicationsVS60)
+SET(CTEST_DASHBOARD_ROOT &quot;c:/Dashboards/My Tests&quot;)
+SET(CTEST_SOURCE_DIRECTORY &quot;${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}&quot;)
+SET(CTEST_BINARY_DIRECTORY &quot;${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}&quot;)
+
+# which ctest command to use for running the dashboard
+SET (CTEST_COMMAND 
+  &quot;\&quot;C:/Program Files/CMake 2.8/bin/ctest.exe\&quot; -D Nightly -A \&quot;${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}\&quot;&quot;
+  )
+
+# what cmake command to use for configuring this dashboard
+SET (CTEST_CMAKE_COMMAND
+  &quot;\&quot;C:/Program Files/CMake 2.8/bin/cmake.exe\&quot;&quot;
+  )
+
+# should ctest wipe the binary tree before running
+SET (CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
+
+# this is the initial cache to use for the binary tree, be careful to escape
+# any quotes inside of this string if you use it
+SET (CTEST_INITIAL_CACHE &quot;
+SITE:STRING=dash13.kitware
+BUILDNAME:STRING=zApps-Win32-vs60
+CMAKE_GENERATOR:INTERNAL=Visual Studio 6
+CVSCOMMAND:FILEPATH=c:/Program Files/TortoiseCVS/cvs.exe
+BUILD_TESTING:BOOL=ON
+BUILD_EXAMPLES:BOOL=ON
+ITK_DIR:PATH=${CTEST_DASHBOARD_ROOT}/InsightVS60
+USE_VTK:BOOL=ON
+VTK_DIR:PATH=${CTEST_DASHBOARD_ROOT}/VTKVS60
+USE_FLTK:BOOL=ON
+FLTK_DIR:PATH=${CTEST_DASHBOARD_ROOT}/Fltk-VS60
+
+// Python support
+PYTHON_EXECUTABLE:FILEPATH=C:/Dashboards/Support/Python-2.4/PC/VC6/python.exe
+PYTHON_INCLUDE_PATH:PATH=C:/Dashboards/Support/Python-2.4/Include;C:/Dashboards/Support/Python-2.4/PC
+PYTHON_LIBRARY:FILEPATH=C:/Dashboards/Support/Python-2.4/PC/VC6/python24.lib
+
+// TCL wrapping
+TCL_INCLUDE_PATH:PATH=C:/Dashboards/Support/tcl849-src/tcl8.4.9/generic
+TCL_LIBRARY:FILEPATH=C:/Dashboards/Support/tcl849-src/tcl8.4.9/win/Release/tcl84.lib
+TCL_TCLSH:FILEPATH=C:/Dashboards/Support/tcl849-src/tcl8.4.9/win/Release/tclsh84.exe
+TK_LIBRARY:FILEPATH=C:/Dashboards/Support/tk849-src/tk8.4.9/win/Release/tk84.lib
+TK_INCLUDE_PATH:PATH=C:/Dashboards/Support/tk849-src/tk8.4.9/generic;C:/Dashboards/Support/tk849-src/tk8.4.9/xlib
+
+// Enable java wrapping
+JAVA_COMPILE:FILEPATH=c:/Program Files/j2sdk1.4.2_04/bin/javac.exe
+JAVA_ARCHIVE:FILEPATH=c:/Program Files/j2sdk1.4.2_04/bin/jar.exe
+JAVACOMMAND:FILEPATH=c:/Program Files/j2sdk1.4.2_04/bin/java.exe
+JAVA_RUNTIME:FILEPATH=c:/Program Files/j2sdk1.4.2_04/bin/java.exe
+&quot;)
+
+# set any extra envionment variables here
+SET (CTEST_ENVIRONMENT
+  &quot;PATH=C:/Dashboards/Support/tcl849-src/tcl8.4.9/win/Release\;C:/Dashboards/Support/tk849-src/tk8.4.9/win/Release&quot;
+  &quot;TCL_LIBRARY=C:/Dashboards/Support/tcl849-src/tcl8.4.9/library&quot;
+  &quot;TK_LIBRARY=C:/Dashboards/Support/tk849-src/tk8.4.9/library&quot;
+  &quot;PYTHONPATH=${CTEST_BINARY_DIRECTORY}/Wrapping/CSwig/Python/Release&quot;
+  )
+
+</Text>
+</Note>
+</Notes>
+</Site>

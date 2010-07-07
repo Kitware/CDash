@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApps-Win32-vs60"
+  BuildStamp="20100707-0100-Nightly"
+  Name="dash13.kitware"
+  Generator="ctest-2.8.0"
+  CompilerName="cl"
+  OSName="Windows"
+  Hostname="dash13"
+  OSRelease="XP Professional"
+  OSVersion="Service Pack 2 (Build 2600)"
+  OSPlatform="x86"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="15"
+  ModelID="4"
+  ProcessorCacheSize="0"
+  NumberOfLogicalCPU="2"
+  NumberOfPhysicalCPU="1"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="3"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2800"
+>
+<Testing>
+  <StartDateTime>Jul 07 08:40 Eastern Daylight Time</StartDateTime>
+  <StartTestTime>1278506427</StartTestTime>
+  <TestList>
+    <Test>./ImageCalculator/ImageCalculator2DTest1</Test>
+    <Test>./ImageCalculator/ImageCalculator2DGaussianTest</Test>
+    <Test>./ImageCalculator/ImageCalculator2DTest2</Test>
+    <Test>./ImageCalculator/ImageCalculator2DTest3</Test>
+    <Test>./ImageCalculator/ImageCalc2DMult</Test>
+    <Test>./ImageCalculator/ImageCalc2DDiv</Test>
+    <Test>./ImageCalculator/ImageCalc2DAvg</Test>
+    <Test>./ImageCalculator/ImageCalc2DTestSquare</Test>
+    <Test>./ImageCalculator/ImageCalc2DTestSquareRoot</Test>
+    <Test>./ImageCalculator/ImageCalculator3DTest1</Test>
+    <Test>./ImageCalculator/ImageCalc3DTestOMult</Test>
+    <Test>./ImageCalculator/ImageCalc3DTestIMult</Test>
+    <Test>./ImageCalculator/ImageCalc3DTestODiv</Test>
+    <Test>./ImageCalculator/ImageCalc3DTestIDiv</Test>
+    <Test>./ImageCalculator/ImageCalc2DTestIAdd</Test>
+    <Test>./ImageCalculator/ImageCalc2DTestOAdd</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_png</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_jpg_unsigned_int</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_tiff</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_analyze75</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_bmp_unsigned_char</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_nrrd_float</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_vtk_long</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_gipl</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_to_nifti_test</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_png</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_jpg_unsigned_int</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_tiff</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_analyze75</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_nrrd_float</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_vtk_long</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_gipl</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_from_nifti</Test>
+    <Test>./ConvertBetweenFileFormats/compare_png</Test>
+    <Test>./ConvertBetweenFileFormats/compare_tiff</Test>
+    <Test>./ConvertBetweenFileFormats/compare_analyze75</Test>
+    <Test>./ConvertBetweenFileFormats/compare_nrrd_float</Test>
+    <Test>./ConvertBetweenFileFormats/compare_vtk_long</Test>
+    <Test>./ConvertBetweenFileFormats/compare_gipl</Test>
+    <Test>./ConvertBetweenFileFormats/ccvnt_compare_nifti</Test>
+  </TestList>
+  <Test Status="notrun">
+    <Name>ImageCalculator2DTest1</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DTest1</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalculator2DGaussianTest</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DGaussianTest</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalculator2DTest2</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DTest2</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalculator2DTest3</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator2DTest3</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc2DMult</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DMult</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc2DDiv</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DDiv</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc2DAvg</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DAvg</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc2DTestSquare</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DTestSquare</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc2DTestSquareRoot</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DTestSquareRoot</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalculator3DTest1</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalculator3DTest1</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc3DTestOMult</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc3DTestOMult</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc3DTestIMult</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc3DTestIMult</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc3DTestODiv</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc3DTestODiv</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc3DTestIDiv</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc3DTestIDiv</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc2DTestIAdd</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DTestIAdd</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ImageCalc2DTestOAdd</Name>
+    <Path>./ImageCalculator</Path>
+    <FullName>./ImageCalculator/ImageCalc2DTestOAdd</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCalculatorTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_png</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_png</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_jpg_unsigned_int</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_jpg_unsigned_int</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_tiff</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_tiff</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_analyze75</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_analyze75</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_bmp_unsigned_char</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_bmp_unsigned_char</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_nrrd_float</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_nrrd_float</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_vtk_long</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_vtk_long</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_gipl</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_gipl</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_to_nifti_test</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_to_nifti_test</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_from_png</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_png</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_from_jpg_unsigned_int</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_jpg_unsigned_int</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_from_tiff</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_tiff</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_from_analyze75</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_analyze75</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_from_nrrd_float</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_nrrd_float</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_from_vtk_long</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_vtk_long</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_from_gipl</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_gipl</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_from_nifti</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_from_nifti</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ConvertBetweenFileFormats</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>compare_png</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_png</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCompareTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>compare_tiff</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_tiff</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCompareTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>compare_analyze75</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_analyze75</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCompareTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>compare_nrrd_float</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_nrrd_float</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCompareTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>compare_vtk_long</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_vtk_long</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCompareTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>compare_gipl</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/compare_gipl</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCompareTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>ccvnt_compare_nifti</Name>
+    <Path>./ConvertBetweenFileFormats</Path>
+    <FullName>./ConvertBetweenFileFormats/ccvnt_compare_nifti</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /ImageCompareTests</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <EndDateTime>Jul 07 08:41 Eastern Daylight Time</EndDateTime>
+  <EndTestTime>1278506445</EndTestTime>
+<ElapsedMinutes>0.3</ElapsedMinutes></Testing>
+</Site>

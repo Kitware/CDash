@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="zApp-Win64-Vista-vs9-Release"
+  BuildStamp="20100707-0100-Nightly"
+  Name="redwall.kitware"
+  Generator="ctest2.6-patch 4"  OSName="Windows"
+  Hostname="Redwall"
+  OSRelease="Vista"
+  OSVersion="Service Pack 2 (Build 6002)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="0"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2660"
+>
+<Configure>
+  <StartDateTime>Jul 07 08:22 Eastern Daylight Time</StartDateTime>
+  <StartConfigureTime>1278505363</StartConfigureTime>
+<ConfigureCommand>"C:/Program Files (x86)/CMake 2.6/bin/cmake.exe" "D:/cygwin/home/ibanez/Dashboards/src/InsightApplications"</ConfigureCommand>
+<Log>-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/cygwin/home/ibanez/Dashboards/bin/zAppVS9Rel
+</Log>
+  <ConfigureStatus>0</ConfigureStatus>
+  <EndDateTime>Jul 07 08:22 Eastern Daylight Time</EndDateTime>
+  <EndConfigureTime>1278505376</EndConfigureTime>
+<ElapsedMinutes>0.2</ElapsedMinutes></Configure>
+</Site>

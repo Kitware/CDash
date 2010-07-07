@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.8.0">
+  <Site>dash13.kitware</Site>
+  <BuildName>zApps-Win32-vs60</BuildName>
+  <BuildStamp>20100707-0100-Nightly</BuildStamp>
+  <StartDateTime>Jul 07 08:26 Eastern Daylight Time</StartDateTime>
+  <StartTime>1278505574</StartTime>
+  <UpdateCommand>&quot;c:/Program Files/TortoiseCVS/cvs.exe&quot; &quot;-z3&quot; &quot;update&quot; &quot;-d&quot; &quot;-A&quot; &quot;-P&quot; &quot;-D2010-07-07 01:00:00 UTC&quot;</UpdateCommand>
+  <UpdateType>CVS</UpdateType>
+  <EndDateTime>Jul 07 08:27 Eastern Daylight Time</EndDateTime>
+  <EndTime>1278505634</EndTime>
+<ElapsedMinutes>1</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>

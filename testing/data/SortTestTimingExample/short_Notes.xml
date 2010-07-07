@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="zApp-Win64-Vista-vs9-Release" BuildStamp="20100707-0100-Nightly" Name="redwall.kitware" Generator="ctest2.6-patch 4">
+<Notes>
+<Note Name="D:/cygwin/home/ibanez/src/Work/Luis/DashboardScripts/redwall_itk_applications_Nightly_VS9_Release.txt">
+<Time>1.27851e+009</Time>
+<DateTime>Jul 07 08:37 Eastern Daylight Time</DateTime>
+<Text>
+# these are the name of the source and binary directory on disk. 
+SET(CTEST_SOURCE_NAME "src/InsightApplications")
+SET(CTEST_BINARY_NAME "bin/zAppVS9Rel")
+SET(CTEST_DASHBOARD_ROOT "D:/cygwin/home/ibanez/Dashboards/")
+SET(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}")
+SET(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}")
+
+# which ctest command to use for running the dashboard
+SET (CTEST_COMMAND
+  "\"C:/Program Files (x86)/CMake 2.6/bin/ctest.exe\" -C Release -D Nightly -A \"${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}\""
+  "\"C:/Program Files (x86)/CMake 2.6/bin/cmake.exe\" -DBUILD_TYPE=Release -P \"${CTEST_BINARY_DIRECTORY}/cmake_install.cmake\""
+  )
+
+# what cmake command to use for configuring this dashboard
+SET (CTEST_CMAKE_COMMAND
+  "\"C:/Program Files (x86)/CMake 2.6/bin/cmake.exe\""
+  )
+
+# should ctest wipe the binary tree before running
+SET (CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
+
+# this is the initial cache to use for the binary tree, be careful to escape
+# any quotes inside of this string if you use it
+SET (CTEST_INITIAL_CACHE "
+SITE:STRING=redwall.kitware
+BUILDNAME:STRING=zApp-Win64-Vista-vs9-Release
+CMAKE_GENERATOR:INTERNAL=Visual Studio 9 2008 Win64
+CTEST_BUILD_CONFIGURATION:STRING=Release
+BUILD_SHARED_LIBS:BOOL=OFF
+CVSCOMMAND:FILEPATH=D:/cygwin/bin/cvs.exe
+BUILD_TESTING:BOOL=ON
+BUILD_EXAMPLES:BOOL=ON
+
+ITK_DIR:PATH=${CTEST_DASHBOARD_ROOT}/bin/InsightVS9Release
+USE_VTK:BOOL=ON
+VTK_DIR:PATH=${CTEST_DASHBOARD_ROOT}/bin/VTKVS9Release
+USE_FLTK:BOOL=ON
+FLTK_DIR:PATH=${CTEST_DASHBOARD_ROOT}/bin/ISIS/FLTKVS9Release
+// For install
+CMAKE_INSTALL_PREFIX:PATH=${CTEST_BINARY_DIRECTORY}/InsightApplicationsVS9Install
+// Deal with limitation of VS9 for large number of inline functions and 
+// large number of template instantiations.
+CMAKE_CXX_FLAGS:STRING= /DWIN32 /D_WINDOWS /W3 /Zm1000 /EHsc /GR /bigobj
+")
+
+# set any extra envionment variables here
+SET (CTEST_ENVIRONMENT
+  )
+
+</Text>
+</Note>
+</Notes>
+</Site>
