@@ -36,11 +36,25 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->setSpeed("300");
     $this->click("//tr[5]/td[2]/a[1]/img");
+    for ($second = 0; ; $second++) {
+        if ($second >= 60) $this->fail("timeout");
+        try {
+            if ($this->isElementPresent("//div[@id='wizard']/ul/li[2]/a/span")) break;
+        } catch (Exception $e) {}
+        sleep(1);
+    }
     $this->click("//div[@id='wizard']/ul/li[2]/a/span");
     $this->click("//div[@id='wizard']/ul/li[3]/a/span");
     $this->click("//div[@id='wizard']/ul/li[4]/a/span");
     $this->click("//div[@id='wizard']/ul/li[5]/a/span");
     $this->click("updatesubscription");
+    for ($second = 0; ; $second++) {
+        if ($second >= 60) $this->fail("timeout");
+        try {
+            if ($this->isElementPresent("//tr[5]/td[2]/a[1]/img")) break;
+        } catch (Exception $e) {}
+        sleep(1);
+    }
     $this->click("//tr[5]/td[2]/a[1]/img");
     $this->click("unsubscribe");
     $this->assertTrue((bool)preg_match('/^Are you sure you want to unsubscribe[\s\S]$/',$this->getConfirmation()));
