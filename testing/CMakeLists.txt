@@ -91,7 +91,7 @@ if(TEST_CLIENT_MANAGEMENT)
     PASS_REGULAR_EXPRESSION ".*Nothing to do.*"
   )
   add_test(requestwork_1 
-    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
   )
   set_tests_properties(
     requestwork_1 PROPERTIES
@@ -103,7 +103,7 @@ if(TEST_CLIENT_MANAGEMENT)
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
   add_test(requestwork_2 
-    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
   )
   set_tests_properties(
     requestwork_2 PROPERTIES
@@ -115,7 +115,7 @@ if(TEST_CLIENT_MANAGEMENT)
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
   add_test(requestwork_3 
-    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
   )
   set_tests_properties(
     requestwork_3 PROPERTIES

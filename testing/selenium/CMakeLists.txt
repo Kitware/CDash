@@ -1,9 +1,15 @@
+if(NOT BROWSER)
+  set(BROWSER firefox)
+endif()
+
+message(STATUS "browser: ${BROWSER}")
+
 # function to add a new Selenium based coverage test to CDash
 #
 function(add_selenium_test TestName)
   add_test(
     ${TestName}
-    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_${TestName}.php
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_${TestName}.php ${BROWSER}
   )
   set_tests_properties(
     ${TestName} PROPERTIES

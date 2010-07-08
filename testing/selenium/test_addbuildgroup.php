@@ -6,10 +6,11 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected function setUp()
   {
+    global $argv;
+    $this->setBrowser("*" . $argv[2]);
     $path = dirname(__FILE__)."/..";
     set_include_path(get_include_path() . PATH_SEPARATOR . $path);
     require('config.test.php');
-    $this->setBrowser("*chrome");
     $this->setBrowserUrl($configure['webserver']);
     $this->webPath = $configure['webpath'];
   }

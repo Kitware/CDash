@@ -6,7 +6,8 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected function setUp()
   {
-    $this->setBrowser("*chrome");
+    global $argv;
+    $this->setBrowser("*" . $argv[2]);
     $path = dirname(__FILE__)."/..";
     set_include_path(get_include_path() . PATH_SEPARATOR . $path);
     require('config.test.php');
