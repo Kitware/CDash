@@ -117,7 +117,6 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
   // Clean the backup directory
   clean_backup_directory();
 
-
   $projectname = get_project_name($projectid);
 
   $sitename = "";
@@ -163,6 +162,11 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
 
   if(!$handle = fopen($filename, 'w'))
     {
+    //try parent dir as well
+    $filename = "../$filename";
+    }
+  if(!$handle = fopen($filename, 'w'))
+    {
     echo "Cannot open file ($filename)";
     add_log("Cannot open file ($filename)", "ctest_parse",LOG_ERR);
     return $handler;
@@ -171,7 +175,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
   // Write the file.
   if(fwrite($handle, $content) === FALSE)
     {
-    echo "Cannot write to file ($filename)";
+    echo "ERROR: Cannot write to file ($filename)";
     add_log("Cannot write to file ($filename)", "ctest_parse",LOG_ERR);
     fclose($handle);
     return $handler;
@@ -232,7 +236,7 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
       return $handler;
       }
     
-    //burn the first 8192 since we have already read it
+    //burn the first 8192 since we have already parsed it
     $content = fread($parseHandle, 8192);
     while(!feof($parseHandle))
       {

@@ -46,6 +46,11 @@ while(pdo_num_rows($query) > 0)
   pdo_query("UPDATE submission SET status=1 WHERE projectid='".$projectid."' AND status=0 AND filename='".$filename."'");   
 
   $fp = fopen($filename, 'r');
+  if(!$fp)
+    {
+    // check in parent dir also
+    $fp = fopen("../$filename", 'r');
+    }
   if($fp)
     {
     do_submit($fp,$projectid);

@@ -22,7 +22,7 @@ include_once("cdash/common.php");
 include_once("cdash/createRSS.php");
 include("cdash/sendemail.php");
 
-function do_submit($filehandle, $projectid, $expected_md5)
+function do_submit($filehandle, $projectid, $expected_md5='')
 {
   include('cdash/config.php');
    
@@ -69,7 +69,7 @@ function do_submit($filehandle, $projectid, $expected_md5)
     include("cdash/dailyupdates.php");
     addDailyChanges($projectid);
     }
-  
+
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/submit.php"))
     {
     include("local/submit.php");
@@ -147,7 +147,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5)
     $currentURI =  $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid;
-    
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $request);
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
