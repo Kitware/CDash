@@ -48,7 +48,6 @@ if ($session_OK)
   }
     
   $role = 0;
- 
   $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$usersessionid'"));
   if($projectid && is_numeric($projectid))
     {
@@ -113,7 +112,7 @@ function register_user($projectid,$email,$firstName,$lastName,$cvslogin)
                                   VALUES ('$userid','$projectid','0','$cvslogin','1')");
       echo pdo_error();
       return false;
-        }
+      }
     return "<error>User ".$email." already registered.</error>";
     } // already registered
     
@@ -272,7 +271,7 @@ if($adduser)
     
   if(pdo_num_rows($user2project) == 0)
     {
-    pdo_query("INSERT INTO user2project (userid,role,cvslogin,projectid) VALUES ('$userid','$role','$cvslogin','$projectid')");
+    pdo_query("INSERT INTO user2project (userid,role,cvslogin,projectid,emailtype) VALUES ('$userid','$role','$cvslogin','$projectid','1')");
     }
 }
 
