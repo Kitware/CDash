@@ -25,6 +25,9 @@ if(!is_numeric($projectid))
   return;
   }
 
+// Catch the fatal errors during submission
+register_shutdown_function('PHPErrorHandler',$projectid);
+
 // Check if someone is already processing the submission for this project
 $query = pdo_query("SELECT count(*) AS c FROM submission WHERE projectid='".$projectid."' AND status=1");
 if(!$query)
