@@ -49,18 +49,19 @@ while(pdo_num_rows($query) > 0)
   if(!$fp)
     {
     // check in parent dir also
-    $fp = fopen("../$filename", 'r');
+    $filename = "../$filename";
+    $fp = fopen($filename, 'r');
     }
   if($fp)
     {
     do_submit($fp,$projectid, '', false);
+    // delete the temporary backup file since we now have a better-named one
+    unlink($filename);
     }
   else
     {
     add_log("ProcessSubmission","Cannot open file ".$filename,LOG_ERR);
     }
-  // delete the temporary backup file since we now have a better-named one
-  unlink($filename);
   pdo_query("DELETE FROM submission WHERE projectid='".$projectid."' AND status=1 AND filename='".$filename."'");
   $query = pdo_query("SELECT filename FROM submission WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1");
   }
