@@ -103,12 +103,14 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 {
   include('cdash/config.php');
   
-  $filename = $CDASH_BACKUP_DIRECTORY."/".$projectid."_";
-  for($i = 0; $i < 40; $i++)
-    {
-    $filename .= rand(0, 9);
-    }
-  $filename .= ".xml";
+  do 
+    { 
+    $filename = $CDASH_BACKUP_DIRECTORY."/".mt_rand().".xml";
+    $fp = @fopen($filename, 'x'); 
+    } 
+  while(!$fp); 
+  fclose($fp);
+  
   $outfile = fopen($filename, 'w');
 
   // Save the file in the backup directory
