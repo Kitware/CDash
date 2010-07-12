@@ -29,7 +29,7 @@ require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5='')
+function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=true)
 {
   include 'cdash/config.php';
   require_once 'cdash/common.php';
@@ -193,71 +193,65 @@ function ctest_parse($filehandler, $projectid,$onlybackup=false,$expected_md5=''
       }
     }
   fclose($handle);
-  $md5sum = md5_file($filename);
-  $md5error = false;
 
-  echo "<cdash version=\"$CDASH_VERSION\">\n";
-  if($expected_md5 == '' || $expected_md5 == $md5sum)
+  if($do_checksum == true)
     {
-    echo "  <status>OK</status>\n";
-    echo "  <message></message>\n";
-    }
-  else
-    {
-    echo "  <status>ERROR</status>\n";
-    echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
-    $md5error = true;
-    }
-  echo "  <md5>$md5sum</md5>\n";
-  echo "</cdash>\n";
-
-  if($md5error)
-    {
-    add_log("Checksum failure on file: $filename", "ctest_parse", LOG_ERR, $projectid);
-    return FALSE;
-    }
-
-  if($onlybackup) //asynchronous_submit
-    {
-    return $filename;
-    }
-  else //synchronous_submit (parse now)
-    {
-    // Set the handler
-    if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
-      {
-      $localParser->StartParsing();
-      }
-
-    if(!$parseHandle = fopen($filename, 'r'))
-      {
-      echo "ERROR: Cannot open file ($filename)";
-      add_log("Cannot open file ($filename)", "parse_xml_file",LOG_ERR);
-      return $handler;
-      }
+    $md5sum = md5_file($filename);
+    $md5error = false;
     
-    //burn the first 8192 since we have already parsed it
+    echo "<cdash version=\"$CDASH_VERSION\">\n";
+    if($expected_md5 == '' || $expected_md5 == $md5sum)
+      {
+      echo "  <status>OK</status>\n";
+      echo "  <message></message>\n";
+      }
+    else
+      {
+      echo "  <status>ERROR</status>\n";
+      echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
+      $md5error = true;
+      }
+    echo "  <md5>$md5sum</md5>\n";
+    echo "</cdash>\n";
+
+    if($md5error)
+      {
+      add_log("Checksum failure on file: $filename", "ctest_parse", LOG_ERR, $projectid);
+      return FALSE;
+      }
+    }
+
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+    {
+    $localParser->StartParsing();
+    }
+  if(!$parseHandle = fopen($filename, 'r'))
+    {
+    echo "ERROR: Cannot open file ($filename)";
+    add_log("Cannot open file ($filename)", "parse_xml_file",LOG_ERR);
+    return $handler;
+    }
+    
+  //burn the first 8192 since we have already parsed it
+  $content = fread($parseHandle, 8192);
+  while(!feof($parseHandle))
+    {
     $content = fread($parseHandle, 8192);
-    while(!feof($parseHandle))
-      {
-      $content = fread($parseHandle, 8192);
 
-      if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
-        {
-        $localParser->ParseFile();
-        }
-      xml_parse($parser,$content, false);
-      }
-    xml_parse($parser, null, true);
-    xml_parser_free($parser);
-    fclose($parseHandle);
-    
     if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
       {
-      $localParser->EndParsingFile();
+      $localParser->ParseFile();
       }
+    xml_parse($parser,$content, false);
     }
-
+  xml_parse($parser, null, true);
+  xml_parser_free($parser);
+  fclose($parseHandle);
+  
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
+    {
+    $localParser->EndParsingFile();
+    }
   return $handler;
 }
 ?>

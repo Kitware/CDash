@@ -22,10 +22,10 @@ include_once("cdash/common.php");
 include_once("cdash/createRSS.php");
 include("cdash/sendemail.php");
 
-function do_submit($filehandle, $projectid, $expected_md5='')
+function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
 {
   include('cdash/config.php');
-   
+
   // We find the daily updates
   // If we have php curl we do it asynchronously
   if(function_exists("curl_init") == TRUE)
@@ -76,7 +76,7 @@ function do_submit($filehandle, $projectid, $expected_md5='')
     }
 
   // Parse the XML file
-  $handler = ctest_parse($filehandle,$projectid, false, $expected_md5);
+  $handler = ctest_parse($filehandle,$projectid, $expected_md5, $do_checksum);
   //this is the md5 checksum fail case
   if($handler == FALSE)
     {
@@ -99,18 +99,55 @@ function do_submit($filehandle, $projectid, $expected_md5='')
 }
 
 /** Asynchronous submission */
-function do_submit_asynchronous($filehandle, $projectid, $expected_md5)
+function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 {
   include('cdash/config.php');
+  
+  $filename = $CDASH_BACKUP_DIRECTORY."/".$projectid."_";
+  for($i = 0; $i < 40; $i++)
+    {
+    $filename .= rand(0, 9);
+    }
+  $filename .= ".xml";
+  $outfile = fopen($filename, 'w');
 
   // Save the file in the backup directory
-  $filename = ctest_parse($filehandle, $projectid, true, $expected_md5);
-  fclose($filehandle);
-  
-  //this is the md5 checksum fail case
-  if($filename == FALSE)
+  while(!feof($filehandle))
     {
-    //no need to log an error since ctest_parse already did
+    $content = fread($filehandle, 8192);
+    if (fwrite($outfile, $content) === FALSE)
+      {
+      echo "ERROR: Cannot write to file ($filename)";
+      add_log("Cannot write to file ($filename)", "do_submit_asynchronous",LOG_ERR);
+      fclose($outfile);
+      fclose($filehandle);
+      return;
+      }
+    }
+  fclose($outfile);
+  fclose($filehandle);
+
+  $md5sum = md5_file($filename);
+  $md5error = false;
+  
+  echo "<cdash version=\"$CDASH_VERSION\">\n";
+  if($expected_md5 == '' || $expected_md5 == $md5sum)
+    {
+    echo "  <status>OK</status>\n";
+    echo "  <message></message>\n";
+    }
+  else
+    {
+    echo "  <status>ERROR</status>\n";
+    echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
+    $md5error = true;
+    }
+  echo "  <md5>$md5sum</md5>\n";
+  echo "</cdash>\n";
+
+  if($md5error)
+    {
+    add_log("Checksum failure on file: $filename", "do_submit_asynchronous", LOG_ERR, $projectid);
     return;
     }
 
