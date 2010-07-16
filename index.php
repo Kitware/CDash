@@ -855,7 +855,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $build_row['countconfigurewarningdiff'] = 0;
       } 
 
-      
+
     $build_row['hastest'] = 0;
     if($build_row['counttestsfailed']!=-1)
       {
@@ -964,13 +964,13 @@ function generate_main_dashboard_XML($projectid,$date)
 
         //  test
         $build_rows_collapsed[$idx]['hastest'] += $build_row['hastest'];
-        $build_rows_collapsed[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'];
+        $build_rows_collapsed[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'] > 0 ? $build_row['counttestsnotrun'] : 0;
         $build_rows_collapsed[$idx]['counttestsnotrundiffp'] += $build_row['counttestsnotrundiffp'];
         $build_rows_collapsed[$idx]['counttestsnotrundiffn'] += $build_row['counttestsnotrundiffn'];
-        $build_rows_collapsed[$idx]['counttestsfailed'] += $build_row['counttestsfailed'];
+        $build_rows_collapsed[$idx]['counttestsfailed'] += $build_row['counttestsfailed'] > 0 ? $build_row['counttestsfailed'] : 0;
         $build_rows_collapsed[$idx]['counttestsfaileddiffp'] += $build_row['counttestsfaileddiffp'];
         $build_rows_collapsed[$idx]['counttestsfaileddiffn'] += $build_row['counttestsfaileddiffn'];
-        $build_rows_collapsed[$idx]['counttestspassed'] += $build_row['counttestspassed'];
+        $build_rows_collapsed[$idx]['counttestspassed'] += $build_row['counttestspassed'] > 0 ? $build_row['counttestspassed'] : 0;
         $build_rows_collapsed[$idx]['counttestspasseddiffp'] += $build_row['counttestspasseddiffp'];
         $build_rows_collapsed[$idx]['counttestspasseddiffn'] += $build_row['counttestspasseddiffn'];
         $build_rows_collapsed[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'];
