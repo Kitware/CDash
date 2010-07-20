@@ -488,7 +488,7 @@ function backup_build($dirname,$file,$build_array)
       $coveragefile = pdo_query("SELECT * FROM coveragefile WHERE id='".$coverage_array['fileid']."'");
       $coveragefile_array = pdo_fetch_array($coveragefile);
       
-      $filename = $dirname."/coveragefile_".$coveragefile['id'];
+      $filename = $dirname."/coveragefile_".$coveragefile_array['id'];
       $file = fopen($filename,"wb");
       fwrite($file,$coveragefile['file']);
       fclose($file);

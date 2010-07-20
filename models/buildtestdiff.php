@@ -39,7 +39,7 @@ class BuildTestDiff
       return false;
       }
 
-    if(!$this->Type)
+    if(empty($this->Type))
       {
       echo "BuildTestDiff::Insert(): Type is not set<br>";
       return false;

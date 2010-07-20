@@ -8,6 +8,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/image.php');
 require_once('models/testimage.php');
 require_once('cdash/pdo.php');
+require_once('cdash/common.php');
 
 class ImageTestCase extends KWWebTestCase
 {

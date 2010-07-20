@@ -26,7 +26,7 @@ class BuildAPI extends CDashAPI
   private function ListDefects()
     {       
     include_once('../cdash/common.php');  
-    include_once("../cdash/config.php");
+    include("../cdash/config.php");
     
     if(!isset($this->Parameters['project']))  
       {
