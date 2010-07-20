@@ -50,9 +50,10 @@ function add_backup_value($file,$tag,$value)
 function backup_users($file)
 {
   fwrite($file,"<users>\n");
-  $query = pdo_query("SELECT * from user ORDER BY id");
+   
+  $query = pdo_query("SELECT * FROM ".qid('user')." ORDER BY id");
   while($user_array = pdo_fetch_array($query))
-    {
+    {    
     fwrite($file,"<user id=\"".$user_array['id']."\">\n");
     add_backup_value($file,"email",$user_array['email']);
     add_backup_value($file,"password",$user_array['password']);
@@ -62,14 +63,14 @@ function backup_users($file)
     add_backup_value($file,"admin",$user_array['admin']);
     
     // Add the sites
-    $site = pdo_query("SELECT siteid from site2user WHERE userid='".$user_array['id']."'");
+    $site = pdo_query("SELECT siteid FROM site2user WHERE userid='".$user_array['id']."'");
     while($site_array = pdo_fetch_array($site))
       {
       fwrite($file,"<site id=\"".$site_array['siteid']."\"/>\n");
       }
       
     // Add the projects
-    $project = pdo_query("SELECT * from user2project WHERE userid='".$user_array['id']."'");
+    $project = pdo_query("SELECT * FROM user2project WHERE userid='".$user_array['id']."'");
     while($project_array = pdo_fetch_array($project))
       {
       fwrite($file,"<project id=\"".$project_array['projectid']."\">\n");
@@ -276,7 +277,7 @@ function backup_build($dirname,$file,$build_array)
     {
     add_backup_value($file,"groupid",$build2group_array['groupid']);
     }
-  
+
   // Add the build note
   $buildnote = pdo_query("SELECT * from buildnote WHERE buildid='".$build_array['id']."'");
   while($buildnote_array = pdo_fetch_array($buildnote))
@@ -288,17 +289,17 @@ function backup_build($dirname,$file,$build_array)
     add_backup_value($file,"status",$buildnote_array['status']);
     fwrite($file,"  </buildnote>\n");
     }
-  
+    
   // Deal with the notes for the build
   $build2note = pdo_query("SELECT * from build2note WHERE buildid='".$build_array['id']."'");
   while($build2note_array = pdo_fetch_array($build2note))
     {
-    if(!in_array($build2note['noteid'],$noteid_array))
+    if(!in_array($build2note_array['noteid'],$noteid_array))
       {
-      $noteid_array[] = $build2note['noteid'];
-      fwrite($file,"  <note id=\"".$build2note['noteid']."\">\n");
-      add_backup_value($file,"time",$build2note['time']);
-      $note = pdo_query("SELECT * from note WHERE id='".$build2note['noteid']."'");
+      $noteid_array[] = $build2note_array['noteid'];
+      fwrite($file,"  <note id=\"".$build2note_array['noteid']."\">\n");
+      add_backup_value($file,"time",$build2note_array['time']);
+      $note = pdo_query("SELECT * from note WHERE id='".$build2note_array['noteid']."'");
       while($note_array = pdo_fetch_array($note))
         {
         add_backup_value($file,"text",$note_array['text']);
@@ -308,7 +309,9 @@ function backup_build($dirname,$file,$build_array)
       fwrite($file,"  </note>\n");
       }
     }
-  
+
+
+    
   // Updates
   $buildupdate = pdo_query("SELECT * from buildupdate WHERE buildid='".$build_array['id']."'");
   while($buildupdate_array = pdo_fetch_array($buildupdate))
@@ -336,7 +339,7 @@ function backup_build($dirname,$file,$build_array)
     
     fwrite($file,"</update>\n");
     }
-  
+
   // Configure
   $buildconfigure = pdo_query("SELECT * from configure WHERE buildid='".$build_array['id']."'");
   while($buildconfigure_array = pdo_fetch_array($buildconfigure))
@@ -382,7 +385,7 @@ function backup_build($dirname,$file,$build_array)
   $builderrordiff = pdo_query("SELECT * from builderrordiff WHERE buildid='".$build_array['id']."'");
   while($builderrordiff_array = pdo_fetch_array($builderrordiff))
     {
-    fwrite($file,"<builderrordiff type=\"".$builderrordiff_array['type']."\">".$builderrordiff_array['difference']."</builderrordiff>\n");
+    fwrite($file,"<builderrordiff type=\"".$builderrordiff_array['type']."\">".$builderrordiff_array['difference_positive']."</builderrordiff>\n");
     }
   
   // Tests
@@ -402,14 +405,14 @@ function backup_build($dirname,$file,$build_array)
       $testid_array[] = $build2test_array['testid'];
       fwrite($file,"  <test id=\"".$build2test_array['testid']."\">\n");
       
-      $test = pdo_query("SELECT * from test WHERE id='".$build2test_array['testid']."'");
+      $test = pdo_query("SELECT * FROM test WHERE id='".$build2test_array['testid']."'");
       $test_array = pdo_fetch_array($test);
       add_backup_value($file,"crc32",$test_array['crc32']);
       add_backup_value($file,"name",$test_array['name']);
       add_backup_value($file,"path",$test_array['path']);
       add_backup_value($file,"command",$test_array['command']);
       add_backup_value($file,"details",htmlentities($test_array['details']));
-      add_backup_value($file,"output",htmlentities($test_array['output']));
+      //add_backup_value($file,"output",htmlentities($test_array['output']));
       
       // Add test images
       $test2image = pdo_query("SELECT * from test2image WHERE testid='".$build2test_array['testid']."'");
@@ -438,7 +441,7 @@ function backup_build($dirname,$file,$build_array)
   $testdiff = pdo_query("SELECT * from testdiff WHERE buildid='".$build_array['id']."'");
   while($testdiff_array = pdo_fetch_array($testdiff))
     {
-    fwrite($file,"<testdiff type=\"".$testdiff_array['type']."\">".$testdiff_array['difference']."</testdiff>\n");
+    fwrite($file,"<testdiff type=\"".$testdiff_array['type']."\">".$testdiff_array['difference_positive']."</testdiff>\n");
     }
  
   // Add coverage summary
@@ -594,15 +597,16 @@ if(isset($submit))
   fwrite($h,'<?xml version="1.0" encoding="utf-8"?>');
   fwrite($h,'<cdash>');
   
+  
   // Write these always
   backup_projects($h);
   backup_sites($h);
   backup_images(dirname($filename),$h);
   backup_users($h);
-  
+
   $starttime =  gmdate(FMT_DATETIME,mktime(0,0,0,$monthFrom,$dayFrom,$yearFrom));
   $endtime = gmdate(FMT_DATETIME,mktime(0,0,0,$monthTo,$dayTo,$yearTo));
-  
+    
   // Write the builds
   fwrite($h,"<builds>\n");
   
@@ -610,7 +614,7 @@ if(isset($submit))
   
   $build = pdo_query("SELECT * from build WHERE starttime>'$starttime' AND starttime<'$endtime' ORDER BY id");
   while($build_array = pdo_fetch_array($build))
-    {
+    {    
     if($currenttime == 0)
       {
       $currenttime = strtotime($build_array['starttime']);
