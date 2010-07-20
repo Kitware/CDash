@@ -46,7 +46,7 @@ class APITestCase extends KWWebTestCase
       }
     
     $checkinsdefects = $this->get($this->url."/api/?method=build&task=checkinsdefects&project=EmailProjectExample");
-    if(strpos($checkinsdefects, '"testfailed":"3"') === false)
+    if(strpos($checkinsdefects, '"testfailed":"3"') === false && strpos($checkinsdefects, '"testfailed":3') === false)
       {
       $this->fail("Expected output not found when querying API for checkinsdefects.");
       return 1;

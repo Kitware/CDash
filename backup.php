@@ -490,7 +490,7 @@ function backup_build($dirname,$file,$build_array)
       
       $filename = $dirname."/coveragefile_".$coveragefile_array['id'];
       $file = fopen($filename,"wb");
-      fwrite($file,$coveragefile['file']);
+      fwrite($file,$coveragefile_array['file']);
       fclose($file);
       
       add_backup_value($file,"filename",$filename);
