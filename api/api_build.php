@@ -188,16 +188,27 @@ class BuildAPI extends CDashAPI
     
     $date = date("Y-m-d");
     list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]); 
-
-
+    $currentUTCTime =  gmdate(FMT_DATETIME,$currentstarttime);
+    
     // Get all the unique builds for the section of the dashboard
-    $query = pdo_query("SELECT max(b.id) AS buildid,CONCAT(s.name,'-',b.name) AS fullname,s.name AS sitename,b.name,
+    if($CDASH_DB_TYPE == "pgsql") 
+      {
+      $query = pdo_query("SELECT max(b.id) AS buildid,s.name || '-' || b.name AS fullname,s.name AS sitename,b.name,
                si.totalphysicalmemory,si.processorclockfrequency
                FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg, build2group AS b2g
                WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id 
                AND bg.name='".$group."' AND b.testfailed>0 AND b2g.buildid=b.id AND b2g.groupid=bg.id
-               AND b.starttime>$currentstarttime AND b.starttime<NOW() GROUP BY fullname ORDER BY buildid");
-
+               AND b.starttime>'$currentUTCTime' AND b.starttime<NOW() GROUP BY fullname ORDER BY buildid"); 
+      }
+    else
+      {  
+      $query = pdo_query("SELECT max(b.id) AS buildid,CONCAT(s.name,'-',b.name) AS fullname,s.name AS sitename,b.name,
+               si.totalphysicalmemory,si.processorclockfrequency
+               FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg, build2group AS b2g
+               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id 
+               AND bg.name='".$group."' AND b.testfailed>0 AND b2g.buildid=b.id AND b2g.groupid=bg.id
+               AND b.starttime>'$currentUTCTime' AND b.starttime<NOW() GROUP BY fullname ORDER BY buildid");
+      }
     $sites = array();
     $buildids = '';
     while($query_array = pdo_fetch_array($query))
