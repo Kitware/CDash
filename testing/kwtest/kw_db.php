@@ -337,8 +337,8 @@ class dbo_pgsql extends dbo
        $linnum++;
        } // end for each line
      $pwd = md5('simpletest');
-     $query = "INSERT INTO \"user\" (id, email, password, firstname, lastname, institution, admin) ";
-     $query .= "VALUES (nextval('user_id_seq'::regclass), 'simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
+     $query = "INSERT INTO \"user\" (email, password, firstname, lastname, institution, admin) ";
+     $query .= "VALUES ('simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
      pg_query($this->dbconnect,$query);
      echo pg_last_error();
      
