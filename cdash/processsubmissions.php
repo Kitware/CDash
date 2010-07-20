@@ -36,7 +36,7 @@ if(!$query)
   return;
   } 
 $query_array = pdo_fetch_array($query);
-if($query['c'] > 0) // if we do we quit
+if($query_array['c'] > 0) // if we do we quit
   {
   return;
   }

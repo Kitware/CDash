@@ -39,6 +39,7 @@ class BuildTestDiffTestCase extends KWWebTestCase
     $buildtestdiff = new BuildTestDiff();
 
     $buildtestdiff->BuildId = 0;
+    $buildtestdiff->Type = 0;
     ob_start();
     $result = $buildtestdiff->Insert();
     $output = ob_get_contents();

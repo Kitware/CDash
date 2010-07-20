@@ -65,7 +65,7 @@ class EmailTestCase extends KWWebTestCase
     $this->setField('passwd','user1');
     $this->setField('passwd2','user1');
     $this->setField('institution','Kitware Inc');
-    $this->clickSubmitByName('sent');
+    $this->clickSubmitByName('sent',array('url' => 'catchbot'));
     $this->assertText('Registration Complete. Please login with your email and password.');
     
     // Login as the user and subscribe to the project

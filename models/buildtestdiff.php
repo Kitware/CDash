@@ -38,6 +38,12 @@ class BuildTestDiff
       echo "BuildTestDiff::Insert(): BuildId is not set<br>";
       return false;
       }
+
+    if(!$this->Type)
+      {
+      echo "BuildTestDiff::Insert(): Type is not set<br>";
+      return false;
+      }
       
     $query = "INSERT INTO testdiff (buildid,type,difference_positive) VALUES ('$this->BuildId','$this->Type','$this->Difference')";                     
     if(!pdo_query($query))

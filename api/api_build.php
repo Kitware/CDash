@@ -24,8 +24,10 @@ class BuildAPI extends CDashAPI
   
   /** Return the defects: builderrors, buildwarnings, testnotrun, testfailed. */
   private function ListDefects()
-    { 
+    {       
     include_once('../cdash/common.php');  
+    include_once("../cdash/config.php");
+    
     if(!isset($this->Parameters['project']))  
       {
       echo "Project not set";
@@ -41,6 +43,7 @@ class BuildAPI extends CDashAPI
 
     $builds = array();
     
+
     if($CDASH_DB_TYPE == "pgsql") 
       {
       $query = pdo_query("SELECT EXTRACT(YEAR FROM starttime) AS y ,

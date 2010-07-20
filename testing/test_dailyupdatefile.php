@@ -78,7 +78,7 @@ class DailyUpdateFileTestCase extends KWWebTestCase
 
     //cover the various SetValue options
     $dailyupdatefile->SetValue("FILENAME", "dailyupdatefile.log");
-    $dailyupdatefile->SetValue("CHECKINDATE", strtotime("two hours ago"));
+    $dailyupdatefile->SetValue("CHECKINDATE", date("Y-m-d H:i:s",strtotime("two hours ago")));
     $dailyupdatefile->SetValue("AUTHOR", "CDash Tester");
     $dailyupdatefile->SetValue("LOG", "example daily update log");
     $dailyupdatefile->SetValue("REVISION", "2");
