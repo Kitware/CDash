@@ -19,14 +19,16 @@
 class BuildTestDiff
 {
   var $Type;
-  var $Difference;
+  var $DifferenceNegative;
+  var $DifferencePositive;
   var $BuildId;
   
   function SetValue($tag,$value)  
     {
     switch($tag)
       {
-      case "TESTDIFF": $this->Difference = $value;break;
+      case "TESTDIFFPOSITIVE": $this->DifferencePositive = $value;break;
+      case "TESTDIFFNEGATIVE": $this->DifferenceNegative = $value;break;
       }
     }
     
@@ -45,7 +47,8 @@ class BuildTestDiff
       return false;
       }
       
-    $query = "INSERT INTO testdiff (buildid,type,difference_positive) VALUES ('$this->BuildId','$this->Type','$this->Difference')";                     
+    $query = "INSERT INTO testdiff (buildid,type,difference_negative,difference_positive) 
+              VALUES ('$this->BuildId','$this->Type','$this->DifferenceNegative','$this->DifferencePositive')";                     
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildTestDiff Insert",0,$this->BuildId);
