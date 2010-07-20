@@ -162,7 +162,10 @@ class BuildAPI extends CDashAPI
    *  array2: array1_id, test_fullname */
   private function ListSiteTestFailure()
     { 
+    include("../cdash/config.php");  
     include_once('../cdash/common.php');  
+    
+    
     if(!isset($this->Parameters['project']))  
       {
       echo "Project not set";
@@ -189,6 +192,7 @@ class BuildAPI extends CDashAPI
     $date = date("Y-m-d");
     list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]); 
     $currentUTCTime =  gmdate(FMT_DATETIME,$currentstarttime);
+    
     
     // Get all the unique builds for the section of the dashboard
     if($CDASH_DB_TYPE == "pgsql") 
