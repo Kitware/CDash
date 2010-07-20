@@ -40,13 +40,30 @@ class BuildAPI extends CDashAPI
       }
 
     $builds = array();
-    $query = pdo_query("SELECT YEAR(starttime) AS y ,MONTH(starttime) AS m,DAY(starttime) AS d,
-                AVG(builderrors) AS builderrors,AVG(buildwarnings) AS buildwarnings,
-                AVG(testnotrun) AS testnotrun,AVG(testfailed) AS testfailed
-                FROM build WHERE projectid=".$projectid." 
-                AND starttime<NOW()
-                GROUP BY YEAR(starttime),MONTH(starttime),DAY(starttime) 
-                ORDER BY YEAR(starttime),MONTH(starttime),DAY(starttime) ASC LIMIT 1000"); // limit the request
+    
+    if($CDASH_DB_TYPE == "pgsql") 
+      {
+      $query = pdo_query("SELECT EXTRACT(YEAR FROM starttime) AS y ,
+                              EXTRACT(MONTH FROM starttime) AS m,
+                              EXTRACT(DAY FROM starttime) AS d,
+                  AVG(builderrors) AS builderrors,AVG(buildwarnings) AS buildwarnings,
+                  AVG(testnotrun) AS testnotrun,AVG(testfailed) AS testfailed
+                  FROM build WHERE projectid=".$projectid." 
+                  AND starttime<NOW()
+                  GROUP BY y,m,d 
+                  ORDER BY y,m,d ASC LIMIT 1000"); // limit the request  
+      }
+    else 
+      { 
+      $query = pdo_query("SELECT YEAR(starttime) AS y ,MONTH(starttime) AS m,DAY(starttime) AS d,
+                  AVG(builderrors) AS builderrors,AVG(buildwarnings) AS buildwarnings,
+                  AVG(testnotrun) AS testnotrun,AVG(testfailed) AS testfailed
+                  FROM build WHERE projectid=".$projectid." 
+                  AND starttime<NOW()
+                  GROUP BY YEAR(starttime),MONTH(starttime),DAY(starttime) 
+                  ORDER BY YEAR(starttime),MONTH(starttime),DAY(starttime) ASC LIMIT 1000"); // limit the request
+      }
+      
     echo pdo_error();
      
     while($query_array = pdo_fetch_array($query))
