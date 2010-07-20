@@ -46,6 +46,12 @@ $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Banner</menusubtitle>";
   
 @$projectid = $_GET["projectid"];
+
+if(empty($projectid))
+  {
+  $projectid = 0;  
+  }
+
 $Project = new Project;
      
 // If the projectid is not set and there is only one project we go directly to the page
