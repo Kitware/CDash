@@ -48,7 +48,7 @@ class UserAPI extends CDashAPI
             WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
             AND bed.buildid=b.id AND bed.difference_positive>0 AND bed.difference_negative!=bed.difference_positive
             AND b.starttime<NOW()
-            GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
+            GROUP BY b.id HAVING COUNT(DISTINCT u.author)=1) AS q GROUP BY author");
      echo pdo_error();
      
      while($query_array = pdo_fetch_array($query))
@@ -65,7 +65,7 @@ class UserAPI extends CDashAPI
             WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
             AND bed.buildid=b.id AND bed.difference_negative>0 AND bed.difference_positive<bed.difference_negative
             AND b.starttime<NOW()
-            GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
+            GROUP BY b.id HAVING COUNT(DISTINCT u.author)=1) AS q GROUP BY author");
      echo pdo_error();
      
      while($query_array = pdo_fetch_array($query))
@@ -81,7 +81,7 @@ class UserAPI extends CDashAPI
               WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
               AND td.buildid=b.id AND td.difference_positive>0 AND td.type=1
               AND b.starttime<NOW()
-              GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
+              GROUP BY b.id HAVING COUNT(DISTINCT u.author)=1) AS q GROUP BY author");
      echo pdo_error();
      while($query_array = pdo_fetch_array($query))
        {
@@ -96,7 +96,7 @@ class UserAPI extends CDashAPI
               WHERE b.projectid=".$projectid." AND u.buildid=b.id AND b2g.buildid=b.id AND b2g.groupid=bg.id AND bg.name!='Experimental'
               AND td.buildid=b.id AND td.difference_positive>0 AND td.type=2 AND td.difference_negative=0
               AND b.starttime<NOW()
-              GROUP BY b.id HAVING dauthor=1) AS q GROUP BY author");
+              GROUP BY b.id HAVING COUNT(DISTINCT u.author)=1) AS q GROUP BY author");
      echo pdo_error();
      while($query_array = pdo_fetch_array($query))
        {
