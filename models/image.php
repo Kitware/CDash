@@ -85,6 +85,7 @@ class Image
   /** Save the image */
   function Save()
     {
+    include("cdash/config.php");  
     // Get the data from the file if necessary
     $this->GetData();
       
