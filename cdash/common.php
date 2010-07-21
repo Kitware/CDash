@@ -568,11 +568,11 @@ function get_server_URI()
   include("cdash/config.php");
   $currentPort="";
   $httpprefix="http://";
-  if($_SERVER['SERVER_PORT']!=80)
+  if($_SERVER['SERVER_PORT']!=80 && $_SERVER['SERVER_PORT']!=443)
     {
     $currentPort=":".$_SERVER['SERVER_PORT'];
     }
-  if($CDASH_USE_HTTPS === true)
+  if($_SERVER['SERVER_PORT']==443 || $CDASH_USE_HTTPS === true)
     {
     $httpprefix = "https://";
     }

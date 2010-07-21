@@ -296,7 +296,13 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
 function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testtimemaxstatus,$emailtesttimingchanged)
 {
   $serverURI = get_server_URI();
-  
+  // In the case of asynchronous submission, the serverURI contains /cdash
+  // we need to remove it
+  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+    {
+    $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));  
+    }
+    
   $information = "";
   
   // Update information
@@ -623,6 +629,15 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     } 
   
     
+    
+  // In the case of asynchronous submission, the serverURI contains /cdash
+  // we need to remove it
+  $currentURI = get_server_URI();
+  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+    {
+    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));  
+    }  
+    
   // Select the users who want to receive all emails
   $user = pdo_query("SELECT ".qid("user").".email,user2project.emailtype,".qid("user").".id  FROM ".qid("user").",user2project 
                      WHERE user2project.projectid=".qnum($projectid)." 
@@ -660,8 +675,6 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     $messagePlainText = "The \"".$summaryemail_array["name"]."\" group has either errors, warnings or test failures.\n";
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
     $messagePlainText .= "or you are listed in the default contact list.\n\n";  
-     
-    $currentURI = get_server_URI();
     
     $messagePlainText .= "To see this dashboard:\n";  
     $messagePlainText .= $currentURI;
@@ -781,7 +794,13 @@ function send_email_fix_to_user($userid,$emailtext,$Build,$Project)
   require_once("models/user.php");
 
   $serverURI = get_server_URI();
-  
+  // In the case of asynchronous submission, the serverURI contains /cdash
+  // we need to remove it
+  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+    {
+    $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));  
+    }
+   
   $messagePlainText = "Congratulations, a submission to CDash for the project ".$Project->Name." has ";
   $titleerrors = "(";
     
@@ -899,7 +918,13 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   require_once("models/user.php");
 
   $serverURI = get_server_URI();
-  
+  // In the case of asynchronous submission, the serverURI contains /cdash
+  // we need to remove it
+  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+    {
+    $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));  
+    }
+    
   $messagePlainText = "A submission to CDash for the project ".$Project->Name." has ";
   $titleerrors = "(";
 
