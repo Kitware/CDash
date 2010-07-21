@@ -98,8 +98,14 @@ class Image
         $idvalue = "'".$this->Id."',";
         }
 
+      $contents = $this->Data;
+      if($CDASH_DB_TYPE == "pgsql")
+        {
+        $contents = pg_escape_bytea($this->Data);
+        }
+        
       if(pdo_query("INSERT INTO image (".$id."img,extension,checksum)
-                     VALUES (".$idvalue."'".$this->Data."','".$this->Extension."','".$this->Checksum."')"))
+                     VALUES (".$idvalue."'".$contents."','".$this->Extension."','".$this->Checksum."')"))
          {
          $this->Id = pdo_insert_id("image");
          }
