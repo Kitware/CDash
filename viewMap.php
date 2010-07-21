@@ -98,7 +98,7 @@ if($CDASH_DB_TYPE == "pgsql")
                      WHERE s.id=b.siteid 
                      AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                      AND si.siteid=s.id
-                     AND b.projectid='$projectid' GROUP BY GROUP BY s.id,s.name,si.processorclockfrequency,
+                     AND b.projectid='$projectid' GROUP BY s.id,s.name,si.processorclockfrequency,
                      si.description,
                      si.numberphysicalcpus,s.ip,s.latitude,s.longitude,".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id");
    }
@@ -114,7 +114,7 @@ else
                      WHERE s.id=b.siteid 
                      AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                      AND si.siteid=s.id
-                     AND b.projectid='$projectid' GROUP BY b.siteid");
+                     AND b.projectid='$projectid' GROUP BY s.id");
   }  
    
 echo pdo_error();
