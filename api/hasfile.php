@@ -35,7 +35,7 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 foreach($md5sums as $md5sum)
   {
   if($md5sum == '') continue;
-  $md5sum = mysql_real_escape_string($md5sum);
+  $md5sum = pdo_real_escape_string($md5sum);
   $result = pdo_query("SELECT id FROM filesum WHERE md5sum='$md5sum'");
   //we don't have this file, add it to the list to send
   if(pdo_num_rows($result) == 0)
