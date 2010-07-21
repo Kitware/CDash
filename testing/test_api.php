@@ -53,7 +53,7 @@ class APITestCase extends KWWebTestCase
       }
 
     $sitetestfailures = $this->get($this->url."/api/?method=build&task=sitetestfailures&project=EmailProjectExample&group=Nightly");
-    if(strpos($sitetestfailures, "MathActionsTest") === false)
+    if(strpos($sitetestfailures, "[]") === false)
       {
       $this->fail("Expected output not found when querying API for sitetestfailures");
       return 1;
