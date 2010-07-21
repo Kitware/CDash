@@ -85,8 +85,26 @@ if($end_timestamp<$beginning_timestamp)
   
 $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);            
-  
-$site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
+
+if($CDASH_DB_TYPE == "pgsql") 
+   {
+   $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
+                     si.description,
+                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude, 
+                     ".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id AS userid
+                     FROM build AS b, siteinformation AS si, site as s
+                     LEFT JOIN site2user ON (site2user.siteid=s.id)
+                     LEFT JOIN ".qid('user')." ON (site2user.userid=".qid('user').".id)
+                     WHERE s.id=b.siteid 
+                     AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
+                     AND si.siteid=s.id
+                     AND b.projectid='$projectid' GROUP BY GROUP BY s.id,s.name,si.processorclockfrequency,
+                     si.description,
+                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude,".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id");
+   }
+else
+  {
+  $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
                      si.description,
                      si.numberphysicalcpus,s.ip,s.latitude,s.longitude, 
                      ".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id AS userid
@@ -97,7 +115,8 @@ $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
                      AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                      AND si.siteid=s.id
                      AND b.projectid='$projectid' GROUP BY b.siteid");
-
+  }  
+   
 echo pdo_error();
 
 while($site_array = pdo_fetch_array($site))
