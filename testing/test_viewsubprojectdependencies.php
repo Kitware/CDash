@@ -25,7 +25,7 @@ class ViewSubprojectDependenciesTestCase extends KWWebTestCase
   function testViewSubprojectDependencies()
     {
     $this->login();
-    $this->get($this->url."/viewSubprojectDependencies.php?project=SubprojectExample");
+    $this->get($this->url."/viewSubprojectDependencies.php?project=SubProjectExample");
     if(strpos($this->getBrowser()->getContentAsText(), "Komplex") === false)
       {
       $this->fail("'Komplex' not found when expected");
