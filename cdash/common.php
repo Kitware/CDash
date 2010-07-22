@@ -2211,15 +2211,63 @@ function get_loggerhead_diff_url($projecturl, $directory, $file, $revision)
 /** Return the GitWeb diff URL */
 function get_gitweb_diff_url($projecturl, $directory, $file, $revision)
 {
-  $diff_url = $projecturl . ";a=commitdiff;h=" . $revision;
+  if($revision != '')
+    {
+    $diff_url = $projecturl . ";a=commitdiff;h=" . $revision;
+    }
+  else if ($file != '')
+    {
+    $diff_url = $projecturl . ";a=blob;f=";
+    if ($directory != '')
+      {
+      $diff_url .= $directory . "/";
+      }
+    $diff_url .= $file;
+    }
+  else
+    {
+    return '';
+    }
+
   return make_cdash_url($diff_url);
 }
 
 /** Return the Gitorious/GitHub diff URL */
+function get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, $blobs, $branch='master')
+{
+  if ($revision != '')
+    {
+    $diff_url = $projecturl . "/commit/" . $revision;
+    }
+  else if ($file != '')
+    {
+    $diff_url = $projecturl . "/" . $blobs . "/" . $branch . "/";
+    if ($directory != '')
+      {
+      $diff_url .= $directory . "/";
+      }
+    $diff_url .= $file;
+    }
+  else
+    {
+    return '';
+    }
+
+  return make_cdash_url($diff_url);
+}
+
+/** Return the Gitorious diff URL */
 function get_gitorious_diff_url($projecturl, $directory, $file, $revision)
 {
-  $diff_url = $projecturl . "/commit/" . $revision;
-  return make_cdash_url($diff_url);
+  // Gitorious uses 'blobs' or 'trees' (plural)
+  return get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, 'blobs');
+}
+
+/** Return the GitHub diff URL */
+function get_github_diff_url($projecturl, $directory, $file, $revision)
+{
+  // GitHub uses 'blob' or 'tree' (singular, no s)
+  return get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, 'blob');
 }
 
 /** Return the cgit diff URL */
@@ -2283,8 +2331,7 @@ function get_diff_url($projectid, $projecturl, $directory, $file, $revision='')
     }
   elseif($project_array["cvsviewertype"] == "github")
     {
-    // GitHub uses same URL structure as Gitorious, so:
-    return get_gitorious_diff_url($projecturl, $directory, $file, $revision);
+    return get_github_diff_url($projecturl, $directory, $file, $revision);
     }
   elseif($project_array["cvsviewertype"] == "cgit")
     {
@@ -2371,6 +2418,12 @@ function get_gitorious_revision_url($projecturl, $revision, $priorrevision)
   return make_cdash_url($revision_url);
 }
 
+/** Return the GitHub revision URL */
+function get_github_revision_url($projecturl, $revision, $priorrevision)
+{
+  return get_gitorious_revision_url($projecturl, $revision, $priorrevision);
+}
+
 /** Return the cgit revision URL */
 function get_cgit_revision_url($projecturl, $revision)
 {
@@ -2427,8 +2480,7 @@ function get_revision_url($projectid, $revision, $priorrevision)
     }
   elseif($project_array["cvsviewertype"] == "github")
     {
-    // GitHub uses same URL structure as Gitorious, so:
-    return get_gitorious_revision_url($projecturl,$revision,$priorrevision);
+    return get_github_revision_url($projecturl,$revision,$priorrevision);
     }
   elseif($project_array["cvsviewertype"] == "cgit")
     {
