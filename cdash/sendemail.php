@@ -295,6 +295,8 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
 /** Return a summary for a category of error */
 function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testtimemaxstatus,$emailtesttimingchanged)
 {
+  include("config.php");
+  
   $serverURI = get_server_URI();
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
