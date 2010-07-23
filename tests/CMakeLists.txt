@@ -1,4 +1,4 @@
-set(testing_dir "${CDash_SOURCE_DIR}/testing")
+set(testing_dir "${CDash_SOURCE_DIR}/tests")
 
 # function to add a new PHP based coverage test to CDash
 #

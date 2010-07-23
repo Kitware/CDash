@@ -1,6 +1,6 @@
 set(EXPECTED_PASSED 40)
-set(OUTFILE "@CDash_BINARY_DIR@/testing/ctest/alltests.out")
-file(DOWNLOAD "@CDASH_TESTING_URL@/testing/alltests.php"
+set(OUTFILE "@CDash_BINARY_DIR@/tests/ctest/alltests.out")
+file(DOWNLOAD "@CDASH_TESTING_URL@/tests/alltests.php"
   "@CDash_BINARY_DIR@/TestData/alltests.out")
 file(READ "@CDash_BINARY_DIR@/TestData/alltests.out" OUTDATA)
 string(REGEX REPLACE ".*strong>([0-9]+).*strong.*passes.*" "\\1"

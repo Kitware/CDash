@@ -2,9 +2,9 @@
 #
 function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
   set(DriverScript 
-    "${CDash_BINARY_DIR}/testing/ctest/ctestdriver-${TestName}.ctest")
+    "${CDash_BINARY_DIR}/tests/ctest/ctestdriver-${TestName}.ctest")
   configure_file(
-    "${CDash_SOURCE_DIR}/testing/ctest/ctestdriver.ctest.in"
+    "${CDash_SOURCE_DIR}/tests/ctest/ctestdriver.ctest.in"
     "${DriverScript}"
     @ONLY
     )
@@ -20,9 +20,9 @@ endfunction(add_ctest_test)
 #
 function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
   set(DriverScript
-    "${CDash_BINARY_DIR}/testing/ctest/coveragedriver-${TestName}.ctest")
+    "${CDash_BINARY_DIR}/tests/ctest/coveragedriver-${TestName}.ctest")
   configure_file(
-    "${CDash_SOURCE_DIR}/testing/ctest/coveragedriver.ctest.in"
+    "${CDash_SOURCE_DIR}/tests/ctest/coveragedriver.ctest.in"
     "${DriverScript}"
     @ONLY
     )

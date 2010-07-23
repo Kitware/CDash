@@ -32,7 +32,7 @@ if(NOT DEFINED CDASH_BUILD_NAME)
 endif()
 
 # turn the CDash into one that can be tested
-file(WRITE "${CDash_SOURCE_DIR}/testing/config.test.local.php"
+file(WRITE "${CDash_SOURCE_DIR}/tests/config.test.local.php"
 "<?php
 $configure = array(
   'urlwebsite'       => '${CDASH_TESTING_URL}',
@@ -79,5 +79,5 @@ $CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}';
 ?>
 ")
 
-# add the testing directory
-add_subdirectory(testing)
+# add the tests directory
+add_subdirectory(tests)

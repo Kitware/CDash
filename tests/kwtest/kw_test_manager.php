@@ -169,7 +169,7 @@ class TestManager
       if($dbcreated)
         {
         $dirname = str_replace('\\','/',dirname(__FILE__));
-        $sqlfile = str_replace("/testing/kwtest","", $dirname)."/sql/".$dbtype."/cdash.sql";
+        $sqlfile = str_replace("/tests/kwtest","", $dirname)."/sql/".$dbtype."/cdash.sql";
         $database->fillDb($sqlfile);
         }
       return true;
