@@ -26,13 +26,11 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=InsightExample");
     $this->waitForPageToLoad("30000");
-    sleep(1);
-    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[4]/img");
-    sleep(1);
+    $this->setSpeed("1000");
+    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[3]/img");
     $this->click("link=[mark as expected]");
     $this->waitForPageToLoad("30000");
-    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[4]/img");
-    sleep(1);
+    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[3]/img");
     $this->click("link=[mark as non expected]");
     $this->waitForPageToLoad("30000");
     $this->click("link=Log Out");

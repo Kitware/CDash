@@ -1,8 +1,7 @@
 if(NOT BROWSER)
+  set(BROWSER firefox PARENT_SCOPE)
   set(BROWSER firefox)
 endif()
-
-message(STATUS "browser: ${BROWSER}")
 
 # function to add a new Selenium based coverage test to CDash
 #
