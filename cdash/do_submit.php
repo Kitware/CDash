@@ -183,7 +183,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
       $prefix =  "https://";
       }
     
-    $currentURI =  $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
+    $currentURI = $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid;
 
