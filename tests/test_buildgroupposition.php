@@ -45,9 +45,9 @@ class BuildGroupPositionTestCase extends KWWebTestCase
       }
 
     $buildgroupposition->GroupId = 1;
-    $buildgroupposition->SetValue("POSITION", 1);
-    $buildgroupposition->SetValue("STARTTIME", date("Y-m-d H:i:s", time() - 1));
-    $buildgroupposition->SetValue("ENDTIME", date("Y-m-d H:i:s"));
+    $buildgroupposition->Position = 1;
+    $buildgroupposition->StartTime = date("Y-m-d H:i:s", time() - 1);
+    $buildgroupposition->EndTime = date("Y-m-d H:i:s");
 
     //call save twice to cover different execution paths
     if(!$buildgroupposition->Add())

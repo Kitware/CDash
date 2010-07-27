@@ -389,28 +389,6 @@ class Build
     return false;
     }
 
-
-  /**  Set the value */
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "SITEID": $this->SiteId = $value;break;
-      case "PROJECTID": $this->ProjectId = $value;break;
-      case "STAMP": $this->Stamp = $value;break;
-      case "NAME": $this->Name = $value;break;
-      case "TYPE": $this->Type = $value;break;
-      case "GENERATOR": $this->Generator = $value;break;
-      case "STARTTIME": $this->StartTime = $value;break;
-      case "ENDTIME": $this->EndTime = $value;break;
-      case "SUBMITTIME": $this->SubmitTime = $value;break;
-      case "COMMAND": $this->Command = $value;break;
-      case "LOG": $this->Log = $value;break;
-      case "GROUPID": $this->GroupId = $value;break;
-      case "SUBPROJECTID": $this->SubProjectId = $value;break;
-      }
-    }
-
   /** Get the build id from it's name */
   function GetIdFromName($subproject)
     {

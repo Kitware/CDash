@@ -57,8 +57,6 @@ class BuildTestDiffTestCase extends KWWebTestCase
 
     $buildtestdiff->BuildId = 1;
     $buildtestdiff->Type = 0;
-    $buildtestdiff->SetValue("TESTDIFFPOSITIVE", 1);
-    $buildtestdiff->SetValue("TESTDIFFNEGATIVE", 1);
 
     //call save twice to cover different execution paths
     if(!$buildtestdiff->Insert())

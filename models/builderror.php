@@ -27,22 +27,7 @@ class BuildError
   var $PostContext;
   var $RepeatCount;
   var $BuildId;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "TYPE": $this->Type = $value;break;
-      case "LOGLINE": $this->LogLine = $value;break;
-      case "TEXT": $this->Text = $value;break;
-      case "SOURCEFILE": $this->SourceFile = $value;break;
-      case "SOURCELINE": $this->SourceLine = $value;break;
-      case "PRECONTEXT": $this->PreContext = $value;break;
-      case "POSTCONTEXT": $this->PostContext = $value;break;
-      case "REPEATCOUNT": $this->RepeatCount = $value;break;
-      }
-    }
-      
+
   // Insert in the database (no update possible)
   function Insert()
     {

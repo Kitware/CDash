@@ -40,22 +40,7 @@ class BuildUpdate
     {
     $this->Files[] = $file;
     }
-    
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "STARTTIME": $this->StartTime = $value;break;
-      case "ENDTIME": $this->EndTime = $value;break;
-      case "COMMAND": $this->Command = $value;break;
-      case "TYPE": $this->Type = $value;break;
-      case "STATUS": $this->Status = $value;break;
-      case "REVISION": $this->Revision = $value;break;
-      case "PRIORREVISION": $this->PriorRevision = $value;break;
-      case "PATH": $this->Path = $value;break;
-      }
-    } 
-    
+ 
   // Insert the update
   function Insert()
     {

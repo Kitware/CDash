@@ -24,17 +24,6 @@ class BuildUserNote
   var $Status;
   var $BuildId;
 
-  function SetValue($tag,$value)
-    {
-    switch($tag)
-      {
-      case "USERID": $this->UserId = $value;break;
-      case "NOTE": $this->Note = $value;break;
-      case "TIMESTAMP": $this->TimeStamp = $value;break;
-      case "STATUS": $this->Status = $value;break;
-      }
-    } 
-
   // Insert in the database
   function Insert()
     {

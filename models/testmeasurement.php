@@ -23,17 +23,7 @@ class TestMeasurement
   var $Name;
   var $Type;
   var $Value;
-  var $TestId;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "NAME": $this->Name = $value;break;
-      case "TYPE": $this->Type = $value;break;
-      case "VALUE": $this->Value = $value;break;
-      }
-    }  
+  var $TestId;  
   
   /** Return if exists */
   function Exists()

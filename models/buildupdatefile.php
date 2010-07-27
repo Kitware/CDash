@@ -27,21 +27,7 @@ class BuildUpdateFile
   var $PriorRevision;
   var $Status; //MODIFIED | CONFLICTING | UPDATED
   var $BuildId;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "FILENAME": $this->Filename = $value;break;
-      case "CHECKINDATE": $this->CheckinDate = $value;break;
-      case "AUTHOR": $this->Author = $value;break;
-      case "EMAIL": $this->Email = $value;break;
-      case "LOG": $this->Log = $value;break;
-      case "REVISION": $this->Revision = $value;break;
-      case "PRIORREVISION": $this->PriorRevision = $value;break;    
-      }
-    } 
-    
+
   // Insert the update
   function Insert()
     {

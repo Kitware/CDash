@@ -59,19 +59,6 @@ class BuildGroup
       return $query_array['position']+1;
       }
     return 1;    
-    }  
-    
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "NAME": $this->Name = $value;break;
-      case "DESCRIPTION": $this->Description = $value;break;
-      case "STARTTIME": $this->StartTime = $value;break;
-      case "ENDTIME": $this->EndTime = $value;break;
-      case "SUMMARYEMAIL": $this->SummaryEmail = $value;break;
-      case "PROJECTID": $this->ProjectId = $value;break;  
-      }
     }
     
   /** Check if the group already exists */  

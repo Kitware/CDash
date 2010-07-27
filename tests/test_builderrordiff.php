@@ -38,7 +38,7 @@ class BuildErrorDiffTestCase extends KWWebTestCase
     $builderrordiff = new BuildErrorDiff();
     
     //no buildid
-    $builderrordiff->SetValue("BUILDID", 0);
+    $builderrordiff->BuildId = 0;
     ob_start();
     $builderrordiff->Save();
     $output = ob_get_contents();
@@ -49,10 +49,8 @@ class BuildErrorDiffTestCase extends KWWebTestCase
       return 1;
       }
    
-    $builderrordiff->SetValue("BUILDID", 1);
-    $builderrordiff->SetValue("TYPE", 1);
-    $builderrordiff->SetValue("DIFFERENCEPOSITIVE", 1);
-    $builderrordiff->SetValue("DIFFERENCENEGATIVE", -1);
+    $builderrordiff->BuildId = 1;
+    $builderrordiff->Type = 1;
 
     //call save twice to cover different execution paths
     if(!$builderrordiff->Save())

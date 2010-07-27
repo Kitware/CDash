@@ -52,18 +52,6 @@ class BuildConfigure
     $this->Labels[] = $label;
     }
 
-  function SetValue($tag,$value)
-    {
-    switch($tag)
-      {
-      case "STARTTIME": $this->StartTime = $value;break;
-      case "ENDTIME": $this->EndTime = $value;break;
-      case "COMMAND": $this->Command = $value;break;
-      case "LOG": $this->Log = $value;break;
-      case "STATUS": $this->Status = $value;break;
-      }
-    }
-
   /** Check if the configure exists */ 
   function Exists()
     {

@@ -29,17 +29,7 @@ class BuildGroupPosition
     $this->EndTime = '1980-01-01 00:00:00';
     $this->Position = 1;
     }
-    
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "STARTTIME": $this->StartTime = $value;break;
-      case "ENDTIME": $this->EndTime = $value;break;
-      case "POSITION": $this->Position = $value;break;
-      }
-    }
-    
+
   /** Check if the position already exists */  
   function Exists()
     {

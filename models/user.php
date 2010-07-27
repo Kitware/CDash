@@ -40,19 +40,6 @@ class User
     $project->Save();
     }
 
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "EMAIL": $this->Email = $value;break;
-      case "PASSWORD": $this->Password = $value;break;
-      case "FIRSTNAME": $this->FirstName = $value;break;
-      case "LASTNAME": $this->LastName = $value;break;
-      case "INSTITUTION": $this->Institution = $value;break;
-      case "ADMIN": $this->Admin = $value;break;
-      }
-    }
-  
   /** Return if the user is admin */
   function IsAdmin()
     {

@@ -105,7 +105,7 @@ class Project
       $this->AutoremoveMaxBuilds=300;
       }
     }  
-    
+
   /** Add a build group */
   function AddBuildGroup($buildgroup)
     {
@@ -113,43 +113,6 @@ class Project
     $buildgroup->Save();
     }
 
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "NAME": $this->Name = $value;break;
-      case "DESCRIPTION": $this->Description = $value;break;
-      case "HOMEURL": $this->HomeUrl = $value;break;
-      case "CVSURL": $this->CvsUrl = $value;break;
-      case "DOCUMENTATIONURL": $this->DocumentationUrl = $value;break;
-      case "BUGTRACKERURL": $this->BugTrackerUrl = $value;break;
-      case "BUGTRACKERFILEURL": $this->BugTrackerFileUrl = $value;break;
-      case "IMAGEID": $this->ImageId = $value;break;
-      case "PUBLIC": $this->Public = $value;break;
-      case "COVERAGETHRESHOLD": $this->CoverageThreshold = $value;break;
-      case "NIGHTLYTIME": $this->NightlyTime = $value;break;
-      case "GOOGLETRACKER": $this->GoogleTracker = $value;break;
-      case "EMAILLOWCOVERAGE": $this->EmailLowCoverage = $value;break;
-      case "EMAILTESTTIMINGCHANGED": $this->EmailTestTimingChanged = $value;break;
-      case "EMAILBROKENSUBMISSION": $this->EmailBrokenSubmission = $value;break;
-      case "EMAILREDUNDANTFAILURES": $this->EmailRedundantFailures = $value;break;
-      case "EMAILADMINISTRATOR": $this->EmailAdministrator = $value;break;
-      case "SHOWIPADDRESSES": $this->ShowIPAddresses = $value;break;
-      case "DISPLAYLABELS": $this->DisplayLabels = $value;break;
-      case "AUTOREMOVETIMEFRAME": $this->AutoremoveTimeframe = $value;break;
-      case "AUTOREMOVEMAXBUILDS": $this->AutoremoveMaxBuilds = $value;break;
-      case "CVSVIEWERTYPE": $this->CvsViewerType = $value;break;
-      case "TESTTIMESTD": $this->TestTimeStd = $value;break;
-      case "TESTTIMESTDTHRESHOLD": $this->TestTimeStdThreshold = $value;break;
-      case "SHOWTESTTIME": $this->ShowTestTime = $value;break;
-      case "TESTTIMEMAXSTATUS": $this->TestTimeMaxStatus = $value;break;
-      case "EMAILMAXITEMS": $this->EmailMaxItems = $value;break;
-      case "EMAILMAXCHARS": $this->EmailMaxChars = $value;break;
-      case "ROBOTNAME": $this->RobotName = $value;break;
-      case "ROBOTREGEX": $this->RobotRegex = $value;break;
-      }
-    }    
-  
   /** Delete a project */
   function Delete()
     {

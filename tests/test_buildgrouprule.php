@@ -45,12 +45,6 @@ class BuildGroupRuleTestCase extends KWWebTestCase
       }
 
     $buildgrouprule->GroupId = 1;
-    $buildgrouprule->SetValue("BUILDTYPE", "Experimental");
-    $buildgrouprule->SetValue("BUILDNAME", "test");
-    $buildgrouprule->SetValue("SITEID", 1);
-    $buildgrouprule->SetValue("EXPECTED", 1);
-    $buildgrouprule->SetValue("STARTTIME", date("Y-m-d H:i:s", time() - 1));
-    $buildgrouprule->SetValue("ENDTIME", date("Y-m-d H:i:s"));
 
     //call save twice to cover different execution paths
     if(!$buildgrouprule->Add())

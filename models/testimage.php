@@ -23,15 +23,7 @@ class TestImage
 {
   var $Id;
   var $Role;
-  var $TestId;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "IMAGE": $this->Role = $value;break;
-      }
-    }    
+  var $TestId;  
   
   /** Return if exists */
   function Exists()

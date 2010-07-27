@@ -23,15 +23,6 @@ class BuildConfigureError
   var $Text;
   var $BuildId;
   
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "TYPE": $this->Type = $value;break;
-      case "TEXT": $this->Text = $value;break;
-      }
-    }
-  
   /** Return if exists */
   function Exists()
     {

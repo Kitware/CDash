@@ -25,20 +25,7 @@ class BuildTest
   var $TimeMean;
   var $TimeStd;
   var $TimeStatus;
-  var $BuildId;
-    
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "TESTID": $this->TestId = $value;break;
-      case "STATUS": $this->Status = $value;break;
-      case "TIME": $this->Time = $value;break;
-      case "TIMEMEAN": $this->TimeMean = $value;break;
-      case "TIMESTD": $this->TimeStd = $value;break;
-      case "TIMESTATUS": $this->TimeStatus = $value;break;
-      }
-    }    
+  var $BuildId;  
 
   // Insert in the database
   function Insert()

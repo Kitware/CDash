@@ -24,17 +24,6 @@ class BuildNote
   var $Crc32;
   var $BuildId;
   
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "TIME": $this->Time = $value;break;
-      case "TEXT": $this->Text = $value;break;
-      case "NAME": $this->Name = $value;break;
-      case "CRC32": $this->Crc32 = $value;break;
-      }
-    } 
-  
   /** Get the CRC32 */
   function GetCrc32()
     {

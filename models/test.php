@@ -74,21 +74,6 @@ class Test
     $this->Labels[] = $label;
     }
 
-
-  function SetValue($tag,$value)
-    {
-    switch($tag)
-      {
-      case "CRC32": $this->Crc32 = $value;break;
-      case "PROJECTID": $this->ProjectId = $value;break;
-      case "NAME": $this->Name = $value;break;
-      case "PATH": $this->Path = $value;break;
-      case "COMMAND": $this->Command = $value;break;
-      case "DETAILS": $this->Details = $value;break;
-      case "OUTPUT": $this->Output = $value;break;
-      }
-    }
-
   /** Get the CRC32 */
   function GetCrc32()
     {

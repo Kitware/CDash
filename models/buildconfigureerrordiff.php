@@ -21,15 +21,7 @@ class BuildConfigureErrorDiff
   var $Type;
   var $Difference;
   var $BuildId;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "BUILDERRORDIFF": $this->Difference = $value;break;
-      case "TYPE": $this->Type = $value;break;
-      }
-    }
+
     /** Return if exists */
   function Exists()
     {

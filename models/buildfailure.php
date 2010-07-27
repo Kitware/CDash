@@ -38,25 +38,6 @@ class BuildFailure
     {
     $this->Arguments = array();
     }
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "TYPE": $this->Type = $value;break;
-      case "WORKINGDIRECTORY": $this->WorkingDirectory = $value;break;
-      case "ARGUMENT": $this->AddArgument($value);break; // Concatenate the arguments
-      case "STDOUT": $this->StdOutput = $value;break;
-      case "STDERR": $this->StdError = $value;break;
-      case "EXITCONDITION": $this->ExitCondition = $value;break;
-      case "LANGUAGE": $this->Language = $value;break;
-      case "TARGETNAME": $this->TargetName = $value;break;
-      case "SOURCEFILE": $this->SourceFile = $value;break;
-      case "OUTPUTFILE": $this->OutputFile = $value;break;
-      case "OUTPUTTYPE": $this->OutputType = $value;break;
-      }
-    }
-
 
   function AddLabel($label)
     {

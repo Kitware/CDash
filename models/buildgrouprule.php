@@ -25,20 +25,7 @@ class BuildGroupRule
   var $StartTime;
   var $EndTime;  
   var $GroupId;  
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "BUILDTYPE": $this->BuildType = $value;break;
-      case "BUILDNAME": $this->BuildName = $value;break;
-      case "SITEID": $this->SiteId = $value;break;
-      case "EXPECTED": $this->Expected = $value;break;
-      case "STARTTIME": $this->StartTime = $value;break;
-      case "ENDTIME": $this->EndTime = $value;break;
-      }
-    }
-  
+
   function __construct()
     {
     $this->StartTime = '1980-01-01 00:00:00';

@@ -31,18 +31,6 @@ class Site
     $information->SiteId = $this->Id;
     $information->Save();
     }
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "ID": $this->Id = $value;break;
-      case "NAME": $this->Name = $value;break;
-      case "IP": $this->Ip = $value;break;
-      case "LATITUDE": $this->Latitude = $value;break;
-      case "LONGITUDE": $this->Longitude = $value;break;
-      }
-    }
     
   /** Check if the site already exists */  
   function Exists()

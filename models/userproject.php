@@ -37,20 +37,7 @@ class UserProject
     $this->EmailMissingSites=0;
     $this->EmailSuccess=0;
     }
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "ROLE": $this->Role = $value;break;
-      case "CVSLOGIN": $this->CvsLogin = $value;break;
-      case "EMAILTYPE": $this->EmailType = $value;break;
-      case "EMAILCATEGORY": $this->EmailCategory = $value;break;
-      case "EMAILMISSINGSITES": $this->EmailMissingSites = $value;break;
-      case "EMAILSUCCESS": $this->EmailSuccess = $value;break;
-      }
-    }
-  
+
   /** Return if a project exists */
   function Exists()
     {

@@ -53,11 +53,7 @@ class ImageTestCase extends KWWebTestCase
       $this->fail("Exists() should return false with no matching checksum\n");
       }
 
-    //cover the various SetValue options
     $pathToImage = dirname(__FILE__)."/data/smile.gif";
-    $image->SetValue("FILENAME", $pathToImage);
-    $image->SetValue("EXTENSION", "image/gif");
-    $image->SetValue("CHECKSUM", "12345");
 
     //call save twice to cover different execution paths
     if(!$image->Save())
@@ -73,8 +69,7 @@ class ImageTestCase extends KWWebTestCase
 
     //exercise the TestImage class as well
     $testimage = new TestImage();
-    
-    $testimage->SetValue("IMAGE", "ValidImage");
+
     $testimage->Id = 1;
     $testimage->TestId = 1;
 

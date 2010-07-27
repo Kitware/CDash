@@ -57,7 +57,7 @@ class DailyUpdateFileTestCase extends KWWebTestCase
       }
 
     //no filename
-    $dailyupdatefile->SetValue("FILENAME", "");
+    $dailyupdatefile->Filename = "";
     $dailyupdatefile->DailyUpdateId = 1;
     ob_start();
     $dailyupdatefile->Save();
@@ -76,13 +76,7 @@ class DailyUpdateFileTestCase extends KWWebTestCase
       return 1;
       }
 
-    //cover the various SetValue options
-    $dailyupdatefile->SetValue("FILENAME", "dailyupdatefile.log");
-    $dailyupdatefile->SetValue("CHECKINDATE", date("Y-m-d H:i:s",strtotime("two hours ago")));
-    $dailyupdatefile->SetValue("AUTHOR", "CDash Tester");
-    $dailyupdatefile->SetValue("LOG", "example daily update log");
-    $dailyupdatefile->SetValue("REVISION", "2");
-    $dailyupdatefile->SetValue("PRIORREVISION", "1");
+    $dailyupdatefile->Filename = "dailyupdatefile.log";
 
     //call save twice to cover different execution paths
     if(!$dailyupdatefile->Save())

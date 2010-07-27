@@ -32,17 +32,7 @@ class Image
     $this->Filename = '';
     $this->Name = '';
     }
-    
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "FILENAME": $this->Filename = $value;break;
-      case "EXTENSION": $this->Extension = $value;break;
-      case "CHECKSUM": $this->Checksum = $value;break;
-      }
-    }
-    
+
   private function GetData()
     {
     if(strlen($this->Filename)>0)

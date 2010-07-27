@@ -23,18 +23,7 @@ class BuildErrorDiff
   var $Type;
   var $DifferencePositive;
   var $DifferenceNegative;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "TYPE": $this->Type = $value;break;
-      case "BUILDID": $this->BuildId = $value;break;  
-      case "DIFFERENCEPOSITIVE": $this->DifferencePositive = $value;break;
-      case "DIFFERENCENEGATIVE": $this->DifferenceNegative = $value;break;
-      }
-    } 
-    
+
   /** Return if exists */
   function Exists()
     {

@@ -63,12 +63,6 @@ class BuildConfigureTestCase extends KWWebTestCase
     $label = new Label();
     $configure->AddLabel($label);
 
-    $configure->SetValue("STARTTIME", "Dec 31 23:58 EST");
-    $configure->SetValue("ENDTIME", "Dec 31 23:59 EST");
-    $configure->SetValue("COMMAND", "cmake .");
-    $configure->SetValue("LOG", "Configuring done");
-    $configure->SetValue("STATUS", 0);
-
     $configure->BuildId = false;
     ob_start();
     $configure->Exists();

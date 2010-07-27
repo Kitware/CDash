@@ -22,16 +22,7 @@ class BuildTestDiff
   var $DifferenceNegative;
   var $DifferencePositive;
   var $BuildId;
-  
-  function SetValue($tag,$value)  
-    {
-    switch($tag)
-      {
-      case "TESTDIFFPOSITIVE": $this->DifferencePositive = $value;break;
-      case "TESTDIFFNEGATIVE": $this->DifferenceNegative = $value;break;
-      }
-    }
-    
+
   // Insert in the database
   function Insert()
     {
