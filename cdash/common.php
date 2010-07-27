@@ -586,189 +586,6 @@ function get_server_URI()
   return $currentURI;
 }
 
-
-/** Send a coverage email */
-function send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,$branchstested,$branchsuntested,
-                             $functionstested,$functionsuntested)
-{
-  include("cdash/config.php");
-  require_once("cdash/pdo.php");
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-  $build = pdo_query("SELECT projectid,name from build WHERE id='$buildid'");
-  $build_array = pdo_fetch_array($build);
-  $projectid = $build_array["projectid"];
-  
-  // Check if we should send the email  
-  $project = pdo_query("SELECT name,coveragethreshold,emaillowcoverage FROM project WHERE id='$projectid'");
-  $project_array = pdo_fetch_array($project);
-  if($project_array["emaillowcoverage"] == 0)
-    {
-    return;
-    }
-    
-  $coveragethreshold = $project_array["coveragethreshold"]; 
-  $coveragemetric = 1;
-   
-  // Compute the coverage metric for bullseye
-  if($branchstested>0 || $branchsuntested>0 || $functionstested>0 || $functionsuntested>0)
-    { 
-    // Metric coverage
-    $metric = 0;
-    if($functionstested+$functionsuntested>0)
-      {
-      $metric += $functionstested/($functionstested+$functionsuntested);
-      }
-    if($branchsuntested+$branchsuntested>0)
-      {
-      $metric += $branchsuntested/($branchstested+$branchsuntested);
-      $metric /= 2.0;
-      }
-    $coveragemetric = $metric;
-    $percentcoverage = $metric*100;
-    }
-  else // coverage metric for gcov
-    {
-    $coveragemetric = ($loctested+10)/($loctested+$locuntested+10);
-    $percentcoverage = ($loctested/($loctested+$locuntested))*100;    
-    }
-  
-  // If the coveragemetric is below the coverage threshold we send the email
-  if($coveragemetric < ($coveragethreshold/100.0))
-    {
-    // Find the cvs user
-    $filename = $fullpath;
-    if(substr($filename,0,2) == "./")
-      {
-      $filename = substr($filename,2);
-      }
-    $sql = "SELECT updatefile.author from updatefile,build
-                               WHERE updatefile.buildid=build.id AND build.projectid='$projectid'
-                                AND updatefile.filename='$filename' ORDER BY revision DESC LIMIT 1";
-    $updatefile = pdo_query($sql);
-    
-    // If we have a user in the database
-    if(pdo_num_rows($updatefile)>0)
-      {                             
-      $updatefile_array = pdo_fetch_array($updatefile);
-      $author = $updatefile_array["author"];
-      
-      // Writing the message
-      $messagePlainText = "The file *".$filename."* of the project ".$project_array["name"];
-      $messagePlainText .= " submitted to CDash has a low coverage.\n"; 
-      $messagePlainText .= "You have been identified as one of the authors who have checked in changes to that file.\n";
-      $messagePlainText .= "Details on the submission can be found at ";
-  
-      $currentURI =  "http://".$_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']; 
-      $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-      $messagePlainText .= $currentURI;
-      $messagePlainText .= "/viewCoverageFile.php?buildid=".$buildid;
-      $messagePlainText .= "&fileid=".$fileid;
-      $messagePlainText .= "\n\n";
-      
-      $messagePlainText .= "Project: ".$project_array["name"]."\n";
-      $messagePlainText .= "BuildName: ".$build_array["name"]."\n";
-      $messagePlainText .= "Filename: ".$fullpath."\n";
-      $threshold = round($coveragemetric*100,1);
-      $messagePlainText .= "Coverage metric: ".$threshold."%\n";
-      $messagePlainText .= "Coverage percentage: ".$percentcoverage."%\n";
-      $messagePlainText .= "CVS User: ".$author."\n";
-      
-      $messagePlainText .= "\n-CDash on ".$_SERVER['SERVER_NAME']."\n";
-      
-      // Send the email
-      $title = "CDash [".$project_array["name"]."] - ".$fullpath." - Low Coverage";
-      
-      mail("$email", $title, $messagePlainText,
-           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
-      }
-    }
-}
-
-/** Create a coverage file */
-function add_coveragefile($buildid,$fullpath,$filecontent)
-{
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-    
-   // Compute the crc32 of the file
-  $crc32 = crc32($fullpath.$filecontent);
-  
-  $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE crc32='$crc32'");
-  add_last_sql_error("add_coveragefile",0,$buildid);
-    
-  if(pdo_num_rows($coveragefile)>0) // we have the same crc32
-    {
-    $coveragefile_array = pdo_fetch_array($coveragefile);
-    $fileid = $coveragefile_array["id"];
-
-    // Update the current coverage.fileid
-    $coverage = pdo_query("SELECT c.fileid FROM coverage AS c,coveragefile AS cf 
-                             WHERE c.fileid=cf.id AND c.buildid='$buildid' 
-                             AND cf.fullpath='$fullpath'");
-    $coverage_array = pdo_fetch_array($coverage);
-    $prevfileid = $coverage_array["fileid"];
-
-    pdo_query ("UPDATE coverage SET fileid='$fileid' WHERE buildid='$buildid' AND fileid='$prevfileid'");
-    add_last_sql_error("add_coveragefile",0,$buildid);
-
-    // Remove the file if the crc32 is NULL
-    pdo_query ("DELETE FROM coveragefile WHERE id='$prevfileid' AND file IS NULL and crc32 IS NULL");
-    add_last_sql_error("add_coveragefile",0,$buildid);
-    }
-  else // The file doesn't exist in the database
-    {
-    // We find the current fileid based on the name and the file should be null
-    $coveragefile = pdo_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf 
-                                 WHERE c.fileid=cf.id AND c.buildid='$buildid' 
-                                 AND cf.fullpath='$fullpath' ORDER BY cf.id ASC");
-    $coveragefile_array = pdo_fetch_array($coveragefile);
-    $fileid = $coveragefile_array["id"];
-    pdo_query ("UPDATE coveragefile SET file='$filecontent',crc32='$crc32' WHERE id='$fileid'"); 
-    add_last_sql_error("add_coveragefile",0,$buildid);
-    }
-    
-  return $fileid;
-}
-
-/** Add the coverage log */
-function add_coveragelogfile($buildid,$fileid,$coveragelogarray)
-{
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-  if(!is_numeric($fileid))
-    {
-    return;
-    }
-
-  $sql = "INSERT INTO coveragefilelog (buildid,fileid,line,code) VALUES ";
-  
-  $i=0;
-  foreach($coveragelogarray as $key=>$value)
-     {
-     if($i>0)
-       {
-       $sql .= ",";
-       }  
-      
-     $sql.= "('$buildid','$fileid','$key','$value')";
-     
-     if($i==0)
-       {
-       $i++;
-       }
-     }
- 
-  pdo_query ($sql);
-  add_last_sql_error("add_coveragelogfile",0,$buildid);
-}
-
 /** add a user to a site */
 function add_site2user($siteid,$userid)
 {
@@ -1295,102 +1112,6 @@ function remove_build($buildid)
 
 }
 
-/** Add a new error/warning */
-function add_error($buildid,$type,$logline,$text,$sourcefile,$sourceline,$precontext,$postcontext,$repeatcount)
-{
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-    
-  $type = pdo_real_escape_numeric($type);
-  $logline = pdo_real_escape_numeric($logline);
-  $text = pdo_real_escape_string($text);
-  $sourcefile = pdo_real_escape_string($sourcefile);
-  $sourceline = pdo_real_escape_numeric($sourceline);  
-  $precontext = pdo_real_escape_string($precontext);  
-  $postcontext = pdo_real_escape_string($postcontext);  
-  $repeatcount = pdo_real_escape_numeric($repeatcount);  
-  
-  if($sourceline == "")
-    {
-    $sourceline = 0;
-    }
-        
-  pdo_query ("INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,postcontext,repeatcount) 
-               VALUES ('$buildid','$type','$logline','$text','$sourcefile','$sourceline','$precontext',
-                       '$postcontext','$repeatcount')");
-  add_last_sql_error("add_error",0,$buildid);
-}
-
-/** Add dynamic analysis */
-function add_dynamic_analysis($buildid,$status,$checker,$name,$path,$fullcommandline,$log)
-{  
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-    
-  $status = pdo_real_escape_string($status);
-  $checker = pdo_real_escape_string($checker);
-  $name = pdo_real_escape_string($name);
-  $path = pdo_real_escape_string($path);
-  $fullcommandline = pdo_real_escape_string($fullcommandline);
-  $log = pdo_real_escape_string($log);
-
-  pdo_query ("INSERT INTO dynamicanalysis (buildid,status,checker,name,path,fullcommandline,log) 
-               VALUES ('$buildid','$status','$checker','$name','$path','$fullcommandline','$log')");
-  return pdo_insert_id("dynamicanalysis");
-}
-     
-/** Add dynamic analysis defect */
-function add_dynamic_analysis_defect($dynid,$type,$value)
-{
-  if(!is_numeric($dynid))
-    {
-    return;
-    }
-    
-  $type = pdo_real_escape_string($type);
-  $value = pdo_real_escape_string($value);
-
-  pdo_query ("INSERT INTO dynamicanalysisdefect (dynamicanalysisid,type,value) 
-                VALUES ('$dynid','$type','$value')");
-  add_last_sql_error("add_dynamic_analysis_defect");
-}
-
-
-/** Add a new note */
-function add_note($buildid,$text,$timestamp,$name)
-{
-  if(!is_numeric($buildid))
-    {
-    return;
-    }
-    
-  $text = pdo_real_escape_string($text);
-  $timestamp = pdo_real_escape_string($timestamp);
-  $name = pdo_real_escape_string($name);
-  
-  $crc32 = crc32($text.$name);  
-  $notecrc32 =  pdo_query("SELECT id FROM note WHERE crc32='$crc32'");
-  add_last_sql_error("add_note",0,$buildid);
-  if(pdo_num_rows($notecrc32) == 0)
-    {
-    pdo_query("INSERT INTO note (text,name,crc32) VALUES ('$text','$name','$crc32')");
-    add_last_sql_error("add_note");
-    $noteid = pdo_insert_id("note",0,$buildid);
-    }
-  else // already there
-    {
-    $notecrc32_array = pdo_fetch_array($notecrc32);
-    $noteid = $notecrc32_array["id"];
-    }
-
-  pdo_query("INSERT INTO build2note (buildid,noteid,time) VALUES ('$buildid','$noteid','$timestamp')");
-  add_last_sql_error("add_note",0,$buildid);
-}
-
 /**
  * Recursive version of glob
  *
@@ -1513,8 +1234,7 @@ function has_next_date($date, $currentstarttime)
   return (
     isset($date) &&
     strlen($date)>=8 &&
-    date(FMT_DATE, $currentstarttime)<date(FMT_DATE)
-    );
+    date(FMT_DATE, $currentstarttime)<date(FMT_DATE));
 }
 
 /** Get the logo id */
@@ -2658,7 +2378,6 @@ function getByteValueWithExtension($value)
     return round($value,2).$valueext;
     }
 
-
 /** Given a query that returns a set of rows,
   * each of which contains a 'text' field,
   * construct a chunk of <labels><label>....
@@ -2682,6 +2401,5 @@ function get_labels_xml_from_query_results($qry)
 
   return $xml;
   }
-
 
 ?>

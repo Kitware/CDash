@@ -132,10 +132,6 @@ class CoverageHandler extends AbstractHandler
         $branchsuntested = $coverage->BranchesUntested;
         $functionstested = $coverage->FunctionsTested;
         $functionsuntested = $coverage->FunctionsUntested;
-
-        // Send an email if the coverage is below the project threshold
-        //send_coverage_email($buildid,$fileid,$fullpath,$loctested,$locuntested,$branchstested,
-        //                    $branchsuntested,$functionstested,$functionsuntested);
         }
 
       }
