@@ -54,7 +54,7 @@ class BuildUserNoteTestCase extends KWWebTestCase
       }
 
     $buildusernote->BuildId = 1;
-    $buildusernote->SetValue("USERID", 0);
+    $buildusernote->UserId = 0;
     ob_start();
     $result = $buildusernote->Insert();
     $output = ob_get_contents();
@@ -70,10 +70,7 @@ class BuildUserNoteTestCase extends KWWebTestCase
       return 1;
       }
 
-    $buildusernote->SetValue("USERID", 1);
-    $buildusernote->SetValue("NOTE", "this is a note");
-    $buildusernote->SetValue("TIMESTAMP", date("Y-m-d H:i:s"));
-    $buildusernote->SetValue("STATUS", 1);
+    $buildusernote->UserId = 1;
 
     if(!$buildusernote->Insert())
       {
