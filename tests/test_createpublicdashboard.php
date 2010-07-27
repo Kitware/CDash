@@ -37,6 +37,7 @@ class CreatePublicDashboardTestCase extends KWWebTestCase
     $this->setField('name', 'PublicDashboard');
     $this->setField('description', 'This project is for CMake dashboards run on this machine to submit to from their test suites... CMake dashboards on this machine should set CMAKE_TESTS_CDASH_SERVER to "'.$this->url.'"');
     $this->setField('public', '1');
+    $this->setField('emailAdministrator','1');
     $this->clickSubmitByName('Submit');
 
     $this->checkErrors();
