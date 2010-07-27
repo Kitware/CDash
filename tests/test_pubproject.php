@@ -36,6 +36,7 @@ class PubProjectTestCase extends KWWebTestCase
     $this->setField('name','ProjectTest');
     $this->setField('description','This is a project test for cdash');
     $this->setField('public','1');
+    $this->setField('emailAdministrator','1');
     $this->clickSubmitByName('Submit');
 
 
