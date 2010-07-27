@@ -23,20 +23,7 @@ class TestMeasurement
   var $Name;
   var $Type;
   var $Value;
-  var $TestId;  
-  
-  /** Return if exists */
-  function Exists()
-    {
-    $query = pdo_query("SELECT count(*) AS c FROM testmeasurement WHERE testid='".$this->TestId."' AND name='".$this->Name."' AND 
-                        type='".$this->Type."' AND value='".$this->Value."'");  
-    $query_array = pdo_fetch_array($query);
-    if($query_array['c']>0)
-      {
-      return true;
-      }
-    return false;
-    }      
+  var $TestId;
       
   // Save in the database
   function Insert()
