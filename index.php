@@ -949,8 +949,8 @@ function generate_main_dashboard_XML($projectid,$date)
         $build_rows_collapsed[$idx]['countupdatewarnings'] += $build_row['countupdatewarnings'];
 
         $build_rows_collapsed[$idx]['buildduration'] += $build_row['buildduration'];
-        $build_rows_collapsed[$idx]['countbuilderrors'] += $build_row['countbuilderrors'];
-        $build_rows_collapsed[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'];
+        $build_rows_collapsed[$idx]['countbuilderrors'] += $build_row['countbuilderrors'] > 0 ? $build_row['countbuilderrors'] : 0;
+        $build_rows_collapsed[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'] > 0 ? $build_row['countbuildwarnings'] : 0;
         $build_rows_collapsed[$idx]['countbuilderrordiffp'] += $build_row['countbuilderrordiffp'];
         $build_rows_collapsed[$idx]['countbuilderrordiffn'] += $build_row['countbuilderrordiffn'];
         $build_rows_collapsed[$idx]['countbuildwarningdiffp'] += $build_row['countbuildwarningdiffp'];
@@ -973,7 +973,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $build_rows_collapsed[$idx]['counttestspassed'] += $build_row['counttestspassed'] > 0 ? $build_row['counttestspassed'] : 0;
         $build_rows_collapsed[$idx]['counttestspasseddiffp'] += $build_row['counttestspasseddiffp'];
         $build_rows_collapsed[$idx]['counttestspasseddiffn'] += $build_row['counttestspasseddiffn'];
-        $build_rows_collapsed[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'];
+        $build_rows_collapsed[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'] > 0 ? $build_row['countteststimestatusfailed'] : 0;
         $build_rows_collapsed[$idx]['countteststimestatusfaileddiffp'] += $build_row['countteststimestatusfaileddiffp'];
         $build_rows_collapsed[$idx]['countteststimestatusfaileddiffn'] += $build_row['countteststimestatusfaileddiffn'];
         $build_rows_collapsed[$idx]['testsduration'] += $build_row['testsduration'];
@@ -1004,9 +1004,9 @@ function generate_main_dashboard_XML($projectid,$date)
   $totalBuildDuration = 0;
   $totalnotrun = 0;
   $totalfail= 0;
-  $totalpass = 0;  
+  $totalpass = 0;
   $totalTestsDuration = 0;
-  
+
   foreach($build_rows as $build_array)
     {
     $groupposition = $build_array["position"];
