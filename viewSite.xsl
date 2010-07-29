@@ -44,7 +44,7 @@
 <!-- Site manager -->
 <xsl:if test="cdash/user/sitemanager=1">
 <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="cdash/site/id"/></xsl:attribute>
-<xsl:if test="cdash/user/siteclaimed=0">Are you maitaining this site? [claim this site]</xsl:if><xsl:if test="cdash/user/siteclaimed=1">[edit site description]</xsl:if></a>
+<xsl:if test="cdash/user/siteclaimed=0">Are you maintaining this site? [claim this site]</xsl:if><xsl:if test="cdash/user/siteclaimed=1">[edit site description]</xsl:if></a>
 <br/>
 <br/>
 </xsl:if>

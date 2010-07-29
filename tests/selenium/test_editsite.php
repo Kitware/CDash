@@ -28,7 +28,7 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=CDashTestingSite");
     $this->waitForPageToLoad("30000");
-    $this->click("link=exact:Are you maitaining this site? [claim this site]");
+    $this->click("link=exact:Are you maintaining this site? [claim this site]");
     $this->waitForPageToLoad("30000");
     $this->click("claimsite");
     $this->waitForPageToLoad("30000");
