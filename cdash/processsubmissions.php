@@ -46,20 +46,21 @@ while(pdo_num_rows($query) > 0)
   {
   $query_array = pdo_fetch_array($query);
   $filename = $query_array['filename'];
-  pdo_query("UPDATE submission SET status=1 WHERE projectid='".$projectid."' AND status=0 AND filename='".$filename."'");   
+  pdo_query("UPDATE submission SET status=1 WHERE projectid='".$projectid."' AND status=0 AND filename='".$filename."'");
 
-  $fp = fopen($filename, 'r');
+  $real_filename = $filename;
+  $fp = fopen($real_filename, 'r');
   if(!$fp)
     {
     // check in parent dir also
-    $filename = "../$filename";
-    $fp = fopen($filename, 'r');
+    $real_filename = "../$filename";
+    $fp = fopen($real_filename, 'r');
     }
   if($fp)
     {
     do_submit($fp,$projectid, '', false);
     // delete the temporary backup file since we now have a better-named one
-    unlink($filename);
+    unlink($real_filename);
     }
   else
     {
