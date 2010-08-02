@@ -26,12 +26,7 @@ class User
   var $FirstName;
   var $LastName;
   var $Institution;  
-  var $Admin;  
-  
-  function AddSite($id)
-    {
-    $this->SiteIds[] = $id;
-    }
+  var $Admin;
     
   /** Add a project to the user */
   function AddProject($project)
@@ -52,7 +47,7 @@ class User
       {
       return true;
       }
-    return false;  
+    return false;
     }
   
   /** Return if a user exists */
@@ -74,7 +69,7 @@ class User
         return true;
         }
       
-      return false;    
+      return false;
       }
       
     $query = pdo_query("SELECT count(*) FROM ".qid("user")." WHERE id='".$this->Id."' OR (firstname='".$this->FirstName."' AND lastname='".$this->LastName."')");  
@@ -84,9 +79,9 @@ class User
       return true;
       }
     return false;
-    }      
+    }
       
-  // Save the project in the database
+  // Save the user in the database
   function Save()
     { 
     if(empty($this->Admin))
@@ -94,7 +89,7 @@ class User
       $this->Admin = 0;
       }
       
-    // Check if the project is already
+    // Check if the user exists already
     if($this->Exists())
       {
       // Update the project
@@ -138,7 +133,7 @@ class User
        $this->Id = pdo_insert_id("user");    
        }
     return true;
-    } 
+    }
     
   /** Get the name */
   function GetName()
@@ -168,7 +163,7 @@ class User
     $query_array = pdo_fetch_array($query);
     
     return $query_array['email'];
-    } 
+    }
    
   /** Set a password */
   function SetPassword($newPassword)
@@ -203,7 +198,7 @@ class User
       
     $query_array = pdo_fetch_array($query);
     return $query_array['id'];
-    }    
+    }
     
   /** Get the user id from the email */
   function GetIdFromEmail($email)
@@ -223,6 +218,6 @@ class User
       
     $query_array = pdo_fetch_array($query);
     return $query_array['id'];
-    }   
+    }
 }
 ?>
