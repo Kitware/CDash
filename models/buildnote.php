@@ -47,10 +47,28 @@ class BuildNote
     {
     if(!$this->BuildId)
       {
-      echo "BuildUserNote::Insert(): BuildId is not set<br>";
+      echo "BuildNote::Insert(): BuildId is not set<br>";
+      return false;
+      }
+
+    if(!$this->Time)
+      {
+      echo "BuildNote::Insert(): Time is not set<br>";
       return false;
       }
       
+    if(!$this->Name)
+      {
+      echo "BuildNote::Insert(): Name is not set<br>";
+      return false;
+      }
+      
+    if(!$this->Text)
+      {
+      echo "BuildNote::Insert(): Text is not set<br>";
+      return false;
+      }
+          
     // Check if the note already exists
     $crc32 = $this->GetCrc32();
     
@@ -71,7 +89,7 @@ class BuildNote
         }
       if(!pdo_query($query))
         {
-        add_last_sql_error("BuildUserNote:Insert",0,$this->BuildId);
+        add_last_sql_error("BuildNote:Insert",0,$this->BuildId);
         return false;
         }  
       $this->Id = pdo_insert_id("note");
@@ -84,7 +102,7 @@ class BuildNote
    
     if(!$this->Id)
       {
-      echo "BuildUserNote::Insert(): No NoteId";
+      echo "BuildNote::Insert(): No NoteId";
       return false;
       }
   
@@ -92,7 +110,7 @@ class BuildNote
               VALUES ('$this->BuildId','$this->Id','$this->Time')";                    
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildUserNote:Insert",0,$this->BuildId);
+      add_last_sql_error("BuildNote:Insert",0,$this->BuildId);
       return false;
       }  
     return true;

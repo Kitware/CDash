@@ -38,7 +38,25 @@ class BuildUserNote
       echo "BuildUserNote::Insert(): UserId is not set<br>";
       return false;
       }
+
+    if(!$this->Note)
+      {
+      echo "BuildUserNote::Insert(): Note is not set<br>";
+      return false;
+      }
       
+    if(!$this->TimeStamp)
+      {
+      echo "BuildUserNote::Insert(): TimeStamp is not set<br>";
+      return false;
+      }
+      
+    if(!$this->Status)
+      {
+      echo "BuildUserNote::Insert(): Status is not set<br>";
+      return false;
+      }  
+       
     $query = "INSERT INTO buildnote (buildid,userid,note,timestamp,status)
               VALUES ('$this->BuildId','$this->UserId','$this->Note','$this->TimeStamp','$this->Status')";                     
     if(!pdo_query($query))
