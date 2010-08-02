@@ -77,7 +77,18 @@ class DailyUpdateFileTestCase extends KWWebTestCase
       }
 
     $dailyupdatefile->Filename = "dailyupdatefile.log";
+    ob_start();
+    $dailyupdatefile->Save();
+    $output = ob_get_contents();
+    ob_end_clean();
+    if($output !== "DailyUpdateFile::Save(): CheckinDate not set!")
+      {
+      $this->fail("'CheckinDate not set!' not found from Save()");
+      return 1;
+      }
 
+    $dailyupdatefile->CheckinDate = "2010-10-10 10:10:10";
+   
     //call save twice to cover different execution paths
     if(!$dailyupdatefile->Save())
       {

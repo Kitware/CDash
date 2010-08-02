@@ -54,6 +54,7 @@ class BuildUserNoteTestCase extends KWWebTestCase
       return 1;
       }
 
+    $buildusernote->BuildId = 1;
     $buildusernote->UserId = 0;
     ob_start();
     $result = $buildusernote->Insert();

@@ -31,7 +31,7 @@ class DailyUpdateFile
   function Exists()
     {
     // If no id specify return false
-    if(!$this->DailyUpdateId)
+    if(!$this->DailyUpdateId || !$this->Filename)
       {
       return false;    
       }
@@ -58,6 +58,12 @@ class DailyUpdateFile
     if(!$this->Filename)
       {
       echo "DailyUpdateFile::Save(): Filename not set!";
+      return false;
+      }
+
+    if(!$this->CheckinDate)
+      {
+      echo "DailyUpdateFile::Save(): CheckinDate not set!";
       return false;
       }
       
