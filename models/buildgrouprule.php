@@ -36,10 +36,11 @@ class BuildGroupRule
   function Exists()
     {
     // If no id specify return false
-    if(!$this->GroupId)
+   if(empty($this->GroupId) || empty($this->BuildType)
+      || empty($this->BuildName) || empty($this->SiteId))
       {
       return false;    
-      }
+      } 
     
     $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE 
                         groupid='".$this->GroupId."' AND buildtype='".$this->BuildType."'
@@ -59,6 +60,12 @@ class BuildGroupRule
   /** Save the goup position */
   function Add()
     {
+    if(empty($this->GroupId) || empty($this->BuildType)
+       || empty($this->BuildName) || empty($this->SiteId) || empty($this->Expected))
+      {
+      return false;    
+      }  
+
     if(!$this->Exists())
       {
       if(!pdo_query("INSERT INTO build2grouprule (groupid,buildtype,buildname,siteid,expected,starttime,endtime)
