@@ -71,12 +71,6 @@ class BuildTestDiffTestCase extends KWWebTestCase
       }
       
     $buildtestdiff->DifferencePositive = 0;
-    if($buildtestdiff->Insert())
-      {
-      $this->fail("Add() returned true when it should be false.\n");
-      return 1;
-      }
-      
     //call save twice to cover different execution paths
     if(!$buildtestdiff->Insert())
       {

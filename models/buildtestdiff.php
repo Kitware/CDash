@@ -38,15 +38,15 @@ class BuildTestDiff
       return false;
       }
       
-    if(!$this->DifferenceNegative || !is_numeric($this->DifferenceNegative))
+    if(empty($this->DifferenceNegative) || !is_numeric($this->DifferenceNegative))
       {
-      echo "BuildTestDiff::Insert(): DifferenceNegative  is not set<br>";
+      echo "BuildTestDiff::Insert(): DifferenceNegative is not set<br>";
       return false;
       } 
        
-    if(!$this->DifferencePositive || !is_numeric($this->DifferencePositive))
+    if(empty($this->DifferencePositive) || !is_numeric($this->DifferencePositive))
       {
-      echo "BuildTestDiff::Insert(): DifferencePositive  is not set<br>";
+      echo "BuildTestDiff::Insert(): DifferencePositive is not set<br>";
       return false;
       }
       

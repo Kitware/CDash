@@ -102,7 +102,7 @@ class Image
          }
        else
          {
-         add_last_sql_error("Image Insert");
+         add_last_sql_error("Image::Save");
          return false;
          }
       }
