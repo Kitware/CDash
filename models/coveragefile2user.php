@@ -138,7 +138,6 @@ class CoverageFile2User
     if(!pdo_query($query))
       {
       add_last_sql_error("CoverageFile2User:Remove");
-      echo $query;
       return false;
       }
     
@@ -159,7 +158,6 @@ class CoverageFile2User
     if(!$query)
       {
       add_last_sql_error("CoverageFile2User:FixPosition");
-      echo $query;
       return false;
       }
       
@@ -187,7 +185,6 @@ class CoverageFile2User
     if(!$query)
       {
       add_last_sql_error("CoverageFile2User:GetAuthors");
-      echo $query;
       return false;
       }
     $authorids = array();
@@ -211,7 +208,6 @@ class CoverageFile2User
     if(!$query)
       {
       add_last_sql_error("CoverageFile2User:GetId");
-      echo $query;
       return false;
       }
     if(pdo_num_rows($query) == 0)
@@ -234,7 +230,6 @@ class CoverageFile2User
     if(!$query)
       {
       add_last_sql_error("CoverageFile2User:GetFiles");
-      echo $query;
       return false;
       }
       
@@ -255,7 +250,7 @@ class CoverageFile2User
       return false;
       }
       
-    $query = pdo_query("SELECT coveragefile.id FROM coveragefile,coveragefilepriority,coverage WHERE 
+    $query = pdo_query("SELECT coveragefile.id AS id FROM coveragefile,coveragefilepriority,coverage WHERE 
                         coveragefilepriority.id=".qnum($this->FileId)."
                         AND coverage.buildid=".qnum($buildid)."
                         AND coverage.fileid=coveragefile.id

@@ -364,14 +364,8 @@ if($projectid>0)
       $xml .= add_XML_value("id",$CoverageFile2User->GetId());
       $xml .= add_XML_value("fileid",$fileid);
       
-      if($row == 0)
-        {
-        $row = 1;
-        }
-      else
-        {
-        $row = 0;
-        }   
+      $row = $row == 0 ? 1 : 0;
+ 
       $xml .= add_XML_value("row",$row);
       
       // Get the authors
