@@ -26,6 +26,14 @@ class UserStatisticsTestCase extends KWWebTestCase
     {
     $this->login();
     $this->get($this->url."/userStatistics.php?projectid=1");
+    
+    // No project selected
+    $this->get($this->url."/userStatistics.php");
+    
+    $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"lastweek"));
+    $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"thismonth"));
+    $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"lastmonth"));
+    $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"thisyear"));
     }
 }
 ?>
