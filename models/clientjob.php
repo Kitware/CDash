@@ -71,19 +71,6 @@ class ClientJob
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
-      
-  /** Get the compiler id for the job */
-  function GetCompiler()
-    {
-    if(!$this->Id)
-      {
-      add_log("ClientJob::GetCompiler","Id not set");
-      return;
-      }
-    $sys = pdo_query("SELECT compilerid FROM client_job WHERE id=".qnum($this->Id));
-    $row = pdo_fetch_array($sys);
-    return $row[0];
-    }
     
   /** Get Status */
   function GetStatus()
@@ -94,19 +81,6 @@ class ClientJob
       return;
       }
     $sys = pdo_query("SELECT status FROM client_job WHERE id=".qnum($this->Id));
-    $row = pdo_fetch_array($sys);
-    return $row[0];
-    }
-    
-  /** Get CMakeId */
-  function GetCMakeId()
-    {
-    if(!$this->Id)
-      {
-      add_log("ClientJob::GetCMakeId","Id not set");
-      return;
-      }
-    $sys = pdo_query("SELECT cmakeid FROM client_job WHERE id=".qnum($this->Id));
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
@@ -152,32 +126,5 @@ class ClientJob
     $this->Id = pdo_insert_id('client_job');
     add_last_sql_error("ClientJob::Save");
     }   // end Save
-   
-   
-   /** Remove a job */  
-  function Remove()
-    {   
-    if(!$this->Id)
-      {
-      add_log("ClientJob::Remove()","Id not set");
-      return;
-      }
-    pdo_query("DELETE FROM client_job WHERE id=".qnum($this->Id));
-    add_last_sql_error("ClientJob::Remove");
-    }   // end Remove
-  
-  /** */
-  function getAll($userid,$nresult)
-    {
-    $query=pdo_query("SELECT j.id FROM client_job as j,client_jobschedule AS s 
-                      WHERE j.scheduleid=s.id AND s.userid='$userid' ORDER BY j.id DESC LIMIT $nresult");   
-    add_last_sql_error("ClientJob::getAll");
-    $result=array();
-    while($row = pdo_fetch_array($query))
-      {
-      $result[] = $row['id'];
-      }
-    return $result;
-    }
-  
+
 } // end class proJob
