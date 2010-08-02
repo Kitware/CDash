@@ -72,8 +72,7 @@ class BuildErrorDiff
     if(!$this->DifferenceNegative || !is_numeric($this->DifferenceNegative))
       {
       echo "BuildErrorDiff::Save(): DifferenceNegative not set<br>";
-      ret
-      urn false;    
+      return false;    
       }  
     if($this->Exists())
       {
