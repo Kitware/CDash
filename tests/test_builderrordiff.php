@@ -54,14 +54,28 @@ class BuildErrorDiffTestCase extends KWWebTestCase
     $builderrordiff->Type = 1;
 
     //call save twice to cover different execution paths
+    if($builderrordiff->Save())
+      {
+      $this->fail("Save() call #1 returned true when it should be false.\n");
+      return 1;
+      }
+    
+    $builderrordiff->DifferencePositive = 1;
+    if($builderrordiff->Save())
+      {
+      $this->fail("Save() call #2 returned true when it should be false.\n");
+      return 1;
+      }
+    
+    $builderrordiff->DifferenceNegative = 1;
     if(!$builderrordiff->Save())
       {
-      $this->fail("Save() call #1 returned false when it should be true.\n");
+      $this->fail("Save() call #3 returned false when it should be true.\n");
       return 1;
       }
     if(!$builderrordiff->Save())
       {
-      $this->fail("Save() call #2 returned false when it should be true.\n");
+      $this->fail("Save() call #4 returned false when it should be true.\n");
       return 1;
       }
 

@@ -46,7 +46,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
 
     $buildgrouprule->GroupId = 1;
     
-    if(!$buildgrouprule->Add())
+    if($buildgrouprule->Add())
       {
       $this->fail("Add returned true when it should be false.\n");
       return 1;
