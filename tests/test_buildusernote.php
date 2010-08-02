@@ -48,7 +48,7 @@ class BuildUserNoteTestCase extends KWWebTestCase
       $this->fail("Insert() should return false when BuildId is 0");
       return 1;
       }
-    if(strpos($output, "BuildNote::Insert(): BuildId is not set") === false)
+    if(strpos($output, "BuildUserNote::Insert(): BuildId is not set") === false)
       {
       $this->fail("'BuildId is not set' not found from Insert()");
       return 1;
@@ -65,7 +65,7 @@ class BuildUserNoteTestCase extends KWWebTestCase
       $this->fail("Insert() should return false when UserId is 0");
       return 1;
       }
-    if(strpos($output, "BuildNote::Insert(): UserId is not set") === false)
+    if(strpos($output, "BuildUserNote::Insert(): UserId is not set") === false)
       {
       $this->fail("'UserId is not set' not found from Insert()");
       return 1;
