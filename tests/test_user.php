@@ -76,7 +76,6 @@ class UserTestCase extends KWWebTestCase
       }
       
     $user->Id = $id;
-    $user->Email = "";
     $user->FirstName = "Foo";
     
     if($user->Exists() != true)
