@@ -38,7 +38,7 @@ class UserStatisticsTestCase extends KWWebTestCase
     
     // Cover no user id case
     $this->logout();
-    $this->$this->get($this->url."/userStatistics.php");
+    $this->get($this->url."/userStatistics.php");
     }
 }
 ?>
