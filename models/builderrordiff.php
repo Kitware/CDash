@@ -62,7 +62,19 @@ class BuildErrorDiff
       echo "BuildErrorDiff::Save(): Type not set<br>";
       return false;    
       }
+
+    if(!$this->DifferencePositive || !is_numeric($this->DifferencePositive))
+      {
+      echo "BuildErrorDiff::Save(): DifferencePositive not set<br>";
+      return false;    
+      }
       
+    if(!$this->DifferenceNegative || !is_numeric($this->DifferenceNegative))
+      {
+      echo "BuildErrorDiff::Save(): DifferenceNegative not set<br>";
+      ret
+      urn false;    
+      }  
     if($this->Exists())
       {
       // Update

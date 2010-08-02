@@ -45,18 +45,30 @@ class BuildGroupRuleTestCase extends KWWebTestCase
       }
 
     $buildgrouprule->GroupId = 1;
-
-    //call save twice to cover different execution paths
+    
+    if(!$buildgrouprule->Add())
+      {
+      $this->fail("Add returned true when it should be false.\n");
+      return 1;
+      }
+      
+    $buildgrouprule->BuildType = 1;
+    $buildgrouprule->BuildName = 'TestBuild';
+    $buildgrouprule->SiteId = 1;
+    $buildgrouprule->Expected = 1;
+          
     if(!$buildgrouprule->Add())
       {
       $this->fail("Add() returned false when it should be true.\n");
       return 1;
       }
+      
     if($buildgrouprule->Add())
       {
       $this->fail("Add returned true when it should be false.\n");
       return 1;
       }
+      
     $this->pass("Passed");
     if ( extension_loaded('xdebug'))
       {
