@@ -47,40 +47,7 @@ class LabelEmail
       return true;
       }
     return false;
-    }      
-  
-  
-  /** Remove */
-  function Remove()
-    {
-   if(!$this->ProjectId)
-      {
-      echo "LabelEmail Remove(): ProjectId not set";
-      return false;
-      } 
-      
-    if(!$this->UserId)
-      {
-      echo "LabelEmail Remove(): UserId not set";
-      return false;
-      }
-      
-    if(!$this->LabelId)
-      {
-      echo "LabelEmail Remove(): LabelId not set";
-      return false;
-      } 
-      
-    $query = pdo_query("DELETE FROM labelemail WHERE userid=".qnum($this->UserId).
-                        " AND projectid=".qnum($this->ProjectId).
-                        " AND labelid=".qnum($this->LabelId));  
- 
-    if(!$query)
-      {
-      return false;
-      }
-    return true;
-    }      
+    }
     
   function Insert()
     {
