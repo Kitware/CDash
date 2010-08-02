@@ -88,7 +88,7 @@ class UserTestCase extends KWWebTestCase
     $user->password = "simpletest";
     
     //Update save.
-    $user->Save()
+    $user->Save();
     
     return 0;
     }
