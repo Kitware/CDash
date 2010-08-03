@@ -54,7 +54,7 @@ endif(NOT CDASH_DB_TYPE)
 set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
 make_directory("${CDASH_COVERAGE_DIR}")
 configure_file(${CDash_SOURCE_DIR}/tests/append_coverage.php.in 
-  ${CDash_BINARY_DIR}/tests/append_coverage.php)
+               ${CDash_BINARY_DIR}/append_coverage.php)
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
