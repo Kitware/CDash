@@ -59,14 +59,14 @@ class BuildTestDiffTestCase extends KWWebTestCase
     $buildtestdiff->Type = 0;
     if($buildtestdiff->Insert())
       {
-      $this->fail("Add() returned true when it should be false.\n");
+      $this->fail("Add() #1 returned true when it should be false.\n");
       return 1;
       }
       
     $buildtestdiff->DifferenceNegative = 0;
     if($buildtestdiff->Insert())
       {
-      $this->fail("Add() returned true when it should be false.\n");
+      $this->fail("Add() #2 returned true when it should be false.\n");
       return 1;
       }
       
@@ -74,15 +74,10 @@ class BuildTestDiffTestCase extends KWWebTestCase
     //call save twice to cover different execution paths
     if(!$buildtestdiff->Insert())
       {
-      $this->fail("Add() returned false when it should be true.\n");
+      $this->fail("Add() #3 returned false when it should be true.\n");
       return 1;
       }
-    if($buildtestdiff->Insert())
-      {
-      $this->fail("Add() returned true when it should be false.\n");
-      return 1;
-      }
-      
+        
     $this->pass("Passed");
 
     if ( extension_loaded('xdebug'))
