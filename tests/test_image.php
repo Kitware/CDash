@@ -55,6 +55,9 @@ class ImageTestCase extends KWWebTestCase
 
     $pathToImage = dirname(__FILE__)."/data/smile.gif";
 
+    //dummy checksum so we don't break the test on pgSQL
+    $image->Checksum=100;
+    
     //call save twice to cover different execution paths
     if(!$image->Save())
       {
