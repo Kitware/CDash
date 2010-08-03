@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(CDash NONE)
+project(CDash)
 include(CTest)
 configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
   ${CDash_BINARY_DIR}/CTestCustom.cmake)
