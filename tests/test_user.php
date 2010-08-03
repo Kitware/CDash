@@ -83,7 +83,8 @@ class UserTestCase extends KWWebTestCase
       
     $user->Id = $id;
     $user->Admin = "1";
-    $user->FirstName = "Foo";
+    $user->FirstName = "administrator";
+    $user->Institution = "Kitware Inc.";
     
     if($user->Exists() != true)
       {
@@ -91,13 +92,13 @@ class UserTestCase extends KWWebTestCase
       return 1;
       }
     
-    $user->Password = "simpletest";
+    $user->Password = md5("simpletest");
     
     // Coverage for update save
     $user->Save();
     
     // Coverage for SetPassword
-    $user->SetPassword("simpletest");
+    $user->SetPassword(md5("simpletest"));
     
     return 0;
     }
