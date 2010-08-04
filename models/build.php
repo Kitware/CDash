@@ -299,7 +299,8 @@ class Build
     //
     if ($subproject != '')
       {
-      $query = pdo_query("SELECT id FROM subproject WHERE name='".$subproject."' AND projectid=".qnum($this->ProjectId));
+      $query = pdo_query("SELECT id FROM subproject WHERE name='".$subproject."' 
+                          AND projectid=".qnum($this->ProjectId)." AND endtime='1980-01-01 00:00:00'");
       if(pdo_num_rows($query)>0)
         {
         $rows = pdo_fetch_array($query);

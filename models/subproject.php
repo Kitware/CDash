@@ -449,7 +449,7 @@ class SubProject
       }
   
     $project = pdo_query("SELECT id FROM subproject WHERE projectid=".qnum($this->ProjectId).
-                         " AND name='".$this->Name."'");
+                         " AND name='".$this->Name."' AND endtime='1980-01-01 00:00:00'");
                         
     if(!$project)
       {
