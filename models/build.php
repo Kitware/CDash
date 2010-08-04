@@ -288,55 +288,6 @@ class Build
     return false;
     }
 
-
-  /** Get the next build id */
-  function GetNextBuildId()
-    {
-    if(!$this->Id)
-      {
-      return false;    
-      }
-  
-    $query = pdo_query("SELECT id FROM build
-                       WHERE siteid=".qnum($this->SiteId)." AND type='$this->Type' AND name='$this->Name'
-                       AND projectid=".qnum($this->ProjectId)." AND starttime>'$this->StartTime' 
-                       ORDER BY starttime ASC LIMIT 1");
-    
-    if(!$query)
-      {
-      add_last_sql_error("Build:GetNextBuildId",$this->ProjectId,$this->Id);
-      return false;
-      }  
-      
-    if(pdo_num_rows($query)>0)
-      {
-      $nextbuild_array = pdo_fetch_array($query);              
-      return $nextbuild_array["id"];
-      }
-    return false;
-    }
-
-
-  /** Get the last build id */
-  function GetLastBuildId()
-    {
-    if(!$this->Id)
-      {
-      return false;    
-      }
-  
-    $query = pdo_query("SELECT id FROM build
-                        WHERE siteid=".qnum($this->SiteId)." AND type='$this->Type' AND name='$this->Name'
-                        AND projectid=".qnum($this->ProjectId)." ORDER BY starttime DESC LIMIT 1");
-    add_last_sql_error("Build:GetLastBuildId",$this->ProjectId,$this->Id);   
-    if(pdo_num_rows($query)>0)
-      {
-      $nextbuild_array = pdo_fetch_array($query);              
-      return $nextbuild_array["id"];
-      }
-    return false;
-    }
-
   /** Get the build id from it's name */
   function GetIdFromName($subproject)
     {
