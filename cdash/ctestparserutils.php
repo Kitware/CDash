@@ -30,15 +30,6 @@ function add_build($build)
   return $build->Id;
 }
 
-function init_db()
-{
-  include 'cdash/config.php';
-  require_once 'cdash/pdo.php';
-  require_once 'cdash/common.php';
-  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-  pdo_select_db("$CDASH_DB_NAME", $db);  
-}
-
 /** Extract the type from the build stamp */
 function extract_type_from_buildstamp($buildstamp)
 {
@@ -296,7 +287,7 @@ function compute_test_difference($buildid,$previousbuildid,$testtype,$projecttes
 
 /** Add the difference between the numbers of loc tested and untested
  *  for the previous and current build */
-function compute_coverage_difference($buildid)
+/*function compute_coverage_difference($buildid)
 {
   // Find the previous build
   $build = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id='$buildid'");
@@ -338,10 +329,9 @@ function compute_coverage_difference($buildid)
       add_last_sql_error("compute_coverage_difference",0,$buildid);
       }
     }
-}
-
+}*/
       
-function store_test_image($encodedImg, $type)
+/*function store_test_image($encodedImg, $type)
 {
   include("cdash/config.php");
   require_once("cdash/pdo.php");
@@ -394,5 +384,5 @@ function store_test_image($encodedImg, $type)
     echo pdo_error();
     }
   return 0;
-}
+}*/
 ?>
