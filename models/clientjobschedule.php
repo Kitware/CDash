@@ -123,19 +123,6 @@ class ClientJobSchedule
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
-    
-  /** Get the owner of the schedule */
-  function GetUserId()
-    {
-    if(!$this->Id)
-      {
-      add_log("ClientJobSchedule::GetUserId","Id not set");
-      return;
-      }
-    $sys = pdo_query("SELECT userid FROM client_jobschedule WHERE id=".qnum($this->Id));
-    $row = pdo_fetch_array($sys);
-    return $row[0];
-    }
 
   /** Get Type */
   function GetType()

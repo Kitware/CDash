@@ -926,29 +926,6 @@ class Project
     return $project_array[0];
     }
   
-  /** Get the number of configure given a date range */
-  function GetNumberOfConfigures($startUTCdate,$endUTCdate)
-    {
-    if(!$this->Id)
-      {
-      echo "Project GetNumberOfConfigures(): Id not set";
-      return false;
-      }
-  
-    $project = pdo_query("SELECT count(*) FROM configure,build,build2group,buildgroup WHERE projectid=".qnum($this->Id).
-                         " AND configure.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                           AND buildgroup.includesubprojectotal=1 
-                           AND build.starttime<='$endUTCdate'");
-    if(!$project)
-      {
-      add_last_sql_error("Project GetNumberOfConfigures",$this->Id);
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    return $project_array[0];
-    } 
-  
   /** Get the number of failing configure given a date range */
   function GetNumberOfWarningConfigures($startUTCdate,$endUTCdate)
     {
@@ -1017,29 +994,6 @@ class Project
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfPassingConfigures",$this->Id);
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    return $project_array[0];
-    }
-    
-  /** Get the number of tests given a date range */
-  function GetNumberOfTests($startUTCdate,$endUTCdate)
-    {
-    if(!$this->Id)
-      {
-      echo "Project GetNumberOfTests(): Id not set";
-      return false;
-      }
-  
-    $project = pdo_query("SELECT count(*) FROM build2test,build,build2group,buildgroup WHERE build.projectid=".qnum($this->Id).
-                         " AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                           AND buildgroup.includesubprojectotal=1
-                           AND build2test.buildid=build.id AND build.starttime>'$startUTCdate' 
-                           AND build.starttime<='$endUTCdate'");
-    if(!$project)
-      {
-      add_last_sql_error("Project GetNumberOfTests",$this->Id);
       return false;
       }
     $project_array = pdo_fetch_array($project);
