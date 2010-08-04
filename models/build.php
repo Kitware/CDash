@@ -1220,25 +1220,6 @@ class Build
     $errors_array  = pdo_fetch_array($errors);
     return $errors_array[0];
     } // end FindRealErrors
-
-  /** Return the siteid of a build */
-  function GetSiteId()
-    {
-    if(!$this->Id)
-      {
-      echo "Build GetSiteId(): Id not set";
-      return false;
-      }
-
-    $build = pdo_query("SELECT siteid FROM build WHERE id=".qnum($this->Id));
-    if(!$build)
-      {
-      add_last_sql_error("Build:GetSiteId",$this->ProjectId,$this->Id);
-      return false;
-      }
-    $build_array = pdo_fetch_array($build);
-    return $build_array['siteid'];
-    }
     
   /** Return the name of a build */
   function GetName()
