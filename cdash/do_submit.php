@@ -158,8 +158,9 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
   $bytes = filesize($filename);
 
   // Insert the filename in the database
+  $now_utc = gmdate(FMT_DATETIMESTD);
   pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
-    "VALUES ('".$filename."','".$projectid."','0','0','$bytes','$md5sum',UTC_TIMESTAMP())");
+    "VALUES ('".$filename."','".$projectid."','0','0','$bytes','$md5sum','$now_utc')");
 
   // We find the daily updates
   // If we have php curl we do it asynchronously

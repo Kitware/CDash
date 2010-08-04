@@ -35,6 +35,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
 
     $old_time = gmdate(FMT_DATETIMESTD, time()-(2*$CDASH_SUBMISSION_PROCESSING_TIME_LIMIT));
+    $now_utc = gmdate(FMT_DATETIMESTD);
 
     pdo_query(
       "INSERT INTO submission ".
@@ -47,7 +48,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
       "INSERT INTO submission ".
       " (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
       "VALUES ".
-      " ('bogus_submission_file_2.noxml','1','0','0','999','bogus_md5sum_2',UTC_TIMESTAMP())"
+      " ('bogus_submission_file_2.noxml','1','0','0','999','bogus_md5sum_2','$now_utc')"
     );
 
     return 0;

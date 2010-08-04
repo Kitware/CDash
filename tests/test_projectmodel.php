@@ -3,8 +3,6 @@
 require_once('kwtest/kw_web_tester.php');
 require_once('kwtest/kw_db.php');
 
-$path = dirname(__FILE__)."/..";
-set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once('models/project.php');
 require_once('cdash/pdo.php');
 require_once('cdash/common.php');
@@ -13,7 +11,7 @@ class ProjectModelTestCase extends KWWebTestCase
 {
   var $url = null;
   var $db  = null;
-  
+
   function __construct()
    {
    parent::__construct();
@@ -25,7 +23,7 @@ class ProjectModelTestCase extends KWWebTestCase
    $this->db->setUser($db['login']);
    $this->db->setPassword($db['pwd']);
    }
-  
+
   function testProjectModel()
     {
     xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
@@ -33,7 +31,7 @@ class ProjectModelTestCase extends KWWebTestCase
     pdo_select_db("cdash4simpletest", $db);
 
     $project = new Project();
-    
+
     $this->assertTrue($project->GetNumberOfErrorConfigures(0,0) === false, "GetNumberOfErrorConfigures!=false");
     $this->assertTrue($project->GetNumberOfWarningConfigures(0,0) === false, "GetNumberOfWarningConfigures!=false");
     $this->assertTrue($project->GetNumberOfPassingConfigures(0,0) === false, "GetNumberOfPassingConfigures!=false");
@@ -41,31 +39,31 @@ class ProjectModelTestCase extends KWWebTestCase
     $this->assertTrue($project->GetNumberOfFailingTests(0,0) === false, "GetNumberOfFailingTests!=false");
     $this->assertTrue($project->GetNumberOfNotRunTests(0,0) === false, "GetNumberOfNotRunTests!=false");
     $this->assertTrue($project->SendEmailToAdmin(0,0) === false, "SendEmailToAdmin!=false");
-    
+
     if(!($project->Delete() === false))
       {
       $this->fail("Project::Delete didn't return false for no id");
       return 1;
       }
-    
+
     $project->Id = "12039831208";
     if(!($project->Exists() === false))
       {
       $this->fail("Project::Exists didn't return false for bogus id");
       return 1;
       }
-    
+
     //Cover empty contents case
     $project->AddLogo('','');
     $project->Id = "2";
     $contents1 = file_get_contents('data/smile.gif', true);
     $contents2 = file_get_contents('data/smile2.gif', true);
-    
+
     //Cover all execution paths
     $project->AddLogo($contents1, 'gif');
     $project->AddLogo($contents2, 'gif');
     $project->AddLogo($contents1, 'gif');
-    
+
     @$project->SendEmailToAdmin('foo', 'hello world');
     }
 }

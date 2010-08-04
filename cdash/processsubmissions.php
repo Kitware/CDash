@@ -91,7 +91,8 @@ function ProcessSubmissions($projectid)
 
     # Mark it as status=1 (processing) and record started time:
     #
-    pdo_query("UPDATE submission SET status=1, started=UTC_TIMESTAMP(), lastupdated=UTC_TIMESTAMP(), attempts=$new_attempts WHERE id='".$submission_id."'");
+    $now_utc = gmdate(FMT_DATETIMESTD);
+    pdo_query("UPDATE submission SET status=1, started='$now_utc', lastupdated='$now_utc', attempts=$new_attempts WHERE id='".$submission_id."'");
 
     echo "# ============================================================================\n";
     echo 'Marked submission as started'."\n";
@@ -124,7 +125,8 @@ function ProcessSubmissions($projectid)
     # Mark it as done and record finished time:
     #
     echo 'Marking submission as finished'."\n";
-    pdo_query("UPDATE submission SET status=$new_status, finished=UTC_TIMESTAMP(), lastupdated=UTC_TIMESTAMP() WHERE id='".$submission_id."'");
+    $now_utc = gmdate(FMT_DATETIMESTD);
+    pdo_query("UPDATE submission SET status=$new_status, finished='$now_utc', lastupdated='$now_utc' WHERE id='".$submission_id."'");
 
     echo 'Re-querying for more submissions'."\n";
     $query = pdo_query($qs);
@@ -213,7 +215,8 @@ if (-1 != $current_submission_id)
   // "Current" or "in progress"... but not started recently...
   // Must have been killed while processing. Reset status to 0 and try again.
   //
-  pdo_query("UPDATE submission SET status=0, lastupdated=UTC_TIMESTAMP() WHERE id='".$current_submission_id."'");
+  $now_utc = gmdate(FMT_DATETIMESTD);
+  pdo_query("UPDATE submission SET status=0, lastupdated='$now_utc' WHERE id='".$current_submission_id."'");
 }
 
 
