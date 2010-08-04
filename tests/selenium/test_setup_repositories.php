@@ -42,8 +42,9 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->select("cvsviewertype", "label=GitWeb");
     $this->type("cvsURL", "cmake.org/gitweb?p=cmake.git");
     $this->click("Update");
-    $this->setSpeed("500");
+    $this->waitForPageToLoad("30000");
     $this->select("projectSelection", "label=EmailProjectExample");
+    $this->setSpeed("500");
     $this->click("//div[@id='wizard']/ul/li[3]/a/span");
     $this->type("cvsRepository[0]", "https://www.kitware.com/svn/CDash/trunk");
     $this->type("cvsURL", "https://www.kitware.com/svn/CDash/trunk");
