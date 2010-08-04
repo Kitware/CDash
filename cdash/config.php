@@ -103,6 +103,8 @@ $CDASH_MANAGE_CLIENTS = '0';
 $CDASH_GIT_COMMAND = 'git';
 // The default git directory where the bare repositories should be created
 $CDASH_DEFAULT_GIT_DIRECTORY = 'git';
+// Number of seconds to allow processing a single submission before resetting
+$CDASH_SUBMISSION_PROCESSING_TIME_LIMIT = '450';
 
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';

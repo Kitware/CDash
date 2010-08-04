@@ -102,7 +102,7 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
 function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 {
   include('cdash/config.php');
-  
+
   do 
     { 
     $filename = $CDASH_BACKUP_DIRECTORY."/".mt_rand().".xml";
@@ -120,7 +120,8 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     if (fwrite($outfile, $content) === FALSE)
       {
       echo "ERROR: Cannot write to file ($filename)";
-      add_log("Cannot write to file ($filename)", "do_submit_asynchronous",LOG_ERR);
+      add_log("Cannot write to file ($filename)", "do_submit_asynchronous",
+        LOG_ERR, $projectid);
       fclose($outfile);
       fclose($filehandle);
       return;
@@ -131,7 +132,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 
   $md5sum = md5_file($filename);
   $md5error = false;
-  
+
   echo "<cdash version=\"$CDASH_VERSION\">\n";
   if($expected_md5 == '' || $expected_md5 == $md5sum)
     {
@@ -149,13 +150,17 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 
   if($md5error)
     {
-    add_log("Checksum failure on file: $filename", "do_submit_asynchronous", LOG_ERR, $projectid);
+    add_log("Checksum failure on file: $filename", "do_submit_asynchronous",
+      LOG_ERR, $projectid);
     return;
     }
 
+  $bytes = filesize($filename);
+
   // Insert the filename in the database
-  pdo_query("INSERT INTO submission (filename,projectid,status) VALUES ('".$filename."','".$projectid."','0')");
-  
+  pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
+    "VALUES ('".$filename."','".$projectid."','0','0','$bytes','$md5sum',UTC_TIMESTAMP())");
+
   // We find the daily updates
   // If we have php curl we do it asynchronously
   if(function_exists("curl_init") == TRUE)
@@ -165,7 +170,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
       {
       $currentPort=":".$_SERVER['SERVER_PORT'];
       }
-    
+
     // Where to send to curl request
     $serverName = "localhost";     
     if(!$CDASH_CURL_REQUEST_LOCALHOST)
@@ -197,7 +202,9 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     }
   else // synchronously
     {
-    add_log("do_submit_asynchronous","Cannot submit asynchronously",LOG_ERR);
+    add_log("do_submit_asynchronous",
+      "Cannot submit asynchronously: php curl_init function does not exist",
+      LOG_ERR, $projectid);
     }
 }
 

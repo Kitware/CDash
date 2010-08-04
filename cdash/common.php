@@ -15,6 +15,9 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+require_once("cdash/config.php");
+require_once("cdash/log.php");
+
 if (PHP_VERSION >= 5) {
     // Emulate the old xslt library functions
     function xslt_create() {
@@ -66,14 +69,6 @@ if (PHP_VERSION >= 5) {
     }
 }
 
-define("FMT_TIME", "H:i:s");  // time
-define("FMT_DATE", "Y-m-d");  // date
-define("FMT_DATETIMESTD", "Y-m-d H:i:s");  // date and time standard
-define("FMT_DATETIME", "Y-m-d\TH:i:s");  // date and time
-define("FMT_DATETIMETZ", "Y-m-d\TH:i:s T");  // date and time with time zone
-define("FMT_DATETIMEMS", "Y-m-d\TH:i:s.u");  // date and time with milliseconds
-define("LOG_TESTING","log_testing");
-  
 /** Do the XSLT translation and look in the local directory if the file
  *  doesn't exist */
 function generate_XSLT($xml,$pageName,$only_in_local=false)
@@ -164,55 +159,6 @@ function microtime_float()
 function add_XML_value($tag,$value)
 {
   return "<".$tag.">".XMLStrFormat($value)."</".$tag.">";
-}
-
-/** Add information to the log file */
-function add_log($text,$function,$type=LOG_INFO,$projectid=0,$buildid=0,$resourcetype=0,$resourceid=0)
-{
-  if(strlen($text)==0)
-    {
-    return;
-    }
-  include("cdash/config.php");
-  include_once("models/constants.php");
-  include_once("models/errorlog.php");
-  $error = "";
-  if($type != LOG_TESTING)
-    {
-    $error = "[".date(FMT_DATETIME)."]";
-    }
-    
-  // This is parsed by the testing
-  switch($type)
-    {
-    case LOG_INFO: $error.="[INFO]"; break;
-    case LOG_WARNING: $error.="[WARNING]"; break;
-    case LOG_ERR: $error.="[ERROR]"; break;
-    case LOG_TESTING: $error.="[TESTING]";break;
-    }
-  $error .= "(".$function."): ".$text."\n";  
-  error_log($error,3,$CDASH_LOG_FILE);
-  
-  // Insert in the database
-  if($type == LOG_WARNING || $type==LOG_ERR)
-    { 
-    $ErrorLog = new ErrorLog;
-    $ErrorLog->ProjectId = $projectid;
-    $ErrorLog->BuildId = $buildid;
-    switch($type)
-      { 
-      case LOG_INFO: $ErrorLog->Type = 6;
-      case LOG_WARNING: $ErrorLog->Type = 5;
-      case LOG_ERR: $ErrorLog->Type = 4;
-      }
-    $ErrorLog->Description = "(".$function."): ".$text;
-    $ErrorLog->ResourceType = $resourcetype;
-    $ErrorLog->ResourceId = $resourceid;
-    $ErrorLog->Insert();
-    
-    // Clean the log more than 10 days
-    $ErrorLog->Clean(10);
-    }
 }
 
 /** Report last my SQL error */

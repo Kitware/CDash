@@ -15,14 +15,15 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include_once("../cdash/common.php");
 
-// Open the database connection
-include("../cdash/config.php");
-require_once("../cdash/pdo.php");
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+// To be able to access files in this CDash installation regardless
+// of getcwd() value:
+//
+$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
+set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
+require_once("cdash/common.php");
+require_once("cdash/pdo.php");
 
 @$project = $_GET['project'];
 @$site = $_GET['site'];

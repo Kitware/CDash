@@ -891,9 +891,17 @@ CREATE TABLE IF NOT EXISTS `submission` (
   `filename` varchar(500) NOT NULL,
   `projectid` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL,
+  `attempts` int(11) NOT NULL DEFAULT '0',
+  `filesize` int(11) NOT NULL DEFAULT '0',
+  `filemd5sum` varchar(32) NOT NULL DEFAULT '',
+  `lastupdated` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `created` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `started` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `finished` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
   PRIMARY KEY (`id`),
   KEY `projectid` (`projectid`),
-  KEY `status` (`status`)
+  KEY `status` (`status`),
+  KEY `finished` (`finished`)
 );
 
 

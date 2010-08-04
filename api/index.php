@@ -16,18 +16,19 @@
 
 =========================================================================*/
 
-// Open the database connection
-include("../cdash/config.php");
-require_once("../cdash/pdo.php");
+// To be able to access files in this CDash installation regardless
+// of getcwd() value:
+//
+$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
+set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+require_once("cdash/pdo.php");
 
 // Add other api includes here
-include("api_coverage.php");
-include("api_project.php");
-include("api_build.php");
-include("api_user.php");
+require("api_coverage.php");
+require("api_project.php");
+require("api_build.php");
+require("api_user.php");
 
 if(!isset($_GET['method']))
   {

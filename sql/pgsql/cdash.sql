@@ -852,13 +852,21 @@ CREATE INDEX "coveragefilepriority_projectid" on "coveragefilepriority" ("projec
 --
 CREATE TABLE "submission" (
   "id" serial NOT NULL,
-  "fullpath" character varying(255) DEFAULT '' NOT NULL,
+  "filename" character varying(500) DEFAULT '' NOT NULL,
   "projectid" bigint  NOT NULL,
   "status" smallint NOT NULL,
+  "attempts" bigint DEFAULT '0' NOT NULL,
+  "filesize" bigint DEFAULT '0' NOT NULL,
+  "filemd5sum" character varying(32) DEFAULT '' NOT NULL,
+  "lastupdated" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "created" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "started" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "finished" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "submission_projectid" on "submission" ("projectid");
 CREATE INDEX "submission_status" on "submission" ("status");
+CREATE INDEX "submission_finished" on "submission" ("finished");
 
 
 CREATE TABLE "blockbuild" (

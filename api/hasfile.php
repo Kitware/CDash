@@ -15,7 +15,15 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-include_once("../cdash/common.php");
+
+// To be able to access files in this CDash installation regardless
+// of getcwd() value:
+//
+$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
+set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
+
+require_once("cdash/common.php");
+require_once("cdash/pdo.php");
 
 $md5sums_get = isset($_GET['md5sums']) ? $_GET['md5sums'] : '';
 if($md5sums_get == '')
@@ -25,12 +33,6 @@ if($md5sums_get == '')
   }
 
 $md5sums = split('[|\\.:,;]+', $md5sums_get);
-
-// Open the database connection
-include("../cdash/config.php");
-require_once("../cdash/pdo.php");
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
 
 foreach($md5sums as $md5sum)
   {

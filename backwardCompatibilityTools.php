@@ -756,7 +756,7 @@ if(isset($_GET['upgrade-1-8']))
   // Add lastping to the client_site table
   AddTableField("client_site","lastping","timestamp","timestamp(0)","1980-01-01 00:00:00");
   AddTableIndex('client_site','lastping');
-   
+
   // Remove img index for table test2image
   RenameTableField('test2image','imgid','imgid',"int(11)","bigint","0");
   RemoveTablePrimaryKey('test2image');
@@ -768,7 +768,19 @@ if(isset($_GET['upgrade-1-8']))
   
   AddTableField("dailyupdate","revision","varchar(60)","character varying(60)","");
   AddTableField("repositories","branch","varchar(60)","character varying(60)","");
- 
+
+  // New fields for the submission table to make asynchronous submission
+  // processing more robust:
+  //
+  AddTableField("submission", "attempts", "int(11)", "bigint", "0");
+  AddTableField("submission", "filesize", "int(11)", "bigint", "0");
+  AddTableField("submission", "filemd5sum", "varchar(32)", "character varying(32)", "");
+  AddTableField("submission", "lastupdated", "timestamp", "timestamp(0)", "1980-01-01 00:00:00");
+  AddTableField("submission", "created", "timestamp", "timestamp(0)", "1980-01-01 00:00:00");
+  AddTableField("submission", "started", "timestamp", "timestamp(0)", "1980-01-01 00:00:00");
+  AddTableField("submission", "finished", "timestamp", "timestamp(0)", "1980-01-01 00:00:00");
+  AddTableIndex("submission", "finished");
+
   // Set the database version
   setVersion();
 
@@ -777,6 +789,7 @@ if(isset($_GET['upgrade-1-8']))
 
   return;
 }
+
 // When adding new tables they should be added to the SQL installation file
 // and here as well
 if($Upgrade)
