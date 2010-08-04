@@ -357,7 +357,7 @@ function clean_backup_directory()
 }
 
 /** Backup an XML file */
-function backup_xml_file($parser,$contents,$projectid)
+/*function backup_xml_file($parser,$contents,$projectid)
 {
   
   // If the content of the file is empty we return
@@ -457,7 +457,7 @@ function backup_xml_file($parser,$contents,$projectid)
     }
     
   fclose($handle);
-}
+}*/
 
 /** return an array of projects */
 function get_projects()

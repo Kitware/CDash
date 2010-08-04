@@ -63,20 +63,11 @@ class Build
     $this->InsertErrors = true;
     }
 
-
   function AddError($error)
     {
     $error->BuildId = $this->Id;
     $this->Errors[] = $error;
     }
-
-
-  function AddErrorDiff($diff)
-    {
-    $diff->BuildId = $this->Id;
-    $this->ErrorDiffs[] = $diff;
-    }    
-
 
   function AddLabel($label)
     {
@@ -88,49 +79,6 @@ class Build
     $label->BuildId = $this->Id;
     $this->Labels[] = $label;
     }
-
-
-  function SaveTest($test)
-    {
-    $test->BuildId = $this->Id;
-    $test->Insert();
-    }
-
-
-  function SaveTestDiff($diff)
-    {
-    $diff->BuildId = $this->Id;
-    $diff->Insert();
-    }    
-
-
-  function SaveUpdate($update)
-    {
-    $update->BuildId = $this->Id;
-    $update->Insert();
-    }
-
-
-  function SaveConfigure($configure)
-    {
-    $configure->BuildId = $this->Id;
-    $configure->Insert();
-    }
-
-
-  function SaveNote($note)
-    {
-    $note->BuildId = $this->Id;
-    $note->Insert();
-    }
-
-
-  function SaveUserNote($note)
-    {
-    $note->BuildId = $this->Id;
-    $note->Insert();
-    }
-
 
   function SetStamp($stamp)
     {
