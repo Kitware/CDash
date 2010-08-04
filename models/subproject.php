@@ -247,7 +247,7 @@ class SubProject
     {
     if(!$this->Id)
       {
-      echo "SubProject GetNumberOfWarningBuilds(): Id not set";
+      echo "SubProject GetNumberOfErrorBuilds(): Id not set";
       return false;
       }
   
@@ -261,7 +261,7 @@ class SubProject
   
     if(!$project)
       {
-      add_last_sql_error("SubProject GetNumberOfWarningBuilds");
+      add_last_sql_error("SubProject GetNumberOfErrorBuilds");
       return false;
       }
     $project_array = pdo_fetch_array($project);
