@@ -15,9 +15,16 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-require_once("../cdash/config.php");
-require_once("../cdash/pdo.php");
-require_once("../cdash/common.php");
+
+// To be able to access files in this CDash installation regardless
+// of getcwd() value:
+//
+$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
+set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
+
+require_once("cdash/config.php");
+require_once("cdash/pdo.php");
+require_once("cdash/common.php");
 
 $testid = $_GET["testid"];
 $buildid = $_GET["buildid"];

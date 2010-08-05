@@ -16,26 +16,34 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-require_once("../cdash/config.php");
-require_once("../cdash/pdo.php");
-include("../cdash/common.php");
-$noforcelogin = 1;
-include('../login.php');
-@$userid = $_GET["userid"];
 
+// To be able to access files in this CDash installation regardless
+// of getcwd() value:
+//
+$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
+set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
+
+require_once("cdash/config.php");
+require_once("cdash/pdo.php");
+require_once("cdash/common.php");
+
+$noforcelogin = 1;
+include('login.php');
+
+@$userid = $_GET["userid"];
 if(!$userid && !isset($_SESSION['cdash']))
   {
   echo "Not a valid user id";
   return;
   }
-  
+
 $buildid = $_GET["buildid"];
 if(!isset($buildid) || !is_numeric($buildid))
   {
   echo "Not a valid buildid!";
   return;
   }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
