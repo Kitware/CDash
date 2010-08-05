@@ -31,7 +31,7 @@ class UserTestCase extends KWWebTestCase
    
   function testUser()
     {
-    xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
+    //xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
     $db = pdo_connect($this->db->dbo->host, $this->db->dbo->user, $this->db->dbo->password);
     pdo_select_db("cdash4simpletest", $db);
 
