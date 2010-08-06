@@ -5,6 +5,7 @@ require_once('kwtest/kw_db.php');
 
 $path = dirname(__FILE__)."/..";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
 require_once('models/test.php');
 require_once('models/image.php');
 require_once('models/testmeasurement.php');
@@ -51,10 +52,11 @@ class TestModelTestCase extends KWWebTestCase
     $test->AddMeasurement($testmeasurement);
     
     $image = new Image();
-    $image->Id = "8192";
-    $image->Filename = "data/smile.gif";
-    $image->Checksum=100;
+    $image->Filename = dirname(__FILE__)."/data/smile.gif";
+    $image->Data = base64_encode(file_get_contents($image->Filename));
+    $image->Checksum = 100;
     $image->Extension = "image/gif";
+
     $test->AddImage($image);
     
     $test->Insert();

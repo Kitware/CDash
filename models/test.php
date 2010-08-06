@@ -227,7 +227,7 @@ class Test
       {
       // Decode the data
       $imgStr = base64_decode($image->Data);
-       $img = imagecreatefromstring($imgStr);
+      $img = imagecreatefromstring($imgStr);
       ob_start();
       switch($image->Extension)
         {
