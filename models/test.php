@@ -64,7 +64,6 @@ class Test
 
   function AddImage($image)
     {
-    $image->TestId = $this->Id;
     $this->Images[] = $image;
     }
 

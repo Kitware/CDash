@@ -23,6 +23,11 @@ require_once("models/errorlog.php");
 function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                  $resourcetype=0, $resourceid=0)
 {
+  if(!file_exists($CDASH_LOG_FILE))
+    {
+    return false;
+    }
+
   if(strlen($text)==0)
   {
     return;
