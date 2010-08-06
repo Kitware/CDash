@@ -46,7 +46,7 @@ class ProjectModelTestCase extends KWWebTestCase
       return 1;
       }
 
-    $project->Id = "12039831208";
+    $project->Id = "27123";
     if(!($project->Exists() === false))
       {
       $this->fail("Project::Exists didn't return false for bogus id");
