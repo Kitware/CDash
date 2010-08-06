@@ -94,7 +94,7 @@ class SubProjectTestCase extends KWWebTestCase
       }
     if(!$this->compareLog($this->logfilename,$rep."/cdash_2.log"))
       {
-      return;  
+      return;
       }
     $this->pass('Test passed');  
     }
