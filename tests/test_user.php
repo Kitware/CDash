@@ -99,8 +99,6 @@ class UserTestCase extends KWWebTestCase
     
     // Coverage for SetPassword
     $user->SetPassword(md5("simpletest"));
-    
-    return 0;
     }
 }
 
