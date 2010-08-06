@@ -23,9 +23,21 @@ require_once("models/errorlog.php");
 function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                  $resourcetype=0, $resourceid=0)
 {
-  if(!file_exists($CDASH_LOG_FILE))
+  global $CDASH_LOG_FILE;
+  $logFile = $CDASH_LOG_FILE;
+
+  if(!file_exists(dirname($logFile)))
     {
-    return false;
+    $paths = explode(PATH_SEPARATOR, get_include_path());
+    // Search the include path for the log file
+    foreach($paths as $path)
+      {
+      if(file_exists(dirname("$path/$CDASH_LOG_FILE")))
+        {
+        $logFile = "$path/$CDASH_LOG_FILE";
+        break;
+        }
+      }
     }
 
   if(strlen($text)==0)
@@ -48,8 +60,8 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
   }
   $error .= "(".$function."): ".$text."\n";
 
-  global $CDASH_LOG_FILE;
-  error_log($error, 3, $CDASH_LOG_FILE);
+  
+  error_log($error, 3, $logFile);
 
   // Insert in the database
   if($type == LOG_WARNING || $type==LOG_ERR)
