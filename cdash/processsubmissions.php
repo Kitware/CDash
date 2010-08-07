@@ -80,6 +80,7 @@ function ProcessSubmissions($projectid)
     $projectid."' AND status=0 ORDER BY id LIMIT 1";
 
   $query = pdo_query($qs);
+  $iterations = 0;
 
   while (pdo_num_rows($query) > 0)
   {
@@ -94,7 +95,12 @@ function ProcessSubmissions($projectid)
     $now_utc = gmdate(FMT_DATETIMESTD);
     pdo_query("UPDATE submission SET status=1, started='$now_utc', lastupdated='$now_utc', attempts=$new_attempts WHERE id='".$submission_id."'");
 
+    $mem_used = memory_get_usage();
+    $logstring = "iterations='$iterations' mem_used='$mem_used'";
+    add_log("ProcessSubmission", "$logstring", LOG_INFO, $projectid);
+
     echo "# ============================================================================\n";
+    echo "# $logstring\n";
     echo 'Marked submission as started'."\n";
     echo print_r($query_array, true) . "\n";
 
@@ -130,6 +136,7 @@ function ProcessSubmissions($projectid)
 
     echo 'Re-querying for more submissions'."\n";
     $query = pdo_query($qs);
+    $iterations = $iterations + 1;
   }
 }
 
