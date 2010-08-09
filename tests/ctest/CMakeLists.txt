@@ -45,6 +45,37 @@ add_ctest_test(sameImage InsightExample sameImage sameImage.php)
   
 add_ctest_test(svnUpdates EmailProjectExample simple simple.php)
 add_ctest_test(gitUpdates PublicDashboard simple simple.php)
+  
+function(add_cdash_test TestName TestDir)
+  CONFIGURE_FILE(
+    "${CMAKE_CURRENT_SOURCE_DIR}/${TestDir}/test.cmake.in"
+    "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake"
+    @ONLY ESCAPE_QUOTES)
+  ADD_TEST(${TestName} ${CMAKE_CTEST_COMMAND}
+    -S "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake" -V
+    --output-log "${CDash_BINARY_DIR}/Tests/${TestDir}/output.log"
+    )
+endfunction(add_cdash_test)
+  
+add_cdash_test(CTestSubmitLargeOutput CTestSubmitLargeOutput)
+
+# This test only passes if it fails to submit properly...
+#
+SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
+  PASS_REGULAR_EXPRESSION "Errors occurred during submission")
+
+# Give this test plenty of time to run on slower machines:
+# Use 1500 or CTEST_TEST_TIMEOUT for long test timeout value,
+# whichever is greater.
+SET(CMAKE_LONG_TEST_TIMEOUT 1500)
+IF(CTEST_TEST_TIMEOUT)
+  SET(CMAKE_LONG_TEST_TIMEOUT ${CTEST_TEST_TIMEOUT})
+ENDIF(CTEST_TEST_TIMEOUT)
+IF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
+  SET(CMAKE_LONG_TEST_TIMEOUT 1500)
+ENDIF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
+SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
+  TIMEOUT ${CMAKE_LONG_TEST_TIMEOUT})
 
 if(CMake_SOURCE_DIR)
   #just so we don't pollute the CMake binary dir with our testing...
@@ -65,25 +96,6 @@ if(CMake_SOURCE_DIR)
   set(protocol "http")
   set(server "${CDASH_SERVER}")
   set(path "/${CDASH_DIR_NAME}")
-  add_cmake_test(CTestSubmitLargeOutput CTestSubmitLargeOutput)
-
-  # This test only passes if it fails to submit properly...
-  #
-  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
-    PASS_REGULAR_EXPRESSION "Errors occurred during submission")
-
-  # Give this test plenty of time to run on slower machines:
-  # Use 1500 or CTEST_TEST_TIMEOUT for long test timeout value,
-  # whichever is greater.
-  SET(CMAKE_LONG_TEST_TIMEOUT 1500)
-  IF(CTEST_TEST_TIMEOUT)
-    SET(CMAKE_LONG_TEST_TIMEOUT ${CTEST_TEST_TIMEOUT})
-  ENDIF(CTEST_TEST_TIMEOUT)
-  IF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
-    SET(CMAKE_LONG_TEST_TIMEOUT 1500)
-  ENDIF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
-  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
-    TIMEOUT ${CMAKE_LONG_TEST_TIMEOUT})
 
   macro(add_failed_submit_test name source build in out log regex)
     # Have variables named source, build and drop_method because the
@@ -151,15 +163,14 @@ else(COVERAGE_COMMAND)
   add_ctest_test(simple_async Simple simple simple.php enable_async)
 endif(COVERAGE_COMMAND)
 add_ctest_test(simple2_async Simple simple2 simple2.php enable_async)
+  
+add_cdash_test(CTestSubmitLargeOutput_async CTestSubmitLargeOutput)
+SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
+  PASS_REGULAR_EXPRESSION "Submission successful")
+SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
+  TIMEOUT ${CMAKE_LONG_TEST_TIMEOUT})
 
 if(CMake_SOURCE_DIR)
-  add_cmake_test(CTestSubmitLargeOutput_async CTestSubmitLargeOutput)
-
-  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
-    PASS_REGULAR_EXPRESSION "Submission successful")
-
-  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
-    TIMEOUT ${CMAKE_LONG_TEST_TIMEOUT})
 
   foreach(drop_method cp ftp http https scp xmlrpc)
     # Cycle through these values each time through the loop:
