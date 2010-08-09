@@ -22,6 +22,8 @@ include_once('models/builderrordiff.php');
 include_once('models/builderror.php');
 include_once('models/buildinformation.php');
 include_once('models/label.php');
+include_once('models/constants.php');
+include_once('cdash/ctestparserutils.php');
 
 class Build
 {
@@ -359,6 +361,7 @@ class Build
       add_log('No Build::Id - cannot call $label->Insert...','Build::InsertLabelAssociations',LOG_ERR,
               $this->ProjectId,$this->Id,
               CDASH_OBJECT_BUILD,$this->Id);
+      return false;
       }
     }
 
