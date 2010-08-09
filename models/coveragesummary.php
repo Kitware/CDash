@@ -212,6 +212,12 @@ class CoverageSummary
         add_last_sql_error("CoverageSummary Insert");
         return false;
         }
+
+      // Add labels
+      foreach($this->Coverages as &$coverage)
+        {
+        $coverage->InsertLabelAssociations($this->BuildId);
+        }
       }
 
     return true;

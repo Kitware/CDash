@@ -36,6 +36,50 @@ class Coverage
   var $CoverageFile;
   var $Labels;
 
+
+  // Purposely no Insert function. Everything is done from the coverage summary
+  function AddLabel($label)
+    {
+    if(!isset($this->Labels))
+      {
+      $this->Labels = array();
+      }
+
+    $label->CoverageFileId = $this->CoverageFile->Id;
+    $label->CoverageFileBuildId = $this->BuildId;
+    $this->Labels[] = $label;
+    }
+
+
+  function InsertLabelAssociations($buildid)
+    {
+    if($buildid &&
+       isset($this->CoverageFile) &&
+       $this->CoverageFile->Id)
+      {
+      
+      if(empty($this->Labels))
+        {
+        return;
+        }
+      
+      foreach($this->Labels as $label)
+        {
+        $label->CoverageFileId = $this->CoverageFile->Id;
+        $label->CoverageFileBuildId = $buildid;
+        $label->Insert();
+        }
+      }
+    else
+      {
+      add_log('No BuildFailure id - cannot call $label->Insert...',
+              'BuildFailure::InsertLabelAssociations',LOG_ERR,
+              0,$buildid,
+              CDASH_OBJECT_COVERAGE,$this->CoverageFile->Id);   
+      }
+    }
+
+
   /** Return the name of a build */
   function GetFiles()
     {
