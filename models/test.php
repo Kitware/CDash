@@ -23,6 +23,7 @@ include_once('models/buildtest.php');
 include_once('models/label.php');
 include_once('models/testimage.php');
 include_once('models/image.php');
+include_once('models/constants.php');
 
 /** Test */
 class Test
