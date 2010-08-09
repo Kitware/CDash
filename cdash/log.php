@@ -58,6 +58,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
     case LOG_ERR: $error.="[ERROR]"; break;
     case LOG_TESTING: $error.="[TESTING]";break;
   }
+  $error .= "[pid=".getmypid()."]";
   $error .= "(".$function."): ".$text."\n";
 
   

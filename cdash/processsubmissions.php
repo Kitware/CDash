@@ -79,7 +79,9 @@ function ProcessSubmissions($projectid)
   $qs = "SELECT id, filename, attempts FROM submission WHERE projectid='".
     $projectid."' AND status=0 ORDER BY id LIMIT 1";
 
+  add_log("ProcessSubmission", "querying before loop", LOG_INFO, $projectid);
   $query = pdo_query($qs);
+  add_last_sql_error("ProcessSubmissions-1");
   $iterations = 0;
 
   while (pdo_num_rows($query) > 0)
@@ -94,6 +96,7 @@ function ProcessSubmissions($projectid)
     #
     $now_utc = gmdate(FMT_DATETIMESTD);
     pdo_query("UPDATE submission SET status=1, started='$now_utc', lastupdated='$now_utc', attempts=$new_attempts WHERE id='".$submission_id."'");
+    add_last_sql_error("ProcessSubmissions-2");
 
     $mem_used = memory_get_usage();
     $logstring = "iterations='$iterations' mem_used='$mem_used'";
@@ -115,9 +118,11 @@ function ProcessSubmissions($projectid)
     if($fp)
     {
       echo 'Calling do_submit'."\n";
+      add_log("ProcessSubmission", "calling do_submit", LOG_INFO, $projectid);
       do_submit($fp, $projectid, '', false);
       // delete the temporary backup file since we now have a better-named one
       echo 'Calling unlink (' . $filename . ')'."\n";
+      add_log("ProcessSubmission", "calling unlink", LOG_INFO, $projectid);
       unlink($filename);
       $new_status = 2; // done, did call do_submit
     }
@@ -132,12 +137,20 @@ function ProcessSubmissions($projectid)
     #
     echo 'Marking submission as finished'."\n";
     $now_utc = gmdate(FMT_DATETIMESTD);
+    add_log("ProcessSubmission", "marking status=$new_status", LOG_INFO, $projectid);
     pdo_query("UPDATE submission SET status=$new_status, finished='$now_utc', lastupdated='$now_utc' WHERE id='".$submission_id."'");
+    add_last_sql_error("ProcessSubmissions-3");
 
     echo 'Re-querying for more submissions'."\n";
+    add_log("ProcessSubmission", "querying for more submissions", LOG_INFO, $projectid);
     $query = pdo_query($qs);
+    add_last_sql_error("ProcessSubmissions-4");
     $iterations = $iterations + 1;
   }
+
+  $mem_used = memory_get_usage();
+  $logstring = "DONE iterations='$iterations' mem_used='$mem_used'";
+  add_log("ProcessSubmission", "$logstring", LOG_INFO, $projectid);
 }
 
 
@@ -153,6 +166,7 @@ function DeleteOldSubmissionRecords()
   $one_week_ago_utc = gmdate(FMT_DATETIMESTD, time()-$seconds);
 
   pdo_query("DELETE FROM submission WHERE status>1 AND finished<'$one_week_ago_utc'");
+  add_last_sql_error("ProcessSubmissions-5");
 }
 
 
@@ -224,6 +238,7 @@ if (-1 != $current_submission_id)
   //
   $now_utc = gmdate(FMT_DATETIMESTD);
   pdo_query("UPDATE submission SET status=0, lastupdated='$now_utc' WHERE id='".$current_submission_id."'");
+  add_last_sql_error("ProcessSubmissions-6");
 }
 
 
