@@ -102,7 +102,8 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
 function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 {
   include('cdash/config.php');
-
+  include('cdash/version.php');
+  
   do 
     { 
     $filename = $CDASH_BACKUP_DIRECTORY."/".mt_rand().".xml";
@@ -133,7 +134,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
   $md5sum = md5_file($filename);
   $md5error = false;
 
-  echo "<cdash version=\"$CDASH_VERSION\">\n";
+  echo "<cdash version=\"".$CDASH_VERSION."\">\n";
   if($expected_md5 == '' || $expected_md5 == $md5sum)
     {
     echo "  <status>OK</status>\n";
