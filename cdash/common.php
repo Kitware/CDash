@@ -173,12 +173,24 @@ function add_last_sql_error($functionname,$projectid=0,$buildid=0,$resourcetype=
     }
 }
 
-/** Catch the PHP fatal error */ 
+/** Catch any PHP fatal errors */
+//
+// This is a registered shutdown function (see register_shutdown_function help)
+// and gets called at script exit time, regardless of reason for script exit.
+// i.e. -- it gets called when a script exits normally, too.
+//
 global $PHP_ERROR_BUILD_ID;
 global $PHP_ERROR_RESOURCE_TYPE;
 global $PHP_ERROR_RESOURCE_ID;
+
 function PHPErrorHandler($projectid)
 {
+  if (connection_aborted())
+    {
+    add_log('PHPErrorHandler', "connection_aborted()='".connection_aborted()."'", LOG_INFO, $projectid);
+    add_log('PHPErrorHandler', "connection_status()='".connection_status()."'", LOG_INFO, $projectid);
+    }
+
   if ($error = error_get_last())
     {
     switch($error['type'])
@@ -197,7 +209,7 @@ function PHPErrorHandler($projectid)
         exit();  // stop the script
         break;
       }
-    }  
+    }
 }  // end PHPErrorHandler()
 
 /** Set the CDash version number in the database */

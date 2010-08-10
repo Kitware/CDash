@@ -30,7 +30,9 @@ require_once("cdash/do_submit.php");
 require_once("cdash/pdo.php");
 
 
+ob_start();
 set_time_limit(0);
+ignore_user_abort(TRUE);
 
 
 // Returns the 'id' of the submission that is currently being processed for
@@ -76,7 +78,7 @@ function DidSubmissionStartRecently($submission_id, $recent)
 //
 function ProcessSubmissions($projectid)
 {
-  $qs = "SELECT id, filename, attempts FROM submission WHERE projectid='".
+  $qs = "SELECT id, filename, filesize, attempts FROM submission WHERE projectid='".
     $projectid."' AND status=0 ORDER BY id LIMIT 1";
 
   add_log("ProcessSubmission", "querying before loop", LOG_INFO, $projectid);
@@ -84,9 +86,13 @@ function ProcessSubmissions($projectid)
   add_last_sql_error("ProcessSubmissions-1");
   $iterations = 0;
 
-  while (pdo_num_rows($query) > 0)
+  $n = pdo_num_rows($query);
+  while ($n > 0)
   {
     $query_array = pdo_fetch_array($query);
+    add_last_sql_error("ProcessSubmissions-1.5");
+
+    add_log("ProcessSubmission", "query_array: ".print_r($query_array, true), LOG_INFO, $projectid);
 
     $submission_id = $query_array['id'];
     $filename = $query_array['filename'];
@@ -102,10 +108,17 @@ function ProcessSubmissions($projectid)
     $logstring = "iterations='$iterations' mem_used='$mem_used'";
     add_log("ProcessSubmission", "$logstring", LOG_INFO, $projectid);
 
+    add_log("ProcessSubmission", "connection_status='".connection_status()."'", LOG_INFO, $projectid);
+    add_log("ProcessSubmission", "connection_aborted='".connection_aborted()."'", LOG_INFO, $projectid);
+
     echo "# ============================================================================\n";
     echo "# $logstring\n";
     echo 'Marked submission as started'."\n";
+    add_log("ProcessSubmission", print_r($query_array, true), LOG_INFO, $projectid);
     echo print_r($query_array, true) . "\n";
+
+    add_log("ProcessSubmission", "calling pdo_free_result", LOG_INFO, $projectid);
+    pdo_free_result($query_array);
 
     $fp = fopen($filename, 'r');
     if(!$fp)
@@ -120,6 +133,8 @@ function ProcessSubmissions($projectid)
       echo 'Calling do_submit'."\n";
       add_log("ProcessSubmission", "calling do_submit", LOG_INFO, $projectid);
       do_submit($fp, $projectid, '', false);
+      add_log("ProcessSubmission", "calling fclose", LOG_INFO, $projectid);
+      fclose($fp);
       // delete the temporary backup file since we now have a better-named one
       echo 'Calling unlink (' . $filename . ')'."\n";
       add_log("ProcessSubmission", "calling unlink", LOG_INFO, $projectid);
@@ -145,6 +160,8 @@ function ProcessSubmissions($projectid)
     add_log("ProcessSubmission", "querying for more submissions", LOG_INFO, $projectid);
     $query = pdo_query($qs);
     add_last_sql_error("ProcessSubmissions-4");
+    $n = pdo_num_rows($query);
+    add_log("ProcessSubmission", "got $n rows", LOG_INFO, $projectid);
     $iterations = $iterations + 1;
   }
 
@@ -165,7 +182,7 @@ function DeleteOldSubmissionRecords()
 
   $one_week_ago_utc = gmdate(FMT_DATETIMESTD, time()-$seconds);
 
-  pdo_query("DELETE FROM submission WHERE status>1 AND finished<'$one_week_ago_utc'");
+  pdo_query("DELETE FROM submission WHERE (status=2 OR status=3) AND finished<'$one_week_ago_utc' AND finished!='1980-01-01 00:00:00'");
   add_last_sql_error("ProcessSubmissions-5");
 }
 
@@ -245,6 +262,16 @@ if (-1 != $current_submission_id)
 echo "projectid='$projectid'\n";
 echo "force='$force'\n";
 
+function myErrorHandler($errno, $errstr, $errfile, $errline)
+{
+  add_log("ProcessSubmission", "$errno : $errstr : $errfile : $errline",
+    LOG_INFO, $projectid);
+  // pass on to PHP built in:
+  return false;
+}
+
+//set_error_handler("myErrorHandler");
+
 ProcessSubmissions($projectid);
 echo "Done with ProcessSubmissions\n";
 
@@ -252,4 +279,6 @@ DeleteOldSubmissionRecords();
 echo "Done with DeleteOldSubmissionRecords\n";
 
 echo "</pre>";
+
+ob_end_flush();
 ?>
