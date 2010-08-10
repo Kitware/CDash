@@ -57,6 +57,10 @@ function(add_cdash_test TestName TestDir)
     )
 endfunction(add_cdash_test)
   
+set(protocol "http")
+set(server "${CDASH_SERVER}")
+set(path "/${CDASH_DIR_NAME}")
+  
 add_cdash_test(CTestSubmitLargeOutput CTestSubmitLargeOutput)
 
 # This test only passes if it fails to submit properly...
@@ -92,10 +96,6 @@ if(CMake_SOURCE_DIR)
       --output-log "${CDash_BINARY_DIR}/Tests/${TestDir}/output.log"
       )
   endfunction(add_cmake_test)
-
-  set(protocol "http")
-  set(server "${CDASH_SERVER}")
-  set(path "/${CDASH_DIR_NAME}")
 
   macro(add_failed_submit_test name source build in out log regex)
     # Have variables named source, build and drop_method because the
