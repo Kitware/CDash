@@ -159,6 +159,11 @@ class TestingHandler extends AbstractHandler
       else
         {
         $this->Build->Id = $buildid;
+        //if the build already exists factor the number of tests that have
+        //already been run into our running total
+        $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
+        $this->NumberTestsNotRun += $this->Build->GetNumberOfNotRunTests();
+        $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();
         }  
         
       $this->BuildId = $buildid;

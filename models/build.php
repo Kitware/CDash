@@ -673,6 +673,60 @@ class Build
     return true;
     }
 
+  /** Get number of failed tests */
+  function GetNumberOfFailedTests()
+    {
+    $result =
+      pdo_query("SELECT testfailed FROM build WHERE id=".qnum($this->Id));
+    if(pdo_num_rows($result) > 0)
+      {
+      $build_array = pdo_fetch_array($result);
+      $numTestsFailed = $build_array["testfailed"];
+      if($numTestsFailed < 0)
+        {
+        return 0;
+        }
+      return $numTestsFailed;
+      }
+    return 0;
+    }
+
+  /** Get number of passed tests */
+  function GetNumberOfPassedTests()
+    {
+    $result =
+      pdo_query("SELECT testpassed FROM build WHERE id=".qnum($this->Id));
+    if(pdo_num_rows($result) > 0)
+      {
+      $build_array = pdo_fetch_array($result);
+      $numTestsPassed = $build_array["testpassed"];
+      if($numTestsPassed < 0)
+        {
+        return 0;
+        }
+      return $numTestsPassed;
+      }
+    return 0;
+    }
+
+  /** Get number of not run tests */
+  function GetNumberOfNotRunTests()
+    {
+    $result =
+      pdo_query("SELECT testnotrun FROM build WHERE id=".qnum($this->Id));
+    if(pdo_num_rows($result) > 0)
+      {
+      $build_array = pdo_fetch_array($result);
+      $numTestsNotRun = $build_array["testnotrun"];
+      if($numTestsNotRun < 0)
+        {
+        return 0;
+        }
+      return $numTestsNotRun;
+      }
+    return 0;
+    }
+
   /** Update the test numbers */
   function UpdateTestNumbers($numberTestsPassed,$numberTestsFailed,$numberTestsNotRun)
     {
