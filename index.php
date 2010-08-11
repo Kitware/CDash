@@ -644,7 +644,6 @@ function generate_main_dashboard_XML($projectid,$date)
     }
            
   $sql =  "SELECT b.id,b.siteid,
-                  bn.buildid AS countbuildnotes,
                   bu.status AS updatestatus,
                   bu.starttime AS updatestarttime,
                   bu.endtime AS updateendtime, 
@@ -682,7 +681,6 @@ function generate_main_dashboard_XML($projectid,$date)
                   (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog
                   FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql.",
                   build AS b
-                  LEFT JOIN buildnote AS bn ON (bn.buildid=b.id)
                   LEFT JOIN buildupdate AS bu ON (bu.buildid=b.id)
                   LEFT JOIN configure AS c ON (c.buildid=b.id)
                   LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
@@ -872,6 +870,10 @@ function generate_main_dashboard_XML($projectid,$date)
       $build_row['testsduration'] = round($build_row['testsduration'],1); //already in minutes
       } 
     
+    // Build notes
+    $countbuildnotes = pdo_single_row_query("SELECT count(*) AS c FROM buildnote WHERE buildid='".$buildid."'");
+    $build_row['countbuildnotes'] = $countbuildnotes['c'];
+     
     //  Save the row in '$build_rows'
     $build_rows[] = $build_row;
     }
