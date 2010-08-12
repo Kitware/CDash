@@ -44,13 +44,13 @@ class KWWebTestCase extends WebTestCase {
   
   /** Delete the log file */
   function deleteLog($filename)
-    {  
+    {
     if(file_exists($filename))
       {
       unlink($filename);
       }
     }
-    
+
   /** Look at the log file and return false if errors are found */
   function checkLog($filename)
     {
@@ -60,10 +60,10 @@ class KWWebTestCase extends WebTestCase {
       if($this->findString($content,'ERROR')   ||
          $this->findString($content,'WARNING'))
         {
-        $this->fail("Log file as error or warnings");
+        $this->fail("Log file has errors or warnings");
         return false;
         }
-      return $content;  
+      return $content;
       }
     return true;   
     }
@@ -106,11 +106,11 @@ class KWWebTestCase extends WebTestCase {
         // if we have the tag we skip the word
         else if($pos2 == $it)
           {
-          while(($it < strlen($templateLog)) && ($templateLog[$it] != ' ') && ($templateLog[$it] != '/'))
+          while(($it < strlen($templateLog)) && ($templateLog[$it] != ' ') && ($templateLog[$it] != '/') && ($templateLog[$it] != ']'))
             {
             $it++;
             }  
-          while(($il < strlen($log)) && ($log[$il] != ' ') && ($log[$il] != '/'))
+          while(($il < strlen($log)) && ($log[$il] != ' ') && ($log[$il] != '/') && ($log[$il] != ']'))
             {
             $il++;
             }  
@@ -119,8 +119,8 @@ class KWWebTestCase extends WebTestCase {
         }
       
       if($log[$il] != $templateLog[$it])
-        {  
-        $this->fail("Logs are different at char $it: ".ord($templateLog[$it])."=".ord($log[$il])." *".substr($templateLog,$it,10)."* v.s. *".substr($log,$il,10)."*");
+        {
+        $this->fail("Log files are different\n  logfilename='$logfilename'\n  template='$template'\n  at char $it: ".ord($templateLog[$it])."=".ord($log[$il])."\n  **".substr($templateLog,$it,10)."** vs. **".substr($log,$il,10)."**");
         return false;
         }
       $it++;
