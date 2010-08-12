@@ -218,11 +218,37 @@ function pdo_num_rows($result)
 
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") 
     {
+    // The documentation here: http://us.php.net/manual/en/pdostatement.rowcount.php
+    // suggests that rowCount may be inappropriate for using on SELECT queries.
+    // It is the corollary to the mysql_affected_rows or pg_affected_rows functions,
+    // not the mysql_num_rows function...
+    //
+    // This seems like it might be a bug waiting to be reported...
+    //
     return $result->rowCount();
     }
   else 
     {
     return mysql_num_rows($result);
+    }
+}
+
+/** */
+function pdo_affected_rows($result)
+{
+  if(!$result)
+    {
+    return false;
+    }
+  global $CDASH_DB_TYPE;
+
+  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
+    {
+    return $result->rowCount();
+    }
+  else
+    {
+    return mysql_affected_rows(get_link_identifier());
     }
 }
 

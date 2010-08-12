@@ -10,6 +10,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
   var $url           = null;
   var $db            = null;
   var $projecttestid = null;
+  var $logfilename   = null;
 
   function __construct()
     {
@@ -21,11 +22,12 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     $this->db->setHost($db['host']);
     $this->db->setUser($db['login']);
     $this->db->setPassword($db['pwd']);
+    $this->logfilename = $cdashpath."/backup/cdash.log";
     }
 
-  function addFakeSubmissionRecords()
+  function addFakeSubmissionRecords($projectid)
     {
-    // Insert fake submission records for projectid 1.
+    // Insert fake submission records for the given projectid.
     // One old one (older than the "stuck threshold") with status=1
     // and one new one (right now) with status=0
     //
@@ -36,25 +38,38 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
 
     $old_time = gmdate(FMT_DATETIMESTD, time()-(2*$CDASH_SUBMISSION_PROCESSING_TIME_LIMIT));
     $now_utc = gmdate(FMT_DATETIMESTD);
+    $n = 3;
 
-    pdo_query(
-      "INSERT INTO submission ".
-      " (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
-      "VALUES ".
-      " ('bogus_submission_file_1.noxml','1','1','1','999','bogus_md5sum_1','$old_time')"
-    );
+    $i = 0;
+    while ($i < $n)
+      {
+      pdo_query(
+        "INSERT INTO submission ".
+        " (filename,projectid,status,attempts,filesize,filemd5sum,created,started) ".
+        "VALUES ".
+        " ('bogus_submission_file_1.noxml','$projectid','1','1','999','bogus_md5sum_1','$old_time','$old_time')"
+      );
 
-    pdo_query(
-      "INSERT INTO submission ".
-      " (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
-      "VALUES ".
-      " ('bogus_submission_file_2.noxml','1','0','0','999','bogus_md5sum_2','$now_utc')"
-    );
+      ++$i;
+      }
+
+    $i = 0;
+    while ($i < $n)
+      {
+      pdo_query(
+        "INSERT INTO submission ".
+        " (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
+        "VALUES ".
+        " ('bogus_submission_file_2.noxml','$projectid','0','0','999','bogus_md5sum_2','$now_utc')"
+      );
+
+      ++$i;
+      }
 
     return 0;
     }
 
-  function allRecordsProcessed()
+  function allRecordsProcessed($projectid)
     {
     // The status field in the submission table may have the value 0, 1, 2 or 3.
     // 0 means queued, but not yet (or no longer) processing.
@@ -67,14 +82,15 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     //
     // This function returns 0 if any record in the table has status=0 or 1.
 
-    $c0 = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE status=0", 'c', '');
-    $c1 = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE status=1", 'c', '');
-    $c2 = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE status=2", 'c', '');
-    $c3 = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE status=3", 'c', '');
-    $c_total = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission", 'c', '');
+    $c0 = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE status=0 AND projectid='$projectid'", 'c', '');
+    $c1 = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE status=1 AND projectid='$projectid'", 'c', '');
+    $c2 = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE status=2 AND projectid='$projectid'", 'c', '');
+    $c3 = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE status=3 AND projectid='$projectid'", 'c', '');
+    $c_total = pdo_get_field_value("SELECT COUNT(*) AS c FROM submission WHERE projectid='$projectid'", 'c', '');
 
     echo "Counts of submission status values:\n";
     echo "===================================\n";
+    echo "  (for projectid='$projectid')\n";
     echo "c0='$c0'\n";
     echo "c1='$c1'\n";
     echo "c2='$c2'\n";
@@ -89,20 +105,38 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     return 0;
     }
 
+  function launchViaCurl($path, $timeout)
+    {
+    $request = $this->url . $path;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $request);
+    curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_exec($ch);
+    curl_close($ch);
+    }
 
   function testProcessSubmissionsTest()
     {
     $this->login();
+
+    echo "this->logfilename='$this->logfilename'\n";
+    echo "this->url='$this->url'\n";
+
     $content = $this->get($this->url."/cdash/processsubmissions.php");
     if(strpos($content, "projectid/argv[1] should be a number") === false)
       {
       $this->fail("'projectid/argv[1] should be a number' not found when expected");
+      echo "content (1):\n$content\n";
       return 1;
       }
+
     $content = $this->get($this->url."/cdash/processsubmissions.php?projectid=1");
     if(strpos($content, "Done with ProcessSubmissions") === false)
       {
       $this->fail("'Done with ProcessSubmissions' not found when expected");
+      echo "content (2):\n$content\n";
       return 1;
       }
 
@@ -112,20 +146,53 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     // Then validate that processsubmissions properly processes the old record
     // *and* the queued records.
     //
-    $this->addFakeSubmissionRecords();
+    $this->addFakeSubmissionRecords("1");
+
+    // Launch the first instance of the processor process via curl and tell
+    // it to take a long time by sleeping each time through its loop.
+    // (With 6 fake records just added, it'll sleep for about 6 seconds,
+    // 1 second for each time through its loop...)
+    //
+    $this->launchViaCurl("/cdash/processsubmissions.php?projectid=1&sleep_in_loop=1", 1);
+    //$this->launchViaCurl("/cdash/processsubmissions.php?projectid=1", 1);
+
+    // Sleep for 2 seconds, and then try to process submissions synchronously
+    // and simultaneously... (This one should go through the "can't acquire
+    // lock" code path.)
+    //
+    echo "sleep(2)\n";
+    sleep(2);
 
     $content = $this->get($this->url."/cdash/processsubmissions.php?projectid=1");
-    if(strpos($content, "Done with ProcessSubmissions") === false)
+    if(strpos($content, "Another process is already processing") === false)
       {
-      $this->fail("'Done with ProcessSubmissions' not found when expected");
+      $this->fail("'Another process is already processing' not found when expected");
+      echo "content (3):\n$content\n";
       return 1;
       }
 
-    if (!$this->allRecordsProcessed())
+    // Now... sleep for 10 seconds before checking to see if all processing
+    // is done:
+    //
+    echo "sleep(10)\n";
+    sleep(10);
+
+    if (!$this->allRecordsProcessed("1")) // projectid 1 is tested in this test...
       {
+      $rows = pdo_all_rows_query("SELECT * FROM submission WHERE status<2");
+      echo print_r($rows, true)."\n";
+
       $this->fail("some records still not processed after calling processsubmissions.php");
       return 1;
       }
+
+    // Actually, with this test, we expect some errors to be logged in the
+    // cdash.log file, so do not do this check:
+    //
+    //if(!$this->checkLog($this->logfilename))
+    //  {
+    //  return 1;
+    //  }
 
     $this->pass("Passed");
     return 0;

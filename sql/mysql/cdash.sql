@@ -1211,6 +1211,16 @@ CREATE TABLE IF NOT EXISTS `errorlog` (
   KEY `buildid` (`buildid`)
 );
 
+
+CREATE TABLE IF NOT EXISTS `submissionprocessor` (
+  `projectid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `lastupdated` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `locked` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  PRIMARY KEY (`projectid`)
+);
+
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 

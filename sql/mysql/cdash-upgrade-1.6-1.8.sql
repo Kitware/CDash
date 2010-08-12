@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `projectjobscript` (
   KEY `projectid` (`projectid`)
 );
 
+
 CREATE TABLE IF NOT EXISTS `client_site2program` (
   `siteid` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
@@ -30,4 +31,13 @@ CREATE TABLE IF NOT EXISTS `errorlog` (
   KEY `resourcetype` (`resourcetype`),
   KEY `projectid` (`projectid`),
   KEY `buildid` (`buildid`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `submissionprocessor` (
+  `projectid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `lastupdated` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `locked` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  PRIMARY KEY (`projectid`)
 );
