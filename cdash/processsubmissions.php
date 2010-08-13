@@ -40,7 +40,9 @@ function AcquireProcessingLock($projectid)
 {
   $locked = false;
 
-  $table_locked = pdo_query("LOCK TABLES submissionprocessor WRITE");
+  $tables = array();
+  $tables[] = 'submissionprocessor';
+  $table_locked = pdo_lock_tables($tables);
   if (!$table_locked)
     {
     add_log("AcquireProcessingLock", "could not lock database tables", LOG_ERR, $projectid);
@@ -116,7 +118,7 @@ function AcquireProcessingLock($projectid)
         }
       }
 
-    $table_unlocked = pdo_query("UNLOCK TABLES");
+    $table_unlocked = pdo_unlock_tables($tables);
     if (!$table_unlocked)
       {
       add_log("AcquireProcessingLock", "could not unlock database tables", LOG_ERR, $projectid);
@@ -134,7 +136,9 @@ function ReleaseProcessingLock($projectid)
 {
   $unlocked = false;
 
-  $table_locked = pdo_query("LOCK TABLES submissionprocessor WRITE");
+  $tables = array();
+  $tables[] = 'submissionprocessor';
+  $table_locked = pdo_lock_tables($tables);
   if (!$table_locked)
     {
     add_log("ReleaseProcessingLock", "could not lock database tables", LOG_ERR, $projectid);
@@ -163,7 +167,7 @@ function ReleaseProcessingLock($projectid)
       add_log("ReleaseProcessingLock", "lock not released, unexpected pid mismatch: pid='$pid' mypid='$mypid' - attempt to unlock a lock we don't own...", LOG_ERR, $projectid);
       }
 
-    $table_unlocked = pdo_query("UNLOCK TABLES");
+    $table_unlocked = pdo_unlock_tables($tables);
     if (!$table_unlocked)
       {
       add_log("ReleaseProcessingLock", "could not unlock database tables", LOG_ERR, $projectid);

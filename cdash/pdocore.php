@@ -268,11 +268,60 @@ function pdo_query($query, $link_identifier = NULL)
 }
 
 /** */
+function pdo_lock_tables($table)
+{
+  global $CDASH_DB_TYPE;
+
+  // Table is an array of table names. Construct a comma separated string:
+  //
+  $table_str = $table[0];
+
+  $n = count($table);
+  for ($i = 1; $i < $n; ++$i)
+    {
+    $table_str .= ", " . $table[$i];
+    }
+
+  if(isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE!="mysql")
+    {
+    // PgSql table locking syntax:
+    // http://www.postgresql.org/docs/8.1/static/sql-lock.html
+    //
+    return pdo_query("LOCK TABLE ".$table_str);
+    }
+  else
+    {
+    // MySQL table locking:
+    // http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html
+    //
+    return pdo_query("LOCK TABLES ".$table_str." WRITE");
+    }
+}
+
+/** */
+function pdo_unlock_tables($table)
+{
+  global $CDASH_DB_TYPE;
+
+  if(isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE!="mysql")
+    {
+    // Unlock occurs automatically at transaction end for PgSql, according to:
+    // http://www.postgresql.org/docs/8.1/static/sql-lock.html
+    //
+    return true;
+    }
+  else
+    {
+    return pdo_query("UNLOCK TABLES");
+    }
+}
+
+/** */
 function pdo_real_escape_string($unescaped_string, $link_identifier = NULL)
 {
   global $CDASH_DB_TYPE;
-    
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") 
+
+  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
     {
     $str = get_link_identifier($link_identifier)->quote($unescaped_string);
     // in contrast to mysql_real_escape_string(),
