@@ -287,7 +287,7 @@ function pdo_lock_tables($table)
     // PgSql table locking syntax:
     // http://www.postgresql.org/docs/8.1/static/sql-lock.html
     //
-    pdo_query("BEGIN CDASH_pdo_lock_tables");
+    pdo_query("BEGIN WORK");
     return pdo_query("LOCK TABLE ".$table_str);
     }
   else
@@ -309,7 +309,7 @@ function pdo_unlock_tables($table)
     // Unlock occurs automatically at transaction end for PgSql, according to:
     // http://www.postgresql.org/docs/8.1/static/sql-lock.html
     //
-    pdo_query("COMMIT CDASH_pdo_lock_tables");
+    pdo_query("COMMIT WORK");
     return true;
     }
   else
