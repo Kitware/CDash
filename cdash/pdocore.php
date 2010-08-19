@@ -288,7 +288,15 @@ function pdo_lock_tables($table)
     // http://www.postgresql.org/docs/8.1/static/sql-lock.html
     //
     pdo_query("BEGIN WORK");
-    return pdo_query("LOCK TABLE ".$table_str);
+
+    $locked = pdo_query("LOCK TABLE ".$table_str);
+
+    if (!$locked)
+      {
+      pdo_query("COMMIT WORK");
+      }
+
+    return $locked;
     }
   else
     {

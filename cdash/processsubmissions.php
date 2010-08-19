@@ -54,8 +54,8 @@ function AcquireProcessingLock($projectid)
     // each projectid value. Expect $c to be 0 or 1 here.
     //
     $c = pdo_get_field_value(
-      "SELECT COUNT(*) FROM submissionprocessor WHERE projectid='".$projectid."'",
-      'COUNT(*)', 0);
+      "SELECT COUNT(*) AS c FROM submissionprocessor WHERE projectid='".$projectid."'",
+      'c', 0);
 
     $now_utc = gmdate(FMT_DATETIMESTD);
     $mypid = getmypid();
