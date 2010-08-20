@@ -158,12 +158,12 @@ add_test(enable_async
 )
 
 if(COVERAGE_COMMAND)
-  add_coverage_test(simple_async Simple simple manageCoverageTest.php enable_async)
+  add_coverage_test(simple_async InsightExample simple manageCoverageTest.php enable_async)
 else(COVERAGE_COMMAND)
-  add_ctest_test(simple_async Simple simple simple.php enable_async)
+  add_ctest_test(simple_async InsightExample simple simple.php enable_async)
 endif(COVERAGE_COMMAND)
-add_ctest_test(simple2_async Simple simple2 simple2.php enable_async)
-  
+add_ctest_test(simple2_async InsightExample simple2 simple2.php enable_async)
+
 add_cdash_test(CTestSubmitLargeOutput_async CTestSubmitLargeOutput)
 SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
   PASS_REGULAR_EXPRESSION "Submission successful")

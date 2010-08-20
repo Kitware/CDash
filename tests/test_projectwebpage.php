@@ -1,26 +1,17 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
-require_once('kwtest/kw_db.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ProjectWebPageTestCase extends KWWebTestCase
 {
-  var $url           = null;
-  var $db            = null;
-  var $projecttestid = null;
-  
   function __construct()
     {
     parent::__construct();
-    require('config.test.php');
-    $this->url = $configure['urlwebsite'];
-    $this->db  =& new database($db['type']);
-    $this->db->setDb($db['name']);
-    $this->db->setHost($db['host']);
-    $this->db->setUser($db['login']);
-    $this->db->setPassword($db['pwd']);
     }
-   
+
   function testAccessToWebPageProjectTest()
     {
     $this->login();
@@ -38,7 +29,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertText('BatchmakeExample Dashboard');
     }
-    
+
   function testSubmissionBatchmakeBuild()
     {
     $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
@@ -49,7 +40,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-    
+
   function testSubmissionBatchmakeConfigure()
     {
     $rep  = dirname(__FILE__)."/data/BatchmakeNightlyExample";
@@ -60,8 +51,8 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-  
-  
+
+
   function testSubmissionBatchmakeNotes()
     {
     $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
@@ -72,7 +63,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-    
+
   function testSubmissionBatchmakeTest()
     {
     $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
@@ -83,7 +74,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-  
+
   function testSubmissionBatchmakeUpdate()
     {
     $rep = dirname(__FILE__)."/data/BatchmakeNightlyExample";
@@ -106,7 +97,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-    
+
   function testSubmissionInsightConfigure()
     {
     $url  = $this->url.'/submit.php?project=InsightExample';
@@ -130,7 +121,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-    
+
   function testSubmissionInsightCoverageLog()
     {
     $url  = $this->url.'/submit.php?project=InsightExample';
@@ -146,9 +137,9 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $content = $this->connect($this->url.'/index.php?project=InsightExample&date=20090223');
     $content = $this->analyse($this->clickLink('76.43%'));
     $content = $this->analyse($this->clickLink('Satisfactory (75)'));
-    $content = $this->analyse($this->clickLink('./Source/itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h')); 
+    $content = $this->analyse($this->clickLink('./Source/itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h'));
     $expected = '<span class="lineCov">    1 | #ifndef __itkNormalVectorDiffusionFunction_txx</span><br><span class="lineNum">   18</span><span class="lineCov">    2 | #define __itkNormalVectorDiffusionFunction_txx</span><br>';
-      
+
     if(!$this->findString($content,$expected))
        {
        $this->fail('Coverage log is wrong');
@@ -156,7 +147,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
        }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-  
+
   function testSubmissionInsightDynamicAnalysis()
     {
     $url  = $this->url.'/submit.php?project=InsightExample';
@@ -168,7 +159,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-    
+
   function testSubmissionInsightNotes()
     {
     $url  = $this->url.'/submit.php?project=InsightExample';
@@ -180,7 +171,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-    
+
   function testSubmissionInsightTest()
     {
     $url  = $this->url.'/submit.php?project=InsightExample';
@@ -192,7 +183,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,"Submission of $file has succeeded");
     }
-  
+
   function testSubmissionInDb()
     {
     $query  = "SELECT id, stamp, name, type, generator,command FROM build WHERE id=6";
@@ -206,7 +197,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
                       );
     $this->assertEqual($result[0],$expected);
     }
-  
+
   function testProjectExperimentalLinkMachineName()
     {
     $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
@@ -226,7 +217,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,'The webpage match the content exepected');
     }
-  
+
   function testProjectExperimentalLinkBuildSummary()
     {
     $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
@@ -245,9 +236,9 @@ class ProjectWebPageTestCase extends KWWebTestCase
       $this->assertTrue(false,'The webpage does not match right the content exepected');
       return;
       }
-    $this->assertTrue(true,'The webpage match the content exepected');  
+    $this->assertTrue(true,'The webpage match the content exepected');
     }
-  
+
   function testProjectExperimentalLinkNotes()
     {
     $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
@@ -262,6 +253,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $expected = '-- F:/Dashboards/Dash20_batchmake_vs9.cmake';
     $this->assertText($expected);
-    }      
+    }
 }
 ?>

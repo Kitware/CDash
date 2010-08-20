@@ -1,31 +1,21 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
-require_once('kwtest/kw_db.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ManageSubprojectTestCase extends KWWebTestCase
 {
-  var $url           = null;
-  var $db            = null;
-  var $projecttestid = null;
-  
   function __construct()
     {
     parent::__construct();
-    require('config.test.php');
-    $this->url = $configure['urlwebsite'];
-    $this->db  =& new database($db['type']);
-    $this->db->setDb($db['name']);
-    $this->db->setHost($db['host']);
-    $this->db->setUser($db['login']);
-    $this->db->setPassword($db['pwd']);
-    $this->projectid = -1;
     }
 
   function testManageSubproject()
     {
     $this->login();
-    
+
     //get projectid for PublicDashboards
     $content = $this->connect($this->url.'/manageSubproject.php');
     $lines = explode("\n", $content);
@@ -45,14 +35,14 @@ class ManageSubprojectTestCase extends KWWebTestCase
       $this->fail("'Teuchos' not found when expected.  Here's what we found instead:\n".$this->getBrowser()->getContentAsText()."\n");
       return 1;
       }
-    
+
     $this->get($this->url."/manageSubproject.php?projectid=$this->projectid&delete=1");
     if(strpos($this->getBrowser()->getContentAsText(), "Teuchos") !== false)
       {
       $this->fail("'Teuchos' found when not expected");
       return 1;
       }
-      
+
     if(!$this->setFieldByName("dependency_selection_2", "3"))
       {
       $this->fail("Set dependency_selection_2 returned false");

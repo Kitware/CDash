@@ -1,24 +1,15 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
-require_once('kwtest/kw_db.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ManageCoverageTestCase extends KWWebTestCase
 {
-  var $url           = null;
-  var $db            = null;
-  var $projecttestid = null;
-  
   function __construct()
     {
     parent::__construct();
-    require('config.test.php');
-    $this->url = $configure['urlwebsite'];
-    $this->db  =& new database($db['type']);
-    $this->db->setDb($db['name']);
-    $this->db->setHost($db['host']);
-    $this->db->setUser($db['login']);
-    $this->db->setPassword($db['pwd']);
     }
 
   function testManageCoverageTest()
@@ -110,7 +101,7 @@ class ManageCoverageTestCase extends KWWebTestCase
       $this->fail("'simple.cxx' not found when expected");
       return 1;
       }
-    
+
     //test the "Add author" button
     if(!$this->setFieldByName("prioritySelection", 2))
       {
@@ -157,7 +148,7 @@ class ManageCoverageTestCase extends KWWebTestCase
       $this->fail("'<td>administrator' found when unexpected");
       return 1;
       }
-    
+
     //test the "Upload authors file" button
      $authorsFile = dirname(__FILE__)."/data/authors.txt";
     if(!$this->setFieldByName("authorsFile", @$authorsFile))
@@ -170,7 +161,7 @@ class ManageCoverageTestCase extends KWWebTestCase
       $this->fail("clicking uploadAuthorsFile returned false");
       return 1;
       }
-  
+
     //test the "Assign last author" button
     if(!$this->clickSubmitByName("assignLastAuthor"))
       {

@@ -1,45 +1,28 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
-require_once('kwtest/kw_db.php');
-
 class SubProjectTestCase extends KWWebTestCase
 {
-  var $url           = null;
-  var $db            = null;
-  var $projecttestid = null;
-  var $logfilename   = null;
-  
   function __construct()
     {
     parent::__construct();
-    require('config.test.php');
-    $this->url = $configure['urlwebsite'];
-    $this->db  =& new database($db['type']);
-    $this->db->setDb($db['name']);
-    $this->db->setHost($db['host']);
-    $this->db->setUser($db['login']);
-    $this->db->setPassword($db['pwd']);
-    $this->logfilename = $cdashpath."/backup/cdash.log";
     $this->deleteLog($this->logfilename);
     }
-   
+
   function testAccessToWebPageProjectTest()
     {
     $this->login();
     // first project necessary for testing
     $name = 'SubProjectExample';
     $description = 'Project SubProjectExample test for cdash testing';
-     
+
     // Create the project
     $this->clickLink('[Create new project]');
     $this->setField('name',$name);
     $this->setField('description',$description);
     $this->setField('public','1');
     $this->setField('emailBrokenSubmission','1');
-    $this->setField('emailRedundantFailures','1');  
+    $this->setField('emailRedundantFailures','1');
     $this->clickSubmitByName('Submit');
-    
+
     $content = $this->connect($this->url.'/index.php?project=SubProjectExample');
     if(!$content)
       {
@@ -49,9 +32,9 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->pass('Test passed'); 
+    $this->pass('Test passed');
     }
-    
+
   function testSubmissionProjectDependencies()
     {
     $rep = dirname(__FILE__)."/data/SubProjectExample";
@@ -66,7 +49,7 @@ class SubProjectTestCase extends KWWebTestCase
       }
     $this->pass('Test passed');
     }
-    
+
   function testSubmissionSubProjectBuild()
     {
     $this->deleteLog($this->logfilename);
@@ -80,9 +63,9 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->pass('Test passed');  
+    $this->pass('Test passed');
     }
-  
+
   function testSubmissionSubProjectTest()
     {
     $this->deleteLog($this->logfilename);
@@ -96,7 +79,7 @@ class SubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    $this->pass('Test passed');  
+    $this->pass('Test passed');
     }
 }
 

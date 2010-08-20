@@ -18,6 +18,7 @@ add_php_test(compressedtest)
 add_php_test(createpublicdashboard)
 add_php_test(email)
 add_php_test(projectwebpage)
+
 add_php_test(autoremovebuilds)
 add_php_test(backwardcompatibilitytools)
 add_php_test(banner)
@@ -65,6 +66,7 @@ add_php_test(viewdynamicanalysisfile)
 add_php_test(viewerrorlog)
 add_php_test(viewissues)
 add_php_test(viewmap)
+
 add_php_test(subproject)
 add_php_test(groupsdescription)
 add_php_test(managesubproject)
@@ -83,7 +85,6 @@ if(CDASH_USE_SELENIUM)
 endif()
 
 if(TEST_CLIENT_MANAGEMENT)
-  add_selenium_test(setup_repositories)
   add_test(registerclient ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT1})
   set_tests_properties(
     registerclient PROPERTIES
@@ -128,4 +129,3 @@ if(TEST_CLIENT_MANAGEMENT)
   add_selenium_test(removescheduledbuild)
   add_php_test(deletedailyupdate)
 endif()
-

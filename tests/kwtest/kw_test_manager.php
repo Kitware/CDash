@@ -51,7 +51,7 @@ class TestManager
       {
       $path = $file;
       }
-    print "$path";
+    print "$path\n";
     $test->addTestFile($path);
     return $test->run($reporter);
   }

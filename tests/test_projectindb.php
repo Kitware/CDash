@@ -1,24 +1,15 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
-require_once('kwtest/kw_db.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ProjectInDbTestCase extends KWWebTestCase
 {
-  var $url           = null;
-  var $db            = null;
-  var $projecttestid = null;
-  
   function __construct()
    {
    parent::__construct();
-   require('config.test.php');
-   $this->url = $configure['urlwebsite'];
-   $this->db  =& new database($db['type']);
-   $this->db->setDb($db['name']);
-   $this->db->setHost($db['host']);
-   $this->db->setUser($db['login']);
-   $this->db->setPassword($db['pwd']);
    }
 
   function testProjectTest4DbInDatabase()
@@ -34,7 +25,7 @@ class ProjectInDbTestCase extends KWWebTestCase
                       'public'      =>  $publicexpected);
     $this->assertEqual($result[0],$expected);
     }
-  
+
   function testProjectInBuildGroup()
     {
     $query  = "SELECT id FROM project WHERE name = 'ProjectTest4Db'";
@@ -56,7 +47,7 @@ class ProjectInDbTestCase extends KWWebTestCase
                                    'description' => 'Continuous builds'));
    $this->assertEqual($result,$expected);
    }
-  
+
   function testProjectInBuildGroupPosition()
     {
     $query  = "SELECT COUNT(*) FROM buildgroupposition WHERE buildgroupid IN (SELECT id FROM buildgroup WHERE projectid=";
@@ -68,10 +59,10 @@ class ProjectInDbTestCase extends KWWebTestCase
       }
     elseif(!strcmp($this->db->getType(),'mysql'))
       {
-      $this->assertEqual($result[0]['COUNT(*)'],3);  
+      $this->assertEqual($result[0]['COUNT(*)'],3);
       }
     }
-  
+
   function testUser2Project()
     {
     $query  = "SELECT userid, role, emailtype, emailcategory FROM user2project WHERE projectid=".$this->projecttestid;
@@ -82,8 +73,8 @@ class ProjectInDbTestCase extends KWWebTestCase
                       'emailcategory' => 62);
     $this->assertEqual($result[0],$expected);
     }
- 
-  
+
+
   function createProjectTest4Db()
     {
     $this->get($this->url);
@@ -97,6 +88,6 @@ class ProjectInDbTestCase extends KWWebTestCase
     $this->setField('public','0');
     return $this->clickSubmitByName('Submit');
     }
-  
+
 }
 ?>

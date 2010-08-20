@@ -1,25 +1,17 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
-require_once('kwtest/kw_db.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class PubProjectTestCase extends KWWebTestCase
 {
-  var $url = null;
-  var $db  = null;
-  
   function __construct()
    {
    parent::__construct();
-   require('config.test.php');
-   $this->url = $configure['urlwebsite'];
-   $this->db  =& new database($db['type']);
-   $this->db->setDb($db['name']);
-   $this->db->setHost($db['host']);
-   $this->db->setUser($db['login']);
-   $this->db->setPassword($db['pwd']);
    }
-  
+
   function testCreateProject()
     {
     $content = $this->connect($this->url);
@@ -32,7 +24,7 @@ class PubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-    
+
     $this->setField('name','ProjectTest');
     $this->setField('description','This is a project test for cdash');
     $this->setField('public','1');
@@ -42,29 +34,29 @@ class PubProjectTestCase extends KWWebTestCase
 
     $query = "SELECT COUNT(*) FROM project";
     $result = $this->db->query($query);
-    if( strcmp($this->db->getType(),"pgsql") == 0 && 
+    if( strcmp($this->db->getType(),"pgsql") == 0 &&
         $result[0]['count'] < 1)
       {
-      $result = $result[0]['count'];  
-      $errormsg = "The result of the query '$query' which is $result"; 
+      $result = $result[0]['count'];
+      $errormsg = "The result of the query '$query' which is $result";
       $errormsg .= "is not the one expected: 1";
       $this->assertEqual($result,'1',$errormsg);
       return;
       }
-    elseif(strcmp($this->db->getType(),"mysql") == 0 && 
+    elseif(strcmp($this->db->getType(),"mysql") == 0 &&
            $result[0]['COUNT(*)'] < 1)
       {
-      $result = $result[0]['COUNT(*)']; 
-      $errormsg = "The result of the query '$query' which is $result"; 
+      $result = $result[0]['COUNT(*)'];
+      $errormsg = "The result of the query '$query' which is $result";
       $errormsg .= "is not the one expected: 1";
       $this->assertEqual($result,'1',$errormsg);
       return;
       }
-    
+
     $this->checkErrors();
     $this->assertText('The project ProjectTest has been created successfully.');
     }
-  
+
     function testProjectTestInDatabase()
     {
     $query = "SELECT name,description,public FROM project WHERE name = 'ProjectTest'";
@@ -77,13 +69,13 @@ class PubProjectTestCase extends KWWebTestCase
                       'public'      =>  $publicexpected);
     $this->assertEqual($result[0],$expected);
     }
-  
+
   function testIndexProjectTest()
     {
     $content = $this->get($this->url.'/index.php?project=ProjectTest');
     $this->assertTitle('CDash - ProjectTest');
     }
-  
+
   function testEditProject()
     {
     $content = $this->connect($this->url);

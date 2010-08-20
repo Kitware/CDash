@@ -1,22 +1,20 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
-require_once('kwtest/kw_db.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class EmailTestCase extends KWWebTestCase
 {
-  var $url           = null;
-  var $db            = null;
-  var $projecttestid = null;
-  var $logfilename   = null;
-  
   function __construct()
     {
     parent::__construct();
-    require('config.test.php');
+
+    global $configure;
     $this->url = $configure['urlwebsite'];
     }
-   
+
   function testSimple()
     {
     $content = $this->connect($this->url.'/index.php?project=InsightExample');
@@ -26,7 +24,7 @@ class EmailTestCase extends KWWebTestCase
       }
     $this->assertText('CDash-CTest-sameImage');
     }
-  
+
 }
 
 ?>

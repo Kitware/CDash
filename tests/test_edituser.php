@@ -1,24 +1,15 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
-require_once('kwtest/kw_db.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class EditUserTestCase extends KWWebTestCase
 {
-  var $url           = null;
-  var $db            = null;
-  var $projecttestid = null;
-  
   function __construct()
     {
     parent::__construct();
-    require('config.test.php');
-    $this->url = $configure['urlwebsite'];
-    $this->db  =& new database($db['type']);
-    $this->db->setDb($db['name']);
-    $this->db->setHost($db['host']);
-    $this->db->setUser($db['login']);
-    $this->db->setPassword($db['pwd']);
     }
 
   function testEditUserTest()
@@ -91,7 +82,7 @@ class EditUserTestCase extends KWWebTestCase
       $this->fail("'password has been updated' not found in output.  Here's what we got instead:\n$content");
       return 1;
       }
-    
+
     //log back in with the new password
     $this->logout();
     $this->login('simpletest2@localhost', '12345');

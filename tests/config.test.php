@@ -1,14 +1,13 @@
 <?php
-
-// To be able to access files in this CDash installation regardless
-// of getcwd() value:
 //
-$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
-set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
+// The only includer of this file should be cdash_test_case.php.
+// Do not include this file directly; include cdash_test_case.php instead.
+// That file adds the root of the CDash source tree to the include path.
+//
+require_once("cdash/config.php");
 
-require("cdash/config.php");
 
-
+global $configure;
 $configure = array(
   // url of the cdash to test
   'urlwebsite'       => 'http://localhost/CDash',
@@ -26,7 +25,7 @@ $configure = array(
   'svnroot'          => '/var/www/CDashTesting'
   );
 
-
+global $db;
 $db = array( 'host'   => $CDASH_DB_HOST,
              'login'  => $CDASH_DB_LOGIN,
              'pwd'    => $CDASH_DB_PASS,
@@ -41,6 +40,7 @@ $db = array( 'host'   => $CDASH_DB_HOST,
 // we think we are running in the browser. Otherwise, we must be running from
 // a php command line invocation.
 //
+global $inBrowser;
 $inBrowser = false;
 
 if (array_key_exists('SERVER_ADDR', $_SERVER) &&
@@ -69,6 +69,7 @@ if (array_key_exists('SERVER_ADDR', $_SERVER) &&
 // The default value is based on the above guess regarding whether we are
 // running in the browser or not:
 //
+global $web_report;
 $web_report = $inBrowser;
 
 
@@ -76,7 +77,9 @@ $web_report = $inBrowser;
 // (presumably the same for earlier revs of Windows NT family, and also
 // presumably still valid on Vista or Windows7...)
 //
+global $isWindows;
 $isWindows = false;
+global $isMacOSX;
 $isMacOSX = false;
 
 if (PHP_OS == 'WINNT')

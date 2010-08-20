@@ -1,10 +1,9 @@
 <?php
-require_once(dirname(dirname(__FILE__)) . '/config.test.php');
 
 /**#@+
  *  include other SimpleTest class files
  */
-require_once(dirname(__FILE__) . '/simpletest/web_tester.php');
+require_once('tests/kwtest/simpletest/web_tester.php');
 
 /**
  *    Test case for testing of web pages. Allows
@@ -14,7 +13,56 @@ require_once(dirname(__FILE__) . '/simpletest/web_tester.php');
  *    @subpackage WebTester
  */
 class KWWebTestCase extends WebTestCase {
-  
+
+  var $url           = null;
+  var $db            = null;
+  var $logfilename   = null;
+
+  function __construct()
+    {
+    parent::__construct();
+
+    global $configure;
+    $this->url = $configure['urlwebsite'];
+
+    global $db;
+    $this->db =& new database($db['type']);
+    $this->db->setDb($db['name']);
+    $this->db->setHost($db['host']);
+    $this->db->setUser($db['login']);
+    $this->db->setPassword($db['pwd']);
+
+    global $cdashpath;
+    $this->logfilename = $cdashpath."/backup/cdash.log";
+    }
+
+  function startCodeCoverage()
+    {
+    //echo "startCodeCoverage called...\n";
+    if (extension_loaded('xdebug'))
+      {
+      xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
+      //echo "xdebug_start_code_coverage called...\n";
+      }
+    }
+
+  function stopCodeCoverage()
+    {
+    //echo "stopCodeCoverage called...\n";
+    if (extension_loaded('xdebug'))
+      {
+      $data = xdebug_get_code_coverage();
+      xdebug_stop_code_coverage();
+      //echo "xdebug_stop_code_coverage called...\n";
+      $file = $CDASH_COVERAGE_DIR . DIRECTORY_SEPARATOR .
+        md5($_SERVER['SCRIPT_FILENAME']);
+      file_put_contents(
+        $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . "test_autoremovebuilds",
+        serialize($data)
+      );
+      }
+    }
+
   /**
    * find a string into another one
    * @return true if the search string has found or false in the other case

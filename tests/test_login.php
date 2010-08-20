@@ -1,18 +1,17 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class LoginTestCase extends KWWebTestCase
 {
-  var $url = null;
-  
   function __construct()
     {
     parent::__construct();
-    require('config.test.php');
-    $this->url = $configure['urlwebsite'];
     }
-  
+
   function testHomePage()
     {
     $content = $this->connect($this->url);
@@ -40,7 +39,7 @@ class LoginTestCase extends KWWebTestCase
     $this->clickSubmitByName('sent');
     $this->assertText('Bots are not allowed to obtain CDash accounts!','Bots detected in test_login.php.42');
     }
-  
+
   function testRegister()
     {
     $url = $this->url.'/register.php';
@@ -53,7 +52,7 @@ class LoginTestCase extends KWWebTestCase
     $this->clickSubmitByName('sent',array('url' => 'catchbot'));
     $this->assertText('Registration Complete. Please login with your email and password.');
     }
-  
+
   function fillOutRegisterForm()
     {
     $fname        = 'test';

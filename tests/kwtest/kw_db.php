@@ -20,13 +20,21 @@ class database
         $this->dbo = new dbo_mysql();
         $this->type = "mysql";
         break;
+
       case "pgsql":
         $this->dbo = new dbo_pgsql();
         $this->type = "pgsql";
         break;
+
       default:
         $status = "database type unsupported.\n";
+
+        trigger_error(
+          __FILE__ . ": $status",
+          E_USER_ERROR);
+
         exit($status);
+        break;
       }
    }
   

@@ -1,18 +1,15 @@
 <?php
+//
+// After including cdash_selenium_test_base.php, subsequent require_once calls
+// are relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_selenium_test_case.php');
 
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
-
-class Example extends PHPUnit_Extensions_SeleniumTestCase
+class Example extends CDashSeleniumTestCase
 {
   protected function setUp()
   {
-    global $argv;
-    $this->setBrowser("*" . $argv[2]);
-    $path = dirname(__FILE__)."/..";
-    set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-    require('config.test.php');
-    $this->setBrowserUrl($configure['webserver']);
-    $this->webPath = $configure['webpath'];
+    $this->browserSetUp();
   }
 
   public function testRemoveScheduledBuild()

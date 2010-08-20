@@ -1,19 +1,17 @@
 <?php
-// kwtest library
-require_once('kwtest/kw_web_tester.php');
+//
+// After including cdash_test_case.php, subsequent require_once calls are
+// relative to the top of the CDash source tree
+//
+require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class BackwardCompatibilityToolsTestCase extends KWWebTestCase
 {
-  var $url = null;
-  
   function __construct()
     {
     parent::__construct();
-    require('config.test.php');
-    $this->url = $configure['urlwebsite'];
-    $this->logfilename = $cdashpath."/backup/cdash.log";
     }
-  
+
   function testAssignBuildsToDefaultGroups()
     {
     if(!$this->getMaintenancePage())
@@ -23,7 +21,7 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
     $this->clickSubmitByName("AssignBuildToDefaultGroups");
     $this->assertText("Builds have been added to default groups successfully.");
     }
-  
+
   function testFixBuildGroups()
     {
     if(!$this->getMaintenancePage())
@@ -56,7 +54,7 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
       }
     $this->pass("Passed");
     }
-  
+
   function testComputeTestTiming()
     {
     if(!$this->getMaintenancePage())
@@ -84,6 +82,7 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
     $this->assertText("Timing for tests has been computed successfully.");
     }
 */
+
   function testCompressTestOutput()
     {
     if(!$this->getMaintenancePage())
@@ -97,7 +96,7 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
       }
     $this->pass("Passed");
     }
-  
+
   function testCleanup()
     {
     if(!$this->getMaintenancePage())
@@ -111,7 +110,7 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
       }
     $this->assertText("Database cleanup complete.");
     }
-  
+
   function testUpgrade()
     {
     if(!$this->getMaintenancePage())
@@ -140,7 +139,7 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
     }
 
   function getMaintenancePage()
-  {
+    {
     $this->login();
     $content = $this->connect($this->url . "/backwardCompatibilityTools.php");
     if($content == false)
@@ -149,6 +148,7 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
       return false;
       }
     return true;
-  }
+    }
 }
+
 ?>
