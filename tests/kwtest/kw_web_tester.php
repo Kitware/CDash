@@ -54,10 +54,11 @@ class KWWebTestCase extends WebTestCase {
       $data = xdebug_get_code_coverage();
       xdebug_stop_code_coverage();
       //echo "xdebug_stop_code_coverage called...\n";
+      global CDASH_COVERAGE_DIR;
       $file = $CDASH_COVERAGE_DIR . DIRECTORY_SEPARATOR .
         md5($_SERVER['SCRIPT_FILENAME']);
       file_put_contents(
-        $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . "test_autoremovebuilds",
+        $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . get_class(),
         serialize($data)
       );
       }
