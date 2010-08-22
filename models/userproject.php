@@ -202,5 +202,28 @@ class UserProject
     return $category_array['emailcategory'];    
     }
 
+  /** Get the projects associated with the user */  
+  function GetProjects()
+    {
+    if(!$this->UserId)
+      {
+      echo "UserProject GetProjects(): UserId not set";
+      return false;
+      }
+
+    $project = pdo_query("SELECT projectid FROM user2project WHERE userid=".qnum($this->UserId));
+    if(!$project)
+      {
+      add_last_sql_error("UserProject GetProjects");
+      return false;
+      }
+    
+    $projectids = array();  
+    while($project_array = pdo_fetch_array($project))
+      {
+      $projectids[] = $project_array['projectid'];
+      }
+    return $projectids;
+    }
 } // end class UserProject
 ?>
