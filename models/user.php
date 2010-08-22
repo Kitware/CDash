@@ -147,7 +147,7 @@ class User
     $query = pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id=".qnum($this->Id));  
     $query_array = pdo_fetch_array($query);
     
-    return $query_array['firstname']." ".$query_array['lastname'];
+    return trim($query_array['firstname']." ".$query_array['lastname']);
     }
    
   /** Get the email */
