@@ -38,7 +38,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
 
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
     {
-    include("local/ctestparser.php");
+    require_once("local/ctestparser.php");
     $localParser = new LocalParser();
     $localParser->SetProjectId($projectid);
     $localParser->BufferSizeMB =8192/(1024*1024);

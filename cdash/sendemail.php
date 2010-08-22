@@ -1074,7 +1074,7 @@ function sendemail($handler,$projectid)
   
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
     {
-    include("local/sendemail.php");
+    include_once("local/sendemail.php");
     $sendEmail = new SendEmail();
     $sendEmail->SetProjectId($projectid);
     }
