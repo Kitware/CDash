@@ -64,8 +64,11 @@ class TestEnvTestCase extends KWWebTestCase
     $s = $s . "_COOKIE=[".print_r($_COOKIE, true)."]\n";
     $s = $s . "\n";
 
-    $s = $s . "_SESSION=[".print_r($_SESSION, true)."]\n";
-    $s = $s . "\n";
+    if (isset($_SESSION))
+      {
+      $s = $s . "_SESSION=[".print_r($_SESSION, true)."]\n";
+      $s = $s . "\n";
+      }
 
     $s = $s . "_REQUEST=[".print_r($_REQUEST, true)."]\n";
     $s = $s . "\n";
@@ -73,20 +76,35 @@ class TestEnvTestCase extends KWWebTestCase
     $s = $s . "_ENV=[".print_r($_ENV, true)."]\n";
     $s = $s . "\n";
 
-    $s = $s . "argc=[".print_r($argc, true)."]\n";
-    $s = $s . "\n";
+    if (isset($argc))
+      {
+      $s = $s . "argc=[".print_r($argc, true)."]\n";
+      $s = $s . "\n";
+      }
 
-    $s = $s . "argv=[".print_r($argv, true)."]\n";
-    $s = $s . "\n";
+    if (isset($argv))
+      {
+      $s = $s . "argv=[".print_r($argv, true)."]\n";
+      $s = $s . "\n";
+      }
 
-    $s = $s . "HTTP_RAW_POST_DATA=[".print_r($HTTP_RAW_POST_DATA, true)."]\n";
-    $s = $s . "\n";
+    if (isset($HTTP_RAW_POST_DATA))
+      {
+      $s = $s . "HTTP_RAW_POST_DATA=[".print_r($HTTP_RAW_POST_DATA, true)."]\n";
+      $s = $s . "\n";
+      }
 
-    $s = $s . "http_response_header=[".print_r($http_response_header, true)."]\n";
-    $s = $s . "\n";
+    if (isset($http_response_header))
+      {
+      $s = $s . "http_response_header=[".print_r($http_response_header, true)."]\n";
+      $s = $s . "\n";
+      }
 
-    $s = $s . "php_errormsg=[".print_r($php_errormsg, true)."]\n";
-    $s = $s . "\n";
+    if (isset($php_errormsg))
+      {
+      $s = $s . "php_errormsg=[".print_r($php_errormsg, true)."]\n";
+      $s = $s . "\n";
+      }
 
     $s = $s . "GLOBALS=[".print_r($GLOBALS, true)."]\n";
     $s = $s . "\n";
