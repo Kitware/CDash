@@ -16,16 +16,69 @@ function(add_selenium_test TestName)
   )
 endfunction(add_selenium_test)
 
+if(CLIENT_TEST_SCRIPT1 AND CLIENT_TEST_SCRIPT2)
+  set(TEST_CLIENT_MANAGEMENT ON)
+endif()
+
+
 add_selenium_test(setup_repositories)
+
+if(TEST_CLIENT_MANAGEMENT)
+  add_test(registerclient ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT1})
+  set_tests_properties(
+    registerclient PROPERTIES
+    PASS_REGULAR_EXPRESSION ".*Nothing to do.*"
+  )
+  add_test(requestwork_1 
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
+  )
+  set_tests_properties(
+    requestwork_1 PROPERTIES
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+  )
+  add_test(client_pass ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2},pass)
+  set_tests_properties(
+    client_pass PROPERTIES
+    PASS_REGULAR_EXPRESSION ".*Test passed.*"
+  )
+  add_test(requestwork_2 
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
+  )
+  set_tests_properties(
+    requestwork_2 PROPERTIES
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+  )
+  add_test(client_fail ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2},fail)
+  set_tests_properties(
+    client_fail PROPERTIES
+    PASS_REGULAR_EXPRESSION ".*Test passed.*"
+  )
+  add_test(requestwork_3 
+    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
+  )
+  set_tests_properties(
+    requestwork_3 PROPERTIES
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+  )
+  add_test(client_running ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2})
+  set_tests_properties(
+    client_running PROPERTIES
+    PASS_REGULAR_EXPRESSION ".*Test passed.*"
+  )
+  add_selenium_test(removescheduledbuild)
+  add_php_test(deletedailyupdate)
+endif()
 
 add_selenium_test(addbuildgroup)
 add_selenium_test(expectedbuildgroup)
 add_selenium_test(buildinfogroup)
 add_selenium_test(showtestgraphs)
 add_selenium_test(buildsummary)
+
 if(COVERAGE_COMMAND)
   add_selenium_test(showcoveragegraph)
 endif()
+
 add_selenium_test(showupdategraph)
 add_selenium_test(finduserproject)
 add_selenium_test(findusers)
