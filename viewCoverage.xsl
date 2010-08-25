@@ -44,7 +44,7 @@
                <td align="center">
                <xsl:attribute name="class">
                 <xsl:choose>
-                  <xsl:when test="cdash/coverage/percentcoverage > cdash/coverage/percentagegreen">
+                  <xsl:when test="cdash/coverage/percentcoverage >= cdash/coverage/percentagegreen">
                     normal
                     </xsl:when>
                   <xsl:otherwise>
