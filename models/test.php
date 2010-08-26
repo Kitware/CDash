@@ -123,8 +123,11 @@ class Test
   /** Return if exists */
   function Exists()
     {
+    $name = pdo_real_escape_string($this->Name);  
     $crc32 = $this->GetCrc32();
-    $query = pdo_query("SELECT id FROM test WHERE projectid=".qnum($this->ProjectId)." AND crc32='".$crc32."'");
+    $query = pdo_query("SELECT id FROM test WHERE projectid=".qnum($this->ProjectId)
+                       ." AND name='".$name."'"
+                       ." AND crc32='".$crc32."'");
     if(pdo_num_rows($query)>0)
       {
       $query_array = pdo_fetch_array($query);
