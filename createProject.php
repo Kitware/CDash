@@ -145,6 +145,7 @@ if($Submit)
       }
     
     $Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
+    $Project->TestingDataUrl = stripslashes_if_gpc_magic_quotes($_POST["testingDataUrl"]);
     $Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
     $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
     @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);

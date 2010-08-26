@@ -274,6 +274,7 @@ CREATE TABLE "project" (
   "imageid" bigint DEFAULT '0' NOT NULL,
   "public" smallint DEFAULT '1' NOT NULL,
   "coveragethreshold" smallint DEFAULT '70' NOT NULL,
+  "testingdataurl" character varying(255) DEFAULT '' NOT NULL,
   "nightlytime" character varying(50) DEFAULT '00:00:00' NOT NULL,
   "googletracker" character varying(50) DEFAULT '' NOT NULL,
   "emaillowcoverage" smallint DEFAULT '0' NOT NULL,

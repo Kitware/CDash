@@ -683,10 +683,39 @@
                       </tr>
                     </table>
                   </div>
-
                   <div id="fragment-4" class="tab_content">
                     <div class="tab_help"></div>
                     <table width="550">
+                    <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
+                            <strong>Testing Data URL:</strong>
+                          </div>
+                        </td>
+                        <td>
+                          <input onchange="saveChanges();" onfocus="showHelp('TestingDataUrl_help');"
+                            name="testingDataUrl" type="text" id="testingDataUrl" size="30">
+                            <xsl:attribute name="value">
+                  <xsl:if test="string-length(cdash/project/testingdataurl)=0"></xsl:if>
+                    <xsl:value-of select="cdash/project/testingdataurl" />
+                  </xsl:attribute>
+                          </input>
+                          <xsl:text disable-output-escaping="yes"> </xsl:text>
+                          <a
+                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            target="blank">
+                            <img onmouseover="showHelp('TestingDataUrl_help');" src="images/help.gif"
+                              border="0" />
+                          </a>
+                          <span class="help_content" id="TestingDataUrl_help">
+                            <b>Testing Data URL:</b>
+                            <br />
+                            CDash can display a link on the main dashboard page
+                            to the URL of your testing data
+                          </span>
+                        </td>
+                      </tr>
                       <tr>
                         <td></td>
                         <td>
@@ -1159,7 +1188,7 @@
                         <span class="help_content" id="ctestConfig_help">
                           <b>Block List</b>
                           <br />
-                          Submission to CDash can be block given a sitename,
+                          Submission to CDash can be blocked given a sitename,
                           buildname and IP address in order to prevent submissions
                           from unwanted host.
                         </span>

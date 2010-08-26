@@ -34,6 +34,7 @@ class Project
   var $ImageId;
   var $Public;
   var $CoverageThreshold;
+  var $TestingDataUrl;
   var $NightlyTime;
   var $GoogleTracker;
   var $EmailLowCoverage;
@@ -176,13 +177,14 @@ class Project
     $Description = pdo_real_escape_string($this->Description);
     $HomeUrl = pdo_real_escape_string($this->HomeUrl);
     $CvsUrl = pdo_real_escape_string($this->CvsUrl);
-    $DocumentationUrl = pdo_real_escape_string($this->DocumentationUrl);  
-    $BugTrackerUrl = pdo_real_escape_string($this->BugTrackerUrl);  
-    $BugTrackerFileUrl = pdo_real_escape_string($this->BugTrackerFileUrl);  
-    $NightlyTime = pdo_real_escape_string($this->NightlyTime);  
-    $GoogleTracker = pdo_real_escape_string($this->GoogleTracker);  
-    $RobotName = pdo_real_escape_string($this->RobotName);  
-    $RobotRegex = pdo_real_escape_string($this->RobotRegex);  
+    $DocumentationUrl = pdo_real_escape_string($this->DocumentationUrl);
+    $BugTrackerUrl = pdo_real_escape_string($this->BugTrackerUrl);
+    $BugTrackerFileUrl = pdo_real_escape_string($this->BugTrackerFileUrl);
+    $TestingDataUrl = pdo_real_escape_string($this->TestingDataUrl);
+    $NightlyTime = pdo_real_escape_string($this->NightlyTime);
+    $GoogleTracker = pdo_real_escape_string($this->GoogleTracker);
+    $RobotName = pdo_real_escape_string($this->RobotName);
+    $RobotRegex = pdo_real_escape_string($this->RobotRegex);
     $Name = pdo_real_escape_string($this->Name); 
     $CvsViewerType = pdo_real_escape_string($this->CvsViewerType); 
 
@@ -202,6 +204,7 @@ class Project
       $query .= ",bugtrackerfileurl='".$BugTrackerFileUrl."'";
       $query .= ",public=".qnum($this->Public);
       $query .= ",coveragethreshold=".qnum($this->CoverageThreshold);
+      $query .= ",testingdataurl='".$TestingDataUrl."'";
       $query .= ",nightlytime='".$NightlyTime."'";
       $query .= ",googletracker='".$GoogleTracker."'";
       $query .= ",emaillowcoverage=".qnum($this->EmailLowCoverage);
@@ -303,13 +306,13 @@ class Project
       // Trim the name
       $this->Name = trim($this->Name);
       $this->Initialize();
-      $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,nightlytime,
-                                    googletracker,emailbrokensubmission,emailredundantfailures,
+      $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,testingdataurl,
+                                    nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
                                     ,displaylabels,autoremovetimeframe,autoremovemaxbuilds)
                  VALUES (".$idvalue."'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
-                 ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$NightlyTime',
+                 ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$TestingDataUrl','$NightlyTime',
                  '$GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).","
                  .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$CvsViewerType',".qnum($this->TestTimeStd)
                  .",".qnum($this->TestTimeStdThreshold).",".qnum($this->TestTimeMaxStatus).",".qnum($this->EmailMaxItems).",".qnum($this->EmailMaxChars).","
@@ -428,6 +431,7 @@ class Project
       $this->ImageId = $project_array['imageid'];
       $this->Public = $project_array['public'];
       $this->CoverageThreshold = $project_array['coveragethreshold'];
+      $this->TestingDataUrl = $project_array['testingdataurl'];
       $this->NightlyTime = $project_array['nightlytime'];
       $this->GoogleTracker = $project_array['googletracker'];
       $this->EmailLowCoverage = $project_array['emaillowcoverage'];
