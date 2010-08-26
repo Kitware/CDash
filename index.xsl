@@ -813,6 +813,17 @@
 </table>
 </xsl:if>
 
+<xsl:if test="cdash/testingdataurl">
+<table width="100%" cellpadding="11" cellspacing="0">
+  <tr>
+    <td height="25" align="left">
+      Testing data for this project can be found at:
+      <a><xsl:attribute name="href"><xsl:value-of select="cdash/testingdataurl"/></xsl:attribute><xsl:value-of select="cdash/testingdataurl"/></a>
+    </td>
+  </tr>
+</table>
+</xsl:if>
+
 <!-- Display the table dependencies -->
 <xsl:if test="count(cdash/subproject/dependency)>0">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">

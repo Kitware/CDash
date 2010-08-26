@@ -138,6 +138,7 @@ if($Submit)
     $Project->BugTrackerUrl = stripslashes_if_gpc_magic_quotes($_POST["bugURL"]);
     $Project->BugTrackerFileUrl = stripslashes_if_gpc_magic_quotes($_POST["bugFileURL"]);
     $Project->DocumentationUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["docURL"]));
+    $Project->TestingDataUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["testingDataUrl"]));
     @$Public = $_POST["public"];
     if(!isset($Public))
       {
@@ -145,7 +146,6 @@ if($Submit)
       }
     
     $Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
-    $Project->TestingDataUrl = stripslashes_if_gpc_magic_quotes($_POST["testingDataUrl"]);
     $Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
     $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
     @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
@@ -308,6 +308,7 @@ if($Update || $AddRepository)
   $Project->BugTrackerUrl = stripslashes_if_gpc_magic_quotes($_POST["bugURL"]);
   $Project->BugTrackerFileUrl = stripslashes_if_gpc_magic_quotes($_POST["bugFileURL"]);
   $Project->DocumentationUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["docURL"]));
+  $Project->TestingDataUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["testingDataUrl"]));
   @$Project->Public = $_POST["public"];
   if(!isset($Project->Public))
     {
@@ -404,6 +405,7 @@ if($projectid>0)
   $xml .= add_XML_value("imageid",$Project->ImageId);
   $xml .= add_XML_value("coveragethreshold",$Project->CoverageThreshold);  
   $xml .= add_XML_value("nightlytime",$Project->NightlyTime);
+  $xml .= add_XML_value("testingdataurl",$Project->TestingDataUrl);
   $xml .= add_XML_value("googletracker",$Project->GoogleTracker);
   $xml .= add_XML_value("emailbrokensubmission",$Project->EmailBrokenSubmission);
   $xml .= add_XML_value("emailredundantfailures",$Project->EmailRedundantFailures);

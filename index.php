@@ -344,6 +344,11 @@ function generate_main_dashboard_XML($projectid,$date)
     $docurl = make_cdash_url(htmlentities($project_array["documentationurl"]));
     $projectpublic =  $project_array["public"]; 
     $projectname = $project_array["name"];
+    
+    if(isset($project_array['testingdataurl']) && $project_array['testingdataurl'] != '')
+      {
+      $testingdataurl = make_cdash_url(htmlentities($project_array['testingdataurl']));
+      }
     }
   else
     {
@@ -484,6 +489,11 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $xml .= "</subproject>";
     } // end isset(subproject)
+
+  if(isset($testingdataurl))
+    {
+    $xml .= add_XML_value("testingdataurl",$testingdataurl);
+    }
 
   // updates
   $xml .= "<updates>";
