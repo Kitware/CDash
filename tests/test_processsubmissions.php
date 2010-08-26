@@ -58,6 +58,26 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     return 0;
     }
 
+  function addFakeStaleProcessingLock($projectid)
+    {
+    // Setup fake "stale" submissionprocessor record for the given projectid.
+    //
+    // This function assumes the record already exists for projectid. It does
+    // because prior to calling this method, some calls to
+    // processsubmissions.php for the projectid have already been made.
+    // If not, this function should check and INSERT instead...
+    //
+    global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
+
+    $old_time = gmdate(FMT_DATETIMESTD, time()-(2*$CDASH_SUBMISSION_PROCESSING_TIME_LIMIT));
+
+    pdo_query(
+      "UPDATE submissionprocessor ".
+      "SET pid='1', lastupdated='$old_time', locked='$old_time' ".
+      "WHERE projectid='$projectid'"
+      );
+    }
+
   function allRecordsProcessed($projectid)
     {
     // The status field in the submission table may have the value 0, 1, 2 or 3.
@@ -106,10 +126,24 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     curl_close($ch);
     }
 
+  function launchViaCommandLine($projectid)
+    {
+    global $cdashpath;
+    global $PHP_EXE;
+    $cmd = "\"$PHP_EXE\" \"$cdashpath/cdash/processsubmissions.php\" $projectid --force";
+    echo "Running command line:\n";
+    echo "  cmd='${cmd}'\n";
+    $result = system($cmd);
+    echo "\n";
+    echo "  result='$result'\n";
+    echo "Done with command line\n";
+    }
+
   function testProcessSubmissionsTest()
     {
     $this->login();
 
+    echo "CTEST_FULL_OUTPUT\n";
     echo "this->logfilename='$this->logfilename'\n";
     echo "this->url='$this->url'\n";
 
@@ -129,6 +163,9 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
       return 1;
       }
 
+    echo "log file perms: [";
+    echo substr(sprintf('%o', fileperms($this->logfilename)), -4)."]\n";
+
     // Simulate the processsubmissions.php "been processing for a long time"
     // issue. (Add records that are in the "processing" state, but appear to
     // be "old"... And records *after* that in the "queued" state.)
@@ -143,7 +180,6 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     // 1 second for each time through its loop...)
     //
     $this->launchViaCurl("/cdash/processsubmissions.php?projectid=1&sleep_in_loop=1", 1);
-    //$this->launchViaCurl("/cdash/processsubmissions.php?projectid=1", 1);
 
     // Sleep for 2 seconds, and then try to process submissions synchronously
     // and simultaneously... (This one should go through the "can't acquire
@@ -171,9 +207,47 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
       $rows = pdo_all_rows_query("SELECT * FROM submission WHERE status<2");
       echo print_r($rows, true)."\n";
 
-      $this->fail("some records still not processed after calling processsubmissions.php");
+      $this->fail("some records still not processed after call 1 processsubmissions.php");
       return 1;
       }
+
+
+    // Done, right? Not quite.
+    // Now add some more fake submissions, and add a fake, stale processing
+    // lock, such that the processing code has to go through the "acquire
+    // lock by assuming existing lock is dead, so steal it" chunk of code.
+    //
+    $this->addFakeSubmissionRecords("1");
+    $this->addFakeStaleProcessingLock("1");
+    $content = $this->get($this->url."/cdash/processsubmissions.php?projectid=1");
+
+    if (!$this->allRecordsProcessed("1")) // projectid 1 is tested in this test...
+    {
+      $rows = pdo_all_rows_query("SELECT * FROM submission WHERE status<2");
+      echo print_r($rows, true)."\n";
+
+      $this->fail("some records still not processed after call 2 processsubmissions.php");
+      echo "content (4):\n$content\n";
+      return 1;
+    }
+
+
+    // Finally, execute the processsubmissions.php script by php command line
+    // to get coverage of the chunk of code that processes command line args.
+    //
+    $this->addFakeSubmissionRecords("1");
+    $this->addFakeStaleProcessingLock("1");
+    $this->launchViaCommandLine(1);
+
+    if (!$this->allRecordsProcessed("1")) // projectid 1 is tested in this test...
+    {
+      $rows = pdo_all_rows_query("SELECT * FROM submission WHERE status<2");
+      echo print_r($rows, true)."\n";
+
+      $this->fail("some records still not processed after call 3 processsubmissions.php");
+      return 1;
+    }
+
 
     // Actually, with this test, we expect some errors to be logged in the
     // cdash.log file, so do not do this check:

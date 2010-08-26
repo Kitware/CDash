@@ -61,8 +61,19 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
   $error .= "[pid=".getmypid()."]";
   $error .= "(".$function."): ".$text."\n";
 
-  
+
+  $log_pre_exists = file_exists($logFile);
+
   error_log($error, 3, $logFile);
+
+  // If we just created the logFile, then give it group write permissions
+  // so that command-line invocations of CDash functions can also write to
+  // the same log file.
+  //
+  if (!$log_pre_exists)
+    {
+    chmod($logFile, 0664);
+    }
 
   // Insert in the database
   if($type == LOG_WARNING || $type==LOG_ERR)
