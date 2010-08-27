@@ -40,8 +40,7 @@ class ErrorLog
     {
     $time = time()-($days*3600*24);
     $date = date("Y-m-d H:i:s",$time);
-    //pdo_query("DELETE FROM errorlog WHERE date<'".$date."'");
-    //echo "DELETE FROM errorlog WHERE date<'".$date."'";
+    pdo_query("DELETE FROM errorlog WHERE date<'".$date."'");
     }
     
   // Save in the database
