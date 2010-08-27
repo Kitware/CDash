@@ -77,16 +77,16 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
 
   // Insert in the database
   if($type == LOG_WARNING || $type==LOG_ERR)
-  {
+    {
     $ErrorLog = new ErrorLog;
     $ErrorLog->ProjectId = $projectid;
     $ErrorLog->BuildId = $buildid;
     switch($type)
-    {
-      case LOG_INFO: $ErrorLog->Type = 6;
-      case LOG_WARNING: $ErrorLog->Type = 5;
-      case LOG_ERR: $ErrorLog->Type = 4;
-    }
+      {
+      // case LOG_INFO: $ErrorLog->Type = 6; break;
+      case LOG_WARNING: $ErrorLog->Type = 5; break;
+      case LOG_ERR: $ErrorLog->Type = 4; break;
+      }
     $ErrorLog->Description = "(".$function."): ".$text;
     $ErrorLog->ResourceType = $resourcetype;
     $ErrorLog->ResourceId = $resourceid;
@@ -95,6 +95,6 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
 
     // Clean the log more than 10 days
     $ErrorLog->Clean(10);
-  }
+    }
 }
 ?>
