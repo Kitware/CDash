@@ -364,14 +364,20 @@ function ProcessSubmissions($projectid)
       LOG_INFO, $projectid);
     pdo_free_result($query);
 
-    $fp = fopen($filename, 'r');
-    if(!$fp)
+    unset($fp);
+
+    if(!file_exists($filename))
     {
       echo "Unexpected: no such file, checking in ../\n";
       // check in parent dir also
       $filename = "../$filename";
+    }
+
+    if(file_exists($filename))
+    {
       $fp = fopen($filename, 'r');
     }
+
     if($fp)
     {
       echo 'Calling do_submit'."\n";
