@@ -184,10 +184,10 @@ if($Submit)
         }
       }
       
-   if($db_created)
+
+   /** process an SQL file */   
+   function _processSQLfile($filename)  
      {
-     pdo_select_db("$CDASH_DB_NAME",$db);
-     $sqlfile = "sql/".$db_type."/cdash.sql";
      $file_content = file($sqlfile);
      $query = "";
      foreach($file_content as $sql_line)
@@ -214,7 +214,25 @@ if($Submit)
            $query = "";
            }
          }
-       } // end for each line
+       } // end for each line 
+     } // end _processSQLfile    
+      
+   if($db_created)
+     {
+     pdo_select_db("$CDASH_DB_NAME",$db);
+     $sqlfile = "sql/".$db_type."/cdash.sql";
+     _processSQLfile($sqlfile);
+     
+     // If we have a local directory we process the sql in that directory
+     if($CDASH_USE_LOCAL_DIRECTORY)
+       {
+       $sqlfile = "local/sql/".$db_type."/cdash.sql";
+       
+       if(file_exists($sqlfile))
+         { 
+         _processSQLfile($sqlfile);
+         }
+       }
     
     // If we are with PostGreSQL we need to add some extra functions
     if($db_type == 'pgsql')
