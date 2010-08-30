@@ -122,7 +122,8 @@ function AcquireProcessingLock($projectid, $force)
           //if ($pid is not presently running) // assumed, php-way to measure?
           //  {
             add_log("AcquireProcessingLock",
-              "taking lock: other processor pid='$pid' apparently stalled, lastupdated='$lastupdated'",
+              "taking lock: projectid=$projectid, other processor pid='$pid' ".
+              "apparently stalled, lastupdated='$lastupdated'",
               LOG_ERR, $projectid);
             $acquire_lock = true;
           //  }
@@ -153,7 +154,7 @@ function AcquireProcessingLock($projectid, $force)
         add_last_sql_error("AcquireProcessingLock-2");
         $locked = true;
 
-        add_log("AcquireProcessingLock", "lock acquired",
+        add_log("AcquireProcessingLock", "lock acquired, projectid=$projectid",
           LOG_INFO, $projectid);
         }
 
@@ -361,7 +362,7 @@ function ProcessSubmissions($projectid)
 
     add_log("ProcessSubmissions", "calling pdo_free_result",
       LOG_INFO, $projectid);
-    pdo_free_result($query_array);
+    pdo_free_result($query);
 
     $fp = fopen($filename, 'r');
     if(!$fp)
