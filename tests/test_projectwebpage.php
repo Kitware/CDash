@@ -19,6 +19,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $name = 'BatchmakeExample';
     $description = 'Project Batchmake\'s test for cdash testing';
     $this->createProject($name,$description);
+    $this->get($this->url.'/user.php'); // comes back to the my user page
     $name = 'InsightExample';
     $description = 'Project Insight test for cdash testing';
     $this->createProject($name,$description);
