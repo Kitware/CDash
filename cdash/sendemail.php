@@ -680,7 +680,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     
     $messagePlainText .= "To see this dashboard:\n";  
     $messagePlainText .= $currentURI;
-    $messagePlainText .= "/index.php?project=".$Project->Name."&date=".$today;
+    $messagePlainText .= "/index.php?project=".urlencode($Project->Name)."&date=".$today;
     $messagePlainText .= "\n\n";
     
     $messagePlainText .= "Summary of the first build failure:\n";
