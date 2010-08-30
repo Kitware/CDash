@@ -188,7 +188,7 @@ if($Submit)
    /** process an SQL file */   
    function _processSQLfile($filename)  
      {
-     $file_content = file($sqlfile);
+     $file_content = file($filename);
      $query = "";
      foreach($file_content as $sql_line)
        {
@@ -227,7 +227,6 @@ if($Submit)
      if($CDASH_USE_LOCAL_DIRECTORY)
        {
        $sqlfile = "local/sql/".$db_type."/cdash.sql";
-       
        if(file_exists($sqlfile))
          { 
          _processSQLfile($sqlfile);
