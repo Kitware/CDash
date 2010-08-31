@@ -39,6 +39,7 @@ CREATE TABLE "buildgroup" (
   "projectid" bigint DEFAULT '0' NOT NULL,
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "autoremovetimeframe" bigint DEFAULT '0',
   "description" text DEFAULT '' NOT NULL,
   "summaryemail" smallint DEFAULT '0',
   "includesubprojectotal" smallint DEFAULT '1',

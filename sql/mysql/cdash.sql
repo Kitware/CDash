@@ -51,6 +51,7 @@ CREATE TABLE `buildgroup` (
   `projectid` int(11) NOT NULL default '0',
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `autoremovetimeframe` int(11) default '0',
   `description` text NOT NULL default '',
   `summaryemail` tinyint(4) default '0',
   `includesubprojectotal` tinyint(4) default '1',
