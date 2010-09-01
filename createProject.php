@@ -463,6 +463,16 @@ if($projectid>0)
     $nRepositories++;
     }
     
+  $buildgroups = $Project->GetBuildGroups();
+  foreach($buildgroups as $buildgroup)
+    {
+    $xml .= "<buildgroup>";
+    $xml .= add_XML_value('id',$buildgroup['id']);
+    $xml .= add_XML_value('name',$buildgroup['name']);
+    $xml .= add_XML_value('autoremovetimeframe',$buildgroup['autoremovetimeframe']);
+    $xml .= "</buildgroup>";
+    }
+    
   // If we should add another repository
   if($AddRepository)
     {

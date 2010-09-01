@@ -1403,7 +1403,7 @@
                           </div>
                         </td>
                         <td>
-                          <input onchange="saveChanges();" onfocus="showHelp('displayLabels');"
+                          <input onchange="saveChanges();" onfocus="showHelp('displayLabels_help');"
                             type="checkbox" name="displayLabels" value="1">
                             <xsl:if test="cdash/project/displaylabels=1">
                               <xsl:attribute name="checked"></xsl:attribute>
@@ -1432,12 +1432,12 @@
                           </div>
                         </td>
                         <td>
-                          <input onchange="saveChanges();" onfocus="showHelp('autoremoveTimeframe');"
+                          <input onchange="saveChanges();" onfocus="showHelp('autoremoveTimeframe_help');"
                             name="autoremoveTimeframe" type="text" id="autoremoveTimeframe"
                             size="10">
                             <xsl:attribute name="value">
-                   <xsl:value-of select="cdash/project/autoremovetimeframe" />
-                 </xsl:attribute>
+                              <xsl:value-of select="cdash/project/autoremovetimeframe" />
+                            </xsl:attribute>
                           </input>
                           <a
                             href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
@@ -1450,10 +1450,40 @@
                             <br />
                             On the first submission of the day, remove builds that are
                             older than X number of days.
-                            If this value is less than 2 days no builds are removed.
+                            If this value is less than 2 days, no builds are removed.
                           </span>
                         </td>
                       </tr>
+                      <xsl:for-each select="cdash/buildgroup">
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
+                            <strong>AutoRemove Time Frame - <xsl:value-of select="name" /></strong>
+                          </div>
+                        </td>
+                        <td>
+                          <input onchange="saveChanges();" type="text" size="10">
+                            <xsl:attribute name="onfocus">showHelp('autoremoveTimeframe<xsl:value-of select="name" />_help');</xsl:attribute>
+                            <xsl:attribute name="value"><xsl:value-of select="autoremovetimeframe" /></xsl:attribute>
+                            <xsl:attribute name="name">autoremovetimeframe<xsl:value-of select="name" /></xsl:attribute>
+                            <xsl:attribute name="id">autoremovetimeframe<xsl:value-of select="name" /></xsl:attribute>
+                          </input>
+                          <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                            <img src="images/help.gif" border="0">
+                              <xsl:attribute name="onmouseover">showHelp('autoremoveTimeframe<xsl:value-of select="name" />_help');</xsl:attribute>
+                            </img>
+                          </a>
+                          <span class="help_content"><xsl:attribute name="id">autoremoveTimeframe<xsl:value-of select="name" />_help</xsl:attribute>
+                            <b>AutoRemove Timeframe - <xsl:value-of select="name" /></b>
+                            <br />
+                            On the first submission of the day, remove <xsl:value-of select="name" /> builds that are
+                            older than X number of days.
+                            If this value is less than 2 days, no builds are removed.
+                          </span>
+                        </td>
+                      </tr>
+                      </xsl:for-each>
                       <tr>
                         <td></td>
                         <td>

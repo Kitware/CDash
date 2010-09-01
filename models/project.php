@@ -627,6 +627,24 @@ class Project
        }
      return $repositories;   
      } // end GetRepositories
+     
+  /** Get the build groups */
+   function GetBuildGroups()
+     {
+     $buildgroups = array();
+     $query = pdo_query("SELECT id,name,autoremovetimeframe FROM buildgroup 
+                         WHERE projectid=".qnum($this->Id));
+                         
+     add_last_sql_error("Project GetBuildGroups",$this->Id);
+     while($buildgroup = pdo_fetch_array($query))
+       {
+       $group['id'] = $buildgroup['id'];
+       $group['name'] = $buildgroup['name'];
+       $group['autoremovetimeframe'] = $buildgroup['autoremovetimeframe'];
+       $buildgroups[] = $group;
+       }
+     return $buildgroups;   
+     } // end GetBuildGroups
 
   /** Get the list of block builds */ 
   function GetBlockedBuilds()
