@@ -345,6 +345,15 @@ if($Update || $AddRepository)
     } 
     
   $Project->Save();
+
+  foreach($_POST as $key=>$value)
+    {
+    if(substr($key, 0, 20) == 'autoremovetimeframe_' && is_numeric($value))
+      {
+      list(,$id) = explode('_',$key);
+      pdo_query("UPDATE buildgroup SET autoremovetimeframe='$value' WHERE id=".qnum($id));
+      }
+    }
   
   // Add the logo
   if(strlen($_FILES['logo']['tmp_name'])>0)

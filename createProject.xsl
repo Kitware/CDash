@@ -1466,8 +1466,8 @@
                           <input onchange="saveChanges();" type="text" size="10">
                             <xsl:attribute name="onfocus">showHelp('autoremoveTimeframe<xsl:value-of select="name" />_help');</xsl:attribute>
                             <xsl:attribute name="value"><xsl:value-of select="autoremovetimeframe" /></xsl:attribute>
-                            <xsl:attribute name="name">autoremovetimeframe<xsl:value-of select="name" /></xsl:attribute>
-                            <xsl:attribute name="id">autoremovetimeframe<xsl:value-of select="name" /></xsl:attribute>
+                            <xsl:attribute name="name">autoremovetimeframe_<xsl:value-of select="id" /></xsl:attribute>
+                            <xsl:attribute name="id">autoremovetimeframe_<xsl:value-of select="id" /></xsl:attribute>
                           </input>
                           <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
                             <img src="images/help.gif" border="0">
