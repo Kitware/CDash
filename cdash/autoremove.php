@@ -16,12 +16,53 @@
 
 =========================================================================*/
 
+/** Remove builds by their group-specific auto-remove timeframe setting */
+function removeBuildsGroupwise($projectid, $maxbuilds)
+{
+  require_once('cdash/config.php');
+  require_once('cdash/pdo.php');
+  require_once('cdash/common.php');
+  
+  set_time_limit(0);
+  
+  $buildgroups = pdo_query('SELECT id,autoremovetimeframe FROM buildgroup WHERE projectid='.qnum($projectid));
+
+  while($buildgroup = pdo_fetch_array($buildgroups))
+    {
+    $days = $buildgroup['autoremovetimeframe'];
+    
+    if($days < 2)
+      {
+      return;
+      }
+    $groupid = $buildgroup['id'];
+
+    $cutoff = time()-3600*24*$days;
+    $cutoffdate = date(FMT_DATETIME,$cutoff);
+
+    $builds = pdo_query("SELECT build.id AS id FROM build,build2group WHERE build.starttime<'$cutoffdate'
+      AND build2group.buildid=build.id AND build2group.groupid=".qnum($groupid).
+      "ORDER BY build.starttime ASC LIMIT $maxbuilds");
+    add_last_sql_error("autoremove::removeBuildsGroupwise");
+
+    while($build = pdo_fetch_array($builds))
+      {
+      $buildid = $build['id'];
+      $s = 'removing old buildid: '.$buildid.' projectid: '.$projectid;
+      add_log($s, 'removeBuildsGroupwise');
+      print "  -- " . $s . "\n";
+      remove_build($buildid); 
+      }
+    }
+
+}
+
 /** Remove the first builds that are at the beginning of the queue */
 function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
 {
-  include("cdash/config.php");
+  require_once("cdash/config.php");
   require_once("cdash/pdo.php");
-  include_once("cdash/common.php");
+  require_once("cdash/common.php");
 
   set_time_limit(0);
 

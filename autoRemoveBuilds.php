@@ -26,7 +26,8 @@ require_once("cdash/pdo.php");
 
 if($argc != 2)
 {
-  print "Usage: php $argv[0] project_name\n";
+  print "Usage: php $argv[0] <project_name>\n";
+  print "Or:    php $argv[0] all\n";
   return -1;
 }
 
@@ -45,12 +46,13 @@ if($projectname == "all")
 $project = pdo_query("SELECT id,autoremovetimeframe,autoremovemaxbuilds FROM project".$sql);
 if(!$project)
   {
-  add_last_sql_error("autoRemoveBuilds");
+  add_last_sql_error('autoRemoveBuilds');
   return false;
   }  
 while($project_array = pdo_fetch_array($project))
   {
-  removeFirstBuilds($project_array["id"],$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"], true); // force the autoremove
+  removeFirstBuilds($project_array['id'],$project_array['autoremovetimeframe'],$project_array['autoremovemaxbuilds'], true); // force the autoremove
+  removeBuildsGroupwise($project_array['id'],$project_array['autoremovemaxbuilds']);
   }
 
 return 0;
