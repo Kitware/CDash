@@ -130,14 +130,14 @@ class ClientOS
   /** Get the platform name */  
   function GetPlatformFromName($name)
     {
-    $key = array_search(ucfirst(strtolower($name)), $this->Platforms);
+    $key = array_search($name, $this->Platforms);
     if($key !== false)
       {
       return $key;  
       }
     return 0;  
     }
-    
+
   /** Get the OS name */  
   function GetNameFromPlatform($platform)
     {
@@ -147,7 +147,7 @@ class ClientOS
   /** Get the platform name */  
   function GetVersionFromName($name)
     {
-    $key = array_search(ucfirst(strtolower($name)),$this->OperatingSystems);
+    $key = array_search($name, $this->OperatingSystems);
     if($key !== false)
       {
       return $key;  

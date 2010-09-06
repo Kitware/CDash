@@ -1203,64 +1203,109 @@ class Project
       } // end if email
     } // end SendEmailToAdmin
 
-    
+
+  function getDefaultCTestUpdateType()
+    {
+    switch ($this->CvsViewerType)
+      {
+      case 'cgit':
+      case 'github':
+      case 'gitorious':
+      case 'gitweb':
+        return "git";
+      break;
+
+      case 'websvn':
+        return "svn";
+      break;
+
+      default:
+        return "cvs";
+      break;
+      }
+    }
+
+
   function getDefaultJobTemplateScript()
-    { 
-    $ctest_script = 'IF(JOB_MODULE)'."\n"; 
-    $ctest_script .= 'SET(SOURCE_NAME ${JOB_MODULE})'."\n";
-    $ctest_script .= '  IF(JOB_TAG)'."\n"; 
-    $ctest_script .= '    SET(SOURCE_NAME ${SOURCE_NAME}-${JOB_TAG})'."\n";
-    $ctest_script .= '  ENDIF(JOB_TAG)'."\n";
-    $ctest_script .= 'ELSE(JOB_MODULE)'."\n";
-    $ctest_script .= 'SET(SOURCE_NAME ${PROJECT_NAME})'."\n";
-    $ctest_script .= '  IF(JOB_BUILDNAME_SUFFIX)'."\n"; 
-    $ctest_script .= '    SET(SOURCE_NAME ${SOURCE_NAME}-${JOB_BUILDNAME_SUFFIX})'."\n";
-    $ctest_script .= '  ENDIF(JOB_BUILDNAME_SUFFIX)'."\n";
-    $ctest_script .= 'ENDIF(JOB_MODULE)'."\n";
-       
-    $ctest_script .= 'SET(CTEST_SOURCE_NAME ${SOURCE_NAME})'."\n";
-    $ctest_script .= 'SET(CTEST_BINARY_NAME ${SOURCE_NAME}-bin)'."\n";
-    $ctest_script .= 'SET(CTEST_DASHBOARD_ROOT "${CLIENT_BASE_DIRECTORY}")'."\n";
-    $ctest_script .= 'SET(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}")'."\n";
-    $ctest_script .= 'SET(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}")'."\n";
-    $ctest_script .= 'SET(CTEST_CMAKE_GENERATOR "${JOB_CMAKE_GENERATOR}")'."\n";
-    $ctest_script .= 'SET(CTEST_BUILD_CONFIGURATION "${JOB_BUILD_CONFIGURATION}")'."\n";
-       
+    {
+    $ctest_script  = '# From this line down, this script may be customized'."\n";
+    $ctest_script .= '# on the Clients tab of the CDash createProject page.'."\n";
+    $ctest_script .= '#'."\n";
+    $ctest_script .= 'if(JOB_MODULE)'."\n";
+    $ctest_script .= '  set(SOURCE_NAME ${JOB_MODULE})'."\n";
+    $ctest_script .= '  if(JOB_TAG)'."\n";
+    $ctest_script .= '    set(SOURCE_NAME ${SOURCE_NAME}-${JOB_TAG})'."\n";
+    $ctest_script .= '  endif()'."\n";
+    $ctest_script .= 'else()'."\n";
+    $ctest_script .= '  set(SOURCE_NAME ${PROJECT_NAME})'."\n";
+    $ctest_script .= '  if(JOB_BUILDNAME_SUFFIX)'."\n"; 
+    $ctest_script .= '    set(SOURCE_NAME ${SOURCE_NAME}-${JOB_BUILDNAME_SUFFIX})'."\n";
+    $ctest_script .= '  endif()'."\n";
+    $ctest_script .= 'endif()'."\n";
+    $ctest_script .= "\n";
+    $ctest_script .= 'set(CTEST_SOURCE_NAME ${SOURCE_NAME})'."\n";
+    $ctest_script .= 'set(CTEST_BINARY_NAME ${SOURCE_NAME}-bin)'."\n";
+    $ctest_script .= 'set(CTEST_DASHBOARD_ROOT "${CLIENT_BASE_DIRECTORY}")'."\n";
+    $ctest_script .= 'set(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}")'."\n";
+    $ctest_script .= 'set(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}")'."\n";
+    $ctest_script .= 'set(CTEST_CMAKE_GENERATOR "${JOB_CMAKE_GENERATOR}")'."\n";
+    $ctest_script .= 'set(CTEST_BUILD_CONFIGURATION "${JOB_BUILD_CONFIGURATION}")'."\n";
+    $ctest_script .= "\n";
+
     // Construct the buildname
     $ctest_script .= 'set(CTEST_SITE "${CLIENT_SITE}")'."\n";
     $ctest_script .= 'set(CTEST_BUILD_NAME "${JOB_OS_NAME}-${JOB_OS_VERSION}-${JOB_OS_BITS}-${JOB_COMPILER_NAME}-${JOB_COMPILER_VERSION}")'."\n";
-    $ctest_script .= '  IF(JOB_BUILDNAME_SUFFIX)'."\n"; 
-    $ctest_script .= 'set(CTEST_BUILD_NAME ${CTEST_BUILD_NAME}-${JOB_BUILDNAME_SUFFIX})'."\n";
-    $ctest_script .= '  ENDIF(JOB_BUILDNAME_SUFFIX)'."\n";
-      
+    $ctest_script .= 'if(JOB_BUILDNAME_SUFFIX)'."\n";
+    $ctest_script .= '  set(CTEST_BUILD_NAME ${CTEST_BUILD_NAME}-${JOB_BUILDNAME_SUFFIX})'."\n";
+    $ctest_script .= 'endif()'."\n";
+    $ctest_script .= "\n";
+
     // Set the checkout command
-    $ctest_script .= 'SET(REPOSITORY_TYPE cvs)'."\n";
-    $ctest_script .= 'IF(${REPOSITORY_TYPE} STREQUAL "cvs")'."\n";
-    $ctest_script .= '  SET(CTEST_CHECKOUT_COMMAND "cvs -d ${JOB_REPOSITORY} checkout ")'."\n";
-    $ctest_script .= '  IF(JOB_TAG)'."\n";
-    $ctest_script .= '    SET(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} -r ${JOB_TAG}")'."\n";
-    $ctest_script .= '  ENDIF(JOB_TAG)'."\n";
-    $ctest_script .= '  SET(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} -d ${SOURCE_NAME}")'."\n";
-    $ctest_script .= '  SET(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} ${JOB_MODULE}")'."\n";
-    $ctest_script .= '  SET(CTEST_UPDATE_COMMAND "cvs")'."\n";
-    $ctest_script .= 'ENDIF(${REPOSITORY_TYPE} STREQUAL "cvs")'."\n";
-     
-    $ctest_script .= 'IF(${REPOSITORY_TYPE} STREQUAL "svn")'."\n";
-    $ctest_script .= '  SET(CTEST_CHECKOUT_COMMAND "svn co ${JOB_REPOSITORY} ${SOURCE_NAME}")'."\n";
-    $ctest_script .= '  SET(CTEST_UPDATE_COMMAND "svn")'."\n";  
-    $ctest_script .= 'ENDIF(${REPOSITORY_TYPE} STREQUAL "svn")'."\n";
-          
+    $repo_type = $this->getDefaultCTestUpdateType();
+
+    if ($repo_type == 'cvs')
+    {
+      $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")'."\n";
+      $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "cvs -d ${JOB_REPOSITORY} checkout ")'."\n";
+      $ctest_script .= '  if(JOB_TAG)'."\n";
+      $ctest_script .= '    set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} -r ${JOB_TAG}")'."\n";
+      $ctest_script .= '  endif()'."\n";
+      $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} -d ${SOURCE_NAME}")'."\n";
+      $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} ${JOB_MODULE}")'."\n";
+      $ctest_script .= 'endif()'."\n";
+      $ctest_script .= 'set(CTEST_UPDATE_COMMAND "cvs")'."\n";
+    }
+
+    if ($repo_type == 'git')
+    {
+      $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")'."\n";
+      $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "git clone ${JOB_REPOSITORY} ${SOURCE_NAME}")'."\n";
+      $ctest_script .= 'endif()'."\n";
+      $ctest_script .= 'set(CTEST_UPDATE_COMMAND "git")'."\n";
+    }
+
+    if ($repo_type == 'svn')
+    {
+      $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")'."\n";
+      $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "svn co ${JOB_REPOSITORY} ${SOURCE_NAME}")'."\n";
+      $ctest_script .= 'endif()'."\n";
+      $ctest_script .= 'set(CTEST_UPDATE_COMMAND "svn")'."\n";
+    }
+
+    $ctest_script .= "\n";
+
     $ctest_script .= 'ctest_start(${JOB_BUILDTYPE})'."\n";
     $ctest_script .= 'ctest_update(SOURCE ${CTEST_SOURCE_DIRECTORY})'."\n";
-    $ctest_script .= 'ctest_configure(BUILD  "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
-    $ctest_script .= 'ctest_build(BUILD  "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
-    $ctest_script .= 'ctest_test(BUILD  "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
+    $ctest_script .= 'ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
+    $ctest_script .= 'ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
+    $ctest_script .= 'ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
     $ctest_script .= 'ctest_submit(RETURN_VALUE res)'."\n";
-    $ctest_script .= 'MESSAGE("DONE")'."\n";
+    $ctest_script .= "\n";
+    $ctest_script .= 'message("DONE")'."\n";
+
     return $ctest_script;  
     }
- 
-      
+
 }  // end class Project
 
 ?>
