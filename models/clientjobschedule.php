@@ -782,10 +782,10 @@ class ClientJobSchedule
     $ctest_script .= 'set(CTEST_DROP_LOCATION "/CDash/submit.php?project='.$Project->Name.'")'."\n";
     $ctest_script .= 'set(CTEST_DROP_SITE_CDASH  TRUE)'."\n";
     $ctest_script .= 'set(CTEST_NOTES_FILES ${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME})'."\n";
-    
-    // Write the cache file
-    $ctest_script .= 'file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "'.$this->GetCMakeCache().'\n")'."\n";            
-    
+
+    // Make the cache available
+    $ctest_script .= 'set(JOB_INITIAL_CACHE "'.$this->GetCMakeCache().'\n")'."\n";
+
     // Set the macro to warn CDash that the script failed
     $ctest_script .= "\n".'MACRO(JOB_FAILED)'."\n";
     
@@ -799,10 +799,17 @@ class ClientJobSchedule
     $ctest_script .= '  file(DOWNLOAD "${CTEST_DROP_METHOD}://${CTEST_DROP_SITE}'.$uri.'?siteid='.$this->SiteId.'&jobfailed=1" "${CLIENT_BASE_DIRECTORY}/scriptfailed.txt")'."\n";
     $ctest_script .= '  return()'."\n";
     $ctest_script .= 'ENDMACRO(JOB_FAILED)'."\n\n";
-    
-    $ctest_script .= $Project->CTestTemplateScript;
-     
+
+    if(strlen($Project->CTestTemplateScript)>0)
+      {
+      $ctest_script .= $Project->CTestTemplateScript;
+      }
+    else
+      {
+      $ctest_script .= $Project->getDefaultJobTemplateScript();
+      }
+
     return $ctest_script;
     }
-    
+
 } // end class clienjobschedule

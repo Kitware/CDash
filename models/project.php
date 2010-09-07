@@ -1294,6 +1294,11 @@ class Project
 
     $ctest_script .= "\n";
 
+    // Write the initial CMakeCache.txt
+    //
+    $ctest_script .= 'file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "${JOB_INITIAL_CACHE}")'."\n";
+    $ctest_script .= "\n";
+
     $ctest_script .= 'ctest_start(${JOB_BUILDTYPE})'."\n";
     $ctest_script .= 'ctest_update(SOURCE ${CTEST_SOURCE_DIRECTORY})'."\n";
     $ctest_script .= 'ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
