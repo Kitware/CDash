@@ -70,7 +70,7 @@ class ProjectInDbTestCase extends KWWebTestCase
     $expected = array('userid'        => 1,
                       'role'          => 2,
                       'emailtype'     => 3,
-                      'emailcategory' => 62);
+                      'emailcategory' => 126);
     $this->assertEqual($result[0],$expected);
     }
 

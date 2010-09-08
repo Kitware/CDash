@@ -33,7 +33,7 @@ class UserProject
     $this->EmailType = 1;
     $this->ProjectId = 0;
     $this->UserId = 0;
-    $this->EmailCategory=62;
+    $this->EmailCategory=126;
     $this->EmailMissingSites=0;
     $this->EmailSuccess=0;
     }

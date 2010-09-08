@@ -287,7 +287,7 @@
              </xsl:if>
              </input> Error
            </td>
-          </tr>  
+          </tr>
           <tr>
             <td></td>
             <td ><input type="checkbox" onchange="saveChanges();" name="emailcategory_test" value="32">
@@ -296,7 +296,16 @@
              </xsl:if>
              </input> Test
            </td>
-          </tr>  
+          </tr>
+          <tr>
+            <td></td>
+            <td ><input type="checkbox" onchange="saveChanges();" name="emailcategory_dynamicanalysis" value="64">
+             <xsl:if test="/cdash/emailcategory_dynamicanalysis=1">
+             <xsl:attribute name="checked"></xsl:attribute>
+             </xsl:if>
+             </input> Dynamic Analysis
+           </td>
+          </tr>
         </table>
     </div>
     <div id="fragment-5" class="tab_content">

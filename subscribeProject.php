@@ -97,6 +97,7 @@ if ($session_OK)
     $xml .= add_XML_value("emailcategory_warning",check_email_category("warning",$emailcategory));
     $xml .= add_XML_value("emailcategory_error",check_email_category("error",$emailcategory));
     $xml .= add_XML_value("emailcategory_test",check_email_category("test",$emailcategory));
+    $xml .= add_XML_value("emailcategory_dynamicanalysis",check_email_category("dynamicanalysis",$emailcategory));
     }
   else // we set the default categories
     {
@@ -105,6 +106,7 @@ if ($session_OK)
     $xml .= add_XML_value("emailcategory_warning",1);
     $xml .= add_XML_value("emailcategory_error",1);
     $xml .= add_XML_value("emailcategory_test",1);
+    $xml .= add_XML_value("emailcategory_dynamicanalysis",1);
     }
   
   // If we ask to subscribe
@@ -156,8 +158,9 @@ if ($session_OK)
     @$emailcategory_warning = $_POST["emailcategory_warning"];
     @$emailcategory_error = $_POST["emailcategory_error"];
     @$emailcategory_test = $_POST["emailcategory_test"];
+    @$emailcategory_dynamicanalysis = $_POST["emailcategory_dynamicanalysis"];
     
-    $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test;    
+    $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test+$emailcategory_dynamicanalysis;    
     if(pdo_num_rows($user2project)>0)
       {
       pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',
@@ -194,8 +197,9 @@ if ($session_OK)
     @$emailcategory_warning = $_POST["emailcategory_warning"];
     @$emailcategory_error = $_POST["emailcategory_error"];
     @$emailcategory_test = $_POST["emailcategory_test"];
+    @$emailcategory_dynamicanalysis = $_POST["emailcategory_dynamicanalysis"];
     
-    $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test;    
+    $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test+$emailcategory_dynamicanalysis;    
     if(pdo_num_rows($user2project)>0)
       {
       pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',

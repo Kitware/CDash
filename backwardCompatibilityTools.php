@@ -242,7 +242,7 @@ function AddTableField($table,$field,$mySQLType,$pgSqlType,$default)
   $sql = '';  
   if($default !== false)
     {
-    $sql = " DEFAULT '".$default."'";      
+    $sql = " DEFAULT '".$default."'";
     }  
         
   $query = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");

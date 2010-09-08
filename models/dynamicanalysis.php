@@ -45,6 +45,22 @@ class DynamicAnalysis
     $label->DynamicAnalysisId = $this->Id;
     $this->Labels[] = $label;
     }
+    
+  /** Find how many dynamic analysis tests were failed or notrun status */
+  function GetNumberOfErrors()
+    {
+    if(strlen($this->BuildId) == 0)
+      {
+      echo "DynamicAnalysis::GetNumberOfErrors BuildId not set";
+      return false;
+      }
+      
+    $query = "SELECT count(*) FROM dynamicanalysis WHERE buildid=".qnum($this->BuildId).
+             " AND status IN ('notrun','failed')";
+    $errorcount = pdo_query($query);
+    $error_array = pdo_fetch_array($errorcount);
+    return $error_array[0];
+    }
 
 
   /** Remove all the dynamic analysis associated with a buildid */

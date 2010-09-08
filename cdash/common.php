@@ -2264,6 +2264,15 @@ function get_formated_time($minutes)
 /** Check the email category */
 function check_email_category($name,$emailcategory)
 {
+  if($emailcategory>= 64)
+    {
+    if($name == "dynamicanalysis")
+      {
+      return true;
+      }
+    $emailcategory -= 64;
+    }
+    
   if($emailcategory>= 32)
     {
     if($name == "test")
