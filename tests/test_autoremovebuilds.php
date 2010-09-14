@@ -41,9 +41,14 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
     include('autoRemoveBuilds.php');
     $output = ob_get_contents();
     ob_end_clean();
+
     if(strpos($output, "removing builds for InsightExample") === false)
       {
       $this->fail("Expected output not found from autoRemoveBuilds.php.\n$output\n");
+      }
+    else if(strpos($output, "removing old buildid:") === false)
+      {
+      $this->fail("Autoremovebuilds failed to remove old build by buildgroup setting.\n$output\n");
       }
     else
       {

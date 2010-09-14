@@ -24,7 +24,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
   require_once('cdash/common.php');
   
   set_time_limit(0);
-  
+
   $buildgroups = pdo_query('SELECT id,autoremovetimeframe FROM buildgroup WHERE projectid='.qnum($projectid));
 
   while($buildgroup = pdo_fetch_array($buildgroups))
@@ -33,7 +33,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
     
     if($days < 2)
       {
-      return;
+      continue;
       }
     $groupid = $buildgroup['id'];
 
@@ -54,7 +54,6 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
       remove_build($buildid); 
       }
     }
-
 }
 
 /** Remove the first builds that are at the beginning of the queue */
