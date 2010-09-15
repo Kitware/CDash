@@ -88,7 +88,8 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
   if($handler instanceof UpdateHandler ||
      $handler instanceof TestingHandler ||
      $handler instanceof BuildHandler ||
-     $handler instanceof ConfigureHandler)
+     $handler instanceof ConfigureHandler ||
+     $handler instanceof DynamicAnalysisHandler)
     {
     sendemail($handler, $projectid);
     }

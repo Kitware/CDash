@@ -125,11 +125,31 @@ class EmailTestCase extends KWWebTestCase
     $this->deleteLog($this->logfilename);
     $rep  = dirname(__FILE__)."/data/EmailProjectExample";
     $file = "$rep/2_test.xml";
+
     if(!$this->submission('EmailProjectExample',$file))
       {
       return;
       }
-    if(!$this->compareLog($this->logfilename,$rep."/cdash_2.log")) {return;}
+    if(!$this->compareLog($this->logfilename,"$rep/cdash_2.log")) {return;}
+
+    $this->pass("Passed");
+    }
+
+  function testSubmissionEmailDynamicAnalysis()
+    {
+    $this->deleteLog($this->logfilename);
+    $rep  = dirname(__FILE__)."/data/EmailProjectExample";
+    $file = "$rep/2_dynamicanalysis.xml";
+    
+    if(!$this->submission('EmailProjectExample',$file))
+      {
+      return;
+      }
+    if(!$this->compareLog($this->logfilename,"$rep/cdash_3.log"))
+      {
+      return;
+      }
+    //$this->fail("failed");
     $this->pass("Passed");
     }
 }

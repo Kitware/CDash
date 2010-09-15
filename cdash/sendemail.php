@@ -167,12 +167,13 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
     $errors['errors'] = false;
     }
 
+
   // look for the previous build
   $previousbuildid = $Build->GetPreviousBuildId();
   if($previousbuildid > 0)
     {
     $error_differences = $Build->GetErrorDifferences($buildid);
-    if($errors['errors'] && $checkpreviouserrors)
+    if($errors['errors'] && $checkpreviouserrors && $errors['dynamicanalysis_errors'] == 0)
       {
       // If the builderroddiff positive and configureerrordiff and testdiff positive are zero we don't send an email
       // we don't send any emails
@@ -499,7 +500,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
       $information .= "\n";
       } // end test not run > 0
     }
-  else if($errorkey == "dynamicanlysis_errors")
+  else if($errorkey == "dynamicanalysis_errors")
     {
     $da_query = pdo_query("SELECT name,id FROM dynamicanalysis WHERE status IN ('failed','notrun') AND buildid="
         .qnum($buildid)." LIMIT $maxitems");
@@ -779,6 +780,7 @@ function set_email_sent($userid,$buildid,$emailtext)
       case 'buildwarning_fixes': $category=8; break;
       case 'builderror_fixes': $category=9; break;
       case 'test_fixes': $category=10; break;
+      case 'dynamicanalysis_errors': $category=11; break;
       }
 
    if($category>0)
@@ -806,6 +808,7 @@ function check_email_sent($userid,$buildid,$errorkey)
     case 'buildwarning_fixes': $category=8; break;
     case 'builderror_fixes': $category=9; break;
     case 'test_fixes': $category=10; break;
+    case 'dynamicanalysis_errors': $category=11; break;
     }
 
   if($category == 0)

@@ -54,9 +54,10 @@ class DynamicAnalysis
       echo "DynamicAnalysis::GetNumberOfErrors BuildId not set";
       return false;
       }
-      
+
     $query = "SELECT count(*) FROM dynamicanalysis WHERE buildid=".qnum($this->BuildId).
              " AND status IN ('notrun','failed')";
+
     $errorcount = pdo_query($query);
     $error_array = pdo_fetch_array($errorcount);
     return $error_array[0];
@@ -155,7 +156,7 @@ class DynamicAnalysis
     
     $query = "INSERT INTO dynamicanalysis (".$id."buildid,status,checker,name,path,fullcommandline,log)
               VALUES (".$idvalue.qnum($this->BuildId).",'$this->Status','$this->Checker','$this->Name','".$path."',
-                      '".$fullCommandLine."','$this->Log')";                     
+                      '".$fullCommandLine."','$this->Log')";
     if(!pdo_query($query))
       {
       add_last_sql_error("DynamicAnalysis Insert",0,$this->BuildId);
