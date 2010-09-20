@@ -55,7 +55,10 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
     
     $currentURI =  $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-    $request = $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
+    $request = $CDASH_ASYNCHRONOUS_SUBMISSION ?
+      $currentURI."/dailyupdatescurl.php?projectid=".$projectid :
+      $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
+    
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $request);
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
@@ -202,6 +205,10 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
     curl_exec($ch);
     curl_close($ch);
+    
+    $fh = fopen('c:/do_submit_asynch.txt','w');
+    fwrite($fh, $request);
+    fclose($fh);
     }
   else // synchronously
     {

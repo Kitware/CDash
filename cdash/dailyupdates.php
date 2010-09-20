@@ -1047,6 +1047,7 @@ function addDailyChanges($projectid)
     // Remove the first builds of the project
     include_once("cdash/autoremove.php");
     removeFirstBuilds($projectid,$project_array["autoremovetimeframe"],$project_array["autoremovemaxbuilds"]);
+    removeBuildsGroupwise($projectid, $project_array["autoremovemaxbuilds"]);
     }
 }
 ?>
