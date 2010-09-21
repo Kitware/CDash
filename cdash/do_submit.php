@@ -205,10 +205,6 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
     curl_exec($ch);
     curl_close($ch);
-    
-    $fh = fopen('c:/do_submit_asynch.txt','w');
-    fwrite($fh, $request);
-    fclose($fh);
     }
   else // synchronously
     {
