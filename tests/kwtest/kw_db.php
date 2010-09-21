@@ -194,7 +194,7 @@ class dbo_mysql extends dbo
      {
      $this->connectToDb();
      $resource = mysql_query($query);
-     if(!$resource)
+     if(!$resource || $resource === true)
        {
        return false;
        }

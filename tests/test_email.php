@@ -149,7 +149,6 @@ class EmailTestCase extends KWWebTestCase
       {
       return;
       }
-    //$this->fail("failed");
     $this->pass("Passed");
     }
 }

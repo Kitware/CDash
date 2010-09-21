@@ -68,6 +68,7 @@ add_php_test(viewmap)
 
 add_php_test(editautoremovesettings)
 add_php_test(autoremovebuilds)
+add_php_test(autoremovebuilds_on_submit)
 add_php_test(subproject)
 add_php_test(groupsdescription)
 add_php_test(managesubproject)
