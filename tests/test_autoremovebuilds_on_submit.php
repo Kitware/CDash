@@ -42,6 +42,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
       if(strpos($line, "?>") !== false)
         {
         fwrite($handle, '$CDASH_AUTOREMOVE_BUILDS = \'1\';');
+        fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = false;');
         fwrite($handle, "\n?>");
         }
       else

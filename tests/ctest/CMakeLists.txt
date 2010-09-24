@@ -140,11 +140,6 @@ if(CMake_SOURCE_DIR)
   endforeach()
 endif()
 
-add_test(removebuilds 
-  ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_removebuilds.php)
-set_tests_properties(
-  removebuilds PROPERTIES
-  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
 add_test(recoverpassword 
   ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_recoverpassword.php)
 set_tests_properties(

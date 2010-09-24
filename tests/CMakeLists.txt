@@ -67,8 +67,6 @@ add_php_test(viewissues)
 add_php_test(viewmap)
 
 add_php_test(editautoremovesettings)
-add_php_test(autoremovebuilds)
-add_php_test(autoremovebuilds_on_submit)
 add_php_test(subproject)
 add_php_test(groupsdescription)
 add_php_test(managesubproject)
@@ -82,3 +80,6 @@ if(CDASH_USE_SELENIUM)
   file(MAKE_DIRECTORY ${CDash_BINARY_DIR}/cmake.git)
   add_subdirectory(selenium)
 endif()
+
+# These should go last so the removal of builds doesn't clobber other tests
+add_subdirectory(autoremovebuilds)
