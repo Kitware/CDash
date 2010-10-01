@@ -27,7 +27,7 @@ function buildgroup_click(buildid)
 function buildnosubmission_click(siteid,buildname,divname,buildgroupid,buildtype)
 {
   buildname = URLencode(buildname);
-  divname = URLencode(divname);
+  divname = str_replace(' ','_',divname);
   
   var group = "#infoexpected_"+divname;
   if($(group).html() != "" && $(group).is(":visible"))
@@ -62,7 +62,7 @@ function buildinfo_click(buildid)
 function expectedinfo_click(siteid,buildname,divname,projectid,buildtype,currentime)
 {   
   buildname = URLencode(buildname);
-  divname = URLencode(divname);
+  divname = str_replace(' ','_',divname);
   
   var group = "#infoexpected_"+divname;
   if($(group).html() != "" && $(group).is(":visible"))
