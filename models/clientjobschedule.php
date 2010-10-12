@@ -773,7 +773,7 @@ class ClientJobSchedule
       $program_version = str_replace('.','_',strtoupper($program['version']));
       if($program['name'] != $currentname)
         {
-        $ctest_script .= 'SET(CLIENT_EXECUTABLE_'.$program_name.' "'.$program['path'].'")'."\n"; 
+        $ctest_script .= 'SET(CLIENT_EXECUTABLE_'.$program_name.' "'.$program['path'].'")'."\n";
         $currentname = $program['name']; 
         }
       $ctest_script .= 'SET(CLIENT_EXECUTABLE_'.$program_name.'_'.$program_version.' "'.$program['path'].'")'."\n";
@@ -816,7 +816,11 @@ class ClientJobSchedule
     $ctest_script .= '  return()'."\n";
     $ctest_script .= 'ENDMACRO(JOB_FAILED)'."\n\n";
 
-    if(strlen($Project->CTestTemplateScript)>0)
+    if(strlen(trim($this->GetClientScript()))>0)
+      {
+      $ctest_script .= $this->GetClientScript();
+      }
+    else if(strlen($Project->CTestTemplateScript)>0)
       {
       $ctest_script .= $Project->CTestTemplateScript;
       }

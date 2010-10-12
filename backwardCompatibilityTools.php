@@ -784,7 +784,7 @@ if(isset($_GET['upgrade-1-8']))
   AddTableField("submission", "finished", "timestamp", "timestamp(0)", "1980-01-01 00:00:00");
   AddTableIndex("submission", "finished");
 
-  AddTableField("clientjobschedule", "clientscript", "text", "text", "");
+  AddTableField("client_jobschedule", "clientscript", "text", "text", "");
   // Set the database version
   setVersion();
 
