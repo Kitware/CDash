@@ -180,11 +180,11 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
        
       <tr>
         <td align="right" valign="top"><b>Initial CMakeCache:</b></td> 
-        <td><textarea style="width:600px" rows="4" id="clientscript" name="clientscript"><xsl:value-of select="/cdash/clientscript"/></textarea></td>
+        <td><textarea style="width:600px" rows="4" id="cmakecache" name="cmakecahce"><xsl:value-of select="/cdash/clientscript"/></textarea></td>
       </tr>
       <tr>
         <td align="right" valign="top"><b>Job-specific client script:</b></td> 
-        <td><textarea style="width:600px" rows="10" id="cmakecache" name="cmakecache"><xsl:value-of select="/cdash/cmakecache"/></textarea></td>
+        <td><textarea style="width:600px" rows="10" id="clientscript" name="clientscript"><xsl:value-of select="/cdash/cmakecache"/></textarea></td>
       </tr>
       <tr>
         <td align="right" valign="top"><b>Type:</b></td> 
