@@ -184,7 +184,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
       </tr>
       <tr>
         <td align="right" valign="top"><b>Job-specific client script:</b></td> 
-        <td><textarea style="width:800px" rows="10" id="cmakecache" name="cmakecache"><xsl:value-of select="/cdash/cmakecache"/></textarea></td>
+        <td><textarea style="width:600px" rows="10" id="cmakecache" name="cmakecache"><xsl:value-of select="/cdash/cmakecache"/></textarea></td>
       </tr>
       <tr>
         <td align="right" valign="top"><b>Type:</b></td> 
