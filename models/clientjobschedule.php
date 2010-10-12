@@ -232,15 +232,16 @@ class ClientJobSchedule
   /** Save a job schedule */  
   function Save()
     {    
-    $cmakecache = pdo_real_escape_string($this->CMakeCache); 
+    $cmakecache = pdo_real_escape_string($this->CMakeCache);
+    $clientscript = pdo_real_escape_string($this->ClientScript);
     if(!$this->Id)
       {
       $sql = "INSERT INTO client_jobschedule (userid,projectid,startdate,enddate,starttime,enable,type,
-                                              repeattime,cmakecache,repository,module,buildnamesuffix,tag,
-                                              buildconfiguration) 
+                                              repeattime,cmakecache,clientscript,repository,module,buildnamesuffix,
+                                              tag,buildconfiguration) 
               VALUES ('".$this->UserId."','".$this->ProjectId."','".$this->StartDate."','".$this->EndDate.
               "','".$this->StartTime."','".$this->Enable."','".$this->Type."','".$this->RepeatTime.
-              "','".$cmakecache."','".$this->Repository."','".$this->Module."','".$this->BuildNameSuffix.
+              "','".$cmakecache."','".$clientscript."','".$this->Repository."','".$this->Module."','".$this->BuildNameSuffix.
               "','".$this->Tag."','".$this->BuildConfiguration."')";
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_jobschedule');
@@ -254,6 +255,7 @@ class ClientJobSchedule
              starttime='".$this->StartTime."',
              repeattime='".$this->RepeatTime."',
              cmakecache='".$cmakecache."',
+             clientscript='".$clientscript."',
              repository='".$this->Repository."',
              module='".$this->Module."',
              buildnamesuffix='".$this->BuildNameSuffix."',
