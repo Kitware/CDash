@@ -104,7 +104,7 @@ if ($session_OK)
     $xml .= add_XML_value("type",$ClientJobSchedule->GetType());
     $xml .= add_XML_value("repeat",$ClientJobSchedule->GetRepeatTime());
     $xml .= add_XML_value("cmakecache",$ClientJobSchedule->GetCMakeCache());
-    $xml .= add_XML_value("clientscript"$ClientJobSchedule->GetClientScript());
+    $xml .= add_XML_value("clientscript",$ClientJobSchedule->GetClientScript());
     $xml .= add_XML_value("enable",$ClientJobSchedule->GetEnable());
     $xml .= add_XML_value("module",$ClientJobSchedule->GetModule());
     $xml .= add_XML_value("tag",$ClientJobSchedule->GetTag());
