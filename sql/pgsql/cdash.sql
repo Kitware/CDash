@@ -935,6 +935,7 @@ CREATE TABLE "client_jobschedule" (
   "userid" bigint DEFAULT NULL,
   "projectid" bigint DEFAULT NULL,
   "cmakecache" text NOT NULL,
+  "clientscript" text default '',
   "startdate" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "enddate" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "type" smallint NOT NULL,

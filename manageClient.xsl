@@ -35,7 +35,7 @@
   project repository</a> before starting.<br/>
 </xsl:if>  
 <xsl:if test="count(cdash/os)=0">
-No site are currently available. You should run the CTest script in order to register at least one client.<br/>
+No sites are currently available. You should run the CTest script in order to register at least one client.<br/>
 Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki page</a> for more information on how to set this up.
 </xsl:if>   
 
@@ -180,7 +180,11 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
        
       <tr>
         <td align="right" valign="top"><b>Initial CMakeCache:</b></td> 
-        <td><textarea style="width:600px" rows="4" id="cmakecache" name="cmakecache"><xsl:value-of select="/cdash/cmakecache"/></textarea></td>
+        <td><textarea style="width:800x" rows="10" id="clientscript" name="clientscript"><xsl:value-of select="/cdash/clientscript"/></textarea></td>
+      </tr>
+      <tr>
+        <td align="right" valign="top"><b>Job-specific client script:</b></td> 
+        <td><textarea style="width:600px" rows="" id="cmakecache" name="cmakecache"><xsl:value-of select="/cdash/cmakecache"/></textarea></td>
       </tr>
       <tr>
         <td align="right" valign="top"><b>Type:</b></td> 

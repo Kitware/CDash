@@ -29,6 +29,7 @@ class ClientJobSchedule
   var $RepeatTime;
   var $Enable;
   var $CMakeCache;
+  var $ClientScript;
   var $Repository;
   var $Module;
   var $Tag;
@@ -71,7 +72,20 @@ class ClientJobSchedule
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
-    
+
+  /** Get the custom client script */
+  function GetClientScript()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule::GetClientScript","Id not set");
+      return;
+      }
+    $query = pdo_query("SELECT clientscript FROM client_jobschedule WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($query);
+    return $row[0];
+    }
+
   /** Get StartingDate */
   function GetStartDate()
     {

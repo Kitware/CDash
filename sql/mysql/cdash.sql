@@ -981,6 +981,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule (
   `userid` int(11) default NULL,
   `projectid` int(11) default NULL,
   `cmakecache` mediumtext NOT NULL,
+  `clientscript` text default '',
   `startdate` timestamp NOT NULL default '1980-01-01 00:00:00',
   `enddate` timestamp NOT NULL default '1980-01-01 00:00:00',
   `type` tinyint(4) NOT NULL,

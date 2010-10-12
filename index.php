@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT autoremovetimeframe FROM buildgroup LIMIT 1") )
+  if(!pdo_query("SELECT clientscript FROM clientjobschedule LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
