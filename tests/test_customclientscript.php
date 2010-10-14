@@ -12,11 +12,41 @@ class ManageClientTestCase extends KWWebTestCase
     parent::__construct();
     }
 
+  /*function testEnableManageClients()
+    {
+    $filename = dirname(__FILE__)."/../cdash/config.local.php";
+    $handle = fopen($filename, "r");
+    $contents = fread($handle, filesize($filename));
+    fclose($handle);
+    $handle = fopen($filename, "w");
+    $lines = explode("\n", $contents);
+    foreach($lines as $line)
+      {
+      if(strpos($line, "?>") !== false)
+        {
+        fwrite($handle, '$CDASH_MANAGE_CLIENTS = \'1\';');
+        fwrite($handle, "\n?>");
+        }
+      else
+        {
+        fwrite($handle, "$line\n");
+        }
+      }
+    fclose($handle);
+    $this->pass("Passed");
+    }*/
+
   function testManageClientTest()
     {
-    //1 submit a mock machine config xml
+    //1 set the repository for the project
+    $this->login();
+    $this->connect($this->url."/createProject.php?edit=1&projectid=3");
+    $this->setField('cvsRepository[0]', 'git://fake/repo.git');
+    $this->clickSubmitByName('Update');
+    
+    //2 submit a mock machine config xml
     $machineDescription = dirname(__FILE__)."/data/camelot.cdash.xml";
-    $result = $this->uploadfile($this->url."/submit.php?sitename=camelot.kitware&systemname=Ubuntu-32-g++&submitinfo=1",$machineDescription);
+    $result = $this->uploadfile($this->url."/submit.php?sitename=camelot.kitware&systemname=Ubuntu32&submitinfo=1",$machineDescription);
     if($this->findString($result,'error')   ||
        $this->findString($result,'Warning') ||
        $this->findString($result,'Notice'))
@@ -25,20 +55,19 @@ class ManageClientTestCase extends KWWebTestCase
       return false;
       }
     
-    //2 set the repository for the project
-    $this->login();
-    $this->connect($this->url."/createProject.php?edit=1&projectid=1");
-    $this->setField('cvsRepository[0]', 'git://fake/repo.git');
-    $this->clickSubmitByName('Update');
-    
     //3 schedule a job for the machine
-    $this->connect($this->url."/manageClient.php?projectid=1");
+    $this->connect($this->url."/manageClient.php?projectid=3");
     $scriptContents = 'message("hello world")';
     $this->setField('clientscript',$scriptContents);
     $this->clickSubmitByName('submit');
     
-    //4 verify that we receive the correct script when we query for a job
-    $content = $this->connect($this->url."/submit.php?getjob=1&siteid=1");
+    //4 get the site id
+    $siteid = $this->get($this->url."/submit.php?sitename=camelot.kitware&systemname=Ubuntu32&getsiteid=1");
+
+    sleep(3);
+    //5 verify that we receive the correct script when we query for a job
+    $content = $this->get($this->url."/submit.php?getjob=1&siteid=$siteid");
+
     if(!$this->findString($content, 'message("hello world")'))
       {
       $this->fail("Wrong script was sent: expected hello world script but got: $content");
