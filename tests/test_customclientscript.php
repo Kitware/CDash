@@ -19,7 +19,7 @@ class ManageClientTestCase extends KWWebTestCase
     $this->connect($this->url."/createProject.php?edit=1&projectid=3");
     $this->setField('cvsRepository[0]', 'git://fake/repo.git');
     $this->clickSubmitByName('Update');
-    
+
     // submit a mock machine config xml
     $machineDescription = dirname(__FILE__)."/data/camelot.cdash.xml";
     $result = $this->uploadfile($this->url."/submit.php?sitename=camelot.kitware&systemname=Ubuntu32&submitinfo=1",$machineDescription);
@@ -30,19 +30,19 @@ class ManageClientTestCase extends KWWebTestCase
       $this->assertEqual($result,"\n");
       return false;
       }
-    
+
     // schedule a job for the machine
     $this->connect($this->url."/manageClient.php?projectid=3");
     $scriptContents = "message(\"hello world\")";
     $this->setField('clientscript',$scriptContents);
     $this->clickSubmitByName('submit');
-    
+
     // get the site id
     $siteid = $this->get($this->url."/submit.php?sitename=camelot.kitware&systemname=Ubuntu32&getsiteid=1");
 
     // wait a few seconds so that we know we are ahead of the schedule time
     sleep(3);
-    
+
     // verify that we receive the correct script when we query for a job
     $content = $this->get($this->url."/submit.php?getjob=1&siteid=$siteid");
 

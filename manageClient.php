@@ -338,8 +338,8 @@ if ($session_OK)
     $clientJobSchedule->StartTime = $_POST['starttime'];
     $clientJobSchedule->Type = $_POST['type'];
     $clientJobSchedule->RepeatTime = $_POST['repeat'];
-    $clientJobSchedule->CMakeCache = $_POST['cmakecache'];
-    $clientJobSchedule->ClientScript = $_POST['clientscript'];
+    $clientJobSchedule->CMakeCache = stripslashes_if_gpc_magic_quotes($_POST['cmakecache']);
+    $clientJobSchedule->ClientScript = stripslashes_if_gpc_magic_quotes($_POST['clientscript']);
     $clientJobSchedule->Enable = 1;
     if(!empty($_POST['update']))
       {

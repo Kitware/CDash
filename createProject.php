@@ -109,19 +109,6 @@ function stripHTTP($url)
   return $url;
   }
 
-/** strip slashes from the post if magic quotes are on */
-function stripslashes_if_gpc_magic_quotes( $string ) 
-{
-  if(get_magic_quotes_gpc()) 
-    {
-    return stripslashes($string);
-    } 
-  else 
-    {
-    return $string;
-    }
-}
-
 // If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)

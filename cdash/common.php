@@ -520,6 +520,19 @@ function get_project_name($projectid)
   return "NA";
 }
 
+/** strip slashes from the post if magic quotes are on */
+function stripslashes_if_gpc_magic_quotes( $string ) 
+{
+  if(get_magic_quotes_gpc()) 
+    {
+    return stripslashes($string);
+    } 
+  else 
+    {
+    return $string;
+    }
+}
+
 /** Get the current URI of the dashboard */
 function get_server_URI()
 {
