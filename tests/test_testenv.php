@@ -113,7 +113,7 @@ class TestEnvTestCase extends KWWebTestCase
 
     echo $s;
 
-    $this->assertTrue(true, $s);
+    $this->pass('TestEnv Passed');
     }
 
 }
