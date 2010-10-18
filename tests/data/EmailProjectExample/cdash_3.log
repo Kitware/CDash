@@ -38,11 +38,11 @@ MathActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 *Dynamic analysis tests failing or not run* (first 5)
+itkGeodesicActiveContourLevelSetSegmentationModuleTest1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
+itkShapeDetectionLevelSetSegmentationModuleTest1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
+itkShapeDetectionLevelSetSegmentationModuleTest2 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
 itkVectorFiniteDifferenceFunctionTest1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
-itkVectorSegmentationLevelSetFunctionTest1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
 itkVectorLevelSetFunctionTest2 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
-itkVectorSparseFieldLevelSetImageFilterTest1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
-itkVectorSparseFieldLevelSetImageFilterTest2 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
 
 
 -CDash on <NA>
