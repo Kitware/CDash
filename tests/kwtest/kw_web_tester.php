@@ -17,7 +17,7 @@ class KWWebTestCase extends WebTestCase {
   var $url           = null;
   var $db            = null;
   var $logfilename   = null;
-  var $usecdashpro   = null;
+  var $cdashpro   = null;
   
   function __construct()
     {
@@ -25,10 +25,10 @@ class KWWebTestCase extends WebTestCase {
 
     global $configure;
     $this->url = $configure['urlwebsite'];
-    $this->usecdashpro = false;
-    if(isset($configure['usecdashpro']) && $configure['usecdashpro'])
+    $this->cdashpro = false;
+    if(isset($configure['cdashpro']) && $configure['cdashpro'])
       {
-      $this->usecdashpro = true;  
+      $this->cdashpro = true;  
       }
     
     global $db;

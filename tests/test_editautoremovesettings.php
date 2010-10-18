@@ -30,23 +30,25 @@ class EditAutoRemoveSettingsTestCase extends KWWebTestCase
       return;
       }
     
-    $buildgroupid = $this->db->query("SELECT id FROM buildgroup WHERE projectid='$projectid' AND name='Experimental'");
-    $id = $buildgroupid[0]['id'];
-    $this->setField("autoremovetimeframe_$id",'7');
-
-    $this->clickSubmitByName('Update');
-    
-    $timeframe = $this->db->query("SELECT autoremovetimeframe FROM buildgroup WHERE id='$id'");
-    
-    if($timeframe[0]['autoremovetimeframe'] == 7)
+    if(!$this->cdashpro)  
       {
-      $this->pass("Passed");
+      $buildgroupid = $this->db->query("SELECT id FROM buildgroup WHERE projectid='$projectid' AND name='Experimental'");
+      $id = $buildgroupid[0]['id'];
+      $this->setField("autoremovetimeframe_$id",'7');
+  
+      $this->clickSubmitByName('Update');
+      
+      $timeframe = $this->db->query("SELECT autoremovetimeframe FROM buildgroup WHERE id='$id'");
+      
+      if($timeframe[0]['autoremovetimeframe'] == 7)
+        {
+        $this->pass("Passed");
+        }
+      else
+        {
+        $this->fail("Autoremovetimeframe was not set correctly");
+        }
       }
-    else
-      {
-      $this->fail("Autoremovetimeframe was not set correctly");
-      }
-    
     $this->stopCodeCoverage();
     }
 }
