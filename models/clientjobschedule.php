@@ -598,7 +598,7 @@ class ClientJobSchedule
       AND (os.osid IS NULL OR os.osid=s.osid)
       AND js.startdate<'".$now."' AND (js.enddate='1980-01-01 00:00:00' OR js.enddate>'".$now."')
       AND js.enable=1
-      GROUP BY js.id
+      GROUP BY js.id,js.lastrun,js.starttime,js.repeattime,count(library.libraryid)
       ";
     $query=pdo_query($sql);
     if(!$query)
