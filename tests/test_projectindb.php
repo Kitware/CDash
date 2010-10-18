@@ -23,6 +23,13 @@ class ProjectInDbTestCase extends KWWebTestCase
     $expected = array('name'        =>  $nameexpected,
                       'description' =>  $descriptionexpected,
                       'public'      =>  $publicexpected);
+    
+    // For CDashPro projects should be public
+    if($this->usecdashpro)
+      {
+      $expected['public'] = 1;  
+      }
+    
     $this->assertEqual($result[0],$expected);
     }
 

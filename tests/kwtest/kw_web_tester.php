@@ -17,14 +17,20 @@ class KWWebTestCase extends WebTestCase {
   var $url           = null;
   var $db            = null;
   var $logfilename   = null;
-
+  var $usecdashpro   = null;
+  
   function __construct()
     {
     parent::__construct();
 
     global $configure;
     $this->url = $configure['urlwebsite'];
-
+    $this->usecdashpro = false;
+    if(isset($configure['usecdashpro']) && $configure['usecdashpro'])
+      {
+      $this->usecdashpro = true;  
+      }
+    
     global $db;
     $this->db =& new database($db['type']);
     $this->db->setDb($db['name']);
