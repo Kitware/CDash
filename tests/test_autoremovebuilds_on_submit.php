@@ -78,7 +78,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
       return;
       }
 
-    if(!$this->compareLog($this->logfilename,"$rep/cdash_autoremove.log"))
+    if(!$this->cdashpro && !$this->compareLog($this->logfilename,"$rep/cdash_autoremove.log"))
       {
       return;
       }
