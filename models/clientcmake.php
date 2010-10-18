@@ -77,7 +77,6 @@ class ClientCMake
       $sql = "INSERT INTO client_site2cmake (siteid,cmakeid,path) 
               VALUES (".qnum($this->SiteId).",".qnum($this->Id).",'".$this->Path."')";
       pdo_query($sql);
-      $this->Id = pdo_insert_id('client_site2cmake');
       add_last_sql_error("clientCMake::Save()");
       }
     else // update
