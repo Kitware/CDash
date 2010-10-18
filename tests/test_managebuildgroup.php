@@ -91,7 +91,17 @@ class ManageBuildGroupTestCase extends KWWebTestCase
     $this->get($this->url."/manageBuildGroup.php?projectid=$this->projectid#fragment-2");
     $this->setFieldByName("name", "New Builds");
     $content = $this->clickSubmitByName("createGroup");
-    $this->assertText("New Builds");
+    
+    // For CDashPro we shouldn't be able to create new groups
+    if($this->usecdashpro)
+      {
+      $this->assertNoText("New Builds");
+      }
+    else
+      {
+      $this->assertText("New Builds");
+      }  
+    
     return 0;
     }
 
