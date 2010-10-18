@@ -583,7 +583,7 @@ class ClientJobSchedule
     // Update the lastping
     pdo_query("UPDATE client_site SET lastping='".$now."' WHERE id=".qnum($this->SiteId));
     
-    $sql = "SELECT js.id,js.lastrun,js.starttime,js.repeattime,count(library.libraryid)
+    $sql = "SELECT js.id,js.lastrun,js.starttime,js.repeattime,count(library.libraryid) AS c
      FROM client_jobschedule AS js 
      LEFT JOIN client_jobschedule2cmake AS cmake ON (cmake.scheduleid=js.id) 
      LEFT JOIN client_jobschedule2compiler AS compiler ON (compiler.scheduleid=js.id)
@@ -598,7 +598,7 @@ class ClientJobSchedule
       AND (os.osid IS NULL OR os.osid=s.osid)
       AND js.startdate<'".$now."' AND (js.enddate='1980-01-01 00:00:00' OR js.enddate>'".$now."')
       AND js.enable=1
-      GROUP BY js.id,MAX(js.lastrun),MAX(js.starttime),MAX(js.repeattime),MAX(count(library.libraryid))
+      GROUP BY js.id,MAX(js.lastrun),MAX(js.starttime),MAX(js.repeattime),MAX(c)
       ";
     $query=pdo_query($sql);
     if(!$query)
