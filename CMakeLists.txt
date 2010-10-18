@@ -11,6 +11,7 @@ set(CDASH_DB_PASS "" CACHE STRING "Password for database user")
 set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
 set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
 option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
+option(CDASH_PRO "Are we testing CDashPro?" OFF)
 set(CMake_SOURCE_DIR CACHE FILEPATH "Path to CMake source dir.  Set this to import tests from CMake")
 set(CLIENT_TEST_SCRIPT1 CACHE FILEPATH "Path to client management test script")
 set(CLIENT_TEST_SCRIPT2 CACHE FILEPATH "Path to client management test script")
@@ -42,7 +43,8 @@ $configure = array(
   'site'             => '${CDASH_SITE}',
   'buildname'        => '${CDASH_BUILD_NAME}',
   'cdash'            => 'http://www.cdash.org/CDash',
-  'svnroot'          => '${CDash_SOURCE_DIR}'
+  'svnroot'          => '${CDash_SOURCE_DIR}',
+  'cdashpro'         => '${CDASH_PRO}',
   );
 ?>
 ")
