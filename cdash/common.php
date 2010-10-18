@@ -1008,11 +1008,12 @@ function remove_build($buildid)
     {
     $fileid = $coverage_array["fileid"];
     // Make sur the file is not shared
-    $numfiles = pdo_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
-    if($numfiles[0]==1)
+    $numfiles = pdo_query("SELECT count(*) AS c FROM coveragefile WHERE id='$fileid'");
+    $numfiles_array = pdo_fetch_array($numfiles);
+    if($numfiles_array['c']==1)
       {
       pdo_query("DELETE FROM coveragefile WHERE id='$fileid'"); 
-         pdo_query("DELETE FROM label2coveragefile WHERE id='$coveragefileid' AND buildid=".qnum($buildid)); 
+      pdo_query("DELETE FROM label2coveragefile WHERE id='$coveragefileid' AND buildid=".qnum($buildid)); 
       }
     }
   

@@ -106,7 +106,6 @@ class ClientCompiler
       $sql = "INSERT INTO client_site2compiler (siteid,compilerid,command,generator) 
               VALUES (".qnum($this->SiteId).",".qnum($this->Id).",'".$this->Command."','".$this->Generator."')";
       pdo_query($sql);
-      $this->Id = pdo_insert_id('client_site2compiler');
       add_last_sql_error("clientCompiler::Save2");
       }
     else // update
