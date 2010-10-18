@@ -503,7 +503,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
   else if($errorkey == "dynamicanalysis_errors")
     {
     $da_query = pdo_query("SELECT name,id FROM dynamicanalysis WHERE status IN ('failed','notrun') AND buildid="
-        .qnum($buildid)." LIMIT $maxitems");
+        .qnum($buildid)." ORDER BY name LIMIT $maxitems");
     add_last_sql_error("sendmail");
     $numrows = pdo_num_rows($da_query);
 
