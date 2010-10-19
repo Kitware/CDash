@@ -26,7 +26,7 @@ class KWWebTestCase extends WebTestCase {
     global $configure;
     $this->url = $configure['urlwebsite'];
     $this->cdashpro = false;
-    if(isset($configure['cdashpro']) && $configure['cdashpro'])
+    if(isset($configure['cdashpro']) && $configure['cdashpro']=='1')
       {
       $this->cdashpro = true;  
       }
