@@ -1064,7 +1064,7 @@ class Build
                                        $warningdiff,$errordiff,$testdiff)
     {
     // Find the userid from the author name
-    $user2project = pdo_query("SELECT userid FROM user2project AS up,user2repository AS ur 
+    $user2project = pdo_query("SELECT up.userid FROM user2project AS up,user2repository AS ur 
                                WHERE up.userid=ur.userid
                                AND up.projectid=".qnum($this->ProjectId)."
                                AND ur.credential='$author'
