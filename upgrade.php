@@ -785,6 +785,36 @@ if(isset($_GET['upgrade-1-8']))
   AddTableIndex("submission", "finished");
 
   AddTableField("client_jobschedule", "clientscript", "text", "text", "");
+
+  // Add the users' cvslogin to the user2repository table (by default all projects)
+  if(pdo_query("SELECT cvslogin FROM user2project"))
+    {
+    // Add all the user's email to the user2repository table
+    $emailarray = array();
+    $query = pdo_query("SELECT id,email FROM user");
+    while($query_array = pdo_fetch_array($query))
+      {
+      $userid = $query_array['id']; 
+      $email = $query_array['email'];
+      $emailarray[] = $email;
+      pdo_query("INSERT INTO user2repository (userid,credential) VALUES ('".$userid."','".$email."')");
+      }   
+      
+    // Add the repository login  
+    $query = pdo_query("SELECT userid,projectid,cvslogin FROM user2project GROUP BY userid,cvslogin");
+    while($query_array = pdo_fetch_array($query))
+      {
+      $userid = $query_array['userid']; 
+      $cvslogin = $query_array['cvslogin'];
+      if(!in_array($cvslogin,$emailarray))
+        {
+        pdo_query("INSERT INTO user2repository (userid,projectid,credential) 
+                   VALUES ('".$userid."','".$projectid."','".$cvslogin."')");
+        }
+      }
+    RemoveTableField("user2project","cvslogin");
+    }
+
   // Set the database version
   setVersion();
 
@@ -1582,5 +1612,5 @@ else if($AssignBuildToDefaultGroups)
 $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml,"backwardCompatibilityTools");
+generate_XSLT($xml,"upgrade");
 ?>

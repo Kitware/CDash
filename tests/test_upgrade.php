@@ -5,7 +5,7 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
-class BackwardCompatibilityToolsTestCase extends KWWebTestCase
+class UpgradeTestCase extends KWWebTestCase
 {
   function __construct()
     {
@@ -124,13 +124,13 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
       $this->fail("clicking Upgrade returned false");
       }
     //fake the javascript calls...
-    $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-tables=1");
-    $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-0-8=1");
-    $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-1-0=1");
-    $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-1-2=1");
-    $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-1-4=1");
-    $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-1-6=1");
-    $this->get($this->url . "/backwardCompatibilityTools.php?upgrade-1-8=1");
+    $this->get($this->url . "/upgrade.php?upgrade-tables=1");
+    $this->get($this->url . "/upgrade.php?upgrade-0-8=1");
+    $this->get($this->url . "/upgrade.php?upgrade-1-0=1");
+    $this->get($this->url . "/upgrade.php?upgrade-1-2=1");
+    $this->get($this->url . "/upgrade.php?upgrade-1-4=1");
+    $this->get($this->url . "/upgrade.php?upgrade-1-6=1");
+    $this->get($this->url . "/upgrade.php?upgrade-1-8=1");
     //some of these upgrades pollute the log file
     //clear it out so that it doesn't cause subsequent tests to fail
     $this->deleteLog($this->logfilename);
@@ -141,10 +141,10 @@ class BackwardCompatibilityToolsTestCase extends KWWebTestCase
   function getMaintenancePage()
     {
     $this->login();
-    $content = $this->connect($this->url . "/backwardCompatibilityTools.php");
+    $content = $this->connect($this->url . "/upgrade.php");
     if($content == false)
       {
-      $this->fail("failed to connect to backwardCompatibilityTools.php");
+      $this->fail("failed to connect to upgrade.php");
       return false;
       }
     return true;

@@ -227,10 +227,10 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
       }
 
     $UserProject = new UserProject();
-    $UserProject->CvsLogin = $author;
+    $UserProject->RepositoryCredential = $author;
     $UserProject->ProjectId = $projectid;
 
-    if(!$UserProject->FillFromCVSLogin())
+    if(!$UserProject->FillFromRepositoryCredential())
       {
       // Daily updates send an email to tell adminsitrator that the user is not registered but we log anyway
       add_log("User: ".$author." is not registered (or has no email) for the project ".$projectid,"SendEmail",LOG_WARNING,$projectid,$buildid);
@@ -577,14 +577,18 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
 
   // Find the current updaters from the night using the dailyupdatefile table
   $summaryEmail = "";
-  $query = "SELECT ".qid("user").".email,user2project.emailcategory,".qid("user").".id FROM ".qid("user").",user2project,dailyupdate,dailyupdatefile WHERE
-                           user2project.projectid=".qnum($projectid)."
-                           AND user2project.userid=".qid("user").".id
-                           AND user2project.cvslogin=dailyupdatefile.author
+  $query = "SELECT ".qid("user").".email,up.emailcategory,".qid("user").".id 
+                          FROM ".qid("user").",user2project AS up,user2repository AS ur,
+                           dailyupdate,dailyupdatefile WHERE
+                           up.projectid=".qnum($projectid)."
+                           AND up.userid=".qid("user").".id
+                           AND ur.userid=up.userid
+                           AND (ur.projectid=0 OR ur.projectid=".qnum($projectid).")
+                           AND ur.credential=dailyupdatefile.author
                            AND dailyupdatefile.dailyupdateid=dailyupdate.id
                            AND dailyupdate.date='$dashboarddate'
                            AND dailyupdate.projectid=".qnum($projectid)."
-                           AND user2project.emailtype>0
+                           AND up.emailtype>0
                            ";
   $user = pdo_query($query);
   add_last_sql_error("sendmail");
@@ -629,10 +633,10 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       }
 
     $UserProject = new UserProject();
-    $UserProject->CvsLogin = $author;
+    $UserProject->RepositoryCredential = $author;
     $UserProject->ProjectId = $projectid;
 
-    if(!$UserProject->FillFromCVSLogin())
+    if(!$UserProject->FillFromRepositoryCredential())
       {
       continue;
       }

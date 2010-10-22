@@ -24,6 +24,7 @@ include("models/project.php");
 include("models/user.php");
 include("models/label.php");
 include("models/labelemail.php");
+include_once("models/userproject.php");
 
 if ($session_OK) 
   {
@@ -81,12 +82,11 @@ if ($session_OK)
     }
   
   // Check if the user is not already in the database
-  $user2project = pdo_query("SELECT cvslogin,role,emailtype,emailcategory,emailmissingsites,emailsuccess
+  $user2project = pdo_query("SELECT role,emailtype,emailcategory,emailmissingsites,emailsuccess
                              FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
   if(pdo_num_rows($user2project)>0)
     {
     $user2project_array = pdo_fetch_array($user2project);
-    $xml .= add_XML_value("cvslogin",$user2project_array["cvslogin"]);
     $xml .= add_XML_value("role",$user2project_array["role"]);
     $xml .= add_XML_value("emailtype",$user2project_array["emailtype"]);
     $xml .= add_XML_value("emailmissingsites",$user2project_array["emailmissingsites"]);
@@ -114,7 +114,7 @@ if ($session_OK)
   @$UpdateSubscription = $_POST["updatesubscription"];
   @$Unsubscribe = $_POST["unsubscribe"]; 
   @$Role = $_POST["role"];
-  @$CVSLogin = $_POST["cvslogin"];
+  @$Credentials = $_POST["credentials"];
   @$EmailType = $_POST["emailtype"];
   if(!isset($_POST["emailmissingsites"]))
     {
@@ -142,6 +142,7 @@ if ($session_OK)
   if($Unsubscribe)
     {
     pdo_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+    pdo_query("DELETE FROM user2repository WHERE userid='$userid' AND projectid='$projectid'");
     
     // Remove the claim sites for this project if they are only part of this project
     pdo_query("DELETE FROM site2user WHERE userid='$userid' 
@@ -163,11 +164,18 @@ if ($session_OK)
     $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test+$emailcategory_dynamicanalysis;    
     if(pdo_num_rows($user2project)>0)
       {
-      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',
+      pdo_query("UPDATE user2project SET role='$Role',emailtype='$EmailType',
                          emailcategory='$EmailCategory',
                          emailmissingsites='$EmailMissingSites',
                          emailsuccess='$EmailSuccess' 
                          WHERE userid='$userid' AND projectid='$projectid'");
+      
+       // Update the repository credential
+      $UserProject = new UserProject();
+      $UserProject->ProjectId = $projectid;
+      $UserProject->UserId = $userid;
+      $UserProject->UpdateCredentials($Credentials);
+      
       if($Role==0)
         { 
         // Remove the claim sites for this project if they are only part of this project
@@ -202,11 +210,18 @@ if ($session_OK)
     $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test+$emailcategory_dynamicanalysis;    
     if(pdo_num_rows($user2project)>0)
       {
-      pdo_query("UPDATE user2project SET role='$Role',cvslogin='$CVSLogin',emailtype='$EmailType',
+      pdo_query("UPDATE user2project SET role='$Role',emailtype='$EmailType',
                          emailcategory='$EmailCategory'.
                          emailmissingsites='$EmailMissingSites',
                          emailsuccess='$EmailSuccess'  
                          WHERE userid='$userid' AND projectid='$projectid'");
+      
+      // Update the repository credential
+      $UserProject = new UserProject();
+      $UserProject->ProjectId = $projectid;
+      $UserProject->UserId = $userid;
+      $UserProject->UpdateCredentials($Credentials);
+      
       if($Role==0)
         { 
         // Remove the claim sites for this project if they are only part of this project
@@ -219,16 +234,40 @@ if ($session_OK)
       }
     else
       {
-      pdo_query("INSERT INTO user2project (role,cvslogin,userid,projectid,emailtype,emailcategory,emailsuccess,
+      pdo_query("INSERT INTO user2project (role,userid,projectid,emailtype,emailcategory,emailsuccess,
                                            emailmissingsites) 
-                 VALUES ('$Role','$CVSLogin','$userid','$projectid','$EmailType','$EmailCategory',
+                 VALUES ('$Role','$userid','$projectid','$EmailType','$EmailCategory',
                          '$EmailSuccess','$EmailMissingSites')");
+      
+      $UserProject = new UserProject();
+      $UserProject->ProjectId = $projectid;
+      $UserProject->UserId = $userid;  
+      foreach($Credentials as $credential)
+        {
+        $UserProject->AddCredential($credential);
+        }
       }
     header( 'location: user.php?note=subscribedtoproject' );
     }
 
 
   // XML
+  // Show the current credentials for the user
+  $query = pdo_query("SELECT credential,projectid FROM user2repository WHERE userid='".$userid."'
+                      AND (projectid='".$projectid."' OR projectid=0)");
+  $credential_num = 0;
+  while($credential_array = pdo_fetch_array($query))
+    {
+    if($credential_array['projectid'] == 0)
+      {
+      $xml .= add_XML_value("global_credential",$credential_array['credential']);
+      }
+    else
+      {  
+      $xml .= add_XML_value("credential_".$credential_num++,$credential_array['credential']);
+      }
+    }  
+    
   $xml .= "<project>";
   $xml .= add_XML_value("id",$project_array['id']);
   $xml .= add_XML_value("name",$project_array['name']);

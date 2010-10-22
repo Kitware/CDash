@@ -19,7 +19,7 @@ add_php_test(createpublicdashboard)
 add_php_test(email)
 add_php_test(projectwebpage)
 
-add_php_test(backwardcompatibilitytools)
+add_php_test(upgrade)
 add_php_test(banner)
 add_php_test(buildconfigure)
 add_php_test(builderrordiff)

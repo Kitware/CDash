@@ -52,14 +52,15 @@ if(!is_numeric($projectid))
   
 $author = pdo_real_escape_string($author);
 // Check if the given user exists in the database
-$userquery = pdo_query("SELECT id FROM ".qid("user").",user2project WHERE ".qid("user").".id=user2project.userid 
-                        AND user2project.cvslogin='$author'
-                        AND user2project.projectid='$projectid'");
+$userquery = pdo_query("SELECT up.userid FROM user2project AS up,user2repository AS ur
+                        WHERE ur.userid=up.userid AND up.projectid='$projectid' 
+                        AND ur.credential='$author'
+                        AND (ur.projectid='$projectid' OR ur.projectid=0)");
                                           
 if(pdo_num_rows($userquery)>0)
   { 
   $userarray = pdo_fetch_array($userquery);
-  $userid = $userarray['id'];
+  $userid = $userarray['userid'];
   echo $userid."</userid>";
   return;
   }

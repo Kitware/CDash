@@ -85,7 +85,7 @@
           <li>                 
             <a href="#fragment-1"><span>Select your role in this project</span></a></li>                
           <li>
-            <a href="#fragment-2"><span>CVS/SVN login</span></a></li>
+            <a href="#fragment-2"><span>Repository Credential</span></a></li>
           <li>
             <a href="#fragment-3"><span>Email Preference</span></a></li>                
           <li>
@@ -148,15 +148,47 @@
     </div>
     <div id="fragment-2" class="tab_content" >
       <div class="tab_help"></div>
-        <table width="800" >
+        <table width="800">
+         <tr>
+            <td></td>
+            <td>Your repository credentials are used to match your repository id with cdash and send you alerts.<br/>
+            To change your global credentials go to "My Profile".
+            </td>
+          </tr>        
           <tr>
             <td></td>
-            <td >Login: <input onchange="saveChanges();" type="text" name="cvslogin" size="30">
+            <td>Global Credentials: 
+             <xsl:for-each select="/cdash/global_credential">
+               '<xsl:value-of select="."/>' 
+             </xsl:for-each>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>Credential #1: <input onchange="saveChanges();" type="text" name="credentials[0]" size="30">
              <xsl:attribute name="value">
-               <xsl:value-of select="cdash/cvslogin"/>
+               <xsl:value-of select="cdash/credential_0"/>
              </xsl:attribute>
              </input>
-             <br/><br/><i>Your login is used to send you an email when the dashboard breaks.</i></td>
+             </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>Credential #2: <input onchange="saveChanges();" type="text" name="credentials[1]" size="30">
+             <xsl:attribute name="value">
+               <xsl:value-of select="cdash/credential_1"/>
+             </xsl:attribute>
+             </input>
+             </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>Credential #3: <input onchange="saveChanges();" type="text" name="credentials[2]" size="30">
+             <xsl:attribute name="value">
+               <xsl:value-of select="cdash/credential_2"/>
+             </xsl:attribute>
+             </input>
+             </td>
           </tr>
           <tr>
             <td></td>

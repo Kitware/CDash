@@ -34,9 +34,9 @@ class ManageProjectRolesTestCase extends KWWebTestCase
       $this->fail("Set user last name returned false");
       return 1;
       }
-    if(!$this->setFieldByName("registerusercvslogin", "simpleuser"))
+    if(!$this->setFieldByName("registeruserrepositorycredential", "simpleuser"))
       {
-      $this->fail("Set user CVS login returned false");
+      $this->fail("Set user repository credential returned false");
       return 1;
       }
     $this->clickSubmitByName("registerUser");

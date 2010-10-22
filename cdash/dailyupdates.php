@@ -860,10 +860,10 @@ function sendEmailUnregisteredUsers($projectid,$cvsauthors)
       }
     
     $UserProject = new UserProject();
-    $UserProject->CvsLogin = $author;
+    $UserProject->RepositoryCredential = $author;
     $UserProject->ProjectId = $projectid;
     
-    if(!$UserProject->FillFromCVSLogin())
+    if(!$UserProject->FillFromRepositoryCredential())
       {
       $unregisteredusers[] = $author;  
       }

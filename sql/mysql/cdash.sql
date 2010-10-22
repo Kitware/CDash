@@ -1223,6 +1223,15 @@ CREATE TABLE IF NOT EXISTS `submissionprocessor` (
   PRIMARY KEY (`projectid`)
 );
 
+CREATE TABLE IF NOT EXISTS `user2repository` (
+  `userid` int(11) NOT NULL,
+  `credential` varchar(255) NOT NULL,
+  `projectid` int(11) NOT NULL DEFAULT '0',
+  KEY `userid` (`userid`),
+  KEY `credential` (`credential`),
+  KEY `projectid` (`projectid`)
+);
+
 
 --
 -- Change the table maximum size to be more than 4GB

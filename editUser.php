@@ -19,6 +19,7 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include("cdash/version.php");
+include_once("models/userproject.php");
 
 if ($session_OK) 
   {
@@ -67,7 +68,9 @@ if ($session_OK)
       add_last_sql_error("editUser.php");
       }
     }
-  
+ 
+   
+ // Update the password
  @$updatepassword = $_POST["updatepassword"];
  if($updatepassword) 
     {
@@ -97,8 +100,8 @@ if ($session_OK)
    
     add_last_sql_error("editUser.php");
     }
-    }
-  
+    } // end update password
+ 
   $xml .= "<user>";
   $user = pdo_query("SELECT * FROM ".qid("user")." WHERE id='$userid'");
   $user_array = pdo_fetch_array($user);
@@ -106,7 +109,41 @@ if ($session_OK)
   $xml .= add_XML_value("lastname",$user_array["lastname"]);
   $xml .= add_XML_value("email",$user_array["email"]);
   $xml .= add_XML_value("institution",$user_array["institution"]);
-   
+
+  // Update the credentials
+ @$updatecredentials = $_POST["updatecredentials"];
+ if($updatecredentials) 
+    {
+    $credentials = $_POST["credentials"];
+    $UserProject = new UserProject();
+    $UserProject->ProjectId = 0;
+    $UserProject->UserId = $userid;
+    $credentials[] = $user_array["email"];
+    $UserProject->UpdateCredentials($credentials);
+    } // end update credentials
+  
+    
+  // List the credentials
+  // First the email one (which cannot be changed)
+  $credential = pdo_query("SELECT credential FROM user2repository WHERE userid='$userid'
+                     AND projectid=0 AND credential='".$user_array["email"]."'");
+  if(pdo_num_rows($credential) == 0)
+    {
+    $xml .= add_XML_value("credential_0","Not found (you should really add it)");    
+    }
+  else
+    {
+    $xml .= add_XML_value("credential_0",$user_array["email"]);  
+    }
+  
+  $credential = pdo_query("SELECT credential FROM user2repository WHERE userid='$userid'
+                           AND projectid=0 AND credential!='".$user_array["email"]."'");
+  $credential_num = 1;
+  while($credential_array = pdo_fetch_array($credential))
+    {
+    $xml .= add_XML_value("credential_".$credential_num++,$credential_array["credential"]);  
+    } 
+    
   $xml .= "</user>";
   $xml .= "</cdash>";
   

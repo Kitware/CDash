@@ -72,7 +72,7 @@ function upgrade_tables()
     {   
     var text = "Upgrading tables";
     $("#Upgrade-Tables-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-    sendAjax("#Upgrade-Tables-Status","backwardCompatibilityTools.php?upgrade-tables=1",text,nextstep); 
+    sendAjax("#Upgrade-Tables-Status","upgrade.php?upgrade-tables=1",text,nextstep); 
     }
   else
     {
@@ -84,42 +84,42 @@ function upgrade_0_8()
 {
   var text = "Applying 0.8 patches";
   $("#Upgrade-0-8-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-0-8-Status","backwardCompatibilityTools.php?upgrade-0-8=1",text,upgrade_1_0);  
+  sendAjax("#Upgrade-0-8-Status","upgrade.php?upgrade-0-8=1",text,upgrade_1_0);  
 }
 
 function upgrade_1_0()
 {
   var text = "Applying 1.0 patches";
   $("#Upgrade-1-0-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-0-Status","backwardCompatibilityTools.php?upgrade-1-0=1",text,upgrade_1_2);  
+  sendAjax("#Upgrade-1-0-Status","upgrade.php?upgrade-1-0=1",text,upgrade_1_2);  
 }
 
 function upgrade_1_2()
 {
   var text = "Applying 1.2 patches";
   $("#Upgrade-1-2-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-2-Status","backwardCompatibilityTools.php?upgrade-1-2=1",text,upgrade_1_4);  
+  sendAjax("#Upgrade-1-2-Status","upgrade.php?upgrade-1-2=1",text,upgrade_1_4);  
 }
 
 function upgrade_1_4()
 {
   var text = "Applying 1.4 patches";
   $("#Upgrade-1-4-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-4-Status","backwardCompatibilityTools.php?upgrade-1-4=1",text,upgrade_1_6);  
+  sendAjax("#Upgrade-1-4-Status","upgrade.php?upgrade-1-4=1",text,upgrade_1_6);  
 }
 
 function upgrade_1_6()
 {
   var text = "Applying 1.6 patches";
   $("#Upgrade-1-6-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-6-Status","backwardCompatibilityTools.php?upgrade-1-6=1",text,upgrade_1_8);  
+  sendAjax("#Upgrade-1-6-Status","upgrade.php?upgrade-1-6=1",text,upgrade_1_8);  
 }
 
 function upgrade_1_8()
 {
   var text = "Applying 1.8 patches";
   $("#Upgrade-1-8-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-8-Status","backwardCompatibilityTools.php?upgrade-1-8=1",text,done);  
+  sendAjax("#Upgrade-1-8-Status","upgrade.php?upgrade-1-8=1",text,done);  
 }
 
 // empty function needed

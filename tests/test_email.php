@@ -65,7 +65,7 @@ class EmailTestCase extends KWWebTestCase
     $this->clickSubmitByName('sent');
 
     $this->clickLink('[Subscribe to this project]');
-    $this->setField('cvslogin','user1kw');
+    $this->setField('credentials[0]','user1kw');
     $this->setField('emailsuccess','1');
     $this->clickSubmitByName('subscribe');
     if(!$this->checkLog($this->logfilename))

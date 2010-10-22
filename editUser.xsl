@@ -89,7 +89,37 @@
   <td width="20%" id="nob"></td>
   <td width="80%" id="nob"><input type="submit" value="Update Password" name="updatepassword" class="textbox"/>  
  </td>
-</tr> 
+</tr>
+<tr class="treven">
+    <td width="20%" height="2" ><div align="right">Repository Credential #1</div></td>
+    <td width="80%" height="2" id="nob"><xsl:value-of select="cdash/user/credential_0"/></td>
+</tr>
+<tr class="trodd">
+    <td width="20%" height="2" ><div align="right">Repository Credential #2</div></td>
+    <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[1]">
+    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_1"/></xsl:attribute>  
+    </input>
+    </td>
+</tr>
+<tr class="treven">
+    <td width="20%" height="2" ><div align="right">Repository Credential #3</div></td>
+    <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[2]">
+    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_2"/></xsl:attribute>  
+    </input>
+    </td>
+</tr>
+<tr class="trodd">
+    <td width="20%" height="2" ><div align="right">Repository Credential #4</div></td>
+    <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[3]">
+    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_3"/></xsl:attribute>  
+    </input>
+    </td>
+</tr>
+<tr>
+  <td width="20%" id="nob"></td>
+  <td width="80%" id="nob"><input type="submit" value="Update Credentials" name="updatecredentials" class="textbox"/>  
+ </td>
+</tr>
 </form>
 </tbody>
 </table>

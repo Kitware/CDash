@@ -337,7 +337,7 @@
     <tr class="treven"><td id="nob"><a href="manageCoverage.php">[Manage project coverage]</a></td></tr> 
     <tr class="trodd"><td id="nob"><a href="manageBanner.php">[Manage banner message]</a></td></tr> 
     <tr class="treven"><td id="nob"><a href="manageUsers.php">[Manage users]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="backwardCompatibilityTools.php">[CDash maintenance]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="upgrade.php">[Maintenance]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a>
     
     <xsl:if test="cdash/nerrorlogs>0">

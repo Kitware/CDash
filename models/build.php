@@ -1064,7 +1064,12 @@ class Build
                                        $warningdiff,$errordiff,$testdiff)
     {
     // Find the userid from the author name
-    $user2project = pdo_query("SELECT userid FROM user2project WHERE cvslogin='$author' AND projectid=".qnum($this->ProjectId));
+    $user2project = pdo_query("SELECT userid FROM user2project AS up,user2repository AS ur 
+                               WHERE up.userid=ur.userid
+                               AND up.projectid=".qnum($this->ProjectId)."
+                               AND ur.credential='$author'
+                               AND (ur.projectid=0 OR ur.projectid=".qnum($this->ProjectId).")"
+                               );
     if(pdo_num_rows($user2project)==0)
       {
       return;

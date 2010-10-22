@@ -19,7 +19,7 @@
 class UserProject
 {
   var $Role;
-  var $CvsLogin;
+  var $RepositoryCredential;
   var $EmailType;
   var $EmailCategory;
   var $EmailMissingSites; // send email when a site is missing for the project (expected builds)
@@ -77,7 +77,6 @@ class UserProject
       // Update the project
       $query = "UPDATE user2project SET";
       $query .= " role='".$this->Role."'";
-      $query .= ",cvslogin='".$this->CvsLogin."'";
       $query .= ",emailtype='".$this->EmailType."'";
       $query .= ",emailcategory='".$this->EmailCategory."'";
       $query .= ",emailsuccess='".$this->EmailSuccess."'";
@@ -91,9 +90,9 @@ class UserProject
       }
     else // insert
       {    
-      $query = "INSERT INTO user2project (userid,projectid,role,cvslogin,emailtype,emailcategory,
+      $query = "INSERT INTO user2project (userid,projectid,role,emailtype,emailcategory,
                                           emailsuccess,emailmissingsites)
-                VALUES ($this->UserId,$this->ProjectId,$this->Role,'$this->CvsLogin',
+                VALUES ($this->UserId,$this->ProjectId,$this->Role,
                         $this->EmailType,$this->EmailCategory,$this->EmailSuccess,$this->EmailMissingSites)";                     
        if(!pdo_query($query))
          {
@@ -135,33 +134,100 @@ class UserProject
     return $userids;
     }     
    
-  /** Fill in the information given a projectid and a CVS login. 
+  /** Update the credentials for a project */
+  function UpdateCredentials($credentials)
+    { 
+    if(!$this->UserId)
+      {
+      add_log('UserId not set',"UserProject UpdateCredentials()",LOG_ERR,
+              $this->ProjectId,0,CDASH_OBJECT_USER,$this->UserId);
+      return false;
+      }
+    
+    // Insert the new credentials
+    $credential_string = '';
+    foreach($credentials as $credential)
+      {
+      $this->AddCredential($credential);
+      if($credential_string != '')
+        {
+        $credential_string.=",";  
+        }
+      $credential_string .= "'".$credential."'";
+      }
+
+    // Remove the one that have been removed
+    pdo_query("DELETE FROM user2repository WHERE userid=".qnum($this->UserId)."
+                  AND projectid=".qnum($this->ProjectId)."
+                  AND credential NOT IN (".$credential_string.")");  
+    add_last_sql_error("UserProject UpdateCredentials");
+    return true;  
+    } // End UpdateCredentials    
+    
+  /** Add a credential for a given project */
+  function AddCredential($credential)
+    { 
+    if(empty($credential))
+      {
+      return false;  
+      }
+     
+    if(!$this->UserId)
+      {
+      add_log('UserId not set',"UserProject AddCredential()",LOG_ERR,
+              $this->ProjectId,0,CDASH_OBJECT_USER,$this->UserId);
+      return false;
+      }
+    
+    // Check if the credential exists for all the project or the given project
+    $credential = pdo_real_escape_string($credential);
+    $query = pdo_query("SELECT userid FROM user2repository WHERE userid=".qnum($this->UserId)."
+                        AND (projectid=".qnum($this->ProjectId)." OR projectid=0)
+                        AND credential='".$credential."'");
+    add_last_sql_error("UserProject AddCredential");
+    
+    if(pdo_num_rows($query) == 0)
+      {
+      pdo_query("INSERT INTO user2repository (userid,projectid,credential)
+                 VALUES(".qnum($this->UserId).",".qnum($this->ProjectId).",'".$credential."')");
+      add_last_sql_error("UserProject AddCredential");
+      return true;  
+      }
+
+    return false;  
+    } // End AddCredential
+      
+    
+  /** Fill in the information given a projectid and a repository credential. 
    *  This function expects the emailtype>0 */
-  function FillFromCVSLogin()
+  function FillFromRepositoryCredential()
     {
     if(!$this->ProjectId)
       {
-      add_log('ProjectId not set',"UserProject FillFromCVSLogin()",LOG_ERR,
+      add_log('ProjectId not set',"UserProject FillFromRepositoryCredential()",LOG_ERR,
               $this->ProjectId,0,CDASH_OBJECT_USER,$this->UserId);
       return false;
       }
      
-    if(!$this->CvsLogin)
+    if(!$this->RepositoryCredential)
       {
-      add_log("CvsLogin not set","UserProject FillFromCVSLogin()",LOG_ERR,
+      add_log("RepositoryCredential not set","UserProject FillFromRepositoryCredential()",LOG_ERR,
               $this->ProjectId,0,CDASH_OBJECT_USER,$this->UserId);
       return false;
       }
      
-    $sql = "SELECT emailcategory,userid,emailsuccess
-               FROM user2project WHERE user2project.projectid=".qnum($this->ProjectId)."
-               AND user2project.cvslogin='".$this->CvsLogin."'
-               AND user2project.emailtype>0";
+    $sql = "SELECT up.emailcategory,up.userid,up.emailsuccess
+               FROM user2project AS up,user2repository AS ur
+               WHERE up.projectid=".qnum($this->ProjectId)."
+               AND up.userid=ur.userid
+               AND (ur.projectid=0 OR ur.projectid=up.projectid)
+               AND ur.credential='".$this->RepositoryCredential."'
+               AND up.emailtype>0";
                
     $user = pdo_query($sql);
     if(!$user)
       {
-      add_last_sql_error("UserProject FillFromCVSLogin");
+      add_last_sql_error("UserProject FillFromRepositoryCredential");
       return false;
       }
 

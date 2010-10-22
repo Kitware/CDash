@@ -186,7 +186,7 @@
                 <td><center><b>Lastname</b></center></td>
                 <td><center><b>Email</b></center></td>
                 <td><center><b>Role</b></center></td>
-                <td><center><b>CVS Login</b></center></td>
+                <td><center><b>Repository Credentials</b></center></td>
                 <td><center><b>Action</b></center></td>
                </tr>
                 
@@ -209,15 +209,14 @@
                </select>
                </td>
                <td>
-                <input type="text" name="cvslogin" size="20">
-                <xsl:attribute name="value"><xsl:value-of select="cvslogin"/></xsl:attribute>
-                </input>
+                 <xsl:for-each select="repositorycredential">
+                   '<xsl:value-of select="."/>' 
+                 </xsl:for-each>
                 </td>
                 <td>
                 <input type="submit" name="updateuser" value="Update"/>
                 <input type="submit" name="removeuser" value="Remove"/>
-                </td>
-                
+                </td> 
                 </tr>
                 </form>
                 </xsl:for-each>
@@ -225,7 +224,7 @@
              </td>
              </tr>
           </table>
-                    <!-- Send email to site maintainer -->
+          <!-- Send email to site maintainer -->
           <form name="emailsitemaintainers_form" method="post" action="">
           <table width="100%"  border="0"> 
             <tr>
@@ -294,9 +293,10 @@
             </td>
             </tr>
             <tr>
-             <td><div align="right">CVS Login:</div></td>
+             <td><div align="right">Repository credential:</div></td>
             <td>
-            <input name="registerusercvslogin" type="text" id="registerusercvslogin" size="40"/>
+            <input name="registeruserrepositorycredential" type="text" id="registeruserrepositorycredential" size="40"/>
+            * email address is automatically added as a credential
             </td>
             </tr>
             <tr>

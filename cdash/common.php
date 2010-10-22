@@ -1296,9 +1296,7 @@ function make_cdash_url($url)
   return $cdash_url;
 }
 
-
 // Return the email of a given author within a given project.
-//
 function get_author_email($projectname, $author)
 {
   include("cdash/config.php");
@@ -1323,7 +1321,11 @@ function get_author_email($projectname, $author)
     exit(0);
     }
 
-  $qry = pdo_query("SELECT email FROM ".qid("user")." WHERE id IN (SELECT userid FROM user2project WHERE projectid='$projectid' AND cvslogin='$author') LIMIT 1");
+  $qry = pdo_query("SELECT email FROM ".qid("user")." WHERE id IN 
+  (SELECT up.userid FROM user2project AS up, user2repository AS ur
+   WHERE ur.userid=up.userid AND up.projectid='$projectid' 
+   AND ur.credential='$author' AND (ur.projectid=0 OR ur.projectid='$projectid')
+   ) LIMIT 1");
 
   $email = "";
 

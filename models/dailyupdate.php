@@ -48,10 +48,14 @@ class DailyUpdate
       $sql = " ORDER BY dailyupdate.id DESC LIMIT 1";
       }
     
-    $query = pdo_query("SELECT DISTINCT user2project.userid FROM user2project,dailyupdatefile,dailyupdate WHERE 
-                        dailyupdatefile.dailyupdateid=dailyupdate.id AND dailyupdate.projectid=user2project.projectid
-                        AND user2project.cvslogin=dailyupdatefile.author
-                        AND user2project.projectid=".qnum($this->ProjectId)." AND dailyupdatefile.filename LIKE '%".$filename."'".$sql);                    
+    $query = pdo_query("SELECT DISTINCT up.userid FROM user2project AS up,user2repository AS ur,dailyupdatefile,dailyupdate 
+                        WHERE dailyupdatefile.dailyupdateid=dailyupdate.id 
+                        AND dailyupdate.projectid=up.projectid
+                        AND ur.credential=dailyupdatefile.author
+                        AND up.projectid=".qnum($this->ProjectId)." 
+                        AND up.userid=ur.userid
+                        AND (ur.projectid=0 OR ur.projectid=".qnum($this->ProjectId).")
+                        AND dailyupdatefile.filename LIKE '%".$filename."'".$sql);                    
         
     if(!$query)
       {

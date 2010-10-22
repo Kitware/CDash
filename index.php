@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT clientscript FROM client_jobschedule LIMIT 1") )
+  if(!pdo_query("SELECT userid FROM user2repository LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -648,10 +648,13 @@ function generate_main_dashboard_XML($projectid,$date)
   $userupdatesql = "";
   if(isset($_SESSION['cdash']))
     {
-    $userupdatesql = "(SELECT count(updatefile.buildid) FROM updatefile,user2project
+    $userupdatesql = "(SELECT count(updatefile.buildid) FROM updatefile,user2project,
+                      user2repository 
                       WHERE buildid=b.id AND user2project.projectid=b.projectid 
                       AND user2project.userid='".$_SESSION['cdash']['loginid']."'
-                      AND user2project.cvslogin=updatefile.author) AS userupdates,";
+                      AND user2repository.userid=user2project.userid
+                      AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
+                      AND user2repository.credential=updatefile.author) AS userupdates,";
     }
            
   $sql =  "SELECT b.id,b.siteid,

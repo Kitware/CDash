@@ -49,3 +49,16 @@ CREATE TABLE "submissionprocessor" (
   "locked" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("projectid")
 );
+
+--
+-- Table: user2repository
+--
+CREATE TABLE "user2repository" (
+  "userid" bigint NOT NULL,
+  "credential" character varying(512) NOT NULL,
+  "projectid" bigint NOT NULL DEFAULT '0'
+);
+CREATE INDEX "user2repository_userid" on "user2repository" ("userid");
+CREATE INDEX "user2repository_credential" on "user2repository" ("credential");
+CREATE INDEX "user2repository_projectid" on "user2repository" ("projectid");
+
