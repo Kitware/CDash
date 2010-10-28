@@ -1,4 +1,28 @@
-CDash 1.6.4, 2010-14-16
+CDash 1.8.0, 2010-10-25
+------------------------
+- 0010834 CDash should log php errors during submission
+- 0010720 Upgrading PostgreSQL database from 1.7 to 1.8 gives "An error occured"
+- 0010660 regex for BUG: bug_number
+- 0010947 Sorting by test timing does not work on index.php
+- 0010929 Spelling mistakes on code coverage pages
+- 0010657 MyCDash - project creation blocked
+- 0010649 Editing project in Chrome makes the repository field empty
+- 0010647 HTTP Header should specify charset
+- 0010269 Submission without 'ctest -D ...Build' reports entries in the dashboard 'build' column
+- 0010260 Logo image doesnt appear on all pages of a Dashboard that uses Subprojects.
+- 0010975 Negative numbers (for test counts, others?) appearing in subproject dashboard results
+- 0011284 Buildname with spaces breaks javascript
+- 0011167 Coverage threshold check should be greater than or equal to
+- 0011125 Test.Exists() uses incomplete key, resulting in bogus test associations in DB
+- 0011108 Build shows up more than once if it has more than one note added to it
+- 0010976 Adding a user to a project sets 'no email' by default
+- 0010767 Clicking on administration/Users in an arbitrary project leads to an error.
+- 0010760 The <link> in build update feed should point to the build
+- 0010721 Showing build errors (the yellow triangle) does not work
+- 0010921 Sorting of time test does not work 
+- 0009941 Add buildmanagement functionality to CDash 
+
+CDash 1.6.4, 2010-04-16
 ------------------------
 - 0010290 CDash sends failed-test emails, even when this is disabled
 - 0010426 ClientJobSchedule::Save fails because of missing client_jobschedule table columns
