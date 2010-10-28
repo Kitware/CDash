@@ -54,7 +54,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     $handler = new UpdateHandler($projectid);
     $file = "Update";
     }
-  else if(ereg('<Build', $content))
+  else if(preg_match('/<Build/', $content))
     {
     $handler = new BuildHandler($projectid);
     $file = "Build";
@@ -160,11 +160,21 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     $i++;
     }
 
+  // Make sure the file is in the right directory
+  $pos = strpos(realpath($filename),realpath($CDASH_BACKUP_DIRECTORY));
+  if($pos === FALSE || $pos!=0)
+    {
+    echo "Cannot open file ($filename)";
+    add_log("Cannot open file ($filename)", "ctest_parse",LOG_ERR);
+    return $handler;
+    }  
+    
   if(!$handle = fopen($filename, 'w'))
     {
     //try parent dir as well
     $filename = "../$filename";
     }
+      
   if(!$handle = fopen($filename, 'w'))
     {
     echo "Cannot open file ($filename)";
