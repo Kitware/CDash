@@ -685,7 +685,6 @@ if(isset($_GET['upgrade-1-6']))
   return;
 }
 
-
 // 1.8 Upgrade
 if(isset($_GET['upgrade-1-8']))
 {  
@@ -823,6 +822,18 @@ if(isset($_GET['upgrade-1-8']))
 
   return;
 }
+
+// 2.0 Upgrade
+if(isset($_GET['upgrade-2-0']))
+{  
+  // Set the database version
+  setVersion();
+
+  // Put that the upgrade is done in the log
+  add_log("Upgrade done.","upgrade-2-0");
+  return;
+}
+
 
 // When adding new tables they should be added to the SQL installation file
 // and here as well
