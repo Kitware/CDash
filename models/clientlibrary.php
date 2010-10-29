@@ -58,7 +58,40 @@ class ClientLibrary
       }
     return $ids;    
     } 
-      
+
+  /** Get the library id from the description */  
+  function GetLibrary($name,$version='')
+    {
+    $sql = "SELECT id FROM client_library WHERE ";
+    $ids = array();
+    
+    $firstarg = true;
+    if($name!='')
+      {  
+      $name = pdo_real_escape_string($name); 
+      $sql .= " name='".$name."'"; 
+      $firstarg = false;  
+      }
+    
+    if($version!='')
+      {
+      if(!$firstarg)
+        {
+        $sql .= " AND ";  
+        }  
+      $version = pdo_real_escape_string($version);  
+      $sql .= " version='".$version."'"; 
+      $firstarg = false;  
+      }
+            
+    $query = pdo_query($sql);
+    while($query_array = pdo_fetch_array($query))
+      {
+      $ids[] = $query_array['id'];
+      }
+    return $ids;    
+    } // end GetLibrary  
+    
   /** Save */
   function Save()
     {    

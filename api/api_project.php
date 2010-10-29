@@ -28,7 +28,6 @@ include_once('api.php');
 
 class ProjectAPI extends CDashAPI
 {
-  
   /** Return the coverage per directory */
   private function ListProjects()
     {

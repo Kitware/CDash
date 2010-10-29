@@ -126,7 +126,50 @@ class ClientOS
       }
     return $ids;    
     }    
+
+  /** Get the OS id from the description */  
+  function GetOS($name,$version='',$bits='')
+    {
+    $sql = "SELECT id FROM client_os WHERE ";
+    $ids = array();
+    $firstarg = true;
+    if($name!='')
+      {  
+      $name = pdo_real_escape_string($name); 
+      $sql .= " name='".$name."'"; 
+      $firstarg = false;  
+      }
+    
+    if($version!='')
+      {
+      if(!$firstarg)
+        {
+        $sql .= " AND ";  
+        }  
+      $version = pdo_real_escape_string($version);  
+      $sql .= " version='".$version."'"; 
+      $firstarg = false;  
+      }
       
+    if($bits!='')
+      {
+      if(!$firstarg)
+        {
+        $sql .= " AND ";  
+        }  
+      $bits = pdo_real_escape_string($bits);  
+      $sql .= " bits='".$bits."'"; 
+      $firstarg = false;  
+      }
+      
+    $query = pdo_query($sql);
+    while($query_array = pdo_fetch_array($query))
+      {
+      $ids[] = $query_array['id'];
+      }
+    return $ids;    
+    } // end GetOS  
+    
   /** Get the platform name */  
   function GetPlatformFromName($name)
     {

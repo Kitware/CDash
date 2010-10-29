@@ -63,7 +63,6 @@ class ClientCompiler
     return $ids;    
     }    
       
-    
   /** Get version */
   function GetVersion()
     {
@@ -76,6 +75,39 @@ class ClientCompiler
     $row = pdo_fetch_array($sys);
     return $row['version'];
     }
+    
+  /** Get the Compiler id from the description */  
+  function GetCompiler($name,$version='')
+    {
+    $sql = "SELECT id FROM client_compiler WHERE ";
+    $ids = array();
+    
+    $firstarg = true;
+    if($name!='')
+      {  
+      $name = pdo_real_escape_string($name); 
+      $sql .= " name='".$name."'"; 
+      $firstarg = false;  
+      }
+    
+    if($version!='')
+      {
+      if(!$firstarg)
+        {
+        $sql .= " AND ";  
+        }  
+      $version = pdo_real_escape_string($version);  
+      $sql .= " version='".$version."'"; 
+      $firstarg = false;  
+      }
+            
+    $query = pdo_query($sql);
+    while($query_array = pdo_fetch_array($query))
+      {
+      $ids[] = $query_array['id'];
+      }
+    return $ids;    
+    } // end GetCompiler    
     
   /** Save */
   function Save()

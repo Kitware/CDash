@@ -47,16 +47,31 @@ class ClientCMake
       }
     return $ids;    
     }    
+
+  /** Get cmake who have this version */ 
+  function GetIdFromVersion()
+    {
+    if(!$this->Version)
+      {
+      add_log("clientCMake::GetIdFromVersion()","Version not set");
+      return;
+      }
+    $version = pdo_real_escape_string($this->Version);
+    $sys = pdo_query("SELECT id FROM client_cmake WHERE version='".$version."'");
+    $row = pdo_fetch_array($sys);
+    return $row['id'];
+    }
     
   /** Save */
   function Save()
     {
+    $version = pdo_real_escape_string($this->Version);  
     // Check if the version already exists
-    $query = pdo_query("SELECT id FROM client_cmake WHERE version='".$this->Version."'");
+    $query = pdo_query("SELECT id FROM client_cmake WHERE version='".$version."'");
     if(pdo_num_rows($query) == 0)
       {
       $sql = "INSERT INTO client_cmake (version) 
-              VALUES ('".$this->Version."')";
+              VALUES ('".$version."')";
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_cmake');
       add_last_sql_error("clientCMake::Save()");
@@ -65,7 +80,7 @@ class ClientCMake
       {
       $query_array = pdo_fetch_array($query);
       $this->Id = $query_array['id'];
-      $sql = "UPDATE client_cmake SET version='".$this->Version."' WHERE id=".qnum($this->Id);
+      $sql = "UPDATE client_cmake SET version='".$version."' WHERE id=".qnum($this->Id);
       pdo_query($sql);
       add_last_sql_error("clientCMake::Save()");
       }
