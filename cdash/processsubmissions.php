@@ -414,7 +414,7 @@ function ProcessSubmissions($projectid)
     //  LOG_INFO, $projectid);
     $query = pdo_query($qs);
     add_last_sql_error("ProcessSubmissions-4");
-    //$n = pdo_num_rows($query);
+    $n = pdo_num_rows($query);
     //add_log("ProcessSubmissions", "got $n rows", LOG_INFO, $projectid);
     $iterations = $iterations + 1;
   }
