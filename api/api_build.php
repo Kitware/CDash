@@ -187,7 +187,7 @@ class BuildAPI extends CDashAPI
       }   
 
     $group = 'Nightly';      
-    if(isset($this->Parameters['dsfdsgroup']))
+    if(isset($this->Parameters['group']))
       {
       $group = pdo_real_escape_string($this->Parameters['group']);
       }
@@ -260,6 +260,169 @@ class BuildAPI extends CDashAPI
     return $sites;
     } // end function ListCheckinsDefects 
     
+  /** Schedule a build */
+  private function ScheduleBuild()
+    { 
+    include("../cdash/config.php");  
+    include_once('../cdash/common.php');  
+    include_once("../models/clientjobschedule.php");
+    include_once("../models/clientos.php");
+    include_once("../models/clientcmake.php");
+    include_once("../models/clientcompiler.php");
+    include_once("../models/clientlibrary.php");
+
+    $clientJobSchedule = new ClientJobSchedule();
+    
+    $status = array();
+    $status['scheduled'] = 0;
+    if(!isset($this->Parameters['project']))  
+      {
+      echo "Project name should be set";
+      return;
+      }
+      
+    $projectid = get_project_id($this->Parameters['project']);
+    if(!is_numeric($projectid))
+      {
+      echo "Project not found";
+      return;
+      }  
+    $clientJobSchedule->ProjectId = $projectid;
+      
+    // We would need a user login/password at some point
+    $clientJobSchedule->UserId = '1';      
+    if(isset($this->Parameters['userid']))
+      {
+      $clientJobSchedule->UserId = pdo_real_escape_string($this->Parameters['userid']);
+      } 
+
+    // Experimental: 0
+    // Nightly: 1
+    // Continuous: 2
+    $clientJobSchedule->Type = 0;  
+    if(isset($this->Parameters['type']))
+      {
+      $clientJobSchedule->Type = pdo_real_escape_string($this->Parameters['type']);
+      }
+
+    if(!isset($this->Parameters['repository']))
+      {
+      echo "Repository should be set";
+      return;
+      }  
+    
+    $clientJobSchedule->Repository = pdo_real_escape_string($this->Parameters['repository']);   
+  
+    if(isset($this->Parameters['module']))
+      {
+      $clientJobSchedule->Module = pdo_real_escape_string($this->Parameters['module']);
+      }
+
+    if(isset($this->Parameters['tag']))
+      {
+      $clientJobSchedule->Tag = pdo_real_escape_string($this->Parameters['tag']);
+      }  
+
+    if(isset($this->Parameters['suffix']))
+      {
+      $clientJobSchedule->BuildNameSuffix = pdo_real_escape_string($this->Parameters['suffix']);
+      }
+         
+    // Build Configuration
+    // Debug: 0
+    // Release: 1
+    // RelWithDebInfo: 2
+    // MinSizeRel: 3
+    $clientJobSchedule->BuildConfiguration = 0; 
+    if(isset($this->Parameters['configuration']))
+      {
+      $clientJobSchedule->BuildConfiguration = pdo_real_escape_string($this->Parameters['configuration']);
+      }
+
+    $clientJobSchedule->StartTime = date("Y-m-d H:i:s"); 
+    $clientJobSchedule->EndDate = '1980-01-01 00:00:00';   
+    $clientJobSchedule->RepeatTime = 0; // No repeat
+    $clientJobSchedule->Enable = 1;
+    $clientJobSchedule->Save();
+
+    // Remove everything and add them back in
+    $clientJobSchedule->RemoveDependencies();
+
+    // Set CMake
+    if(isset($this->Parameters['cmakeversion']))
+      {
+      $cmakeversion = pdo_real_escape_string($this->Parameters['cmakeversion']);
+      $ClientCMake  = new ClientCMake();
+      $ClientCMake->Version = $cmakeversion;
+      $cmakeid = $ClientCMake->GetIdFromVersion();
+      if(!empty($cmakeid))
+        {
+        $clientJobSchedule->AddCMake($cmakeid);
+        }
+      }
+
+    // Set the site id (for now only one)
+    if(isset($this->Parameters['siteid']))
+      {
+      $siteid = pdo_real_escape_string($this->Parameters['siteid']);
+      $clientJobSchedule->AddSite($siteid);
+      }
+
+    if(isset($this->Parameters['osname']) 
+       || isset($this->Parameters['osversion'])
+       || isset($this->Parameters['osbits'])
+       )
+      {
+      $ClientOS  = new ClientOS();
+      $osname = '';
+      $osversion = '';
+      $osbits = '';
+      if(isset($this->Parameters['osname'])) {$osname = $this->Parameters['osname'];}
+      if(isset($this->Parameters['osversion'])) {$osversion = $this->Parameters['osversion'];}
+      if(isset($this->Parameters['osbits'])) {$osbits = $this->Parameters['osbits'];}
+      $osids = $ClientOS->GetOS($osname,$osversion,$osbits);
+      
+      foreach($osids as $osid)
+        {
+        $clientJobSchedule->AddOS($osid);
+        }
+      }
+      
+     if(isset($this->Parameters['compilername']) 
+       || isset($this->Parameters['compilerversion']))
+       {
+       $ClientCompiler  = new ClientCompiler();  
+       $compilername = '';
+       $compilerversion = '';
+       if(isset($this->Parameters['compilername'])) {$compilername = $this->Parameters['compilername'];}
+       if(isset($this->Parameters['compilerversion'])) {$compilerversion = $this->Parameters['compilerversion'];}
+       $compilerids = $ClientCompiler->GetCompiler($compilername,$compilerversion);
+       foreach($compilerids as $compilerid)
+         {
+         $clientJobSchedule->AddCompiler($compilerid);
+         }
+       }
+
+    if(isset($this->Parameters['libraryname']) 
+       || isset($this->Parameters['libraryversion']))
+       {
+       $ClientLibrary  = new ClientLibrary();  
+       $libraryname = '';
+       $libraryversion = '';
+       if(isset($this->Parameters['libraryname'])) {$libraryname = $this->Parameters['libraryname'];}
+       if(isset($this->Parameters['libraryversion'])) {$libraryversion = $this->Parameters['libraryversion'];}
+       $libraryids = $ClientLibrary->GetLibrary($libraryname,$libraryversion);
+       foreach($libraryids as $libraryid)
+         {
+         $clientJobSchedule->AddLibrary($libraryid);
+         }
+       }
+         
+    $status['scheduleid'] = $clientJobSchedule->Id;
+    $status['scheduled'] = 1;
+    return $status;
+    } // end function ScheduleBuild   
+
     
   /** Run function */
   function Run()
@@ -269,6 +432,7 @@ class BuildAPI extends CDashAPI
       case 'defects': return $this->ListDefects();
       case 'checkinsdefects': return $this->ListCheckinsDefects();
       case 'sitetestfailures': return $this->ListSiteTestFailure();
+      case 'schedule': return $this->ScheduleBuild();
       }
     } 
 }
