@@ -71,8 +71,8 @@ function AcquireProcessingLock($projectid, $force)
         "VALUES ('$projectid', '$mypid', '$now_utc', '$now_utc')");
       add_last_sql_error("AcquireProcessingLock-1");
       $locked = true;
-      add_log("AcquireProcessingLock", "lock acquired -- and row created",
-        LOG_INFO, $projectid);
+      //add_log("AcquireProcessingLock", "lock acquired -- and row created",
+      //  LOG_INFO, $projectid);
       }
     else
       {
@@ -94,8 +94,8 @@ function AcquireProcessingLock($projectid, $force)
 
       if ($force)
         {
-        add_log("AcquireProcessingLock", "taking lock: 'force' is true",
-          LOG_INFO, $projectid);
+        //add_log("AcquireProcessingLock", "taking lock: 'force' is true",
+        //  LOG_INFO, $projectid);
         $acquire_lock = true;
         }
       elseif ($pid != 0)
@@ -121,10 +121,10 @@ function AcquireProcessingLock($projectid, $force)
           {
           //if ($pid is not presently running) // assumed, php-way to measure?
           //  {
-            add_log("AcquireProcessingLock",
-              "taking lock: projectid=$projectid, other processor pid='$pid' ".
-              "apparently stalled, lastupdated='$lastupdated'",
-              LOG_ERR, $projectid);
+            //add_log("AcquireProcessingLock",
+            //  "taking lock: projectid=$projectid, other processor pid='$pid' ".
+            //  "apparently stalled, lastupdated='$lastupdated'",
+            //  LOG_ERR, $projectid);
             $acquire_lock = true;
           //  }
           }
@@ -154,8 +154,8 @@ function AcquireProcessingLock($projectid, $force)
         add_last_sql_error("AcquireProcessingLock-2");
         $locked = true;
 
-        add_log("AcquireProcessingLock", "lock acquired, projectid=$projectid",
-          LOG_INFO, $projectid);
+        //add_log("AcquireProcessingLock", "lock acquired, projectid=$projectid",
+        //  LOG_INFO, $projectid);
         }
 
       $table_unlocked = pdo_unlock_tables($tables);
@@ -203,7 +203,7 @@ function ReleaseProcessingLock($projectid)
         "WHERE projectid='".$projectid."'");
       add_last_sql_error("ReleaseProcessingLock-1");
       $unlocked = true;
-      add_log("ReleaseProcessingLock", "lock released", LOG_INFO, $projectid);
+      //add_log("ReleaseProcessingLock", "lock released", LOG_INFO, $projectid);
       }
     else
       {
@@ -245,8 +245,8 @@ function SetLockLastUpdatedTime($projectid)
     "SET lastupdated='$now_utc' ".
     "WHERE projectid='".$projectid."'"))
     {
-    add_log("SetLockLastUpdatedTime", "lock lastupdated='$now_utc'",
-      LOG_INFO, $projectid);
+    //add_log("SetLockLastUpdatedTime", "lock lastupdated='$now_utc'",
+    //  LOG_INFO, $projectid);
     return true;
     }
 
@@ -294,7 +294,7 @@ function ProcessSubmissions($projectid)
   $qs = "SELECT id, filename, filesize, attempts FROM submission ".
     "WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1";
 
-  add_log("ProcessSubmissions", "querying before loop", LOG_INFO, $projectid);
+  //add_log("ProcessSubmissions", "querying before loop", LOG_INFO, $projectid);
   $query = pdo_query($qs);
   add_last_sql_error("ProcessSubmissions-1");
   $iterations = 0;
@@ -313,8 +313,8 @@ function ProcessSubmissions($projectid)
     $query_array = pdo_fetch_array($query);
     add_last_sql_error("ProcessSubmissions-1.5");
 
-    add_log("ProcessSubmissions", "query_array: ".print_r($query_array, true),
-      LOG_INFO, $projectid);
+    //add_log("ProcessSubmissions", "query_array: ".print_r($query_array, true),
+    // LOG_INFO, $projectid);
 
     // Verify that *this* process still owns the lock.
     //
@@ -348,20 +348,20 @@ function ProcessSubmissions($projectid)
 
     $mem_used = memory_get_usage();
     $logstring = "iterations='$iterations' mem_used='$mem_used'";
-    add_log("ProcessSubmissions", "$logstring", LOG_INFO, $projectid);
+    //add_log("ProcessSubmissions", "$logstring", LOG_INFO, $projectid);
 
-    add_log("ProcessSubmissions",
-      "connection_status='".connection_status()."'", LOG_INFO, $projectid);
-    add_log("ProcessSubmissions",
-      "connection_aborted='".connection_aborted()."'", LOG_INFO, $projectid);
+    //add_log("ProcessSubmissions",
+    //  "connection_status='".connection_status()."'", LOG_INFO, $projectid);
+    //add_log("ProcessSubmissions",
+    //  "connection_aborted='".connection_aborted()."'", LOG_INFO, $projectid);
 
-    echo "# ============================================================================\n";
-    echo "# $logstring\n";
-    echo 'Marked submission as started'."\n";
-    echo print_r($query_array, true) . "\n";
+    //echo "# ============================================================================\n";
+    //echo "# $logstring\n";
+    //echo 'Marked submission as started'."\n";
+    //echo print_r($query_array, true) . "\n";
 
-    add_log("ProcessSubmissions", "calling pdo_free_result",
-      LOG_INFO, $projectid);
+    //add_log("ProcessSubmissions", "calling pdo_free_result",
+    //  LOG_INFO, $projectid);
     pdo_free_result($query);
 
     unset($fp);
@@ -380,20 +380,19 @@ function ProcessSubmissions($projectid)
 
     if($fp)
     {
-      echo 'Calling do_submit'."\n";
-      add_log("ProcessSubmissions", "calling do_submit", LOG_INFO, $projectid);
+      //echo 'Calling do_submit'."\n";
+      //add_log("ProcessSubmissions", "calling do_submit", LOG_INFO, $projectid);
       do_submit($fp, $projectid, '', false);
-      add_log("ProcessSubmissions", "calling fclose", LOG_INFO, $projectid);
+      //add_log("ProcessSubmissions", "calling fclose", LOG_INFO, $projectid);
       fclose($fp);
       // delete the temporary backup file since we now have a better-named one
-      echo 'Calling unlink (' . $filename . ')'."\n";
-      add_log("ProcessSubmissions", "calling unlink", LOG_INFO, $projectid);
+      //echo 'Calling unlink (' . $filename . ')'."\n";
+      //add_log("ProcessSubmissions", "calling unlink", LOG_INFO, $projectid);
       unlink($filename);
       $new_status = 2; // done, did call do_submit
     }
     else
     {
-      echo 'Calling add_log'."\n";
       add_log("ProcessSubmissions", "Cannot open file '".$filename."'",
         LOG_ERR, $projectid);
       $new_status = 3; // done, did *NOT* call do_submit
@@ -401,28 +400,28 @@ function ProcessSubmissions($projectid)
 
     // Mark it as done and record finished time:
     //
-    echo 'Marking submission as finished'."\n";
+    //echo 'Marking submission as finished'."\n";
     $now_utc = gmdate(FMT_DATETIMESTD);
-    add_log("ProcessSubmissions", "marking status=$new_status",
-      LOG_INFO, $projectid);
+    //add_log("ProcessSubmissions", "marking status=$new_status",
+    //  LOG_INFO, $projectid);
     pdo_query(
       "UPDATE submission SET status=$new_status, finished='$now_utc', ".
       "lastupdated='$now_utc' WHERE id='".$submission_id."'");
     add_last_sql_error("ProcessSubmissions-3");
 
-    echo 'Re-querying for more submissions'."\n";
-    add_log("ProcessSubmissions", "querying for more submissions",
-      LOG_INFO, $projectid);
+    //echo 'Re-querying for more submissions'."\n";
+    //add_log("ProcessSubmissions", "querying for more submissions",
+    //  LOG_INFO, $projectid);
     $query = pdo_query($qs);
     add_last_sql_error("ProcessSubmissions-4");
-    $n = pdo_num_rows($query);
-    add_log("ProcessSubmissions", "got $n rows", LOG_INFO, $projectid);
+    //$n = pdo_num_rows($query);
+    //add_log("ProcessSubmissions", "got $n rows", LOG_INFO, $projectid);
     $iterations = $iterations + 1;
   }
 
-  $mem_used = memory_get_usage();
-  $logstring = "DONE iterations='$iterations' mem_used='$mem_used'";
-  add_log("ProcessSubmissions", "$logstring", LOG_INFO, $projectid);
+  //$mem_used = memory_get_usage();
+  //$logstring = "DONE iterations='$iterations' mem_used='$mem_used'";
+  //add_log("ProcessSubmissions", "$logstring", LOG_INFO, $projectid);
 
   return true;
 }
@@ -516,19 +515,19 @@ if (AcquireProcessingLock($projectid, $force))
   echo "Done with DeleteOldSubmissionRecords\n";
 
   if (ReleaseProcessingLock($projectid))
-  {
+    {
     echo "ReleasedProcessingLock returned true\n";
-  }
+    }
   else
-  {
+    {
     echo "ReleasedProcessingLock returned false\n";
-  }
+    }
 }
 else
-{
+  {
   echo "AcquireProcessingLock returned false\n";
   echo "Another process is already processing or there was a locking error\n";
-}
+  }
 
 echo "end processSubmissions.php\n";
 echo "</pre>";
