@@ -121,10 +121,10 @@ function AcquireProcessingLock($projectid, $force)
           {
           //if ($pid is not presently running) // assumed, php-way to measure?
           //  {
-            //add_log("AcquireProcessingLock",
-            //  "taking lock: projectid=$projectid, other processor pid='$pid' ".
-            //  "apparently stalled, lastupdated='$lastupdated'",
-            //  LOG_ERR, $projectid);
+            add_log("AcquireProcessingLock",
+              "taking lock: projectid=$projectid, other processor pid='$pid' ".
+              "apparently stalled, lastupdated='$lastupdated'",
+              LOG_ERR, $projectid);
             $acquire_lock = true;
           //  }
           }
