@@ -806,7 +806,7 @@ if(isset($_GET['upgrade-1-8']))
       {
       $userid = $query_array['userid']; 
       $cvslogin = $query_array['cvslogin'];
-      if(!in_array($cvslogin,$emailarray))
+      if(!empty($cvslogin) && !in_array($cvslogin,$emailarray))
         {
         pdo_query("INSERT INTO user2repository (userid,projectid,credential) 
                    VALUES ('".$userid."','".$projectid."','".$cvslogin."')");
