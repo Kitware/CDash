@@ -131,9 +131,9 @@ function AcquireProcessingLock($projectid, $force)
 
         if (!$acquire_lock)
           {
-          add_log("AcquireProcessingLock",
-            "lock not acquired, owned by other pid='$pid'",
-            LOG_INFO, $projectid);
+          //add_log("AcquireProcessingLock",
+          //  "lock not acquired, owned by other pid='$pid'",
+          //  LOG_INFO, $projectid);
           }
         }
       else
