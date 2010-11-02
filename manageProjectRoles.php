@@ -465,7 +465,7 @@ if($projectid>0)
   $date = date(FMT_DATETIME,strtotime(date(FMT_DATETIME)." -30 days"));
   $sql = "SELECT DISTINCT author,emailtype,".qid("user").".email FROM dailyupdate,dailyupdatefile
             LEFT JOIN user2repository ON (dailyupdatefile.author=user2repository.credential
-            AND user2repository.projectid=".qnum($project_array['id'])."
+            AND (user2repository.projectid=0 OR user2repository.projectid=".qnum($project_array['id']).")
             )
             LEFT JOIN user2project ON (user2repository.userid= user2project.userid AND
             user2project.projectid=".qnum($project_array['id']).")
