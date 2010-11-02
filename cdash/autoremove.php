@@ -67,22 +67,16 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
 
   if(!$force && !isset($CDASH_AUTOREMOVE_BUILDS))
     {
-    add_log('early return: not forced and $CDASH_AUTOREMOVE_BUILDS not set',
-      'removeFirstBuilds');
     return;
     }
 
   if(!$force && $CDASH_AUTOREMOVE_BUILDS!='1')
     {
-    add_log('early return: not forced and $CDASH_AUTOREMOVE_BUILDS != 1',
-      'removeFirstBuilds');
     return;
     }
 
   if($days < 2)
     {
-    add_log('early return: $days < 2  $days=' . $days,
-      'removeFirstBuilds');
     return;
     }
 
