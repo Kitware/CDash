@@ -298,9 +298,11 @@ CREATE TABLE `image` (
 -- Table structure for table `test2image`
 -- 
 CREATE TABLE `test2image` (
+  `id` bigint(20) NOT NULL auto_increment,
   `imgid` int(11) NOT NULL,
   `testid` int(11) NOT NULL,
   `role` tinytext NOT NULL,
+  PRIMARY KEY  (`id`),
   KEY `imgid` (`imgid`),
   KEY `testid` (`testid`)
 );
@@ -576,10 +578,12 @@ CREATE TABLE `project2repositories` (
 
 -- --------------------------------------------------------
 CREATE TABLE `testmeasurement` (
+  `id` bigint(20) NOT NULL auto_increment,
   `testid` bigint(20) NOT NULL,
   `name` varchar(70) NOT NULL,
   `type` varchar(70) NOT NULL,
   `value` text NOT NULL,
+  PRIMARY KEY  (`id`),
   KEY `testid` (`testid`)
 );
 

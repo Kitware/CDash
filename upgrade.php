@@ -826,6 +826,22 @@ if(isset($_GET['upgrade-1-8']))
 // 2.0 Upgrade
 if(isset($_GET['upgrade-2-0']))
 {  
+  // Add column id to test2image and testmeasurement
+  if(!pdo_query("SELECT id FROM test2image LIMIT 1"))
+    { 
+    include("cdash/config.php");
+    if($CDASH_DB_TYPE != "pgsql")
+      {
+      pdo_query("ALTER TABLE testmeasurement ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)");     
+      pdo_query("ALTER TABLE test2image ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)");     
+      }
+    else 
+      {
+      pdo_query("ALTER TABLE testmeasurement ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)");     
+      pdo_query("ALTER TABLE test2image ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)");   
+      }
+    }
+
   // Set the database version
   setVersion();
 

@@ -227,7 +227,7 @@ else
 
 //get any images associated with this test
 $xml .= "<images>";
-$query = "SELECT * FROM test2image WHERE testid = '$testid'";
+$query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' ORDER BY id";
 $result = pdo_query($query);
 while($row = pdo_fetch_array($result))
   {
@@ -240,7 +240,7 @@ $xml .= "</images>";
 
 //get any measurements associated with this test
 $xml .= "<measurements>";
-$query = "SELECT * FROM testmeasurement WHERE testid = '$testid'";
+$query = "SELECT name,type,value FROM testmeasurement WHERE testid = '$testid' ORDER BY id";
 $result = pdo_query($query);
 while($row = pdo_fetch_array($result))
   {
