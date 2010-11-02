@@ -20,7 +20,8 @@ CDash 1.8.0, 2010-10-25
 - 0010760 The <link> in build update feed should point to the build
 - 0010721 Showing build errors (the yellow triangle) does not work
 - 0010921 Sorting of time test does not work 
-- 0009941 Add buildmanagement functionality to CDash 
+- 0009941 Add buildmanagement functionality to CDash
+- 0011124 Screen shot regressions show up in a random order 
 
 CDash 1.6.4, 2010-04-16
 ------------------------
