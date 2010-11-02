@@ -241,9 +241,11 @@ CREATE INDEX "checksum" on "image" ("checksum");
 -- Table: test2image
 --
 CREATE TABLE "test2image" (
+  "id" serial NOT NULL,
   "imgid" bigint NOT NULL,
   "testid" bigint NOT NULL,
-  "role" text NOT NULL
+  "role" text NOT NULL,
+   PRIMARY KEY ("id")
 );
 CREATE INDEX "imgid" on "test2image" ("imgid");
 CREATE INDEX "testid" on "test2image" ("testid");
@@ -492,10 +494,12 @@ CREATE TABLE "project2repositories" (
 -- Table: testmeasurement
 --
 CREATE TABLE "testmeasurement" (
+  "id" serial NOT NULL,
   "testid" bigint NOT NULL,
   "name" character varying(70) NOT NULL,
   "type" character varying(70) NOT NULL,
-  "value" text NOT NULL
+  "value" text NOT NULL,
+   PRIMARY KEY ("id")
 );
 CREATE INDEX "testid3" on "testmeasurement" ("testid");
 
