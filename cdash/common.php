@@ -989,6 +989,7 @@ function remove_build($buildid)
   pdo_query("DELETE FROM testdiff WHERE buildid='$buildid'");
   pdo_query("DELETE FROM buildtesttime WHERE buildid='$buildid'");
   pdo_query("DELETE FROM summaryemail WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM errorlog WHERE buildid='$buildid'");
    
   // Remove the buildfailureargument
   $buildfailure = pdo_query("SELECT id FROM buildfailure WHERE buildid='$buildid'");
