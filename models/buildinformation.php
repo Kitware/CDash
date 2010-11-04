@@ -41,13 +41,25 @@ class BuildInformation
     
   /** Save the site information */
   function Save()
-    {
+    {  
     if($this->OSName!="" || $this->OSPlatform!="" || $this->OSRelease!="" || $this->OSVersion!="")
        {
-       pdo_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion) 
+       if(empty($this->BuildId))
+         {
+         return false;
+         }
+       
+       // Check if we already have a buildinformation for that build. If yes we just skip it
+       $query = pdo_query("SELECT buildid FROM buildinformation WHERE buildid='".qnum($this->BuildId)."'");
+       add_last_sql_error("BuildInformation Insert",0,$this->BuildId);
+       if(pdo_num_rows($query)==0)
+         {  
+         pdo_query ("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion) 
                     VALUES (".qnum($this->BuildId).",'$this->OSName','$this->OSRelease',
                             '$this->OSVersion','$this->OSPlatform','$this->CompilerName','$this->CompilerVersion')");
-       add_last_sql_error("BuildInformation Insert",0,$this->BuildId);
+         add_last_sql_error("BuildInformation Insert",0,$this->BuildId);
+         }
+       return true;
        }
     } // end function save  
 }
