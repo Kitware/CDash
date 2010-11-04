@@ -282,7 +282,7 @@ class BuildAPI extends CDashAPI
       }
       
     $projectid = get_project_id($this->Parameters['project']);
-    if(!is_numeric($projectid))
+    if(!is_numeric($projectid) || $projectid<=0)
       {
       echo "Project not found";
       return;
@@ -423,6 +423,62 @@ class BuildAPI extends CDashAPI
     return $status;
     } // end function ScheduleBuild   
 
+   /** Return the status of a scheduled build */
+   private function ScheduleStatus()
+    { 
+    include("../cdash/config.php");  
+    include_once('../cdash/common.php');  
+    include_once("../models/clientjobschedule.php");
+    include_once("../models/clientos.php");
+    include_once("../models/clientcmake.php");
+    include_once("../models/clientcompiler.php");
+    include_once("../models/clientlibrary.php");
+
+    $status = array();
+    $status['scheduled'] = 0;
+    if(!isset($this->Parameters['project']))  
+      {
+      echo "Project name should be set";
+      return;
+      }
+      
+    $projectid = get_project_id($this->Parameters['project']);
+    if(!is_numeric($projectid) || $projectid<=0)
+      {
+      echo "Project not found";
+      return;
+      }  
+    
+    $scheduleid = $this->Parameters['scheduleid'];
+    if(!is_numeric($scheduleid) || $scheduleid<=0)
+      {
+      echo "ScheduleId not set";
+      return;
+      }  
+    
+    $clientJobSchedule = new ClientJobSchedule();        
+    $clientJobSchedule->Id = $scheduleid;
+    $clientJobSchedule->ProjectId = $projectid;
+   
+    $status['status'] = $clientJobSchedule->GetStatus();    
+    switch($status['status'])
+      {
+      case -1: $status['statusstring'] = "not found"; break;
+      case 0: $status['statusstring'] = "scheduled"; break;
+      case 2: $status['statusstring'] = "running"; break;
+      case 3: $status['statusstring'] = "finished"; break;
+      case 4: $status['statusstring'] = "aborted"; break;
+      case 5: $status['statusstring'] = "failed"; break;
+      }
+    
+    $status['scheduleid'] = $clientJobSchedule->Id;
+    $status['scheduled'] = 0;
+    if($status['status']>0)
+      {
+      $status['scheduled'] = 1;
+      } 
+    return $status;
+    } // end function ScheduleBuild
     
   /** Run function */
   function Run()
@@ -433,6 +489,7 @@ class BuildAPI extends CDashAPI
       case 'checkinsdefects': return $this->ListCheckinsDefects();
       case 'sitetestfailures': return $this->ListSiteTestFailure();
       case 'schedule': return $this->ScheduleBuild();
+      case 'schedulestatus': return $this->ScheduleStatus();
       }
     } 
 }

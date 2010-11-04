@@ -565,6 +565,44 @@ class ClientJobSchedule
     return $libraryids;
     }
 
+  /** Get the status of the scheduled build */
+  function GetStatus()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule:GetStatus","Id not set");
+      return -1; 
+      } 
+
+    // If we have a projectid we check also the projectid
+    $extrasql = '';
+    if($this->ProjectId)
+      {
+      $extrasql = " AND js.projectid='".$this->ProjectId."' ";
+      } 
+       
+    $sql = "SELECT js.lastrun,j.id,j.status,j.startdate,j.enddate FROM client_jobschedule AS js
+            LEFT JOIN client_job AS j ON (j.scheduleid=js.id)
+            WHERE js.id=".qnum($this->Id).$extrasql."
+            ORDER BY j.id
+            ";
+    $query=pdo_query($sql);
+    if(pdo_num_rows($query) == 0)
+      {
+      return -1; // No schedule found  
+      }
+
+    $query_array = pdo_fetch_array($query);
+    if($query_array['lastrun'] == '1980-01-01 00:00:00')
+      {
+      return CDASH_JOB_SCHEDULED;  
+      } 
+    else
+      {
+      return $query_array['status'];  
+      }
+    } // end function GetStatus()
+    
     
   /** Return the job id if we have a job for the current siteid */
   function HasJob()
