@@ -50,7 +50,7 @@ class BuildInformation
          }
        
        // Check if we already have a buildinformation for that build. If yes we just skip it
-       $query = pdo_query("SELECT buildid FROM buildinformation WHERE buildid='".qnum($this->BuildId)."'");
+       $query = pdo_query("SELECT buildid FROM buildinformation WHERE buildid=".qnum($this->BuildId));
        add_last_sql_error("BuildInformation Insert",0,$this->BuildId);
        if(pdo_num_rows($query)==0)
          {  
