@@ -139,7 +139,7 @@
 <!-- Timing per project -->
 <b>Time spent per project (computed from average data over one week):</b><br/><br/>
 
-<center><div id="placeholder" style="width:850px;height:300px"></div></center>
+<center><div id="placeholder" style="width:900px;height:300px"></div></center>
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     $.plot($("#placeholder"), [
