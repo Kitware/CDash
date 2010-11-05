@@ -105,6 +105,7 @@ if ($session_OK)
   $xml .= "<user>";
   $user = pdo_query("SELECT * FROM ".qid("user")." WHERE id='$userid'");
   $user_array = pdo_fetch_array($user);
+  $xml .= add_XML_value("id",$userid);
   $xml .= add_XML_value("firstname",$user_array["firstname"]);
   $xml .= add_XML_value("lastname",$user_array["lastname"]);
   $xml .= add_XML_value("email",$user_array["email"]);
