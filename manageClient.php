@@ -45,7 +45,7 @@ if ($session_OK)
     $ClientJobSchedule = new ClientJobSchedule();
     $ClientJobSchedule->Id = $_GET['removeschedule'];
     
-    if(!$User->IsAdmin() || $ClientJobSchedule->GetOwner()!=$userid)
+    if(!$User->IsAdmin() && $ClientJobSchedule->GetOwner()!=$userid)
       {
       echo "You cannot access this job";
       return;
