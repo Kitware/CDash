@@ -105,16 +105,22 @@ if ($session_OK)
             break;
           case CDASH_JOB_FINISHED:
             $status = "Finished";
+            $ClientSite = new ClientSite(); 
+            $ClientSite->Id = $ClientJob->GetSite();
+            $status .= " (".$ClientSite->GetName().")";
             $lastrun = $ClientJob->GetEndDate();
             break;
           case CDASH_JOB_FAILED:
             $status = "Failed";
+            $ClientSite = new ClientSite(); 
+            $ClientSite->Id = $ClientJob->GetSite();
+            $status .= " (".$ClientSite->GetName().")";
             $lastrun = $ClientJob->GetEndDate();
             break;
           case CDASH_JOB_ABORTED:
             $status = "Aborted";
             $lastrun = $ClientJob->GetEndDate();
-            break;  
+            break;
           }
         }
       
