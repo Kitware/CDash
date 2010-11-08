@@ -86,12 +86,12 @@ class CoverageFile
       pdo_query("UPDATE coverage SET fileid=".qnum($this->Id)." WHERE buildid=".qnum($buildid)." AND fileid=".qnum($prevfileid));
       add_last_sql_error("CoverageFile:Update");
 
-      $row = pdo_single_row_query("SELECT COUNT(*) FROM label2coveragefile WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
-      if ($row['COUNT(*)']>0)
-      {
+      $row = pdo_single_row_query("SELECT COUNT(*) AS c FROM label2coveragefile WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
+      if ($row['c']>0)
+        {
         pdo_query("UPDATE label2coveragefile SET coveragefileid=".qnum($this->Id)." WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
         add_last_sql_error("CoverageFile:Update");
-      }
+        }
 
       // Remove the file if the crc32 is NULL
       pdo_query("DELETE FROM coveragefile WHERE id=".qnum($prevfileid)." AND file IS NULL and crc32 IS NULL");
