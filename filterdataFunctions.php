@@ -37,7 +37,7 @@ interface PageSpecificFilters
 {
   public function getDefaultFilter();
   public function getFilterDefinitionsXML();
-  public function getSqlField($field, &$sql_field);
+  public function getSqlField($field);
 }
 
 
@@ -57,7 +57,7 @@ class DefaultFilters implements PageSpecificFilters
       E_USER_WARNING);
   }
 
-  public function getSqlField($field, &$sql_field)
+  public function getSqlField($field)
   {
     trigger_error(
       'DefaultFilters::getSqlField not implemented: subclass should override',
@@ -115,8 +115,9 @@ class IndexPhpFilters extends DefaultFilters
     return $xml;
   }
 
-  public function getSqlField($field, &$sql_field)
+  public function getSqlField($field)
   {
+  $sql_field = '';
   switch (strtolower($field))
   {
     case 'buildduration':
@@ -305,6 +306,7 @@ class IndexPhpFilters extends DefaultFilters
       trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
     break;
   }
+  return $sql_field;
   }
 }
 
@@ -336,8 +338,9 @@ class QueryTestsPhpFilters extends DefaultFilters
     return $xml;
   }
 
-  public function getSqlField($field, &$sql_field)
+  public function getSqlField($field)
   {
+  $sql_field = '';
   switch (strtolower($field))
   {
     case 'buildname':
@@ -386,6 +389,7 @@ class QueryTestsPhpFilters extends DefaultFilters
       trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
     break;
   }
+  return $sql_field;
   }
 }
 
@@ -415,8 +419,9 @@ class ViewTestPhpFilters extends DefaultFilters
     return $xml;
   }
 
-  public function getSqlField($field, &$sql_field)
+  public function getSqlField($field)
   {
+  $sql_field = '';
   switch (strtolower($field))
   {
     case 'details':
@@ -453,6 +458,7 @@ class ViewTestPhpFilters extends DefaultFilters
       trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
     break;
   }
+  return $sql_field;
   }
 }
 
@@ -553,8 +559,11 @@ function get_sql_date_value($value)
 
 // Translate "comparison operation" and "compare-to value" to SQL equivalents:
 //
-function get_sql_compare_and_value($compare, $value, &$sql_compare, &$sql_value)
+function get_sql_compare_and_value($compare, $value)
 {
+  $sql_compare = '';
+  $sql_value = '';
+
   switch ($compare)
   {
     case 0:
@@ -709,6 +718,8 @@ function get_sql_compare_and_value($compare, $value, &$sql_compare, &$sql_value)
       trigger_error('unknown $compare value: ' . $compare, E_USER_WARNING);
     break;
   }
+
+  return array($sql_compare, $sql_value);
 }
 
 
@@ -797,13 +808,11 @@ function get_filterdata_from_request($page_id = '')
       $remove_filter = $i;
     }
 
-    $sql_field = '';
-    $sql_compare = '';
-    $sql_value = '';
+    $cv = get_sql_compare_and_value($compare, $value);
+    $sql_compare = $cv[0];
+    $sql_value = $cv[1];
 
-    get_sql_compare_and_value($compare, $value, &$sql_compare, &$sql_value);
-
-    $pageSpecificFilters->getSqlField($field, &$sql_field);
+    $sql_field = $pageSpecificFilters->getSqlField($field);
 
     if ($fieldtype == 'date')
     {
