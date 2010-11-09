@@ -265,27 +265,19 @@ if ($session_OK)
     $xml .= add_XML_value("longitude",$site_array["longitude"]); 
     $xml .= "</site>";
     
-    $site2project = pdo_query("SELECT projectid FROM build WHERE siteid='$siteid' GROUP BY projectid");
-    while($site2project_array = pdo_fetch_array($site2project))
-       {
-       $projectid = $site2project_array["projectid"];
-       $user2project = pdo_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
-       if(pdo_num_rows($user2project)>0)
-         {
-         $xml .= add_XML_value("sitemanager","1");
-         $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-         if(pdo_num_rows($user2site) == 0)
-           {
-           $xml .= add_XML_value("siteclaimed","0");
-           }
-         else
-           {
-           $xml .= add_XML_value("siteclaimed","1");
-           } 
-         break;
-         }
-       }
-     $xml .= "</user>";  
+    $user2site = pdo_query("SELECT su.userid FROM site2user AS su,user2project AS up  
+                            WHERE su.userid=up.userid AND up.role>0 AND su.siteid='$siteid' and su.userid='$userid'");
+    echo pdo_error();
+    if(pdo_num_rows($user2site) == 0)
+      {
+      $xml .= add_XML_value("siteclaimed","0");
+      }
+    else
+      {
+      $xml .= add_XML_value("siteclaimed","1");
+      } 
+      
+    $xml .= "</user>";  
     } // end isset(siteid)
   
   
