@@ -87,7 +87,7 @@ class CoverageFile
       add_last_sql_error("CoverageFile:Update");
 
       $row = pdo_single_row_query("SELECT COUNT(*) AS c FROM label2coveragefile WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
-      if ($row['c']>0)
+      if(isset($row['c']) && $row['c']>0)
         {
         pdo_query("UPDATE label2coveragefile SET coveragefileid=".qnum($this->Id)." WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
         add_last_sql_error("CoverageFile:Update");
