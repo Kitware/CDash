@@ -147,6 +147,7 @@ $xml .= "</menu>";
   $xml .= add_XML_value("userid",$userid);
   
   $nsatisfactorycoveredfiles = 0;
+  $coveragetype = "gcov"; // default coverage to avoid warning
     
   // Coverage files
   $coveragefile = pdo_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested,c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested
