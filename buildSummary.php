@@ -36,6 +36,11 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
+if(!isset($projectid) || $projectid==0)
+  {
+  echo "This build doesn't exist. Maybe it has been deleted.";
+  exit();
+  }
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 

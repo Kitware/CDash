@@ -1014,7 +1014,7 @@ function remove_build($buildid)
     if($numfiles_array['c']==1)
       {
       pdo_query("DELETE FROM coveragefile WHERE id='$fileid'"); 
-      pdo_query("DELETE FROM label2coveragefile WHERE id='$coveragefileid' AND buildid=".qnum($buildid)); 
+      pdo_query("DELETE FROM label2coveragefile WHERE coveragefileid='$fileid' AND buildid=".qnum($buildid)); 
       }
     }
   
