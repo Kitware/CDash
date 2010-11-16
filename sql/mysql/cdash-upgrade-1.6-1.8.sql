@@ -15,6 +15,12 @@ CREATE TABLE IF NOT EXISTS `client_site2program` (
   KEY `siteid` (`siteid`)
 );
 
+CREATE TABLE IF NOT EXISTS `client_site2project` (
+  `projectid` int(11) DEFAULT NULL,
+  `siteid` int(11) DEFAULT NULL,
+  KEY `siteid` (`siteid`)
+);
+
 
 CREATE TABLE IF NOT EXISTS `errorlog` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
