@@ -286,9 +286,10 @@ $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date
 $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_project($projectname,$date));
 $xml .= "</menu>";
 
-$dailyupdate = pdo_query("SELECT * FROM dailyupdatefile,dailyupdate 
-                            WHERE dailyupdate.date='$gmdate' and projectid='$projectid'
-                            AND dailyupdatefile.dailyupdateid = dailyupdate.id");
+$dailyupdate = pdo_query("SELECT df.filename,df.revision,df.priorrevision,df.author,df.email,df.log 
+                            FROM dailyupdatefile AS df,dailyupdate AS du
+                            WHERE du.date='$gmdate' and du.projectid='$projectid'
+                            AND df.dailyupdateid = du.id");
 $commits = array();
 while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   {
