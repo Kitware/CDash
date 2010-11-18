@@ -27,24 +27,24 @@ require_once ("models/project.php");
 require_once ("models/constants.php");
 require_once ("models/user.php");
 
-if ($session_OK) 
+if ($session_OK)
   {
   if(!$CDASH_MANAGE_CLIENTS)
     {
     echo "CDash has not been setup to allow client management";
     return;
-    }   
-  
+    }
+
   $userid = $_SESSION['cdash']['loginid'];
 
-  /** If we should remove a job */  
+  /** If we should remove a job */
   if(isset($_GET['removeschedule']))
-    { 
+    {
     $User = new User();
     $User->Id = $userid;
     $ClientJobSchedule = new ClientJobSchedule();
     $ClientJobSchedule->Id = $_GET['removeschedule'];
-    
+
     if(!$User->IsAdmin() && $ClientJobSchedule->GetOwner()!=$userid)
       {
       echo "You cannot access this job";
@@ -53,7 +53,7 @@ if ($session_OK)
     $ClientJobSchedule->Remove();
     echo "<script language=\"javascript\">window.location='user.php'</script>";
     } // end remove job
-  
+
   if(!isset($_GET['projectid']) && !isset($_GET['scheduleid']))
     {
     echo "Projectid or Schedule id not set";
@@ -63,30 +63,30 @@ if ($session_OK)
   if(isset($_GET['projectid']))
     {
     $projectid = $_GET['projectid'];
-    }   
+    }
   else
     {
     $scheduleid = $_GET['scheduleid'];
-    $ClientJobSchedule = new ClientJobSchedule();  
+    $ClientJobSchedule = new ClientJobSchedule();
     $ClientJobSchedule->Id = $scheduleid;
     $projectid = $ClientJobSchedule->GetProjectId();
     }
-      
+
   $xml = "<cdash>";
   $xml .= add_XML_value("cssfile",$CDASH_CSS_FILE);
   $xml .= add_XML_value("version",$CDASH_VERSION);
   $xml .= add_XML_value("manageclient",$CDASH_MANAGE_CLIENTS);
-  
+
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
   $xml .= add_XML_value("title","CDash - Schedule Build");
   $xml .= add_XML_value("menutitle","CDash");
   $xml .= add_XML_value("menusubtitle","Schedule Build");
-  
+
   $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
   $xml .= "<date>".date("r")."</date>";
   $xml .= "<backurl>user.php</backurl>";
-  
+
   $xml .= "<user>";
   $userid = $_SESSION['cdash']['loginid'];
   $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
@@ -94,13 +94,13 @@ if ($session_OK)
   $xml .= add_XML_value("id", $userid);
   $xml .= add_XML_value("admin", $user_array["admin"]);
   $xml .= "</user>";
-  
+
   if(isset($scheduleid))
     {
     $xml .= add_XML_value("edit","1");
-    $xml .= add_XML_value("startdate",$ClientJobSchedule->GetStartDate());  
-    $xml .= add_XML_value("enddate",$ClientJobSchedule->GetEndDate());  
-    $xml .= add_XML_value("starttime",$ClientJobSchedule->GetStartTime());    
+    $xml .= add_XML_value("startdate",$ClientJobSchedule->GetStartDate());
+    $xml .= add_XML_value("enddate",$ClientJobSchedule->GetEndDate());
+    $xml .= add_XML_value("starttime",$ClientJobSchedule->GetStartTime());
     $xml .= add_XML_value("type",$ClientJobSchedule->GetType());
     $xml .= add_XML_value("repeat",$ClientJobSchedule->GetRepeatTime());
     $xml .= add_XML_value("cmakecache",$ClientJobSchedule->GetCMakeCache());
@@ -119,19 +119,19 @@ if ($session_OK)
     }
   else
     {
-    $xml .= add_XML_value("startdate",date("Y-m-d H:i:s"));  
-    $xml .= add_XML_value("enddate",date("1980-01-01 00:00:00"));  
-    $xml .= add_XML_value("starttime","21:00:00");    
-    $xml .= add_XML_value("type","0"); // experimental   
+    $xml .= add_XML_value("startdate",date("Y-m-d H:i:s"));
+    $xml .= add_XML_value("enddate",date("1980-01-01 00:00:00"));
+    $xml .= add_XML_value("starttime","21:00:00");
+    $xml .= add_XML_value("type","0"); // experimental
     $xml .= add_XML_value("cmakecache","");
     $xml .= add_XML_value("clientscript","");
     $xml .= add_XML_value("repeat","0");
     $xml .= add_XML_value("enable","1");
     $xml .= add_XML_value("builconfiguration","0"); // debug
     $repository = "";
-    }  
+    }
 
-  $inprojectrepository = false;  
+  $inprojectrepository = false;
   $Project = new Project();
   $Project->Id = $projectid;
   $repositories = $Project->GetRepositories();
@@ -143,22 +143,22 @@ if ($session_OK)
     {
     $xml .= '<repository>';
     $xml .= add_XML_value("url", $projectrepository['url']);
-    
-    if(isset($scheduleid) && $repository==$projectrepository['url']) 
+
+    if(isset($scheduleid) && $repository==$projectrepository['url'])
       {
       $inprojectrepository = true;
       $xml .= add_XML_value("selected",1);
       }
-    
+
     $xml .= '</repository>';
     }
   $xml .= '</project>';
-  
+
   if(isset($scheduleid) && !$inprojectrepository)
     {
-    $xml .= add_XML_value("otherrepository",$repository);  
+    $xml .= add_XML_value("otherrepository",$repository);
     }
-  
+
   // Build configurations
   $jobschedule = new ClientJobSchedule();
   foreach($jobschedule->BuildConfigurations as $key => $value)
@@ -168,11 +168,11 @@ if ($session_OK)
     $xml .= add_XML_value("id",$key);
     if(isset($scheduleid) && $key == $ClientJobSchedule->GetBuildConfiguration())
       {
-      $xml .= add_XML_value("selected","1");  
+      $xml .= add_XML_value("selected","1");
       }
-    $xml .= '</buildconfiguration>';  
+    $xml .= '</buildconfiguration>';
     }
-    
+
   // OS versions
   $clientOS = new ClientOS();
   $osids = $clientOS->getAll();
@@ -184,11 +184,11 @@ if ($session_OK)
     $xml .= add_XML_value("id",$osid);
     if(isset($systems) && array_search($osid,$systems) !== false)
       {
-      $xml .= add_XML_value("selected","1");  
+      $xml .= add_XML_value("selected","1");
       }
-    $xml .= '</os>';  
+    $xml .= '</os>';
     }
- 
+
   // Compiler versions
   $Compiler = new ClientCompiler();
   $compilerids = $Compiler->getAll();
@@ -200,10 +200,10 @@ if ($session_OK)
     $xml .= add_XML_value("id",$compilerid);
     if(isset($compilers) && array_search($compilerid,$compilers) !== false)
       {
-      $xml .= add_XML_value("selected","1");  
+      $xml .= add_XML_value("selected","1");
       }
-    $xml .= '</compiler>';  
-    } 
+    $xml .= '</compiler>';
+    }
 
   // CMake versions
   $CMake = new ClientCMake();
@@ -216,36 +216,36 @@ if ($session_OK)
     $xml .= add_XML_value("id",$cmakeid);
     if(isset($cmakes) && array_search($cmakeid,$cmakes) !== false)
       {
-      $xml .= add_XML_value("selected","1");  
+      $xml .= add_XML_value("selected","1");
       }
-    $xml .= '</cmake>';  
-    } 
+    $xml .= '</cmake>';
+    }
 
-  // Sites 
+  // Sites
   $Site = new ClientSite();
-  $siteids = $Site->getAll();
+  $siteids = $Site->GetAllForProject($projectid);
   foreach($siteids as $siteid)
     {
     $xml .= '<site>';
     $Site->Id = $siteid;
-    
+
     $lastping = $Site->GetLastPing();
     $time = time()-(5*60);
-    if(strtotime($lastping)<$time)  
+    if(strtotime($lastping)<$time)
       {
       $lastseen = 0;
       }
-    else 
+    else
       {
       $lastseen = 1;
-      }  
-    
+      }
+
     // Check when the site was last seen
     $lastpingtime = '';
     $diff = time()-strtotime($lastping);
     $days = $diff/(3600*24);
     if(floor($days)>0)
-      {   
+      {
       $lastpingtime .= floor($days)." days";
       $diff = $diff-(floor($days)*3600*24);
       }
@@ -254,35 +254,35 @@ if ($session_OK)
       {
       if($lastpingtime != '')
         {
-        $lastpingtime .= ', '; 
+        $lastpingtime .= ', ';
         }
       $lastpingtime .= floor($hours)." hours";
       $diff = $diff-(floor($hours)*3600);
-      }  
+      }
     $minutes = $diff/(60);
     if($minutes>0)
       {
       if($lastpingtime != '')
         {
-        $lastpingtime .= ', '; 
-        }  
+        $lastpingtime .= ', ';
+        }
       $lastpingtime .= floor($minutes)." minutes";
-      }   
-      
+      }
+
     $xml .= add_XML_value("name",$Site->GetName()."-".$Site->GetSystemName()." (".$lastpingtime." ago)");
     $xml .= add_XML_value("id",$siteid);
     $xml .= add_XML_value("availablenow",$lastseen); // Have we seen it in the past 5 minutes
     if(isset($sites) && array_search($siteid,$sites) !== false)
       {
-      $xml .= add_XML_value("selected","1");  
+      $xml .= add_XML_value("selected","1");
       }
-    $xml .= '</site>';  
-    }   
-  
-  // Libraries 
+    $xml .= '</site>';
+    }
+
+  // Libraries
   $Library = new ClientLibrary();
   $libraryids = $Library->getAll();
-  
+
   foreach($libraryids as $libraryid)
     {
     $xml .= '<library>';
@@ -291,12 +291,12 @@ if ($session_OK)
     $xml .= add_XML_value("id",$libraryid);
     if(isset($libraries) && array_search($libraryid,$libraries) !== false)
       {
-      $xml .= add_XML_value("selected","1");  
+      $xml .= add_XML_value("selected","1");
       }
-    $xml .= '</library>';  
-    }        
+    $xml .= '</library>';
+    }
   $xml .= "</cdash>";
-  
+
   // Schedule the build
   if(!empty($_POST['submit']) || !empty($_POST['update']))
     {
@@ -306,21 +306,21 @@ if ($session_OK)
     $clientJobSchedule->BuildNameSuffix = $_POST['buildnamesuffix'];
     $clientJobSchedule->BuildConfiguration = $_POST['buildconfiguration'];
     $clientJobSchedule->Tag = $_POST['tag'];
-    
+
     if(strlen($_POST['module'])>0)
       {
-      $clientJobSchedule->Module = $_POST['module'];  
+      $clientJobSchedule->Module = $_POST['module'];
       }
-      
+
     if(strlen($_POST['otherrepository'])>0)
       {
-      $clientJobSchedule->Repository = $_POST['otherrepository'];   
-      }   
+      $clientJobSchedule->Repository = $_POST['otherrepository'];
+      }
     else
       {
-      $clientJobSchedule->Repository = $_POST['repository']; 
-      } 
-       
+      $clientJobSchedule->Repository = $_POST['repository'];
+      }
+
     if(isset($_POST['enable']))
       {
       $clientJobSchedule->Enable = 1;
@@ -328,12 +328,12 @@ if ($session_OK)
     $clientJobSchedule->StartDate = $_POST['startdate'];
     if(empty($clientJobSchedule->StartDate))
       {
-      $clientJobSchedule->StartDate = date("Y-m-d H:i:s");  
+      $clientJobSchedule->StartDate = date("Y-m-d H:i:s");
       }
     $clientJobSchedule->EndDate = $_POST['enddate'];
     if(empty($clientJobSchedule->EndDate))
       {
-      $clientJobSchedule->EndDate = '1980-01-01 00:00:00';  
+      $clientJobSchedule->EndDate = '1980-01-01 00:00:00';
       }
     $clientJobSchedule->StartTime = $_POST['starttime'];
     $clientJobSchedule->Type = $_POST['type'];
@@ -346,7 +346,7 @@ if ($session_OK)
       $clientJobSchedule->Id = $scheduleid;
       }
     $clientJobSchedule->Save();
-    
+
     // Remove everything and add them back in
     $clientJobSchedule->RemoveDependencies();
 
@@ -358,7 +358,7 @@ if ($session_OK)
         $clientJobSchedule->AddOS($osid);
         }
       }
-      
+
     // Add the compiler
     if(isset($_POST['compiler']))
       {
@@ -367,7 +367,7 @@ if ($session_OK)
         $clientJobSchedule->AddCompiler($compilerid);
         }
       }
-    
+
     // Add the cmake
     if(isset($_POST['cmake']))
       {
@@ -376,16 +376,19 @@ if ($session_OK)
         $clientJobSchedule->AddCMake($cmakeid);
         }
       }
-      
+
     // Add the site
     if(isset($_POST['site']))
       {
       foreach($_POST['site'] as $siteid)
         {
-        $clientJobSchedule->AddSite($siteid);
+        if(in_array($siteid, $siteids))
+          {
+          $clientJobSchedule->AddSite($siteid);
+          }
         }
       }
-       
+
     // Add the libraries
     if(isset($_POST['library']))
       {
@@ -394,7 +397,7 @@ if ($session_OK)
         $clientJobSchedule->AddLibrary($libraryid);
         }
       }
-      
+
     echo "<script language=\"javascript\">window.location='user.php'</script>";
     }
   generate_XSLT($xml, "manageClient", true);
