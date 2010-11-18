@@ -22,7 +22,7 @@ function client_submit()
     {
     return 0;
     }
- 
+
   include_once("models/clientsite.php");
   include_once("models/clientos.php");
   include_once("models/clientjob.php");
@@ -30,10 +30,10 @@ function client_submit()
   include_once("models/clientcmake.php");
   include_once("models/clientcompiler.php");
   include_once("models/clientlibrary.php");
-  
+
   include 'cdash/config.php';
   require_once 'cdash/common.php';
-  
+
   // Client asks for the site id
   if(isset($_GET['getsiteid']))
     {
@@ -42,14 +42,14 @@ function client_submit()
       echo "ERROR: sitename or systemname not set";
       return 0;
       }
-      
+
     $sitename = $_GET['sitename'];
     $systemname = $_GET['systemname'];
-    
+
     // Should get the site id
     $ClientSite = new ClientSite();
     $siteid = $ClientSite->GetId($sitename,$systemname);
-    
+
     echo $siteid;
     return 1;
     }
@@ -61,10 +61,10 @@ function client_submit()
       echo "0";
       return 1;
       }
-    
+
     $ClientJobSchedule = new ClientJobSchedule();
     $ClientJobSchedule->SiteId = $_GET['siteid'];
-    
+
     $jobid = $ClientJobSchedule->HasJob();
     if($jobid>0) // if we have something to do
       {
@@ -83,7 +83,7 @@ function client_submit()
       echo "0";
       return 1;
       }
-      
+
     $filehandle='php://input';
     $contents = file_get_contents($filehandle);
     $xml = new SimpleXMLElement($contents);  
@@ -94,7 +94,7 @@ function client_submit()
     $ClientOS->Version = $ClientOS->GetVersionFromName($xml->system->version);
     $ClientOS->Bits = $xml->system->bits;
     $ClientOS->Save();
-    
+
     // Add/Update the site
     $ClientSite = new ClientSite();
     $ClientSite->Name = $_GET['sitename'];
@@ -128,7 +128,7 @@ function client_submit()
     $ClientCompiler = new ClientCompiler();
     $ClientCompiler->SiteId = $siteid;
     $ClientCompiler->DeleteUnused($compilers);
-    
+
     // Add/Update CMake(s)
     $cmakes = array();
     foreach($xml->cmake as $cmake)
@@ -147,7 +147,7 @@ function client_submit()
     $ClientCMake = new ClientCMake();
     $ClientCMake->SiteId = $siteid;
     $ClientCMake->DeleteUnused($cmakes); 
-    
+
     // Add/Update Libraries
     $libraries = array();
     foreach($xml->library as $library)
@@ -159,7 +159,7 @@ function client_submit()
       $ClientLibrary->Version = $library->version;
       $ClientLibrary->SiteId = $siteid; 
       $ClientLibrary->Save();
-      
+
       $lib = array();
       $lib['name'] = $library->name;
       $lib['path'] = $library->path;

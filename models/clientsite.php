@@ -20,11 +20,11 @@ class ClientSite
   var $Id;
   var $Name;
   var $OsId;
-  
+
   var $SystemName;
   var $Host;
   var $BaseDirectory;
-  
+
   /** get name*/
   function GetName()
     {
@@ -37,7 +37,7 @@ class ClientSite
     $row = pdo_fetch_array($name);
     return $row[0];
     }
-     
+
   /** Return the last ping */
   function GetLastPing()
     {
@@ -46,12 +46,12 @@ class ClientSite
       add_log("ClientSite::GetLastPing()","Id not set");
       return false;
       }
-    
+
     $lastping = pdo_query("SELECT lastping FROM client_site WHERE id=".qnum($this->Id));
     $row = pdo_fetch_array($lastping);
     return $row[0];
-    }  
-     
+    }
+
   /** get name*/
   function GetSystemName()
     {
@@ -64,7 +64,7 @@ class ClientSite
     $row = pdo_fetch_array($name);
     return $row[0];
     }
-    
+
   /** get the OS */
   function GetOS()
     {
@@ -77,9 +77,9 @@ class ClientSite
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
-    
+
   /** get host*/
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetHost()
     {
@@ -93,7 +93,7 @@ class ClientSite
     return $row['host'];
     }
   */
-    
+
   /** get base directory */
   function GetBaseDirectory()
     {
@@ -104,7 +104,7 @@ class ClientSite
       }
     $sys = pdo_query("SELECT basedirectory FROM client_site WHERE id=".qnum($this->Id));
     $row = pdo_fetch_array($sys);
-    
+
     // If we have a source we update and build
     $baseDir =  $row[0];
     if($baseDir[strlen($baseDir)-1] == '/')
@@ -113,9 +113,9 @@ class ClientSite
       }
     return $baseDir;
     }
-    
+
   /** Return a list of compiler ids */
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetCompilerIds()
     {
@@ -124,17 +124,17 @@ class ClientSite
       add_log("ClientSite::GetCompilerIds()","Id not set");
       return;
       }
-      
-    $ids = array();  
+
+    $ids = array();
     $query = pdo_query("SELECT compilerid FROM client_site2compiler WHERE siteid=".qnum($this->Id));
     while($query_array = pdo_fetch_array($query))
       {
       $ids[] = $query_array['compilerid'];
       }
-    return $ids;  
+    return $ids;
     }
   */
-  
+
   /** get name*/
   function GetCompilerGenerator($compilerid)
     {
@@ -147,7 +147,7 @@ class ClientSite
     $row = pdo_fetch_array($name);
     return $row[0];
     }
-    
+
   /** Return the CMake path */
   function GetCMakePath($cmakeid)
     {
@@ -160,9 +160,9 @@ class ClientSite
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
-  
+
   /** Get Library Source */
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetLibrarySource($libraryid)
     {
@@ -176,9 +176,9 @@ class ClientSite
     return $row[0];
     }
   */
-  
+
   /** Get Library Repository */
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetLibraryRepository($libraryid)
     {
@@ -192,9 +192,9 @@ class ClientSite
     return $row[0];
     }
   */
-  
+
   /** Get Library Path */
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetLibraryPath($libraryid)
     {
@@ -210,7 +210,7 @@ class ClientSite
   */
 
   /** Get Library Module */
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetLibraryModule($libraryid)
     {
@@ -224,9 +224,9 @@ class ClientSite
     return $row[0];
     }
   */
-    
+
   /** Return a list of cmake ids */
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetCMakeIds()
     {
@@ -235,19 +235,19 @@ class ClientSite
       add_log("ClientSite::GetCMakeIds()","Id not set");
       return;
       }
-      
-    $ids = array();  
+
+    $ids = array();
     $query = pdo_query("SELECT cmakeid FROM client_site2cmake WHERE siteid=".qnum($this->Id));
     while($query_array = pdo_fetch_array($query))
       {
       $ids[] = $query_array['cmakeid'];
       }
-    return $ids;  
+    return $ids;
     }
   */
-  
+
   /** Return a list of cmake ids */
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetLibraryIds()
     {
@@ -256,18 +256,18 @@ class ClientSite
       add_log("ClientSite::GetLibraryIds()","Id not set");
       return;
       }
-      
-    $ids = array();  
+
+    $ids = array();
     $query = pdo_query("SELECT libraryid FROM client_site2library WHERE siteid=".qnum($this->Id));
     while($query_array = pdo_fetch_array($query))
       {
       $ids[] = $query_array['libraryid'];
       }
-    return $ids;  
+    return $ids;
     }
   */
-  
-  /** Get the id of a site from the sitename and systemname */  
+
+  /** Get the id of a site from the sitename and systemname */
   function GetId($sitename,$systemname)
     {
      $query = pdo_query("SELECT id FROM client_site WHERE name='".$sitename."' AND systemname='".$systemname."'");
@@ -276,25 +276,25 @@ class ClientSite
       add_last_sql_error("clientSite::GetId()");
       return 0;
       }
-    
+
     if(pdo_num_rows($query) == 0)
       {
       return 0;
       }
-      
+
     $row = pdo_fetch_array($query);
     return $row['0'];
     }
-  
-    
-  /** Save a site */  
+
+
+  /** Save a site */
   function Save()
     {
     // Check if the name or system already exists
     $query = pdo_query("SELECT id FROM client_site WHERE name='".$this->Name."' AND systemname='".$this->SystemName."'");
     if(pdo_num_rows($query) == 0)
       {
-      $sql = "INSERT INTO client_site (name,osid,systemname,host,basedirectory) 
+      $sql = "INSERT INTO client_site (name,osid,systemname,host,basedirectory)
               VALUES ('".$this->Name."','".$this->OsId."','".$this->SystemName."','".$this->Host."','".$this->BaseDirectory."')";
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_site');
@@ -309,8 +309,8 @@ class ClientSite
       add_last_sql_error("clientSite::Save()");
       }
     }   // end Save
-      
-  /** Get all the site */  
+
+  /** Get all the site */
   function GetAll()
     {
     $ids = array();
@@ -320,11 +320,35 @@ class ClientSite
       {
       $ids[] = $query_array['id'];
       }
-    return $ids;    
-    } 
-    
+    return $ids;
+    }
+
+  function GetAllForProject($projectid)
+    {
+    $ids = $this->GetAll();
+
+    $matching = array();
+    foreach($ids as $id)
+      {
+      $result = pdo_query("SELECT projectid FROM client_site2project WHERE siteid=".qnum($id));
+      if(pdo_num_rows($result) == 0)
+        {
+        $matching[] = $id;
+        }
+      else
+        {
+        $result = pdo_query("SELECT projectid FROM client_site2project WHERE siteid=".qnum($id)." AND projectid=".qnum($projectid));
+        if(pdo_num_rows($result) > 0)
+          {
+          $matching[] = $id;
+          }
+        }
+      }
+    return $matching;
+    }
+
   /** Return all the sites that match this os */
-  // commenting out until it's actually used 
+  // commenting out until it's actually used
   /*
   function GetAllByOS($osid)
     {
@@ -335,7 +359,7 @@ class ClientSite
       {
       $ids[] = $query_array['id'];
       }
-    return $ids;  
+    return $ids;
     }
   */
 
@@ -347,8 +371,8 @@ class ClientSite
       add_log("ClientSite::GetPrograms()","Id not set");
       return;
       }
-      
-    $programs = array();  
+
+    $programs = array();
     $query = pdo_query("SELECT name,version,path FROM client_site2program WHERE siteid=".qnum($this->Id)." ORDER BY NAME,VERSION DESC");
     while($query_array = pdo_fetch_array($query))
       {
@@ -356,7 +380,7 @@ class ClientSite
       }
     return $programs;
     }
-    
+
   /** Update the list of program for a site */
   function UpdatePrograms($programs)
     {
@@ -365,14 +389,14 @@ class ClientSite
       $program_name = pdo_real_escape_string($program['name']);
       $program_version = pdo_real_escape_string($program['version']);
       $program_path = pdo_real_escape_string($program['path']);
-        
+
       // Check if the name or system already exists
-      $query = pdo_query("SELECT siteid FROM client_site2program 
+      $query = pdo_query("SELECT siteid FROM client_site2program
                 WHERE name='".$program_name."' AND version='".$program_version."' AND siteid=".qnum($this->Id));
       add_last_sql_error("clientSite::UpdatePrograms()");
       if(pdo_num_rows($query) == 0)
         {
-        $sql = "INSERT INTO client_site2program (siteid,name,version,path) 
+        $sql = "INSERT INTO client_site2program (siteid,name,version,path)
                 VALUES ('".$this->Id."','".$program_name."','".$program_version."','".$program_path."')";
         pdo_query($sql);
         add_last_sql_error("clientSite::UpdatePrograms()");
@@ -385,25 +409,25 @@ class ClientSite
         add_last_sql_error("clientSite::UpdatePrograms()");
         }
       }
- 
+
     // Delete the old programs
     $query = pdo_query("SELECT name,version FROM client_site2program WHERE siteid=".qnum($this->Id));
-    
+
     add_last_sql_error("clientSite::UpdatePrograms()");
     while($query_array = pdo_fetch_array($query))
       {
-      $delete = 1;  
+      $delete = 1;
       foreach($programs as $program)
         {
         if($program['name'] == $query_array['name'] && $program['version'] == $query_array['version'])
           {
           $delete = 0;
-          break;    
+          break;
           }
         }
-      if($delete)  
+      if($delete)
         {
-        pdo_query("DELETE FROM client_site2program WHERE name='".$query_array['name']."' AND version='".$query_array['version']."' AND siteid=".qnum($this->Id)); 
+        pdo_query("DELETE FROM client_site2program WHERE name='".$query_array['name']."' AND version='".$query_array['version']."' AND siteid=".qnum($this->Id));
         add_last_sql_error("clientSite::UpdatePrograms()");
         }
       }
