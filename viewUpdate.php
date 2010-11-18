@@ -21,6 +21,7 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+require_once("cdash/bugurl.php");
 
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
@@ -190,14 +191,19 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $filename = $file['filename'];
     $filename = str_replace("\\", "/", $filename);
     $directory = substr($filename,0,strrpos($filename,"/"));
-     
+
     $pos = strrpos($filename,"/");
     if($pos !== FALSE)
       { 
       $filename = substr($filename,$pos+1);
       }
- 
-      
+
+    $baseurl = $project_array["bugtrackerfileurl"];
+    if(empty($baseurl))
+      {
+      $baseurl = $project_array["bugtrackerurl"];
+      }
+
     $author = $file['author'];
     $email = $file['email'];
     $log = $file['log'];
@@ -210,42 +216,25 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     // java script function not just displayed as html
     $log = XMLStrFormat($log); // Apparently no need to do this twice anymore
     $log = XMLStrFormat($log);
-    
+
     $log = trim($log);
-    
+
     $file['directory'] = $directory;
     $file['author'] = $author;
     $file['email'] = $email;
     $file['log'] = $log;        
     $file['revision'] = $revision;    
     $file['filename'] = $filename;
-    $file['bugurl'] = ""; 
-    
-    // If the log starts with BUG:
-    if(strpos($log,"BUG:") !== FALSE && strpos($log,"BUG:")==0)
+    $file['bugurl'] = "";
+    $file['bugid'] = "0";
+    $file['bugpos'] = "0";
+
+    $bug = get_bug_from_log($log, $baseurl);
+    if ($bug !== FALSE)
       {
-      // Try to find the bugid
-      $posend = strpos($log," ",6);
-      if($posend === FALSE)
-        {
-        $posend = strlen($log);
-        }
-      $bugid = trim(substr($log,4,$posend-4));      
-      if(is_numeric($bugid))
-        {
-        // For now we assume we are using mantis in the future we might want 
-        // to support other bug trackers
-        $url = $project_array["bugtrackerfileurl"];
-        if(empty($url))
-          {
-          $url = $project_array["bugtrackerurl"];
-          }
-        $file['bugurl'] = XMLStrFormat($url.$bugid);
-        } // end have bugid
-      else
-        {
-        //$file['bugurl'] = XMLStrFormat("http://".$project_array["bugtrackerurl"]);
-        }
+      $file['bugurl'] = $bug[0];
+      $file['bugid'] = $bug[1];
+      $file['bugpos'] = $bug[2];
       }
 
     if($status == "UPDATED")
@@ -272,45 +261,45 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     }
   
   // Updated files
-  $xml .= "dbAdd (true, \"".$projectname." Updated files  (".count($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\",\"\")\n";
+  $xml .= "dbAdd (true, \"".$projectname." Updated files  (".count($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
    $previousdir = "";
   foreach($updatedfiles as $file)
     {
     $directory = $file['directory'];
     if($previousdir=="" || $directory != $previousdir)
       {
-      $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\",\"\")\n";
+      $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
       }
-    $xml .= " dbAdd ( false, \"".$file['filename']." Revision: ".$file['revision']."\",\"".$file['diff_url']."\",2,\"\",\"1\",\"".$file['author']."\",\"".$file['email']."\",\"".$file['log']."\",\"".$file['bugurl']."\")\n";
+    $xml .= " dbAdd ( false, \"".$file['filename']." Revision: ".$file['revision']."\",\"".$file['diff_url']."\",2,\"\",\"1\",\"".$file['author']."\",\"".$file['email']."\",\"".$file['log']."\",\"".$file['bugurl']."\",\"".$file['bugid']."\",\"".$file['bugpos']."\")\n";
     }
 
   // Modified files
-  $xml .= "dbAdd (true, \"Modified files  (".count($locallymodified).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\",\"\")\n";
+  $xml .= "dbAdd (true, \"Modified files  (".count($locallymodified).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
   $previousdir = "";
   foreach($locallymodified as $file)
     {
     $directory = $file['directory'];
     if($previousdir=="" || $directory != $previousdir)
       {
-      $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\",\"\")\n";
+      $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
       }
-    $xml .= " dbAdd ( false, \"".$file['filename']."\",\"".$file['diff_url']."\",2,\"\",\"1\",\"".$file['author']."\",\"".$file['email']."\",\"".$file['log']."\",\"".$file['bugurl']."\")\n";
+    $xml .= " dbAdd ( false, \"".$file['filename']."\",\"".$file['diff_url']."\",2,\"\",\"1\",\"".$file['author']."\",\"".$file['email']."\",\"".$file['log']."\",\"".$file['bugurl']."\",\"".$file['bugid']."\",\"".$file['bugpos']."\")\n";
     }
   
   // Conflicting files
-  $xml .= "dbAdd (true, \"Conflicting files  (".count($conflictingfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\",\"\")\n";
+  $xml .= "dbAdd (true, \"Conflicting files  (".count($conflictingfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
   $previousdir = "";
   foreach($conflictingfiles as $file)
     {
     $directory = $file['directory'];
     if($previousdir=="" || $directory != $previousdir)
       {
-      $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
+      $xml .= " dbAdd (true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
       }
-    $xml .= " dbAdd ( false, \"".$file['filename']." Revision: ".$file['revision']."\",\"".$file['diff_url']."\",2,\"\",\"1\",\"".$file['author']."\",\"".$file['email']."\",\"".$file['log']."\",\"".$file['bugurl']."\")\n";
+    $xml .= " dbAdd ( false, \"".$file['filename']." Revision: ".$file['revision']."\",\"".$file['diff_url']."\",2,\"\",\"1\",\"".$file['author']."\",\"".$file['email']."\",\"".$file['log']."\",\"".$file['bugurl']."\",\"".$file['bugid']."\",\"".$file['bugpos']."\")\n";
     }
 
   $xml .= "</javascript>";

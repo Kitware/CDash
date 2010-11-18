@@ -72,33 +72,23 @@
     {
     var posHTTPInit = 0;
     var comment = db[i].comment;
-    var comment = comment.replace(/  /g," "); // replace two spaces by only one
-    
+    // var comment = comment.replace(/  /g," "); // replace two spaces by only one
+
     // If we have a bugURL we add it
     if ( db[i].bugURL != null && db[i].bugURL != "" )
       {
-      var posSpace = comment.indexOf(' ');
-      if(posSpace > 0)
-        {
-        var posSpace2 = comment.indexOf(' ',posSpace+1);
-        if(posSpace2 > 0)
-          {
-          posSpace = posSpace2;
-          }
-        }
-      else
-        {
-        posSpace = 0;
-        }
-      
       // Insert the bugURL
-      comment = "<a href=\""+db[i].bugURL+"\">"+comment.substr(0,posSpace)+"</a>"+comment.substr(posSpace);
-      
-      posHTTPInit = posSpace+db[i].bugURL.length+17;
+      var pos = parseInt(db[i].bugpos) + parseInt(db[i].bugid.length);
+      var leading = comment.substr(0, db[i].bugpos);
+      var bugtext = comment.substr(db[i].bugpos, db[i].bugid.length);
+      var trailing = comment.substr(pos);
+      comment = leading + "<a href=\"" + db[i].bugURL + "\">" + bugtext + "</a>" + trailing;
+
+      posHTTPInit = db[i].bugpos + 17; // gets it beyond the http:// that we just added for the bug link
       }
-    
-    
-    
+
+
+
     // Add link when there is http in the comments
     var posHTTP = comment.indexOf("http://",posHTTPInit);
     while(posHTTP != -1)
