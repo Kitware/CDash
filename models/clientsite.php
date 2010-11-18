@@ -359,7 +359,7 @@ class ClientSite
     
   /** Update the list of program for a site */
   function UpdatePrograms($programs)
-    { 
+    {
     foreach($programs as $program)
       {
       $program_name = pdo_real_escape_string($program['name']);
@@ -406,7 +406,40 @@ class ClientSite
         pdo_query("DELETE FROM client_site2program WHERE name='".$query_array['name']."' AND version='".$query_array['version']."' AND siteid=".qnum($this->Id)); 
         add_last_sql_error("clientSite::UpdatePrograms()");
         }
-      } 
-    } 
+      }
+    }
+
+  function UpdateAllowedProjects($projectNames)
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientSite::UpdateAllowedProjects()","Id not set");
+      return;
+      }
+
+    pdo_query("DELETE FROM client_site2project WHERE siteid=".qnum($this->Id));
+    foreach($projectNames as $projectName)
+      {
+      $projectid = 0;
+      $projectName = pdo_real_escape_string($projectName);
+      $project = pdo_query("SELECT id FROM project WHERE name='$projectName'");
+
+      if(pdo_num_rows($project)>0)
+        {
+        $project_array = pdo_fetch_array($project);
+        $projectid = $project_array["id"];
+        }
+
+      if(!$projectid)
+        {
+        add_log("ClientSite::UpdateAllowedProjects()","Invalid project name given: $projectName");
+        continue;
+        }
+
+      $sql = "INSERT INTO client_site2project (siteid,projectid) VALUES ('".$this->Id."','".$projectid."')";
+      pdo_query($sql);
+      add_last_sql_error("clientSite::UpdateAllowedProjects()");
+      }
+    }
 }
 ?>

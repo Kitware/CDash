@@ -1099,6 +1099,15 @@ CREATE TABLE "client_site2program" (
 CREATE INDEX "client_site2program_siteid" on "client_site2program" ("siteid");
 
 --
+-- Table: client_site2project
+--
+CREATE TABLE "client_site2project" (
+  "projectid" bigint DEFAULT NULL,
+  "siteid" bigint DEFAULT NULL
+);
+CREATE INDEX "client_site2project_siteid" on "client_site2project" ("siteid");
+
+--
 -- Table structure for table projectrobot
 --
 CREATE TABLE "projectrobot" (

@@ -103,10 +103,10 @@ function client_submit()
     $ClientSite->OsId = $ClientOS->Id;
     $ClientSite->BaseDirectory = $xml->system->basedirectory;
     $ClientSite->Save();
-    
+
     $siteid = $ClientSite->Id;
-    
-    // Add/Update the compiler
+
+    // Add/Update the compiler(s)
     $compilers = array();
     foreach($xml->compiler as $compiler)
       {
@@ -129,7 +129,7 @@ function client_submit()
     $ClientCompiler->SiteId = $siteid;
     $ClientCompiler->DeleteUnused($compilers);
     
-    // Add/Update CMake
+    // Add/Update CMake(s)
     $cmakes = array();
     foreach($xml->cmake as $cmake)
       {
@@ -182,7 +182,15 @@ function client_submit()
       $programs[] = $prog;
       }
     $ClientSite->UpdatePrograms($programs);
-      
+
+    // Add/Update the list of allowed projects
+    $allowedProjects = array();
+    foreach($xml->allowedproject as $allowedProject)
+      {
+      $allowedProjects[] = $allowedProject;
+      }
+    $ClientSite->UpdateAllowedProjects($allowedProjects);
+
     return 1;
     }
   else if(isset($_GET['jobdone'])) // Mark the job has finished
@@ -195,7 +203,7 @@ function client_submit()
     $ClientJob->SiteId = $_GET['siteid'];
     $ClientJob->SetFinished();
     return 1;
-    }  
+    }
   else if(isset($_GET['jobfailed'])) // Mark the job has failed
     {
     if(!isset($_GET['siteid']))
@@ -206,7 +214,7 @@ function client_submit()
     $ClientJob->SiteId = $_GET['siteid'];
     $ClientJob->SetFailed();
     return 1;
-    }   
+    }
   return 0;
 }
 
