@@ -10,11 +10,9 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
 
@@ -143,38 +141,39 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
   // Append a timestamp for the file
   $currenttimestamp = microtime(true)*100;
 
+  $backupDir = $CDASH_BACKUP_DIRECTORY;
+  if(!file_exists($backupDir))
+    {
+    // try parent dir as well (for asynch submission)
+    $backupDir = "../$backupDir";
+    }
+
   if($file == "Project")
     {
-    $filename = $CDASH_BACKUP_DIRECTORY."/".$projectname."_".$currenttimestamp."_".$file.".xml";
+    $filename = $backupDir."/".$projectname."_".$currenttimestamp."_".$file.".xml";
     }
   else
     {
-    $filename = $CDASH_BACKUP_DIRECTORY."/".$projectname."_".$sitename."_".$buildname."_".$handler->getBuildStamp()."_".$currenttimestamp.'_'.$file.".xml";
+    $filename = $backupDir."/".$projectname."_".$sitename."_".$buildname."_".$handler->getBuildStamp()."_".$currenttimestamp.'_'.$file.".xml";
     }
 
   // If the file is other we append a number until we get a non existing file
   $i=1;
   while(file_exists($filename))
     {
-    $filename = $CDASH_BACKUP_DIRECTORY."/".$projectname."_".$sitename."_".$buildname."_".$handler->getBuildStamp().'_'.$currenttimestamp."_".$file."_".$i.".xml";
+    $filename = $backupDir."/".$projectname."_".$sitename."_".$buildname."_".$handler->getBuildStamp().'_'.$currenttimestamp."_".$file."_".$i.".xml";
     $i++;
     }
 
   // Make sure the file is in the right directory
-  $pos = strpos(realpath(dirname($filename)),realpath($CDASH_BACKUP_DIRECTORY));
+  $pos = strpos(realpath(dirname($filename)),realpath($backupDir));
   if($pos === FALSE || $pos!=0)
     {
-    echo "File cannot be store in backup directory: $filename";
-    add_log("File cannot be store in backup directory: $filename", "ctest_parse",LOG_ERR);
+    echo "File cannot be stored in backup directory: $filename";
+    add_log("File cannot be stored in backup directory: $filename (realpath = ".realpath($backupDir).")", "ctest_parse",LOG_ERR);
     return $handler;
-    }  
-    
-  if(!$handle = fopen($filename, 'w'))
-    {
-    //try parent dir as well
-    $filename = "../$filename";
     }
-      
+
   if(!$handle = fopen($filename, 'w'))
     {
     echo "Cannot open file ($filename)";
@@ -208,7 +207,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     {
     $md5sum = md5_file($filename);
     $md5error = false;
-    
+
     echo "<cdash version=\"$CDASH_VERSION\">\n";
     if($expected_md5 == '' || $expected_md5 == $md5sum)
       {
@@ -241,7 +240,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     add_log("Cannot open file ($filename)", "parse_xml_file",LOG_ERR);
     return $handler;
     }
-    
+
   //burn the first 8192 since we have already parsed it
   $content = fread($parseHandle, 8192);
   while(!feof($parseHandle))
@@ -257,7 +256,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
   xml_parse($parser, null, true);
   xml_parser_free($parser);
   fclose($parseHandle);
-  
+
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
     {
     $localParser->EndParsingFile();
