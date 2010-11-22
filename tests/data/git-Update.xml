@@ -71,6 +71,190 @@
       <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
     </Updated>
   </Directory>
+  <Directory>
+    <Name>zzzzZzzzzZzzzz Log Message Testing</Name>
+    <Updated>
+      <File>foo01.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo01.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>Log message no bug number no trailing newline</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo02.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo02.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>Log message no bug number one trailing newline
+</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo03.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo03.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG: 312345 Bug number space no trailing newline</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo04.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo04.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG: 412345. Bug number period no trailing newline</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo05.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo05.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG: 512345, bug number comma no trailing newline</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo06.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo06.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG: 612345; bug number semi-colon no trailing newline</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo07.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo07.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG: 712345- bug number hyphen no trailing newline</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo08.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo08.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>Trailing bug number no trailing newline (#812345)</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo09.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo09.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>Trailing bug number trailing newline (#912345)
+</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo10.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo10.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>Trailing bug number multiline (#678910)
+
+Line3 - line2 was empty
+Line4
+Line5 - trailing newline right here:
+</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo11.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo11.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>Trailing bug number multiline (#678911)
+
+Line3 - line2 was empty
+Line4
+Line5 - no trailing newline</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo12.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo12.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG:678912 no space before number</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo13.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo13.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG:678913_no_space_before_or_after_number</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo14.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo14.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG: 678914 and BUG: 667714 two bug numbers</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo15.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo15.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>BUG: 678915 and # 667715 two bug numbers - one of each reference style</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo16.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo16.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>Does not start with prefix. Nor does it use the hash/pound symbol. But it does claim to have fixed issue 678916.</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>foo17.txt</File>
+      <Directory>zzzzZzzzzZzzzz Log Message Testing</Directory>
+      <FullName>zzzzZzzzzZzzzz Log Message Testing/foo17.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Log>No prefix. No symbol. Fixes bug 678917</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+  </Directory>
   <EndDateTime>Dec 18 10:53 EST</EndDateTime>
   <EndTime>1261151631</EndTime>
 <ElapsedMinutes>0</ElapsedMinutes>

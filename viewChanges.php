@@ -21,6 +21,7 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+require_once("cdash/bugurl.php");
 
 // get_related_dates takes a projectname and basedate as input
 // and produces an array of related dates and times based on:
@@ -171,7 +172,7 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
 
   // Args to dbAdd : "true" means directory, "false" means file
   //
-  $xml .= "dbAdd(true, \"Updated files  (".count($commits).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\")\n";
+  $xml .= "dbAdd(true, \"Updated files  (".count($commits).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\")\n";
 
   $previousdir = "";
 
@@ -185,7 +186,7 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
 
     if($directory != $previousdir)
       {
-      $xml .= "dbAdd(true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\")\n";
+      $xml .= "dbAdd(true, \"".$directory."\", \"\", 1, \"\", \"1\", \"\", \"\", \"\", \"\", \"\")\n";
       $previousdir = $directory;
       }
 
@@ -231,7 +232,7 @@ function get_updates_xml_from_commits($projectname, $dates, $commits)
     $diff_url = get_diff_url(get_project_id($projectname),$projecturl, $directory, $filename, $revision);
     $diff_url = XMLStrFormat($diff_url);
 
-    $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\",\"".$commit['bugurl']."\")\n";
+    $xml .= "dbAdd(false, \"".$filename."  Revision: ".$revision."\",\"".$diff_url."\",2,\"\",\"1\",\"".$author."\",\"".$email."\",\"".$comment."\",\"".$commit['bugurl']."\",\"".$commit['bugid']."\",\"".$commit['bugpos']."\")\n";
     }
 
   $xml .= "</javascript>\n";
@@ -302,7 +303,13 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
     {
     $current_directory = '/';  
     }
-  
+
+  $baseurl = $project_array["bugtrackerfileurl"];
+  if(empty($baseurl))
+    {
+    $baseurl = $project_array["bugtrackerurl"];
+    }
+
   $commit['directory'] = $current_directory;
   $commit['filename'] = $current_filename;
   $commit['revision'] = $current_revision;
@@ -311,30 +318,17 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   $commit['author'] = $dailyupdate_array['author'];
   $commit['email'] = $dailyupdate_array['email'];
   $commit['comment'] = $dailyupdate_array['log'];
-  $commit['bugurl'] = '';
-  
+  $commit['bugurl'] = "";
+  $commit['bugid'] = "";
+  $commit['bugpos'] = "";
+
   $log = $commit['comment'];
-  // If the log starts with BUG:
-  if(strpos($log,"BUG:") !== FALSE && strpos($log,"BUG:")==0)
+  $bug = get_bug_from_log($log, $baseurl);
+  if ($bug !== FALSE)
     {
-    // Try to find the bugid
-    $posend = strpos($log," ",6);
-    if($posend === FALSE)
-      {
-      $posend = strlen($log);
-      }
-    $bugid = trim(substr($log,4,$posend-4));      
-    if(is_numeric($bugid))
-      {
-      // For now we assume we are using mantis in the future we might want 
-      // to support other bug trackers
-      $url = $project_array["bugtrackerfileurl"];
-      if(empty($url))
-        {
-        $url = $project_array["bugtrackerurl"];
-        }
-      $commit['bugurl'] = XMLStrFormat($url.$bugid);
-      } // end have bugid
+    $commit['bugurl'] = $bug[0];
+    $commit['bugid'] = $bug[1];
+    $commit['bugpos'] = $bug[2];
     }
 
   $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;

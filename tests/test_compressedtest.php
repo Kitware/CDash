@@ -20,7 +20,8 @@ class CompressedTestCase extends KWWebTestCase
     $name = 'TestCompressionExample';
     $description = 'Project compression example';
     $svnviewerurl = 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample';
-    $this->createProject($name,$description,$svnviewerurl);
+    $bugtrackerfileurl = 'http://public.kitware.com/Bug/view.php?id=';
+    $this->createProject($name,$description,$svnviewerurl,$bugtrackerfileurl);
     $content = $this->connect($this->url.'/index.php?project=TestCompressionExample');
     if(!$content)
       {
@@ -146,7 +147,7 @@ class CompressedTestCase extends KWWebTestCase
       {
       return;
       } 
-    $content = $this->analyse($this->clickLink('5'));
+    $content = $this->analyse($this->clickLink('22'));
     $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample&amp;rev=23a41258921e1cba8581ee2fa5add00f817f39fe';
     if(!$this->findString($content,$expected))
        {
