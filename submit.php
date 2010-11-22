@@ -69,4 +69,5 @@ else
   {
   do_submit($fp, $projectid, $expected_md5);
   }
+fclose($fp);
 ?>
