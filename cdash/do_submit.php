@@ -99,7 +99,6 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
   
   // Create the RSS feed
   CreateRSSFeed($projectid);
-  fclose($filehandle);
 }
 
 /** Asynchronous submission */
@@ -128,12 +127,10 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
       add_log("Cannot write to file ($filename)", "do_submit_asynchronous",
         LOG_ERR, $projectid);
       fclose($outfile);
-      fclose($filehandle);
       return;
       }
     }
   fclose($outfile);
-  fclose($filehandle);
 
   $md5sum = md5_file($filename);
   $md5error = false;
