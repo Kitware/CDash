@@ -280,7 +280,6 @@ class ClientJobSchedule
     pdo_query("DELETE FROM client_jobschedule2library WHERE scheduleid=".qnum($this->Id));
     pdo_query("DELETE FROM client_jobschedule2os WHERE scheduleid=".qnum($this->Id));
     pdo_query("DELETE FROM client_jobschedule2site WHERE scheduleid=".qnum($this->Id));
-    pdo_query("DELETE FROM client_jobschedule2build WHERE scheduleid=".qnum($this->Id));
     add_last_sql_error("ClientJobSchedule::RemoveDependencies");
     }  // end RemoveDependencies
 
@@ -892,4 +891,22 @@ class ClientJobSchedule
       }
     }
 
-} // end class clienjobschedule
+  /** Get all builds associated with this job schedule */
+  function GetAssociatedBuilds()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule::GetAssociateBuilds","Id not set");
+      return false;
+      }
+    $result = pdo_query("SELECT buildid FROM client_jobschedule2build WHERE scheduleid='".$this->Id."'");
+
+    $builds = array();
+    while($row = pdo_fetch_array($result))
+      {
+      $builds[] = $row['buildid'];
+      }
+    return $builds;
+    }
+
+} // end class clientjobschedule
