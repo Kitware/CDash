@@ -193,7 +193,8 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     
     $currentURI = $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
-    $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid;
+    $clientscheduleid = isset($_GET["clientscheduleid"]) ? $_GET["clientscheduleid"] : 0;
+    $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid."&clientscheduleid=".$clientscheduleid;
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $request);

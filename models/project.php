@@ -1304,6 +1304,9 @@ class Project
     $ctest_script .= 'ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
     $ctest_script .= 'ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
     $ctest_script .= 'ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)'."\n";
+    $ctest_script .= '# The following lines are used to associate a build id with this job.'."\n";
+    $ctest_script .= 'set(CTEST_DROP_SITE ${JOB_DROP_SITE})'."\n";
+    $ctest_script .= 'set(CTEST_DROP_LOCATION ${JOB_DROP_LOCATION})'."\n";
     $ctest_script .= 'ctest_submit(RETURN_VALUE res)'."\n";
     $ctest_script .= "\n";
     $ctest_script .= 'message("DONE")'."\n";

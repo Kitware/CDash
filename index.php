@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT siteid FROM client_site2project LIMIT 1") )
+  if(!pdo_query("SELECT scheduleid FROM client_jobschedule2build LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -71,9 +71,9 @@ function generate_index_table()
    $rows = pdo_query("SHOW table STATUS");
     $dbsize = 0;
     while ($row = pdo_fetch_array($rows)) 
-     {
-    $dbsize += $row['Data_length'] + $row['Index_length']; 
-    }
+      {
+      $dbsize += $row['Data_length'] + $row['Index_length']; 
+      }
     
    $ext = "b";
    if($dbsize>1024)
