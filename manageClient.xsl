@@ -263,11 +263,13 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
 <div id="result" style="display:none;">
 <img src="images/loading.gif" /></div>
 
-<hr/>
-<h3>Builds Submitted For This Job</h3>
-<xsl:for-each select="/cdash/build">
-  <a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="id" /></xsl:attribute><xsl:value-of select="id" /></a><br />
-</xsl:for-each>
+<xsl:if test="/cdash/edit=1">
+  <hr/>
+  <h3>Builds Submitted For This Job</h3>
+  <xsl:for-each select="/cdash/build">
+    <a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="id" /></xsl:attribute><xsl:value-of select="id" /></a><br />
+  </xsl:for-each>
+</xsl:if>
 
 <!-- FOOTER -->
 <br/><br/>
