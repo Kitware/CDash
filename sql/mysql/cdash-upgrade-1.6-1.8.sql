@@ -62,3 +62,10 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2build (
   buildid int(11) NOT NULL,
   UNIQUE KEY scheduleid (scheduleid,buildid)
 );
+
+CREATE TABLE IF NOT EXISTS `apitoken` (
+  `projectid` int(11) NOT NULL,
+  `token` varchar(40),
+  `expiration_date` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  KEY `token` (`token`)
+);

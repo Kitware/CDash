@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -25,7 +25,7 @@ require_once("filterdataFunctions.php");
 
 /** Generate the index table */
 function generate_index_table()
-{ 
+{
   $noforcelogin = 1;
   include("cdash/config.php");
   require_once("cdash/pdo.php");
@@ -52,7 +52,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT scheduleid FROM client_jobschedule2build LIMIT 1") )
+  if(!pdo_query("SELECT webapikey FROM project LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -64,17 +64,17 @@ function generate_index_table()
    $xml .= add_XML_value("noregister","1");
    }
  $xml .= "</dashboard> ";
- 
+
  // Show the size of the database
- if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql")) 
+ if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql"))
    {
    $rows = pdo_query("SHOW table STATUS");
     $dbsize = 0;
-    while ($row = pdo_fetch_array($rows)) 
+    while ($row = pdo_fetch_array($rows))
       {
-      $dbsize += $row['Data_length'] + $row['Index_length']; 
+      $dbsize += $row['Data_length'] + $row['Index_length'];
       }
-    
+
    $ext = "b";
    if($dbsize>1024)
      {
@@ -95,20 +95,20 @@ function generate_index_table()
      {
      $dbsize /= 1024;
      $ext = "Tb";
-     } 
-     
+     }
+
    $xml .= "<database>";
    $xml .= add_XML_value("size",round($dbsize,1).$ext);
    $xml .= "</database>";
    }
-  else 
+  else
     {
     // no equivalent yet for other databases
     $xml .= "<database>";
     $xml .= add_XML_value("size","NA");
     $xml .= "</database>";
     }
- 
+
   // User
   $userid = 0;
   if(isset($_SESSION['cdash']))
@@ -121,7 +121,7 @@ function generate_index_table()
     $xml .= add_XML_value("admin",$user_array["admin"]);
     $xml .= "</user>";
     }
-        
+
   $projects = get_projects($userid);
   $row=0;
   foreach($projects as $project)
@@ -139,7 +139,7 @@ function generate_index_table()
       $xml .= "<lastbuild>".date(FMT_DATETIMESTD,strtotime($project['last_build']. "UTC"))."</lastbuild>";
       $xml .= "<lastbuilddate>".date(FMT_DATE,strtotime($project['last_build']. "UTC"))."</lastbuilddate>";
       }
-    
+
     // Display the first build
     if($project['first_build'] == "NA")
       {
@@ -156,7 +156,7 @@ function generate_index_table()
       {
       $dayssincelastsubmission = (time()-strtotime($project['last_build']))/86400;
       }
-      
+
     if($dayssincelastsubmission > $CDASH_ACTIVE_PROJECT_DAYS)
       {
       $xml .= "<active>0</active>";
@@ -165,7 +165,7 @@ function generate_index_table()
       {
       $xml .= "<active>1</active>";
       }
-        
+
     $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
@@ -290,7 +290,7 @@ function get_multiple_builds_hyperlink($build_row, $filterdata)
       {
         $n++;
 
-        $existing_filter_params .= 
+        $existing_filter_params .=
           '&field' . $n . '=' . $filter['field'] . '/' . $filter['fieldtype'] .
           '&compare' . $n . '=' . $filter['compare'] .
           '&value' . $n . '=' . htmlspecialchars($filter['value']);
@@ -311,7 +311,7 @@ function get_multiple_builds_hyperlink($build_row, $filterdata)
 
 /** Generate the main dashboard XML */
 function generate_main_dashboard_XML($projectid,$date)
-{  
+{
   $start = microtime_float();
   $noforcelogin = 1;
   include_once("cdash/config.php");
@@ -340,11 +340,11 @@ function generate_main_dashboard_XML($projectid,$date)
     $svnurl = make_cdash_url(htmlentities($project_array["cvsurl"]));
     $homeurl = make_cdash_url(htmlentities($project_array["homeurl"]));
     $bugurl = make_cdash_url(htmlentities($project_array["bugtrackerurl"]));
-    $googletracker = htmlentities($project_array["googletracker"]);  
+    $googletracker = htmlentities($project_array["googletracker"]);
     $docurl = make_cdash_url(htmlentities($project_array["documentationurl"]));
-    $projectpublic =  $project_array["public"]; 
+    $projectpublic =  $project_array["public"];
     $projectname = $project_array["name"];
-    
+
     if(isset($project_array['testingdataurl']) && $project_array['testingdataurl'] != '')
       {
       $testingdataurl = make_cdash_url(htmlentities($project_array['testingdataurl']));
@@ -356,7 +356,7 @@ function generate_main_dashboard_XML($projectid,$date)
     }
 
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
-    
+
   $xml = '<?xml version="1.0"?'.'><cdash>';
   $xml .= "<title>CDash - ".$projectname."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -384,34 +384,34 @@ function generate_main_dashboard_XML($projectid,$date)
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid);
 
-  // Main dashboard section 
+  // Main dashboard section
   $xml .=
   "<dashboard>
   <datetime>".date("l, F d Y H:i:s T",time())."</datetime>
   <date>".$date."</date>
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <svn>".$svnurl."</svn>
-  <bugtracker>".$bugurl."</bugtracker> 
-  <googletracker>".$googletracker."</googletracker> 
+  <bugtracker>".$bugurl."</bugtracker>
+  <googletracker>".$googletracker."</googletracker>
   <documentation>".$docurl."</documentation>
   <home>".$homeurl."</home>
-  <logoid>".$logoid."</logoid> 
-  <projectid>".$projectid."</projectid> 
-  <projectname>".$projectname."</projectname> 
-  <projectname_encoded>".urlencode($projectname)."</projectname_encoded> 
-  <previousdate>".$previousdate."</previousdate> 
-  <projectpublic>".$projectpublic."</projectpublic> 
-  <displaylabels>".$project_array["displaylabels"]."</displaylabels> 
+  <logoid>".$logoid."</logoid>
+  <projectid>".$projectid."</projectid>
+  <projectname>".$projectname."</projectname>
+  <projectname_encoded>".urlencode($projectname)."</projectname_encoded>
+  <previousdate>".$previousdate."</previousdate>
+  <projectpublic>".$projectpublic."</projectpublic>
+  <displaylabels>".$project_array["displaylabels"]."</displaylabels>
   <nextdate>".$nextdate."</nextdate>";
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {
     include_once("local/models/proProject.php");
-    $pro= new proProject; 
+    $pro= new proProject;
     $pro->ProjectId=$projectid;
     $xml.="<proedition>".$pro->GetEdition(1)."</proedition>";
     }
- 
-  if($currentstarttime>time()) 
+
+  if($currentstarttime>time())
    {
    $xml .= "<future>1</future>";
     }
@@ -434,30 +434,30 @@ function generate_main_dashboard_XML($projectid,$date)
   $end_timestamp = $currentstarttime+3600*24;
 
   $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);   
-  
+  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
+
   // Add the extra url if necessary
   if(isset($_GET["display"]) && $_GET["display"]=="project")
     {
     $xml .= add_XML_value("extraurl","&display=project");
     }
-    
+
   // If we have a subproject
   if(isset($_GET["subproject"]))
     {
     // Add an extra URL argument for the menu
     $xml .= add_XML_value("extraurl","&subproject=".$_GET["subproject"]);
     $xml .= add_XML_value("subprojectname",$_GET["subproject"]);
-    
+
     $xml .= "<subproject>";
-    
+
     $SubProject = new SubProject();
     $SubProject->Name = $_GET["subproject"];
     $SubProject->ProjectId = $projectid;
     $subprojectid = $SubProject->GetIdFromName();
-    
+
     $xml .= add_XML_value("name",$SubProject->Name );
-     
+
     $rowparity = 0;
     $dependencies = $SubProject->GetDependencies();
     foreach($dependencies as $dependency)
@@ -468,7 +468,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("rowparity",$rowparity);
       $xml .= add_XML_value("name",$DependProject->GetName());
       $xml .= add_XML_value("nbuilderror",$DependProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nbuildwarning",$DependProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate)); 
+      $xml .= add_XML_value("nbuildwarning",$DependProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("nbuildpass",$DependProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("nconfigureerror",$DependProject->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("nconfigurewarning",$DependProject->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
@@ -481,10 +481,10 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("lastsubmission","NA");
         }
       else
-        {  
+        {
         $xml .= add_XML_value("lastsubmission",$DependProject->GetLastSubmission());
         }
-      $rowparity = ($rowparity==1) ? 0:1;  
+      $rowparity = ($rowparity==1) ? 0:1;
       $xml .= "</dependency>";
       }
     $xml .= "</subproject>";
@@ -497,14 +497,14 @@ function generate_main_dashboard_XML($projectid,$date)
 
   // updates
   $xml .= "<updates>";
-  
+
   $gmdate = gmdate(FMT_DATE, $currentstarttime);
   $xml .= "<url>viewChanges.php?project=".urlencode($projectname)."&amp;date=".$gmdate."</url>";
-  
-  $dailyupdate = pdo_query("SELECT count(ds.dailyupdateid),count(distinct ds.author) 
+
+  $dailyupdate = pdo_query("SELECT count(ds.dailyupdateid),count(distinct ds.author)
                             FROM dailyupdate AS d LEFT JOIN dailyupdatefile AS ds ON (ds.dailyupdateid = d.id)
                             WHERE d.date='$gmdate' and d.projectid='$projectid' GROUP BY ds.dailyupdateid");
-  
+
   if(pdo_num_rows($dailyupdate)>0)
     {
     $dailupdate_array = pdo_fetch_array($dailyupdate);
@@ -514,7 +514,7 @@ function generate_main_dashboard_XML($projectid,$date)
   else
    {
    $xml .= "<nchanges>-1</nchanges>";
-   }    
+   }
   $xml .= add_XML_value("timestamp",date("l, F d Y H:i:s T",$currentstarttime));
   $xml .= "</updates>";
 
@@ -547,8 +547,8 @@ function generate_main_dashboard_XML($projectid,$date)
   // Local function to add expected builds
   function add_expected_builds($groupid,$currentstarttime,$received_builds)
     {
-    include('cdash/config.php');  
-    
+    include('cdash/config.php');
+
     $currentUTCTime =  gmdate(FMT_DATETIME,$currentstarttime+3600*24);
     $xml = "";
     $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
@@ -571,7 +571,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("buildtype",$buildtype);
         $xml .= add_XML_value("buildgroupid",$groupid);
         $xml .= add_XML_value("expected","1");
-           
+
         // compute historical average to get approximate expected time
         // PostgreSQL doesn't have the necessary functions for this
         if($CDASH_DB_TYPE == 'pgsql')
@@ -583,32 +583,32 @@ function generate_main_dashboard_XML($projectid,$date)
           $time = 0;
           while($query_array = pdo_fetch_array($query))
             {
-            $time += strtotime(date("H:i:s",strtotime($query_array['submittime']))); 
+            $time += strtotime(date("H:i:s",strtotime($query_array['submittime'])));
             }
           if(pdo_num_rows($query)>0)
-            {  
+            {
             $time /= pdo_num_rows($query);
             }
           $nextExpected = strtotime(date("H:i:s",$time)." UTC");
           }
         else
-          {   
+          {
           $query = pdo_query("SELECT AVG(TIME_TO_SEC(TIME(submittime))) FROM (SELECT submittime FROM build,build2group
                                 WHERE build2group.buildid=build.id AND siteid='$siteid' AND name='$buildname'
                                 AND type='$buildtype' AND build2group.groupid='$groupid'
                                 ORDER BY id DESC LIMIT 5) as t");
           $query_array = pdo_fetch_array($query);
-          $time = $query_array[0];  
+          $time = $query_array[0];
           $hours = floor($time/3600);
           $time = ($time%3600);
           $minutes = floor($time/60);
           $seconds = ($time%60);
           $nextExpected = strtotime($hours.":".$minutes.":".$seconds." UTC");
           }
-        
-        
-          
-        $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"]; 
+
+
+
+        $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"];
         $divname = str_replace("+","_",$divname);
         $divname = str_replace(".","_",$divname);
         $divname = str_replace(' ',"_",$divname);
@@ -621,7 +621,7 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     return $xml;
     }
- 
+
   // add a request for the subproject
   $subprojectsql = "";
   $subprojecttablesql = "";
@@ -629,9 +629,9 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     $subprojecttablesql = ",subproject2build AS sp2b";
     $subprojectsql = " AND sp2b.buildid=b.id AND sp2b.subprojectid=".$subprojectid;
-    }   
-                                                   
-  
+    }
+
+
   // Use this as the default date clause, but if $filterdata has a date clause,
   // then cancel this one out:
   //
@@ -641,7 +641,7 @@ function generate_main_dashboard_XML($projectid,$date)
     {
     $date_clause = '';
     }
-    
+
   $build_rows = array();
 
   // If the user is logged in we display if the build has some changes for him
@@ -649,18 +649,18 @@ function generate_main_dashboard_XML($projectid,$date)
   if(isset($_SESSION['cdash']))
     {
     $userupdatesql = "(SELECT count(updatefile.buildid) FROM updatefile,user2project,
-                      user2repository 
-                      WHERE buildid=b.id AND user2project.projectid=b.projectid 
+                      user2repository
+                      WHERE buildid=b.id AND user2project.projectid=b.projectid
                       AND user2project.userid='".$_SESSION['cdash']['loginid']."'
                       AND user2repository.userid=user2project.userid
                       AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
                       AND user2repository.credential=updatefile.author) AS userupdates,";
     }
-           
+
   $sql =  "SELECT b.id,b.siteid,
                   bu.status AS updatestatus,
                   bu.starttime AS updatestarttime,
-                  bu.endtime AS updateendtime, 
+                  bu.endtime AS updateendtime,
                   bu.nfiles AS countupdatefiles,
                   bu.warnings AS countupdatewarnings,
                   c.status AS configurestatus,
@@ -706,27 +706,27 @@ function generate_main_dashboard_XML($projectid,$date)
                   LEFT JOIN testdiff AS tpassed_diff ON (tpassed_diff.buildid=b.id AND tpassed_diff.type=2)
                   LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
                   WHERE s.id=b.siteid AND ".$date_clause."
-                   b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
+                   b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id
                    AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
                   ".$subprojectsql." ".$filter_sql." ORDER BY gp.position ASC,b.name ASC,b.siteid ASC,b.stamp DESC";
 
-      
+
   // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = pdo_query($sql);
   echo pdo_error();
-  
+
   // The SQL results are ordered by group so this should work
   // Group position have to be continuous
   $previousgroupposition = -1;
-  
+
   $received_builds = array();
 
   // Find the last position of the group
-  $groupposition_array = pdo_fetch_array(pdo_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g 
-                                                        WHERE g.projectid='$projectid' AND g.id=gp.buildgroupid 
+  $groupposition_array = pdo_fetch_array(pdo_query("SELECT gp.position FROM buildgroupposition AS gp,buildgroup AS g
+                                                        WHERE g.projectid='$projectid' AND g.id=gp.buildgroupid
                                                         AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
                                                         ORDER BY gp.position DESC LIMIT 1"));
-                                                        
+
   $lastGroupPosition = $groupposition_array["position"];
 
 
@@ -791,8 +791,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $siteid = $build_row['siteid'];
 
     $build_row['buildids'][] = $buildid;
-    $build_row['maxstarttime'] = $build_row['starttime'];   
-    
+    $build_row['maxstarttime'] = $build_row['starttime'];
+
     // One more query for the labels
     $build_row['labels'] = array();
     $label_rows = pdo_all_rows_query(
@@ -811,10 +811,10 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     else
      {
-     $build_row['updateduration'] = 0;  
+     $build_row['updateduration'] = 0;
      }
-      
-      
+
+
     if(strlen($build_row["updatestatus"]) > 0 &&
        $build_row["updatestatus"]!="0")
       {
@@ -826,17 +826,17 @@ function generate_main_dashboard_XML($projectid,$date)
       }
 
     $build_row['buildduration'] = round((strtotime($build_row['endtime'])-strtotime($build_row['starttime']))/60,1);
-    
+
     // Error/Warnings differences
     if(empty($build_row['countbuilderrordiffp']))
       {
       $build_row['countbuilderrordiffp'] = 0;
-      } 
+      }
     if(empty($build_row['countbuilderrordiffn']))
       {
       $build_row['countbuilderrordiffn'] = 0;
-      } 
-         
+      }
+
     if(empty($build_row['countbuildwarningdiffp']))
       {
       $build_row['countbuildwarningdiffp'] = 0;
@@ -845,11 +845,11 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $build_row['countbuildwarningdiffn'] = 0;
       }
-      
+
     $build_row['hasconfigurestatus'] = 0;
     $build_row['countconfigureerrors'] = 0;
     $build_row['configureduration'] = 0;
-        
+
     if(strlen($build_row['configurestatus'])>0)
       {
       $build_row['hasconfigurestatus'] = 1;
@@ -860,12 +860,12 @@ function generate_main_dashboard_XML($projectid,$date)
     if(empty($build_row['countconfigurewarnings']))
       {
       $build_row['countconfigurewarnings'] = 0;
-      } 
-    
+      }
+
     if(empty($build_row['countconfigurewarningdiff']))
       {
       $build_row['countconfigurewarningdiff'] = 0;
-      } 
+      }
 
 
     $build_row['hastest'] = 0;
@@ -873,7 +873,7 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $build_row['hastest'] = 1;
       }
-      
+
     if(empty($build_row['testsduration']))
       {
       $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
@@ -882,12 +882,12 @@ function generate_main_dashboard_XML($projectid,$date)
     else
       {
       $build_row['testsduration'] = round($build_row['testsduration'],1); //already in minutes
-      } 
-    
+      }
+
     // Build notes
     $countbuildnotes = pdo_single_row_query("SELECT count(*) AS c FROM buildnote WHERE buildid='".$buildid."'");
     $build_row['countbuildnotes'] = $countbuildnotes['c'];
-     
+
     //  Save the row in '$build_rows'
     $build_rows[] = $build_row;
     }
@@ -971,7 +971,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $build_rows_collapsed[$idx]['countbuilderrordiffn'] += $build_row['countbuilderrordiffn'];
         $build_rows_collapsed[$idx]['countbuildwarningdiffp'] += $build_row['countbuildwarningdiffp'];
         $build_rows_collapsed[$idx]['countbuildwarningdiffn'] += $build_row['countbuildwarningdiffn'];
-        
+
         $build_rows_collapsed[$idx]['hasconfigurestatus'] += $build_row['hasconfigurestatus'];
         $build_rows_collapsed[$idx]['countconfigureerrors'] += $build_row['countconfigureerrors'];
         $build_rows_collapsed[$idx]['countconfigurewarnings'] += $build_row['countconfigurewarnings'];
@@ -1036,24 +1036,24 @@ function generate_main_dashboard_XML($projectid,$date)
           {
           $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds);
           }
-          
+
         $xml .= add_XML_value("totalUpdatedFiles",$totalUpdatedFiles);
         $xml .= add_XML_value("totalUpdateError",$totalUpdateError);
         $xml .= add_XML_value("totalUpdateWarning",$totalUpdateWarning);
         $xml .= add_XML_value("totalUpdateDuration",$totalUpdateDuration);
-      
+
         $xml .= add_XML_value("totalConfigureDuration",$totalConfigureDuration);
         $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
         $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
-      
+
         $xml .= add_XML_value("totalError",$totalerrors);
         $xml .= add_XML_value("totalWarning",$totalwarnings);
         $xml .= add_XML_value("totalBuildDuration",$totalBuildDuration);
-      
+
         $xml .= add_XML_value("totalNotRun",$totalnotrun);
         $xml .= add_XML_value("totalFail",$totalfail);
-        $xml .= add_XML_value("totalPass",$totalpass); 
-        $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);  
+        $xml .= add_XML_value("totalPass",$totalpass);
+        $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);
         $xml .= "</buildgroup>";
         }
 
@@ -1067,7 +1067,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
       for($i=$prevpos;$i<$groupposition;$i++)
         {
-        $group = pdo_fetch_array(pdo_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
+        $group = pdo_fetch_array(pdo_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid
                                                 AND gp.position='$i' AND g.projectid='$projectid'
                                                 AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate'  OR gp.endtime='1980-01-01 00:00:00')
                                                 "));
@@ -1081,7 +1081,7 @@ function generate_main_dashboard_XML($projectid,$date)
           $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds);
           }
         $xml .= "</buildgroup>";
-        }  
+        }
 
 
       $xml .= "<buildgroup>";
@@ -1097,7 +1097,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $totalBuildDuration = 0;
       $totalnotrun = 0;
       $totalfail= 0;
-      $totalpass = 0;  
+      $totalpass = 0;
       $totalTestsDuration = 0;
       $xml .= add_default_buildgroup_sortlist($groupname);
       $xml .= add_XML_value("name",$groupname);
@@ -1130,8 +1130,8 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("buildname", $build_array["name"]);
     if(isset($build_array["userupdates"]))
       {
-      $xml .= add_XML_value("userupdates", $build_array["userupdates"]);    
-      } 
+      $xml .= add_XML_value("userupdates", $build_array["userupdates"]);
+      }
     $xml .= add_XML_value("buildid", $build_array["id"]);
     $xml .= add_XML_value("generator", $build_array["generator"]);
 
@@ -1177,7 +1177,7 @@ function generate_main_dashboard_XML($projectid,$date)
       else
         {
         $xml .= add_XML_value("errors", 0);
-  
+
         if($build_array['countupdatewarnings']>0)
           {
           $xml .= add_XML_value("warning", 1);
@@ -1199,14 +1199,14 @@ function generate_main_dashboard_XML($projectid,$date)
       $nerrors = $build_array['countbuilderrors'];
       $totalerrors += $nerrors;
       $xml .= add_XML_value("error", $nerrors);
-    
+
       $nwarnings = $build_array['countbuildwarnings'];
       $totalwarnings += $nwarnings;
       $xml .= add_XML_value("warning", $nwarnings);
       $duration = $build_array['buildduration'];
       $totalBuildDuration += $duration;
       $xml .= add_XML_value("time", $duration);
-      
+
       $diff = $build_array['countbuilderrordiffp'];
       if($diff!=0)
         {
@@ -1217,7 +1217,7 @@ function generate_main_dashboard_XML($projectid,$date)
         {
         $xml .= add_XML_value("nerrordiffn", $diff);
         }
-        
+
       $diff = $build_array['countbuildwarningdiffp'];
       if($diff!=0)
         {
@@ -1227,7 +1227,7 @@ function generate_main_dashboard_XML($projectid,$date)
       if($diff!=0)
         {
         $xml .= add_XML_value("nwarningdiffn", $diff);
-        }  
+        }
       }
     $xml .= "</compilation>";
 
@@ -1270,7 +1270,7 @@ function generate_main_dashboard_XML($projectid,$date)
         {
         $xml .= add_XML_value("nnotrundiffn",$build_array['counttestsnotrundiffn']);
         }
- 
+
       $nfail = $build_array['counttestsfailed'];
 
       if($build_array['counttestsfaileddiffp']!=0)
@@ -1281,7 +1281,7 @@ function generate_main_dashboard_XML($projectid,$date)
         {
         $xml .= add_XML_value("nfaildiffn", $build_array['counttestsfaileddiffn']);
         }
-          
+
       $npass = $build_array['counttestspassed'];
 
       if($build_array['counttestspasseddiffp']!=0)
@@ -1292,7 +1292,7 @@ function generate_main_dashboard_XML($projectid,$date)
         {
         $xml .= add_XML_value("npassdiffn", $build_array['counttestspasseddiffn']);
         }
-        
+
       if($project_array["showtesttime"] == 1)
         {
         $xml .= add_XML_value("timestatus", $build_array['countteststimestatusfailed']);
@@ -1304,7 +1304,7 @@ function generate_main_dashboard_XML($projectid,$date)
         if($build_array['countteststimestatusfaileddiffn']!=0)
           {
           $xml .= add_XML_value("ntimediffn", $build_array['countteststimestatusfaileddiffn']);
-          }  
+          }
         }
 
       $totalnotrun += $nnotrun;
@@ -1336,7 +1336,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = pdo_fetch_array($coverages))
       {
-      $xml .= "<coverage>";          
+      $xml .= "<coverage>";
       $xml .= "  <site>".$build_array["sitename"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
@@ -1392,9 +1392,9 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <site>".$build_array["sitename"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
-      
+
       $xml .= "  <checker>".$dynanalysis_array["checker"]."</checker>";
-      $defect = pdo_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d 
+      $defect = pdo_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d
                                               WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
       $defectcount = pdo_fetch_array($defect);
       if(!isset($defectcount[0]))
@@ -1402,7 +1402,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $defectcounts = 0;
         }
       else
-        { 
+        {
         $defectcounts = $defectcount[0];
         }
       $xml .= "  <defectcount>".$defectcounts."</defectcount>";
@@ -1434,24 +1434,24 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $xml .= add_expected_builds($groupid,$currentstarttime,$received_builds);
       }
-    
+
     $xml .= add_XML_value("totalUpdatedFiles",$totalUpdatedFiles);
     $xml .= add_XML_value("totalUpdateError",$totalUpdateError);
     $xml .= add_XML_value("totalUpdateWarning",$totalUpdateWarning);
     $xml .= add_XML_value("totalUpdateDuration",$totalUpdateDuration);
-  
+
     $xml .= add_XML_value("totalConfigureDuration",$totalConfigureDuration);
     $xml .= add_XML_value("totalConfigureError",$totalConfigureError);
     $xml .= add_XML_value("totalConfigureWarning",$totalConfigureWarning);
-  
+
     $xml .= add_XML_value("totalError",$totalerrors);
     $xml .= add_XML_value("totalWarning",$totalwarnings);
     $xml .= add_XML_value("totalBuildDuration",$totalBuildDuration);
-  
+
     $xml .= add_XML_value("totalNotRun",$totalnotrun);
     $xml .= add_XML_value("totalFail",$totalfail);
-    $xml .= add_XML_value("totalPass",$totalpass); 
-    $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);  
+    $xml .= add_XML_value("totalPass",$totalpass);
+    $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);
     $xml .= "</buildgroup>";
     }
 
@@ -1465,10 +1465,10 @@ function generate_main_dashboard_XML($projectid,$date)
 
   for($i=$prevpos;$i<=$lastGroupPosition;$i++)
     {
-    $group = pdo_fetch_array(pdo_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid 
+    $group = pdo_fetch_array(pdo_query("SELECT g.name,g.id FROM buildgroup AS g,buildgroupposition AS gp WHERE g.id=gp.buildgroupid
                                                                                      AND gp.position='$i' AND g.projectid='$projectid'
                                                                                      AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate'  OR gp.endtime='1980-01-01 00:00:00')"));
-    
+
     $xml .= "<buildgroup>";
     $xml .= add_default_buildgroup_sortlist($group['name']);
     $xml .= add_XML_value("id",$group["id"]);
@@ -1478,7 +1478,7 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $xml .= add_expected_builds($group["id"],$currentstarttime,$received_builds);
       }
-    $xml .= "</buildgroup>";  
+    $xml .= "</buildgroup>";
     }
 
   $xml .= add_XML_value("enableTestTiming",$project_array["showtesttime"]);
@@ -1502,7 +1502,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
   include('cdash/version.php');
   include_once("models/banner.php");
   include_once("models/subproject.php");
-      
+
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   if(!$db)
     {
@@ -1514,15 +1514,15 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     echo "Error selecting CDash database<br>\n";
     return;
     }
-  
+
   $Project = new Project();
   $Project->Id = $projectid;
   $Project->Fill();
-  
+
   $homeurl = make_cdash_url(htmlentities($Project->HomeUrl));
 
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
-    
+
   $xml = '<?xml version="1.0"?'.'><cdash>';
   $xml .= "<title>CDash - ".$Project->Name."</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -1548,15 +1548,15 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     }
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$Project->NightlyTime);
-  
-  
+
+
   $svnurl = make_cdash_url(htmlentities($Project->CvsUrl));
   $homeurl = make_cdash_url(htmlentities($Project->HomeUrl));
   $bugurl = make_cdash_url(htmlentities($Project->BugTrackerUrl));
-  $googletracker = htmlentities($Project->GoogleTracker);  
-  $docurl = make_cdash_url(htmlentities($Project->DocumentationUrl));  
-  
-  // Main dashboard section 
+  $googletracker = htmlentities($Project->GoogleTracker);
+  $docurl = make_cdash_url(htmlentities($Project->DocumentationUrl));
+
+  // Main dashboard section
   $xml .=
   "<dashboard>
   <datetime>".date("l, F d Y H:i:s T",time())."</datetime>
@@ -1564,25 +1564,25 @@ function generate_subprojects_dashboard_XML($projectid,$date)
   <unixtimestamp>".$currentstarttime."</unixtimestamp>
   <svn>".$svnurl."</svn>
   <bugtracker>".$bugurl."</bugtracker>
-  <googletracker>".$googletracker."</googletracker> 
+  <googletracker>".$googletracker."</googletracker>
   <documentation>".$docurl."</documentation>
   <home>".$homeurl."</home>
-  <logoid>".$Project->getLogoID()."</logoid> 
-  <projectid>".$projectid."</projectid> 
-  <projectname>".$Project->Name."</projectname> 
-  <projectname_encoded>".urlencode($Project->Name)."</projectname_encoded> 
-  <previousdate>".$previousdate."</previousdate> 
-  <projectpublic>".$Project->Public."</projectpublic> 
+  <logoid>".$Project->getLogoID()."</logoid>
+  <projectid>".$projectid."</projectid>
+  <projectname>".$Project->Name."</projectname>
+  <projectname_encoded>".urlencode($Project->Name)."</projectname_encoded>
+  <previousdate>".$previousdate."</previousdate>
+  <projectpublic>".$Project->Public."</projectpublic>
   <nextdate>".$nextdate."</nextdate>";
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {
     include_once("local/models/proProject.php");
-    $pro= new proProject; 
+    $pro= new proProject;
     $pro->ProjectId=$projectid;
     $xml.="<proedition>".$pro->GetEdition(1)."</proedition>";
     }
- 
-  if($currentstarttime>time()) 
+
+  if($currentstarttime>time())
    {
    $xml .= "<future>1</future>";
     }
@@ -1604,7 +1604,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
   $end_timestamp = $currentstarttime+3600*24;
 
   $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);                                                      
+  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
 
 
   // User
@@ -1625,11 +1625,11 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("admin",$isadmin);
     $xml .= "</user>";
     }
-     
+
   // Get some information about the project
   $xml .= "<project>";
   $xml .= add_XML_value("nbuilderror",$Project->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("nbuildwarning",$Project->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate)); 
+  $xml .= add_XML_value("nbuildwarning",$Project->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
   $xml .= add_XML_value("nbuildpass",$Project->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
   $xml .= add_XML_value("nconfigureerror",$Project->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
   $xml .= add_XML_value("nconfigurewarning",$Project->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
@@ -1642,11 +1642,11 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("lastsubmission","NA");
     }
   else
-    {  
+    {
     $xml .= add_XML_value("lastsubmission",$Project->GetLastSubmission());
-    }  
+    }
   $xml .= "</project>";
-  
+
   // Look for the subproject
   $row=0;
   $subprojectids = $Project->GetSubProjects();
@@ -1657,9 +1657,9 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     $xml .= "<subproject>";
     $xml .= add_XML_value("row",$row);
     $xml .= add_XML_value("name",$SubProject->GetName());
-    
+
     $xml .= add_XML_value("nbuilderror",$SubProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nbuildwarning",$SubProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate)); 
+    $xml .= add_XML_value("nbuildwarning",$SubProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("nbuildpass",$SubProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("nconfigureerror",$SubProject->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("nconfigurewarning",$SubProject->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
@@ -1676,7 +1676,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("lastsubmission",$SubProject->GetLastSubmission());
       }
     $xml .= "</subproject>";
-    
+
     if($row == 1)
       {
       $row=0;
@@ -1684,10 +1684,10 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     else
       {
       $row=1;
-      }  
+      }
     } // end for each subproject
- 
-   
+
+
   $end = microtime_float();
   $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
   $xml .= "</cdash>";
@@ -1710,7 +1710,7 @@ if(!$db
     echo "CDash cannot connect to the database.";
     return;
     }
-  else  
+  else
     {
     echo "<script language=\"javascript\">window.location='install.php'</script>";
     }
@@ -1736,7 +1736,7 @@ else
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
 
-  // Check if the project has any subproject 
+  // Check if the project has any subproject
   $Project = new Project();
   $Project->Id = $projectid;
   $displayProject = false;
@@ -1746,7 +1746,7 @@ else
     }
 
   if(!$displayProject && !isset($_GET["subproject"]) && $Project->GetNumberOfSubProjects() > 0)
-    {  
+    {
     $xml = generate_subprojects_dashboard_XML($projectid,$date);
     // Now doing the xslt transition
     generate_XSLT($xml,"indexsubproject");
