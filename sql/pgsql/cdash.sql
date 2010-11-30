@@ -296,6 +296,8 @@ CREATE TABLE "project" (
   "displaylabels" smallint default '1',
   "autoremovetimeframe" bigint default '0',
   "autoremovemaxbuilds" bigint default '300',
+  "webapikey" character varying(40) DEFAULT '' NOT NULL,
+  "tokenduration" integer DEFAULT '0',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name2" on "project" ("name");
@@ -1190,3 +1192,10 @@ CREATE TABLE "user2repository" (
 CREATE INDEX "user2repository_userid" on "user2repository" ("userid");
 CREATE INDEX "user2repository_credential" on "user2repository" ("credential");
 CREATE INDEX "user2repository_projectid" on "user2repository" ("projectid");
+
+CREATE TABLE "apitoken" (
+  "projectid" bigint NOT NULL,
+  "token" character varying(40),
+  "expiration_date" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
+);
+CREATE INDEX "apitoken_token" on "apitoken" ("token");

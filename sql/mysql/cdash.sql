@@ -357,6 +357,8 @@ CREATE TABLE `project` (
   `displaylabels` tinyint(4) default '1',
   `autoremovetimeframe` int(11) default '0',
   `autoremovemaxbuilds` int(11) default '300',
+  `webapikey` varchar(40),
+  `tokenduration` int(11),
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)
@@ -1252,6 +1254,13 @@ CREATE TABLE IF NOT EXISTS `user2repository` (
   KEY `userid` (`userid`),
   KEY `credential` (`credential`),
   KEY `projectid` (`projectid`)
+);
+
+CREATE TABLE IF NOT EXISTS `apitoken` (
+  `projectid` int(11) NOT NULL,
+  `token` varchar(40),
+  `expiration_date` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  KEY `token` (`token`)
 );
 
 

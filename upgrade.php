@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -24,7 +24,7 @@ include("cdash/version.php");
 set_time_limit(0);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
- 
+
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
@@ -58,9 +58,9 @@ else
   {
   $db_type = $CDASH_DB_TYPE;
   }
-  
+
 if(isset($_GET['upgrade-tables']))
-{ 
+{
   // Apply all the patches
   foreach(glob("sql/".$db_type."/cdash-upgrade-*.sql") as $filename)
     {
@@ -69,16 +69,16 @@ if(isset($_GET['upgrade-tables']))
     foreach($file_content as $sql_line)
       {
       $tsl = trim($sql_line);
-      
-      if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) 
+
+      if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#"))
          {
          $query .= $sql_line;
-         if(preg_match("/;\s*$/", $sql_line)) 
+         if(preg_match("/;\s*$/", $sql_line))
            {
            $query = str_replace(";", "", "$query");
            $result = pdo_query($query);
            if (!$result)
-             {       
+             {
              if($db_type != "pgsql") // postgresql doesn't know CREATE TABLE IF NOT EXITS so we don't die
                {
                die(pdo_error());
@@ -93,7 +93,7 @@ if(isset($_GET['upgrade-tables']))
 }
 
 if(isset($_GET['upgrade-0-8']))
-{ 
+{
   // Add the index if they don't exist
   $querycrc32 = pdo_query("SELECT crc32 FROM coveragefile LIMIT 1");
   if(!$querycrc32)
@@ -101,15 +101,15 @@ if(isset($_GET['upgrade-0-8']))
     pdo_query("ALTER TABLE coveragefile ADD crc32 int(11)");
     pdo_query("ALTER TABLE coveragefile ADD INDEX (crc32)");
     }
-    
+
   // Compression the coverage
   CompressCoverage();
-  
+
   return;
 }
 
 if(isset($_GET['upgrade-1-0']))
-{ 
+{
   $description = pdo_query("SELECT description FROM buildgroup LIMIT 1");
   if(!$description)
     {
@@ -120,7 +120,7 @@ if(isset($_GET['upgrade-1-0']))
     {
     pdo_query("ALTER TABLE project ADD cvsviewertype varchar(10)");
     }
-  
+
   if(pdo_query("ALTER TABLE site2user DROP PRIMARY KEY"))
     {
     pdo_query("ALTER TABLE site2user ADD INDEX (siteid)");
@@ -132,22 +132,22 @@ if(isset($_GET['upgrade-1-0']))
   if(!$timestatus)
     {
     pdo_query("ALTER TABLE build2test ADD timemean float(7,2) default '0.00'");
-    pdo_query("ALTER TABLE build2test ADD timestd float(7,2) default '0.00'");  
+    pdo_query("ALTER TABLE build2test ADD timestd float(7,2) default '0.00'");
     pdo_query("ALTER TABLE build2test ADD timestatus tinyint(4) default '0'");
-    pdo_query("ALTER TABLE build2test ADD INDEX (timestatus)"); 
+    pdo_query("ALTER TABLE build2test ADD INDEX (timestatus)");
     // Add timing test fields in the table project
     pdo_query("ALTER TABLE project ADD testtimestd float(3,1) default '4.0'");
     // Add the index name in the table test
     pdo_query("ALTER TABLE test ADD INDEX (name)");
     }
-  
-  // Add the testtimethreshold  
+
+  // Add the testtimethreshold
   if(!pdo_query("SELECT testtimestdthreshold FROM project LIMIT 1"))
     {
     pdo_query("ALTER TABLE project ADD testtimestdthreshold float(3,1) default '1.0'");
     }
-    
-  // Add an option to show the testtime or not   
+
+  // Add an option to show the testtime or not
   if(!pdo_query("SELECT showtesttime FROM project LIMIT 1"))
     {
     pdo_query("ALTER TABLE project ADD showtesttime tinyint(4) default '0'");
@@ -156,7 +156,7 @@ if(isset($_GET['upgrade-1-0']))
 }
 
 if(isset($_GET['upgrade-1-2']))
-{ 
+{
   // Replace the field 'output' in the table test from 'text' to 'mediumtext'
   $result = pdo_query("SELECT output FROM test LIMIT 1");
   $type  = pdo_field_type($result,0);
@@ -164,7 +164,7 @@ if(isset($_GET['upgrade-1-2']))
     {
     $result = pdo_query("ALTER TABLE test CHANGE output output MEDIUMTEXT");
     }
-  
+
   // Change the file from blob to longblob
   $result = pdo_query("SELECT file FROM coveragefile LIMIT 1");
   $length = mysql_field_len($result, 0);
@@ -178,24 +178,24 @@ if(isset($_GET['upgrade-1-2']))
     {
     CompressNotes();
     }
-  
+
   // Change the dates for the groups from 0000-00-00 to 1000-01-01
   // This is for mySQL
   pdo_query("UPDATE buildgroup SET starttime='1980-01-01 00:00:00' WHERE starttime='0000-00-00 00:00:00'");
   pdo_query("UPDATE buildgroup SET endtime='1980-01-01 00:00:00' WHERE endtime='0000-00-00 00:00:00'");
   pdo_query("UPDATE build2grouprule SET starttime='1980-01-01 00:00:00' WHERE starttime='0000-00-00 00:00:00'");
-  pdo_query("UPDATE build2grouprule SET endtime='1980-01-01 00:00:00' WHERE endtime='0000-00-00 00:00:00'");  
+  pdo_query("UPDATE build2grouprule SET endtime='1980-01-01 00:00:00' WHERE endtime='0000-00-00 00:00:00'");
   pdo_query("UPDATE buildgroupposition SET starttime='1980-01-01 00:00:00' WHERE starttime='0000-00-00 00:00:00'");
   pdo_query("UPDATE buildgroupposition SET endtime='1980-01-01 00:00:00' WHERE endtime='0000-00-00 00:00:00'");
-  
+
   pdo_query("ALTER TABLE buildgroup MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
   pdo_query("ALTER TABLE buildgroup MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");
   pdo_query("ALTER TABLE build2grouprule MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
-  pdo_query("ALTER TABLE build2grouprule MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");  
+  pdo_query("ALTER TABLE build2grouprule MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");
   pdo_query("ALTER TABLE buildgroupposition MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
   pdo_query("ALTER TABLE buildgroupposition MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");
-  
-  //  Add fields in the project table 
+
+  //  Add fields in the project table
   $timestatus = pdo_query("SELECT testtimemaxstatus FROM project LIMIT 1");
   if(!$timestatus)
     {
@@ -203,7 +203,7 @@ if(isset($_GET['upgrade-1-2']))
     pdo_query("ALTER TABLE project ADD emailmaxitems tinyint(4) default '5'");
     pdo_query("ALTER TABLE project ADD emailmaxchars int(11) default '255'");
     }
-  
+
   // Add summary email
   $summaryemail = pdo_query("SELECT summaryemail FROM buildgroup LIMIT 1");
   if(!$summaryemail)
@@ -216,9 +216,9 @@ if(isset($_GET['upgrade-1-2']))
       {
       pdo_query("ALTER TABLE buildgroup ADD summaryemail tinyint(4) default '0'");
       }
-    }   
-  
-  // Add emailcategory 
+    }
+
+  // Add emailcategory
   $emailcategory = pdo_query("SELECT emailcategory FROM user2project LIMIT 1");
   if(!$emailcategory)
     {
@@ -230,7 +230,7 @@ if(isset($_GET['upgrade-1-2']))
       {
       pdo_query("ALTER TABLE user2project ADD emailcategory tinyint(4) default '62'");
       }
-    }     
+    }
   return;
 }
 
@@ -238,13 +238,13 @@ if(isset($_GET['upgrade-1-2']))
 function AddTableField($table,$field,$mySQLType,$pgSqlType,$default)
 {
   include("cdash/config.php");
-  
-  $sql = '';  
+
+  $sql = '';
   if($default !== false)
     {
     $sql = " DEFAULT '".$default."'";
-    }  
-        
+    }
+
   $query = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
   if(!$query)
     {
@@ -257,7 +257,7 @@ function AddTableField($table,$field,$mySQLType,$pgSqlType,$default)
       {
       pdo_query("ALTER TABLE ".$table." ADD ".$field." ".$mySQLType.$sql);
       }
-      
+
     add_last_sql_error("AddTableField");
     add_log("Done adding $field to $table","AddTableField");
     }
@@ -329,10 +329,10 @@ function AddTableIndex($table,$field)
 
 // Helper function to remove an index to a table
 function RemoveTableIndex($table,$field)
-{  
+{
   include("cdash/config.php");
   if(pdo_check_index_exists($table,$field))
-    {  
+    {
     add_log("Removing index $field from $table","RemoveTableIndex");
 
     if($CDASH_DB_TYPE == "pgsql")
@@ -352,9 +352,9 @@ function RemoveTableIndex($table,$field)
 function ModifyTableField($table,$field,$mySQLType,$pgSqlType,$default,$notnull,$autoincrement)
 {
   include("cdash/config.php");
-  
+
   //$check = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
-  //$type  = pdo_field_type($check,0); 
+  //$type  = pdo_field_type($check,0);
   //add_log($type,"ModifyTableField");
   if(1)
     {
@@ -380,7 +380,7 @@ function ModifyTableField($table,$field,$mySQLType,$pgSqlType,$default,$notnull,
         pdo_query("CREATE SEQUENCE \"".$table."_".$field."_seq\"");
         pdo_query("ALTER TABLE  \"".$table."\" ALTER COLUMN \"".$field."\" SET DEFAULT nextval('".$table."_".$field."_seq')");
         pdo_query("ALTER SEQUENCE \"".$table."_".$field."_seq\" OWNED BY \"".$table."\".\"".$field."\"");
-        }  
+        }
       }
     else
       {
@@ -443,19 +443,19 @@ function RemoveTablePrimaryKey($table)
 
 // 1.4 Upgrade
 if(isset($_GET['upgrade-1-4']))
-{    
-  //  Add fields in the project table 
+{
+  //  Add fields in the project table
   $starttime = pdo_query("SELECT starttime FROM subproject LIMIT 1");
   if(!$starttime)
     {
     pdo_query("ALTER TABLE subproject ADD starttime TIMESTAMP NOT NULL default '1980-01-01 00:00:00'");
     pdo_query("ALTER TABLE subproject ADD endtime TIMESTAMP NOT NULL default '1980-01-01 00:00:00'");
     }
-  
-  // Create the right indexes if necessary  
+
+  // Create the right indexes if necessary
   AddTableIndex('buildfailure','buildid');
   AddTableIndex('buildfailure','type');
-  
+
   // Create the new table buildfailure arguments if the old one is still there
   if(pdo_query("SELECT buildfailureid FROM buildfailureargument"))
     {
@@ -466,7 +466,7 @@ if(isset($_GET['upgrade-1-4']))
               PRIMARY KEY  (`id`),
               KEY `argument` (`argument`))");
     }
-  
+
   AddTableIndex('buildfailureargument','argument');
 
   //  Add fields in the buildgroup table
@@ -475,20 +475,20 @@ if(isset($_GET['upgrade-1-4']))
   AddTableField("buildgroup","includesubprojectotal","tinyint(4)","smallint","1");
   AddTableField("project","emailredundantfailures","tinyint(4)","smallint","0");
   AddTableField("buildfailure2argument","place","int(11)","bigint","0");
-  
+
   if($CDASH_DB_TYPE != "pgsql")
     {
     pdo_query("ALTER TABLE `builderror` CHANGE `precontext` `precontext` TEXT NULL");
     pdo_query("ALTER TABLE `builderror` CHANGE `postcontext` `postcontext` TEXT NULL");
     }
-  
+
   ModifyTableField("buildfailureargument","argument","VARCHAR( 255 )","VARCHAR( 255 )","",true,false);
   ModifyTableField("buildfailure","exitcondition","VARCHAR( 255 )","VARCHAR( 255 )","",true,false);
   ModifyTableField("buildfailure","language","VARCHAR( 64 )","VARCHAR( 64 )","",true,false);
   ModifyTableField("buildfailure","sourcefile","VARCHAR( 512)","VARCHAR( 512 )","",true,false);
   RemoveTableField("buildfailure","arguments");
   ModifyTableField("configure","log","MEDIUMTEXT","TEXT","",true,false);
-  
+
   AddTableIndex('coverage','covered');
   AddTableIndex('build2grouprule','starttime');
   AddTableIndex('build2grouprule','endtime');
@@ -513,7 +513,7 @@ if(isset($_GET['upgrade-1-4']))
   AddTableIndex('builderror','type');
   AddTableIndex('build','starttime');
   AddTableIndex('build','submittime');
-  
+
   RemoveTableIndex('build','siteid');
   AddTableIndex('build','siteid');
   AddTableIndex('build','name');
@@ -521,13 +521,13 @@ if(isset($_GET['upgrade-1-4']))
   AddTableIndex('build','type');
   AddTableIndex('project','name');
   AddTableIndex('site','name');
-  
+
   ModifyTableField("image","id","BIGINT( 11 )","BIGINT","",true,false);
   RemoveTableIndex("image"," id");
   RemoveTablePrimaryKey("image");
   AddTablePrimaryKey("image","id");
   ModifyTableField("image","id","BIGINT( 11 )","BIGINT","",true,true);
-  
+
   ModifyTableField("dailyupdate","id","BIGINT( 11 )","BIGINT","",true,false);
   RemoveTableIndex("dailyupdate"," buildid");
   RemoveTablePrimaryKey("dailyupdate");
@@ -544,18 +544,18 @@ if(isset($_GET['upgrade-1-4']))
   ModifyTableField("note ","crc32","BIGINT( 20 )","BIGINT","",true,false);
   ModifyTableField("test ","crc32","BIGINT( 20 )","BIGINT","",true,false);
   ModifyTableField("coveragefile ","crc32","BIGINT( 20 )","BIGINT","",true,false);
-  
+
   // Remove duplicates in buildfailureargument
   //pdo_query("DELETE FROM buildfailureargument WHERE id NOT IN (SELECT buildfailureid as id FROM buildfailure2argument)");
-  
+
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
   AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
   AddTableField("project","autoremovemaxbuilds","int(11)","bigint","300");
   AddTableIndex('coveragefilelog','line');
- 
+
   // Set the database version
   setVersion();
-  
+
   // Put that the upgrade is done in the log
   add_log("Upgrade done.","upgrade-1-4");
 
@@ -564,7 +564,7 @@ if(isset($_GET['upgrade-1-4']))
 
 // 1.6 Upgrade
 if(isset($_GET['upgrade-1-6']))
-{    
+{
   if($CDASH_DB_TYPE != "pgsql")
     {
     pdo_query("ALTER TABLE configure CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
@@ -574,7 +574,7 @@ if(isset($_GET['upgrade-1-6']))
     pdo_query("ALTER TABLE build2note CHANGE time time TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
     pdo_query("ALTER TABLE buildemail CHANGE time time TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
     }
-  
+
   RemoveTableField("project","emailbuildmissing");
   AddTableField("project","displaylabels","tinyint(4)","smallint","1");
   AddTableField("project","autoremovetimeframe","int(11)","bigint","0");
@@ -585,7 +585,7 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("repositories","password","VARCHAR(50)","VARCHAR( 50 )","");
   AddTableIndex('coveragefilelog','line');
   AddTableIndex('dailyupdatefile','author');
-  
+
   RenameTableField("testdiff","difference","difference_positive","int(11)","bigint","0");
   AddTableField("testdiff","difference_negative","int(11)","bigint","0");
   AddTableIndex('testdiff','difference_positive');
@@ -597,49 +597,49 @@ if(isset($_GET['upgrade-1-6']))
   AddTableField("builderrordiff","difference_negative","int(11)","bigint","0");
   AddTableIndex('builderrordiff','difference_positive');
   AddTableIndex('builderrordiff','difference_negative');
- 
+
   AddTableField("builderror","crc32","bigint(20)","BIGINT","0");
   AddTableField("builderror","newstatus","tinyint(4)","smallint","0");
   AddTableIndex('builderror','crc32');
-  AddTableIndex('builderror','newstatus');  
- 
+  AddTableIndex('builderror','newstatus');
+
   AddTableField("buildfailure","crc32","bigint(20)","BIGINT","0");
   AddTableField("buildfailure","newstatus","tinyint(4)","smallint","0");
   AddTableIndex('buildfailure','crc32');
   AddTableIndex('buildfailure','newstatus');
-  
+
   AddTableField("client_jobschedule","repository","VARCHAR(512)","VARCHAR(512)","");
   AddTableField("client_jobschedule","module","VARCHAR(255)","VARCHAR(255)","");
   AddTableField("client_jobschedule","buildnamesuffix","VARCHAR(255)","VARCHAR(255)","");
   AddTableField("client_jobschedule","tag","VARCHAR(255)","VARCHAR(255)","");
-  
+
   ModifyTableField("updatefile","revision","VARCHAR(60)","VARCHAR(60)","",true,false);
   ModifyTableField("updatefile","priorrevision","VARCHAR(60)","VARCHAR(60)","",true,false);
   AddTableField("buildupdate","revision","VARCHAR(60)","VARCHAR(60)","0");
   AddTableField("buildupdate","priorrevision","VARCHAR(60)","VARCHAR(60)","0");
   AddTableField("buildupdate","path","VARCHAR(255)","VARCHAR(255)","");
-  
+
   AddTableField("user2project","emailsuccess","tinyint(4)","smallint","0");
   AddTableIndex('user2project','emailsuccess');
   AddTableField("user2project","emailmissingsites","tinyint(4)","smallint","0");
   AddTableIndex('user2project','emailmissingsites');
-  
+
   if(!pdo_query("SELECT projectid FROM test LIMIT 1"))
     {
     AddTableField("test","projectid","int(11)","bigint","0");
     AddTableIndex('test','projectid');
-    
+
     // Set the project id
-    pdo_query("UPDATE test SET projectid=(SELECT projectid FROM build,build2test 
+    pdo_query("UPDATE test SET projectid=(SELECT projectid FROM build,build2test
                WHERE build2test.testid=test.id AND build2test.buildid=build.id LIMIT 1)");
-    
+
     echo pdo_error();
     }
-    
+
   // Add the cookiekey field
   AddTableField("user","cookiekey","VARCHAR(40)","VARCHAR( 40 )","");
   ModifyTableField("dynamicanalysis","log","MEDIUMTEXT","TEXT","",true,false);
-  
+
   // New build, buildupdate and configure fields to speedup reading
   if(!pdo_query("SELECT builderrors FROM build LIMIT 1") )
     {
@@ -649,33 +649,33 @@ if(isset($_GET['upgrade-1-6']))
     AddTableField("build","testfailed","smallint(6)","smallint","-1");
     AddTableField("build","testpassed","smallint(6)","smallint","-1");
     AddTableField("build","testtimestatusfailed","smallint(6)","smallint","-1");
-    
+
     AddTableField("buildupdate","nfiles","smallint(6)","smallint","-1");
     AddTableField("buildupdate","warnings","smallint(6)","smallint","-1");
     AddTableField("configure","warnings","smallint(6)","smallint","-1");
-    
-    pdo_query("UPDATE configure SET warnings=(SELECT count(buildid) FROM configureerror WHERE buildid=configure.buildid AND type='1') 
+
+    pdo_query("UPDATE configure SET warnings=(SELECT count(buildid) FROM configureerror WHERE buildid=configure.buildid AND type='1')
                  WHERE warnings=-1");
-    pdo_query("UPDATE buildupdate SET 
-                warnings=(SELECT count(buildid) FROM updatefile WHERE buildid=buildupdate.buildid AND revision='-1' AND author='Local User'), 
-                nfiles=(SELECT count(buildid) FROM updatefile WHERE buildid=buildupdate.buildid) 
+    pdo_query("UPDATE buildupdate SET
+                warnings=(SELECT count(buildid) FROM updatefile WHERE buildid=buildupdate.buildid AND revision='-1' AND author='Local User'),
+                nfiles=(SELECT count(buildid) FROM updatefile WHERE buildid=buildupdate.buildid)
                 WHERE warnings=-1");
-    
-    pdo_query("UPDATE build SET 
-                 builderrors=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='0'), 
+
+    pdo_query("UPDATE build SET
+                 builderrors=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='0'),
                  buildwarnings=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='1'),
-                 builderrors=builderrors+(SELECT count(buildid) FROM buildfailure WHERE buildid=build.id AND type='0'), 
+                 builderrors=builderrors+(SELECT count(buildid) FROM buildfailure WHERE buildid=build.id AND type='0'),
                  buildwarnings=buildwarnings+(SELECT count(buildid) FROM buildfailure WHERE buildid=build.id AND type='1'),
                  testpassed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='passed'),
-                 testfailed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='failed'), 
-                 testnotrun=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='notrun'), 
-                 testtimestatusfailed=(SELECT count(buildid) FROM build2test,project WHERE project.id=build.id 
+                 testfailed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='failed'),
+                 testnotrun=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='notrun'),
+                 testtimestatusfailed=(SELECT count(buildid) FROM build2test,project WHERE project.id=build.id
                                        AND buildid=build.id AND timestatus>=project.testtimemaxstatus)
                  WHERE builderrors=-1");
-    
+
     echo pdo_error();
     } // end new table build
- 
+
   // Set the database version
   setVersion();
 
@@ -688,19 +688,19 @@ if(isset($_GET['upgrade-1-6']))
 
 // 1.8 Upgrade
 if(isset($_GET['upgrade-1-8']))
-{  
+{
   // If the new coveragefilelog is not set
   if(!pdo_query("SELECT log FROM coveragefilelog LIMIT 1"))
     {
     AddTableField("coveragefilelog","log","LONGBLOB","bytea",false);
-    
+
     // Get the lines for each buildid/fileid
     $query = pdo_query("SELECT DISTINCT buildid,fileid FROM coveragefilelog ORDER BY buildid,fileid");
     while($query_array = pdo_fetch_array($query))
       {
       $buildid = $query_array['buildid'];
       $fileid = $query_array['fileid'];
-      
+
       // Get the lines
       $firstline = false;
       $log = '';
@@ -709,26 +709,26 @@ if(isset($_GET['upgrade-1-8']))
         {
         $line = $lines_array['line'];
         $code = $lines_array['code'];
-        
+
         if($firstline === false)
           {
-          $firstline = $line;  
+          $firstline = $line;
           }
         $log .= $line.':'.$code.';';
         }
-        
+
       // Update the first line
-      pdo_query("UPDATE coveragefilelog SET log='".$log."' 
+      pdo_query("UPDATE coveragefilelog SET log='".$log."'
                 WHERE buildid='".$buildid."' AND fileid='".$fileid."' AND line='".$firstline."'");
-       
+
       // Delete the other lines
-      pdo_query("DELETE FROM coveragefilelog 
+      pdo_query("DELETE FROM coveragefilelog
                  WHERE buildid='".$buildid."' AND fileid='".$fileid."' AND line!='".$firstline."'");
       } // end looping through buildid/fileid
 
     RemoveTableField("coveragefilelog","line");
     RemoveTableField("coveragefilelog","code");
-    } 
+    }
 
   // Missing fields in the client_jobschedule table
   if(!pdo_query("SELECT repository FROM client_jobschedule LIMIT 1"))
@@ -746,16 +746,16 @@ if(isset($_GET['upgrade-1-8']))
   ModifyTableField("dailyupdatefile","priorrevision","VARCHAR(60)","VARCHAR(60)","",true,false);
   AddTableField("dailyupdatefile","email","VARCHAR(255)","character varying(255)","");
   AddTableIndex('dailyupdatefile','email');
-  
+
   AddTableField("client_jobschedule","buildconfiguration","tinyint(4)","smallint","0");
-  
+
   // Remove the toolkits tables
   pdo_query("DROP TABLE IF EXISTS client_toolkit");
   pdo_query("DROP TABLE IF EXISTS client_toolkitconfiguration");
   pdo_query("DROP TABLE IF EXISTS client_toolkitconfiguration2os");
   pdo_query("DROP TABLE IF EXISTS client_toolkitversion");
   pdo_query("DROP TABLE IF EXISTS client_jobschedule2toolkit");
-  
+
   // Add lastping to the client_site table
   AddTableField("client_site","lastping","timestamp","timestamp(0)","1980-01-01 00:00:00");
   AddTableIndex('client_site','lastping');
@@ -764,11 +764,11 @@ if(isset($_GET['upgrade-1-8']))
   RenameTableField('test2image','imgid','imgid',"int(11)","bigint","0");
   RemoveTablePrimaryKey('test2image');
   AddTableIndex('test2image','imgid');
-  
+
   ModifyTableField("buildfailure","stdoutput","MEDIUMTEXT","TEXT","",true,false);
   ModifyTableField("buildfailure","stderror","MEDIUMTEXT","TEXT","",true,false);
   AddTableIndex('builderrordiff','type');
-  
+
   AddTableField("dailyupdate","revision","varchar(60)","character varying(60)","");
   AddTableField("repositories","branch","varchar(60)","character varying(60)","");
 
@@ -786,6 +786,9 @@ if(isset($_GET['upgrade-1-8']))
 
   AddTableField("client_jobschedule", "clientscript", "text", "text", "");
 
+  AddTableField("project", "webapikey", "varchar(40)", "character varying(40)", "");
+  AddTableField("project", "tokenduration", "int(11)", "bigint", "0");
+
   // Add the users' cvslogin to the user2repository table (by default all projects)
   if(pdo_query("SELECT cvslogin FROM user2project"))
     {
@@ -794,21 +797,21 @@ if(isset($_GET['upgrade-1-8']))
     $query = pdo_query("SELECT id,email FROM user");
     while($query_array = pdo_fetch_array($query))
       {
-      $userid = $query_array['id']; 
+      $userid = $query_array['id'];
       $email = $query_array['email'];
       $emailarray[] = $email;
       pdo_query("INSERT INTO user2repository (userid,credential) VALUES ('".$userid."','".$email."')");
-      }   
-      
-    // Add the repository login  
+      }
+
+    // Add the repository login
     $query = pdo_query("SELECT userid,projectid,cvslogin FROM user2project GROUP BY userid,cvslogin");
     while($query_array = pdo_fetch_array($query))
       {
-      $userid = $query_array['userid']; 
+      $userid = $query_array['userid'];
       $cvslogin = $query_array['cvslogin'];
       if(!empty($cvslogin) && !in_array($cvslogin,$emailarray))
         {
-        pdo_query("INSERT INTO user2repository (userid,projectid,credential) 
+        pdo_query("INSERT INTO user2repository (userid,projectid,credential)
                    VALUES ('".$userid."','".$projectid."','".$cvslogin."')");
         }
       }
@@ -821,16 +824,16 @@ if(isset($_GET['upgrade-1-8']))
     include("cdash/config.php");
     if($CDASH_DB_TYPE != "pgsql")
       {
-      pdo_query("ALTER TABLE testmeasurement ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)");     
-      pdo_query("ALTER TABLE test2image ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)");     
+      pdo_query("ALTER TABLE testmeasurement ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)");
+      pdo_query("ALTER TABLE test2image ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)");
       }
-    else 
+    else
       {
-      pdo_query("ALTER TABLE testmeasurement ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)");     
-      pdo_query("ALTER TABLE test2image ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)");   
+      pdo_query("ALTER TABLE testmeasurement ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)");
+      pdo_query("ALTER TABLE test2image ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)");
       }
     }
-    
+
   // Set the database version
   setVersion();
 
@@ -844,19 +847,19 @@ if(isset($_GET['upgrade-1-8']))
 // and here as well
 if($Upgrade)
 {
-  // check if the backup directory is writable 
+  // check if the backup directory is writable
   if(!is_writable($CDASH_BACKUP_DIRECTORY))
-    {  
+    {
     $xml .= "<backupwritable>0</backupwritable>";
     }
   else
     {
     $xml .= "<backupwritable>1</backupwritable>";
     }
-    
-  // check if the rss directory is writable 
+
+  // check if the rss directory is writable
   if(!is_writable("rss"))
-    {  
+    {
     $xml .= "<rsswritable>0</rsswritable>";
     }
   else
@@ -868,11 +871,11 @@ if($Upgrade)
 
 // Compress the test output
 if(isset($_POST["CompressTestOutput"]))
-{ 
+{
   // Do it slowly so we don't take all the memory
   $query = pdo_query("SELECT count(*) FROM test");
   $query_array = pdo_fetch_array($query);
-  $ntests = $query_array[0];  
+  $ntests = $query_array[0];
   $ngroup = 1024;
   for($i=0;$i<$ntests;$i+=$ngroup)
     {
@@ -886,14 +889,14 @@ if(isset($_POST["CompressTestOutput"]))
         pdo_query("UPDATE test SET output='".$compressed."' WHERE id=".$query_array['id']);
         echo pdo_error();
         }
-      } 
+      }
     }
 }
 
 
 // Compute the testtime
 if($ComputeTestTiming)
-{ 
+{
   @$TestTimingDays = $_POST["TestTimingDays"];
   if(is_numeric($TestTimingDays) && $TestTimingDays>0)
     {
@@ -908,7 +911,7 @@ if($ComputeTestTiming)
 
 // Compute the user statistics
 if($ComputeUpdateStatistics)
-{ 
+{
   @$UpdateStatisticsDays = $_POST["UpdateStatisticsDays"];
   if(is_numeric($UpdateStatisticsDays) && $UpdateStatisticsDays>0)
     {
@@ -918,7 +921,7 @@ if($ComputeUpdateStatistics)
   else
    {
    $xml .= add_XML_value("alert","Wrong number of days.");
-   } 
+   }
 }
 
 
@@ -946,7 +949,7 @@ function CompressNotes()
      echo "Cannot create new table 'note'";
      return false;
      }
-  
+
   // Move each note from notetemp to the new table
   $note = pdo_query("SELECT * FROM notetemp ORDER BY buildid ASC");
   while($note_array = pdo_fetch_array($note))
@@ -956,7 +959,7 @@ function CompressNotes()
     $time = $note_array["time"];
     $buildid = $note_array["buildid"];
     $crc32 = crc32($text.$name);
-    
+
     $notecrc32 =  pdo_query("SELECT id FROM note WHERE crc32='$crc32'");
     if(pdo_num_rows($notecrc32) == 0)
       {
@@ -973,18 +976,18 @@ function CompressNotes()
     pdo_query("INSERT INTO build2note (buildid,noteid,time) VALUES ('$buildid','$noteid','$time')");
     echo pdo_error();
     }
-  
-  // Drop the old note table  
+
+  // Drop the old note table
   pdo_query("DROP TABLE notetemp");
   echo pdo_error();
 } // end CompressNotes()
 
 /** Compute the timing for test
- *  For each test we compare with the previous build and if the percentage time 
+ *  For each test we compare with the previous build and if the percentage time
  *  is more than the project.testtimepercent we increas test.timestatus by one.
  *  We also store the test.reftime which is the time of the test passing
- *  
- *  If test.timestatus is more than project.testtimewindow we reset 
+ *
+ *  If test.timestatus is more than project.testtimewindow we reset
  *  the test.timestatus to zero and we set the test.reftime to the previous build time.
  */
 function ComputeTestTiming($days = 4)
@@ -995,39 +998,39 @@ function ComputeTestTiming($days = 4)
 
 
   while($project_array = pdo_fetch_array($project))
-    {    
+    {
     $projectid = $project_array["id"];
     $testtimestd = $project_array["testtimestd"];
-    $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
-    
+    $projecttimestdthreshold = $project_array["testtimestdthreshold"];
+
     // only test a couple of days
     $now = gmdate(FMT_DATETIME,time()-3600*24*$days);
-    
+
     // Find the builds
     $builds = pdo_query("SELECT starttime,siteid,name,type,id
                                FROM build
                                WHERE build.projectid='$projectid' AND build.starttime>'$now'
                                ORDER BY build.starttime ASC");
-    
+
     $total = pdo_num_rows($builds);
     echo pdo_error();
-    
+
     $i=0;
     $previousperc = 0;
     while($build_array = pdo_fetch_array($builds))
-      {                           
+      {
       $buildid = $build_array["id"];
       $buildname = $build_array["name"];
       $buildtype = $build_array["type"];
       $starttime = $build_array["starttime"];
       $siteid = $build_array["siteid"];
-      
+
       // Find the previous build
       $previousbuild = pdo_query("SELECT id FROM build
-                                    WHERE build.siteid='$siteid' 
+                                    WHERE build.siteid='$siteid'
                                     AND build.type='$buildtype' AND build.name='$buildname'
-                                    AND build.projectid='$projectid' 
-                                    AND build.starttime<'$starttime' 
+                                    AND build.projectid='$projectid'
+                                    AND build.starttime<'$starttime'
                                     AND build.starttime>'$now'
                                     ORDER BY build.starttime DESC LIMIT 1");
 
@@ -1039,23 +1042,23 @@ function ComputeTestTiming($days = 4)
         // Loop through the tests
         $previousbuild_array = pdo_fetch_array($previousbuild);
         $previousbuildid = $previousbuild_array ["id"];
-  
-        $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name 
+
+        $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name
                               FROM build2test,test WHERE build2test.buildid='$buildid'
                               AND build2test.testid=test.id
                               ");
         echo pdo_error();
-  
+
         flush();
         ob_flush();
-     
+
         // Find the previous test
         $previoustest = pdo_query("SELECT build2test.testid,test.name FROM build2test,test
-                                     WHERE build2test.buildid='$previousbuildid' 
-                                     AND test.id=build2test.testid 
+                                     WHERE build2test.buildid='$previousbuildid'
+                                     AND test.id=build2test.testid
                                      ");
         echo pdo_error();
-      
+
         $testarray = array();
         while($test_array = pdo_fetch_array($previoustest))
           {
@@ -1082,28 +1085,28 @@ function ComputeTestTiming($days = 4)
             }
           }
 
-                             
+
         if($previoustestid>0)
             {
             $previoustest = pdo_query("SELECT timemean,timestd FROM build2test
-                                       WHERE buildid='$previousbuildid' 
-                                       AND build2test.testid='$previoustestid' 
+                                       WHERE buildid='$previousbuildid'
+                                       AND build2test.testid='$previoustestid'
                                        ");
 
             $previoustest_array = pdo_fetch_array($previoustest);
             $previoustimemean = $previoustest_array["timemean"];
             $previoustimestd = $previoustest_array["timestd"];
-          
+
            // Check the current status
           if($previoustimestd<$projecttimestdthreshold)
             {
             $previoustimestd = $projecttimestdthreshold;
             }
-          
+
             // Update the mean and std
             $timemean = (1-$weight)*$previoustimemean+$weight*$testtime;
             $timestd = sqrt((1-$weight)*$previoustimestd*$previoustimestd + $weight*($testtime-$timemean)*($testtime-$timemean));
-            
+
             // Check the current status
             if($testtime > $previoustimemean+$testtimestd*$previoustimestd) // only do positive std
               {
@@ -1120,33 +1123,33 @@ function ComputeTestTiming($days = 4)
             $timestatus = 0;
             $timemean = $testtime;
             }
-          
-          
-      
-          pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
+
+
+
+          pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus'
                         WHERE buildid='$buildid' AND testid='$testid'");
-       
-          }  // end loop through the test  
-          
+
+          }  // end loop through the test
+
         }
       else // this is the first build
         {
         $timestd = 0;
         $timestatus = 0;
-        
+
         // Loop throught the tests
         $tests = pdo_query("SELECT time,testid FROM build2test WHERE buildid='$buildid'");
         while($test_array = pdo_fetch_array($tests))
           {
           $timemean = $test_array['time'];
           $testid = $test_array['testid'];
-        
-           pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus' 
+
+           pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus'
                         WHERE buildid='$buildid' AND testid='$testid'");
-          }          
+          }
       } // loop through the tests
-        
-      // Progress bar  
+
+      // Progress bar
       $perc = ($i/$total)*100;
       if($perc-$previousperc>5)
         {
@@ -1156,7 +1159,7 @@ function ComputeTestTiming($days = 4)
         $previousperc = $perc;
         }
       $i++;
-      } // end looping through builds 
+      } // end looping through builds
     } // end looping through projects
 }
 
@@ -1167,47 +1170,47 @@ function ComputeUpdateStatistics($days = 4)
 {
   // Loop through the projects
   $project = pdo_query("SELECT id FROM project");
-  
+
   while($project_array = pdo_fetch_array($project))
-    {    
+    {
     $projectid = $project_array["id"];
-    
+
     // only test a couple of days
     $now = gmdate(FMT_DATETIME,time()-3600*24*$days);
-    
+
     // Find the builds
     $builds = pdo_query("SELECT starttime,siteid,name,type,id
                                FROM build
                                WHERE build.projectid='$projectid' AND build.starttime>'$now'
                                ORDER BY build.starttime ASC");
-    
+
     $total = pdo_num_rows($builds);
     echo pdo_error();
-    
+
     $i=0;
     $previousperc = 0;
     while($build_array = pdo_fetch_array($builds))
-      {                           
+      {
       $buildid = $build_array["id"];
       $buildname = $build_array["name"];
       $buildtype = $build_array["type"];
       $starttime = $build_array["starttime"];
       $siteid = $build_array["siteid"];
-      
+
       // Find the previous build
       $previousbuild = pdo_query("SELECT id FROM build
-                                    WHERE build.siteid='$siteid' 
+                                    WHERE build.siteid='$siteid'
                                     AND build.type='$buildtype' AND build.name='$buildname'
-                                    AND build.projectid='$projectid' 
-                                    AND build.starttime<'$starttime' 
+                                    AND build.projectid='$projectid'
+                                    AND build.starttime<'$starttime'
                                     AND build.starttime>'$now'
                                     ORDER BY build.starttime DESC LIMIT 1");
       echo pdo_error();
-      
+
       if(pdo_num_rows($previousbuild)>0)
         {
         $previousbuild_array = pdo_fetch_array($previousbuild);
-        $previousbuildid = $previousbuild_array["id"];   
+        $previousbuildid = $previousbuild_array["id"];
         compute_update_statistics($projectid,$buildid,$previousbuildid);
         }
       else
@@ -1215,7 +1218,7 @@ function ComputeUpdateStatistics($days = 4)
         compute_update_statistics($projectid,$buildid,0);
         }
 
-      // Progress bar  
+      // Progress bar
       $perc = ($i/$total)*100;
       if($perc-$previousperc>5)
         {
@@ -1225,14 +1228,14 @@ function ComputeUpdateStatistics($days = 4)
         $previousperc = $perc;
         }
       $i++;
-      } // end looping through builds 
+      } // end looping through builds
     } // end looping through projects
 }
 
 /** Delete unused rows */
 function delete_unused_rows($table,$field,$targettable,$selectfield='id')
 {
-  pdo_query("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)"); 
+  pdo_query("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)");
   echo pdo_error();
 }
 
@@ -1253,7 +1256,7 @@ if($Cleanup)
   delete_unused_rows('test','projectid','project');
   delete_unused_rows('user2project','projectid','project');
   delete_unused_rows('userstatistics','projectid','project');
-  
+
   delete_unused_rows('build2note','buildid','build');
   delete_unused_rows('build2test','buildid','build');
   delete_unused_rows('buildemail','buildid','build');
@@ -1277,14 +1280,14 @@ if($Cleanup)
   delete_unused_rows('summaryemail','buildid','build');
   delete_unused_rows('testdiff','buildid','build');
   delete_unused_rows('updatefile','buildid','build');
-  
+
   delete_unused_rows('dynamicanalysisdefect','dynamicanalysisid','dynamicanalysis');
   delete_unused_rows('subproject2subproject','subprojectid','subproject');
 
   delete_unused_rows('dailyupdatefile','dailyupdateid','dailyupdate');
   delete_unused_rows('coveragefile','id','coverage','fileid');
   delete_unused_rows('coveragefile2user','fileid','coveragefile');
-  
+
   delete_unused_rows('dailyupdatefile','dailyupdateid','dailyupdate');
   delete_unused_rows('test2image','testid','test');
   delete_unused_rows('testmeasurement','testid','test');
@@ -1308,7 +1311,7 @@ function CompressCoverage()
   $coveragefile =  pdo_query("SELECT count(*) AS num FROM coveragefile WHERE crc32 IS NULL");
   $coveragefile_array = pdo_fetch_array($coveragefile);
   $total = $coveragefile_array["num"];
-  
+
   $i=0;
   $previousperc = 0;
   $coveragefile = pdo_query("SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000");
@@ -1333,8 +1336,8 @@ function CompressCoverage()
       $previousperc = $perc;
       }
     }
-    
-  // Delete files with the same crc32 and upgrade   
+
+  // Delete files with the same crc32 and upgrade
   $previouscrc32 = 0;
   $coveragefile = pdo_query("SELECT id,crc32 FROM coveragefile ORDER BY crc32 ASC,id ASC");
   $total = pdo_num_rows($coveragefile);
@@ -1365,7 +1368,7 @@ function CompressCoverage()
     $previouscrc32 = $crc32;
     $i++;
     }
- 
+
   /** Remove the Duplicates in the coverage section */
   $coverage = pdo_query("SELECT buildid,fileid,count(*) as cnt FROM coverage GROUP BY buildid,fileid");
   while($coverage_array = pdo_fetch_array($coverage))
@@ -1373,16 +1376,16 @@ function CompressCoverage()
     $cnt = $coverage_array["cnt"];
     if($cnt > 1)
       {
-      $buildid = $coverage_array["buildid"]; 
-      $fileid = $coverage_array["fileid"]; 
+      $buildid = $coverage_array["buildid"];
+      $fileid = $coverage_array["fileid"];
       $limit = $cnt-1;
       $sql = "DELETE FROM coverage WHERE buildid='$buildid' AND fileid='$fileid'";
       $sql .= " LIMIT ".$limit;
-      pdo_query($sql); 
+      pdo_query($sql);
       }
     }
 
-  /** SECOND STEP */    
+  /** SECOND STEP */
 }
 
 /** Check the builds with wrong date */
@@ -1390,7 +1393,7 @@ if($CheckBuildsWrongDate)
 {
   $currentdate = time()+3600*24*3; // or 3 days away from now
   $forwarddate = date(FMT_DATETIME,$currentdate);
-   
+
   $builds = pdo_query("SELECT id,name,starttime FROM build WHERE starttime<'1975-12-31 23:59:59' OR starttime>'$forwarddate'");
   while($builds_array = pdo_fetch_array($builds))
     {
@@ -1410,7 +1413,7 @@ if($DeleteBuildsWrongDate)
     {
     $buildid = $builds_array["id"];
     //echo $buildid."<br>";
-    remove_build($buildid); 
+    remove_build($buildid);
     }
 }
 
@@ -1438,10 +1441,10 @@ if($FixNewTableTest)
     $time = $oldtest_array["time"];
     $details = $oldtest_array["details"];
     $output = stripslashes($oldtest_array["output"]);
-    
+
     // Add the images
     $images = array();
-    
+
     $oldimages = pdo_query("SELECT * from test2image WHERE testid='$oldtestid'");
     while($oldimages_array = pdo_fetch_array($oldimages))
       {
@@ -1452,22 +1455,22 @@ if($FixNewTableTest)
 
 
    // Do the processing
-  
+
     $command = addslashes($command);
     $output = addslashes($output);
-    
+
     // Check if the test doesn't exist
     $test = pdo_query("SELECT id FROM test2 WHERE name='$name' AND path='$path' AND fullname='$fullname' AND command='$command' AND output='$output' LIMIT 1");
-    
+
     $testexists = false;
-    
+
     if(pdo_num_rows($test) > 0) // test exists
-      {  
+      {
       while($test_array = pdo_fetch_array($test))
         {
         $currentid = $test_array["id"];
         $sql = "SELECT count(imgid) FROM test2image2 WHERE testid='$currentid' ";
-        
+
         // need to double check that the images are the same as well
         $i=0;
         foreach($images as $image)
@@ -1477,24 +1480,24 @@ if($FixNewTableTest)
             {
             $sql .= "AND (";
             }
-          
+
           if($i>0)
             {
             $sql .= " OR";
             }
-          
+
           $sql .= " imgid='$imagid' ";
-          
+
           $i++;
           if($i==count($images))
             {
             $sql .= ")";
             }
           } // end for each image
-        
+
          $nimage_array = pdo_fetch_array(pdo_query($sql));
          $nimages = $nimage_array[0];
-      
+
          if($nimages == count($images))
            {
            $testid = $test_array["id"];
@@ -1503,7 +1506,7 @@ if($FixNewTableTest)
            }
          } // end while test_array
        }
-    
+
     if(!$testexists)
       {
       // Need to create a new test
@@ -1529,9 +1532,9 @@ if($FixNewTableTest)
         echo pdo_error();
         }
       }
-    
+
     // Add into build2test
-    pdo_query("INSERT INTO build2test (buildid,testid,status,time) 
+    pdo_query("INSERT INTO build2test (buildid,testid,status,time)
                  VALUES ('$buildid','$testid','$status','$time')");
     } // end loop test
     } // end loop $j
@@ -1545,7 +1548,7 @@ if($FixBuildBasedOnRule)
   while($buildgroup_array = pdo_fetch_array($buildgroups))
     {
     $buildid = $buildgroup_array["buildid"];
-    
+
     $build = pdo_query("SELECT * from build WHERE id='$buildid'");
     $build_array = pdo_fetch_array($build);
     $type = $build_array["type"];
@@ -1553,10 +1556,10 @@ if($FixBuildBasedOnRule)
     $siteid = $build_array["siteid"];
     $projectid = $build_array["projectid"];
     $submittime = $build_array["submittime"];
-        
+
     $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
                                     WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
-                                    AND (b2g.groupid=bg.id AND bg.projectid='$projectid') 
+                                    AND (b2g.groupid=bg.id AND bg.projectid='$projectid')
                                     AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
     echo pdo_error();
     if(pdo_num_rows($build2grouprule)>0)
@@ -1576,50 +1579,50 @@ if($CreateDefaultGroups)
   while($project_array = pdo_fetch_array($projects))
      {
      $projectid = $project_array["id"];
-     
+
      if(pdo_num_rows(pdo_query("SELECT projectid FROM buildgroup WHERE projectid='$projectid'"))==0)
        {
        // Add the default groups
-       pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description) 
+       pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
                   VALUES ('Nightly','$projectid','1980-01-01 00:00:00','1980-01-01 00:00:00','Nightly Builds')");
        $id = pdo_insert_id("buildgroup");
        pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime)
                   VALUES ('$id','1','1980-01-01 00:00:00','1980-01-01 00:00:00')");
        echo pdo_error();
-       pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description) 
+       pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
                   VALUES ('Continuous','$projectid','1980-01-01 00:00:00','1980-01-01 00:00:00','Continuous Builds')");
        $id = pdo_insert_id("buildgroup");
-       pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
+       pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime)
                   VALUES ('$id','2','1980-01-01 00:00:00','1980-01-01 00:00:00')");
-       pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description) 
+       pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
                   VALUES ('Experimental','$projectid','1980-01-01 00:00:00','1980-01-01 00:00:00','Experimental Builds')");
        $id = pdo_insert_id("buildgroup");
-       pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime) 
+       pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime)
                   VALUES ('$id','3','1980-01-01 00:00:00','1980-01-01 00:00:00')");
        $n++;
        }
      }
-     
+
   $xml .= add_XML_value("alert",$n." projects have now default groups.");
-  
+
   } // end CreateDefaultGroups
 else if($AssignBuildToDefaultGroups)
   {
   // Loop throught the builds
   $builds = pdo_query("SELECT id,type,projectid FROM build WHERE id NOT IN (SELECT buildid as id FROM build2group)");
- 
+
   while($build_array = pdo_fetch_array($builds))
      {
      $buildid = $build_array["id"];
      $buildtype = $build_array["type"];
      $projectid = $build_array["projectid"];
-     
+
      $buildgroup_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'"));
-     
+
      $groupid = $buildgroup_array["id"];
-     pdo_query("INSERT INTO build2group(buildid,groupid) VALUES ('$buildid','$groupid')"); 
+     pdo_query("INSERT INTO build2group(buildid,groupid) VALUES ('$buildid','$groupid')");
      }
-     
+
   $xml .= add_XML_value("alert","Builds have been added to default groups successfully.");
 
   } // end AssignBuildToDefaultGroups

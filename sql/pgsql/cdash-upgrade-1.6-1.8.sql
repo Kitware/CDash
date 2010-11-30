@@ -79,3 +79,10 @@ CREATE TABLE "client_jobschedule2build" (
   "buildid" bigint NOT NULL,
   Constraint "scheduleid1" UNIQUE ("scheduleid", "buildid")
 );
+
+CREATE TABLE "apitoken" (
+  "projectid" bigint NOT NULL,
+  "token" character varying(40),
+  "expiration_date" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
+);
+CREATE INDEX "apitoken_token" on "apitoken" ("token");
