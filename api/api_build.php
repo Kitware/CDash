@@ -293,7 +293,7 @@ class BuildAPI extends CDashAPI
     $clientJobSchedule->ProjectId = $projectid;
 
     // Perform the authentication (make sure user has project admin priviledges)
-    if(!authenticate($projectid, $this->Parameters['token']))
+    if(!web_api_authenticate($projectid, $this->Parameters['token']))
       {
       return array('status'=>false, 'message'=>'Invalid API token.');
       }

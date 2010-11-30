@@ -2428,7 +2428,7 @@ function clean_outdated_api_tokens()
   * Returns true if token is valid, false otherwise.
   * Handles SQL escaping/validation of parameters.
   */
-function authenticate($projectid, $token)
+function web_api_authenticate($projectid, $token)
   {
   if(!is_numeric($projectid))
     {
