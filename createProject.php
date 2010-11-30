@@ -159,7 +159,7 @@ if($Submit)
     @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
     @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
     @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
-    @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);     
+    @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
     $Project->Public = $Public;
         
     /** If we are managing clients */
@@ -423,6 +423,7 @@ if($projectid>0)
   $xml .= add_XML_value("displaylabels",$Project->DisplayLabels);
   $xml .= add_XML_value("autoremovetimeframe",$Project->AutoremoveTimeframe);
   $xml .= add_XML_value("autoremovemaxbuilds",$Project->AutoremoveMaxBuilds);
+  $xml .= add_XML_value("webapikey",$Project->WebApiKey);
   if(strlen($Project->CTestTemplateScript)>0)
     {
     $xml .= add_XML_value("ctesttemplatescript",$Project->CTestTemplateScript);

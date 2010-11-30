@@ -1514,6 +1514,24 @@
                           </span>
                         </td>
                       </tr>
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
+                            <strong>Web API Key:</strong>
+                          </div>
+                        </td>
+                        <td onmouseover="showHelp('webapikey_help');" >
+                          <xsl:value-of select="cdash/project/webapikey" />
+                          <span class="help_content" id="webapikey_help">
+                            <b>Web API key</b>
+                            <br />
+                            Use this key when calling the login method of the web API.
+                            It will return a token that you can temporarily use for authenticated access
+                            to other web API methods.
+                          </span>
+                        </td>
+                      </tr>
 
 
                       <tr>

@@ -56,6 +56,7 @@ class Project
   var $RobotName;
   var $RobotRegex;
   var $CTestTemplateScript;
+  var $WebApiKey;
 
   function __construct()
     {
@@ -104,6 +105,10 @@ class Project
     if(empty($this->AutoremoveMaxBuilds))
       { 
       $this->AutoremoveMaxBuilds=300;
+      }
+    if(empty($this->WebApiKey))
+      {
+      $this->WebApiKey='';
       }
     }  
 
@@ -186,7 +191,7 @@ class Project
     $RobotName = pdo_real_escape_string($this->RobotName);
     $RobotRegex = pdo_real_escape_string($this->RobotRegex);
     $Name = pdo_real_escape_string($this->Name); 
-    $CvsViewerType = pdo_real_escape_string($this->CvsViewerType); 
+    $CvsViewerType = pdo_real_escape_string($this->CvsViewerType);
 
     // Check if the project is already
     if($this->Exists())
@@ -223,6 +228,7 @@ class Project
       $query .= ",testtimemaxstatus=".qnum($this->TestTimeMaxStatus);
       $query .= ",emailmaxitems=".qnum($this->EmailMaxItems);
       $query .= ",emailmaxchars=".qnum($this->EmailMaxChars);
+      $query .= ",webapikey='".$this->WebApiKey."'";
       $query .= " WHERE id=".qnum($this->Id)."";
       
       if(!pdo_query($query))
@@ -310,14 +316,14 @@ class Project
                                     nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
-                                    ,displaylabels,autoremovetimeframe,autoremovemaxbuilds)
+                                    ,displaylabels,autoremovetimeframe,autoremovemaxbuilds,webapikey)
                  VALUES (".$idvalue."'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
                  ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$TestingDataUrl','$NightlyTime',
                  '$GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).","
                  .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$CvsViewerType',".qnum($this->TestTimeStd)
                  .",".qnum($this->TestTimeStdThreshold).",".qnum($this->TestTimeMaxStatus).",".qnum($this->EmailMaxItems).",".qnum($this->EmailMaxChars).","
                  .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).",".qnum($this->DisplayLabels)
-                 .",".qnum($this->AutoremoveTimeframe).",".qnum($this->AutoremoveMaxBuilds).")";
+                 .",".qnum($this->AutoremoveTimeframe).",".qnum($this->AutoremoveMaxBuilds).",'".$this->WebApiKey."')";
                     
        if(pdo_query($query))
          {
@@ -450,6 +456,15 @@ class Project
       $this->TestTimeMaxStatus = $project_array['testtimemaxstatus'];
       $this->EmailMaxItems = $project_array['emailmaxitems'];
       $this->EmailMaxChars = $project_array['emailmaxchars'];
+      $this->WebApiKey = $project_array['webapikey'];
+      if($this->WebApiKey == '')
+        {
+        // If no web API key exists, we add one
+        include_once('cdash/common.php');
+        $newKey = generate_web_api_key();
+        pdo_query("UPDATE project SET webapikey='$newKey' WHERE id=".$this->Id);
+        $this->WebApiKey = $newKey;
+        }
       }
 
     // Check if we have a robot
