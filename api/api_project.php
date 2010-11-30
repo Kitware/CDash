@@ -49,18 +49,23 @@ class ProjectAPI extends CDashAPI
    */
   function Authenticate()
     {
-    if(!isset($this->Parameters['projectid']) || !is_numeric($this->Parameters['projectid']))
+    include_once('../cdash/common.php');
+    if(!isset($this->Parameters['project']))
       {
-      return array('status'=>false, 'message'=>"You must specify a projectid parameter.");
+      return array('status'=>false, 'message'=>"You must specify a project parameter.");
+      }
+    $projectid = get_project_id($this->Parameters['project']);
+    if(!is_numeric($projectid) || $projectid <= 0)
+      {
+      return array('status'=>false, 'message'=>'Project not found.');
       }
     if(!isset($this->Parameters['key']) || $this->Parameters['key'] == '')
       {
       return array('status'=>false, 'message'=>"You must specify a key parameter.");
       }
 
-    $id = $this->Parameters['projectid'];
     $key = $this->Parameters['key'];
-    $query = pdo_query("SELECT webapikey FROM project WHERE id=$id");
+    $query = pdo_query("SELECT webapikey FROM project WHERE id=$projectid");
     if(pdo_num_rows($query) == 0)
       {
       return array('status'=>false, 'message'=>"Invalid projectid.");
@@ -72,8 +77,7 @@ class ProjectAPI extends CDashAPI
       {
       return array('status'=>false, 'message'=>"Incorrect API key passed.");
       }
-    include_once('../cdash/common.php');
-    $token = create_web_api_token($id);
+    $token = create_web_api_token($projectid);
     return array('status'=>true, 'token'=>$token);
     }
 
