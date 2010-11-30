@@ -49,7 +49,7 @@ class ProjectAPI extends CDashAPI
    */
   function Authenticate()
     {
-    if(!isset($this->Parameters['projectid']))
+    if(!isset($this->Parameters['projectid']) || !is_numeric($this->Parameters['projectid']))
       {
       return array('status'=>false, 'message'=>"You must specify a projectid parameter.");
       }

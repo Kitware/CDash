@@ -2420,7 +2420,24 @@ function create_web_api_token($projectid)
 function clean_outdated_api_tokens()
   {
   $now = gmdate(FMT_DATETIME);
-  pdo_query("DELETE FROM apitoken WHERE expiration_date < $now");
+  pdo_query("DELETE FROM apitoken WHERE expiration_date < '$now'");
+  }
+
+/** 
+  * Pass this a valid token created by create_web_api_token.
+  * Returns true if token is valid, false otherwise.
+  * Handles SQL escaping/validation of parameters.
+  */
+function authenticate($projectid, $token)
+  {
+  if(!is_numeric($projectid))
+    {
+    return false;
+    }
+  $now = gmdate(FMT_DATETIME);
+  $token = pdo_real_escape_string($token);
+  $result = pdo_query("SELECT * FROM apitoken WHERE projectid=$projectid AND token='$token' AND expiration_date > '$now'");
+  return pdo_num_rows($result) != 0;
   }
 
 ?>

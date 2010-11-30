@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -21,26 +21,26 @@
 //
 $cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
-  
+
 // Return a tree of coverage directory with the number of line covered
 // and not covered
 include_once('api.php');
 
 class BuildAPI extends CDashAPI
 {
-  
+
   /** Return the defects: builderrors, buildwarnings, testnotrun, testfailed. */
   private function ListDefects()
-    {       
-    include_once('../cdash/common.php');  
+    {
+    include_once('../cdash/common.php');
     include("../cdash/config.php");
-    
-    if(!isset($this->Parameters['project']))  
+
+    if(!isset($this->Parameters['project']))
       {
       echo "Project not set";
       return;
       }
-      
+
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid))
       {
@@ -49,40 +49,40 @@ class BuildAPI extends CDashAPI
       }
 
     $builds = array();
-    
 
-    if($CDASH_DB_TYPE == "pgsql") 
+
+    if($CDASH_DB_TYPE == "pgsql")
       {
       $query = pdo_query("SELECT EXTRACT(YEAR FROM starttime) AS y ,
                               EXTRACT(MONTH FROM starttime) AS m,
                               EXTRACT(DAY FROM starttime) AS d,
                   AVG(builderrors) AS builderrors,AVG(buildwarnings) AS buildwarnings,
                   AVG(testnotrun) AS testnotrun,AVG(testfailed) AS testfailed
-                  FROM build WHERE projectid=".$projectid." 
+                  FROM build WHERE projectid=".$projectid."
                   AND starttime<NOW()
-                  GROUP BY y,m,d 
-                  ORDER BY y,m,d ASC LIMIT 1000"); // limit the request  
+                  GROUP BY y,m,d
+                  ORDER BY y,m,d ASC LIMIT 1000"); // limit the request
       }
-    else 
-      { 
+    else
+      {
       $query = pdo_query("SELECT YEAR(starttime) AS y ,MONTH(starttime) AS m,DAY(starttime) AS d,
                   AVG(builderrors) AS builderrors,AVG(buildwarnings) AS buildwarnings,
                   AVG(testnotrun) AS testnotrun,AVG(testfailed) AS testfailed
-                  FROM build WHERE projectid=".$projectid." 
+                  FROM build WHERE projectid=".$projectid."
                   AND starttime<NOW()
-                  GROUP BY YEAR(starttime),MONTH(starttime),DAY(starttime) 
+                  GROUP BY YEAR(starttime),MONTH(starttime),DAY(starttime)
                   ORDER BY YEAR(starttime),MONTH(starttime),DAY(starttime) ASC LIMIT 1000"); // limit the request
       }
-      
+
     echo pdo_error();
-     
+
     while($query_array = pdo_fetch_array($query))
       {
       $build['month'] = $query_array['m'];
       $build['day'] = $query_array['d'];
       $build['year'] = $query_array['y'];
       $build['time'] = strtotime($query_array['y'].'-'.$query_array['m'].'-'.$query_array['d']);
-      
+
       $build['builderrors'] = 0;
       if($query_array['builderrors']>=0)
         {
@@ -103,22 +103,22 @@ class BuildAPI extends CDashAPI
         {
         $build['testfailed'] = $query_array['testfailed'];
         }
-      $builds[] = $build;  
+      $builds[] = $build;
       }
     return $builds;
     } // end function ListDefects
-  
-    
+
+
   /** Return the number of defects per number of checkins */
   private function ListCheckinsDefects()
-    { 
-    include_once('../cdash/common.php');  
-    if(!isset($this->Parameters['project']))  
+    {
+    include_once('../cdash/common.php');
+    if(!isset($this->Parameters['project']))
       {
       echo "Project not set";
       return;
       }
-      
+
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid))
       {
@@ -128,16 +128,16 @@ class BuildAPI extends CDashAPI
 
     $builds = array();
     $query = pdo_query("SELECT nfiles, builderrors, buildwarnings, testnotrun, testfailed
-                FROM build,buildupdate WHERE build.projectid=".$projectid." 
+                FROM build,buildupdate WHERE build.projectid=".$projectid."
                 AND buildupdate.buildid=build.id
                 AND nfiles>0
                 AND build.starttime<NOW()
                 ORDER BY build.starttime DESC LIMIT 1000"); // limit the request
     echo pdo_error();
-    
+
     while($query_array = pdo_fetch_array($query))
       {
-      $build['nfiles'] = $query_array['nfiles'];   
+      $build['nfiles'] = $query_array['nfiles'];
       $build['builderrors'] = 0;
       if($query_array['builderrors']>=0)
         {
@@ -158,66 +158,66 @@ class BuildAPI extends CDashAPI
         {
         $build['testfailed'] = $query_array['testfailed'];
         }
-      $builds[] = $build;  
+      $builds[] = $build;
       }
     return $builds;
-    } // end function ListCheckinsDefects 
-    
-    
+    } // end function ListCheckinsDefects
+
+
   /** Return an array with two sub arrays:
-   *  array1: id, buildname, os, bits, memory, frequency 
+   *  array1: id, buildname, os, bits, memory, frequency
    *  array2: array1_id, test_fullname */
   private function ListSiteTestFailure()
-    { 
-    include("../cdash/config.php");  
-    include_once('../cdash/common.php');  
-    
-    
-    if(!isset($this->Parameters['project']))  
+    {
+    include("../cdash/config.php");
+    include_once('../cdash/common.php');
+
+
+    if(!isset($this->Parameters['project']))
       {
       echo "Project not set";
       return;
       }
-      
+
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid))
       {
       echo "Project not found";
       return;
-      }   
+      }
 
-    $group = 'Nightly';      
+    $group = 'Nightly';
     if(isset($this->Parameters['group']))
       {
       $group = pdo_real_escape_string($this->Parameters['group']);
       }
-      
+
     // Get first all the unique builds for today's dashboard and group
     $query = pdo_query("SELECT nightlytime FROM project WHERE id=".qnum($projectid));
     $project_array = pdo_fetch_array($query);
-    
+
     $date = date("Y-m-d");
-    list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]); 
+    list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
     $currentUTCTime =  date(FMT_DATETIME,$currentstarttime);
-    
+
     // Get all the unique builds for the section of the dashboard
-    if($CDASH_DB_TYPE == "pgsql") 
+    if($CDASH_DB_TYPE == "pgsql")
       {
       $query = pdo_query("SELECT max(b.id) AS buildid,s.name || '-' || b.name AS fullname,s.name AS sitename,b.name,
                si.totalphysicalmemory,si.processorclockfrequency
                FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg, build2group AS b2g
-               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id 
+               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id
                AND bg.name='".$group."' AND b.testfailed>0 AND b2g.buildid=b.id AND b2g.groupid=bg.id
                AND b.starttime>'$currentUTCTime' AND b.starttime<NOW() GROUP BY fullname,
                s.name,b.name,si.totalphysicalmemory,si.processorclockfrequency
-               ORDER BY buildid"); 
+               ORDER BY buildid");
       }
     else
-      {  
+      {
       $query = pdo_query("SELECT max(b.id) AS buildid,CONCAT(s.name,'-',b.name) AS fullname,s.name AS sitename,b.name,
                si.totalphysicalmemory,si.processorclockfrequency
                FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg, build2group AS b2g
-               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id 
+               WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id
                AND bg.name='".$group."' AND b.testfailed>0 AND b2g.buildid=b.id AND b2g.groupid=bg.id
                AND b.starttime>'$currentUTCTime' AND b.starttime<NOW() GROUP BY fullname ORDER BY buildid");
       }
@@ -228,78 +228,87 @@ class BuildAPI extends CDashAPI
       if($buildids != '')
         {
         $buildids.=",";
-        }  
-      $buildids .= $query_array['buildid'];    
+        }
+      $buildids .= $query_array['buildid'];
       $site = array();
       $site['name'] = $query_array['sitename'];
       $site['buildname'] = $query_array['name'];
       $site['cpu'] = $query_array['processorclockfrequency'];
       $site['memory'] = $query_array['totalphysicalmemory'];
       $sites[$query_array['buildid']] = $site;
-      } 
+      }
 
     if(empty($sites))
       {
       return $sites;
       }
-      
+
     $query = pdo_query("SELECT bt.buildid AS buildid,t.name AS testname,t.id AS testid
               FROM build2test AS bt,test as t
               WHERE bt.buildid IN (".$buildids.") AND bt.testid=t.id AND bt.status='failed'");
 
     $tests = array();
-    
+
     while($query_array = pdo_fetch_array($query))
       {
       $test = array();
-      $test['id'] = $query_array['testid']; 
-      $test['name'] = $query_array['testname'];  
+      $test['id'] = $query_array['testid'];
+      $test['name'] = $query_array['testname'];
       $sites[$query_array['buildid']]['tests'][] = $test;
       }
 
     return $sites;
-    } // end function ListCheckinsDefects 
-    
+    } // end function ListCheckinsDefects
+
   /** Schedule a build */
   private function ScheduleBuild()
-    { 
-    include("../cdash/config.php");  
-    include_once('../cdash/common.php');  
+    {
+    include("../cdash/config.php");
+    include_once('../cdash/common.php');
     include_once("../models/clientjobschedule.php");
     include_once("../models/clientos.php");
     include_once("../models/clientcmake.php");
     include_once("../models/clientcompiler.php");
     include_once("../models/clientlibrary.php");
 
+    if(!isset($this->Parameters['token']))
+      {
+      return array('status'=>false, 'message'=>'You must specify a token parameter.');
+      }
+
     $clientJobSchedule = new ClientJobSchedule();
-    
+
     $status = array();
     $status['scheduled'] = 0;
-    if(!isset($this->Parameters['project']))  
+    if(!isset($this->Parameters['project']))
       {
-      echo "Project name should be set";
-      return;
+      return array('status'=>false, 'message'=>'You must specify a project parameter.');
       }
-      
+
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid) || $projectid<=0)
       {
-      echo "Project not found";
-      return;
-      }  
+      return array('status'=>false, 'message'=>'Project not found.');
+      }
     $clientJobSchedule->ProjectId = $projectid;
-      
+
+    // Perform the authentication (make sure user has project admin priviledges)
+    if(!authenticate($projectid, $this->Parameters['token']))
+      {
+      return array('status'=>false, 'message'=>'Invalid API token.');
+      }
+
     // We would need a user login/password at some point
-    $clientJobSchedule->UserId = '1';      
+    $clientJobSchedule->UserId = '1';
     if(isset($this->Parameters['userid']))
       {
       $clientJobSchedule->UserId = pdo_real_escape_string($this->Parameters['userid']);
-      } 
+      }
 
     // Experimental: 0
     // Nightly: 1
     // Continuous: 2
-    $clientJobSchedule->Type = 0;  
+    $clientJobSchedule->Type = 0;
     if(isset($this->Parameters['type']))
       {
       $clientJobSchedule->Type = pdo_real_escape_string($this->Parameters['type']);
@@ -307,12 +316,11 @@ class BuildAPI extends CDashAPI
 
     if(!isset($this->Parameters['repository']))
       {
-      echo "Repository should be set";
-      return;
-      }  
-    
-    $clientJobSchedule->Repository = pdo_real_escape_string($this->Parameters['repository']);   
-  
+      return array('status'=>false, 'message'=>'You must specify a repository parameter.');
+      }
+
+    $clientJobSchedule->Repository = pdo_real_escape_string($this->Parameters['repository']);
+
     if(isset($this->Parameters['module']))
       {
       $clientJobSchedule->Module = pdo_real_escape_string($this->Parameters['module']);
@@ -321,26 +329,26 @@ class BuildAPI extends CDashAPI
     if(isset($this->Parameters['tag']))
       {
       $clientJobSchedule->Tag = pdo_real_escape_string($this->Parameters['tag']);
-      }  
+      }
 
     if(isset($this->Parameters['suffix']))
       {
       $clientJobSchedule->BuildNameSuffix = pdo_real_escape_string($this->Parameters['suffix']);
       }
-         
+
     // Build Configuration
     // Debug: 0
     // Release: 1
     // RelWithDebInfo: 2
     // MinSizeRel: 3
-    $clientJobSchedule->BuildConfiguration = 0; 
+    $clientJobSchedule->BuildConfiguration = 0;
     if(isset($this->Parameters['configuration']))
       {
       $clientJobSchedule->BuildConfiguration = pdo_real_escape_string($this->Parameters['configuration']);
       }
 
-    $clientJobSchedule->StartTime = date("Y-m-d H:i:s"); 
-    $clientJobSchedule->EndDate = '1980-01-01 00:00:00';   
+    $clientJobSchedule->StartTime = date("Y-m-d H:i:s");
+    $clientJobSchedule->EndDate = '1980-01-01 00:00:00';
     $clientJobSchedule->RepeatTime = 0; // No repeat
     $clientJobSchedule->Enable = 1;
     $clientJobSchedule->Save();
@@ -368,7 +376,7 @@ class BuildAPI extends CDashAPI
       $clientJobSchedule->AddSite($siteid);
       }
 
-    if(isset($this->Parameters['osname']) 
+    if(isset($this->Parameters['osname'])
        || isset($this->Parameters['osversion'])
        || isset($this->Parameters['osbits'])
        )
@@ -381,17 +389,17 @@ class BuildAPI extends CDashAPI
       if(isset($this->Parameters['osversion'])) {$osversion = $this->Parameters['osversion'];}
       if(isset($this->Parameters['osbits'])) {$osbits = $this->Parameters['osbits'];}
       $osids = $ClientOS->GetOS($osname,$osversion,$osbits);
-      
+
       foreach($osids as $osid)
         {
         $clientJobSchedule->AddOS($osid);
         }
       }
-      
-     if(isset($this->Parameters['compilername']) 
+
+     if(isset($this->Parameters['compilername'])
        || isset($this->Parameters['compilerversion']))
        {
-       $ClientCompiler  = new ClientCompiler();  
+       $ClientCompiler  = new ClientCompiler();
        $compilername = '';
        $compilerversion = '';
        if(isset($this->Parameters['compilername'])) {$compilername = $this->Parameters['compilername'];}
@@ -403,10 +411,10 @@ class BuildAPI extends CDashAPI
          }
        }
 
-    if(isset($this->Parameters['libraryname']) 
+    if(isset($this->Parameters['libraryname'])
        || isset($this->Parameters['libraryversion']))
        {
-       $ClientLibrary  = new ClientLibrary();  
+       $ClientLibrary  = new ClientLibrary();
        $libraryname = '';
        $libraryversion = '';
        if(isset($this->Parameters['libraryname'])) {$libraryname = $this->Parameters['libraryname'];}
@@ -417,17 +425,18 @@ class BuildAPI extends CDashAPI
          $clientJobSchedule->AddLibrary($libraryid);
          }
        }
-         
+
     $status['scheduleid'] = $clientJobSchedule->Id;
     $status['scheduled'] = 1;
+    $status['status'] = true;
     return $status;
-    } // end function ScheduleBuild   
+    } // end function ScheduleBuild
 
    /** Return the status of a scheduled build */
    private function ScheduleStatus()
-    { 
-    include("../cdash/config.php");  
-    include_once('../cdash/common.php');  
+    {
+    include("../cdash/config.php");
+    include_once('../cdash/common.php');
     include_once("../models/clientjobschedule.php");
     include_once("../models/clientos.php");
     include_once("../models/clientcmake.php");
@@ -436,31 +445,31 @@ class BuildAPI extends CDashAPI
 
     $status = array();
     $status['scheduled'] = 0;
-    if(!isset($this->Parameters['project']))  
+    if(!isset($this->Parameters['project']))
       {
       echo "Project name should be set";
       return;
       }
-      
+
     $projectid = get_project_id($this->Parameters['project']);
     if(!is_numeric($projectid) || $projectid<=0)
       {
       echo "Project not found";
       return;
-      }  
-    
+      }
+
     $scheduleid = $this->Parameters['scheduleid'];
     if(!is_numeric($scheduleid) || $scheduleid<=0)
       {
       echo "ScheduleId not set";
       return;
-      }  
-    
-    $clientJobSchedule = new ClientJobSchedule();        
+      }
+
+    $clientJobSchedule = new ClientJobSchedule();
     $clientJobSchedule->Id = $scheduleid;
     $clientJobSchedule->ProjectId = $projectid;
-   
-    $status['status'] = $clientJobSchedule->GetStatus();    
+
+    $status['status'] = $clientJobSchedule->GetStatus();
     switch($status['status'])
       {
       case -1: $status['statusstring'] = "not found"; break;
@@ -470,16 +479,16 @@ class BuildAPI extends CDashAPI
       case 4: $status['statusstring'] = "aborted"; break;
       case 5: $status['statusstring'] = "failed"; break;
       }
-    
+
     $status['scheduleid'] = $clientJobSchedule->Id;
     $status['scheduled'] = 0;
     if($status['status']>0)
       {
       $status['scheduled'] = 1;
-      } 
+      }
     return $status;
     } // end function ScheduleBuild
-    
+
   /** Run function */
   function Run()
     {
@@ -491,7 +500,7 @@ class BuildAPI extends CDashAPI
       case 'schedule': return $this->ScheduleBuild();
       case 'schedulestatus': return $this->ScheduleStatus();
       }
-    } 
+    }
 }
 
 ?>
