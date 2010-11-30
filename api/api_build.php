@@ -481,6 +481,7 @@ class BuildAPI extends CDashAPI
       }
 
     $status['scheduleid'] = $clientJobSchedule->Id;
+    $status['builds'] = $clientJobSchedule->GetAssociatedBuilds();
     $status['scheduled'] = 0;
     if($status['status']>0)
       {
