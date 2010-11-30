@@ -2386,4 +2386,41 @@ function get_labels_xml_from_query_results($qry)
   return $xml;
   }
 
+function generate_web_api_key()
+  {
+  $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  $length = 40;
+
+  // seed with microseconds
+  function make_seed_recoverpass()
+    {
+    list($usec, $sec) = explode(' ', microtime());
+    return (float) $sec + ((float) $usec * 100000);
+    }
+  srand(make_seed_recoverpass());
+
+  $key = "";
+  $max=strlen($keychars)-1;
+  for ($i=0;$i<$length;$i++)
+    {
+    $key .= substr($keychars, rand(0, $max), 1);
+    }
+  return $key;
+  }
+
+function create_web_api_token($projectid)
+  {
+  $token = generate_web_api_key();
+  $expTime = gmdate(FMT_DATETIME,time()+3600); //hard-coding 1 hour for now
+  pdo_query("INSERT INTO apitoken (projectid,token,expiration_date) VALUES ($projectid,'$token','$expTime')");
+  clean_outdated_api_tokens();
+  return $token;
+  }
+  
+function clean_outdated_api_tokens()
+  {
+  $now = gmdate(FMT_DATETIME);
+  pdo_query("DELETE FROM apitoken WHERE expiration_date < $now");
+  }
+
 ?>
