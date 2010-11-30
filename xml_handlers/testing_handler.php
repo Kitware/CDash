@@ -151,7 +151,7 @@ class TestingHandler extends AbstractHandler
         $this->Build->SetSubProject($this->SubProjectName);
         $this->Build->Append = $this->Append;
         $this->Build->InsertErrors = false;
-        add_build($this->Build);
+        add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
 
         $this->UpdateEndTime = true;
         $buildid = $this->Build->Id;

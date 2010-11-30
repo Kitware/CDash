@@ -56,3 +56,9 @@ CREATE TABLE IF NOT EXISTS `user2repository` (
   KEY `credential` (`credential`),
   KEY `projectid` (`projectid`)
 );
+
+CREATE TABLE IF NOT EXISTS client_jobschedule2build (
+  scheduleid bigint(20) unsigned NOT NULL,
+  buildid int(11) NOT NULL,
+  UNIQUE KEY scheduleid (scheduleid,buildid)
+);

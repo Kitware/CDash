@@ -1009,6 +1009,18 @@ CREATE TABLE IF NOT EXISTS client_jobschedule (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table 'client_jobschedule2build'
+--
+
+CREATE TABLE IF NOT EXISTS client_jobschedule2build (
+  scheduleid bigint(20) unsigned NOT NULL,
+  buildid int(11) NOT NULL,
+  UNIQUE KEY scheduleid (scheduleid,buildid)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table 'client_jobschedule2cmake'
 --
 

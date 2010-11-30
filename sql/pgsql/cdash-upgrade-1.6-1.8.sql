@@ -71,3 +71,11 @@ CREATE INDEX "user2repository_userid" on "user2repository" ("userid");
 CREATE INDEX "user2repository_credential" on "user2repository" ("credential");
 CREATE INDEX "user2repository_projectid" on "user2repository" ("projectid");
 
+--
+-- Table: client_jobschedule2build
+--
+CREATE TABLE "client_jobschedule2build" (
+  "scheduleid" bigint NOT NULL,
+  "buildid" bigint NOT NULL,
+  Constraint "scheduleid1" UNIQUE ("scheduleid", "buildid")
+);

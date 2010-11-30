@@ -67,7 +67,7 @@ if($CDASH_ASYNCHRONOUS_SUBMISSION)
   }
 else  
   {
-  do_submit($fp, $projectid, $expected_md5);
+  do_submit($fp, $projectid, $expected_md5, true);
   }
 fclose($fp);
 ?>

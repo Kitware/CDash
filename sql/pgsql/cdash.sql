@@ -959,6 +959,14 @@ CREATE INDEX "client_jobschedule_enable" on "client_jobschedule" ("enable");
 CREATE INDEX "client_jobschedule_starttime" on "client_jobschedule" ("starttime");
 CREATE INDEX "client_jobschedule_repeattime" on "client_jobschedule" ("repeattime");
 
+--
+-- Table: client_jobschedule2build
+--
+CREATE TABLE "client_jobschedule2build" (
+  "scheduleid" bigint NOT NULL,
+  "buildid" bigint NOT NULL,
+  Constraint "scheduleid1" UNIQUE ("scheduleid", "buildid")
+);
 
 --
 -- Table: client_jobschedule2cmake

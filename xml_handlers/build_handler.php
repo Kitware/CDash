@@ -122,7 +122,7 @@ class BuildHandler extends AbstractHandler
       $this->Build->SetSubProject($this->SubProjectName);
       $this->Build->Append = $this->Append;
 
-      add_build($this->Build);
+      add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
       $this->Build->ComputeDifferences();
       }
     else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE') 

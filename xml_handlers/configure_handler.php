@@ -91,7 +91,7 @@ class ConfigureHandler extends AbstractHandler
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         $this->Build->SetSubProject($this->SubProjectName);
         $this->Build->InsertErrors = false;
-        add_build($this->Build);
+        add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
         $buildid = $this->Build->Id;
         }
       $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid; 

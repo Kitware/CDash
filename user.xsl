@@ -12,7 +12,7 @@
       <head>
         <title><xsl:value-of select="cdash/title"/></title>
         <meta name="robots" content="noindex,nofollow" />
-        <link rel="shortcut icon" href="favicon.ico"/> 
+        <link rel="shortcut icon" href="favicon.ico"/>
         <link rel="StyleSheet" type="text/css">
           <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
         </link>
@@ -20,7 +20,7 @@
         <script src="javascript/cdashUser.js" type="text/javascript" charset="utf-8"></script>
       </head>
  <body>
- 
+
  <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
   <tr>
     <td>
@@ -31,17 +31,17 @@
       <tr>
         <td width="66%" class="paddl">
         <a href="index.php">All Dashboards</a> | <a href="user.php?logout=1">Log Out</a>
-        </td>        
+        </td>
       </tr>
-    </table>    
+    </table>
     </td>
-  </tr> 
+  </tr>
   <tr>
     <td height="22" class="topline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
   </tr>
   <tr>
     <td width="100%" align="left" class="topbg">
- 
+
     <table width="100%" border="0" cellpadding="0" cellspacing="0" >
     <tr>
     <td width="195" height="121" class="topbgleft">
@@ -98,14 +98,14 @@
     </tr>
 
    <tr class="table-heading">
-      <td align="center" width="100px" class="botl">Project Name</td>   
-      <td align="center" width="240px" class="botl">Actions</td>   
+      <td align="center" width="100px" class="botl">Project Name</td>
+      <td align="center" width="240px" class="botl">Actions</td>
       <td align="center" width="130px" class="botl">Builds</td>
       <td align="center" width="130px" class="botl">Builds per day</td>
       <td align="center" width="130px" class="botl">Success Last 24h</td>
       <td align="center" width="130px" class="botl">Errors Last 24h</td>
       <td align="center" width="130px" class="botl">Warnings Last 24h</td>
-      
+
    </tr>
     <xsl:for-each select="cdash/project">
       <tr class="table-heading">
@@ -114,7 +114,7 @@
         <xsl:attribute name="href">
         index.php?project=<xsl:value-of select="name_encoded"/>
         </xsl:attribute>
-        <xsl:value-of select="name"/></a> </td>      
+        <xsl:value-of select="name"/></a> </td>
        <td align="center"  bgcolor="#DDDDDD" ><a class="tooltip" title="Edit subscription" >
         <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>
         <img src="images/edit.png" border="0" alt="subscribe" />
@@ -145,12 +145,12 @@
           <a class="tooltip" title="Manage project coverage" >
           <xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
            <img src="images/filecoverage.png" border="0" alt="managecoverage" /></a>
-           
+
           <xsl:if test="nerrorlogs>0">
           <a class="tooltip">
           <xsl:attribute name="title"><xsl:value-of select="nerrorlogs"/> errors in the CDash log</xsl:attribute>
           <xsl:attribute name="href">viewErrorLog.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-           <img src="images/warning.png" border="0" alt="erro logs" /></a> 
+           <img src="images/warning.png" border="0" alt="erro logs" /></a>
           </xsl:if>
         </xsl:if>
       </td>
@@ -188,7 +188,7 @@
 
 <!-- Job Submission -->
 <xsl:if test="/cdash/manageclient=1">
-<xsl:if test="count(cdash/jobschedule)>0">    
+<xsl:if test="count(cdash/jobschedule)>0">
  <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
     <tr class="table-heading1">
@@ -196,11 +196,11 @@
     </tr>
 
    <tr class="table-heading">
-      <td align="center" class="botl">Project</td>   
-      <td align="center" class="botl">Status</td>   
+      <td align="center" class="botl">Project</td>
+      <td align="center" class="botl">Status</td>
       <td align="center" class="botl">Last run</td>
       <td align="center" class="botl">Actions</td>
-      
+
    </tr>
     <xsl:for-each select="cdash/jobschedule">
       <tr class="table-heading">
@@ -209,18 +209,18 @@
         <xsl:attribute name="href">
         index.php?project=<xsl:value-of select="projectname"/>
         </xsl:attribute>
-        <xsl:value-of select="projectname"/></a> </td>  
+        <xsl:value-of select="projectname"/></a> </td>
         <td align="center" >
-        <xsl:value-of select="status"/></td>  
+        <xsl:value-of select="status"/></td>
          <td align="center" >
-        <xsl:value-of select="lastrun"/></td>  
+        <xsl:value-of select="lastrun"/></td>
         <td align="center" >
         <a><xsl:attribute name="href">manageClient.php?scheduleid=<xsl:value-of select="id"/>
         </xsl:attribute><img src="images/advanced.png" border="0" alt="edit schedule" /></a>
         <a onclick="return VerifyDeleteSchedule()"><xsl:attribute name="href">manageClient.php?removeschedule=<xsl:value-of select="id"/>
         </xsl:attribute><img src="images/delete.png" border="0" alt="remove schedule" /></a>
-        
-        </td>     
+
+        </td>
     </tr>
   </xsl:for-each>
   </tbody>
@@ -240,21 +240,21 @@
     <!-- header of the matrix -->
     <tr class="table-heading">
       <td align="center"><b><i>Site\Project</i></b></td>
-      
+
       <xsl:for-each select="cdash/claimedsiteproject">
         <td align="center" id="nob"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute><xsl:value-of select="name"/></a></td>
       </xsl:for-each>
     </tr>
-    
+
     <!-- Fill in the information -->
     <xsl:for-each select="cdash/claimedsite">
   <tr class="treven">
       <td align="center" >
         <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute><xsl:value-of select="name"/></a>
       </td>
-      
+
       <xsl:for-each select="project">
-        <td align="center" id="nob"> 
+        <td align="center" id="nob">
      <table width="100%" border="0">
             <xsl:if test="nightly/NA=0">
               <tr class="table-heading">
@@ -264,7 +264,7 @@
                 <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/errorclass"/></xsl:attribute><xsl:value-of select="nightly/error"/></td>
                 <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/testfailclass"/></xsl:attribute><xsl:value-of select="nightly/testfail"/></td>
                 <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="nightly/dateclass"/></xsl:attribute>
-                <a><xsl:attribute name="href"><xsl:value-of select="nightly/datelink"/></xsl:attribute><xsl:value-of select="nightly/date"/></a>  
+                <a><xsl:attribute name="href"><xsl:value-of select="nightly/datelink"/></xsl:attribute><xsl:value-of select="nightly/date"/></a>
               </td>
             </tr>
           </xsl:if>
@@ -274,9 +274,9 @@
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/updateclass"/></xsl:attribute><xsl:value-of select="continuous/update"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/configureclass"/></xsl:attribute><xsl:value-of select="continuous/configure"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/errorclass"/></xsl:attribute><xsl:value-of select="continuous/error"/></td>
-              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/testfailclass"/></xsl:attribute><xsl:value-of select="continuous/testfail"/></td> 
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/testfailclass"/></xsl:attribute><xsl:value-of select="continuous/testfail"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="continuous/dateclass"/></xsl:attribute>
-              <a><xsl:attribute name="href"><xsl:value-of select="continuous/datelink"/></xsl:attribute><xsl:value-of select="continuous/date"/></a>  
+              <a><xsl:attribute name="href"><xsl:value-of select="continuous/datelink"/></xsl:attribute><xsl:value-of select="continuous/date"/></a>
             </td></tr>
           </xsl:if>
           <xsl:if test="experimental/NA=0">
@@ -285,11 +285,11 @@
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/updateclass"/></xsl:attribute><xsl:value-of select="experimental/update"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/configureclass"/></xsl:attribute><xsl:value-of select="experimental/configure"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/errorclass"/></xsl:attribute><xsl:value-of select="experimental/error"/></td>
-              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/testfailclass"/></xsl:attribute><xsl:value-of select="experimental/testfail"/></td>  
+              <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/testfailclass"/></xsl:attribute><xsl:value-of select="experimental/testfail"/></td>
               <td align="center" id="nob"><xsl:attribute name="class"><xsl:value-of select="experimental/dateclass"/></xsl:attribute>
-              <a><xsl:attribute name="href"><xsl:value-of select="experimental/datelink"/></xsl:attribute><xsl:value-of select="experimental/date"/></a>  
+              <a><xsl:attribute name="href"><xsl:value-of select="experimental/datelink"/></xsl:attribute><xsl:value-of select="experimental/date"/></a>
             </td></tr>
-          </xsl:if> 
+          </xsl:if>
         </table>
       </td>
     </xsl:for-each>
@@ -331,20 +331,20 @@
     <tr class="table-heading1"><td id="nob"><h3>Administration</h3></td></tr>
     <tr class="trodd"><td id="nob"><a href="createProject.php">[Create new project]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="createProject.php?edit=1">[Edit project]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">[Manage project roles]</a></td></tr> 
-    <tr class="treven"><td id="nob"><a href="manageSubproject.php">[Manage subproject]</a></td></tr> 
-    <tr class="trodd"><td id="nob"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr> 
-    <tr class="treven"><td id="nob"><a href="manageCoverage.php">[Manage project coverage]</a></td></tr> 
-    <tr class="trodd"><td id="nob"><a href="manageBanner.php">[Manage banner message]</a></td></tr> 
+    <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">[Manage project roles]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="manageSubproject.php">[Manage subproject]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="manageCoverage.php">[Manage project coverage]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="manageBanner.php">[Manage banner message]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="manageUsers.php">[Manage users]</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="upgrade.php">[Maintenance]</a></td></tr>
     <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a>
-    
+
     <xsl:if test="cdash/nerrorlogs>0">
        <a class="tooltip">
        <xsl:attribute name="title"><xsl:value-of select="cdash/nerrorlogs"/> errors in the CDash log</xsl:attribute>
        <xsl:attribute name="href">viewErrorLog.php</xsl:attribute>
-       <img src="images/warning.png" border="0" alt="erro logs" /></a> 
+       <img src="images/warning.png" border="0" alt="erro logs" /></a>
        </xsl:if>
     </td></tr>
     <tr class="trodd"><td id="nob"><a href="siteStatistics.php">[Site Statistics]</a></td></tr>

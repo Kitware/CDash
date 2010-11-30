@@ -4,7 +4,7 @@
   <xsl:include href="footer.xsl"/>
   <xsl:include href="headscripts.xsl"/>
   <xsl:include href="headeradminproject.xsl" />
-  
+
   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="UTF-8"/>
   <xsl:template match="/">
@@ -33,11 +33,11 @@
     createProject.php?edit=1&#38;projectid=<xsl:value-of select="cdash/project/id" />#fragment-3
   </xsl:attribute>
   project repository</a> before starting.<br/>
-</xsl:if>  
+</xsl:if>
 <xsl:if test="count(cdash/os)=0">
 No sites are currently available. You should run the CTest script in order to register at least one client.<br/>
 Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki page</a> for more information on how to set this up.
-</xsl:if>   
+</xsl:if>
 
 <xsl:if test="count(cdash/os)>0">
   <xsl:if test="count(cdash/project/repository)>0">
@@ -45,7 +45,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
     <table id="form_table">
       <tr>
         <td align="right"><b>Project:</b></td>
-        <td><xsl:value-of select="cdash/project/name" /></td>    
+        <td><xsl:value-of select="cdash/project/name" /></td>
       </tr>
       <tr>
         <td align="right" valign="top">
@@ -107,7 +107,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
         <td valign="top" align="right"><b>Operating System:</b><br/><a href="#" onclick="return clearOS();">[clear all]</a></td>
         <td>
           <select multiple="true" name="system[]" id="system_select" onchange="checkSystem();">
-            <xsl:for-each select="/cdash/os">             
+            <xsl:for-each select="/cdash/os">
               <option>
                 <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
                 <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>
@@ -121,7 +121,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
         <td valign="top" align="right"><b>Compiler:</b><br/><a href="#" onclick="return clearCompiler();">[clear all]</a></td>
         <td>
           <select multiple="true" name="compiler[]" id="compiler_select" onchange="checkSystem();">
-            <xsl:for-each select="/cdash/compiler">              
+            <xsl:for-each select="/cdash/compiler">
               <option>
                 <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
                 <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>
@@ -130,12 +130,12 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
             </xsl:for-each>
           </select>
         </td>
-      </tr> 
+      </tr>
       <tr>
         <td valign="top" align="right"><b>CMake:</b><br/><a href="#" onclick="return clearCMake()">[clear all]</a></td>
         <td>
           <select multiple="true" name="cmake[]" id="cmake_select" onchange="checkSystem();">
-            <xsl:for-each select="/cdash/cmake">              
+            <xsl:for-each select="/cdash/cmake">
               <option>
                 <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
                 <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>
@@ -144,12 +144,12 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
             </xsl:for-each>
           </select>
         </td>
-      </tr> 
+      </tr>
       <tr>
         <td valign="top" align="right"><b>Libraries:</b><br/><a href="#" onclick="return clearLibrary()">[clear all]</a></td>
         <td>
           <select multiple="true" name="library[]" id="library_select" onchange="checkSystem();">
-            <xsl:for-each select="/cdash/library">              
+            <xsl:for-each select="/cdash/library">
               <option>
                 <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
                 <xsl:if test="selected=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>
@@ -163,7 +163,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
         <td valign="top" align="right"><b>Site:</b><br/><a href="#" onclick="return clearSite()">[clear all]</a></td>
         <td>
           <select multiple="true" name="site[]" id="site_select" onchange="checkSystem();">
-            <xsl:for-each select="/cdash/site">              
+            <xsl:for-each select="/cdash/site">
               <option>
                 <xsl:if test="availablenow=0"><xsl:attribute name="style">color:red</xsl:attribute></xsl:if>
                 <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
@@ -172,22 +172,22 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
               </option>
             </xsl:for-each>
           </select><br/>
-        Sites marked in <font color="red">red</font> have not been responding in the last 5 minutes.  
-        <div id="check"></div> 
-        <br/> 
+        Sites marked in <font color="red">red</font> have not been responding in the last 5 minutes.
+        <div id="check"></div>
+        <br/>
         </td>
       </tr>
-       
+
       <tr>
-        <td align="right" valign="top"><b>Initial CMakeCache:</b></td> 
+        <td align="right" valign="top"><b>Initial CMakeCache:</b></td>
         <td><textarea style="width:600px" rows="4" id="cmakecache" name="cmakecache"><xsl:value-of select="/cdash/cmakecache"/></textarea></td>
       </tr>
       <tr>
-        <td align="right" valign="top"><b>Job-specific client script:</b></td> 
+        <td align="right" valign="top"><b>Job-specific client script:</b></td>
         <td><textarea style="width:600px" rows="10" id="clientscript" name="clientscript"><xsl:value-of select="/cdash/clientscript"/></textarea></td>
       </tr>
       <tr>
-        <td align="right" valign="top"><b>Type:</b></td> 
+        <td align="right" valign="top"><b>Type:</b></td>
         <td><select name="type">
              <option value="0"><xsl:if test="/cdash/type=0"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Experimental</option>
              <option value="1"><xsl:if test="/cdash/type=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Nightly</option>
@@ -212,34 +212,34 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
         </td>
       </tr>
       <tr>
-        <td align="right" valign="top"><b>Start date:</b></td> 
+        <td align="right" valign="top"><b>Start date:</b></td>
         <td><input name="startdate" type="text" size="19" maxlength="19">
         <xsl:attribute name="value"><xsl:value-of select="/cdash/startdate" /></xsl:attribute>
         </input></td>
       </tr>
       <tr>
-        <td align="right" valign="top"><b>End date:</b></td> 
+        <td align="right" valign="top"><b>End date:</b></td>
         <td><input name="enddate" type="text" size="19" maxlength="19">
          <xsl:attribute name="value"><xsl:value-of select="/cdash/enddate" /></xsl:attribute>
         </input></td>
       </tr>
       <tr>
-        <td align="right" valign="top"><b>Start time:</b></td> 
+        <td align="right" valign="top"><b>Start time:</b></td>
         <td><input name="starttime" type="text" size="8" maxlength="8">
          <xsl:attribute name="value"><xsl:value-of select="/cdash/starttime" /></xsl:attribute>
          </input>
         </td>
       </tr>
       <tr>
-        <td align="right" valign="top"><b>Repeat every:</b></td> 
+        <td align="right" valign="top"><b>Repeat every:</b></td>
         <td><input name="repeat" type="text" size="4" maxlength="4">
         <xsl:attribute name="value"><xsl:value-of select="/cdash/repeat" /></xsl:attribute>
         </input>
         hour(s)</td>
       </tr>
       <tr>
-        <td align="right" valign="top"><b>Enable:</b></td> 
-        <td><input name="enable" type="checkbox">        
+        <td align="right" valign="top"><b>Enable:</b></td>
+        <td><input name="enable" type="checkbox">
         <xsl:if test="/cdash/enable=1">
         <xsl:attribute name="checked">true</xsl:attribute>
         </xsl:if>
@@ -255,13 +255,21 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
         </xsl:choose>
         </td>
       </tr>
-    </table>  
+    </table>
     </form>
-  </xsl:if>  
-</xsl:if> 
+  </xsl:if>
+</xsl:if>
 
 <div id="result" style="display:none;">
 <img src="images/loading.gif" /></div>
+
+<xsl:if test="/cdash/edit=1">
+  <hr/>
+  <h3>Builds Submitted For This Job</h3>
+  <xsl:for-each select="/cdash/build">
+    <a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="id" /></xsl:attribute><xsl:value-of select="id" /></a><br />
+  </xsl:for-each>
+</xsl:if>
 
 <!-- FOOTER -->
 <br/><br/>

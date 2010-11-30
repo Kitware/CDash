@@ -114,7 +114,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->Build->EndTime = $start_time;
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         $this->Build->InsertErrors = false;
-        add_build($this->Build);
+        add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
         $this->UpdateEndTime = true;  
         $buildid = $this->Build->Id;
         }
