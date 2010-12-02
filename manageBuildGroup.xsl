@@ -24,6 +24,7 @@
           <xsl:comment><![ endif]]></xsl:comment>
           <script src="javascript/jquery.js"></script>
           <script type="text/javascript" src="javascript/ui.tabs.js"></script>
+          <script type="text/javascript" src="javascript/cdashCreateProject.js"></script>
              
        <!-- Functions to confirm the remove -->
   <xsl:text disable-output-escaping="yes">
@@ -100,6 +101,8 @@ project page</a>
             <a href="#fragment-2"><span>Create new group</span></a></li>
           <li>
             <a href="#fragment-3"><span>Global Move</span></a></li>
+          <li>
+            <a href="#fragment-4"><span>Auto-Remove Settings</span></a></li>
       </ul>
     <div id="fragment-1" class="tab_content" >
         <div class="tab_help_top"></div>
@@ -255,6 +258,44 @@ project page</a>
             </tr>
           </table>  
          </form>          
+    </div>
+    <div id="fragment-4" class="tab_content" >
+      Builds for each group can be automatically removed after a certain number of days.<br/>
+      <form method="post" action="">
+      <table>
+      <xsl:for-each select="cdash/buildgroup">
+        <tr>
+          <td></td>
+          <td>
+            <div align="right">
+              <strong>AutoRemove Time Frame - <xsl:value-of select="name" />:</strong>
+            </div>
+          </td>
+          <td>
+            <input onchange="saveChanges();" type="text" size="10">
+              <xsl:attribute name="onfocus">showHelp('autoremoveTimeframe<xsl:value-of select="name" />_help');</xsl:attribute>
+              <xsl:attribute name="value"><xsl:value-of select="autoremovetimeframe" /></xsl:attribute>
+              <xsl:attribute name="name">autoremovetimeframe_<xsl:value-of select="id" /></xsl:attribute>
+              <xsl:attribute name="id">autoremovetimeframe_<xsl:value-of select="id" /></xsl:attribute>
+            </input>
+            <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+              <img src="images/help.gif" border="0">
+                <xsl:attribute name="onmouseover">showHelp('autoremoveTimeframe<xsl:value-of select="name" />_help');</xsl:attribute>
+              </img>
+            </a>
+            <span class="help_content"><xsl:attribute name="id">autoremoveTimeframe<xsl:value-of select="name" />_help</xsl:attribute>
+              <b>AutoRemove Timeframe - <xsl:value-of select="name" /></b>
+              <br />
+              On the first submission of the day, remove <xsl:value-of select="name" /> builds that are
+              older than X number of days.
+              If this value is less than 2 days, no builds are removed.
+            </span>
+          </td>
+        </tr>
+        </xsl:for-each>
+        </table>
+        <input type="submit" name="submitAutoRemoveSettings" value="Update Settings"/>
+        </form>
     </div>
  </div>
   

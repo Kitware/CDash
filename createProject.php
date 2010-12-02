@@ -326,24 +326,15 @@ if($Update || $AddRepository)
   @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
   @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
   @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
-      
+
   /** If we are managing clients */
   if($CDASH_MANAGE_CLIENTS)
     {
-    $Project->CTestTemplateScript = stripslashes_if_gpc_magic_quotes($_POST["ctestTemplateScript"]); 
-    } 
-    
+    $Project->CTestTemplateScript = stripslashes_if_gpc_magic_quotes($_POST["ctestTemplateScript"]);
+    }
+
   $Project->Save();
 
-  foreach($_POST as $key=>$value)
-    {
-    if(substr($key, 0, 20) == 'autoremovetimeframe_' && is_numeric($value))
-      {
-      list(,$id) = explode('_',$key);
-      pdo_query("UPDATE buildgroup SET autoremovetimeframe='$value' WHERE id=".qnum($id));
-      }
-    }
-  
   // Add the logo
   if(strlen($_FILES['logo']['tmp_name'])>0)
     {
@@ -354,10 +345,10 @@ if($Update || $AddRepository)
       $contents = addslashes(fread($handle,$_FILES['logo']['size']));
       $filetype = $_FILES['logo']['type'];
       fclose($handle);
-      }  
+      }
     $Project->AddLogo($contents,$filetype);
     }
-  
+
   // Add repositories
   $Project->AddRepositories($_POST["cvsRepository"], 
                             $_POST["cvsUsername"], 
@@ -461,17 +452,8 @@ if($projectid>0)
     $nRegisteredRepositories++;
     $nRepositories++;
     }
-    
-  $buildgroups = $Project->GetBuildGroups();
-  foreach($buildgroups as $buildgroup)
-    {
-    $xml .= "<buildgroup>";
-    $xml .= add_XML_value('id',$buildgroup['id']);
-    $xml .= add_XML_value('name',$buildgroup['name']);
-    $xml .= add_XML_value('autoremovetimeframe',$buildgroup['autoremovetimeframe']);
-    $xml .= "</buildgroup>";
-    }
-    
+
+
   // If we should add another repository
   if($AddRepository)
     {
