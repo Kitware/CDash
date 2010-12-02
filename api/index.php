@@ -39,7 +39,7 @@ $method = $_GET['method'];
 
 $classname = ucfirst($method).'API';
 $class = new $classname;
-$class->Parameters = $_GET;
+$class->Parameters = array_merge($_GET, $_POST);
 $results = $class->Run();
 
 // Return json by default
