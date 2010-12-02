@@ -117,13 +117,13 @@ if ($session_OK)
     $systems = $ClientJobSchedule->GetSystems();
     $repository = $ClientJobSchedule->GetRepository();
 
-    $builds = $ClientJobSchedule->GetAssociatedBuilds();
+    /*$builds = $ClientJobSchedule->GetAssociatedBuilds();
     foreach($builds as $buildid)
       {
       $xml .= '<build>';
       $xml .= add_XML_value("id", $buildid);
       $xml .= '</build>';
-      }
+      }*/
     }
   else
     {

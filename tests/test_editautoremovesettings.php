@@ -24,7 +24,7 @@ class EditAutoRemoveSettingsTestCase extends KWWebTestCase
     $this->login();
     $query = $this->db->query("SELECT id FROM project WHERE name = 'InsightExample'");
     $projectid = $query[0]['id'];
-    $content = $this->connect($this->url.'/createProject.php?projectid='.$projectid);
+    $content = $this->connect($this->url.'/manageBuildGroup.php?projectid='.$projectid);
     if(!$content)
       {
       return;
@@ -36,7 +36,7 @@ class EditAutoRemoveSettingsTestCase extends KWWebTestCase
       $id = $buildgroupid[0]['id'];
       $this->setField("autoremovetimeframe_$id",'7');
   
-      $this->clickSubmitByName('Update');
+      $this->clickSubmitByName('submitAutoRemoveSettings');
       
       $timeframe = $this->db->query("SELECT autoremovetimeframe FROM buildgroup WHERE id='$id'");
       

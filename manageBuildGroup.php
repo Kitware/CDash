@@ -20,6 +20,7 @@ require_once("cdash/pdo.php");
 include_once("cdash/common.php");
 include('login.php');
 include('cdash/version.php');
+include("models/project.php");
 
 if ($session_OK) 
 {
@@ -54,7 +55,20 @@ if(!isset($projectid))
     $projectid = $project_array["id"];
     }
 }
-  
+
+@$submitAutoRemoveSettings = $_POST["submitAutoRemoveSettings"];
+if($submitAutoRemoveSettings)
+{
+  foreach($_POST as $key=>$value)
+    {
+    if(substr($key, 0, 20) == 'autoremovetimeframe_' && is_numeric($value))
+      {
+      list(,$id) = explode('_',$key);
+      pdo_query("UPDATE buildgroup SET autoremovetimeframe='$value' WHERE id=".qnum($id));
+      }
+    }
+}
+
 @$show = $_GET["show"];
 
 $role=0;
@@ -392,6 +406,18 @@ if($projectid>0)
       }
     }
 }
+
+$Project = new Project();
+$Project->Id = $projectid;
+$buildgroups = $Project->GetBuildGroups();
+foreach($buildgroups as $buildgroup)
+    {
+    $xml .= "<buildgroup>";
+    $xml .= add_XML_value('id',$buildgroup['id']);
+    $xml .= add_XML_value('name',$buildgroup['name']);
+    $xml .= add_XML_value('autoremovetimeframe',$buildgroup['autoremovetimeframe']);
+    $xml .= "</buildgroup>";
+    }
 
 // If we have a project id
 // WARNING: We should check for security here
