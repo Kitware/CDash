@@ -228,7 +228,6 @@ class Project
       $query .= ",testtimemaxstatus=".qnum($this->TestTimeMaxStatus);
       $query .= ",emailmaxitems=".qnum($this->EmailMaxItems);
       $query .= ",emailmaxchars=".qnum($this->EmailMaxChars);
-      $query .= ",webapikey='".$this->WebApiKey."'";
       $query .= " WHERE id=".qnum($this->Id)."";
       
       if(!pdo_query($query))
