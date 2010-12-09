@@ -164,10 +164,41 @@ function sort_by_directory_file_time($e1, $e2)
   return 0;
 }
 
-function get_updates_xml_from_commits($projectname, $dates, $commits)
+function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits)
 {
   $xml = "<updates>\n";
   $xml .= "<timestamp>".date(FMT_DATETIMETZ, $dates['nightly-0'])."</timestamp>";
+
+
+  // Get revision numbers for the current day and "the last time it ran before that..."
+  // Only works if the LIMIT 2 query below returns exactly 2 records and the date from
+  // the most recent record matches the current 'nightly-0' date... If those criteria
+  // are not met, the revision strings will be empty and no revision information will
+  // be displayed on the resulting web page.
+  //
+  $revision_current = '';
+  $revision_prior = '';
+
+  $qry = "SELECT date, revision FROM dailyupdate ".
+           "WHERE projectid='$projectid' ".
+           "  AND date <= '".gmdate(FMT_DATE, $dates['nightly-0'])."' ".
+           "ORDER BY date DESC LIMIT 2";
+  $rows = pdo_all_rows_query($qry);
+  if (count($rows) == 2)
+    {
+    if ($rows[0]['date'] == gmdate(FMT_DATE, $dates['nightly-0']))
+      {
+      $revision_current = $rows[0]['revision'];
+      $revision_prior = $rows[1]['revision'];
+      }
+    }
+
+  $xml .= add_XML_value("revision", $revision_current);
+  $xml .= add_XML_value("priorrevision", $revision_prior);
+  $xml .= add_XML_value("revisionurl", get_revision_url($projectid, $revision_current, $revision_prior));
+  $xml .= add_XML_value("revisiondiff", get_revision_url($projectid, $revision_prior, '')); // no prior prior revision...
+
+
   $xml .= "<javascript>\n";
 
   // Args to dbAdd : "true" means directory, "false" means file
@@ -334,7 +365,7 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
   }
 
-$xml .= get_updates_xml_from_commits($projectname, $dates, $commits);
+$xml .= get_updates_xml_from_commits($projectname, $projectid, $dates, $commits);
 
 $xml .= "</cdash>";
 
