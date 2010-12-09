@@ -312,46 +312,34 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
   if(!file_exists($gitdir))
     {
     // If the bare repository doesn't exist we clone it   
-    $command = 'cd "'.$gitlocaldirectory.'" && '.$gitcommand.' clone --bare '.$gitroot.' '.$gitdirectory;
-    if(DIRECTORY_SEPARATOR == '\\') // we are on windows
-      {
-      $command = '"'.$command.'"';  
-      }
+    $command = 'cd "'.$gitlocaldirectory.'" && "'.$gitcommand.'" clone --bare '.$gitroot.' '.$gitdirectory;
     $raw_output = `$command`;
     }
-    
+
   // Update the current bare repository
-  $command = $gitcommand.' --git-dir="'.$gitdir.'" fetch '.$gitroot;
+  $command = '"'.$gitcommand.'" --git-dir="'.$gitdir.'" fetch '.$gitroot;
   if($branch != '')
     {
     $command .= ' '.$branch.":".$branch;  
     }
-    
-  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
-    {
-    $command = '"'.$command.'"';  
-    }
+
   $raw_output = `$command`;
-   
+
   // Get what changed during that time
   if($branch == '')
     {
     $branch = 'FETCH_HEAD';  
     }
 
-  $command = $gitcommand.' --git-dir="'.$gitdir.'" rev-parse '.$branch;
-  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
-    { 
-    $command = '"'.$command.'"';  
-    }
-  $currentrevision = `$command`;    
+  $command = '"'.$gitcommand.'" --git-dir="'.$gitdir.'" rev-parse '.$branch;
+  $currentrevision = `$command`;
   $results['currentrevision'] = trim($currentrevision);
-      
+
   // Find the previous day version
   if($previousrevision != '')
     {
     // Compare with the fetch head for now
-    $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged '.$previousrevision.'..'.$currentrevision.' --pretty=medium '.$branch;
+    $command = '"'.$gitcommand.'" --git-dir="'.$gitdir.'" whatchanged '.$previousrevision.'..'.$currentrevision.' --pretty=medium '.$branch;
     }
   else
     {  
@@ -359,17 +347,13 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
 
     // Compare with the fetch head for now
-    $command = $gitcommand.' --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --pretty=medium '.$branch;
+    $command = '"'.$gitcommand.'" --git-dir="'.$gitdir.'" whatchanged --since="'.$fromtime.'" --until="'.$totime.'" --pretty=medium '.$branch;
     }
-   
-  if(DIRECTORY_SEPARATOR == '\\') // we are on windows
-    {
-    $command = '"'.$command.'"';  
-    }
+
   $raw_output = `$command`;
-  
+
   $lines = explode("\n", $raw_output);
-    
+
   foreach($lines as $line)
     {
     if(substr($line,0,6) == 'commit')
@@ -415,6 +399,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     }
   
   $results['commits'] = $commits;
+  
   return $results;
 } // end get_git_repository_commits
 
@@ -683,11 +668,11 @@ function get_repository_commits($projectid, $dates)
       else if($cvsviewer == "gitweb" || $cvsviewer == "gitorious" || $cvsviewer == "github")
         {
         $branch = $repositories_array["branch"];
-        
+
         // Find the prior revision
         $previousdate = gmdate(FMT_DATE, $dates['nightly-1']);
         $prevrev = pdo_query("SELECT revision FROM dailyupdate 
-                              WHERE projectid='$projectid' AND date=".$previousdate);
+                              WHERE projectid='$projectid' AND date='".$previousdate."'");
 
         $previousrevision = '';
         if(pdo_num_rows($prevrev)>0)
@@ -948,7 +933,7 @@ function addDailyChanges($projectid)
     $updateid = pdo_insert_id("dailyupdate");    
     $dates = get_related_dates($project_array["nightlytime"],$date);
     $commits = get_repository_commits($projectid, $dates);
-    
+
     // Insert the commits
     foreach($commits as $commit)
       {
@@ -986,7 +971,7 @@ function addDailyChanges($projectid)
  
       pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,email,log,revision,priorrevision)
                    VALUES ($updateid,'$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
-      echo pdo_error();
+      add_last_sql_error("addDailyChanges", $projectid);
       
       } // end foreach commit
     
