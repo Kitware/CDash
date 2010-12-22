@@ -22,6 +22,8 @@ class BuildUpdateFile
   var $CheckinDate;
   var $Author;
   var $Email;
+  var $Committer;
+  var $CommitterEmail;
   var $Log;  
   var $Revision;  
   var $PriorRevision;
@@ -76,14 +78,16 @@ class BuildUpdateFile
       }
 
     $this->Email = pdo_real_escape_string($this->Email);
+    $this->Committer = pdo_real_escape_string($this->Committer);
+    $this->CommitterEmail = pdo_real_escape_string($this->CommitterEmail);
     $this->Log = pdo_real_escape_string($this->Log);
     $this->Revision = pdo_real_escape_string($this->Revision);
     $this->PriorRevision = pdo_real_escape_string($this->PriorRevision);
     $this->BuildId = pdo_real_escape_string($this->BuildId);
 
-    $query = "INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision,status)
+    $query = "INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision,status,committer,committeremail)
               VALUES (".qnum($this->BuildId).",'$this->Filename','$this->CheckinDate','$this->Author','$this->Email',
-                      '$this->Log','$this->Revision','$this->PriorRevision','$this->Status')";
+                      '$this->Log','$this->Revision','$this->PriorRevision','$this->Status','$this->Committer','$this->CommitterEmail')";
     
     
     if(!pdo_query($query))

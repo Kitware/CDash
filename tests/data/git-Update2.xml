@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.9.20091218">
+  <Site>test.site</Site>
+  <BuildName>dash-test</BuildName>
+  <BuildStamp>20091218-1553-Experimental</BuildStamp>
+  <StartDateTime>Dec 18 10:53 EST</StartDateTime>
+  <StartTime>1261151630</StartTime>
+  <UpdateCommand>&quot;/usr/bin/git&quot; &quot;pull&quot;</UpdateCommand>
+  <UpdateType>GIT</UpdateType>
+  <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+  <PriorRevision>0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4</PriorRevision>
+  <Directory>
+    <Name></Name>
+    <Updated>
+      <File>fakegitfile1.txt</File>
+      <Directory></Directory>
+      <FullName>fakegitfile1.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Email>test@email.com</Email>
+      <Committer>Test Committer</Committer>
+      <CommitterEmail>test@committer.com</CommitterEmail>
+      <Log>Changed content
+</Log>
+      <Revision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</Revision>
+      <PriorRevision>0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4</PriorRevision>
+    </Updated>
+    <Updated>
+      <File>fakegitfile2.txt</File>
+      <Directory></Directory>
+      <FullName>fakegitfile2.txt</FullName>
+      <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
+      <Author>Test Author</Author>
+      <Email>test@email.com</Email>
+      <Committer>Test Committer</Committer>
+      <CommitterEmail>test@committer.com</CommitterEmail>
+      <Log>Changed content again
+</Log>
+      <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+      <PriorRevision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</PriorRevision>
+    </Updated>
+  </Directory>
+  <EndDateTime>Dec 18 10:53 EST</EndDateTime>
+  <EndTime>1261151631</EndTime>
+<ElapsedMinutes>0</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>
