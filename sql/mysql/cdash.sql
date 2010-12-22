@@ -490,6 +490,8 @@ CREATE TABLE `updatefile` (
   `checkindate` timestamp NOT NULL default '1980-01-01 00:00:00',
   `author` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
+  `committer` varchar(255) NOT NULL default '',
+  `committeremail` varchar(255) NOT NULL default '',
   `log` text NOT NULL,
   `revision` varchar(60) NOT NULL default '0',
   `priorrevision` varchar(60) NOT NULL default '0',

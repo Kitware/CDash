@@ -846,6 +846,8 @@ if(isset($_GET['upgrade-2-0']))
     }
   AddTableField("project", "webapikey", "varchar(40)", "character varying(40)", "");
   AddTableField("project", "tokenduration", "int(11)", "bigint", "0");
+  AddTableField("updatefile", "committer", "varchar(255)", "character varying(255)", "");
+  AddTableField("updatefile", "committeremail", "varchar(255)", "character varying(255)", "");
 
   // Set the database version
   setVersion();
