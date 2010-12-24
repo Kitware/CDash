@@ -31,7 +31,7 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=SubProjects");
     $this->waitForPageToLoad("30000");
-    $this->click("//form[@id='formnewgroup']/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/a");
+    $this->click("//form[@id='formnewgroup']/table/tbody/tr[3]/td[2]/table/tbody/tr[1]/td[2]/a");
     $this->waitForPageToLoad("30000");
   }
 }
