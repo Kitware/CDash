@@ -17,9 +17,9 @@
       <FullName>fakegitfile1.txt</FullName>
       <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
       <Author>Test Author</Author>
-      <Email>test@email.com</Email>
+      <Email>simpletest@localhost</Email>
       <Committer>Test Committer</Committer>
-      <CommitterEmail>test@committer.com</CommitterEmail>
+      <CommitterEmail>simpleuser@localhost</CommitterEmail>
       <Log>Changed content
 </Log>
       <Revision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</Revision>
@@ -31,9 +31,9 @@
       <FullName>fakegitfile2.txt</FullName>
       <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
       <Author>Test Author</Author>
-      <Email>test@email.com</Email>
+      <Email>simpletest@localhost</Email>
       <Committer>Test Committer</Committer>
-      <CommitterEmail>test@committer.com</CommitterEmail>
+      <CommitterEmail>simpleuser@localhost</CommitterEmail>
       <Log>Changed content again
 </Log>
       <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>

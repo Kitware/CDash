@@ -216,48 +216,74 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
   $userids = array();
 
   // Check if we know to whom we should send the email
-  $authors = pdo_query("SELECT author FROM updatefile WHERE buildid=".qnum($buildid));
+  $updatefiles = pdo_query("SELECT author,email,committeremail FROM updatefile WHERE buildid=".qnum($buildid));
   add_last_sql_error("sendmail",$projectid,$buildid);
-  while($authors_array = pdo_fetch_array($authors))
+  while($updatefiles_array = pdo_fetch_array($updatefiles))
     {
-    $author = $authors_array["author"];
-    if($author=="Local User")
+    $author = $updatefiles_array["author"];
+    $emails = array();
+    $authorEmail = $updatefiles_array["email"];
+    $emails[] = $authorEmail;
+    $committerEmail = $updatefiles_array["committeremail"];
+    if($committerEmail != '' && $committerEmail != $authorEmail)
       {
-      continue;
+      $emails[] = $committerEmail;
       }
 
-    $UserProject = new UserProject();
-    $UserProject->RepositoryCredential = $author;
-    $UserProject->ProjectId = $projectid;
-
-    if(!$UserProject->FillFromRepositoryCredential())
+    foreach($emails as $email)
       {
-      // Daily updates send an email to tell adminsitrator that the user is not registered but we log anyway
-      add_log("User: ".$author." is not registered (or has no email) for the project ".$projectid,"SendEmail",LOG_WARNING,$projectid,$buildid);
-      continue;
-      }
+      if($author=="Local User")
+        {
+        continue;
+        }
 
-    // If the user doesn't want to receive email
-    if($fixes && !$UserProject->EmailSuccess)
-      {
-      continue;
-      }
+      $UserProject = new UserProject();
+      $UserProject->RepositoryCredential = $author;
+      $UserProject->ProjectId = $projectid;
+      
+      $filled = false;
+      if($email != '')
+        {
+        $result = pdo_query("SELECT id FROM user WHERE email='$email'"); 
+    
+        if(pdo_num_rows($result) != 0)
+          {
+          $user_array = pdo_fetch_array($result); 
+          $id = $user_array['id'];
+          $UserProject->UserId = $id;
+          $filled = $UserProject->FillFromUserId();
+          }
+        }
+      if(!$filled && !$UserProject->FillFromRepositoryCredential())
+        {
+        $name = $email == '' ? $author : $email;
+        // Daily updates send an email to tell adminsitrator that the user is not registered but we log anyway
+        add_log("User: ".$name." is not registered (or has no email) for the project ".$projectid,"SendEmail",LOG_WARNING,$projectid,$buildid);
+        continue;
+        }
 
-    // Check the categories
-    if(!checkEmailPreferences($UserProject->EmailCategory,$errors,$fixes))
-      {
-      continue;
-      }
+      // If the user doesn't want to receive email
+      if($fixes && !$UserProject->EmailSuccess)
+        {
+        continue;
+        }
 
-    // Check if the labels are defined for this user
-    if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid, $UserProject->EmailCategory))
-      {
-      continue;
-      }
+      // Check the categories
+      if(!checkEmailPreferences($UserProject->EmailCategory,$errors,$fixes))
+        {
+        continue;
+        }
 
-    if(!in_array($UserProject->UserId,$userids))
-      {
-      $userids[] = $UserProject->UserId;
+      // Check if the labels are defined for this user
+      if(!checkEmailLabel($projectid,$UserProject->UserId, $buildid, $UserProject->EmailCategory))
+        {
+        continue;
+        }
+
+      if(!in_array($UserProject->UserId,$userids))
+        {
+        $userids[] = $UserProject->UserId;
+        }
       }
     }
 

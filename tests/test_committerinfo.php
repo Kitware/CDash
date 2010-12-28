@@ -30,9 +30,9 @@ class CommitterInfoTestCase extends KWWebTestCase
       return;
       }
 
-    if($committerEmail != 'test@committer.com')
+    if($committerEmail != 'simpleuser@localhost')
       {
-      $this->fail("Incorrect update committer email value: expected 'test@commiter.com' but was '$committerEmail'");
+      $this->fail("Incorrect update committer email value: expected 'simpleuser@localhost' but was '$committerEmail'");
       return;
       }
 

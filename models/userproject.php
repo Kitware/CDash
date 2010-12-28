@@ -241,7 +241,47 @@ class UserProject
     $this->EmailSuccess = $user_array['emailsuccess'];
     return true;
     }
-      
+
+  function FillFromUserId()
+    {
+    if(!$this->ProjectId)
+      {
+      add_log('ProjectId not set',"UserProject FillFromUserId()",LOG_ERR,
+              $this->ProjectId,0,CDASH_OBJECT_USER,$this->UserId);
+      return false;
+      }
+
+    if(!$this->UserId)
+      {
+      add_log('UserId not set',"UserProject FillFromUserId()",LOG_ERR,
+              $this->ProjectId,0,CDASH_OBJECT_USER,$this->UserId);
+      return false;
+      }
+
+    $sql = "SELECT emailcategory,emailsuccess
+               FROM user2project
+               WHERE projectid=".qnum($this->ProjectId)."
+               AND userid=".qnum($this->UserId)."
+               AND emailtype>0";
+
+    $user = pdo_query($sql);
+    if(!$user)
+      {
+      add_last_sql_error("UserProject FillFromRepositoryCredential");
+      return false;
+      }
+
+    if(pdo_num_rows($user) == 0)
+      {
+      return false;
+      }
+
+    $user_array = pdo_fetch_array($user);
+    $this->EmailCategory = $user_array['emailcategory'];
+    $this->EmailSuccess = $user_array['emailsuccess'];
+    return true;
+    }
+
   /** Get the email category from the user id */
   function GetEmailCategory()
     {  

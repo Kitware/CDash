@@ -53,23 +53,23 @@ class APITestCase extends KWWebTestCase
       }
 
     $userdefects = $this->get($this->url."/api/?method=user&task=defects&project=EmailProjectExample");
-    if($userdefects != '{"user1kw":{"buildfixes":"6","buildfixesfiles":"1","testfixes":"2","testfixesfiles":"1"}}')
+    if($userdefects != '{"user1kw":{"buildfixes":"6","buildfixesfiles":"1","testfixes":"2","testfixesfiles":"1"},"Test Author":{"testerrors":"1","testerrorsfiles":"1"}}')
       {
-      $this->fail("Expected output not found when querying API for userdefects");
+      $this->fail("Expected output not found when querying API for userdefects: $userdefects");
       return 1;
       }
 
     $buildid = $this->get($this->url."/api/getbuildid.php?project=EmailProjectExample&siteid=3&name=Win32-MSVC2009&stamp=20090223-0100-Nightly");
     if($buildid !== '<?xml version="1.0" encoding="UTF-8"?><buildid>4</buildid>')
       {
-      $this->fail("Expected output not found when querying API for buildid");
+      $this->fail("Expected output not found when querying API for buildid: $buildid");
       return 1;
       }
 
     $userid = $this->get($this->url."/api/getuserid.php?author=user1kw&project=EmailProjectExample");
     if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>2</userid>')
       {
-      $this->fail("Expected output not found when querying API for userid");
+      $this->fail("Expected output not found when querying API for userid: $userid");
       return 1;
       }
 
@@ -77,14 +77,14 @@ class APITestCase extends KWWebTestCase
     $version = $this->get($this->url."/api/getversion.php");
     if($version !== $CDASH_VERSION)
       {
-      $this->fail("Expected output not found when querying API for version");
+      $this->fail("Expected output not found when querying API for version: $version");
       return 1;
       }
 
     $hasfile = $this->get($this->url."/api/hasfile.php");
     if($hasfile !== "md5sum not specified")
       {
-      $this->fail("Expected output not found when querying API for hasfile");
+      $this->fail("No output found when querying API for hasfile: $hasfile");
       return 1;
       }
 
