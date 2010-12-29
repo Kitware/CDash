@@ -132,29 +132,54 @@
 </tr>
 </xsl:if>
 
-<xsl:if test="argument">
+
+<xsl:if test="argumentfirst">
 <tr>
 <th class="measurement" style="width: 1%">Command</th>
 <td>
 <div style="margin-left: 25px; text-indent: -25px;">
-<nobr>"<font class="argument"><xsl:value-of select="argumentfirst"/></font>"</nobr><xsl:text disable-output-escaping="yes"> </xsl:text>
-<a href="#">
+<xsl:choose>
+
+<xsl:when test="argument">
+<span>
 <xsl:attribute name="id">showarguments_<xsl:value-of select="id"/></xsl:attribute>
+<xsl:if test="count(argument)&lt;4">
+<xsl:attribute name="style">display:none</xsl:attribute>
+</xsl:if>
+<a href="#">
 <xsl:attribute name="onclick">return showArguments(<xsl:value-of select="id"/>);</xsl:attribute>
 [+]</a>
-<span style="display:none">
+<xsl:text disable-output-escaping="yes"> </xsl:text><nobr>"<font class="argument"><xsl:value-of select="argumentfirst"/></font>"</nobr>
+</span>
+
+<span>
 <xsl:attribute name="id">argumentlist_<xsl:value-of select="id"/></xsl:attribute>
-<xsl:for-each select="argument">
-<nobr>"<font class="argument"><xsl:value-of select="."/></font>"</nobr><xsl:text disable-output-escaping="yes"> </xsl:text>
-</xsl:for-each>
+<xsl:if test="count(argument)&gt;3">
+<xsl:attribute name="style">display:none</xsl:attribute>
+</xsl:if>
 <a href="#">
 <xsl:attribute name="onclick">return hideArguments(<xsl:value-of select="id"/>);</xsl:attribute>
 [-]</a>
+<xsl:text disable-output-escaping="yes"> </xsl:text><nobr>"<font class="argument"><xsl:value-of select="argumentfirst"/></font>"</nobr>
+<xsl:for-each select="argument">
+<xsl:text disable-output-escaping="yes"> </xsl:text><nobr>"<font class="argument"><xsl:value-of select="."/></font>"</nobr>
+</xsl:for-each>
 </span>
+</xsl:when>
+
+<xsl:otherwise>
+<nobr>"<font class="argument"><xsl:value-of select="argumentfirst"/></font>"</nobr>
+<xsl:for-each select="argument">
+<xsl:text disable-output-escaping="yes"> </xsl:text><nobr>"<font class="argument"><xsl:value-of select="."/></font>"</nobr>
+</xsl:for-each>
+</xsl:otherwise>
+
+</xsl:choose>
 </div>
 </td>
 </tr>
 </xsl:if>
+
 
 <xsl:if test="workingdirectory">
 <tr>
