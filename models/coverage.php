@@ -50,14 +50,13 @@ class Coverage
     $this->Labels[] = $label;
     }
 
-
+  /** Put labels for coverage */
   function InsertLabelAssociations($buildid)
     {
     if($buildid &&
        isset($this->CoverageFile) &&
        $this->CoverageFile->Id)
       {
-      
       if(empty($this->Labels))
         {
         return;
@@ -72,8 +71,8 @@ class Coverage
       }
     else
       {
-      add_log('No BuildFailure id - cannot call $label->Insert...',
-              'BuildFailure::InsertLabelAssociations',LOG_ERR,
+      add_log('No buildid or coveragefile',
+              'Coverage::InsertLabelAssociations',LOG_ERR,
               0,$buildid,
               CDASH_OBJECT_COVERAGE,$this->CoverageFile->Id);   
       }
