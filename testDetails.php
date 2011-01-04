@@ -184,14 +184,14 @@ if($CDASH_USE_COMPRESSION)
     }
   else
     {
-    $xml .= add_XML_value("output", $testRow["output"]);
+    $xml .= add_XML_value("output", $testRow['output']);
     }
   }
 else
   {
-  $xml .= add_XML_value("output", $testRow["output"]);
+  $xml .= add_XML_value("output", $testRow['output']);
   }
-      
+
 $xml .= add_XML_value("summaryLink", $summaryLink);
 switch($testRow["status"])
   {

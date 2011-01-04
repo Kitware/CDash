@@ -158,6 +158,11 @@ function microtime_float()
 /** Add an XML tag to a string */
 function add_XML_value($tag,$value)
 {
+  $value = preg_replace_callback('/[^\x0A\x20-\x7E]/',
+    function($match) {
+      $decimal_value = hexdec(bin2hex($match[0]));
+      return '&#'.$decimal_value.';';
+    }, $value);
   return "<".$tag.">".XMLStrFormat($value)."</".$tag.">";
 }
 
