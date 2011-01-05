@@ -161,7 +161,7 @@ function add_XML_value($tag,$value)
   $value = preg_replace_callback('/[\x1b]/',
     create_function('$match',
       '$decimal_value = hexdec(bin2hex($match[0]));
-      return \'&#\'.$decimal_value.\';\';'
+      return "&#".$decimal_value.";";'
     ), $value);
   return "<".$tag.">".XMLStrFormat($value)."</".$tag.">";
 }
