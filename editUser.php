@@ -142,7 +142,7 @@ if ($session_OK)
   $credential_num = 1;
   while($credential_array = pdo_fetch_array($credential))
     {
-    $xml .= add_XML_value("credential_".$credential_num++,$credential_array["credential"]);  
+    $xml .= add_XML_value("credential_".$credential_num++,stripslashes($credential_array["credential"]));  
     } 
     
   $xml .= "</user>";
