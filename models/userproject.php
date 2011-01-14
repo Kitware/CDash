@@ -153,6 +153,7 @@ class UserProject
         {
         $credential_string.=",";  
         }
+      $credential = pdo_real_escape_string($credential);  
       $credential_string .= "'".$credential."'";
       }
 
