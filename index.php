@@ -996,8 +996,33 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       else
         {
-        // Add new row:
+        // Add new row, but don't let accumulators start out negative:
         //
+        if ($build_row['countbuilderrors'] < 0)
+          {
+          $build_row['countbuilderrors'] = 0;
+          }
+        if ($build_row['countbuildwarnings'] < 0)
+          {
+          $build_row['countbuildwarnings'] = 0;
+          }
+        if ($build_row['counttestsnotrun'] < 0)
+          {
+          $build_row['counttestsnotrun'] = 0;
+          }
+        if ($build_row['counttestsfailed'] < 0)
+          {
+          $build_row['counttestsfailed'] = 0;
+          }
+        if ($build_row['counttestspassed'] < 0)
+          {
+          $build_row['counttestspassed'] = 0;
+          }
+        if ($build_row['countteststimestatusfailed'] < 0)
+          {
+          $build_row['countteststimestatusfailed'] = 0;
+          }
+
         $build_rows_collapsed[] = $build_row;
         }
       }
