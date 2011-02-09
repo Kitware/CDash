@@ -38,7 +38,7 @@ function get_bugid_and_pos_from_log($log)
   $matches = array();
   if (preg_match(
         "/^.*([Bb][Uu][Gg]:*|[Ii][Ss][Ss][Uu][Ee]:*|#) *#* *([0-9]+).*$/",
-        $log, &$matches))
+        $log, $matches))
     {
     //echo "count(matches)='".count($matches)."'<br/>";
     //echo "matches[0]='$matches[0]'<br/>";
