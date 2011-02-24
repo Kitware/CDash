@@ -1588,7 +1588,7 @@ function get_previous_revision($revision)
 {
   // Split revision into components based on any "." separators:
   //
-  $revcmps = split("\.", $revision);
+  $revcmps = explode(".", $revision);
   $n = count($revcmps);
 
   // svn style "single-component" revision number, just subtract one:
@@ -1642,7 +1642,7 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
     return "";
     }
     
-  $cmps = split("\?", $projecturl);
+  $cmps = explode("?", $projecturl);
 
   // If $cmps[1] starts with "root=" and the $directory value starts
   // with "whatever comes after that" then remove that bit from directory:
