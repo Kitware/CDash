@@ -25,6 +25,7 @@ require_once 'xml_handlers/coverage_log_handler.php';
 require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
+require_once 'xml_handlers/upload_handler.php';
 
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=true)
@@ -91,6 +92,11 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     {
     $handler = new ProjectHandler($projectid);
     $file = "Project";
+    }
+  else if(preg_match('/<Upload/', $content))
+    {
+    $handler = new UploadHandler($projectid);
+    $file = "Upload";
     }
 
   if($handler == NULL)
