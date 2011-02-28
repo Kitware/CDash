@@ -692,7 +692,8 @@ function generate_main_dashboard_XML($projectid,$date)
                   b.testpassed AS counttestspassed,
                   b.testtimestatusfailed AS countteststimestatusfailed,
                   g.name as groupname,gp.position,g.id as groupid,
-                  (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog
+                  (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
+                  (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
                   FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql.",
                   build AS b
                   LEFT JOIN buildupdate AS bu ON (bu.buildid=b.id)
@@ -1159,6 +1160,7 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $xml .= add_XML_value("buildid", $build_array["id"]);
     $xml .= add_XML_value("generator", $build_array["generator"]);
+    $xml .= add_XML_value("upload-file-count", $build_array["builduploadfiles"]);
 
     if($build_array['countbuildnotes']>0)
       {
