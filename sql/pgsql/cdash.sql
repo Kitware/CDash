@@ -1201,3 +1201,26 @@ CREATE TABLE "apitoken" (
   "expiration_date" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
 );
 CREATE INDEX "apitoken_token" on "apitoken" ("token");
+
+-- 
+-- Table: uploadfile
+--
+CREATE TABLE "uploadfile" (
+  "id" serial NOT NULL,
+  "file" bytea NOT NULL,
+  "filename" character varying(255) NOT NULL,
+  "filesize" bigint NOT NULL DEFAULT '0',
+  "md5sum" character varying(32) NOT NULL,
+  PRIMARY KEY("id")
+);
+CREATE INDEX "uploadfile_md5sum" on "uploadfile" ("md5sum");
+
+-- 
+-- Table: build2uploadfile
+--
+CREATE TABLE "build2uploadfile" (
+  "fileid" bigint NOT NULL,
+  "buildid" bigint NOT NULL
+);
+CREATE INDEX "build2uploadfile_fileid" on "build2uploadfile" ("fileid");
+CREATE INDEX "build2uploadfile_buildid" on "build2uploadfile" ("buildid");
