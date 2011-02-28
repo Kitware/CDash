@@ -59,7 +59,7 @@ class UploadFile
       }
     $filename = pdo_real_escape_string(basename($this->Filename));
     $filedata = base64_decode(trim($this->Content));
-    if(strpos(strtolower($this->FileEncoding), 'gzip') !== false)
+    if($this->FileEncoding == 'gzip')
       {
       @$filedata = gzuncompress($filedata);
       }
