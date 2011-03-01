@@ -1078,11 +1078,23 @@ function remove_build($buildid)
       }
     }
   pdo_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
-   
-   // Delete the subproject
+
+  // Delete the uploaded files if not shared
+  $build2uploadfiles - pdo_query("SELECT fileid FROM build2uploadfile WHERE buildid='$buildid'");
+  while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
+    {
+    $fileid = $build2uploadfile_array['fileid'];
+    if(pdo_num_rows(pdo_query("SELECT * FROM build2uploadfile WHERE fileid='$fileid' AND buildid != '$buildid'")) == 0)
+      {
+      pdo_query("DELETE FROM uploadfile WHERE id='$fileid'");
+      }
+    }
+  pdo_query("DELETE FROM build2uploadfile WHERE buildid='$buildid'");
+
+  // Delete the subproject
   pdo_query("DELETE FROM subproject2build WHERE buildid='$buildid'"); 
 
-   // Delete the labels
+  // Delete the labels
   pdo_query("DELETE FROM label2build WHERE buildid='$buildid'");
    
   // Only delete the buildid at the end so that no other build can get it in the meantime
