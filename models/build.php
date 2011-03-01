@@ -24,6 +24,7 @@ include_once('models/buildinformation.php');
 include_once('models/label.php');
 include_once('models/constants.php');
 include_once('cdash/ctestparserutils.php');
+include_once('models/uploadfile.php');
 
 class Build
 {
@@ -1361,6 +1362,25 @@ class Build
     return $builderror_array[0];  
     } // end GetNumberOfWarnings() 
 
+  /* Return all uploaded files for this build */
+  function GetUploadedFiles()
+    {
+    if(!$this->Id)
+      {
+      echo "Build::GetUploadedFiles(): Id not set";
+      return false;    
+      }
 
+    $results = pdo_query("SELECT fileid FROM build2uploadfile WHERE buildid='$this->Id'");
+    $allUploadedFiles = array();
+    while($uploadfiles_array = pdo_fetch_array($results))
+      {
+      $UploadFile = new UploadFile();
+      $UploadFile->Id = $uploadfiles_array['fileid'];
+      $UploadFile->Fill();
+      $allUploadedFiles[] = $UploadFile;
+      }
+    return $allUploadedFiles;
+    }
 } // end class Build
 ?>

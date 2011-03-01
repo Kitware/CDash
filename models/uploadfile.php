@@ -19,6 +19,7 @@ class UploadFile
 {
   var $Id;
   var $Filename;
+  var $Filesize;
   var $Content;
   var $MD5Sum;
   var $BuildId;
@@ -86,17 +87,45 @@ class UploadFile
       $filequery_array = pdo_fetch_array($filequery);
       $this->Id = $filequery_array["id"];
       }
-      
+
     if(!$this->Id)
       {
       echo "UploadFile::Insert(): No Id";
       return false;
       }
-    
+
     if(!pdo_query("INSERT INTO build2uploadfile (fileid, buildid)
                    VALUES ('$this->Id','$this->BuildId')"))
       {
       add_last_sql_error("UploadFile::Insert", 0, $this->BuildId);
+      return false;
+      }
+    return true;
+    }
+
+  function Fill()
+    {
+    if(!$this->Id)
+      {
+      echo "UploadFile::Fill(): Id not set";
+      return false;
+      }
+    $query = pdo_query("SELECT filename, filesize, md5sum FROM uploadfile WHERE id='$this->Id'");
+    if(!$query)
+      {
+      add_last_sql_error('Uploadfile::Fill', 0, $this->Id);
+      return false;
+      }
+    if(pdo_num_rows($query) > 0)
+      {
+      $fileArray = pdo_fetch_array($query);
+      $this->MD5Sum = $fileArray['md5sum'];
+      $this->Filename = $fileArray['filename'];
+      $this->Filesize = $fileArray['filesize'];
+      }
+    else
+      {
+      echo "UploadFile::Fill(): Invalid id";
       return false;
       }
     return true;
