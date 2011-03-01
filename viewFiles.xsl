@@ -34,7 +34,7 @@
 <tr><th>File</th><th>Size</th><th>MD5</th></tr>
 <xsl:for-each select="/cdash/uploadfile">
   <tr>
-  <td><a><xsl:attribute name="href">cdash/downloadFile.php?id=<xsl:value-of select="id" /></xsl:attribute><xsl:value-of select="filename" /></a></td>
+  <td><a><xsl:attribute name="href">downloadFile.php?id=<xsl:value-of select="id" /></xsl:attribute><xsl:value-of select="filename" /></a></td>
   <td><xsl:value-of select="filesize" /></td>
   <td><xsl:value-of select="md5sum" /></td>
   </tr>
