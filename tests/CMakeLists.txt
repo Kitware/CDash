@@ -75,6 +75,7 @@ add_php_test(viewsubprojectdependencies)
 add_php_test(testmodel)
 add_php_test(buildmodel)
 add_php_test(projectxmlsequence)
+add_php_test(uploadfile)
 
 add_subdirectory(ctest)
 
