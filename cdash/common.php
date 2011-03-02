@@ -1080,7 +1080,7 @@ function remove_build($buildid)
   pdo_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
 
   // Delete the uploaded files if not shared
-  $build2uploadfiles - pdo_query("SELECT fileid FROM build2uploadfile WHERE buildid='$buildid'");
+  $build2uploadfiles = pdo_query("SELECT fileid FROM build2uploadfile WHERE buildid='$buildid'");
   while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
     {
     $fileid = $build2uploadfile_array['fileid'];
