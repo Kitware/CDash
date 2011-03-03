@@ -185,19 +185,40 @@ function generate_index_table()
 
 function add_default_buildgroup_sortlist($groupname)
 {
+  // Sort settings should probably be definable/overrideable by the user as well on the users page,
+  // or perhaps by the project admin on the project page. This function simply bases the default
+  // sort ordering for a group based on the groupname.
+  //
+  $st = '';
   $xml = '';
 
-  // Sort settings should probably be defined by the user as well on the users page
-  //
-  switch($groupname)
+  $gn = strtolower($groupname);
+
+  if (strpos($gn, 'nightly') !== FALSE)
     {
-    case 'Continuous':
-    case 'Experimental':
-      $xml .= add_XML_value("sortlist", "{sortlist: [[14,1]]}"); //build time
+    $st = 'SortAsNightly';
+    }
+  else if ((strpos($gn, 'continuous') !== FALSE) || (strpos($gn, 'experimental') !== FALSE))
+    {
+    $st = 'SortByTime';
+    }
+
+  switch($st)
+    {
+    case 'SortAsNightly':
+      $xml .= add_XML_value("sortlist", "{sortlist: [[4,1],[7,1],[11,1],[10,1],[5,1],[8,1],[1,0]]}");
+        // Theoretically, most important to least important:
+        //   configure errors DESC, build errors DESC, tests failed DESC, tests not run DESC,
+        //   configure warnings DESC, build warnings DESC, build name ASC
       break;
-    case 'Nightly':
-      $xml .= add_XML_value("sortlist", "{sortlist: [[1,0]]}"); //build name
+
+    case 'SortByTime':
+      $xml .= add_XML_value("sortlist", "{sortlist: [[14,1]]}");
+        // build time DESC
       break;
+
+      // By default, no javascript-based sorting. Accept the ordering naturally as it came from
+      // MySQL and the php processing code...
     }
 
   return $xml;
