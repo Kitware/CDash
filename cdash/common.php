@@ -964,142 +964,224 @@ function remove_project_builds($projectid)
     }
     
   $build = pdo_query("SELECT id FROM build WHERE projectid='$projectid'");
+  $buildids = array();
   while($build_array = pdo_fetch_array($build))
     {
-    $buildid = $build_array["id"];
-    remove_build($buildid);
+    $buildids[] = $build_array["id"];
     }
+  remove_build($buildids);  
 }
 
 /** Remove all related inserts for a given build */
 function remove_build($buildid)
 {
-  if(!is_numeric($buildid))
+  $buildids = '(';  
+  if(is_array($buildid))
     {
-    return;
-    }
-
-  pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM builderror WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM buildemail WHERE buildid='$buildid'");
+    $buildids .= implode(",",$buildid);  
+    }  
+  else 
+    {
+    if(!is_numeric($buildid))
+      {
+      return;
+      }  
+    $buildids .= $buildid;
+    }  
+  $buildids .= ')';
+  
+  pdo_query("DELETE FROM build2group WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM builderror WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM buildemail WHERE buildid IN ".$buildids);
    
-  pdo_query("DELETE FROM buildinformation WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM builderrordiff WHERE buildid='$buildid'");   
-  pdo_query("DELETE FROM buildupdate WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM buildinformation WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM builderrordiff WHERE buildid IN ".$buildids);   
+  pdo_query("DELETE FROM buildupdate WHERE buildid IN ".$buildids);
    
-  pdo_query("DELETE FROM configure WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM configureerror WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM configureerrordiff WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM coveragesummarydiff WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM testdiff WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM buildtesttime WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM summaryemail WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM errorlog WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM configure WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM configureerror WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM configureerrordiff WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM coveragesummarydiff WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM testdiff WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM buildtesttime WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM summaryemail WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM errorlog WHERE buildid IN ".$buildids);
    
   // Remove the buildfailureargument
-  $buildfailure = pdo_query("SELECT id FROM buildfailure WHERE buildid='$buildid'");
+  $buildfailureids = '(';
+  $buildfailure = pdo_query("SELECT id FROM buildfailure WHERE buildid IN ".$buildids);
   while($buildfailure_array = pdo_fetch_array($buildfailure))
     {
-    $buildfailureid = $buildfailure_array['id'];
-    pdo_query("DELETE FROM buildfailure2argument WHERE buildfailureid='$buildfailureid'");
-    pdo_query("DELETE FROM label2buildfailure WHERE buildfailureid='$buildfailureid'");
-      // Don't delete the arguments for now...
-    }
-  
-  pdo_query("DELETE FROM buildfailure WHERE buildid='$buildid'");      
-          
-  // coverage file are kept unless they are shared
-  $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid='$buildid'");
-  while($coverage_array = pdo_fetch_array($coverage))
-    {
-    $fileid = $coverage_array["fileid"];
-    // Make sur the file is not shared
-    $numfiles = pdo_query("SELECT count(*) AS c FROM coveragefile WHERE id='$fileid'");
-    $numfiles_array = pdo_fetch_array($numfiles);
-    if($numfiles_array['c']==1)
+    if($buildfailureids != '(')
       {
-      pdo_query("DELETE FROM coveragefile WHERE id='$fileid'"); 
-      pdo_query("DELETE FROM label2coveragefile WHERE coveragefileid='$fileid' AND buildid=".qnum($buildid)); 
-      }
+      $buildfailureids .= ',';
+      }  
+    $buildfailureids .= $buildfailure_array['id'];
     }
+  $buildfailureids .= ')';
+  if(strlen($buildfailureids)>2)
+    {
+    pdo_query("DELETE FROM buildfailure2argument WHERE buildfailureid IN ".$buildfailureids);
+    pdo_query("DELETE FROM label2buildfailure WHERE buildfailureid IN ".$buildfailureids);
+    }
+  pdo_query("DELETE FROM buildfailure WHERE buildid IN ".$buildids);
   
-  pdo_query("DELETE FROM coverage WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM coveragefilelog WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM coveragesummary WHERE buildid='$buildid'");
+  // coverage file are kept unless they are shared
+  $coveragefile = pdo_query("SELECT a.fileid,count(b.fileid) AS c 
+                             FROM coverage AS a LEFT JOIN coverage AS b 
+                             ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
+                             GROUP BY a.fileid HAVING c=0");
+    
+  $fileids = '(';
+  while($coveragefile_array = pdo_fetch_array($coveragefile))
+    {
+    if($fileids != '(')
+      {
+      $fileids .= ',';
+      } 
+    $fileids .= $coveragefile_array["fileid"];
+    }
+  $fileids .= ')';
+    
+  if(strlen($fileids)>2)
+    {
+    pdo_query("DELETE FROM coveragefile WHERE id IN ".$fileids);
+    } 
+      
+  pdo_query("DELETE FROM label2coveragefile WHERE buildid IN ".$buildids);    
+  pdo_query("DELETE FROM coverage WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM coveragefilelog WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM coveragesummary WHERE buildid IN ".$buildids);
 
   // dynamicanalysisdefect
-  $dynamicanalysis = pdo_query("SELECT id FROM dynamicanalysis WHERE buildid='$buildid'");
+  $dynamicanalysis = pdo_query("SELECT id FROM dynamicanalysis WHERE buildid IN ".$buildids);
+  $dynids = '(';
   while($dynamicanalysis_array = pdo_fetch_array($dynamicanalysis))
     {
-    $dynid = $dynamicanalysis_array["id"];
-    pdo_query("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid='$dynid'"); 
-    pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid='$dynid'"); 
+    if($dynids != '(')
+      {
+      $dynids .= ',';
+      }    
+    $dynids .= $dynamicanalysis_array["id"];
     }
-   
-  pdo_query("DELETE FROM dynamicanalysis WHERE buildid='$buildid'");
-  pdo_query("DELETE FROM updatefile WHERE buildid='$buildid'");   
+  $dynids .= ')';
+
+  if(strlen($dynids)>2)
+    {
+    pdo_query("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN ".$dynids); 
+    pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN ".$dynids); 
+    } 
+  pdo_query("DELETE FROM dynamicanalysis WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM updatefile WHERE buildid IN ".$buildids);   
   
   // Delete the note if not shared
-  $build2note = pdo_query("SELECT * FROM build2note WHERE buildid='$buildid'");
+  $noteids = '(';
+  
+  
+  $build2note = pdo_query("SELECT a.noteid,count(b.noteid) AS c 
+                           FROM build2note AS a LEFT JOIN build2note AS b 
+                           ON (a.noteid=b.noteid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
+                           GROUP BY a.noteid HAVING c=0");
   while($build2note_array = pdo_fetch_array($build2note))
     {
-    $noteid = $build2note_array["noteid"];
-    if(pdo_num_rows(pdo_query("SELECT * FROM build2note WHERE noteid='$noteid'"))==1)
+    // Note is not shared we delete
+    if($noteids != '(')
       {
-      // Note is not shared we delete
-      pdo_query("DELETE FROM note WHERE id='$noteid'");
+      $noteids .= ',';
       }
+    $noteids .= $build2note_array["noteid"];
     }
-  pdo_query("DELETE FROM build2note WHERE buildid='$buildid'"); 
+  $noteids .= ')';  
+  if(strlen($noteids)>2)
+    {
+    pdo_query("DELETE FROM note WHERE id IN ".$noteids);
+    }
+ 
+  pdo_query("DELETE FROM build2note WHERE buildid IN ".$buildids); 
   
   // Delete the test if not shared
-  $build2test = pdo_query("SELECT * FROM build2test WHERE buildid='$buildid'");
+  $build2test = pdo_query("SELECT a.testid,count(b.testid) AS c 
+                           FROM build2test AS a LEFT JOIN build2test AS b 
+                           ON (a.testid=b.testid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
+                           GROUP BY a.testid HAVING c=0");
+  
+  $testids = '(';
   while($build2test_array = pdo_fetch_array($build2test))
     {
     $testid = $build2test_array["testid"];
-    if(pdo_num_rows(pdo_query("SELECT * FROM build2test WHERE testid='$testid'"))==1)
+    if($testids != '(')
       {
-      // Check if the images for the test are not shared
-      $test2image = pdo_query("SELECT imgid FROM test2image WHERE testid='$testid'");
-      while($test2image_array = pdo_fetch_array($test2image))
-        {
-        $imgid = $test2image_array["imgid"];
-        // Check if the test images are shared
-        if(pdo_num_rows(pdo_query("SELECT * FROM test2image WHERE imgid='$imgid'"))==1)
-          {
-          pdo_query("DELETE FROM image WHERE id='$imgid'");
-          }
-        }
-      // Tests are not shared we delete
-      pdo_query("DELETE FROM testmeasurement WHERE testid='$testid'");
-      pdo_query("DELETE FROM test WHERE id='$testid'");
-      pdo_query("DELETE FROM test2image WHERE testid='$testid'");
-      pdo_query("DELETE FROM label2test WHERE testid='$testid' AND buildid='$buildid'");
-      }
+      $testids .= ',';
+      } 
+    $testids .= $testid;
     }
-  pdo_query("DELETE FROM build2test WHERE buildid='$buildid'"); 
+  $testids .= ')';
+  
+  if(strlen($testids)>2)
+    {
+    pdo_query("DELETE FROM testmeasurement WHERE testid IN ".$testids);
+    pdo_query("DELETE FROM test WHERE id IN ".$testids);
+    
+    $imgids = '(';
+    // Check if the images for the test are not shared
+    $test2image = pdo_query("SELECT a.imgid,count(b.imgid) AS c 
+                           FROM test2image AS a LEFT JOIN test2image AS b 
+                           ON (a.imgid=b.imgid AND b.testid NOT IN ".$testids.") WHERE a.testid IN ".$testids." 
+                           GROUP BY a.imgid HAVING c=0");
+    while($test2image_array = pdo_fetch_array($test2image))
+      {
+      $imgid = $test2image_array["imgid"];
+      if($imgids != '(')
+        {
+        $imgids .= ',';
+        }
+      $imgids .= $imgid;
+      }
+    $imgids .= ')';
+    if(strlen($imgids)>2)
+      {
+      pdo_query("DELETE FROM image WHERE id IN ".$imgids);  
+      }
+    pdo_query("DELETE FROM test2image WHERE testid IN ".$testids);
+    }
+
+  pdo_query("DELETE FROM label2test WHERE buildid IN ".$buildids);   
+  pdo_query("DELETE FROM build2test WHERE buildid IN ".$buildids); 
 
   // Delete the uploaded files if not shared
-  $build2uploadfiles = pdo_query("SELECT fileid FROM build2uploadfile WHERE buildid='$buildid'");
+  $fileids = '(';
+  $build2uploadfiles = pdo_query("SELECT a.fileid,count(b.fileid) AS c 
+                           FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b 
+                           ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
+                           GROUP BY a.fileid HAVING c=0");
+  
   while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
     {
     $fileid = $build2uploadfile_array['fileid'];
-    if(pdo_num_rows(pdo_query("SELECT * FROM build2uploadfile WHERE fileid='$fileid' AND buildid != '$buildid'")) == 0)
+    if($fileids != '(')
       {
-      pdo_query("DELETE FROM uploadfile WHERE id='$fileid'");
-      }
+      $fileids .= ',';
+      }   
+    $fileids .= $fileid;
     }
-  pdo_query("DELETE FROM build2uploadfile WHERE buildid='$buildid'");
+  $fileids .= ')';  
+  if(strlen($fileids)>2)
+    {
+    pdo_query("DELETE FROM uploadfile WHERE id IN ".$fileids);
+    }  
+    
+  pdo_query("DELETE FROM build2uploadfile WHERE buildid IN ".$buildids);
 
   // Delete the subproject
-  pdo_query("DELETE FROM subproject2build WHERE buildid='$buildid'"); 
+  pdo_query("DELETE FROM subproject2build WHERE buildid IN ".$buildids); 
 
   // Delete the labels
-  pdo_query("DELETE FROM label2build WHERE buildid='$buildid'");
+  pdo_query("DELETE FROM label2build WHERE buildid IN ".$buildids);
    
   // Only delete the buildid at the end so that no other build can get it in the meantime
-  pdo_query("DELETE FROM build WHERE id='$buildid'");
+  pdo_query("DELETE FROM build WHERE id IN ".$buildids);
 
+  add_last_sql_error("remove_build");
 }
 
 /**

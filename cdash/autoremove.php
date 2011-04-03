@@ -27,6 +27,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
 
   $buildgroups = pdo_query('SELECT id,autoremovetimeframe FROM buildgroup WHERE projectid='.qnum($projectid));
 
+  $buildids = array();
   while($buildgroup = pdo_fetch_array($buildgroups))
     {
     $days = $buildgroup['autoremovetimeframe'];
@@ -47,13 +48,14 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
 
     while($build = pdo_fetch_array($builds))
       {
-      $buildid = $build['id'];
-      $s = 'removing old buildid: '.$buildid.' projectid: '.$projectid;
-      add_log($s, 'removeBuildsGroupwise');
-      print "  -- " . $s . "\n";
-      remove_build($buildid); 
+      $buildids[] = $build['id'];
       }
     }
+
+   $s = 'removing old buildids for projectid: '.$projectid;
+   add_log($s, 'removeBuildsGroupwise');
+   print "  -- " . $s . "\n";
+   remove_build($buildids);  
 }
 
 /** Remove the first builds that are at the beginning of the queue */
@@ -87,16 +89,18 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
   add_log('about to query for builds to remove', 'removeFirstBuilds');
   $builds = pdo_query("SELECT id FROM build WHERE starttime<'".$startdate."' AND projectid=".qnum($projectid)." ORDER BY starttime ASC LIMIT ".$maxbuilds);
   add_last_sql_error("dailyupdates::removeFirstBuilds");
-  
 
+  $buildids = array();
   while($builds_array = pdo_fetch_array($builds))
     {
-    $buildid = $builds_array["id"];
-    $s = 'removing old buildid: '.$buildid.' projectid: '.$projectid;
-    add_log($s, 'removeFirstBuilds');
-    print "  -- " . $s . "\n"; // for "interactive" command line feedback
-    remove_build($buildid);
+    $buildids[] = $builds_array["id"];
+    //$s = 'removing old buildid: '.$buildid.' projectid: '.$projectid;
+    //remove_build($buildid);
     }
+
+  add_log($s, 'removeFirstBuilds');
+  print "  -- " . $s . "\n"; // for "interactive" command line feedback
+  remove_build($buildids);    
 }
 
 ?>
