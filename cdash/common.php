@@ -975,6 +975,11 @@ function remove_project_builds($projectid)
 /** Remove all related inserts for a given build */
 function remove_build($buildid)
 {
+  if(empty($buildid))
+    {
+    return;  
+    }
+    
   $buildids = '(';  
   if(is_array($buildid))
     {
