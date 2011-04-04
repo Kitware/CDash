@@ -1035,7 +1035,7 @@ function remove_build($buildid)
   $coveragefile = pdo_query("SELECT a.fileid,count(b.fileid) AS c 
                              FROM coverage AS a LEFT JOIN coverage AS b 
                              ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
-                             GROUP BY a.fileid HAVING c=0");
+                             GROUP BY a.fileid HAVING count(b.fileid)=0");
     
   $fileids = '(';
   while($coveragefile_array = pdo_fetch_array($coveragefile))
@@ -1086,7 +1086,7 @@ function remove_build($buildid)
   $build2note = pdo_query("SELECT a.noteid,count(b.noteid) AS c 
                            FROM build2note AS a LEFT JOIN build2note AS b 
                            ON (a.noteid=b.noteid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
-                           GROUP BY a.noteid HAVING c=0");
+                           GROUP BY a.noteid HAVING count(b.noteid)=0");
   while($build2note_array = pdo_fetch_array($build2note))
     {
     // Note is not shared we delete
@@ -1108,7 +1108,7 @@ function remove_build($buildid)
   $build2test = pdo_query("SELECT a.testid,count(b.testid) AS c 
                            FROM build2test AS a LEFT JOIN build2test AS b 
                            ON (a.testid=b.testid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
-                           GROUP BY a.testid HAVING c=0");
+                           GROUP BY a.testid HAVING count(b.testid)=0");
   
   $testids = '(';
   while($build2test_array = pdo_fetch_array($build2test))
@@ -1132,7 +1132,7 @@ function remove_build($buildid)
     $test2image = pdo_query("SELECT a.imgid,count(b.imgid) AS c 
                            FROM test2image AS a LEFT JOIN test2image AS b 
                            ON (a.imgid=b.imgid AND b.testid NOT IN ".$testids.") WHERE a.testid IN ".$testids." 
-                           GROUP BY a.imgid HAVING c=0");
+                           GROUP BY a.imgid HAVING count(b.imgid)=0");
     while($test2image_array = pdo_fetch_array($test2image))
       {
       $imgid = $test2image_array["imgid"];
@@ -1158,7 +1158,7 @@ function remove_build($buildid)
   $build2uploadfiles = pdo_query("SELECT a.fileid,count(b.fileid) AS c 
                            FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b 
                            ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
-                           GROUP BY a.fileid HAVING c=0");
+                           GROUP BY a.fileid HAVING count(b.fileid)=0");
   
   while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
     {
