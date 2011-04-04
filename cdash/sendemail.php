@@ -244,7 +244,7 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
       $filled = false;
       if($email != '')
         {
-        $result = pdo_query("SELECT id FROM user WHERE email='$email'"); 
+        $result = pdo_query("SELECT id FROM ".qid("user")." WHERE email='$email'"); 
     
         if(pdo_num_rows($result) != 0)
           {
