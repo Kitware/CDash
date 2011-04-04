@@ -46,7 +46,7 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
       {
       $this->fail("Expected output not found from autoRemoveBuilds.php.\n$output\n");
       }
-    else if(strpos($output, "removing old buildid:") === false)
+    else if(strpos($output, "removing old buildids") === false)
       {
       $this->fail("Autoremovebuilds failed to remove old build by buildgroup setting.\n$output\n");
       }
