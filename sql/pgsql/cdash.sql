@@ -1207,13 +1207,12 @@ CREATE INDEX "apitoken_token" on "apitoken" ("token");
 --
 CREATE TABLE "uploadfile" (
   "id" serial NOT NULL,
-  "file" bytea NOT NULL,
   "filename" character varying(255) NOT NULL,
   "filesize" bigint NOT NULL DEFAULT '0',
-  "md5sum" character varying(32) NOT NULL,
+  "sha1sum" character varying(40) NOT NULL,
   PRIMARY KEY("id")
 );
-CREATE INDEX "uploadfile_md5sum" on "uploadfile" ("md5sum");
+CREATE INDEX "uploadfile_sha1sum" on "uploadfile" ("sha1sum");
 
 -- 
 -- Table: build2uploadfile

@@ -20,11 +20,8 @@ class UploadFile
   var $Id;
   var $Filename;
   var $Filesize;
-  var $Content;
-  var $MD5Sum;
+  var $Sha1Sum;
   var $BuildId;
-  var $FileEncoding;
-  var $FileCompression;
 
   // Insert in the database
   function Insert()
@@ -47,34 +44,24 @@ class UploadFile
       return false;
       }
 
-    if(!$this->Content)
+    if(!$this->Sha1Sum)
       {
-      echo "UploadFile::Insert(): Content is not set<br>";
-      return false;
+      echo "UploadFile::Insert(): Sha1Sum is not set<br>";
       }
 
-    if(strtolower($this->FileEncoding) != 'base64')
+    if(!$this->Filesize)
       {
-      echo "UploadFile::Insert(): Unsupported file encoding<br>";
-      return false;
+      echo "UploadFile::Insert(): Filesize is not set<br>";
       }
+
     $filename = pdo_real_escape_string(basename($this->Filename));
-    $filedata = base64_decode(trim($this->Content));
-    if($this->FileEncoding == 'gzip')
-      {
-      @$filedata = gzuncompress($filedata);
-      }
-
-    $md5sum = md5($filedata);
-    $filesize = strlen($filedata);
-    $filedata = pdo_real_escape_string($filedata);
 
     //check if the file already exists
-    $filequery = pdo_query("SELECT id FROM uploadfile WHERE md5sum = '$md5sum' AND filename ='$filename'");
+    $filequery = pdo_query("SELECT id FROM uploadfile WHERE sha1sum = '".$this->Sha1Sum."' AND filename ='$filename'");
     if(pdo_num_rows($filequery) == 0)
       {
       // Insert the file into the database
-      $query = "INSERT INTO uploadfile (file, filename, filesize, md5sum) VALUES ('$filedata','$filename','$filesize','$md5sum')";
+      $query = "INSERT INTO uploadfile (filename, filesize, sha1sum) VALUES ('$filename','$this->Filesize','$this->Sha1Sum')";
       if(!pdo_query($query))
         {
         add_last_sql_error('Uploadfile::Insert', 0, $this->BuildId);
@@ -110,7 +97,7 @@ class UploadFile
       echo "UploadFile::Fill(): Id not set";
       return false;
       }
-    $query = pdo_query("SELECT filename, filesize, md5sum FROM uploadfile WHERE id='$this->Id'");
+    $query = pdo_query("SELECT filename, filesize, sha1sum FROM uploadfile WHERE id='$this->Id'");
     if(!$query)
       {
       add_last_sql_error('Uploadfile::Fill', 0, $this->Id);
@@ -119,7 +106,7 @@ class UploadFile
     if(pdo_num_rows($query) > 0)
       {
       $fileArray = pdo_fetch_array($query);
-      $this->MD5Sum = $fileArray['md5sum'];
+      $this->Sha1Sum = $fileArray['sha1sum'];
       $this->Filename = $fileArray['filename'];
       $this->Filesize = $fileArray['filesize'];
       }
