@@ -47,11 +47,13 @@ class UploadFile
     if(!$this->Sha1Sum)
       {
       echo "UploadFile::Insert(): Sha1Sum is not set<br>";
+      return false;
       }
 
     if(!$this->Filesize)
       {
       echo "UploadFile::Insert(): Filesize is not set<br>";
+      return false;
       }
 
     $filename = pdo_real_escape_string(basename($this->Filename));
