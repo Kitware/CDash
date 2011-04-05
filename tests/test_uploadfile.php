@@ -30,7 +30,7 @@ class UploadFileTestCase extends KWWebTestCase
     }
 
   // Make sure the uploaded files are present
-  function verifyFileSubmission()
+  function testVerifyFileSubmission()
     {
     $query = $this->db->query("SELECT buildid FROM build2uploadfile");
     if(count($query) == 0)
