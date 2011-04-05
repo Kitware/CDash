@@ -59,7 +59,8 @@ foreach($uploadFiles as $uploadFile)
   {
   $xml .= '<uploadfile>';
   $xml .= '<id>'.$uploadFile->Id.'</id>';
-  $xml .= '<md5sum>'.$uploadFile->MD5Sum.'</md5sum>';
+  $xml .= '<href>uploadfiles/'.$uploadFile->Sha1Sum.'/'.$uploadFile->Filename.'</href>';
+  $xml .= '<sha1sum>'.$uploadFile->Sha1Sum.'</sha1sum>';
   $xml .= '<filename>'.$uploadFile->Filename.'</filename>';
   $xml .= '<filesize>'.$uploadFile->Filesize.'</filesize>';
   $xml .= '</uploadfile>';

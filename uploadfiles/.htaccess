@@ -1,0 +1,3 @@
+Options -ExecCGI
+Options -Indexes
+php_flag engine off

@@ -31,12 +31,12 @@
 
 <h3>Files submitted with this build:</h3>
 <table border="2" cellpadding="4">
-<tr><th>File</th><th>Size</th><th>MD5</th></tr>
+<tr><th>File</th><th>Size</th><th>SHA-1</th></tr>
 <xsl:for-each select="/cdash/uploadfile">
   <tr>
-  <td><a><xsl:attribute name="href">downloadFile.php?id=<xsl:value-of select="id" /></xsl:attribute><xsl:value-of select="filename" /></a></td>
+  <td><a><xsl:attribute name="href"><xsl:value-of select="href" /></xsl:attribute><xsl:value-of select="filename" /></a></td>
   <td><xsl:value-of select="filesize" /></td>
-  <td><xsl:value-of select="md5sum" /></td>
+  <td><xsl:value-of select="sha1sum" /></td>
   </tr>
 </xsl:for-each>
 </table>
