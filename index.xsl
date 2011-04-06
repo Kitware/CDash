@@ -164,7 +164,7 @@
       <xsl:if test="upload-file-count>0 and countbuildids=1">
       <a><xsl:attribute name="href">viewFiles.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute>
          <xsl:attribute name="title"><xsl:value-of select="upload-file-count" /> files uploaded with this build</xsl:attribute>
-      <img src="images/disk.png" alt="Files" border="0"/></a>
+      <img src="images/package.png" alt="Files" border="0"/></a>
       </xsl:if>
 
       <xsl:if test="string-length(note)>0 and countbuildids=1">
