@@ -16,7 +16,8 @@ set(CMake_SOURCE_DIR CACHE FILEPATH "Path to CMake source dir.  Set this to impo
 set(CLIENT_TEST_SCRIPT1 CACHE FILEPATH "Path to client management test script")
 set(CLIENT_TEST_SCRIPT2 CACHE FILEPATH "Path to client management test script")
 
-get_filename_component(CDASH_DIR_NAME ${CDash_SOURCE_DIR} NAME)
+get_filename_component(CDASH_DIR_NAME_DEFAULT ${CDash_SOURCE_DIR} NAME)
+set(CDASH_DIR_NAME "${CDASH_DIR_NAME_DEFAULT}" CACHE STRING "URL suffix. Ie 'http://<CDASH_SERVER>/<CDASH_DIR_NAME>'")
 message("CDASH_DIR_NAME = ${CDASH_DIR_NAME}")
 
 set(CDASH_TESTING_URL "http://${CDASH_SERVER}/${CDASH_DIR_NAME}")
