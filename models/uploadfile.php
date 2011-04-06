@@ -28,25 +28,25 @@ class UploadFile
     {
     if(!$this->BuildId)
       {
-      echo "UploadFile::Insert(): BuildId is not set<br>";
+      add_log("BuildId is not set", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
       return false;
       }
 
     if(!$this->Filename)
       {
-      echo "UploadFile::Insert(): Filename is not set<br>";
+      add_log("Filename is not set", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
       return false;
       }
 
     if(!$this->Sha1Sum)
       {
-      echo "UploadFile::Insert(): Sha1Sum is not set<br>";
+      add_log("Sha1Sum is not set", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
       return false;
       }
 
     if(!$this->Filesize)
       {
-      echo "UploadFile::Insert(): Filesize is not set<br>";
+      add_log("Filesize is not set", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
       return false;
       }
 
@@ -73,7 +73,7 @@ class UploadFile
 
     if(!$this->Id)
       {
-      echo "UploadFile::Insert(): No Id";
+      add_log("No Id", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
       return false;
       }
 
@@ -90,7 +90,7 @@ class UploadFile
     {
     if(!$this->Id)
       {
-      echo "UploadFile::Fill(): Id not set";
+      add_log("Id not set", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
       return false;
       }
     $query = pdo_query("SELECT filename, filesize, sha1sum FROM uploadfile WHERE id='$this->Id'");
@@ -108,7 +108,7 @@ class UploadFile
       }
     else
       {
-      echo "UploadFile::Fill(): Invalid id";
+      add_log("Invalid id", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
       return false;
       }
     return true;
