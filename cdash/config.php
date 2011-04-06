@@ -58,6 +58,8 @@ $CDASH_USE_LOCAL_DIRECTORY = '0';
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory
 $CDASH_BACKUP_DIRECTORY = 'backup';
+// Upload directory
+$CDASH_UPLOAD_DIRECTORY = 'upload';
 // Log file location
 $CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
 // Using external authentication
