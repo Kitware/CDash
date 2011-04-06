@@ -15,8 +15,6 @@ require_once("cdash/pdo.php");
 include_once('cdash/common.php');
 include("cdash/version.php");
 
-include('login.php');
-
 include_once('models/project.php');
 include_once('models/build.php');
 include_once('models/site.php');
@@ -37,7 +35,6 @@ $Site->Id = $Build->SiteId;
 
 $build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));  
 $projectid = $build_array["projectid"];
-checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= add_XML_value("cssfile",$CDASH_CSS_FILE);

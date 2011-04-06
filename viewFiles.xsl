@@ -19,7 +19,9 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
        <xsl:call-template name="headscripts"/>
+  
        <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+       <script language="javascript" type="text/javascript" src="javascript/cdashUploadFilesSorter.js"></script> 
 
        </head>
        <body bgcolor="#ffffff">
@@ -40,7 +42,7 @@
 <p><b>Build start time: </b><xsl:value-of select="/cdash/buildstarttime" /></p>
 
 <h3>Files submitted with this build:</h3>
-<table class="tabb">
+<table id="filesTable" class="tabb">
 <thead class="table-heading1">
   <tr>
     <th id="sort_0">File</th>
