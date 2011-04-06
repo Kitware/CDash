@@ -33,9 +33,14 @@ $Build->FillFromId($buildid);
 $Site = new Site();
 $Site->Id = $Build->SiteId;
 
-$xml = "<cdash>";
+$build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));  
+$projectid = $build_array["projectid"];
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
+
+$xml = '<?xml version="1.0"?><cdash>';
 $xml .= add_XML_value("cssfile",$CDASH_CSS_FILE);
 $xml .= add_XML_value("version",$CDASH_VERSION);
+$xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
@@ -59,7 +64,7 @@ foreach($uploadFiles as $uploadFile)
   {
   $xml .= '<uploadfile>';
   $xml .= '<id>'.$uploadFile->Id.'</id>';
-  $xml .= '<href>uploadfiles/'.$uploadFile->Sha1Sum.'/'.$uploadFile->Filename.'</href>';
+  $xml .= '<href>'.$CDASH_UPLOAD_DIRECTORY.'/'.$uploadFile->Sha1Sum.'/'.$uploadFile->Filename.'</href>';
   $xml .= '<sha1sum>'.$uploadFile->Sha1Sum.'</sha1sum>';
   $xml .= '<filename>'.$uploadFile->Filename.'</filename>';
   $xml .= '<filesize>'.$uploadFile->Filesize.'</filesize>';

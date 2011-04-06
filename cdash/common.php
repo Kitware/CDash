@@ -1081,8 +1081,7 @@ function remove_build($buildid)
   
   // Delete the note if not shared
   $noteids = '(';
-  
-  
+
   $build2note = pdo_query("SELECT a.noteid,count(b.noteid) AS c 
                            FROM build2note AS a LEFT JOIN build2note AS b 
                            ON (a.noteid=b.noteid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
@@ -1166,15 +1165,16 @@ function remove_build($buildid)
     if($fileids != '(')
       {
       $fileids .= ',';
-      }   
+      }
     $fileids .= $fileid;
+    unlink_uploaded_file($fileid);
     }
   $fileids .= ')';  
   if(strlen($fileids)>2)
     {
     pdo_query("DELETE FROM uploadfile WHERE id IN ".$fileids);
-    }  
-    
+    }
+
   pdo_query("DELETE FROM build2uploadfile WHERE buildid IN ".$buildids);
 
   // Delete the subproject
@@ -1187,6 +1187,34 @@ function remove_build($buildid)
   pdo_query("DELETE FROM build WHERE id IN ".$buildids);
 
   add_last_sql_error("remove_build");
+}
+
+/**
+ * Deletes the symlink to an uploaded file.  If it is the only symlink to that content,
+ * it will also delete the content itself.
+ */
+function unlink_uploaded_file($fileid)
+{
+  global $CDASH_UPLOAD_DIRECTORY;
+  $query = pdo_query("SELECT sha1sum, filename FROM uploadfile WHERE id='$fileid'");
+  $uploadfile_array = pdo_fetch_array($query);
+  $sha1sum = $uploadfile_array['sha1sum'];
+  $symlinkname = $uploadfile_array['filename'];
+
+  $query = pdo_query("SELECT count(*) FROM uploadfile WHERE sha1sum='$sha1sum' AND id != '$fileid'");
+  $count_array = pdo_fetch_array($builderror);
+  $shareCount = $count_array[0];
+
+  if($shareCount == 0) //If only one name maps to this content
+    {
+    // Delete the content and symlink
+    rmdirr($CDASH_UPLOAD_DIRECTORY.'/'.$sha1sum);
+    }
+  else
+    {
+    // Just delete the symlink, keep the content around
+    unlink($CDASH_UPLOAD_DIRECTORY.'/'.$sha1sum.'/'.$symlinkname);
+    }
 }
 
 /**
@@ -1223,6 +1251,29 @@ function globr($sDir, $sPattern, $nFlags = NULL)
 
   return $aFiles;
 } 
+
+/**
+ * Recursive version of rmdir()
+ */
+function rmdirr($dir)
+{
+  if (is_dir($dir))
+    {
+    $objects = scandir($dir); 
+    foreach ($objects as $object)
+      {
+      if ($object != '.' && $object != '..')
+        {
+        if (filetype($dir.'/'.$object) == 'dir')
+          rrmdir($dir.'/'.$object);
+        else
+          unlink($dir.'/'.$object); 
+        }
+      }
+    reset($objects); 
+    rmdir($dir); 
+    }
+}
 
 /** Get year from formatted date */
 function date2year($date)
