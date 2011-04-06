@@ -871,6 +871,16 @@ if($Upgrade)
     {
     $xml .= "<backupwritable>1</backupwritable>";
     }
+    
+  // check if the upload directory is writable
+  if(!is_writable($CDASH_UPLOAD_DIRECTORY))
+    {
+    $xml .= "<uploadwritable>0</uploadwritable>";
+    }
+  else
+    {
+    $xml .= "<uploadwritable>1</uploadwritable>";
+    }
 
   // check if the rss directory is writable
   if(!is_writable("rss"))
