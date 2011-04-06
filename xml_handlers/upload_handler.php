@@ -178,11 +178,16 @@ class UploadHandler extends AbstractHandler
       // Close base64 temporary file writting handler
       fclose($this->Base64TmpFileWriteHandle);
       
-      // Decode file using 'stream based' approach to minimize memory footprint
+      // Decode file using 'read by chunk' approach to minimize memory footprint
+      // Note: Using stream_filter_append/stream_copy_to_stream is more efficient but 
+      // return an "invalid byte sequence" on windows
       $rhandle = fopen($this->Base64TmpFilename, 'r');
-      stream_filter_append($rhandle, 'convert.base64-decode');
       $whandle = fopen($this->TmpFilename, 'w+');
-      stream_copy_to_stream($rhandle, $whandle);
+      $chunksize = 4096;
+      while (!feof($rhandle))
+        {
+        fwrite($whandle, base64_decode(fread($rhandle, $chunksize)));
+        }
       fclose($rhandle);
       fclose($whandle);
       
