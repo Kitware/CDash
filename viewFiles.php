@@ -15,6 +15,8 @@ require_once("cdash/pdo.php");
 include_once('cdash/common.php');
 include("cdash/version.php");
 
+include('login.php');
+
 include_once('models/project.php');
 include_once('models/build.php');
 include_once('models/site.php');
