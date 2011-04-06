@@ -32,12 +32,6 @@ class UploadFile
       return false;
       }
 
-    if(!$this->FileEncoding)
-      {
-      echo "UploadFile::Insert(): FileEncoding is not set<br>";
-      return false;
-      }
-
     if(!$this->Filename)
       {
       echo "UploadFile::Insert(): Filename is not set<br>";
