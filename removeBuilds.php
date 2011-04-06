@@ -106,94 +106,6 @@ $xml .= "<yearTo>".$yearTo."</yearTo>";
 
 @$submit = $_POST["Submit"];
 
-/** THIS SHOULD GO IN  common.php */
-/* Remove an array of builds 
- * This should be much faster than deleting builds one by one */
-function remove_builds($builds)
-{
-  if(empty($builds))
-    {
-    return;
-    }
-    
-  $buildsql="";
-  $buildidsql="";
-
-  foreach($builds as $buildid)
-    {
-    if(!is_numeric($buildid))
-      {
-      return;
-      }
-    
-    if($buildsql != "")
-      {
-      $buildsql .= " OR ";
-      $buildidsql .= " OR ";
-      }
-    $buildsql .= 'buildid='.qnum($buildid);
-    $buildidsql .= 'id='.qnum($buildid);  
-    }
-
-  pdo_query("DELETE FROM build2group WHERE ".$buildsql);
-  pdo_query("DELETE FROM builderror WHERE ".$buildsql);
-  pdo_query("DELETE FROM buildinformation WHERE ".$buildsql);
-  pdo_query("DELETE FROM buildnote WHERE ".$buildsql);
-  pdo_query("DELETE FROM builderrordiff WHERE ".$buildsql);
-  pdo_query("DELETE FROM buildupdate WHERE ".$buildsql);
-  pdo_query("DELETE FROM configure WHERE ".$buildsql);
-  pdo_query("DELETE FROM configureerror WHERE ".$buildsql);
-  pdo_query("DELETE FROM configureerrordiff WHERE ".$buildsql);
-  pdo_query("DELETE FROM coveragesummarydiff WHERE ".$buildsql);
-  pdo_query("DELETE FROM testdiff WHERE ".$buildsql);
-  pdo_query("DELETE FROM coverage WHERE ".$buildsql);
-  pdo_query("DELETE FROM coveragefilelog WHERE ".$buildsql);
-  pdo_query("DELETE FROM coveragesummary WHERE ".$buildsql);
-  pdo_query("DELETE FROM dynamicanalysis WHERE ".$buildsql);
-  pdo_query("DELETE FROM updatefile WHERE ".$buildsql);   
-  pdo_query("DELETE FROM build2note WHERE ".$buildsql); 
-  pdo_query("DELETE FROM build2test WHERE ".$buildsql); 
-  
-  // If we have the buildfailure tables
-  if(pdo_query("SELECT id FROM buildfailure LIMIT 1"))
-    {
-    pdo_query("DELETE FROM buildfailure WHERE ".$buildsql); 
-    pdo_query("DELETE FROM buildfailure2argument WHERE buildfailureid NOT IN (SELECT id as buildfailureid FROM buildfailure)");
-    }
-    
-  // If we have the label tables
-  if(pdo_query("SELECT buildid FROM label2build LIMIT 1"))
-    {
-    pdo_query("DELETE FROM label2build WHERE ".$buildsql);
-    pdo_query("DELETE FROM label2coveragefile WHERE ".$buildsql);
-    pdo_query("DELETE FROM label2test WHERE ".$buildsql);
-    
-    pdo_query("DELETE FROM label2buildfailure WHERE buildfailureid NOT IN (SELECT id as buildfailureid FROM buildfailure)");
-    pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid NOT IN (SELECT id as dynamicanalysisid FROM dynamicanalysis)");
-    }
-  
-  // coverage file are kept unless they are shared
-  pdo_query("DELETE FROM coveragefile WHERE id NOT IN (SELECT fileid as id FROM coverage)");
-
-  // dynamicanalysisdefect
-  pdo_query("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid NOT IN (SELECT id as dynamicanalysisid FROM dynamicanalysis)");  
-  
-  // Delete the note if not shared
-  pdo_query("DELETE FROM note WHERE id NOT IN (SELECT noteid as id FROM build2note)");
-  
-  // Delete the test if not shared
-  pdo_query("DELETE FROM test WHERE id NOT IN (SELECT testid as id FROM build2test)");
-  pdo_query("DELETE FROM testmeasurement WHERE testid NOT IN (SELECT id as testid FROM test)");
-  pdo_query("DELETE FROM test2image WHERE testid NOT IN (SELECT id as testid FROM test)");
-
-  // Delete the testimages if not shared
-  pdo_query("DELETE FROM image WHERE id NOT IN (SELECT imgid as id FROM test2image) AND id NOT IN (SELECT imageid FROM project)");
-  
-  // Delete build
-  pdo_query("DELETE FROM build WHERE ".$buildidsql);
-}
-
-
 // Delete the builds
 if(isset($submit))
   {
@@ -208,8 +120,8 @@ if(isset($submit))
     {
     $builds[] = $build_array['id'];
     }
- 
-  remove_builds($builds);
+
+  remove_build($builds);
   $xml .= add_XML_value("alert","Removed ".count($builds)." builds.");
   }
   

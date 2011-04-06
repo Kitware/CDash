@@ -979,30 +979,30 @@ function remove_build($buildid)
     {
     return;  
     }
-    
-  $buildids = '(';  
+
+  $buildids = '(';
   if(is_array($buildid))
     {
-    $buildids .= implode(",",$buildid);  
-    }  
-  else 
+    $buildids .= implode(",",$buildid);
+    }
+  else
     {
     if(!is_numeric($buildid))
       {
       return;
-      }  
+      }
     $buildids .= $buildid;
-    }  
+    }
   $buildids .= ')';
-  
+
   pdo_query("DELETE FROM build2group WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM builderror WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM buildemail WHERE buildid IN ".$buildids);
-   
+
   pdo_query("DELETE FROM buildinformation WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM builderrordiff WHERE buildid IN ".$buildids);   
   pdo_query("DELETE FROM buildupdate WHERE buildid IN ".$buildids);
-   
+
   pdo_query("DELETE FROM configure WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM configureerror WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM configureerrordiff WHERE buildid IN ".$buildids);
@@ -1011,7 +1011,7 @@ function remove_build($buildid)
   pdo_query("DELETE FROM buildtesttime WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM summaryemail WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM errorlog WHERE buildid IN ".$buildids);
-   
+
   // Remove the buildfailureargument
   $buildfailureids = '(';
   $buildfailure = pdo_query("SELECT id FROM buildfailure WHERE buildid IN ".$buildids);
@@ -1030,29 +1030,29 @@ function remove_build($buildid)
     pdo_query("DELETE FROM label2buildfailure WHERE buildfailureid IN ".$buildfailureids);
     }
   pdo_query("DELETE FROM buildfailure WHERE buildid IN ".$buildids);
-  
+
   // coverage file are kept unless they are shared
-  $coveragefile = pdo_query("SELECT a.fileid,count(b.fileid) AS c 
-                             FROM coverage AS a LEFT JOIN coverage AS b 
+  $coveragefile = pdo_query("SELECT a.fileid,count(b.fileid) AS c
+                             FROM coverage AS a LEFT JOIN coverage AS b
                              ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
                              GROUP BY a.fileid HAVING count(b.fileid)=0");
-    
+
   $fileids = '(';
   while($coveragefile_array = pdo_fetch_array($coveragefile))
     {
     if($fileids != '(')
       {
       $fileids .= ',';
-      } 
+      }
     $fileids .= $coveragefile_array["fileid"];
     }
   $fileids .= ')';
-    
+
   if(strlen($fileids)>2)
     {
     pdo_query("DELETE FROM coveragefile WHERE id IN ".$fileids);
     } 
-      
+
   pdo_query("DELETE FROM label2coveragefile WHERE buildid IN ".$buildids);    
   pdo_query("DELETE FROM coverage WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM coveragefilelog WHERE buildid IN ".$buildids);
@@ -1078,7 +1078,7 @@ function remove_build($buildid)
     } 
   pdo_query("DELETE FROM dynamicanalysis WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM updatefile WHERE buildid IN ".$buildids);   
-  
+
   // Delete the note if not shared
   $noteids = '(';
 
@@ -1100,15 +1100,15 @@ function remove_build($buildid)
     {
     pdo_query("DELETE FROM note WHERE id IN ".$noteids);
     }
- 
+
   pdo_query("DELETE FROM build2note WHERE buildid IN ".$buildids); 
-  
+
   // Delete the test if not shared
   $build2test = pdo_query("SELECT a.testid,count(b.testid) AS c 
                            FROM build2test AS a LEFT JOIN build2test AS b 
                            ON (a.testid=b.testid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
                            GROUP BY a.testid HAVING count(b.testid)=0");
-  
+
   $testids = '(';
   while($build2test_array = pdo_fetch_array($build2test))
     {
@@ -1120,12 +1120,12 @@ function remove_build($buildid)
     $testids .= $testid;
     }
   $testids .= ')';
-  
+
   if(strlen($testids)>2)
     {
     pdo_query("DELETE FROM testmeasurement WHERE testid IN ".$testids);
     pdo_query("DELETE FROM test WHERE id IN ".$testids);
-    
+
     $imgids = '(';
     // Check if the images for the test are not shared
     $test2image = pdo_query("SELECT a.imgid,count(b.imgid) AS c 
@@ -1158,7 +1158,6 @@ function remove_build($buildid)
                            FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b 
                            ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
                            GROUP BY a.fileid HAVING count(b.fileid)=0");
-  
   while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
     {
     $fileid = $build2uploadfile_array['fileid'];
@@ -1202,7 +1201,7 @@ function unlink_uploaded_file($fileid)
   $symlinkname = $uploadfile_array['filename'];
 
   $query = pdo_query("SELECT count(*) FROM uploadfile WHERE sha1sum='$sha1sum' AND id != '$fileid'");
-  $count_array = pdo_fetch_array($builderror);
+  $count_array = pdo_fetch_array($query);
   $shareCount = $count_array[0];
 
   if($shareCount == 0) //If only one name maps to this content
@@ -1264,8 +1263,8 @@ function rmdirr($dir)
       {
       if ($object != '.' && $object != '..')
         {
-        if (filetype($dir.'/'.$object) == 'dir')
-          rrmdir($dir.'/'.$object);
+        if (is_dir($dir.'/'.$object))
+          rmdirr($dir.'/'.$object);
         else
           unlink($dir.'/'.$object); 
         }

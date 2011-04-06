@@ -5,8 +5,15 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
+require_once('cdash/common.php');
+require_once('cdash/pdo.php');
+
 class UploadFileTestCase extends KWWebTestCase
 {
+  var $BuildId;
+  var $FileId;
+  var $Sha1Sum;
+
   function __construct()
     {
     parent::__construct();
@@ -32,14 +39,16 @@ class UploadFileTestCase extends KWWebTestCase
   // Make sure the uploaded files are present
   function testVerifyFileSubmission()
     {
-    $query = $this->db->query("SELECT buildid FROM build2uploadfile");
+    //Verify file exists in the database
+    $query = $this->db->query("SELECT buildid, fileid FROM build2uploadfile");
     if(count($query) == 0)
       {
-      $this->fail('No upload files were added to the database');
+      $this->fail('No build2upload records were added to the database');
       return;
       }
-    $buildid = $query[0]['buildid'];
-    $content = $this->connect($this->url."/viewFiles.php?buildid=$buildid");
+    $this->BuildId = $query[0]['buildid'];
+
+    $content = $this->connect($this->url."/viewFiles.php?buildid=$this->BuildId");
     if(!$content)
       {
       return;
@@ -49,6 +58,35 @@ class UploadFileTestCase extends KWWebTestCase
       {
       return;
       }
+
+    //Verify symlink and content exist on disk
+    $query = $this->db->query("SELECT id, sha1sum FROM uploadfile WHERE filename='CMakeCache.txt'");
+    if(count($query) == 0)
+      {
+      $this->fail('CMakeCache.txt was not added to the uploadfile table');
+      return;
+      }
+    $this->FileId = $query[0]['id'];
+    $this->Sha1Sum = $query[0]['sha1sum'];
+
+    global $CDASH_UPLOAD_DIRECTORY;
+    $dirName = dirname(__FILE__).'/../'.$CDASH_UPLOAD_DIRECTORY.'/'.$this->Sha1Sum;
+    if(!is_dir($dirName))
+      {
+      $this->fail("Directory $dirName was not created");
+      return;
+      }
+    if(!file_exists($dirName.'/'.$this->Sha1Sum))
+      {
+      $this->fail("File contents were not written to $dirName/$this->Sha1Sum");
+      return;
+      }
+    if(!file_exists($dirName.'/CMakeCache.txt'))
+      {
+      $this->fail("File symlink was not written to $dirName/CMakeCache.txt");
+      return;
+      }
+    $this->pass('Uploaded file exists in database and on disk');
     }
 }
 
