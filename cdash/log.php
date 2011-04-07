@@ -25,6 +25,10 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
 {
   global $CDASH_LOG_FILE;
   $logFile = $CDASH_LOG_FILE;
+  if($buildid == 0 && isset($GLOBALS['PHP_ERROR_BUILD_ID'])) //use the global build id as a default if it's set
+    {
+    $buildid = $GLOBALS['PHP_ERROR_BUILD_ID'];
+    }
 
   if(!file_exists(dirname($logFile)))
     {
