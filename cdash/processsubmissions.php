@@ -34,7 +34,7 @@ ignore_user_abort(TRUE);
 
 // Returns true if this call to processsubmissions.php should execute the
 // processing loop. Returns false if another instance of processsubmissions.php
-// is already executing the loop.
+// is already executing the loop for this projectid.
 //
 function AcquireProcessingLock($projectid, $force)
 {
@@ -71,8 +71,6 @@ function AcquireProcessingLock($projectid, $force)
         "VALUES ('$projectid', '$mypid', '$now_utc', '$now_utc')");
       add_last_sql_error("AcquireProcessingLock-1");
       $locked = true;
-      //add_log("AcquireProcessingLock", "lock acquired -- and row created",
-      //  LOG_INFO, $projectid);
       }
     else
       {
@@ -94,8 +92,8 @@ function AcquireProcessingLock($projectid, $force)
 
       if ($force)
         {
-        //add_log("AcquireProcessingLock", "taking lock: 'force' is true",
-        //  LOG_INFO, $projectid);
+        add_log("AcquireProcessingLock", "taking lock: 'force' is true",
+          LOG_INFO, $projectid);
         $acquire_lock = true;
         }
       elseif ($pid != 0)
@@ -128,13 +126,6 @@ function AcquireProcessingLock($projectid, $force)
             $acquire_lock = true;
           //  }
           }
-
-        if (!$acquire_lock)
-          {
-          //add_log("AcquireProcessingLock",
-          //  "lock not acquired, owned by other pid='$pid'",
-          //  LOG_INFO, $projectid);
-          }
         }
       else
         {
@@ -153,9 +144,6 @@ function AcquireProcessingLock($projectid, $force)
           "WHERE projectid='".$projectid."'");
         add_last_sql_error("AcquireProcessingLock-2");
         $locked = true;
-
-        //add_log("AcquireProcessingLock", "lock acquired, projectid=$projectid",
-        //  LOG_INFO, $projectid);
         }
 
       $table_unlocked = pdo_unlock_tables($tables);
@@ -203,7 +191,6 @@ function ReleaseProcessingLock($projectid)
         "WHERE projectid='".$projectid."'");
       add_last_sql_error("ReleaseProcessingLock-1");
       $unlocked = true;
-      //add_log("ReleaseProcessingLock", "lock released", LOG_INFO, $projectid);
       }
     else
       {
@@ -245,8 +232,6 @@ function SetLockLastUpdatedTime($projectid)
     "SET lastupdated='$now_utc' ".
     "WHERE projectid='".$projectid."'"))
     {
-    //add_log("SetLockLastUpdatedTime", "lock lastupdated='$now_utc'",
-    //  LOG_INFO, $projectid);
     return true;
     }
 
@@ -258,6 +243,14 @@ function SetLockLastUpdatedTime($projectid)
 // For submissions that are "currently processing" but started processing a
 // "long time" ago... consider them stalled and reset them to "not processing"
 // so that the next processing loop will try again.
+//
+// Known status values are as follows:
+//   0 = not yet processing (or reset)
+//   1 = actively processing (or stalled and awaiting reset)
+//   2 = finished processing normally
+//   3 = could not process, could not read xml file
+//   4 = error caught during processing, partially processed
+//   5 = too many attempts, gave up, partially processed possibly many times
 //
 // Returns the number of records reset, or -1 if there was a query error.
 //
@@ -294,13 +287,13 @@ function ProcessSubmissions($projectid)
   $qs = "SELECT id, filename, filesize, attempts FROM submission ".
     "WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1";
 
-  //add_log("ProcessSubmissions", "querying before loop", LOG_INFO, $projectid);
   $query = pdo_query($qs);
   add_last_sql_error("ProcessSubmissions-1");
   $iterations = 0;
   $mypid = getmypid();
 
   @$sleep_in_loop = $_GET['sleep_in_loop'];
+  @$intentional_nonreturning_submit = $_GET['intentional_nonreturning_submit'];
 
   $n = pdo_num_rows($query);
   while ($n > 0)
@@ -313,8 +306,7 @@ function ProcessSubmissions($projectid)
     $query_array = pdo_fetch_array($query);
     add_last_sql_error("ProcessSubmissions-1.5");
 
-    //add_log("ProcessSubmissions", "query_array: ".print_r($query_array, true),
-    // LOG_INFO, $projectid);
+    pdo_free_result($query);
 
     // Verify that *this* process still owns the lock.
     //
@@ -333,95 +325,91 @@ function ProcessSubmissions($projectid)
     $filename = $query_array['filename'];
     $new_attempts = $query_array['attempts'] + 1;
 
-    // Mark it as status=1 (processing) and record started time:
-    //
-    $now_utc = gmdate(FMT_DATETIMESTD);
-    pdo_query("UPDATE submission SET status=1, started='$now_utc', ".
-      "lastupdated='$now_utc', attempts=$new_attempts ".
-      "WHERE id='".$submission_id."'");
-    add_last_sql_error("ProcessSubmissions-2");
-
     // Mark the submissionprocessing table each time through the loop so that
     // we do not become known as an "apparently stalled" processor...
     //
     SetLockLastUpdatedTime($projectid);
 
-    $mem_used = memory_get_usage();
-    $logstring = "iterations='$iterations' mem_used='$mem_used'";
-    //add_log("ProcessSubmissions", "$logstring", LOG_INFO, $projectid);
-
-    //add_log("ProcessSubmissions",
-    //  "connection_status='".connection_status()."'", LOG_INFO, $projectid);
-    //add_log("ProcessSubmissions",
-    //  "connection_aborted='".connection_aborted()."'", LOG_INFO, $projectid);
-
-    //echo "# ============================================================================\n";
-    //echo "# $logstring\n";
-    //echo 'Marked submission as started'."\n";
-    //echo print_r($query_array, true) . "\n";
-
-    //add_log("ProcessSubmissions", "calling pdo_free_result",
-    //  LOG_INFO, $projectid);
-    pdo_free_result($query);
-
-    unset($fp);
-
-    if(!file_exists($filename))
-    {
-      echo "Unexpected: no such file, checking in ../\n";
-      // check in parent dir also
-      $filename = "../$filename";
-    }
-
-    if(file_exists($filename))
-    {
-      $fp = fopen($filename, 'r');
-    }
-
-    if($fp)
-    {
-      //echo 'Calling do_submit'."\n";
-      //add_log("ProcessSubmissions", "calling do_submit", LOG_INFO, $projectid);
-      do_submit($fp, $projectid, '', false);
-      //add_log("ProcessSubmissions", "calling fclose", LOG_INFO, $projectid);
-      fclose($fp);
-      // delete the temporary backup file since we now have a better-named one
-      //echo 'Calling unlink (' . $filename . ')'."\n";
-      //add_log("ProcessSubmissions", "calling unlink", LOG_INFO, $projectid);
-      unlink($filename);
-      $new_status = 2; // done, did call do_submit
-    }
-    else
-    {
-      add_log("ProcessSubmissions", "Cannot open file '".$filename."'",
+    global $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS;
+    if ($new_attempts > $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS)
+      {
+      add_log("ProcessSubmissions", "Too many attempts to process '".$filename."'",
         LOG_ERR, $projectid);
-      $new_status = 3; // done, did *NOT* call do_submit
-    }
+      $new_status = 5; // done, called do_submit too many times already
+      }
+    else
+      {
+      // Mark it as status=1 (processing) and record started time:
+      //
+      $now_utc = gmdate(FMT_DATETIMESTD);
+      pdo_query("UPDATE submission SET status=1, started='$now_utc', ".
+        "lastupdated='$now_utc', attempts=$new_attempts ".
+        "WHERE id='".$submission_id."'");
+      add_last_sql_error("ProcessSubmissions-2");
 
-    // Mark it as done and record finished time:
+      // Record id in global so that we can mark it as "error status" if we
+      // get thrown to the error handler...
+      //
+      global $PHP_ERROR_SUBMISSION_ID;
+      $PHP_ERROR_SUBMISSION_ID = $submission_id;
+
+      // Try to open the file and process it (call "do_submit" on it)
+      //
+      unset($fp);
+      if(!file_exists($filename))
+        {
+        // check in parent dir also
+        $filename = "../$filename";
+        }
+      if(file_exists($filename))
+        {
+        $fp = fopen($filename, 'r');
+        }
+
+      if($fp)
+        {
+        if($intentional_nonreturning_submit)
+          {
+          // simulate "error occurred" during do_submit: status will be set to 4 in error handler...
+          trigger_error(
+            'ProcessSubmissions: intentional_nonreturning_submit is on',
+            E_USER_ERROR);
+          }
+
+        do_submit($fp, $projectid, '', false);
+        $PHP_ERROR_SUBMISSION_ID = 0;
+
+        fclose($fp);
+        // delete the temporary backup file since we now have a better-named one
+        unlink($filename);
+        $new_status = 2; // done, did call do_submit, finished normally
+        }
+      else
+        {
+        add_log("ProcessSubmissions", "Cannot open file '".$filename."'",
+          LOG_ERR, $projectid);
+        $new_status = 3; // done, did *NOT* call do_submit
+        }
+      }
+
+    $PHP_ERROR_SUBMISSION_ID = 0;
+
+    // Mark it as done with $new_status and record finished time:
     //
-    //echo 'Marking submission as finished'."\n";
     $now_utc = gmdate(FMT_DATETIMESTD);
-    //add_log("ProcessSubmissions", "marking status=$new_status",
-    //  LOG_INFO, $projectid);
     pdo_query(
       "UPDATE submission SET status=$new_status, finished='$now_utc', ".
       "lastupdated='$now_utc' WHERE id='".$submission_id."'");
     add_last_sql_error("ProcessSubmissions-3");
 
-    //echo 'Re-querying for more submissions'."\n";
-    //add_log("ProcessSubmissions", "querying for more submissions",
-    //  LOG_INFO, $projectid);
+    // Query for more... Continue processing while there are records to
+    // process:
+    //
     $query = pdo_query($qs);
     add_last_sql_error("ProcessSubmissions-4");
     $n = pdo_num_rows($query);
-    //add_log("ProcessSubmissions", "got $n rows", LOG_INFO, $projectid);
     $iterations = $iterations + 1;
   }
-
-  //$mem_used = memory_get_usage();
-  //$logstring = "DONE iterations='$iterations' mem_used='$mem_used'";
-  //add_log("ProcessSubmissions", "$logstring", LOG_INFO, $projectid);
 
   return true;
 }
@@ -438,10 +426,69 @@ function DeleteOldSubmissionRecords($projectid)
 
   $one_week_ago_utc = gmdate(FMT_DATETIMESTD, time()-$seconds);
 
-  pdo_query("DELETE FROM submission WHERE (status=2 OR status=3) AND ".
+  pdo_query("DELETE FROM submission WHERE ".
+    "(status=2 OR status=3 OR status=4 OR status=5) AND ".
     "projectid='$projectid' AND finished<'$one_week_ago_utc' AND ".
     "finished!='1980-01-01 00:00:00'");
   add_last_sql_error("DeleteOldSubmissionRecords");
+}
+
+
+// Provide an error handler that can give up on a submission if a
+// fatal PHP error occurs while processing a file.
+//
+function ProcessSubmissionsErrorHandler($projectid)
+{
+  $needs_clean_up = false;
+
+  if ($error = error_get_last())
+    {
+    switch($error['type'])
+      {
+      case E_ERROR:
+      case E_CORE_ERROR:
+      case E_COMPILE_ERROR:
+      case E_USER_ERROR:
+        $needs_clean_up = true;
+      break;
+      }
+    }
+
+  if ($needs_clean_up)
+    {
+    // Mark the current submission, if any, as 'failed with error'
+    //
+    global $PHP_ERROR_SUBMISSION_ID;
+    if (0 != $PHP_ERROR_SUBMISSION_ID)
+      {
+      $now_utc = gmdate(FMT_DATETIMESTD);
+      pdo_query(
+        "UPDATE submission SET status=4, finished='$now_utc', ".
+        "lastupdated='$now_utc' WHERE id='".$PHP_ERROR_SUBMISSION_ID."'");
+      add_last_sql_error("ProcessSubmissionsErrorHandler-1");
+
+      echo "ProcessSubmissionsErrorHandler: error processing submission id $PHP_ERROR_SUBMISSION_ID\n";
+      add_log('ProcessSubmissionsErrorHandler',
+        "error processing submission id $PHP_ERROR_SUBMISSION_ID",
+        LOG_ERR, $projectid);
+      }
+
+    // Call ReleaseProcessingLock since an error occurred before the expected
+    // call to it at the bottom of the script:
+    //
+    if (ReleaseProcessingLock($projectid))
+      {
+      echo "ProcessSubmissionsErrorHandler: ReleasedProcessingLock($projectid) returned true\n";
+      }
+    else
+      {
+      echo "ProcessSubmissionsErrorHandler: ReleasedProcessingLock($projectid) returned false\n";
+      }
+    }
+
+  // Call the main CDash error handler for its default logging behavior:
+  //
+  PHPErrorHandler($projectid);
 }
 
 
@@ -495,7 +542,7 @@ if(!is_numeric($projectid))
 
 // Catch any fatal errors during processing
 //
-register_shutdown_function('PHPErrorHandler', $projectid);
+register_shutdown_function('ProcessSubmissionsErrorHandler', $projectid);
 
 
 echo "projectid='$projectid'\n";
