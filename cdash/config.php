@@ -21,6 +21,10 @@
  * any text after the 'DO NOT EDIT AFTER THIS LINE' otherwise your
  * configuration file will be referencing each other. */
 
+// This file is 'config.php', in the directory 'cdash', in the root.
+// Therefore, the root of the CDash source tree on the web server is:
+$CDASH_ROOT_DIR = dirname(dirname(__FILE__));
+
 // Hostname of the database server
 $CDASH_DB_HOST = 'localhost';
 // Login for database access
@@ -57,7 +61,7 @@ $CDASH_USE_LOCAL_DIRECTORY = '0';
 // CSS file 
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory
-$CDASH_BACKUP_DIRECTORY = 'backup';
+$CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR.'/backup';
 // Upload directory (absolute or relative)
 $CDASH_UPLOAD_DIRECTORY = 'upload';
 // The relative path from the CDash root dir to the $CDASH_UPLOAD_DIRECTORY (for downloading)

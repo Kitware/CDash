@@ -152,6 +152,15 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     {
     // try parent dir as well (for asynch submission)
     $backupDir = "../$backupDir";
+
+    if(!file_exists($backupDir))
+      {
+      trigger_error(
+        "function ctest_parse cannot process files when backup directory ".
+        "does not exist: CDASH_BACKUP_DIRECTORY='$CDASH_BACKUP_DIRECTORY'",
+        E_USER_ERROR);
+      return;
+      }
     }
 
   if($file == "Project")
