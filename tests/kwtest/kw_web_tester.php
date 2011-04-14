@@ -96,13 +96,21 @@ class KWWebTestCase extends WebTestCase {
     $page = $this->get($url);
     return $this->analyse($page);
     }
-  
+
   /** Delete the log file */
   function deleteLog($filename)
     {
     if(file_exists($filename))
       {
+      // Delete file:
       unlink($filename);
+
+      // Alternatively, rename it to a random name to keep for later
+      // inspection. (Comment out the above unlink and uncomment this
+      // chunk to keep the log files from the test suite around...)
+      //
+      //global $CDASH_LOG_FILE;
+      //rename($filename, $CDASH_LOG_FILE . "." . mt_rand() . ".txt");
       }
     }
 
