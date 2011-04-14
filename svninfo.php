@@ -16,7 +16,7 @@
 
 =========================================================================*/
 
-include('login.php');
+require_once('login.php');
 
 
 function echo_svn_output($cmd)
@@ -31,6 +31,24 @@ function echo_svn_output($cmd)
   echo htmlentities($svn_output);
   echo '</pre>';
   echo '<br/>';
+}
+
+
+function echo_file_contents($filename)
+{
+  // Emit the contents of the named file, but only if it exists.
+  // If it doesn't exist, emit nothing.
+  //
+  if (file_exists($filename))
+    {
+    $contents = file_get_contents($filename);
+
+    echo '<h3>contents of "'.$filename.'"</h3>';
+    echo '<pre>';
+    echo htmlentities($contents);
+    echo '</pre>';
+    echo '<br/>';
+    }
 }
 
 
@@ -49,6 +67,10 @@ if ($session_OK)
     echo_svn_output('info');
     echo_svn_output('status');
     echo_svn_output('diff');
+
+    global $CDASH_ROOT_DIR;
+    echo_file_contents($CDASH_ROOT_DIR.'/cdash/config.local.php');
+    echo_file_contents($CDASH_ROOT_DIR.'/tests/config.test.local.php');
 
     echo '<h3>phpinfo</h3>';
     phpinfo();
