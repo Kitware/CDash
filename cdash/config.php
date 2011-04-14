@@ -23,7 +23,7 @@
 
 // This file is 'config.php', in the directory 'cdash', in the root.
 // Therefore, the root of the CDash source tree on the web server is:
-$CDASH_ROOT_DIR = dirname(dirname(__FILE__));
+$CDASH_ROOT_DIR = str_replace("\\", "/", dirname(dirname(__FILE__)));
 
 // Hostname of the database server
 $CDASH_DB_HOST = 'localhost';
