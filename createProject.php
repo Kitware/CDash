@@ -194,14 +194,17 @@ if($Submit)
     $BuildGroup->Id = ''; 
     $BuildGroup->Name = 'Nightly';
     $BuildGroup->Description = 'Nightly builds';
+    $BuildGroup->SummaryEmail = 0;
     $Project->AddBuildGroup($BuildGroup);
     $BuildGroup->Id = ''; 
     $BuildGroup->Name = 'Continuous';
     $BuildGroup->Description = 'Continuous builds';
+    $BuildGroup->SummaryEmail = 0;
     $Project->AddBuildGroup($BuildGroup);
     $BuildGroup->Id = ''; 
     $BuildGroup->Name = 'Experimental';
     $BuildGroup->Description = 'Experimental builds';
+    $BuildGroup->SummaryEmail = 2; // default to "No Email" for the Experimental group
     $Project->AddBuildGroup($BuildGroup);
 
     // Add administrator to the project
