@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -31,13 +31,13 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
   if(function_exists("curl_init") == TRUE)
     {
     $currentPort="";
-    if($_SERVER['SERVER_PORT']!=80)
+    if($CDASH_SERVER_PORT!="")
       {
-      $currentPort=":".$_SERVER['SERVER_PORT'];
+      $currentPort=":".$CDASH_SERVER_PORT;
       }
-    
+
     // Where to send to curl request
-    $serverName = "localhost";     
+    $serverName = "localhost";
     if(!$CDASH_CURL_REQUEST_LOCALHOST)
       {
       $serverName = $CDASH_SERVER_NAME;
@@ -46,19 +46,19 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
         $serverName = $_SERVER['SERVER_NAME'];
         }
       }
-      
+
     $prefix =  "http://";
     if($CDASH_USE_HTTPS)
       {
       $prefix =  "https://";
       }
-    
-    $currentURI =  $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
+
+    $currentURI =  $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI'];
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $request = $CDASH_ASYNCHRONOUS_SUBMISSION ?
       $currentURI."/dailyupdatescurl.php?projectid=".$projectid :
       $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
-    
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $request);
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
@@ -86,7 +86,7 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
     //no need to log an error since ctest_parse already did
     return;
     }
-  
+
   // Send the emails if necessary
   if($handler instanceof UpdateHandler ||
      $handler instanceof TestingHandler ||
@@ -96,7 +96,7 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
     {
     sendemail($handler, $projectid);
     }
-  
+
   // Create the RSS feed
   CreateRSSFeed($projectid);
 }
@@ -106,15 +106,15 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 {
   include('cdash/config.php');
   include('cdash/version.php');
-  
-  do 
-    { 
+
+  do
+    {
     $filename = $CDASH_BACKUP_DIRECTORY."/".mt_rand().".xml";
-    $fp = @fopen($filename, 'x'); 
-    } 
-  while(!$fp); 
+    $fp = @fopen($filename, 'x');
+    }
+  while(!$fp);
   fclose($fp);
-  
+
   $outfile = fopen($filename, 'w');
 
   // Save the file in the backup directory
@@ -169,13 +169,13 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
   if(function_exists("curl_init") == TRUE)
     {
     $currentPort="";
-    if($_SERVER['SERVER_PORT']!=80)
+    if($CDASH_SERVER_PORT!="")
       {
-      $currentPort=":".$_SERVER['SERVER_PORT'];
+      $currentPort=":".$CDASH_SERVER_PORT;
       }
 
     // Where to send to curl request
-    $serverName = "localhost";     
+    $serverName = "localhost";
     if(!$CDASH_CURL_REQUEST_LOCALHOST)
       {
       $serverName = $CDASH_SERVER_NAME;
@@ -184,14 +184,14 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
         $serverName = $_SERVER['SERVER_NAME'];
         }
       }
-      
+
     $prefix =  "http://";
     if($CDASH_USE_HTTPS)
       {
       $prefix =  "https://";
       }
-    
-    $currentURI = $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI']; 
+
+    $currentURI = $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI'];
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $clientscheduleid = isset($_GET["clientscheduleid"]) ? $_GET["clientscheduleid"] : 0;
     $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid."&clientscheduleid=".$clientscheduleid;
