@@ -55,8 +55,8 @@ function format_for_iphone($text)
   $text = str_replace("\n","<br/>",$text);
   return $text;
 }  
-  
-$xml = '<?xml version="1.0"?><cdash>';
+
+$xml = '<?xml version="1.0"?'.'><cdash>';
 $projectname = get_project_name($projectid);
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";

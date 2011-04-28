@@ -257,7 +257,7 @@ class Build
     {
     if(!$this->Id)
       {
-      return false;    
+      return false;
       }
 
     // If StartTime is not set or if we are appending we set it
@@ -269,27 +269,53 @@ class Build
         add_last_sql_error("Build:GetPreviousBuildId",$this->ProjectId,$this->Id);
         return false;
         }
-      $query_array = pdo_fetch_array($query);              
+      $query_array = pdo_fetch_array($query);
       $this->StartTime = $query_array['starttime'];
       }
-      
-    $query = pdo_query("SELECT id FROM build
-                        WHERE siteid=".qnum($this->SiteId)." AND type='$this->Type' AND name='$this->Name'
-                         AND projectid=".qnum($this->ProjectId)." AND starttime<'$this->StartTime'
-                         ORDER BY starttime DESC LIMIT 1");
+
+    // Take subproject into account, such that if there is one, then the
+    // previous build must be associated with the same subproject...
+    //
+    $subproj_table = "";
+    $subproj_criteria = "";
+
+    if ($this->SubProjectId)
+      {
+      $subproj_table = ", subproject2build";
+      $subproj_criteria =
+        "AND build.id=subproject2build.buildid ".
+        "AND subproject2build.subprojectid=".qnum($this->SubProjectId)." ";
+      }
+    else
+      {
+      $subproj_table = "";
+      $subproj_criteria = "";
+        // ?? "AND build.id NOT IN (SELECT buildid FROM subproject2build) ";
+      }
+
+    $query = pdo_query("SELECT id FROM build".$subproj_table." ".
+                       "WHERE siteid=".qnum($this->SiteId)." ".
+                         "AND type='$this->Type' ".
+                         "AND name='$this->Name' ".
+                         "AND projectid=".qnum($this->ProjectId)." ".
+                         $subproj_criteria.
+                         "AND starttime<'$this->StartTime' ".
+                       "ORDER BY starttime DESC LIMIT 1");
     if(!$query)
       {
       add_last_sql_error("Build:GetPreviousBuildId",$this->ProjectId,$this->Id);
       return false;
       }
-      
+
     if(pdo_num_rows($query)>0)
       {
-      $previousbuild_array = pdo_fetch_array($query);              
+      $previousbuild_array = pdo_fetch_array($query);
       return $previousbuild_array["id"];
       }
+
     return false;
     }
+
 
   /** Get the build id from it's name */
   function GetIdFromName($subproject)
@@ -811,9 +837,9 @@ class Build
     $projecttimestd = $project_array["testtimestd"]; 
     $projecttimestdthreshold = $project_array["testtimestdthreshold"]; 
     $projecttestmaxstatus = $project_array["testtimemaxstatus"]; 
-    
+
     // Find the previous build
-    $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+    $previousbuildid = $this->GetPreviousBuildId();
     if($previousbuildid == 0)
       {
       return;
