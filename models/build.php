@@ -222,6 +222,22 @@ class Build
       }  
     }
 
+
+  function QuerySubProjectId($buildid)
+    {
+    $query = pdo_query(
+      "SELECT id FROM subproject, subproject2build " .
+      "WHERE subproject.id=subproject2build.subprojectid AND subproject2build.buildid=".qnum($buildid));
+    if(!$query)
+      {
+      add_last_sql_error("Build:QuerySubProjectId", $this->ProjectId, $buildid);
+      return false;
+      }
+    $query_array = pdo_fetch_array($query);
+    return $query_array["id"];
+    }
+
+
   /** Fill the current build information from the buildid */
   function FillFromId($buildid)
     {
@@ -230,25 +246,20 @@ class Build
       {
       add_last_sql_error("Build:FillFromId()",$this->ProjectId,$this->Id);
       return false;
-      }  
-      
-    $build_array = pdo_fetch_array($query);                           
+      }
+
+    $build_array = pdo_fetch_array($query);
     $this->Name = $build_array["name"];
     $this->Type = $build_array["type"];
     $this->StartTime = $build_array["starttime"];
     $this->SiteId = $build_array["siteid"];
     $this->ProjectId = $build_array["projectid"];
 
-    $query2 = pdo_query(
-      "SELECT id FROM subproject, subproject2build " .
-      "WHERE subproject.id=subproject2build.subprojectid AND subproject2build.buildid=".qnum($buildid));
-    if(!$query2)
+    $subprojectid = $this->QuerySubProjectId($buildid);
+    if ($subprojectid)
       {
-      add_last_sql_error("Build:FillFromId",$this->ProjectId,$this->Id);
-      return false;
+      $this->SubProjectId = $subprojectid;
       }
-    $subprojectid_array = pdo_fetch_array($query2);
-    $this->SubProjectId = $subprojectid_array["id"];
     }
 
 
@@ -273,6 +284,23 @@ class Build
       $this->StartTime = $query_array['starttime'];
       }
 
+    // Necessary for code paths that call into ComputeUpdateStatistics, where
+    // there is no subproject information passed via Update.xml, but there is
+    // already a buildid associated with a subproject from earlier Configure,
+    // Build or Test.xml files... If we don't have a subproject id already
+    // stored in $this->SubProjectId, query for it; and if there's a value
+    // there, store it in $this->SubProjectId so we don't have to do the
+    // query again.
+    //
+    if (!$this->SubProjectId)
+      {
+      $subprojectid = $this->QuerySubProjectId($this->Id);
+      if ($subprojectid)
+        {
+        $this->SubProjectId = $subprojectid;
+        }
+      }
+
     // Take subproject into account, such that if there is one, then the
     // previous build must be associated with the same subproject...
     //
@@ -286,12 +314,14 @@ class Build
         "AND build.id=subproject2build.buildid ".
         "AND subproject2build.subprojectid=".qnum($this->SubProjectId)." ";
       }
-    else
-      {
-      $subproj_table = "";
-      $subproj_criteria = "";
-        // ?? "AND build.id NOT IN (SELECT buildid FROM subproject2build) ";
-      }
+    //else
+    //  {
+    //  $subproj_table = "";
+    //  $subproj_criteria = "";
+    //    // ?? Or... some criteria that explicitly enforces "no subproject
+    //    // association" ??
+    //    //   "AND build.id NOT IN (SELECT buildid FROM subproject2build) ";
+    //  }
 
     $query = pdo_query("SELECT id FROM build".$subproj_table." ".
                        "WHERE siteid=".qnum($this->SiteId)." ".
@@ -321,23 +351,12 @@ class Build
   function GetIdFromName($subproject)
     {
     $buildid = 0;
-    $subprojectid = 0;
 
-    // If there's a subproject given then only return a build id if there is also
-    // a record for that subproject already associated with that buildid...
+    // Make sure subproject name and id fields are set:
     //
-    if ($subproject != '')
-      {
-      $query = pdo_query("SELECT id FROM subproject WHERE name='".$subproject."' 
-                          AND projectid=".qnum($this->ProjectId)." AND endtime='1980-01-01 00:00:00'");
-      if(pdo_num_rows($query)>0)
-        {
-        $rows = pdo_fetch_array($query);
-        $subprojectid = $rows['id'];
-        }
-      }
+    $this->SetSubProject($subproject);
 
-    if($subprojectid != 0)
+    if($this->SubProjectId != 0)
       {
       $build = pdo_query("SELECT id FROM build, subproject2build".
                          " WHERE projectid=".qnum($this->ProjectId).
@@ -345,7 +364,7 @@ class Build
                          " AND name='".$this->Name."'".
                          " AND stamp='".$this->Stamp."'".
                          " AND build.id=subproject2build.buildid".
-                         " AND subproject2build.subprojectid=".qnum($subprojectid));
+                         " AND subproject2build.subprojectid=".qnum($this->SubProjectId));
       }
     else
       {
@@ -994,18 +1013,19 @@ class Build
     {
     if(!$this->Id)
       {
-      add_log("ProjectId is not set","Build::ComputeUpdateStatistics",LOG_ERR,
+      add_log("Id is not set","Build::ComputeUpdateStatistics",LOG_ERR,
               $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
       return false;
       }
-    
+
     if(!$this->ProjectId)
       {
       add_log("ProjectId is not set","Build::ComputeUpdateStatistics",LOG_ERR,0,$this->Id);
       return false;
       }
+
     $previousbuildid = $this->GetPreviousBuildId();
-    
+
     // Find the errors, warnings and test failures
     // Find the current number of errors
     $errors = pdo_query("SELECT builderrors,buildwarnings,testnotrun,testfailed FROM build WHERE id=".qnum($this->Id));
