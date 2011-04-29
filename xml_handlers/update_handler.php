@@ -73,9 +73,6 @@ class UpdateHandler extends AbstractHandler
       $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
       $submit_time = gmdate(FMT_DATETIME);
 
-      $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-      $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
-
       $this->Build->ProjectId = $this->projectid;
       $buildid = $this->Build->GetIdFromName($this->SubProjectName);
 
@@ -85,7 +82,7 @@ class UpdateHandler extends AbstractHandler
         $this->Build->ProjectId = $this->projectid;
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $end_time;
-        $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+        $this->Build->SubmitTime = $submit_time;
         $this->Build->InsertErrors = false;
         add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
         $buildid = $this->Build->Id;
@@ -96,7 +93,7 @@ class UpdateHandler extends AbstractHandler
         $this->Build->ProjectId = $this->projectid;
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $end_time;
-        $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+        $this->Build->SubmitTime = $submit_time;
         }
 
       $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;

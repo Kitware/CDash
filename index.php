@@ -273,26 +273,18 @@ function get_multiple_builds_hyperlink($build_row, $filterdata)
     $baseurl = substr($baseurl, 0, $idx);
   }
 
-  // Use the exact date range known from the times in build_row to add two
-  // build time clauses that more likely get the set of builds represented by
-  // $build_row... Use +/- 1 second for use with the "is before" and "is after"
-  // date comparison operators.
-  //
-  $minstarttime = date(FMT_DATETIMETZ, strtotime($build_row['starttime'].' UTC-1 second'));
-  $maxstarttime = date(FMT_DATETIMETZ, strtotime($build_row['maxstarttime'].' UTC+1 second'));
-
-  // Gather up string repersenting existing filters so that we simply apply
-  // some extra filters for buildname, site and buildstarttime to get the page
+  // Gather up string representing existing filters so that we simply apply
+  // some extra filters for buildname, site and stamp to get the page
   // that shows the builds the user expects. (Match his existing filter
   // criteria in addition to adding our extra fields here. Do not allow user
   // to override the fields we need to specify...)
   //
   // This can only be done effectively with the current filters implementation
   // when the filtercombine parameter is 'and' -- hence the != 'or' test...
-  // (Because to specify our 4 filter parameters, we need to use 'and'...)
+  // (Because to specify our 3 filter parameters, we need to use 'and'...)
   //
   $existing_filter_params = '';
-  $n = 4;
+  $n = 3;
   if (strtolower($filterdata['filtercombine']) != 'or')
   {
     $count = count($filterdata['filters']);
@@ -302,7 +294,7 @@ function get_multiple_builds_hyperlink($build_row, $filterdata)
 
       if ($filter['field'] != 'buildname' &&
           $filter['field'] != 'site' &&
-          $filter['field'] != 'buildstarttime' &&
+          $filter['field'] != 'stamp' &&
           $filter['compare'] != 0 &&
           $filter['compare'] != 20 &&
           $filter['compare'] != 40 &&
@@ -323,8 +315,7 @@ function get_multiple_builds_hyperlink($build_row, $filterdata)
     '&filtercount=' . $n . '&showfilters=1&filtercombine=and' .
     '&field1=buildname/string&compare1=61&value1=' . htmlspecialchars($build_row['name']) .
     '&field2=site/string&compare2=61&value2=' . htmlspecialchars($build_row['sitename']) .
-    '&field3=buildstarttime/date&compare3=83&value3=' . htmlspecialchars($minstarttime) .
-    '&field4=buildstarttime/date&compare4=84&value4=' . htmlspecialchars($maxstarttime) .
+    '&field3=buildstamp/string&compare3=61&value3=' . htmlspecialchars($build_row['stamp']) .
     $existing_filter_params .
     '&collapse=0';
 }
