@@ -53,13 +53,6 @@ class CoverageSummary
       return false;
       }
  
-    $query = "DELETE FROM testdiff WHERE buildid=".qnum($this->BuildId);
-    if(!pdo_query($query))
-      {
-      add_last_sql_error("CoverageSummary RemoveAll");
-      return false;
-      }  
-      
     // coverage file are kept unless they are shared
     $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid=".qnum($this->BuildId));
     while($coverage_array = pdo_fetch_array($coverage))
