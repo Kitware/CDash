@@ -507,6 +507,7 @@ function filterdata_XML($filterdata)
   $debug = $filterdata['debug']; // '0' or '1' -- shows debug info in HTML output
   $filtercombine = $filterdata['filtercombine']; // 'OR' or 'AND'
   $filters = $filterdata['filters']; // an array
+  $limit = $filterdata['limit']; // an integer
   $pageId = $filterdata['pageId']; // id of the "calling page"...
   $pageSpecificFilters = $filterdata['pageSpecificFilters']; // an instance of PageSpecificFilters
   $showfilters = $filterdata['showfilters']; // 0 or 1
@@ -514,6 +515,7 @@ function filterdata_XML($filterdata)
   $xml = '<filterdata>';
   $xml .= add_XML_value('debug', $debug);
   $xml .= add_XML_value('filtercombine', $filtercombine);
+  $xml .= add_XML_value('limit', $limit);
   $xml .= add_XML_value('pageId', $pageId);
   $xml .= add_XML_value('script', $_SERVER['SCRIPT_NAME']);
   $xml .= add_XML_value('showfilters', $showfilters);
@@ -760,6 +762,11 @@ function get_filterdata_from_request($page_id = '')
 
   @$filtercount = $_REQUEST['filtercount'];
   @$showfilters = $_REQUEST['showfilters'];
+  @$limit = intval($_REQUEST['limit']);
+  if (!is_int($limit))
+  {
+    $limit = 0;
+  }
 
   @$clear = $_REQUEST['clear'];
   if ($clear == 'Clear')
@@ -906,6 +913,7 @@ function get_filterdata_from_request($page_id = '')
 
   $filterdata['filtercombine'] = $filtercombine;
   $filterdata['filters'] = $filters;
+  $filterdata['limit'] = $limit;
 
   if ($showfilters)
     {

@@ -116,7 +116,7 @@ Filter Definitions:<br/>
       </select>
 
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-      <input type="text" size="30" onblur="filters_onblur(this)" onchange="filters_onchange(this)">
+      <input type="text" size="60" onblur="filters_onblur(this)" onchange="filters_onchange(this)">
         <xsl:attribute name="id">id_value<xsl:value-of select="position()"/></xsl:attribute>
         <xsl:attribute name="name">value<xsl:value-of select="position()"/></xsl:attribute>
         <xsl:attribute name="value"><xsl:value-of select="value"/></xsl:attribute>
@@ -153,6 +153,21 @@ Filter Definitions:<br/>
     <xsl:attribute name="class">
       <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 0">treven</xsl:if>
       <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">trodd</xsl:if>
+    </xsl:attribute>
+  <td>
+      Limit results to
+      <input type="text" size="3" onblur="filters_onblur(this)" onchange="filters_onchange(this)"
+             id="id_limit" name="limit" align="center">
+        <xsl:attribute name="value"><xsl:value-of select="cdash/filterdata/limit"/></xsl:attribute>
+      </input>
+      rows (0 for unlimited)
+  </td>
+  </tr>
+
+  <tr>
+    <xsl:attribute name="class">
+      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 0">trodd</xsl:if>
+      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">treven</xsl:if>
     </xsl:attribute>
   <td>
       <input type="hidden" name="filtercount">

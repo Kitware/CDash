@@ -214,6 +214,11 @@ $xml .= add_XML_value("onlynotrun", $onlynotrun);
 //
 $filterdata = get_filterdata_from_request();
 $filter_sql = $filterdata['sql'];
+$limit_sql = '';
+if ($filterdata['limit']>0)
+{
+  $limit_sql = ' LIMIT '.$filterdata['limit'];
+}
 $xml .= $filterdata['xml'];
 
 $limitnew = "";
@@ -226,7 +231,7 @@ $sql = "SELECT bt.status,bt.newstatus,bt.timestatus,t.id,bt.time,t.details,t.nam
        "FROM test as t,build2test as bt " .
        "WHERE bt.buildid='$buildid' AND t.id=bt.testid " . $status . " " .
        $filter_sql . " " .$limitnew.
-       "ORDER BY " . $order;
+       "ORDER BY " . $order. $limit_sql;
 
 $result = pdo_query($sql);
 

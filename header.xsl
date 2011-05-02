@@ -130,7 +130,7 @@ Builds</a></li>
 <xsl:attribute name="href">testOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
 Tests</a></li>
 <li><a class="submm">
-<xsl:attribute name="href">queryTests.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
+<xsl:attribute name="href">queryTests.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/>&#38;limit=200<xsl:value-of select="cdash/extraurl"/></xsl:attribute>
 Tests Query</a></li>
 <li><a class="submm">
 <xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>

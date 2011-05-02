@@ -298,6 +298,12 @@ function filters_create_hyperlink()
   s = s + "&filtercount=" + n;
   s = s + "&showfilters=1";
 
+  l = $("#id_limit").attr("value");
+  if (l != 0)
+  {
+    s = s + "&limit=" + l;
+  }
+
   if (n > 1)
   {
     s = s + "&filtercombine=" + $("#id_filtercombine").attr("value");

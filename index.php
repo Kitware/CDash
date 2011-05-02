@@ -553,6 +553,11 @@ function generate_main_dashboard_XML($projectid,$date)
   //
   $filterdata = get_filterdata_from_request();
   $filter_sql = $filterdata['sql'];
+  $limit_sql = '';
+  if ($filterdata['limit']>0)
+  {
+    $limit_sql = ' LIMIT '.$filterdata['limit'];
+  }
   $xml .= $filterdata['xml'];
 
 
@@ -721,7 +726,7 @@ function generate_main_dashboard_XML($projectid,$date)
                   WHERE s.id=b.siteid AND ".$date_clause."
                    b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id
                    AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
-                  ".$subprojectsql." ".$filter_sql." ORDER BY gp.position ASC,b.name ASC,b.siteid ASC,b.stamp DESC";
+                  ".$subprojectsql." ".$filter_sql." ORDER BY gp.position ASC,b.name ASC,b.siteid ASC,b.stamp DESC".$limit_sql;
 
 
   // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)

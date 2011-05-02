@@ -60,6 +60,18 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($project['name'], $date);
 
 
+// Filters:
+//
+$filterdata = get_filterdata_from_request();
+$filter_sql = $filterdata['sql'];
+$limit_sql = '';
+if ($filterdata['limit']>0)
+{
+  $limit_sql = ' LIMIT '.$filterdata['limit'];
+}
+$xml .= $filterdata['xml'];
+
+
 $xml .= "<menu>";
 
 if ($date == '')
@@ -73,16 +85,18 @@ else
 
 $xml .= add_XML_value("back",$back);
 
+$limit_param = "&limit=".$filterdata['limit'];
+
 $xml .= add_XML_value("previous",
-  "queryTests.php?project=".urlencode($project['name'])."&date=".$previousdate);
+  "queryTests.php?project=".urlencode($project['name'])."&date=".$previousdate.$limit_param);
 
 $xml .= add_XML_value("current",
-  "queryTests.php?project=".urlencode($project['name']));
+  "queryTests.php?project=".urlencode($project['name']).$limit_param);
 
 if(has_next_date($date, $currentstarttime))
   {
   $xml .= add_XML_value("next",
-    "queryTests.php?project=".urlencode($project['name'])."&date=".$nextdate);
+    "queryTests.php?project=".urlencode($project['name'])."&date=".$nextdate.$limit_param);
   }
 else
   {
@@ -95,13 +109,6 @@ $xml .= "</menu>";
 $xml .= "<project>";
 $xml .= add_XML_value("showtesttime", $project['showtesttime']);
 $xml .= "</project>";
-
-
-// Filters:
-//
-$filterdata = get_filterdata_from_request();
-$filter_sql = $filterdata['sql'];
-$xml .= $filterdata['xml'];
 
 
 //get information about all the builds for the given date and project
@@ -139,7 +146,8 @@ $query = "SELECT
           WHERE b.projectid = '" . $project['id'] . "' " .
           $date_clause . " " .
           $filter_sql .
-          "ORDER BY build2test.status, test.name";
+          "ORDER BY build2test.status, test.name".
+          $limit_sql;
 
 $result = pdo_query($query);
 
