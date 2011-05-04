@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -24,7 +24,7 @@ include("models/buildgroup.php");
 include("models/project.php");
 include("models/user.php");
 
-if ($session_OK) 
+if ($session_OK)
   {
   @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
@@ -36,12 +36,12 @@ if ($session_OK)
     echo "Not a valid userid!";
     return;
     }
-    
-  @$projectid = $_GET["projectid"]; 
+
+  @$projectid = $_GET["projectid"];
   @$edit = $_GET["edit"];
-  
+
   $Project = new Project;
-     
+
   // If the projectid is not set and there is only one project we go directly to the page
   if(isset($edit) && !isset($projectid))
     {
@@ -59,14 +59,14 @@ if ($session_OK)
   $role = $Project->GetUserRole($userid);
 
   // If we are editing a project make sure we have the right to do so
-  if(!isset($projectid) 
-     && !(isset($_SESSION['cdash']['user_can_create_project']) && 
+  if(!isset($projectid)
+     && !(isset($_SESSION['cdash']['user_can_create_project']) &&
      $_SESSION['cdash']['user_can_create_project'] == 1)
      && !$User->IsAdmin()
      )
     {
     echo "You don't have the permissions to access this page";
-    return; 
+    return;
     }
   else if(isset($projectid) && (!$User->IsAdmin() && $role<=1))
     {
@@ -75,7 +75,7 @@ if ($session_OK)
     }
 
 $nRepositories = 0;
-  
+
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
@@ -113,13 +113,13 @@ function stripHTTP($url)
 @$Submit = $_POST["Submit"];
 if($Submit)
   {
-  // Remove any slashes, etc...  
+  // Remove any slashes, etc...
   $Name = stripslashes_if_gpc_magic_quotes($_POST["name"]);
   $Name = preg_replace("/[^a-zA-Z0-9s+-]/", "",$Name);
-  
+
   // Check that the name are different
   if(!$Project->ExistsByName($Name))
-    {    
+    {
     $Project->Name = $Name;
     $Project->Description = stripslashes_if_gpc_magic_quotes($_POST["description"]);
     $Project->HomeUrl = stripHTTP(stripslashes_if_gpc_magic_quotes($_POST["homeURL"]));
@@ -133,10 +133,10 @@ if($Submit)
       {
       $Public = 0;
       }
-    
+
     $Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
     $Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
-    $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
+    $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]);
     @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
     @$Project->EmailRedundantFailures = stripslashes_if_gpc_magic_quotes($_POST["emailRedundantFailures"]);
     @$Project->EmailLowCoverage = stripslashes_if_gpc_magic_quotes($_POST["emailLowCoverage"]);
@@ -148,7 +148,7 @@ if($Submit)
     @$CVSUsernames = stripslashes_if_gpc_magic_quotes($_POST["cvsUsername"]);
     @$CVSPasswords = stripslashes_if_gpc_magic_quotes($_POST["cvsPassword"]);
     @$CVSBranches = stripslashes_if_gpc_magic_quotes($_POST["cvsBranch"]);
-    
+
     @$Project->TestTimeStd = stripslashes_if_gpc_magic_quotes($_POST["testTimeStd"]);
     @$Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
     @$Project->TestTimeMaxStatus = stripslashes_if_gpc_magic_quotes($_POST["testTimeMaxStatus"]);
@@ -161,22 +161,29 @@ if($Submit)
     @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
     @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
     $Project->Public = $Public;
-        
+
+    /** Calculate the upload quota */
+    $uploadQuota = $_POST['uploadQuota'];
+    if(is_numeric($uploadQuota) && $uploadQuota > 0)
+      {
+      $Project->UploadQuota = floor(min($uploadQuota, $CDASH_MAX_UPLOAD_QUOTA) * 1024 * 1024 * 1024);
+      }
+
     /** If we are managing clients */
     if($CDASH_MANAGE_CLIENTS)
       {
-      @$Project->CTestTemplateScript = stripslashes_if_gpc_magic_quotes($_POST["ctestTemplateScript"]); 
-      } 
-    
+      @$Project->CTestTemplateScript = stripslashes_if_gpc_magic_quotes($_POST["ctestTemplateScript"]);
+      }
+
     $projectid = -1;
     $Project->Id = '';
-   
+
     // Save the project
     if($Project->Save())
       {
       $projectid = $Project->Id;
       }
-                         
+
     if($projectid>0)
       {
       $xml .= "<project_name>$Name</project_name>";
@@ -188,20 +195,20 @@ if($Submit)
       {
       return;
       }
-      
+
     // Add the default groups
     $BuildGroup = new BuildGroup;
-    $BuildGroup->Id = ''; 
+    $BuildGroup->Id = '';
     $BuildGroup->Name = 'Nightly';
     $BuildGroup->Description = 'Nightly builds';
     $BuildGroup->SummaryEmail = 0;
     $Project->AddBuildGroup($BuildGroup);
-    $BuildGroup->Id = ''; 
+    $BuildGroup->Id = '';
     $BuildGroup->Name = 'Continuous';
     $BuildGroup->Description = 'Continuous builds';
     $BuildGroup->SummaryEmail = 0;
     $Project->AddBuildGroup($BuildGroup);
-    $BuildGroup->Id = ''; 
+    $BuildGroup->Id = '';
     $BuildGroup->Name = 'Experimental';
     $BuildGroup->Description = 'Experimental builds';
     $BuildGroup->SummaryEmail = 2; // default to "No Email" for the Experimental group
@@ -214,7 +221,7 @@ if($Submit)
     $UserProject->ProjectId = $projectid;
     $User->Id = 1; // administrator
     $User->AddProject($UserProject);
-    
+
     // Add current user to the project
     $User->Id = $userid;
     if($userid != 1)
@@ -222,10 +229,10 @@ if($Submit)
       $User->Id = $userid;
       $User->AddProject($UserProject);
       }
-    
+
     // Add the repositories
     $Project->AddRepositories($CVSRepositories, $CVSUsernames, $CVSPasswords,$CVSBranches);
-    
+
     /** Add the logo if any */
     if(isset($_FILES['logo']) && strlen($_FILES['logo']['tmp_name'])>0)
       {
@@ -249,23 +256,23 @@ if($Submit)
     $xml .= "<alert>Project's name already exists.</alert>";
     }
   } // end submit
-  
+
 // If we should add a spam filter
 @$SpamFilter = stripslashes_if_gpc_magic_quotes($_POST["SpamFilter"]);
 if($SpamFilter)
   {
   @$spambuildname = pdo_real_escape_string(stripslashes_if_gpc_magic_quotes($_POST["spambuildname"]));
-  @$spamsitename = pdo_real_escape_string(stripslashes_if_gpc_magic_quotes($_POST["spamsitename"]));  
-  @$spamip = pdo_real_escape_string(stripslashes_if_gpc_magic_quotes($_POST["spamip"]));  
-  
+  @$spamsitename = pdo_real_escape_string(stripslashes_if_gpc_magic_quotes($_POST["spamsitename"]));
+  @$spamip = pdo_real_escape_string(stripslashes_if_gpc_magic_quotes($_POST["spamip"]));
+
   if(!empty($spambuildname) || !empty($spamsitename) || !empty($spamip))
     {
     pdo_query("INSERT INTO blockbuild (projectid,buildname,sitename,ipaddress) VALUES (".qnum($projectid).
               ",'".$spambuildname."','".$spamsitename."','".$spamip."')");
     }
   } // end spam filter
-  
-  
+
+
 // If we should remove a spam filter
 @$RemoveSpamFilter = $_POST["RemoveSpamFilter"];
 if($RemoveSpamFilter)
@@ -278,8 +285,8 @@ if($RemoveSpamFilter)
       pdo_query("DELETE FROM blockbuild WHERE id=".qnum($key));
       }
     }
-  } // end spam filter  
-  
+  } // end spam filter
+
 // If we should delete the project
 @$Delete = $_POST["Delete"];
 if($Delete)
@@ -306,20 +313,20 @@ if($Update || $AddRepository)
     {
     $Project->Public = 0;
     }
-  
+
   @$Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
   @$Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
-  @$Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]); 
+  @$Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]);
   @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
   @$Project->EmailRedundantFailures = stripslashes_if_gpc_magic_quotes($_POST["emailRedundantFailures"]);
   @$Project->EmailLowCoverage = stripslashes_if_gpc_magic_quotes($_POST["emailLowCoverage"]);
   @$Project->EmailTestTimingChanged = stripslashes_if_gpc_magic_quotes($_POST["emailTestTimingChanged"]);
-  @$Project->CvsViewerType = stripslashes_if_gpc_magic_quotes($_POST["cvsviewertype"]); 
-  @$Project->RobotName = stripslashes_if_gpc_magic_quotes($_POST["robotname"]); 
-  @$Project->RobotRegex = stripslashes_if_gpc_magic_quotes($_POST["robotregex"]); 
+  @$Project->CvsViewerType = stripslashes_if_gpc_magic_quotes($_POST["cvsviewertype"]);
+  @$Project->RobotName = stripslashes_if_gpc_magic_quotes($_POST["robotname"]);
+  @$Project->RobotRegex = stripslashes_if_gpc_magic_quotes($_POST["robotregex"]);
   @$Project->TestTimeStd = stripslashes_if_gpc_magic_quotes($_POST["testTimeStd"]);
   @$Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
-  @$Project->TestTimeMaxStatus = stripslashes_if_gpc_magic_quotes($_POST["testTimeMaxStatus"]);  
+  @$Project->TestTimeMaxStatus = stripslashes_if_gpc_magic_quotes($_POST["testTimeMaxStatus"]);
   @$Project->TestTimeStdThreshold = stripslashes_if_gpc_magic_quotes($_POST["testTimeStdThreshold"]);
   @$Project->ShowTestTime = stripslashes_if_gpc_magic_quotes($_POST["showTestTime"]);
   @$Project->EmailMaxItems = stripslashes_if_gpc_magic_quotes($_POST["emailMaxItems"]);
@@ -329,6 +336,13 @@ if($Update || $AddRepository)
   @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
   @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
   @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
+  
+  /** Calculate the upload quota */
+  $uploadQuota = $_POST['uploadQuota'];
+  if(is_numeric($uploadQuota) && $uploadQuota > 0)
+    {
+    $Project->UploadQuota = floor(min($uploadQuota, $CDASH_MAX_UPLOAD_QUOTA) * 1024 * 1024 * 1024);
+    }
 
   /** If we are managing clients */
   if($CDASH_MANAGE_CLIENTS)
@@ -353,19 +367,19 @@ if($Update || $AddRepository)
     }
 
   // Add repositories
-  $Project->AddRepositories($_POST["cvsRepository"], 
-                            $_POST["cvsUsername"], 
+  $Project->AddRepositories($_POST["cvsRepository"],
+                            $_POST["cvsUsername"],
                             $_POST["cvsPassword"],
                             $_POST["cvsBranch"]);
   }
-  
+
 // List the available projects
 $sql = "SELECT id,name FROM project";
 if(!$User->IsAdmin())
   {
-  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
+  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
   }
-$sql .= " ORDER by name ASC";  
+$sql .= " ORDER by name ASC";
 $projects = pdo_query($sql);
 while($projects_array = pdo_fetch_array($projects))
    {
@@ -378,24 +392,24 @@ while($projects_array = pdo_fetch_array($projects))
       }
    $xml .= "</availableproject>";
    }
-   
+
 if($projectid>0)
   {
   $Project->Fill();
-  
+
   $xml .= "<project>";
   $xml .= add_XML_value("id",$Project->Id);
   $xml .= add_XML_value("name",$Project->Name);
   $xml .= add_XML_value("name_encoded",urlencode($Project->Name));
   $xml .= add_XML_value("description",$Project->Description);
-  $xml .= add_XML_value("homeurl",$Project->HomeUrl);  
+  $xml .= add_XML_value("homeurl",$Project->HomeUrl);
   $xml .= add_XML_value("cvsurl",$Project->CvsUrl);
   $xml .= add_XML_value("bugurl",$Project->BugTrackerUrl);
   $xml .= add_XML_value("bugfileurl",$Project->BugTrackerFileUrl);
-  $xml .= add_XML_value("docurl",$Project->DocumentationUrl); 
+  $xml .= add_XML_value("docurl",$Project->DocumentationUrl);
   $xml .= add_XML_value("public",$Project->Public);
   $xml .= add_XML_value("imageid",$Project->ImageId);
-  $xml .= add_XML_value("coveragethreshold",$Project->CoverageThreshold);  
+  $xml .= add_XML_value("coveragethreshold",$Project->CoverageThreshold);
   $xml .= add_XML_value("nightlytime",$Project->NightlyTime);
   $xml .= add_XML_value("testingdataurl",$Project->TestingDataUrl);
   $xml .= add_XML_value("googletracker",$Project->GoogleTracker);
@@ -408,7 +422,7 @@ if($projectid>0)
   $xml .= add_XML_value("robotregex",$Project->RobotRegex);
   $xml .= add_XML_value("testtimestd",$Project->TestTimeStd);
   $xml .= add_XML_value("testtimestdthreshold",$Project->TestTimeStdThreshold);
-  $xml .= add_XML_value("testtimemaxstatus",$Project->TestTimeMaxStatus);  
+  $xml .= add_XML_value("testtimemaxstatus",$Project->TestTimeMaxStatus);
   $xml .= add_XML_value("showtesttime",$Project->ShowTestTime);
   $xml .= add_XML_value("emailmaxitems",$Project->EmailMaxItems);
   $xml .= add_XML_value("emailmaxchars",$Project->EmailMaxChars);
@@ -426,8 +440,11 @@ if($projectid>0)
     {
     $xml .= add_XML_value("ctesttemplatescript",$Project->getDefaultJobTemplateScript());
     }
+  $uploadQuotaGB = $Project->UploadQuota == 0 ? 0 : $Project->UploadQuota / (1024*1024*1024);
+  $xml .= add_XML_value('uploadquota', min($uploadQuotaGB, $CDASH_MAX_UPLOAD_QUOTA));
+  $xml .= add_XML_value('maxuploadquota', $CDASH_MAX_UPLOAD_QUOTA);
   $xml .= "</project>";
-  
+
   // Get the spam list
   $spambuilds = $Project->GetBlockedBuilds();
   foreach($spambuilds as $spambuild)
@@ -439,7 +456,7 @@ if($projectid>0)
     $xml .= add_XML_value("id",$spambuild['id']);
     $xml .= "</blockedbuild>";
     }
-  
+
   $repositories = $Project->GetRepositories();
   $nRegisteredRepositories = 0;
   $nRepositories = 0;
@@ -481,8 +498,8 @@ if($nRepositories == 0)
   $xml .= "</cvsrepository>";
   $nRepositories++;
   }
-    
-// 
+
+//
 function AddCVSViewer($name,$description,$currentViewer)
   {
   $xml = "<cvsviewer>";

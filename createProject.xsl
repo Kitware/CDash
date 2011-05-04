@@ -1462,7 +1462,7 @@
                           </div>
                         </td>
                         <td>
-                          <input onchange="saveChanges();" onfocus="showHelp('autoremoveMaxBuilds');"
+                          <input onchange="saveChanges();" onfocus="showHelp('autoremoveMaxBuilds_help');"
                             name="autoremoveMaxBuilds" type="text" id="autoremoveMaxBuilds"
                             size="10">
                             <xsl:attribute name="value">
@@ -1481,6 +1481,37 @@
                             On the first submission of the day, remove builds that are
                             older than X number of days.
                             The maximum number of builds that should be removed.
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
+                            <strong>File upload quota (GB):</strong>
+                          </div>
+                        </td>
+                        <td>
+                          <input onchange="saveChanges();" onfocus="showHelp('uploadQuota_help');"
+                            name="uploadQuota" type="text" id="uploadQuota"
+                            size="10">
+                            <xsl:attribute name="value">
+                   <xsl:value-of select="cdash/project/uploadquota" />
+                 </xsl:attribute>
+                          </input>
+                          <a
+                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            target="blank">
+                            <img onmouseover="showHelp('uploadQuota_help');"
+                              src="images/help.gif" border="0" />
+                          </a>
+                          <span class="help_content" id="uploadQuota_help">
+                            <b>File upload quota</b>
+                            <br />
+                            Enter how many gigabytes of uploaded files to store with this project.
+                            If this quota is exceeded, older files will be deleted to make room when
+                            new ones are uploaded. The number must be less than or equal to the maximum
+                            per-project quota of <xsl:value-of select="cdash/project/maxuploadquota" /> GB.
                           </span>
                         </td>
                       </tr>

@@ -296,6 +296,7 @@ CREATE TABLE "project" (
   "displaylabels" smallint default '1',
   "autoremovetimeframe" bigint default '0',
   "autoremovemaxbuilds" bigint default '300',
+  "uploadquota" bigint default '0',
   "webapikey" character varying(40) DEFAULT '' NOT NULL,
   "tokenduration" integer DEFAULT '0',
   PRIMARY KEY ("id")

@@ -117,6 +117,8 @@ $CDASH_DEFAULT_GIT_DIRECTORY = 'git';
 $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT = '450';
 // Number of times to attempt processing a single submission before giving up
 $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS = '5';
+// Maximum per-project upload quota, in GB
+$CDASH_MAX_UPLOAD_QUOTA = '10';
 
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';

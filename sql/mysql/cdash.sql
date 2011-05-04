@@ -381,6 +381,7 @@ CREATE TABLE `project` (
   `displaylabels` tinyint(4) default '1',
   `autoremovetimeframe` int(11) default '0',
   `autoremovemaxbuilds` int(11) default '300',
+  `uploadquota` bigint(20) default '0',
   `webapikey` varchar(40),
   `tokenduration` int(11),
   PRIMARY KEY  (`id`),

@@ -844,10 +844,11 @@ if(isset($_GET['upgrade-2-0']))
       pdo_query("ALTER TABLE test2image ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)");
       }
     }
-  AddTableField("project", "webapikey", "varchar(40)", "character varying(40)", "");
-  AddTableField("project", "tokenduration", "int(11)", "bigint", "0");
-  AddTableField("updatefile", "committer", "varchar(255)", "character varying(255)", "");
-  AddTableField("updatefile", "committeremail", "varchar(255)", "character varying(255)", "");
+  AddTableField('project', 'webapikey', 'varchar(40)', 'character varying(40)', '');
+  AddTableField('project', 'tokenduration', 'int(11)', 'bigint', '0');
+  AddTableField('project', 'uploadquota', 'bigint(20)', 'bigint', '0');
+  AddTableField('updatefile', 'committer', 'varchar(255)', 'character varying(255)', '');
+  AddTableField('updatefile', 'committeremail', 'varchar(255)', 'character varying(255)', '');
 
   // Set the database version
   setVersion();
