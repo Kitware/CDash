@@ -1168,10 +1168,11 @@ function remove_build($buildid)
     $fileids .= $fileid;
     unlink_uploaded_file($fileid);
     }
-  $fileids .= ')';  
+  $fileids .= ')';
   if(strlen($fileids)>2)
     {
     pdo_query("DELETE FROM uploadfile WHERE id IN ".$fileids);
+    pdo_query("DELETE FROM build2uploadfile WHERE fileid IN ".$fileids);
     }
 
   pdo_query("DELETE FROM build2uploadfile WHERE buildid IN ".$buildids);
@@ -1191,14 +1192,16 @@ function remove_build($buildid)
 /**
  * Deletes the symlink to an uploaded file.  If it is the only symlink to that content,
  * it will also delete the content itself.
+ * Returns the number of bytes deleted from disk (0 for symlink, otherwise the size of the content)
  */
 function unlink_uploaded_file($fileid)
 {
   global $CDASH_UPLOAD_DIRECTORY;
-  $query = pdo_query("SELECT sha1sum, filename FROM uploadfile WHERE id='$fileid'");
+  $query = pdo_query("SELECT sha1sum, filename, filesize FROM uploadfile WHERE id='$fileid'");
   $uploadfile_array = pdo_fetch_array($query);
   $sha1sum = $uploadfile_array['sha1sum'];
   $symlinkname = $uploadfile_array['filename'];
+  $filesize = $uploadfile_array['filesize'];
 
   $query = pdo_query("SELECT count(*) FROM uploadfile WHERE sha1sum='$sha1sum' AND id != '$fileid'");
   $count_array = pdo_fetch_array($query);
@@ -1208,11 +1211,13 @@ function unlink_uploaded_file($fileid)
     {
     // Delete the content and symlink
     rmdirr($CDASH_UPLOAD_DIRECTORY.'/'.$sha1sum);
+    return $filesize;
     }
   else
     {
     // Just delete the symlink, keep the content around
     unlink($CDASH_UPLOAD_DIRECTORY.'/'.$sha1sum.'/'.$symlinkname);
+    return 0;
     }
 }
 

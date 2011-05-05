@@ -20,9 +20,10 @@ require_once('xml_handlers/abstract_handler.php');
 require_once('models/build.php');
 require_once('models/uploadfile.php');
 require_once('models/site.php');
+require_once('models/project.php');
 
 /**
-* 
+*
 * For each uploaded file the following steps occur:
 *  1) Temporary file 'tmpXXX-base64' is created (See startElement())
 *  2) Chunk of base64 data are written to that file  (See text())
@@ -44,7 +45,7 @@ class UploadHandler extends AbstractHandler
   private $TmpFilename;
   private $Base64TmpFileWriteHandle;
   private $Base64TmpFilename;
-  
+
   /** If True, means an error happened while processing the file */
   private $UploadError;
 
@@ -64,7 +65,7 @@ class UploadHandler extends AbstractHandler
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
-    
+
     if ($this->UploadError)
       {
       return;
@@ -129,7 +130,7 @@ class UploadHandler extends AbstractHandler
     else if($name == 'CONTENT')
       {
       $fileEncoding = isset($attributes['ENCODING']) ? $attributes['ENCODING'] : 'base64';
-      
+
       if (strcmp($fileEncoding, 'base64') != 0)
         {
         // Only base64 encoding is supported for file upload
@@ -137,7 +138,7 @@ class UploadHandler extends AbstractHandler
         $this->UploadError = true;
         return;
         }
-      
+
       // Create tmp file
       $this->TmpFilename = tempnam($GLOBALS[CDASH_UPLOAD_DIRECTORY], 'tmp'); // TODO Handle error
       if (empty($this->TmpFilename))
@@ -147,7 +148,7 @@ class UploadHandler extends AbstractHandler
         return;
         }
       $this->Base64TmpFilename = $this->TmpFilename . '-base64';
-      
+
       // Open base64 temporary file for writting
       $this->Base64TmpFileWriteHandle = fopen($this->Base64TmpFilename, 'w');
       if (!$this->Base64TmpFileWriteHandle)
@@ -165,7 +166,7 @@ class UploadHandler extends AbstractHandler
     {
     $parent = $this->getParent(); // should be before endElement
     parent::endElement($parser, $name);
-    
+
     if ($this->UploadError)
       {
       return;
@@ -174,12 +175,12 @@ class UploadHandler extends AbstractHandler
     if($name == 'FILE' && $parent == 'UPLOAD')
       {
       $this->UploadFile->BuildId = $this->BuildId;
-      
+
       // Close base64 temporary file writting handler
       fclose($this->Base64TmpFileWriteHandle);
-      
+
       // Decode file using 'read by chunk' approach to minimize memory footprint
-      // Note: Using stream_filter_append/stream_copy_to_stream is more efficient but 
+      // Note: Using stream_filter_append/stream_copy_to_stream is more efficient but
       // return an "invalid byte sequence" on windows
       $rhandle = fopen($this->Base64TmpFilename, 'r');
       $whandle = fopen($this->TmpFilename, 'w+');
@@ -190,7 +191,7 @@ class UploadHandler extends AbstractHandler
         }
       fclose($rhandle);
       fclose($whandle);
-      
+
       // Delete base64 encoded file
       $success = unlink($this->Base64TmpFilename);
       if (!$success)
@@ -198,15 +199,29 @@ class UploadHandler extends AbstractHandler
         add_log("Failed to delete file '".$this->Base64TmpFilename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);
         }
 
-      // Computer SHA1 of decoded file
-      $upload_file_sha1 = sha1_file($this->TmpFilename);
+      // Check file size against the upload quota
       $upload_file_size = filesize($this->TmpFilename);
-      
+      $Project = new Project;
+      $Project->Id = $this->projectid;
+      $Project->Fill();
+      if($upload_file_size > $Project->UploadQuota)
+        {
+        add_log("Size of uploaded file $this->TmpFilename is $upload_file_size bytes, which is greater ".
+                "than the total upload quota for this project ($Project->UploadQuota bytes)",
+                __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
+        $this->UploadError = true;
+        unlink($this->TmpFilename);
+        return;
+        }
+
+      // Compute SHA1 of decoded file
+      $upload_file_sha1 = sha1_file($this->TmpFilename);
+
       $this->UploadFile->Sha1Sum = $upload_file_sha1;
       $this->UploadFile->Filesize = $upload_file_size;
-      
+
       $upload_dir = realpath($GLOBALS[CDASH_UPLOAD_DIRECTORY]).'/'.$this->UploadFile->Sha1Sum;
-      
+
       $uploadfilepath = $upload_dir.'/'.$this->UploadFile->Sha1Sum;
 
       // Check if upload directory should be created
@@ -220,7 +235,7 @@ class UploadHandler extends AbstractHandler
           return;
           }
         }
-      
+
       // Check if file has already been referenced
       if (!file_exists($GLOBALS[CDASH_UPLOAD_DIRECTORY].'/'.$upload_file_sha1.'/'.$upload_file_sha1))
         {
@@ -241,14 +256,14 @@ class UploadHandler extends AbstractHandler
           add_log("Failed to delete file '".$this->TmpFilename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);
           }
         }
-      
+
       // Generate symlink name
       $path_parts = pathinfo($this->UploadFile->Filename);
       $symlinkName = $path_parts['basename'];
-      
+
       // Check if symlink should be created
       $createSymlink = !file_exists($upload_dir.'/'.$symlinkName);
-      
+
       if ($createSymlink)
         {
         // Create symlink
@@ -260,14 +275,15 @@ class UploadHandler extends AbstractHandler
           return;
           }
         }
-      
+
       // Update model
       $success = $this->UploadFile->Insert();
       if (!$success)
         {
         add_log("UploadFile model - Failed to insert row associated with file: '".$this->UploadFile->Filename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
         }
-      
+      $Project->CullUploadedFiles();
+
       // Reset UploadError so that the handler could attempt to process following files
       $this->UploadError = false;
       }
@@ -281,7 +297,7 @@ class UploadHandler extends AbstractHandler
       {
       return;
       }
-      
+
     $parent = $this->getParent();
     $element = $this->getElement();
 

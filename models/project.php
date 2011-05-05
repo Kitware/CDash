@@ -1335,6 +1335,88 @@ class Project
     return $ctest_script;
     }
 
+  /** Returns the total size of all uploaded files for this project */
+  function GetUploadsTotalSize()
+    {
+    if(!$this->Id)
+      {
+      add_log('Id not set', 'Project::SendEmailToAdmin', LOG_ERR);
+      return false;
+      }
+    $totalSizeQuery = pdo_query("SELECT DISTINCT uploadfile.id, uploadfile.filesize AS size
+                                 FROM build, build2uploadfile, uploadfile
+                                 WHERE build.projectid=".qnum($this->Id)." AND
+                                 build.id=build2uploadfile.buildid AND
+                                 build2uploadfile.fileid=uploadfile.id");
+    if(!$totalSizeQuery)
+      {
+      add_last_sql_error("Project::GetUploadsTotalSize", $this->Id);
+      return false;
+      }
+     
+    $totalSize = 0;
+    while($result = pdo_fetch_array($totalSizeQuery))
+      {
+      $totalSize += $result['size'];
+      }
+    return $totalSize;
+    }
+
+  /**
+   * Checks whether this project has exceeded its upload size quota.  If so,
+   * Removes the files (starting with the oldest builds) until the total upload size
+   * is <= the upload quota.
+   */
+  function CullUploadedFiles()
+    {
+    $totalUploadSize = $this->GetUploadsTotalSize();
+    if($totalUploadSize > $this->UploadQuota)
+      {
+      require_once('cdash/common.php');
+      add_log('Upload quota exceeded, removing old files', 'Project::CullUploadedFiles',
+              LOG_INFO, $this->Id);
+
+      $query = pdo_query("SELECT DISTINCT build.id
+                               FROM build, build2uploadfile, uploadfile
+                               WHERE build.projectid=".qnum($this->Id)." AND
+                               build.id=build2uploadfile.buildid AND
+                               build2uploadfile.fileid=uploadfile.id
+                               ORDER BY build.starttime ASC");
+
+      while($builds_array = pdo_fetch_array($query))
+        {
+        // Delete the uploaded files if not shared
+        $fileids = '(';
+        $build2uploadfiles = pdo_query("SELECT a.fileid,count(b.fileid) AS c
+                                 FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b
+                                 ON (a.fileid=b.fileid AND b.buildid != ".qnum($builds_array['build.id']).")
+                                 WHERE a.buildid = ".qnum($builds_array['build.id'])."
+                                 GROUP BY a.fileid HAVING count(b.fileid)=0");
+        while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
+          {
+          $fileid = $build2uploadfile_array['fileid'];
+          if($fileids != '(')
+            {
+            $fileids .= ',';
+            }
+          $fileids .= $fileid;
+          $totalUploadSize -= unlink_uploaded_file($fileid);
+          }
+        
+        $fileids .= ')';
+        if(strlen($fileids)>2)
+          {
+          pdo_query("DELETE FROM uploadfile WHERE id IN ".$fileids);
+          pdo_query("DELETE FROM build2uploadfile WHERE fileid IN ".$fileids);
+          }
+
+        if($totalUploadSize <= $this->UploadQuota)
+          {
+          break;
+          }
+        }
+      }
+    }
 }  // end class Project
 
 ?>
