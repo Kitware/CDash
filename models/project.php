@@ -1391,13 +1391,10 @@ class Project
 
       while($builds_array = pdo_fetch_array($query))
         {
-        // Delete the uploaded files if not shared
+        // Delete the uploaded files
         $fileids = '(';
-        $build2uploadfiles = pdo_query("SELECT a.fileid,count(b.fileid) AS c
-                                 FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b
-                                 ON (a.fileid=b.fileid AND b.buildid != ".qnum($builds_array['id']).")
-                                 WHERE a.buildid = ".qnum($builds_array['id'])."
-                                 GROUP BY a.fileid HAVING count(b.fileid)=0");
+        $build2uploadfiles = pdo_query("SELECT fileid FROM build2uploadfile
+                                 WHERE buildid = ".qnum($builds_array['id']));
         while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
           {
           $fileid = $build2uploadfile_array['fileid'];
