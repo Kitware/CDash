@@ -1340,7 +1340,7 @@ class Project
     {
     if(!$this->Id)
       {
-      add_log('Id not set', 'Project::SendEmailToAdmin', LOG_ERR);
+      add_log('Id not set', 'Project::GetUploadsTotalSize', LOG_ERR);
       return false;
       }
     $totalSizeQuery = pdo_query("SELECT DISTINCT uploadfile.id, uploadfile.filesize AS size
@@ -1369,14 +1369,20 @@ class Project
    */
   function CullUploadedFiles()
     {
+    if(!$this->Id)
+      {
+      add_log('Id not set', 'Project::CullUploadedFiles', LOG_ERR);
+      return false;
+      }
     $totalUploadSize = $this->GetUploadsTotalSize();
+
     if($totalUploadSize > $this->UploadQuota)
       {
       require_once('cdash/common.php');
       add_log('Upload quota exceeded, removing old files', 'Project::CullUploadedFiles',
               LOG_INFO, $this->Id);
 
-      $query = pdo_query("SELECT DISTINCT build.id
+      $query = pdo_query("SELECT DISTINCT build.id AS id
                                FROM build, build2uploadfile, uploadfile
                                WHERE build.projectid=".qnum($this->Id)." AND
                                build.id=build2uploadfile.buildid AND
@@ -1389,8 +1395,8 @@ class Project
         $fileids = '(';
         $build2uploadfiles = pdo_query("SELECT a.fileid,count(b.fileid) AS c
                                  FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b
-                                 ON (a.fileid=b.fileid AND b.buildid != ".qnum($builds_array['build.id']).")
-                                 WHERE a.buildid = ".qnum($builds_array['build.id'])."
+                                 ON (a.fileid=b.fileid AND b.buildid != ".qnum($builds_array['id']).")
+                                 WHERE a.buildid = ".qnum($builds_array['id'])."
                                  GROUP BY a.fileid HAVING count(b.fileid)=0");
         while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
           {
@@ -1407,9 +1413,9 @@ class Project
         if(strlen($fileids)>2)
           {
           pdo_query("DELETE FROM uploadfile WHERE id IN ".$fileids);
-          pdo_query("DELETE FROM build2uploadfile WHERE fileid IN ".$fileids);
           }
 
+        // Stop if we get below the quota
         if($totalUploadSize <= $this->UploadQuota)
           {
           break;

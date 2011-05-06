@@ -19,6 +19,25 @@ class UploadFileTestCase extends KWWebTestCase
     parent::__construct();
     }
 
+  // Set a suitable upload quota on EmailProjectExample
+  function testSetUploadQuota()
+    {
+    $this->deleteLog($this->logfilename);
+    $this->login();
+    $query = $this->db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
+    $projectid = $query[0]['id'];
+    $content = $this->connect($this->url.'/createProject.php?projectid='.$projectid);
+
+    if($content == false)
+      {
+      return;
+      }
+
+    // set the upload quota to 1 GB
+    $this->setField('uploadQuota','1');
+    $this->clickSubmitByName('Update');
+    }
+
   // Submit an upload XML
   function testSubmitUploadXML()
     {
@@ -39,6 +58,7 @@ class UploadFileTestCase extends KWWebTestCase
   // Make sure the uploaded files are present
   function testVerifyFileSubmission()
     {
+    $this->deleteLog($this->logfilename);
     //Verify file exists in the database
     $query = $this->db->query("SELECT buildid, fileid FROM build2uploadfile");
     if(count($query) == 0)
