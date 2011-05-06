@@ -1353,7 +1353,7 @@ class Project
       add_last_sql_error("Project::GetUploadsTotalSize", $this->Id);
       return false;
       }
-     
+
     $totalSize = 0;
     while($result = pdo_fetch_array($totalSizeQuery))
       {
@@ -1407,12 +1407,14 @@ class Project
             }
           $fileids .= $fileid;
           $totalUploadSize -= unlink_uploaded_file($fileid);
+          add_log("Removed file $fileid", 'Project::CullUploadedFiles', LOG_INFO, $this->Id);
           }
-        
+
         $fileids .= ')';
         if(strlen($fileids)>2)
           {
           pdo_query("DELETE FROM uploadfile WHERE id IN ".$fileids);
+          pdo_query("DELETE FROM build2uploadfile WHERE fileid IN ".$fileids);
           }
 
         // Stop if we get below the quota
