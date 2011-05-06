@@ -166,7 +166,9 @@ function generate_index_table()
       $xml .= "<active>1</active>";
       }
 
+    $uploadsizeGB = round($project['uploadsize'] / (1024.0*1024.0*1024.0), 2);
     $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
+    $xml .= '<uploadsize>'.$uploadsizeGB.'</uploadsize>';
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
     if($row == 0)

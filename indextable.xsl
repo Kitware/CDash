@@ -116,15 +116,16 @@
 <table border="0" cellpadding="4" cellspacing="0" width="100%" id="indexTable" class="tabb">
 <thead>
 <tr class="table-heading1">
-  <td colspan="5" align="left" class="nob"><h3>Available Dashboards</h3></td>
+  <td colspan="6" align="left" class="nob"><h3>Available Dashboards</h3></td>
 </tr>
 
   <tr class="table-heading">
      <th align="center" id="sort_0"><b>Project</b></th>
      <td align="center"><b>Description</b></td>
      <th align="center" id="sort_1"><b>Submissions</b></th>
-     <th align="center" id="sort_2"><b>First build</b></th>
-     <th align="center" id="sort_3" class="nob"><b>Last activity</b></th>
+     <th align="center" id="sort_2"><b>Total Uploads</b></th>
+     <th align="center" id="sort_3"><b>First build</b></th>
+     <th align="center" id="sort_4" class="nob"><b>Last activity</b></th>
   </tr>
  </thead>
  <tbody>
@@ -141,6 +142,7 @@
      </a></td>
      <td align="center"><xsl:value-of select="description"/></td>
      <td align="center"><xsl:value-of select="nbuilds"/></td>
+     <td align="center"><xsl:value-of select="uploadsize"/> GB</td>
      <td align="center"><xsl:value-of select="firstbuild"/></td>
     <td align="center" class="nob">
     <a>

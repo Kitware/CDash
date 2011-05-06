@@ -426,9 +426,10 @@ function clean_backup_directory()
 function get_projects()
 {
   $projects = array();
-  
+
   include("cdash/config.php");
   require_once("cdash/pdo.php");
+  require_once('models/project.php');
 
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
@@ -441,7 +442,7 @@ function get_projects()
     $project['name'] = $project_array["name"];
     $project['description'] = $project_array["description"];
     $projectid = $project['id'];
-    
+
     $project['last_build'] = "NA";
     $lastbuildquery = pdo_query("SELECT submittime FROM build WHERE projectid='$projectid' ORDER BY submittime DESC LIMIT 1");
     if(pdo_num_rows($lastbuildquery)>0)
@@ -461,10 +462,14 @@ function get_projects()
     $buildquery = pdo_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
     $buildquery_array = pdo_fetch_array($buildquery); 
     $project['nbuilds'] = $buildquery_array[0];
-    
+
+    $Project = new Project;
+    $Project->Id = $project['id'];
+    $project['uploadsize'] = $Project->GetUploadsTotalSize();
+
     $projects[] = $project; 
     }
-    
+
   return $projects;
 }
 
