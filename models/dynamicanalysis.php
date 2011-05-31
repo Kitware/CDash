@@ -30,7 +30,8 @@ class DynamicAnalysis
   private $Defects;
   var $BuildId;
   var $Labels;
-
+  var $LogCompression;
+  var $LogEncoding;
 
   /** Add a defect */
   function AddDefect($defect)
@@ -45,7 +46,7 @@ class DynamicAnalysis
     $label->DynamicAnalysisId = $this->Id;
     $this->Labels[] = $label;
     }
-    
+
   /** Find how many dynamic analysis tests were failed or notrun status */
   function GetNumberOfErrors()
     {
@@ -68,12 +69,12 @@ class DynamicAnalysis
   function RemoveAll()
     {
     include("cdash/config.php");
-    
+
     if(strlen($this->BuildId)==0)
       {
       echo "DynamicAnalysis::RemoveAll BuildId not set";
       return false;
-      } 
+      }
 
     if($CDASH_DB_TYPE == 'pgsql') // postgresql doesn't support multiple delete
       {
@@ -85,11 +86,11 @@ class DynamicAnalysis
       }
     else
       {
-      $query = "DELETE dynamicanalysisdefect,dynamicanalysis FROM dynamicanalysisdefect, dynamicanalysis 
+      $query = "DELETE dynamicanalysisdefect,dynamicanalysis FROM dynamicanalysisdefect, dynamicanalysis
                WHERE dynamicanalysis.buildid=".qnum($this->BuildId)."
                AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid";
       }
-    
+
     if(!pdo_query($query))
       {
       add_last_sql_error("DynamicAnalysis RemoveAll",0,$this->BuildId);
@@ -102,7 +103,7 @@ class DynamicAnalysis
       add_last_sql_error("DynamicAnalysis RemoveAll",0,$this->BuildId);
       return false;
       }
-        
+
     }
 
   /** Insert labels */
@@ -112,7 +113,7 @@ class DynamicAnalysis
       {
       return;
       }
-      
+
     if($this->Id)
       {
       foreach($this->Labels as $label)
@@ -136,7 +137,7 @@ class DynamicAnalysis
       {
       echo "DynamicAnalysis::Insert BuildId not set";
       return false;
-      } 
+      }
 
     $id = "";
     $idvalue = "";
@@ -145,7 +146,24 @@ class DynamicAnalysis
       $id = "id,";
       $idvalue = qnum($this->Id).",";
       }
-        
+
+    // Handle log decoding/decompression
+    if(strtolower($this->LogEncoding) == 'base64')
+      {
+      $this->Log = str_replace(array("\r\n", "\n", "\r"), '', $this->Log);
+      $this->Log = base64_decode($this->Log);
+      }
+    if(strtolower($this->LogCompression) == 'gzip')
+      {
+      $this->Log = gzuncompress($this->Log);
+      }
+    if($this->Log === false)
+      {
+      add_log('Unable to decompress dynamic analysis log',
+              'DynamicAnalysis::Insert',LOG_ERR,0,$this->BuildId,CDASH_OBJECT_DYNAMICANALYSIS,$this->Id);
+      $this->Log = '';
+      }
+
     $this->Status = pdo_real_escape_string($this->Status);
     $this->Checker = pdo_real_escape_string($this->Checker);
     $this->Name = pdo_real_escape_string($this->Name);
@@ -153,7 +171,7 @@ class DynamicAnalysis
     $fullCommandLine = pdo_real_escape_string(substr($this->FullCommandLine,0,255));
     $this->Log = pdo_real_escape_string($this->Log);
     $this->BuildId = pdo_real_escape_string($this->BuildId);
-    
+
     $query = "INSERT INTO dynamicanalysis (".$id."buildid,status,checker,name,path,fullcommandline,log)
               VALUES (".$idvalue.qnum($this->BuildId).",'$this->Status','$this->Checker','$this->Name','".$path."',
                       '".$fullCommandLine."','$this->Log')";
@@ -162,9 +180,9 @@ class DynamicAnalysis
       add_last_sql_error("DynamicAnalysis Insert",0,$this->BuildId);
       return false;
       }
-    
+
     $this->Id = pdo_insert_id("dynamicanalysis");
-    
+
     // Add the defects
     if(!empty($this->Defects))
       {
@@ -173,7 +191,7 @@ class DynamicAnalysis
         $defect->DynamicAnalysisId = $this->Id;
         $defect->Insert();
         }
-      }    
+      }
 
     // Add the labels
     $this->InsertLabelAssociations();

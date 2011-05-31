@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -33,14 +33,13 @@ class DynamicAnalysisHandler extends AbstractHandler
   private $DynamicAnalysisDefect;
   private $Label;
 
-
   /** Constructor */
   public function __construct($projectID)
     {
     parent::__construct($projectID);
     $this->Build = new Build();
     $this->Site = new Site();
-    $this->UpdateEndTime = false; 
+    $this->UpdateEndTime = false;
     }
 
 
@@ -48,24 +47,24 @@ class DynamicAnalysisHandler extends AbstractHandler
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
-    
-   if($name=='SITE')
+
+    if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
       $this->Site->Insert();
-      
+
       $siteInformation = new SiteInformation();
        $buildInformation =  new BuildInformation();
-      
+
       // Fill in the attribute
       foreach($attributes as $key=>$value)
         {
         $siteInformation->SetValue($key,$value);
         $buildInformation->SetValue($key,$value);
         }
-      
+
       $this->Site->SetInformation($siteInformation);
-      
+
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
@@ -74,7 +73,7 @@ class DynamicAnalysisHandler extends AbstractHandler
       }
     else if($name=='DYNAMICANALYSIS')
       {
-      $this->Checker = $attributes['CHECKER'];    
+      $this->Checker = $attributes['CHECKER'];
       }
     else if($name=='TEST' && isset($attributes['STATUS']))
       {
@@ -91,6 +90,11 @@ class DynamicAnalysisHandler extends AbstractHandler
       {
       $this->Label = new Label();
       }
+    else if($name == 'LOG')
+      {
+      $this->DynamicAnalysis->LogCompression = isset($attributes['COMPRESSION']) ? $attributes['COMPRESSION'] : '';
+      $this->DynamicAnalysis->LogEncoding = isset($attributes['ENCODING']) ? $attributes['ENCODING'] : '';
+      }
     } // end start element
 
 
@@ -101,7 +105,7 @@ class DynamicAnalysisHandler extends AbstractHandler
     parent::endElement($parser, $name);
 
     if($name == "STARTTESTTIME" && $parent == 'DYNAMICANALYSIS')
-      {  
+      {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $this->Build->ProjectId = $this->projectid;
       $buildid = $this->Build->GetIdFromName($this->SubProjectName);
@@ -115,7 +119,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         $this->Build->InsertErrors = false;
         add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
-        $this->UpdateEndTime = true;  
+        $this->UpdateEndTime = true;
         $buildid = $this->Build->Id;
         }
       else
@@ -125,12 +129,12 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->DynamicAnalysis->BuildId = $buildid;
         $this->DynamicAnalysis->RemoveAll();
         unset($this->DynamicAnalysis);
-        }  
-      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;   
+        }
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
       $this->BuildId = $buildid;
       }
     else if($name == "TEST" && $parent == 'DYNAMICANALYSIS')
-      {  
+      {
       $this->DynamicAnalysis->BuildId = $this->BuildId;
       $this->DynamicAnalysis->Insert();
       }
@@ -166,7 +170,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->DynamicAnalysis->Checker = $this->Checker;
         $this->DynamicAnalysis->Insert();
         }
-      }  
+      }
     } // end endElement
 
 
@@ -180,7 +184,7 @@ class DynamicAnalysisHandler extends AbstractHandler
       {
       switch($element)
         {
-        case 'STARTBUILDTIME': 
+        case 'STARTBUILDTIME':
           $this->StartTimeStamp .= $data;
           break;
         case 'STARTDATETIME':
@@ -192,7 +196,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         }
        }
     else if($parent=='TEST')
-      {  
+      {
       switch($element)
         {
         case 'NAME':
