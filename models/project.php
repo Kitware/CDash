@@ -1125,21 +1125,29 @@ class Project
     $todaytime -= 3600*24*$days;
     $today = date(FMT_DATETIMESTD,$todaytime);
 
+    include("cdash/config.php");
+    $straighthjoin = "";
+    if($CDASH_DB_TYPE != "pgsql")
+      {
+      $straighthjoin = 'STRAIGHT_JOIN';
+      }
+
     $labelids = array();
-    $labels = pdo_query("SELECT label.id as labelid FROM label WHERE
-                         label.id IN (SELECT labelid AS id FROM label2build,build
-                            WHERE label2build.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
-                         OR label.id IN (SELECT labelid AS id FROM label2test,build
-                            WHERE label2test.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
-                         OR label.id IN (SELECT labelid AS id FROM label2coveragefile,build
-                            WHERE label2coveragefile.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
-                         OR label.id IN (SELECT labelid AS id FROM label2buildfailure,buildfailure,build
-                            WHERE label2buildfailure.buildfailureid=buildfailure.id AND buildfailure.buildid=build.id
+    $labels = pdo_query("(SELECT labelid AS id FROM label2build,build WHERE label2build.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
+                          UNION
+                          (SELECT labelid AS id FROM label2test,build WHERE label2test.buildid=build.id 
                                   AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
-                         OR label.id IN (SELECT labelid AS id FROM label2dynamicanalysis,dynamicanalysis,build
-                            WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id AND dynamicanalysis.buildid=build.id
-                            AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
-                         ");
+                          UNION
+                          (SELECT ".$straighthjoin." labelid AS id FROM build,label2coveragefile WHERE label2coveragefile.buildid=build.id 
+                                 AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
+                          UNION
+                          (SELECT ".$straighthjoin." labelid AS id FROM build,buildfailure,label2buildfailure WHERE label2buildfailure.buildfailureid=buildfailure.id 
+                                 AND buildfailure.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
+                          UNION
+                          (SELECT ".$straighthjoin." labelid AS id FROM build,dynamicanalysis,label2dynamicanalysis WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id 
+                                 AND dynamicanalysis.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
+                          ");
+    
     if(!$labels)
       {
       add_last_sql_error("Project GetLabels",$this->Id);
