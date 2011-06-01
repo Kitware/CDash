@@ -17,17 +17,18 @@ include_once('cdash/common.php');
 include("cdash/version.php");
 
 include_once('models/project.php');
-include_once ("models/clientsite.php");
-include_once ("models/clientjobschedule.php");
-include_once ("models/clientos.php");
-include_once ("models/clientcmake.php");
-include_once ("models/clientcompiler.php");
-include_once ("models/clientlibrary.php");
-require_once ("models/project.php");
-require_once ("models/constants.php");
-require_once ("models/user.php");
+include_once("models/clientsite.php");
+include_once("models/clientjobschedule.php");
+include_once("models/clientos.php");
+include_once("models/clientcmake.php");
+include_once("models/clientcompiler.php");
+include_once("models/clientlibrary.php");
+require_once("models/project.php");
+require_once("models/constants.php");
+require_once("models/user.php");
+require_once("models/userproject.php");
 
-if ($session_OK)
+if($session_OK)
   {
   if(!$CDASH_MANAGE_CLIENTS)
     {
@@ -70,6 +71,16 @@ if ($session_OK)
     $ClientJobSchedule = new ClientJobSchedule();
     $ClientJobSchedule->Id = $scheduleid;
     $projectid = $ClientJobSchedule->GetProjectId();
+    }
+
+  // Make sure user has project admin privileges to use this page
+  $UserProject = new UserProject();
+  $UserProject->ProjectId = $projectid;
+  $projectAdmins = $UserProject->GetUsers(2); //get project admin users
+  if(!in_array($userid, $projectAdmins))
+    {
+    echo "You are not a project administrator!";
+    return;
     }
 
   $xml = "<cdash>";
