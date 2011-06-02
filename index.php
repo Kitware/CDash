@@ -460,7 +460,7 @@ function generate_main_dashboard_XML($projectid,$date)
   if(isset($_GET["subproject"]))
     {
     // Add an extra URL argument for the menu
-    $xml .= add_XML_value("extraurl","&subproject=".$_GET["subproject"]);
+    $xml .= add_XML_value("extraurl","&subproject=".urlencode($_GET["subproject"]));
     $xml .= add_XML_value("subprojectname",$_GET["subproject"]);
 
     $xml .= "<subproject>";
@@ -1703,6 +1703,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     $xml .= "<subproject>";
     $xml .= add_XML_value("row",$row);
     $xml .= add_XML_value("name",$SubProject->GetName());
+    $xml .= add_XML_value("name_encoded",urlencode($SubProject->GetName()));
 
     $xml .= add_XML_value("nbuilderror",$SubProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
     $xml .= add_XML_value("nbuildwarning",$SubProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
