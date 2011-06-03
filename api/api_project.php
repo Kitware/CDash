@@ -44,7 +44,7 @@ class ProjectAPI extends CDashAPI
 
   /** 
    * Authenticate to the web API as a project admin
-   * @param projectid the id of the project
+   * @param project the name of the project
    * @param key the web API key for that project
    */
   function Authenticate()
@@ -81,6 +81,49 @@ class ProjectAPI extends CDashAPI
     return array('status'=>true, 'token'=>$token);
     }
 
+  /**
+   * List all files for a given project
+   * @param project the name of the project
+   * @param key the web API key for that project
+   */
+  function ListFiles()
+    {
+    include_once('../cdash/common.php');
+    include_once('../models/project.php');
+
+    global $CDASH_DOWNLOAD_RELATIVE_URL;
+
+    if(!isset($this->Parameters['project']))
+      {
+      return array('status'=>false, 'message'=>'You must specify a project parameter.');
+      }
+    $projectid = get_project_id($this->Parameters['project']);
+    if(!is_numeric($projectid) || $projectid <= 0)
+      {
+      return array('status'=>false, 'message'=>'Project not found.');
+      }
+
+    $Project = new Project();
+    $Project->Id = $projectid;
+    $files = $Project->GetUploadedFiles();
+
+    if(!$files)
+      {
+      return array('status'=>false, 'message'=>'Error in Project::GetUploadedFiles');
+      }
+    $filteredList = array();
+    foreach($files as $file)
+      {
+      if(isset($this->Parameters['match']) && !preg_match('/'.$this->Parameters['match'].'/', $file['filename']))
+        {
+        continue; //skip if it doesn't match regex
+        }
+      $filteredList[] = array_merge($file, array('url'=>$CDASH_DOWNLOAD_RELATIVE_URL.'/'.$file['sha1sum'].'/'.$file['filename']));
+      }
+
+    return array('status'=>true, 'files'=>$filteredList);
+    }
+
   /** Run function */
   function Run()
     {
@@ -88,6 +131,7 @@ class ProjectAPI extends CDashAPI
       {
       case 'list': return $this->ListProjects();
       case 'login': return $this->Authenticate();
+      case 'files': return $this->ListFiles();
       }
     }
 }

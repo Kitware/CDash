@@ -1371,6 +1371,42 @@ class Project
     }
 
   /**
+   * Return a list of files, each of which has the following key/value pairs:
+   *  id       - id of the file in the uploadfile table
+   *  filename - name of the file
+   *  filesize - size in bytes of the file
+   *  sha1sum  - sha-1 checksum of the file
+   */
+  function GetUploadedFiles()
+    {
+    if(!$this->Id)
+      {
+      add_log('Id not set', 'Project::GetUploadedFiles', LOG_ERR);
+      return false;
+      }
+    $query = pdo_query("SELECT uploadfile.id, uploadfile.filename, uploadfile.filesize, uploadfile.sha1sum
+                        FROM uploadfile, build2uploadfile, build
+                        WHERE build.projectid=".qnum($this->Id)." AND
+                        build.id=build2uploadfile.buildid AND
+                        build2uploadfile.fileid=uploadfile.id");
+    if(!$query)
+      {
+      add_last_sql_error("Project::GetUploadedFiles", $this->Id);
+      return false;
+      }
+
+    $files = array();
+    while($result = pdo_fetch_array($query))
+      {
+      $files[] = array('id'=>$result['id'],
+                       'filename'=>$result['filename'],
+                       'filesize'=>$result['filesize'],
+                       'sha1sum'=>$result['sha1sum']);
+      }
+    return $files;
+    }
+
+  /**
    * Checks whether this project has exceeded its upload size quota.  If so,
    * Removes the files (starting with the oldest builds) until the total upload size
    * is <= the upload quota.
