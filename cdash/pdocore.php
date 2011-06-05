@@ -92,7 +92,7 @@ function pdo_check_index_exists($tablename,$columnname)
     }
   else 
     {
-    $query = pdo_query("SHOW INDEX FROM ".$tablename);
+    $query = pdo_query("SHOW INDEX FROM ".$tablename." WHERE Seq_in_index=1");
     if($query)
       {
       while($index_array = pdo_fetch_array($query))

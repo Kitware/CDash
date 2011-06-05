@@ -850,6 +850,14 @@ if(isset($_GET['upgrade-2-0']))
   AddTableField('updatefile', 'committer', 'varchar(255)', 'character varying(255)', '');
   AddTableField('updatefile', 'committeremail', 'varchar(255)', 'character varying(255)', '');
 
+  // Add indexes for the label2... tables
+  AddTableIndex('label2build','buildid');
+  AddTableIndex('label2buildfailure','buildfailureid');
+  AddTableIndex('label2coveragefile','buildid');
+  AddTableIndex('label2dynamicanalysis','dynamicanalysisid');
+  AddTableIndex('label2test','buildid');
+  AddTableIndex('label2update','updateid');
+  
   // Set the database version
   setVersion();
 
