@@ -28,7 +28,8 @@ require_once 'xml_handlers/project_handler.php';
 require_once 'xml_handlers/upload_handler.php';
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=true)
+function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=true,
+                     $scheduleid=0)
 {
   include 'cdash/config.php';
   require_once 'cdash/common.php';
@@ -50,52 +51,52 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
 
   if(preg_match('/<Update/', $content)) // Should be first otherwise confused with Build
     {
-    $handler = new UpdateHandler($projectid);
+    $handler = new UpdateHandler($projectid, $scheduleid);
     $file = "Update";
     }
   else if(preg_match('/<Build/', $content))
     {
-    $handler = new BuildHandler($projectid);
+    $handler = new BuildHandler($projectid, $scheduleid);
     $file = "Build";
     }
   else if(preg_match('/<Configure/', $content))
     {
-    $handler = new ConfigureHandler($projectid);
+    $handler = new ConfigureHandler($projectid, $scheduleid);
     $file = "Configure";
     }
   else if(preg_match('/<Testing/', $content))
     {
-    $handler = new TestingHandler($projectid);
+    $handler = new TestingHandler($projectid, $scheduleid);
     $file = "Test";
     }
   else if(preg_match('/<CoverageLog/', $content)) // Should be before coverage
     {
-    $handler = new CoverageLogHandler($projectid);
+    $handler = new CoverageLogHandler($projectid, $scheduleid);
     $file = "CoverageLog";
     }
   else if(preg_match('/<Coverage/', $content))
     {
-    $handler = new CoverageHandler($projectid);
+    $handler = new CoverageHandler($projectid, $scheduleid);
     $file = "Coverage";
     }
   else if(preg_match('/<Notes/', $content))
     {
-    $handler = new NoteHandler($projectid);
+    $handler = new NoteHandler($projectid, $scheduleid);
     $file = "Notes";
     }
   else if(preg_match('/<DynamicAnalysis/', $content))
     {
-    $handler = new DynamicAnalysisHandler($projectid);
+    $handler = new DynamicAnalysisHandler($projectid, $scheduleid);
     $file = "DynamicAnalysis";
     }
   else if(preg_match('/<Project/', $content))
     {
-    $handler = new ProjectHandler($projectid);
+    $handler = new ProjectHandler($projectid, $scheduleid);
     $file = "Project";
     }
   else if(preg_match('/<Upload/', $content))
     {
-    $handler = new UploadHandler($projectid);
+    $handler = new UploadHandler($projectid, $scheduleid);
     $file = "Upload";
     }
 

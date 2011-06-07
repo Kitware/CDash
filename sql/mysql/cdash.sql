@@ -1111,6 +1111,19 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2site (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table 'client_jobschedule2submission'
+--
+
+CREATE TABLE IF NOT EXISTS client_jobschedule2submission (
+  scheduleid bigint(20) NOT NULL,
+  submissionid bigint(11) NOT NULL,
+  UNIQUE KEY scheduleid (scheduleid,submissionid)
+);
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table 'client_library'
 --
 

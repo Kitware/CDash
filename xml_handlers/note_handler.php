@@ -26,9 +26,9 @@ class NoteHandler extends AbstractHandler
   private $Note;
   
   /** Constructor */
-  public function __construct($projectID)
+  public function __construct($projectID, $scheduleID)
     {
-    parent::__construct($projectID);
+    parent::__construct($projectID, $scheduleID);
     $this->Build = new Build();
     $this->Site = new Site();
     $this->Configure = new BuildConfigure();

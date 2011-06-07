@@ -29,9 +29,9 @@ class ProjectHandler extends AbstractHandler
   private $Subprojects; // keep an array of supbprojects in order to remove them
 
   /** Constructor */
-  public function __construct($projectid)
+  public function __construct($projectid, $scheduleid)
     {
-    parent::__construct($projectid);
+    parent::__construct($projectid, $scheduleid);
     }
 
   /** startElement function */

@@ -28,9 +28,9 @@ class CoverageLogHandler extends AbstractHandler
   private $BuildId;
   
   /** Constructor */
-  public function __construct($projectID)
+  public function __construct($projectID, $scheduleID)
     {
-    parent::__construct($projectID);
+    parent::__construct($projectID, $scheduleID);
     $this->Build = new Build();
     $this->Site = new Site();
     $this->BuildId = 0;

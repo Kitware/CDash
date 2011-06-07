@@ -83,10 +83,15 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     $this->launchViaCurl("/cdash/processsubmissions.php?projectid=5&sleep_in_loop=1", 1);
 
     // Sleep for 2 seconds, and then try to process a client submission.
-    echo "sleep(2)\n";
+    echo "sleeping... (1)\n";
     sleep(2);
     $url = $this->url."/submit.php?project=InsightExample&clientscheduleid=$scheduleid";
     $this->uploadfile($url,$xmlDir . "/" . "Build.xml");
+
+    // Sleep again to give CDash a chance to process this submission before
+    // we check if it is properly associated with the client job.
+    echo "sleeping... (2)\n";
+    sleep(5);
 
     // Check scheduleSummary.php to see if the client's submission got associated with
     // the correct job.

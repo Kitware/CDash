@@ -22,7 +22,8 @@ include_once("cdash/common.php");
 include_once("cdash/createRSS.php");
 include("cdash/sendemail.php");
 
-function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
+function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
+                   $submission_id=0)
 {
   include('cdash/config.php');
 
@@ -78,8 +79,19 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true)
     include("local/submit.php");
     }
 
+  $scheduleid = 0;
+  if($submission_id !== 0)
+    {
+    $row = pdo_single_row_query(
+      "SELECT scheduleid from client_jobschedule2submission WHERE submissionid=$submission_id"); 
+    if(!empty($row))
+      {
+      $scheduleid = $row[0];
+      }
+    }
+
   // Parse the XML file
-  $handler = ctest_parse($filehandle,$projectid, $expected_md5, $do_checksum);
+  $handler = ctest_parse($filehandle,$projectid, $expected_md5, $do_checksum, $scheduleid);
   //this is the md5 checksum fail case
   if($handler == FALSE)
     {
@@ -164,6 +176,10 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
   pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
     "VALUES ('".$filename."','".$projectid."','0','0','$bytes','$md5sum','$now_utc')");
 
+  // Get the ID associated with this submission.  We may need to reference it
+  // later if this is a CDash@home (client) submission.
+  $submissionid = pdo_insert_id('submission');
+
   // We find the daily updates
   // If we have php curl we do it asynchronously
   if(function_exists("curl_init") == TRUE)
@@ -194,7 +210,12 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     $currentURI = $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI'];
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     $clientscheduleid = isset($_GET["clientscheduleid"]) ? $_GET["clientscheduleid"] : 0;
-    $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid."&clientscheduleid=".$clientscheduleid;
+    if($clientscheduleid !== 0)
+      {
+      pdo_query("INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ".
+        "VALUES ('$clientscheduleid','$submissionid')");
+      }
+    $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid;
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $request);

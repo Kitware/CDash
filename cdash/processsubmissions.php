@@ -376,7 +376,7 @@ function ProcessSubmissions($projectid)
             E_USER_ERROR);
           }
 
-        do_submit($fp, $projectid, '', false);
+        do_submit($fp, $projectid, '', false, $submission_id);
         $PHP_ERROR_SUBMISSION_ID = 0;
 
         fclose($fp);

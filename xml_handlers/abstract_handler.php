@@ -29,9 +29,10 @@ abstract class AbstractHandler implements SaxHandler
   protected $Site;
   protected $SubProjectName;
 
-  public function __construct($projectid)
+  public function __construct($projectid, $scheduleid)
     {
     $this->projectid = $projectid;
+    $this->scheduleid = $scheduleid;
     $this->stack = new Stack();  
     }
   

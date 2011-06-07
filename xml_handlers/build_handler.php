@@ -29,9 +29,9 @@ class BuildHandler extends AbstractHandler
   private $Label;
   private $Append;
 
-  public function __construct($projectid)
+  public function __construct($projectid, $scheduleid)
     {
-    parent::__construct($projectid);
+    parent::__construct($projectid, $scheduleid);
     $this->Build = new Build();
     $this->Site = new Site();
     $this->Append = false;
@@ -122,7 +122,7 @@ class BuildHandler extends AbstractHandler
       $this->Build->SetSubProject($this->SubProjectName);
       $this->Build->Append = $this->Append;
 
-      add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
+      add_build($this->Build, $this->scheduleid);
       $this->Build->ComputeDifferences();
       }
     else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE') 

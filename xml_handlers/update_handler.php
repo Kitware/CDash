@@ -31,9 +31,9 @@ class UpdateHandler extends AbstractHandler
   private $UpdateFile;
 
   /** Constructor */
-  public function __construct($projectID)
+  public function __construct($projectID, $scheduleID)
     {
-    parent::__construct($projectID);
+    parent::__construct($projectID, $scheduleID);
     $this->Build = new Build();
     $this->Site = new Site();
     }
@@ -84,7 +84,7 @@ class UpdateHandler extends AbstractHandler
         $this->Build->EndTime = $end_time;
         $this->Build->SubmitTime = $submit_time;
         $this->Build->InsertErrors = false;
-        add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
+        add_build($this->Build, $this->scheduleid);
         $buildid = $this->Build->Id;
         }
       else

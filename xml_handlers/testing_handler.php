@@ -44,9 +44,9 @@ class TestingHandler extends AbstractHandler
   private $NumberTestsPassed;
 
   /** Constructor */
-  public function __construct($projectID)
+  public function __construct($projectID, $scheduleID)
     {
-    parent::__construct($projectID);
+    parent::__construct($projectID, $scheduleID);
     $this->Build = new Build();
     $this->Site = new Site();
     $this->UpdateEndTime = false;
@@ -151,7 +151,7 @@ class TestingHandler extends AbstractHandler
         $this->Build->SetSubProject($this->SubProjectName);
         $this->Build->Append = $this->Append;
         $this->Build->InsertErrors = false;
-        add_build($this->Build, isset($_GET['clientscheduleid']) ? $_GET['clientscheduleid'] : 0);
+        add_build($this->Build, $this->scheduleid);
 
         $this->UpdateEndTime = true;
         $buildid = $this->Build->Id;
