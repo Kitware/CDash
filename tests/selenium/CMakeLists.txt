@@ -65,6 +65,10 @@ if(TEST_CLIENT_MANAGEMENT)
     client_running PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
+  configure_file(
+    ${testing_dir}/test_properclientprocessing.php.in
+    ${CMAKE_BINARY_DIR}/tests/test_properclientprocessing.php)
+  add_configured_php_test(properclientprocessing)
   add_selenium_test(removescheduledbuild)
   add_php_test(deletedailyupdate)
 endif()

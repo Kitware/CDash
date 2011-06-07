@@ -1,4 +1,5 @@
 set(testing_dir "${CDash_SOURCE_DIR}/tests")
+set(binary_testing_dir "${CDash_BINARY_DIR}/tests")
 
 # function to add a new PHP based coverage test to CDash
 #
@@ -12,6 +13,16 @@ function(add_php_test TestName)
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   )
 endfunction(add_php_test)
+function(add_configured_php_test TestName)
+  add_test(
+    ${TestName}
+    ${PHP_EXE} ${testing_dir}/singletest.php ${binary_testing_dir}/test_${TestName}.php
+  )
+  set_tests_properties(
+    ${TestName} PROPERTIES
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+  )
+endfunction(add_configured_php_test)
 
 add_php_test(install)
 add_php_test(compressedtest)
