@@ -1024,9 +1024,8 @@ CREATE TABLE "client_jobschedule2site" (
 -- Table client_jobschedule2submission
 --
 CREATE TABLE "client_jobschedule2submission" (
-  "scheduleid" bigint NOT NULL,
-  "submissionid" bigint NOT NULL,
-  Constraint "scheduleid7" UNIQUE ("scheduleid", "submissionid")
+  "scheduleid" bigint NOT NULL UNIQUE,
+  "submissionid" bigint NOT NULL UNIQUE
 );
 
 --

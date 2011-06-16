@@ -1117,7 +1117,8 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2site (
 CREATE TABLE IF NOT EXISTS client_jobschedule2submission (
   scheduleid bigint(20) NOT NULL,
   submissionid bigint(11) NOT NULL,
-  UNIQUE KEY scheduleid (scheduleid,submissionid)
+  PRIMARY KEY (`submissionid`),
+  UNIQUE KEY `scheduleid` (`scheduleid`)
 );
 
 

@@ -25,6 +25,7 @@ abstract class AbstractHandler implements SaxHandler
 {
   protected $stack;
   protected $projectid;
+  protected $scheduleid;
   protected $Build;
   protected $Site;
   protected $SubProjectName;
