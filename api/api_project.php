@@ -107,7 +107,7 @@ class ProjectAPI extends CDashAPI
 
     $Project = new Project();
     $Project->Id = $projectid;
-    $files = $Project->GetUploadedFiles(true);
+    $files = $Project->GetUploadedFiles();
 
     if(!$files)
       {
