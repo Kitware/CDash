@@ -1376,6 +1376,7 @@ class Project
    *  filename - name of the file
    *  filesize - size in bytes of the file
    *  sha1sum  - sha-1 checksum of the file
+   * The files will be returned in order, with the newest first
    */
   function GetUploadedFiles()
     {
@@ -1388,7 +1389,7 @@ class Project
                         FROM uploadfile, build2uploadfile, build
                         WHERE build.projectid=".qnum($this->Id)." AND
                         build.id=build2uploadfile.buildid AND
-                        build2uploadfile.fileid=uploadfile.id");
+                        build2uploadfile.fileid=uploadfile.id ORDER BY build.starttime DESC");
     if(!$query)
       {
       add_last_sql_error("Project::GetUploadedFiles", $this->Id);

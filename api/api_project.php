@@ -42,7 +42,7 @@ class ProjectAPI extends CDashAPI
     return $projects;
     } // end function ListProjects
 
-  /** 
+  /**
    * Authenticate to the web API as a project admin
    * @param project the name of the project
    * @param key the web API key for that project
@@ -85,6 +85,8 @@ class ProjectAPI extends CDashAPI
    * List all files for a given project
    * @param project the name of the project
    * @param key the web API key for that project
+   * @param [match] regular expression that files must match
+   * @param [mostrecent] include this if you only want the most recent match
    */
   function ListFiles()
     {
@@ -105,7 +107,7 @@ class ProjectAPI extends CDashAPI
 
     $Project = new Project();
     $Project->Id = $projectid;
-    $files = $Project->GetUploadedFiles();
+    $files = $Project->GetUploadedFiles(true);
 
     if(!$files)
       {
@@ -119,6 +121,11 @@ class ProjectAPI extends CDashAPI
         continue; //skip if it doesn't match regex
         }
       $filteredList[] = array_merge($file, array('url'=>$CDASH_DOWNLOAD_RELATIVE_URL.'/'.$file['sha1sum'].'/'.$file['filename']));
+
+      if(isset($this->Parameters['mostrecent']))
+        {
+        break; //user requested only the most recent file
+        }
       }
 
     return array('status'=>true, 'files'=>$filteredList);
