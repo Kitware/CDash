@@ -130,7 +130,8 @@ function ldapAuthenticate($email,$password,$SessionCachePolicy)
   if(isset($ldap) && $ldap != '')
     {
     /* search for pid dn */
-    $result = ldap_search($ldap,$CDASH_LDAP_BASEDN, 'mail='.$email, array('dn','cn'));
+    $result = ldap_search($ldap,$CDASH_LDAP_BASEDN,
+      '(&(mail='.$email.')'.$CDASH_LDAP_FILTER.')', array('dn','cn'));
     if ($result != 0) 
       {
       $entries = ldap_get_entries($ldap, $result);
