@@ -13,3 +13,10 @@ CREATE TABLE IF NOT EXISTS `build2uploadfile` (
   KEY `fileid` (`fileid`),
   KEY `buildid` (`buildid`)
 );
+
+CREATE TABLE IF NOT EXISTS client_jobschedule2submission (
+  scheduleid bigint(20) NOT NULL,
+  submissionid bigint(11) NOT NULL,
+  PRIMARY KEY (`submissionid`),
+  UNIQUE KEY `scheduleid` (`scheduleid`)
+);
