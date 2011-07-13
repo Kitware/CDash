@@ -81,7 +81,6 @@ class CoverageLogHandler extends AbstractHandler
         $t = 'Cannot add a coverage log to a build that does not exist';
         $f = 'CoverageLogHandler::endElement';
         add_log($t, $f, LOG_ERROR, $this->projectid);
-        trigger_error($f.': '.$t, E_USER_ERROR);
         }
       }
     else if($name == 'LINE')
@@ -90,15 +89,18 @@ class CoverageLogHandler extends AbstractHandler
       }  
     else if($name == 'FILE')
       {
-      $this->CoverageFile->Update($this->BuildId);
-      $this->CoverageFileLog->BuildId = $this->BuildId;
-      $this->CoverageFileLog->FileId = $this->CoverageFile->Id;
-      $this->CoverageFileLog->Insert();
+      if ($this->BuildId != 0)
+        {
+        $this->CoverageFile->Update($this->BuildId);
+        $this->CoverageFileLog->BuildId = $this->BuildId;
+        $this->CoverageFileLog->FileId = $this->CoverageFile->Id;
+        $this->CoverageFileLog->Insert();
+        }
       unset($this->CoverageFile);
       unset($this->CoverageFileLog);
       }
     } // end endElement()
-  
+
   /** Text */
   public function text($parser, $data)
     {
