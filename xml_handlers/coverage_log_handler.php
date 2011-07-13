@@ -78,8 +78,10 @@ class CoverageLogHandler extends AbstractHandler
       $this->BuildId = $this->Build->GetIdFromName($this->SubProjectName);
       if($this->BuildId == 0)
         {
-        echo "Trying to add a coverage log to a build that doesn't exist";
-        exit();
+        $t = 'Cannot add a coverage log to a build that does not exist';
+        $f = 'CoverageLogHandler::endElement';
+        add_log($t, $f, LOG_ERROR, $this->projectid);
+        trigger_error($f.': '.$t, E_USER_ERROR);
         }
       }
     else if($name == 'LINE')
