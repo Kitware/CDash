@@ -80,7 +80,7 @@ class CoverageLogHandler extends AbstractHandler
         {
         $t = 'Cannot add a coverage log to a build that does not exist';
         $f = 'CoverageLogHandler::endElement';
-        add_log($t, $f, LOG_ERROR, $this->projectid);
+        add_log($t, $f, LOG_ERR, $this->projectid);
         }
       }
     else if($name == 'LINE')
