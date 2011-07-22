@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="Windows_NT-TDD-hut11.kitware" BuildStamp="20110722-1514-Experimental" Name="hut11.kitware" Generator="ctest2.8.4.20110707-g0eecf">
+<Notes>
+<Note Name="C:/K/Trilinos/cmake/ctest/drivers/TrilinosDriverDashboard.cmake">
+<Time>1.31135e+009</Time>
+<DateTime>Jul 22 11:14 Eastern Daylight Time</DateTime>
+<Text>
+
+MESSAGE(
+ &quot;\n***&quot;
+ &quot;\n*** TrilinosDriverDashboard.cmake&quot;
+ &quot;\n***\n&quot;
+ )
+
+# Get the base diretory for the Trilinos source.  We only assume that the
+# CTest script that is being called is under Trilinos/cmake.
+STRING(REGEX MATCH &quot;(.+/Trilinos)/cmake&quot; TRILINOS_CMAKE_DIR
+  &quot;${CTEST_SCRIPT_DIRECTORY}&quot; )
+IF(&quot;${TRILINOS_CMAKE_DIR}&quot; STREQUAL &quot;&quot;)
+  STRING(REGEX MATCH &quot;(.+)/cmake&quot; TRILINOS_CMAKE_DIR
+    &quot;${CTEST_SCRIPT_DIRECTORY}&quot; )
+ENDIF()
+  
+MESSAGE(&quot;TRILINOS_CMAKE_DIR = ${TRILINOS_CMAKE_DIR}&quot;)
+
+SET( CMAKE_MODULE_PATH
+   &quot;${TRILINOS_CMAKE_DIR}/utils&quot;
+   )
+
+#MESSAGE(&quot;CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}&quot;)
+
+INCLUDE(PrintVar)
+INCLUDE(SetDefaultAndFromEnv)
+
+#
+# A) Set up the environment get options
+#
+
+set(CTEST_SITE &quot;$ENV{CTEST_SITE}&quot;)
+if(&quot;${CTEST_SITE}&quot; STREQUAL &quot;&quot;)
+  site_name(CTEST_SITE)
+endif()
+if(&quot;${CTEST_SITE}&quot; STREQUAL &quot;&quot;)
+  if(WIN32)
+    string(TOLOWER &quot;$ENV{COMPUTERNAME}&quot; CTEST_SITE)
+  else()
+    execute_process(COMMAND uname -n
+      OUTPUT_VARIABLE CTEST_SITE
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+  endif()
+endif()
+
+set(CTEST_BUILD_NAME &quot;$ENV{CTEST_BUILD_NAME}&quot;)
+if(&quot;${CTEST_BUILD_NAME}&quot; STREQUAL &quot;&quot;)
+  if(WIN32)
+    set(HOST_TYPE $ENV{OS})
+  else()
+    execute_process(COMMAND uname
+      OUTPUT_VARIABLE HOST_TYPE
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+  endif()
+  set(CTEST_BUILD_NAME &quot;${HOST_TYPE}-TDD-${CTEST_SITE}&quot;)
+endif()
+
+set(CTEST_CMAKE_GENERATOR &quot;$ENV{CTEST_CMAKE_GENERATOR}&quot;)
+if(&quot;${CTEST_CMAKE_GENERATOR}&quot; STREQUAL &quot;&quot;)
+  if(WIN32)
+    set(CTEST_CMAKE_GENERATOR &quot;NMake Makefiles&quot;)
+  else()
+    set(CTEST_CMAKE_GENERATOR &quot;Unix Makefiles&quot;)
+  endif()
+endif()
+
+set(CTEST_TEST_TIMEOUT &quot;$ENV{CTEST_TEST_TIMEOUT}&quot;)
+if(&quot;${CTEST_TEST_TIMEOUT}&quot; STREQUAL &quot;&quot;)
+  set(CTEST_TEST_TIMEOUT 7200)
+endif()
+  
+# Submit the results to the dashboard or not
+SET_DEFAULT_AND_FROM_ENV( TDD_DO_SUBMIT TRUE )
+
+# Dashboard model : Nightly, Experimental, Continuous
+SET_DEFAULT_AND_FROM_ENV( TDD_CTEST_TEST_TYPE Experimental )
+
+# set this to ON if you need to test something before committing.
+SET_DEFAULT_AND_FROM_ENV( TDD_IN_TESTING_MODE OFF )
+
+get_filename_component(CTEST_SOURCE_DIRECTORY
+  &quot;${CTEST_SCRIPT_DIRECTORY}&quot; ABSOLUTE)
+
+get_filename_component(CTEST_UPDATE_DIRECTORY
+  &quot;${CTEST_SCRIPT_DIRECTORY}/../../..&quot; ABSOLUTE)
+
+get_filename_component(CTEST_BINARY_DIRECTORY
+  &quot;${CTEST_SCRIPT_DIRECTORY}/../../../../TDD_BUILD&quot; ABSOLUTE)
+
+get_filename_component(CTEST_NOTES_FILES
+  &quot;${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}&quot; ABSOLUTE)
+if(NOT &quot;$ENV{TDD_CRON_DRIVER_LOGFILE}&quot; STREQUAL &quot;&quot;)
+  set(CTEST_NOTES_FILES ${CTEST_NOTES_FILES} &quot;$ENV{TDD_CRON_DRIVER_LOGFILE}&quot;)
+endif()
+if(NOT &quot;$ENV{TDD_CRON_DRIVER_SCRIPT}&quot; STREQUAL &quot;&quot;)
+  set(CTEST_NOTES_FILES ${CTEST_NOTES_FILES} &quot;$ENV{TDD_CRON_DRIVER_SCRIPT}&quot;)
+endif()
+
+set(parallel_level &quot;$ENV{TDD_PARALLEL_LEVEL}&quot;)
+if(&quot;${parallel_level}&quot; STREQUAL &quot;&quot;)
+  set(parallel_level 1)
+endif()
+
+set(git_exe &quot;$ENV{TDD_GIT_EXE}&quot;)
+if(&quot;${git_exe}&quot; STREQUAL &quot;&quot;)
+  set(git_exe &quot;git_exe-NOTFOUND&quot;)
+  find_program(git_exe NAMES git.cmd eg git)
+endif()
+if(git_exe)
+  set(CTEST_UPDATE_TYPE &quot;git&quot;)
+  set(CTEST_UPDATE_COMMAND &quot;${git_exe}&quot;)
+endif()
+
+#
+# Run the outer dashboard
+#
+
+message(&quot;\nA) Empty out ${CTEST_BINARY_DIRECTORY} ...&quot;)
+ctest_empty_binary_directory(&quot;${CTEST_BINARY_DIRECTORY}&quot;)
+
+ctest_start(&quot;${TDD_CTEST_TEST_TYPE}&quot;)
+
+message(&quot;\nB) Update ${CTEST_UPDATE_DIRECTORY} ...&quot;)
+message(&quot;      CTEST_UPDATE_COMMAND=&apos;${CTEST_UPDATE_COMMAND}&apos;&quot;)
+message(&quot;      CTEST_UPDATE_TYPE=&apos;${CTEST_UPDATE_TYPE}&apos;&quot;)
+if(NOT TDD_IN_TESTING_MODE)
+  ctest_update(SOURCE &quot;${CTEST_UPDATE_DIRECTORY}&quot;)
+else()
+  message(&quot;In testing mode no update will be performed.&quot;)
+endif()
+
+message(&quot;\nC) Configure ${CTEST_BINARY_DIRECTORY} ...&quot;)
+ctest_configure(BUILD &quot;${CTEST_BINARY_DIRECTORY}&quot;)
+
+ctest_read_custom_files(BUILD &quot;${CTEST_BINARY_DIRECTORY}&quot;)
+
+message(&quot;\nD) Build ${CTEST_BINARY_DIRECTORY} ...&quot;)
+ctest_build(BUILD &quot;${CTEST_BINARY_DIRECTORY}&quot; APPEND)
+
+message(&quot;\nE) Submitting update configure notes build ...&quot;)
+if (TDD_DO_SUBMIT)
+  if(NOT &quot;$ENV{TDD_CTEST_DROP_SITE}&quot; STREQUAL &quot;&quot;)
+    set(CTEST_DROP_SITE &quot;$ENV{TDD_CTEST_DROP_SITE}&quot;)
+  endif()
+  if(NOT &quot;$ENV{TDD_CTEST_DROP_LOCATION}&quot; STREQUAL &quot;&quot;)
+    set(CTEST_DROP_LOCATION &quot;$ENV{TDD_CTEST_DROP_LOCATION}&quot;)
+  endif()
+  ctest_submit(PARTS update configure notes build)
+else()
+  message(&quot;\nSkipping submit!&quot;)
+endif()
+
+message(&quot;\nF) Run tests (which run all everything really): PARALLEL_LEVEL ${parallel_level} from ${CTEST_BINARY_DIRECTORY} ...&quot;)
+ctest_test(BUILD &quot;${CTEST_BINARY_DIRECTORY}&quot; PARALLEL_LEVEL ${parallel_level})
+
+message(&quot;\nG) Submitting Test ...&quot;)
+if (TDD_DO_SUBMIT)
+  ctest_submit(PARTS Test)
+else()
+  message(&quot;\nSkipping submit!&quot;)
+endif()
+
+MESSAGE(
+ &quot;\n*** Finished TrilinosDriverDashboard.cmake ***\n&quot;
+ )
+</Text>
+</Note>
+<Note Name="C:\K\Trilinos\cmake\ctest\drivers\hut11\cron_driver.bat">
+<Time>1.31135e+009</Time>
+<DateTime>Jul 22 11:14 Eastern Daylight Time</DateTime>
+<Text>
+setlocal
+
+:# TrilinosDriver settings:
+:#
+set TDD_PARALLEL_LEVEL=2
+set TDD_CRON_DRIVER_SCRIPT=%~f0
+
+:# Trilinos settings:
+:#
+set CTEST_SITE=hut11.kitware
+
+:# Set Trilinos_PACKAGES to a subset to limit the packages built:
+:#
+:# set Trilinos_PACKAGES=TrilinosFramework;Teuchos;ThreadPool;Sacado
+
+:# VC10 command line build environment
+:#
+for /f &quot;usebackq delims=&quot; %%d in (`echo &quot;%VS100COMNTOOLS%\..\..&quot;`) do set VS_ROOT_DIR=%%~fd
+call &quot;%VS_ROOT_DIR%\VC\vcvarsall.bat&quot;
+
+:# Tell Trilinos scripts where git is:
+:#
+set PATH=C:\Program Files (x86)\Git\cmd;%PATH%
+
+:# Remove the previous TDD_BUILD, if present. If we wait and let it happen
+:# in the cron_driver.py call, then subsequent runs frequently fail on
+:# Windows 7. I suspect that whole &quot;deleting files on Windows 7 timing&quot;
+:# thing is the main culprit.
+:#
+if exist &quot;C:\K\TDD_BUILD&quot; rmdir /s /q C:\K\TDD_BUILD
+
+:# Machine independent cron_driver:
+:#
+set PYTHON_EXE=C:\Python26\python.exe
+call &quot;%PYTHON_EXE%&quot; &quot;%~dp0..\cron_driver.py&quot; &gt;&quot;%~dp0cron_driver.log&quot; 2&gt;&amp;1
+
+endlocal
+</Text>
+</Note>
+</Notes>
+</Site>

@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="ML">
+</Subproject>
+<Labels>
+  <Label>ML</Label>
+</Labels>
+<Testing>
+	<StartDateTime>Jul 22 11:31 Eastern Daylight Time</StartDateTime>
+	<StartTestTime>1311348662</StartTestTime>
+	<TestList>
+		<Test>./packages/ml/test/AztecSimple/ML_AztecSimple</Test>
+		<Test>./packages/ml/test/Communicator/ML_Communicator</Test>
+		<Test>./packages/ml/test/IFPACKSmoothers/ML_IFPACKSmoothers</Test>
+		<Test>./packages/ml/test/MatrixFree/ML_MatrixFree</Test>
+		<Test>./packages/ml/test/Miscellaneous/ML_Miscellaneous</Test>
+		<Test>./packages/ml/test/ML_Operator2Epetra_RowMatrix/ML_ML_Operator2Epetra_RowMatrix</Test>
+		<Test>./packages/ml/test/MultiLevelPreconditioner_Maxwell/ML_MLP_Maxwell</Test>
+		<Test>./packages/ml/test/MultiLevelPreconditioner_NonSym/ML_MLP_NonSym</Test>
+		<Test>./packages/ml/test/MultiLevelPreconditioner_Restart/ML_MLP_Restart</Test>
+		<Test>./packages/ml/test/MultiLevelPreconditioner_Sym/ML_MLP_Sym</Test>
+		<Test>./packages/ml/test/MultiLevelPreconditioner_Sys/ML_MLP_Sys</Test>
+		<Test>./packages/ml/test/SelfSmoother/ML_SelfSmoother</Test>
+		<Test>./packages/ml/examples/BasicExamples/ML_aztec_simple</Test>
+		<Test>./packages/ml/examples/BasicExamples/ML_operator</Test>
+		<Test>./packages/ml/examples/BasicExamples/ML_preconditioner</Test>
+		<Test>./packages/ml/examples/BasicExamples/ML_readex</Test>
+		<Test>./packages/ml/examples/BasicExamples/ML_user_smoothing</Test>
+		<Test>./packages/ml/examples/MLAPI/ML_Blackboard</Test>
+		<Test>./packages/ml/examples/MLAPI/ML_PowerMethod</Test>
+		<Test>./packages/ml/examples/MLAPI/ML_TwoLevelDDAdditive</Test>
+		<Test>./packages/ml/examples/MLAPI/ML_MultiLevel</Test>
+		<Test>./packages/ml/examples/MLAPI/ML_Richardson</Test>
+		<Test>./packages/ml/examples/MLAPI/ML_AdaptiveSA</Test>
+		<Test>./packages/ml/examples/MLAPI/ML_EpetraInterface</Test>
+		<Test>./packages/ml/examples/MultipleRHS/ML_ml_multiple_rhs</Test>
+		<Test>./packages/ml/examples/TwoLevelDD/ML_ml_2level_DD</Test>
+		<Test>./packages/ml/examples/XML/ML_ml_XML</Test>
+	</TestList>
+	<Test Status="notrun">
+		<Name>ML_AztecSimple</Name>
+		<Path>./packages/ml/test/AztecSimple</Path>
+		<FullName>./packages/ml/test/AztecSimple/ML_AztecSimple</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/AztecSimple/ML_AztecSimple.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_Communicator</Name>
+		<Path>./packages/ml/test/Communicator</Path>
+		<FullName>./packages/ml/test/Communicator/ML_Communicator</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/Communicator/ML_Communicator.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_IFPACKSmoothers</Name>
+		<Path>./packages/ml/test/IFPACKSmoothers</Path>
+		<FullName>./packages/ml/test/IFPACKSmoothers/ML_IFPACKSmoothers</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/IFPACKSmoothers/ML_IFPACKSmoothers.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_MatrixFree</Name>
+		<Path>./packages/ml/test/MatrixFree</Path>
+		<FullName>./packages/ml/test/MatrixFree/ML_MatrixFree</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/MatrixFree/ML_MatrixFree.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_Miscellaneous</Name>
+		<Path>./packages/ml/test/Miscellaneous</Path>
+		<FullName>./packages/ml/test/Miscellaneous/ML_Miscellaneous</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/Miscellaneous/ML_Miscellaneous.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_ML_Operator2Epetra_RowMatrix</Name>
+		<Path>./packages/ml/test/ML_Operator2Epetra_RowMatrix</Path>
+		<FullName>./packages/ml/test/ML_Operator2Epetra_RowMatrix/ML_ML_Operator2Epetra_RowMatrix</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/ML_Operator2Epetra_RowMatrix/ML_ML_Operator2Epetra_RowMatrix.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_MLP_Maxwell</Name>
+		<Path>./packages/ml/test/MultiLevelPreconditioner_Maxwell</Path>
+		<FullName>./packages/ml/test/MultiLevelPreconditioner_Maxwell/ML_MLP_Maxwell</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/MultiLevelPreconditioner_Maxwell/ML_MLP_Maxwell.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_MLP_NonSym</Name>
+		<Path>./packages/ml/test/MultiLevelPreconditioner_NonSym</Path>
+		<FullName>./packages/ml/test/MultiLevelPreconditioner_NonSym/ML_MLP_NonSym</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/MultiLevelPreconditioner_NonSym/ML_MLP_NonSym.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_MLP_Restart</Name>
+		<Path>./packages/ml/test/MultiLevelPreconditioner_Restart</Path>
+		<FullName>./packages/ml/test/MultiLevelPreconditioner_Restart/ML_MLP_Restart</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/MultiLevelPreconditioner_Restart/ML_MLP_Restart.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_MLP_Sym</Name>
+		<Path>./packages/ml/test/MultiLevelPreconditioner_Sym</Path>
+		<FullName>./packages/ml/test/MultiLevelPreconditioner_Sym/ML_MLP_Sym</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/MultiLevelPreconditioner_Sym/ML_MLP_Sym.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_MLP_Sys</Name>
+		<Path>./packages/ml/test/MultiLevelPreconditioner_Sys</Path>
+		<FullName>./packages/ml/test/MultiLevelPreconditioner_Sys/ML_MLP_Sys</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/MultiLevelPreconditioner_Sys/ML_MLP_Sys.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_SelfSmoother</Name>
+		<Path>./packages/ml/test/SelfSmoother</Path>
+		<FullName>./packages/ml/test/SelfSmoother/ML_SelfSmoother</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/test/SelfSmoother/ML_SelfSmoother.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_aztec_simple</Name>
+		<Path>./packages/ml/examples/BasicExamples</Path>
+		<FullName>./packages/ml/examples/BasicExamples/ML_aztec_simple</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/BasicExamples/ML_aztec_simple.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_operator</Name>
+		<Path>./packages/ml/examples/BasicExamples</Path>
+		<FullName>./packages/ml/examples/BasicExamples/ML_operator</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/BasicExamples/ML_operator.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_preconditioner</Name>
+		<Path>./packages/ml/examples/BasicExamples</Path>
+		<FullName>./packages/ml/examples/BasicExamples/ML_preconditioner</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/BasicExamples/ML_preconditioner.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_readex</Name>
+		<Path>./packages/ml/examples/BasicExamples</Path>
+		<FullName>./packages/ml/examples/BasicExamples/ML_readex</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/BasicExamples/ML_readex.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_user_smoothing</Name>
+		<Path>./packages/ml/examples/BasicExamples</Path>
+		<FullName>./packages/ml/examples/BasicExamples/ML_user_smoothing</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/BasicExamples/ML_user_smoothing.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_Blackboard</Name>
+		<Path>./packages/ml/examples/MLAPI</Path>
+		<FullName>./packages/ml/examples/MLAPI/ML_Blackboard</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/MLAPI/ML_Blackboard.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_PowerMethod</Name>
+		<Path>./packages/ml/examples/MLAPI</Path>
+		<FullName>./packages/ml/examples/MLAPI/ML_PowerMethod</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/MLAPI/ML_PowerMethod.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_TwoLevelDDAdditive</Name>
+		<Path>./packages/ml/examples/MLAPI</Path>
+		<FullName>./packages/ml/examples/MLAPI/ML_TwoLevelDDAdditive</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/MLAPI/ML_TwoLevelDDAdditive.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_MultiLevel</Name>
+		<Path>./packages/ml/examples/MLAPI</Path>
+		<FullName>./packages/ml/examples/MLAPI/ML_MultiLevel</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/MLAPI/ML_MultiLevel.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_Richardson</Name>
+		<Path>./packages/ml/examples/MLAPI</Path>
+		<FullName>./packages/ml/examples/MLAPI/ML_Richardson</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/MLAPI/ML_Richardson.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_AdaptiveSA</Name>
+		<Path>./packages/ml/examples/MLAPI</Path>
+		<FullName>./packages/ml/examples/MLAPI/ML_AdaptiveSA</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/MLAPI/ML_AdaptiveSA.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_EpetraInterface</Name>
+		<Path>./packages/ml/examples/MLAPI</Path>
+		<FullName>./packages/ml/examples/MLAPI/ML_EpetraInterface</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/MLAPI/ML_EpetraInterface.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_ml_multiple_rhs</Name>
+		<Path>./packages/ml/examples/MultipleRHS</Path>
+		<FullName>./packages/ml/examples/MultipleRHS/ML_ml_multiple_rhs</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/MultipleRHS/ML_ml_multiple_rhs.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_ml_2level_DD</Name>
+		<Path>./packages/ml/examples/TwoLevelDD</Path>
+		<FullName>./packages/ml/examples/TwoLevelDD/ML_ml_2level_DD</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/TwoLevelDD/ML_ml_2level_DD.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>ML_ml_XML</Name>
+		<Path>./packages/ml/examples/XML</Path>
+		<FullName>./packages/ml/examples/XML/ML_ml_XML</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/XML/ML_ml_XML.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Test>
+	<EndDateTime>Jul 22 11:31 Eastern Daylight Time</EndDateTime>
+	<EndTestTime>1311348662</EndTestTime>
+<ElapsedMinutes>0</ElapsedMinutes></Testing>
+</Site>

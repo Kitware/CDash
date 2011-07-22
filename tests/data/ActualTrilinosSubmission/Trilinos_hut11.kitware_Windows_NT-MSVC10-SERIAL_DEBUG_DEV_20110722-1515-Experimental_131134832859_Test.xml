@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="Epetra">
+</Subproject>
+<Labels>
+  <Label>Epetra</Label>
+</Labels>
+<Testing>
+	<StartDateTime>Jul 22 11:25 Eastern Daylight Time</StartDateTime>
+	<StartTestTime>1311348331</StartTestTime>
+	<TestList>
+		<Test>./packages/epetra/test/BlockMap/Epetra_BlockMap_test</Test>
+		<Test>./packages/epetra/test/BasicPerfTest/Epetra_BasicPerfTest_test</Test>
+		<Test>./packages/epetra/test/Comm/Epetra_Comm_test</Test>
+		<Test>./packages/epetra/test/CrsGraph/Epetra_CrsGraph_test_unit</Test>
+		<Test>./packages/epetra/test/CrsMatrix/Epetra_CrsMatrix_test</Test>
+		<Test>./packages/epetra/test/RowMatrix/Epetra_RowMatrix_test</Test>
+		<Test>./packages/epetra/test/CrsRectMatrix/Epetra_CrsRectMatrix_test</Test>
+		<Test>./packages/epetra/test/Directory/Epetra_Directory_test</Test>
+		<Test>./packages/epetra/test/FECrsGraph/Epetra_FECrsGraph_test</Test>
+		<Test>./packages/epetra/test/FECrsMatrix/Epetra_FECrsMatrix_test</Test>
+		<Test>./packages/epetra/test/FEVbrMatrix/Epetra_FEVbrMatrix_test</Test>
+		<Test>./packages/epetra/test/FEVector/Epetra_FEVector_test</Test>
+		<Test>./packages/epetra/test/ImportExport/Epetra_ImportExport_test</Test>
+		<Test>./packages/epetra/test/IntSerialDense/Epetra_IntSerialDense_test</Test>
+		<Test>./packages/epetra/test/Map/Epetra_Map_test</Test>
+		<Test>./packages/epetra/test/MapColoring/Epetra_MapColoring_test</Test>
+		<Test>./packages/epetra/test/MultiVector/Epetra_MultiVector_test</Test>
+		<Test>./packages/epetra/test/Object/Epetra_Object_test</Test>
+		<Test>./packages/epetra/test/RowMatrixTransposer/Epetra_RowMatrixTransposer_test</Test>
+		<Test>./packages/epetra/test/SerialDense/Epetra_SerialDense_test</Test>
+		<Test>./packages/epetra/test/SerialSpdDense/Epetra_SerialSpdDense_test</Test>
+		<Test>./packages/epetra/test/VbrMatrix/Epetra_VbrMatrix_test</Test>
+		<Test>./packages/epetra/test/Vector/Epetra_Vector_test</Test>
+		<Test>./packages/epetra/test/OSKI/Epetra_Oski_test</Test>
+		<Test>./packages/epetra/example/petra_power_method/Epetra_petra_power_method</Test>
+		<Test>./packages/epetra/example/verySimple/Epetra_verySimple</Test>
+		<Test>./packages/epetra/example/UG_Ex1/Epetra_UG_Ex1</Test>
+		<Test>./packages/epetra/example/UG_ExMaps/Epetra_UG_ExMaps</Test>
+		<Test>./packages/epetra/example/my_example/Epetra_my_example</Test>
+	</TestList>
+	<Test Status="notrun">
+		<Name>Epetra_BlockMap_test</Name>
+		<Path>./packages/epetra/test/BlockMap</Path>
+		<FullName>./packages/epetra/test/BlockMap/Epetra_BlockMap_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/BlockMap/Epetra_BlockMap_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_BasicPerfTest_test</Name>
+		<Path>./packages/epetra/test/BasicPerfTest</Path>
+		<FullName>./packages/epetra/test/BasicPerfTest/Epetra_BasicPerfTest_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/BasicPerfTest/Epetra_BasicPerfTest_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_Comm_test</Name>
+		<Path>./packages/epetra/test/Comm</Path>
+		<FullName>./packages/epetra/test/Comm/Epetra_Comm_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/Comm/Epetra_Comm_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_CrsGraph_test_unit</Name>
+		<Path>./packages/epetra/test/CrsGraph</Path>
+		<FullName>./packages/epetra/test/CrsGraph/Epetra_CrsGraph_test_unit</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/CrsGraph/Epetra_CrsGraph_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_CrsMatrix_test</Name>
+		<Path>./packages/epetra/test/CrsMatrix</Path>
+		<FullName>./packages/epetra/test/CrsMatrix/Epetra_CrsMatrix_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/CrsMatrix/Epetra_CrsMatrix_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_RowMatrix_test</Name>
+		<Path>./packages/epetra/test/RowMatrix</Path>
+		<FullName>./packages/epetra/test/RowMatrix/Epetra_RowMatrix_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/RowMatrix/Epetra_RowMatrix_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_CrsRectMatrix_test</Name>
+		<Path>./packages/epetra/test/CrsRectMatrix</Path>
+		<FullName>./packages/epetra/test/CrsRectMatrix/Epetra_CrsRectMatrix_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/CrsRectMatrix/Epetra_CrsRectMatrix_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_Directory_test</Name>
+		<Path>./packages/epetra/test/Directory</Path>
+		<FullName>./packages/epetra/test/Directory/Epetra_Directory_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/Directory/Epetra_Directory_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_FECrsGraph_test</Name>
+		<Path>./packages/epetra/test/FECrsGraph</Path>
+		<FullName>./packages/epetra/test/FECrsGraph/Epetra_FECrsGraph_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/FECrsGraph/Epetra_FECrsGraph_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_FECrsMatrix_test</Name>
+		<Path>./packages/epetra/test/FECrsMatrix</Path>
+		<FullName>./packages/epetra/test/FECrsMatrix/Epetra_FECrsMatrix_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/FECrsMatrix/Epetra_FECrsMatrix_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_FEVbrMatrix_test</Name>
+		<Path>./packages/epetra/test/FEVbrMatrix</Path>
+		<FullName>./packages/epetra/test/FEVbrMatrix/Epetra_FEVbrMatrix_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/FEVbrMatrix/Epetra_FEVbrMatrix_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_FEVector_test</Name>
+		<Path>./packages/epetra/test/FEVector</Path>
+		<FullName>./packages/epetra/test/FEVector/Epetra_FEVector_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/FEVector/Epetra_FEVector_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_ImportExport_test</Name>
+		<Path>./packages/epetra/test/ImportExport</Path>
+		<FullName>./packages/epetra/test/ImportExport/Epetra_ImportExport_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/ImportExport/Epetra_ImportExport_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_IntSerialDense_test</Name>
+		<Path>./packages/epetra/test/IntSerialDense</Path>
+		<FullName>./packages/epetra/test/IntSerialDense/Epetra_IntSerialDense_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/IntSerialDense/Epetra_IntSerialDense_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_Map_test</Name>
+		<Path>./packages/epetra/test/Map</Path>
+		<FullName>./packages/epetra/test/Map/Epetra_Map_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/Map/Epetra_Map_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_MapColoring_test</Name>
+		<Path>./packages/epetra/test/MapColoring</Path>
+		<FullName>./packages/epetra/test/MapColoring/Epetra_MapColoring_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/MapColoring/Epetra_MapColoring_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_MultiVector_test</Name>
+		<Path>./packages/epetra/test/MultiVector</Path>
+		<FullName>./packages/epetra/test/MultiVector/Epetra_MultiVector_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/MultiVector/Epetra_MultiVector_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_Object_test</Name>
+		<Path>./packages/epetra/test/Object</Path>
+		<FullName>./packages/epetra/test/Object/Epetra_Object_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/Object/Epetra_Object_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_RowMatrixTransposer_test</Name>
+		<Path>./packages/epetra/test/RowMatrixTransposer</Path>
+		<FullName>./packages/epetra/test/RowMatrixTransposer/Epetra_RowMatrixTransposer_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/RowMatrixTransposer/Epetra_RowMatrixTransposer_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_SerialDense_test</Name>
+		<Path>./packages/epetra/test/SerialDense</Path>
+		<FullName>./packages/epetra/test/SerialDense/Epetra_SerialDense_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/SerialDense/Epetra_SerialDense_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_SerialSpdDense_test</Name>
+		<Path>./packages/epetra/test/SerialSpdDense</Path>
+		<FullName>./packages/epetra/test/SerialSpdDense/Epetra_SerialSpdDense_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/SerialSpdDense/Epetra_SerialSpdDense_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_VbrMatrix_test</Name>
+		<Path>./packages/epetra/test/VbrMatrix</Path>
+		<FullName>./packages/epetra/test/VbrMatrix/Epetra_VbrMatrix_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/VbrMatrix/Epetra_VbrMatrix_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_Vector_test</Name>
+		<Path>./packages/epetra/test/Vector</Path>
+		<FullName>./packages/epetra/test/Vector/Epetra_Vector_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/Vector/Epetra_Vector_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_Oski_test</Name>
+		<Path>./packages/epetra/test/OSKI</Path>
+		<FullName>./packages/epetra/test/OSKI/Epetra_Oski_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/OSKI/Epetra_Oski_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_petra_power_method</Name>
+		<Path>./packages/epetra/example/petra_power_method</Path>
+		<FullName>./packages/epetra/example/petra_power_method/Epetra_petra_power_method</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/example/petra_power_method/Epetra_petra_power_method.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_verySimple</Name>
+		<Path>./packages/epetra/example/verySimple</Path>
+		<FullName>./packages/epetra/example/verySimple/Epetra_verySimple</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/example/verySimple/Epetra_verySimple.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_UG_Ex1</Name>
+		<Path>./packages/epetra/example/UG_Ex1</Path>
+		<FullName>./packages/epetra/example/UG_Ex1/Epetra_UG_Ex1</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/example/UG_Ex1/Epetra_UG_Ex1.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_UG_ExMaps</Name>
+		<Path>./packages/epetra/example/UG_ExMaps</Path>
+		<FullName>./packages/epetra/example/UG_ExMaps/Epetra_UG_ExMaps</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/example/UG_ExMaps/Epetra_UG_ExMaps.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Epetra_my_example</Name>
+		<Path>./packages/epetra/example/my_example</Path>
+		<FullName>./packages/epetra/example/my_example/Epetra_my_example</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/example/my_example/Epetra_my_example.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Test>
+	<EndDateTime>Jul 22 11:25 Eastern Daylight Time</EndDateTime>
+	<EndTestTime>1311348331</EndTestTime>
+<ElapsedMinutes>0</ElapsedMinutes></Testing>
+</Site>

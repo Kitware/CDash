@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	Append="true"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="ML">
+</Subproject>
+<Labels>
+  <Label>ML</Label>
+</Labels>
+<Build>
+	<StartDateTime>Jul 22 11:30 Eastern Daylight Time</StartDateTime>
+	<StartBuildTime>1311348622</StartBuildTime>
+<BuildCommand>nmake /NOLOGO  -i &quot;ML_libs&quot;</BuildCommand>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/ml/src/Coarsen/ml_agg_min_energy.cpp</SourceFile>
+			<OutputFile>CMakeFiles\ml.dir\Coarsen\ml_agg_min_energy.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\ml.dir\Coarsen\ml_agg_min_energy.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src\ml.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_min_energy.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_agg_min_energy.cpp
+c:\k\serial_debug_dev\trilinos\packages\ml\src\coarsen\ml_agg_min_energy.cpp(1977) : warning C4700: uninitialized local variable 'Atilde' used</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/src/Coarsen/ml_agg_METIS.c</SourceFile>
+			<OutputFile>CMakeFiles\ml.dir\Coarsen\ml_agg_METIS.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ml.dir\Coarsen\ml_agg_METIS.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src\ml.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_METIS.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_agg_METIS.c
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_METIS.c(2080) : warning C4101: 'i' : unreferenced local variable</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/src/Coarsen/ml_agg_ParMETIS.c</SourceFile>
+			<OutputFile>CMakeFiles\ml.dir\Coarsen\ml_agg_ParMETIS.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ml.dir\Coarsen\ml_agg_ParMETIS.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src\ml.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_ParMETIS.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_agg_ParMETIS.c
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_ParMETIS.c(684) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_ParMETIS.c(689) : warning C4305: '=' : truncation from 'double' to 'float'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_ParMETIS.c(501) : warning C4101: 'ParMETISComm' : unreferenced local variable
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_ParMETIS.c(501) : warning C4101: 'orig_comm' : unreferenced local variable
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_ParMETIS.c(501) : warning C4101: 'parmetis_group' : unreferenced local variable
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen\ml_agg_ParMETIS.c(501) : warning C4101: 'orig_group' : unreferenced local variable</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/src/Operator/ml_matmat_mult.c</SourceFile>
+			<OutputFile>CMakeFiles\ml.dir\Operator\ml_matmat_mult.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ml.dir\Operator\ml_matmat_mult.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src\ml.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator\ml_matmat_mult.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_matmat_mult.c
+c:\k\serial_debug_dev\trilinos\packages\ml\src\operator\ml_matmat_mult.c(1704) : warning C4700: uninitialized local variable 'j' used</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/src/Operator/ml_operator.c</SourceFile>
+			<OutputFile>CMakeFiles\ml.dir\Operator\ml_operator.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ml.dir\Operator\ml_operator.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src\ml.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator\ml_operator.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_operator.c
+c:\k\serial_debug_dev\trilinos\packages\ml\src\operator\ml_operator.c(1517) : warning C4700: uninitialized local variable 'NTotalCols' used</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/src/Operator/ml_op_utils.c</SourceFile>
+			<OutputFile>CMakeFiles\ml.dir\Operator\ml_op_utils.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ml.dir\Operator\ml_op_utils.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src\ml.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator\ml_op_utils.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_op_utils.c
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator\ml_op_utils.c(2923) : warning C4101: 'Entry' : unreferenced local variable
+c:\k\serial_debug_dev\trilinos\packages\ml\src\operator\ml_op_utils.c(3364) : warning C4715: 'ML_Operator_BlkMatFinalize' : not all control paths return a value</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/ml/src/Utils/ml_epetra_utils.cpp</SourceFile>
+			<OutputFile>CMakeFiles\ml.dir\Utils\ml_epetra_utils.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\ml.dir\Utils\ml_epetra_utils.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src\ml.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils\ml_epetra_utils.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_epetra_utils.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils\ml_epetra_utils.cpp(3105) : warning C4297: 'Epetra_ML_readvariableblocks' : function assumed not to throw an exception but does
+        __declspec(nothrow) or throw() was specified on the function
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils\ml_epetra_utils.cpp(3138) : warning C4297: 'Epetra_ML_writegidviz' : function assumed not to throw an exception but does
+        __declspec(nothrow) or throw() was specified on the function</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/src/Utils/ml_memory.c</SourceFile>
+			<OutputFile>CMakeFiles\ml.dir\Utils\ml_memory.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ml.dir\Utils\ml_memory.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src\ml.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils\ml_memory.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_memory.c
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils\ml_memory.c(1027) : warning C4244: 'function' : conversion from '__int64' to 'size_t', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils\ml_memory.c(1037) : warning C4244: 'function' : conversion from '__int64' to 'size_t', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils\ml_memory.c(1048) : warning C4244: 'function' : conversion from '__int64' to 'size_t', possible loss of data</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ml</TargetName>
+			<Language>C++</Language>
+			<OutputFile>ml.lib</OutputFile>
+			<OutputType>static library</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\link.exe</Argument>
+			<Argument>/lib</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/out:ml.lib</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_uncoupled.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_amg.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_coupled.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_amg_genP.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_check.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_dd.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_genP.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_min_energy.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_amg_MIS.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_MIS.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_METIS.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_user.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_VBMETIS.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_Zoltan.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_ParMETIS.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_aggregate.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_ggraph.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_agg_reitzinger.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Coarsen/ml_qr_fix.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_gridagx.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_pde.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_bdrypts.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_grid.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_gridfunc.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_setup.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_elementagx.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_get_basis.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/FEGrid/ml_mapper.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Main/ml_struct.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Main/driver.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Main/mli_solver.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Main/ml_seg_precond.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Main/ml_ggb.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Comm/ml_comm.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Comm/ml_comminfoagx.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Comm/ml_comminfoop.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Comm/ml_exch_row.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Smoother/ml_csolve.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Smoother/ml_smoother.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Smoother/ml_solver.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Smoother/ml_superlu.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Smoother/ml_xxt.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Smoother/ml_xyt.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Krylov/ml_bicgstabl.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Krylov/ml_cg.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Krylov/ml_gmres.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Krylov/ml_krylov.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Operator/ml_matmat_mult.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Operator/ml_operatoragx.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Operator/ml_operator_blockmat.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Operator/ml_operator.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Operator/ml_op_utils.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Operator/ml_rap.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Operator/ml_mat_formats.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Operator/ml_rap_utils.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_rbm.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_aztec_utils.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_read_utils.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_twogrid_analysis.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_epetra_utils.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_utils.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_intlist.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_vec.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_memory.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_eigf2c.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_agg_info.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_viz_opendx.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_viz_xyz.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_viz_vtk.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_amesos.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_amesos_wrap.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_ifpack.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_ifpack_wrap.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_self.c.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_self_wrap.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_Filtering.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_NullSpace.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_Defaults.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_Smoothers.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_Viz.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_Adapt.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_Analyze.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_Test.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_Aux.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelPreconditioner_XML.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_anasazi.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_MultiLevelOperator.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_RowMatrix.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_DD_prec.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/Epetra_Multi_CrsMatrix.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/Utils/ml_ValidateParameters.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/RefMaxwell/ml_FaceMatrixFreePreconditioner.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/RefMaxwell/ml_EdgeMatrixFreePreconditioner.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/RefMaxwell/ml_RefMaxwell_11_Operator.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/RefMaxwell/ml_RefMaxwell.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MatrixFree/ml_MatrixFreePreconditioner.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Defaults.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Gallery.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_InverseOperator.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_LoadBalanceInverseOperator.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Operator_Utils.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Eig.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Krylov.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Workspace.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Expressions.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_MultiVector_Utils.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_BaseObject.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Aggregation.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_Error.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_DistributedMatrix.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_SAMIS.cpp.obj</Argument>
+			<Argument>CMakeFiles/ml.dir/MLAPI/MLAPI_LinearCombinations.cpp.obj</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_MultiLevelPreconditioner.cpp.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Log Encoding="base64" Compression="/bin/gzip">
+	</Log>
+	<EndDateTime>Jul 22 11:30 Eastern Daylight Time</EndDateTime>
+	<EndBuildTime>1311348642</EndBuildTime>
+<ElapsedMinutes>0.3</ElapsedMinutes></Build>
+</Site>

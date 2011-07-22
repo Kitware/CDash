@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	Append="true"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="Epetra">
+</Subproject>
+<Labels>
+  <Label>Epetra</Label>
+</Labels>
+<Build>
+	<StartDateTime>Jul 22 11:25 Eastern Daylight Time</StartDateTime>
+	<StartBuildTime>1311348306</StartBuildTime>
+<BuildCommand>nmake /NOLOGO  -i</BuildCommand>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>Epetra_CrsMatrix_test</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/epetra/test/CrsMatrix/cxx_main.cpp</SourceFile>
+			<OutputFile>CMakeFiles\Epetra_CrsMatrix_test.dir\cxx_main.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/epetra/test/CrsMatrix</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\Epetra_CrsMatrix_test.dir\cxx_main.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\test\CrsMatrix\Epetra_CrsMatrix_test.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\test\CrsMatrix\cxx_main.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>cxx_main.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\test\CrsMatrix\cxx_main.cpp(700) : warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\test\CrsMatrix\cxx_main.cpp(713) : warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\test\CrsMatrix\cxx_main.cpp(725) : warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\test\CrsMatrix\cxx_main.cpp(776) : warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\test\CrsMatrix\cxx_main.cpp(817) : warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\test\CrsMatrix\cxx_main.cpp(849) : warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\test\CrsMatrix\cxx_main.cpp(879) : warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Epetra</Label>
+		</Labels>
+	</Failure>
+	<Log Encoding="base64" Compression="/bin/gzip">
+	</Log>
+	<EndDateTime>Jul 22 11:25 Eastern Daylight Time</EndDateTime>
+	<EndBuildTime>1311348331</EndBuildTime>
+<ElapsedMinutes>0.4</ElapsedMinutes></Build>
+</Site>

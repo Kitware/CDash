@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	Append="true"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="ML">
+</Subproject>
+<Labels>
+  <Label>ML</Label>
+</Labels>
+<Build>
+	<StartDateTime>Jul 22 11:30 Eastern Daylight Time</StartDateTime>
+	<StartBuildTime>1311348643</StartBuildTime>
+<BuildCommand>nmake /NOLOGO  -i</BuildCommand>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ML_ml_example2d</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/examples/Other/ml_example2d.c</SourceFile>
+			<OutputFile>CMakeFiles\ML_ml_example2d.dir\ml_example2d.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/Other</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ML_ml_example2d.dir\ml_example2d.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\examples\Other\ML_ml_example2d.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\examples\Other\ml_example2d.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_example2d.c
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\examples\Other\ml_example2d.c(142) : warning C4101: 'filename' : unreferenced local variable</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ML_ml_example3d</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/examples/Other/ml_example3d.c</SourceFile>
+			<OutputFile>CMakeFiles\ML_ml_example3d.dir\ml_example3d.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/Other</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ML_ml_example3d.dir\ml_example3d.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\examples\Other\ML_ml_example3d.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\examples\Other\ml_example3d.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_example3d.c
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\examples\Other\ml_example3d.c(118) : warning C4101: 'filename' : unreferenced local variable</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ML_ml_read_salsa</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/examples/Other/ml_read_salsa.c</SourceFile>
+			<OutputFile>CMakeFiles\ML_ml_read_salsa.dir\ml_read_salsa.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/Other</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ML_ml_read_salsa.dir\ml_read_salsa.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\examples\Other\ML_ml_read_salsa.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\examples\Other\ml_read_salsa.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_read_salsa.c
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\examples\Other\ml_read_salsa.c(66) : warning C4101: 'ch' : unreferenced local variable</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>ML_ml_example1dGS</TargetName>
+			<Language>C</Language>
+			<SourceFile>packages/ml/examples/StandAlone/ml_example1dGS.c</SourceFile>
+			<OutputFile>CMakeFiles\ML_ml_example1dGS.dir\ml_example1dGS.c.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/ml/examples/StandAlone</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Comm</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Coarsen</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\FEGrid</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Main</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Smoother</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Krylov</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Operator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\Utils</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\RefMaxwell</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MatrixFree</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\src\MLAPI</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\aztecoo\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\triutils\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\epetra\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\epetra\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/FoCMakeFiles\ML_ml_example1dGS.dir\ml_example1dGS.c.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\ml\examples\StandAlone\ML_ml_example1dGS.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\examples\StandAlone\ml_example1dGS.c</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>ml_example1dGS.c
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\ml\examples\StandAlone\ml_example1dGS.c(163) : warning C4101: 'proc_id' : unreferenced local variable</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>ML</Label>
+		</Labels>
+	</Failure>
+	<Log Encoding="base64" Compression="/bin/gzip">
+	</Log>
+	<EndDateTime>Jul 22 11:31 Eastern Daylight Time</EndDateTime>
+	<EndBuildTime>1311348662</EndBuildTime>
+<ElapsedMinutes>0.3</ElapsedMinutes></Build>
+</Site>

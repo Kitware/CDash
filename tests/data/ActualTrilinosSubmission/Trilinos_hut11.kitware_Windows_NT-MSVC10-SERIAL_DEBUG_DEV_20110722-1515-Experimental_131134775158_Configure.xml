@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="TrilinosFramework">
+</Subproject>
+<Labels>
+  <Label>TrilinosFramework</Label>
+</Labels>
+<Configure>
+	<StartDateTime>Jul 22 11:15 Eastern Daylight Time</StartDateTime>
+	<StartConfigureTime>1311347735</StartConfigureTime>
+<ConfigureCommand>"C:/K/tools/cmake-dev/bin/cmake.exe" "-DCTEST_USE_LAUNCHERS:BOOL=1" "-DTrilinos_ENABLE_ALL_OPTIONAL_PACKAGES:BOOL=ON" "-DTrilinos_ENABLE_TESTS:BOOL=ON" "-DTrilinos_WARNINGS_AS_ERRORS_FLAGS:STRING=" "-DTrilinos_ALLOW_NO_PACKAGES:BOOL=OFF" "-DTrilinos_DEPS_XML_OUTPUT_FILE:FILEPATH=" "-DTrilinos_ENABLE_SECONDARY_STABLE_CODE:BOOL=ON" "-DMPI_EXEC_MAX_NUMPROCS:STRING=4" "-DTrilinos_EXTRAREPOS_FILE:STRING=C:/K/Trilinos/cmake/ExtraExternalRepositories.cmake" "-DTrilinos_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE:STRING=Experimental" "-DCLAPACK_DIR:PATH=C:/K/clapack/build-vs10/clapack-prefix/src/clapack-build" "-DCMAKE_BUILD_TYPE:STRING=DEBUG" "-DTrilinos_ENABLE_DEPENCENCY_UNIT_TESTS:BOOL=OFF" "-DCMAKE_CXX_COMPILER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/cl.exe" "-DCMAKE_C_COMPILER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/cl.exe" "-DDART_TESTING_TIMEOUT:STRING=600" "-DTrilinos_ENABLE_EXPLICIT_INSTANTIATION:BOOL=ON" "-DTrilinos_ENABLE_TrilinosFramework:BOOL=ON" "-GNMake Makefiles" "C:/K/SERIAL_DEBUG_DEV/Trilinos"</ConfigureCommand>
+<Log>
+Configuring Trilinos build directory
+
+-- TRILINOS_HOME_DIR = C:/K/SERIAL_DEBUG_DEV/Trilinos
+-- TRILINOS_BUILD_DIR = C:/K/SERIAL_DEBUG_DEV/BUILD
+-- CMAKE_VERSION = 2.8.4.20110707-g0eecf
+-- Found PythonInterp: C:/Python26/python.exe (Required is at least version &quot;2.4&quot;)
+PYTHON_EXECUTABLE = C:/Python26/python.exe
+
+Setting up major user options ...
+
+-- Setting Trilinos_ENABLE_EXAMPLES=ON because Trilinos_ENABLE_TESTS=ON
+
+Reading the list of extra repositories from C:/K/Trilinos/cmake/ExtraExternalRepositories.cmake
+
+
+Reading the list of packages from C:/K/SERIAL_DEBUG_DEV/Trilinos/cmake/TrilinosPackages.cmake
+
+-- Trilinos_NUM_PACKAGES=&apos;58&apos;
+
+Reading the list of TPLs from C:/K/SERIAL_DEBUG_DEV/Trilinos/cmake/TrilinosTPLs.cmake
+
+-- Trilinos_NUM_TPLS=&apos;52&apos;
+
+Processing Dependencies.cmake files and buliding internal dependencies graph
+
+-- Trilinos_NUM_SE_PACKAGES=&apos;62&apos;
+-- Tentatively enabling TPL &apos;Pthread&apos;
+-- Tentatively enabling TPL &apos;BinUtils&apos;
+
+***
+*** Warning: Setting Trilinos_ENABLE_ForTrilinos=OFF because Trilinos_ENABLE_Fortran=OFF!
+***
+
+
+Explicitly enabled packages on input (by user):  TrilinosFramework 1
+
+Explicitly enabled SE packages on input (by user):  TrilinosFramework 1
+
+Explicitly disabled packages on input (by user or by default):  Zoltan Tpetra Isorropia Pamgen SEACAS Trios Ifpack2 Meros Anasazi Teko TriKota STK Phalanx Phdmesh MOOCHO Aristos Sundance ForTrilinos PyTrilinos WebTrilinos NewPackage 21
+
+Explicitly disabled SE packages on input (by user or by default):  Zoltan Tpetra Isorropia Pamgen SEACAS Trios Ifpack2 Meros Anasazi Teko TriKota STK Phalanx Phdmesh MOOCHO Aristos Sundance ForTrilinos PyTrilinos WebTrilinos NewPackage 21
+
+Explicitly enabled TPLs on input (by user):  Pthread BinUtils 2
+
+Explicitly disabled TPLs on input (by user or by default):  0
+
+Disabling all packages that have a required dependency on disabled TPLs and optional package TPL support based on TPL_ENABLE_&lt;TPL&gt;=OFF ...
+
+
+Disabling forward required packages and optional intra-package support that have a dependancy on disabled packages Trilinos_ENABLE_&lt;PACKAGE&gt;=OFF ...
+
+-- Setting Trilinos_ENABLE_ThyraTpetraAdapters=OFF because ThyraTpetraAdapters has a required library dependence on disabled package Tpetra
+
+Enabling all tests and/or examples that have not been explicitly disabled because Trilinos_ENABLE_[TESTS,EXAMPLES]=ON ...
+
+-- Setting TrilinosFramework_ENABLE_TESTS=ON
+-- Setting TrilinosFramework_ENABLE_EXAMPLES=ON
+
+Enabling all optional packages for current set of enabled packages because Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES=ON ...
+
+
+Enabling all remaining required packages for the current set of enabled packages ...
+
+
+Enabling all optional intra-package enables &lt;PACKAGE&gt;_ENABLE_&lt;DEPPACKAGE&gt; that are not currently disabled if both sets of packages are enabled ...
+
+
+Enabling all remaining required TPLs for current set of enabled packages ...
+
+
+Enabling all optional package TPL support for currently enabled TPLs ...
+
+
+Enabling TPLs based on &lt;PACKAGE&gt;_ENABLE_&lt;TPL&gt;=ON if TPL is not explicitly disabled ...
+
+
+Set cache entries for optional packages/TPLs and tests/examples for packages actually enabled ...
+
+
+Final set of enabled packages:  TrilinosFramework 1
+
+Final set of enabled SE packages:  TrilinosFramework 1
+
+Final set of non-enabled packages:  Teuchos ThreadPool Sacado RTOp Kokkos Epetra Zoltan Shards GlobiPack Triutils Tpetra EpetraExt Thyra OptiPack Isorropia Pliris Claps AztecOO Galeri Amesos Pamgen SEACAS Trios Ifpack Komplex ML Belos Ifpack2 Stratimikos Meros FEI Anasazi Teko RBGen TriKota Intrepid STK Phalanx Phdmesh NOX Moertel TrilinosCouplings Rythmos MOOCHO Aristos Stokhos Piro Sundance CTrilinos ForTrilinos PyTrilinos WebTrilinos Didasko NewPackage Optika Mesquite FEApp 57
+
+Final set of non-enabled SE packages:  Teuchos ThreadPool Sacado RTOp Kokkos Epetra Zoltan Shards GlobiPack Triutils Tpetra EpetraExt ThyraCore ThyraEpetraAdapters ThyraEpetraExtAdapters ThyraTpetraAdapters Thyra OptiPack Isorropia Pliris Claps AztecOO Galeri Amesos Pamgen SEACAS Trios Ifpack Komplex ML Belos Ifpack2 Stratimikos Meros FEI Anasazi Teko RBGen TriKota Intrepid STK Phalanx Phdmesh NOX Moertel TrilinosCouplings Rythmos MOOCHO Aristos Stokhos Piro Sundance CTrilinos ForTrilinos PyTrilinos WebTrilinos Didasko NewPackage Optika Mesquite FEApp 61
+
+Final set of enabled TPLs:  Pthread BinUtils 2
+
+Final set of non-enabled TPLs:  Peano CUDA Thrust Cusp TBB ARPREC QD MPI BLAS LAPACK Boost Scotch METIS ParMETIS PaToH CppUnit ADOLC ADIC TVMET MF ExodusII Nemesis XDMF Netcdf y12m SuperLUDist SuperLU Zlib UMFPACK MA28 AMD PETSC HYPRE BLACS SCALAPACK MUMPS PARDISO_MKL Oski TAUCS ForUQTK Dakota HIPS HDF5 MATLAB CASK SPARSKIT QT gtest BoostLib OpenNURBS 50
+
+Probing the environment ...
+
+-- CMAKE_BUILD_TYPE=&apos;DEBUG&apos;
+-- The C compiler identification is MSVC
+-- Check for CL compiler version
+-- Check for CL compiler version - 1600
+-- Check if this is a free VC compiler
+-- Check if this is a free VC compiler - no
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/cl.exe
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/cl.exe -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- CMAKE_C_COMPILER_ID=&apos;MSVC&apos;
+-- The CXX compiler identification is MSVC
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/cl.exe
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/cl.exe -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- CMAKE_CXX_COMPILER_ID=&apos;MSVC&apos;
+-- Trilinos_HOSTNAME=&apos;HUT11&apos;
+-- CMAKE_HOST_SYSTEM_NAME=&apos;Windows&apos;
+-- Looking for C++ include sys/time.h
+-- Looking for C++ include sys/time.h - not found
+-- Looking for C++ include time.h
+-- Looking for C++ include time.h - found
+-- Looking for C++ include stdint.h
+-- Looking for C++ include stdint.h - found
+-- Looking for C++ include inttypes.h
+-- Looking for C++ include inttypes.h - not found
+-- Found Perl: C:/Perl64/bin/perl.exe 
+-- Performing Test FINITE_VALUE_HAVE_GLOBAL_ISNAN
+-- Performing Test FINITE_VALUE_HAVE_GLOBAL_ISNAN - Failed
+-- Performing Test FINITE_VALUE_HAVE_STD_ISNAN
+-- Performing Test FINITE_VALUE_HAVE_STD_ISNAN - Failed
+-- Performing Test FINITE_VALUE_HAVE_GLOBAL_ISINF
+-- Performing Test FINITE_VALUE_HAVE_GLOBAL_ISINF - Failed
+-- Performing Test FINITE_VALUE_HAVE_STD_ISINF
+-- Performing Test FINITE_VALUE_HAVE_STD_ISINF - Failed
+-- Found Doxygen: C:/Program Files (x86)/doxygen/bin/doxygen.exe 
+
+Getting information for all enabled TPLs ...
+
+-- Processing enabled TPL: Pthread
+--   Attempting to enable tentatively enabled TPL &apos;Pthread&apos; ...
+--   Searching for library &apos;pthread&apos; ...
+--   Warning: Could not find a library in the set &quot;pthread&quot; for the TPL Pthread!  Please manually set Pthread_LIBRARY_DIRS and/or Pthread_LIBRARY_NAMES or just TPL_Pthread_LIBRARIES to point to the Pthread libraries!
+-- Could not find the Pthread Library!  Please manually set Pthread_LIBRARY_DIRS and/or Pthread_LIBRARY_NAMES or just TPL_Pthread_LIBRARIES to point to the Pthread libraries!
+-- _Pthread_ENABLE_SUCCESS=&apos;FALSE&apos;
+--   TPL_Pthread_LIBRARIES=&apos;&apos;
+--     Did not find Pthread TPL header: pthread.h
+-- Could not find the Pthread headers include directory! Please manually set Pthread_INCLUDE_DIRS and/or Pthread_LIBRARY_DIRS or TPL_Pthread_INCLUDE_DIRS to point to the Pthread headers!
+-- _Pthread_ENABLE_SUCCESS=&apos;FALSE&apos;
+--   TPL_Pthread_INCLUDE_DIRS=&apos;&apos;
+--   Attempt to enable tentatively enabled TPL &apos;Pthread&apos; failed!  Setting TPL_ENABLE_Pthread=OFF
+-- Processing enabled TPL: BinUtils
+--   Attempting to enable tentatively enabled TPL &apos;BinUtils&apos; ...
+--   Must find all libraries in &quot;bfd;iberty&quot;
+--   Searching for library &apos;bfd&apos; ...
+--   Error: Could not find a library in the set &quot;bfd&quot; for the TPL BinUtils!  Please manually set BinUtils_LIBRARY_DIRS and/or BinUtils_LIBRARY_NAMES or just TPL_BinUtils_LIBRARIES to point to the BinUtils libraries!
+--   Searching for library &apos;iberty&apos; ...
+--   Error: Could not find a library in the set &quot;iberty&quot; for the TPL BinUtils!  Please manually set BinUtils_LIBRARY_DIRS and/or BinUtils_LIBRARY_NAMES or just TPL_BinUtils_LIBRARIES to point to the BinUtils libraries!
+-- Could not find the BinUtils Library!  Please manually set BinUtils_LIBRARY_DIRS and/or BinUtils_LIBRARY_NAMES or just TPL_BinUtils_LIBRARIES to point to the BinUtils libraries!
+-- _BinUtils_ENABLE_SUCCESS=&apos;FALSE&apos;
+--   TPL_BinUtils_LIBRARIES=&apos;&apos;
+--   Must find all headers in &quot;link.h;bfd.h&quot;
+--   Searching for headers &quot;link.h&quot;
+--     Did not find BinUtils TPL header: link.h
+--   Searching for headers &quot;bfd.h&quot;
+--     Did not find BinUtils TPL header: bfd.h
+-- Could not find the BinUtils headers include directory! Please manually set BinUtils_INCLUDE_DIRS and/or BinUtils_LIBRARY_DIRS or TPL_BinUtils_INCLUDE_DIRS to point to the BinUtils headers!
+-- _BinUtils_ENABLE_SUCCESS=&apos;FALSE&apos;
+--   TPL_BinUtils_INCLUDE_DIRS=&apos;&apos;
+-- TPL_ENABLE_BinUtils=&apos;OFF&apos;
+
+Setting up testing support ...
+
+-- CTEST_DROP_METHOD=&apos;http&apos;
+-- ENV_CTEST_DROP_SITE=&apos;bundok.wireless.kitwarein.com&apos;
+-- CTEST_DROP_SITE=&apos;bundok.wireless.kitwarein.com&apos;
+-- CTEST_PROJECT_NAME=&apos;Trilinos&apos;
+-- ENV_CTEST_DROP_LOCATION=&apos;/CDash/submit.php?project=Trilinos&apos;
+-- CTEST_DROP_LOCATION=&apos;/CDash/submit.php?project=Trilinos&apos;
+-- CTEST_TRIGGER_SITE=&apos;&apos;
+-- CTEST_DROP_SITE_CDASH=&apos;TRUE&apos;
+
+Configuring individual enabled Trilinos packages ...
+
+Processing enabled package: TrilinosFramework (Libs, Tests, Examples, )
+
+Exporting library dependencies ...
+
+-- Configuring done
+-- Generating done
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    Trilinos_ENABLE_DEPENCENCY_UNIT_TESTS
+    Trilinos_ENABLE_EXPLICIT_INSTANTIATION
+    Trilinos_ENABLE_SECONDARY_STABLE_CODE
+    Trilinos_WARNINGS_AS_ERRORS_FLAGS
+
+-- Build files have been written to: C:/K/SERIAL_DEBUG_DEV/BUILD
+
+</Log>
+	<ConfigureStatus>0</ConfigureStatus>
+	<EndDateTime>Jul 22 11:15 Eastern Daylight Time</EndDateTime>
+	<EndConfigureTime>1311347748</EndConfigureTime>
+<ElapsedMinutes>0.2</ElapsedMinutes></Configure>
+</Site>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="Shards">
+</Subproject>
+<Labels>
+  <Label>Shards</Label>
+</Labels>
+<Testing>
+	<StartDateTime>Jul 22 11:26 Eastern Daylight Time</StartDateTime>
+	<StartTestTime>1311348361</StartTestTime>
+	<TestList>
+		<Test>./packages/shards/example/Shards_example_03</Test>
+		<Test>./packages/shards/example/Shards_example_02</Test>
+		<Test>./packages/shards/test/Shards_test_all_serial</Test>
+	</TestList>
+	<Test Status="passed">
+		<Name>Shards_example_03</Name>
+		<Path>./packages/shards/example</Path>
+		<FullName>./packages/shards/example/Shards_example_03</FullName>
+		<FullCommandLine>C:\K\SERIAL_DEBUG_DEV\BUILD\packages\shards\example\Shards_example_03.exe</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.113</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\SERIAL_DEBUG_DEV\BUILD\packages\shards\example\Shards_example_03.exe</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJztXFFv2jAQfudX+G102oBA21EktLUFqQ9dRUel7a0yxAVrIUGJy8rUHz8ToDGJTezKBLqepUool7M/33d3vgs07bbVUXpGNsfzar7uE55MPYIeI4KCB8TGBPXHOHQjNMXD33hEWmbzWcbnHKHbRxLO19jwDFMPDzjgIfE8xIJp4AUjSqK94OPQIkYDP/qKLgOf4SFDqIdnxEMXwXBMZqg8HQwWn75F2HcproyC2ZEhvqsKusQhIyHqun9iYsrjIVl83Dqpcr4O8WmEflD3L/ZQ2Q3jD+JUFTN8rxzxfFHsaR8i9IcMIspiXxszNm1VqyykHvWDqJIgq648Mqou9bLz3a2U9ObLx2d1v3bTQbtkfcJn1P11/r133UVOK466RVjxuJuGxCUP1CcuqnU+IYf/1TuImxE1OuowtL/hj8JAfeKRIeOQYgAunRA/4pGI2qiGxBtL1zRii12c89tqS7xRDP48AT5HbD5dgC+zgPGw4Lc7yzuPSp/tjpLgE5cL6HdrCOK4wDwdM5kk41Y7xJeMm8AlSoF9z15z1mecKB7qQJwZvgMlbtM4wJwE3+Ew131ixHd5glUTVnuvhO3M+je8llwTsD3Nge13afucTAXG36XxIfOo8VknQLOodtRFtaNfmzXeK22SRa55Q3VfVwqUKg0DlR4OGR162TpiLSigjjBwjzq4R4pSA67z3aNgrqHaz8WnS3bBzGkcwMBeiqR9xJ1YNBmkWeBuPfZ4Piq5g7SZi++gyINuRY3POgGa3Upd3a3UDfIk1KPLcRdS7I+87CGXCASV20fshtTDjITYuz9WCpSrHKsEDaXKqTmwpg6wTcmZ7l76Y86qrKgTBLJK4oLgibQOXArSKj3iMzwK/PsTpSCzyhV5iiVpiyUC5V4aKoF6L7KqaLUX67khU9MahPopRHo8INJzI71gv80pB+GISruBuX9scdyCydaoJY+B8E1eIYcoGhM4/ozwISjbXiDvo2xTum7OCQgJMU2rOd97993ivUrjqIXaKh5vJpNoPhxqqB8ONQweDjXBO3jlRFiIx8QNeRQfKwWb3rGI+pWkqRRkHKo3D/GEupm8kwgkPviTuKNsuZcIlHtpqgQbexEFTs1cxdFSEe1S31hFbTFR5YueCkpM6WSiVmnkF5V0Gb6Nl6X1nQyVcl5ElaaOSpyXZA1hSlBKLsoaQplAucqp+SrNnFUkkjO1ivVsmulUTZIj/NAHQXKE5HgwybHg7AAtWy6+N58dCnYpjX7tDNwKEjUkanlUiQ9CDCq5E4gpaCcK8UP4ojMP3y4dsXi+NQ506CL/+7Rge8LkHQb1VvLmEMw5Ft5ioP3qEPvvMHjl2wga0DKJY/v/RkuuH8Y/W6Wuw4+t4GeV1r9VEy+99UcMKsjQ18olB9zXJlegnbJQRpT+AQGW5oQ=</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Shards</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>Shards_example_02</Name>
+		<Path>./packages/shards/example</Path>
+		<FullName>./packages/shards/example/Shards_example_02</FullName>
+		<FullCommandLine>C:\K\SERIAL_DEBUG_DEV\BUILD\packages\shards\example\Shards_example_02.exe</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.122</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\SERIAL_DEBUG_DEV\BUILD\packages\shards\example\Shards_example_02.exe</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJzdWNtO20AQfc9XzFtBqmAvtuMgRW1JIiGVIiioqlRV0cZZErfGjmKHS4F/7/iC4+zaToKSFrCQsDRnZnfmnJ1Zp93e6NN4gE0+D1m83q24mngSZqGE4BKisYTzsZgOQ5gI57cYyYP14m14f3QXuvLS9d3IDfx4gx3peRfBJPCC0R0Eg1/SicI14jE1njMLo+AKHAwLURrXlStE3Eq+ZzMZxhsLP0An8CPhRACn4lp6cBg4Y3kNO5PBIH77GAp/6Iq9UXC9u+b+jvagI6aRnEJveJMQvTN2ZPxaG7QyXlf6bghf3eEf4cHOcJq8FEPtrbe/Zz5JvDBR7rsQbuQgdKNEu+Momhzs70dT13P9INyb72w/U3i4n/rp8S4yp9XiLd/fRvPdbHtpNzYe8AF63z99OT3uAT2AzlSKyPVH5Qf4copnsGjpikhAGE1n+fHeQsJIr/BHnuxbcA9daAOD93DyDV84vnzG/+SWEcKJQ6wGqms2iNvED/IT/9B4DyfBUCLycdFI64yszsjrjEad0aw00ny3x64v+3FmBChmqICoAqJYDUMFMQXEMJa5AGL5coXqpksyXNRI4I+NxvkY0WczgQ3DE9iNhNe3Mxb4EwtGzgIntkEJsV8tC2i06ozNdfnTqCnjz1zOHwdLBXEFxHHBZgXJKoOLTFu6H6324+hH0cNCz8X0eL5eqWzKFkWJnUocoaPA75vq8TaLx9ukBjFfsrAUBbAs3xr+WcZ/DfssY7+Ge5ZwrwnNUCAG7qZcHAUCihQl5BzJ28SktV6ryI1F7bfTel8ecVp/MBWIWcntnL+S5r7pST2/SbDCTSK7utMu4BUMWHfVb4Mt3CTSrcRly+RMn+TMcjnj/MIJRoz/LOe5KAubnnO42DkpWdo6xas9ns+fyWi064yt9aa5Wd8U0mlu1beFdJo36xtDOs3t+tbAk9bQWt7VURz65LXRM9ZQbziSMA6ugpH0pRvdxWeiIKzmUl0136auniOAFaZCSr/1rwZ6U2O+gnOyzWHA9WHAV54C2xsGh1KO3WvZp0z9oKHzacAZZZwQ522qfEvdMy5CfYmqa/T2LmM0ZyCHqB9cNOchh8QtWoHYCiTt4QuQlgJpAdU2Q9X6IoTqFdZKTPVPUKoWmZRg1CpTPXmqlpnp2VO1zlxPn6qFNsryV0ttqumvcn1e/rVsZD4lX9esCk+TzDU8r8KzpAq2ijeq8DytSEt1MKscjLQ6VBs1VpWHmYhAr2hTr+jTRUQX4PyXhEKXLr/FPDnjfbj8MvMXOG7kIw==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Shards</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>Shards_test_all_serial</Name>
+		<Path>./packages/shards/test</Path>
+		<FullName>./packages/shards/test/Shards_test_all_serial</FullName>
+		<FullCommandLine>C:\K\SERIAL_DEBUG_DEV\BUILD\packages\shards\test\Shards_test_all_serial.exe</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.197</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[End Result: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\SERIAL_DEBUG_DEV\BUILD\packages\shards\test\Shards_test_all_serial.exe</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Shards</Label>
+		</Labels>
+	</Test>
+	<EndDateTime>Jul 22 11:26 Eastern Daylight Time</EndDateTime>
+	<EndTestTime>1311348361</EndTestTime>
+<ElapsedMinutes>0</ElapsedMinutes></Testing>
+</Site>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-TDD-hut11.kitware"
+	BuildStamp="20110722-1514-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Configure>
+	<StartDateTime>Jul 22 11:14 Eastern Daylight Time</StartDateTime>
+	<StartConfigureTime>1311347647</StartConfigureTime>
+<ConfigureCommand>"C:/K/tools/cmake-TDD/bin/cmake.exe" "-GNMake Makefiles" "C:/K/Trilinos/cmake/ctest/drivers"</ConfigureCommand>
+<Log>-- TDD_FORCE_CMAKE_INSTALL=&apos;1&apos;
+site=&apos;HUT11&apos;
+subdir=&apos;HUT11&apos;
+-- Adding CMake install test dev
+-- TDD_HTTP_PROXY=&apos;&apos;
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/K/TDD_BUILD
+</Log>
+	<ConfigureStatus>0</ConfigureStatus>
+	<EndDateTime>Jul 22 11:14 Eastern Daylight Time</EndDateTime>
+	<EndConfigureTime>1311347649</EndConfigureTime>
+<ElapsedMinutes>0</ElapsedMinutes></Configure>
+</Site>

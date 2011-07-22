@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="AztecOO">
+</Subproject>
+<Labels>
+  <Label>AztecOO</Label>
+</Labels>
+<Testing>
+	<StartDateTime>Jul 22 11:28 Eastern Daylight Time</StartDateTime>
+	<StartTestTime>1311348536</StartTestTime>
+	<TestList>
+		<Test>./packages/aztecoo/test/AztecOO/AztecOO_AztecOO_test</Test>
+		<Test>./packages/aztecoo/test/AztecOO_StatusTest/AztecOO_AztecOO_StatusTest</Test>
+		<Test>./packages/aztecoo/test/AztecOO_SetParameters/AztecOO_AztecOO_SetParameters</Test>
+		<Test>./packages/aztecoo/test/GMRES_Tests/AztecOO_GMRES</Test>
+		<Test>./packages/aztecoo/example/simple_epetra_aztecoo/AztecOO_epetra_crsmatrix</Test>
+		<Test>./packages/aztecoo/example/UG_Ex1/AztecOO_UG_Ex1</Test>
+		<Test>./packages/aztecoo/example/AztecOO_UserOpUserMat/AztecOO_Poisson2d</Test>
+	</TestList>
+	<Test Status="notrun">
+		<Name>AztecOO_AztecOO_test</Name>
+		<Path>./packages/aztecoo/test/AztecOO</Path>
+		<FullName>./packages/aztecoo/test/AztecOO/AztecOO_AztecOO_test</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/aztecoo/test/AztecOO/AztecOO_AztecOO_test.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>AztecOO</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>AztecOO_AztecOO_StatusTest</Name>
+		<Path>./packages/aztecoo/test/AztecOO_StatusTest</Path>
+		<FullName>./packages/aztecoo/test/AztecOO_StatusTest/AztecOO_AztecOO_StatusTest</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/aztecoo/test/AztecOO_StatusTest/AztecOO_AztecOO_StatusTest.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>AztecOO</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>AztecOO_AztecOO_SetParameters</Name>
+		<Path>./packages/aztecoo/test/AztecOO_SetParameters</Path>
+		<FullName>./packages/aztecoo/test/AztecOO_SetParameters/AztecOO_AztecOO_SetParameters</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/aztecoo/test/AztecOO_SetParameters/AztecOO_AztecOO_SetParameters.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>AztecOO</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>AztecOO_GMRES</Name>
+		<Path>./packages/aztecoo/test/GMRES_Tests</Path>
+		<FullName>./packages/aztecoo/test/GMRES_Tests/AztecOO_GMRES</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/aztecoo/test/GMRES_Tests/AztecOO_GMRES.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>AztecOO</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>AztecOO_epetra_crsmatrix</Name>
+		<Path>./packages/aztecoo/example/simple_epetra_aztecoo</Path>
+		<FullName>./packages/aztecoo/example/simple_epetra_aztecoo/AztecOO_epetra_crsmatrix</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/aztecoo/example/simple_epetra_aztecoo/AztecOO_epetra_crsmatrix.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>AztecOO</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>AztecOO_UG_Ex1</Name>
+		<Path>./packages/aztecoo/example/UG_Ex1</Path>
+		<FullName>./packages/aztecoo/example/UG_Ex1/AztecOO_UG_Ex1</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/aztecoo/example/UG_Ex1/AztecOO_UG_Ex1.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>AztecOO</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>AztecOO_Poisson2d</Name>
+		<Path>./packages/aztecoo/example/AztecOO_UserOpUserMat</Path>
+		<FullName>./packages/aztecoo/example/AztecOO_UserOpUserMat/AztecOO_Poisson2d</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/aztecoo/example/AztecOO_UserOpUserMat/AztecOO_Poisson2d.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>AztecOO</Label>
+		</Labels>
+	</Test>
+	<EndDateTime>Jul 22 11:28 Eastern Daylight Time</EndDateTime>
+	<EndTestTime>1311348536</EndTestTime>
+<ElapsedMinutes>0</ElapsedMinutes></Testing>
+</Site>
