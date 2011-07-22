@@ -53,7 +53,8 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
 
   function submitFiles()
     {
-    $dir = dirname(__FILE__)."/data/ActualTrilinosSubmission";
+    $dir = str_replace("\\", '/',
+      dirname(__FILE__).'/data/ActualTrilinosSubmission');
 
     $listfilename = $dir."/orderedFileList.txt";
 
@@ -66,11 +67,11 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
         continue;
         }
 
-      $fullname = $dir."/".$filename;
+      $fullname = str_replace("\r", '', $dir.'/'.$filename);
 
       if (!file_exists($fullname))
         {
-        $this->fail("file [$fullname] does not exist");
+        $this->fail("file '$fullname' does not exist");
         return false;
         }
 
@@ -95,7 +96,7 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
         }
       }
 
-    $this->assertTrue(true, "Submission of all files has succeeded");
+    $this->assertTrue(true, "Submission of all files succeeded");
     return true;
     }
 
