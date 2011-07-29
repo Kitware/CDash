@@ -55,10 +55,20 @@ if($Submit && $filemask)
   $i = 0;
   $n = count($filelist);
 
+  add_log(
+    "before loop n=".$n,
+    "importBackup.php",
+    LOG_INFO);
+
   foreach($filelist as $filename)
     {
     ++$i;
     $projectid = -1;
+
+    add_log(
+      "looping i=".$i." filename=".$filename,
+      "importBackup.php",
+      LOG_INFO);
 
     # split on path separator
     $pathParts = split("[/\\]", $filename);
@@ -74,8 +84,18 @@ if($Submit && $filemask)
       {
       $name = get_project_name($projectid);
       $handle = fopen($filename,"r");
-      ctest_parse($handle,$projectid);
-      fclose($handle);
+      if($handle)
+        {
+        ctest_parse($handle,$projectid);
+        fclose($handle);
+        }
+      else
+        {
+        add_log(
+          "could not open file filename=".$filename,
+          "importBackup.php",
+          LOG_ERR);
+        }
       }
     }
 
