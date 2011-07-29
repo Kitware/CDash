@@ -24,6 +24,7 @@ set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
 require_once("cdash/common.php");
 require_once("cdash/do_submit.php");
+require_once("cdash/fnProcessFile.php");
 require_once("cdash/pdo.php");
 
 
@@ -45,7 +46,7 @@ function AcquireProcessingLock($projectid, $force)
   $table_locked = pdo_lock_tables($tables);
   if (!$table_locked)
     {
-    add_log("AcquireProcessingLock", "could not lock database tables",
+    add_log("could not lock database tables", "AcquireProcessingLock",
       LOG_ERR, $projectid);
     }
 
@@ -78,7 +79,7 @@ function AcquireProcessingLock($projectid, $force)
       //
       if ($c != 1)
         {
-        add_log("AcquireProcessingLock", "unexpected row count c='$c'",
+        add_log("unexpected row count c='$c'", "AcquireProcessingLock",
           LOG_ERR, $projectid);
         }
 
@@ -92,7 +93,7 @@ function AcquireProcessingLock($projectid, $force)
 
       if ($force)
         {
-        add_log("AcquireProcessingLock", "taking lock: 'force' is true",
+        add_log("taking lock: 'force' is true", "AcquireProcessingLock",
           LOG_INFO, $projectid);
         $acquire_lock = true;
         }
@@ -119,9 +120,10 @@ function AcquireProcessingLock($projectid, $force)
           {
           //if ($pid is not presently running) // assumed, php-way to measure?
           //  {
-            add_log("AcquireProcessingLock",
+            add_log(
               "taking lock: projectid=$projectid, other processor pid='$pid' ".
               "apparently stalled, lastupdated='$lastupdated'",
+              "AcquireProcessingLock",
               LOG_ERR, $projectid);
             $acquire_lock = true;
           //  }
@@ -149,7 +151,7 @@ function AcquireProcessingLock($projectid, $force)
       $table_unlocked = pdo_unlock_tables($tables);
       if (!$table_unlocked)
         {
-        add_log("AcquireProcessingLock", "could not unlock database tables",
+        add_log("could not unlock database tables", "AcquireProcessingLock",
           LOG_ERR, $projectid);
         }
       }
@@ -171,7 +173,7 @@ function ReleaseProcessingLock($projectid)
   $table_locked = pdo_lock_tables($tables);
   if (!$table_locked)
     {
-    add_log("ReleaseProcessingLock", "could not lock database tables",
+    add_log("could not lock database tables", "ReleaseProcessingLock",
       LOG_ERR, $projectid);
     }
 
@@ -194,15 +196,16 @@ function ReleaseProcessingLock($projectid)
       }
     else
       {
-      add_log("ReleaseProcessingLock",
+      add_log(
         "lock not released, unexpected pid mismatch: pid='$pid' mypid='$mypid' - attempt to unlock a lock we don't own...",
+        "ReleaseProcessingLock",
         LOG_ERR, $projectid);
       }
 
     $table_unlocked = pdo_unlock_tables($tables);
     if (!$table_unlocked)
       {
-      add_log("ReleaseProcessingLock", "could not unlock database tables",
+      add_log("could not unlock database tables", "ReleaseProcessingLock",
         LOG_ERR, $projectid);
       }
     }
@@ -268,8 +271,9 @@ function ResetApparentlyStalledSubmissions($projectid)
   $nrows = pdo_affected_rows($result);
   if ($nrows > 0)
     {
-    add_log("ResetApparentlyStalledSubmissions",
+    add_log(
       "$nrows submission records assumed stalled, reset to status=0",
+      "ResetApparentlyStalledSubmissions",
       LOG_ERR, $projectid);
     }
 
@@ -315,8 +319,9 @@ function ProcessSubmissions($projectid)
     //
     if (!ProcessOwnsLock($projectid, $mypid))
       {
-      add_log("ProcessSubmissions",
+      add_log(
         "pid '$mypid' does not own lock anymore: abandoning loop...",
+        "ProcessSubmissions",
         LOG_INFO, $projectid);
       return false;
       }
@@ -333,7 +338,8 @@ function ProcessSubmissions($projectid)
     global $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS;
     if ($new_attempts > $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS)
       {
-      add_log("ProcessSubmissions", "Too many attempts to process '".$filename."'",
+      add_log("Too many attempts to process '".$filename."'",
+        "ProcessSubmissions",
         LOG_ERR, $projectid);
       $new_status = 5; // done, called do_submit too many times already
       }
@@ -353,43 +359,16 @@ function ProcessSubmissions($projectid)
       global $PHP_ERROR_SUBMISSION_ID;
       $PHP_ERROR_SUBMISSION_ID = $submission_id;
 
-      // Try to open the file and process it (call "do_submit" on it)
-      //
-      unset($fp);
-      if(!file_exists($filename))
+      if($intentional_nonreturning_submit)
         {
-        // check in parent dir also
-        $filename = "../$filename";
-        }
-      if(file_exists($filename))
-        {
-        $fp = fopen($filename, 'r');
+        // simulate "error occurred" during do_submit: status will be set
+        // to 4 in error handler...
+        trigger_error(
+          'ProcessFile: intentional_nonreturning_submit is on',
+          E_USER_ERROR);
         }
 
-      if($fp)
-        {
-        if($intentional_nonreturning_submit)
-          {
-          // simulate "error occurred" during do_submit: status will be set to 4 in error handler...
-          trigger_error(
-            'ProcessSubmissions: intentional_nonreturning_submit is on',
-            E_USER_ERROR);
-          }
-
-        do_submit($fp, $projectid, '', false, $submission_id);
-        $PHP_ERROR_SUBMISSION_ID = 0;
-
-        fclose($fp);
-        // delete the temporary backup file since we now have a better-named one
-        unlink($filename);
-        $new_status = 2; // done, did call do_submit, finished normally
-        }
-      else
-        {
-        add_log("ProcessSubmissions", "Cannot open file '".$filename."'",
-          LOG_ERR, $projectid);
-        $new_status = 3; // done, did *NOT* call do_submit
-        }
+      $new_status = ProcessFile($projectid, $filename);
       }
 
     $PHP_ERROR_SUBMISSION_ID = 0;
@@ -468,8 +447,9 @@ function ProcessSubmissionsErrorHandler($projectid)
       add_last_sql_error("ProcessSubmissionsErrorHandler-1");
 
       echo "ProcessSubmissionsErrorHandler: error processing submission id $PHP_ERROR_SUBMISSION_ID\n";
-      add_log('ProcessSubmissionsErrorHandler',
+      add_log(
         "error processing submission id $PHP_ERROR_SUBMISSION_ID",
+        'ProcessSubmissionsErrorHandler',
         LOG_ERR, $projectid);
       }
 
@@ -534,7 +514,8 @@ if(!is_numeric($projectid))
 {
   echo "projectid/argv[1] should be a number\n";
   echo "</pre>";
-  add_log("ProcessSubmission", "projectid '".$projectid."' should be a number",
+  add_log("projectid '".$projectid."' should be a number",
+    "ProcessSubmission",
     LOG_ERR, $projectid);
   return;
 }
