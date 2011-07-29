@@ -27,30 +27,45 @@ class ProjectHandler extends AbstractHandler
   private $SubProject;
   private $Dependencies; // keep an array of dependencies in order to remove them
   private $Subprojects; // keep an array of supbprojects in order to remove them
+  private $ProjectNameMatches;
+
 
   /** Constructor */
   public function __construct($projectid, $scheduleid)
     {
     parent::__construct($projectid, $scheduleid);
+
+    // Only actually track stuff and write it into the database if the
+    // Project.xml file's name element matches this project's name in the
+    // database.
+    //
+    $this->ProjectNameMatches = true;
     }
+
 
   /** startElement function */
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
-    // Check that the project name is correct
+
+    // Check that the project name matches
     if($name=='PROJECT')
       {
-      //add_log("Processing Project.xml for ".$attributes['NAME'],
-      //  "ProjectHandler:startElement", LOG_INFO, $this->projectid);
-
       if(get_project_id($attributes['NAME']) != $this->projectid)
         {
         add_log("Wrong project name: ".$attributes['NAME'],
-          "ProjectHandler:startElement", LOG_ERROR, $this->projectid);
-        exit();
+          "ProjectHandler::startElement", LOG_ERR, $this->projectid);
+        $this->ProjectNameMatches = false;
         }
+      }
 
+    if (!$this->ProjectNameMatches)
+      {
+      return;
+      }
+
+    if($name=='PROJECT')
+      {
       $this->Subprojects = array();
       $this->Dependencies = array();
       }
@@ -152,10 +167,17 @@ class ProjectHandler extends AbstractHandler
 
     } // end startElement
 
+
   /** endElement function */
   public function endElement($parser, $name)
     {
     parent::endElement($parser, $name);
+
+    if (!$this->ProjectNameMatches)
+      {
+      return;
+      }
+
     if($name=='PROJECT')
       {
       //add_log("Processing ".count($this->Subprojects)." subprojects", "ProjectHandler:endElement", LOG_INFO, $this->projectid);
@@ -212,11 +234,14 @@ class ProjectHandler extends AbstractHandler
       }
    } // end endElement
 
+
   /** text function */
   public function text($parser, $data)
     {
     //$parent = $this->getParent();
     //$element = $this->getElement();
     } // end function text
+
+
 } // end class
 ?>

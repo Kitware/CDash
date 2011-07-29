@@ -167,6 +167,3 @@ else
   if($query_array[0]>1) {echo 's'; $word = "have";}
   echo " matching these settings ".$word." been responding in the last 24 hours.<br/>";
   }
-  
-//exit();
-return;
