@@ -1056,17 +1056,19 @@ class Build
       $testdiff = $ntests;
       } 
       
-    // Find the number of different users  
+    $buildid_clause = get_updates_buildid_clause(qnum($this->Id));
+
+    // Find the number of different users
     $nauthors_array = pdo_fetch_array(pdo_query("SELECT count(author) FROM (SELECT author FROM updatefile
-                                                WHERE buildid=".qnum($this->Id)." GROUP BY author) AS test"));
+                                                WHERE ".$buildid_clause." GROUP BY author) AS test"));
     add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
     $nauthors = $nauthors_array[0];
    
     $newbuild = 1;
     $previousauthor = "";
     // Loop through the updated files
-    $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile WHERE buildid=".qnum($this->Id)." 
-                              AND checkindate>'1980-01-01T00:00:00' ORDER BY author ASC, checkindate ASC");
+    $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile WHERE ".$buildid_clause." ".
+                             "AND checkindate>'1980-01-01T00:00:00' ORDER BY author ASC, checkindate ASC");
     add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
     $nupdatedfiles = pdo_num_rows($updatefiles);
     

@@ -215,8 +215,10 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
 
   $userids = array();
 
+  $buildid_clause = get_updates_buildid_clause(qnum($buildid));
+
   // Check if we know to whom we should send the email
-  $updatefiles = pdo_query("SELECT author,email,committeremail FROM updatefile WHERE buildid=".qnum($buildid));
+  $updatefiles = pdo_query("SELECT author,email,committeremail FROM updatefile WHERE ".$buildid_clause);
   add_last_sql_error("sendmail",$projectid,$buildid);
   while($updatefiles_array = pdo_fetch_array($updatefiles))
     {
@@ -351,7 +353,9 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     {
     $information = "\n\n*Update*\n";
 
-    $update = pdo_query("SELECT command,status FROM buildupdate WHERE buildid=".qnum($buildid));
+    $buildid_clause = get_updates_buildid_clause(qnum($buildid));
+
+    $update = pdo_query("SELECT command,status FROM buildupdate WHERE ".$buildid_clause);
     $update_array = pdo_fetch_array($update);
 
     $information .= "Status: ".$update_array["status"]." (".$serverURI."/viewUpdate.php?buildid=".$buildid.")\n";
@@ -647,8 +651,10 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     $summaryEmail .= $user_array["email"];
     }
 
+  $buildid_clause = get_updates_buildid_clause(qnum($buildid));
+
   // Select the users that are part of this build
-  $authors = pdo_query("SELECT author FROM updatefile WHERE buildid=".qnum($buildid));
+  $authors = pdo_query("SELECT author FROM updatefile WHERE ".$buildid_clause);
   add_last_sql_error("sendmail");
   while($authors_array = pdo_fetch_array($authors))
     {

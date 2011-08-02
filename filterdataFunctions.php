@@ -272,13 +272,15 @@ class IndexPhpFilters extends DefaultFilters
 
     case 'updatedfiles':
     {
-      $sql_field = "(SELECT COUNT(buildid) FROM updatefile WHERE buildid=b.id)";
+      $buildid_clause = get_updates_buildid_clause("b.id");
+      $sql_field = "(SELECT COUNT(buildid) FROM updatefile WHERE ".$buildid_clause.")";
     }
     break;
 
     case 'updateduration':
     {
-      $sql_field = "IF((SELECT COUNT(*) FROM buildupdate WHERE buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM buildupdate WHERE buildid=b.id),0)";
+      $buildid_clause = get_updates_buildid_clause("b.id");
+      $sql_field = "IF((SELECT COUNT(*) FROM buildupdate WHERE ".$buildid_clause.")>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM buildupdate WHERE ".$buildid_clause."),0)";
     }
     break;
 

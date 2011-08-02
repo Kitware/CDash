@@ -2604,4 +2604,15 @@ function web_api_authenticate($projectid, $token)
   return pdo_num_rows($result) != 0;
   }
 
+
+function get_updates_buildid_clause($buildid_str, $field_str = 'buildid')
+  {
+  $buildid_clause = " ".$field_str." IN (SELECT id FROM build ".
+    "WHERE (stamp, siteid, name)=".
+    "(SELECT stamp, siteid, name FROM build WHERE id=".$buildid_str.")) ";
+
+  return $buildid_clause;
+  }
+
+
 ?>

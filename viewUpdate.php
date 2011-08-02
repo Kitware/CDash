@@ -118,15 +118,17 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     get_revision_url($projectid, $status_array["priorrevision"], '')); // no prior prior revision...
 
   $xml .= "<javascript>";
-  // This should work hopefully
-  $updatedfiles = pdo_query("SELECT * FROM updatefile WHERE buildid='$buildid'
+
+  $buildid_clause = get_updates_buildid_clause($buildid);
+
+  $updatedfiles = pdo_query("SELECT * FROM updatefile WHERE ".$buildid_clause."
                               ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
-  
+
   function sort_array_by_directory($a,$b)
     { 
     return $a>$b ? 1:0;
     }
-    
+
   function sort_array_by_filename($a,$b)
     {
     // Extract directory

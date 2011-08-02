@@ -69,11 +69,11 @@ class BuildUpdate
     $this->EndTime = pdo_real_escape_string($this->EndTime);
     $this->Command = pdo_real_escape_string($this->Command);
     
+    $this->Type = pdo_real_escape_string($this->Type);
     if(strlen($this->Type)>4)
       {
       $this->Type = 'NA';  
       }
-    $this->Type = pdo_real_escape_string($this->Type);
     $this->Status = pdo_real_escape_string($this->Status);
     $this->Revision = pdo_real_escape_string($this->Revision);
     $this->PriorRevision = pdo_real_escape_string($this->PriorRevision);
@@ -117,10 +117,12 @@ class BuildUpdate
       echo "BuildUpdate::GetNumberOfErrors(): BuildId not set";
       return false;    
       }
-       
-    $builderror = pdo_query("SELECT status FROM buildupdate WHERE buildid=".qnum($this->BuildId));
+
+    $buildid_clause = get_updates_buildid_clause($this->BuildId);
+
+    $builderror = pdo_query("SELECT status FROM buildupdate WHERE ".$buildid_clause);
     $updatestatus_array = pdo_fetch_array($builderror);
-    
+
     if(strlen($updatestatus_array["status"]) > 0 &&
        $updatestatus_array["status"]!="0")
       {

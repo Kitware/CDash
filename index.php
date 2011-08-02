@@ -667,14 +667,17 @@ function generate_main_dashboard_XML($projectid,$date)
   $userupdatesql = "";
   if(isset($_SESSION['cdash']))
     {
+    $buildid_clause = get_updates_buildid_clause("b.id");
     $userupdatesql = "(SELECT count(updatefile.buildid) FROM updatefile,user2project,
                       user2repository
-                      WHERE buildid=b.id AND user2project.projectid=b.projectid
+                      WHERE ".$buildid_clause." AND user2project.projectid=b.projectid
                       AND user2project.userid='".$_SESSION['cdash']['loginid']."'
                       AND user2repository.userid=user2project.userid
                       AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
                       AND user2repository.credential=updatefile.author) AS userupdates,";
     }
+
+  $buildid_clause = get_updates_buildid_clause("b.id", "bu.buildid");
 
   $sql =  "SELECT b.id,b.siteid,
                   bu.status AS updatestatus,
@@ -715,7 +718,7 @@ function generate_main_dashboard_XML($projectid,$date)
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
                   FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql.",
                   build AS b
-                  LEFT JOIN buildupdate AS bu ON (bu.buildid=b.id)
+                  LEFT JOIN buildupdate AS bu ON ".$buildid_clause."
                   LEFT JOIN configure AS c ON (c.buildid=b.id)
                   LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
                   LEFT JOIN builderrordiff AS bw_diff ON (bw_diff.buildid=b.id AND bw_diff.type=1)
@@ -978,7 +981,10 @@ function generate_main_dashboard_XML($projectid,$date)
         $build_rows_collapsed[$idx]['countnotes'] += $build_row['countnotes'];
         $build_rows_collapsed[$idx]['labels'] = array_merge($build_rows_collapsed[$idx]['labels'], $build_row['labels']);
 
-        $build_rows_collapsed[$idx]['countupdatefiles'] += $build_row['countupdatefiles'];
+    //  countupdatefiles - use one number here, not the sum...
+    //  each non-collapsed row is the same set of updates
+        //$build_rows_collapsed[$idx]['countupdatefiles'] += $build_row['countupdatefiles'];
+
     //  updatestatus
         $build_rows_collapsed[$idx]['updateduration'] += $build_row['updateduration'];
         $build_rows_collapsed[$idx]['countupdateerrors'] += $build_row['countupdateerrors'];

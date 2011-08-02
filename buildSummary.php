@@ -294,25 +294,27 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     
   $xml .= "</build>";
 
+  $buildid_clause = get_updates_buildid_clause(qnum($buildid));
+
   // Update
-  $buildupdate = pdo_query("SELECT * FROM buildupdate WHERE buildid='$buildid'");
-  
+  $buildupdate = pdo_query("SELECT * FROM buildupdate WHERE ".$buildid_clause);
+
   if(pdo_num_rows($buildupdate)>0) // show the update only if we have one
     {
     $xml .= "<update>";
-  
+
     // Checking for locally modify files
-    $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE buildid='$buildid' AND author='Local User'");      
+    $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE ".$buildid_clause.
+      " AND author='Local User'");
     $nerrors = pdo_num_rows($updatelocal);
     $nwarnings = 0;
     $xml .= add_XML_value("nerrors",$nerrors);
     $xml .= add_XML_value("nwarnings",$nwarnings);
-    
-    $update = pdo_query("SELECT buildid FROM updatefile WHERE buildid='$buildid'");
+
+    $update = pdo_query("SELECT buildid FROM updatefile WHERE ".$buildid_clause);
     $nupdates = pdo_num_rows($update);
-    $xml .= add_XML_value("nupdates",$nupdates);  
-       
-    
+    $xml .= add_XML_value("nupdates",$nupdates);
+
     $update_array = pdo_fetch_array($buildupdate);
     $xml .= add_XML_value("command",$update_array["command"]);
     $xml .= add_XML_value("type",$update_array["type"]);
@@ -320,8 +322,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("endtime",date(FMT_DATETIMETZ,strtotime($update_array["endtime"]." UTC")));
     $xml .= "</update>";
     }
-  
-  
+
+
   // Configure
   $xml .= "<configure>";
   $configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
@@ -395,8 +397,11 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $npreviousfailingtests = $nfail_array[0];
     $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='notrun'"));
     $npreviousnotruntests = $nfail_array[0];
-  
-    $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE buildid='$previousbuildid' AND author='Local User'");      
+
+    $buildid_clause = get_updates_buildid_clause(qnum($previousbuildid));
+
+    $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE ".$buildid_clause.
+      " AND author='Local User'");
     $nupdateerrors = pdo_num_rows($updatelocal);
     $nupdatewarnings = 0;
     $xml .= add_XML_value("nupdateerrors",$nupdateerrors);

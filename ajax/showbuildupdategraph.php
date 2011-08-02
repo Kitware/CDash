@@ -49,13 +49,15 @@ $projectid = $build_array["projectid"];
 $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
 
+$buildid_clause = get_updates_buildid_clause("b.id", "bu.buildid");
+
 // Find the other builds
-$previousbuilds = pdo_query("SELECT b.id,b.starttime,bu.nfiles FROM build as b,buildupdate as bu WHERE bu.buildid=b.id
+$previousbuilds = pdo_query("SELECT b.id,b.starttime,bu.nfiles FROM build as b,buildupdate as bu WHERE ".$buildid_clause."
                                AND b.siteid='$siteid' AND b.type='$buildtype' AND b.name='$buildname'
                                AND b.projectid='$projectid' AND b.starttime<='$starttime' ORDER BY b.starttime ASC");
 ?>
 
-    
+
 <br>
 <script language="javascript" type="text/javascript">
 $(function () {
