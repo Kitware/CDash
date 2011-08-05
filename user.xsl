@@ -347,9 +347,10 @@
        <img src="images/warning.png" border="0" alt="erro logs" /></a>
        </xsl:if>
     </td></tr>
-    <tr class="trodd"><td id="nob"><a href="siteStatistics.php">[Site Statistics]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="userStatistics.php">[User Statistics]</a>  (beta)</td></tr>
-    <tr class="trodd"><td id="nob"><a href="manageBackup.php">[Manage Backup]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="monitor.php">[Monitor / Processing Statistics]</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="siteStatistics.php">[Site Statistics]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="userStatistics.php">[User Statistics]</a>  (beta)</td></tr>
+    <tr class="treven"><td id="nob"><a href="manageBackup.php">[Manage Backup]</a></td></tr>
   </tbody>
   </table>
 </xsl:if>
