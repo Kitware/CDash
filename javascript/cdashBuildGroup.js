@@ -1,5 +1,5 @@
 // Main function
-function URLencode(sStr) 
+function URLencode(sStr)
 {
     return escape(sStr)
        .replace(/\+/g, '%2B')
@@ -8,16 +8,16 @@ function URLencode(sStr)
 }
 
 function buildgroup_click(buildid)
-{   
+{
   var group = "#buildgroup_"+buildid;
-  
+
   //if($(group).html() != "" && $(group).html() != "added to group!")
   if($(group).html() != "" && $(group).is(":visible"))
     {
     $(group).fadeOut('medium');
     return;
     }
-  
+
   $(group).fadeIn('slow');
   $(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/addbuildgroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
@@ -42,14 +42,14 @@ function buildnosubmission_click(siteid,buildname,divname,buildgroupid,buildtype
 }
 
 function buildinfo_click(buildid)
-{   
+{
   var group = "#buildgroup_"+buildid;
   if($(group).html() != "" && $(group).is(":visible"))
     {
     $(group).fadeOut('medium');
     return;
     }
- 
+
   $(group).fadeIn('slow');
   $(group).html("fetching...<img src=images/loading.gif></img>");
   $(group).load("ajax/buildinfogroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
@@ -59,7 +59,7 @@ function buildinfo_click(buildid)
 
 
 function expectedinfo_click(siteid,buildname,divname,projectid,buildtype,currentime)
-{   
+{
   buildname = URLencode(buildname);
 
   var group = "#infoexpected_"+divname;
@@ -80,10 +80,13 @@ function removebuild_click(buildid)
     {
     var group = "#buildgroup_"+buildid;
     $(group).html("updating...");
-    $.post("ajax/addbuildgroup.php?buildid="+buildid,{removebuild:"1",buildid:buildid});
-    $(group).html("deleted.");
-    $(group).fadeOut('slow');
-    window.location = "";
+    $.post("ajax/addbuildgroup.php?buildid="+buildid,{removebuild:"1",buildid:buildid},
+        function(data){
+          $(group).html("deleted.");
+          $(group).fadeOut('slow');
+          location.reload();
+          return false;
+          });
     }
 }
 
@@ -91,17 +94,20 @@ function markasexpected_click(buildid,groupid,expected)
 {
   var group = "#buildgroup_"+buildid;
   $(group).html("updating...");
-  $.post("ajax/addbuildgroup.php?buildid="+buildid,{markexpected:"1",groupid:groupid,expected:expected});
-  $(group).html("updated.");
-  $(group).fadeOut('slow');
-  window.location = "";
+  $.post("ajax/addbuildgroup.php?buildid="+buildid,{markexpected:"1",groupid:groupid,expected:expected},
+        function(data){
+          $(group).html("updated.");
+          $(group).fadeOut('slow');
+          location.reload();
+          return false;
+        });
 }
 
 function addbuildgroup_click(buildid,groupid,definerule)
 {
   var expected = "expected_"+buildid+"_"+groupid;
   var t = document.getElementById(expected);
-  
+
   var expectedbuild = 0;
   if(t.checked)
     {
@@ -110,8 +116,11 @@ function addbuildgroup_click(buildid,groupid,definerule)
 
   var group = "#buildgroup_"+buildid;
   $(group).html("addinggroup");
-  $.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild,definerule:definerule});
-  $(group).html("added to group.");
-  $(group).fadeOut('slow');
-  window.location = "";
+  $.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild,definerule:definerule},
+        function(data){
+          $(group).html("added to group.");
+          $(group).fadeOut('slow');
+          location.reload();
+          return false;
+        });
 }
