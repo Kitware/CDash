@@ -481,6 +481,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $DependProject->Id = $dependency;
       $xml .= add_XML_value("rowparity",$rowparity);
       $xml .= add_XML_value("name",$DependProject->GetName());
+      $xml .= add_XML_value("name_encoded",urlencode($DependProject->GetName()));
       $xml .= add_XML_value("nbuilderror",$DependProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("nbuildwarning",$DependProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
       $xml .= add_XML_value("nbuildpass",$DependProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
@@ -1811,6 +1812,4 @@ else
     generate_XSLT($xml,"index");
     }
   }
-
-
 ?>

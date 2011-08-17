@@ -47,7 +47,7 @@
    <xsl:attribute name="bgcolor"><xsl:value-of select="bgcolor"/></xsl:attribute>
    <td>
    <a>
-     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;subproject=<xsl:value-of select="name"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
+     <xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/dashboard/projectname"/>&amp;subproject=<xsl:value-of select="name_encoded"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
      <xsl:value-of select="name"/>
     </a>
    </td>

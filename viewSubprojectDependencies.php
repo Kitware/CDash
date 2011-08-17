@@ -140,6 +140,8 @@ if($projectid == 0)
       } 
       
     $xml .= add_XML_value("name",$SubProject->GetName());
+    $xml .= add_XML_value("name_encoded",urlencode($SubProject->GetName()));
+    
     $dependencies = $SubProject->GetDependencies($date);
     foreach($subprojectids as $subprojectid2)
       {
