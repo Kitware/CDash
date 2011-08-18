@@ -242,15 +242,15 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
       $UserProject = new UserProject();
       $UserProject->RepositoryCredential = $author;
       $UserProject->ProjectId = $projectid;
-      
+
       $filled = false;
       if($email != '')
         {
-        $result = pdo_query("SELECT id FROM ".qid("user")." WHERE email='$email'"); 
-    
+        $result = pdo_query("SELECT id FROM ".qid("user")." WHERE email='$email'");
+
         if(pdo_num_rows($result) != 0)
           {
-          $user_array = pdo_fetch_array($result); 
+          $user_array = pdo_fetch_array($result);
           $id = $user_array['id'];
           $UserProject->UserId = $id;
           $filled = $UserProject->FillFromUserId();
@@ -486,7 +486,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
       $sql = "OR timestatus>".qnum($testtimemaxstatus);
       }
     $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid).
-                            " AND test.id=build2test.testid AND (build2test.status='failed'".$sql.") LIMIT $maxitems");
+                            " AND test.id=build2test.testid AND (build2test.status='failed'".$sql.") ORDER BY test.id LIMIT $maxitems");
     add_last_sql_error("sendmail");
     $numrows = pdo_num_rows($test_query);
 
@@ -509,7 +509,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
 
     // Add the tests not run
     $test_query = pdo_query("SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=".qnum($buildid).
-                            " AND test.id=build2test.testid AND (build2test.status='notrun'".$sql.") LIMIT $maxitems");
+                            " AND test.id=build2test.testid AND (build2test.status='notrun'".$sql.") ORDER BY test.id LIMIT $maxitems");
     add_last_sql_error("sendmail");
     $numrows = pdo_num_rows($test_query);
 
@@ -607,7 +607,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
 
   // Find the current updaters from the night using the dailyupdatefile table
   $summaryEmail = "";
-  $query = "SELECT ".qid("user").".email,up.emailcategory,".qid("user").".id 
+  $query = "SELECT ".qid("user").".email,up.emailcategory,".qid("user").".id
                           FROM ".qid("user").",user2project AS up,user2repository AS ur,
                            dailyupdate,dailyupdatefile WHERE
                            up.projectid=".qnum($projectid)."
