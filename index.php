@@ -366,7 +366,10 @@ function generate_main_dashboard_XML($projectid,$date)
     }
   else
     {
-    $projectname = "NA";
+    //$projectname = "NA";
+    echo "This project doesn't exist. Maybe the URL you are trying to access is wrong.<br>";
+    echo '<a href="index.php">Go to the list of dashboards</a>';
+    return false;
     }
 
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
@@ -433,6 +436,7 @@ function generate_main_dashboard_XML($projectid,$date)
   {
   $xml .= "<future>0</future>";
   }
+
   $xml .= "</dashboard>";
 
   // Menu definition
@@ -1809,7 +1813,10 @@ else
     {
     $xml = generate_main_dashboard_XML($projectid,$date);
     // Now doing the xslt transition
-    generate_XSLT($xml,"index");
+    if($xml)
+      {
+      generate_XSLT($xml,"index");
+      }
     }
   }
 ?>
