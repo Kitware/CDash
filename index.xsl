@@ -23,18 +23,18 @@
       </xsl:choose>
       <div>
       <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
-      </div> 
+      </div>
       <div class="quicklink">
       <xsl:for-each select="/cdash/buildgroup">
         <xsl:if test="name!=$type/name">
         <a>
         <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
-        <xsl:value-of select="name"/></a> | 
+        <xsl:value-of select="name"/></a> |
         </xsl:if>
-      </xsl:for-each> 
-      <a href="#Coverage">Coverage</a> | 
+      </xsl:for-each>
+      <a href="#Coverage">Coverage</a> |
       <a href="#DynamicAnalysis">Dynamic Analysis</a>
-      </div> 
+      </div>
       </td>
     </tr>
   </xsl:if>
@@ -57,21 +57,21 @@
       </xsl:choose>
    <div>
    <xsl:attribute name="id"><xsl:value-of select="linkname"/></xsl:attribute>
-   </div> 
+   </div>
    <div class="quicklink">
    <xsl:for-each select="/cdash/buildgroup">
        <xsl:if test="name!=$type/name">
          <a>
      <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
-     <xsl:value-of select="name"/></a> | 
+     <xsl:value-of select="name"/></a> |
       </xsl:if>
     </xsl:for-each>
-   <a href="#Coverage">Coverage</a> | 
+   <a href="#Coverage">Coverage</a> |
    <a href="#DynamicAnalysis">Dynamic Analysis</a>
-    </div> 
+    </div>
     </td>
    </tr>
-   
+
    <tr class="table-heading">
       <th align="center" rowspan="2" width="15%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_0</xsl:attribute>
@@ -169,7 +169,7 @@
 
       <xsl:if test="string-length(note)>0 and countbuildids=1">
       <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="images/Document.gif" alt="Notes" border="0"/></a>
-      </xsl:if> 
+      </xsl:if>
 
       <xsl:if test="string-length(generator)>0 and countbuildids=1">
       <a><xsl:attribute name="href">javascript:alert("<xsl:value-of select="generator"/>");</xsl:attribute>
@@ -177,7 +177,7 @@
       <xsl:attribute name="alt"><xsl:value-of select="generator"/></xsl:attribute>
       </img>
       </a>
-      </xsl:if> 
+      </xsl:if>
 
       <!-- If the build has errors or test failing -->
       <xsl:if test="(compilation/error > 0 or test/fail > 0) and countbuildids=1">
@@ -203,14 +203,14 @@
       <img src="images/note.png" border="0"></img>
       </a>
       </xsl:if>
-      
+
       <!-- If we have error logs -->
       <xsl:if test="nerrorlog>0 and countbuildids=1">
       <a class="tooltip">
       <xsl:attribute name="title"><xsl:value-of select="nerrorlog"/> errors in the CDash log</xsl:attribute>
       <xsl:attribute name="href">viewErrorLog.php?buildid=<xsl:value-of select="buildid"/>&amp;projectid=<xsl:value-of select="/cdash/dashboard/projectid"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute><img src="images/warningsmall.png" alt="errorlogs" border="0"/></a>
       </xsl:if>
-      
+
       <!-- If user is admin of the project propose to group this build -->
       <xsl:if test="/cdash/user/admin=1 and (countbuildids=1 or expected=1)">
         <xsl:if test="string-length(buildid)>0">
@@ -227,8 +227,8 @@
         </xsl:if>
       </xsl:if> <!-- end admin -->
 
-     
-      
+
+
       <xsl:if test="string-length(buildid)>0 and countbuildids=1">
       <div>
       <xsl:attribute name="id">buildgroup_<xsl:value-of select="buildid"/></xsl:attribute>
@@ -241,8 +241,8 @@
       </div>
      </xsl:if>
 
-       
-      
+
+
       </td>
 
       <td align="center">
@@ -275,13 +275,13 @@
         <xsl:if test="countbuildids!=1">
           <xsl:value-of select="update/files"/>
         </xsl:if>
-      <xsl:if test="update/defined=1"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
+      <xsl:if test="update/defined=1"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
       <td align="right">
       <xsl:value-of select="update/time"/>
-      <xsl:if test="string-length(update/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if> 
-      </td>    
+      <xsl:if test="string-length(update/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
+      </td>
 
       <td align="center">
        <xsl:attribute name="class">
@@ -314,8 +314,8 @@
             warning
             </xsl:when>
            <xsl:when test="string-length(configure/warning)>0">
-           normal 
-           </xsl:when>     
+           normal
+           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
         <xsl:if test="countbuildids=1">
@@ -328,14 +328,14 @@
         <xsl:if test="countbuildids!=1">
           <xsl:value-of select="configure/warning"/>
         </xsl:if>
-      <xsl:if test="string-length(configure/warning)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>   
+      <xsl:if test="string-length(configure/warning)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       <xsl:if test="configure/nwarningdiff > 0 and countbuildids=1"><sub>+<xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       <xsl:if test="configure/nwarningdiff &lt; 0 and countbuildids=1"><sub><xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       </td>
 
       <td align="right">
       <xsl:value-of select="configure/time"/>
-      <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if> 
+      <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
       <td align="center">
@@ -345,15 +345,15 @@
             error
             </xsl:when>
            <xsl:when test="string-length(compilation/error)>0">
-           normal 
-           </xsl:when>     
+           normal
+           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
 
        <div>
        <xsl:if test="compilation/nerrordiffp > 0 or compilation/nerrordiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
-       </xsl:if> 
+       </xsl:if>
         <xsl:if test="countbuildids=1">
         <a>
         <xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/>
@@ -364,7 +364,7 @@
         <xsl:if test="countbuildids!=1">
           <xsl:value-of select="compilation/error"/>
         </xsl:if>
-      <xsl:if test="string-length(compilation/error)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>   
+      <xsl:if test="string-length(compilation/error)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       <xsl:if test="compilation/nerrordiffp > 0 and countbuildids=1">
       <a class="sup">
         <xsl:attribute name="href">viewBuildError.php?onlydeltap&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
@@ -386,15 +386,15 @@
             warning
             </xsl:when>
            <xsl:when test="string-length(compilation/warning)>0">
-           normal 
-           </xsl:when>   
+           normal
+           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
        <div>
        <xsl:if test="compilation/nwarningdiffp > 0 or compilation/nwarningdiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
-       </xsl:if> 
-      
+       </xsl:if>
+
         <xsl:if test="countbuildids=1">
         <a>
         <xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/>
@@ -419,11 +419,11 @@
       </a>
       </xsl:if>
       </div>
-      
+
       </td>
 
       <td align="right"><xsl:value-of select="compilation/time"/>
-      <xsl:if test="string-length(compilation/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>   
+      <xsl:if test="string-length(compilation/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
       <td align="center">
@@ -440,7 +440,7 @@
       <div>
        <xsl:if test="test/nnotrundiffp > 0 or test/nnotrundiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
-       </xsl:if> 
+       </xsl:if>
         <xsl:if test="countbuildids=1">
         <a>
         <xsl:attribute name="href">viewTest.php?onlynotrun&#38;buildid=<xsl:value-of select="buildid"/>
@@ -471,14 +471,14 @@
             error
             </xsl:when>
           <xsl:when test="string-length(test/fail)>0">
-            normal  
-          </xsl:when>  
+            normal
+          </xsl:when>
         </xsl:choose>
       </xsl:attribute>
        <div>
        <xsl:if test="test/nfaildiffp > 0 or test/nfaildiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
-       </xsl:if> 
+       </xsl:if>
         <xsl:if test="countbuildids=1">
         <a>
         <xsl:attribute name="href">viewTest.php?onlyfailed&#38;buildid=<xsl:value-of select="buildid"/>
@@ -489,13 +489,13 @@
         <xsl:if test="countbuildids!=1">
           <xsl:value-of select="test/fail"/>
         </xsl:if>
-      <xsl:if test="string-length(test/fail)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
+      <xsl:if test="string-length(test/fail)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       <xsl:if test="test/nfaildiffp > 0 and countbuildids=1"><a class="sup">
         <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
         +<xsl:value-of select="test/nfaildiffp"/></a>
       </xsl:if>
       <xsl:if test="test/nfaildiffn > 0 and countbuildids=1"><span class="sub">-<xsl:value-of select="test/nfaildiffn"/></span>
-      </xsl:if> 
+      </xsl:if>
       </div>
       </td>
 
@@ -504,13 +504,13 @@
         <xsl:choose>
              <xsl:when test="string-length(test/pass)>0">
              normal
-             </xsl:when>       
+             </xsl:when>
         </xsl:choose>
       </xsl:attribute>
        <div>
        <xsl:if test="test/npassdiffp > 0 or test/npassdiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
-       </xsl:if> 
+       </xsl:if>
        <xsl:if test="countbuildids=1">
         <a>
         <xsl:attribute name="href">viewTest.php?onlypassed&#38;buildid=<xsl:value-of select="buildid"/>
@@ -521,14 +521,14 @@
         <xsl:if test="countbuildids!=1">
           <xsl:value-of select="test/pass"/>
         </xsl:if>
-      <xsl:if test="string-length(test/fail)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
+      <xsl:if test="string-length(test/fail)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       <xsl:if test="test/npassdiffp > 0 and countbuildids=1">
       <a class="sup">
         <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>+<xsl:value-of select="test/npassdiffp"/>
       </a>
       </xsl:if>
-     
+
       <xsl:if test="test/npassdiffn > 0 and countbuildids=1">
       <span class="sub">-<xsl:value-of select="test/npassdiffn"/></span>
       </xsl:if>
@@ -543,16 +543,16 @@
             </xsl:when>
              <xsl:when test="string-length(test/timestatus)>0">
              normal
-             </xsl:when>  
+             </xsl:when>
         </xsl:choose>
       </xsl:attribute>
       <div>
        <xsl:if test="test/ntimediffp > 0 or test/ntimediffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
-       </xsl:if> 
+       </xsl:if>
       <xsl:choose>
           <xsl:when test="test/timestatus > 0">
-             <b><a><xsl:attribute name="href">viewTest.php?onlytimestatus&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/timestatus"/></a></b>  
+             <b><a><xsl:attribute name="href">viewTest.php?onlytimestatus&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/timestatus"/></a></b>
              <xsl:if test="test/ntimediffp > 0">
              <a class="sup">
               <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
@@ -565,7 +565,7 @@
           </xsl:when>
            <xsl:when test="string-length(test/timestatus)>0">
              <xsl:value-of select="test/time"/>
-             <xsl:if test="string-length(test/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
+             <xsl:if test="string-length(test/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
              <xsl:if test="test/ntimediffp > 0 and countbuildids=1">
              <a class="sup">
               <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
@@ -574,11 +574,11 @@
              </xsl:if>
              <xsl:if test="test/ntimediffn > 0 and countbuildids=1">
               <span class="sub">-<xsl:value-of select="test/ntimediffn"/></span>
-              </xsl:if>  
-           </xsl:when>  
+              </xsl:if>
+           </xsl:when>
              <xsl:when test="string-length(test/timestatus)=0">
                <xsl:value-of select="test/time"/>
-               <xsl:if test="string-length(test/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>  
+               <xsl:if test="string-length(test/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
              </xsl:when>
         </xsl:choose>
         </div>
@@ -588,14 +588,14 @@
         <xsl:if test="/cdash/dashboard/displaylabels=0">
          <xsl:attribute name="class">nob</xsl:attribute>
         </xsl:if>
-        
+
         <xsl:if test="string-length(builddate)=0">
           Expected build<br />
           <span style="font-size: 10px;">
           Expected submit time: <xsl:value-of select="expectedstarttime" />
           </span>
         </xsl:if>
-        
+
         <xsl:value-of select="builddate"/>
       </td>
 
@@ -646,7 +646,7 @@
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <b><xsl:value-of select = "$type/totalConfigureError"/></b>  
+      <b><xsl:value-of select = "$type/totalConfigureError"/></b>
       </td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
@@ -658,7 +658,7 @@
            normal
            </xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>  
+      </xsl:attribute>
       <b><xsl:value-of select = "$type/totalConfigureWarning"/></b>
       </td>
       <td width="5%" align="right">
@@ -687,7 +687,7 @@
              normal
            </xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>  
+      </xsl:attribute>
       <b><xsl:value-of select = "$type/totalWarning"/></b>
       </td>
       <td width="5%" align="right">
@@ -716,14 +716,14 @@
             normal
            </xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>   
-      <b><xsl:value-of select = "$type/totalFail"/></b>  
+      </xsl:attribute>
+      <b><xsl:value-of select = "$type/totalFail"/></b>
       </td>
       <td width="3%" align="center">
-       <xsl:attribute name="class">normal</xsl:attribute>   
+       <xsl:attribute name="class">normal</xsl:attribute>
       <b><xsl:value-of select = "$type/totalPass"/></b>
       </td>
-      <td width="3%" align="center">      
+      <td width="3%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/enableTestTiming != 0">
@@ -738,7 +738,7 @@
          <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-      
+
       <!-- display the labels -->
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <td width="10%" class="nob"></td>
@@ -758,9 +758,9 @@
    <xsl:include href="local/header.xsl"/>
    <xsl:include href="local/footer.xsl"/>
 
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
- 
+
     <xsl:template match="/">
       <html>
        <head>
@@ -769,16 +769,16 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-                  
+
          <!-- Include JavaScript -->
          <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
          <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
-         <xsl:call-template name="headscripts"/> 
+         <xsl:call-template name="headscripts"/>
        </head>
        <body bgcolor="#ffffff">
 
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -797,7 +797,7 @@
   <b><xsl:value-of select="text"/></b>
   </td>
   </tr>
-  </xsl:for-each>  
+  </xsl:for-each>
   <tr>
     <td height="25" align="left" valign="bottom">
     <xsl:if test="cdash/updates/nchanges=-1">No update data</xsl:if>
@@ -805,17 +805,18 @@
     <xsl:if test="cdash/updates/nchanges>0">
       <a><xsl:attribute name="href"><xsl:value-of select="cdash/updates/url"/></xsl:attribute>
          <xsl:value-of select="cdash/updates/nchanges"/> file<xsl:if test="cdash/updates/nchanges>1">s</xsl:if>
-          changed  </a> 
+          changed  </a>
          by <xsl:value-of select="cdash/updates/nauthors"/> author<xsl:if test="cdash/updates/nauthors>1">s</xsl:if>
     </xsl:if>
          as of
          <b><xsl:value-of select="cdash/updates/timestamp"/></b></td>
-         <td><a href="#" class="keytrigger">Help</a>
-         <div class="jqmWindow" id="key">Loading key...</div>
-         <div class="jqmWindow" id="groupsdescription">Loading key...</div>
+         <td align="right"><a href="#" class="autorefresh">Auto-refresh</a>
+         <a href="#" class="helptrigger">Help</a>
+         <div class="jqmWindow" id="help">Loading help...</div>
+         <div class="jqmWindow" id="groupsdescription">Loading group description...</div>
          </td>
   </tr>
-  
+
 </table>
 </xsl:if>
 
@@ -846,10 +847,10 @@
    <xsl:for-each select="/cdash/buildgroup">
      <a>
      <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
-     <xsl:value-of select="name"/></a> | 
+     <xsl:value-of select="name"/></a> |
     </xsl:for-each>
     <a href="#DynamicAnalysis">Dynamic Analysis</a>
-    </div> 
+    </div>
     </td>
    </tr>
 
@@ -871,7 +872,7 @@
      <td align="center"><b>Fail</b></td>
      <td align="center"><b>Pass</b></td>
   </tr>
-   
+
   <xsl:for-each select="cdash/subproject/dependency">
    <tr>
       <xsl:attribute name="class"><xsl:value-of select="rowparity"/></xsl:attribute>
@@ -884,14 +885,14 @@
     <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="nconfigureerror>0">error</xsl:when>
-          <xsl:otherwise> 
+          <xsl:otherwise>
           <xsl:choose>
           <xsl:when test="nconfigureerror=0 and nconfigurewarning=0 and nconfigurepass=0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">  
+      </xsl:attribute>
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">
     <xsl:value-of select="nconfigureerror"/>
     </xsl:if>
     </td>
@@ -906,8 +907,8 @@
           </xsl:choose>
           </xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">  
+      </xsl:attribute>
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">
     <xsl:value-of select="nconfigurewarning"/>
     </xsl:if>
     </td>
@@ -917,8 +918,8 @@
           <xsl:when test="nconfigureerror=0 and nconfigurewarning=0 and nconfigurepass=0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute> 
-    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">        
+      </xsl:attribute>
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">
     <xsl:value-of select="nconfigurepass"/>
     </xsl:if>
     </td>
@@ -931,8 +932,8 @@
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">        
+      </xsl:attribute>
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">
     <xsl:value-of select="nbuilderror"/>
     </xsl:if>
     </td>
@@ -945,8 +946,8 @@
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">     
+      </xsl:attribute>
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">
     <xsl:value-of select="nbuildwarning"/>
     </xsl:if>
     </td>
@@ -956,8 +957,8 @@
           <xsl:when test="nbuildpass>0">normal</xsl:when>
           <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">     
+      </xsl:attribute>
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">
     <xsl:value-of select="nbuildpass"/>
     </xsl:if>
     </td>
@@ -984,8 +985,8 @@
           <xsl:otherwise></xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>  
-    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">    
+      </xsl:attribute>
+    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">
     <xsl:value-of select="ntestfail"/>
     </xsl:if>
     </td>
@@ -995,8 +996,8 @@
           <xsl:when test="ntestpass>0">normal</xsl:when>
           <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute> 
-    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">   
+      </xsl:attribute>
+    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">
     <xsl:value-of select="ntestpass"/>
     </xsl:if>
     </td>
@@ -1038,14 +1039,14 @@
    <xsl:for-each select="/cdash/buildgroup">
      <a>
      <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
-     <xsl:value-of select="name"/></a> | 
+     <xsl:value-of select="name"/></a> |
     </xsl:for-each>
     <a href="#DynamicAnalysis">Dynamic Analysis</a>
-    </div> 
+    </div>
     </td>
    </tr>
    </xsl:if>
-   
+
     <xsl:if test="count(cdash/buildgroup/coverage)>0">
 <thead>
 <tr class="table-heading2">
@@ -1060,10 +1061,10 @@
    <xsl:for-each select="/cdash/buildgroup">
      <a>
      <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
-     <xsl:value-of select="name"/></a> | 
+     <xsl:value-of select="name"/></a> |
     </xsl:for-each>
     <a href="#DynamicAnalysis">Dynamic Analysis</a>
-    </div> 
+    </div>
     </td>
    </tr>
    <tr class="table-heading">
@@ -1077,16 +1078,16 @@
        <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
       Date</th>
-      
+
       <!-- display the labels -->
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <th align="center" class="nob" id="sortcoveragesort_6" width="10%">Labels</th>
-      </xsl:if>  
+      </xsl:if>
    </tr>
 </thead>
-<tbody>   
+<tbody>
   <xsl:for-each select="cdash/buildgroup/coverage">
-   
+
    <tr>
       <td align="left" class="paddt"><xsl:value-of select="site"/></td>
       <td align="left" class="paddt"><xsl:value-of select="buildname"/></td>
@@ -1107,11 +1108,11 @@
       </td>
       <td align="center" ><b><xsl:value-of select="pass"/></b>
       <xsl:if test="passdiff > 0"><sub>+<xsl:value-of select="passdiff"/></sub></xsl:if>
-      <xsl:if test="passdiff &lt; 0"><sub><xsl:value-of select="passdiff"/></sub></xsl:if>    
+      <xsl:if test="passdiff &lt; 0"><sub><xsl:value-of select="passdiff"/></sub></xsl:if>
       </td>
       <td align="center" ><b><xsl:value-of select="fail"/></b>
       <xsl:if test="faildiff > 0"><sub>+<xsl:value-of select="faildiff"/></sub></xsl:if>
-      <xsl:if test="faildiff &lt; 0"><sub><xsl:value-of select="faildiff"/></sub></xsl:if>    
+      <xsl:if test="faildiff &lt; 0"><sub><xsl:value-of select="faildiff"/></sub></xsl:if>
       </td>
       <td align="left">
       <xsl:if test="/cdash/dashboard/displaylabels=0">
@@ -1124,7 +1125,7 @@
         <xsl:if test="count(labels/label)=0">(none)</xsl:if>
         <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
         </td>
-      </xsl:if>  
+      </xsl:if>
    </tr>
   </xsl:for-each>
 </tbody>
@@ -1142,7 +1143,7 @@
 
 
 <!-- Dynamic analysis -->
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable"> 
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable">
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)=0">
    <tr class="table-heading3" >
       <td colspan="1" class="nob">
@@ -1156,14 +1157,14 @@
    <xsl:for-each select="/cdash/buildgroup">
       <a>
      <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
-     <xsl:value-of select="name"/></a> | 
+     <xsl:value-of select="name"/></a> |
     </xsl:for-each>
     <a href="#Coverage">Coverage</a>
-    </div> 
+    </div>
     </td>
    </tr>
    </xsl:if>
-   
+
     <xsl:if test="count(cdash/buildgroup/dynamicanalysis)>0">
   <thead>
       <tr class="table-heading3">
@@ -1177,10 +1178,10 @@
    <xsl:for-each select="/cdash/buildgroup">
       <a>
      <xsl:attribute name="href">#<xsl:value-of select="linkname"/></xsl:attribute>
-     <xsl:value-of select="name"/></a> | 
+     <xsl:value-of select="name"/></a> |
     </xsl:for-each>
     <a href="#Coverage">Coverage</a>
-    </div> 
+    </div>
     </td>
    </tr>
    <tr class="table-heading">
@@ -1198,9 +1199,9 @@
       </xsl:if>
    </tr>
 </thead>
-<tbody> 
+<tbody>
   <xsl:for-each select="cdash/buildgroup/dynamicanalysis">
-   
+
    <tr>
       <td align="left"><xsl:value-of select="site"/></td>
       <td align="left"><xsl:value-of select="buildname"/></td>
@@ -1219,18 +1220,18 @@
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
       </td>
       <td align="left">
-      <xsl:if test="/cdash/dashboard/displaylabels=0"> 
+      <xsl:if test="/cdash/dashboard/displaylabels=0">
         <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
-      
+
       <xsl:value-of select="date"/></td>
 
-      <xsl:if test="/cdash/dashboard/displaylabels=1"> 
+      <xsl:if test="/cdash/dashboard/displaylabels=1">
         <td class="nob" align="left">
         <xsl:if test="count(labels/label)=0">(none)</xsl:if>
         <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
         </td>
-      </xsl:if>  
+      </xsl:if>
    </tr>
   </xsl:for-each>
 </tbody>
@@ -1245,7 +1246,7 @@
   </table>
 </xsl:if>
 
-<!-- footer  -->        
+<!-- footer  -->
 <xsl:if test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="coverageheader_local"/>
 </xsl:if>
@@ -1261,7 +1262,7 @@ CDash cannot predict the future (yet)...
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>
