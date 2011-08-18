@@ -9,8 +9,8 @@ body {
  font-weight: normal;
  color: #000000;
 }
- 
-  
+
+
 .argument {
  background-color: #eeeeee;
  font-family: Courier;
@@ -193,7 +193,7 @@ height: expression(this.height > 110 ? 110: true);
 background-color: #999999;
 }
 
-   
+
 
  .treven {
  background-color : #ececec;
@@ -405,20 +405,20 @@ background-color: #999999;
  background-position: right bottom;
 }
 
-#nav-one li:hover a, 
+#nav-one li:hover a,
 #nav-one li.sfHover a {
   background: #ccc;
   color: #000;
 }
-#nav-one li:hover ul a, 
+#nav-one li:hover ul a,
 #nav-one li.sfHover ul a {
   background: #FFFFFF;
-  color: #959595; 
+  color: #959595;
 }
-#nav-one li:hover ul a:hover, 
+#nav-one li:hover ul a:hover,
 #nav-one li.sfHover ul a:hover {
   background: #ccc;
-  color: #000; 
+  color: #000;
 }
 
 .nav li ul {
@@ -684,9 +684,9 @@ img.datepicker_trigger {
 
 
 .cal {
-  position: absolute; 
+  position: absolute;
   top: -999px; /* we hide it from safari */
-  left: 140px; 
+  left: 140px;
 }
 
 
@@ -820,7 +820,7 @@ a.grouptrigger:visited{
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
-    white-space: nowrap; /* required in IE 6 */    
+    white-space: nowrap; /* required in IE 6 */
 }
 .tabs-nav .tabs-selected a {
     color: #000;
@@ -899,7 +899,7 @@ span.help_content{
 
 /* fix the position of the help tootip */
 
-div#key {
+div#help {
   position: absolute;
 }
 
