@@ -62,11 +62,16 @@ set(server "${CDASH_SERVER}")
 set(path "/${CDASH_DIR_NAME}")
   
 add_cdash_test(CTestSubmitLargeOutput CTestSubmitLargeOutput)
+if("${CDASH_DB_TYPE}" STREQUAL "mysql")
+  # This test only passes if it fails to submit properly...
+  #
+  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
+    PASS_REGULAR_EXPRESSION "Errors occurred during submission")
+else()
+  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
+    PASS_REGULAR_EXPRESSION "Submission successful")
+endif()
 
-# This test only passes if it fails to submit properly...
-#
-SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
-  PASS_REGULAR_EXPRESSION "Errors occurred during submission")
 
 # Give this test plenty of time to run on slower machines:
 # Use 1500 or CTEST_TEST_TIMEOUT for long test timeout value,
