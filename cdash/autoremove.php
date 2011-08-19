@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -22,7 +22,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
   require_once('cdash/config.php');
   require_once('cdash/pdo.php');
   require_once('cdash/common.php');
-  
+
   set_time_limit(0);
 
   $buildgroups = pdo_query('SELECT id,autoremovetimeframe FROM buildgroup WHERE projectid='.qnum($projectid));
@@ -31,7 +31,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
   while($buildgroup = pdo_fetch_array($buildgroups))
     {
     $days = $buildgroup['autoremovetimeframe'];
-    
+
     if($days < 2)
       {
       continue;
@@ -41,7 +41,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
     $cutoff = time()-3600*24*$days;
     $cutoffdate = date(FMT_DATETIME,$cutoff);
 
-    $builds = pdo_query("SELECT build.id AS id FROM build,build2group WHERE build.starttime<'$cutoffdate'
+    $builds = pdo_query("SELECT build.id AS id FROM build,build2group WHERE build.starttime<'".$cutoffdate."'
       AND build2group.buildid=build.id AND build2group.groupid=".qnum($groupid).
       "ORDER BY build.starttime ASC LIMIT $maxbuilds");
     add_last_sql_error("autoremove::removeBuildsGroupwise");
@@ -55,7 +55,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds)
    $s = 'removing old buildids for projectid: '.$projectid;
    add_log($s, 'removeBuildsGroupwise');
    print "  -- " . $s . "\n";
-   remove_build($buildids);  
+   remove_build($buildids);
 }
 
 /** Remove the first builds that are at the beginning of the queue */
@@ -83,7 +83,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
     }
 
   // First remove the builds with the wrong date
-  $currentdate = time()-3600*24*$days; 
+  $currentdate = time()-3600*24*$days;
   $startdate = date(FMT_DATETIME,$currentdate);
 
   add_log('about to query for builds to remove', 'removeFirstBuilds');
@@ -95,11 +95,11 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
     {
     $buildids[] = $builds_array["id"];
     }
-    
+
   $s = 'removing old buildids for projectid: '.$projectid;
   add_log($s, 'removeFirstBuilds');
   print "  -- " . $s . "\n"; // for "interactive" command line feedback
-  remove_build($buildids);    
+  remove_build($buildids);
 }
 
 ?>
