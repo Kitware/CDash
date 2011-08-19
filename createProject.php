@@ -109,6 +109,7 @@ function stripHTTP($url)
   return $url;
   }
 
+
 // If we should create the tables
 @$Submit = $_POST["Submit"];
 if($Submit)
@@ -163,7 +164,15 @@ if($Submit)
     $Project->Public = $Public;
 
     /** Calculate the upload quota */
-    $uploadQuota = $_POST['uploadQuota'];
+    if(isset($_POST['uploadQuota']))
+      {
+      $uploadQuota = $_POST['uploadQuota'];
+      }
+    else
+      {
+      $uploadQuota = $CDASH_MAX_UPLOAD_QUOTA;
+      }
+
     if(is_numeric($uploadQuota) && $uploadQuota > 0)
       {
       $Project->UploadQuota = floor(min($uploadQuota, $CDASH_MAX_UPLOAD_QUOTA) * 1024 * 1024 * 1024);
@@ -336,9 +345,16 @@ if($Update || $AddRepository)
   @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
   @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
   @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
-  
+
   /** Calculate the upload quota */
-  $uploadQuota = $_POST['uploadQuota'];
+  if(isset($_POST['uploadQuota']))
+    {
+    $uploadQuota = $_POST['uploadQuota'];
+    }
+  else
+    {
+    $uploadQuota = $CDASH_MAX_UPLOAD_QUOTA;
+    }
   if(is_numeric($uploadQuota) && $uploadQuota > 0)
     {
     $Project->UploadQuota = floor(min($uploadQuota, $CDASH_MAX_UPLOAD_QUOTA) * 1024 * 1024 * 1024);
