@@ -163,6 +163,7 @@ function time_difference($duration,$compact=false)
   $duration -= $mins*60;
   $secs = $duration;
 
+  $diff = '';
   if($compact)
     {
     if($years>0)
@@ -194,10 +195,6 @@ function time_difference($duration,$compact=false)
     if($secs>0)
       {
       $diff .= $secs.'s';
-      }
-    else
-      {
-      $diff = '0s';
       }
     }
   else
@@ -232,11 +229,13 @@ function time_difference($duration,$compact=false)
       $diff = $secs. ' second';
       if($secs>1) {$diff .= 's';}
       }
-    else
-      {
-      $diff = '0s';
-      }
     }
+
+  if($diff == '')
+    {
+    $diff = '0s';
+    }
+
   return $diff;
 }
 
