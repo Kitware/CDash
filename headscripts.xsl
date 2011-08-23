@@ -28,9 +28,6 @@
     <!-- Include Calendar JavaScript -->
     <script src="javascript/cdashmenu.js" type="text/javascript" charset="utf-8"></script>
 
-    <!-- Include Core Datepicker Stylesheet -->
-    <link rel="stylesheet" href="javascript/ui.datepicker.css" type="text/css" media="screen" title="core css file" charset="utf-8" />
-
     <!-- Include the sorting -->
     <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>

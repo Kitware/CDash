@@ -73,7 +73,7 @@
    </tr>
 
    <tr class="table-heading">
-      <th align="center" rowspan="2" width="15%">
+      <th align="center" rowspan="2" width="10%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_0</xsl:attribute>
       Site</th>
       <th align="center" rowspan="2" width="20%">
@@ -82,8 +82,8 @@
       <td align="center" colspan="1" width="5%" class="botl">Update</td>
       <td align="center" colspan="2" width="10%" class="botl">Configure</td>
       <td align="center" colspan="2" width="10%" class="botl">Build</td>
-      <td align="center" colspan="4" width="10%" class="botl">Test</td>
-      <th align="center" rowspan="2" width="5%">
+      <td align="center" colspan="4" width="15%" class="botl">Test</td>
+      <th align="center" rowspan="2" width="10%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_11</xsl:attribute>
       <xsl:if test="/cdash/dashboard/displaylabels=0">
         <xsl:attribute name="class">nob</xsl:attribute>
@@ -97,7 +97,7 @@
    </tr>
 
    <tr class="table-heading">
-      <th align="center">
+      <th align="center" width="3%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_2</xsl:attribute>
       Files</th>
       <th align="center">
@@ -112,16 +112,16 @@
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_6</xsl:attribute>
       Warn</th>
-      <th align="center">
+      <th align="center" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_7</xsl:attribute>
       Not Run</th>
-      <th align="center">
+      <th align="center" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_8</xsl:attribute>
       Fail</th>
-      <th align="center">
+      <th align="center" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_9</xsl:attribute>
       Pass</th>
-     <th align="center">
+     <th align="center" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_10</xsl:attribute>
       Time</th>
    </tr>

@@ -173,9 +173,11 @@ height: expression(this.height > 110 ? 110: true);
  padding-top: 3px;
  padding-bottom: 3px;
 }
+
+
 .tabb td{
- padding-top: 8px;
- padding-bottom: 8px;
+ padding-top: 4px;
+ padding-bottom: 4px;
 }
 
 .tabb tbody tr.odd td.normal {
@@ -234,6 +236,8 @@ background-color: #adcae6
 }
 
 .table-heading1 .nob {
+ margin: 0px;
+ padding: 3px;
  border-top-width: 0px;
  border-right-width: 0px;
  border-left-width: 0px;
@@ -245,6 +249,8 @@ background-color: #adcae6
  border-bottom-style: solid;
  border-bottom-color: #555555;
  font-weight: bold;
+ margin: 0px;
+ padding: 0px;
 }
 #sort_11{
  border-top-width: 0px;
@@ -748,7 +754,6 @@ a.sup {
 /** New CSS starts here */
 div#header {
   width:100%;
-
 }
 
 div#headertop {
@@ -1010,9 +1015,10 @@ div#banner {
 
 div#index_top {
   width: 100%;
-  padding-top: 10px;
-  padding-bottom: 5px;
-  height: 20px;
+  padding-top: 8px;
+  padding-bottom: 1px;
+  height: 15px;
+  margin: 0px;
 }
 
 div#updatechanges {
