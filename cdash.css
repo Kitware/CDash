@@ -154,7 +154,7 @@ height: expression(this.height > 110 ? 110: true);
 }
 
 .tabb a {
-  color:  #003366 ; /* #3B5998 #00498f*/
+  color:  #00264D ; /* #3B5998 #00498f*/
   text-decoration:  none;
 }
 
@@ -173,7 +173,6 @@ height: expression(this.height > 110 ? 110: true);
  padding-top: 8px;
  padding-bottom: 8px;
 }
-
 
 .tabb tbody tr.odd td.normal {
   background-color: #7DB04A; /* 669933 */
