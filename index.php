@@ -1112,7 +1112,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $xml .= add_XML_value("totalNotRun",$totalnotrun);
         $xml .= add_XML_value("totalFail",$totalfail);
         $xml .= add_XML_value("totalPass",$totalpass);
-        $xml .= add_XML_value("totalTestsDuration",$totalTestsDuration);
+        $xml .= add_XML_value("totalTestsDuration",time_difference($totalTestsDuration*60.0,true));
         $xml .= "</buildgroup>";
         }
 
