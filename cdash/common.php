@@ -149,89 +149,95 @@ function XMLStrFormat($str)
 }
 
 
-function time_difference($endtime,$compact=false){
-    $days= (date("j",$endtime)-1);
-    $months =(date("n",$endtime)-1);
-    $years =(date("Y",$endtime)-1970);
-    $hours =date("G",$endtime)-1;
-    $mins =date("i",$endtime);
-    $secs =date("s",$endtime);
+function time_difference($duration,$compact=false)
+{
+  $years = floor($duration/31557600);
+  $duration -= $years*31557600;
+  $months = floor($duration/2635200);
+  $duration -= $months*2635200;
+  $days = floor($duration/86400);
+  $duration -= $days*86400;
+  $hours = floor($duration/3600);
+  $duration -= $hours*3600;
+  $mins = floor($duration/60);
+  $duration -= $mins*60;
+  $secs = $duration;
 
-    if($compact)
+  if($compact)
+    {
+    if($years>0)
       {
-      if($years>0)
-        {
-        $diff .= $years. ' year';
-        if($years>1) {$diff .= 's';}
-        $diff .= ' ';
-        }
-      if($months>0)
-        {
-        $diff .= $months.' month';
-        if($months>1) {$diff .= 's';}
-        $diff .= ' ';
-        }
-      if($days>0)
-        {
-        $diff .= $days. ' day';
-        if($days>1) {$diff .= 's';}
-        $diff .= ' ';
-        }
-      if($hours>0)
-        {
-        $diff .= $hours.'h ';
-        }
-      if($mins>0)
-        {
-        $diff .= $mins.'m ';
-        }
-      if($secs>0)
-        {
-        $diff .= $secs.'s';
-        }
-      else
-        {
-        $diff = '0s';
-        }
+      $diff .= $years. ' year';
+      if($years>1) {$diff .= 's';}
+      $diff .= ' ';
+      }
+    if($months>0)
+      {
+      $diff .= $months.' month';
+      if($months>1) {$diff .= 's';}
+      $diff .= ' ';
+      }
+    if($days>0)
+      {
+      $diff .= $days. ' day';
+      if($days>1) {$diff .= 's';}
+      $diff .= ' ';
+      }
+    if($hours>0)
+      {
+      $diff .= $hours.'h ';
+      }
+    if($mins>0)
+      {
+      $diff .= $mins.'m ';
+      }
+    if($secs>0)
+      {
+      $diff .= $secs.'s';
       }
     else
       {
-      if($years>0)
-        {
-        $diff = $years. ' year';
-        if($years>1) {$diff .= 's';}
-        }
-      else if($months>0)
-        {
-        $diff = $months. ' month';
-        if($months>1) {$diff .= 's';}
-        }
-      else if($days>0)
-        {
-        $diff = $days. ' day';
-        if($days>1) {$diff .= 's';}
-        }
-      else if($hours>0)
-        {
-        $diff = $hours. ' hour';
-        if($hours>1) {$diff .= 's';}
-        }
-      else if($mins>0)
-        {
-        $diff = $mins. ' minute';
-        if($mins>1) {$diff .= 's';}
-        }
-      else if($secs>0)
-        {
-        $diff = $secs. ' second';
-        if($secs>1) {$diff .= 's';}
-        }
-      else
-        {
-        $diff = '0s';
-        }
+      $diff = '0s';
       }
-    return $diff;
+    }
+  else
+    {
+    if($years>0)
+      {
+      $diff = $years. ' year';
+      if($years>1) {$diff .= 's';}
+      }
+    else if($months>0)
+      {
+      $diff = $months. ' month';
+      if($months>1) {$diff .= 's';}
+      }
+    else if($days>0)
+      {
+      $diff = $days. ' day';
+      if($days>1) {$diff .= 's';}
+      }
+    else if($hours>0)
+      {
+      $diff = $hours. ' hour';
+      if($hours>1) {$diff .= 's';}
+      }
+    else if($mins>0)
+      {
+      $diff = $mins. ' minute';
+      if($mins>1) {$diff .= 's';}
+      }
+    else if($secs>0)
+      {
+      $diff = $secs. ' second';
+      if($secs>1) {$diff .= 's';}
+      }
+    else
+      {
+      $diff = '0s';
+      }
+    }
+  return $diff;
 }
 
 /** Microtime function */

@@ -1295,7 +1295,6 @@ function generate_main_dashboard_XML($projectid,$date)
       }
     $xml .= "</compilation>";
 
-
     $xml .= "<configure>";
 
     if($build_array['hasconfigurestatus'] != 0)
