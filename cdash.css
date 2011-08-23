@@ -59,6 +59,10 @@ a:hover{
  background-repeat: repeat-x;
 }
 
+.table-nobuild {
+  display:none;
+}
+
 #projectlogo {
 max-height : 110px;
 /* IE Image max-width */
@@ -216,6 +220,10 @@ background-color: #adcae6
 }
 .min {
  background-color: #fff687;
+}
+
+#coveragetable {
+  border-bottom: 1px solid #555555;
 }
 
 .tabb .nob {
@@ -778,7 +786,7 @@ div#headermenu {
 div#headername {
   font-size: 24px;
   font-weight: bold;
-  text-transform: uppercase;
+  text-transform: capitalize;
   color: #FFD966;
   position: absolute;
   top: 30px;
@@ -789,7 +797,7 @@ div#headername {
 div#headername2 {
   font-size: 24px;
   font-weight: bold;
-  text-transform: uppercase;
+  text-transform: capitalize;
   color: #FFD966;
   position: absolute;
   top: 40px;
@@ -864,7 +872,8 @@ div#topmenu a:hover {
   padding: 0;
   position: relative;
   text-align: center;
-  witdh: 110px;
+  width: 100px;
+  font-size: 1em;
 }
 
 #navigation li a, #navigation li a:link, #navigation li a:active, #navigation li a:visited {
@@ -890,6 +899,7 @@ div#topmenu a:hover {
 
 #navigation li li {
   display: none;
+  font-size: 0.9em;
 }
 
 #navigation li:hover li {
@@ -939,7 +949,6 @@ div#topmenu a:hover {
    left: 0px;
    padding-left: 10px;
 }
-
 
 /** Footer */
 #footer {

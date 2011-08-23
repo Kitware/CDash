@@ -67,11 +67,11 @@
         <li>
         <a>
         <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
-        DASHBOARD</a>
+        Dashboard</a>
         </li><li id="Back">
         <a>
         <xsl:attribute name="href"><xsl:value-of select="cdash/menu/back"/></xsl:attribute>
-        BACK</a><ul></ul>
+        Back</a><ul></ul>
         </li>
         </xsl:when>
         <xsl:otherwise>
@@ -82,7 +82,7 @@
         <xsl:attribute name="href">
         index.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/>
         </xsl:attribute>
-        DASHBOARD</a>
+        Dashboard</a>
         <ul>
         <li><a>
         <xsl:attribute name="href">viewChanges.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>Updates</a></li>
@@ -102,7 +102,7 @@
         </li>
         </xsl:otherwise>
         </xsl:choose>
-        <li><a id="cal" href="#">CALENDAR</a>
+        <li><a id="cal" href="#">Calendar</a>
         <span id="date_now" style="display:none;"><xsl:value-of select="cdash/dashboard/date"/></span>
         </li>
 
@@ -119,7 +119,7 @@
           </xsl:otherwise>
         </xsl:choose>
         </xsl:attribute>
-          PREVIOUS
+          Previous
           </a></li>
         </xsl:if>
 
@@ -133,7 +133,7 @@
           </xsl:otherwise>
         </xsl:choose>
         </xsl:attribute>
-            CURRENT
+            Current
             </a></li>
 
         <xsl:if test="string-length(cdash/menu/nonext)=0">
@@ -148,12 +148,12 @@
           </xsl:otherwise>
         </xsl:choose>
         </xsl:attribute>
-              NEXT
+              Next
               </a></li>
         </xsl:if>
 
         <li>
-        <a href="#">PROJECT</a><ul>
+        <a href="#">Project</a><ul>
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/documentation"/> </xsl:attribute>Doxygen</a></li>
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>Repository</a></li>
@@ -163,7 +163,7 @@
 
         <xsl:if test="cdash/user/projectrole>2 or cdash/user/admin=1">
         <li id="admin">
-        <a href="#">SETTINGS</a><ul>
+        <a href="#">Settings</a><ul>
         <li><a><xsl:attribute name="href">createProject.php?edit=1&#x26;projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Project</a></li>
         <li><a><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Users</a></li>
         <li><a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Groups</a></li>

@@ -61,7 +61,7 @@
         <li id="Back">
         <a>
         <xsl:attribute name="href"><xsl:value-of select="/cdash/backurl"/></xsl:attribute>
-        BACK</a><ul></ul>
+        Back</a><ul></ul>
         </li>
        </ul>
     </div>

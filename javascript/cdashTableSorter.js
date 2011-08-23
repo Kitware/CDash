@@ -324,7 +324,7 @@ $(document).ready(function() {
                    3: { sorter:'buildname'},
                    4: { sorter:'digit'},
                    5: { sorter:'text'},
-                   6: { sorter:'text'},
+                   6: { sorter:'text'}
                },
              debug: false,
              widgets: ['zebra']
@@ -348,7 +348,7 @@ $(document).ready(function() {
                    3: { sorter:'digit'},
                    4: { sorter:'text'},
                    5: { sorter:'text'},
-                   6: { sorter:'text'},
+                   6: { sorter:'text'}
                },
              debug: false,
              widgets: ['zebra']
@@ -367,7 +367,7 @@ $(document).ready(function() {
                4: { sorter:'digit'},
                5: { sorter:'text'},
                6: { sorter:'text'},
-               7: { sorter:'text'},
+               7: { sorter:'text'}
               },
            debug: false,
            widgets: ['zebra']
@@ -434,7 +434,7 @@ $(document).ready(function() {
            0: { sorter:'buildname'},
            1: { sorter:'digit'},
            2: { sorter:'text'},
-           3: { sorter:'text'},
+           3: { sorter:'text'}
           },
           debug: false,
           widgets: ['zebra']
@@ -459,7 +459,7 @@ $(document).ready(function() {
                   0: { sorter:'buildname'},
                   1: { sorter:'buildname'},
                   2: { sorter:'numericvalue'},
-                  3: { sorter:'digit'},
+                  3: { sorter:'numericvalue'},
                   4: { sorter:'numericvalue'},
                   5: { sorter:'numericvalue'},
                   6: { sorter:'numericvalue'},
@@ -467,11 +467,8 @@ $(document).ready(function() {
                   8: { sorter:'numericvalue'},
                   9: { sorter:'numericvalue'},
                   10: { sorter:'numericvalue'},
-                  11: { sorter:'numericvalue'},
-                  12: { sorter:'numericvalue'},
-                  13: { sorter:'numericvalue'},
-                  14: { sorter:'text'},
-                  15: { sorter:'text'}
+                  11: { sorter:'text'},
+                  12: { sorter:'text'}
               },
             debug: false,
             widgets: ['zebra']
