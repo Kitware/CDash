@@ -173,8 +173,25 @@ height: expression(this.height > 110 ? 110: true);
  padding-top: 8px;
  padding-bottom: 8px;
 }
+
+.tabb tbody tr.even td {
+  border-bottom: 1px solid #BBBBBB;
+}
+
+.tabb tbody tr.even td.normal {
+  border-bottom: 1px solid #669933;
+}
+
+.tabb tbody tr.even td.warning {
+  border-bottom: 1px solid #cc9966;
+}
+
+.tabb tbody tr.even td.error {
+  border-bottom: 1px solid #cc6666;
+}
+
 .tabb tbody tr.odd {
-  background-color:#ececec;
+  background-color: #ececec;
 }
 .tabb thead tr .header {
   background-repeat: no-repeat;
