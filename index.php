@@ -139,7 +139,7 @@ function generate_index_table()
       $lastbuild = strtotime($project['last_build']. "UTC");
       $xml .= "<lastbuild>".date(FMT_DATETIMEDISPLAY,$lastbuild)."</lastbuild>";
       $xml .= "<lastbuilddate>".date(FMT_DATE,$lastbuild)."</lastbuilddate>";
-      $xml .= "<lastbuild_elapsed>".time_difference(time()-$lastbuild)."</lastbuild_elapsed>";
+      $xml .= "<lastbuild_elapsed>".time_difference(time()-$lastbuild)." ago</lastbuild_elapsed>";
       }
 
     // Display the first build
@@ -150,7 +150,7 @@ function generate_index_table()
     else
       {
       $firstbuild = strtotime($project['first_build']. "UTC");
-      $xml .= "<firstbuild_elapsed>".time_difference(time()-$firstbuild)."</firstbuild_elapsed>";
+      $xml .= "<firstbuild_elapsed>".time_difference(time()-$firstbuild)." ago</firstbuild_elapsed>";
       $xml .= "<firstbuild>".date(FMT_DATETIMEDISPLAY,$firstbuild)."</firstbuild>";
       }
 
@@ -1251,7 +1251,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
       $duration = $build_array['updateduration'];
       $totalUpdateDuration += $duration;
-      $xml .= add_XML_value("time", $duration);
+      $xml .= add_XML_value("time", time_difference($duration,true));
       } // end if we have an update
     $xml .= "</update>";
 
@@ -1269,7 +1269,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("warning", $nwarnings);
       $duration = $build_array['buildduration'];
       $totalBuildDuration += $duration;
-      $xml .= add_XML_value("time", $duration);
+      $xml .= add_XML_value("time",time_difference($duration,true));
 
       $diff = $build_array['countbuilderrordiffp'];
       if($diff!=0)
@@ -1315,7 +1315,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
       $duration = $build_array['configureduration'];
       $totalConfigureDuration += $duration;
-      $xml .= add_XML_value("time", $duration);
+      $xml .= add_XML_value("time",time_difference($duration,true));
       }
     $xml .= "</configure>";
 
@@ -1381,7 +1381,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
       $duration = $build_array['testsduration'];
       $totalTestsDuration += $duration;
-      $xml .= add_XML_value("time", $duration);
+      $xml .= add_XML_value("time",time_difference($duration,true));
 
       $xml .= "</test>";
       }
@@ -1391,7 +1391,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $submittimestamp = strtotime($build_array["submittime"]." UTC");
     $xml .= add_XML_value("builddate",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
 
-    $xml .= add_XML_value("builddateelapsed",time_difference(time()-$starttimestamp)); // use the default timezone
+    $xml .= add_XML_value("builddateelapsed",time_difference(time()-$starttimestamp).' ago'); // use the default timezone
 
     $xml .= add_XML_value("submitdate",date(FMT_DATETIMEDISPLAY,$submittimestamp));// use the default timezone
     $xml .= add_XML_value("nerrorlog",$build_array["nerrorlog"]);// use the default timezone

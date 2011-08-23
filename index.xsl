@@ -79,9 +79,9 @@
       <th align="center" rowspan="2" width="20%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_1</xsl:attribute>
       Build Name</th>
-      <td align="center" colspan="2" width="5%" class="botl">Update</td>
-      <td align="center" colspan="3" width="10%" class="botl">Configure</td>
-      <td align="center" colspan="3" width="10%" class="botl">Build</td>
+      <td align="center" colspan="1" width="5%" class="botl">Update</td>
+      <td align="center" colspan="2" width="10%" class="botl">Configure</td>
+      <td align="center" colspan="2" width="10%" class="botl">Build</td>
       <td align="center" colspan="4" width="10%" class="botl">Test</td>
       <th align="center" rowspan="2" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
@@ -101,17 +101,11 @@
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_2</xsl:attribute>
       Files</th>
       <th align="center">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_3</xsl:attribute>
-      Min</th>
-      <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_4</xsl:attribute>
       Error</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_5</xsl:attribute>
       Warn</th>
-      <th align="center">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_6</xsl:attribute>
-      Min</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_7</xsl:attribute>
       Error</th>
@@ -119,20 +113,17 @@
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_8</xsl:attribute>
       Warn</th>
       <th align="center">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_9</xsl:attribute>
-      Min</th>
-      <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_10</xsl:attribute>
-      NotRun</th>
+      Not Run</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_11</xsl:attribute>
       Fail</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_12</xsl:attribute>
       Pass</th>
-      <th align="center">
+     <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_13</xsl:attribute>
-      Min</th>
+      Time</th>
    </tr>
    </thead>
 
@@ -235,8 +226,6 @@
       </div>
      </xsl:if>
 
-
-
       </td>
 
       <td align="center">
@@ -270,11 +259,6 @@
           <xsl:value-of select="update/files"/>
         </xsl:if>
       <xsl:if test="update/defined=1"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      </td>
-
-      <td align="right">
-      <xsl:value-of select="update/time"/>
-      <xsl:if test="string-length(update/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
       <td align="center">
@@ -327,10 +311,7 @@
       <xsl:if test="configure/nwarningdiff &lt; 0 and countbuildids=1"><sub><xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       </td>
 
-      <td align="right">
-      <xsl:value-of select="configure/time"/>
-      <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      </td>
+
 
       <td align="center">
       <xsl:attribute name="class">
@@ -416,9 +397,6 @@
 
       </td>
 
-      <td align="right"><xsl:value-of select="compilation/time"/>
-      <xsl:if test="string-length(compilation/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      </td>
 
       <td align="center">
       <xsl:attribute name="class">
@@ -593,7 +571,10 @@
         </xsl:when>
         <xsl:otherwise>
         <span class="builddateelapsed">
-           <xsl:attribute name="alt"><xsl:value-of select="builddate"/></xsl:attribute>
+           <xsl:attribute name="alt"><xsl:value-of select="builddate"/>
+           <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Update time: <xsl:value-of select="update/time"/>
+           <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Configure time: <xsl:value-of select="configure/time"/>
+           <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Compilation time: <xsl:value-of select="compilation/time"/></xsl:attribute>
            <xsl:value-of select="builddateelapsed"/>
         </span>
         </xsl:otherwise>
@@ -620,8 +601,7 @@
   <xsl:if test="count($type/build/buildid)>0">
   <tbody>
     <tr class="total">
-      <td width="15%" align="left">Totals</td>
-      <td width="15%" align="center"><b><xsl:value-of select = "count($type/build/buildid)" /> Builds</b></td>
+      <td width="30%" colspan="2" align="center"><b><xsl:value-of select = "count($type/build/buildid)" /> build<xsl:if test="count($type/build/buildid)>1">s</xsl:if></b></td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
        <xsl:choose>
@@ -635,7 +615,6 @@
         </xsl:attribute>
       <xsl:value-of select = "$type/totalUpdatedFiles"/>
       </td>
-      <td width="3%" align="right"><xsl:value-of select = "$type/totalUpdateDuration"/></td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
        <xsl:choose>
@@ -661,9 +640,6 @@
         </xsl:choose>
       </xsl:attribute>
       <b><xsl:value-of select = "$type/totalConfigureWarning"/></b>
-      </td>
-      <td width="5%" align="right">
-        <xsl:value-of select = "$type/totalConfigureDuration"/>
       </td>
       <td width="5%" align="center">
        <xsl:attribute name="class">
@@ -691,9 +667,6 @@
       </xsl:attribute>
       <b><xsl:value-of select = "$type/totalWarning"/></b>
       </td>
-      <td width="5%" align="right">
-        <xsl:value-of select = "$type/totalBuildDuration"/>
-      </td>
       <td width="6%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
@@ -720,10 +693,12 @@
       </xsl:attribute>
       <b><xsl:value-of select = "$type/totalFail"/></b>
       </td>
+
       <td width="3%" align="center">
        <xsl:attribute name="class">normal</xsl:attribute>
       <b><xsl:value-of select = "$type/totalPass"/></b>
       </td>
+
       <td width="3%" align="center">
       <xsl:attribute name="class">
         <xsl:choose>
