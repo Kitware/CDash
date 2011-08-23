@@ -2,13 +2,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headeradminproject.xsl"/> 
+   <xsl:include href="headeradminproject.xsl"/>
 
    <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headeradminproject.xsl"/>  
-     
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:include href="local/headeradminproject.xsl"/>
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -22,9 +22,9 @@
          <xsl:comment><![CDATA[[if IE]></xsl:comment>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
           <xsl:comment><![ endif]]></xsl:comment>
-          <script src="javascript/jquery.js"></script>
+          <script src="javascript/jquery-1.6.2.js"></script>
           <script type="text/javascript" src="javascript/ui.tabs.js"></script>
-             
+
        <!-- Functions to confirm the remove -->
   <xsl:text disable-output-escaping="yes">
         &lt;script language="javascript" type="text/javascript" &gt;
@@ -38,21 +38,21 @@
   </xsl:text>
        </head>
        <body bgcolor="#ffffff">
-       
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headeradminproject_local"/>
 </xsl:when>
 <xsl:otherwise>
   <xsl:call-template name="headeradminproject"/>
 </xsl:otherwise>
-</xsl:choose>    
+</xsl:choose>
 
 <br/>
 
 <xsl:choose>
  <xsl:when test="cdash/group_created=1">
- The group <b><xsl:value-of select="cdash/group_name"/></b> has been created successfully.<br/>          
+ The group <b><xsl:value-of select="cdash/group_name"/></b> has been created successfully.<br/>
  Click here to access the  <a>
  <xsl:attribute name="href">index.php?project=<xsl:value-of select="cdash/project_name"/></xsl:attribute>
 project page</a>
@@ -74,7 +74,7 @@ project page</a>
         <xsl:attribute name="value">0</xsl:attribute>
         Choose...
         </option>
-        
+
         <xsl:for-each select="cdash/availableproject">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -88,14 +88,14 @@ project page</a>
       </form>
     </td>
   </tr>
-</table> 
-  
+</table>
+
 <!-- If a project has been selected -->
 <xsl:if test="count(cdash/project)>0">
   <div id="wizard">
       <ul>
-          <li>                 
-            <a href="#fragment-1"><span>Current groups</span></a></li>                
+          <li>
+            <a href="#fragment-1"><span>Current groups</span></a></li>
           <li>
             <a href="#fragment-2"><span>Create new group</span></a></li>
           <li>
@@ -110,10 +110,10 @@ project page</a>
              <tr>
                <td><div align="right"></div></td>
                <td>
-               <table border="0" width="100%">    
+               <table border="0" width="100%">
                <xsl:for-each select="cdash/project/group">
                <tr>
-               <xsl:attribute name="bgcolor"><xsl:value-of select="bgcolor"/></xsl:attribute> 
+               <xsl:attribute name="bgcolor"><xsl:value-of select="bgcolor"/></xsl:attribute>
                <td><xsl:value-of select="name"/></td>
                <td>
                <a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;groupid=<xsl:value-of select="id"/>&amp;up=1</xsl:attribute> [up]</a>
@@ -145,22 +145,22 @@ project page</a>
                <xsl:attribute name="value"><xsl:value-of select="description"/></xsl:attribute>
                </input>
                <input type="submit" name="submitDescription" value="Update Description"/>
-               <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="1">  
+               <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="1">
                <xsl:if test="summaryemail=1">
-                 <xsl:attribute name="checked">1</xsl:attribute> 
-                </xsl:if> 
+                 <xsl:attribute name="checked">1</xsl:attribute>
+                </xsl:if>
                </input>
                Summary email
-               <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="2">  
+               <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="2">
                <xsl:if test="summaryemail=2">
-                 <xsl:attribute name="checked">1</xsl:attribute> 
-                </xsl:if> 
+                 <xsl:attribute name="checked">1</xsl:attribute>
+                </xsl:if>
                </input>
                No email
-               <input name="includeInSummary" onclick="form.submit();" type="checkbox" value="1">  
+               <input name="includeInSummary" onclick="form.submit();" type="checkbox" value="1">
                <xsl:if test="includeinsummary=1">
-                 <xsl:attribute name="checked">1</xsl:attribute> 
-                </xsl:if> 
+                 <xsl:attribute name="checked">1</xsl:attribute>
+                </xsl:if>
                </input>
                In summary <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
                   <img onmouseover="showHelpTop('summary_help');" src="images/help.gif" border="0"/></a>
@@ -181,7 +181,7 @@ project page</a>
                </td>
               <td></td>
             </tr>
-          </table>          
+          </table>
     </div>
     <div id="fragment-2" class="tab_content" >
         <div class="tab_help"></div>
@@ -196,14 +196,14 @@ project page</a>
               <td><div align="right"></div></td>
               <td><input type="submit" name="createGroup" value="Create Group"/><br/><br/></td>
             </tr>
-          </table> 
-          </form>         
+          </table>
+          </form>
     </div>
     <div id="fragment-3" class="tab_content" >
         <div class="tab_help"></div>
           <form name="globalmove" method="post">
           <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
-          <table width="800"  border="0">            
+          <table width="800"  border="0">
             <tr>
               <td width="10%"><div align="right">Show:</div></td>
               <td width="90%" >
@@ -241,7 +241,7 @@ project page</a>
                   <xsl:attribute name="value">0</xsl:attribute>
                   Choose...
                   </option>
-                  
+
                   <xsl:for-each select="cdash/project/group">
                   <option>
                   <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -255,8 +255,8 @@ project page</a>
               <input type="submit" name="globalMove" value="Move selected build to group"/>
               </td>
             </tr>
-          </table>  
-         </form>          
+          </table>
+         </form>
     </div>
     <div id="fragment-4" class="tab_content" >
       Builds for each group can be automatically removed after a certain number of days.<br/>
@@ -287,9 +287,9 @@ project page</a>
         </form>
     </div>
  </div>
-  
+
 </xsl:if>
- 
+
 
 <br/>
 </xsl:otherwise>
@@ -300,7 +300,7 @@ project page</a>
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

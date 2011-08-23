@@ -3,29 +3,29 @@
 
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
-   
+
    <!-- Include local common files -->
    <xsl:include href="local/header.xsl"/>
    <xsl:include href="local/footer.xsl"/>
 
-   
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-        
+
     <xsl:template match="/">
        <html>
        <head>
        <title><xsl:value-of select="cdash/title"/></title>
         <meta name="robots" content="noindex,nofollow" />
-          <link rel="shortcut icon" href="favicon.ico"/> 
+          <link rel="shortcut icon" href="favicon.ico"/>
      <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-          <xsl:call-template name="headscripts"/> 
+          <xsl:call-template name="headscripts"/>
        </head>
        <body>
- 
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -41,9 +41,9 @@
   <b><xsl:value-of select="cdash/banner/text"/></b>
   </td>
   </tr>
-  </xsl:if>  
+  </xsl:if>
 </table>
- 
+
 <!-- Main table -->
 <br/>
 
@@ -76,7 +76,7 @@
      <td align="center"><b>Not Run</b></td>
      <td align="center"><b>Fail</b></td>
      <td align="center"><b>Pass</b></td>
-  </tr> 
+  </tr>
    <tr class="treven">
    <td align="center">
      <a>
@@ -93,14 +93,14 @@
     <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="/cdash/project/nconfigureerror>0">error</xsl:when>
-          <xsl:otherwise> 
+          <xsl:otherwise>
           <xsl:choose>
           <xsl:when test="/cdash/project/nconfigureerror=0 and /cdash/project/nconfigurewarning=0 and /cdash/project/nconfigurepass=0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">  
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">
     <xsl:value-of select="/cdash/project/nconfigureerror"/>
     </xsl:if>
     </td>
@@ -115,8 +115,8 @@
           </xsl:choose>
           </xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">  
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">
     <xsl:value-of select="/cdash/project/nconfigurewarning"/>
     </xsl:if>
     </td>
@@ -126,8 +126,8 @@
           <xsl:when test="/cdash/project/nconfigureerror=0 and /cdash/project/nconfigurewarning=0 and /cdash/project/nconfigurepass=0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute> 
-    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">        
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/nconfigureerror!=0 or /cdash/project/nconfigurewarning!=0 or /cdash/project/nconfigurepass!=0">
     <xsl:value-of select="/cdash/project/nconfigurepass"/>
     </xsl:if>
     </td>
@@ -140,8 +140,8 @@
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">        
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">
     <xsl:value-of select="/cdash/project/nbuilderror"/>
     </xsl:if>
     </td>
@@ -154,8 +154,8 @@
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">     
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">
     <xsl:value-of select="/cdash/project/nbuildwarning"/>
     </xsl:if>
     </td>
@@ -165,8 +165,8 @@
           <xsl:when test="/cdash/project/nbuildpass>0">normal</xsl:when>
           <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">     
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/nbuilderror!=0 or /cdash/project/nbuildwarning!=0 or /cdash/project/nbuildpass!=0">
     <xsl:value-of select="/cdash/project/nbuildpass"/>
     </xsl:if>
     </td>
@@ -193,8 +193,8 @@
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>  
-    <xsl:if test="/cdash/project/ntestfail!=0 or /cdash/project/ntestpass!=0 or /cdash/project/ntestnotrun!=0">    
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/ntestfail!=0 or /cdash/project/ntestpass!=0 or /cdash/project/ntestnotrun!=0">
     <xsl:value-of select="/cdash/project/ntestfail"/>
     </xsl:if>
     </td>
@@ -204,8 +204,8 @@
           <xsl:when test="/cdash/project/ntestpass>0">normal</xsl:when>
           <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute> 
-    <xsl:if test="/cdash/project/ntestfail!=0 or /cdash/project/ntestpass!=0 or /cdash/project/ntestnotrun!=0">   
+      </xsl:attribute>
+    <xsl:if test="/cdash/project/ntestfail!=0 or /cdash/project/ntestpass!=0 or /cdash/project/ntestnotrun!=0">
     <xsl:value-of select="/cdash/project/ntestpass"/>
     </xsl:if>
     </td>
@@ -250,14 +250,14 @@
     <xsl:attribute name="class">
         <xsl:choose>
           <xsl:when test="nconfigureerror>0">error</xsl:when>
-          <xsl:otherwise> 
+          <xsl:otherwise>
           <xsl:choose>
           <xsl:when test="nconfigureerror=0 and nconfigurewarning=0 and nconfigurepass=0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">  
+      </xsl:attribute>
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">
     <xsl:value-of select="nconfigureerror"/>
     </xsl:if>
     </td>
@@ -272,8 +272,8 @@
           </xsl:choose>
           </xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">  
+      </xsl:attribute>
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">
     <xsl:value-of select="nconfigurewarning"/>
     </xsl:if>
     </td>
@@ -283,8 +283,8 @@
           <xsl:when test="nconfigureerror=0 and nconfigurewarning=0 and nconfigurepass=0"></xsl:when>
           <xsl:otherwise>normal</xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute> 
-    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">        
+      </xsl:attribute>
+    <xsl:if test="nconfigureerror!=0 or nconfigurewarning!=0 or nconfigurepass!=0">
     <xsl:value-of select="nconfigurepass"/>
     </xsl:if>
     </td>
@@ -297,8 +297,8 @@
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">        
+      </xsl:attribute>
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">
     <xsl:value-of select="nbuilderror"/>
     </xsl:if>
     </td>
@@ -311,8 +311,8 @@
           <xsl:otherwise>normal</xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">     
+      </xsl:attribute>
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">
       <xsl:value-of select="nbuildwarning"/>
     </xsl:if>
     </td>
@@ -322,8 +322,8 @@
           <xsl:when test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">normal</xsl:when>
           <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>    
-    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">     
+      </xsl:attribute>
+    <xsl:if test="nbuilderror!=0 or nbuildwarning!=0 or nbuildpass!=0">
       <xsl:value-of select="nbuildpass"/>
     </xsl:if>
     </td>
@@ -350,8 +350,8 @@
           <xsl:otherwise></xsl:otherwise>
           </xsl:choose></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute>  
-    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">    
+      </xsl:attribute>
+    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">
     <xsl:value-of select="ntestfail"/>
     </xsl:if>
     </td>
@@ -361,18 +361,18 @@
           <xsl:when test="(ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0) and string-length(ntestpass)>0">normal</xsl:when>
           <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
-      </xsl:attribute> 
-    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">   
+      </xsl:attribute>
+    <xsl:if test="ntestfail!=0 or ntestpass!=0 or ntestnotrun!=0">
     <xsl:value-of select="ntestpass"/>
     </xsl:if>
     </td>
-   
+
     <td align="center" class="nob"><xsl:value-of select="lastsubmission"/></td>
     </tr>
    </xsl:for-each>
-</tbody>   
+</tbody>
 </table>
-   
+
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
@@ -390,8 +390,7 @@
 <!-- FOOTER -->
 <br/>
 <xsl:call-template name="footer"/>
-<font size="1">Generated in <xsl:value-of select="/cdash/generationtime"/> seconds</font>
-        </body>
+       </body>
       </html>
     </xsl:template>
 </xsl:stylesheet>

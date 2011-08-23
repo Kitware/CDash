@@ -1,13 +1,13 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-     
+
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
-  
+
    <xsl:include href="local/header.xsl"/>
    <xsl:include href="local/footer.xsl"/>
-    
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <xsl:template match="/">
       <html>
@@ -17,15 +17,15 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-         <xsl:call-template name="headscripts"/> 
-     
+         <xsl:call-template name="headscripts"/>
+
          <!-- Include JavaScript -->
-         <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script> 
-         <script src="javascript/cdashAddNote.js" type="text/javascript" charset="utf-8"></script> 
+         <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script>
+         <script src="javascript/cdashAddNote.js" type="text/javascript" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
-   
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -40,6 +40,12 @@
 <xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="cdash/build/siteid"/></xsl:attribute>
 <xsl:value-of select="cdash/build/site"/></a>
     <br/><b>Build Name: </b><xsl:value-of select="cdash/build/name"/>
+
+    <xsl:if test="string-length(note)>0">
+      (<a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute>view notes</a>)
+    </xsl:if>
+
+
     <br/><b>Stamp: </b><xsl:value-of select="cdash/build/stamp"/>
     (<a><xsl:attribute name="href"><xsl:value-of select="cdash/build/relatedBuildsLink"/></xsl:attribute>related builds</a>)
     <br/><b>Time: </b><xsl:value-of select="cdash/build/time"/>
@@ -57,20 +63,24 @@
     </xsl:if>
     <xsl:if test="cdash/build/osversion">
       <br/><b>OS Version: </b><xsl:value-of select="cdash/build/osversion"/>
-    </xsl:if>  
-  
+    </xsl:if>
+
     <!-- Display Compiler information  -->
     <xsl:if test="cdash/build/compilername">
       <br/><b>Compiler Name: </b><xsl:value-of select="cdash/build/compilername"/>
     </xsl:if>
     <xsl:if test="cdash/build/compilerversion">
       <br/><b>Compiler Version: </b><xsl:value-of select="cdash/build/compilerversion"/>
-    </xsl:if>  
-    
+    </xsl:if>
+
+    <xsl:if test="cdash/build/generator">
+      <br/><b>CTest version: </b><xsl:value-of select="cdash/build/generator"/>
+    </xsl:if>
+
     <xsl:if test="cdash/build/lastsubmitbuild>0">
     <p/><b>Last submission: </b><a>
-     <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/lastsubmitbuild"/></xsl:attribute><xsl:value-of select="cdash/build/lastsubmitdate"/></a>  
-     </xsl:if> 
+     <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/lastsubmitbuild"/></xsl:attribute><xsl:value-of select="cdash/build/lastsubmitdate"/></a>
+     </xsl:if>
       <br/><br/>
       <table>
       <tr><td>
@@ -88,7 +98,7 @@
             <a href="#Stage0"><b>Update</b></a>
           </xsl:when>
           <xsl:otherwise><b>Update</b></xsl:otherwise>
-        </xsl:choose> 
+        </xsl:choose>
        </td>
         <td align="right">
         <xsl:attribute name="class">
@@ -103,7 +113,7 @@
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-       
+
         <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
         <xsl:value-of select="cdash/update/nerrors"/></a></b></td>
         <td align="right">
@@ -119,7 +129,7 @@
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-        
+
         <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
         <xsl:value-of select="cdash/update/nwarnings"/></a></b></td>
         </tr>
@@ -202,7 +212,7 @@
       </table>
       </td>
       <td>
-      
+
       <!-- Previous build -->
       <xsl:if test="cdash/previousbuild">
       <table class="dart">
@@ -231,7 +241,7 @@
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-       
+
         <b><a><xsl:attribute name="href">viewUpdate?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
        <xsl:value-of select="cdash/previousbuild/nupdateerrors"/></a></b></td>
         <td align="right">
@@ -247,7 +257,7 @@
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-        
+
         <b><a><xsl:attribute name="href">viewUpdate?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
         <xsl:value-of select="cdash/previousbuild/nupdatewarnings"/></a></b></td>
         </tr>
@@ -338,12 +348,12 @@
 <div class="title-divider">History</div>
 <a>
 <xsl:attribute name="href">javascript:showbuildhistory_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
-[Show Build History]
+Show Build History
 </a><br/>
 <a><xsl:attribute name="href">
 index.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>&#38;filtercount=3&#38;showfilters=1&#38;filtercombine=and&#38;field1=site/string&#38;compare1=63&#38;value1=<xsl:value-of select="/cdash/build/sitename_encoded"/>&#38;field2=buildstarttime/date&#38;compare2=83&#38;value2=<xsl:value-of select="/cdash/build/filterstarttime"/>&#38;field3=buildstarttime/date&#38;compare3=84&#38;value3=<xsl:value-of select="/cdash/build/filterendtime"/>
 </xsl:attribute>
-[Build History Filter]
+Build History Filter
 </a>
 <div id="buildhistory"></div>
 <br/>
@@ -364,14 +374,14 @@ index.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>&
 <!-- Add Notes -->
 <a>
 <xsl:attribute name="href">javascript:addnote_click(<xsl:value-of select="cdash/build/id"/>,'<xsl:value-of select="cdash/user/id"/>')</xsl:attribute>
-[Add a Note to this Build]</a>
+Add a Note to this Build</a>
 <div id="addnote"></div>
 <br/>
 
 <!-- Graph -->
 <div class="title-divider">Graph</div>
 <img src="images/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
-[Show Build Graphs]</a>
+Show Build Graphs</a>
 <div id="graphoptions"></div>
 <div id="graph"></div>
 <center>
@@ -383,18 +393,18 @@ index.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>&
 <xsl:if test="cdash/update">
 <div class="title-divider" id="Stage0">
 <div class="tracknav">
-[<a href="#top">Top</a>]
-[<a href="#Stage0">Update</a>]
-[<a href="#Stage1">Configure</a>]
-[<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
-[<a href="#Stage3">Test</a>]
+<a href="#top">Top</a>
+<a href="#Stage0">Update</a>
+<a href="#Stage1">Configure</a>
+<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
+<a href="#Stage3">Test</a>
 </div>
 Stage: Update (<xsl:value-of select="cdash/update/nerrors"/> errors, <xsl:value-of select="cdash/update/nwarnings"/> warnings)
 </div>
-<br/><b>Start Time: </b><xsl:value-of select="cdash/update/starttime"/> 
+<br/><b>Start Time: </b><xsl:value-of select="cdash/update/starttime"/>
 <br/><b>End Time: </b><xsl:value-of select="cdash/update/endtime"/>
 <br/><b>Update Command: </b> <xsl:value-of select="cdash/update/command"/>
-<br/><b>Update Type: </b> <xsl:value-of select="cdash/update/type"/>   
+<br/><b>Update Type: </b> <xsl:value-of select="cdash/update/type"/>
 <br/><b>Number of Updates: </b>
 <a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
 <xsl:value-of select="cdash/update/nupdates"/></a>
@@ -404,32 +414,32 @@ Stage: Update (<xsl:value-of select="cdash/update/nerrors"/> errors, <xsl:value-
 <!-- Configure -->
 <div class="title-divider" id="Stage1">
 <div class="tracknav">
-[<a href="#top">Top</a>]
-<xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
-[<a href="#Stage1">Configure</a>]
-[<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
-[<a href="#Stage3">Test</a>]
+<a href="#top">Top</a>
+<xsl:if test="cdash/update"><a href="#Stage0">Update</a></xsl:if>
+<a href="#Stage1">Configure</a>
+<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
+<a href="#Stage3">Test</a>
 </div>
 Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:value-of select="cdash/configure/nwarnings"/> warnings)
 </div>
 
-<br/><b>Start Time: </b><xsl:value-of select="cdash/configure/starttime"/> 
+<br/><b>Start Time: </b><xsl:value-of select="cdash/configure/starttime"/>
 <br/><b>End Time: </b><xsl:value-of select="cdash/configure/endtime"/>
-<br/><b>Configure Command: </b> <xsl:value-of select="cdash/configure/command"/>    
-<br/><b>Configure Return Value: </b> <xsl:value-of select="cdash/configure/status"/> 
+<br/><b>Configure Command: </b> <xsl:value-of select="cdash/configure/command"/>
+<br/><b>Configure Return Value: </b> <xsl:value-of select="cdash/configure/status"/>
 <br/><b>Configure Output: </b>
-<br/><pre><xsl:value-of select="cdash/configure/output"/></pre>      
+<br/><pre><xsl:value-of select="cdash/configure/output"/></pre>
 <br/>
-<a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>[View Configure Summary]</a>
+<a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>View Configure Summary</a>
 <br/><br/>
 <!-- Build -->
 <div class="title-divider" id="Stage2">
 <div class="tracknav">
-[<a href="#top">Top</a>]
-<xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
-[<a href="#Stage1">Configure</a>]
-[<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
-[<a href="#Stage3">Test</a>]
+<a href="#top">Top</a>
+<xsl:if test="cdash/update"><a href="#Stage0">Update</a></xsl:if>
+<a href="#Stage1">Configure</a>
+<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
+<a href="#Stage3">Test</a>
 </div>Stage: Build (<xsl:value-of select="cdash/build/nerrors"/> errors, <xsl:value-of select="cdash/build/nwarnings"/> warnings)</div>
         <br/><b>Build command: </b><tt><xsl:value-of select="cdash/build/command"/></tt>
         <br/><b>Start Time: </b><xsl:value-of select="cdash/build/starttime"/>
@@ -461,18 +471,18 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 </xsl:if>
 
 </xsl:for-each>
-<a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>[View Errors Summary]</a>
+<a><xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>View Errors Summary</a>
 <br/>
 <br/>
 <!--  Warnings -->
 <div class="title-divider" id="Stage2Warnings"><div class="tracknav">
-[<a href="#top">Top</a>]
-<xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
-[<a href="#Stage1">Configure</a>]
-[<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
-[<a href="#Stage3">Test</a>]</div>
+<a href="#top">Top</a>
+<xsl:if test="cdash/update"><a href="#Stage0">Update</a></xsl:if>
+<a href="#Stage1">Configure</a>
+<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
+<a href="#Stage3">Test</a></div>
 Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
-           
+
 <xsl:for-each select="cdash/build/warning">
 <xsl:if test="sourceline>0">
 <hr/>
@@ -496,30 +506,30 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
   </xsl:if>
 </xsl:if>
 
-</xsl:for-each> 
+</xsl:for-each>
 <br/>
-<a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>[View Warnings Summary]</a>
+<a><xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>View Warnings Summary</a>
 <br/>
 <br/>
 <!-- Test -->
 <div class="title-divider" id="Stage3">
 <div class="tracknav">
-[<a href="#top">Top</a>]
-<xsl:if test="cdash/update">[<a href="#Stage0">Update</a>]</xsl:if>
-[<a href="#Stage1">Configure</a>]
-[<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>]
-[<a href="#Stage3">Test</a>]
+<a href="#top">Top</a>
+<xsl:if test="cdash/update"><a href="#Stage0">Update</a></xsl:if>
+<a href="#Stage1">Configure</a>
+<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
+<a href="#Stage3">Test</a>
 </div>
         Stage: Test (<xsl:value-of select="cdash/test/npassed"/>  passed, <xsl:value-of select="cdash/test/nfailed"/> failed, <xsl:value-of select="cdash/test/nnotrun"/> not run)
         </div>
-<a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>[View Tests Summary]</a>
+<a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>View Tests Summary</a>
 
 <br/>
 <br/>
 
 <!-- FOOTER -->
 <br/>
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

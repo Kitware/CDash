@@ -136,8 +136,10 @@ function generate_index_table()
       }
     else
       {
-      $xml .= "<lastbuild>".date(FMT_DATETIMESTD,strtotime($project['last_build']. "UTC"))."</lastbuild>";
-      $xml .= "<lastbuilddate>".date(FMT_DATE,strtotime($project['last_build']. "UTC"))."</lastbuilddate>";
+      $lastbuild = strtotime($project['last_build']. "UTC");
+      $xml .= "<lastbuild>".date(FMT_DATETIMEDISPLAY,$lastbuild)."</lastbuild>";
+      $xml .= "<lastbuilddate>".date(FMT_DATE,$lastbuild)."</lastbuilddate>";
+      $xml .= "<lastbuild_elapsed>".time_difference(time()-$lastbuild)."</lastbuild_elapsed>";
       }
 
     // Display the first build
@@ -147,7 +149,9 @@ function generate_index_table()
       }
     else
       {
-      $xml .= "<firstbuild>".date(FMT_DATETIMETZ,strtotime($project['first_build']. "UTC"))."</firstbuild>";
+      $firstbuild = strtotime($project['first_build']. "UTC");
+      $xml .= "<firstbuild_elapsed>".time_difference(time()-$firstbuild)."</firstbuild_elapsed>";
+      $xml .= "<firstbuild>".date(FMT_DATETIMEDISPLAY,$firstbuild)."</firstbuild>";
       }
 
     // Display if the project is considered active or not
@@ -686,6 +690,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
   $sql =  "SELECT b.id,b.siteid,
                   bu.status AS updatestatus,
+                  i.osname AS osname,
                   bu.starttime AS updatestarttime,
                   bu.endtime AS updateendtime,
                   bu.nfiles AS countupdatefiles,
@@ -707,8 +712,7 @@ function generate_main_dashboard_XML($projectid,$date)
                   tpassed_diff.difference_positive AS counttestspasseddiffp,
                   tpassed_diff.difference_negative AS counttestspasseddiffn,
                   tstatusfailed_diff.difference_positive AS countteststimestatusfaileddiffp,
-                  tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,
-                  (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,"
+                  tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,"
                   .$userupdatesql."
                   s.name AS sitename,
                   b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
@@ -725,6 +729,7 @@ function generate_main_dashboard_XML($projectid,$date)
                   build AS b
                   LEFT JOIN buildupdate AS bu ON ".$buildid_clause."
                   LEFT JOIN configure AS c ON (c.buildid=b.id)
+                  LEFT JOIN buildinformation AS i ON (i.buildid=b.id)
                   LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
                   LEFT JOIN builderrordiff AS bw_diff ON (bw_diff.buildid=b.id AND bw_diff.type=1)
                   LEFT JOIN configureerrordiff AS ce_diff ON (ce_diff.buildid=b.id AND ce_diff.type=1)
@@ -784,7 +789,6 @@ function generate_main_dashboard_XML($projectid,$date)
     //  buildids (array of buildids for summary rows)
     //  sitename
     //  countbuildnotes (added by users)
-    //  countnotes (sent with ctest -A)
     //  labels
     //  countupdatefiles
     //  updatestatus
@@ -983,7 +987,6 @@ function generate_main_dashboard_XML($projectid,$date)
         $build_rows_collapsed[$idx]['buildids'][] = $build_row['id'];
     //  sitename
         $build_rows_collapsed[$idx]['countbuildnotes'] += $build_row['countbuildnotes'];
-        $build_rows_collapsed[$idx]['countnotes'] += $build_row['countnotes'];
         $build_rows_collapsed[$idx]['labels'] = array_merge($build_rows_collapsed[$idx]['labels'], $build_row['labels']);
 
     //  countupdatefiles - use one number here, not the sum...
@@ -1184,6 +1187,16 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("site", $build_array["sitename"]);
     $xml .= add_XML_value("siteid", $siteid);
     $xml .= add_XML_value("buildname", $build_array["name"]);
+
+    $buildplatform = '';
+    switch($build_array["osname"])
+      {
+      case 'Windows' : $buildplatform='windows'; break;
+      case 'Mac OS X' : $buildplatform='mac'; break;
+      case 'Linux' : $buildplatform='linux'; break;
+      }
+
+    $xml .= add_XML_value("buildplatform",$buildplatform);
     if(isset($build_array["userupdates"]))
       {
       $xml .= add_XML_value("userupdates", $build_array["userupdates"]);
@@ -1196,12 +1209,6 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $xml .= add_XML_value("buildnote","1");
       }
-
-    if($build_array['countnotes']>0)
-      {
-      $xml .= add_XML_value("note","1");
-      }
-
 
     // Are there labels for this build?
     //
@@ -1382,8 +1389,11 @@ function generate_main_dashboard_XML($projectid,$date)
 
     $starttimestamp = strtotime($build_array["starttime"]." UTC");
     $submittimestamp = strtotime($build_array["submittime"]." UTC");
-    $xml .= add_XML_value("builddate",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
-    $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
+    $xml .= add_XML_value("builddate",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+
+    $xml .= add_XML_value("builddateelapsed",time_difference(time()-$starttimestamp)); // use the default timezone
+
+    $xml .= add_XML_value("submitdate",date(FMT_DATETIMEDISPLAY,$submittimestamp));// use the default timezone
     $xml .= add_XML_value("nerrorlog",$build_array["nerrorlog"]);// use the default timezone
     $xml .= "</build>";
 

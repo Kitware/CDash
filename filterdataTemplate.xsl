@@ -6,11 +6,12 @@
 
 <xsl:template name="filterdata">
 
+<div id="labelshowfilters">
 <a id="label_showfilters" href="javascript:filters_toggle();">
-<xsl:if test="cdash/filterdata/showfilters = 0">[Show Filters]</xsl:if>
-<xsl:if test="cdash/filterdata/showfilters != 0">[Hide Filters]</xsl:if>
+<xsl:if test="cdash/filterdata/showfilters = 0">Show Filters</xsl:if>
+<xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
 </a>
-<br/>
+</div>
 
 <div id="div_showfilters">
 <xsl:if test="cdash/filterdata/showfilters = 0">

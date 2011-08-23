@@ -7,9 +7,9 @@
 
 <!-- Local includes -->
 <xsl:include href="local/footer.xsl"/>
-<xsl:include href="local/header.xsl"/> 
+<xsl:include href="local/header.xsl"/>
 
-<xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
 <xsl:template match="/">
@@ -23,11 +23,11 @@
     </xsl:attribute>
   </link>
   <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
-  <xsl:call-template name="headscripts"/>   
+  <xsl:call-template name="headscripts"/>
 </head>
 <body bgcolor="#ffffff">
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -60,15 +60,15 @@
 </xsl:if>
 <xsl:if test="cdash/build/osversion">
   <tr><td align="right"><b>OS Version:</b></td><td><xsl:value-of select="cdash/build/osversion"/></td></tr>
-</xsl:if>  
-  
+</xsl:if>
+
 <!-- Display Compiler information  -->
 <xsl:if test="cdash/build/compilername">
   <tr><td align="right"><b>Compiler Name:</b></td><td><xsl:value-of select="cdash/build/compilername"/></td></tr>
 </xsl:if>
 <xsl:if test="cdash/build/compilerversion">
   <tr><td align="right"><b>Compiler Version:</b></td><td><xsl:value-of select="cdash/build/compilerversion"/></td></tr>
-</xsl:if>  
+</xsl:if>
 
 </table>
 
@@ -91,7 +91,7 @@
   <xsl:value-of select="cdash/numTimeFailed"/> tests failed for timing reasons.
 </xsl:if>
 <xsl:if test="cdash/onlypassed!=1 and cdash/onlyfailed!=1 and cdash/onlynotrun!=1 and cdash/onlytimestatus!=1">
-  <xsl:value-of select="cdash/numPassed"/> passed, 
+  <xsl:value-of select="cdash/numPassed"/> passed,
   <xsl:value-of select="cdash/numFailed"/> failed,
   <xsl:value-of select="cdash/numTimeFailed"/> failed for timing,
   <xsl:value-of select="cdash/numNotRun"/> not run.
@@ -99,17 +99,17 @@
 </h3><br/>
 
 <!-- Hide a div for javascript to know if time status is on -->
-<xsl:if test="/cdash/project/showtesttime=1">   
+<xsl:if test="/cdash/project/showtesttime=1">
 <div id="showtesttimediv" style="display:none"></div>
-</xsl:if>  
+</xsl:if>
 
 <table id="viewTestTable" cellspacing="0" class="tabb">
 <!-- <xsl:attribute name="id">project_<xsl:value-of select="/cdash/dashboard/projectid"/>_1</xsl:attribute> -->
-<thead> 
+<thead>
   <tr class="table-heading1">
     <th id="sort_0">Name</th>
     <th id="sort_1">Status</th>
-<xsl:if test="cdash/project/showtesttime=1">    
+<xsl:if test="cdash/project/showtesttime=1">
     <th id="sort_2">Time Status</th>
     <th id="sort_3">Time</th>
     <xsl:if test="/cdash/build/displaylabels=0 and cdash/displaydetails=1">
@@ -121,8 +121,8 @@
       </xsl:if>
       <th class="nob">Labels</th>
     </xsl:if>
-</xsl:if>        
-<xsl:if test="cdash/project/showtesttime=0">    
+</xsl:if>
+<xsl:if test="cdash/project/showtesttime=0">
     <th id="sort_2">Time (s)</th>
     <xsl:if test="/cdash/build/displaylabels=0 and cdash/displaydetails=1">
       <th id="sort_3" class="nob">Details</th>
@@ -133,7 +133,7 @@
       </xsl:if>
       <th class="nob">Labels</th>
     </xsl:if>
-</xsl:if>        
+</xsl:if>
   </tr>
 </thead>
 <xsl:for-each select="cdash/tests/test">
@@ -171,7 +171,7 @@
         <xsl:value-of select="status"/>
       </a>
     </td>
-    <xsl:if test="/cdash/project/showtesttime=1">          
+    <xsl:if test="/cdash/project/showtesttime=1">
      <td>
       <xsl:attribute name="align">center</xsl:attribute>
       <xsl:attribute name="class">
@@ -184,17 +184,17 @@
         <xsl:value-of select="timestatus"/>
       </a>
     </td>
-</xsl:if>  
+</xsl:if>
     <td align="right">
       <xsl:value-of select="execTime"/>
     </td>
-  
+
     <xsl:if test="/cdash/displaydetails=1">
     <td>
       <xsl:value-of select="details"/>
     </td>
     </xsl:if>
-    
+
     <xsl:if test="/cdash/build/displaylabels=1">
     <td align="left" class="nob">
       <xsl:for-each select="labels/label">
@@ -204,7 +204,7 @@
         <nobr><xsl:value-of select="."/></nobr>
       </xsl:for-each>
     </td>
-    </xsl:if>  
+    </xsl:if>
   </tr>
 </xsl:for-each>
 </table>
@@ -213,7 +213,7 @@
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>
@@ -222,7 +222,6 @@
 </xsl:otherwise>
 </xsl:choose>
 
-<font size="1">Generated in <xsl:value-of select="/cdash/generationtime"/> seconds</font>
 </body>
 </html>
 </xsl:template>

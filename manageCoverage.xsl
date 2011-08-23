@@ -2,13 +2,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headeradminproject.xsl"/> 
-   
+   <xsl:include href="headeradminproject.xsl"/>
+
     <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headeradminproject.xsl"/>  
-     
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:include href="local/headeradminproject.xsl"/>
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -19,24 +19,24 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-   
+
         <!-- Include JQuery -->
-        <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>  
-        <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>  
+        <script src="javascript/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
+        <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
 
        </head>
        <body bgcolor="#ffffff">
-       
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headeradminproject_local"/>
 </xsl:when>
 <xsl:otherwise>
   <xsl:call-template name="headeradminproject"/>
 </xsl:otherwise>
-</xsl:choose>    
+</xsl:choose>
 
 
 <xsl:if test="string-length(cdash/warning)>0">
@@ -85,11 +85,11 @@
      </form>
     </td>
   </tr>
-</table> 
-  
+</table>
+
 <!-- If a project has been selected -->
 <xsl:if test="count(cdash/project)>0">
- 
+
 <form name="formnewgroup" method="post">
 <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="cdash/project/id"/>&#38;buildid=<xsl:value-of select="cdash/project/buildid"/></xsl:attribute>
 
@@ -101,7 +101,7 @@
   <tr>
     <td width="10%"></td>
     <td width="90%">
-    
+
     <table id="manageCoverageTable" cellspacing="0" class="tabb">
     <thead>
     <tr class="table-heading1">
@@ -113,12 +113,12 @@
     </thead>
     <tbody>
     <xsl:for-each select="cdash/project/file">
-    <tr> 
+    <tr>
       <td><input type="checkbox">
       <xsl:attribute name="name">selectionFiles[<xsl:value-of select="fileid"/>]</xsl:attribute>
       <xsl:attribute name="value"><xsl:value-of select="fullpath"/></xsl:attribute>
       </input>
-      <xsl:value-of select="fullpath"/></td> 
+      <xsl:value-of select="fullpath"/></td>
       <td>
       <form name="form_priority" method="post">
       <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="/cdash/project/id"/>&#38;buildid=<xsl:value-of select="/cdash/project/buildid"/></xsl:attribute>
@@ -232,7 +232,7 @@
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

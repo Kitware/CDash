@@ -110,15 +110,15 @@ function countFilters()
 
 function filters_toggle()
 {
-  if ($("#label_showfilters").html() == "[Hide Filters]")
+  if ($("#label_showfilters").html() == "Hide Filters")
     {
     $("#div_showfilters").hide();
-    $("#label_showfilters").html("[Show Filters]");
+    $("#label_showfilters").html("Show Filters");
     return;
     }
 
   $("#div_showfilters").show();
-  $("#label_showfilters").html("[Hide Filters]");
+  $("#label_showfilters").html("Hide Filters");
 }
 
 

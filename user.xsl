@@ -21,65 +21,44 @@
       </head>
  <body>
 
- <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
-  <tr>
-    <td>
-  <table width="100%" align="center" cellpadding="0" cellspacing="0" >
-  <tr>
-    <td height="30" valign="middle">
-    <table width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="66%" class="paddl">
-        <a href="index.php">All Dashboards</a> | <a href="user.php?logout=1">Log Out</a>
-        </td>
-      </tr>
-    </table>
-    </td>
-  </tr>
-  <tr>
-    <td height="22" class="topline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-  </tr>
-  <tr>
-    <td width="100%" align="left" class="topbg">
 
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" >
-    <tr>
-    <td width="195" height="121" class="topbgleft">
-    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-    <a href="http://www.cdash.org">
-    <img border="0" alt="" src="images/cdash.gif"/>
-    </a>
-    </td>
-    <td width="425" valign="top" class="insd">
-    <div class="insdd">
-      <span class="inn1">My CDash</span><br />
-      <span class="inn2"><xsl:value-of select="cdash/user_name"/></span>
-      </div>
-    </td>
-    <td height="121" class="insd2"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-   </tr>
-  </table>
-  </td>
-    </tr>
-  <tr>
-    <td align="left" class="topbg2"><table width="100%" height="28" border="0" cellpadding="0" cellspacing="0">
- <tr>
-  <td width="631" align="left" class="bgtm"><ul id="Nav" class="nav">
-<li>
-<a href="editUser.php">MY PROFILE</a>
-</li>
-</ul>
-</td>
-  <td height="28" class="insd3"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
- </tr>
-</table></td>
-  </tr>
-</table></td>
-  </tr>
-</table>
+ <div id="header">
+ <div id="headertop">
+  <div id="topmenu">
+    <a href="index.php">All Dashboards</a>
+    <a href="editUser.php">My Profile</a>
+    <a href="user.php?logout=1">Log Out</a>
+  </div>
+ </div>
+
+ <div id="headerbottom">
+    <div id="headerlogo">
+      <a>
+        <xsl:attribute name="href">
+        <xsl:value-of select="cdash/dashboard/home"/></xsl:attribute>
+        <img id="projectlogo" border="0" height="50px">
+        <xsl:attribute name="alt"></xsl:attribute>
+        <xsl:choose>
+        <xsl:when test="cdash/dashboard/logoid>0">
+          <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
+         </xsl:when>
+        <xsl:otherwise>
+         <xsl:attribute name="src">images/cdash.gif</xsl:attribute>
+        </xsl:otherwise>
+        </xsl:choose>
+        </img>
+      </a>
+    </div>
+    <div id="headername2">
+      CDash
+      <span id="subheadername">
+        <xsl:value-of select="cdash/user_name"/>
+      </span>
+    </div>
+ </div>
+</div>
 
 <br/>
-
 <!-- Message -->
 <table>
   <tr>
@@ -87,7 +66,6 @@
     <td><div style="color: green;"><xsl:value-of select="cdash/message" /></div></td>
   </tr>
 </table>
-
 
 <!-- My Projects -->
 <xsl:if test="count(cdash/project)>0">
@@ -150,7 +128,7 @@
           <a class="tooltip">
           <xsl:attribute name="title"><xsl:value-of select="nerrorlogs"/> errors in the CDash log</xsl:attribute>
           <xsl:attribute name="href">viewErrorLog.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-           <img src="images/warning.png" border="0" alt="erro logs" /></a>
+           <img src="images/warning.png" border="0" alt="erro logs" height="16" /></a>
           </xsl:if>
         </xsl:if>
       </td>
@@ -329,28 +307,28 @@
  <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
     <tr class="table-heading1"><td id="nob"><h3>Administration</h3></td></tr>
-    <tr class="trodd"><td id="nob"><a href="createProject.php">[Create new project]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="createProject.php?edit=1">[Edit project]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">[Manage project roles]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="manageSubproject.php">[Manage subproject]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="manageBuildGroup.php">[Manage project groups]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="manageCoverage.php">[Manage project coverage]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="manageBanner.php">[Manage banner message]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="manageUsers.php">[Manage users]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="upgrade.php">[Maintenance]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="loggingAdministration.php">[CDash Logs]</a>
+    <tr class="trodd"><td id="nob"><a href="createProject.php">Create new project</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="createProject.php?edit=1">Edit project</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">Manage project roles</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="manageSubproject.php">Manage subproject</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="manageBuildGroup.php">Manage project groups</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="manageCoverage.php">Manage project coverage</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="manageBanner.php">Manage banner message</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="manageUsers.php">Manage users</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="upgrade.php">Maintenance</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="loggingAdministration.php">CDash Logs</a>
 
     <xsl:if test="cdash/nerrorlogs>0">
        <a class="tooltip">
        <xsl:attribute name="title"><xsl:value-of select="cdash/nerrorlogs"/> errors in the CDash log</xsl:attribute>
        <xsl:attribute name="href">viewErrorLog.php</xsl:attribute>
-       <img src="images/warning.png" border="0" alt="erro logs" /></a>
+       <img src="images/warning.png" border="0" alt="erro logs" height="16" /></a>
        </xsl:if>
     </td></tr>
-    <tr class="trodd"><td id="nob"><a href="monitor.php">[Monitor / Processing Statistics]</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="siteStatistics.php">[Site Statistics]</a></td></tr>
-    <tr class="trodd"><td id="nob"><a href="userStatistics.php">[User Statistics]</a>  (beta)</td></tr>
-    <tr class="treven"><td id="nob"><a href="manageBackup.php">[Manage Backup]</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="monitor.php">Monitor / Processing Statistics</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="siteStatistics.php">Site Statistics</a></td></tr>
+    <tr class="trodd"><td id="nob"><a href="userStatistics.php">User Statistics</a>  (beta)</td></tr>
+    <tr class="treven"><td id="nob"><a href="manageBackup.php">Manage Backup</a></td></tr>
   </tbody>
   </table>
 </xsl:if>

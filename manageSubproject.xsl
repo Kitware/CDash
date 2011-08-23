@@ -2,13 +2,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headeradminproject.xsl"/> 
-   
+   <xsl:include href="headeradminproject.xsl"/>
+
     <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headeradminproject.xsl"/>  
-     
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:include href="local/headeradminproject.xsl"/>
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -22,19 +22,19 @@
          <xsl:comment><![CDATA[[if IE]></xsl:comment>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
           <xsl:comment><![ endif]]></xsl:comment>
-          <script src="javascript/jquery.js"></script>
+          <script src="javascript/jquery-1.6.2.js"></script>
           <script type="text/javascript" src="javascript/ui.tabs.js"></script>
        </head>
        <body bgcolor="#ffffff">
-       
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headeradminproject_local"/>
 </xsl:when>
 <xsl:otherwise>
   <xsl:call-template name="headeradminproject"/>
 </xsl:otherwise>
-</xsl:choose>    
+</xsl:choose>
 
 <br/>
 
@@ -54,7 +54,7 @@
         <xsl:attribute name="value">-1</xsl:attribute>
         Choose...
         </option>
-        
+
         <xsl:for-each select="cdash/availableproject">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -68,16 +68,16 @@
       </form>
     </td>
   </tr>
-</table> 
-  
+</table>
+
 <!-- If a project has been selected -->
 <xsl:if test="cdash/project/id > -1">
 
 
 <div id="wizard">
       <ul>
-          <li>                 
-            <a href="#fragment-1"><span>Current Subprojects</span></a></li>                
+          <li>
+            <a href="#fragment-1"><span>Current Subprojects</span></a></li>
           <li>
             <a href="#fragment-2"><span>Add a subproject</span></a></li>
       </ul>
@@ -104,17 +104,17 @@
             <form method="post">
             <xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
             <xsl:attribute name="name">form_add_dependency_<xsl:value-of select="id"/></xsl:attribute>
-            Add dependency: 
+            Add dependency:
             <input type="hidden" name="dependencyid">
             <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
             </input>
             <select>
-               <xsl:attribute name="name">dependency_selection_<xsl:value-of select="id"/></xsl:attribute>  
+               <xsl:attribute name="name">dependency_selection_<xsl:value-of select="id"/></xsl:attribute>
                 <option>
                 <xsl:attribute name="value">-1</xsl:attribute>
                 Choose...
                 </option>
-                
+
                 <xsl:for-each select="availabledependency">
                 <option>
                 <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -126,7 +126,7 @@
                 </xsl:for-each>
                 </select>
                 <input type="submit" name="addDependency" value="Add dependency"/>
-              </form>    
+              </form>
             </td>
             </tr>
             <tr> <!-- List the dependencies for that subproject -->
@@ -143,7 +143,7 @@
             </td>
           </tr>
           </xsl:for-each>
-        </table> 
+        </table>
         </form>
     </div>
     <div id="fragment-2" class="tab_content" >
@@ -161,24 +161,24 @@
             <input name="newsubproject" type="text"></input>
             </td>
           </tr>
-          
+
           <tr>
             <td><div align="right"></div></td>
             <td><input type="submit" name="addSubproject" value="Add subproject >>"/><br/><br/></td>
           </tr>
-        </table> 
+        </table>
         </form>
     </div>
  </div>
 </xsl:if>
- 
+
 
 <br/>
 
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

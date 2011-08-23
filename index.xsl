@@ -76,14 +76,14 @@
       <th align="center" rowspan="2" width="15%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_0</xsl:attribute>
       Site</th>
-      <th align="center" rowspan="2" width="15%">
+      <th align="center" rowspan="2" width="20%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_1</xsl:attribute>
       Build Name</th>
       <td align="center" colspan="2" width="5%" class="botl">Update</td>
       <td align="center" colspan="3" width="10%" class="botl">Configure</td>
       <td align="center" colspan="3" width="10%" class="botl">Build</td>
       <td align="center" colspan="4" width="10%" class="botl">Test</td>
-      <th align="center" rowspan="2" width="20%">
+      <th align="center" rowspan="2" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
       <xsl:if test="/cdash/dashboard/displaylabels=0">
         <xsl:attribute name="class">nob</xsl:attribute>
@@ -153,6 +153,9 @@
         <xsl:attribute name="href"><xsl:value-of select="multiplebuildshyperlink"/>
         </xsl:attribute>
         </xsl:if>
+        <img class="platformicon" border="0">
+            <xsl:attribute name="src">images/platform_<xsl:value-of select="buildplatform"/>.png</xsl:attribute>
+        </img>
         <xsl:value-of select="buildname"/>
       </a>
      </xsl:if>
@@ -165,18 +168,6 @@
       <a><xsl:attribute name="href">viewFiles.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute>
          <xsl:attribute name="title"><xsl:value-of select="upload-file-count" /> files uploaded with this build</xsl:attribute>
       <img src="images/package.png" alt="Files" border="0"/></a>
-      </xsl:if>
-
-      <xsl:if test="string-length(note)>0 and countbuildids=1">
-      <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="images/Document.gif" alt="Notes" border="0"/></a>
-      </xsl:if>
-
-      <xsl:if test="string-length(generator)>0 and countbuildids=1">
-      <a><xsl:attribute name="href">javascript:alert("<xsl:value-of select="generator"/>");</xsl:attribute>
-      <img src="images/Generator.png" border="0">
-      <xsl:attribute name="alt"><xsl:value-of select="generator"/></xsl:attribute>
-      </img>
-      </a>
       </xsl:if>
 
       <!-- If the build has errors or test failing -->
@@ -584,19 +575,26 @@
         </div>
       </td>
 
-      <td>
+      <td align="center">
         <xsl:if test="/cdash/dashboard/displaylabels=0">
          <xsl:attribute name="class">nob</xsl:attribute>
         </xsl:if>
 
-        <xsl:if test="string-length(builddate)=0">
-          Expected build<br />
-          <span style="font-size: 10px;">
-          Expected submit time: <xsl:value-of select="expectedstarttime" />
-          </span>
-        </xsl:if>
 
-        <xsl:value-of select="builddate"/>
+        <xsl:choose>
+        <xsl:when test="string-length(builddate)=0">
+          <span class="builddateelapsed" alt="Expected build">
+           <xsl:attribute name="alt">Expected submit time: <xsl:value-of select="expectedstarttime" /></xsl:attribute>
+           Expected build
+          </span>
+        </xsl:when>
+        <xsl:otherwise>
+        <span class="builddateelapsed">
+           <xsl:attribute name="alt"><xsl:value-of select="builddate"/></xsl:attribute>
+           <xsl:value-of select="builddateelapsed"/>
+        </span>
+        </xsl:otherwise>
+        </xsl:choose>
       </td>
 
       <!-- display the labels -->
@@ -786,20 +784,17 @@
   <xsl:call-template name="header"/>
 </xsl:otherwise>
 </xsl:choose>
+
 <div id="index_content">
 <xsl:if test="cdash/dashboard/future=0">
 
 <xsl:if test="cdash/updates">
-<table width="100%" cellpadding="11" cellspacing="0">
+<div id="index_top">
   <xsl:for-each select="cdash/banner">
-  <tr bgcolor="#DDDDDD">
-  <td align="center" width="100%" colspan="2">
-  <b><xsl:value-of select="text"/></b>
-  </td>
-  </tr>
+  <div id="banner"><xsl:value-of select="text"/></div>
   </xsl:for-each>
-  <tr>
-    <td height="25" align="left" valign="bottom">
+
+  <div id="updatechanges">
     <xsl:if test="cdash/updates/nchanges=-1">No update data</xsl:if>
     <xsl:if test="cdash/updates/nchanges=0">No file changed</xsl:if>
     <xsl:if test="cdash/updates/nchanges>0">
@@ -809,15 +804,25 @@
          by <xsl:value-of select="cdash/updates/nauthors"/> author<xsl:if test="cdash/updates/nauthors>1">s</xsl:if>
     </xsl:if>
          as of
-         <b><xsl:value-of select="cdash/updates/timestamp"/></b></td>
-         <td align="right"><a href="#" class="autorefresh">Auto-refresh</a>
+         <b><xsl:value-of select="cdash/updates/timestamp"/></b>
+  </div>
+
+
+ <div id="helpmenu">
          <a href="#" class="helptrigger">Help</a>
          <div class="jqmWindow" id="help">Loading help...</div>
          <div class="jqmWindow" id="groupsdescription">Loading group description...</div>
-         </td>
-  </tr>
+</div>
+<div id="autorefresh">
+         <a href="#" class="autorefresh">Auto-refresh</a>
+</div>
 
-</table>
+<!-- Filters? -->
+<xsl:if test="count(cdash/filterdata) = 1">
+  <xsl:call-template name="filterdata" select="."/>
+</xsl:if>
+</div>
+
 </xsl:if>
 
 <xsl:if test="cdash/testingdataurl">
@@ -1006,11 +1011,6 @@
   </xsl:for-each>
 </tbody>
 </table>
-</xsl:if>
-
-<!-- Filters? -->
-<xsl:if test="count(cdash/filterdata) = 1">
-  <xsl:call-template name="filterdata" select="."/>
 </xsl:if>
 
 <!-- Look each group -->
@@ -1260,8 +1260,6 @@ CDash cannot predict the future (yet)...
 </xsl:if> <!-- end dashboard is in the future -->
 </div>
 <!-- FOOTER -->
-<br/>
-
 <xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
@@ -1270,9 +1268,6 @@ CDash cannot predict the future (yet)...
   <xsl:call-template name="footer"/>
 </xsl:otherwise>
 </xsl:choose>
-
-
-<font size="1">Generated in <xsl:value-of select="/cdash/generationtime"/> seconds</font>
         </body>
       </html>
     </xsl:template>

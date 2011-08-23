@@ -1,16 +1,18 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
 <xsl:template name="footer">
-<table width="100%" cellpadding="0" cellspacing="0">
-  <tr>
-   <td height="66" align="left" valign="middle" class="footer">
-   <table style="float:right">
-    <tr>
-     <td><a href="http://www.cdash.org"><img src="images/logo2.gif" border="0" height="66" alt="CDash logo"/></a></td>
-   <td>CDash
+
+<div id="footer">
+  <div id="kitwarelogo">
+      <a href="http://www.kitware.com"><img src="images/blogo.gif" border="0" height="30" alt="logo" /></a>
+  </div>
+  <div id="footerlogo">
+    <a href="http://www.cdash.org"><img src="images/logo2.gif" border="0" height="40" alt="CDash logo"/></a>
+    <span id="footertext">
+    CDash
    <xsl:choose>
      <xsl:when test="(count(/cdash/user/admin)=1 and /cdash/user/admin!=0) or (count(/cdash/user_is_admin)=1 and /cdash/user_is_admin!=0)">
        <a href="svninfo.php"><xsl:value-of select="/cdash/version"/></a>
@@ -19,19 +21,22 @@
        <xsl:value-of select="/cdash/version"/>
      </xsl:otherwise>
    </xsl:choose>
-   <xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text> 2010-2011
-   <a href="http://www.kitware.com">Kitware Inc.</a>
-   <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><br/>
-  <a href="http://www.cdash.org/Bug">[report problems]</a>
- </td>     
-</tr>
-   </table>
-   <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-   <img src="images/blogo.gif" height="66" alt="logo" />
-   </td>
-  </tr>
-</table>
-
+   <xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text>
+   <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text> <a href="http://www.kitware.com">Kitware</a>
+   | <a href="http://www.cdash.org/Bug">Report problems</a>
+   <xsl:choose>
+   <xsl:when test="string-length(/cdash/generationtime)>0">
+     | <xsl:value-of select="/cdash/generationtime"/>s
+   </xsl:when>
+   <xsl:otherwise>
+     <xsl:if test="string-length(/cdash/database/size)>0">
+       | <xsl:value-of select="/cdash/database/size"/>
+     </xsl:if>
+   </xsl:otherwise>
+   </xsl:choose>
+   </span>
+  </div>
+</div>
 <!-- Google Analytics -->
 <xsl:if test="string-length(/cdash/dashboard/googletracker)>0">
 <xsl:text disable-output-escaping="yes">

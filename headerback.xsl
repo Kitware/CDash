@@ -1,57 +1,73 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-        
+
     <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="UTF-8"/>
     <xsl:template name="headerback">
 <link rel="shortcut icon" href="favicon.ico"/>
-<table width="100%" class="toptable" cellpadding="1" cellspacing="0">
-  <tr>
-    <td>
-  <table width="100%" align="center" cellpadding="0" cellspacing="0" >
-  <tr>
-    <td height="22" class="topline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-  </tr>
-  <tr>
-    <td width="100%" align="left" class="topbg">
 
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" >
-    <tr>
-    <td width="195" height="121" class="topbgleft">
-     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-     <a href="http://www.cdash.org">
-     <img  border="0" alt="" src="images/cdash.gif"/>
-     </a>
-    </td>
-    <td width="425" valign="top" class="insd">
-    <div class="insdd">
-      <span class="inn1"><xsl:value-of select="/cdash/menutitle"/></span><br />
-      <span class="inn2"><xsl:value-of select="/cdash/menusubtitle"/></span>
-      </div>
-    </td>
-    <td height="121" class="insd2"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-   </tr>
-  </table>
 
-  </td>
-    </tr>
-  <tr>
-    <td align="left" class="topbg2">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
- <tr>
-  <td width="631" align="left" class="bgtm">
-<ul id="Nav" class="nav">
-<li id="Dartboard">
-<a><xsl:attribute name="href"><xsl:value-of select="/cdash/backurl"/></xsl:attribute>BACK</a>
-</li>
-</ul>
-</td>
-  <td height="28" class="insd3"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
- </tr>
-</table></td>
-  </tr>
-</table></td>
-  </tr>
-</table>
+<div id="header">
+ <div id="headertop">
+  <div id="topmenu">
+      <a href="index.php">All Dashboards</a>
+     <xsl:if test="cdash/user/id>0">
+       <a href="user.php?logout=1">Log Out</a>
+     </xsl:if>
+    <a><xsl:attribute name="href">user.php</xsl:attribute>
+        <xsl:choose>
+          <xsl:when test="cdash/user/id>0">My CDash</xsl:when>
+          <xsl:otherwise></xsl:otherwise>
+        </xsl:choose></a>
+  </div>
+
+  <div id="datetime">
+   <xsl:value-of select="cdash/dashboard/datetime"/>
+  </div>
+ <div id="feedicon" alt="RSS Feed" title="RSS Feed">
+   <xsl:if test="cdash/dashboard/projectpublic=1">
+      <a>
+      <xsl:attribute name="href">rss/SubmissionRSS<xsl:value-of select="cdash/dashboard/projectname"/>.xml</xsl:attribute><img src="images/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
+      </a>
+   </xsl:if>
+   </div>
+ </div>
+
+ <div id="headerbottom">
+    <div id="headerlogo">
+      <a>
+        <xsl:attribute name="href">
+        <xsl:value-of select="cdash/dashboard/home"/></xsl:attribute>
+        <img id="projectlogo" border="0" height="50px">
+        <xsl:attribute name="alt"></xsl:attribute>
+        <xsl:choose>
+        <xsl:when test="cdash/dashboard/logoid>0">
+          <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
+         </xsl:when>
+        <xsl:otherwise>
+         <xsl:attribute name="src">images/cdash.gif</xsl:attribute>
+        </xsl:otherwise>
+        </xsl:choose>
+        </img>
+      </a>
+    </div>
+    <div id="headername">
+      <xsl:value-of select="/cdash/menutitle"/>
+      <span id="subheadername">
+        <xsl:value-of select="/cdash/menusubtitle"/>
+      </span>
+    </div>
+    <div id="headermenu">
+        <ul id="navigation">
+        <li id="Back">
+        <a>
+        <xsl:attribute name="href"><xsl:value-of select="/cdash/backurl"/></xsl:attribute>
+        BACK</a><ul></ul>
+        </li>
+       </ul>
+    </div>
+ </div>
+
+</div>
 
 
     </xsl:template>

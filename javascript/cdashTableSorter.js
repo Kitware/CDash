@@ -11,17 +11,18 @@ $(document).ready(function() {
    var refresh_cookie = $.cookie('cdash_refresh');
    if(refresh_cookie)
       {
-      $('.autorefresh').html('Auto-refreshing');
+      $('.autorefresh').css('font-weight','bold');
       setTimeout( function(){if($.cookie('cdash_refresh')) location.reload()},refresh_cookie); // do the refresh
       }
 
   /** Enable the autorefresh */
   $('.autorefresh').click(function() {
-    if($(this).html() == 'Auto-refreshing')
+     var refresh_cookie = $.cookie('cdash_refresh');
+
+    if(refresh_cookie)
       {
       $.cookie('cdash_refresh', null);
-
-      $(this).html('Auto-refresh');
+      $(this).css('font-weight','normal');
       }
     else
       {
@@ -29,6 +30,16 @@ $(document).ready(function() {
       location.reload();
       }
   });
+
+  /** qtip on the build time elapsed */
+  $('.builddateelapsed').qtip({
+     content: {attr: 'alt'},
+     style: {classes: 'ui-tooltip-blue'},
+     position: {
+      my: 'top right',  // Position my top left...
+      at: 'bottom left' // at the bottom right of...
+      }
+   })
 
   /** Build name */
   $.tablesorter.addParser({

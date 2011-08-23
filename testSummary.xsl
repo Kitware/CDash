@@ -6,8 +6,8 @@
 
 <xsl:include href="local/header.xsl"/>
 <xsl:include href="local/footer.xsl"/>
-  
-<xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+<xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 <xsl:template match="/">
 <html>
@@ -19,14 +19,14 @@
       <xsl:value-of select="cdash/cssfile"/>
     </xsl:attribute>
   </link>
-  <xsl:call-template name="headscripts"/> 
+  <xsl:call-template name="headscripts"/>
    <!-- Include JavaScript -->
-  <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script> 
- 
+  <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script>
+
 </head>
 <body bgcolor="#ffffff">
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -36,7 +36,7 @@
 </xsl:choose>
 
 <br/>
-<h3>Testing summary for 
+<h3>Testing summary for
 <u><xsl:value-of select="cdash/testName"/></u>
  performed between <xsl:value-of select="cdash/builds/teststarttime"/> and <xsl:value-of select="cdash/builds/testendtime"/>
 </h3>
@@ -54,7 +54,7 @@
 <br/>
 <!-- Test Summary table -->
 <table id="testSummaryTable" cellspacing="0" cellpadding="3" class="tabb">
-<thead> 
+<thead>
   <tr class="table-heading1">
     <th id="sort_0">Site</th>
     <th id="sort_1">Build Name</th>
@@ -63,7 +63,7 @@
     <th id="sort_4">Time (s)</th>
     <th id="sort_5" class="nob">Detail</th>
   </tr>
-</thead> 
+</thead>
 
 <xsl:for-each select="cdash/builds/build">
   <tr>
@@ -104,7 +104,7 @@
 
 <!-- FOOTER -->
 <br/>
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>
@@ -112,7 +112,6 @@
   <xsl:call-template name="footer"/>
 </xsl:otherwise>
 </xsl:choose>
-<font size="1">Generated in <xsl:value-of select="/cdash/generationtime"/> seconds</font>
 </body>
 </html>
 </xsl:template>

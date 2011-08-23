@@ -3,7 +3,7 @@ $(document).ready(function() {
   $(".nonactive").hide();
   $("#hideold").hide();
   $("#indexTable").trigger("appendCache");
-});   
+});
 
 /** Show the old project */
 function showoldproject()

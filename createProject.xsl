@@ -4,12 +4,12 @@
   <xsl:include href="footer.xsl" />
   <xsl:include href="headeradminproject.xsl" />
   <xsl:include href="headerback.xsl" />
-   
+
   <!-- Local includes -->
   <xsl:include href="local/footer.xsl" />
   <xsl:include href="local/headeradminproject.xsl" />
   <xsl:include href="local/headerback.xsl" />
-   
+
   <xsl:output method="xml" indent="yes"
     doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
     doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
@@ -27,7 +27,7 @@
         <xsl:comment><![CDATA[[if IE]></xsl:comment>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
           <xsl:comment><![ endif]]></xsl:comment>
-        <script src="javascript/jquery.js"></script>
+        <script type="text/javascript" src="javascript/jquery-1.6.2.js"></script>
         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
         <script type="text/javascript" src="javascript/cdashCreateProject.js"></script>
       </head>
@@ -178,13 +178,13 @@
                         <span>E-mail</span>
                       </a>
                     </li>
-                    
+
                     <xsl:if test="cdash/edit=1">
                       <li><a href="#fragment-6"><span>Spam</span></a></li>
                       <li><a href="#fragment-7"><span>Clients</span></a></li>
                     </xsl:if>
 
-                    
+
                     <li>
                       <xsl:if test="cdash/edit=0">
                         <xsl:attribute name="class">
@@ -200,7 +200,7 @@
                     </li>
 
                   </ul>
-                  
+
                   <div id="fragment-1" class="tab_content">
                     <div class="tab_help"></div>
                     <table width="550">
@@ -557,7 +557,7 @@
                             <xsl:attribute name="value">
                                <xsl:value-of select="cdash/project/robotregex" />
                              </xsl:attribute>
-                          </input> 
+                          </input>
                           <a
                             href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
@@ -573,7 +573,7 @@
                             from the robot checkin.
                           </span>
                         </td>
-                      </tr> 
+                      </tr>
                       <xsl:for-each select="/cdash/cvsrepository">
                         <tr>
                           <td></td>
@@ -1300,7 +1300,7 @@
                      <xsl:if test="cdash/edit=0">fragment-6</xsl:if>
                      <xsl:if test="cdash/edit=1">fragment-8</xsl:if>
                      </xsl:attribute>
-                     
+
                     <div class="tab_help"></div>
                     <table width="550">
 

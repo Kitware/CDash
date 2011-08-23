@@ -2,9 +2,9 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-    <xsl:include href="headerback.xsl"/> 
-   
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    <xsl:include href="headerback.xsl"/>
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
     <xsl:template match="/">
       <html>
@@ -30,12 +30,12 @@
               <script type="text/javascript">
               var version='<xsl:value-of select="cdash/minversion"/>';
               </script>
-              <script src="javascript/jquery.js" type="text/javascript" charset="utf-8"></script>
+              <script src="javascript/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
               <script src="javascript/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>
             </xsl:if>
           </xsl:if>
-        </xsl:if> 
-         
+        </xsl:if>
+
        </head>
        <body bgcolor="#ffffff">
    <xsl:call-template name="headerback"/>
@@ -59,27 +59,27 @@
   <tr>
     <td><div align="right">Delete builds with wrong start date:</div></td>
     <td><div align="left"><input type="submit" name="CheckBuildsWrongDate" value="Check builds"/><input type="submit" name="DeleteBuildsWrongDate" value="Delete builds"/></div></td>
-  </tr> 
+  </tr>
   <tr>
     <td><div align="right">Compute test timing:</div></td>
     <td><div align="left">for the last <input type="text" name="TestTimingDays" size="2" value="4"/> days <input type="submit" name="ComputeTestTiming" value="Compute test timing"/></div></td>
-  </tr> 
+  </tr>
   <tr>
     <td><div align="right">Compute update statistics:</div></td>
     <td><div align="left">for the last <input type="text" name="UpdateStatisticsDays" size="2" value="4"/> days <input type="submit" name="ComputeUpdateStatistics" value="Compute update statistics"/></div></td>
-  </tr> 
+  </tr>
   <tr>
     <td><div align="right">Compress test output (can take a long time):</div></td>
     <td><input type="submit" name="CompressTestOutput" value="Compress test output"/></td>
-  </tr>  
+  </tr>
   <tr>
     <td><div align="right">Cleanup CDash (can take a long time):</div></td>
     <td><input type="submit" name="Cleanup" value="Cleanup database"/></td>
-  </tr> 
+  </tr>
   <tr>
     <td><div align="right">Upgrade CDash: (this might take some time)</div></td>
     <td><div align="left"><input type="submit" name="Upgrade" value="Upgrade CDash"/></div></td>
-  </tr> 
+  </tr>
 </table>
 </form><br/>
 

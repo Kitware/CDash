@@ -1,15 +1,15 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-    
+
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headerback.xsl"/> 
-   
+   <xsl:include href="headerback.xsl"/>
+
    <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headerback.xsl"/> 
+   <xsl:include href="local/headerback.xsl"/>
 
- <!-- HEADER -->   
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+ <!-- HEADER -->
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <xsl:template match="/">
       <html>
@@ -18,19 +18,19 @@
         <meta name="robots" content="noindex,nofollow" />
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link>   
+         </link>
        <xsl:comment><![CDATA[[if IE]>
        <script language="javascript" type="text/javascript" src="javascript/excanvas.js">
        </script>
        <![endif]]]></xsl:comment>
-       <script language="javascript" type="text/javascript" src="javascript/jquery.js" charset="utf-8"></script> 
-       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.min.js" charset="utf-8"></script> 
+       <script language="javascript" type="text/javascript" src="javascript/jquery-1.6.2.js" charset="utf-8"></script>
+       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.min.js" charset="utf-8"></script>
        <script src="javascript/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
-       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.pie.js" charset="utf-8"></script>      
+       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.pie.js" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headerback_local"/>
 </xsl:when>
@@ -38,7 +38,7 @@
   <xsl:call-template name="headerback"/>
 </xsl:otherwise>
 </xsl:choose>
-     
+
 <br/>
 
 <!-- Site manager -->
@@ -49,19 +49,19 @@
 <br/>
 </xsl:if>
 
-<!-- Main -->         
-<b>Processor Speed: </b><xsl:if test="string-length(cdash/site/processorclockfrequency)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>   
-<b>64 Bits: </b><xsl:if test="string-length(cdash/site/processoris64bits)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processoris64bits"/><br/>    
-<b>Processor Vendor: </b><xsl:if test="string-length(cdash/site/processorvendor)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendor"/><br/>    
-<b>Processor Vendor ID: </b><xsl:if test="string-length(cdash/site/processorvendorid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendorid"/><br/>    
-<b>Processor Family ID: </b><xsl:if test="string-length(cdash/site/processorfamilyid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorfamilyid"/><br/>    
-<b>Processor Cache Size: </b><xsl:if test="string-length(cdash/site/processorcachesize)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorcachesize"/><br/>    
-<b>Number of logical CPUs: </b><xsl:if test="string-length(cdash/site/numberlogicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberlogicalcpus"/><br/>    
-<b>Number of physical CPUs: </b><xsl:if test="string-length(cdash/site/numberphysicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberphysicalcpus"/><br/>    
-<b>Number of logical CPU per Physical CPUs: </b><xsl:if test="string-length(cdash/site/logicalprocessorsperphysical)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/logicalprocessorsperphysical"/><br/>   
-<b>Total Virtual Memory: </b><xsl:if test="string-length(cdash/site/totalvirtualmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalvirtualmemory"/><br/>    
-<b>Total Physical Memory: </b><xsl:if test="string-length(cdash/site/totalphysicalmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalphysicalmemory"/><br/>    
-<b>Description: </b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/description"/><br/>    
+<!-- Main -->
+<b>Processor Speed: </b><xsl:if test="string-length(cdash/site/processorclockfrequency)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>
+<b>64 Bits: </b><xsl:if test="string-length(cdash/site/processoris64bits)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processoris64bits"/><br/>
+<b>Processor Vendor: </b><xsl:if test="string-length(cdash/site/processorvendor)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendor"/><br/>
+<b>Processor Vendor ID: </b><xsl:if test="string-length(cdash/site/processorvendorid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendorid"/><br/>
+<b>Processor Family ID: </b><xsl:if test="string-length(cdash/site/processorfamilyid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorfamilyid"/><br/>
+<b>Processor Cache Size: </b><xsl:if test="string-length(cdash/site/processorcachesize)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorcachesize"/><br/>
+<b>Number of logical CPUs: </b><xsl:if test="string-length(cdash/site/numberlogicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberlogicalcpus"/><br/>
+<b>Number of physical CPUs: </b><xsl:if test="string-length(cdash/site/numberphysicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberphysicalcpus"/><br/>
+<b>Number of logical CPU per Physical CPUs: </b><xsl:if test="string-length(cdash/site/logicalprocessorsperphysical)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/logicalprocessorsperphysical"/><br/>
+<b>Total Virtual Memory: </b><xsl:if test="string-length(cdash/site/totalvirtualmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalvirtualmemory"/><br/>
+<b>Total Physical Memory: </b><xsl:if test="string-length(cdash/site/totalphysicalmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalphysicalmemory"/><br/>
+<b>Description: </b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/description"/><br/>
 <br/>
 
 <!-- Display the claimers -->
@@ -80,7 +80,7 @@
 </xsl:if>
 
 <!-- Display the map -->
-<xsl:if test="string-length(cdash/site/ip)>0">  
+<xsl:if test="string-length(cdash/site/ip)>0">
   <b>IP address: </b><xsl:value-of select="cdash/site/ip"/><br/>
   <b>Map:</b><br/>
   <script type="text/javascript">
@@ -90,10 +90,10 @@
     &lt;script type="text/javascript"&gt;
       // Creates a marker whose info window displays the letter corresponding
       // to the given index.
-      function createMarker(point,title) 
-        {     
+      function createMarker(point,title)
+        {
         var marker = new GMarker(point);
-        GEvent.addListener(marker, "click", function() 
+        GEvent.addListener(marker, "click", function()
           {
           marker.openInfoWindowHtml(title);
           });
@@ -143,15 +143,15 @@
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     $.plot($("#placeholder"), [
-    
+
 <xsl:for-each select="cdash/siteload/build">
  { label: "<xsl:value-of select="project"/> - <xsl:value-of select="name"/> (<xsl:value-of select="type"/>)",  data: <xsl:value-of select="time"/>},
 </xsl:for-each>
  { label: "Non-CDash",  data: <xsl:value-of select="cdash/siteload/idle"/>}
-  ], 
+  ],
   {
    series: {
-      pie: { 
+      pie: {
         show: true,
         radius: 1,
         label: {
@@ -171,7 +171,7 @@ $(function () {
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

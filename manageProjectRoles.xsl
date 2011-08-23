@@ -2,13 +2,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headeradminproject.xsl"/> 
-     
+   <xsl:include href="headeradminproject.xsl"/>
+
    <!-- Include local common files -->
    <xsl:include href="local/footer.xsl"/>
    <xsl:include href="local/headeradminproject.xsl"/>
-  
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -23,10 +23,10 @@
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
           <xsl:comment><![ endif]]></xsl:comment>
           <!-- Include project roles -->
-          <script src="javascript/jquery.js"></script>
+          <script src="javascript/jquery-1.6.2.js"></script>
           <script src="javascript/cdashProjectRole.js"></script>
           <script type="text/javascript" src="javascript/ui.tabs.js"></script>
-   
+
 
         <!-- Functions to confirm the email -->
         <xsl:text disable-output-escaping="yes">
@@ -42,7 +42,7 @@
        </head>
        <body bgcolor="#ffffff">
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headeradminproject_local"/>
 </xsl:when>
@@ -67,7 +67,7 @@
         <xsl:attribute name="value">0</xsl:attribute>
         Choose...
         </option>
-        
+
         <xsl:for-each select="cdash/availableproject">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -78,15 +78,15 @@
         </option>
         </xsl:for-each>
         </select></td>
-    </form>    
+    </form>
   </tr>
-</table>  
+</table>
 
 <xsl:choose>
  <xsl:when test="count(cdash/cvsuser)>0">
     <div id="wizard">
           <table width="800" border="0">
-             <!-- Show the cvsusers if imported to check that they are valid -->            
+             <!-- Show the cvsusers if imported to check that they are valid -->
             <form  method="post">
             <td valign="top" width="100"><div align="right">Import CVS Users:</div></td>
             <td>
@@ -95,8 +95,8 @@
             <td>Send</td>
             <td>Email</td>
             <td>CVS Login</td>
-            <td>First Name</td>    
-            <td>Last Name</td>    
+            <td>First Name</td>
+            <td>Last Name</td>
             </tr>
             <xsl:for-each select="cdash/cvsuser">
             <tr>
@@ -122,13 +122,13 @@
             <xsl:attribute name="value"><xsl:value-of select="firstname"/></xsl:attribute>
             <xsl:attribute name="name">firstname[<xsl:value-of select="id"/>]</xsl:attribute>
             </input>
-            </td>    
+            </td>
             <td><xsl:value-of select="lastname"/>
             <input type="hidden">
             <xsl:attribute name="value"><xsl:value-of select="lastname"/></xsl:attribute>
             <xsl:attribute name="name">lastname[<xsl:value-of select="id"/>]</xsl:attribute>
             </input>
-            </td>    
+            </td>
             </tr>
             </xsl:for-each>
             <tr>
@@ -136,18 +136,18 @@
             </tr>
             </table>
             </td>
-            </form>            
+            </form>
           </table>
       </div>
     </xsl:when>
     <xsl:otherwise>
-  <!-- If a project has 
+  <!-- If a project has
   been selected -->
   <xsl:if test="count(cdash/project)>0">
    <div id="wizard">
       <ul>
-          <li>                 
-            <a href="#fragment-1"><span>Current users</span></a></li>                
+          <li>
+            <a href="#fragment-1"><span>Current users</span></a></li>
           <li>
             <a href="#fragment-2"><span>Search for already registered users</span></a></li>
           <li>
@@ -157,7 +157,7 @@
       </ul>
     <div id="fragment-1" class="tab_content" >
         <div class="tab_help"></div>
-         
+
           <table width="800"  border="0">
             <tr>
             <td><div align="right"></div></td>
@@ -189,7 +189,7 @@
                 <td><center><b>Repository Credentials</b></center></td>
                 <td><center><b>Action</b></center></td>
                </tr>
-                
+
                <xsl:for-each select="cdash/user">
                <form method="post" action="">
                <xsl:attribute name="form">formuser<xsl:value-of select="id"/></xsl:attribute>
@@ -210,13 +210,13 @@
                </td>
                <td>
                  <xsl:for-each select="repositorycredential">
-                   '<xsl:value-of select="."/>' 
+                   '<xsl:value-of select="."/>'
                  </xsl:for-each>
                 </td>
                 <td>
                 <input type="submit" name="updateuser" value="Update"/>
                 <input type="submit" name="removeuser" value="Remove"/>
-                </td> 
+                </td>
                 </tr>
                 </form>
                 </xsl:for-each>
@@ -226,7 +226,7 @@
           </table>
           <!-- Send email to site maintainer -->
           <form name="emailsitemaintainers_form" method="post" action="">
-          <table width="100%"  border="0"> 
+          <table width="100%"  border="0">
             <tr>
               <td  bgcolor="#DDDDDD"><strong>Send email to site maintainers</strong></td>
             </tr>
@@ -313,24 +313,24 @@
           <table width="800"  border="0">
             <tr>
                 <td><div align="right">CVS Users File:</div></td>
-          
+
             <td>
             <form method="post" action="" enctype="multipart/form-data">
             <input name="cvsUserFile" type="file"/><input type="submit" name="importUsers" value="Import"/>
             </form>
             </td>
-            </tr>              
+            </tr>
           </table>
     </div>
   </div>
 </xsl:if> <!-- end if a project has been selected -->
 </xsl:otherwise>
 </xsl:choose>
-  
+
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

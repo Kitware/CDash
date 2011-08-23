@@ -2,13 +2,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headeradminproject.xsl"/> 
-     
+   <xsl:include href="headeradminproject.xsl"/>
+
    <!-- Include local common files -->
    <xsl:include href="local/footer.xsl"/>
    <xsl:include href="local/headeradminproject.xsl"/>
-  
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -19,9 +19,9 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-   
+
         <!-- Include project roles -->
-        <script src="javascript/jquery.js"></script>
+        <script src="javascript/jquery-1.6.2.js"></script>
         <script src="javascript/cdashManageUsers.js"></script>
         <!-- Functions to confirm the email -->
         <xsl:text disable-output-escaping="yes">
@@ -32,9 +32,9 @@
                  }
                  return false;
               }
-              
+
               function generatePassword()
-                { 
+                {
                 var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
                 var passwd = "";
                 for(x=0;x&lt;12;x++)
@@ -46,12 +46,12 @@
                 $("input#passwd2").val(passwd);
                 $("#clearpasswd").html("("+passwd+")");
                 }
-              
+
               &lt;/script&gt;
         </xsl:text>
        </head>
        <body bgcolor="#ffffff">
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headeradminproject_local"/>
 </xsl:when>
@@ -66,10 +66,10 @@
 <div style="color: green;"><xsl:value-of select="cdash/warning"/></div><br/>
 </xsl:if>
 
-<div style="color: red;"><xsl:value-of select="cdash/error" /></div> 
+<div style="color: red;"><xsl:value-of select="cdash/error" /></div>
 
 <form method="post" action="manageUsers.php" name="regform">
-<table width="100%"  border="0">  
+<table width="100%"  border="0">
   <tr>
     <td><div align="right"></div></td>
     <td  bgcolor="#DDDDDD"><strong>Search for already registered users</strong></td>
@@ -134,14 +134,14 @@
   <td width="80%" class="nob"><input type="submit" value="Add user >>" name="adduser" class="textbox"/>
   (password will be display in clear upon addition)
   </td>
-</tr> 
-</table>  
-</form> 
+</tr>
+</table>
+</form>
 
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

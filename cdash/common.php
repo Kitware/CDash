@@ -7,11 +7,11 @@
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved. 
+  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -85,7 +85,7 @@ function generate_XSLT($xml,$pageName,$only_in_local=false)
       {
       $xml = substr($xml,0,$pos);
       $xml .= "<uselocaldirectory>1</uselocaldirectory>";
-      
+
       // look at the local directory if we have the same php file
       // and add the xml if needed
       $localphpfile = "local/".$pageName.".php";
@@ -94,15 +94,15 @@ function generate_XSLT($xml,$pageName,$only_in_local=false)
         include_once($localphpfile);
         $xml .= getLocalXML();
         }
-        
+
       $xml .= "</cdash>"; // finish the xml
       }
     }
 
   $xh = xslt_create();
-  
+
   if(PHP_VERSION < 5)
-    { 
+    {
     $filebase = 'file://' . getcwd () . '/';
     xslt_set_base($xh,$filebase);
     }
@@ -120,19 +120,19 @@ function generate_XSLT($xml,$pageName,$only_in_local=false)
      fclose($inF);
     }
   $xslpage = $pageName.".xsl";
-  
+
   // Check if the page exists in the local directory
   if($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/".$xslpage))
     {
     $xslpage = "local/".$xslpage;
     }
- 
+
   $html = xslt_process($xh, 'arg:/_xml', $xslpage, NULL, $arguments);
-  
+
   // Enfore the charset to be UTF-8
-  header('Content-type: text/html; charset=utf-8'); 
+  header('Content-type: text/html; charset=utf-8');
   echo $html;
-  
+
   xslt_free($xh);
 }
 
@@ -140,12 +140,54 @@ function generate_XSLT($xml,$pageName,$only_in_local=false)
 function XMLStrFormat($str)
 {
   $str = str_replace("&", "&amp;", $str);
-  $str = str_replace("<", "&lt;", $str); 
-  $str = str_replace(">", "&gt;", $str); 
-  $str = str_replace("'", "&apos;", $str);  
-  $str = str_replace("\"", "&quot;", $str); 
+  $str = str_replace("<", "&lt;", $str);
+  $str = str_replace(">", "&gt;", $str);
+  $str = str_replace("'", "&apos;", $str);
+  $str = str_replace("\"", "&quot;", $str);
   $str = str_replace("\r", "", $str);
   return $str;
+}
+
+
+function time_difference($endtime){
+    $days= (date("j",$endtime)-1);
+    $months =(date("n",$endtime)-1);
+    $years =(date("Y",$endtime)-1970);
+    $hours =date("G",$endtime);
+    $mins =date("i",$endtime);
+    $secs =date("s",$endtime);
+    if($years>0)
+      {
+      $diff = $years. ' year';
+      if($years>1) {$diff .= 's';}
+      }
+    else if($months>0)
+      {
+      $diff = $months. ' month';
+      if($months>1) {$diff .= 's';}
+      }
+    else if($days>0)
+      {
+      $diff = $days. ' day';
+      if($days>1) {$diff .= 's';}
+      }
+    else if($hours>0)
+      {
+      $diff = $hours. ' hour';
+      if($hours>1) {$diff .= 's';}
+      }
+    else if($mins>0)
+      {
+      $diff = $mins. ' minute';
+      if($mins>1) {$diff .= 's';}
+      }
+    else if($secs>0)
+      {
+      $diff = $secs. ' second';
+      if($secs>1) {$diff .= 's';}
+      }
+    $diff .= ' ago';
+    return $diff;
 }
 
 /** Microtime function */
@@ -207,7 +249,7 @@ function PHPErrorHandler($projectid)
         if(strlen($GLOBALS['PHP_ERROR_RESOURCE_TYPE'])==0) {$GLOBALS['PHP_ERROR_RESOURCE_TYPE']=0;}
         if(strlen($GLOBALS['PHP_ERROR_BUILD_ID'])==0) {$GLOBALS['PHP_ERROR_BUILD_ID']=0;}
         if(strlen($GLOBALS['PHP_ERROR_RESOURCE_ID'])==0) {$GLOBALS['PHP_ERROR_RESOURCE_ID']=0;}
-      
+
         add_log('Fatal error:'.$error['message'],$error['file'].' ('.$error['line'].')',
                  LOG_ERR,$projectid,$GLOBALS['PHP_ERROR_BUILD_ID'],
                  $GLOBALS['PHP_ERROR_RESOURCE_TYPE'],$GLOBALS['PHP_ERROR_RESOURCE_ID']);
@@ -227,7 +269,7 @@ function setVersion()
   $version = pdo_query("SELECT major FROM version");
   if(pdo_num_rows($version) == 0)
     {
-    pdo_query("INSERT INTO version (major,minor,patch) 
+    pdo_query("INSERT INTO version (major,minor,patch)
                VALUES ($CDASH_VERSION_MAJOR,$CDASH_VERSION_MINOR,$CDASH_VERSION_PATCH)");
     }
   else
@@ -235,7 +277,7 @@ function setVersion()
     pdo_query("UPDATE version SET major=$CDASH_VERSION_MAJOR,
                                   minor=$CDASH_VERSION_MINOR,
                                   patch=$CDASH_VERSION_PATCH");
-    }  
+    }
 }
 
 
@@ -246,7 +288,7 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
     {
     return;
     }
-    
+
   // If the projectid=0 only admin can access the page
   if($projectid==0 && pdo_num_rows(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid' AND admin='1'"))==0)
     {
@@ -264,13 +306,13 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
     {
     $project = pdo_query("SELECT public FROM project WHERE id='$projectid'");
     $project_array = pdo_fetch_array($project);
-    
+
     // If the project is public we quit
     if($project_array["public"]==1)
       {
       return true;
       }
-    
+
     // If the project is private and the user is not logged in we quit
     if(!$userid && $project_array["public"]!=1)
       {
@@ -307,10 +349,10 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
 
 /** Clean the backup directory */
 function clean_backup_directory()
-{   
+{
   include("cdash/config.php");
   require_once("cdash/pdo.php");
-  foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename) 
+  foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename)
     {
     if(time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600)
       {
@@ -322,18 +364,18 @@ function clean_backup_directory()
 /** Backup an XML file */
 /*function backup_xml_file($parser,$contents,$projectid)
 {
-  
+
   // If the content of the file is empty we return
   if(strlen($contents)==0)
     {
-    return; 
+    return;
     }
 
   include("cdash/config.php");
   require_once("cdash/pdo.php");
-   
+
   clean_backup_directory(); // should probably be run as a cronjob
- 
+
   if(@$parser->index["BUILD"] != "")
     {
     $file = "Build.xml";
@@ -349,11 +391,11 @@ function clean_backup_directory()
   else if(@$parser->index["UPDATE"] != "")
     {
     $file = "Update.xml";
-    }  
+    }
   else if(@$parser->index["COVERAGE"] != "")
     {
     $file = "Coverage.xml";
-    } 
+    }
   else if(@$parser->index["COVERAGELOG"] != "")
     {
     $file = "CoverageLog.xml";
@@ -365,12 +407,12 @@ function clean_backup_directory()
   else if(@$parser->index["DYNAMICANALYSIS"] != "")
     {
     $file = "DynamicAnalysis.xml";
-    } 
+    }
   else
     {
     $file = "Other.xml";
     }
-  
+
  // For some reasons the update.xml has a different format
  if(@$parser->index["UPDATE"] != "")
    {
@@ -382,13 +424,13 @@ function clean_backup_directory()
  else
    {
    $site = $parser->index["SITE"];
-   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"]; 
+   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"];
    $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
    $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
    }
- 
+
  $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_".$file;
-  
+
  // If the file is other we append a number until we get a non existing file
  $i=1;
  while($file=="Other.xml" && file_exists($filename))
@@ -396,29 +438,29 @@ function clean_backup_directory()
    $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_Other.".$i.".xml";
    $i++;
    }
-   
+
  while($file=="CoverageLog.xml" && file_exists($filename))
    {
    $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_CoverageLog.".$i.".xml";
    $i++;
    }
-   
-  if (!$handle = fopen($filename, 'w')) 
+
+  if (!$handle = fopen($filename, 'w'))
     {
     echo "Cannot open file ($filename)";
     add_log("Cannot open file ($filename)", "backup_xml_file");
     return;
     }
-  
+
   // Write the file.
-  if (fwrite($handle, $contents) === FALSE)  
+  if (fwrite($handle, $contents) === FALSE)
     {
     echo "Cannot write to file ($contents)";
     add_log("Cannot write to file ($$contents)", "backup_xml_file");
     fclose($handle);
     return;
     }
-    
+
   fclose($handle);
 }*/
 
@@ -438,7 +480,7 @@ function get_projects()
   while($project_array = pdo_fetch_array($projectres))
     {
     $project = array();
-    $project['id'] = $project_array["id"];  
+    $project['id'] = $project_array["id"];
     $project['name'] = $project_array["name"];
     $project['description'] = $project_array["description"];
     $projectid = $project['id'];
@@ -460,14 +502,14 @@ function get_projects()
       }
 
     $buildquery = pdo_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
-    $buildquery_array = pdo_fetch_array($buildquery); 
+    $buildquery_array = pdo_fetch_array($buildquery);
     $project['nbuilds'] = $buildquery_array[0];
 
     $Project = new Project;
     $Project->Id = $project['id'];
     $project['uploadsize'] = $Project->GetUploadsTotalSize();
 
-    $projects[] = $project; 
+    $projects[] = $project;
     }
 
   return $projects;
@@ -475,20 +517,20 @@ function get_projects()
 
 /** Get the build id from stamp, name and buildname */
 function get_build_id($buildname,$stamp,$projectid,$sitename)
-{  
+{
   if(!is_numeric($projectid))
     {
     return;
     }
-  
+
   $buildname = pdo_real_escape_string($buildname);
   $stamp = pdo_real_escape_string($stamp);
-  
+
   $sql = "SELECT build.id AS id FROM build,site WHERE build.name='$buildname' AND build.stamp='$stamp'";
   $sql .= " AND build.projectid='$projectid'";
-  $sql .= " AND build.siteid=site.id AND site.name='$sitename'"; 
+  $sql .= " AND build.siteid=site.id AND site.name='$sitename'";
   $sql .= " ORDER BY build.id DESC";
-  
+
   $build = pdo_query($sql);
   if(pdo_num_rows($build)>0)
     {
@@ -526,18 +568,18 @@ function get_project_name($projectid)
     $project_array = pdo_fetch_array($project);
     return $project_array["name"];
     }
-    
+
   return "NA";
 }
 
 /** strip slashes from the post if magic quotes are on */
-function stripslashes_if_gpc_magic_quotes( $string ) 
+function stripslashes_if_gpc_magic_quotes( $string )
 {
-  if(get_magic_quotes_gpc()) 
+  if(get_magic_quotes_gpc())
     {
     return stripslashes($string);
-    } 
-  else 
+    }
+  else
     {
     return $string;
     }
@@ -562,7 +604,7 @@ function get_server_URI()
     {
     $serverName = $_SERVER['SERVER_NAME'];
     }
-  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI']; 
+  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI'];
   $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
   return $currentURI;
 }
@@ -578,7 +620,7 @@ function add_site2user($siteid,$userid)
     {
     return;
     }
-        
+
   $site2user = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
   if(pdo_num_rows($site2user) == 0)
     {
@@ -609,16 +651,16 @@ function update_site($siteid,$name,
            $logicalprocessorsperphysical,
            $processorclockfrequency,
            $description,$ip,$latitude,$longitude,$nonewrevision=false)
-{  
+{
   include("cdash/config.php");
   require_once("cdash/pdo.php");
- 
+
   // Security checks
   if(!is_numeric($siteid))
     {
     return;
     }
-    
+
   $latitude = pdo_real_escape_string($latitude);
   $longitude = pdo_real_escape_string($longitude);
   $ip = pdo_real_escape_string($ip);
@@ -636,12 +678,12 @@ function update_site($siteid,$name,
   $logicalprocessorsperphysical = round(pdo_real_escape_string($logicalprocessorsperphysical));
   $processorclockfrequency = round(pdo_real_escape_string($processorclockfrequency));
   $description = pdo_real_escape_string($description);
- 
+
   // Update the basic information first
-  pdo_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'"); 
- 
+  pdo_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'");
+
   add_last_sql_error("update_site");
- 
+
   $names = array();
   $names[] = "processoris64bits";
   $names[] = "processorvendor";
@@ -649,30 +691,30 @@ function update_site($siteid,$name,
   $names[] = "processorfamilyid";
   $names[] = "processormodelid";
   $names[] = "processorcachesize";
-  $names[] = "numberlogicalcpus";     
-  $names[] = "numberphysicalcpus";    
-  $names[] = "totalvirtualmemory";  
-  $names[] = "totalphysicalmemory";  
-  $names[] = "logicalprocessorsperphysical";  
-  $names[] = "processorclockfrequency";  
-  $names[] = "description";      
- 
+  $names[] = "numberlogicalcpus";
+  $names[] = "numberphysicalcpus";
+  $names[] = "totalvirtualmemory";
+  $names[] = "totalphysicalmemory";
+  $names[] = "logicalprocessorsperphysical";
+  $names[] = "processorclockfrequency";
+  $names[] = "description";
+
  // Check that we have a valid input
  $isinputvalid = 0;
  foreach($names as $name)
   {
    if($$name != "NA" && strlen($$name)>0)
-     { 
+     {
      $isinputvalid = 1;
    break;
      }
- }  
+ }
 
  if(!$isinputvalid)
    {
   return;
-   }  
-  
+   }
+
  // Check if we have valuable information and the siteinformation doesn't exist
  $hasvalidinfo = false;
  $newrevision2 = false;
@@ -701,7 +743,7 @@ function update_site($siteid,$name,
   // Check if the information are different from what we have in the database, then that means
    // the system has been upgraded and we need to create a new revision
    foreach($names as $name)
-    {  
+    {
     if($$name!="NA" && $query_array[$name]!=$$name && strlen($$name)>0)
       {
    // Take care of rounding issues
@@ -721,7 +763,7 @@ function update_site($siteid,$name,
       }
     }
    }
-  
+
   if($newrevision2 && !$nonewrevision)
    {
   $now = gmdate(FMT_DATETIME);
@@ -733,7 +775,7 @@ function update_site($siteid,$name,
      $sql .= " ,$name";
     }
     }
-   
+
   $sql .= ") VALUES($siteid,'$now'";
   foreach($names as $name)
     {
@@ -742,7 +784,7 @@ function update_site($siteid,$name,
      $sql .= ",'".$$name."'";
     }
     }
-   $sql .= ")"; 
+   $sql .= ")";
   pdo_query ($sql);
   add_last_sql_error("update_site",$sql);
    }
@@ -753,7 +795,7 @@ function update_site($siteid,$name,
   foreach($names as $name)
     {
    if($$name != "NA" && strlen($$name)>0)
-     { 
+     {
     if($i>0)
      {
      $sql .= " ,";
@@ -762,22 +804,22 @@ function update_site($siteid,$name,
         $i++;
     }
     }
-   
+
      $timestamp = $query_array["timestamp"];
      $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
-  
-     pdo_query ($sql); 
+
+     pdo_query ($sql);
    add_last_sql_error("update_site",$sql);
   }
-}      
+}
 
 /** Get the geolocation from IP address */
 function get_geolocation($ip)
-{  
+{
   include("cdash/config.php");
   require_once("cdash/pdo.php");
   $location = array();
-  
+
   // Test if curl exists
   if(function_exists("curl_init") == FALSE)
     {
@@ -789,34 +831,34 @@ function get_geolocation($ip)
   // Ask hostip.info for geolocation
   $lat = "";
   $long = "";
- 
+
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, "http://api.hostip.info/get_html.php?ip=".$ip."&position=true");
   curl_setopt($curl, CURLOPT_TIMEOUT, 5); // if we cannot get the geolocation in 5 seconds we quit
-      
+
   ob_start();
   curl_exec($curl);
   $httpReply = ob_get_contents();
   ob_end_clean();
-  
+
   $pos = strpos($httpReply,"Latitude: ");
   if($pos !== FALSE)
     {
     $pos2 = strpos($httpReply,"\n",$pos);
     $lat = substr($httpReply,$pos+10,$pos2-$pos-10);
     }
-    
+
   $pos = strpos($httpReply,"Longitude: ");
   if($pos !== FALSE)
     {
     $pos2 = strlen($httpReply);
     $long = substr($httpReply,$pos+11,$pos2-$pos-11);
-    } 
+    }
   curl_close($curl);
- 
+
   $location['latitude'] = "";
   $location['longitude'] = "";
-  
+
   // Sanity check
   if(strlen($lat) > 0 && strlen($long)>0
      && $lat[0] != ' ' && $long[0] != ' '
@@ -839,9 +881,9 @@ function get_geolocation($ip)
         }
       }
     }
-  
+
   return $location;
-} 
+}
 
 /** Create a site */
 /*function add_site($name, $attributes)
@@ -852,21 +894,21 @@ function get_geolocation($ip)
   pdo_select_db("$CDASH_DB_NAME",$db);
 
  @$processoris64bits=$attributes["IS64BITS"];
- @$processorvendor=$attributes["VENDORSTRING"]; 
- @$processorvendorid=$attributes["VENDORID"]; 
- @$processorfamilyid=$attributes["FAMILYID"]; 
- @$processormodelid=$attributes["MODELID"]; 
- @$processorcachesize=$attributes["PROCESSORCACHESIZE"]; 
- @$numberlogicalcpus=$attributes["NUMBEROFLOGICALCPU"]; 
- @$numberphysicalcpus=$attributes["NUMBEROFPHYSICALCPU"]; 
- @$totalvirtualmemory=$attributes["TOTALVIRTUALMEMORY"]; 
- @$totalphysicalmemory=$attributes["TOTALPHYSICALMEMORY"]; 
- @$logicalprocessorsperphysical=$attributes["LOGICALPROCESSORSPERPHYSICAL"]; 
- @$processorclockfrequency=$attributes["PROCESSORCLOCKFREQUENCY"]; 
+ @$processorvendor=$attributes["VENDORSTRING"];
+ @$processorvendorid=$attributes["VENDORID"];
+ @$processorfamilyid=$attributes["FAMILYID"];
+ @$processormodelid=$attributes["MODELID"];
+ @$processorcachesize=$attributes["PROCESSORCACHESIZE"];
+ @$numberlogicalcpus=$attributes["NUMBEROFLOGICALCPU"];
+ @$numberphysicalcpus=$attributes["NUMBEROFPHYSICALCPU"];
+ @$totalvirtualmemory=$attributes["TOTALVIRTUALMEMORY"];
+ @$totalphysicalmemory=$attributes["TOTALPHYSICALMEMORY"];
+ @$logicalprocessorsperphysical=$attributes["LOGICALPROCESSORSPERPHYSICAL"];
+ @$processorclockfrequency=$attributes["PROCESSORCLOCKFREQUENCY"];
  $description="";
  $ip = $_SERVER['REMOTE_ADDR'];
- 
- 
+
+
   $ip = pdo_real_escape_string($ip);
   $processoris64bits = pdo_real_escape_string($processoris64bits);
   $processorvendor = pdo_real_escape_string($processorvendor);
@@ -890,7 +932,7 @@ function get_geolocation($ip)
     $sitename = $site_array["name"];
     $latitude = $site_array["latitude"];
     $longitude = $site_array["longitude"];
-  
+
     // We update the site information if needed
     update_site($siteid,$sitename,
         $processoris64bits,
@@ -908,22 +950,22 @@ function get_geolocation($ip)
         $description,$ip,$latitude,$longitude,false);
     return $siteid;
     }
-  
+
   // If not found we create the site
   // We retrieve the geolocation from the IP address
   $location = get_geolocation($ip);
-  
-  $latitude = $location['latitude'];
-  $longitude = $location['longitude'];  
 
-  if(!pdo_query ("INSERT INTO site (name,ip,latitude,longitude) 
+  $latitude = $location['latitude'];
+  $longitude = $location['longitude'];
+
+  if(!pdo_query ("INSERT INTO site (name,ip,latitude,longitude)
                     VALUES ('$name','$ip','$latitude','$longitude')"))
     {
-    echo "add_site = ".pdo_error();  
+    echo "add_site = ".pdo_error();
     }
-  
+
   $siteid = pdo_insert_id("site");
- 
+
   // Insert the site information
   $now = gmdate(FMT_DATETIME);
   pdo_query ("INSERT INTO siteinformation (siteid,
@@ -940,7 +982,7 @@ function get_geolocation($ip)
            totalphysicalmemory,
            logicalprocessorsperphysical,
            processorclockfrequency,
-                    description) 
+                    description)
            VALUES ('$siteid',
             '$now',
             '$processoris64bits',
@@ -956,7 +998,7 @@ function get_geolocation($ip)
             '$logicalprocessorsperphysical',
             '$processorclockfrequency',
             '$description')");
-  
+
   return $siteid;
 }*/
 
@@ -967,14 +1009,14 @@ function remove_project_builds($projectid)
     {
     return;
     }
-    
+
   $build = pdo_query("SELECT id FROM build WHERE projectid='$projectid'");
   $buildids = array();
   while($build_array = pdo_fetch_array($build))
     {
     $buildids[] = $build_array["id"];
     }
-  remove_build($buildids);  
+  remove_build($buildids);
 }
 
 /** Remove all related inserts for a given build */
@@ -982,7 +1024,7 @@ function remove_build($buildid)
 {
   if(empty($buildid))
     {
-    return;  
+    return;
     }
 
   $buildids = '(';
@@ -1005,7 +1047,7 @@ function remove_build($buildid)
   pdo_query("DELETE FROM buildemail WHERE buildid IN ".$buildids);
 
   pdo_query("DELETE FROM buildinformation WHERE buildid IN ".$buildids);
-  pdo_query("DELETE FROM builderrordiff WHERE buildid IN ".$buildids);   
+  pdo_query("DELETE FROM builderrordiff WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM buildupdate WHERE buildid IN ".$buildids);
 
   pdo_query("DELETE FROM configure WHERE buildid IN ".$buildids);
@@ -1025,7 +1067,7 @@ function remove_build($buildid)
     if($buildfailureids != '(')
       {
       $buildfailureids .= ',';
-      }  
+      }
     $buildfailureids .= $buildfailure_array['id'];
     }
   $buildfailureids .= ')';
@@ -1039,7 +1081,7 @@ function remove_build($buildid)
   // coverage file are kept unless they are shared
   $coveragefile = pdo_query("SELECT a.fileid,count(b.fileid) AS c
                              FROM coverage AS a LEFT JOIN coverage AS b
-                             ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
+                             ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids."
                              GROUP BY a.fileid HAVING count(b.fileid)=0");
 
   $fileids = '(';
@@ -1056,9 +1098,9 @@ function remove_build($buildid)
   if(strlen($fileids)>2)
     {
     pdo_query("DELETE FROM coveragefile WHERE id IN ".$fileids);
-    } 
+    }
 
-  pdo_query("DELETE FROM label2coveragefile WHERE buildid IN ".$buildids);    
+  pdo_query("DELETE FROM label2coveragefile WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM coverage WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM coveragefilelog WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM coveragesummary WHERE buildid IN ".$buildids);
@@ -1071,25 +1113,25 @@ function remove_build($buildid)
     if($dynids != '(')
       {
       $dynids .= ',';
-      }    
+      }
     $dynids .= $dynamicanalysis_array["id"];
     }
   $dynids .= ')';
 
   if(strlen($dynids)>2)
     {
-    pdo_query("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN ".$dynids); 
-    pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN ".$dynids); 
-    } 
+    pdo_query("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN ".$dynids);
+    pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN ".$dynids);
+    }
   pdo_query("DELETE FROM dynamicanalysis WHERE buildid IN ".$buildids);
-  pdo_query("DELETE FROM updatefile WHERE buildid IN ".$buildids);   
+  pdo_query("DELETE FROM updatefile WHERE buildid IN ".$buildids);
 
   // Delete the note if not shared
   $noteids = '(';
 
-  $build2note = pdo_query("SELECT a.noteid,count(b.noteid) AS c 
-                           FROM build2note AS a LEFT JOIN build2note AS b 
-                           ON (a.noteid=b.noteid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
+  $build2note = pdo_query("SELECT a.noteid,count(b.noteid) AS c
+                           FROM build2note AS a LEFT JOIN build2note AS b
+                           ON (a.noteid=b.noteid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids."
                            GROUP BY a.noteid HAVING count(b.noteid)=0");
   while($build2note_array = pdo_fetch_array($build2note))
     {
@@ -1100,18 +1142,18 @@ function remove_build($buildid)
       }
     $noteids .= $build2note_array["noteid"];
     }
-  $noteids .= ')';  
+  $noteids .= ')';
   if(strlen($noteids)>2)
     {
     pdo_query("DELETE FROM note WHERE id IN ".$noteids);
     }
 
-  pdo_query("DELETE FROM build2note WHERE buildid IN ".$buildids); 
+  pdo_query("DELETE FROM build2note WHERE buildid IN ".$buildids);
 
   // Delete the test if not shared
-  $build2test = pdo_query("SELECT a.testid,count(b.testid) AS c 
-                           FROM build2test AS a LEFT JOIN build2test AS b 
-                           ON (a.testid=b.testid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
+  $build2test = pdo_query("SELECT a.testid,count(b.testid) AS c
+                           FROM build2test AS a LEFT JOIN build2test AS b
+                           ON (a.testid=b.testid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids."
                            GROUP BY a.testid HAVING count(b.testid)=0");
 
   $testids = '(';
@@ -1121,7 +1163,7 @@ function remove_build($buildid)
     if($testids != '(')
       {
       $testids .= ',';
-      } 
+      }
     $testids .= $testid;
     }
   $testids .= ')';
@@ -1133,9 +1175,9 @@ function remove_build($buildid)
 
     $imgids = '(';
     // Check if the images for the test are not shared
-    $test2image = pdo_query("SELECT a.imgid,count(b.imgid) AS c 
-                           FROM test2image AS a LEFT JOIN test2image AS b 
-                           ON (a.imgid=b.imgid AND b.testid NOT IN ".$testids.") WHERE a.testid IN ".$testids." 
+    $test2image = pdo_query("SELECT a.imgid,count(b.imgid) AS c
+                           FROM test2image AS a LEFT JOIN test2image AS b
+                           ON (a.imgid=b.imgid AND b.testid NOT IN ".$testids.") WHERE a.testid IN ".$testids."
                            GROUP BY a.imgid HAVING count(b.imgid)=0");
     while($test2image_array = pdo_fetch_array($test2image))
       {
@@ -1149,19 +1191,19 @@ function remove_build($buildid)
     $imgids .= ')';
     if(strlen($imgids)>2)
       {
-      pdo_query("DELETE FROM image WHERE id IN ".$imgids);  
+      pdo_query("DELETE FROM image WHERE id IN ".$imgids);
       }
     pdo_query("DELETE FROM test2image WHERE testid IN ".$testids);
     }
 
-  pdo_query("DELETE FROM label2test WHERE buildid IN ".$buildids);   
-  pdo_query("DELETE FROM build2test WHERE buildid IN ".$buildids); 
+  pdo_query("DELETE FROM label2test WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM build2test WHERE buildid IN ".$buildids);
 
   // Delete the uploaded files if not shared
   $fileids = '(';
-  $build2uploadfiles = pdo_query("SELECT a.fileid,count(b.fileid) AS c 
-                           FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b 
-                           ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids." 
+  $build2uploadfiles = pdo_query("SELECT a.fileid,count(b.fileid) AS c
+                           FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b
+                           ON (a.fileid=b.fileid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids."
                            GROUP BY a.fileid HAVING count(b.fileid)=0");
   while($build2uploadfile_array = pdo_fetch_array($build2uploadfiles))
     {
@@ -1183,11 +1225,11 @@ function remove_build($buildid)
   pdo_query("DELETE FROM build2uploadfile WHERE buildid IN ".$buildids);
 
   // Delete the subproject
-  pdo_query("DELETE FROM subproject2build WHERE buildid IN ".$buildids); 
+  pdo_query("DELETE FROM subproject2build WHERE buildid IN ".$buildids);
 
   // Delete the labels
   pdo_query("DELETE FROM label2build WHERE buildid IN ".$buildids);
-   
+
   // Only delete the buildid at the end so that no other build can get it in the meantime
   pdo_query("DELETE FROM build WHERE id IN ".$buildids);
 
@@ -1259,7 +1301,7 @@ function globr($sDir, $sPattern, $nFlags = NULL)
   // files all of our children found.
 
   return $aFiles;
-} 
+}
 
 /**
  * Recursive version of rmdir()
@@ -1268,7 +1310,7 @@ function rmdirr($dir)
 {
   if (is_dir($dir))
     {
-    $objects = scandir($dir); 
+    $objects = scandir($dir);
     foreach ($objects as $object)
       {
       if ($object != '.' && $object != '..')
@@ -1276,11 +1318,11 @@ function rmdirr($dir)
         if (is_dir($dir.'/'.$object))
           rmdirr($dir.'/'.$object);
         else
-          unlink($dir.'/'.$object); 
+          unlink($dir.'/'.$object);
         }
       }
-    reset($objects); 
-    rmdir($dir); 
+    reset($objects);
+    rmdir($dir);
     }
 }
 
@@ -1320,7 +1362,7 @@ function time2second($time)
   return is_numeric(substr($time,2,1)) ? substr($time,4,2) : substr($time,6,2);
 }
 
-/** Get dates 
+/** Get dates
  * today: the *starting* timestamp of the current dashboard
  * previousdate: the date in Y-m-d format of the previous dashboard
  * nextdate: the date in Y-m-d format of the next dashboard
@@ -1332,34 +1374,34 @@ function get_dates($date,$nightlytime)
   $nightlyhour = date("H",$nightlytime);
   $nightlyminute = date("i",$nightlytime);
   $nightlysecond = date("s",$nightlytime);
- 
+
   if(!isset($date) || strlen($date)==0)
-    { 
+    {
     $date = date(FMT_DATE); // the date is always the date of the server
-    
+
     if(date(FMT_TIME)>date(FMT_TIME,$nightlytime))
       {
       $date = date(FMT_DATE,time()+3600*24); //next day
       }
     }
   else
-    {  
+    {
      // If the $nightlytime is in the morning it's actually the day after
     if(date(FMT_TIME,$nightlytime)<'12:00:00')
       {
       $date = date(FMT_DATE,strtotime($date)+3600*24); // previous date
-      }  
+      }
      }
-    
+
   $today = mktime($nightlyhour,$nightlyminute,$nightlysecond,date2month($date),date2day($date),date2year($date))-3600*24; // starting time
 
   // If the $nightlytime is in the morning it's actually the day after
   if(date(FMT_TIME,$nightlytime)<'12:00:00')
     {
     $date = date(FMT_DATE,strtotime($date)-3600*24); // previous date
-    }  
+    }
 
-  $todaydate = mktime(0,0,0,date2month($date),date2day($date),date2year($date)); 
+  $todaydate = mktime(0,0,0,date2month($date),date2day($date),date2year($date));
   $previousdate = date(FMT_DATE,$todaydate-3600*24);
   $nextdate = date(FMT_DATE,$todaydate+3600*24);
 
@@ -1486,9 +1528,9 @@ function get_author_email($projectname, $author)
     exit(0);
     }
 
-  $qry = pdo_query("SELECT email FROM ".qid("user")." WHERE id IN 
+  $qry = pdo_query("SELECT email FROM ".qid("user")." WHERE id IN
   (SELECT up.userid FROM user2project AS up, user2repository AS ur
-   WHERE ur.userid=up.userid AND up.projectid='$projectid' 
+   WHERE ur.userid=up.userid AND up.projectid='$projectid'
    AND ur.credential='$author' AND (ur.projectid=0 OR ur.projectid='$projectid')
    ) LIMIT 1");
 
@@ -1499,8 +1541,8 @@ function get_author_email($projectname, $author)
     $results = pdo_fetch_array($qry);
     $email = $results["email"];
     }
-    
-  return $email;  
+
+  return $email;
 }
 
 /** Get the previous build id */
@@ -1509,10 +1551,10 @@ function get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttim
   $previousbuild = pdo_query("SELECT id FROM build
                               WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                               AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
-  
+
   if(pdo_num_rows($previousbuild)>0)
     {
-    $previousbuild_array = pdo_fetch_array($previousbuild);              
+    $previousbuild_array = pdo_fetch_array($previousbuild);
     return $previousbuild_array["id"];
     }
   return 0;
@@ -1527,7 +1569,7 @@ function get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
 
   if(pdo_num_rows($nextbuild)>0)
     {
-    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    $nextbuild_array = pdo_fetch_array($nextbuild);
     return $nextbuild_array["id"];
     }
   return 0;
@@ -1536,14 +1578,14 @@ function get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
 /** Get the last build id */
 function get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
 {
- 
+
    $nextbuild = pdo_query("SELECT id FROM build
                           WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                           AND projectid='$projectid' ORDER BY starttime DESC LIMIT 1");
 
   if(pdo_num_rows($nextbuild)>0)
     {
-    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    $nextbuild_array = pdo_fetch_array($nextbuild);
     return $nextbuild_array["id"];
     }
   return 0;
@@ -1554,13 +1596,13 @@ function get_previous_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$bui
 {
   $previousbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
                               WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                              AND build.projectid='$projectid' AND build.starttime<'$starttime' 
+                              AND build.projectid='$projectid' AND build.starttime<'$starttime'
                               AND dynamicanalysis.buildid=build.id
                               ORDER BY build.starttime DESC LIMIT 1");
- 
+
   if(pdo_num_rows($previousbuild)>0)
     {
-    $previousbuild_array = pdo_fetch_array($previousbuild);              
+    $previousbuild_array = pdo_fetch_array($previousbuild);
     return $previousbuild_array["id"];
     }
   return 0;
@@ -1571,13 +1613,13 @@ function get_next_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildna
 {
   $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
                           WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                          AND build.projectid='$projectid' AND build.starttime>'$starttime' 
+                          AND build.projectid='$projectid' AND build.starttime>'$starttime'
                           AND dynamicanalysis.buildid=build.id
                           ORDER BY build.starttime ASC LIMIT 1");
 
   if(pdo_num_rows($nextbuild)>0)
     {
-    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    $nextbuild_array = pdo_fetch_array($nextbuild);
     return $nextbuild_array["id"];
     }
   return 0;
@@ -1586,16 +1628,16 @@ function get_next_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildna
 /** Get the last build id dynamicanalysis */
 function get_last_buildid_dynamicanalysis($projectid,$siteid,$buildtype,$buildname,$starttime)
 {
- 
+
    $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
                           WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                          AND build.projectid='$projectid' 
+                          AND build.projectid='$projectid'
                           AND dynamicanalysis.buildid=build.id
                           ORDER BY build.starttime DESC LIMIT 1");
 
   if(pdo_num_rows($nextbuild)>0)
     {
-    $nextbuild_array = pdo_fetch_array($nextbuild);              
+    $nextbuild_array = pdo_fetch_array($nextbuild);
     return $nextbuild_array["id"];
     }
   return 0;
@@ -1612,12 +1654,12 @@ function get_dashboard_date_from_build_starttime($starttime,$nightlytime)
     {
     $date = date(FMT_DATE,$starttime+3600*24); //next day
     }
-    
+
   // If the $nightlytime is in the morning it's actually the day after
   if(date(FMT_TIME,$nightlytime)<'12:00:00')
     {
     $date = date(FMT_DATE,strtotime($date)-3600*24); // previous date
-    } 
+    }
   return $date;
 }
 
@@ -1625,23 +1667,23 @@ function get_dashboard_date_from_project($projectname, $date)
 {
   $project = pdo_query("SELECT nightlytime FROM project WHERE name='$projectname'");
   $project_array = pdo_fetch_array($project);
-  
+
   $nightlytime = strtotime($project_array["nightlytime"]);
   $nightlyhour = date("H",$nightlytime);
   $nightlyminute = date("i",$nightlytime);
   $nightlysecond = date("s",$nightlytime);
 
   if(!isset($date) || strlen($date)==0)
-    { 
+    {
     $date = date(FMT_DATE); // the date is always the date of the server
-    
+
     if(date(FMT_TIME)>date(FMT_TIME,$nightlytime))
       {
       $date = date(FMT_DATE,time()+3600*24); //next day
-      } 
+      }
     }
-  
-  return $date;  
+
+  return $date;
 }
 
 function get_cdash_dashboard_xml($projectname, $date)
@@ -1684,7 +1726,7 @@ function get_cdash_dashboard_xml($projectname, $date)
     $project_array["name"] = $projectname;
     $project_array["nightlytime"] = "00:00:00";
     }
-  
+
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 
   $xml = "<dashboard>
@@ -1695,7 +1737,7 @@ function get_cdash_dashboard_xml($projectname, $date)
   <svn>".make_cdash_url(htmlentities($project_array["cvsurl"]))."</svn>
   <bugtracker>".make_cdash_url(htmlentities($project_array["bugtrackerurl"]))."</bugtracker>
   <googletracker>".htmlentities($project_array["googletracker"])."</googletracker>
-  <documentation>".make_cdash_url(htmlentities($project_array["documentationurl"]))."</documentation> 
+  <documentation>".make_cdash_url(htmlentities($project_array["documentationurl"]))."</documentation>
   <home>".make_cdash_url(htmlentities($project_array["homeurl"]))."</home>
   <projectid>".$projectid."</projectid>
   <projectname>".$project_array["name"]."</projectname>
@@ -1704,23 +1746,23 @@ function get_cdash_dashboard_xml($projectname, $date)
   <previousdate>".$previousdate."</previousdate>
   <nextdate>".$nextdate."</nextdate>
   <logoid>".getLogoID($projectid)."</logoid>";
-    
+
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {
     include_once("local/models/proProject.php");
-    $pro= new proProject; 
+    $pro= new proProject;
     $pro->ProjectId=$projectid;
     $xml.="<proedition>".$pro->GetEdition(1)."</proedition>";
     }
   $xml .="</dashboard>";
-  
+
   $userid = 0;
   if(isset($_SESSION['cdash']))
     {
     $xml .= "<user>";
     $userid = $_SESSION['cdash']['loginid'];
     $xml .= add_XML_value("id",$userid);
-   
+
     // Is the user super administrator
     $userquery = pdo_query("SELECT admin FROM ".qid('user')." WHERE id='$userid'");
     $user_array = pdo_fetch_array($userquery);
@@ -1730,7 +1772,7 @@ function get_cdash_dashboard_xml($projectname, $date)
     $userquery = pdo_query("SELECT role FROM user2project WHERE userid=".qnum($userid)." AND projectid=".qnum($projectid));
     $user_array = pdo_fetch_array($userquery);
     $xml .= add_XML_value("projectrole",$user_array[0]);
-    
+
     $xml .= "</user>";
     }
 
@@ -1800,7 +1842,7 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
     {
     return "";
     }
-    
+
   $cmps = explode("?", $projecturl);
 
   // If $cmps[1] starts with "root=" and the $directory value starts
@@ -1840,10 +1882,10 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
     $dircmp = "";
     }
 
- 
+
   // If we have a revision
   if($revision != '')
-    { 
+    {
     $prev_revision = get_previous_revision($revision);
     if (0 === strcmp($revision, $prev_revision))
       {
@@ -1870,12 +1912,12 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
 function get_trac_diff_url($projecturl, $directory, $file, $revision)
 {
   $filename = $file;
-  
+
   if($directory != "")
     {
     $filename = $directory."/".$file;
     }
- 
+
   if($revision != '')
     {
     $diff_url = $projecturl."/changeset/".$revision."/".$filename;
@@ -1884,7 +1926,7 @@ function get_trac_diff_url($projecturl, $directory, $file, $revision)
     {
     $diff_url = $projecturl."/browser/".$filename;
     }
-    
+
   return make_cdash_url($diff_url);
 }
 
@@ -1892,15 +1934,15 @@ function get_trac_diff_url($projecturl, $directory, $file, $revision)
 function get_fisheye_diff_url($projecturl, $directory, $file, $revision)
 {
   $diff_url = rtrim($projecturl, '/').($directory ? ("/".$directory) : "")."/".$file;
-  
+
   if($revision != '')
     {
     $prev_revision = get_previous_revision($revision);
     if($prev_revision != $revision)
       {
       $diff_url .= "?r1=".$prev_revision."&r2=".$revision;
-      } 
-    else 
+      }
+    else
       {
       $diff_url .= "?r=".$revision;
       }
@@ -1918,13 +1960,13 @@ function get_cvstrac_diff_url($projecturl, $directory, $file, $revision)
       {
       $diff_url = $projecturl."/filediff?f=".($directory ? ($directory) : "")."/".$file;
       $diff_url .= "&v1=".$prev_revision."&v2=".$revision;
-      } 
-    else 
+      }
+    else
       {
       $diff_url = $projecturl."/fileview?f=".($directory ? ($directory) : "")."/".$file;
       $diff_url .= "&v=".$revision;
       }
-    } 
+    }
   else
     {
     $diff_url = $projecturl."/rlog?f=".($directory ? ($directory) : "")."/".$file;
@@ -1944,13 +1986,13 @@ function get_viewvc_diff_url($projecturl, $directory, $file, $revision)
       {
       $diff_url = $projecturl."/?action=browse&path=".($directory ? ($directory) : "")."/".$file;
       $diff_url .= "&r1=".$prev_revision."&r2=".$revision;
-      } 
+      }
     else //view
       {
       $diff_url = $projecturl."/?action=browse&path=".($directory ? ($directory) : "")."/".$file;
       $diff_url .= "&revision=".$revision."&view=markup";
       }
-    } 
+    }
   else //log
     {
     $diff_url = $projecturl."/?action=browse&path=".($directory ? ($directory) : "")."/".$file."&view=log";
@@ -1969,13 +2011,13 @@ function get_viewvc_1_1_diff_url($projecturl, $directory, $file, $revision)
       {
       $diff_url = $projecturl."/".($directory ? ($directory) : "")."/".$file;
       $diff_url .= "?r1=".$prev_revision."&r2=".$revision;
-      } 
+      }
     else //view
       {
       $diff_url = $projecturl."/".($directory ? ($directory) : "")."/".$file;
       $diff_url .= "?revision=".$revision."&view=markup";
       }
-    } 
+    }
   else //log
     {
     $diff_url = $projecturl."/".($directory ? ($directory) : "")."/".$file."?view=log";
@@ -2003,7 +2045,7 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
       $repname = substr($projecturl,$pos_repname);
       }
     }
-  
+
   // find the root name
   $pos_root = strpos($projecturl,"path=");
   if($pos_root !== false)
@@ -2018,8 +2060,8 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
       $root = substr($projecturl,$pos_root+5);
       }
     }
-  
-  
+
+
   // find the project url
   $pos_dotphp = strpos($projecturl,".php?");
   if($pos_dotphp !== false)
@@ -2036,14 +2078,14 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
       {
       $diff_url = $projecturl."/diff.php?".$repname."&path=".$root.($directory ? "/".($directory) : "")."/".$file;
       $diff_url .= "&rev=".$revision."&sc=1";
-      } 
+      }
     else //view
       {
       $diff_url = $projecturl."/filedetails.php?".$repname."&path=".$root.($directory ? "/".($directory) : "")."/".$file;
       $diff_url .= "&rev=".$revision;
       }
-    } 
-  else //log 
+    }
+  else //log
     {
     $diff_url = $projecturl."/log.php?".$repname."&path=".$root.($directory ? "/".($directory) : "")."/".$file;
     $diff_url .= "&rev=0&sc=0&isdir=0";
@@ -2058,7 +2100,7 @@ function get_loggerhead_diff_url($projecturl, $directory, $file, $revision)
   if($revision != '')
     {
     $diff_url = $projecturl."/revision/".$revision.($directory ? ("/".$directory) : "")."/".$file;
-    } 
+    }
   else
     {
     $diff_url = $projecturl."/changes/head:/".($directory ? ($directory) : "")."/".$file;
@@ -2356,15 +2398,15 @@ function qid($id)
 {
   global $CDASH_DB_TYPE;
 
-  if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql")) 
+  if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql"))
     {
     return "`$id`";
     }
-  elseif($CDASH_DB_TYPE == "pgsql") 
+  elseif($CDASH_DB_TYPE == "pgsql")
     {
     return "\"$id\"";
     }
-  else 
+  else
     {
     return $id;
     }
@@ -2375,11 +2417,11 @@ function qiv($iv)
 {
   global $CDASH_DB_TYPE;
 
-  if($CDASH_DB_TYPE == "pgsql") 
+  if($CDASH_DB_TYPE == "pgsql")
     {
     return "'$iv'";
     }
-  else 
+  else
     {
     return $iv;
     }
@@ -2390,15 +2432,15 @@ function qnum($num)
 {
   global $CDASH_DB_TYPE;
 
-  if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql")) 
+  if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql"))
     {
     return "'$num'";
     }
-  elseif($CDASH_DB_TYPE == "pgsql") 
+  elseif($CDASH_DB_TYPE == "pgsql")
     {
     return $num != "" ? $num : "0";
     }
-  else 
+  else
     {
     return $num;
     }
@@ -2408,25 +2450,25 @@ function qnum($num)
 function find_site_maintainers($projectid)
 {
   $userids = array();
-  
+
   // Get the registered user first
-  $site2user = pdo_query("SELECT site2user.userid FROM site2user,user2project 
+  $site2user = pdo_query("SELECT site2user.userid FROM site2user,user2project
                         WHERE site2user.userid=user2project.userid AND user2project.projectid='$projectid'");
   while($site2user_array = pdo_fetch_array($site2user))
     {
     $userids[] = $site2user_array["userid"];
     }
 
-  // Then we list all the users that have been submitting in the past 48 hours 
+  // Then we list all the users that have been submitting in the past 48 hours
   $submittime_UTCDate = gmdate(FMT_DATETIME,time()-3600*48);
-  $site2project = pdo_query("SELECT DISTINCT  userid FROM site2user WHERE siteid IN 
-                            (SELECT siteid FROM build WHERE projectid=$projectid 
-                             AND submittime>'$submittime_UTCDate')");                           
+  $site2project = pdo_query("SELECT DISTINCT  userid FROM site2user WHERE siteid IN
+                            (SELECT siteid FROM build WHERE projectid=$projectid
+                             AND submittime>'$submittime_UTCDate')");
   while($site2project_array = pdo_fetch_array($site2project))
     {
     $userids[] = $site2project_array["userid"];
     }
-  
+
   return array_unique($userids);
 }
 
@@ -2435,11 +2477,11 @@ function get_formated_time($minutes)
 {
   $time_in_seconds = round($minutes*60);
   $hours=floor($time_in_seconds/3600);
-  
+
   $remainingseconds = $time_in_seconds-$hours*3600;
   $minutes=floor($remainingseconds/60);
-  $seconds = $remainingseconds-$minutes*60;  
-  return $hours.":".str_pad($minutes, 2, "0", STR_PAD_LEFT).":".str_pad($seconds, 2, "0", STR_PAD_LEFT);  
+  $seconds = $remainingseconds-$minutes*60;
+  return $hours.":".str_pad($minutes, 2, "0", STR_PAD_LEFT).":".str_pad($seconds, 2, "0", STR_PAD_LEFT);
 }
 
 /** Check the email category */
@@ -2453,7 +2495,7 @@ function check_email_category($name,$emailcategory)
       }
     $emailcategory -= 64;
     }
-    
+
   if($emailcategory>= 32)
     {
     if($name == "test")
@@ -2471,7 +2513,7 @@ function check_email_category($name,$emailcategory)
       }
     $emailcategory -= 16;
     }
-    
+
   if($emailcategory >= 8)
     {
     if($name == "warning")
@@ -2480,7 +2522,7 @@ function check_email_category($name,$emailcategory)
       }
     $emailcategory -= 8;
     }
-  
+
   if($emailcategory >= 4)
     {
     if($name == "configure")
@@ -2489,7 +2531,7 @@ function check_email_category($name,$emailcategory)
       }
     $emailcategory -= 4;
     }
-      
+
   if($emailcategory >= 2)
     {
     if($name == "update")
@@ -2497,7 +2539,7 @@ function check_email_category($name,$emailcategory)
       return true;
       }
     }
-      
+
   return false;
 }
 
@@ -2520,9 +2562,9 @@ function getByteValueWithExtension($value)
     if($value>1024)
       {
       $value /= 1024;
-      $value = $value;        
+      $value = $value;
       $valueext = "G";
-      }    
+      }
     return round($value,2).$valueext;
     }
 
@@ -2580,14 +2622,14 @@ function create_web_api_token($projectid)
   clean_outdated_api_tokens();
   return $token;
   }
-  
+
 function clean_outdated_api_tokens()
   {
   $now = gmdate(FMT_DATETIME);
   pdo_query("DELETE FROM apitoken WHERE expiration_date < '$now'");
   }
 
-/** 
+/**
   * Pass this a valid token created by create_web_api_token.
   * Returns true if token is valid, false otherwise.
   * Handles SQL escaping/validation of parameters.

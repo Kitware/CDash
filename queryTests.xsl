@@ -8,7 +8,7 @@
 <xsl:include href="local/footer.xsl"/>
 
 <xsl:output method="xml" indent="yes"
-  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
 <xsl:template match="/">
@@ -21,14 +21,14 @@
       <xsl:value-of select="cdash/cssfile"/>
     </xsl:attribute>
   </link>
-  <xsl:call-template name="headscripts"/> 
+  <xsl:call-template name="headscripts"/>
    <!-- Include JavaScript -->
   <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body bgcolor="#ffffff">
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -148,7 +148,6 @@
 </xsl:otherwise>
 </xsl:choose>
 
-<font size="1">Generated in <xsl:value-of select="/cdash/generationtime"/> seconds</font>
 </body>
 </html>
 </xsl:template>

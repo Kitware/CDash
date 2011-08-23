@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -21,7 +21,7 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
-    
+
 @$buildid = $_GET["buildid"];
 // Checks
 if(!isset($buildid) || !is_numeric($buildid))
@@ -34,7 +34,7 @@ if(!isset($buildid) || !is_numeric($buildid))
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 if(!isset($projectid) || $projectid==0)
   {
@@ -54,7 +54,7 @@ function format_for_iphone($text)
     }
   $text = str_replace("\n","<br/>",$text);
   return $text;
-}  
+}
 
 $xml = '<?xml version="1.0"?'.'><cdash>';
 $projectname = get_project_name($projectid);
@@ -74,7 +74,7 @@ $previousbuild = pdo_query("SELECT id,starttime FROM build
 
 if(pdo_num_rows($previousbuild)>0)
   {
-  $previousbuild_array = pdo_fetch_array($previousbuild);              
+  $previousbuild_array = pdo_fetch_array($previousbuild);
   $lastsubmitbuild = $previousbuild_array["id"];
   $lastsubmitdate = date(FMT_DATETIMETZ,strtotime($previousbuild_array["starttime"]." UTC"));
   }
@@ -94,14 +94,14 @@ if(isset($previousbuild_array))
 else
   {
   $xml .= add_XML_value("noprevious","1");
-  }  
+  }
 
-$xml .= add_XML_value("current","buildSummary.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));  
+$xml .= add_XML_value("current","buildSummary.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));
 $nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($nextbuildid>0)
   {
   $xml .= add_XML_value("next","buildSummary.php?buildid=".$nextbuildid);
-  }  
+  }
 else
   {
   $xml .= add_XML_value("nonext","1");
@@ -121,7 +121,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
    $xml .= add_XML_value("admin",$user_array["admin"]);
    $xml .= "</user>";
    }
-  
+
   // Notes
   $note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
   while($note_array = pdo_fetch_array($note))
@@ -143,11 +143,11 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("text",$note_array["note"]);
     $xml .= "</note>";
     }
-  
+
   // Build
   $xml .= "<build>";
   $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = pdo_fetch_array($build); 
+  $build_array = pdo_fetch_array($build);
   $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
   $xml .= add_XML_value("site",$site_array["name"]);
   $xml .= add_XML_value("sitename_encoded",urlencode($site_array["name"]));
@@ -157,6 +157,10 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("stamp",$build_array["stamp"]);
   $xml .= add_XML_value("time",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]." UTC")));
   $xml .= add_XML_value("type",$build_array["type"]);
+
+  $note = pdo_query("SELECT count(buildid) AS c FROM build2note WHERE buildid='$buildid'");
+  $note_array = pdo_fetch_array($note);
+  $xml .= add_XML_value("note",$note_array["c"]);
 
   // Compute a related builds link. Most useful in projects with sub-projects
   // defined, but maybe still useful for monolithic projects. Displays all
@@ -180,8 +184,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= add_XML_value("relatedBuildsLink", $relatedBuildsLink);
 
   // For the filter (we display 1 week)
-  $xml .= add_XML_value("filterstarttime",date("Y-m-d",strtotime($build_array["starttime"]." UTC -7 days")));  
-  $xml .= add_XML_value("filterendtime",date("Y-m-d",strtotime($build_array["starttime"]." UTC")));  
+  $xml .= add_XML_value("filterstarttime",date("Y-m-d",strtotime($build_array["starttime"]." UTC -7 days")));
+  $xml .= add_XML_value("filterendtime",date("Y-m-d",strtotime($build_array["starttime"]." UTC")));
 
 
   // Find the OS and compiler information
@@ -214,15 +218,15 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
       $xml .= add_XML_value("compilerversion",$buildinformation_array["compilerversion"]);
       }
     }
-  
+
 
   $xml .= add_XML_value("generator",$build_array["generator"]);
   $xml .= add_XML_value("command",$build_array["command"]);
-  $xml .= add_XML_value("starttime",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]." UTC"))); 
-  $xml .= add_XML_value("endtime",date(FMT_DATETIMETZ,strtotime($build_array["endtime"]." UTC"))); 
-  
+  $xml .= add_XML_value("starttime",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]." UTC")));
+  $xml .= add_XML_value("endtime",date(FMT_DATETIMETZ,strtotime($build_array["endtime"]." UTC")));
+
   $xml .= add_XML_value("lastsubmitdate",$lastsubmitdate);
- 
+
   // Number of errors and warnings
   $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
   $builderror_array = pdo_fetch_array($builderror);
@@ -230,7 +234,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='0'");
   $builderror_array = pdo_fetch_array($builderror);
   $nerrors += $builderror_array[0];
-  
+
   $xml .= add_XML_value("error",$nerrors);
   $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
   $buildwarning_array = pdo_fetch_array($buildwarning);
@@ -238,10 +242,10 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='1'");
   $buildwarning_array = pdo_fetch_array($buildwarning);
   $nwarnings += $buildwarning_array[0];
-   
+
   $xml .= add_XML_value("nerrors",$nerrors);
   $xml .= add_XML_value("nwarnings",$nwarnings);
-  
+
   // Display the build errors
   $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='0'");
   while($error_array = pdo_fetch_array($errors))
@@ -255,7 +259,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("postcontext",format_for_iphone($error_array["postcontext"]));
     $xml .= "</error>";
     }
-    
+
   // Display the build failure error
   $errors = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid='$buildid' and type='0'");
   while($error_array = pdo_fetch_array($errors))
@@ -266,7 +270,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("stderror",$error_array["stderror"]);
     $xml .= "</error>";
     }
-    
+
   // Display the warnings
   $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='1'");
   while($error_array = pdo_fetch_array($errors))
@@ -280,7 +284,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("postcontext",format_for_iphone($error_array["postcontext"]));
     $xml .= "</warning>";
     }
-  
+
   // Display the build failure error
   $errors = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid='$buildid' and type='1'");
   while($error_array = pdo_fetch_array($errors))
@@ -291,7 +295,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= add_XML_value("stderror",$error_array["stderror"]);
     $xml .= "</warning>";
     }
-    
+
   $xml .= "</build>";
 
   $buildid_clause = get_updates_buildid_clause(qnum($buildid));
@@ -328,18 +332,18 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $xml .= "<configure>";
   $configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
   $configure_array = pdo_fetch_array($configure);
-  
+
   $nerrors = 0;
-  
+
   if($configure_array["status"]!=0)
     {
     $nerrors = 1;
     }
-  
+
   $nwarnings = 0;
   $xml .= add_XML_value("nerrors",$nerrors);
   $xml .= add_XML_value("nwarnings",$nwarnings);
-  
+
 
   $xml .= add_XML_value("status",$configure_array["status"]);
   $xml .= add_XML_value("command",$configure_array["command"]);
@@ -354,20 +358,20 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $nwarnings = 0;
   $xml .= add_XML_value("nerrors",$nerrors);
   $xml .= add_XML_value("nwarnings",$nwarnings);
-  
+
   $npass_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
   $npass = $npass_array[0];
   $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
   $nnotrun = $nnotrun_array[0];
   $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
   $nfail = $nfail_array[0];
-  
+
   $xml .= add_XML_value("npassed",$npass);
-  $xml .= add_XML_value("nnotrun",$nnotrun);  
-  $xml .= add_XML_value("nfailed",$nfail); 
-  
+  $xml .= add_XML_value("nnotrun",$nnotrun);
+  $xml .= add_XML_value("nfailed",$nfail);
+
   $xml .= "</test>";
-  
+
   // Previous build
   // Find the previous build
   if($lastsubmitbuild > 0)
@@ -375,7 +379,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $xml .= "<previousbuild>";
     $previousbuildid = $lastsubmitbuild;
     $xml .= add_XML_value("buildid",$previousbuildid);
-    
+
     // Find if the build has any errors
     $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
     $builderror_array = pdo_fetch_array($builderror);
@@ -383,7 +387,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='0'");
     $builderror_array = pdo_fetch_array($builderror);
     $npreviousbuilderrors += $builderror_array[0];
-  
+
     // Find if the build has any warnings
     $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
     $buildwarning_array = pdo_fetch_array($buildwarning);
@@ -391,7 +395,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='1'");
     $buildwarning_array = pdo_fetch_array($buildwarning);
     $npreviousbuildwarnings += $buildwarning_array[0];
-  
+
     // Find if the build has any test failings
     $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
     $npreviousfailingtests = $nfail_array[0];
@@ -409,7 +413,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
 
     $configure = pdo_query("SELECT * FROM configure WHERE buildid='$previousbuildid'");
     $configure_array = pdo_fetch_array($configure);
-  
+
     $nconfigureerrors = 0;
     if($configure_array["status"]!=0)
       {
@@ -424,7 +428,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
 
     $xml .= add_XML_value("ntestfailed",$npreviousfailingtests);
     $xml .= add_XML_value("ntestnotrun",$npreviousnotruntests);
-     
+
     $xml .= "</previousbuild>";
     }
   $xml .= "</cdash>";
