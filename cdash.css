@@ -176,15 +176,15 @@ height: expression(this.height > 110 ? 110: true);
 
 
 .tabb tbody tr.odd td.normal {
-  background-color: #669933;
+  background-color: #7DB04A; /* 669933 */
 }
 
 .tabb tbody tr.odd td.warning {
-  background-color: #cc9966;
+  background-color: #FCA854; /* cc9966 */
 }
 
 .tabb tbody tr.odd td.error {
-  background-color: #cc6666;
+  background-color: #D95454; /* cc6666 */
 }
 
 .tabb tbody tr.odd {
