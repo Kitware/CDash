@@ -153,9 +153,12 @@
         <xsl:attribute name="href"><xsl:value-of select="multiplebuildshyperlink"/>
         </xsl:attribute>
         </xsl:if>
+
+        <xsl:if test="string-length(buildplatform)>0">
         <img class="platformicon" border="0">
             <xsl:attribute name="src">images/platform_<xsl:value-of select="buildplatform"/>.png</xsl:attribute>
         </img>
+        </xsl:if>
         <xsl:value-of select="buildname"/>
       </a>
      </xsl:if>
