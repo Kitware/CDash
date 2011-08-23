@@ -1251,7 +1251,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
       $duration = $build_array['updateduration'];
       $totalUpdateDuration += $duration;
-      $xml .= add_XML_value("time", time_difference($duration,true));
+      $xml .= add_XML_value("time", time_difference($duration*60.0,true));
       } // end if we have an update
     $xml .= "</update>";
 
@@ -1269,7 +1269,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= add_XML_value("warning", $nwarnings);
       $duration = $build_array['buildduration'];
       $totalBuildDuration += $duration;
-      $xml .= add_XML_value("time",time_difference($duration,true));
+      $xml .= add_XML_value("time",time_difference($duration*60.0,true));
 
       $diff = $build_array['countbuilderrordiffp'];
       if($diff!=0)
@@ -1314,7 +1314,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
       $duration = $build_array['configureduration'];
       $totalConfigureDuration += $duration;
-      $xml .= add_XML_value("time",time_difference($duration,true));
+      $xml .= add_XML_value("time",time_difference($duration*60.0,true));
       }
     $xml .= "</configure>";
 
@@ -1380,7 +1380,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
       $duration = $build_array['testsduration'];
       $totalTestsDuration += $duration;
-      $xml .= add_XML_value("time",time_difference($duration,true));
+      $xml .= add_XML_value("time",time_difference($duration*60.0,true));
 
       $xml .= "</test>";
       }
