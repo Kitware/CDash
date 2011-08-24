@@ -35,11 +35,12 @@
  <div id="header">
  <div id="headertop">
   <div id="topmenu">
-    <a><xsl:attribute name="href">user.php</xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="cdash/user/id>0">My CDash</xsl:when>
-          <xsl:otherwise>Login <a href="register.php">Register</a></xsl:otherwise>
-        </xsl:choose></a>
+     <xsl:choose>
+        <xsl:when test="cdash/user/id>0">
+         <a href="user.php">My CDash</a>
+        </xsl:when>
+        <xsl:otherwise><a href="user.php">Login</a> <a href="register.php">Register</a></xsl:otherwise>
+     </xsl:choose>
      <xsl:if test="cdash/user/id>0">
        <a href="user.php?logout=1">Log Out</a>
      </xsl:if>
