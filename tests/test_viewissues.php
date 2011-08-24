@@ -15,9 +15,9 @@ class ViewIssuesTestCase extends KWWebTestCase
   function testViewIssues()
     {
     $this->get($this->url."/viewIssues.php");
-    if(strpos($this->getBrowser()->getContentAsText(), "Available Dashboards") === false)
+    if(strpos($this->getBrowser()->getContentAsText(), "Dashboards") === false)
       {
-      $this->fail("'Available Dashboards' not found when expected.");
+      $this->fail("'Dashboards' not found when expected.");
       return 1;
       }
     $this->pass("Passed");
