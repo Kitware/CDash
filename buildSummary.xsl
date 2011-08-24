@@ -392,13 +392,6 @@ Show Build Graphs</a>
 <!-- Update -->
 <xsl:if test="cdash/update">
 <div class="title-divider" id="Stage0">
-<div class="tracknav">
-<a href="#top">Top</a>
-<a href="#Stage0">Update</a>
-<a href="#Stage1">Configure</a>
-<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
-<a href="#Stage3">Test</a>
-</div>
 Stage: Update (<xsl:value-of select="cdash/update/nerrors"/> errors, <xsl:value-of select="cdash/update/nwarnings"/> warnings)
 </div>
 <br/><b>Start Time: </b><xsl:value-of select="cdash/update/starttime"/>
@@ -413,14 +406,7 @@ Stage: Update (<xsl:value-of select="cdash/update/nerrors"/> errors, <xsl:value-
 
 <!-- Configure -->
 <div class="title-divider" id="Stage1">
-<div class="tracknav">
-<a href="#top">Top</a>
-<xsl:if test="cdash/update"><a href="#Stage0">Update</a></xsl:if>
-<a href="#Stage1">Configure</a>
-<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
-<a href="#Stage3">Test</a>
-</div>
-Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:value-of select="cdash/configure/nwarnings"/> warnings)
+Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:value-of select="cdash/configure/nwarnings"/> warnings)
 </div>
 
 <br/><b>Start Time: </b><xsl:value-of select="cdash/configure/starttime"/>
@@ -434,13 +420,7 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 <br/><br/>
 <!-- Build -->
 <div class="title-divider" id="Stage2">
-<div class="tracknav">
-<a href="#top">Top</a>
-<xsl:if test="cdash/update"><a href="#Stage0">Update</a></xsl:if>
-<a href="#Stage1">Configure</a>
-<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
-<a href="#Stage3">Test</a>
-</div>Stage: Build (<xsl:value-of select="cdash/build/nerrors"/> errors, <xsl:value-of select="cdash/build/nwarnings"/> warnings)</div>
+Build (<xsl:value-of select="cdash/build/nerrors"/> errors, <xsl:value-of select="cdash/build/nwarnings"/> warnings)</div>
         <br/><b>Build command: </b><tt><xsl:value-of select="cdash/build/command"/></tt>
         <br/><b>Start Time: </b><xsl:value-of select="cdash/build/starttime"/>
         <br/><b>End Time: </b><xsl:value-of select="cdash/build/endtime"/>
@@ -475,12 +455,7 @@ Stage: Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:
 <br/>
 <br/>
 <!--  Warnings -->
-<div class="title-divider" id="Stage2Warnings"><div class="tracknav">
-<a href="#top">Top</a>
-<xsl:if test="cdash/update"><a href="#Stage0">Update</a></xsl:if>
-<a href="#Stage1">Configure</a>
-<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
-<a href="#Stage3">Test</a></div>
+<div class="title-divider" id="Stage2Warnings">
 Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 
 <xsl:for-each select="cdash/build/warning">
@@ -513,15 +488,8 @@ Build Warnings (<xsl:value-of select="cdash/build/nwarnings"/>)</div>
 <br/>
 <!-- Test -->
 <div class="title-divider" id="Stage3">
-<div class="tracknav">
-<a href="#top">Top</a>
-<xsl:if test="cdash/update"><a href="#Stage0">Update</a></xsl:if>
-<a href="#Stage1">Configure</a>
-<a href="#Stage2">Build</a>|<a href="#Stage2Warnings">W</a>
-<a href="#Stage3">Test</a>
-</div>
-        Stage: Test (<xsl:value-of select="cdash/test/npassed"/>  passed, <xsl:value-of select="cdash/test/nfailed"/> failed, <xsl:value-of select="cdash/test/nnotrun"/> not run)
-        </div>
+Test (<xsl:value-of select="cdash/test/npassed"/>  passed, <xsl:value-of select="cdash/test/nfailed"/> failed, <xsl:value-of select="cdash/test/nnotrun"/> not run)
+ </div>
 <a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>View Tests Summary</a>
 
 <br/>
