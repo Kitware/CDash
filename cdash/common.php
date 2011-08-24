@@ -410,109 +410,6 @@ function clean_backup_directory()
     }
 }
 
-/** Backup an XML file */
-/*function backup_xml_file($parser,$contents,$projectid)
-{
-
-  // If the content of the file is empty we return
-  if(strlen($contents)==0)
-    {
-    return;
-    }
-
-  include("cdash/config.php");
-  require_once("cdash/pdo.php");
-
-  clean_backup_directory(); // should probably be run as a cronjob
-
-  if(@$parser->index["BUILD"] != "")
-    {
-    $file = "Build.xml";
-    }
-  else if(@$parser->index["CONFIGURE"] != "")
-    {
-    $file = "Configure.xml";
-    }
-  else if(@$parser->index["TESTING"] != "")
-    {
-    $file = "Test.xml";
-    }
-  else if(@$parser->index["UPDATE"] != "")
-    {
-    $file = "Update.xml";
-    }
-  else if(@$parser->index["COVERAGE"] != "")
-    {
-    $file = "Coverage.xml";
-    }
-  else if(@$parser->index["COVERAGELOG"] != "")
-    {
-    $file = "CoverageLog.xml";
-    }
-  else if(@$parser->index["NOTES"] != "")
-    {
-    $file = "Notes.xml";
-    }
-  else if(@$parser->index["DYNAMICANALYSIS"] != "")
-    {
-    $file = "DynamicAnalysis.xml";
-    }
-  else
-    {
-    $file = "Other.xml";
-    }
-
- // For some reasons the update.xml has a different format
- if(@$parser->index["UPDATE"] != "")
-   {
-   $vals = $parser->vals;
-   $sitename = getXMLValue($vals,"SITE","UPDATE");
-   $name = getXMLValue($vals,"BUILDNAME","UPDATE");
-   $stamp = getXMLValue($vals,"BUILDSTAMP","UPDATE");
-   }
- else
-   {
-   $site = $parser->index["SITE"];
-   $sitename = $parser->vals[$site[0]]["attributes"]["NAME"];
-   $name = $parser->vals[$site[0]]["attributes"]["BUILDNAME"];
-   $stamp = $parser->vals[$site[0]]["attributes"]["BUILDSTAMP"];
-   }
-
- $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_".$file;
-
- // If the file is other we append a number until we get a non existing file
- $i=1;
- while($file=="Other.xml" && file_exists($filename))
-   {
-   $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_Other.".$i.".xml";
-   $i++;
-   }
-
- while($file=="CoverageLog.xml" && file_exists($filename))
-   {
-   $filename = $CDASH_BACKUP_DIRECTORY."/".get_project_name($projectid)."_".$sitename."_".$name."_".$stamp."_CoverageLog.".$i.".xml";
-   $i++;
-   }
-
-  if (!$handle = fopen($filename, 'w'))
-    {
-    echo "Cannot open file ($filename)";
-    add_log("Cannot open file ($filename)", "backup_xml_file");
-    return;
-    }
-
-  // Write the file.
-  if (fwrite($handle, $contents) === FALSE)
-    {
-    echo "Cannot write to file ($contents)";
-    add_log("Cannot write to file ($$contents)", "backup_xml_file");
-    fclose($handle);
-    return;
-    }
-
-  fclose($handle);
-}*/
-
 /** return an array of projects */
 function get_projects()
 {
@@ -542,15 +439,10 @@ function get_projects()
       $project['last_build'] = $lastbuild_array["submittime"];
       }
 
-    $project['first_build'] = "NA";
-    $firstbuildquery = pdo_query("SELECT starttime FROM build WHERE projectid='$projectid' AND starttime>'2000-01-01' ORDER BY starttime ASC LIMIT 1");
-    if(pdo_num_rows($firstbuildquery)>0)
-      {
-      $firstbuild_array = pdo_fetch_array($firstbuildquery);
-      $project['first_build'] = $firstbuild_array["starttime"];
-      }
-
-    $buildquery = pdo_query("SELECT count(id) FROM build WHERE projectid='$projectid'");
+    // Get the number of builds in the past 7 days
+    $submittime_UTCDate = gmdate(FMT_DATETIME,time()-604800);
+    $buildquery = pdo_query("SELECT count(id) FROM build WHERE projectid='$projectid' AND starttime>'".$submittime_UTCDate."'");
+    echo pdo_error();
     $buildquery_array = pdo_fetch_array($buildquery);
     $project['nbuilds'] = $buildquery_array[0];
 

@@ -133,6 +133,7 @@ function generate_index_table()
     if($project['last_build'] == "NA")
       {
       $xml .= "<lastbuild>NA</lastbuild>";
+      $xml .= "<activitylevel>none</activitylevel>";
       }
     else
       {
@@ -140,18 +141,7 @@ function generate_index_table()
       $xml .= "<lastbuild>".date(FMT_DATETIMEDISPLAY,$lastbuild)."</lastbuild>";
       $xml .= "<lastbuilddate>".date(FMT_DATE,$lastbuild)."</lastbuilddate>";
       $xml .= "<lastbuild_elapsed>".time_difference(time()-$lastbuild)." ago</lastbuild_elapsed>";
-      }
-
-    // Display the first build
-    if($project['first_build'] == "NA")
-      {
-      $xml .= "<firstbuild>NA</firstbuild>";
-      }
-    else
-      {
-      $firstbuild = strtotime($project['first_build']. "UTC");
-      $xml .= "<firstbuild_elapsed>".time_difference(time()-$firstbuild)." ago</firstbuild_elapsed>";
-      $xml .= "<firstbuild>".date(FMT_DATETIMEDISPLAY,$firstbuild)."</firstbuild>";
+      $xml .= "<activitylevel>high</activitylevel>";
       }
 
     // Display if the project is considered active or not
@@ -171,7 +161,28 @@ function generate_index_table()
       }
 
     $uploadsizeGB = round($project['uploadsize'] / (1024.0*1024.0*1024.0), 2);
-    $xml .= "<nbuilds>".$project['nbuilds']."</nbuilds>";
+
+    $xml .= "<activity>";
+    if($project['nbuilds'] == 0)
+      {
+      $xml .= "none";
+      }
+    else if($project['nbuilds'] < 10)
+      {
+      $xml .= "low";
+      }
+    else if($project['nbuilds'] < 30)
+      {
+      $xml .= "medium";
+      }
+    else if($project['nbuilds'] > 30)
+      {
+      $xml .= "high";
+      }
+
+    $xml .= "</activity>";
+
+
     $xml .= '<uploadsize>'.$uploadsizeGB.'</uploadsize>';
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";

@@ -92,10 +92,8 @@
   <tr class="table-heading">
      <th align="center" id="sort_0"><b>Project</b></th>
      <td align="center"><b>Description</b></td>
-     <th align="center" id="sort_1"><b>Submissions</b></th>
      <th align="center" id="sort_2"><b>Total Uploads</b></th>
-     <th align="center" id="sort_3"><b>First build</b></th>
-     <th align="center" id="sort_4" class="nob"><b>Last activity</b></th>
+     <th align="center" id="sort_3" class="nob"><b>Last activity</b></th>
   </tr>
  </thead>
  <tbody>
@@ -111,20 +109,17 @@
      <xsl:value-of select="name"/>
      </a></td>
      <td align="center"><xsl:value-of select="description"/></td>
-     <td align="center"><xsl:value-of select="nbuilds"/></td>
      <td align="center"><xsl:value-of select="uploadsize"/> GB</td>
-     <td align="center">
-         <span class="builddateelapsed">
-         <xsl:attribute name="alt"><xsl:value-of select="firstbuild"/></xsl:attribute>
-         <xsl:value-of select="firstbuild_elapsed"/>
-         </span>
-     </td>
     <td align="center" class="nob">
     <a class="builddateelapsed">
      <xsl:attribute name="alt"><xsl:value-of select="lastbuild"/></xsl:attribute>
       <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
       <xsl:value-of select="lastbuild_elapsed"/>
     </a>
+
+    <img src="images/cleardot.gif">
+       <xsl:attribute name="class">activity-level-<xsl:value-of select="activity"/></xsl:attribute>
+    </img>
     </td>
     </tr>
    </xsl:for-each>

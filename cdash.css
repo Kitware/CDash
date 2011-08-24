@@ -1103,3 +1103,35 @@ div#calendar{
 .quicklink{
   display: none; /* hide for now */
 }
+
+.activity-level-none {
+    float: right;
+    background: url("images/activity-level.png") no-repeat scroll -16px -16px transparent;
+    height: 16px;
+    width: 16px;
+}
+
+.activity-level-low {
+    float: right;
+    background: url("images/activity-level.png") no-repeat scroll 0 -16px transparent;
+    height: 16px;
+    width: 16px;
+}
+
+.activity-level-medium {
+    float: right;
+    background: url("images/activity-level.png") no-repeat scroll -16px 0 transparent;
+    height: 16px;
+    width: 16px;
+}
+
+.activity-level-high {
+    float: right;
+    background: url("images/activity-level.png") no-repeat scroll 0 0 transparent;
+    height: 16px;
+    width: 16px;
+}
+
+img {
+    border: 0 none;
+}
