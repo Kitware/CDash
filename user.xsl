@@ -294,7 +294,7 @@
         <td  id="nob">
         <xsl:attribute name="class"><xsl:value-of select="trparity"/></xsl:attribute>
         <a>
-        <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>[Subscribe to this project]</a></td>
+        <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>Subscribe to this project</a></td>
       </tr>
     </xsl:for-each>
     </tbody>

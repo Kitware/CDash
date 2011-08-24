@@ -73,7 +73,7 @@
    </tr>
 
    <tr class="table-heading">
-      <th align="center" rowspan="2" width="10%">
+      <th align="center" rowspan="2" width="15%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_0</xsl:attribute>
       Site</th>
       <th align="center" rowspan="2" width="20%">

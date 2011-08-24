@@ -861,7 +861,7 @@ div#topmenu a:hover {
  font-family: Arial, Helvetica, sans-serif;
  z-index: 1000;
  position: relative;
- left: 50px;
+ left: 55px;
  top: -10px;
 }
 
@@ -1086,4 +1086,8 @@ div#calendar{
   z-index: 1000;
   left: 150px;
   display: none; /* hide by default */
+}
+
+.quicklink{
+  display: none; /* hide for now */
 }

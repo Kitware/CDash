@@ -18,7 +18,7 @@ class KWWebTestCase extends WebTestCase {
   var $db            = null;
   var $logfilename   = null;
   var $cdashpro   = null;
-  
+
   function __construct()
     {
     parent::__construct();
@@ -28,9 +28,9 @@ class KWWebTestCase extends WebTestCase {
     $this->cdashpro = false;
     if(isset($configure['cdashpro']) && $configure['cdashpro']=='1')
       {
-      $this->cdashpro = true;  
+      $this->cdashpro = true;
       }
-    
+
     global $db;
     $this->db =& new database($db['type']);
     $this->db->setDb($db['name']);
@@ -84,11 +84,11 @@ class KWWebTestCase extends WebTestCase {
       }
     return true;
     }
-  
+
   /**
    * Try to connect to the website
-   * @return the content if the connection succeeded 
-   *         or false if there were some errors 
+   * @return the content if the connection succeeded
+   *         or false if there were some errors
    * @param string $url
    */
   function connect($url)
@@ -128,13 +128,13 @@ class KWWebTestCase extends WebTestCase {
         }
       return $content;
       }
-    return true;   
+    return true;
     }
 
   /** Compare the current log with a file */
   function compareLog($logfilename,$template)
     {
-    $log = "";  
+    $log = "";
     if(file_exists($logfilename))
       {
       $log = file_get_contents($logfilename);
@@ -152,7 +152,7 @@ class KWWebTestCase extends WebTestCase {
         {
         $pos2 = strpos($templateLog,"<NA>",$it);
         $pos3 = strpos($templateLog,"<NA>\n",$it);
-  
+
         // We skip the line
         if($pos3 == $it)
           {
@@ -172,15 +172,15 @@ class KWWebTestCase extends WebTestCase {
           while(($it < strlen($templateLog)) && ($templateLog[$it] != ' ') && ($templateLog[$it] != '/') && ($templateLog[$it] != ']'))
             {
             $it++;
-            }  
+            }
           while(($il < strlen($log)) && ($log[$il] != ' ') && ($log[$il] != '/') && ($log[$il] != ']'))
             {
             $il++;
-            }  
-          continue; 
+            }
+          continue;
           }
         }
-      
+
       if($log[$il] != $templateLog[$it])
         {
         $this->fail("Log files are different\n  logfilename='$logfilename'\n  template='$template'\n  at char $it: ".ord($templateLog[$it])."=".ord($log[$il])."\n  **".substr($templateLog,$it,10)."** vs. **".substr($log,$il,10)."**");
@@ -191,7 +191,7 @@ class KWWebTestCase extends WebTestCase {
       }
     return true;
     }
-  
+
   /** Check the current content for errors */
   function checkErrors()
     {
@@ -210,10 +210,10 @@ class KWWebTestCase extends WebTestCase {
       {
       $this->assertNoText('Notice');
       return false;
-      }  
-    return true;  
+      }
+    return true;
     }
-    
+
   /**
    * Analyse a website page
    * @return the content of the page if there is no errors
@@ -259,7 +259,7 @@ class KWWebTestCase extends WebTestCase {
       }
     return $content;
     }
-    
+
   function login($user='simpletest@localhost', $passwd='simpletest')
     {
     $this->get($this->url);
@@ -268,13 +268,13 @@ class KWWebTestCase extends WebTestCase {
     $this->setField('passwd',$passwd);
     return $this->clickSubmitByName('sent');
     }
-  
+
   function logout()
     {
     $this->get($this->url);
     return $this->clickLink('Log Out');
     }
-    
+
   function submission($projectname,$file)
     {
     $url = $this->url."/submit.php?project=$projectname";
@@ -288,7 +288,7 @@ class KWWebTestCase extends WebTestCase {
       }
     return true;
     }
-    
+
   function uploadfile($url,$filename)
     {
     set_time_limit(0); // sometimes this is slow when access the local webserver from external URL
@@ -303,19 +303,19 @@ class KWWebTestCase extends WebTestCase {
     curl_close($ch);
     fclose($fp);
     return $page;
-    }   
-    
+    }
+
   // In case of the project does not exist yet
   function createProject($name,$description,$svnviewerurl="",$bugtrackerfileurl="")
     {
-    $this->clickLink('[Create new project]');
+    $this->clickLink('Create new project');
     $this->setField('name',$name);
     $this->setField('description',$description);
     $this->setField('cvsURL',$svnviewerurl);
     $this->setField('bugFileURL',$bugtrackerfileurl);
     $this->setField('public','1');
-    $this->clickSubmitByName('Submit');  
-    return $this->clickLink('BACK');
+    $this->clickSubmitByName('Submit');
+    return $this->clickLink('Back');
     }
 }
 ?>

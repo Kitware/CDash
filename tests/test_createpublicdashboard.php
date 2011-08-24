@@ -21,7 +21,7 @@ class CreatePublicDashboardTestCase extends KWWebTestCase
       }
 
     $this->login();
-    if(!$this->analyse($this->clickLink('[Create new project]')))
+    if(!$this->analyse($this->clickLink('Create new project')))
       {
       return;
       }

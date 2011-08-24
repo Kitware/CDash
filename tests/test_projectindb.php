@@ -23,13 +23,13 @@ class ProjectInDbTestCase extends KWWebTestCase
     $expected = array('name'        =>  $nameexpected,
                       'description' =>  $descriptionexpected,
                       'public'      =>  $publicexpected);
-    
+
     // For CDashPro projects should be public
     if($this->cdashpro)
       {
-      $expected['public'] = 1;  
+      $expected['public'] = 1;
       }
-    
+
     $this->assertEqual($result[0],$expected);
     }
 
@@ -89,7 +89,7 @@ class ProjectInDbTestCase extends KWWebTestCase
     $this->setField('login','simpletest@localhost');
     $this->setField('passwd','simpletest');
     $this->clickSubmitByName('sent');
-    $this->clickLink('[Create new project]');
+    $this->clickLink('Create new project');
     $this->setField('name','ProjectTest4Db');
     $this->setField('description','This is a project test for cdash');
     $this->setField('public','0');

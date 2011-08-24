@@ -47,7 +47,7 @@ $(document).ready(function()
     }
 
   // Quick links
-  $('.quicklink').hide();
+  /* $('.quicklink').hide();
 
   $('.table-heading1').mouseover(function()
     {
@@ -71,5 +71,5 @@ $(document).ready(function()
     {
     $('.quicklink', this).hide();
     });
-
+   */
   });

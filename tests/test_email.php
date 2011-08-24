@@ -19,7 +19,7 @@ class EmailTestCase extends KWWebTestCase
     $name = 'EmailProjectExample';
     $description = 'Project EmailProjectExample test for cdash testing';
 
-    $this->clickLink('[Create new project]');
+    $this->clickLink('Create new project');
     $this->setField('name',$name);
     $this->setField('description',$description);
     $this->setField('public','1');
@@ -64,7 +64,7 @@ class EmailTestCase extends KWWebTestCase
     $this->setField('passwd','user1');
     $this->clickSubmitByName('sent');
 
-    $this->clickLink('[Subscribe to this project]');
+    $this->clickLink('Subscribe to this project');
     $this->setField('credentials[0]','user1kw');
     $this->setField('emailsuccess','1');
     $this->clickSubmitByName('subscribe');
@@ -140,7 +140,7 @@ class EmailTestCase extends KWWebTestCase
     $this->deleteLog($this->logfilename);
     $rep  = dirname(__FILE__)."/data/EmailProjectExample";
     $file = "$rep/2_dynamicanalysis.xml";
-    
+
     if(!$this->submission('EmailProjectExample',$file))
       {
       return;

@@ -20,7 +20,7 @@ class PubProjectTestCase extends KWWebTestCase
       return;
       }
     $this->login();
-    if(!$this->analyse($this->clickLink('[Create new project]')))
+    if(!$this->analyse($this->clickLink('Create new project')))
       {
       return;
       }
@@ -90,7 +90,7 @@ class PubProjectTestCase extends KWWebTestCase
       {
       return;
       }
-//  $this->analyse($this->clickLink('[Edit project]'));
+//  $this->analyse($this->clickLink('Edit project'));
 //  echo $this->analyse($this->setField('projectSelection','ProjectTest'));
     $description = $this->_browser->getField('description');
     $public      = $this->_browser->getField('public');

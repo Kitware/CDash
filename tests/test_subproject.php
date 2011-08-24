@@ -15,7 +15,7 @@ class SubProjectTestCase extends KWWebTestCase
     $description = 'Project SubProjectExample test for cdash testing';
 
     // Create the project
-    $this->clickLink('[Create new project]');
+    $this->clickLink('Create new project');
     $this->setField('name',$name);
     $this->setField('description',$description);
     $this->setField('public','1');
