@@ -16,9 +16,9 @@ class RouterTestCase extends KWWebTestCase
     {
     $this->login();
     $content = $this->get($this->url."/router.php");
-    if(strpos($content, "Available") === false)
+    if(strpos($content, "Dashboards") === false)
       {
-      $this->fail("'Available' not found on router.php\n$content\n");
+      $this->fail("'Dashboards' not found on router.php\n$content\n");
       }
     $content = $this->get($this->url."/router.php?page=login");
     $this->pass("Passed");
