@@ -549,7 +549,7 @@ function generate_main_dashboard_XML($projectid,$date)
    {
    $xml .= "<nchanges>-1</nchanges>";
    }
-  $xml .= add_XML_value("timestamp",date("l, F d Y H:i:s T",$currentstarttime));
+  $xml .= add_XML_value("timestamp",date("l, F d Y - H:i T",$currentstarttime));
   $xml .= "</updates>";
 
   // User
@@ -1392,6 +1392,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $duration = $build_array['testsduration'];
       $totalTestsDuration += $duration;
       $xml .= add_XML_value("time",time_difference($duration*60.0,true));
+      $xml .= add_XML_value("timefull",$duration);
 
       $xml .= "</test>";
       }
@@ -1399,10 +1400,19 @@ function generate_main_dashboard_XML($projectid,$date)
 
     $starttimestamp = strtotime($build_array["starttime"]." UTC");
     $submittimestamp = strtotime($build_array["submittime"]." UTC");
-    $xml .= add_XML_value("builddate",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+    $xml .= add_XML_value("builddatefull",$starttimestamp); // use the default timezone
 
-    $xml .= add_XML_value("builddateelapsed",time_difference(time()-$starttimestamp).' ago'); // use the default timezone
-
+    // If the data is more than 24h old then we switch from an elapsed to a normal representation
+    if(time()-$starttimestamp<86400)
+      {
+      $xml .= add_XML_value("builddate",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+      $xml .= add_XML_value("builddateelapsed",time_difference(time()-$starttimestamp).' ago'); // use the default timezone
+      }
+    else
+      {
+      $xml .= add_XML_value("builddateelapsed",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+      $xml .= add_XML_value("builddate",time_difference(time()-$starttimestamp).' ago'); // use the default timezone
+      }
     $xml .= add_XML_value("submitdate",date(FMT_DATETIMEDISPLAY,$submittimestamp));// use the default timezone
     $xml .= add_XML_value("nerrorlog",$build_array["nerrorlog"]);// use the default timezone
     $xml .= "</build>";

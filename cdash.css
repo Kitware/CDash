@@ -133,6 +133,22 @@ height: expression(this.height > 110 ? 110: true);
  color: #FFFFFF;
 }
 
+.table-heading0 {
+ background-color : #7796DF;
+ color: #FFFFFF;
+}
+
+.table-heading0 h3{
+ color: #FFFFFF;
+ font-size: 17px;
+ font-weight: bold;
+ margin: 0px;
+ padding-top: 0px;
+ padding-right: 0px;
+ padding-bottom: 0px;
+ padding-left: 7px;
+}
+
 .table-heading1 a:link{
  font-size:10px;
  color:#FFFFFF;

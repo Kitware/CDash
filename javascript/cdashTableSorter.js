@@ -141,6 +141,26 @@ $(document).ready(function() {
         type: 'numeric'
     });
 
+  /** elapsed time */
+  $.tablesorter.addParser({
+      // set a unique id
+      id: 'elapsedtime',
+      is: function(s) {
+            // return false so this parser is not auto detected
+            return false;
+        },
+        format: function(s) {
+            // format your data for normalization
+            var i = s.indexOf("<span");
+            var j = s.indexOf(">",i);
+            var k = s.indexOf("</span>",j);
+            var t = s.substr(j+1,k-j-1);
+            return t.toLowerCase();
+        },
+        // set type, either numeric or text
+        type: 'numeric'
+    });
+
   /** Coverage percent table */
   $.tablesorter.addParser({
       // set a unique id
@@ -466,8 +486,8 @@ $(document).ready(function() {
                   7: { sorter:'numericvalue'},
                   8: { sorter:'numericvalue'},
                   9: { sorter:'numericvalue'},
-                  10: { sorter:'numericvalue'},
-                  11: { sorter:'text'},
+                  10: { sorter:'elapsedtime'},
+                  11: { sorter:'elapsedtime'},
                   12: { sorter:'text'}
               },
             debug: false,

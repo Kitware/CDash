@@ -28,7 +28,7 @@ Filter Definitions:<br/>
 
 <form method="post" action="">
   <table id="tablefilters" cellpadding="0" cellspacing="0">
-  <tr class="table-heading1" >
+  <tr class="table-heading0" >
       <td colspan="10" class="nob">
           <h3>Filters</h3>
       </td>

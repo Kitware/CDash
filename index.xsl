@@ -518,6 +518,9 @@
              </xsl:when>
         </xsl:choose>
       </xsl:attribute>
+      <xsl:if test="string-length(test/timestatus)=0">
+         <span class="sorttime" style="display:none"><xsl:value-of select="test/timefull"/></span>
+       </xsl:if>
       <div>
        <xsl:if test="test/ntimediffp > 0 or test/ntimediffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
@@ -570,6 +573,7 @@
           </span>
         </xsl:when>
         <xsl:otherwise>
+        <span class="sorttime" style="display:none"><xsl:value-of select="builddatefull"/></span>
         <span class="builddateelapsed">
            <xsl:attribute name="alt"><xsl:value-of select="builddate"/>
            <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Update time: <xsl:value-of select="update/time"/>
