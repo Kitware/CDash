@@ -152,6 +152,8 @@ $(document).ready(function() {
         format: function(s) {
             // format your data for normalization
             var i = s.indexOf("<span");
+            if(i == -1) return s;
+
             var j = s.indexOf(">",i);
             var k = s.indexOf("</span>",j);
             var t = s.substr(j+1,k-j-1);
