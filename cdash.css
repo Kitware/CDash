@@ -1050,8 +1050,20 @@ div#autorefresh {
   width: 90px;
 }
 
+#tablefilters {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+#tablefilters tr td {
+  padding-left: 10px;
+}
+
 div#div_showfilters {
   clear: both;
+  width: 100%;
   position: relative;
   float: left;
 }

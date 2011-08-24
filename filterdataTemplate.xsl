@@ -27,8 +27,12 @@ Filter Definitions:<br/>
 </xsl:if>
 
 <form method="post" action="">
-  <!-- <table width="100%" cellpadding="11" cellspacing="0"> -->
-  <table>
+  <table id="tablefilters" cellpadding="0" cellspacing="0">
+  <tr class="table-heading1" >
+      <td colspan="10" class="nob">
+          <h3>Filters</h3>
+      </td>
+  </tr>
   <tr class="trodd">
   <td>
   <span id="Match_filter">
