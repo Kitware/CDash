@@ -239,21 +239,5 @@ class ProjectWebPageTestCase extends KWWebTestCase
       }
     $this->assertTrue(true,'The webpage match the content exepected');
     }
-
-  function testProjectExperimentalLinkNotes()
-    {
-    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
-    if(!$content)
-      {
-      return;
-      }
-    $content = $this->analyse($this->clickLink('Notes'));
-    if(!$content)
-      {
-      return;
-      }
-    $expected = '-- F:/Dashboards/Dash20_batchmake_vs9.cmake';
-    $this->assertText($expected);
-    }
 }
 ?>
