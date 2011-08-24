@@ -167,15 +167,15 @@ function generate_index_table()
       {
       $xml .= "none";
       }
-    else if($project['nbuilds'] < 10)
+    else if($project['nbuilds'] < 20) // 2 builds day
       {
       $xml .= "low";
       }
-    else if($project['nbuilds'] < 30)
+    else if($project['nbuilds'] < 70) // 10 builds a day
       {
       $xml .= "medium";
       }
-    else if($project['nbuilds'] > 30)
+    else if($project['nbuilds'] >= 70)
       {
       $xml .= "high";
       }
