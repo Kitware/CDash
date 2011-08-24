@@ -2,8 +2,8 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-      
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -16,37 +16,30 @@
          </link>
        </head>
        <body bgcolor="#ffffff">
-   
- <table width="100%" class="toptable" cellpadding="1" cellspacing="0">
-  <tr>
-    <td>
-  <table width="100%" align="center" cellpadding="0" cellspacing="0" >
-  <tr>
-    <td height="22" class="topline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-  </tr>
-  <tr>
-    <td width="100%" align="left" class="topbg">
- 
-    <table width="100%" height="121" border="0" cellpadding="0" cellspacing="0" >
-    <tr>
-    <td width="195" height="121" class="topbgleft">
-    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text> <img  border="0" alt="" src="images/cdash.gif"/>
-    </td>
-    <td width="425" valign="top" class="insd">
-    <div class="insdd">
-      <span class="inn1">CDash</span><br />
-      <span class="inn2">Installation</span>
-      </div>
-    </td>
-    <td height="121" class="insd2"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-   </tr>
-  </table>
-  </td>
-    </tr>
- 
-</table></td>
-  </tr>
-</table>
+
+<div id="header">
+ <div id="headertop">
+  <div id="topmenu">
+     
+  </div>
+ </div>
+
+ <div id="headerbottom">
+    <div id="headerlogo">
+      <a>
+        <xsl:attribute name="href">
+        <xsl:value-of select="cdash/dashboard/home"/></xsl:attribute>
+        <img id="projectlogo" border="0" height="50px" src="images/cdash.gif"></img>
+      </a>
+    </div>
+    <div id="headername2">
+      CDash
+      <span id="subheadername">
+        Installation
+      </span>
+    </div>
+ </div>
+</div>
 
 <font color="red"><xsl:value-of select="cdash/alert"/></font><br/>
 
