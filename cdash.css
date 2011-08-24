@@ -782,7 +782,7 @@ div#headerlogo {
   height: 20px;
 }
 div#headermenu {
-  width:100%;
+  width:90%;
   position: absolute;
   top: 70px;
   left: 5px;
@@ -1037,7 +1037,7 @@ div#labelshowfilters {
 div#helpmenu {
   position: relative;
   top: -18px;
-  left: 10px;
+  margin-left: 3px;
   float: right;
   width: 50px;
 }
