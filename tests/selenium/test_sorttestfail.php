@@ -15,7 +15,7 @@ class Example extends CDashSeleniumTestCase
   public function testSortTestFail()
   {
     $this->open($this->webPath."/index.php?project=InsightExample&date=2010-07-07");
-    $this->click("sort13sort_11");
+    $this->click("sort13sort_9");
     try {
         $this->assertEquals("3", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[9]/div/a"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
@@ -31,7 +31,7 @@ class Example extends CDashSeleniumTestCase
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
-    $this->click("sort13sort_11");
+    $this->click("sort13sort_9");
     try {
         $this->assertEquals("3", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[9]/div/a"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
