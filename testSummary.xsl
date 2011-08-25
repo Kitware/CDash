@@ -44,7 +44,7 @@
 <!-- Failure Graph -->
 <a>
 <xsl:attribute name="href">javascript:showtestfailuregraph_click('<xsl:value-of select="/cdash/dashboard/projectid"/>','<xsl:value-of select="/cdash/testName"/>','<xsl:value-of select="/cdash/builds/currentstarttime"/>')</xsl:attribute>
-[Show Test Failure Trend]
+Show Test Failure Trend
 </a>
 <div id="testfailuregraphoptions"></div>
 <div id="testfailuregraph"></div>
