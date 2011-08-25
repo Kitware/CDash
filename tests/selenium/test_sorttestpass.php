@@ -22,7 +22,7 @@ class Example extends CDashSeleniumTestCase
         array_push($this->verificationErrors, $e->toString());
     }
     try {
-        $this->assertEquals("2", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[1]/div/a"));
+        $this->assertEquals("2", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[10]/div/a"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }

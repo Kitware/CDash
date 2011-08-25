@@ -21,7 +21,7 @@ class Example extends CDashSeleniumTestCase
     $this->type("passwd", "simpletest");
     $this->click("sent");
     $this->waitForPageToLoad("30000");
-    $this->click("//tr[5]/td[2]/a[4]/img");
+    $this->click("//tr[4]/td[2]/a[4]/img");
     $this->waitForPageToLoad("30000");
     $this->click("//div[@id='wizard']/ul/li[5]/a/span");
     $this->click("emailBrokenSubmission");
@@ -33,7 +33,7 @@ class Example extends CDashSeleniumTestCase
     $this->click("link=My CDash");
     $this->waitForPageToLoad("30000");
     $this->setSpeed("300");
-    $this->click("//tr[5]/td[2]/a[1]/img");
+    $this->click("//tr[4]/td[2]/a[1]/img");
     for ($second = 0; ; $second++) {
         if ($second >= 60) $this->fail("timeout");
         try {
@@ -53,7 +53,7 @@ class Example extends CDashSeleniumTestCase
         } catch (Exception $e) {}
         sleep(1);
     }
-    $this->click("//tr[5]/td[2]/a[1]/img");
+    $this->click("//tr[4]/td[2]/a[1]/img");
     $this->click("unsubscribe");
     $this->assertTrue((bool)preg_match('/^Are you sure you want to unsubscribe[\s\S]$/',$this->getConfirmation()));
   }
