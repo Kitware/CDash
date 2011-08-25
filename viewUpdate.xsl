@@ -1,15 +1,15 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-    
-    
+
+
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
-    
+
    <!-- Include local common files -->
    <xsl:include href="local/header.xsl"/>
    <xsl:include href="local/footer.xsl"/>
-  
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <xsl:template match="/">
       <html>
@@ -21,11 +21,11 @@
          </link>
        <xsl:call-template name="headscripts"/>
          <!-- Include JavaScript -->
-         <script src="javascript/cdashUpdateGraph.js" type="text/javascript" charset="utf-8"></script>  
+         <script src="javascript/cdashUpdateGraph.js" type="text/javascript" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
-   
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -37,7 +37,7 @@
 <h4>
 <xsl:if test="cdash/build/site">
 Files changed on <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="cdash/build/siteid"/></xsl:attribute>
-<xsl:value-of select="cdash/build/site"/></a> 
+<xsl:value-of select="cdash/build/site"/></a>
 (<xsl:value-of select="cdash/build/buildname"/>) as of <xsl:value-of select="cdash/build/buildtime"/>
 </xsl:if>
 <xsl:if test="cdash/updates/timestamp">
@@ -65,13 +65,13 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 <xsl:if test="cdash/build/site">
 <a>
 <xsl:attribute name="href">javascript:showbuildgraph_click(<xsl:value-of select="cdash/build/buildid"/>)</xsl:attribute>
-[Show Activity Graph]
+Show Activity Graph
 </a>
 </xsl:if>
 <xsl:if test="cdash/updates/timestamp">
 <a>
 <xsl:attribute name="href">javascript:showprojectgraph_click(<xsl:value-of select="cdash/dashboard/projectid"/>,<xsl:value-of select="cdash/dashboard/unixtimestamp"/>)</xsl:attribute>
-[Show Activity Graph]
+Show Activity Graph
 </a>
 </xsl:if>
 
@@ -97,7 +97,7 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 <xsl:text disable-output-escaping="yes">&lt;script type="text/javascript">var Icons = "images/";&lt;/script&gt;</xsl:text>
 <script type="text/javascript" SRC="javascript/tree.js"></script>
 
-[<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Expand all';return true;" onClick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Collapse all';return true;" onClick="contract()">Collapse all</a>]
+<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Expand all';return true;" onClick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Collapse all';return true;" onClick="contract()">Collapse all</a>
 
 <p></p>
 <xsl:text disable-output-escaping="yes">
@@ -108,13 +108,13 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 
 <script type="text/javascript" SRC="javascript/tree_init.js"></script>
 <br/>
-[<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Expand all';return true;" onClick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Collapse all';return true;" onClick="contract()">Collapse all</a>]
+<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Expand all';return true;" onClick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Collapse all';return true;" onClick="contract()">Collapse all</a>
 <br/>
 
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>
