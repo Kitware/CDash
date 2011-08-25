@@ -1,22 +1,22 @@
 function showcoveragegraph_click(buildid,zoomout)
-{  
+{
   if(zoomout)
     {
     $("#graph").load("ajax/showcoveragegraph.php?buildid="+buildid);
     return;
     }
- 
+
   if($("#graph").html() != "" && $("#grapholder").is(":visible"))
     {
     $("#grapholder").hide();
     $("#graphoptions").html("");
     return;
     }
-  
+
   $("#graph").fadeIn('slow');
   $("#graph").html("fetching...<img src=images/loading.gif></img>");
   $("#grapholder").attr("style","width:800px;height:400px;");
-  $("#graphoptions").html("<a href=javascript:showcoveragegraph_click("+buildid+",true)>[Zoom out]</a>");
+  $("#graphoptions").html("<a href=javascript:showcoveragegraph_click("+buildid+",true)>Zoom out</a>");
 
   $("#graph").load("ajax/showcoveragegraph.php?buildid="+buildid,{},function(){$("#grapholder").fadeIn('slow');
 $("#graphoptions").show();

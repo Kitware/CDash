@@ -23,7 +23,7 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("//img[@alt='edit schedule']");
     $this->waitForPageToLoad("30000");
-    $this->click("link=MY CDASH");
+    $this->click("link=My CDash");
     $this->waitForPageToLoad("30000");
     $this->click("//img[@alt='remove schedule']");
     $this->assertTrue((bool)preg_match('/^Are you sure you want to delete this schedule[\s\S]$/',$this->getConfirmation()));

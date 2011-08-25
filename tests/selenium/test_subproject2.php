@@ -25,7 +25,7 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=ThreadPool");
     $this->waitForPageToLoad("30000");
-    $this->click("link=DASHBOARD");
+    $this->click("link=Dashboard");
     $this->waitForPageToLoad("30000");
     $this->click("link=NOX");
     $this->waitForPageToLoad("30000");

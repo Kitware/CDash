@@ -21,7 +21,7 @@ class Example extends CDashSeleniumTestCase
     $this->type("passwd", "simpletest");
     $this->click("sent");
     $this->waitForPageToLoad("30000");
-    $this->click("link=[Manage users]");
+    $this->click("link=Manage users");
     $this->waitForPageToLoad("30000");
     $this->type("search", "simple");
     $this->keyUp("search", "e");

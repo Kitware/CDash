@@ -24,10 +24,10 @@ class Example extends CDashSeleniumTestCase
     $this->click("link=InsightExample");
     $this->waitForPageToLoad("30000");
     $this->setSpeed("1000");
-    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[4]/img");
+    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[2]/img");
     $this->click("link=[mark as expected]");
     $this->waitForPageToLoad("30000");
-    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[4]/img");
+    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[2]/img");
     $this->click("link=[mark as non expected]");
     $this->waitForPageToLoad("30000");
     $this->click("link=Log Out");

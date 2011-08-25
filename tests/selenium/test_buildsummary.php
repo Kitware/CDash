@@ -25,12 +25,12 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=Win32-MSVC2009");
     $this->waitForPageToLoad("30000");
-    $this->click("link=[Show Build History]");
-    $this->click("link=[Show Build History]");
-    $this->click("link=[Show Build Graphs]");
-    $this->click("link=[Zoom out]");
-    $this->click("link=[Show Build Graphs]");
-    $this->click("link=[Add a Note to this Build]");
+    $this->click("link=Show Build History");
+    $this->click("link=Show Build History");
+    $this->click("link=Show Build Graphs");
+    $this->click("link=Zoom out");
+    $this->click("link=Show Build Graphs");
+    $this->click("link=Add a Note to this Build");
     for ($second = 0; ; $second++) {
         if ($second >= 60) $this->fail("timeout");
         try {

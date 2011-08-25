@@ -30,7 +30,7 @@ class Example extends CDashSeleniumTestCase
     $this->click("emailLowCoverage");
     $this->click("emailTestTimingChanged");
     $this->click("Update");
-    $this->click("link=MY CDASH");
+    $this->click("link=My CDash");
     $this->waitForPageToLoad("30000");
     $this->setSpeed("300");
     $this->click("//tr[5]/td[2]/a[1]/img");

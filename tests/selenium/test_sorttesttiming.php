@@ -18,33 +18,33 @@ class Example extends CDashSeleniumTestCase
     $this->click("sort13sort_13");
     $this->click("sort13sort_13");
     try {
-        $this->assertEquals("0.3", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[14]/div"));
+        $this->assertEquals("0.3", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[11]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
     try {
-        $this->assertEquals("0.1", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[14]/div"));
+        $this->assertEquals("0.1", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[11]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
     try {
-        $this->assertEquals("0", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[14]/div"));
+        $this->assertEquals("0", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[11]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
     $this->click("sort13sort_13");
     try {
-        $this->assertEquals("0", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[14]/div"));
+        $this->assertEquals("0", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[11]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
     try {
-        $this->assertEquals("0.1", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[14]/div"));
+        $this->assertEquals("0.1", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[11]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
     try {
-        $this->assertEquals("0.3", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[14]/div"));
+        $this->assertEquals("0.3", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[11]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }

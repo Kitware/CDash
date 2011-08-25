@@ -1,5 +1,5 @@
 function showtesttimegraph_click(buildid,testid,zoomout)
-{   
+{
   if(zoomout)
     {
     $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid+"&zoomout=1");
@@ -11,13 +11,13 @@ function showtesttimegraph_click(buildid,testid,zoomout)
     $("#timegraphoptions").html("");
     return;
     }
- 
- 
+
+
   $("#timegraph").fadeIn('slow');
   $("#timegraph").html("fetching...<img src=images/loading.gif></img>");
   $("#timegrapholder").attr("style","width:800px;height:400px;");
 
-  $("#timegraphoptions").html("<a href=javascript:showtesttimegraph_click("+buildid+","+testid+",true)>[Zoom out]</a>");
+  $("#timegraphoptions").html("<a href=javascript:showtesttimegraph_click("+buildid+","+testid+",true)>Zoom out</a>");
   $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid,{},function(){
   $("#timegrapholder").fadeIn('slow');
   $("#timegraphoptions").show();
@@ -25,7 +25,7 @@ function showtesttimegraph_click(buildid,testid,zoomout)
 }
 
 function showtestpassinggraph_click(buildid,testid,zoomout)
-{  
+{
   if(zoomout)
     {
     $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid+"&zoomout=1");
@@ -36,13 +36,13 @@ function showtestpassinggraph_click(buildid,testid,zoomout)
     $("#passinggrapholder").hide(); //fadeOut('medium');
     $("#passinggraphoptions").html("");
     return;
-    } 
+    }
 
   $("#passinggraph").fadeIn('slow');
   $("#passinggraph").html("fetching...<img src=images/loading.gif></img>");
   $("#passinggrapholder").attr("style","width:800px;height:400px;");
-  
-  $("#passinggraphoptions").html("<a href=javascript:showtestpassinggraph_click("+buildid+","+testid+",true)>[Zoom out]</a>");
+
+  $("#passinggraphoptions").html("<a href=javascript:showtestpassinggraph_click("+buildid+","+testid+",true)>Zoom out</a>");
   $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid,{},function(){
   $("#passinggrapholder").fadeIn('slow');
   $("#passinggraphoptions").show();
@@ -50,7 +50,7 @@ function showtestpassinggraph_click(buildid,testid,zoomout)
 }
 
 function showtestfailuregraph_click(projectid,testname,starttime,zoomout)
-{  
+{
    if(zoomout)
     {
     $("#testfailuregraph").load("ajax/showtestfailuregraph.php?testname="+testname+"&starttime="+starttime+"&projectid="+projectid+"&zoomout=1");
@@ -61,13 +61,13 @@ function showtestfailuregraph_click(projectid,testname,starttime,zoomout)
     $("#testfailuregrapholder").hide(); //fadeOut('medium');
     $("#testfailuregraphoptions").html("");
     return;
-    } 
+    }
 
   $("#testfailuregraph").fadeIn('slow');
   $("#testfailuregraph").html("fetching...<img src=images/loading.gif></img>");
   $("#testfailuregrapholder").attr("style","width:800px;height:400px;");
-  
-  $("#testfailuregraphoptions").html("<a href=javascript:showtestfailuregraph_click('"+projectid+"','"+testname+"','"+starttime+"',true)>[Zoom out]</a>");
+
+  $("#testfailuregraphoptions").html("<a href=javascript:showtestfailuregraph_click('"+projectid+"','"+testname+"','"+starttime+"',true)>Zoom out</a>");
   $("#testfailuregraph").load("ajax/showtestfailuregraph.php?testname="+testname+"&projectid="+projectid+"&starttime="+starttime,{},function(){
   $("#testfailuregrapholder").fadeIn('slow');
   $("#testfailuregraphoptions").show();

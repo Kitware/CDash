@@ -15,18 +15,18 @@ class Example extends CDashSeleniumTestCase
   public function testShowUpdateGraph()
   {
     $this->open($this->webPath."/viewUpdate.php?buildid=1");
-    $this->click("link=[Show Activity Graph]");
-    $this->click("link=[Zoom out]");
-    $this->click("link=[Show Activity Graph]");
-    $this->click("link=DASHBOARD");
+    $this->click("link=Show Activity Graph");
+    $this->click("link=Zoom out");
+    $this->click("link=Show Activity Graph");
+    $this->click("link=Dashboard");
     $this->waitForPageToLoad("30000");
-    $this->click("link=CURRENT");
+    $this->click("link=Current");
     $this->waitForPageToLoad("30000");
     $this->click("//a[contains(text(),'1 file\n          changed')]");
     $this->waitForPageToLoad("30000");
-    $this->click("link=[Show Activity Graph]");
-    $this->click("link=[Zoom out]");
-    $this->click("link=[Show Activity Graph]");
+    $this->click("link=Show Activity Graph");
+    $this->click("link=Zoom out");
+    $this->click("link=Show Activity Graph");
   }
 }
 ?>

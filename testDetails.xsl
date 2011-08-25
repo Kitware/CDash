@@ -5,10 +5,10 @@
 
 <xsl:include href="local/header.xsl"/>
 <xsl:include href="local/footer.xsl"/>
-   
-<xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+<xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
-  
+
 <xsl:template match="/">
 <html>
 <head>
@@ -19,15 +19,15 @@
       <xsl:value-of select="cdash/cssfile"/>
     </xsl:attribute>
   </link>
-  
-  <xsl:call-template name="headscripts"/> 
+
+  <xsl:call-template name="headscripts"/>
   <!-- Include JavaScript -->
-  <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script> 
-  
+  <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script>
+
 </head>
 <body bgcolor="#ffffff">
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -51,23 +51,23 @@
 <br/>
 <b>Build Date: </b><xsl:value-of select="cdash/test/buildstarttime"/>
 
-<xsl:if test="cdash/project/showtesttime=1"> 
+<xsl:if test="cdash/project/showtesttime=1">
 <br/>
   <b>Test Timing: </b><font>
         <xsl:attribute name="color">
          <xsl:value-of select="cdash/test/timeStatusColor"/>
         </xsl:attribute><xsl:value-of select="cdash/test/timestatus"/>
       </font>
-</xsl:if>  
+</xsl:if>
 
 <table cellpadding="2">
   <tr>
     <td>
       <a>
         <xsl:attribute name="href">
-   <xsl:value-of select="cdash/test/summaryLink"/> 
+   <xsl:value-of select="cdash/test/summaryLink"/>
         </xsl:attribute>
- <xsl:value-of select="cdash/test/test"/> 
+ <xsl:value-of select="cdash/test/test"/>
       </a>
     </td>
     <td>
@@ -112,7 +112,7 @@
         <xsl:value-of select="cdash/test/details"/>
       </td>
    </tr>
-   
+
   <xsl:for-each select="/cdash/test/measurements/measurement">
      <tr>
       <th class="measurement"><xsl:value-of select="name"/></th>
@@ -126,7 +126,7 @@
 <!-- Timing Graph -->
 <a>
 <xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
-[Show Test Time Graph]
+Show Test Time Graph
 </a>
 <div id="timegraphoptions"></div>
 <div id="timegraph"></div>
@@ -136,7 +136,7 @@
 <!-- Pass/Fail Graph -->
 <a>
 <xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
-[Show Failing/Passing Graph]
+Show Failing/Passing Graph
 </a>
 <div id="passinggraphoptions"></div>
 <div id="passinggraph"></div>
@@ -154,7 +154,7 @@
 
 <!-- FOOTER -->
 <br/>
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

@@ -29,7 +29,7 @@ class Example extends CDashSeleniumTestCase
     $this->select("groupSelection", "label=Experimental");
     $this->click("globalMove");
     $this->waitForPageToLoad("30000");
-    $this->click("link=DASHBOARD");
+    $this->click("link=Dashboard");
     $this->waitForPageToLoad("30000");
     $this->setSpeed("1000");
     $this->click("//table[@id='project_5_15']/tbody[1]/tr[3]/td[2]/a[4]/img");
