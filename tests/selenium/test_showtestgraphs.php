@@ -15,7 +15,7 @@ class Example extends CDashSeleniumTestCase
   public function testShowTestGraphs()
   {
     $this->open($this->webPath."/index.php?project=EmailProjectExample&date=2009-02-23");
-    $this->click("//table[@id='project_3_7']/tbody[1]/tr[3]/td[9]/div/a");
+    $this->click("//table[@id='project_3_7']/tbody[1]/tr[1]/td[9]/div/a");
     $this->waitForPageToLoad("30000");
     $this->click("link=Failed");
     $this->waitForPageToLoad("30000");
@@ -25,7 +25,7 @@ class Example extends CDashSeleniumTestCase
     $this->click("link=Show Failing/Passing Graph");
     $this->click("link=Zoom out");
     $this->click("link=Show Failing/Passing Graph");
-    $this->click("link=curl");
+    $this->click("link=DashboardSendTest");
     $this->waitForPageToLoad("30000");
     $this->click("link=Show Test Failure Trend");
     $this->click("link=Zoom out");
