@@ -32,7 +32,7 @@ class Example extends CDashSeleniumTestCase
     $this->click("link=Dashboard");
     $this->waitForPageToLoad("30000");
     $this->setSpeed("1000");
-    $this->click("//table[@id='project_5_15']/tbody[1]/tr[3]/td[2]/a[4]/img");
+    $this->click("//table[@id='project_5_15']/tbody[1]/tr[3]/td[2]/a[2]/img");
     $this->click("link=[remove this build]");
     $this->assertTrue((bool)preg_match('/^Are you sure you want to remove this build[\s\S]$/',$this->getConfirmation()));
     sleep(2);
