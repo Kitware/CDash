@@ -9,15 +9,8 @@
 <div id="header">
  <div id="headertop">
   <div id="topmenu">
+    <a><xsl:attribute name="href"><xsl:value-of select="/cdash/backurl"/></xsl:attribute>My CDash</a>
     <a href="index.php">All Dashboards</a>
-    <a><xsl:attribute name="href">user.php</xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="cdash/user/id>0">My CDash</xsl:when>
-          <xsl:otherwise>Login</xsl:otherwise>
-        </xsl:choose></a>
-     <xsl:if test="cdash/user/id>0">
-       <a href="user.php?logout=1">Log Out</a>
-     </xsl:if>
   </div>
 
   <div id="datetime">
@@ -58,7 +51,6 @@
     </div>
     <div id="headermenu">
         <ul id="navigation">
-
         <li id="admin">
         <a href="#">Settings</a><ul>
         <li><a><xsl:attribute name="href">createProject.php?edit=1&#x26;projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Project</a></li>
@@ -69,6 +61,9 @@
         <li class="endsubmenu"><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>SubProjects</a></li>
         </ul>
         </li>
+         <li id="Dashboard">
+            <a><xsl:attribute name="href">index.php?project=<xsl:value-of select="/cdash/project/name_encoded"/></xsl:attribute>Dashboard</a>
+         </li>
        </ul>
     </div>
  </div>

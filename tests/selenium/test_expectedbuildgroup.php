@@ -21,7 +21,7 @@ class Example extends CDashSeleniumTestCase
     $this->type("passwd", "simpletest");
     $this->click("sent");
     $this->waitForPageToLoad("30000");
-    $this->click("//tr[6]/td[2]/a[6]/img");
+    $this->click("//tr[5]/td[2]/a[6]/img");
     $this->waitForPageToLoad("30000");
     $this->click("//div[@id='wizard']/ul/li[3]/a/span");
     $this->addSelection("movebuilds", "label=CDashTestingSite CDash-CTest-sameImage [Experimental] Experimental");
