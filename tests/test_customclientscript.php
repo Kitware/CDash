@@ -41,14 +41,14 @@ class ManageClientTestCase extends KWWebTestCase
     $siteid = $this->get($this->url."/submit.php?sitename=camelot.kitware&systemname=Ubuntu32&getsiteid=1");
 
     // wait a few seconds so that we know we are ahead of the schedule time
-    sleep(3);
+    sleep(5);
 
     // verify that we receive the correct script when we query for a job
-    $content = $this->get($this->url."/submit.php?getjob=1&siteid=$siteid");
+    $content = $this->get($this->url."/submit.php?getjob=1&siteid=".$siteid);
 
     if(!$this->findString($content, "message(\"hello world\")"))
       {
-      $this->fail("Wrong script was sent: expected hello world script but got: $content");
+      $this->fail("Wrong script was sent: expected hello world script but got: ".$content." for siteid=".$siteid);
       return false;
       }
     $this->pass("Passed");
