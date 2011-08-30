@@ -117,12 +117,32 @@
      <tr>
       <th class="measurement"><xsl:value-of select="name"/></th>
       <td>
+         <xsl:if test="type='numeric/double'">
+             <a><xsl:attribute name="href">javascript:shownamedmeasurementgraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>,"<xsl:value-of select="name" />");</xsl:attribute>[Graph]</a> </xsl:if>
         <xsl:value-of select="value" disable-output-escaping="yes"/>
       </td>
    </tr>
    </xsl:for-each>
 </table>
 <br/>
+
+<!-- Named Measurement Graphs -->
+<xsl:for-each select="/cdash/test/measurements/measurement">
+  <xsl:if test="type='numeric/double'">
+  <div>
+    <xsl:attribute name="id"><xsl:value-of select="name" />graphoptions</xsl:attribute>
+  </div>
+  <div>
+    <xsl:attribute name="id"><xsl:value-of select="name" />graph</xsl:attribute>
+  </div>
+  <center>
+    <div>
+      <xsl:attribute name="id"><xsl:value-of select="name" />grapholder</xsl:attribute>
+    </div>
+  </center>
+  </xsl:if>
+</xsl:for-each>
+
 <!-- Timing Graph -->
 <a>
 <xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>

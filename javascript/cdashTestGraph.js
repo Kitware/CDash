@@ -73,3 +73,23 @@ function showtestfailuregraph_click(projectid,testname,starttime,zoomout)
   $("#testfailuregraphoptions").show();
   });
 }
+
+function shownamedmeasurementgraph_click(buildid,testid,measurement)
+{
+  var divname = "#"+measurement+"graph";
+  if($(divname).html() != "" && $(divname+"older").is(":visible"))
+    {
+    $(divname+"older").hide(); //fadeOut('medium');
+    $(divname+"options").html("");
+    return;
+    }
+
+  $(divname).fadeIn('slow');
+  $(divname).html("fetching...<img src=images/loading.gif></img>");
+  $(divname+"older").attr("style","width:800px;height:400px;");
+
+  $(divname).load("ajax/showtestmeasurementdatagraph.php?testid="+testid+"&buildid="+buildid+"&measurement="+measurement,{},function(){
+  $(divname+"older").fadeIn('slow');
+  $(divname+"options").show();
+  });
+}
