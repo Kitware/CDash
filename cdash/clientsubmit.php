@@ -61,6 +61,11 @@ function client_submit()
       echo "0";
       return 1;
       }
+    if(!$_GET['siteid'])
+      {
+      echo "0";
+      return 1;
+      }
 
     $ClientJobSchedule = new ClientJobSchedule();
     $ClientJobSchedule->SiteId = $_GET['siteid'];
@@ -198,6 +203,12 @@ function client_submit()
     if(!isset($_GET['siteid']))
       {
       echo "0";
+      return 1;
+      }
+    if(!$_GET['siteid'])
+      {
+      echo "0";
+      return 1;
       }
     $ClientJob = new ClientJob();
     $ClientJob->SiteId = $_GET['siteid'];
@@ -209,6 +220,12 @@ function client_submit()
     if(!isset($_GET['siteid']))
       {
       echo "0";
+      return 1;
+      }
+    if(!$_GET['siteid'])
+      {
+      echo "0";
+      return 1;
       }
     $ClientJob = new ClientJob();
     $ClientJob->SiteId = $_GET['siteid'];
