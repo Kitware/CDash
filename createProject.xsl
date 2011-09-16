@@ -727,7 +727,7 @@
                           <input onchange="saveChanges();" onfocus="showHelp('NightlyStart_help');"
                             name="nightlyTime" type="text" id="nightlyTime" size="20">
                             <xsl:attribute name="value">
-                  <xsl:if test="string-length(cdash/project/nightlytime)=0">00:00:00 EST</xsl:if>
+                  <xsl:if test="string-length(cdash/project/nightlytime)=0">01:00:00 UTC</xsl:if>
                     <xsl:value-of select="cdash/project/nightlytime" />
                   </xsl:attribute>
                           </input>
@@ -1054,7 +1054,8 @@
                             <b>Email low coverage</b>
                             <br />
                             Enable/Disable sending email when the coverage for files
-                            is lower than the default threshold value specified above.
+                            is lower than the "Coverage Threshold" value specified on
+                            the "Testing" tab.
                           </span>
                         </td>
                       </tr>
