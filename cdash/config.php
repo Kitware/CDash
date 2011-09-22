@@ -39,6 +39,7 @@ $CDASH_DB_TYPE = 'mysql';
 // Prevents from running the install.php again
 $CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = false;
+$CDASH_TESTING_RENAME_LOGS = false;
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;
 // Default from email
@@ -77,6 +78,10 @@ $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Request full email address to add new users
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
+// Warn about unregistered committers: default to '1' to keep
+// the behavior the same as previous versions. Set to '0' to
+// avoid "is not registered (or has no email)" warning messages.
+$CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS = '1';
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
 $CDASH_FORWARDING_IP='192.%'; // should be an SQL format 

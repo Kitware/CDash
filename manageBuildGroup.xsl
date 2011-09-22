@@ -145,26 +145,40 @@ project page</a>
                <xsl:attribute name="value"><xsl:value-of select="description"/></xsl:attribute>
                </input>
                <input type="submit" name="submitDescription" value="Update Description"/>
+               <br/>
                <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="1">
                <xsl:if test="summaryemail=1">
                  <xsl:attribute name="checked">1</xsl:attribute>
                 </xsl:if>
                </input>
                Summary email
+               <br/>
                <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="2">
                <xsl:if test="summaryemail=2">
                  <xsl:attribute name="checked">1</xsl:attribute>
                 </xsl:if>
                </input>
                No email
+               <br/>
+               <input name="emailCommitters" onclick="form.submit();" type="checkbox" value="1">
+               <xsl:if test="emailcommitters != 0">
+                 <xsl:attribute name="checked">1</xsl:attribute>
+               </xsl:if>
+               </input>
+               Email committers
+               <br/>
                <input name="includeInSummary" onclick="form.submit();" type="checkbox" value="1">
                <xsl:if test="includeinsummary=1">
                  <xsl:attribute name="checked">1</xsl:attribute>
                 </xsl:if>
                </input>
-               In summary <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
-                  <img onmouseover="showHelpTop('summary_help');" src="images/help.gif" border="0"/></a>
+               Included in subproject summary
+               <br/>
                </form>
+               </td>
+               <td>
+               <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img onmouseover="showHelpTop('summary_help');" src="images/help.gif" border="0"/></a>
                </td>
                </tr>
                </xsl:for-each>
@@ -176,7 +190,8 @@ project page</a>
               <span class="help_content" id="summary_help">
                <strong>Summary email:</strong> sends only one email per day when the first build in the group fails.<br/>
                <strong>No email:</strong> doesn't send any email for that group regardless of user's preferences.<br/>
-               <strong>In summary:</strong> when dealing with subproject, specifies if the group should be included in the summary page.<br/>
+               <strong>Email committers:</strong> sends email to authors and committers for build problems in the group, even if user is not registered.<br/>
+               <strong>Included in subproject summary:</strong> checked if the group's builds contribute to totals on subproject summary pages.<br/>
                </span>
                </td>
               <td></td>

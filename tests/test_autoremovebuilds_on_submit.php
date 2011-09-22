@@ -41,11 +41,11 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
       {
       if(strpos($line, "?>") !== false)
         {
-        fwrite($handle, '$CDASH_AUTOREMOVE_BUILDS = \'1\';');
-        fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = false;');
-        fwrite($handle, "\n?>");
+        fwrite($handle, '// test config settings injected by file [' . __FILE__ . "]\n");
+        fwrite($handle, '$CDASH_AUTOREMOVE_BUILDS = \'1\';'."\n");
+        fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = false;'."\n");
         }
-      else
+      if($line != '')
         {
         fwrite($handle, "$line\n");
         }

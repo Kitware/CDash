@@ -102,15 +102,19 @@ class KWWebTestCase extends WebTestCase {
     {
     if(file_exists($filename))
       {
-      // Delete file:
-      unlink($filename);
-
-      // Alternatively, rename it to a random name to keep for later
-      // inspection. (Comment out the above unlink and uncomment this
-      // chunk to keep the log files from the test suite around...)
-      //
-      //global $CDASH_LOG_FILE;
-      //rename($filename, $CDASH_LOG_FILE . "." . mt_rand() . ".txt");
+      global $CDASH_TESTING_RENAME_LOGS;
+      if ($CDASH_TESTING_RENAME_LOGS)
+        {
+        // Rename to a random name to keep for later inspection:
+        //
+        global $CDASH_LOG_FILE;
+        rename($filename, $CDASH_LOG_FILE . "." . mt_rand() . ".txt");
+        }
+      else
+        {
+        // Delete file:
+        unlink($filename);
+        }
       }
     }
 

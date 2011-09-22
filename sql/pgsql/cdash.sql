@@ -43,6 +43,7 @@ CREATE TABLE "buildgroup" (
   "description" text DEFAULT '' NOT NULL,
   "summaryemail" smallint DEFAULT '0',
   "includesubprojectotal" smallint DEFAULT '1',
+  "emailcommitters" smallint DEFAULT '0',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "projectid2" on "buildgroup" ("projectid");

@@ -65,10 +65,25 @@ if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php)
 endif(CDASH_USE_SELENIUM)
 
+option(CDASH_TESTING_RENAME_LOGS
+  "If on, kw_web_tester::deleteLog renames cdash.log instead of deleting it"
+  OFF)
+if(CDASH_TESTING_RENAME_LOGS)
+  set(rename_logs "true")
+else()
+  set(rename_logs "false")
+endif()
+
 file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
 "<?php
+// WARNING: This file is unconditionally overwritten by the CMake configure
+// step: [${CMAKE_CURRENT_LIST_FILE}]
+//
+// Some of the CDash tests also inject config settings below as tests run...
+//
 $CDASH_DB_NAME = 'cdash4simpletest';
 $CDASH_TESTING_MODE = true;
+$CDASH_TESTING_RENAME_LOGS = ${rename_logs};
 $CDASH_DB_HOST = '${CDASH_DB_HOST}';
 $CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
 $CDASH_DB_PASS = '${CDASH_DB_PASS}';

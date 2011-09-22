@@ -33,6 +33,7 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
     $this->setField('description',
       $project.' project created by test code in file ['.__FILE__.']');
     $this->setField('public', '1');
+    $this->setField('emailBrokenSubmission', '1');
     $this->setField('showIPAddresses', '1');
     $this->setField('displayLabels', '1');
     $this->clickSubmitByName('Submit');
@@ -44,10 +45,24 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
     }
 
 
+  function setEmailCommitters($projectname, $val)
+    {
+    // The "Email committers" checkbox is on the manageBuildGroup.php
+    // page, but we set it here directly through database manipulation:
+    // it's easier to write the test code this way... And we're testing
+    // the functionality of emailing the committers, not the web UI for
+    // it.
+    //
+    $query = $this->db->query("SELECT id FROM project WHERE name='$projectname'");
+    $projectid = $query[0]['id'];
+    $query = $this->db->query("UPDATE buildgroup SET emailcommitters='$val' WHERE projectid='$projectid'");
+    }
+
+
   function createProjects()
     {
-    $this->createProject("Trilinos");
     $this->createProject("TrilinosDriver");
+    $this->createProject("Trilinos");
     }
 
 
@@ -104,7 +119,9 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
   function testActualTrilinosSubmission()
     {
     $this->createProjects();
+    $this->setEmailCommitters("Trilinos", 1);
     $this->submitFiles();
+    $this->setEmailCommitters("Trilinos", 0);
     $this->deleteLog($this->logfilename);
     }
 }

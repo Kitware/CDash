@@ -208,12 +208,14 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   return $errors;
 }
 
-/** Return the list of user id who should get emails */
-function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=false)
+
+/** Return the list of user id and committer emails who should get emails */
+function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes=false, $collectUnregisteredCommitters=false)
 {
   require_once("models/userproject.php");
 
   $userids = array();
+  $committeremails = array();
 
   $buildid_clause = get_updates_buildid_clause(qnum($buildid));
 
@@ -256,11 +258,31 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
           $filled = $UserProject->FillFromUserId();
           }
         }
+
       if(!$filled && !$UserProject->FillFromRepositoryCredential())
         {
-        $name = $email == '' ? $author : $email;
-        // Daily updates send an email to tell adminsitrator that the user is not registered but we log anyway
-        add_log("User: ".$name." is not registered (or has no email) for the project ".$projectid,"SendEmail",LOG_WARNING,$projectid,$buildid);
+        global $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS;
+        if ($CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS)
+          {
+          $name = $email == '' ? $author : $email;
+          // Daily updates send an email to tell adminsitrator that the user
+          // is not registered but we log anyway
+          add_log("User: ".$name." is not registered (or has no email) for the project ".$projectid,
+            "SendEmail", LOG_WARNING, $projectid, $buildid);
+          }
+        if ($collectUnregisteredCommitters && $email != '' &&
+            !in_array($email, $committeremails))
+          {
+          $committeremails[] = $email;
+          }
+        continue;
+        }
+
+      // If we already have this user in the array, don't bother checking
+      // user preferences again... (avoid below calls to checkEmail*
+      // functions)
+      if(in_array($UserProject->UserId, $userids))
+        {
         continue;
         }
 
@@ -282,17 +304,17 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
         continue;
         }
 
-      if(!in_array($UserProject->UserId,$userids))
-        {
-        $userids[] = $UserProject->UserId;
-        }
+      $userids[] = $UserProject->UserId;
       }
     }
 
   // If it's fixes only concerned users should get the email
   if($fixes)
     {
-    return $userids;
+    $result = array();
+    $result['userids'] = $userids;
+    $result['committeremails'] = $committeremails;
+    return $result;
     }
 
   // Select the users who want to receive all emails
@@ -328,7 +350,10 @@ function lookup_emails_to_send($errors,$buildid,$projectid,$buildtype,$fixes=fal
       }
     }
 
-  return $userids;
+  $result = array();
+  $result['userids'] = $userids;
+  $result['committeremails'] = $committeremails;
+  return $result;
 
 } // end lookup_emails_to_send
 
@@ -831,6 +856,11 @@ function set_email_sent($userid,$buildid,$emailtext)
 /** Check if the email has already been sent for that category */
 function check_email_sent($userid,$buildid,$errorkey)
 {
+  if($userid == 0)
+    {
+    return false;
+    }
+
   $category = 0;
   switch($errorkey)
     {
@@ -986,13 +1016,14 @@ function send_email_fix_to_user($userid,$emailtext,$Build,$Project)
     } // end if testing
 } // end send_email_fix_to_user
 
-/** Send the email to a user */
-function send_email_to_user($userid,$emailtext,$Build,$Project)
+
+// Send one broken submission email to one email address
+//
+function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
 {
   include("cdash/config.php");
   include_once("cdash/common.php");
   require_once("models/site.php");
-  require_once("models/user.php");
 
   $serverURI = get_server_URI();
   // In the case of asynchronous submission, the serverURI contains /cdash
@@ -1056,7 +1087,8 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
   //$title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
 
   $messagePlainText .= ".\n";
-  $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
+  $messagePlainText .= "You have been identified as one of the authors who ";
+  $messagePlainText .= "have checked in changes that are part of this submission ";
   $messagePlainText .= "or you are listed in the default contact list.\n\n";
   $messagePlainText .= "Details on the submission can be found at ";
 
@@ -1103,37 +1135,176 @@ function send_email_to_user($userid,$emailtext,$Build,$Project)
     }
   $messagePlainText .= "\n-CDash on ".$serverName."\n";
 
-  // Find the email
-  $User = new User();
-  $User->Id = $userid;
-  $email = $User->GetEmail();
+  $sent = false;
 
   // If this is the testing
   if($CDASH_TESTING_MODE)
     {
-    add_log($email,"TESTING: EMAIL",LOG_TESTING);
+    add_log($emailaddress,"TESTING: EMAIL",LOG_TESTING);
     add_log($title,"TESTING: EMAILTITLE",LOG_TESTING);
     add_log($messagePlainText,"TESTING: EMAILBODY",LOG_TESTING);
-    // Record that we have send the email
-    set_email_sent($userid,$Build->Id,$emailtext);
+    $sent = true;
     }
   else
     {
     // Send the email
-    if(mail("$email", $title, $messagePlainText,
+    if(mail("$emailaddress", $title, $messagePlainText,
      "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
       {
-      add_log("email sent to: ".$email." with errors ".$titleerrors." for build ".$Build->Id,"sendemail ".$Project->Name,LOG_INFO);
-
-      // Record that we have send the email
-      set_email_sent($userid,$Build->Id,$emailtext);
+      add_log("email sent to: ".$emailaddress." with errors ".$titleerrors." for build ".$Build->Id,"sendemail ".$Project->Name,LOG_INFO);
+      $sent = true;
       }
     else
       {
-      add_log("cannot send email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
+      add_log("cannot send email to: ".$emailaddress,"sendemail ".$Project->Name,LOG_ERR);
       }
     } // end if testing
+
+  return $sent;
+} // end send_email_to_address
+
+
+function send_email_to_user($userid, $emailtext, $Build, $Project)
+{
+  require_once("models/user.php");
+
+  $User = new User();
+  $User->Id = $userid;
+  $email = $User->GetEmail();
+
+  $sent = send_email_to_address($email, $emailtext, $Build, $Project);
+  if ($sent)
+    {
+    // Record that we have sent the email
+    set_email_sent($userid, $Build->Id, $emailtext);
+    }
+
 } // end send_email_to_user
+
+
+function send_error_email($userid, $emailaddress, $sendEmail, $errors,
+  $Build, $Project, $prefix = 'none')
+{
+  $emailtext = array();
+  $emailtext['nerror'] = 0;
+
+  if ($userid != 0)
+    {
+    // For registered users, tune the error array based on user preferences
+    // to make sure he doesn't get emails that are unwanted/unnecessary
+    $UserProject = new UserProject();
+    $UserProject->UserId = $userid;
+    $UserProject->ProjectId = $Project->Id;
+    $useremailcategory = $UserProject->GetEmailCategory();
+    }
+
+  // Check if an email has been sent already for this user
+  foreach($errors as $errorkey => $nerrors)
+    {
+    if($nerrors == 0 || $errorkey=='errors')
+      {
+      continue;
+      }
+
+    $stop = false;
+
+    if($userid != 0)
+      {
+      // If the user doesn't want to get the email
+      switch($errorkey)
+        {
+        case 'update_errors': if(!check_email_category("update",$useremailcategory)) {$stop=true;} break;
+        case 'configure_errors': if(!check_email_category("configure",$useremailcategory)) {$stop=true;} break;
+        case 'build_errors': if(!check_email_category("error",$useremailcategory)) {$stop=true;} break;
+        case 'build_warnings': if(!check_email_category("warning",$useremailcategory)) {$stop=true;} break;
+        case 'test_errors': if(!check_email_category("test",$useremailcategory)) {$stop=true;} break;
+        case 'dynamicanalysis_errors': if(!check_email_category("dynamicanalysis",$useremailcategory)) {$stop=true;} break;
+        }
+      }
+    else
+      {
+      // For committers, only send emails when the errorkey starts with the
+      // prefix associated with the current handler calling us.
+      // (So stop if the errorkey does not begin with the prefix...)
+      // This minimizes sending out possibly near-duplicate emails to the
+      // same committers...
+      //
+      if (0 !== strpos($errorkey, $prefix))
+        {
+        $stop = true;
+        }
+      }
+
+    if($stop)
+      {
+      continue;
+      }
+
+    if(0 == $userid || !check_email_sent($userid, $Build->Id, $errorkey))
+      {
+      $emailtext['summary'][$errorkey] = get_email_summary($Build->Id,$errors,$errorkey,$Project->EmailMaxItems,
+                                                           $Project->EmailMaxChars,$Project->TestTimeMaxStatus,
+                                                           $Project->EmailTestTimingChanged);
+      $emailtext['category'][$errorkey] = $nerrors;
+      $emailtext['nerror'] = 1;
+      }
+    }
+
+  // Send the email
+  if($emailtext['nerror'] == 1)
+    {
+    if($userid != 0)
+      {
+      send_email_to_user($userid, $emailtext, $Build, $Project);
+
+      if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
+        {
+        $sendEmail->UserId = $userid;
+        $sendEmail->Text = $emailtext;
+        $sendEmail->SendToUser();
+        }
+      }
+    else
+      {
+      send_email_to_address($emailaddress, $emailtext, $Build, $Project);
+        //
+        // Do we still need a "$sendEmail->" call here even if
+        // there is no UserId...?
+        //
+      }
+    }
+}
+
+
+function getHandlerErrorKeyPrefix($handler)
+{
+  if($handler instanceof UpdateHandler)
+    {
+    return "update_";
+    }
+
+  if($handler instanceof TestingHandler)
+    {
+    return "test_";
+    }
+
+  if($handler instanceof BuildHandler)
+    {
+    return "build_";
+    }
+
+  if($handler instanceof ConfigureHandler)
+    {
+    return "configure_";
+    }
+
+  if($handler instanceof DynamicAnalysisHandler)
+    {
+    return "dynamicanalysis_";
+    }
+
+  return "none";
+}
 
 
 /** Main function to send email if necessary */
@@ -1198,6 +1369,8 @@ function sendemail($handler,$projectid)
     return;
     }
 
+  $emailCommitters = $BuildGroup->GetEmailCommitters();
+
   $errors = check_email_errors($buildid,$Project->EmailTestTimingChanged,
                                $Project->TestTimeMaxStatus,!$Project->EmailRedundantFailures);
 
@@ -1206,7 +1379,9 @@ function sendemail($handler,$projectid)
     {
     $Build->FillFromId($Build->Id);
     // Get the list of person who should get the email
-    $userids = lookup_emails_to_send($errors, $buildid, $projectid,$Build->Type,true);
+    $lookup_result = lookup_emails_to_send($errors, $buildid, $projectid,
+                                           $Build->Type, true, $emailCommitters);
+    $userids = $lookup_result['userids'];
     foreach($userids as $userid)
       {
       $emailtext = array();
@@ -1269,69 +1444,33 @@ function sendemail($handler,$projectid)
     $sendEmail->SendBuildError();
     }
 
-  // Get the list of person who should get the email
-  $userids = lookup_emails_to_send($errors, $buildid, $projectid,$Build->Type);
+  // Lookup the list of people who should get the email, both registered
+  // users *and* committers:
+  //
+  $lookup_result = lookup_emails_to_send($errors, $buildid, $projectid,
+                                         $Build->Type, false, $emailCommitters);
 
-  // Loop through the users
+  // Loop through the *registered* users:
+  //
+  $userids = $lookup_result['userids'];
   foreach($userids as $userid)
     {
-    $emailtext = array();
-    $emailtext['nerror'] = 0;
+    send_error_email($userid, '', $sendEmail, $errors,
+      $Build, $Project);
+    }
 
-    // Tune the error array based on the preferences of the user to make sure he
-    // doesn't get email that are unecessary
-    $UserProject = new UserProject();
-    $UserProject->UserId = $userid;
-    $UserProject->ProjectId = $projectid;
-    $useremailcategory = $UserProject->GetEmailCategory();
-
-    // Check if an email has been sent already for this user
-    foreach($errors as $errorkey => $nerrors)
+  // Loop through "other" users, if necessary:
+  //
+  // ...people who committed code, but are *not* registered CDash users, but
+  // only if the 'emailcommitters' field is on for this build group.
+  //
+  if($emailCommitters)
+    {
+    $committeremails = $lookup_result['committeremails'];
+    foreach($committeremails as $committeremail)
       {
-      if($nerrors == 0 || $errorkey=='errors')
-        {
-        continue;
-        }
-
-      // If the user doesn't want to get the email
-      $stop = false;
-      switch($errorkey)
-        {
-        case 'update_errors': if(!check_email_category("update",$useremailcategory)) {$stop=true;} break;
-        case 'configure_errors': if(!check_email_category("configure",$useremailcategory)) {$stop=true;} break;
-        case 'build_errors': if(!check_email_category("error",$useremailcategory)) {$stop=true;} break;
-        case 'build_warnings': if(!check_email_category("warning",$useremailcategory)) {$stop=true;} break;
-        case 'test_errors': if(!check_email_category("test",$useremailcategory)) {$stop=true;} break;
-        case 'dynamicanalysis_errors': if(!check_email_category("dynamicanalysis",$useremailcategory)) {$stop=true;} break;
-        }
-
-      if($stop)
-        {
-        continue;
-        }
-
-      if(!check_email_sent($userid,$buildid,$errorkey))
-        {
-        $emailtext['summary'][$errorkey] = get_email_summary($buildid,$errors,$errorkey,$Project->EmailMaxItems,
-                                                             $Project->EmailMaxChars,$Project->TestTimeMaxStatus,
-                                                             $Project->EmailTestTimingChanged);
-        $emailtext['category'][$errorkey] = $nerrors;
-        $emailtext['nerror'] = 1;
-        }
-      }
-
-
-    // Send the email
-    if($emailtext['nerror'] == 1)
-      {
-      send_email_to_user($userid,$emailtext,$Build,$Project);
-
-      if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
-        {
-        $sendEmail->UserId = $userid;
-        $sendEmail->Text = $emailtext;
-        $sendEmail->SendToUser();
-        }
+      send_error_email(0, $committeremail, $sendEmail, $errors,
+        $Build, $Project, getHandlerErrorKeyPrefix($handler));
       }
     }
 }

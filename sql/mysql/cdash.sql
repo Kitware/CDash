@@ -55,6 +55,7 @@ CREATE TABLE `buildgroup` (
   `description` text NOT NULL default '',
   `summaryemail` tinyint(4) default '0',
   `includesubprojectotal` tinyint(4) default '1',
+  `emailcommitters` tinyint(4) default '0',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),

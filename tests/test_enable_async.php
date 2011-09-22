@@ -24,10 +24,10 @@ class EnableAsynchronousTestCase extends KWWebTestCase
       {
       if(strpos($line, "?>") !== false)
         {
-        fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = true;');
-        fwrite($handle, "\n?>");
+        fwrite($handle, '// test config settings injected by file [' . __FILE__ . "]\n");
+        fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = true;'."\n");
         }
-      else
+      if($line != '')
         {
         fwrite($handle, "$line\n");
         }

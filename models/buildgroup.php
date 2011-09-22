@@ -160,8 +160,8 @@ class BuildGroup
       return $buildgroup_array["id"];
       }
     }
-    
-  // Return the value of the summary eamil
+
+  // Return the value of summaryemail
   function GetSummaryEmail()
     {
     if(!$this->Id)
@@ -175,10 +175,27 @@ class BuildGroup
       add_last_sql_error("BuildGroup GetSummaryEmail",$this->ProjectId);
       return false;
       }
-      
+
     $summaryemail_array = pdo_fetch_array($summaryemail);
     return $summaryemail_array["summaryemail"];
-    }  
+    }
+
+  // Return the value of emailcommitters, 0 or 1
+  function GetEmailCommitters()
+    {
+    if(!$this->Id)
+      {
+      add_log('no BuildGroup Id, cannot query database, returning default value of 0',
+        'BuildGroup::GetEmailCommitters', LOG_ERR);
+      return 0;
+      }
+
+    $emailCommitters = pdo_get_field_value(
+      "SELECT emailcommitters FROM buildgroup WHERE id=".qnum($this->Id),
+      'emailcommitters', 0);
+
+    return $emailCommitters;
+    }
 }
 
 ?>
