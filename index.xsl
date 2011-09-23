@@ -100,7 +100,7 @@
       <th align="center" width="3%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_2</xsl:attribute>
       Files</th>
-      <th align="center" class="time">
+      <th align="center" class="time" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_3</xsl:attribute>
       Time</th>
       <th align="center">
@@ -109,7 +109,7 @@
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_5</xsl:attribute>
       Warn</th>
-      <th align="center" class="time">
+      <th align="center" class="time" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_6</xsl:attribute>
       Time</th>
       <th align="center">
@@ -118,7 +118,7 @@
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_8</xsl:attribute>
       Warn</th>
-      <th align="center" class="time">
+      <th align="center" class="time" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_9</xsl:attribute>
       Time</th>
       <th align="center" width="5%">
