@@ -190,6 +190,9 @@ height: expression(this.height > 110 ? 110: true);
  padding-bottom: 3px;
 }
 
+.tabb .time{
+  display: none;
+}
 
 .tabb td{
  padding-top: 4px;
@@ -1059,6 +1062,14 @@ div#helpmenu {
 }
 
 div#autorefresh {
+  position: relative;
+  top: -18px;
+  right: 5px;
+  float: right;
+  width: 90px;
+}
+
+div#showtime {
   position: relative;
   top: -18px;
   right: 5px;

@@ -41,6 +41,36 @@ $(document).ready(function() {
       }
    })
 
+  /** Show/Hide time */
+  $('.showtime').click(function()
+    {
+    if ($('.showtime').html() == "Hide Time")
+      {
+      $('.showtime').html("Show Time");
+      $('.time').hide();
+      $timeheaders = $(".timeheader");
+      $timeheaders.each(
+        function(index) {
+         var colspan = $(this).attr('colspan');
+         colspan--;
+         $(this).attr('colspan',colspan);
+        });
+      }
+    else
+      {
+      $('.showtime').html("Hide Time");
+      $('.time').show();
+
+      $timeheaders = $(".timeheader");
+      $timeheaders.each(
+        function(index) {
+         var colspan = $(this).attr('colspan');
+         colspan++;
+         $(this).attr('colspan',colspan);
+        });
+      }
+    });
+
   /** Build name */
   $.tablesorter.addParser({
       // set a unique id
@@ -328,7 +358,7 @@ $(document).ready(function() {
                    4: { sorter:'buildname'},
                    5: { sorter:'digit'},
                    6: { sorter:'text'},
-                   7: { sorter:'text'},
+                   7: { sorter:'text'}
                },
              debug: false,
              widgets: ['zebra']
@@ -481,16 +511,19 @@ $(document).ready(function() {
                   0: { sorter:'buildname'},
                   1: { sorter:'buildname'},
                   2: { sorter:'numericvalue'},
-                  3: { sorter:'numericvalue'},
+                  3: { sorter:'elapsedtime'},
                   4: { sorter:'numericvalue'},
                   5: { sorter:'numericvalue'},
-                  6: { sorter:'numericvalue'},
+                  6: { sorter:'elapsedtime'},
                   7: { sorter:'numericvalue'},
                   8: { sorter:'numericvalue'},
-                  9: { sorter:'numericvalue'},
-                  10: { sorter:'elapsedtime'},
-                  11: { sorter:'elapsedtime'},
-                  12: { sorter:'text'}
+                  9: { sorter:'elapsedtime'},
+                  10: { sorter:'numericvalue'},
+                  11: { sorter:'numericvalue'},
+                  12: { sorter:'numericvalue'},
+                  13: { sorter:'elapsedtime'},
+                  14: { sorter:'elapsedtime'},
+                  15: { sorter:'text'}
               },
             debug: false,
             widgets: ['zebra']

@@ -73,25 +73,25 @@
    </tr>
 
    <tr class="table-heading">
-      <th align="center" rowspan="2" width="15%">
+      <th align="center" rowspan="2" width="20%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_0</xsl:attribute>
       Site</th>
-      <th align="center" rowspan="2" width="20%">
+      <th align="center" rowspan="2" width="25%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_1</xsl:attribute>
       Build Name</th>
-      <td align="center" colspan="1" width="5%" class="botl">Update</td>
-      <td align="center" colspan="2" width="10%" class="botl">Configure</td>
-      <td align="center" colspan="2" width="10%" class="botl">Build</td>
-      <td align="center" colspan="4" width="15%" class="botl">Test</td>
-      <th align="center" rowspan="2" width="10%">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_11</xsl:attribute>
+      <td align="center" colspan="1" width="5%" class="timeheader botl">Update</td>
+      <td align="center" colspan="2" width="10%" class="timeheader botl">Configure</td>
+      <td align="center" colspan="2" width="10%" class="timeheader botl">Build</td>
+      <td align="center" colspan="3" width="15%" class="timeheader botl">Test</td>
+      <th align="center" rowspan="2" width="20%">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
       <xsl:if test="/cdash/dashboard/displaylabels=0">
         <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
       Build Time</th>
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <th align="center" rowspan="2" width="5%" class="nob">
-        <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_12</xsl:attribute>
+        <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_15</xsl:attribute>
         Labels</th>
       </xsl:if>
    </tr>
@@ -100,29 +100,38 @@
       <th align="center" width="3%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_2</xsl:attribute>
       Files</th>
-      <th align="center">
+      <th align="center" class="time">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_3</xsl:attribute>
-      Error</th>
+      Time</th>
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_4</xsl:attribute>
-      Warn</th>
-      <th align="center">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_5</xsl:attribute>
       Error</th>
       <th align="center">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_6</xsl:attribute>
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_5</xsl:attribute>
       Warn</th>
-      <th align="center" width="5%">
+      <th align="center" class="time">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_6</xsl:attribute>
+      Time</th>
+      <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_7</xsl:attribute>
+      Error</th>
+      <th align="center">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_8</xsl:attribute>
+      Warn</th>
+      <th align="center" class="time">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_9</xsl:attribute>
+      Time</th>
+      <th align="center" width="5%">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_10</xsl:attribute>
       Not Run</th>
       <th align="center" width="5%">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_8</xsl:attribute>
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_11</xsl:attribute>
       Fail</th>
       <th align="center" width="5%">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_9</xsl:attribute>
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_12</xsl:attribute>
       Pass</th>
-     <th align="center" width="5%">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_10</xsl:attribute>
+      <th align="center" width="5%" class="time">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_13</xsl:attribute>
       Time</th>
    </tr>
    </thead>
@@ -261,6 +270,11 @@
       <xsl:if test="update/defined=1"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
+      <td align="right" class="time">
+        <xsl:value-of select="update/time"/>
+        <xsl:if test="string-length(update/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
+      </td>
+
       <td align="center">
        <xsl:attribute name="class">
         <xsl:choose>
@@ -311,6 +325,11 @@
       <xsl:if test="configure/nwarningdiff &lt; 0 and countbuildids=1"><sub><xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       </td>
 
+
+      <td align="center" class="time">
+      <xsl:value-of select="configure/time"/>
+      <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
+      </td>
 
 
       <td align="center">
@@ -395,6 +414,10 @@
       </xsl:if>
       </div>
 
+      </td>
+
+      <td align="center" class="time"><xsl:value-of select="compilation/time"/>
+      <xsl:if test="string-length(compilation/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
 
@@ -508,7 +531,7 @@
       </td>
 
       <td align="center">
-      <xsl:attribute name="class">
+      <xsl:attribute name="class">time
         <xsl:choose>
           <xsl:when test="test/timestatus > 0">
              error
@@ -798,6 +821,9 @@
 </div>
 <div id="autorefresh">
          <a href="#" class="autorefresh">Auto-refresh</a>
+</div>
+<div id="showtime">
+         <a href="#" class="showtime">Show Time</a>
 </div>
 
 <!-- Filters? -->
