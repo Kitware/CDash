@@ -225,6 +225,13 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
   while($updatefiles_array = pdo_fetch_array($updatefiles))
     {
     $author = $updatefiles_array["author"];
+
+    // Skip the Local User, old CVS/SVN issue
+    if($author=="Local User")
+      {
+      continue;
+      }
+
     $emails = array();
     $authorEmail = $updatefiles_array["email"];
     $emails[] = $authorEmail;
@@ -236,11 +243,6 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 
     foreach($emails as $email)
       {
-      if($author=="Local User")
-        {
-        continue;
-        }
-
       $UserProject = new UserProject();
       $UserProject->RepositoryCredential = $author;
       $UserProject->ProjectId = $projectid;
