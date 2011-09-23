@@ -271,6 +271,7 @@
       </td>
 
       <td align="right" class="time">
+        <span class="sorttime" style="display:none"><xsl:value-of select="update/timefull"/></span>
         <xsl:value-of select="update/time"/>
         <xsl:if test="string-length(update/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
@@ -327,6 +328,7 @@
 
 
       <td align="center" class="time">
+      <span class="sorttime" style="display:none"><xsl:value-of select="configure/timefull"/></span>
       <xsl:value-of select="configure/time"/>
       <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
@@ -416,7 +418,9 @@
 
       </td>
 
-      <td align="center" class="time"><xsl:value-of select="compilation/time"/>
+      <td align="center" class="time">
+      <span class="sorttime" style="display:none"><xsl:value-of select="compilation/timefull"/></span>
+      <xsl:value-of select="compilation/time"/>
       <xsl:if test="string-length(compilation/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
