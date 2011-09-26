@@ -15,36 +15,36 @@ class Example extends CDashSeleniumTestCase
   public function testSortTestTiming()
   {
     $this->open($this->webPath."/index.php?project=InsightExample&date=2010-07-07");
-    $this->click("sort13sort_10");
-    $this->click("sort13sort_10");
+    $this->click("sort13sort_13");
+    $this->click("sort13sort_13");
     try {
-        $this->assertEquals("18s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[11]/div"));
+        $this->assertEquals("18s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[14]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
     try {
-        $this->assertEquals("6s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[11]/div"));
+        $this->assertEquals("6s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[14]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
     try {
-        $this->assertEquals("0s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[11]/div"));
+        $this->assertEquals("0s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[14]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
-    $this->click("sort13sort_10");
+    $this->click("sort13sort_13");
     try {
-        $this->assertEquals("0s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[11]/div"));
-    } catch (PHPUnit_Framework_AssertionFailedError $e) {
-        array_push($this->verificationErrors, $e->toString());
-    }
-    try {
-        $this->assertEquals("6s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[11]/div"));
+        $this->assertEquals("0s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[1]/td[14]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
     try {
-        $this->assertEquals("18s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[11]/div"));
+        $this->assertEquals("6s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[2]/td[14]/div"));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+        array_push($this->verificationErrors, $e->toString());
+    }
+    try {
+        $this->assertEquals("18s", $this->getText("//table[@id='project_5_13']/tbody[1]/tr[3]/td[14]/div"));
     } catch (PHPUnit_Framework_AssertionFailedError $e) {
         array_push($this->verificationErrors, $e->toString());
     }
