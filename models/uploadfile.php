@@ -21,6 +21,7 @@ class UploadFile
   var $Filename;
   var $Filesize;
   var $Sha1Sum;
+  var $IsUrl;
   var $BuildId;
 
   // Insert in the database
@@ -50,14 +51,28 @@ class UploadFile
       return false;
       }
 
-    $filename = pdo_real_escape_string(basename($this->Filename));
+    if(!isset($this->IsUrl))
+      {
+      add_log("IsUrl is not set", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
+      return false;
+      }
 
-    //check if the file already exists
+    if(!$this->IsUrl)
+      {
+      $filename = pdo_real_escape_string(basename($this->Filename));
+      }
+    else
+      {
+      $filename = pdo_real_escape_string($this->Filename);
+      }
+
+    // Check if the file already exists
     $filequery = pdo_query("SELECT id FROM uploadfile WHERE sha1sum = '".$this->Sha1Sum."' AND filename ='$filename'");
     if(pdo_num_rows($filequery) == 0)
       {
+
       // Insert the file into the database
-      $query = "INSERT INTO uploadfile (filename, filesize, sha1sum) VALUES ('$filename','$this->Filesize','$this->Sha1Sum')";
+      $query = "INSERT INTO uploadfile (filename, filesize, sha1sum, isurl) VALUES ('$filename','$this->Filesize','$this->Sha1Sum', '$this->IsUrl')";
       if(!pdo_query($query))
         {
         add_last_sql_error('Uploadfile::Insert', 0, $this->BuildId);
@@ -93,7 +108,7 @@ class UploadFile
       add_log("Id not set", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
       return false;
       }
-    $query = pdo_query("SELECT filename, filesize, sha1sum FROM uploadfile WHERE id='$this->Id'");
+    $query = pdo_query("SELECT filename, filesize, sha1sum, isurl FROM uploadfile WHERE id='$this->Id'");
     if(!$query)
       {
       add_last_sql_error('Uploadfile::Fill', 0, $this->Id);
@@ -105,6 +120,7 @@ class UploadFile
       $this->Sha1Sum = $fileArray['sha1sum'];
       $this->Filename = $fileArray['filename'];
       $this->Filesize = $fileArray['filesize'];
+      $this->IsUrl = $fileArray['isurl'];
       }
     else
       {

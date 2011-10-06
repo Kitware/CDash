@@ -850,6 +850,7 @@ if(isset($_GET['upgrade-2-0']))
   AddTableField('updatefile', 'committer', 'varchar(255)', 'character varying(255)', '');
   AddTableField('updatefile', 'committeremail', 'varchar(255)', 'character varying(255)', '');
   AddTableField('buildgroup', 'emailcommitters', 'tinyint(4)', 'smallint', '0');
+  AddTableField('uploadfile', 'isurl', 'tinyint(1)', 'smallint', '0');
 
   // Add indexes for the label2... tables
   AddTableIndex('label2build','buildid');

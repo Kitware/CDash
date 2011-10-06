@@ -1371,28 +1371,29 @@ class Project
     }
 
   /**
-   * Return a list of files, each of which has the following key/value pairs:
+   * Return a list of files or urls, each of which has the following key/value pairs:
    *  id       - id of the file in the uploadfile table
    *  filename - name of the file
    *  filesize - size in bytes of the file
    *  sha1sum  - sha-1 checksum of the file
+   *  isurl    - True if filename is a URL
    * The files will be returned in order, with the newest first
    */
-  function GetUploadedFiles()
+  function GetUploadedFilesOrUrls()
     {
     if(!$this->Id)
       {
-      add_log('Id not set', 'Project::GetUploadedFiles', LOG_ERR);
+      add_log('Id not set', 'Project::GetUploadedFilesOrUrls', LOG_ERR);
       return false;
       }
-    $query = pdo_query("SELECT uploadfile.id, uploadfile.filename, uploadfile.filesize, uploadfile.sha1sum
+    $query = pdo_query("SELECT uploadfile.id, uploadfile.filename, uploadfile.filesize, uploadfile.sha1sum, uploadfile.isurl
                         FROM uploadfile, build2uploadfile, build
                         WHERE build.projectid=".qnum($this->Id)." AND
                         build.id=build2uploadfile.buildid AND
                         build2uploadfile.fileid=uploadfile.id ORDER BY build.starttime DESC");
     if(!$query)
       {
-      add_last_sql_error("Project::GetUploadedFiles", $this->Id);
+      add_last_sql_error("Project::GetUploadedFilesOrUrls", $this->Id);
       return false;
       }
 
@@ -1402,7 +1403,8 @@ class Project
       $files[] = array('id'=>$result['id'],
                        'filename'=>$result['filename'],
                        'filesize'=>$result['filesize'],
-                       'sha1sum'=>$result['sha1sum']);
+                       'sha1sum'=>$result['sha1sum'], 
+                       'isurl'=>$result['isurl']);
       }
     return $files;
     }

@@ -3,6 +3,7 @@ CREATE TABLE "uploadfile" (
   "filename" character varying(255) NOT NULL,
   "filesize" bigint NOT NULL DEFAULT '0',
   "sha1sum" character varying(40) NOT NULL,
+  "isurl" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY("id")
 );
 CREATE INDEX "uploadfile_sha1sum" on "uploadfile" ("sha1sum");

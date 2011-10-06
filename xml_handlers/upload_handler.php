@@ -198,7 +198,7 @@ class UploadHandler extends AbstractHandler
         {
         add_log("Failed to delete file '".$this->Base64TmpFilename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);
         }
-
+        
       // Check file size against the upload quota
       $upload_file_size = filesize($this->TmpFilename);
       $Project = new Project;
@@ -216,63 +216,84 @@ class UploadHandler extends AbstractHandler
 
       // Compute SHA1 of decoded file
       $upload_file_sha1 = sha1_file($this->TmpFilename);
+      
+      // TODO Check if a file if same buildid, sha1 and name has already been uploaded
 
       $this->UploadFile->Sha1Sum = $upload_file_sha1;
       $this->UploadFile->Filesize = $upload_file_size;
-
-      $upload_dir = realpath($GLOBALS[CDASH_UPLOAD_DIRECTORY]).'/'.$this->UploadFile->Sha1Sum;
-
-      $uploadfilepath = $upload_dir.'/'.$this->UploadFile->Sha1Sum;
-
-      // Check if upload directory should be created
-      if (!file_exists($GLOBALS[CDASH_UPLOAD_DIRECTORY].'/'.$upload_file_sha1))
+      
+      // Extension of the file indicates if it's a data file that should be hosted on CDash of if 
+      // an URL should just be considered. File having extension ".url" are expected to contain an URL.
+      $path_parts = pathinfo($this->UploadFile->Filename);
+      $ext = $path_parts['extension'];
+      
+      if($ext == "url")
         {
-        $success = mkdir($upload_dir);
-        if (!$success)
-          {
-          add_log("Failed to create directory '".$upload_dir."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
-          $this->UploadError = true;
-          return;
-          }
-        }
-
-      // Check if file has already been referenced
-      if (!file_exists($GLOBALS[CDASH_UPLOAD_DIRECTORY].'/'.$upload_file_sha1.'/'.$upload_file_sha1))
-        {
-        $success = rename($this->TmpFilename, $uploadfilepath);
-        if (!$success)
-          {
-          add_log("Failed to rename file '".$this->TmpFilename."' into '".$uploadfilepath."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
-          $this->UploadError = true;
-          return;
-          }
+        $this->UploadFile->IsUrl = true;
+        
+        // Read content of the file
+        $url_length = 255; // max length of 'uploadfile.filename' field
+        $this->UploadFile->Filename = trim(file_get_contents($this->TmpFilename, NULL, NULL, 0, $url_length));
+        unlink($this->TmpFilename);
+        add_log("this->UploadFile->Filename '".$this->UploadFile->Filename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
         }
       else
         {
-        // Delete decoded temporary file since it has already been addressed
-        $success = unlink($this->TmpFilename);
-        if (!$success)
+        $this->UploadFile->IsUrl = false; 
+        
+        $upload_dir = realpath($GLOBALS[CDASH_UPLOAD_DIRECTORY]).'/'.$this->UploadFile->Sha1Sum;
+
+        $uploadfilepath = $upload_dir.'/'.$this->UploadFile->Sha1Sum;
+
+        // Check if upload directory should be created
+        if (!file_exists($GLOBALS[CDASH_UPLOAD_DIRECTORY].'/'.$upload_file_sha1))
           {
-          add_log("Failed to delete file '".$this->TmpFilename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);
+          $success = mkdir($upload_dir);
+          if (!$success)
+            {
+            add_log("Failed to create directory '".$upload_dir."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
+            $this->UploadError = true;
+            return;
+            }
           }
-        }
 
-      // Generate symlink name
-      $path_parts = pathinfo($this->UploadFile->Filename);
-      $symlinkName = $path_parts['basename'];
-
-      // Check if symlink should be created
-      $createSymlink = !file_exists($upload_dir.'/'.$symlinkName);
-
-      if ($createSymlink)
-        {
-        // Create symlink
-        $success = symlink($uploadfilepath, $upload_dir.'/'.$symlinkName);
-        if (!$success)
+        // Check if file has already been referenced
+        if (!file_exists($GLOBALS[CDASH_UPLOAD_DIRECTORY].'/'.$upload_file_sha1.'/'.$upload_file_sha1))
           {
-          add_log("Failed to create symlink [target:'".$uploadfilepath."', name: '".$upload_dir.'/'.$symlinkName."']", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
-          $this->UploadError = true;
-          return;
+          $success = rename($this->TmpFilename, $uploadfilepath);
+          if (!$success)
+            {
+            add_log("Failed to rename file '".$this->TmpFilename."' into '".$uploadfilepath."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
+            $this->UploadError = true;
+            return;
+            }
+          }
+        else
+          {
+          // Delete decoded temporary file since it has already been addressed
+          $success = unlink($this->TmpFilename);
+          if (!$success)
+            {
+            add_log("Failed to delete file '".$this->TmpFilename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);
+            }
+          }
+
+        // Generate symlink name
+        $symlinkName = $path_parts['basename'];
+
+        // Check if symlink should be created
+        $createSymlink = !file_exists($upload_dir.'/'.$symlinkName);
+
+        if ($createSymlink)
+          {
+          // Create symlink
+          $success = symlink($uploadfilepath, $upload_dir.'/'.$symlinkName);
+          if (!$success)
+            {
+            add_log("Failed to create symlink [target:'".$uploadfilepath."', name: '".$upload_dir.'/'.$symlinkName."']", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
+            $this->UploadError = true;
+            return;
+            }
           }
         }
 

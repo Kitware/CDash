@@ -41,23 +41,43 @@
 <p><b>Build name: </b><a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="/cdash/buildid" /></xsl:attribute><xsl:value-of select="/cdash/buildname" /></a></p>
 <p><b>Build start time: </b><xsl:value-of select="/cdash/buildstarttime" /></p>
 
-<h3>Files submitted with this build:</h3>
-<table id="filesTable" class="tabb">
-<thead class="table-heading1">
-  <tr>
-    <th id="sort_0">File</th>
-    <th id="sort_1">Size</th>
-    <th id="sort_2">SHA-1</th></tr>
-</thead>
-<xsl:for-each select="/cdash/uploadfile">
-  <tr>
-  <td><a><xsl:attribute name="href"><xsl:value-of select="href" /></xsl:attribute><xsl:value-of select="filename" /></a></td>
-  <td><xsl:value-of select="filesize" /></td>
-  <td><xsl:value-of select="sha1sum" /></td>
-  </tr>
-</xsl:for-each>
-</table>
+<h3>URLs or Files submitted with this build:</h3>
 
+<xsl:if test="count(/cdash/uploadurl)>0">
+  <table id="filesTable" class="tabb">
+  <thead class="table-heading1">
+    <tr>
+      <th id="sort_0">URL</th>
+    </tr>
+  </thead>
+  <xsl:for-each select="/cdash/uploadurl">
+    <tr>
+    <td><a><xsl:attribute name="href"><xsl:value-of select="filename" /></xsl:attribute><xsl:value-of select="filename" />
+    </a></td>
+    </tr>
+  </xsl:for-each>
+  </table>
+  <br/>
+</xsl:if>
+
+<xsl:if test="count(/cdash/uploadfile)>0">
+  <table id="filesTable" class="tabb">
+  <thead class="table-heading1">
+    <tr>
+      <th id="sort_0">File</th>
+      <th id="sort_1">Size</th>
+      <th id="sort_2">SHA-1</th></tr>
+  </thead>
+  <xsl:for-each select="/cdash/uploadfile">
+    <tr>
+    <td><a><xsl:attribute name="href"><xsl:value-of select="href" /></xsl:attribute><xsl:value-of select="filename" />
+    </a></td>
+    <td><xsl:value-of select="filesize" /></td>
+    <td><xsl:value-of select="sha1sum" /></td>
+    </tr>
+  </xsl:for-each>
+  </table>
+</xsl:if>
 
 <!-- FOOTER -->
 <br/><br/>

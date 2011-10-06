@@ -107,15 +107,19 @@ class ProjectAPI extends CDashAPI
 
     $Project = new Project();
     $Project->Id = $projectid;
-    $files = $Project->GetUploadedFiles();
+    $files = $Project->GetUploadedFilesOrUrls();
 
     if(!$files)
       {
-      return array('status'=>false, 'message'=>'Error in Project::GetUploadedFiles');
+      return array('status'=>false, 'message'=>'Error in Project::GetUploadedFilesOrUrls');
       }
     $filteredList = array();
     foreach($files as $file)
       {
+      if($file['isurl'])
+        {
+        continue; // skip if filename is a URL
+        }
       if(isset($this->Parameters['match']) && !preg_match('/'.$this->Parameters['match'].'/', $file['filename']))
         {
         continue; //skip if it doesn't match regex

@@ -57,19 +57,35 @@ $xml .= '<buildstarttime>'.$Build->StartTime.'</buildstarttime>';
 $xml .= '<siteid>'.$Site->Id.'</siteid>';
 $xml .= '<sitename>'.$Site->GetName().'</sitename>';
 
-$uploadFiles = $Build->GetUploadedFiles();
+$uploadFilesOrURLs = $Build->GetUploadedFilesOrUrls();
 
-foreach($uploadFiles as $uploadFile)
+add_log("uploadFilesOrURLs '".var_export($uploadFilesOrURLs, true)."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
+      
+foreach($uploadFilesOrURLs as $uploadFileOrURL)
   {
-  $xml .= '<uploadfile>';
-  $xml .= '<id>'.$uploadFile->Id.'</id>';
-  $xml .= '<href>'.$CDASH_DOWNLOAD_RELATIVE_URL.'/'.$uploadFile->Sha1Sum.'/'.$uploadFile->Filename.'</href>';
-  $xml .= '<sha1sum>'.$uploadFile->Sha1Sum.'</sha1sum>';
-  $xml .= '<filename>'.$uploadFile->Filename.'</filename>';
-  $xml .= '<filesize>'.$uploadFile->Filesize.'</filesize>';
-  $xml .= '</uploadfile>';
+  if(!$uploadFileOrURL->IsUrl)
+    {
+    $xml .= '<uploadfile>';
+    $xml .= '<id>'.$uploadFile->Id.'</id>';
+    $xml .= '<href>'.$CDASH_DOWNLOAD_RELATIVE_URL.'/'.$uploadFileOrURL->Sha1Sum.'/'.$uploadFileOrURL->Filename.'</href>';
+    $xml .= '<sha1sum>'.$uploadFileOrURL->Sha1Sum.'</sha1sum>';
+    $xml .= '<filename>'.$uploadFileOrURL->Filename.'</filename>';
+    $xml .= '<filesize>'.$uploadFileOrURL->Filesize.'</filesize>';
+    $xml .= '<isurl>'.$uploadFileOrURL->IsUrl.'</isurl>';
+    $xml .= '</uploadfile>';
+    }
+  else
+    {
+    $xml .= '<uploadurl>';
+    $xml .= '<id>'.$uploadFileOrURL->Id.'</id>';
+    $xml .= '<filename>'.htmlspecialchars($uploadFileOrURL->Filename).'</filename>';
+    $xml .= '</uploadurl>';
+    } 
   }
 
 $xml .= "</cdash>";
+
+add_log("uploadFilesOrURLs '".$xml."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
+
 generate_XSLT($xml, "viewFiles", true);
 ?>

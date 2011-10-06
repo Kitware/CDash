@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `uploadfile` (
   `filename` varchar(255) NOT NULL,
   `filesize` int(11) NOT NULL DEFAULT '0',
   `sha1sum` varchar(40) NOT NULL,
+  `isurl` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`),
   KEY `sha1sum` (`sha1sum`)
 );

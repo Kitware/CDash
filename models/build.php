@@ -1409,12 +1409,12 @@ class Build
     return $builderror_array[0];
     } // end GetNumberOfWarnings()
 
-  /* Return all uploaded files for this build */
-  function GetUploadedFiles()
+  /* Return all uploaded files or URLs for this build */
+  function GetUploadedFilesOrUrls()
     {
     if(!$this->Id)
       {
-      echo "Build::GetUploadedFiles(): Id not set";
+      echo "Build::GetUploadedFilesOrUrls(): Id not set";
       return false;
       }
 
