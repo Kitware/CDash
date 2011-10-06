@@ -66,9 +66,9 @@
       </a>
     </div>
     <div id="headername2">
-      CDash
+        <xsl:value-of select="cdash/dashboard/title"/>
       <span id="subheadername">
-        Projects
+        <xsl:value-of select="cdash/dashboard/subtitle"/>
       </span>
     </div>
  </div>

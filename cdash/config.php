@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -42,6 +42,9 @@ $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;
+// Main title and subtitle for the index page
+$CDASH_MAININDEX_TITLE = 'CDash';
+$CDASH_MAININDEX_SUBTITLE = 'Projects';
 // Default from email
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
@@ -50,7 +53,7 @@ $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
 $CDASH_COOKIE_EXPIRATION_TIME='3600';
 // Using HTTPS protocol to access CDash
 $CDASH_USE_HTTPS ='0';
-// Name of the server running CDash. 
+// Name of the server running CDash.
 // Leave empty to use current name.
 $CDASH_SERVER_NAME = '';
 // If the remote request should use localhost or the full name
@@ -59,7 +62,7 @@ $CDASH_CURL_REQUEST_LOCALHOST='1';
 $CDASH_CURL_LOCALHOST_PREFIX='';
 // Define the location of the local directory
 $CDASH_USE_LOCAL_DIRECTORY = '0';
-// CSS file 
+// CSS file
 $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory
 $CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR.'/backup';
@@ -84,7 +87,7 @@ $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS = '1';
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
-$CDASH_FORWARDING_IP='192.%'; // should be an SQL format 
+$CDASH_FORWARDING_IP='192.%'; // should be an SQL format
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 // Use compression (default on)
 $CDASH_USE_COMPRESSION='1';
@@ -97,7 +100,7 @@ $CDASH_LDAP_PROTOCOL_VERSION='3';
 // Example: To restrict users to a specific Active Directory group:
 // '(memberOf=cn=superCoolRescrictedGroup,cn=Users,dc=example,dc=com)'
 $CDASH_LDAP_FILTER='';
-// For authentication against Active Directory, set CDASH_LDAP_AUTHENTICATED to '1' 
+// For authentication against Active Directory, set CDASH_LDAP_AUTHENTICATED to '1'
 // CDASH_LDAP_OPT_REFERRALS to '0', and specify a bind DN and password
 $CDASH_LDAP_OPT_REFERRALS='1';
 $CDASH_LDAP_AUTHENTICATED='0';

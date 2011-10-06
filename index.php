@@ -58,6 +58,8 @@ function generate_index_table()
     }
 
  $xml .= "<dashboard>
+ <title>".$CDASH_MAININDEX_TITLE."</title>
+ <subtitle>".$CDASH_MAININDEX_SUBTITLE."</subtitle>
  <googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>";
  if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
    {
@@ -1638,7 +1640,6 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     }
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$Project->NightlyTime);
-
 
   $svnurl = make_cdash_url(htmlentities($Project->CvsUrl));
   $homeurl = make_cdash_url(htmlentities($Project->HomeUrl));
