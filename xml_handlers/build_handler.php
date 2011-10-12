@@ -123,11 +123,41 @@ class BuildHandler extends AbstractHandler
       $this->Build->Append = $this->Append;
 
       add_build($this->Build, $this->scheduleid);
+
       $this->Build->ComputeDifferences();
       }
-    else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE') 
+    else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE')
       {
+      global $CDASH_LARGE_TEXT_LIMIT;
+      $threshold = $CDASH_LARGE_TEXT_LIMIT;
+
+      if ($threshold > 0)
+        {
+        $outlen = strlen($this->Error->StdOutput);
+        if ($outlen > $threshold)
+          {
+          $tmp = substr($this->Error->StdOutput, 0, $threshold);
+          unset($this->Error->StdOutput);
+          $this->Error->StdOutput = $tmp .
+            "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
+          $outlen = strlen($this->Error->StdOutput);
+          //add_log("truncated long out text", "build_handler", LOG_INFO);
+          }
+
+        $errlen = strlen($this->Error->StdError);
+        if ($errlen > $threshold)
+          {
+          $tmp = substr($this->Error->StdError, 0, $threshold);
+          unset($this->Error->StdError);
+          $this->Error->StdError = $tmp .
+            "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
+          $errlen = strlen($this->Error->StdError);
+          //add_log("truncated long err text", "build_handler", LOG_INFO);
+          }
+        }
+
       $this->Build->AddError($this->Error);
+
       unset($this->Error);
       }
     else if($name == 'LABEL')
@@ -206,14 +236,44 @@ class BuildHandler extends AbstractHandler
       }  
     else if($parent == 'RESULT')
       {
+      global $CDASH_LARGE_TEXT_LIMIT;
+      $threshold = $CDASH_LARGE_TEXT_LIMIT;
+      $append = true;
+
       switch ($element)
         {
         case 'STDOUT':
-          $this->Error->StdOutput .= $data;
+          if ($threshold > 0)
+            {
+            if (strlen($this->Error->StdOutput) > $threshold)
+              {
+              //add_log("avoiding append: long output", "build_handler", LOG_INFO);
+              $append = false;
+              }
+            }
+
+          if ($append)
+            {
+            $this->Error->StdOutput .= $data;
+            }
           break;
+
         case 'STDERR':
-          $this->Error->StdError .= $data;
+          if ($threshold > 0)
+            {
+            if (strlen($this->Error->StdError) > $threshold)
+              {
+              //add_log("avoiding append: long error", "build_handler", LOG_INFO);
+              $append = false;
+              }
+            }
+
+          if ($append)
+            {
+            $this->Error->StdError .= $data;
+            }
           break;
+
         case 'EXITCONDITION':
           $this->Error->ExitCondition .= $data;
           break;  
