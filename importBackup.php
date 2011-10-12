@@ -97,7 +97,19 @@ if($Submit && $filemask)
           LOG_ERR);
         }
       }
+    else
+      {
+      add_log(
+        "could not determine projectid from filename=".$filename,
+        "importBackup.php",
+        LOG_ERR);
+      }
     }
+
+  add_log(
+    "after loop n=".$n,
+    "importBackup.php",
+    LOG_INFO);
 
   $alert = 'Import backup complete. '.$i.' files processed.';
   $xml .= add_XML_value("alert",$alert);
