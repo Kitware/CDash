@@ -42,7 +42,7 @@
     <br/><b>Build Name: </b><xsl:value-of select="cdash/build/name"/>
 
     <xsl:if test="string-length(cdash/build/note)>0">
-      (<a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute>view notes</a>)
+      (<a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="cdash/build/id"/> </xsl:attribute>view notes</a>)
     </xsl:if>
 
 
