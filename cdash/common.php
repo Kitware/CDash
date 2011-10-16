@@ -149,8 +149,14 @@ function XMLStrFormat($str)
 }
 
 
-function time_difference($duration,$compact=false)
+function time_difference($duration,$compact=false,$suffix='')
 {
+  // If it's in the future
+  if($duration<0)
+    {
+    return 'Some time in the future';
+    }
+
   $years = floor($duration/31557600);
   $duration -= $years*31557600;
   $months = floor($duration/2635200);
@@ -235,6 +241,8 @@ function time_difference($duration,$compact=false)
     {
     $diff = '0s';
     }
+
+  $diff .= ' '.$suffix;
 
   return $diff;
 }

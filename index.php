@@ -142,7 +142,7 @@ function generate_index_table()
       $lastbuild = strtotime($project['last_build']. "UTC");
       $xml .= "<lastbuild>".date(FMT_DATETIMEDISPLAY,$lastbuild)."</lastbuild>";
       $xml .= "<lastbuilddate>".date(FMT_DATE,$lastbuild)."</lastbuilddate>";
-      $xml .= "<lastbuild_elapsed>".time_difference(time()-$lastbuild)." ago</lastbuild_elapsed>";
+      $xml .= "<lastbuild_elapsed>".time_difference(time()-$lastbuild,false,'ago')."</lastbuild_elapsed>";
       $xml .= "<activitylevel>high</activitylevel>";
       }
 
@@ -1411,12 +1411,12 @@ function generate_main_dashboard_XML($projectid,$date)
     if(time()-$starttimestamp<86400)
       {
       $xml .= add_XML_value("builddate",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
-      $xml .= add_XML_value("builddateelapsed",time_difference(time()-$starttimestamp).' ago'); // use the default timezone
+      $xml .= add_XML_value("builddateelapsed",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
       }
     else
       {
       $xml .= add_XML_value("builddateelapsed",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
-      $xml .= add_XML_value("builddate",time_difference(time()-$starttimestamp).' ago'); // use the default timezone
+      $xml .= add_XML_value("builddate",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
       }
     $xml .= add_XML_value("submitdate",date(FMT_DATETIMEDISPLAY,$submittimestamp));// use the default timezone
     $xml .= add_XML_value("nerrorlog",$build_array["nerrorlog"]);// use the default timezone
