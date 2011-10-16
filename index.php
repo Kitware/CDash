@@ -725,7 +725,8 @@ function generate_main_dashboard_XML($projectid,$date)
                   tpassed_diff.difference_positive AS counttestspasseddiffp,
                   tpassed_diff.difference_negative AS counttestspasseddiffn,
                   tstatusfailed_diff.difference_positive AS countteststimestatusfaileddiffp,
-                  tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,"
+                  tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,
+                  (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,"
                   .$userupdatesql."
                   s.name AS sitename,
                   b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
@@ -1000,6 +1001,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $build_rows_collapsed[$idx]['buildids'][] = $build_row['id'];
     //  sitename
         $build_rows_collapsed[$idx]['countbuildnotes'] += $build_row['countbuildnotes'];
+        $build_rows_collapsed[$idx]['countnotes'] += $build_row['countnotes'];
         $build_rows_collapsed[$idx]['labels'] = array_merge($build_rows_collapsed[$idx]['labels'], $build_row['labels']);
 
     //  countupdatefiles - use one number here, not the sum...
@@ -1221,6 +1223,11 @@ function generate_main_dashboard_XML($projectid,$date)
     if($build_array['countbuildnotes']>0)
       {
       $xml .= add_XML_value("buildnote","1");
+      }
+
+    if($build_array['countnotes']>0)
+      {
+      $xml .= add_XML_value("note","1");
       }
 
     // Are there labels for this build?

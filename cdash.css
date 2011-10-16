@@ -190,7 +190,7 @@ height: expression(this.height > 110 ? 110: true);
  padding-bottom: 3px;
 }
 
-.tabb .time{
+.tabb .advancedviewitem{
   display: none;
 }
 
@@ -1069,12 +1069,12 @@ div#autorefresh {
   width: 90px;
 }
 
-div#showtime {
+div#advancedview {
   position: relative;
   top: -18px;
-  right: 5px;
+  right: 10px;
   float: right;
-  width: 90px;
+  width: 100px;
 }
 
 #tablefilters {

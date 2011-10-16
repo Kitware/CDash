@@ -42,12 +42,12 @@ $(document).ready(function() {
    })
 
   /** Show/Hide time */
-  $('.showtime').click(function()
+  $('.advancedview').click(function()
     {
-    if ($('.showtime').html() == "Hide Time")
+    if ($('.advancedview').html() == "Simple View")
       {
-      $('.showtime').html("Show Time");
-      $('.time').hide();
+      $('.advancedview').html("Advanced View");
+      $('.advancedviewitem').hide();
       $timeheaders = $(".timeheader");
       $timeheaders.each(
         function(index) {
@@ -58,8 +58,8 @@ $(document).ready(function() {
       }
     else
       {
-      $('.showtime').html("Hide Time");
-      $('.time').show();
+      $('.advancedview').html("Simple View");
+      $('.advancedviewitem').show();
 
       $timeheaders = $(".timeheader");
       $timeheaders.each(

@@ -100,7 +100,7 @@
       <th align="center" width="3%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_2</xsl:attribute>
       Files</th>
-      <th align="center" class="time" width="5%">
+      <th align="center" class="advancedviewitem" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_3</xsl:attribute>
       Time</th>
       <th align="center">
@@ -109,7 +109,7 @@
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_5</xsl:attribute>
       Warn</th>
-      <th align="center" class="time" width="5%">
+      <th align="center" class="advancedviewitem" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_6</xsl:attribute>
       Time</th>
       <th align="center">
@@ -118,7 +118,7 @@
       <th align="center">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_8</xsl:attribute>
       Warn</th>
-      <th align="center" class="time" width="5%">
+      <th align="center" class="advancedviewitem" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_9</xsl:attribute>
       Time</th>
       <th align="center" width="5%">
@@ -130,7 +130,7 @@
       <th align="center" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_12</xsl:attribute>
       Pass</th>
-      <th align="center" width="5%" class="time">
+      <th align="center" width="5%" class="advancedviewitem">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_13</xsl:attribute>
       Time</th>
    </tr>
@@ -166,6 +166,10 @@
        <xsl:value-of select="buildname"/>
      </xsl:if>
      <xsl:text>&#x20;</xsl:text>
+
+      <xsl:if test="string-length(note)>0 and countbuildids=1">
+        <a class="advancedviewitem" title="View notes"><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="images/document.png" alt="Notes" border="0"/></a>
+      </xsl:if>
 
       <xsl:if test="upload-file-count>0 and countbuildids=1">
       <a><xsl:attribute name="href">viewFiles.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute>
@@ -270,7 +274,7 @@
       <xsl:if test="update/defined=1"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
 
-      <td align="right" class="time">
+      <td align="right" class="advancedviewitem">
         <span class="sorttime" style="display:none"><xsl:value-of select="update/timefull"/></span>
         <xsl:value-of select="update/time"/>
         <xsl:if test="string-length(update/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
@@ -327,7 +331,7 @@
       </td>
 
 
-      <td align="center" class="time">
+      <td align="center" class="advancedviewitem">
       <span class="sorttime" style="display:none"><xsl:value-of select="configure/timefull"/></span>
       <xsl:value-of select="configure/time"/>
       <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
@@ -418,7 +422,7 @@
 
       </td>
 
-      <td align="center" class="time">
+      <td align="center" class="advancedviewitem">
       <span class="sorttime" style="display:none"><xsl:value-of select="compilation/timefull"/></span>
       <xsl:value-of select="compilation/time"/>
       <xsl:if test="string-length(compilation/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
@@ -535,7 +539,7 @@
       </td>
 
       <td align="center">
-      <xsl:attribute name="class">time
+      <xsl:attribute name="class">advancedviewitem
         <xsl:choose>
           <xsl:when test="test/timestatus > 0">
              error
@@ -826,8 +830,8 @@
 <div id="autorefresh">
          <a href="#" class="autorefresh">Auto-refresh</a>
 </div>
-<div id="showtime">
-         <a href="#" class="showtime">Show Time</a>
+<div id="advancedview">
+         <a href="#" class="advancedview">Advanced View</a>
 </div>
 
 <!-- Filters? -->

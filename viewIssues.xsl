@@ -172,7 +172,7 @@
      <xsl:text>&#x20;</xsl:text>
 
       <xsl:if test="string-length(note)>0 and countbuildids=1">
-      <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="images/Document.gif" alt="Notes" border="0"/></a>
+      <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="images/document.png" alt="Notes" border="0"/></a>
       </xsl:if>
 
       <!-- If the build has errors or test failing -->
