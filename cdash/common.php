@@ -155,9 +155,16 @@ function microtime_float()
   return ((float)$usec + (float)$sec);
   }
 
+function xml_replace_callback($matches)
+{
+  $decimal_value = hexdec(bin2hex($matches[0]));
+  return "&#".$decimal_value.";";
+}
+
 /** Add an XML tag to a string */
 function add_XML_value($tag,$value)
 {
+  $value = preg_replace_callback('/[\x1b]/', 'xml_replace_callback', $value);
   return "<".$tag.">".XMLStrFormat($value)."</".$tag.">";
 }
 
