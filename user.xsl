@@ -2,6 +2,7 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
   <xsl:include href="footer.xsl"/>
+  <xsl:include href="local/footer.xsl"/>
   <xsl:include href="headscripts.xsl"/>
   <xsl:include href="local/headscripts.xsl"/>
 
@@ -334,8 +335,14 @@
 </xsl:if>
 <br/>
 <!-- FOOTER -->
-<br/>
-<xsl:call-template name="footer"/>
+<xsl:choose>
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="footer_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="footer"/>
+</xsl:otherwise>
+</xsl:choose>
 </body>
 </html>
 </xsl:template>
