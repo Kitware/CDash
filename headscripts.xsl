@@ -41,5 +41,10 @@
   <script src="javascript/jqModal.js" type="text/javascript" charset="utf-8"></script>
   <link type="text/css" rel="stylesheet" media="all" href="javascript/jqModal.css" />
 
+  <!-- call the local/headerscripts to add new functionalities -->
+  <xsl:if test="/cdash/uselocaldirectory=1">
+    <xsl:call-template name="headscripts_local"/>
+  </xsl:if>
+
     </xsl:template>
 </xsl:stylesheet>
