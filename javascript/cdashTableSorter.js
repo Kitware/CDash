@@ -1,6 +1,11 @@
 $(document).ready(function() {
   /** Load the help page */
-  $('#help').jqm({ajax: 'help.html', trigger: 'a.helptrigger'});
+  var helpfile = 'help.html';
+  if(this.getElementById('cdashuselocal'))
+    {
+    helpfile = 'local/help.html';
+    }
+  $('#help').jqm({ajax: helpfile, trigger: 'a.helptrigger'});
   if(this.getElementById('projectname'))
     {
     var projectname = this.getElementById('projectname').value;
