@@ -2,10 +2,12 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
+   <xsl:include href="headscripts.xsl"/>
    <xsl:include href="headeradminproject.xsl"/>
 
    <!-- Include local common files -->
    <xsl:include href="local/footer.xsl"/>
+   <xsl:include href="local/headscripts.xsl"/>
    <xsl:include href="local/headeradminproject.xsl"/>
 
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -139,8 +141,6 @@
 </form>
 
 <!-- FOOTER -->
-<br/>
-
 <xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>

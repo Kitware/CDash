@@ -5,6 +5,10 @@
   <xsl:include href="headscripts.xsl"/>
   <xsl:include href="headeradminproject.xsl" />
 
+  <xsl:include href="local/footer.xsl"/>
+  <xsl:include href="local/headscripts.xsl"/>
+  <xsl:include href="local/headeradminproject.xsl" />
+
   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="UTF-8"/>
   <xsl:template match="/">
@@ -35,8 +39,14 @@
 </xsl:if>
 
 <!-- FOOTER -->
-<br/><br/>
-<xsl:call-template name="footer"/>
+<xsl:choose>
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="footer_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="footer"/>
+</xsl:otherwise>
+</xsl:choose>
 </body>
 </html>
 </xsl:template>

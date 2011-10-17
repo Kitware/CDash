@@ -7,8 +7,8 @@
 
   <!-- Local includes -->
   <xsl:include href="local/footer.xsl" />
-  <xsl:include href="local/headeradminproject.xsl" />
   <xsl:include href="local/headerback.xsl" />
+  <xsl:include href="local/headeradminproject.xsl" />
 
   <xsl:output method="xml" indent="yes"
     doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -24,6 +24,10 @@
           <xsl:attribute name="href"><xsl:value-of
             select="cdash/cssfile" /></xsl:attribute>
         </link>
+        <xsl:if test="/cdash/uselocaldirectory=1">
+           <xsl:call-template name="headscripts_local"/>
+        </xsl:if>
+
         <xsl:comment><![CDATA[[if IE]></xsl:comment>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
           <xsl:comment><![ endif]]></xsl:comment>
@@ -47,7 +51,7 @@
        <xsl:otherwise>
         <xsl:choose>
           <xsl:when test="/cdash/uselocaldirectory=1">
-            <xsl:call-template name="headerback_local" />
+           <xsl:call-template name="headerback_local" />
           </xsl:when>
           <xsl:otherwise>
             <xsl:call-template name="headerback" />

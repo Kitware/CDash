@@ -2,13 +2,15 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headeradminproject.xsl"/> 
-   
+   <xsl:include href="headscripts.xsl"/>
+   <xsl:include href="headeradminproject.xsl"/>
+
     <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headeradminproject.xsl"/>  
-     
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:include href="local/headscripts.xsl"/>
+   <xsl:include href="local/headeradminproject.xsl"/>
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -21,15 +23,15 @@
          </link>
        </head>
        <body bgcolor="#ffffff">
-       
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headeradminproject_local"/>
 </xsl:when>
 <xsl:otherwise>
   <xsl:call-template name="headeradminproject"/>
 </xsl:otherwise>
-</xsl:choose>    
+</xsl:choose>
 
 <br/>
 
@@ -49,7 +51,7 @@
         <xsl:attribute name="value">-1</xsl:attribute>
         Choose...
         </option>
-        
+
         <xsl:for-each select="cdash/availableproject">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -63,8 +65,8 @@
       </form>
     </td>
   </tr>
-</table> 
-  
+</table>
+
 <!-- If a project has been selected -->
 <xsl:if test="count(cdash/project)>-1">
 <form name="formnewgroup" method="post">
@@ -80,23 +82,23 @@
     <textarea name="message" cols="100" rows="3"><xsl:value-of select="cdash/project/text"/></textarea>
     </td>
   </tr>
-  
+
   <tr>
     <td><div align="right"></div></td>
     <td><input type="submit" name="updateMessage" value="Update Message"/><br/><br/></td>
   </tr>
-</table> 
+</table>
 </form>
 
-  
+
 </xsl:if>
- 
+
 <br/>
 
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

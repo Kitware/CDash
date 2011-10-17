@@ -2,8 +2,9 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-    <xsl:include href="headerback.xsl"/> 
-   
+   <xsl:include href="local/footer.xsl"/>
+   <xsl:include href="headerback.xsl"/>
+
     <xsl:output method="html" encoding="UTF-8"/>
     <xsl:template match="/">
       <html>
@@ -13,6 +14,8 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+         <xsl:call-template name="headscripts"/>
+
        </head>
        <body bgcolor="#ffffff">
             <xsl:call-template name="headerback"/>
@@ -32,8 +35,14 @@
 
 <br/>
 <!-- FOOTER -->
-<br/>
-<xsl:call-template name="footer"/>
+<xsl:choose>
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="footer_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="footer"/>
+</xsl:otherwise>
+</xsl:choose>
         </body>
       </html>
     </xsl:template>
