@@ -35,8 +35,7 @@
 </xsl:otherwise>
 </xsl:choose>
 
-<!-- Message -->
-
+<br/>
 <b>Site: </b><xsl:value-of select="/cdash/sitename" /><br/>
 <b>Build name: </b><a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="/cdash/buildid" /></xsl:attribute><xsl:value-of select="/cdash/buildname" /></a><br/>
 <b>Build start time: </b><xsl:value-of select="/cdash/buildstarttime" /><br/>
