@@ -32,6 +32,9 @@
 
         <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/cdashIndexTable.js" type="text/javascript" charset="utf-8"></script>
+        <xsl:if test="/cdash/uselocaldirectory=1">
+            <link type="text/css" rel="stylesheet" href="local/cdash.local.css" />
+        </xsl:if>
        </head>
        <body>
 
