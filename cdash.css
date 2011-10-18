@@ -173,6 +173,10 @@ height: expression(this.height > 110 ? 110: true);
  padding-left: 7px;
 }
 
+.tabb {
+  clear: both;
+}
+
 .tabb a {
   color:  #00264D ; /* #3B5998 #00498f*/
   text-decoration:  none;
@@ -1029,7 +1033,8 @@ div#banner {
   font-weight: bold;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: #DDDDDD;
+  background-color: #C7D7E7;
+  margin-bottom: 3px;
 }
 
 div#index_top {
