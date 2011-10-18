@@ -19,9 +19,9 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
        <xsl:call-template name="headscripts"/>
-  
+
        <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
-       <script language="javascript" type="text/javascript" src="javascript/cdashUploadFilesSorter.js"></script> 
+       <script language="javascript" type="text/javascript" src="javascript/cdashUploadFilesSorter.js"></script>
 
        </head>
        <body bgcolor="#ffffff">
@@ -37,11 +37,11 @@
 
 <!-- Message -->
 
-<p><b>Site: </b><xsl:value-of select="/cdash/sitename" /></p>
-<p><b>Build name: </b><a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="/cdash/buildid" /></xsl:attribute><xsl:value-of select="/cdash/buildname" /></a></p>
-<p><b>Build start time: </b><xsl:value-of select="/cdash/buildstarttime" /></p>
+<b>Site: </b><xsl:value-of select="/cdash/sitename" /><br/>
+<b>Build name: </b><a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="/cdash/buildid" /></xsl:attribute><xsl:value-of select="/cdash/buildname" /></a><br/>
+<b>Build start time: </b><xsl:value-of select="/cdash/buildstarttime" /><br/>
 
-<h3>URLs or Files submitted with this build:</h3>
+<h3>URLs or Files submitted with this build</h3>
 
 <xsl:if test="count(/cdash/uploadurl)>0">
   <table id="filesTable" class="tabb">
@@ -70,9 +70,9 @@
   </thead>
   <xsl:for-each select="/cdash/uploadfile">
     <tr>
-    <td><a><xsl:attribute name="href"><xsl:value-of select="href" /></xsl:attribute><xsl:value-of select="filename" />
+    <td><a><xsl:attribute name="href"><xsl:value-of select="href" /><img src="images/package.png" alt="Files" border="0"/></xsl:attribute><xsl:value-of select="filename" />
     </a></td>
-    <td><xsl:value-of select="filesize" /></td>
+    <td><span style="display:none"><xsl:value-of select="filesize" /></span><xsl:value-of select="filesizedisplay" /></td>
     <td><xsl:value-of select="sha1sum" /></td>
     </tr>
   </xsl:for-each>

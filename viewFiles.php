@@ -33,7 +33,7 @@ $Build->FillFromId($buildid);
 $Site = new Site();
 $Site->Id = $Build->SiteId;
 
-$build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));  
+$build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 
 $xml = '<?xml version="1.0"?><cdash>';
@@ -60,7 +60,7 @@ $xml .= '<sitename>'.$Site->GetName().'</sitename>';
 $uploadFilesOrURLs = $Build->GetUploadedFilesOrUrls();
 
 add_log("uploadFilesOrURLs '".var_export($uploadFilesOrURLs, true)."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
-      
+
 foreach($uploadFilesOrURLs as $uploadFileOrURL)
   {
   if(!$uploadFileOrURL->IsUrl)
@@ -71,6 +71,31 @@ foreach($uploadFilesOrURLs as $uploadFileOrURL)
     $xml .= '<sha1sum>'.$uploadFileOrURL->Sha1Sum.'</sha1sum>';
     $xml .= '<filename>'.$uploadFileOrURL->Filename.'</filename>';
     $xml .= '<filesize>'.$uploadFileOrURL->Filesize.'</filesize>';
+
+    $filesize = $uploadFileOrURL->Filesize;
+    $ext = "b";
+    if($filesize>1024)
+      {
+      $filesize /= 1024;
+      $ext = "Kb";
+      }
+    if($filesize>1024)
+      {
+      $filesize /= 1024;
+      $ext = "Mb";
+      }
+    if($filesize>1024)
+      {
+      $filesize /= 1024;
+      $ext = "Gb";
+      }
+    if($dbsize>1024)
+      {
+      $filesize /= 1024;
+      $ext = "Tb";
+      }
+
+    $xml .= '<filesizedisplay>'.$filesize.' '.$ext.'</filesizedisplay>';
     $xml .= '<isurl>'.$uploadFileOrURL->IsUrl.'</isurl>';
     $xml .= '</uploadfile>';
     }
@@ -80,7 +105,7 @@ foreach($uploadFilesOrURLs as $uploadFileOrURL)
     $xml .= '<id>'.$uploadFileOrURL->Id.'</id>';
     $xml .= '<filename>'.htmlspecialchars($uploadFileOrURL->Filename).'</filename>';
     $xml .= '</uploadurl>';
-    } 
+    }
   }
 
 $xml .= "</cdash>";
