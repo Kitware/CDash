@@ -95,7 +95,7 @@ foreach($uploadFilesOrURLs as $uploadFileOrURL)
       $ext = "Tb";
       }
 
-    $xml .= '<filesizedisplay>'.$filesize.' '.$ext.'</filesizedisplay>';
+    $xml .= '<filesizedisplay>'.round($filesize).' '.$ext.'</filesizedisplay>';
     $xml .= '<isurl>'.$uploadFileOrURL->IsUrl.'</isurl>';
     $xml .= '</uploadfile>';
     }

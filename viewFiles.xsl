@@ -70,7 +70,7 @@
   </thead>
   <xsl:for-each select="/cdash/uploadfile">
     <tr>
-    <td><a><xsl:attribute name="href"><xsl:value-of select="href" /><img src="images/package.png" alt="Files" border="0"/></xsl:attribute><xsl:value-of select="filename" />
+    <td><a><xsl:attribute name="href"><xsl:value-of select="href" /></xsl:attribute><img src="images/package.png" alt="Files" border="0"/> <xsl:value-of select="filename" />
     </a></td>
     <td><span style="display:none"><xsl:value-of select="filesize" /></span><xsl:value-of select="filesizedisplay" /></td>
     <td><xsl:value-of select="sha1sum" /></td>
