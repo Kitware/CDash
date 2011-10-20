@@ -66,10 +66,59 @@ class APITestCase extends KWWebTestCase
       return 1;
       }
 
-    $userid = $this->get($this->url."/api/getuserid.php?author=user1kw&project=EmailProjectExample");
-    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>2</userid>')
+    $userid = $this->get($this->url."/api/getuserid.php?author=simpleuser@localhost");
+    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>111</userid>')
       {
-      $this->fail("Expected output not found when querying API for userid: $userid");
+      $this->fail("Expected valid output not found when querying API for userid (test1): $userid");
+      return 1;
+      }
+
+    $userid = $this->get($this->url."/api/getuserid.php?author=simpleuser&project=PublicDashboard");
+    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>111</userid>')
+      {
+      $this->fail("Expected valid output not found when querying API for userid (test2): $userid");
+      return 1;
+      }
+
+    $userid = $this->get($this->url."/api/getuserid.php");
+    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>error<no-author-param/></userid>')
+      {
+      $this->fail("Expected error output not found when querying API for userid (test3): $userid");
+      return 1;
+      }
+
+    $userid = $this->get($this->url."/api/getuserid.php?author=");
+    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>error<empty-author-param/></userid>')
+      {
+      $this->fail("Expected error output not found when querying API for userid (test4): $userid");
+      return 1;
+      }
+
+    $userid = $this->get($this->url."/api/getuserid.php?author=blahblahblahblahblah");
+    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>error<no-project-param/></userid>')
+      {
+      $this->fail("Expected error output not found when querying API for userid (test5): $userid");
+      return 1;
+      }
+
+    $userid = $this->get($this->url."/api/getuserid.php?author=blahblahblahblahblah&project=");
+    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>error<empty-project-param/></userid>')
+      {
+      $this->fail("Expected error output not found when querying API for userid (test6): $userid");
+      return 1;
+      }
+
+    $userid = $this->get($this->url."/api/getuserid.php?author=blahblahblahblahblah&project=garbage-project-1234567890");
+    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>error<no-such-project/></userid>')
+      {
+      $this->fail("Expected error output not found when querying API for userid (test7): $userid");
+      return 1;
+      }
+
+    $userid = $this->get($this->url."/api/getuserid.php?author=blahblahblahblahblah&project=PublicDashboard");
+    if($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>not found<no-such-user/></userid>')
+      {
+      $this->fail("Expected valid output not found when querying API for userid (test8): $userid");
       return 1;
       }
 

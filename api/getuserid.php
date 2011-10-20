@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -28,42 +28,66 @@ require_once("cdash/pdo.php");
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 echo "<userid>";
 
-@$author = $_GET['author'];
-@$project = $_GET['project'];
-
-if(!isset($_GET['author']) || !isset($_GET['project']))
+if(!isset($_GET['author']))
   {
-  echo "not found</userid>";
+  echo "error<no-author-param/></userid>";
   return;
   }
 
-if(strlen($_GET['author']) == 0 || strlen($_GET['project'])==0)
+if(strlen($_GET['author']) == 0)
   {
-  echo "not found</userid>";
+  echo "error<empty-author-param/></userid>";
   return;
   }
-  
+
+$author = pdo_real_escape_string($_GET['author']);
+
+// First, try the simplest query, where the author string is simply exactly
+// equal to the user's email:
+//
+$userid = pdo_get_field_value("SELECT id FROM user WHERE email='$author'", 'id', '-1');
+if ($userid !== '-1')
+  {
+  echo $userid."</userid>";
+  return;
+  }
+
+// If no exact email match, fall back to the more complicated project-based
+// repository credentials lookup:
+//
+if(!isset($_GET['project']))
+  {
+  echo "error<no-project-param/></userid>";
+  return;
+  }
+
+if(strlen($_GET['project'])==0)
+  {
+  echo "error<empty-project-param/></userid>";
+  return;
+  }
+
+$project = pdo_real_escape_string($_GET['project']);
 $projectid = get_project_id($project);
-if(!is_numeric($projectid))
+if($projectid === -1)
   {
-  echo "not found</userid>";
+  echo "error<no-such-project/></userid>";
   return;
   }
-  
-$author = pdo_real_escape_string($author);
-// Check if the given user exists in the database
+
 $userquery = pdo_query("SELECT up.userid FROM user2project AS up,user2repository AS ur
-                        WHERE ur.userid=up.userid AND up.projectid='$projectid' 
-                        AND ur.credential='$author'
-                        AND (ur.projectid='$projectid' OR ur.projectid=0)");
-                                          
+                        WHERE ur.userid=up.userid
+                          AND up.projectid='$projectid'
+                          AND ur.credential='$author'
+                          AND (ur.projectid='$projectid' OR ur.projectid=0)");
+
 if(pdo_num_rows($userquery)>0)
-  { 
+  {
   $userarray = pdo_fetch_array($userquery);
   $userid = $userarray['userid'];
   echo $userid."</userid>";
   return;
   }
 
-echo "not found</userid>"; 
+echo "not found<no-such-user/></userid>";
 ?>
