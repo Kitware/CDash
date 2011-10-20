@@ -31,13 +31,25 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=Dashboard");
     $this->waitForPageToLoad("30000");
-    $this->setSpeed("1000");
-    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[2]/img");
+
+    // Remove the 3rd build listed: "tr[3]"...
+    //
+    $folder_button =
+      "//table[@id='project_5_15']/tbody[1]/tr[3]/td[2]/a[3]/img";
+    $this->sleepWaitingForElement($folder_button);
+    $this->click($folder_button);
     $this->click("link=[remove this build]");
     $this->assertTrue((bool)preg_match('/^Are you sure you want to remove this build[\s\S]$/',$this->getConfirmation()));
-    sleep(2);
-    $this->click("//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[2]/img");
-    sleep(2);
+
+    // After removal, it moves as an empty row "Expected build" to the
+    // bottom of the list. Now it's "tr[6]" -- and, because it's not a real
+    // build anymore, the folder link is now "a[2]" instead of a[3]...
+    // Mark it as non expected, and it disappears...
+    //
+    $folder_button =
+      "//table[@id='project_5_15']/tbody[1]/tr[6]/td[2]/a[2]/img";
+    $this->sleepWaitingForElement($folder_button);
+    $this->click($folder_button);
     $this->click("link=[mark as non expected]");
   }
 }
