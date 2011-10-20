@@ -264,6 +264,7 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
       if(!$filled && !$UserProject->FillFromRepositoryCredential())
         {
         global $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS;
+        global $CDASH_TESTING_MODE;
         if (!$CDASH_TESTING_MODE && $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS)
           {
           $name = $email == '' ? $author : $email;
