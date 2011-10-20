@@ -314,7 +314,7 @@ class ClientSite
   function GetAll()
     {
     $ids = array();
-    $sql = "SELECT id FROM client_site";
+    $sql = "SELECT id FROM client_site ORDER BY lastping DESC, name ASC";
     $query = pdo_query($sql);
     while($query_array = pdo_fetch_array($query))
       {

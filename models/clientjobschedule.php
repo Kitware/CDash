@@ -605,6 +605,38 @@ class ClientJobSchedule
     } // end function GetStatus()
 
 
+  function ProjectAllowed($projectid)
+    {
+    // By default, all projects are allowed:
+    //
+    $allowed = true;
+
+    $count = pdo_get_field_value(
+      "SELECT COUNT(*) AS c FROM client_site2project ".
+      "  WHERE siteid=".qnum($this->SiteId),
+      'c', 0);
+    if ($count > 0)
+      {
+      // If some records contain siteid, only listed projects are allowed:
+      //
+      $projectid_count = pdo_get_field_value(
+        "SELECT COUNT(*) AS c FROM client_site2project ".
+        "  WHERE siteid=".qnum($this->SiteId)." AND projectid=".qnum($projectid),
+        'c', 0);
+      if ($projectid_count > 0)
+        {
+        $allowed = true;
+        }
+      else
+        {
+        $allowed = false;
+        }
+      }
+
+    return $allowed;
+    }
+
+
   /** Return the job id if we have a job for the current siteid */
   function HasJob()
     {
@@ -622,7 +654,8 @@ class ClientJobSchedule
     // Update the lastping
     pdo_query("UPDATE client_site SET lastping='".$now."' WHERE id=".qnum($this->SiteId));
 
-    $sql = "SELECT js.id,js.lastrun,js.starttime,js.repeattime,count(library.libraryid) AS c
+    $sql = "SELECT js.id, js.lastrun, js.starttime, js.repeattime,
+       count(library.libraryid) AS c, js.projectid
      FROM client_jobschedule AS js
      LEFT JOIN client_jobschedule2cmake AS cmake ON (cmake.scheduleid=js.id)
      LEFT JOIN client_jobschedule2compiler AS compiler ON (compiler.scheduleid=js.id)
@@ -631,8 +664,10 @@ class ClientJobSchedule
      LEFT JOIN client_jobschedule2library AS library ON (library.scheduleid=js.id)
      ,client_site2cmake,client_site2compiler,client_site AS s
      WHERE s.id=".qnum($this->SiteId)."
-      AND client_site2cmake.siteid=s.id  AND (cmake.scheduleid IS NULL OR cmake.cmakeid=client_site2cmake.cmakeid)
-      AND client_site2compiler.siteid=s.id AND (compiler.scheduleid IS NULL OR compiler.compilerid=client_site2compiler.compilerid)
+      AND client_site2cmake.siteid=s.id
+      AND (cmake.scheduleid IS NULL OR cmake.cmakeid=client_site2cmake.cmakeid)
+      AND client_site2compiler.siteid=s.id
+      AND (compiler.scheduleid IS NULL OR compiler.compilerid=client_site2compiler.compilerid)
       AND (site.scheduleid IS NULL OR site.siteid=s.id)
       AND (os.osid IS NULL OR os.osid=s.osid)
       AND js.startdate<'".$now."' AND (js.enddate='1980-01-01 00:00:00' OR js.enddate>'".$now."')
@@ -653,6 +688,14 @@ class ClientJobSchedule
     // For each job schedule make sure we have the right libraries
     while($row = pdo_fetch_array($query))
       {
+      // Check if this site allows builds for this project:
+      //
+      $projectid = $row[5];
+      if (!$this->ProjectAllowed($projectid))
+        {
+        continue;
+        }
+
       // Make sure the time is right
       $lastrun = $row[1];
       $starttime = $row[2];
