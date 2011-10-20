@@ -1,4 +1,4 @@
-[TESTING][pid=<NA>](TESTING: EMAIL): simpletest@localhost
+[TESTING][pid=<NA>](TESTING: EMAIL): user1@kw
 [TESTING][pid=<NA>](TESTING: EMAILTITLE): FAILED (w=3, t=3, d=10): EmailProjectExample - Win32-MSVC2009 - Nightly
 [TESTING][pid=<NA>](TESTING: EMAILBODY): A submission to CDash for the project EmailProjectExample has build warnings and failing tests and failing dynamic analysis tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
