@@ -31,6 +31,30 @@ class CDashSeleniumTestCase extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($configure['webserver']);
     $this->webPath = $configure['webpath'];
   }
+
+  public function sleepWaitingForElement($element)
+  {
+    for ($attempts = 0; ; $attempts++)
+      {
+      if ($attempts >= 300)
+        {
+        $this->fail("timeout waiting for '$element'");
+        }
+
+      try
+        {
+        if ($this->isElementPresent($element))
+          {
+          break;
+          }
+        }
+      catch (Exception $e)
+        {
+        }
+
+      sleep(0.033);
+      }
+  }
 }
 
 ?>

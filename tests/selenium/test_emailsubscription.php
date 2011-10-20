@@ -21,9 +21,16 @@ class Example extends CDashSeleniumTestCase
     $this->type("passwd", "simpletest");
     $this->click("sent");
     $this->waitForPageToLoad("30000");
+
     $this->click("//tr[4]/td[2]/a[4]/img");
+      // the 'Edit project' link for 'EmailProjectExample'
+      // "//tr[4]" is the EmailProjectExample table row (4th row, 2 rows of header-ish rows...)
+      // "//tr[4]/td[2]" is the Actions column in that row
+      // "//tr[4]/td[2]/a[4]/img" is the 4th image from the left in that column
+
     $this->waitForPageToLoad("30000");
     $this->click("//div[@id='wizard']/ul/li[5]/a/span");
+      // tab 5, the 'E-mail' tab
     $this->click("emailBrokenSubmission");
     $this->click("emailRedundantFailures");
     $this->click("emailAdministrator");
@@ -32,29 +39,25 @@ class Example extends CDashSeleniumTestCase
     $this->click("Update");
     $this->click("link=My CDash");
     $this->waitForPageToLoad("30000");
-    $this->setSpeed("300");
+
     $this->click("//tr[4]/td[2]/a[1]/img");
-    for ($second = 0; ; $second++) {
-        if ($second >= 60) $this->fail("timeout");
-        try {
-            if ($this->isElementPresent("//div[@id='wizard']/ul/li[2]/a/span")) break;
-        } catch (Exception $e) {}
-        sleep(1);
-    }
+      // the 'Edit subscription' link for 'EmailProjectExample'
+
+    $this->sleepWaitingForElement("//div[@id='wizard']/ul/li[2]/a/span");
+      // tab 2, the 'Logo' tab
     $this->click("//div[@id='wizard']/ul/li[2]/a/span");
     $this->click("//div[@id='wizard']/ul/li[3]/a/span");
     $this->click("//div[@id='wizard']/ul/li[4]/a/span");
     $this->click("//div[@id='wizard']/ul/li[5]/a/span");
     $this->click("updatesubscription");
-    for ($second = 0; ; $second++) {
-        if ($second >= 60) $this->fail("timeout");
-        try {
-            if ($this->isElementPresent("//tr[5]/td[2]/a[1]/img")) break;
-        } catch (Exception $e) {}
-        sleep(1);
-    }
-    $this->click("//tr[4]/td[2]/a[1]/img");
+
+    // Completely unsubscribe from the next project down, 'InsightExample'
+    $this->sleepWaitingForElement("//tr[5]/td[2]/a[1]/img");
+    $this->click("//tr[5]/td[2]/a[1]/img");
+
+    $this->sleepWaitingForElement("unsubscribe");
     $this->click("unsubscribe");
+
     $this->assertTrue((bool)preg_match('/^Are you sure you want to unsubscribe[\s\S]$/',$this->getConfirmation()));
   }
 }
