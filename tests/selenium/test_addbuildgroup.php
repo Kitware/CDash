@@ -29,10 +29,12 @@ class Example extends CDashSeleniumTestCase
 
     $this->sleepWaitingForElement($folder_button);
     $this->click($folder_button);
+    $this->waitForPageToLoad("30000");
     $this->click("link=[mark as expected]");
     $this->waitForPageToLoad("30000");
     $this->sleepWaitingForElement($folder_button);
     $this->click($folder_button);
+    $this->waitForPageToLoad("30000");
     $this->click("link=[mark as non expected]");
     $this->waitForPageToLoad("30000");
     $this->click("link=Log Out");
