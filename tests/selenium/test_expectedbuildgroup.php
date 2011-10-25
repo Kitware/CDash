@@ -32,6 +32,22 @@ class Example extends CDashSeleniumTestCase
     $this->click("link=Dashboard");
     $this->waitForPageToLoad("30000");
 
+    // Mark the 1st build listed as expected: "tr[1]"
+    // Then flip it and mark it as non expected.
+    // This is just exercising the mark-as-expected / mark-as-non-expected
+    // code in a smoke-test fashion.
+    //
+    $folder_button =
+      "//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[3]/img";
+    $this->sleepWaitingForElement($folder_button);
+    $this->click($folder_button);
+    $this->sleepWaitingForElement("link=[mark as expected]");
+    $this->click("link=[mark as expected]");
+    $this->sleepWaitingForElement($folder_button);
+    $this->click($folder_button);
+    $this->sleepWaitingForElement("link=[mark as non expected]");
+    $this->click("link=[mark as non expected]");
+
     // Remove the 3rd build listed: "tr[3]"...
     //
     $folder_button =
@@ -41,18 +57,6 @@ class Example extends CDashSeleniumTestCase
     $this->sleepWaitingForElement("link=[remove this build]");
     $this->click("link=[remove this build]");
     $this->assertTrue((bool)preg_match('/^Are you sure you want to remove this build[\s\S]$/',$this->getConfirmation()));
-
-    // After removal, it moves as an empty row "Expected build" to the
-    // bottom of the list. Now it's "tr[6]" -- and, because it's not a real
-    // build anymore, the folder link is now "a[2]" instead of a[3]...
-    // Mark it as non expected, and it disappears...
-    //
-    $folder_button =
-      "//table[@id='project_5_15']/tbody[1]/tr[6]/td[2]/a[2]/img";
-    $this->sleepWaitingForElement($folder_button);
-    $this->click($folder_button);
-    $this->sleepWaitingForElement("link=[mark as non expected]");
-    $this->click("link=[mark as non expected]");
   }
 }
 ?>
