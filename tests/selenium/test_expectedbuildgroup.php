@@ -43,10 +43,12 @@ class Example extends CDashSeleniumTestCase
     $this->click($folder_button);
     $this->sleepWaitingForElement("link=[mark as expected]");
     $this->click("link=[mark as expected]");
+    $this->waitForPageToLoad("30000");
     $this->sleepWaitingForElement($folder_button);
     $this->click($folder_button);
     $this->sleepWaitingForElement("link=[mark as non expected]");
     $this->click("link=[mark as non expected]");
+    $this->waitForPageToLoad("30000");
 
     // Remove the 3rd build listed: "tr[3]"...
     //
