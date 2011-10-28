@@ -144,7 +144,12 @@
       </td>
       <td align="left">
       <xsl:if test="string-length(buildid)>0">
-      <a>
+      <xsl:if test="string-length(buildplatform)>0">
+        <img class="platformicon" border="0">
+            <xsl:attribute name="src">images/platform_<xsl:value-of select="buildplatform"/>.png</xsl:attribute>
+        </img>
+      </xsl:if>
+      <a class="buildinfo">
         <xsl:if test="countbuildids=1">
         <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
@@ -154,11 +159,10 @@
         </xsl:attribute>
         </xsl:if>
 
-        <xsl:if test="string-length(buildplatform)>0">
-        <img class="platformicon" border="0">
-            <xsl:attribute name="src">images/platform_<xsl:value-of select="buildplatform"/>.png</xsl:attribute>
-        </img>
-        </xsl:if>
+        <xsl:attribute name="alt">
+           <xsl:value-of select="generator"/>
+        </xsl:attribute>
+
         <xsl:value-of select="buildname"/>
       </a>
      </xsl:if>

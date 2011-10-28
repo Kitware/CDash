@@ -46,6 +46,16 @@ $(document).ready(function() {
       }
    })
 
+  /** qtip on the build time elapsed */
+  $('.buildinfo').qtip({
+     content: {attr: 'alt'},
+     style: {classes: 'ui-tooltip-blue'},
+     position: {
+      my: 'top left',  // Position my top left...
+      at: 'bottom right' // at the bottom right of...
+      }
+   })
+
   /** Show/Hide time */
   $('.advancedview').click(function()
     {
