@@ -29,6 +29,8 @@ $CDASH_ROOT_DIR = str_replace("\\", "/", dirname(dirname(__FILE__)));
 $CDASH_DB_HOST = 'localhost';
 // Login for database access
 $CDASH_DB_LOGIN = 'root';
+// Port for the database (leave empty to use default)
+$CDASH_DB_PORT = '';
 // Password for database access
 $CDASH_DB_PASS = '';
 // Name of the database
