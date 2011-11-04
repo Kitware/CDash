@@ -29,6 +29,7 @@ $CDASH_ROOT_DIR = str_replace("\\", "/", dirname(dirname(__FILE__)));
 $CDASH_DB_HOST = 'localhost';
 // Login for database access
 $CDASH_DB_LOGIN = 'root';
+// I
 // Port for the database (leave empty to use default)
 $CDASH_DB_PORT = '';
 // Password for database access
@@ -56,8 +57,9 @@ $CDASH_COOKIE_EXPIRATION_TIME='3600';
 // Using HTTPS protocol to access CDash
 $CDASH_USE_HTTPS ='0';
 // Name of the server running CDash.
-// Leave empty to use current name.
+// Leave empty to use current name and default port.
 $CDASH_SERVER_NAME = '';
+$CDASH_SERVER_PORT = '';
 // If the remote request should use localhost or the full name
 // This variable should be set to 1 in most of the server configurations
 $CDASH_CURL_REQUEST_LOCALHOST='1';
