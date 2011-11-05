@@ -35,6 +35,7 @@ class KWWebTestCase extends WebTestCase {
     $this->db =& new database($db['type']);
     $this->db->setDb($db['name']);
     $this->db->setHost($db['host']);
+    $this->db->setPort($db['port']);
     $this->db->setUser($db['login']);
     $this->db->setPassword($db['pwd']);
 

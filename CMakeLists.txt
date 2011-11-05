@@ -8,6 +8,7 @@ configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
 set(CDASH_DB_LOGIN "root" CACHE STRING "Database user")
 set(CDASH_DB_PASS "" CACHE STRING "Password for database user")
+set(CDASH_DB_PORT "" CACHE STRING "Port to connect to the database")
 set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
 set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
 option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
@@ -86,6 +87,7 @@ $CDASH_TESTING_MODE = true;
 $CDASH_TESTING_RENAME_LOGS = ${rename_logs};
 $CDASH_DB_HOST = '${CDASH_DB_HOST}';
 $CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
+$CDASH_DB_PORT = '${CDASH_DB_PORT}';
 $CDASH_DB_PASS = '${CDASH_DB_PASS}';
 $CDASH_DB_TYPE = '${CDASH_DB_TYPE}';
 $CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';

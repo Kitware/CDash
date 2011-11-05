@@ -3,22 +3,21 @@ require_once(dirname(dirname(__FILE__)) . '/config.test.php');
 require_once(dirname(__FILE__) . '/simpletest/unit_tester.php');
 require_once(dirname(__FILE__) . '/simpletest/mock_objects.php');
 require_once(dirname(__FILE__) . '/simpletest/web_tester.php');
-require_once(dirname(__FILE__) . '/kw_db.php'); 
+require_once(dirname(__FILE__) . '/kw_db.php');
 /**
  * The test manager interface kw tests with simpletest test.
  *
  * @package    kwtests
  */
-class TestManager 
+class TestManager
 {
   var $testDir  = null;
   var $database = null;
-  
+
   function setDatabase($db){
     $this->database = $db;
   }
-  
-  
+
   /**
      * set the tests directory where the test files are placed
      * @param string $dir
@@ -26,7 +25,7 @@ class TestManager
   function setTestDirectory($dir){
      $this->testDir = $dir;
   }
-  
+
   /** Delete the log file */
   function removeLogAndBackupFiles($logfilename)
     {
@@ -57,7 +56,7 @@ class TestManager
   }
   /**
      * run all the tests
-     * @return the result the test running 
+     * @return the result the test running
      * @param object $reporter
      */
   function runAllTests(&$reporter) {
@@ -71,7 +70,7 @@ class TestManager
   }
 
   /**
-     * Match all the test files inside the test directory 
+     * Match all the test files inside the test directory
      * @return an array of the test files
      */
   function getTestCaseList() {
@@ -91,10 +90,10 @@ class TestManager
       }
     return $testsFile;
   }
-  
-  
+
+
   /**
-    * perform a connection to the database 
+    * perform a connection to the database
     * @return the result of the connection
     * @param string $host
     * @param string $user
@@ -103,32 +102,35 @@ class TestManager
     * @param string $dbtype
     * @access protected
     */
-  function _connectToDb($host,$user,$password,$dbname,$dbtype)
+  function _connectToDb($host,$port,$user,$password,$dbname,$dbtype)
   {
     $database = new database($dbtype);
     $database->setHost($host);
+    $database->setPort($port);
     $database->setUser($user);
     $database->setPassword($password);
     $database->setDb($dbname);
     return $database->connectedToDb();
   }
-   
+
   /**
-     * drop the old test database 
+     * drop the old test database
      * @return success/failure depending of the database dropping
      * @param string $host
+     * @param int $port
      * @param string $user
      * @param string $password
      * @param string $dbname
      * @param string $dbtype
      * @access protected
      */
-   function _uninstalldb4test($host,$user,$password,$dbname,$dbtype)
+   function _uninstalldb4test($host,$port,$user,$password,$dbname,$dbtype)
    {
      if(!strcmp($dbname,'cdash4simpletest'))
        {
        $database = new database($dbtype);
        $database->setHost($host);
+       $database->setPort($port);
        $database->setUser($user);
        $database->setPassword($password);
        return $database->drop($dbname);
@@ -138,10 +140,10 @@ class TestManager
       die("We cannot test cdash because test database is not cdash4simpletest\n");
       }
    }
-  
-  
+
+
   /**
-     * create the new test database 
+     * create the new test database
      * @return success/failure depending of the database creating
      * @param string $host
      * @param string $user
@@ -150,12 +152,13 @@ class TestManager
      * @param string $dbtype
      * @access protected
      */
-  function _installdb4test($host,$user,$password,$dbname,$dbtype)
+  function _installdb4test($host,$port,$user,$password,$dbname,$dbtype)
   {
     if(!strcmp($dbname,'cdash4simpletest'))
        {
        $database = new database($dbtype);
        $database->setHost($host);
+       $database->setPort($port);
        $database->setUser($user);
        $database->setPassword($password);
        $dbcreated = true;
@@ -178,8 +181,8 @@ class TestManager
       {
       die("We cannot test cdash because test database is not cdash4simpletest\n");
       }
-  }  
-} 
+  }
+}
 
 
 
@@ -191,7 +194,7 @@ class TestManager
 class CDashTestManager extends TestManager
 {
    var $_urlToCdash = null;
-  
+
   /**
      * run all the tests in the current directory
      * @return the result of the test
@@ -202,10 +205,10 @@ class CDashTestManager extends TestManager
      $reporter->paintTestCaseList($this->getTestCaseList());
      parent::runAllTests($reporter);
      }
-  
-  
+
+
   /**
-     *    Set the url of the CDash server     
+     *    Set the url of the CDash server
      *    @param string $url  url via we make the curl to send the report
      */
    function setCDashServer($servername){
@@ -214,13 +217,13 @@ class CDashTestManager extends TestManager
       $this->_urlToCdash = $servername;
       }
    }
-  
+
  /**
-    * update the svn repository 
+    * update the svn repository
     * @param object $reporter
     * @param string $svnroot
   */
-   
+
    function updateSVN($reporter,$svnroot,$type){
       if(!empty($svnroot))
        {
@@ -244,11 +247,11 @@ class CDashTestManager extends TestManager
       echo "error: updateSVN: empty svnroot\n";
       return false;
     }
-  
-   
+
+
   /**
      *    perform an update of a revision in the svn
-     *    @return the time execution of the svn update 
+     *    @return the time execution of the svn update
      *    @param object $reporter
      *    @param string $svnroot
      *    @access private
@@ -309,7 +312,7 @@ class CDashTestManager extends TestManager
       return explode("\n", $commandline);
     }
 
-    
+
  /**
     * configure the database for the test by droping the old
     * test database and creating a new one
@@ -326,19 +329,21 @@ class CDashTestManager extends TestManager
      $reporter->paintConfigureStart();
      $time_start = (float) array_sum(explode(' ',microtime()));
      $result = $this->_uninstalldb4test($this->database['host'],
-                                         $this->database['login'],
-                                         $this->database['pwd'],
-                                         $this->database['name'],
-                                         $this->database['type']);
+                                        $this->database['port'],
+                                        $this->database['login'],
+                                        $this->database['pwd'],
+                                        $this->database['name'],
+                                        $this->database['type']);
     $time_end = (float) array_sum(explode(' ',microtime()));
     $execution_time = $time_end - $time_start;
     $time_start = $time_end;
     $reporter->paintConfigureUninstallResult($result);
     $result = $this->_connectToDb($this->database['host'],
-                                 $this->database['login'],
-                                 $this->database['pwd'],
-                                 $this->database['name'],
-                                 $this->database['type']);
+                                  $this->database['port'],
+                                  $this->database['login'],
+                                  $this->database['pwd'],
+                                  $this->database['name'],
+                                  $this->database['type']);
     $reporter->paintConfigureConnection($result);
 
     if (file_exists($logfilename))
@@ -354,25 +359,27 @@ class CDashTestManager extends TestManager
     $reporter->paintConfigureDeleteLogResult($result, $logfilename);
 
     $result = $this->_installdb4test($this->database['host'],
-                                      $this->database['login'],
-                                      $this->database['pwd'],
-                                      $this->database['name'],
-                                      $this->database['type']);
+                                     $this->database['port'],
+                                     $this->database['login'],
+                                     $this->database['pwd'],
+                                     $this->database['name'],
+                                     $this->database['type']);
     $time_end = (float) array_sum(explode(' ',microtime()));
     $execution_time += ($time_end - $time_start);
     $execution_time = round($execution_time / 60 , 3);
     $reporter->paintConfigureInstallResult($result);
     $result = $this->_connectToDb($this->database['host'],
-                                 $this->database['login'],
-                                 $this->database['pwd'],
-                                 $this->database['name'],
-                                 $this->database['type']);
+                                  $this->database['port'],
+                                  $this->database['login'],
+                                  $this->database['pwd'],
+                                  $this->database['name'],
+                                  $this->database['type']);
     $reporter->paintConfigureConnection($result);
     $reporter->paintConfigureEnd($execution_time);
     return $result;
    }
-  
-  
+
+
   /**
    * Check the log file of the application testing
    * @return false if there is no log file or no error into the log file
@@ -395,7 +402,7 @@ class CDashTestManager extends TestManager
     // a cake midas application that you're testing, comment the following line
     // and implement your own regex
     //$regex = "([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})";
-    
+
     // the regex to catch the date for cdash: model: [2009-02-25T18:24:56]
     $regex = "([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{2}):([0-9]{2}):([0-9]{2})\]";
     $fp = fopen($filename,'r');
@@ -408,9 +415,9 @@ class CDashTestManager extends TestManager
       }
     return true;
     }
-    
+
   /**
-     *    Send via a curl to the CDash server the xml reports     
+     *    Send via a curl to the CDash server the xml reports
      *    @return true on success / false on failure
      */
     function sendToCdash($reporter,$directory){
@@ -438,7 +445,7 @@ class CDashTestManager extends TestManager
       echo "\tSubmission successful\n";
       return true;
     }
-    
+
   /**
      *    Perform a curl to upload the filename to the CDash Server
      *    @param object $filename
@@ -453,7 +460,7 @@ class CDashTestManager extends TestManager
       curl_exec($ch);
       curl_close($ch);
       fclose($fp);
-    }  
+    }
 }
 
 
@@ -462,11 +469,13 @@ class HtmlTestManager extends TestManager
    function runAllTests($reporter)
      {
      $this->_uninstalldb4test($this->database['host'],
+                              $this->database['port'],
                               $this->database['login'],
                               $this->database['pwd'],
                               $this->database['name'],
                               $this->database['type']);
      $this->_installdb4test($this->database['host'],
+                            $this->database['port'],
                             $this->database['login'],
                             $this->database['pwd'],
                             $this->database['name'],

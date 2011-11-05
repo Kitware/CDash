@@ -2,16 +2,16 @@
 require_once(dirname(dirname(__FILE__)) . '/config.test.php');
 
 /**
-  *    db object to allow the user to interact with 
+  *    db object to allow the user to interact with
   *    a database
   *    @package KWSimpletest
   */
 
-class database 
+class database
 {
   var $dbo = null;
   var $type = null;
-  
+
   function __construct($type)
    {
    switch ($type)
@@ -37,69 +37,74 @@ class database
         break;
       }
    }
-  
+
   function getType()
     {
     return $this->type;
     }
-  
+
   function connect()
     {
     $this->dbo->connect();
     return $this->dbo->getDbConnect();
     }
-  
+
   function connectedToDb()
     {
     return $this->dbo->connectToDb();
     }
-  
+
   function disconnect()
     {
     $this->dbo->disconnect();
     return $this->dbo->getDbConnect();
     }
-  
+
   function getInstance()
    {
    return $this->dbo;
    }
-  
+
   function setHost($host)
    {
    $this->dbo->setHost($host);
    }
-  
+
+  function setPort($port)
+   {
+   $this->dbo->setPort($port);
+   }
+
   function setDb($db)
    {
    $this->dbo->setDb($db);
    }
-  
+
   function setPassword($password)
    {
    $this->dbo->setPassword($password);
    }
-  
+
   function setUser($user)
    {
    $this->dbo->setUser($user);
    }
-  
+
   function create($db)
    {
    return $this->dbo->create($db);
    }
-  
+
   function drop($db)
    {
    return $this->dbo->drop($db);
    }
-  
+
   function fillDb($sqlfile)
    {
    return $this->dbo->fillDb($sqlfile);
    }
-  
+
   function query($query)
    {
    return $this->dbo->query($query);
@@ -108,53 +113,64 @@ class database
 
 class dbo
 {
-   var $host      = null;
-   var $user      = null;
-   var $password  = null;
-   var $db        = null;
-   var $dbconnect = null;
-  
-   function getDbConnect()
-     {
-     return $this->dbconnect;
-     }
-  
-   function setHost($host)
-     {
-      $this->host = $host;
-     }
-  
-   function setDb($db)
-     {
-     $this->db = $db;
-     }
-  
-   function setUser($user)
-     {
-      $this->user = $user;
-     }
-  
-   function setPassword($pasword)
-     {
-     $this->password = $pasword;
-     }
+  var $host      = null;
+  var $port      = null;
+  var $user      = null;
+  var $password  = null;
+  var $db        = null;
+  var $dbconnect = null;
+
+  function getDbConnect()
+    {
+    return $this->dbconnect;
+    }
+
+  function setHost($host)
+    {
+    $this->host = $host;
+    }
+
+  function setPort($port)
+    {
+    $this->port = $port;
+    }
+
+  function setDb($db)
+    {
+    $this->db = $db;
+    }
+
+  function setUser($user)
+    {
+    $this->user = $user;
+    }
+
+  function setPassword($pasword)
+    {
+    $this->password = $pasword;
+    }
 }
 
 class dbo_mysql extends dbo
 {
    function connect()
      {
-     $this->dbconnect = mysql_connect($this->host,
+     $host = $this->host;
+     if(!empty($this->port))
+       {
+       $host .= ':'.$this->port;
+       }
+     $this->dbconnect = mysql_connect($host,
                                       $this->user,
                                       $this->password);
      }
-  
+
    function disconnect()
      {
-      mysql_close($this->dbconnect);
+     mysql_close($this->dbconnect);
      $this->dbconnect = null;
      }
-  
+
    function create($db)
      {
      $this->connect();
@@ -167,7 +183,7 @@ class dbo_mysql extends dbo
      $this->disconnect();
      return true;
      }
-  
+
    function drop($db)
      {
      $this->connect();
@@ -180,7 +196,7 @@ class dbo_mysql extends dbo
      $this->disconnect();
      return true;
      }
-  
+
    function connectToDb()
      {
      if(!$this->dbconnect)
@@ -189,7 +205,7 @@ class dbo_mysql extends dbo
        }
      return mysql_select_db($this->db,$this->dbconnect);
      }
-  
+
    function query($query)
      {
      $this->connectToDb();
@@ -206,7 +222,7 @@ class dbo_mysql extends dbo
      $this->disconnect();
      return $result;
      }
-  
+
    function fillDb($sqlfile)
      {
      if(!$this->dbconnect)
@@ -250,15 +266,19 @@ class dbo_pgsql extends dbo
      $user     = $this->user;
      $password = $this->password;
      $conn  = "host='$host' dbname='$dbname' user='$user' password='$password'";
+     if(!empty($this->port))
+       {
+       $conn .= " port='$this->port'";
+       }
      @$this->dbconnect = pg_connect($conn, PGSQL_CONNECT_FORCE_NEW);
      }
-  
+
    function disconnect()
      {
      pg_close($this->dbconnect);
      $this->dbconnect = null;
      }
-  
+
    function create($db)
      {
      $this->setDb('host');
@@ -272,7 +292,7 @@ class dbo_pgsql extends dbo
      $this->setDb($db);
      return true;
      }
-  
+
    function drop($db)
      {
      $this->setDb('host');
@@ -285,7 +305,7 @@ class dbo_pgsql extends dbo
      $this->disconnect();
      return true;
      }
-  
+
    function connectToDb()
      {
      $this->connect();
@@ -295,7 +315,7 @@ class dbo_pgsql extends dbo
        }
      return true;
      }
-  
+
    function query($query)
      {
      $this->connect();
@@ -312,7 +332,7 @@ class dbo_pgsql extends dbo
      $this->disconnect();
      return $result;
      }
-  
+
    function fillDb($sqlfile)
      {
      if(!$this->dbconnect)
@@ -349,11 +369,11 @@ class dbo_pgsql extends dbo
      $query .= "VALUES ('simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
      pg_query($this->dbconnect,$query);
      echo pg_last_error();
-     
-     // Create the language. PgSQL has no way to know if the language already 
+
+     // Create the language. PgSQL has no way to know if the language already
      // exists
-     @pg_query("CREATE LANGUAGE plpgsql"); 
-     
+     @pg_query("CREATE LANGUAGE plpgsql");
+
      $sqlfile = str_replace(".sql", ".ext.sql", $sqlfile);
      // If we are with PostGreSQL we need to add some extra functions
      $file_content = file($sqlfile);
@@ -361,10 +381,10 @@ class dbo_pgsql extends dbo
        foreach($file_content as $sql_line)
          {
          $tsl = trim($sql_line);
-         if (($sql_line != "") && (substr($tsl, 0, 2) != "--")) 
+         if (($sql_line != "") && (substr($tsl, 0, 2) != "--"))
            {
            $query .= $sql_line;
-           if(strpos("CREATE ", $sql_line) !== false) 
+           if(strpos("CREATE ", $sql_line) !== false)
              {
              // We need to remove only the last semicolon
              $pos = strrpos($query,";");
@@ -372,10 +392,10 @@ class dbo_pgsql extends dbo
                {
                $query = substr($query,0,$pos).substr($query,$pos+1);
                }
-               
+
              $result = pg_query($query);
              if (!$result)
-               { 
+               {
                $xml .= "<db_created>0</db_created>";
                die(pg_last_error());
                }
@@ -383,17 +403,17 @@ class dbo_pgsql extends dbo
              }
            }
          } // end foreach line
-           
+
        // Run the last query
        $pos = strrpos($query,";");
        if($pos !== false)
         {
         $query = substr($query,0,$pos).substr($query,$pos+1);
         }
-               
+
        $result = pg_query($query);
        if (!$result)
-         { 
+         {
          $xml .= "<db_created>0</db_created>";
          die(pg_last_error());
          }
