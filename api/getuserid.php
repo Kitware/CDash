@@ -45,7 +45,7 @@ $author = pdo_real_escape_string($_GET['author']);
 // First, try the simplest query, where the author string is simply exactly
 // equal to the user's email:
 //
-$userid = pdo_get_field_value("SELECT id FROM user WHERE email='$author'", 'id', '-1');
+$userid = pdo_get_field_value("SELECT id FROM ".qid("user")." WHERE email='$author'", 'id', '-1');
 if ($userid !== '-1')
   {
   echo $userid."</userid>";

@@ -34,38 +34,38 @@ class BuildError
     if(!$this->BuildId)
       {
       echo "BuildError::Insert(): BuildId not set<br>";
-      return false;    
+      return false;
       }
-    
-    $text = addslashes($this->Text);
-    
+
+    $text = pdo_real_escape_string($this->Text);
+
     if(strlen($this->PreContext) == 0)
       {
       $precontext = "NULL";
-      }   
+      }
     else
       {
-      $precontext = "'".addslashes($this->PreContext)."'";
+      $precontext = "'".pdo_real_escape_string($this->PreContext)."'";
       }
-      
+
     if(strlen($this->PostContext) == 0)
       {
       $postcontext = "NULL";
-      }   
+      }
     else
       {
-      $postcontext = "'".addslashes($this->PostContext)."'";
+      $postcontext = "'".pdo_real_escape_string($this->PostContext)."'";
       }
 
     if(empty($this->SourceLine))
       {
-      $this->SourceLine = 0; 
+      $this->SourceLine = 0;
       }
     if(empty($this->RepeatCount))
       {
-      $this->RepeatCount = 0; 
+      $this->RepeatCount = 0;
       }
-       
+
     $crc32 = 0;
     // Compute the crc32
     if($this->SourceLine==0)
@@ -76,16 +76,16 @@ class BuildError
       {
       $crc32 = crc32($text.$this->SourceFile.$this->SourceLine); // some warning can be on the same line
       }
-      
+
     $query = "INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,
                                       postcontext,repeatcount,newstatus,crc32)
               VALUES (".qnum($this->BuildId).",".qnum($this->Type).",".qnum($this->LogLine).",'$text','$this->SourceFile',".qnum($this->SourceLine).",
-              ".$precontext.",".$postcontext.",".qnum($this->RepeatCount).",0,".qnum($crc32).")";                     
+              ".$precontext.",".$postcontext.",".qnum($this->RepeatCount).",0,".qnum($crc32).")";
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildError Insert",0,$this->BuildId);
       return false;
-      }  
+      }
     return true;
     } // end insert
 }
