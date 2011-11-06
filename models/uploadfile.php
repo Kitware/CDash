@@ -51,10 +51,9 @@ class UploadFile
       return false;
       }
 
-    if(!isset($this->IsUrl))
+    if(empty($this->IsUrl))
       {
-      add_log("IsUrl is not set", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
-      return false;
+      $this->IsUrl = 0;
       }
 
     if(!$this->IsUrl)
@@ -70,7 +69,6 @@ class UploadFile
     $filequery = pdo_query("SELECT id FROM uploadfile WHERE sha1sum = '".$this->Sha1Sum."' AND filename ='$filename'");
     if(pdo_num_rows($filequery) == 0)
       {
-
       // Insert the file into the database
       $query = "INSERT INTO uploadfile (filename, filesize, sha1sum, isurl) VALUES ('$filename','$this->Filesize','$this->Sha1Sum', '$this->IsUrl')";
       if(!pdo_query($query))
