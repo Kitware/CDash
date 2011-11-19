@@ -57,7 +57,7 @@ endif(NOT CDASH_DB_TYPE)
 
 set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
 make_directory("${CDASH_COVERAGE_DIR}")
-configure_file(${CDash_SOURCE_DIR}/tests/append_coverage.php.in 
+configure_file(${CDash_SOURCE_DIR}/tests/append_coverage.php.in
                ${CDash_BINARY_DIR}/append_coverage.php)
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
@@ -95,6 +95,7 @@ $PHP_EXE = '${PHP_EXE}';
 $PHPUNIT_EXE = '${PHPUNIT_EXE}';
 $CDASH_MANAGE_CLIENTS = '1';
 $CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}';
+$CDASH_USE_LOCAL_DIRECTORY = '${CDASH_PRO}';
 ?>
 ")
 
