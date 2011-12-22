@@ -93,3 +93,16 @@ function shownamedmeasurementgraph_click(buildid,testid,measurement)
   $(divname+"options").show();
   });
 }
+
+function showcommandline_click()
+{
+  if($('#commandline').is(":visible"))
+    {
+    $('#commandlinelink').html('Show Command Line');
+    }
+  else
+    {
+    $('#commandlinelink').html('Hide Command Line');
+    }
+  $('#commandline').toggle();
+}

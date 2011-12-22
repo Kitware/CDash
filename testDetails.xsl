@@ -36,25 +36,61 @@
 </xsl:otherwise>
 </xsl:choose>
 
+<div id="executiontime">
+<img src="images/clock.png" alt="Execution Time" title="Execution Time" />
+<span class="builddateelapsed">
+<xsl:attribute name="alt">
+  Mean time:<xsl:value-of select="cdash/test/timemean"/>s
+  <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>
+  STD time:<xsl:value-of select="cdash/test/timestd"/>s
+</xsl:attribute>
+<xsl:value-of select="cdash/test/time"/>s</span>
+</div>
+
+<!--
+  <tr>
+      <th class="measurement">Completion Status</th>
+      <td>
+        <xsl:value-of select="cdash/test/details"/>
+      </td>
+   </tr>
+-->
+
 <br/>
-<b>Site Name: </b><a>
-  <xsl:attribute name="href">
-    viewSite.php?siteid=<xsl:value-of select="cdash/test/siteid"/>
-  </xsl:attribute>
-  <xsl:value-of select="cdash/test/site"/></a>
+<b>Test: </b>
+<a>
+        <xsl:attribute name="href">
+   <xsl:value-of select="cdash/test/summaryLink"/>
+        </xsl:attribute>
+ <xsl:value-of select="cdash/test/test"/>
+      </a>
+      <font>
+        <xsl:attribute name="color">
+          <xsl:value-of select="cdash/test/statusColor"/>
+        </xsl:attribute>
+        (<xsl:value-of select="cdash/test/status"/>)
+      </font>
 <br/>
-<b>Build Name: </b><a>
-  <xsl:attribute name="href">
+<b>Build: </b>
+<a>
+<xsl:attribute name="href">
     buildSummary.php?buildid=<xsl:value-of select="cdash/test/buildid"/>
   </xsl:attribute>
   <xsl:value-of select="cdash/test/build"/></a>
+
+  (<a>
+  <xsl:attribute name="href">
+    viewSite.php?siteid=<xsl:value-of select="cdash/test/siteid"/>
+  </xsl:attribute>
+  <xsl:value-of select="cdash/test/site"/></a>)
+on <xsl:value-of select="cdash/test/buildstarttime"/>
 <br/>
-<b>Build Date: </b><xsl:value-of select="cdash/test/buildstarttime"/>
-<br/>
+<xsl:if test="string-length(cdash/test/update/revision)>0">
 <b>Repository revision: </b><a><xsl:attribute name="href"><xsl:value-of select="cdash/test/update/revisionurl"/></xsl:attribute>
   <xsl:value-of select="cdash/test/update/revision"/>
   </a>
 <br/>
+</xsl:if>
 
 <xsl:if test="cdash/project/showtesttime=1">
 <br/>
@@ -64,28 +100,8 @@
         </xsl:attribute><xsl:value-of select="cdash/test/timestatus"/>
       </font>
 </xsl:if>
-
-<table cellpadding="2">
-  <tr>
-    <td>
-       <a>
-        <xsl:attribute name="href">
-   <xsl:value-of select="cdash/test/summaryLink"/>
-        </xsl:attribute>
- <xsl:value-of select="cdash/test/test"/>
-      </a>
-    </td>
-    <td>
-      <font>
-        <xsl:attribute name="color">
-          <xsl:value-of select="cdash/test/statusColor"/>
-        </xsl:attribute>
- <xsl:value-of select="cdash/test/status"/>
-      </font>
-    </td>
-  </tr>
-</table>
 <br/>
+<!-- Display the measurements -->
 <table>
 <xsl:for-each select="cdash/test/images/image">
   <tr>
@@ -98,26 +114,6 @@
     </td>
   </tr>
 </xsl:for-each>
-   <tr>
-      <th class="measurement" width="15%">Execution Time (s)</th>
-      <td>
-        <xsl:value-of select="cdash/test/time"/>
-         (mean:<xsl:value-of select="cdash/test/timemean"/>  std:<xsl:value-of select="cdash/test/timestd"/>)
-      </td>
-   </tr>
-   <tr>
-      <th class="measurement">Command Line</th>
-      <td>
-        <xsl:value-of select="cdash/test/command"/>
-      </td>
-   </tr>
-   <tr>
-      <th class="measurement">Completion Status</th>
-      <td>
-        <xsl:value-of select="cdash/test/details"/>
-      </td>
-   </tr>
-
   <xsl:for-each select="/cdash/test/measurements/measurement">
      <tr>
       <th class="measurement"><xsl:value-of select="name"/></th>
@@ -148,10 +144,17 @@
   </xsl:if>
 </xsl:for-each>
 
+<!-- Show command line -->
+<img src="images/console.png"/>
+<a id="commandlinelink" href="javascript:showcommandline_click()">Show Command Line</a>
+<div id="commandline" style="display:none">
+  <pre><xsl:value-of select="cdash/test/command"/></pre>
+</div>
+<br/>
 <!-- Timing Graph -->
+<img src="images/graph.png"/>
 <a>
-<xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
-Show Test Time Graph
+<xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>Show Test Time Graph
 </a>
 <div id="timegraphoptions"></div>
 <div id="timegraph"></div>
@@ -159,9 +162,9 @@ Show Test Time Graph
 <div id="timegrapholder"></div>
 </center>
 <!-- Pass/Fail Graph -->
+<img src="images/graph.png"/>
 <a>
-<xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>
-Show Failing/Passing Graph
+<xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>Show Failing/Passing Graph
 </a>
 <div id="passinggraphoptions"></div>
 <div id="passinggraph"></div>
@@ -169,13 +172,10 @@ Show Failing/Passing Graph
 <div id="passinggrapholder"></div>
 </center>
 <br/>
-
-<br/>
 <b>Test output</b>
 <pre>
   <xsl:value-of select="cdash/test/output"/>
 </pre>
-<br/>
 
 <!-- FOOTER -->
 <br/>

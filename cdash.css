@@ -1167,3 +1167,14 @@ div#calendar{
 img {
     border: 0 none;
 }
+
+#executiontime {
+  position: relative;
+  float: right;
+  top: 10px;
+  padding-right: 5px;
+}
+
+#executiontime img {
+  padding-right: 3px;
+}
