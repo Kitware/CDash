@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -29,10 +29,11 @@ require("api_coverage.php");
 require("api_project.php");
 require("api_build.php");
 require("api_user.php");
+require("api_repository.php");
 
 if(!isset($_GET['method']))
   {
-  echo "Method should be set: method=...";  
+  echo "Method should be set: method=...";
   return;
   }
 $method = $_GET['method'];

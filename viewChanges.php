@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -20,6 +20,7 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
+include_once("cdash/repository.php");
 include("cdash/version.php");
 require_once("cdash/bugurl.php");
 
@@ -56,7 +57,7 @@ function get_related_dates($projectname, $basedate)
     }
 
   // Convert the nightly time into GMT
-  $nightlytime = gmdate(FMT_TIME,strtotime($nightlytime)); 
+  $nightlytime = gmdate(FMT_TIME,strtotime($nightlytime));
 
   $nightlyhour = time2hour($nightlytime);
   $nightlyminute = time2minute($nightlytime);
@@ -229,14 +230,14 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
       }
     $time = gmdate(FMT_DATETIME, strtotime($commit['time']));
     $author = $commit['author'];
-    
+
     // Only display email if the user is logged in
     if(isset($_SESSION['cdash']))
       {
       if(isset($commit['email']))
         {
         $email = $commit['email'];
-        }  
+        }
       else
         {
         $email = get_author_email($projectname, $author);
@@ -251,15 +252,15 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
         $author = substr($author,0,$posat);
         }
       $email = "";
-      }  
+      }
     $comment = $commit['comment'];
-    $comment = str_replace("\n", " ", $comment); 
+    $comment = str_replace("\n", " ", $comment);
     // Do this twice so that <something> ends up as
-    // &amp;lt;something&amp;gt; because it gets sent to a 
+    // &amp;lt;something&amp;gt; because it gets sent to a
     // java script function not just displayed as html
     $comment = XMLStrFormat($comment);
     $comment = XMLStrFormat($comment);
-        
+
     $diff_url = get_diff_url(get_project_id($projectname),$projecturl, $directory, $filename, $revision);
     $diff_url = XMLStrFormat($diff_url);
 
@@ -318,7 +319,7 @@ $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date
 $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_project($projectname,$date));
 $xml .= "</menu>";
 
-$dailyupdate = pdo_query("SELECT df.filename,df.revision,df.priorrevision,df.author,df.email,df.log 
+$dailyupdate = pdo_query("SELECT df.filename,df.revision,df.priorrevision,df.author,df.email,df.log
                             FROM dailyupdatefile AS df,dailyupdate AS du
                             WHERE du.date='$gmdate' and du.projectid='$projectid'
                             AND df.dailyupdateid = du.id");
@@ -329,10 +330,10 @@ while($dailyupdate_array = pdo_fetch_array($dailyupdate))
   $current_directory = dirname($dailyupdate_array['filename']);
   $current_filename = basename($dailyupdate_array['filename']);
   $current_revision = $dailyupdate_array['revision'];
-  
+
   if($current_directory == '\\')
     {
-    $current_directory = '/';  
+    $current_directory = '/';
     }
 
   $baseurl = $project_array["bugtrackerfileurl"];

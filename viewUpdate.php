@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -20,6 +20,7 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
+include_once("cdash/repository.php");
 include("cdash/version.php");
 require_once("cdash/bugurl.php");
 
@@ -32,21 +33,21 @@ if(!isset($buildid) || !is_numeric($buildid))
   echo "Not a valid buildid!";
   return;
   }
- 
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
-  
-$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
+
+$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
-  
+
 $project = pdo_query("SELECT cvsurl,name,nightlytime,bugtrackerfileurl,bugtrackerurl
                       FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
   $project_array = pdo_fetch_array($project);
   $svnurl = $project_array["cvsurl"];
-  $projectname = $project_array["name"];  
+  $projectname = $project_array["name"];
   }
 
 $xml = '<?xml version="1.0"?><cdash>';
@@ -72,13 +73,13 @@ if($previousbuildid>0)
 else
   {
   $xml .= add_XML_value("noprevious","1");
-  }  
-$xml .= add_XML_value("current","viewUpdate.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));  
+  }
+$xml .= add_XML_value("current","viewUpdate.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));
 $nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($nextbuildid>0)
   {
   $xml .= add_XML_value("next","viewUpdate.php?buildid=".$nextbuildid);
-  }  
+  }
 else
   {
   $xml .= add_XML_value("nonext","1");
@@ -94,7 +95,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= add_XML_value("siteid",$siteid);
   $xml .= add_XML_value("buildname",$build_array["name"]);
   $xml .= add_XML_value("buildid",$build_array["id"]);
-  $xml .= add_XML_value("buildtime",date("D, d M Y H:i:s T",strtotime($build_array["starttime"]." UTC")));  
+  $xml .= add_XML_value("buildtime",date("D, d M Y H:i:s T",strtotime($build_array["starttime"]." UTC")));
   $xml .= "</build>";
 
   $xml .= "<updates>";
@@ -110,7 +111,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $xml .= add_XML_value("status",""); // empty status
     }
   $xml .= add_XML_value("revision",$status_array["revision"]);
-  $xml .= add_XML_value("priorrevision",$status_array["priorrevision"]);  
+  $xml .= add_XML_value("priorrevision",$status_array["priorrevision"]);
   $xml .= add_XML_value("path",$status_array["path"]);
   $xml .= add_XML_value("revisionurl",
     get_revision_url($projectid, $status_array["revision"], $status_array["priorrevision"]));
@@ -125,7 +126,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
                               ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
 
   function sort_array_by_directory($a,$b)
-    { 
+    {
     return $a>$b ? 1:0;
     }
 
@@ -133,7 +134,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     {
     // Extract directory
     $filenamea = $a['filename'];
-    $filenameb = $b['filename'];  
+    $filenameb = $b['filename'];
     return $filenamea>$filenameb ? 1:0;
     }
 
@@ -146,7 +147,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $file['filename'] = $file_array["filename"];
     $file['author'] = $file_array["author"];
     $file['status'] = $file_array["status"];
-    
+
     // Only display email if the user is logged int
     if(isset($_SESSION['cdash']))
       {
@@ -155,8 +156,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     else
       {
       $file['email'] = "";
-      }  
-   
+      }
+
     $file['log'] = $file_array["log"];
     $file['revision'] = $file_array["revision"];
     $updatearray1[] = $file;
@@ -166,9 +167,9 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $directoryarray = array_unique($directoryarray);
   usort($directoryarray, "sort_array_by_directory");
   usort($updatearray1, "sort_array_by_filename");
-  
+
   $updatearray = array();
-  
+
   foreach($directoryarray as $directory)
     {
     foreach($updatearray1 as $update)
@@ -182,11 +183,11 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     }
 
   $projecturl = $svnurl;
-  
+
   $locallymodified = array();
   $conflictingfiles = array();
   $updatedfiles = array();
-  
+
   // locally cached query result same as get_project_property($projectname, "cvsurl");
   foreach($updatearray as $file)
     {
@@ -196,7 +197,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
     $pos = strrpos($filename,"/");
     if($pos !== FALSE)
-      { 
+      {
       $filename = substr($filename,$pos+1);
       }
 
@@ -214,7 +215,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $log = str_replace("\r"," ",$log);
     $log = str_replace("\n", " ", $log);
     // Do this twice so that <something> ends up as
-    // &amp;lt;something&amp;gt; because it gets sent to a 
+    // &amp;lt;something&amp;gt; because it gets sent to a
     // java script function not just displayed as html
     $log = XMLStrFormat($log); // Apparently no need to do this twice anymore
     $log = XMLStrFormat($log);
@@ -224,8 +225,8 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $file['directory'] = $directory;
     $file['author'] = $author;
     $file['email'] = $email;
-    $file['log'] = $log;        
-    $file['revision'] = $revision;    
+    $file['log'] = $log;
+    $file['revision'] = $revision;
     $file['filename'] = $filename;
     $file['bugurl'] = "";
     $file['bugid'] = "0";
@@ -243,25 +244,25 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename, $revision);
       $diff_url = XMLStrFormat($diff_url);
-      $file['diff_url'] = $diff_url;  
+      $file['diff_url'] = $diff_url;
       $updatedfiles[] = $file;
       }
     else if($status == "MODIFIED")
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $diff_url = XMLStrFormat($diff_url);
-      $file['diff_url'] = $diff_url;  
+      $file['diff_url'] = $diff_url;
       $locallymodified[] = $file;
       }
     else //CONFLICTED
       {
       $diff_url = get_diff_url($projectid,$projecturl, $directory, $filename);
       $diff_url = XMLStrFormat($diff_url);
-      $file['diff_url'] = $diff_url;  
+      $file['diff_url'] = $diff_url;
       $conflictingfiles[] = $file;
       }
     }
-  
+
   // Updated files
   $xml .= "dbAdd (true, \"".$projectname." Updated files  (".count($updatedfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
    $previousdir = "";
@@ -289,7 +290,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       }
     $xml .= " dbAdd ( false, \"".$file['filename']."\",\"".$file['diff_url']."\",2,\"\",\"1\",\"".$file['author']."\",\"".$file['email']."\",\"".$file['log']."\",\"".$file['bugurl']."\",\"".$file['bugid']."\",\"".$file['bugpos']."\")\n";
     }
-  
+
   // Conflicting files
   $xml .= "dbAdd (true, \"Conflicting files  (".count($conflictingfiles).")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
   $previousdir = "";
@@ -307,7 +308,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= "</javascript>";
   $xml .= "</updates>";
   $xml .= "</cdash>";
- 
+
 
 // Now doing the xslt transition
 generate_XSLT($xml,"viewUpdate");

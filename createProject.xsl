@@ -451,7 +451,7 @@
                           </div>
                         </td>
                         <td>
-                          <input onchange="saveChanges();" onfocus="showHelp('svnViewer_help');"
+                          <input onchange="saveChanges(); changeViewerType();" onfocus="showHelp('svnViewer_help');"
                             name="cvsURL" type="text" id="cvsURL" size="50">
                             <xsl:attribute name="value">
                   <xsl:value-of select="cdash/project/cvsurl" />
@@ -493,8 +493,8 @@
                           </div>
                         </td>
                         <td>
-                          <select onchange="saveChanges();" onfocus="showHelp('svnViewerType_help');"
-                            name="cvsviewertype">
+                          <select onchange="saveChanges();changeViewerType();" onfocus="showHelp('svnViewerType_help');"
+                            id="cvsviewertype" name="cvsviewertype">
                             <xsl:for-each select="/cdash/cvsviewer">
                               <option>
                                 <xsl:attribute name="value"><xsl:value-of
@@ -541,6 +541,15 @@
                             The SVN password corresponding to the above user.  WARNING: this password will be stored in plaintext in the database.
                           </span>
                         </td>
+                      </tr>
+                       <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
+                            <strong>Test URL:</strong>
+                          </div>
+                          </td>
+                        <td><font size="1"><span id="repositoryurlexample"/></font></td>
                       </tr>
                       <tr>
                         <td></td>
