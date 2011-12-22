@@ -1135,19 +1135,19 @@ class Project
     $labelids = array();
     $labels = pdo_query("(SELECT labelid AS id FROM label2build,build WHERE label2build.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
                           UNION
-                          (SELECT labelid AS id FROM label2test,build WHERE label2test.buildid=build.id 
+                          (SELECT labelid AS id FROM label2test,build WHERE label2test.buildid=build.id
                                   AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
                           UNION
-                          (SELECT ".$straighthjoin." labelid AS id FROM build,label2coveragefile WHERE label2coveragefile.buildid=build.id 
+                          (SELECT ".$straighthjoin." labelid AS id FROM build,label2coveragefile WHERE label2coveragefile.buildid=build.id
                                  AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
                           UNION
-                          (SELECT ".$straighthjoin." labelid AS id FROM build,buildfailure,label2buildfailure WHERE label2buildfailure.buildfailureid=buildfailure.id 
+                          (SELECT ".$straighthjoin." labelid AS id FROM build,buildfailure,label2buildfailure WHERE label2buildfailure.buildfailureid=buildfailure.id
                                  AND buildfailure.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
                           UNION
-                          (SELECT ".$straighthjoin." labelid AS id FROM build,dynamicanalysis,label2dynamicanalysis WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id 
+                          (SELECT ".$straighthjoin." labelid AS id FROM build,dynamicanalysis,label2dynamicanalysis WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id
                                  AND dynamicanalysis.buildid=build.id AND build.projectid=".qnum($this->Id)." AND build.starttime>'$today')
                           ");
-    
+
     if(!$labels)
       {
       add_last_sql_error("Project GetLabels",$this->Id);
@@ -1241,6 +1241,7 @@ class Project
       case 'github':
       case 'gitorious':
       case 'gitweb':
+      case 'redmine':
         return "git";
       break;
 
@@ -1248,6 +1249,10 @@ class Project
         return "svn";
       break;
 
+      case 'hgweb':
+        return "mercurial";
+      break;
+    
       default:
         return "cvs";
       break;
@@ -1403,7 +1408,7 @@ class Project
       $files[] = array('id'=>$result['id'],
                        'filename'=>$result['filename'],
                        'filesize'=>$result['filesize'],
-                       'sha1sum'=>$result['sha1sum'], 
+                       'sha1sum'=>$result['sha1sum'],
                        'isurl'=>$result['isurl']);
       }
     return $files;
