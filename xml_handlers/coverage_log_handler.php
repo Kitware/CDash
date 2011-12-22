@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -22,11 +22,11 @@ class CoverageLogHandler extends AbstractHandler
 {
   private $StartTimeStamp;
   private $EndTimeStamp;
-  
+
   private $CoverageFile;
   private $CoverageFileLog;
   private $BuildId;
-  
+
   /** Constructor */
   public function __construct($projectID, $scheduleID)
     {
@@ -34,9 +34,9 @@ class CoverageLogHandler extends AbstractHandler
     $this->Build = new Build();
     $this->Site = new Site();
     $this->BuildId = 0;
-    $this->UpdateEndTime = false; 
+    $this->UpdateEndTime = false;
     }
-  
+
   /** Start element */
   public function startElement($parser, $name, $attributes)
     {
@@ -44,13 +44,21 @@ class CoverageLogHandler extends AbstractHandler
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
+      if(empty($this->Site->Name))
+        {
+        $this->Site->Name = "(empty)";
+        }
       $this->Site->Insert();
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
+      if(empty($this->Build->Name))
+        {
+        $this->Build->Name = "(empty)";
+        }
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       }
-    else if($name=='FILE') 
+    else if($name=='FILE')
       {
       $this->CoverageFile = new CoverageFile();
       $this->CoverageFileLog = new CoverageFileLog();
@@ -64,13 +72,13 @@ class CoverageLogHandler extends AbstractHandler
         }
       }
     } // end startElement()
-  
+
   /** End Element */
   public function endElement($parser, $name)
     {
     $parent = $this->getParent(); // should be before endElement
     parent::endElement($parser, $name);
-    
+
     if($name == "STARTDATETIME" && $parent == 'COVERAGELOG')
       {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
@@ -86,7 +94,7 @@ class CoverageLogHandler extends AbstractHandler
     else if($name == 'LINE')
       {
       $this->CoverageFile->File .= '<br>'; // cannot be <br/> for backward compatibility
-      }  
+      }
     else if($name == 'FILE')
       {
       if ($this->BuildId != 0)
@@ -106,30 +114,11 @@ class CoverageLogHandler extends AbstractHandler
     {
     $parent = $this->getParent();
     $element = $this->getElement();
-    /* This is not used for now. Just skipping it
-    if($parent == 'SITE')
-      {
-      switch ($element)
-        {
-        case 'STARTTIME':
-          $this->StartTimeStamp = $data;
-          break;
-        case 'STARTDATETIME':
-          $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
-          break;
-        case 'ENDTIME':
-          $this->EndTimeStamp = $data;
-          break;
-        case 'ENDDATETIME':
-          $this->EndTimeStamp = str_to_time($data, $this->Build->GetStamp());
-          break;
-        }
-      }*/
     if($element == 'LINE')
       {
       $this->CoverageFile->File .= $data;
       }
     } // end text()
-    
+
 } // end class
 ?>

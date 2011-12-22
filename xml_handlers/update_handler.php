@@ -125,12 +125,20 @@ class UpdateHandler extends AbstractHandler
         {
         case 'BUILDNAME':
           $this->Build->Name = $data;
+          if(empty($this->Build->Name))
+            {
+            $this->Build->Name = "(empty)";
+            }
           break;
         case 'BUILDSTAMP':
           $this->Build->SetStamp($data);
           break;
         case 'SITE':
           $this->Site->Name = $data;
+          if(empty($this->Site->Name))
+            {
+            $this->Site->Name = "(empty)";
+            }
           break;
         case 'STARTTIME':
           $this->StartTimeStamp = $data;

@@ -47,6 +47,10 @@ class CoverageHandler extends AbstractHandler
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
+      if(empty($this->Site->Name))
+        {
+        $this->Site->Name = "(empty)";
+        }
       $this->Site->Insert();
 
       $siteInformation = new SiteInformation();
@@ -63,6 +67,10 @@ class CoverageHandler extends AbstractHandler
 
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
+      if(empty($this->Build->Name))
+        {
+        $this->Build->Name = "(empty)";
+        }
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
@@ -114,7 +122,7 @@ class CoverageHandler extends AbstractHandler
         }
 
       // Remove any previous coverage information
-      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid; 
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
       $this->CoverageSummary->BuildId=$buildid;
       $this->CoverageSummary->RemoveAll();
 

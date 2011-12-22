@@ -74,6 +74,10 @@ class UploadHandler extends AbstractHandler
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
+      if(empty($this->Site->Name))
+        {
+        $this->Site->Name = "(empty)";
+        }
       $this->Site->Insert();
 
       $siteInformation = new SiteInformation();
@@ -90,6 +94,10 @@ class UploadHandler extends AbstractHandler
 
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
+      if(empty($this->Build->Name))
+        {
+        $this->Build->Name = "(empty)";
+        }
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
@@ -198,7 +206,7 @@ class UploadHandler extends AbstractHandler
         {
         add_log("Failed to delete file '".$this->Base64TmpFilename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);
         }
-        
+
       // Check file size against the upload quota
       $upload_file_size = filesize($this->TmpFilename);
       $Project = new Project;
@@ -216,21 +224,21 @@ class UploadHandler extends AbstractHandler
 
       // Compute SHA1 of decoded file
       $upload_file_sha1 = sha1_file($this->TmpFilename);
-      
+
       // TODO Check if a file if same buildid, sha1 and name has already been uploaded
 
       $this->UploadFile->Sha1Sum = $upload_file_sha1;
       $this->UploadFile->Filesize = $upload_file_size;
-      
-      // Extension of the file indicates if it's a data file that should be hosted on CDash of if 
+
+      // Extension of the file indicates if it's a data file that should be hosted on CDash of if
       // an URL should just be considered. File having extension ".url" are expected to contain an URL.
       $path_parts = pathinfo($this->UploadFile->Filename);
       $ext = $path_parts['extension'];
-      
+
       if($ext == "url")
         {
         $this->UploadFile->IsUrl = true;
-        
+
         // Read content of the file
         $url_length = 255; // max length of 'uploadfile.filename' field
         $this->UploadFile->Filename = trim(file_get_contents($this->TmpFilename, NULL, NULL, 0, $url_length));
@@ -239,8 +247,8 @@ class UploadHandler extends AbstractHandler
         }
       else
         {
-        $this->UploadFile->IsUrl = false; 
-        
+        $this->UploadFile->IsUrl = false;
+
         $upload_dir = realpath($GLOBALS[CDASH_UPLOAD_DIRECTORY]).'/'.$this->UploadFile->Sha1Sum;
 
         $uploadfilepath = $upload_dir.'/'.$this->UploadFile->Sha1Sum;

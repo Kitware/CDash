@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -36,7 +36,7 @@ class BuildHandler extends AbstractHandler
     $this->Site = new Site();
     $this->Append = false;
     }
-  
+
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
@@ -44,22 +44,30 @@ class BuildHandler extends AbstractHandler
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
+      if(empty($this->Site->Name))
+        {
+        $this->Site->Name = "(empty)";
+        }
       $this->Site->Insert();
-      
+
       $siteInformation = new SiteInformation();
       $buildInformation = new BuildInformation();
-      
+
       // Fill in the attribute
       foreach($attributes as $key=>$value)
         {
         $siteInformation->SetValue($key,$value);
         $buildInformation->SetValue($key,$value);
         }
-      
+
       $this->Site->SetInformation($siteInformation);
-      
+
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
+      if(empty($this->Build->Name))
+        {
+        $this->Build->Name = "(empty)";
+        }
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
@@ -76,17 +84,17 @@ class BuildHandler extends AbstractHandler
         $this->Append = false;
         }
       }
-    else if($name=='WARNING') 
+    else if($name=='WARNING')
       {
       $this->Error = new BuildError();
       $this->Error->Type = 1;
-      } 
-    else if($name=='ERROR') 
+      }
+    else if($name=='ERROR')
       {
       $this->Error = new BuildError();
       $this->Error->Type = 0;
       }
-    else if($name=='FAILURE') 
+    else if($name=='FAILURE')
       {
       $this->Error = new BuildFailure();
       $this->Error->Type = 0;
@@ -200,7 +208,7 @@ class BuildHandler extends AbstractHandler
           $this->Build->Log .= $data;
           break;
         }
-      } 
+      }
     else if($parent == 'ACTION')
       {
       switch ($element)
@@ -221,7 +229,7 @@ class BuildHandler extends AbstractHandler
           $this->Error->OutputType .= $data;
           break;
         }
-      }  
+      }
     else if($parent == 'COMMAND')
       {
       switch ($element)
@@ -233,7 +241,7 @@ class BuildHandler extends AbstractHandler
            $this->Error->AddArgument($data);
            break;
         }
-      }  
+      }
     else if($parent == 'RESULT')
       {
       global $CDASH_LARGE_TEXT_LIMIT;
@@ -276,9 +284,9 @@ class BuildHandler extends AbstractHandler
 
         case 'EXITCONDITION':
           $this->Error->ExitCondition .= $data;
-          break;  
+          break;
         }
-      }    
+      }
     else if($element == 'BUILDLOGLINE')
       {
       $this->Error->LogLine .= $data;
@@ -287,19 +295,19 @@ class BuildHandler extends AbstractHandler
       {
       $this->Error->Text .= $data;
       }
-    else if($element == 'SOURCEFILE') 
+    else if($element == 'SOURCEFILE')
       {
       $this->Error->SourceFile .= $data;
       }
-    else if($element == 'SOURCELINENUMBER') 
+    else if($element == 'SOURCELINENUMBER')
       {
       $this->Error->SourceLine .= $data;
-      } 
-    else if($element == 'PRECONTEXT') 
+      }
+    else if($element == 'PRECONTEXT')
       {
       $this->Error->PreContext .= $data;
       }
-    else if($element == 'POSTCONTEXT') 
+    else if($element == 'POSTCONTEXT')
       {
       $this->Error->PostContext .= $data;
       }

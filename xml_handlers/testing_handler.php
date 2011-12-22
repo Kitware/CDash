@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -28,7 +28,7 @@ class TestingHandler extends AbstractHandler
   private $EndTimeStamp;
   private $UpdateEndTime; // should we update the end time of the build
 
-  private $BuildId; 
+  private $BuildId;
   private $Test;
   private $BuildTest;
   private $BuildTestDiff;
@@ -36,7 +36,7 @@ class TestingHandler extends AbstractHandler
   private $TestMeasurement;
   private $Label;
   private $Append;
-  
+
   // Keep a record of the number of tests passed, failed and notrun
   // This works only because we have one test file per submission
   private $NumberTestsFailed;
@@ -59,21 +59,25 @@ class TestingHandler extends AbstractHandler
   public function __destruct()
     {
     }
-  
+
   /** Start Element */
   public function startElement($parser, $name, $attributes)
     {
     parent::startElement($parser, $name, $attributes);
     $parent = $this->getParent(); // should be before endElement
-    
+
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
+      if(empty($this->Site->Name))
+        {
+        $this->Site->Name = "(empty)";
+        }
       $this->Site->Insert();
-      
+
       $siteInformation = new SiteInformation();
       $buildInformation =  new BuildInformation();
-      
+
       // Fill in the attribute
       foreach($attributes as $key=>$value)
         {
@@ -85,6 +89,10 @@ class TestingHandler extends AbstractHandler
 
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
+      if(empty($this->Build->Name))
+        {
+        $this->Build->Name = "(empty)";
+        }
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
@@ -104,18 +112,18 @@ class TestingHandler extends AbstractHandler
       $this->Test->ProjectId = $this->projectid;
       $this->BuildTest = new BuildTest();
       $this->BuildTest->Status = $attributes['STATUS'];
-      
+
       if($attributes['STATUS'] == "passed")
         {
         $this->NumberTestsPassed++;
         }
       else if($attributes['STATUS'] == "failed")
         {
-        $this->NumberTestsFailed++; 
+        $this->NumberTestsFailed++;
         }
       else if($attributes['STATUS'] == "notrun")
         {
-        $this->NumberTestsNotRun++;  
+        $this->NumberTestsNotRun++;
         }
       }
     else if($name == "NAMEDMEASUREMENT")
@@ -130,11 +138,11 @@ class TestingHandler extends AbstractHandler
         {
         $this->Test->CompressedOutput = true;
         }
-      }  
+      }
     else if($name == 'LABEL' && $parent == 'LABELS')
       {
       $this->Label = new Label();
-      } 
+      }
     else if($name == "TESTLIST" && $parent == 'TESTING')
       {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
@@ -164,11 +172,11 @@ class TestingHandler extends AbstractHandler
         $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
         $this->NumberTestsNotRun += $this->Build->GetNumberOfNotRunTests();
         $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();
-        }  
+        }
 
       $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-      $this->BuildId = $buildid; 
-      }  
+      $this->BuildId = $buildid;
+      }
     } // end startElement
 
 
@@ -177,9 +185,9 @@ class TestingHandler extends AbstractHandler
     {
     $parent = $this->getParent(); // should be before endElement
     parent::endElement($parser, $name);
-     
+
     if($name == "TEST" && $parent == 'TESTING')
-      {  
+      {
       $this->Test->Insert();
       if($this->Test->Id>0)
         {
@@ -193,7 +201,7 @@ class TestingHandler extends AbstractHandler
         {
         add_log("Cannot insert test","Test XML parser",LOG_ERR,
                 $this->projectid,$this->BuildId);
-        }  
+        }
       }
     else if($name == 'LABEL' && $parent == 'LABELS')
       {
@@ -207,8 +215,8 @@ class TestingHandler extends AbstractHandler
       if($this->TestMeasurement->Name == 'Execution Time')
         {
         $this->BuildTest->Time = $this->TestMeasurement->Value;
-        } 
-      else if($this->TestMeasurement->Name == 'Exit Code') 
+        }
+      else if($this->TestMeasurement->Name == 'Exit Code')
         {
         if(strlen($this->Test->Details)>0)
           {
@@ -217,9 +225,9 @@ class TestingHandler extends AbstractHandler
         else
           {
           $this->Test->Details = $this->TestMeasurement->Value;
-          }     
+          }
         }
-      else if($this->TestMeasurement->Name == 'Completion Status') 
+      else if($this->TestMeasurement->Name == 'Completion Status')
         {
         if(strlen($this->Test->Details)>0)
           {
@@ -228,9 +236,9 @@ class TestingHandler extends AbstractHandler
         else
           {
           $this->Test->Details = $this->TestMeasurement->Value;
-          } 
+          }
         }
-      else if($this->TestMeasurement->Name == 'Command Line') 
+      else if($this->TestMeasurement->Name == 'Command Line')
         {
         // don't do anything since it should already be in the FullCommandLine
         }
@@ -262,14 +270,14 @@ class TestingHandler extends AbstractHandler
       // Update the number of tests in the Build table
       $this->Build->UpdateTestNumbers($this->NumberTestsPassed,
                                       $this->NumberTestsFailed,
-                                      $this->NumberTestsNotRun); 
+                                      $this->NumberTestsNotRun);
       $this->Build->ComputeTestTiming();
       }
     } // end endElement
 
   /** Text function */
   public function text($parser, $data)
-    { 
+    {
     $parent = $this->getParent();
     $element = $this->getElement();
 
@@ -284,7 +292,7 @@ class TestingHandler extends AbstractHandler
     else if($parent == 'TESTING' && $element == 'ENDDATETIME')
       {
       $this->EndTimeStamp = str_to_time($data, $this->Build->GetStamp());
-      }  
+      }
     else if($parent == 'TESTING' && $element == 'ENDTESTTIME')
       {
       $this->EndTimeStamp = $data;
@@ -308,7 +316,7 @@ class TestingHandler extends AbstractHandler
           break;
         case "FULLCOMMANDLINE":
           $this->Test->Command .= $data;
-          break;          
+          break;
         }
       }
     else if($parent == "NAMEDMEASUREMENT" && $element == "VALUE")

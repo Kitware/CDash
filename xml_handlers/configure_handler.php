@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -22,7 +22,7 @@ require_once('models/site.php');
 require_once('models/buildconfigure.php');
 
 class ConfigureHandler extends AbstractHandler
-{  
+{
   private $StartTimeStamp;
   private $EndTimeStamp;
 
@@ -44,6 +44,10 @@ class ConfigureHandler extends AbstractHandler
     if($name=='SITE')
       {
       $this->Site->Name = $attributes['NAME'];
+      if(empty($this->Site->Name))
+        {
+        $this->Site->Name = "(empty)";
+        }
       $this->Site->Insert();
 
       $siteInformation = new SiteInformation();
@@ -60,6 +64,10 @@ class ConfigureHandler extends AbstractHandler
 
       $this->Build->SiteId = $this->Site->Id;
       $this->Build->Name = $attributes['BUILDNAME'];
+      if(empty($this->Build->Name))
+        {
+        $this->Build->Name = "(empty)";
+        }
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
@@ -75,10 +83,10 @@ class ConfigureHandler extends AbstractHandler
     parent::endElement($parser, $name);
 
     if($name=='CONFIGURE')
-      { 
+      {
       $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
       $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
-      
+
       $this->Build->ProjectId = $this->projectid;
       $buildid = $this->Build->GetIdFromName($this->SubProjectName);
 
@@ -94,20 +102,20 @@ class ConfigureHandler extends AbstractHandler
         add_build($this->Build, $this->scheduleid);
         $buildid = $this->Build->Id;
         }
-      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid; 
+      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
       $this->Configure->BuildId = $buildid;
       $this->Configure->StartTime = $start_time;
       $this->Configure->EndTime = $end_time;
-      
+
       // Insert the configure
       if($this->Configure->Exists())
         {
         $this->Configure->Delete();
         }
       $this->Configure->Insert();
-      // Insert errors from the log file 
+      // Insert errors from the log file
       $this->Configure->ComputeErrors();
-      
+
       $this->Build->Id = $buildid;
       $this->Build->ComputeConfigureDifferences();
       }
