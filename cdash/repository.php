@@ -502,7 +502,7 @@ function get_viewvc_revision_url($projecturl, $revision, $priorrevision)
 /** Return the viewVC 1-1 url */
 function get_viewvc_1_1_revision_url($projecturl, $revision, $priorrevision)
 {
-  $revision_url = ""; // not implemented
+  $revision_url = $projecturl."?view=rev&revision=".$revision;
   return make_cdash_url($revision_url);
 }
 
