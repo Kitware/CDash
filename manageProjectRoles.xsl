@@ -153,7 +153,7 @@
           <li>
             <a href="#fragment-2"><span>Search for already registered users</span></a></li>
           <li>
-            <a href="#fragment-3"><span>Register User</span></a></li>
+            <a href="#fragment-3"><span>Register a new user</span></a></li>
           <li>
             <a href="#fragment-4"><span>Import users from CVS file </span></a></li>
       </ul>
@@ -182,13 +182,13 @@
             <tr>
              <td><div align="right"></div></td>
              <td>
-             <table>
+             <table width="850">
                <tr bgcolor="#CCCCCC">
                 <td><center><b>Firstname</b></center></td>
                 <td><center><b>Lastname</b></center></td>
                 <td><center><b>Email</b></center></td>
                 <td><center><b>Role</b></center></td>
-                <td><center><b>Repository Credentials</b></center></td>
+                <td><center><b>Repository Credentials<br/>(cred1;cred2;)</b></center></td>
                 <td><center><b>Action</b></center></td>
                </tr>
 
@@ -211,9 +211,9 @@
                </select>
                </td>
                <td>
-                 <xsl:for-each select="repositorycredential">
-                   '<xsl:value-of select="."/>'
-                 </xsl:for-each>
+                 <input name="credentials" type="text">
+                  <xsl:attribute name="value"><xsl:for-each select="repositorycredential"><xsl:value-of select="."/>;</xsl:for-each></xsl:attribute>
+                 </input>
                 </td>
                 <td>
                 <input type="submit" name="updateuser" value="Update"/>

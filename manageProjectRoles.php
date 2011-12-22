@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -22,7 +22,7 @@ include_once('cdash/common.php');
 include('cdash/version.php');
 include('models/userproject.php');
 
-if ($session_OK) 
+if ($session_OK)
   {
   @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
@@ -34,9 +34,9 @@ if ($session_OK)
     echo "Not a valid usersessionid!";
     return;
     }
-    
+
   @$projectid = $_GET["projectid"];
-  
+
   // If the projectid is not set and there is only one project we go directly to the page
   if(!isset($projectid))
   {
@@ -47,7 +47,7 @@ if ($session_OK)
     $projectid = $project_array["id"];
     }
   }
-    
+
   $role = 0;
   $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$usersessionid'"));
   if($projectid && is_numeric($projectid))
@@ -57,7 +57,7 @@ if ($session_OK)
       {
       $user2project_array = pdo_fetch_array($user2project);
       $role = $user2project_array["role"];
-      }  
+      }
     }
 
   if($user_array["admin"]!=1 && $role<=1)
@@ -80,6 +80,7 @@ if ($session_OK)
 @$removeuser = $_POST["removeuser"];
 @$userid = $_POST["userid"];
 @$role = $_POST["role"];
+@$credentials = $_POST["credentials"];
 @$repositoryCredential = $_POST["repositoryCredential"];
 @$updateuser = $_POST["updateuser"];
 @$importUsers = $_POST["importUsers"];
@@ -92,16 +93,16 @@ function make_seed_recoverpass()
   list($usec, $sec) = explode(' ', microtime());
   return (float) $sec + ((float) $usec * 100000);
   }
-    
-// Register a user and send the email 
+
+// Register a user and send the email
 function register_user($projectid,$email,$firstName,$lastName,$repositoryCredential)
 {
   include("cdash/config.php");
   $UserProject = new UserProject();
   $UserProject->ProjectId = $projectid;
-         
+
   // Check if the user is already registered
-  $user = pdo_query("SELECT id FROM ".qid("user")." WHERE email='$email'");      
+  $user = pdo_query("SELECT id FROM ".qid("user")." WHERE email='$email'");
   if(pdo_num_rows($user)>0)
     {
     // Check if the user has been registered to the project
@@ -111,79 +112,79 @@ function register_user($projectid,$email,$firstName,$lastName,$repositoryCredent
     if(pdo_num_rows($user)==0) // not registered
       {
       // We register the user to the project
-      pdo_query("INSERT INTO user2project (userid,projectid,role,emailtype) 
+      pdo_query("INSERT INTO user2project (userid,projectid,role,emailtype)
                                   VALUES ('$userid','$projectid','0','1')");
-      
+
       // We add the credentials if not already added
       $UserProject->UserId = $userid;
       $UserProject->AddCredential($repositoryCredential);
       $UserProject->ProjectId = 0;
       $UserProject->AddCredential($email); // Add the email by default
-      
+
       echo pdo_error();
       return false;
       }
     return "<error>User ".$email." already registered.</error>";
     } // already registered
-    
+
   // Check if the repositoryCredential exists for this project
   $UserProject->RepositoryCredential = $repositoryCredential;
   if($UserProject->FillFromRepositoryCredential()===true)
     {
     return "<error>".$repositoryCredential." was already registered for this project under a different email address</error>";
     }
-    
+
   // Register the user
-  // Create a new password 
+  // Create a new password
   $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   $length = 10;
-  
+
   srand(make_seed_recoverpass());
-      
+
   $pass = "";
   $max=strlen($keychars)-1;
-  for ($i=0;$i<=$length;$i++) 
+  for ($i=0;$i<=$length;$i++)
     {
     $pass .= substr($keychars, rand(0, $max), 1);
     }
   $encrypted = md5($pass);
 
-  pdo_query("INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution,admin) 
+  pdo_query("INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution,admin)
                  VALUES ('$email','$encrypted','$firstName','$lastName','','0')");
   add_last_sql_error("register_user");
   $userid = pdo_insert_id("user");
-    
+
   // Insert the user into the project
-  pdo_query("INSERT INTO user2project (userid,projectid,role,emailtype) 
+  pdo_query("INSERT INTO user2project (userid,projectid,role,emailtype)
                                 VALUES ('$userid','$projectid','0','1')");
   add_last_sql_error("register_user");
- 
+
   // We add the credentials if not already added
   $UserProject->UserId = $userid;
   $UserProject->AddCredential($repositoryCredential);
   $UserProject->ProjectId = 0;
   $UserProject->AddCredential($email); // Add the email by default
-          
+
   $currentURI = get_server_URI();
-    
+
   $prefix = "";
   if(strlen($firstName)>0)
     {
     $prefix = " ";
     }
-    
+
   $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
   $projectname = $project_array['name'];
 
-  // Send the email      
+  // Send the email
   $text = "Hello".$prefix.$firstName.",<br><br>";
   $text .= "You have been registered to CDash because you have CVS/SVN access to the repository for ".$projectname." <br>";
   $text .= "To access your CDash account: ".$currentURI."/user.php<br>";
   $text .= "Your login is: ".$email."<br>";
   $text .= "Your password is: ".$pass."<br>";
   $text .= "<br>Generated by CDash.";
-      
+
   if(  @mail("$email", "CDash - ".$projectname." : Subscription","$text","From: $CDASH_EMAILADMIN\nReply-To: no-reply\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8"))
     {
     echo "Email sent to: ".$email."<br>";
@@ -201,7 +202,7 @@ if(isset($_POST["sendEmailToSiteMaintainers"]))
   else
     {
     $maintainerids = find_site_maintainers($projectid);
-    
+
     $email = "";
     foreach($maintainerids as $maintainerid)
       {
@@ -213,8 +214,8 @@ if(isset($_POST["sendEmailToSiteMaintainers"]))
         }
       $email .= $user_array2['email'];
       }
-  
-    $projectname = get_project_name($projectid);    
+
+    $projectname = get_project_name($projectid);
     if($email != "")
       {
       if(  @mail("$email", "CDash - ".$projectname." : To Site Maintainers","$emailMaintainers","From: $CDASH_EMAILADMIN\nReply-To: no-reply\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8"))
@@ -224,12 +225,12 @@ if(isset($_POST["sendEmailToSiteMaintainers"]))
       else
         {
         $xml .= "<error>Cannot send email to site maintainers.</error>";
-        }  
+        }
       }
     else
       {
       $xml .= "<error>There is no site maintainers for this project.</error>";
-      }  
+      }
     }
   }
 
@@ -240,7 +241,7 @@ if($registerUser)
   @$firstName = $_POST["registeruserfirstname"];
   @$lastName = $_POST["registeruserlastname"];
   @$repositoryCredential = $_POST["registeruserrepositorycredential"];
-  
+
   if(strlen($email)<3 || strlen($firstName)<2 || strlen($lastName)<2)
     {
     $xml .= "<error>Email, first name and last name should be filled out.</error>";
@@ -261,22 +262,22 @@ if($registerUsers)
   $firstnames = $_POST["firstname"];
   $lastnames = $_POST["lastname"];
   $cvsuser = $_POST["cvsuser"];
-  
+
   for($logini=0;$logini<count($cvslogins);$logini++)
     {
     if(!isset($cvsuser[$logini]))
       {
       continue;
       }
-    
+
     $cvslogin = $cvslogins[$logini];
     $email = $emails[$logini];
     $firstName = $firstnames[$logini];
     $lastName = $lastnames[$logini];
-    
+
     // Call the register_user function
     $xml .= register_user($projectid,$email,$firstName,$lastName,$cvslogin);
-    
+
     } // end loop through users
 } // end register users
 
@@ -284,13 +285,13 @@ if($registerUsers)
 if($adduser)
 {
   $user2project = pdo_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-    
+
   if(pdo_num_rows($user2project) == 0)
     {
     pdo_query("INSERT INTO user2project (userid,role,projectid,emailtype) VALUES ('$userid','$role','$projectid','1')");
-    
+
     $UserProject = new UserProject();
-    $UserProject->ProjectId = $projectid;   
+    $UserProject->ProjectId = $projectid;
     $UserProject->UserId = $userid;
     $UserProject->AddCredential($repositoryCredential);
     }
@@ -307,6 +308,14 @@ if($removeuser)
 // Update the user
 if($updateuser)
   {
+  // Update the credentials
+  $UserProject = new UserProject();
+  $UserProject->ProjectId = $projectid;
+  $UserProject->UserId = $userid;
+
+  $credentials_array = explode(';',$credentials);
+  $UserProject->UpdateCredentials($credentials_array);
+
   pdo_query("UPDATE user2project SET role='$role' WHERE userid='$userid' AND projectid='$projectid'");
   echo pdo_error();
   }
@@ -316,39 +325,39 @@ if($importUsers)
   {
   $contents = file_get_contents($_FILES['cvsUserFile']['tmp_name']);
   if(strlen($contents)>0)
-    {  
+    {
     $id = 0;
     $pos = 0;
     $pos2 = strpos($contents,"\n");
     while($pos !== false)
       {
       $line = substr($contents,$pos,$pos2-$pos);
-      
+
       $email = "";
       $svnlogin = "";
       $firstname = "";
       $lastname = "";
-      
+
       // first is the svnuser
       $possvn = strpos($line,":");
       if($possvn !== false)
         {
         $svnlogin = trim(substr($line,0,$possvn));
-       
+
         $posemail = strpos($line,":",$possvn+1);
         if($posemail !== false)
           {
           $email = trim(substr($line,$possvn+1,$posemail-$possvn-1));
-          
+
           $name = substr($line,$posemail+1);
           $posname = strpos($name,",");
           if($posname !== false)
             {
             $name = substr($name,0,$posname);
             }
-          
+
           $name = trim($name);
-          
+
           // Find the firstname
           $posfirstname = strrpos($name," ");
           if($posfirstname !== false)
@@ -366,7 +375,7 @@ if($importUsers)
           $email = trim(substr($line,$possvn+1));
           }
         }
-     
+
       if(strlen($email)>0 && $email != "kitware@kitware.com")
         {
         $xml .= "<cvsuser>";
@@ -378,7 +387,7 @@ if($importUsers)
         $xml .= "</cvsuser>";
         $id++;
         }
-     
+
       $pos = $pos2;
       $pos2 = strpos($contents,"\n",$pos2+1);
       }
@@ -386,14 +395,14 @@ if($importUsers)
   else
     {
     echo "Cannot parse CVS users file";
-    }   
+    }
 } // end import users
 
 
 $sql = "SELECT id,name FROM project";
 if($user_array["admin"] != 1)
   {
-  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)"; 
+  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)";
   }
 $projects = pdo_query($sql);
 while($project_array = pdo_fetch_array($projects))
@@ -418,21 +427,21 @@ if($projectid>0)
   $xml .= add_XML_value("name",$project_array['name']);
   $xml .= add_XML_value("name_encoded",urlencode($project_array['name']));
   $xml .= "</project>";
-  
-  
+
+
   // List the users for that project
   $user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.role
-                       FROM user2project AS up, ".qid("user")." as u  
-                       WHERE u.id=up.userid  AND up.projectid='$projectid' 
+                       FROM user2project AS up, ".qid("user")." as u
+                       WHERE u.id=up.userid  AND up.projectid='$projectid'
                        ORDER BY u.firstname ASC");
   add_last_sql_error('ManageProjectRole');
-  
-  $i=0;                         
+
+  $i=0;
   while($user_array = pdo_fetch_array($user))
     {
     $userid = $user_array["id"];
     $xml .= "<user>";
-   
+
     if($i%2==0)
       {
       $xml .= add_XML_value("bgcolor","#CADBD9");
@@ -445,19 +454,19 @@ if($projectid>0)
     $xml .= add_XML_value("id",$userid);
     $xml .= add_XML_value("firstname",$user_array['firstname']);
     $xml .= add_XML_value("lastname",$user_array['lastname']);
-    $xml .= add_XML_value("email",$user_array['email']);   
-    
+    $xml .= add_XML_value("email",$user_array['email']);
+
     $credentials = pdo_query("SELECT credential FROM user2repository as ur
-                              WHERE ur.userid='".$userid."' 
+                              WHERE ur.userid='".$userid."'
                               AND (ur.projectid='$projectid' OR ur.projectid=0)");
     add_last_sql_error('ManageProjectRole');
-    
+
     while($credentials_array = pdo_fetch_array($credentials))
       {
-      $xml .= add_XML_value("repositorycredential",$credentials_array['credential']); 
+      $xml .= add_XML_value("repositorycredential",$credentials_array['credential']);
       }
-      
-    $xml .= add_XML_value("role",$user_array['role']);  
+
+    $xml .= add_XML_value("role",$user_array['role']);
     $xml .= "</user>";
     }
 
@@ -470,12 +479,12 @@ if($projectid>0)
             LEFT JOIN user2project ON (user2repository.userid= user2project.userid AND
             user2project.projectid=".qnum($project_array['id']).")
             LEFT JOIN ".qid("user")." ON (user2project.userid=".qid("user").".id)
-            WHERE 
-             dailyupdatefile.dailyupdateid=dailyupdate.id 
+            WHERE
+             dailyupdatefile.dailyupdateid=dailyupdate.id
              AND dailyupdate.projectid=".qnum($project_array['id']).
             " AND dailyupdatefile.checkindate>'".$date."' AND (emailtype=0 OR emailtype IS NULL)";
-    
-  $query = pdo_query($sql);  
+
+  $query = pdo_query($sql);
   add_last_sql_error('ManageProjectRole');
   while($query_array = pdo_fetch_array($query))
     {
@@ -488,7 +497,7 @@ if($projectid>0)
   } // end project=0
 
 
-  
+
 if(isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1)
   {
   $xml .= add_XML_value("fullemail","1");
