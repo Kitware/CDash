@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -25,7 +25,9 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
+include_once("cdash/repository.php");
 include('cdash/version.php');
+
 
 $testid = $_GET["test"];
 // Checks
@@ -33,7 +35,7 @@ if(!isset($testid) || !is_numeric($testid))
   {
   die('Error: no test id supplied in query string');
   }
-  
+
 $buildid = $_GET["build"];
 if(!isset($buildid) || !is_numeric($buildid))
   {
@@ -59,8 +61,8 @@ $siteid = $buildRow["siteid"];
 $project = pdo_query("SELECT name,nightlytime,showtesttime FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
-  $project_array = pdo_fetch_array($project); 
-  $projectname = $project_array["name"];  
+  $project_array = pdo_fetch_array($project);
+  $projectname = $project_array["name"];
   }
 
 $projectRow = pdo_fetch_array(pdo_query("SELECT name,testtimemaxstatus FROM project WHERE id = '$projectid'"));
@@ -80,7 +82,7 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
-  
+
 $xml .= "<project>";
 $xml .= add_XML_value("showtesttime", $project_array["showtesttime"]) . "\n";
 $xml .= "</project>";
@@ -94,15 +96,15 @@ $starttime = $buildRow["starttime"];
 function findTest($buildid,$testName)
 {
   $test = pdo_query("SELECT build2test.testid FROM build2test,test
-                            WHERE build2test.buildid=".qnum($buildid)." 
-                            AND test.id=build2test.testid 
-                            AND test.name='$testName'"); 
+                            WHERE build2test.buildid=".qnum($buildid)."
+                            AND test.id=build2test.testid
+                            AND test.name='$testName'");
   if(pdo_num_rows($test)>0)
     {
-    $test_array = pdo_fetch_array($test); 
+    $test_array = pdo_fetch_array($test);
     return  $test_array["testid"];
     }
-  return 0;    
+  return 0;
 }
 
 $xml .= "<menu>";
@@ -112,24 +114,24 @@ $gotprevious = false;
 if($previousbuildid>0)
   {
   if($previoustestid = findTest($previousbuildid,$testName))
-    {          
+    {
     $xml .= add_XML_value("previous","testDetails.php?test=".$previoustestid."&build=".$previousbuildid);
     $gotprevious = true;
-    }                         
+    }
   }
-  
+
 if(!$gotprevious)
   {
   $xml .= add_XML_value("noprevious","1");
   }
-  
-// Find the last build  
+
+// Find the last build
 $lastbuildid  = get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($lasttestid = findTest($lastbuildid,$testName))
-    {          
+    {
     $xml .= add_XML_value("current","testDetails.php?test=".$lasttestid."&build=".$lastbuildid);
     $gotprevious = true;
-    }      
+    }
 
 // Next build
 $nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
@@ -137,12 +139,12 @@ $gotnext = false;
 if($nextbuildid>0)
   {
   if($nexttestid = findTest($nextbuildid,$testName))
-    {          
+    {
     $xml .= add_XML_value("next","testDetails.php?test=".$nexttestid."&build=".$nextbuildid);
     $gotnext = true;
-    }                         
+    }
   }
-  
+
 if(!$gotnext)
   {
   $xml .= add_XML_value("nonext","1");
@@ -167,16 +169,16 @@ $xml .= add_XML_value("details", $testRow["details"]);
 if($CDASH_USE_COMPRESSION)
   {
   if($CDASH_DB_TYPE == "pgsql")
-    { 
+    {
     if(is_resource($testRow["output"]))
       {
       $testRow["output"] = base64_decode(stream_get_contents($testRow["output"]));
       }
     else
-      {  
+      {
       $testRow["output"] = base64_decode($testRow["output"]);
       }
-    }       
+    }
   @$uncompressedrow = gzuncompress($testRow["output"]);
   if($uncompressedrow !== false)
     {
@@ -208,11 +210,32 @@ switch($testRow["status"])
     $xml .= add_XML_value("statusColor", "#ffcc66");
     break;
   }
-  
+
+// Find the repository revision
+$xml .= "<update>";
+// Return the status
+$status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
+                                FROM buildupdate WHERE buildid='$buildid'"));
+if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
+  {
+  $xml .= add_XML_value("status",$status_array["status"]);
+  }
+else
+  {
+  $xml .= add_XML_value("status",""); // empty status
+  }
+$xml .= add_XML_value("revision",$status_array["revision"]);
+$xml .= add_XML_value("priorrevision",$status_array["priorrevision"]);
+$xml .= add_XML_value("path",$status_array["path"]);
+$xml .= add_XML_value("revisionurl",
+        get_revision_url($projectid, $status_array["revision"], $status_array["priorrevision"]));
+$xml .= add_XML_value("revisiondiff",
+        get_revision_url($projectid, $status_array["priorrevision"], '')); // no prior prior revision...
+$xml .= "</update>";
 
 $xml .= add_XML_value("timemean",$testRow["timemean"]);
 $xml .= add_XML_value("timestd",$testRow["timestd"]);
- 
+
 $testtimemaxstatus = $projectRow["testtimemaxstatus"];
 if($testRow["timestatus"] < $testtimemaxstatus)
   {
@@ -223,7 +246,7 @@ else
   {
   $xml .= add_XML_value("timestatus", "Failed");
   $xml .= add_XML_value("timeStatusColor", "#aa0000");
-  }  
+  }
 
 //get any images associated with this test
 $xml .= "<images>";
@@ -247,7 +270,7 @@ while($row = pdo_fetch_array($result))
   $xml .= "<measurement>";
   $xml .= add_XML_value("name", $row["name"]);
   $xml .= add_XML_value("type", $row["type"]);
-  
+
   // ctest base64 encode the type text/plain...
   $value = $row["value"];
   if($row["type"] == "text/plain")
@@ -256,14 +279,14 @@ while($row = pdo_fetch_array($result))
       {
       $value = base64_decode($value);
       }
-    }  
-  
+    }
+
   // Add nl2br for type text/plain and text/string
    if($row["type"] == "text/plain" || $row["type"] == "text/string")
     {
-    $value = nl2br($value);  
+    $value = nl2br($value);
     }
-    
+
   $xml .= add_XML_value("value", $value);
   $xml .= "</measurement>";
   }

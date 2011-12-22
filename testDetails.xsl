@@ -50,6 +50,11 @@
   <xsl:value-of select="cdash/test/build"/></a>
 <br/>
 <b>Build Date: </b><xsl:value-of select="cdash/test/buildstarttime"/>
+<br/>
+<b>Repository revision: </b><a><xsl:attribute name="href"><xsl:value-of select="cdash/test/update/revisionurl"/></xsl:attribute>
+  <xsl:value-of select="cdash/test/update/revision"/>
+  </a>
+<br/>
 
 <xsl:if test="cdash/project/showtesttime=1">
 <br/>
@@ -63,7 +68,7 @@
 <table cellpadding="2">
   <tr>
     <td>
-      <a>
+       <a>
         <xsl:attribute name="href">
    <xsl:value-of select="cdash/test/summaryLink"/>
         </xsl:attribute>

@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -26,11 +26,12 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
-include("cdash/version.php"); 
+include_once("cdash/repository.php");
+include("cdash/version.php");
 
 $date = $_GET["date"];
 if(!isset($date) || strlen($date)==0)
-  { 
+  {
   die('Error: no date supplied in query string');
   }
 $projectid = $_GET["project"];
@@ -44,7 +45,7 @@ if(!isset($projectid) || !is_numeric($projectid))
   echo "Not a valid projectid!";
   return;
   }
-    
+
 $testName = $_GET["name"];
 if(!isset($testName))
   {
@@ -58,11 +59,11 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
-  $project_array = pdo_fetch_array($project);   
+  $project_array = pdo_fetch_array($project);
   $projectname = $project_array["name"];
   $nightlytime = $project_array["nightlytime"];
   }
-  
+
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
@@ -72,7 +73,7 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 $xml .="<testName>".$testName."</testName>";
-  
+
 $xml .= "<menu>";
 list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
 $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".$date);
@@ -87,7 +88,7 @@ else
   $xml .= add_XML_value("nonext","1");
   }
 $xml .= "</menu>";
-  
+
 //get information about all the builds for the given date and project
 $xml .= "<builds>\n";
 
@@ -97,11 +98,11 @@ $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime+3600*24;
 
 $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-$end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);   
+$end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
 
-// Add the date/time      
-$xml .= add_XML_value("projectid",$projectid);  
-$xml .= add_XML_value("currentstarttime",$currentstarttime);                                            
+// Add the date/time
+$xml .= add_XML_value("projectid",$projectid);
+$xml .= add_XML_value("currentstarttime",$currentstarttime);
 $xml .= add_XML_value("teststarttime",date(FMT_DATETIME,$beginning_timestamp));
 $xml .= add_XML_value("testendtime",date(FMT_DATETIME,$end_timestamp));
 
@@ -122,12 +123,36 @@ while($row = pdo_fetch_array($result))
   {
   $buildid = $row["id"];
   $xml .= "<build>\n";
- 
+
+  // Find the repository revision
+  $xml .= "<update>";
+  // Return the status
+  $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
+                                  FROM buildupdate WHERE buildid='$buildid'"));
+  if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
+    {
+    $xml .= add_XML_value("status",$status_array["status"]);
+    }
+  else
+    {
+    $xml .= add_XML_value("status",""); // empty status
+    }
+  $xml .= add_XML_value("revision",$status_array["revision"]);
+  $xml .= add_XML_value("priorrevision",$status_array["priorrevision"]);
+  $xml .= add_XML_value("path",$status_array["path"]);
+  $xml .= add_XML_value("revisionurl",
+          get_revision_url($projectid, $status_array["revision"], $status_array["priorrevision"]));
+  $xml .= add_XML_value("revisiondiff",
+          get_revision_url($projectid, $status_array["priorrevision"], '')); // no prior prior revision...
+  $xml .= "</update>";
+
   $xml .= add_XML_value("site", $row["sitename"]);
   $xml .= add_XML_value("buildName", $row["name"]);
   $xml .= add_XML_value("buildStamp", $row["stamp"]);
   $xml .= add_XML_value("time", $row["time"]);
-  //$xml .= add_XML_value("details", $row["details"]) . "\n";
+
+//$xml .= add_XML_value("details", $row["details"]) . "\n";
+
   $buildLink = "viewTest.php?buildid=$buildid";
   $xml .= add_XML_value("buildLink", $buildLink);
   $testid = $row["testid"];
@@ -138,7 +163,7 @@ while($row = pdo_fetch_array($result))
     case "passed":
       $xml .= add_XML_value("status", "Passed");
       $xml .= add_XML_value("statusclass", "normal");
-      break; 
+      break;
     case "failed":
       $xml .= add_XML_value("status", "Failed");
       $xml .= add_XML_value("statusclass", "error");

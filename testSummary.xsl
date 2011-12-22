@@ -61,7 +61,7 @@ Show Test Failure Trend
     <th id="sort_2">Build Stamp</th>
     <th id="sort_3">Status</th>
     <th id="sort_4">Time (s)</th>
-    <th id="sort_5" class="nob">Detail</th>
+    <th id="sort_5" class="nob">Build Revision</th>
   </tr>
 </thead>
 
@@ -95,7 +95,9 @@ Show Test Failure Trend
       <xsl:value-of select="time"/>
     </td>
     <td class="nob">
-      <xsl:value-of select="details"/>
+      <a><xsl:attribute name="href"><xsl:value-of select="update/revisionurl"/></xsl:attribute>
+         <xsl:value-of select="update/revision"/>
+      </a>
     </td>
   </tr>
 </xsl:for-each>
