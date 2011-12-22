@@ -153,7 +153,7 @@ function get_trac_diff_url($projecturl, $directory, $file, $revision)
 
   if($revision != '')
     {
-    $diff_url = $projecturl."/changeset/".$revision."/".$filename;
+    $diff_url = $projecturl."/changeset/trunk/".$revision."/".$filename;
     }
   else // no revision
     {
