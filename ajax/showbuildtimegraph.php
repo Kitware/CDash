@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -32,7 +32,7 @@ if(!isset($buildid) || !is_numeric($buildid))
   echo "Not a valid buildid!";
   return;
   }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -56,7 +56,7 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,buildwarnings,builderro
                              AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC");
 ?>
 
-    
+
 <br>
 <script language="javascript" type="text/javascript">
 $(function () {
@@ -80,7 +80,7 @@ $(function () {
     $i++;
       }
     ?>
-    
+
     var options = {
       lines: { show: true },
       points: { show: true },
@@ -93,9 +93,9 @@ $(function () {
       hoverFill: '#444',
       hoverRadius: 4},
       selection: { mode: "x" },
-      colors: ["#0000FF", "#dba255", "#919733"]
+      colors: ["#41A317", "#FDD017", "#FF0000","#0000FF"]
     };
-  
+
     $("#grapholder").bind("selected", function (event, area) {
     plot = $.plot($("#grapholder"), [{label: "Build Time",  data: buildtime},
                                      {label: "# warnings",  data: buildwarnings, yaxis: 2},
@@ -108,9 +108,9 @@ $(function () {
             plot.highlight(item.series, item.datapoint);
             buildid = buildids[item.datapoint[0]];
             window.location = "buildSummary.php?buildid="+buildid;
-            }      
+            }
      });
-       
+
   plot = $.plot($("#grapholder"), [{label: "Build Time",  data: buildtime},
                                    {label: "# warnings",  data: buildwarnings, yaxis: 2},
                                    {label: "# errors",  data:  builderrors, yaxis: 2},
