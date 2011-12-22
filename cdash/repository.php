@@ -145,7 +145,6 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
 function get_trac_diff_url($projecturl, $directory, $file, $revision)
 {
   $filename = $file;
-
   if($directory != "")
     {
     $filename = $directory."/".$file;
@@ -159,7 +158,20 @@ function get_trac_diff_url($projecturl, $directory, $file, $revision)
     {
     $diff_url = $projecturl."/browser/".$filename;
     }
+  return make_cdash_url($diff_url);
+}
 
+/** Return the Mercurial URL */
+function get_hgweb_diff_url($projecturl, $directory, $file, $revision)
+{
+  if($revision != '')
+    {
+    $diff_url = $projecturl."/diff/".$revision."/".($directory ? ("/".$directory) : "")."/".$file;
+    }
+  else
+    {
+    $diff_url = $projecturl."/file/tip/".($directory ? ("/".$directory) : "")."/".$file;
+    }
   return make_cdash_url($diff_url);
 }
 
@@ -475,6 +487,13 @@ function get_viewcvs_revision_url($projecturl, $revision, $priorrevision)
 function get_trac_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl."/changeset/".$revision;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the Mercurial URL */
+function get_hgweb_revision_url($projecturl, $revision, $priorrevision)
+{
+  $revision_url = $projecturl."/detail?r=".$revision;
   return make_cdash_url($revision_url);
 }
 
