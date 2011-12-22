@@ -802,7 +802,7 @@ function get_geolocation($ip)
   $pos = strpos($httpReply,"Longitude: ");
   if($pos !== FALSE)
     {
-    $pos2 = strlen($httpReply);
+    $pos2 = strpos($httpReply,"\n",$pos);
     $long = substr($httpReply,$pos+11,$pos2-$pos-11);
     }
   curl_close($curl);
