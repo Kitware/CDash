@@ -366,6 +366,30 @@ function get_gitweb_diff_url($projecturl, $directory, $file, $revision)
   return make_cdash_url($diff_url);
 }
 
+/** Return the GitWeb2 diff URL */
+function get_gitweb2_diff_url($projecturl, $directory, $file, $revision)
+{
+  if($revision != '')
+    {
+    $diff_url = $projecturl . "/commitdiff/" . $revision;
+    }
+  else if ($file != '')
+    {
+    $diff_url = $projecturl . "/blob/";
+    if ($directory != '')
+      {
+      $diff_url .= $directory . "/";
+      }
+    $diff_url .= $file;
+    }
+  else
+    {
+    return '';
+    }
+
+  return make_cdash_url($diff_url);
+}
+
 /** Return the Gitorious/GitHub diff URL */
 function get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, $blobs, $branch='master')
 {
@@ -427,49 +451,12 @@ function get_diff_url($projectid, $projecturl, $directory, $file, $revision='')
   $project = pdo_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
 
-  if($project_array["cvsviewertype"] == "trac")
+  $cvsviewertype = strtolower($project_array["cvsviewertype"]);
+  $difffonction = 'get_'.$cvsviewertype.'_diff_url';
+
+  if(function_exists($difffonction))
     {
-    return get_trac_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "fisheye")
-    {
-    return get_fisheye_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "cvstrac")
-    {
-    return get_cvstrac_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "viewvc")
-    {
-    return get_viewvc_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "viewvc1.1")
-    {
-    return get_viewvc_1_1_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "websvn")
-    {
-    return get_websvn_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "loggerhead")
-    {
-    return get_loggerhead_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "gitweb")
-    {
-    return get_gitweb_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "gitorious")
-    {
-    return get_gitorious_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "github")
-    {
-    return get_github_diff_url($projecturl, $directory, $file, $revision);
-    }
-  elseif($project_array["cvsviewertype"] == "cgit")
-    {
-    return get_cgit_diff_url($projecturl, $directory, $file, $revision);
+    return $difffonction($projecturl, $directory, $file, $revision);
     }
   else // default is viewcvs
     {
@@ -478,65 +465,72 @@ function get_diff_url($projectid, $projecturl, $directory, $file, $revision='')
 }
 
 /** Return the ViewCVS URL */
-function get_viewcvs_revision_url($projecturl, $revision)
+function get_viewcvs_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl."&rev=".$revision;
   return make_cdash_url($revision_url);
 }
 
 /** Return the Trac URL */
-function get_trac_revision_url($projecturl, $revision)
+function get_trac_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl."/changeset/".$revision;
   return make_cdash_url($revision_url);
 }
 
 /** Return the Fisheye URL */
-function get_fisheye_revision_url($projecturl, $revision)
+function get_fisheye_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl."?r=".$revision;;
   return make_cdash_url($revision_url);
 }
 
 /** Return the CVSTrac URL */
-function get_cvstrac_revision_url($projecturl, $revision)
+function get_cvstrac_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = ""; // not implemented
   return make_cdash_url($revision_url);
 }
 
 /** Return the ViewVC URL */
-function get_viewvc_revision_url($projecturl, $revision)
+function get_viewvc_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl."?view=rev&revision=".$revision;
   return make_cdash_url($diff_url);
 }
 
 /** Return the viewVC 1-1 url */
-function get_viewvc_1_1_revision_url($projecturl, $revision)
+function get_viewvc_1_1_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = ""; // not implemented
   return make_cdash_url($revision_url);
 }
 
 /** Return the WebSVN URL */
-function get_websvn_revision_url($projecturl, $revision)
+function get_websvn_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl."?view=revision&revision=".$revision;
   return make_cdash_url($revision_url);
 }
 
 /** Return the Loggerhead URL */
-function get_loggerhead_revision_url($projecturl, $revision)
+function get_loggerhead_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = ""; // not implemented
   return make_cdash_url($revision_url);
 }
 
 /** Return the GitWeb revision URL */
-function get_gitweb_revision_url($projecturl, $revision)
+function get_gitweb_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl . ";a=shortlog;h=" . $revision;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the GitWeb revision URL */
+function get_gitweb2_revision_url($projecturl, $revision, $priorrevision)
+{
+  $revision_url = $projecturl . "/shortlog/" . $revision;
   return make_cdash_url($revision_url);
 }
 
@@ -559,7 +553,7 @@ function get_github_revision_url($projecturl, $revision, $priorrevision)
 }
 
 /** Return the cgit revision URL */
-function get_cgit_revision_url($projecturl, $revision)
+function get_cgit_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl . "/log/?id=" . $revision;
   return make_cdash_url($revision_url);
@@ -576,49 +570,13 @@ function get_revision_url($projectid, $revision, $priorrevision)
   $project = pdo_query("SELECT cvsviewertype,cvsurl FROM project WHERE id='$projectid'");
   $project_array = pdo_fetch_array($project);
   $projecturl = $project_array['cvsurl'];
-  if($project_array["cvsviewertype"] == "trac")
+
+  $cvsviewertype = strtolower($project_array["cvsviewertype"]);
+  $revisionfonction = 'get_'.$cvsviewertype.'_revision_url';
+
+  if(function_exists($revisionfonction))
     {
-    return get_trac_revision_url($projecturl,$revision);
-    }
-  elseif($project_array["cvsviewertype"] == "fisheye")
-    {
-    return get_fisheye_revision_url($projecturl,$revision);
-    }
-  elseif($project_array["cvsviewertype"] == "cvstrac")
-    {
-    return get_cvstrac_revision_url($projecturl,$revision);
-    }
-  elseif($project_array["cvsviewertype"] == "viewvc")
-    {
-    return get_viewvc_revision_url($projecturl,$revision);
-    }
-  elseif($project_array["cvsviewertype"] == "viewvc1.1")
-    {
-    return get_viewvc_1_1_revision_url($projecturl,$revision);
-    }
-  elseif($project_array["cvsviewertype"] == "websvn")
-    {
-    return get_websvn_revision_url($projecturl,$revision);
-    }
-  elseif($project_array["cvsviewertype"] == "loggerhead")
-    {
-    return get_loggerhead_revision_url($projecturl,$revision);
-    }
-  elseif($project_array["cvsviewertype"] == "gitweb")
-    {
-    return get_gitweb_revision_url($projecturl,$revision);
-    }
-  elseif($project_array["cvsviewertype"] == "gitorious")
-    {
-    return get_gitorious_revision_url($projecturl,$revision,$priorrevision);
-    }
-  elseif($project_array["cvsviewertype"] == "github")
-    {
-    return get_github_revision_url($projecturl,$revision,$priorrevision);
-    }
-  elseif($project_array["cvsviewertype"] == "cgit")
-    {
-    return get_cgit_revision_url($projecturl,$revision);
+    return $revisionfonction($projecturl,$revision,$priorrevision);
     }
   else // default is viewcvs
     {
