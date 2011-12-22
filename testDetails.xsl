@@ -148,7 +148,7 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
 <img src="images/console.png"/>
 <a id="commandlinelink" href="javascript:showcommandline_click()">Show Command Line</a>
 <div id="commandline" style="display:none">
-  <pre><xsl:value-of select="cdash/test/command"/></pre>
+  <xsl:value-of select="cdash/test/command"/>
 </div>
 <br/>
 <!-- Timing Graph -->
