@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -33,12 +33,12 @@ if(!isset($buildid) || !is_numeric($buildid))
   echo "Not a valid buildid!";
   return;
   }
-  
+
 $start = microtime_float();
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
-  
-$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));  
+
+$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 if(!isset($projectid) || $projectid==0)
   {
@@ -52,8 +52,8 @@ $project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime,dis
 if(pdo_num_rows($project)>0)
   {
   $project_array = pdo_fetch_array($project);
-  $projectname = $project_array["name"];  
-  $projectshowtesttime = $project_array["showtesttime"];  
+  $projectname = $project_array["name"];
+  $projectshowtesttime = $project_array["showtesttime"];
   $testtimemaxstatus = $project_array["testtimemaxstatus"];
   }
 
@@ -63,7 +63,7 @@ $buildname = $build_array["name"];
 $starttime = $build_array["starttime"];
 
 $date = get_dashboard_date_from_build_starttime($starttime, $project_array["nightlytime"]);
-  
+
 $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -107,7 +107,7 @@ else if(isset($_GET["onlydelta"])) // new test that are showing up for this cate
   $extraquery = "&onlydelta";
   }
 
-  
+
 $nightlytime = get_project_property($projectname,"nightlytime");
 $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime));
 $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
@@ -118,13 +118,13 @@ if($previousbuildid>0)
 else
   {
   $xml .= add_XML_value("noprevious","1");
-  }  
-$xml .= add_XML_value("current","viewTest.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime).$extraquery);  
+  }
+$xml .= add_XML_value("current","viewTest.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime).$extraquery);
 $nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
 if($nextbuildid>0)
   {
   $xml .= add_XML_value("next","viewTest.php?buildid=".$nextbuildid.$extraquery);
-  }  
+  }
 else
   {
   $xml .= add_XML_value("nonext","1");
@@ -226,7 +226,7 @@ if($onlydelta)
   {
   $limitnew = " AND newstatus=1 ";
   }
-  
+
 $sql = "SELECT bt.status,bt.newstatus,bt.timestatus,t.id,bt.time,t.details,t.name " .
        "FROM test as t,build2test as bt " .
        "WHERE bt.buildid='$buildid' AND t.id=bt.testid " . $status . " " .
@@ -261,14 +261,14 @@ while($row = pdo_fetch_array($result))
     $xml .= add_XML_value("new","1");
     }
   $xml .= add_XML_value("execTime", $row["time"]);
-  $xml .= add_XML_value("details", $row["details"]); 
+  $xml .= add_XML_value("details", $row["details"]);
   $testdate = get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime);
-  $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$testdate";
+  $summaryLink = "testSummary.php?project=$projectid&name=".urlencode($testName)."&date=$testdate";
   $xml .= add_XML_value("summaryLink", $summaryLink);
-  $testid = $row["id"]; 
+  $testid = $row["id"];
   $detailsLink = "testDetails.php?test=$testid&build=$buildid";
   $xml .= add_XML_value("detailsLink", $detailsLink);
-  
+
   if($projectshowtesttime)
     {
     if($row["timestatus"] < $testtimemaxstatus)
@@ -282,7 +282,7 @@ while($row = pdo_fetch_array($result))
       $xml .= add_XML_value("timestatusclass", "error");
       }
     } // end projectshowtesttime
-  
+
   switch($currentStatus)
     {
     case "passed":
@@ -301,10 +301,10 @@ while($row = pdo_fetch_array($result))
       $numNotRun++;
       break;
     }
-  
+
   if($row["timestatus"] >= $testtimemaxstatus)
     {
-    $numTimeFailed++;   
+    $numTimeFailed++;
     }
 
   $testid = $row['id'];

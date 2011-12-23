@@ -72,7 +72,7 @@ $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
-$xml .="<testName>".$testName."</testName>";
+$xml .= add_XML_value("testName",$testName);
 
 $xml .= "<menu>";
 list ($previousdate, $currentstarttime, $nextdate,$today) = get_dates($date,$nightlytime);
