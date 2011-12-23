@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -34,8 +34,8 @@ if(!isset($projectid) || !is_numeric($projectid))
 else
   {
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
-  } 
-  
+  }
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -44,8 +44,8 @@ if($projectid)
   $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
   if(pdo_num_rows($project)>0)
     {
-    $project_array = pdo_fetch_array($project);  
-    $projectname = $project_array["name"];  
+    $project_array = pdo_fetch_array($project);
+    $projectname = $project_array["name"];
     }
   }
 else
@@ -60,21 +60,15 @@ $xml .= "<version>".$CDASH_VERSION."</version>";
 if($buildid)
   {
   $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
-
-  $sql = '';
   // Get the errors
-  if($date)
-    {
-    $sql = "AND date>'".$date."'";
-    }
   $query = pdo_query("SELECT resourcetype,date,resourceid,description,type,buildid,projectid
-                     FROM errorlog WHERE projectid=".qnum($projectid).$sql." AND buildid=".qnum($buildid)." ORDER BY date DESC");
- 
+                     FROM errorlog WHERE projectid=".qnum($projectid)." AND buildid=".qnum($buildid)." ORDER BY date DESC");
+
   }
 else if($projectid)
   {
   $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
- 
+
   $sql = '';
   if($date)
     {
@@ -83,9 +77,9 @@ else if($projectid)
   // Get the errors
   $query = pdo_query("SELECT resourcetype,date,resourceid,description,type,buildid,projectid
                      FROM errorlog WHERE projectid=".qnum($projectid).$sql." ORDER BY date DESC");
-  }  
+  }
 else
-  { 
+  {
   $query = pdo_query("SELECT resourcetype,date,resourceid,errorlog.description,type,buildid,projectid,project.name AS projectname
                      FROM errorlog LEFT JOIN project ON (project.id=errorlog.projectid) ORDER BY date DESC");
   echo pdo_error();
@@ -101,12 +95,12 @@ while($query_array = pdo_fetch_array($query))
   $xml .= add_XML_value("type",$query_array["type"]);
   $xml .= add_XML_value("buildid",$query_array["buildid"]);
   $xml .= add_XML_value("projectid",$query_array["projectid"]);
-  
+
   if(isset($query_array["projectname"]))
     {
-    $xml .= add_XML_value("projectname",$query_array["projectname"]);  
+    $xml .= add_XML_value("projectname",$query_array["projectname"]);
     }
-  
+
   $xml .= "</error>";
   }
 $xml .= "</cdash>";
