@@ -155,7 +155,7 @@ $xml .= add_XML_value("numberphysicalcpus",$siteinformation_array["numberphysica
 $xml .= add_XML_value("totalvirtualmemory",getByteValueWithExtension($siteinformation_array["totalvirtualmemory"]*1000000)."iB");
 $xml .= add_XML_value("totalphysicalmemory",getByteValueWithExtension($siteinformation_array["totalphysicalmemory"]*1000000)."iB");
 $xml .= add_XML_value("logicalprocessorsperphysical",$siteinformation_array["logicalprocessorsperphysical"]);
-$xml .= add_XML_value("processorclockfrequency",getByteValueWithExtension($siteinformation_array["processorclockfrequency"]*1024*1024)."Hz");
+$xml .= add_XML_value("processorclockfrequency",getByteValueWithExtension($siteinformation_array["processorclockfrequency"]*1000000)."Hz");
 if($projectid && $project_array['showipaddresses'])
   {
   $xml .= add_XML_value("ip",$site_array["ip"]);
