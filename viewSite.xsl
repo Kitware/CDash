@@ -50,19 +50,34 @@
 </xsl:if>
 
 <!-- Main -->
-<b>Processor Speed: </b><xsl:if test="string-length(cdash/site/processorclockfrequency)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>
-<b>64 Bits: </b><xsl:if test="string-length(cdash/site/processoris64bits)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processoris64bits"/><br/>
-<b>Processor Vendor: </b><xsl:if test="string-length(cdash/site/processorvendor)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendor"/><br/>
-<b>Processor Vendor ID: </b><xsl:if test="string-length(cdash/site/processorvendorid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorvendorid"/><br/>
-<b>Processor Family ID: </b><xsl:if test="string-length(cdash/site/processorfamilyid)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorfamilyid"/><br/>
-<b>Processor Cache Size: </b><xsl:if test="string-length(cdash/site/processorcachesize)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/processorcachesize"/><br/>
-<b>Number of logical CPUs: </b><xsl:if test="string-length(cdash/site/numberlogicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberlogicalcpus"/><br/>
-<b>Number of physical CPUs: </b><xsl:if test="string-length(cdash/site/numberphysicalcpus)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/numberphysicalcpus"/><br/>
-<b>Number of logical CPU per Physical CPUs: </b><xsl:if test="string-length(cdash/site/logicalprocessorsperphysical)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/logicalprocessorsperphysical"/><br/>
-<b>Total Virtual Memory: </b><xsl:if test="string-length(cdash/site/totalvirtualmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalvirtualmemory"/><br/>
-<b>Total Physical Memory: </b><xsl:if test="string-length(cdash/site/totalphysicalmemory)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/totalphysicalmemory"/><br/>
-<b>Description: </b><xsl:if test="string-length(cdash/site/description)=0"> NA</xsl:if> <xsl:value-of select="cdash/site/description"/><br/>
+<xsl:if test="cdash/site/processorclockfrequency='0Hz'">
+  No system information available at this time.
+</xsl:if>
+<xsl:if test="cdash/site/processorclockfrequency!='0Hz'">
+<b>Processor Speed: </b> <xsl:value-of select="cdash/site/processorclockfrequency"/><br/>
+<xsl:if test="string-length(cdash/site/processorvendor)=0">
+<b>Processor Vendor: </b> <xsl:value-of select="cdash/site/processorvendor"/>
+<xsl:if test="string-length(cdash/site/processorvendorid)=0">
+  (<xsl:value-of select="cdash/site/processorvendorid"/>)
+</xsl:if>
 <br/>
+</xsl:if>
+<xsl:if test="string-length(cdash/site/numberlogicalcpus)=0">
+  <b>Number of CPUs: </b> <xsl:value-of select="cdash/site/numberlogicalcpus"/><br/>
+</xsl:if>
+<xsl:if test="string-length(cdash/site/numberphysicalcpus)=0">
+<b>Number of Cores: </b> <xsl:value-of select="cdash/site/numberphysicalcpus"/><br/>
+</xsl:if>
+<xsl:if test="string-length(cdash/site/totalphysicalmemory)=0">
+<b>Total Physical Memory: </b> <xsl:value-of select="cdash/site/totalphysicalmemory"/><br/>
+</xsl:if>
+
+</xsl:if>
+<xsl:if test="string-length(cdash/site/description)=0">
+  <b>Description: </b> <xsl:value-of select="cdash/site/description"/><br/>
+</xsl:if>
+<br/>
+
 
 <!-- Display the claimers -->
 <xsl:if test="count(cdash/claimer)>0">
