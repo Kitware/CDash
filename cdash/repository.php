@@ -505,7 +505,7 @@ function get_trac_revision_url($projecturl, $revision, $priorrevision)
 /** Return the Mercurial URL */
 function get_hgweb_revision_url($projecturl, $revision, $priorrevision)
 {
-  $revision_url = $projecturl."/detail?r=".$revision;
+  $revision_url = $projecturl."/rev/".$revision;
   return make_cdash_url($revision_url);
 }
 
