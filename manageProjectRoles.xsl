@@ -184,11 +184,11 @@
              <td>
              <table width="850">
                <tr bgcolor="#CCCCCC">
-                <td><center><b>Firstname</b></center></td>
-                <td><center><b>Lastname</b></center></td>
+                <td><center><b>User</b></center></td>
                 <td><center><b>Email</b></center></td>
                 <td><center><b>Role</b></center></td>
                 <td><center><b>Repository Credentials<br/>(cred1;cred2;)</b></center></td>
+                <td><center><b>Notifications</b></center></td>
                 <td><center><b>Action</b></center></td>
                </tr>
 
@@ -200,20 +200,27 @@
                 <input name="userid" type="hidden">
                 <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
                 </input>
-                <td><xsl:value-of select="firstname"/></td>
-                <td><xsl:value-of select="lastname"/></td>
+                <td><xsl:value-of select="firstname"/><xsl:text disable-output-escaping="yes"> </xsl:text><xsl:value-of select="lastname"/></td>
                 <td><xsl:value-of select="email"/></td>
                 <td>
                 <select name="role">
                  <option value="0"><xsl:if test="role=0"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Normal User</option>
                  <option value="1"><xsl:if test="role=1"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Site maintainer</option>
                  <option value="2"><xsl:if test="role=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project Administrator</option>
-               </select>
-               </td>
+                </select>
+                </td>
                <td>
                  <input name="credentials" type="text">
                   <xsl:attribute name="value"><xsl:for-each select="repositorycredential"><xsl:value-of select="."/>;</xsl:for-each></xsl:attribute>
                  </input>
+                </td>
+                <td>
+                <select name="emailtype">
+                 <option value="0"><xsl:if test="emailtype=0"><xsl:attribute name="selected"></xsl:attribute></xsl:if>No email</option>
+                 <option value="1"><xsl:if test="emailtype=1"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Email checkins</option>
+                 <option value="2"><xsl:if test="emailtype=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Email nighlty</option>
+                 <option value="3"><xsl:if test="emailtype=3"><xsl:attribute name="selected"></xsl:attribute></xsl:if>All emails</option>
+               </select>
                 </td>
                 <td>
                 <input type="submit" name="updateuser" value="Update"/>

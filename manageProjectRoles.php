@@ -80,6 +80,7 @@ if ($session_OK)
 @$removeuser = $_POST["removeuser"];
 @$userid = $_POST["userid"];
 @$role = $_POST["role"];
+@$emailtype = $_POST["emailtype"];
 @$credentials = $_POST["credentials"];
 @$repositoryCredential = $_POST["repositoryCredential"];
 @$updateuser = $_POST["updateuser"];
@@ -316,7 +317,7 @@ if($updateuser)
   $credentials_array = explode(';',$credentials);
   $UserProject->UpdateCredentials($credentials_array);
 
-  pdo_query("UPDATE user2project SET role='$role' WHERE userid='$userid' AND projectid='$projectid'");
+  pdo_query("UPDATE user2project SET role='$role',emailtype='$emailtype' WHERE userid='$userid' AND projectid='$projectid'");
   echo pdo_error();
   }
 
@@ -430,7 +431,7 @@ if($projectid>0)
 
 
   // List the users for that project
-  $user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.role
+  $user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.role,up.emailtype
                        FROM user2project AS up, ".qid("user")." as u
                        WHERE u.id=up.userid  AND up.projectid='$projectid'
                        ORDER BY u.firstname ASC");
@@ -467,6 +468,8 @@ if($projectid>0)
       }
 
     $xml .= add_XML_value("role",$user_array['role']);
+    $xml .= add_XML_value("emailtype",$user_array['emailtype']);
+
     $xml .= "</user>";
     }
 
