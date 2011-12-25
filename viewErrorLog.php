@@ -21,6 +21,9 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+include("models/project.php");
+include("models/user.php");
+include_once("models/errorlog.php");
 
 @$buildid = $_GET["buildid"];
 @$projectid = $_GET["projectid"];
@@ -39,19 +42,41 @@ else
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
+$userid = $_SESSION['cdash']['loginid'];
+$User = new User;
+$User->Id = $userid;
+
+$Project = new Project;
+$role = 0;
+
 if($projectid)
   {
-  $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+  $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
   if(pdo_num_rows($project)>0)
     {
     $project_array = pdo_fetch_array($project);
     $projectname = $project_array["name"];
     }
+  $Project->Id = $projectid;
+  $role = $Project->GetUserRole($userid);
   }
 else
   {
   $projectname = 'Global';
   }
+
+// If we should delete the log
+if(($User->IsAdmin() || $role>1) && isset($_POST["deletelogs"]))
+  {
+  $ErrorLog = new ErrorLog();
+  $ErrorLog->Clean(0,$projectid);
+  }
+else if(isset($_POST["deletelogs"]))
+  {
+  echo "You don't have the privileges to delete these logs.";
+  exit();
+  }
+
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>Error Log - ".$projectname."</title>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
@@ -63,7 +88,6 @@ if($buildid)
   // Get the errors
   $query = pdo_query("SELECT resourcetype,date,resourceid,description,type,buildid,projectid
                      FROM errorlog WHERE projectid=".qnum($projectid)." AND buildid=".qnum($buildid)." ORDER BY date DESC");
-
   }
 else if($projectid)
   {
@@ -103,6 +127,10 @@ while($query_array = pdo_fetch_array($query))
 
   $xml .= "</error>";
   }
+
+$xml .= add_XML_value("admin",$User->IsAdmin());
+$xml .= add_XML_value("role",$role);
+
 $xml .= "</cdash>";
 
 // Now doing the xslt transition

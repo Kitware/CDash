@@ -34,15 +34,22 @@ class ErrorLog
     $this->ResourceType = 0;
     $this->Type = 0;
     }
-  
+
   // Clean the logs more than one week
-  function Clean($days)
+  function Clean($days,$projectid=0)
     {
     $time = time()-($days*3600*24);
     $date = date("Y-m-d H:i:s",$time);
-    pdo_query("DELETE FROM errorlog WHERE date<'".$date."'");
+
+    $sql = '';
+    if(is_numeric($projectid) && $projectid > 0)
+      {
+      $sql = " AND projectid=".$projectid;
+      }
+
+    pdo_query("DELETE FROM errorlog WHERE date<'".$date."'".$sql);
     }
-    
+
   // Save in the database
   function Insert()
     {
@@ -52,8 +59,8 @@ class ErrorLog
        !is_numeric($this->ResourceType) ||
        !is_numeric($this->Type))
       {
-      return false;  
-      } 
+      return false;
+      }
 
     $description = pdo_real_escape_string($this->Description);
 
@@ -64,25 +71,25 @@ class ErrorLog
       $query = pdo_query("SELECT projectid FROM build WHERE id='".$this->BuildId."'");
       if(pdo_num_rows($query)>0)
         {
-        $query_array = pdo_fetch_array($query);  
+        $query_array = pdo_fetch_array($query);
         $this->ProjectId = $query_array['projectid'];
         }
       }
-    
+
     // Insert a new row every time an error exists
     $now = date("Y-m-d H:i:s");
 
-    $sql = "INSERT INTO errorlog (projectid,buildid,type,date,resourcetype,resourceid,description) 
+    $sql = "INSERT INTO errorlog (projectid,buildid,type,date,resourcetype,resourceid,description)
                VALUES ('".$this->ProjectId."','".$this->BuildId."','".$this->Type."','".
-                         $now."','".$this->ResourceType."','".$this->ResourceId."','".$description."')";                    
-    
+                         $now."','".$this->ResourceType."','".$this->ResourceId."','".$description."')";
+
     pdo_query($sql);
     echo pdo_error();
-    
+
     // We don't log on purpose (loop loop ;)
     return true;
     }  // end insert
-  
+
 }
 
 ?>
