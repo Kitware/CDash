@@ -153,7 +153,7 @@ class UpdateHandler extends AbstractHandler
           $this->EndTimeStamp = str_to_time($data, $this->getBuildStamp());
           break;
         case 'UPDATECOMMAND':
-          $this->Update->Command = $data;
+          $this->Update->Command .= $data;
           break;
         case 'UPDATETYPE':
           $this->Update->Type = $data;
