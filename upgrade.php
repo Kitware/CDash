@@ -1203,10 +1203,11 @@ function ComputeTestTiming($days = 4)
 }
 
 
-
 /** Compute the statistics for the updated file. Number of produced errors, warning, test failings. */
 function ComputeUpdateStatistics($days = 4)
 {
+  include_once('models/build.php');
+
   // Loop through the projects
   $project = pdo_query("SELECT id FROM project");
 
@@ -1230,32 +1231,10 @@ function ComputeUpdateStatistics($days = 4)
     $previousperc = 0;
     while($build_array = pdo_fetch_array($builds))
       {
-      $buildid = $build_array["id"];
-      $buildname = $build_array["name"];
-      $buildtype = $build_array["type"];
-      $starttime = $build_array["starttime"];
-      $siteid = $build_array["siteid"];
-
-      // Find the previous build
-      $previousbuild = pdo_query("SELECT id FROM build
-                                    WHERE build.siteid='$siteid'
-                                    AND build.type='$buildtype' AND build.name='$buildname'
-                                    AND build.projectid='$projectid'
-                                    AND build.starttime<'$starttime'
-                                    AND build.starttime>'$now'
-                                    ORDER BY build.starttime DESC LIMIT 1");
-      echo pdo_error();
-
-      if(pdo_num_rows($previousbuild)>0)
-        {
-        $previousbuild_array = pdo_fetch_array($previousbuild);
-        $previousbuildid = $previousbuild_array["id"];
-        compute_update_statistics($projectid,$buildid,$previousbuildid);
-        }
-      else
-        {
-        compute_update_statistics($projectid,$buildid,0);
-        }
+      $Build = new Build();
+      $Build->Id = $build_array["id"];
+      $Build->ProjectId = $projectid;
+      $Build->ComputeUpdateStatistics();
 
       // Progress bar
       $perc = ($i/$total)*100;

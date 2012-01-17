@@ -1107,7 +1107,7 @@ class Build
     } // end function ComputeUpdateStatistics
 
 
-  /** Helper function for compute_update_statistics */
+  /** Helper function for ComputeUpdateStatistics */
   private function AddUpdateStatistics($author,$checkindate,$firstbuild,
                                        $warningdiff,$errordiff,$testdiff)
     {
@@ -1261,7 +1261,7 @@ class Build
                     ");
       add_last_sql_error("Build:AddUpdateStatistics",$this->ProjectId,$this->Id);
       }
-    } // end add_update_statistics
+    } // end AddUpdateStatistics
 
 
   /** Find the errors associated with a user */
