@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -26,14 +26,14 @@ include_once('models/clientjobschedule.php');
 include_once('models/clientsite.php');
 include_once('models/clientjob.php');
 
-if ($session_OK) 
+if ($session_OK)
   {
   $userid = $_SESSION['cdash']['loginid'];
   $xml = "<cdash>";
   $xml .= add_XML_value("cssfile",$CDASH_CSS_FILE);
   $xml .= add_XML_value("version",$CDASH_VERSION);
   $xml .= add_XML_value("manageclient",$CDASH_MANAGE_CLIENTS);
-    
+
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
   $xml .= add_XML_value("title","CDash - My Profile");
@@ -42,7 +42,7 @@ if ($session_OK)
   $user_array = pdo_fetch_array($user);
   $xml .= add_XML_value("user_name",$user_array["firstname"]);
   $xml .= add_XML_value("user_is_admin",$user_array["admin"]);
-    
+
   // Go through the list of project the user is part of
   $project2user = pdo_query("SELECT user2project.projectid AS projectid,role,name,
                             (SELECT count(errorlog.projectid) FROM errorlog WHERE errorlog.projectid=user2project.projectid)
@@ -57,7 +57,7 @@ if ($session_OK)
   $start=gmdate(FMT_DATETIME,strtotime(date("r"))-(3600*24));
   while($project2user_array = pdo_fetch_array($project2user))
     {
-    $Project->Id=$project2user_array["projectid"];      
+    $Project->Id=$project2user_array["projectid"];
     $projectid = $project2user_array["projectid"];
     $projectname = $project2user_array["name"];
     $xml .= "<project>";
@@ -73,46 +73,47 @@ if ($session_OK)
     $xml .= add_XML_value("warning",$Project->GetNumberOfWarningBuilds($start,gmdate(FMT_DATETIME)));
     $xml .= "</project>";
     }
-  
+
   // Go through the jobs
   if($CDASH_MANAGE_CLIENTS)
     {
     $ClientJobSchedule = new ClientJobSchedule();
     $userJobSchedules = $ClientJobSchedule->getAll($userid,5);
     foreach($userJobSchedules as $scheduleid)
-      {    
+      {
       $ClientJobSchedule = new ClientJobSchedule();
       $ClientJobSchedule->Id = $scheduleid;
       $projectid=$ClientJobSchedule->GetProjectId();
+      $Project= new Project();
       $Project->Id=$projectid;
-      
+
       $status = "Scheduled";
       $lastrun = "NA";
-      
+
       $lastjobid = $ClientJobSchedule->GetLastJobId();
       if($lastjobid)
         {
         $ClientJob = new ClientJob();
-        $ClientJob->Id = $lastjobid;   
+        $ClientJob->Id = $lastjobid;
         switch($ClientJob->GetStatus())
           {
           case CDASH_JOB_RUNNING:
             $status = "Running";
-            $ClientSite = new ClientSite(); 
+            $ClientSite = new ClientSite();
             $ClientSite->Id = $ClientJob->GetSite();
             $status .= " (".$ClientSite->GetName().")";
             $lastrun = $ClientJob->GetStartDate();
             break;
           case CDASH_JOB_FINISHED:
             $status = "Finished";
-            $ClientSite = new ClientSite(); 
+            $ClientSite = new ClientSite();
             $ClientSite->Id = $ClientJob->GetSite();
             $status .= " (".$ClientSite->GetName().")";
             $lastrun = $ClientJob->GetEndDate();
             break;
           case CDASH_JOB_FAILED:
             $status = "Failed";
-            $ClientSite = new ClientSite(); 
+            $ClientSite = new ClientSite();
             $ClientSite->Id = $ClientJob->GetSite();
             $status .= " (".$ClientSite->GetName().")";
             $lastrun = $ClientJob->GetEndDate();
@@ -123,7 +124,7 @@ if ($session_OK)
             break;
           }
         }
-      
+
       $xml .= "<jobschedule>";
       $xml .= add_XML_value("id",$scheduleid);
       $xml .= add_XML_value("projectid",$Project->Id);
@@ -131,12 +132,12 @@ if ($session_OK)
       $xml .= add_XML_value("status",$status);
       $xml .= add_XML_value("lastrun",$lastrun);
       $xml .= "</jobschedule>";
-      }  
+      }
     } // end if $CDASH_MANAGE_CLIENTS
-    
+
   // Go through the public projects
-  $project = pdo_query("SELECT name,id FROM project WHERE id 
-                        NOT IN (SELECT projectid as id FROM user2project 
+  $project = pdo_query("SELECT name,id FROM project WHERE id
+                        NOT IN (SELECT projectid as id FROM user2project
                         WHERE userid='$userid') AND public='1' ORDER BY name");
   $j = 0;
   if($CDASH_USE_LOCAL_DIRECTORY=='1')
@@ -166,8 +167,8 @@ if ($session_OK)
     $xml .= "</publicproject>";
     $j++;
     }
-  
-  //Go through the claimed sites  
+
+  //Go through the claimed sites
   $claimedsiteprojects = array();
   $siteidwheresql = "";
   $claimedsites = array();
@@ -177,23 +178,23 @@ if ($session_OK)
     $siteid = $site2user_array["siteid"];
     $site["id"] = $siteid;
     $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-    $site["name"] = $site_array["name"]; 
+    $site["name"] = $site_array["name"];
     $claimedsites[] = $site;
-    
+
     if(strlen($siteidwheresql)>0)
       {
       $siteidwheresql .= " OR ";
       }
     $siteidwheresql .= " siteid='$siteid' ";
     }
-  
+
    // Look for all the projects
    if(pdo_num_rows($site2user)>0)
      {
      $site2project = pdo_query("SELECT build.projectid FROM build,user2project WHERE ($siteidwheresql)
                      AND user2project.projectid=build.projectid AND user2project.userid='$userid'
                      AND user2project.role>0
-                     GROUP BY build.projectid"); 
+                     GROUP BY build.projectid");
      while($site2project_array = pdo_fetch_array($site2project))
        {
        $projectid = $site2project_array["projectid"];
@@ -205,34 +206,34 @@ if ($session_OK)
        $claimedsiteprojects[] = $claimedproject;
        }
      }
-  
+
   /** Report statistics about the last build */
   function ReportLastBuild($type,$projectid,$siteid,$projectname,$nightlytime)
     {
     $xml = "<".strtolower($type).">";
     $nightlytime = strtotime($nightlytime);
-    
-    // Find the last build 
+
+    // Find the last build
     $build = pdo_query("SELECT starttime,id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$type' ORDER BY submittime DESC LIMIT 1");
     if(pdo_num_rows($build) > 0)
       {
       $build_array = pdo_fetch_array($build);
       $buildid = $build_array["id"];
-      
+
       // Express the date in terms of days (makes more sens)
       $buildtime = strtotime($build_array["starttime"]." UTC");
       $builddate = $buildtime;
-      
+
       if(date(FMT_TIME,$buildtime)>date(FMT_TIME,$nightlytime))
         {
         $builddate += 3600*24; //next day
         }
-      
+
       if(date(FMT_TIME,$nightlytime)<'12:00:00')
         {
         $builddate -= 3600*24; // previous date
-        }    
-      
+        }
+
       $date = date(FMT_DATE,$builddate);
       $days = ((time()-strtotime($date))/(3600*24));
 
@@ -247,10 +248,10 @@ if ($session_OK)
       else
         {
         $day = round($days)." days";
-        }  
+        }
       $xml .= add_XML_value("date",$day);
       $xml .= add_XML_value("datelink","index.php?project=".urlencode($projectname)."&date=".$date);
-     
+
       // Configure
       $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
       if(pdo_num_rows($configure)>0)
@@ -265,8 +266,8 @@ if ($session_OK)
           {
           $xml .= add_XML_value("configureclass","normal");
           }
-        } 
-      else 
+        }
+      else
         {
          $xml .= add_XML_value("configure","-");
         $xml .= add_XML_value("configureclass","normal");
@@ -292,7 +293,7 @@ if ($session_OK)
         {
         $xml .= add_XML_value("updateclass","normal");
         }
-        
+
       // Find the number of errors and warnings
       $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
       $builderror_array = pdo_fetch_array($builderror);
@@ -302,7 +303,7 @@ if ($session_OK)
       $buildwarning_array = pdo_fetch_array($buildwarning);
       $nwarnings = $buildwarning_array[0];
       $xml .= add_XML_value("warning",$nwarnings);
-      
+
       // Set the color
       if($nerrors>0)
         {
@@ -316,14 +317,14 @@ if ($session_OK)
         {
         $xml .= add_XML_value("errorclass","normal");
         }
-        
+
       // Find the test
       $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
       $nnotrun = $nnotrun_array[0];
       $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
       $nfail = $nfail_array[0];
-      
-      // Display the failing tests then the not run 
+
+      // Display the failing tests then the not run
       if($nfail>0)
         {
         $xml .= add_XML_value("testfail",$nfail);
@@ -339,47 +340,47 @@ if ($session_OK)
         $xml .= add_XML_value("testfail","0");
         $xml .= add_XML_value("testfailclass","normal");
         }
-     $xml .= add_XML_value("NA","0");   
+     $xml .= add_XML_value("NA","0");
      }
     else
       {
       $xml .= add_XML_value("NA","1");
       }
-      
+
     $xml .= "</".strtolower($type).">";
-    
+
     return $xml;
     }
-  
-  
+
+
   // List the claimed sites
   foreach($claimedsites as $site)
     {
     $xml .= "<claimedsite>";
     $xml .= add_XML_value("id",$site["id"]);
     $xml .= add_XML_value("name",$site["name"]);
-    
+
     $siteid = $site["id"];
-    
+
     foreach($claimedsiteprojects as $project)
       {
       $xml .= "<project>";
-      
+
       $projectid = $project["id"];
       $projectname = $project["name"];
       $nightlytime = $project["nightlytime"];
-      
+
       $xml .= ReportLastBuild("Nightly",$projectid,$siteid,$projectname,$nightlytime);
       $xml .= ReportLastBuild("Continuous",$projectid,$siteid,$projectname,$nightlytime);
       $xml .= ReportLastBuild("Experimental",$projectid,$siteid,$projectname,$nightlytime);
-     
+
       $xml .= "</project>";
       }
-    
+
     $xml .= "</claimedsite>";
     }
-    
-  // Use to build the site/project matrix  
+
+  // Use to build the site/project matrix
   foreach($claimedsiteprojects as $project)
     {
     $xml .= "<claimedsiteproject>";
@@ -388,27 +389,27 @@ if ($session_OK)
     $xml .= add_XML_value("name_encoded",urlencode($project["name"]));
     $xml .= "</claimedsiteproject>";
     }
-  
-    
+
+
   if(@$_GET['note'] == "subscribedtoproject")
     {
     $xml .= "<message>You have subscribed to a project.</message>";
-    }  
+    }
   else if(@$_GET['note'] == "subscribedtoproject")
     {
     $xml .= "<message>You have been unsubscribed from a project.</message>";
     }
-    
+
   // If the user is admin we show all the errors
   if($user_array["admin"])
     {
     $errorlog = pdo_fetch_array(pdo_query("SELECT count(id) FROM errorlog"));
     $xml .= add_XML_value("nerrorlogs", $errorlog[0]);
     }
-    
-    
+
+
   $xml .= "</cdash>";
-  
+
   // Now doing the xslt transition
   if(!isset($NoXSLGenerate))
     {
