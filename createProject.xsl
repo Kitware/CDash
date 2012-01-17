@@ -336,7 +336,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('public_help');" src="images/help.gif"
                               border="0" />
@@ -390,7 +390,7 @@
                             directly.
                           </span>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             onmouseover="showHelp('logo_help');" target="blank">
                             <img src="images/help.gif" border="0" />
                           </a>
@@ -459,7 +459,7 @@
                           </input>
                           <xsl:text disable-output-escaping="yes"> </xsl:text>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('svnViewer_help');" src="images/help.gif"
                               border="0" />
@@ -507,7 +507,7 @@
                             </xsl:for-each>
                           </select>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('svnViewerType_help');"
                               src="images/help.gif" border="0" />
@@ -572,7 +572,7 @@
                              </xsl:attribute>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('cvsrobot_help');"
                               src="images/help.gif" border="0" />
@@ -603,7 +603,7 @@
                             </input>
                             <xsl:text disable-output-escaping="yes"> </xsl:text>
                             <a
-                              href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                              href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                               target="blank">
                               <img onmouseover="showHelp('svnRepository_help');"
                                 src="images/help.gif" border="0" />
@@ -637,7 +637,7 @@
                               </xsl:attribute>
                             </input>
                             <xsl:text disable-output-escaping="yes"> </xsl:text>
-                            <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                            <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project" target="blank">
                             <img onmouseover="showHelp('svnUsername_help');" src="images/help.gif" border="0"/></a>
                           </td>
                         </tr>
@@ -654,7 +654,7 @@
                               </xsl:attribute>
                             </input>
                             <xsl:text disable-output-escaping="yes"> </xsl:text>
-                            <a href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                            <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project" target="blank">
                             <img onmouseover="showHelp('svnUsername_help');" src="images/help.gif" border="0"/></a>
                           </td>
                         </tr>
@@ -716,7 +716,7 @@
                           </input>
                           <xsl:text disable-output-escaping="yes"> </xsl:text>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('TestingDataUrl_help');" src="images/help.gif"
                               border="0" />
@@ -746,7 +746,7 @@
                           </input>
                           <xsl:text disable-output-escaping="yes"> </xsl:text>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('NightlyStart_help');" src="images/help.gif"
                               border="0" />
@@ -780,7 +780,7 @@
                           </input>
                           <xsl:text disable-output-escaping="yes"> </xsl:text>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('CoverageThres_help');"
                               src="images/help.gif" border="0" />
@@ -811,7 +811,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('EnableTestTiming_help');"
                               src="images/help.gif" border="0" />
@@ -822,7 +822,7 @@
                             Enable/Disable test timing for this project
                             <p>
                               For more information about test timing see the
-                              <a href="/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration">
+                              <a href="http://www.cdash.org/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
                                 Test Timing</a>
                               section.
                             </p>
@@ -847,7 +847,7 @@
                           </input>
                           <xsl:text disable-output-escaping="yes"> </xsl:text>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('TimeDeviation_help');"
                               src="images/help.gif" border="0" />
@@ -863,7 +863,7 @@
                             only builds submitted after the modification.
                             <p>
                               For more information about test timing see the
-                              <a href="/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration">
+                              <a href="http://www.cdash.org/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
                                 Test Timing</a>
                               section.
                             </p>
@@ -890,7 +890,7 @@
                           </input>
                           <xsl:text disable-output-escaping="yes"> </xsl:text>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('TimeDeviationThreshold_help');"
                               src="images/help.gif" border="0" />
@@ -908,7 +908,7 @@
                             submitted after the modification.
                             <p>
                               For more information about test timing see the
-                              <a href="/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration">
+                              <a href="/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
                                 Test Timing</a>
                               section.
                             </p>
@@ -972,7 +972,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('emailBroken_help');" src="images/help.gif"
                               border="0" />
@@ -1000,7 +1000,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('emailRedundant_help');"
                               src="images/help.gif" border="0" />
@@ -1030,7 +1030,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('emailAdministrator_help');"
                               src="images/help.gif" border="0" />
@@ -1058,7 +1058,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('emailCoverage_help');"
                               src="images/help.gif" border="0" />
@@ -1087,7 +1087,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('emailTiming_help');" src="images/help.gif"
                               border="0" />
@@ -1167,7 +1167,7 @@
                             <strong>
                               Block List
                               <a
-                                href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                                href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                                 target="blank">
                                 <img onmouseover="showHelp('ctestConfig_help');"
                                   src="images/help.gif" border="0" />
@@ -1335,7 +1335,7 @@
                               CTestConfig.cmake
                             </a>
                             <a
-                              href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                              href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                               target="blank">
                               <img onmouseover="showHelp('ctestConfig_help');" src="images/help.gif"
                                 border="0" />
@@ -1367,7 +1367,7 @@
                           </input>
                           <xsl:text disable-output-escaping="yes"> </xsl:text>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('google_help');" src="images/help.gif"
                               border="0" />
@@ -1396,7 +1396,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('showSiteIPAddresses_help');"
                               src="images/help.gif" border="0" />
@@ -1424,7 +1424,7 @@
                             </xsl:if>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('displayLabels_help');"
                               src="images/help.gif" border="0" />
@@ -1454,7 +1454,7 @@
                             </xsl:attribute>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('autoremoveTimeframe_help');"
                               src="images/help.gif" border="0" />
@@ -1484,7 +1484,7 @@
                  </xsl:attribute>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('autoremoveMaxBuilds_help');"
                               src="images/help.gif" border="0" />
@@ -1514,7 +1514,7 @@
                  </xsl:attribute>
                           </input>
                           <a
-                            href="http://public.kitware.com/Wiki/CDash:Administration#Creating_a_project"
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('uploadQuota_help');"
                               src="images/help.gif" border="0" />
