@@ -77,6 +77,9 @@ $CDASH_UPLOAD_DIRECTORY = 'upload';
 $CDASH_DOWNLOAD_RELATIVE_URL = 'upload';
 // Log file location
 $CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
+// Maximum size allocated for the logs
+// CDash creates 10 files spanning the total size allocated
+$CDASH_LOG_FILE_MAXSIZE_MB = 50;
 // Using external authentication
 $CDASH_EXTERNAL_AUTH = '0';
 // Backup timeframe
