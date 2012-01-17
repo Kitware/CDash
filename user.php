@@ -25,6 +25,7 @@ include_once('models/project.php');
 include_once('models/clientjobschedule.php');
 include_once('models/clientsite.php');
 include_once('models/clientjob.php');
+include_once('models/build.php');
 
 if ($session_OK)
   {
@@ -295,13 +296,11 @@ if ($session_OK)
         }
 
       // Find the number of errors and warnings
-      $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
-      $builderror_array = pdo_fetch_array($builderror);
-      $nerrors = $builderror_array[0];
+      $Build = new Build();
+      $Build->Id = $buildid;
+      $nerrors = $Build->GetNumberOfErrors();
       $xml .= add_XML_value("error",$nerrors);
-      $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
-      $buildwarning_array = pdo_fetch_array($buildwarning);
-      $nwarnings = $buildwarning_array[0];
+      $nwarnings = $Build->GetNumberOfWarnings();
       $xml .= add_XML_value("warning",$nwarnings);
 
       // Set the color
@@ -319,10 +318,8 @@ if ($session_OK)
         }
 
       // Find the test
-      $nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
-      $nnotrun = $nnotrun_array[0];
-      $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
-      $nfail = $nfail_array[0];
+      $nnotrun = $Build->GetNumberOfNotRunTests();
+      $nfail = $Build->GetNumberOfFailedTests();
 
       // Display the failing tests then the not run
       if($nfail>0)

@@ -218,7 +218,7 @@
 
     <!-- header of the matrix -->
     <tr class="table-heading">
-      <td align="center"><b><i>Site\Project</i></b></td>
+      <td align="center"><b>Site</b></td>
 
       <xsl:for-each select="cdash/claimedsiteproject">
         <td align="center" id="nob"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute><xsl:value-of select="name"/></a></td>
