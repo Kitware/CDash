@@ -1021,7 +1021,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule (
   `enddate` timestamp NOT NULL default '1980-01-01 00:00:00',
   `type` tinyint(4) NOT NULL,
   `starttime` time NOT NULL default '00:00:00',
-  `repeattime` decimal(3,2) NOT NULL default '0.00',
+  `repeattime` decimal(6,2) NOT NULL default '0.00',
   `enable` tinyint(4) NOT NULL,
   `lastrun` timestamp NOT NULL default '1980-01-01 00:00:00',
   `repository` varchar(512) default '',

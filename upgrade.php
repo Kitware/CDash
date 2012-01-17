@@ -859,7 +859,10 @@ if(isset($_GET['upgrade-2-0']))
   AddTableIndex('label2dynamicanalysis','dynamicanalysisid');
   AddTableIndex('label2test','buildid');
   AddTableIndex('label2update','updateid');
-  
+
+  ModifyTableField("client_jobschedule","repeattime","decimal(6,2)","decimal(6,2)","0.00",true,false);
+
+
   // Set the database version
   setVersion();
 
@@ -882,7 +885,7 @@ if($Upgrade)
     {
     $xml .= "<backupwritable>1</backupwritable>";
     }
-    
+
   // check if the upload directory is writable
   if(!is_writable($CDASH_UPLOAD_DIRECTORY))
     {

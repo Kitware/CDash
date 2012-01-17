@@ -950,7 +950,7 @@ CREATE TABLE "client_jobschedule" (
   "enddate" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "type" smallint NOT NULL,
   "starttime" time DEFAULT '00:00:00' NOT NULL,
-  "repeattime" numeric(3,2) DEFAULT '0.00' NOT NULL,
+  "repeattime" numeric(6,2) DEFAULT '0.00' NOT NULL,
   "enable" smallint NOT NULL,
   "lastrun" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "repository" character varying(512) default '',
