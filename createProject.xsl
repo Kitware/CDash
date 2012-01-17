@@ -833,7 +833,7 @@
                         <td></td>
                         <td>
                           <div align="right">
-                            <strong>Test time standard deviation:</strong>
+                            <strong>Test time standard deviation multiplier:</strong>
                           </div>
                         </td>
                         <td>
@@ -853,7 +853,7 @@
                               src="images/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="TimeDeviation_help">
-                            <b>Test time standard deviation</b>
+                            <b>Test time standard deviation multiplier</b>
                             <br />
                             Set a multiplier for the standard deviation for a test
                             time. If the time for a test is higher than
