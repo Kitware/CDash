@@ -6,9 +6,9 @@
 
    <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headerback.xsl"/> 
+   <xsl:include href="local/headerback.xsl"/>
 
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -18,7 +18,7 @@
         <meta name="robots" content="noindex,nofollow" />
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link> 
+         </link>
           <xsl:comment><![CDATA[[if IE]></xsl:comment>
         <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
         <xsl:comment><![ endif]]></xsl:comment>
@@ -29,20 +29,20 @@
               $("#changesmade").show();
             }
          </script>
-         <script type="text/javascript" src="javascript/OptionTransfer.js"></script> 
+         <script type="text/javascript" src="javascript/OptionTransfer.js"></script>
          <script type="text/javascript" src="javascript/cdashUserLabels.js"></script>
          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
        </head>
        <body bgcolor="#ffffff" onLoad="opt.init(document.forms[1])">
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headerback_local"/>
 </xsl:when>
 <xsl:otherwise>
   <xsl:call-template name="headerback"/>
 </xsl:otherwise>
-</xsl:choose>  
+</xsl:choose>
 
 <br/>
 
@@ -73,7 +73,7 @@
      </xsl:if>
     <xsl:if test="count(cdash/availableproject)=0">
       <xsl:value-of select="cdash/project/name"/>
-    </xsl:if>  
+    </xsl:if>
     </td>
   </tr>
 <tr>
@@ -81,12 +81,12 @@
 <form name="form1" enctype="multipart/form-data" method="post" action="">
   <div id="wizard">
       <ul>
-          <li>                 
-            <a href="#fragment-1"><span>Select your role in this project</span></a></li>                
+          <li>
+            <a href="#fragment-1"><span>Select your role in this project</span></a></li>
           <li>
             <a href="#fragment-2"><span>Repository Credential</span></a></li>
           <li>
-            <a href="#fragment-3"><span>Email Preference</span></a></li>                
+            <a href="#fragment-3"><span>Email Notifications</span></a></li>
           <li>
             <a href="#fragment-4"><span>Email Category</span></a></li>
           <li>
@@ -142,7 +142,7 @@
            <tr>
             <td></td>
             <td bgcolor="#FFFFFF"></td>
-          </tr> 
+          </tr>
         </table>
     </div>
     <div id="fragment-2" class="tab_content" >
@@ -153,12 +153,12 @@
             <td>Your repository credentials are used to match your repository id with cdash and send you alerts.<br/>
             To change your global credentials go to "My Profile".
             </td>
-          </tr>        
+          </tr>
           <tr>
             <td></td>
-            <td>Global Credentials: 
+            <td>Global Credentials:
              <xsl:for-each select="/cdash/global_credential">
-               '<xsl:value-of select="."/>' 
+               '<xsl:value-of select="."/>'
              </xsl:for-each>
             </td>
           </tr>
@@ -200,7 +200,7 @@
         <table width="800" >
          <xsl:if test="/cdash/project/emailbrokensubmission=0">
           <tr>
-            <td></td> 
+            <td></td>
             <td><font color="#900000">*This project has not been configured to send emails.
              <xsl:choose>
                <xsl:when test="/cdash/role>1"><a>
@@ -214,11 +214,15 @@
           <xsl:if test="/cdash/edit=1">
            <tr>
             <td></td>
+            <td><b>Email me:</b></td>
+           </tr>
+           <tr>
+            <td></td>
             <td ><input type="radio" onchange="saveChanges();" name="emailtype" value="0">
              <xsl:if test="/cdash/emailtype=0">
              <xsl:attribute name="checked"></xsl:attribute>
              </xsl:if>
-             </input> No email
+             </input> never (this is not recommended)
            </td>
           </tr>
             </xsl:if>
@@ -228,7 +232,7 @@
              <xsl:if test="/cdash/emailtype=1 or /cdash/edit=0">
              <xsl:attribute name="checked"></xsl:attribute>
              </xsl:if>
-             </input> Email me when <b>my checkins</b> are breaking the dashboard
+             </input> when <b>my checkins</b> are causing problems in <b>any sections</b> of the dashboard
            </td>
           </tr>
           <tr>
@@ -237,14 +241,14 @@
              <xsl:if test="/cdash/emailtype=2">
              <xsl:attribute name="checked">
              </xsl:attribute>
-             </xsl:if>     </input> Email me when checkins are breaking <b>nightly</b> dashboard
+             </xsl:if></input> when <b>any checkins</b> are causing problems in the <b>Nightly section</b> of the dashboard
            </td>
           </tr>
           <tr>
             <td></td>
             <td ><input type="radio" onchange="saveChanges();" name="emailtype" value="3">
              <xsl:if test="/cdash/emailtype=3"><xsl:attribute name="checked"></xsl:attribute></xsl:if>
-             </input> Email me when <b>any builds</b> are breaking the dashboard
+             </input> when <b>any checkins</b> are causing problems in <b>any sections</b> of the dashboard
            </td>
           </tr>
          <tr>
@@ -253,7 +257,7 @@
              <xsl:if test="/cdash/emailsuccess=1">
              <xsl:attribute name="checked"></xsl:attribute>
              </xsl:if>
-             </input> Email me when my checkins are fixing build errors, warnings or tests
+             </input> when <b>my checkins</b> are fixing build errors, warnings or tests
            </td>
          </tr>
          <tr>
@@ -262,9 +266,9 @@
              <xsl:if test="/cdash/emailmissingsites=1">
              <xsl:attribute name="checked"></xsl:attribute>
              </xsl:if>
-             </input> Email me when expected sites are not submitting
+             </input> when expected sites are not submitting
            </td>
-          </tr>  
+          </tr>
         </table>
     </div>
     <div id="fragment-4" class="tab_content" >
@@ -272,7 +276,7 @@
         <table width="800" >
         <xsl:if test="/cdash/project/emailbrokensubmission=0">
           <tr>
-            <td></td> 
+            <td></td>
             <td><font color="#900000">*This project has not been configured to send emails.
              <xsl:choose>
                <xsl:when test="/cdash/role>1"><a>
@@ -388,7 +392,7 @@
         </table>
     </div>
  </div>
- 
+
  <xsl:if test="/cdash/edit=1">
   <br/>
   <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;">
@@ -405,8 +409,8 @@
    <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;"><br/>
   <input type="submit" name="subscribe" value="Subscribe"/>
   </div>
-</xsl:if> 
-    
+</xsl:if>
+
 </form>
 </td>
 </tr>
@@ -416,7 +420,7 @@
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>
