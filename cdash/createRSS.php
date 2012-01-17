@@ -50,8 +50,9 @@ function CreateRSSFeed($projectid)
   $currentURI = get_server_URI();
 
   fputs($fp,"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
-  fputs($fp,"<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n");
+  fputs($fp,"<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n");
   fputs($fp,"<channel>\n");
+  fputs($fp,"<atom:link href=\"".$currentURI."/rssSubmissionRSS".$projectname.".xml\" rel=\"self\" type=\"application/rss+xml\" />\n");
   fputs($fp,"<title>Recent CDash submissions for $projectname</title>\n");
   fputs($fp,"<link>$currentURI/index.php?project=$projectname</link>\n");
   fputs($fp,"<description>CDash for $projectname</description>\n");
@@ -96,16 +97,16 @@ function CreateRSSFeed($projectid)
     $description = "A new ".$build_array["type"]." submission from ".$site_array["name"]." - ".$build_array["name"]." is available: ";
     $description .= $nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
 
-    $pubDate = date('m/d/y h:i:s A');
-    $date = date('m/d/y');
+    $pubDate = date(DATE_RFC822);
+    $date = date(DATE_W3C);
 
     fputs($fp,"<item>\n");
+    fputs($fp,"  <guid>".$currentURI."/buildSummary.php?buildid=".$buildid."</guid>");
     fputs($fp,"  <title>$title</title>");
     fputs($fp,"  <link>$link</link>");
     fputs($fp,"  <description>$description</description>\n");
     fputs($fp,"  <pubDate>$pubDate</pubDate>\n");
     fputs($fp,"  <dc:creator>CDash</dc:creator>\n");
-    fputs($fp,"  <dc:date>$date</dc:date>\n");
     fputs($fp,"</item>\n");
     }
   fputs($fp, "</channel>\n");
