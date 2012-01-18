@@ -21,3 +21,16 @@ CREATE TABLE IF NOT EXISTS client_jobschedule2submission (
   PRIMARY KEY (`submissionid`),
   UNIQUE KEY `scheduleid` (`scheduleid`)
 );
+
+
+CREATE TABLE IF NOT EXISTS  `usertemp` (
+  `email` varchar(255) NOT NULL default '',
+  `password` varchar(40) NOT NULL default '',
+  `firstname` varchar(40) NOT NULL default '',
+  `lastname` varchar(40) NOT NULL default '',
+  `institution` varchar(255) NOT NULL default '',
+  `registrationdate` datetime NOT NULL,
+  `registrationkey` varchar(40) NOT NULL default '',
+  PRIMARY KEY  (`email`),
+  KEY `registrationdate` (`registrationdate`)
+);

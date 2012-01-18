@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -22,12 +22,47 @@ $reg = "";
 
 /** Authentication function */
 function register()
-{ 
-  global $reg; 
+{
+  global $reg;
   include("cdash/config.php");
-  require_once("cdash/pdo.php"); 
+  require_once("cdash/pdo.php");
 
-  if(isset($_POST["sent"])) // arrive from register form 
+  if(isset($_GET["key"]))
+    {
+    $key = pdo_real_escape_string($_GET["key"]);
+    $sql = "SELECT * FROM ".qid("usertemp")." WHERE registrationkey='$key'";
+    $query = pdo_query($sql);
+    if(pdo_num_rows($query) == 0)
+      {
+      $reg = "The key is invalid.";
+      return 0;
+      }
+
+    $query_array = pdo_fetch_array($query);
+
+    $email = $query_array['email'];
+    $passwd = $query_array['password'];
+    $fname = $query_array['firstname'];
+    $lname = $query_array['lastname'];
+    $institution = $query_array['institution'];
+
+    // We copy the data from usertemp to user
+    $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution)
+          VALUES ('$email','$passwd','$fname','$lname','$institution')";
+
+    if(pdo_query($sql))
+      {
+      pdo_query("DELETE FROM usertemp WHERE email='".$email."'");
+      return 1;
+      }
+    else
+      {
+      $reg = pdo_error();
+      return 0;
+      }
+
+    }
+  else if(isset($_POST["sent"])) // arrive from register form
    {
     $url   = $_POST["url"];
     if($url != "catchbot")
@@ -53,10 +88,16 @@ function register()
       $passwd = md5($passwd);
       $email = pdo_real_escape_string($email);
 
-      $sql = "SELECT * FROM ".qid("user")." WHERE email='$email'";
+      $sql = "SELECT email FROM ".qid("user")." WHERE email='$email'";
       if(pdo_num_rows(pdo_query($sql)) > 0)
         {
         $reg = "$email is already registered.";
+        return 0;
+        }
+      $sql = "SELECT email  FROM ".qid("usertemp")." WHERE email='$email'";
+      if(pdo_num_rows(pdo_query($sql)) > 0)
+        {
+        $reg = "$email is already registered. Check your email if you haven't received the link to activate yet.";
         return 0;
         }
 
@@ -64,16 +105,70 @@ function register()
       $fname = pdo_real_escape_string($fname);
       $lname = pdo_real_escape_string($lname);
       $institution = pdo_real_escape_string($institution);
-            
-      $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution) 
-            VALUES ('$email','$passwd','$fname','$lname','$institution')";
+
+      if($CDASH_REGISTRATION_EMAIL_VERIFY)
+        {
+        // Create a key
+        srand(microtime_float());
+
+        $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $length = 40;
+
+        $key = "";
+        $max=strlen($keychars)-1;
+        for ($i=0;$i<=$length;$i++)
+          {
+          $key .= substr($keychars, rand(0, $max), 1);
+          }
+
+        $date = date(FMT_DATETIME);
+        $sql="INSERT INTO ".qid("usertemp")." (email,password,firstname,lastname,institution,registrationkey,registrationdate)
+              VALUES ('$email','$passwd','$fname','$lname','$institution','$key','$date')";
+        }
+      else
+        {
+        $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution)
+              VALUES ('$email','$passwd','$fname','$lname','$institution')";
+        }
       if(pdo_query($sql))
         {
+        if($CDASH_REGISTRATION_EMAIL_VERIFY)
+          {
+          $currentURI = get_server_URI();
+
+          // Send the email
+          $emailtitle = "Welcome to CDash!";
+          $emailbody = "Hello ".$fname.",\n\n";
+          $emailbody .= "Welcome to CDash! In order to validate your registration please follow this link: \n";
+          $emailbody .= $currentURI."/register.php?key=".$key;
+
+          $serverName = $CDASH_SERVER_NAME;
+          if(strlen($serverName) == 0)
+            {
+            $serverName = $_SERVER['SERVER_NAME'];
+            }
+          $emailbody .= "\n-CDash on ".$serverName."\n";
+
+          if(mail("$email", $emailtitle, $emailbody,
+          "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+            {
+            add_log("email sent to: ".$email,"Registration");
+            return;
+            }
+          else
+            {
+            add_log("cannot send email to: ".$email,"Registration",LOG_ERR);
+            }
+
+          $reg = "A confirmation email has been sent. Check your email (including your spam account) to confirm your registration!<br>
+                  You need to activate your account within 24 hours.";
+          return 0;
+          }
         return 1;
         }
       else
         {
-        $reg = "Database Error!";
+        $reg = pdo_error();
         return 0;
         }
       }
@@ -82,41 +177,39 @@ function register()
       $reg = "Please fill in all of the required fields";
       return 0;
       }
-    }
- else
-    {
-    return 0;
-    }
-} 
-  
+    } // end register
+
+  return 0;
+}
+
 /** Login Form function */
 function RegisterForm($regerror)
-{  
+{
   include("cdash/config.php");
   require_once("cdash/pdo.php");
   include_once("cdash/common.php");
   include_once('cdash/version.php');
-  
+
   if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
     {
     die("You cannot access this page. Contact your administrator if you think that's an error.");
     }
-    
+
   $xml = '<?xml version="1.0"?><cdash>';
   $xml .= "<title>CDash - Registration</title>";
   $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";  
+  $xml .= "<version>".$CDASH_VERSION."</version>";
   $xml .= "<error>" . $regerror . "</error>";
   $xml .= "</cdash>";
-  
+
   generate_XSLT($xml,"register");
 }
 
-// -------------------------------------------------------------------------------------- 
-// main 
-// -------------------------------------------------------------------------------------- 
-if(!register())                 // registration failed 
-  RegisterForm($reg);    // display register form 
+// --------------------------------------------------------------------------------------
+// main
+// --------------------------------------------------------------------------------------
+if(!register())                 // registration failed
+  RegisterForm($reg);    // display register form
 else
   header( 'location: user.php?note=register' );
 

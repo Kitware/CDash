@@ -444,6 +444,22 @@ CREATE TABLE "user" (
 );
 CREATE INDEX "email" on "user" ("email");
 
+
+--
+-- Table: usertemp
+--
+CREATE TABLE "usertemp" (
+  "email" character varying(255) DEFAULT '' NOT NULL,
+  "password" character varying(255) DEFAULT '' NOT NULL,
+  "firstname" character varying(255) DEFAULT '' NOT NULL,
+  "lastname" character varying(255) DEFAULT '' NOT NULL,
+  "institution" character varying(255) DEFAULT '' NOT NULL,
+  "registrationdate" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  "registrationkey" character varying(40)  DEFAULT '' NOT NULL,
+  PRIMARY KEY ("email")
+);
+CREATE INDEX "usertemp_registrationdate" on "usertemp" ("registrationdate");
+
 --
 -- Table: user2project
 --
@@ -1028,6 +1044,7 @@ CREATE TABLE "client_jobschedule2submission" (
   "scheduleid" bigint NOT NULL UNIQUE,
   "submissionid" bigint NOT NULL UNIQUE
 );
+
 
 --
 -- Table: client_library

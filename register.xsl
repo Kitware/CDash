@@ -70,9 +70,8 @@
  </div>
 </div>
 
-<div style="color: red;"><xsl:value-of select="cdash/error" /></div>
-
 <br/>
+<div style="color: red;"><xsl:value-of select="cdash/error" /><br/></div>
 
 <!-- Main -->
 <form method="post" action="register.php" name="regform" onSubmit="doSubmit();">

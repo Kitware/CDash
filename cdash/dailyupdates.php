@@ -826,7 +826,16 @@ function cleanBuildEmail($projectid)
   include("cdash/config.php");
   include_once("cdash/common.php");
   $now = date(FMT_DATETIME,time()-3600*48);
-  pdo_query("DELETE from buildemail WHERE time<'$now'");
+  pdo_query("DELETE FROM buildemail WHERE time<'$now'");
+}
+
+/** Clean the usertemp table if more than 24hrs */
+function cleanUserTemp()
+{
+  include("cdash/config.php");
+  include_once("cdash/common.php");
+  $now = date(FMT_DATETIME,time()-3600*24);
+  pdo_query("DELETE FROM usertemp WHERE registrationdate<'$now'");
 }
 
 /** Send an email to administrator of the project for users who are not registered */
@@ -986,6 +995,7 @@ function addDailyChanges($projectid)
 
     // cleanBuildEmail
     cleanBuildEmail($projectid);
+    cleanUserTemp();
 
     // If the status of daily update is set to 2 that means we should send an email
     $query = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");

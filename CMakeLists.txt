@@ -84,6 +84,7 @@ file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
 //
 $CDASH_DB_NAME = 'cdash4simpletest';
 $CDASH_TESTING_MODE = true;
+$CDASH_REGISTRATION_EMAIL_VERIFY = false;
 $CDASH_TESTING_RENAME_LOGS = ${rename_logs};
 $CDASH_DB_HOST = '${CDASH_DB_HOST}';
 $CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
