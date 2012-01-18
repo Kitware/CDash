@@ -118,9 +118,20 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
      <tr>
       <th class="measurement"><xsl:value-of select="name"/></th>
       <td>
-         <xsl:if test="type='numeric/double'">
-             <a><xsl:attribute name="href">javascript:shownamedmeasurementgraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>,"<xsl:value-of select="name" />");</xsl:attribute>[Graph]</a> </xsl:if>
-        <xsl:value-of select="value" disable-output-escaping="yes"/>
+        <xsl:if test="type='numeric/double'">
+          <a><xsl:attribute name="href">javascript:shownamedmeasurementgraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>,"<xsl:value-of select="name" />");</xsl:attribute>[Graph]</a>
+        </xsl:if>
+
+        <xsl:if test="type!='file'">
+          <xsl:value-of select="value" disable-output-escaping="yes"/>
+        </xsl:if>
+
+        <xsl:if test="type='file'">
+           <a><xsl:attribute name="href">testDetails.php?test=<xsl:value-of select="/cdash/test/id"/>&#38;build=<xsl:value-of select="/cdash/test/buildid"/>&#38;fileid=<xsl:value-of select="fileid"/>
+              </xsl:attribute>
+             <image src="images/package.png"/>
+           </a>
+        </xsl:if>
       </td>
    </tr>
    </xsl:for-each>

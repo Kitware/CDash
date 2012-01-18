@@ -129,7 +129,15 @@ class TestingHandler extends AbstractHandler
     else if($name == "NAMEDMEASUREMENT")
       {
       $this->TestMeasurement = new TestMeasurement();
-      $this->TestMeasurement->Name = $attributes['NAME'];
+
+      if($attributes['TYPE'] == 'file')
+        {
+        $this->TestMeasurement->Name = $attributes['FILENAME'];
+        }
+      else
+        {
+        $this->TestMeasurement->Name = $attributes['NAME'];
+        }
       $this->TestMeasurement->Type = $attributes['TYPE'];
       }
     else if($name == "VALUE" && $parent== "MEASUREMENT" )
@@ -255,6 +263,7 @@ class TestingHandler extends AbstractHandler
           }
         else
           {
+          $this->TestMeasurement->Value = trim($this->TestMeasurement->Value);
           $this->Test->AddMeasurement($this->TestMeasurement);
           }
         }

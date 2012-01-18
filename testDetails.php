@@ -56,7 +56,37 @@ if(!$projectid)
 }
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
-$siteid = $buildRow["siteid"];
+
+// If we have a fileid we download it
+if(isset($_GET["fileid"]) && is_numeric($_GET["fileid"]))
+  {
+  $result = pdo_query("SELECT value,name FROM testmeasurement WHERE testid=$testid");
+  for($i=0;$i<$_GET["fileid"];$i++)
+    {
+    $result_array = pdo_fetch_array($result);
+    }
+  header("Content-type: tar/gzip");
+  header('Content-Disposition: attachment; filename="'.$result_array['name'].'.tgz"');
+
+  if($CDASH_DB_TYPE == "pgsql")
+    {
+    $buf = "";
+    while(!feof($result_array["value"]))
+      {
+      $buf .= fread($result_array["value"], 2048);
+      }
+    $buf = stripslashes($buf);
+    }
+  else
+    {
+    $buf = $result_array["value"];
+    }
+  echo base64_decode($buf);
+  flush();
+  return;
+  }
+
+  $siteid = $buildRow["siteid"];
 
 $project = pdo_query("SELECT name,nightlytime,showtesttime FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
@@ -265,6 +295,7 @@ $xml .= "</images>";
 $xml .= "<measurements>";
 $query = "SELECT name,type,value FROM testmeasurement WHERE testid = '$testid' ORDER BY id";
 $result = pdo_query($query);
+$fileid = 1;
 while($row = pdo_fetch_array($result))
   {
   $xml .= "<measurement>";
@@ -280,11 +311,20 @@ while($row = pdo_fetch_array($result))
       $value = base64_decode($value);
       }
     }
-
-  // Add nl2br for type text/plain and text/string
-   if($row["type"] == "text/plain" || $row["type"] == "text/string")
+  else if($row["type"] == "file")
     {
-    $value = nl2br($value);
+    $xml .= add_XML_value("fileid",$fileid++);
+    }
+  // Add nl2br for type text/plain and text/string
+  if($row["type"] == "text/plain" || $row["type"] == "text/string")
+   {
+   $value = nl2br($value);
+   }
+
+  // If the type is a file we just don't pass the text (too big) to the output
+  if($row["type"] == "file")
+    {
+    $value = "";
     }
 
   $xml .= add_XML_value("value", $value);
