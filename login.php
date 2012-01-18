@@ -453,6 +453,11 @@ else:                        // authentication was successful
   $session_OK = 1;
 endif;
 
+if($CDASH_USER_CREATE_PROJECTS && isset($_SESSION['cdash']))
+  {
+  $_SESSION['cdash']['user_can_create_project']=1;
+  }
+
 // If we should use the local/prelogin.php
 if(file_exists("local/prelogin.php"))
   {

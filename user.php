@@ -44,6 +44,14 @@ if ($session_OK)
   $xml .= add_XML_value("user_name",$user_array["firstname"]);
   $xml .= add_XML_value("user_is_admin",$user_array["admin"]);
 
+  if($CDASH_USER_CREATE_PROJECTS)
+    {
+    $xml .= add_XML_value("user_can_create_projects",1);
+    }
+  else
+    {
+    $xml .= add_XML_value("user_can_create_projects",0);
+    }
   // Go through the list of project the user is part of
   $project2user = pdo_query("SELECT user2project.projectid AS projectid,role,name,
                             (SELECT count(errorlog.projectid) FROM errorlog WHERE errorlog.projectid=user2project.projectid)

@@ -303,6 +303,17 @@
   <br/>
 </xsl:if>
 
+<!-- If we allow user to create new projects -->
+<xsl:if test="cdash/user_can_create_projects=1 and cdash/user_is_admin=0">
+ <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+  <tbody>
+    <tr class="table-heading1"><td id="nob"><h3>Administration</h3></td></tr>
+    <tr class="trodd"><td id="nob"><a href="createProject.php">Start a new project</a></td></tr>
+  </tbody>
+  </table>
+<br/>
+</xsl:if>
+
 <!-- Global Administration -->
 <xsl:if test="cdash/user_is_admin=1">
  <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
