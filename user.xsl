@@ -141,19 +141,19 @@
       </td>
       <td align="center"  bgcolor="#DDDDDD">
         <xsl:if test="success>0">
-           <xsl:attribute name="bgcolor">#92CA89</xsl:attribute>
+           <xsl:attribute name="bgcolor">#8aba5a</xsl:attribute>
         </xsl:if>
         <xsl:value-of select="success"/>
       </td>
       <td align="center"  bgcolor="#DDDDDD">
         <xsl:if test="error>0">
-           <xsl:attribute name="bgcolor">#FF6666</xsl:attribute>
+           <xsl:attribute name="bgcolor">#de6868</xsl:attribute>
         </xsl:if>
         <xsl:value-of select="error"/>
       </td>
       <td align="center"  bgcolor="#DDDDDD">
         <xsl:if test="warning>0">
-           <xsl:attribute name="bgcolor">#FDBA76</xsl:attribute>
+           <xsl:attribute name="bgcolor">#fdb66d</xsl:attribute>
         </xsl:if>
         <xsl:value-of select="warning"/>
       </td>
