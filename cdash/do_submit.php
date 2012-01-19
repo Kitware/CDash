@@ -227,8 +227,9 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     }
   else // synchronously
     {
-    add_log("do_submit_asynchronous",
+    add_log(
       "Cannot submit asynchronously: php curl_init function does not exist",
+      "do_submit_asynchronous",
       LOG_ERR, $projectid);
     }
 }
