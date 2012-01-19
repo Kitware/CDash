@@ -75,6 +75,11 @@ else()
   set(rename_logs "false")
 endif()
 
+SET(CDASH_USE_LOCAL_DIRECTORY 0)
+IF(${CDASH_PRO})
+  SET(CDASH_USE_LOCAL_DIRECTORY 1)
+ENDIF(${CDASH_PRO})
+
 file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
 "<?php
 // WARNING: This file is unconditionally overwritten by the CMake configure
@@ -96,7 +101,7 @@ $PHP_EXE = '${PHP_EXE}';
 $PHPUNIT_EXE = '${PHPUNIT_EXE}';
 $CDASH_MANAGE_CLIENTS = '1';
 $CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}';
-$CDASH_USE_LOCAL_DIRECTORY = '${CDASH_PRO}';
+$CDASH_USE_LOCAL_DIRECTORY = '${CDASH_USE_LOCAL_DIRECTORY}';
 ?>
 ")
 
