@@ -137,7 +137,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $this->login();
     $content = $this->connect($this->url.'/index.php?project=InsightExample&date=20090223');
     $content = $this->analyse($this->clickLink('76.43%'));
-    $content = $this->analyse($this->clickLink('Satisfactory (75)'));
+    $content = $this->analyse($this->clickLink('Satisfactory (43)'));
     $content = $this->analyse($this->clickLink('./Source/itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h'));
     $expected = '<span class="lineCov">    1 | #ifndef __itkNormalVectorDiffusionFunction_txx</span><br><span class="lineNum">   18</span><span class="lineCov">    2 | #define __itkNormalVectorDiffusionFunction_txx</span><br>';
 
@@ -211,12 +211,12 @@ class ProjectWebPageTestCase extends KWWebTestCase
       {
       return;
       }
-    elseif(!$this->findString($content,'<b>Total Virtual Memory: </b>2GB<br /><b>Total Physical Memory: </b>15MB<br />'))
+    elseif(!$this->findString($content,'<b>Total Physical Memory: </b>14.31MiB<br />'))
       {
-      $this->assertTrue(false,'The webpage does not match right the content exepected');
+      $this->assertTrue(false,'The webpage does not match the expected content');
       return;
       }
-    $this->assertTrue(true,'The webpage match the content exepected');
+    $this->assertTrue(true,'The webpage matches the expected content');
     }
 
   function testProjectExperimentalLinkBuildSummary()
