@@ -813,7 +813,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       {
       // Send the email
       if(mail("$summaryEmail", $title, $messagePlainText,
-           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
         add_log("summary email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
         return;
@@ -1005,7 +1005,7 @@ function send_email_fix_to_user($userid,$emailtext,$Build,$Project)
     {
     // Send the email
     if(mail("$email", $title, $messagePlainText,
-     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
       {
       add_log("email sent to: ".$email." with fixes ".$titleerrors." for build ".$Build->Id,"sendemail ".$Project->Name,LOG_INFO);
 
@@ -1152,7 +1152,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
     {
     // Send the email
     if(mail("$emailaddress", $title, $messagePlainText,
-     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
+     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
       {
       add_log("email sent to: ".$emailaddress." with errors ".$titleerrors." for build ".$Build->Id,"sendemail ".$Project->Name,LOG_INFO);
       $sent = true;
