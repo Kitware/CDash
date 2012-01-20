@@ -29,10 +29,23 @@ class TestManager
   /** Delete the log file */
   function removeLogAndBackupFiles($logfilename)
     {
-    if (file_exists($logfilename))
+    if(file_exists($logfilename))
       {
-      unlink($logfilename);
+      global $CDASH_TESTING_RENAME_LOGS;
+      if ($CDASH_TESTING_RENAME_LOGS)
+        {
+        // Rename to a random name to keep for later inspection:
+        //
+        global $CDASH_LOG_FILE;
+        rename($logfilename, $CDASH_LOG_FILE . "." . mt_rand() . ".txt");
+        }
+      else
+        {
+        // Delete file:
+        unlink($logfilename);
+        }
       }
+
     $filenames = glob(dirname($logfilename)."/*.xml");
     foreach($filenames as $filename)
       {
