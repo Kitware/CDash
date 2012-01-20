@@ -5,6 +5,8 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
+require_once('cdash/common.php');
+
 class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 {
   function __construct()
@@ -12,24 +14,8 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     parent::__construct();
     }
 
-  function testSetAutoRemoveTimeFrame()
-    {
-    $this->login();
-    $query = $this->db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
-    $projectid = $query[0]['id'];
-    $content = $this->connect($this->url.'/createProject.php?projectid='.$projectid);
 
-    if($content == false)
-      {
-      return;
-      }
-
-    // set global autoremovetimeframe
-    $this->setField("autoremoveTimeframe",'7');
-    $this->clickSubmitByName('Update');
-    }
-
-  function testEnableAutoRemoveConfigSetting()
+  function enableAutoRemoveConfigSetting()
     {
     $filename = dirname(__FILE__)."/../cdash/config.local.php";
     $handle = fopen($filename, "r");
@@ -51,35 +37,51 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
       }
     fclose($handle);
-    $this->pass("Passed");
     }
+
+
+  function setAutoRemoveTimeFrame()
+    {
+    // set project autoremovetimeframe
+    $result = $this->db->query("UPDATE project ".
+      "SET autoremovetimeframe='7' WHERE name='EmailProjectExample'");
+    }
+
 
   function testBuildsRemovedOnSubmission()
     {
+    $this->enableAutoRemoveConfigSetting();
+
+    $this->setAutoRemoveTimeFrame();
+
     $this->startCodeCoverage();
-    $this->login();
-    $this->deleteLog($this->logfilename);
-    $query = $this->db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
-    $projectid = $query[0]['id'];
+
+    $result = $this->db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
+    $projectid = $result[0]['id'];
     $this->db->query("DELETE FROM dailyupdate WHERE projectid='$projectid'");
 
-    $this->deleteLog($this->logfilename);
     $rep  = dirname(__FILE__)."/data/EmailProjectExample";
     $testxml1 = "$rep/1_test.xml";
 
     if(!$this->submission('EmailProjectExample',$testxml1))
       {
+      $this->fail("submission 1 failed");
+      $this->stopCodeCoverage();
       return;
       }
 
     $testxml2 = "$rep/2_test.xml";
     if(!$this->submission('EmailProjectExample',$testxml2))
       {
+      $this->fail("submission 2 failed");
+      $this->stopCodeCoverage();
       return;
       }
 
-    if(!$this->cdashpro && !$this->compareLog($this->logfilename,"$rep/cdash_autoremove.log"))
+    if(!$this->cdashpro && !$this->compareLog($this->logfilename, "$rep/cdash_autoremove.log"))
       {
+      $this->fail("compareLog failed");
+      $this->stopCodeCoverage();
       return;
       }
 

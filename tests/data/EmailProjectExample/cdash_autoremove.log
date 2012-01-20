@@ -1,3 +1,11 @@
+[<NA>][INFO][pid=<NA>](sendEmailUnregisteredUsers): CDash [EmailProjectExample] - Unregistered users : The following users are checking in code but are not registered for the project EmailProjectExample:
+* <NA>
+* <NA>
+
+ You should register these users to your project. They are currently not receiving any emails from CDash.
+
+-CDash on <NA>
+ : <NA>
 [<NA>][INFO][pid=<NA>](removeFirstBuilds): about to query for builds to remove
 [<NA>][INFO][pid=<NA>](removeFirstBuilds): removing old buildids for projectid: <NA>
 [<NA>][INFO][pid=<NA>](removeBuildsGroupwise): removing old buildids for projectid: <NA>
