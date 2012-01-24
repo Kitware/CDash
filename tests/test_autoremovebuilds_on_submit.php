@@ -51,9 +51,8 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
   function testBuildsRemovedOnSubmission()
     {
     $this->enableAutoRemoveConfigSetting();
-
     $this->setAutoRemoveTimeFrame();
-
+    $this->deleteLog($this->logfilename);
     $this->startCodeCoverage();
 
     $result = $this->db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
