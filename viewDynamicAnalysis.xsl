@@ -1,13 +1,13 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-    
+
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
    <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/header.xsl"/> 
-   
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:include href="local/header.xsl"/>
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
    <xsl:template match="/">
       <html>
@@ -17,11 +17,11 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-       <xsl:call-template name="headscripts"/>          
+       <xsl:call-template name="headscripts"/>
        </head>
        <body bgcolor="#ffffff">
-       
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -54,7 +54,7 @@
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Freeing Invalid Memory<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Invalid Pointer Read<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
       <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Invalid Pointer Write<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
-      
+
       <th>Labels</th>
   </tr>
 
@@ -72,7 +72,7 @@
             normal
           </xsl:when>
           <xsl:otherwise>
-            warning
+            error
            </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
@@ -87,7 +87,7 @@
           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
-      <xsl:value-of select="Memory_Leak"/> 
+      <xsl:value-of select="Memory_Leak"/>
       </td>
       <!-- UMR -->
       <td>
@@ -182,7 +182,7 @@
 
 <!-- FOOTER -->
 <br/>
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

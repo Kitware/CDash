@@ -1485,7 +1485,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
     // Dynamic Analysis
     //
-    $dynanalysis = pdo_query("SELECT checker FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
+    $dynanalysis = pdo_query("SELECT checker,status FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
     while($dynanalysis_array = pdo_fetch_array($dynanalysis))
       {
       $xml .= "<dynamicanalysis>";
@@ -1494,6 +1494,7 @@ function generate_main_dashboard_XML($projectid,$date)
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
 
       $xml .= "  <checker>".$dynanalysis_array["checker"]."</checker>";
+      $xml .= "  <status>".$dynanalysis_array["status"]."</status>";
       $defect = pdo_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d
                                               WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
       $defectcount = pdo_fetch_array($defect);

@@ -562,7 +562,7 @@
        </xsl:if>
       <xsl:choose>
           <xsl:when test="test/timestatus > 0">
-             <b><a><xsl:attribute name="href">viewTest.php?onlytimestatus&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/timestatus"/></a></b>
+             <a><xsl:attribute name="href">viewTest.php?onlytimestatus&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="test/timestatus"/></a>
              <xsl:if test="test/ntimediffp > 0">
              <a class="sup">
               <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
@@ -1123,15 +1123,15 @@
            </xsl:otherwise>
         </xsl:choose>
         </xsl:attribute>
-      <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="percentage"/>%</b></a>
+      <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="percentage"/>%</a>
       <xsl:if test="percentagediff > 0"><sub>+<xsl:value-of select="percentagediff"/>%</sub></xsl:if>
       <xsl:if test="percentagediff &lt; 0"><sub><xsl:value-of select="percentagediff"/>%</sub></xsl:if>
       </td>
-      <td align="center" ><b><xsl:value-of select="pass"/></b>
+      <td align="center" ><xsl:value-of select="pass"/>
       <xsl:if test="passdiff > 0"><sub>+<xsl:value-of select="passdiff"/></sub></xsl:if>
       <xsl:if test="passdiff &lt; 0"><sub><xsl:value-of select="passdiff"/></sub></xsl:if>
       </td>
-      <td align="center" ><b><xsl:value-of select="fail"/></b>
+      <td align="center" ><xsl:value-of select="fail"/>
       <xsl:if test="faildiff > 0"><sub>+<xsl:value-of select="faildiff"/></sub></xsl:if>
       <xsl:if test="faildiff &lt; 0"><sub><xsl:value-of select="faildiff"/></sub></xsl:if>
       </td>
@@ -1230,15 +1230,22 @@
       <td align="center">
         <xsl:attribute name="class">
         <xsl:choose>
-          <xsl:when test="defectcount > 0">
-            warning
-            </xsl:when>
+          <xsl:when test="status!='passed'">
+            error
+          </xsl:when>
           <xsl:otherwise>
-           normal
-           </xsl:otherwise>
+            <xsl:choose>
+            <xsl:when test="defectcount > 0">
+             warning
+            </xsl:when>
+            <xsl:otherwise>
+              normal
+            </xsl:otherwise>
+            </xsl:choose>
+          </xsl:otherwise>
         </xsl:choose>
         </xsl:attribute>
-        <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><b><xsl:value-of select="defectcount"/></b></a>
+        <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="defectcount"/></a>
       </td>
       <td align="left">
       <xsl:if test="/cdash/dashboard/displaylabels=0">
