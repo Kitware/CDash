@@ -39,6 +39,7 @@ class InstallTestCase extends KWWebTestCase
         }
       }
 
+    $this->setConnectionTimeout(9999999);
     $this->get($this->url."/install.php");
     if(!$this->setFieldByName("admin_email", "simpletest@localhost"))
       {
