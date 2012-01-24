@@ -568,8 +568,9 @@ function generate_main_dashboard_XML($projectid,$date)
     if($user2project_array["role"]>1 || $user_array["admin"])
       {
       $isadmin=1;
-       }
+      }
     $xml .= add_XML_value("admin",$isadmin);
+    $xml .= add_XML_value("projectrole",$user2project_array['role']);
     $xml .= "</user>";
     }
 
@@ -1721,6 +1722,7 @@ function generate_subprojects_dashboard_XML($projectid,$date)
       $isadmin=1;
        }
     $xml .= add_XML_value("admin",$isadmin);
+    $xml .= add_XML_value("projectrole",$user2project_array['role']);
     $xml .= "</user>";
     }
 

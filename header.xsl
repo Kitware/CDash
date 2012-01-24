@@ -156,11 +156,21 @@
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/documentation"/> </xsl:attribute>Doxygen</a></li>
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>Repository</a></li>
-        <li class="endsubmenu"><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/bugtracker"/> </xsl:attribute>Bug Tracker</a></li>
-        </ul>
+
+        <li>
+          <xsl:if test="string-length(cdash/user/projectrole)>0">
+            <xsl:attribute name="class">endsubmenu</xsl:attribute>
+          </xsl:if>
+          <a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/bugtracker"/> </xsl:attribute>Bug Tracker</a>
         </li>
 
-        <xsl:if test="cdash/user/projectrole>2 or cdash/user/admin=1">
+       <xsl:if test="string-length(cdash/user/projectrole)=0">
+          <li class="endsubmenu"><a><xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/> </xsl:attribute>Subscribe</a></li>
+        </xsl:if>
+
+        </ul>
+        </li>
+        <xsl:if test="cdash/user/admin=1">
         <li id="admin">
         <a href="#">Settings</a><ul>
         <li><a><xsl:attribute name="href">createProject.php?edit=1&#x26;projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Project</a></li>
@@ -186,6 +196,7 @@
  </input>
 
 <div id="calendar" class="ui-datepicker-calendar" ></div>
+
 
 
 
