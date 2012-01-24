@@ -901,7 +901,7 @@ function sendEmailUnregisteredUsers($projectid,$cvsauthors)
 
       add_log($title." : ".$body." : ".$email,"sendEmailUnregisteredUsers");
 
-      /*if(mail("$email", $title, $body,
+      if(mail("$email", $title, $body,
          "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
         add_log("email sent to: ".$email,"sendEmailUnregisteredUsers");
@@ -910,7 +910,7 @@ function sendEmailUnregisteredUsers($projectid,$cvsauthors)
       else
         {
         add_log("cannot send email to: ".$email,"sendEmailUnregisteredUsers");
-        }*/
+        }
       }
     } // end count()
 }
