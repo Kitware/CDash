@@ -1,11 +1,27 @@
-[<NA>][INFO][pid=<NA>](sendEmailUnregisteredUsers): CDash [EmailProjectExample] - Unregistered users : The following users are checking in code but are not registered for the project EmailProjectExample:
-* <NA>
-* <NA>
-
- You should register these users to your project. They are currently not receiving any emails from CDash.
-
--CDash on <NA>
- : <NA>
 [<NA>][INFO][pid=<NA>](removeFirstBuilds): about to query for builds to remove
 [<NA>][INFO][pid=<NA>](removeFirstBuilds): removing old buildids for projectid: <NA>
 [<NA>][INFO][pid=<NA>](removeBuildsGroupwise): removing old buildids for projectid: <NA>
+[TESTING][pid=<NA>](TESTING: EMAIL): simpletest@localhost
+[TESTING][pid=<NA>](TESTING: EMAILTITLE): FAILED (t=5): EmailProjectExample - Win32-MSVC2009 - Nightly
+[TESTING][pid=<NA>](TESTING: EMAILBODY): A submission to CDash for the project EmailProjectExample has failing tests.
+You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+
+Details on the submission can be found at http://localhost/CDash-Head-MySQL/buildSummary.php?buildid=<NA>
+
+Project: EmailProjectExample
+Site: Dash20.kitware
+Build Name: Win32-MSVC2009
+Build Time: 2009-02-23T05:04:11 EST
+Type: Nightly
+Tests failing: 5
+
+
+*Tests failing* (first 5)
+DashboardSendTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
+SystemInfoTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
+FileActionsTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
+StringActionsTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
+MathActionsTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
+
+
+-CDash on localhost
