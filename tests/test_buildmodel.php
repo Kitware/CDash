@@ -45,7 +45,7 @@ class BuildModelTestCase extends KWWebTestCase
       {
       $this->fail("GetGroup didn't return false for empty build id");
       return 1;
-      }    
+      }
 
     if($build->GetNumberOfErrors() !== false)
       {
@@ -134,6 +134,7 @@ class BuildModelTestCase extends KWWebTestCase
       }
 
     $build->ProjectId = '2';
+    $build->SiteId = '1';
     if($build->SetSubProject('8567') !== false)
       {
       $this->fail("SetSubProject didn't return false for invalid subproject id");
@@ -165,7 +166,7 @@ class BuildModelTestCase extends KWWebTestCase
 
     $this->stopCodeCoverage();
 
-      return 0;
+    return 0;
     }
 }
 
