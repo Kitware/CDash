@@ -151,6 +151,10 @@ class BuildModelTestCase extends KWWebTestCase
     $build->SetStamp('20100610-1901-Experimental');
     $build->Type = ''; //force this empty for coverage purposes
 
+    $build->StartTime = '2009-12-18 14:19:11';
+    $build->EndTime = '2009-12-18 14:20:23';
+    $build->SubmitTime = '2012-01-25 16:43:11';
+
     if($build->Exists() == true)
       {
       $this->fail("Exists returned true for an invalid build id");
