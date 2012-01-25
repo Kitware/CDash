@@ -164,20 +164,25 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
       }
     }
 
+  // We escape the sitename and buildname
+  $sitename_escaped = preg_replace('/[^\w\-~_]+/u', '-', $sitename);
+  $buildname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $buildname);
+  $projectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $projectname);
+
   if($file == "Project")
     {
-    $filename = $backupDir."/".$projectname."_".$currenttimestamp."_".$file.".xml";
+    $filename = $backupDir."/".$projectname_escaped."_".$currenttimestamp."_".$file.".xml";
     }
   else
     {
-    $filename = $backupDir."/".$projectname."_".$sitename."_".$buildname."_".$handler->getBuildStamp()."_".$currenttimestamp.'_'.$file.".xml";
+    $filename = $backupDir."/".$projectname_escaped."_".$sitename_escaped."_".$buildname_escaped."_".$handler->getBuildStamp()."_".$currenttimestamp.'_'.$file.".xml";
     }
 
   // If the file is other we append a number until we get a non existing file
   $i=1;
   while(file_exists($filename))
     {
-    $filename = $backupDir."/".$projectname."_".$sitename."_".$buildname."_".$handler->getBuildStamp().'_'.$currenttimestamp."_".$file."_".$i.".xml";
+    $filename = $backupDir."/".$projectname_escaped."_".$sitename_escaped."_".$buildname_escaped."_".$handler->getBuildStamp().'_'.$currenttimestamp."_".$file."_".$i.".xml";
     $i++;
     }
 
