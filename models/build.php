@@ -492,8 +492,11 @@ class Build
         return false;
         }
 
-      $this->Id = pdo_insert_id("build");
-
+      if(!$this->Id)
+        {
+        $this->Id = pdo_insert_id("build");
+        }
+        
       // Add the groupid
       if($this->GroupId)
         {

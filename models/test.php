@@ -37,11 +37,11 @@ class Test
   var $Details;
   var $Output;
   var $CompressedOutput;
-  
+
   var $Images;
   var $Labels;
   var $Measurements;
-  
+
   function __construct()
     {
     $this->Images = array();
@@ -81,16 +81,16 @@ class Test
       {
       return $this->Crc32;
       }
-    
+
     $command = pdo_real_escape_string($this->Command);
     $output = pdo_real_escape_string($this->Output);
-    $name = pdo_real_escape_string($this->Name);  
-    $path = pdo_real_escape_string($this->Path);     
+    $name = pdo_real_escape_string($this->Name);
+    $path = pdo_real_escape_string($this->Path);
     $details = pdo_real_escape_string($this->Details);
-    
+
     // CRC32 is computed with the measurements name and type and value
-    $buffer = $name.$path.$command.$output.$details; 
-    
+    $buffer = $name.$path.$command.$output.$details;
+
     foreach($this->Measurements as $measurement)
       {
       $buffer .= $measurement->Type.$measurement->Name.$measurement->Value;
@@ -119,11 +119,11 @@ class Test
               CDASH_OBJECT_TEST,$this->Id);
       }
     }
-    
+
   /** Return if exists */
   function Exists()
     {
-    $name = pdo_real_escape_string($this->Name);  
+    $name = pdo_real_escape_string($this->Name);
     $crc32 = $this->GetCrc32();
     $query = pdo_query("SELECT id FROM test WHERE projectid=".qnum($this->ProjectId)
                        ." AND name='".$name."'"
@@ -144,7 +144,7 @@ class Test
       {
       return true;
       }
-          
+
     include("cdash/config.php");
     $command = pdo_real_escape_string($this->Command);
 
@@ -159,20 +159,20 @@ class Test
       $id = "id,";
       $idvalue = "'".$this->Id."',";
       }
- 
+
     if($this->CompressedOutput)
       {
       if($CDASH_DB_TYPE == "pgsql")
-        { 
+        {
         $output = pg_escape_bytea($this->Output);
         }
       else
-        {  
+        {
         $output = base64_decode($this->Output);
         }
       }
     else if($CDASH_USE_COMPRESSION)
-      { 
+      {
       $output = gzcompress($this->Output);
       if($output === false)
         {
@@ -181,21 +181,21 @@ class Test
       else
         {
         if($CDASH_DB_TYPE == "pgsql")
-          { 
+          {
           if(strlen($this->Output)<2000) // compression doesn't help for small chunk
             {
-            $output = $this->Output; 
-            } 
-          $output = pg_escape_bytea(base64_encode($output)); // hopefully does the escaping correctly   
+            $output = $this->Output;
+            }
+          $output = pg_escape_bytea(base64_encode($output)); // hopefully does the escaping correctly
           }
-        }  
+        }
       }
     else
       {
       $output = $this->Output;
       }
 
-    // We check for mysql that the 
+    // We check for mysql that the
     if($CDASH_DB_TYPE=='' || $CDASH_DB_TYPE=='mysql')
       {
       $query = pdo_query("SHOW VARIABLES LIKE 'max_allowed_packet'");
@@ -205,19 +205,23 @@ class Test
         {
         add_log("Output is bigger than max_allowed_packet","Test::Insert",LOG_ERR,$this->ProjectId);
         // We cannot truncate the output because it is compressed (too complicated)
-        }  
+        }
       }
-      
-    $output = pdo_real_escape_string($output);    
+
+    $output = pdo_real_escape_string($output);
     $query = "INSERT INTO test (".$id."projectid,crc32,name,path,command,details,output)
-              VALUES (".$idvalue."'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";                     
+              VALUES (".$idvalue."'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";
+
     if(!pdo_query($query))
       {
       add_last_sql_error("Cannot insert test: ".$name." into the database",$this->ProjectId);
       return false;
       }
-      
-    $this->Id = pdo_insert_id("test");
+
+    if(!$this->Id)
+      {
+      $this->Id = pdo_insert_id("test");
+      }
 
     // Add the measurements
     foreach($this->Measurements as $measurement)
@@ -257,7 +261,7 @@ class Test
       $image->Data = $imageVariable;
       $image->Checksum = crc32($imageVariable);
       $image->Save();
-            
+
       $testImage = new TestImage();
       $testImage->Id = $image->Id;
       $testImage->TestId = $this->Id;
@@ -266,6 +270,6 @@ class Test
       }
 
     return true;
-    }  // end Insert 
+    }  // end Insert
 }
 ?>
