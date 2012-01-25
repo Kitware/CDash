@@ -17,11 +17,11 @@ Tests failing: 5
 
 
 *Tests failing* (first 5)
-DashboardSendTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
-SystemInfoTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
-FileActionsTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
-StringActionsTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
-MathActionsTest (http://localhost/CDash-Head-MySQL/testDetails.php?test=<NA>&build=<NA>)
+DashboardSendTest (<NA>/testDetails.php?test=<NA>&build=<NA>)
+SystemInfoTest (<NA>testDetails.php?test=<NA>&build=<NA>)
+FileActionsTest (<NA>/testDetails.php?test=<NA>&build=<NA>)
+StringActionsTest (<NA>/testDetails.php?test=<NA>&build=<NA>)
+MathActionsTest (<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on localhost
