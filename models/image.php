@@ -22,11 +22,11 @@ class Image
   var $Filename;
   var $Extension;
   var $Checksum;
-  
-  var $Data; // In the file refered by Filename  
+
+  var $Data; // In the file refered by Filename
   var $Name; // Use to track the role for test
 
-   
+
   function __construct()
     {
     $this->Filename = '';
@@ -41,9 +41,9 @@ class Image
       $this->Data = addslashes(fread($h,filesize($this->Filename)));
       fclose($h);
       }
-    }  
+    }
 
-  /** Check if exists */  
+  /** Check if exists */
   function Exists()
     {
     // If no id specify return false
@@ -69,16 +69,16 @@ class Image
         }
       return false;
       }
-    return true;  
+    return true;
     }
-    
+
   /** Save the image */
   function Save()
     {
-    include("cdash/config.php");  
+    include("cdash/config.php");
     // Get the data from the file if necessary
     $this->GetData();
-      
+
     if(!$this->Exists())
       {
       $id = "";
@@ -94,21 +94,23 @@ class Image
         {
         $contents = pg_escape_bytea($this->Data);
         }
-        
-      if(pdo_query("INSERT INTO image (".$id."img,extension,checksum)
+
+      if(!pdo_query("INSERT INTO image (".$id."img,extension,checksum)
                      VALUES (".$idvalue."'".$contents."','".$this->Extension."','".$this->Checksum."')"))
-         {
-         $this->Id = pdo_insert_id("image");
-         }
-       else
          {
          add_last_sql_error("Image::Save");
          return false;
          }
+
+      if(!$this->Id)
+        {
+        $this->Id = pdo_insert_id("image");
+        }
+
       }
     return true;
   } // end function save
-      
+
 }
 
 ?>

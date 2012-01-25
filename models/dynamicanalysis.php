@@ -181,8 +181,11 @@ class DynamicAnalysis
       return false;
       }
 
-    $this->Id = pdo_insert_id("dynamicanalysis");
-
+    if(!$this->Id)
+      {
+      $this->Id = pdo_insert_id("dynamicanalysis");
+      }
+      
     // Add the defects
     if(!empty($this->Defects))
       {

@@ -330,16 +330,17 @@ class Project
                  .qnum($this->ShowTestTime).",".qnum($this->EmailAdministrator).",".qnum($this->ShowIPAddresses).",".qnum($this->DisplayLabels)
                  .",".qnum($this->AutoremoveTimeframe).",".qnum($this->AutoremoveMaxBuilds).",".qnum($this->UploadQuota).",'".$this->WebApiKey."')";
 
-      if(pdo_query($query))
-        {
-        $this->Id = pdo_insert_id("project");
-        }
-      else
+      if(!pdo_query($query))
         {
         add_last_sql_error("Project Create");
         return false;
         }
 
+      if(!$this->Id)
+        {
+        $this->Id = pdo_insert_id("project");
+        }
+        
       if($this->RobotName != '')
         {
         $query = "INSERT INTO projectrobot(projectid,robotname,authorregex)
