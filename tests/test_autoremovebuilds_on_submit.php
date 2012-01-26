@@ -57,11 +57,10 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 
     $result = $this->db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
     $projectid = $result[0]['id'];
-    $this->db->query("DELETE FROM dailyupdate WHERE projectid='$projectid'");
 
+    // Submit the first build
     $rep  = dirname(__FILE__)."/data/EmailProjectExample";
     $testxml1 = "$rep/1_test.xml";
-
     if(!$this->submission('EmailProjectExample',$testxml1))
       {
       $this->fail("submission 1 failed");
@@ -78,9 +77,13 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     $query_array = pdo_fetch_array($query);
     if($query_array[0] != 'Win32-MSVC2009')
       {
+      echo $query_array[0];
       $this->fail("First build not inserted correctly");
       return 1;
       }
+
+    // Looks like it's a new day
+    $this->db->query("DELETE FROM dailyupdate WHERE projectid='$projectid'");
 
     $testxml2 = "$rep/2_test.xml";
     if(!$this->submission('EmailProjectExample',$testxml2))
