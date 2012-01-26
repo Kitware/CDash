@@ -87,7 +87,7 @@ if ($session_OK)
   if($CDASH_MANAGE_CLIENTS)
     {
     $ClientJobSchedule = new ClientJobSchedule();
-    $userJobSchedules = $ClientJobSchedule->getAll($userid,5);
+    $userJobSchedules = $ClientJobSchedule->getAll($userid,1000);
     foreach($userJobSchedules as $scheduleid)
       {
       $ClientJobSchedule = new ClientJobSchedule();
