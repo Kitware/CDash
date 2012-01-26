@@ -17,6 +17,8 @@
 =========================================================================*/
 require_once("cdash/config.php");
 
+
+
 /** */
 function pdo_connect($server = NULL, $username = NULL, $password = NULL, $new_link = false, $client_flags = 0)
 {
@@ -114,19 +116,20 @@ function pdo_check_index_exists($tablename,$columnname)
 
 
 /** */
-function pdo_fetch_array($result, $result_type = MYSQL_BOTH)
+function pdo_fetch_array($result, $result_type = PDO::FETCH_BOTH)
 {
   global $CDASH_DB_TYPE;
 
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
     {
-    if    ($result_type == MYSQL_BOTH)  $result_type = PDO::FETCH_BOTH;
-    elseif($result_type == MYSQL_NUM)   $result_type = PDO::FETCH_NUM;
-    elseif($result_type == MYSQL_ASSOC) $result_type = PDO::FETCH_ASSOC;
     return $result->fetch($result_type);
     }
   else
     {
+    if    ($result_type == PDO::FETCH_BOTH)  $result_type = MYSQL_BOTH;
+    elseif($result_type == PDO::FETCH_NUM)   $result_type = MYSQL_NUM;
+    elseif($result_type == PDO::FETCH_ASSOC) $result_type = MYSQL_ASSOC;
+
     return mysql_fetch_array($result, $result_type);
     }
 }
@@ -381,10 +384,10 @@ function pdo_select_db($database_name, &$link_identifier)
     try
       {
       $last_link = $link_identifier = new PDO($dsn, $db_username, $db_password);
-      if($CDASH_DB_TYPE == "mysql") // necessary for looping through rows
+      /*if($CDASH_DB_TYPE == "mysql") // necessary for looping through rows
         {
         $link_identifier->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-        }
+        }*/
       pdo_query("SET client_encoding to 'UTF8'");
       return true;
       }

@@ -215,7 +215,7 @@ class dbo_mysql extends dbo
        return false;
        }
      $result = array();
-     while($row = mysql_fetch_array($resource,MYSQL_ASSOC))
+     while($row = mysql_fetch_array($resource,PDO::FETCH_ASSOC))
        {
        $result[] = $row;
        }
