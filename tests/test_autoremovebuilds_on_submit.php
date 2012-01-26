@@ -69,19 +69,38 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
       return;
       }
 
+    // Check that the test is actually there
+    if(!$query = pdo_query("SELECT name FROM build WHERE projectid='$projectid' AND stamp='20090223-0100-Nightly'"))
+      {
+      $this->fail("pdo_query returned false");
+      return 1;
+      }
+    $query_array = pdo_fetch_array($query);
+    if($query_array[0] != 'Win32-MSVC2009')
+      {
+      $this->fail("First build not inserted correctly");
+      return 1;
+      }
+
     $testxml2 = "$rep/2_test.xml";
     if(!$this->submission('EmailProjectExample',$testxml2))
       {
       $this->fail("submission 2 failed");
       $this->stopCodeCoverage();
-      return;
+      return 1;
       }
 
-    if(!$this->cdashpro && !$this->compareLog($this->logfilename, "$rep/cdash_autoremove.log"))
+    // Check that the first test is gone
+    if(!$query = pdo_query("SELECT name FROM build WHERE projectid='$projectid' AND stamp='20090223-0100-Nightly'"))
       {
-      $this->fail("compareLog failed");
-      $this->stopCodeCoverage();
-      return;
+      $this->fail("pdo_query returned false");
+      return 1;
+      }
+
+    if(pdo_num_rows($query)>0)
+      {
+      $this->fail("Auto remove build on submit failed");
+      return 1;
       }
 
     $this->pass("Passed");
