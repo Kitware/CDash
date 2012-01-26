@@ -282,8 +282,14 @@ if($Submit)
            }
          } // end foreach line
 
-       // For PgSQL 9.0 we need to set the bytea_output to 'escape' (it was changed to hexa)
-       @pdo_query("ALTER DATABASE ".$CDASH_DB_NAME." SET bytea_output TO 'escape'");
+       // Check the version of PostgreSQL
+       $result_version = pdo_query("SELECT version()");
+       $version_array = pdo_fetch_array($result_version);
+       if(strpos(strtolower($version_array[0]),"postgresql 9.") !== FALSE)
+         {
+         // For PgSQL 9.0 we need to set the bytea_output to 'escape' (it was changed to hexa)
+         @pdo_query("ALTER DATABASE ".$CDASH_DB_NAME." SET bytea_output TO 'escape'");
+         }
 
        } // end pgsql functions
 
