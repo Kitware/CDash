@@ -56,6 +56,13 @@ if ($session_OK)
   $User->Id = $userid;
   $Project->Id = $projectid;
 
+  // If the projectid is set, make sure that it's valid
+  if(isset($projectid) && !$Project->Exists())
+    {
+    echo "This project doesn't exists.";
+    return;
+    }
+
   $role = $Project->GetUserRole($userid);
 
   // If we are editing a project make sure we have the right to do so
