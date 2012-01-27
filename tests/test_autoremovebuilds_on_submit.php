@@ -94,7 +94,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
       }
 
     // Check that the first test is gone
-    if(!$query = pdo_query("SELECT name FROM build WHERE projectid='$projectid' AND stamp='20090223-0100-Nightly'"))
+    if(!$query = pdo_query("SELECT id FROM build WHERE projectid='$projectid' AND stamp='20090223-0100-Nightly'"))
       {
       $this->fail("pdo_query returned false");
       return 1;
