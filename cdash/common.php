@@ -149,7 +149,7 @@ function XMLStrFormat($str)
 }
 
 
-function time_difference($duration,$compact=false,$suffix='')
+function time_difference($duration,$compact=false,$suffix='',$displayms=false)
 {
   // If it's in the future
   if($duration<0)
@@ -167,7 +167,9 @@ function time_difference($duration,$compact=false,$suffix='')
   $duration -= $hours*3600;
   $mins = floor($duration/60);
   $duration -= $mins*60;
-  $secs = $duration;
+  $secs = floor($duration);
+  $duration -= $secs;
+  $msecs = round($duration*100);
 
   $diff = '';
   if($compact)
@@ -202,6 +204,10 @@ function time_difference($duration,$compact=false,$suffix='')
       {
       $diff .= $secs.'s';
       }
+    if($displayms && $msecs>0)
+      {
+      $diff .= ' '.$msecs.'ms';
+      }
     }
   else
     {
@@ -234,6 +240,11 @@ function time_difference($duration,$compact=false,$suffix='')
       {
       $diff = $secs. ' second';
       if($secs>1) {$diff .= 's';}
+      }
+    else if($displayms && $msecs>0)
+      {
+      $diff = $msecs. ' milisecond';
+      if($msecs>1) {$diff .= 's';}
       }
     }
 

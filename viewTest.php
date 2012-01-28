@@ -246,7 +246,7 @@ $xml .= "<tests>\n";
 // Find the time to run all the tests
 $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
 $time = $time_array[0];
-$xml .= add_XML_value("totaltime", get_formated_time($time));
+$xml .= add_XML_value("totaltime", time_difference($time,true,'',true));
 
 while($row = pdo_fetch_array($result))
   {
@@ -260,7 +260,8 @@ while($row = pdo_fetch_array($result))
     {
     $xml .= add_XML_value("new","1");
     }
-  $xml .= add_XML_value("execTime", $row["time"]);
+  $xml .= add_XML_value("execTimeFull",$row["time"]);
+  $xml .= add_XML_value("execTime",  time_difference($row["time"],true,'',true));
   $xml .= add_XML_value("details", $row["details"]);
   $testdate = get_dashboard_date_from_build_starttime($build_array["starttime"],$nightlytime);
   $summaryLink = "testSummary.php?project=$projectid&name=".urlencode($testName)."&date=$testdate";

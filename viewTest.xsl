@@ -123,7 +123,7 @@
     </xsl:if>
 </xsl:if>
 <xsl:if test="cdash/project/showtesttime=0">
-    <th id="sort_2">Time (s)</th>
+    <th id="sort_2">Time</th>
     <xsl:if test="/cdash/build/displaylabels=0 and cdash/displaydetails=1">
       <th id="sort_3" class="nob">Details</th>
     </xsl:if>
@@ -186,6 +186,7 @@
     </td>
 </xsl:if>
     <td align="right">
+      <span style="display:none"><xsl:value-of select="execTimeFull"/></span>
       <xsl:value-of select="execTime"/>
     </td>
 

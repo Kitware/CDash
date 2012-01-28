@@ -267,7 +267,7 @@ $(document).ready(function() {
             headers: {
                 0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
-                2: { sorter:'digit'}
+                2: { sorter:'elapsedtime'}
             },
           debug: false,
           widgets: ['zebra']
@@ -282,7 +282,7 @@ $(document).ready(function() {
                 0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
                 2: { sorter:'buildname'},
-                3: { sorter:'digit'}
+                3: { sorter:'elapsedtime'}
             },
           debug: false,
           widgets: ['zebra']
@@ -296,7 +296,7 @@ $(document).ready(function() {
             headers: {
                 0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
-                2: { sorter:'digit'},
+                2: { sorter:'elapsedtime'},
                 3: { sorter:'text'}
             },
           debug: false,
@@ -312,7 +312,7 @@ $(document).ready(function() {
                 0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
                 2: { sorter:'buildname'},
-                3: { sorter:'digit'},
+                3: { sorter:'elapsedtime'},
                 4: { sorter:'text'}
             },
           debug: false,
@@ -328,7 +328,7 @@ $(document).ready(function() {
                 0: { sorter:'buildname'},
                 1: { sorter:'buildname'},
                 2: { sorter:'buildname'},
-                3: { sorter:'digit'},
+                3: { sorter:'elapsedtime'},
                 4: { sorter:'text'},
                 5: { sorter:'text'}
             },
