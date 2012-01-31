@@ -178,10 +178,15 @@ Show coverage over time
        <xsl:value-of select="fullpath"/>
      </xsl:if>
      <xsl:if test="covered=1">
-      <a>
-      <xsl:attribute name="href">viewCoverageFile.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;fileid=<xsl:value-of select="fileid"/></xsl:attribute>
-      <xsl:value-of select="fullpath"/>
-      </a>
+      <xsl:if test="/cdash/coverage/showcoveragecode=1">
+        <a>
+        <xsl:attribute name="href">viewCoverageFile.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;fileid=<xsl:value-of select="fileid"/></xsl:attribute>
+        <xsl:value-of select="fullpath"/>
+        </a>
+     </xsl:if>
+     <xsl:if test="/cdash/coverage/showcoveragecode=0">
+       <xsl:value-of select="fullpath"/>
+     </xsl:if>
      </xsl:if>
     </td>
     <td align="center">

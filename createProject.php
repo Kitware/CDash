@@ -167,6 +167,7 @@ if($Submit)
     @$Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST["emailAdministrator"]);
     @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
     @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
+    @$Project->ShowCoverageCode = stripslashes_if_gpc_magic_quotes($_POST["showCoverageCode"]);
     @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
     @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
     $Project->Public = $Public;
@@ -351,6 +352,7 @@ if($Update || $AddRepository)
   @$Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST["emailAdministrator"]);
   @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST["showIPAddresses"]);
   @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST["displayLabels"]);
+  @$Project->ShowCoverageCode = stripslashes_if_gpc_magic_quotes($_POST["showCoverageCode"]);
   @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
   @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
 
@@ -453,6 +455,7 @@ if($projectid>0)
   $xml .= add_XML_value("emailadministrator",$Project->EmailAdministrator);
   $xml .= add_XML_value("showipaddresses",$Project->ShowIPAddresses);
   $xml .= add_XML_value("displaylabels",$Project->DisplayLabels);
+  $xml .= add_XML_value("showcoveragecode",$Project->ShowCoverageCode);
   $xml .= add_XML_value("autoremovetimeframe",$Project->AutoremoveTimeframe);
   $xml .= add_XML_value("autoremovemaxbuilds",$Project->AutoremoveMaxBuilds);
   $xml .= add_XML_value("webapikey",$Project->WebApiKey);

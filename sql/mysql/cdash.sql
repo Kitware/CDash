@@ -386,6 +386,7 @@ CREATE TABLE `project` (
   `uploadquota` bigint(20) default '0',
   `webapikey` varchar(40),
   `tokenduration` int(11),
+  `showcoveragecode` tinyint(4) default '1',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)

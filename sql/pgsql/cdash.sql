@@ -300,6 +300,7 @@ CREATE TABLE "project" (
   "uploadquota" bigint default '0',
   "webapikey" character varying(40) DEFAULT '' NOT NULL,
   "tokenduration" integer DEFAULT '0',
+  "showcoveragecode" smallint default '1',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name2" on "project" ("name");

@@ -1442,6 +1442,34 @@
                         <td></td>
                         <td>
                           <div align="right">
+                            <strong>Show coverage code:</strong>
+                          </div>
+                        </td>
+                        <td>
+                          <input onchange="saveChanges();" onfocus="showHelp('showCoverageCode_help');"
+                            type="checkbox" name="showCoverageCode" value="1">
+                            <xsl:if test="cdash/project/showcoveragecode=1">
+                              <xsl:attribute name="checked"></xsl:attribute>
+                            </xsl:if>
+                          </input>
+                          <a
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                            target="blank">
+                            <img onmouseover="showHelp('showCoverageCode_help');"
+                              src="images/help.gif" border="0" />
+                          </a>
+                          <span class="help_content" id="showCoverageCode_help">
+                            <b>Display Source Code in Coverage</b>
+                            <br />
+                            Enable/Disable the display of code coverage for the project. Only administrators
+                            of the projects can see the source code in the coverage section when this option is disabled.
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
                             <strong>AutoRemove Timeframe (days):</strong>
                           </div>
                         </td>
