@@ -33,6 +33,12 @@ if(!isset($buildid) || !is_numeric($buildid))
   return;
   }
 
+@$userid = $_SESSION['cdash']['loginid'];
+if(!isset($userid))
+  {
+  $userid = 0;
+  }
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -44,7 +50,7 @@ if(!isset($projectid) || $projectid==0)
   exit();
   }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
+checkUserPolicy($userid,$projectid);
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project) == 0)
@@ -56,7 +62,14 @@ if(pdo_num_rows($project) == 0)
 $project_array = pdo_fetch_array($project);
 $projectname = $project_array["name"];
 
- if(!$project_array["showcoveragecode"])
+$role=0;
+$user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+if(pdo_num_rows($user2project)>0)
+  {
+  $user2project_array = pdo_fetch_array($user2project);
+  $role = $user2project_array["role"];
+  }
+if(!$project_array["showcoveragecode"] && $role<2)
   {
   echo "This project doesn't allow display of coverage code. Contact the administrator of the project.";
   exit();

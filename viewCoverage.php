@@ -54,9 +54,9 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 $build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid,siteid,type,name FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 
-if(!isset($projectid) || $projectid==0)
+if(!isset($projectid) || $projectid==0 || !is_numeric($projectid))
   {
-  echo "This build doesn't exist. Maybe it has been deleted.";
+  echo "This project doesn't exist. Maybe it has been deleted.";
   exit();
   }
 
@@ -69,9 +69,22 @@ if(pdo_num_rows($project) == 0)
   exit();
   }
 
+$role=0;
+$user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
+if(pdo_num_rows($user2project)>0)
+  {
+  $user2project_array = pdo_fetch_array($user2project);
+  $role = $user2project_array["role"];
+  }
+
 $project_array = pdo_fetch_array($project);
 $projectname = $project_array["name"];
-$projectshowcoveragecode = $project_array["showcoveragecode"];
+
+$projectshowcoveragecode = 1;
+if(!$project_array["showcoveragecode"] && $role<2)
+  {
+  $projectshowcoveragecode = 0;
+  }
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
@@ -149,6 +162,8 @@ $xml .= "</menu>";
   $xml .= add_XML_value("buildid",$buildid);
   $xml .= add_XML_value("sortby",$sortby);
   $xml .= add_XML_value("userid",$userid);
+
+
   $xml .= add_XML_value("showcoveragecode",$projectshowcoveragecode);
 
   $nsatisfactorycoveredfiles = 0;
