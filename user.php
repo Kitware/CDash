@@ -140,6 +140,7 @@ if ($session_OK)
       $xml .= add_XML_value("projectname",$Project->GetName());
       $xml .= add_XML_value("status",$status);
       $xml .= add_XML_value("lastrun",$lastrun);
+      $xml .= add_XML_value("description",$ClientJobSchedule->GetDescription());
       $xml .= "</jobschedule>";
       }
     } // end if $CDASH_MANAGE_CLIENTS

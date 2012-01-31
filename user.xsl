@@ -198,7 +198,13 @@
         </xsl:attribute><img src="images/advanced.png" border="0" alt="edit schedule" /></a>
         <a onclick="return VerifyDeleteSchedule()"><xsl:attribute name="href">manageClient.php?removeschedule=<xsl:value-of select="id"/>
         </xsl:attribute><img src="images/delete.png" border="0" alt="remove schedule" /></a>
-
+        <xsl:if test="string-length(description)>0">
+           <a class="tooltip" href="#">
+           <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
+           <img src="images/document.png">
+           </img>
+           </a>
+         </xsl:if>
         </td>
     </tr>
   </xsl:for-each>

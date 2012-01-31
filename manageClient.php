@@ -121,6 +121,7 @@ if($session_OK)
     $xml .= add_XML_value("tag",$ClientJobSchedule->GetTag());
     $xml .= add_XML_value("buildnamesuffix",$ClientJobSchedule->GetBuildNameSuffix());
     $xml .= add_XML_value("builconfiguration",$ClientJobSchedule->GetBuildConfiguration());
+    $xml .= add_XML_value("description",$ClientJobSchedule->GetDescription());
     $libraries = $ClientJobSchedule->GetLibraries();
     $cmakes = $ClientJobSchedule->GetCMakes();
     $compilers = $ClientJobSchedule->GetCompilers();
@@ -143,6 +144,7 @@ if($session_OK)
     $xml .= add_XML_value("starttime","21:00:00");
     $xml .= add_XML_value("type","0"); // experimental
     $xml .= add_XML_value("cmakecache","");
+    $xml .= add_XML_value("description","");
     $xml .= add_XML_value("clientscript","");
     $xml .= add_XML_value("repeat","0");
     $xml .= add_XML_value("enable","1");
@@ -358,6 +360,7 @@ if($session_OK)
     $clientJobSchedule->Type = $_POST['type'];
     $clientJobSchedule->RepeatTime = $_POST['repeat'];
     $clientJobSchedule->CMakeCache = stripslashes_if_gpc_magic_quotes($_POST['cmakecache']);
+    $clientJobSchedule->Description = stripslashes_if_gpc_magic_quotes($_POST['description']);
     $clientJobSchedule->ClientScript = stripslashes_if_gpc_magic_quotes($_POST['clientscript']);
     $clientJobSchedule->Enable = 1;
     if(!empty($_POST['update']))

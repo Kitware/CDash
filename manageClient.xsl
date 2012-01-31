@@ -2,8 +2,11 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
   <xsl:include href="footer.xsl"/>
-  <xsl:include href="headscripts.xsl"/>
-  <xsl:include href="headeradminproject.xsl" />
+  <xsl:include href="headerback.xsl"/>
+
+   <!-- Local includes -->
+   <xsl:include href="local/footer.xsl"/>
+   <xsl:include href="local/headerback.xsl"/>
 
   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="UTF-8"/>
@@ -21,11 +24,20 @@
       </head>
 
  <body>
- <xsl:call-template name="headeradminproject" />
+
+<xsl:choose>
+<xsl:when test="/cdash/uselocaldirectory=1">
+  <xsl:call-template name="headerback_local"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:call-template name="headerback"/>
+</xsl:otherwise>
+</xsl:choose>
+
+<br/>
 
 <!-- Message -->
 <div style="color: green;"><xsl:value-of select="cdash/message" /></div>
-<h3>Schedule a build</h3>
 
 <xsl:if test="count(cdash/project/repository)=0">
   You should set the <a>
@@ -245,6 +257,12 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
         </xsl:if>
         </input>
         </td>
+      </tr>
+      <tr>
+        <td align="right" valign="top"><b>Description:</b></td>
+        <td><input maxlength="255" id="description" name="description" size="100">
+          <xsl:attribute name="value"><xsl:value-of select="/cdash/description"/></xsl:attribute>
+          </input></td>
       </tr>
       <tr>
         <td></td>

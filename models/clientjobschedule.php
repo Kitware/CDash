@@ -36,6 +36,7 @@ class ClientJobSchedule
   var $BuildNameSuffix;
   var $BuildConfigurations;
   var $BuildConfiguration;
+  var $Description;
 
   function __construct()
     {
@@ -69,6 +70,19 @@ class ClientJobSchedule
       return;
       }
     $sys = pdo_query("SELECT cmakecache FROM client_jobschedule WHERE id=".qnum($this->Id));
+    $row = pdo_fetch_array($sys);
+    return $row[0];
+    }
+
+  /** Get the Description */
+  function GetDescription()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJobSchedule::GetDescription","Id not set");
+      return;
+      }
+    $sys = pdo_query("SELECT description FROM client_jobschedule WHERE id=".qnum($this->Id));
     $row = pdo_fetch_array($sys);
     return $row[0];
     }
@@ -234,15 +248,17 @@ class ClientJobSchedule
     {
     $cmakecache = pdo_real_escape_string($this->CMakeCache);
     $clientscript = pdo_real_escape_string($this->ClientScript);
+    $description = pdo_real_escape_string($this->Description);
+
     if(!$this->Id)
       {
       $sql = "INSERT INTO client_jobschedule (userid,projectid,startdate,enddate,starttime,enable,type,
                                               repeattime,cmakecache,clientscript,repository,module,buildnamesuffix,
-                                              tag,buildconfiguration)
+                                              tag,buildconfiguration,description)
               VALUES ('".$this->UserId."','".$this->ProjectId."','".$this->StartDate."','".$this->EndDate.
               "','".$this->StartTime."','".$this->Enable."','".$this->Type."','".$this->RepeatTime.
               "','".$cmakecache."','".$clientscript."','".$this->Repository."','".$this->Module."','".$this->BuildNameSuffix.
-              "','".$this->Tag."','".$this->BuildConfiguration."')";
+              "','".$this->Tag."','".$this->BuildConfiguration."','".$description."')";
       pdo_query($sql);
       $this->Id = pdo_insert_id('client_jobschedule');
       add_last_sql_error("ClientJobSchedule::Save");
@@ -261,6 +277,7 @@ class ClientJobSchedule
              buildnamesuffix='".$this->BuildNameSuffix."',
              buildconfiguration='".$this->BuildConfiguration."',
              tag='".$this->Tag."',
+             description='".$description."',
              type='".$this->Type."' WHERE id=".qnum($this->Id);
       pdo_query($sql);
       add_last_sql_error("ClientJobSchedule::Save");

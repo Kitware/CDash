@@ -1043,6 +1043,7 @@ CREATE TABLE IF NOT EXISTS client_jobschedule (
   `buildnamesuffix` varchar(255) default '',
   `tag` varchar(255) default '',
   `buildconfiguration` tinyint(4) default '0',
+  `description` text default '',
   UNIQUE KEY `id` (`id`),
   KEY `userid` (`userid`),
   KEY `projectid` (`projectid`),

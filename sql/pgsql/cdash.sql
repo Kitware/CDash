@@ -973,7 +973,8 @@ CREATE TABLE "client_jobschedule" (
   "module" character varying(255) default '',
   "buildnamesuffix" character varying(255) default '',
   "tag" character varying(255) default '',
-  "buildconfiguration" smallint default '0'
+  "buildconfiguration" smallint default '0',
+  "description" text default ''
 );
 CREATE INDEX "client_jobschedule_userid" on "client_jobschedule" ("userid");
 CREATE INDEX "client_jobschedule_projectid" on "client_jobschedule" ("projectid");
