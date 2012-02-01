@@ -32,9 +32,9 @@ class ManageClientTestCase extends KWWebTestCase
       return 1;
       }
     $content = $this->get($this->url."/manageClient.php?projectid=1");
-    if(strpos($content, "Schedule a build") === false)
+    if(strpos($content, "Job-specific client script") === false)
       {
-      $this->fail("'Schedule a build' not found when expected");
+      $this->fail("'Job-specific client script' not found when expected");
       return 1;
       }
     $this->pass("Passed");
