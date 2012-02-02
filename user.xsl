@@ -178,6 +178,7 @@
       <td align="center" class="botl">Project</td>
       <td align="center" class="botl">Status</td>
       <td align="center" class="botl">Last run</td>
+      <td align="center" class="botl">Description</td>
       <td align="center" class="botl">Actions</td>
 
    </tr>
@@ -188,23 +189,21 @@
         <xsl:attribute name="href">
         index.php?project=<xsl:value-of select="projectname"/>
         </xsl:attribute>
-        <xsl:value-of select="projectname"/></a> </td>
+        <xsl:value-of select="projectname"/></a>
+        </td>
+        <td align="center" ><xsl:value-of select="status"/></td>
+        <td align="center" ><xsl:value-of select="lastrun"/></td>
         <td align="center" >
-        <xsl:value-of select="status"/></td>
-         <td align="center" >
-        <xsl:value-of select="lastrun"/></td>
-        <td align="center" >
+           <xsl:if test="string-length(description)=0">
+            NA
+           </xsl:if>
+        <xsl:value-of select="description"/></td>
+
+       <td align="center" >
         <a><xsl:attribute name="href">manageClient.php?scheduleid=<xsl:value-of select="id"/>
         </xsl:attribute><img src="images/advanced.png" border="0" alt="edit schedule" /></a>
         <a onclick="return VerifyDeleteSchedule()"><xsl:attribute name="href">manageClient.php?removeschedule=<xsl:value-of select="id"/>
         </xsl:attribute><img src="images/delete.png" border="0" alt="remove schedule" /></a>
-        <xsl:if test="string-length(description)>0">
-           <a class="tooltip" href="#">
-           <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
-           <img src="images/document.png">
-           </img>
-           </a>
-         </xsl:if>
         </td>
     </tr>
   </xsl:for-each>
