@@ -10,6 +10,21 @@ $(document).ready(function() {
     {
     var projectname = this.getElementById('projectname').value;
     $('#groupsdescription').jqm({ajax: 'groupsDescription.php?project='+projectname, trigger: 'a.grouptrigger'});
+
+    // If we are in advanced view, we setup the advanced view
+    if($.cookie('cdash_'+projectname+'_advancedview') == '1')
+      {
+      $('.advancedview').html("Simple View");
+      $('.advancedviewitem').show();
+
+      $timeheaders = $(".timeheader");
+      $timeheaders.each(
+        function(index) {
+         var colspan = $(this).attr('colspan');
+         colspan++;
+         $(this).attr('colspan',colspan);
+        });
+      }
     }
 
   // Check if we have a cookie for refreshing the page
@@ -56,9 +71,12 @@ $(document).ready(function() {
       }
    })
 
+
   /** Show/Hide time */
   $('.advancedview').click(function()
     {
+    var projectname = document.getElementById('projectname').value;
+
     if ($('.advancedview').html() == "Simple View")
       {
       $('.advancedview').html("Advanced View");
@@ -70,6 +88,7 @@ $(document).ready(function() {
          colspan--;
          $(this).attr('colspan',colspan);
         });
+      $.cookie('cdash_'+projectname+'_advancedview','0');
       }
     else
       {
@@ -83,6 +102,7 @@ $(document).ready(function() {
          colspan++;
          $(this).attr('colspan',colspan);
         });
+      $.cookie('cdash_'+projectname+'_advancedview','1');
       }
     });
 
