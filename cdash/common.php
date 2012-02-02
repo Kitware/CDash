@@ -548,7 +548,7 @@ function stripslashes_if_gpc_magic_quotes( $string )
 }
 
 /** Get the current URI of the dashboard */
-function get_server_URI()
+function get_server_URI($localhost=false)
 {
   include("cdash/config.php");
   $currentPort="";
@@ -557,16 +557,45 @@ function get_server_URI()
     {
     $currentPort=":".$_SERVER['SERVER_PORT'];
     }
-  if($_SERVER['SERVER_PORT']==443 || $CDASH_USE_HTTPS === true)
+
+  if($_SERVER['SERVER_PORT']==443 || $CDASH_USE_HTTPS)
     {
     $httpprefix = "https://";
     }
-  $serverName = $CDASH_SERVER_NAME;
-  if(strlen($serverName) == 0)
+
+  // If we should consider the localhost.
+  // This is used for submission but not emails, etc...
+  if($localhost)
     {
-    $serverName = $_SERVER['SERVER_NAME'];
+    $serverName = "localhost";
+    if(!$CDASH_CURL_REQUEST_LOCALHOST)
+      {
+      $serverName = $CDASH_SERVER_NAME;
+      if(strlen($serverName) == 0)
+        {
+        $serverName = $_SERVER['SERVER_NAME'];
+        }
+      }
+    if($CDASH_CURL_LOCALHOST_PREFIX != '')
+      {
+      $currentURI =  $httpprefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX;
+      }
+    else
+      {
+      $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI'];
+      }
     }
-  $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI'];
+  else
+    {
+    $serverName = $CDASH_SERVER_NAME;
+    if(strlen($serverName) == 0)
+      {
+      $serverName = $_SERVER['SERVER_NAME'];
+      }
+    $currentURI =  $httpprefix.$serverName.$currentPort.$_SERVER['REQUEST_URI'];
+    }
+
+  // Truncate the URL based on the curentURI
   $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
   return $currentURI;
 }

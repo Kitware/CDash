@@ -31,31 +31,7 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
   // If we have php curl we do it asynchronously
   if(function_exists("curl_init") == TRUE)
     {
-    $currentPort="";
-    if($CDASH_SERVER_PORT!="")
-      {
-      $currentPort=":".$CDASH_SERVER_PORT;
-      }
-
-    // Where to send to curl request
-    $serverName = "localhost";
-    if(!$CDASH_CURL_REQUEST_LOCALHOST)
-      {
-      $serverName = $CDASH_SERVER_NAME;
-      if(strlen($serverName) == 0)
-        {
-        $serverName = $_SERVER['SERVER_NAME'];
-        }
-      }
-
-    $prefix =  "http://";
-    if($CDASH_USE_HTTPS)
-      {
-      $prefix =  "https://";
-      }
-
-    $currentURI =  $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI'];
-    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+    $currentURI = get_server_URI(true);
     $request = $CDASH_ASYNCHRONOUS_SUBMISSION ?
       $currentURI."/dailyupdatescurl.php?projectid=".$projectid :
       $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
@@ -83,7 +59,7 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
   if($submission_id !== 0)
     {
     $row = pdo_single_row_query(
-      "SELECT scheduleid from client_jobschedule2submission WHERE submissionid=$submission_id"); 
+      "SELECT scheduleid from client_jobschedule2submission WHERE submissionid=$submission_id");
     if(!empty($row))
       {
       $scheduleid = $row[0];
@@ -184,31 +160,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
   // If we have php curl we do it asynchronously
   if(function_exists("curl_init") == TRUE)
     {
-    $currentPort="";
-    if($CDASH_SERVER_PORT!="")
-      {
-      $currentPort=":".$CDASH_SERVER_PORT;
-      }
-
-    // Where to send to curl request
-    $serverName = "localhost";
-    if(!$CDASH_CURL_REQUEST_LOCALHOST)
-      {
-      $serverName = $CDASH_SERVER_NAME;
-      if(strlen($serverName) == 0)
-        {
-        $serverName = $_SERVER['SERVER_NAME'];
-        }
-      }
-
-    $prefix =  "http://";
-    if($CDASH_USE_HTTPS)
-      {
-      $prefix =  "https://";
-      }
-
-    $currentURI = $prefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX.$_SERVER['REQUEST_URI'];
-    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+    $currentURI = get_server_URI(true);
     $clientscheduleid = isset($_GET["clientscheduleid"]) ? $_GET["clientscheduleid"] : 0;
     if($clientscheduleid !== 0)
       {
