@@ -1,3 +1,71 @@
+CDash 2.0.0, 2012-02-03
+------------------------
+
+- 0012555: Asynchronous processing of submission fails with drop site of the form: slicer4.cdash.org 
+- 0011809: "My Build Schedules" might benefit from an extra Comments or Description column 
+- 0012557: Option to hide source code in the coverage webpage 
+- 0011804: "My Build Schedules" list limited to 5 jobs; rest is inaccessible 
+- 0011521: PHP warning about MYSQL_BOTH 
+- 0012913: CDash fails to open update.xml file if CTEST_SITE variable contains a slash character 
+- 0010817: DynamicAnalysis is "green" and "0" even though all tests failed when run under memcheck 
+- 0012884: Adding "Subscribe" to the dashboard page 
+- 0012907: Delete user incomplete / blocks creation of new user with equal name 
+- 0012899: cdash 1.8.2 emails do not include header that indicates text encoding of content 
+- 0012885: When subscribing, "Project" combobox doesn't show current project 
+- 0010648: By default how to allow registered user to create new projects 
+- 0010742: CDash does not check for valid email 
+- 0010408: Time based reload for project dashboard page 
+- 0011939: CDASH cannot display Attached Files 
+- 0012314: description of 'test standard deviation' and 'test standard deviation threshold' is wrong 
+- 0010748: Log rotation 
+- 0012310: 'test time standard deviation' should be renamed 
+- 0010974: Build failures not highlighted 
+- 0010822: compute_update_statistics is undefined 
+- 0011799: "My Build Schedules" lists the same project name for all jobs 
+- 0011711: cdash/createRSS.php creates invalid RSS output 
+- 0010051: Wording of "Email preference" unclear 
+- 0011800: MySQL schema for client_jobschedule does not allow repeattime above 9.99 in newer MySQL versions 
+- 0012218: Update command fails to parse if it contains XML escaped quotes 
+- 0011201: Move the coverage legend on the left 
+- 0012368: CDash's build results html should use monospace font for 'standard error' output 
+- 0012164: CDash 1.6.4 cannot accept the special character 
+- 0012395: cdash login page 'remember me' checkbox does not work when using LDAP authentication 
+- 0012416: Error logs are never cleared 
+- 0009663: [CTest] CTest/CDash OS version & compiler information is lacking on Mac OS X 
+- 0007726: admin should be able to see/set other users settings 
+- 0010289: Patch for the support of hgweb navigation (mercurial) 
+- 0011409: viewErrorLog.php page does not show anything if buildid= *and* date= are given 
+- 0012341: Test names not escaped 
+- 0012360: [CTest] CDash colors for build graphs have poor contrast 
+- 0012384: [PATCH] Add support for the Redmine repository browser 
+- 0011737: CDash submission fails due to wrong parsing of geolocation info 
+- 0012585: Use "(empty)" instead of "" when site and build names come in empty from ctest 
+- 0010684: [CTest] ctest not reporting submission failures 
+- 0012396: [CTest] CDash should indicate the git hash of builds 
+- 0011608: Support new style of gitweb url 
+- 0011920: [CMake] Current svn -> cannot create project + header errors
+- 0012638: Display Example URL of Reposiroty Viewer 
+- 0012631: Admin can't change user settings -- especially can't edit repository credentials 
+- 0010819: Make one more category for coverage files : "complete" or "perfect" 
+- 0012560: Support for PgSQL 9.x 
+- 0012559: Add database port in configuration file 
+- 0012403: CDash should report the time since reported builds 
+- 0012454: Missing CDASH_SERVER_PORT default in config.php 
+- 0012409: Autorefresh support 
+- 0011787: PHP errors when accessing with empty project name 
+- 0012404: Build management from main dashboard doesn't work on Safari 
+- 0012331: Additional search filters for LDAP based logins
+- 0012308: WebApi - Method:project - Task:files - Sort files by uploaded date
+- 0011639: Support committer name and email from git
+- 0010659: Upgrade Jquery
+- 0010930: 1.6.5: ctest/cdash report truncated names 
+- 0009790: URL into Trac svn browser wrong 
+- 0011432: Undefined variables 
+- 0011894: PHP warnings about split() 
+- 0011828: PHP warning about preg_match() 
+- 0010964: [CTest] CDash 1.6.4 - test output "crashes" the log page
+- 0011663: Version 1.8.2 testDetails.php not loading stylesheet.
+
 CDash 1.8.0, 2010-10-25
 ------------------------
 - 0010834 CDash should log php errors during submission
