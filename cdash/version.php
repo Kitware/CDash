@@ -10,14 +10,14 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-// Current version 
-$CDASH_VERSION_MAJOR = '1';
-$CDASH_VERSION_MINOR = '9';
+// Current version
+$CDASH_VERSION_MAJOR = '2';
+$CDASH_VERSION_MINOR = '1';
 $CDASH_VERSION_PATCH = '0';
 $CDASH_VERSION = $CDASH_VERSION_MAJOR.".".$CDASH_VERSION_MINOR.".".$CDASH_VERSION_PATCH;
 ?>
