@@ -1204,12 +1204,19 @@ function generate_main_dashboard_XML($projectid,$date)
     $xml .= add_XML_value("siteid", $siteid);
     $xml .= add_XML_value("buildname", $build_array["name"]);
 
+    // Trying to determing the platform based on the OSName and the buildname
     $buildplatform = '';
-    switch($build_array["osname"])
+    if(strtolower(substr($build_array["osname"],0,7)) == 'windows')
       {
-      case 'Windows' : $buildplatform='windows'; break;
-      case 'Mac OS X' : $buildplatform='mac'; break;
-      case 'Linux' : $buildplatform='linux'; break;
+      $buildplatform='windows';
+      }
+    else if(strtolower(substr($build_array["osname"],0,8)) == 'mac os x')
+      {
+      $buildplatform='mac';
+      }
+    else if(strtolower(substr($build_array["osname"],0,5)) == 'linux')
+      {
+      $buildplatform='linux';
       }
 
     $xml .= add_XML_value("buildplatform",$buildplatform);
