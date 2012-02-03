@@ -579,6 +579,7 @@ function get_server_URI($localhost=false)
     if($CDASH_CURL_LOCALHOST_PREFIX != '')
       {
       $currentURI =  $httpprefix.$serverName.$currentPort.$CDASH_CURL_LOCALHOST_PREFIX;
+      return $currentURI;
       }
     else
       {
