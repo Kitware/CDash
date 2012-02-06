@@ -96,10 +96,10 @@
 </tr>
 
   <tr class="table-heading">
-     <th align="center" id="sort_0"><b>Project</b></th>
-     <td align="center"><b>Description</b></td>
-     <th align="center" id="sort_2"><b>Total Uploads</b></th>
-     <th align="center" id="sort_3" class="nob"><b>Last activity</b></th>
+     <th align="center" id="sort_0" width="10%"><b>Project</b></th>
+     <td align="center" width="68%"><b>Description</b></td>
+     <th align="center" id="sort_2" width="12%"><b>Total Uploads</b></th>
+     <th align="center" id="sort_3" class="nob" width="10%"><b>Last activity</b></th>
   </tr>
  </thead>
  <tbody>
