@@ -428,7 +428,6 @@ function generate_main_dashboard_XML($projectid,$date)
   <bugtracker>".$bugurl."</bugtracker>
   <googletracker>".$googletracker."</googletracker>
   <documentation>".$docurl."</documentation>
-  <home>".$homeurl."</home>
   <logoid>".$logoid."</logoid>
   <projectid>".$projectid."</projectid>
   <projectname>".$projectname."</projectname>
@@ -437,6 +436,16 @@ function generate_main_dashboard_XML($projectid,$date)
   <projectpublic>".$projectpublic."</projectpublic>
   <displaylabels>".$project_array["displaylabels"]."</displaylabels>
   <nextdate>".$nextdate."</nextdate>";
+
+  if(empty($project_array["homeurl"]))
+    {
+    $xml .= "<home>index.php?project=".urlencode($projectname)."</home>";
+    }
+  else
+    {
+    $xml .= "<home>".$homeurl."</home>";
+    }
+
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {
     include_once("local/models/proProject.php");
@@ -1673,7 +1682,6 @@ function generate_subprojects_dashboard_XML($projectid,$date)
   <bugtracker>".$bugurl."</bugtracker>
   <googletracker>".$googletracker."</googletracker>
   <documentation>".$docurl."</documentation>
-  <home>".$homeurl."</home>
   <logoid>".$Project->getLogoID()."</logoid>
   <projectid>".$projectid."</projectid>
   <projectname>".$Project->Name."</projectname>
@@ -1681,6 +1689,16 @@ function generate_subprojects_dashboard_XML($projectid,$date)
   <previousdate>".$previousdate."</previousdate>
   <projectpublic>".$Project->Public."</projectpublic>
   <nextdate>".$nextdate."</nextdate>";
+
+  if(empty($Project->HomeUrl))
+    {
+    $xml .= "<home>index.php?project=".urlencode($Project->Name)."</home>";
+    }
+  else
+    {
+    $xml .= "<home>".$homeurl."</home>";
+    }
+
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {
     include_once("local/models/proProject.php");
