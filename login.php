@@ -32,7 +32,7 @@ function databaseAuthenticate($email,$password,$SessionCachePolicy,$rememberme)
 
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
-  $sql="SELECT id,password FROM ".qid("user")." WHERE email='$email'";
+  $sql="SELECT id,password FROM ".qid("user")." WHERE email='".pdo_real_escape_string($email)."'";
   $result = pdo_query("$sql");
 
   if(pdo_num_rows($result)==0)
@@ -140,7 +140,7 @@ function ldapAuthenticate($email,$password,$SessionCachePolicy,$rememberme)
         // bind as this user
         if(@ldap_bind($ldap, $principal, $password))
           {
-          $sql="SELECT id,password FROM ".qid("user")." WHERE email='$email'";
+          $sql="SELECT id,password FROM ".qid("user")." WHERE email='".pdo_real_escape_string($email)."'";
           $result = pdo_query("$sql");
 
           // If the user doesn't exist we add it
@@ -349,7 +349,7 @@ function auth($SessionCachePolicy='private_no_expire')
       $cookievalue = $_COOKIE[$cookiename];
       $cookiekey = substr($cookievalue,strlen($cookievalue)-33);
       $cookieuseridkey = substr($cookievalue,0,strlen($cookievalue)-33);
-      $sql="SELECT email,password,id FROM ".qid("user")." WHERE cookiekey='$cookiekey' AND id='$cookieuseridkey'";
+      $sql="SELECT email,password,id FROM ".qid("user")." WHERE cookiekey='".pdo_real_escape_string($cookiekey)."' AND id='".pdo_real_escape_string($cookieuseridkey)."'";
       $result = pdo_query("$sql");
       if(pdo_num_rows($result) == 1)
         {
@@ -378,7 +378,7 @@ function auth($SessionCachePolicy='private_no_expire')
       {
       $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
       pdo_select_db("$CDASH_DB_NAME",$db);
-      $sql="SELECT id,password FROM ".qid("user")." WHERE email='$email'";
+      $sql="SELECT id,password FROM ".qid("user")." WHERE email='".pdo_real_escape_string($email)."'";
       $result = pdo_query("$sql");
 
       if(pdo_num_rows($result)==0)
