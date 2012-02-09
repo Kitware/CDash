@@ -17,12 +17,17 @@
 =========================================================================*/
 
 /** Remove builds by their group-specific auto-remove timeframe setting */
-function removeBuildsGroupwise($projectid, $maxbuilds)
+function removeBuildsGroupwise($projectid, $maxbuilds, $force=false)
 {
   require_once('cdash/config.php');
   require_once('cdash/pdo.php');
   require_once('cdash/common.php');
 
+  if(!$force && !isset($CDASH_AUTOREMOVE_BUILDS))
+    {
+    return;
+    }
+    
   set_time_limit(0);
 
   $buildgroups = pdo_query('SELECT id,autoremovetimeframe FROM buildgroup WHERE projectid='.qnum($projectid));
