@@ -864,6 +864,8 @@ if(isset($_GET['upgrade-2-0']))
   AddTableField('client_jobschedule', 'description', 'text', 'text', '');
   AddTableField('project', 'showcoveragecode', 'tinyint(1)', 'smallint', '1');
 
+  AddTableIndex('updatefile','author');
+
   // Set the database version
   setVersion();
 
@@ -875,6 +877,8 @@ if(isset($_GET['upgrade-2-0']))
 // 2.2 Upgrade
 if(isset($_GET['upgrade-2-2']))
   {
+  AddTableIndex('updatefile','author');
+  
   // Set the database version
   setVersion();
 

@@ -524,7 +524,8 @@ CREATE TABLE `updatefile` (
   `revision` varchar(60) NOT NULL default '0',
   `priorrevision` varchar(60) NOT NULL default '0',
   `status` varchar(12) NOT NULL default '',
-  KEY `buildid` (`buildid`)
+  KEY `buildid` (`buildid`),
+  KEY `author` (`author`)
 );
 
 -- --------------------------------------------------------

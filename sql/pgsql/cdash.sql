@@ -428,6 +428,7 @@ CREATE TABLE "updatefile" (
   "status" character varying(12) DEFAULT '' NOT NULL
 );
 CREATE INDEX "buildid9" on "updatefile" ("buildid");
+CREATE INDEX "updatefile_author" on "updatefile" ("author");
 
 --
 -- Table: user
