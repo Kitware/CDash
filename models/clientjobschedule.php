@@ -278,6 +278,7 @@ class ClientJobSchedule
              buildconfiguration='".$this->BuildConfiguration."',
              tag='".$this->Tag."',
              description='".$description."',
+             enable='".$this->Enable."',
              type='".$this->Type."' WHERE id=".qnum($this->Id);
       pdo_query($sql);
       add_last_sql_error("ClientJobSchedule::Save");
