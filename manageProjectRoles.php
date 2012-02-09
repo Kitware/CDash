@@ -399,12 +399,12 @@ if($importUsers)
     }
 } // end import users
 
-
 $sql = "SELECT id,name FROM project";
 if($user_array["admin"] != 1)
   {
   $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)";
   }
+$sql .= " ORDER BY name";
 $projects = pdo_query($sql);
 while($project_array = pdo_fetch_array($projects))
    {
@@ -498,8 +498,6 @@ if($projectid>0)
     $xml .= "</baduser>";
     }
   } // end project=0
-
-
 
 if(isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1)
   {
