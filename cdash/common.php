@@ -1729,7 +1729,6 @@ function get_cdash_dashboard_xml($projectname, $date)
   <bugtracker>".make_cdash_url(htmlentities($project_array["bugtrackerurl"]))."</bugtracker>
   <googletracker>".htmlentities($project_array["googletracker"])."</googletracker>
   <documentation>".make_cdash_url(htmlentities($project_array["documentationurl"]))."</documentation>
-  <home>".make_cdash_url(htmlentities($project_array["homeurl"]))."</home>
   <projectid>".$projectid."</projectid>
   <projectname>".$project_array["name"]."</projectname>
   <projectname_encoded>".urlencode($project_array["name"])."</projectname_encoded>
@@ -1737,6 +1736,15 @@ function get_cdash_dashboard_xml($projectname, $date)
   <previousdate>".$previousdate."</previousdate>
   <nextdate>".$nextdate."</nextdate>
   <logoid>".getLogoID($projectid)."</logoid>";
+
+  if(empty($project_array["homeurl"]))
+    {
+    $xml .= "<home>index.php?project=".urlencode($project_array["name"])."</home>";
+    }
+  else
+    {
+    $xml .= "<home>".make_cdash_url(htmlentities($project_array["homeurl"]))."</home>";
+    }
 
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
     {
