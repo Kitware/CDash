@@ -863,6 +863,7 @@ if(isset($_GET['upgrade-2-0']))
   ModifyTableField("client_jobschedule","repeattime","decimal(6,2)","decimal(6,2)","0.00",true,false);
   AddTableField('client_jobschedule', 'description', 'text', 'text', '');
   AddTableField('project', 'showcoveragecode', 'tinyint(1)', 'smallint', '1');
+  AddTableIndex('updatefile','author');
 
   // Set the database version
   setVersion();
