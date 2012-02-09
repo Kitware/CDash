@@ -424,7 +424,7 @@ function clean_backup_directory()
   require_once("cdash/pdo.php");
   foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename)
     {
-    if(time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600)
+    if(file_exists($filename) && time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600)
       {
       unlink($filename);
       }
