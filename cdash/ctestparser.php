@@ -119,9 +119,6 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
   xml_set_character_data_handler($parser, array($handler, 'text'));
   xml_parse($parser, $content, false);
 
-  // Clean the backup directory
-  clean_backup_directory();
-
   $projectname = get_project_name($projectid);
 
   $sitename = "";
