@@ -32,9 +32,7 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
   if(function_exists("curl_init") == TRUE)
     {
     $currentURI = get_server_URI(true);
-    $request = $CDASH_ASYNCHRONOUS_SUBMISSION ?
-      $currentURI."/dailyupdatescurl.php?projectid=".$projectid :
-      $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
+    $request = $currentURI."/cdash/dailyupdatescurl.php?projectid=".$projectid;
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $request);
