@@ -327,6 +327,7 @@ if($session_OK)
     $clientJobSchedule->BuildNameSuffix = $_POST['buildnamesuffix'];
     $clientJobSchedule->BuildConfiguration = $_POST['buildconfiguration'];
     $clientJobSchedule->Tag = $_POST['tag'];
+    $clientJobSchedule->Enable = 1;
 
     if(strlen($_POST['module'])>0)
       {
@@ -342,9 +343,9 @@ if($session_OK)
       $clientJobSchedule->Repository = $_POST['repository'];
       }
 
-    if(isset($_POST['enable']))
+    if(!isset($_POST['enable']))
       {
-      $clientJobSchedule->Enable = 1;
+      $clientJobSchedule->Enable = 0;
       }
     $clientJobSchedule->StartDate = $_POST['startdate'];
     if(empty($clientJobSchedule->StartDate))
@@ -362,11 +363,12 @@ if($session_OK)
     $clientJobSchedule->CMakeCache = stripslashes_if_gpc_magic_quotes($_POST['cmakecache']);
     $clientJobSchedule->Description = stripslashes_if_gpc_magic_quotes($_POST['description']);
     $clientJobSchedule->ClientScript = stripslashes_if_gpc_magic_quotes($_POST['clientscript']);
-    $clientJobSchedule->Enable = 1;
+
     if(!empty($_POST['update']))
       {
       $clientJobSchedule->Id = $scheduleid;
       }
+
     $clientJobSchedule->Save();
 
     // Remove everything and add them back in
