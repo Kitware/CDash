@@ -514,7 +514,17 @@ if($projectid>0)
       $nRepositories++;
       }
     } // end AddRepository
-  } // end projectid=0
+  } // end projectid>0
+else
+  {
+  $xml .= "<project>";
+  // Initialize the variables for creation
+  $xml .= add_XML_value("emailbrokensubmission","1");
+  $xml .= add_XML_value("autoremovetimeframe","60");
+  $xml .= add_XML_value("autoremovemaxbuilds","500");
+  $xml .= add_XML_value("uploadquota","1");
+  $xml .= "</project>";
+  }
 
 // Make sure we have at least one repository
 if($nRepositories == 0)
