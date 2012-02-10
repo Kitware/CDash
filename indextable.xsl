@@ -98,8 +98,7 @@
   <tr class="table-heading">
      <th align="center" id="sort_0" width="10%"><b>Project</b></th>
      <td align="center" width="65%"><b>Description</b></td>
-     <th align="center" id="sort_2" width="12%"><b>Total Uploads</b></th>
-     <th align="center" id="sort_3" class="nob" width="13%"><b>Last activity</b></th>
+     <th align="center" class="nob"  id="sort_3" width="13%"><b>Last activity</b></th>
   </tr>
  </thead>
  <tbody>
@@ -114,11 +113,10 @@
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
      <xsl:value-of select="name"/>
      </a></td>
-     <td align="center"><xsl:value-of select="description"/></td>
-     <td align="center"><xsl:value-of select="uploadsize"/> GB</td>
+    <td align="left"><xsl:value-of select="description"/></td>
     <td align="center" class="nob">
     <a class="builddateelapsed">
-     <xsl:attribute name="alt"><xsl:value-of select="lastbuild"/></xsl:attribute>
+     <xsl:attribute name="alt"><xsl:value-of select="lastbuild"/> (<xsl:value-of select="uploadsize"/> GB)</xsl:attribute>
       <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
       <xsl:value-of select="lastbuild_elapsed"/>
     </a>
