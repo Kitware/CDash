@@ -242,7 +242,7 @@
                </xsl:choose>
        </xsl:attribute>
 
-        <b><a><xsl:attribute name="href">viewUpdate?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+        <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
        <xsl:value-of select="cdash/previousbuild/nupdateerrors"/></a></b></td>
         <td align="right">
               <xsl:attribute name="class">
@@ -258,7 +258,7 @@
                </xsl:choose>
        </xsl:attribute>
 
-        <b><a><xsl:attribute name="href">viewUpdate?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+        <b><a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
         <xsl:value-of select="cdash/previousbuild/nupdatewarnings"/></a></b></td>
         </tr>
         <tr class="tr-even">
@@ -273,7 +273,7 @@
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-       <b><a><xsl:attribute name="href">viewConfigure?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <b><a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
        <xsl:value-of select="cdash/previousbuild/nconfigureerrors"/></a></b></td>
         <td align="right">  <xsl:attribute name="class">
           <xsl:choose>
@@ -284,7 +284,7 @@
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-       <b><a><xsl:attribute name="href">viewConfigure?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
+       <b><a><xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="cdash/previousbuild/buildid"/></xsl:attribute>
        <xsl:value-of select="cdash/previousbuild/nconfigurewarnings"/></a></b></td>
        </tr>
         <tr class="tr-odd">
