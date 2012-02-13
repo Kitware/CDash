@@ -1040,8 +1040,6 @@ function remove_build($buildid)
 
   pdo_query("DELETE FROM buildinformation WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM builderrordiff WHERE buildid IN ".$buildids);
-  pdo_query("DELETE FROM buildupdate WHERE buildid IN ".$buildids);
-  pdo_query("DELETE FROM build2update WHERE buildid IN ".$buildids);
 
   pdo_query("DELETE FROM configure WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM configureerror WHERE buildid IN ".$buildids);
@@ -1117,7 +1115,6 @@ function remove_build($buildid)
     pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN ".$dynids);
     }
   pdo_query("DELETE FROM dynamicanalysis WHERE buildid IN ".$buildids);
-  pdo_query("DELETE FROM updatefile WHERE buildid IN ".$buildids);
 
   // Delete the note if not shared
   $noteids = '(';
@@ -1142,6 +1139,30 @@ function remove_build($buildid)
     }
 
   pdo_query("DELETE FROM build2note WHERE buildid IN ".$buildids);
+
+  // Delete the update if not shared
+  $updateids = '(';
+
+  $build2update = pdo_query("SELECT a.updateid,count(b.updateid) AS c
+                           FROM build2update AS a LEFT JOIN build2update AS b
+                           ON (a.updateid=b.updateid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids."
+                           GROUP BY a.updateid HAVING count(b.updateid)=0");
+  while($build2update_array = pdo_fetch_array($build2update))
+    {
+    // Note is not shared we delete
+    if($updateids != '(')
+      {
+      $updateids .= ',';
+      }
+    $updateids .= $build2update_array["updateid"];
+    }
+  $updateids .= ')';
+  if(strlen($updateids)>2)
+    {
+    pdo_query("DELETE FROM buildupdate WHERE id IN ".$updateids);
+    pdo_query("DELETE FROM updatefile WHERE updateid IN ".$updateids);
+    }
+  pdo_query("DELETE FROM build2update WHERE buildid IN ".$buildids);
 
   // Delete the test if not shared
   $build2test = pdo_query("SELECT a.testid,count(b.testid) AS c

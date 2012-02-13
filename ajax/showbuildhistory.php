@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -32,7 +32,7 @@ if(!isset($buildid) || !is_numeric($buildid))
   echo "Not a valid buildid!";
   return;
   }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -58,13 +58,14 @@ $previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build
                              buildupdate.nfiles,
                              configure.status AS configurestatus,
                              configure.warnings AS configurewarnings
-                             FROM build 
-                             JOIN buildupdate ON (buildupdate.buildid=build.id)
+                             FROM build
+                             JOIN build2update ON (build2update.buildid=build.id)
+                             JOIN buildupdate ON (buildupdate.updateid=buildupdate.id)
                              JOIN configure ON (configure.buildid=build.id)
                              WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
                              AND build.projectid='$projectid' AND build.starttime<='$starttime'
                              ORDER BY build.starttime DESC LIMIT 50");
-?> 
+?>
 <table width="100%" border="0">
 <tr class="table-heading">
 <th><center>Date</center></th>
@@ -89,7 +90,7 @@ while($build_array = pdo_fetch_array($previousbuilds))
   if($configureerrors == 0) {$configureerrors = 0;}
   $configurewarnings = $build_array["configurewarnings"];
   if($configurewarnings == 0) {$configurewarnings = 0;}
- 
+
   $builderrors = $build_array["builderrors"];
   if($builderrors == 0) {$builderrors = 0;}
   $buildwarnings = $build_array["buildwarnings"];
@@ -104,7 +105,7 @@ while($build_array = pdo_fetch_array($previousbuilds))
     {
   ?>
     <a href="buildSummary.php?buildid=<?php echo $build_array["id"]?>">
-  <?php  
+  <?php
     }
   echo date("Y-m-d H:i:d",strtotime($build_array["starttime"]));
   if($i > 0)
