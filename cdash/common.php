@@ -551,6 +551,14 @@ function stripslashes_if_gpc_magic_quotes( $string )
 function get_server_URI($localhost=false)
 {
   include("cdash/config.php");
+
+  // If the base URL is set and no localhost we just return the base URL
+  // This is the case when
+  if(!$localhost && $CDASH_BASE_URL != '')
+    {
+    return $CDASH_BASE_URL;
+    }
+
   $currentPort="";
   $httpprefix="http://";
   if($_SERVER['SERVER_PORT']!=80 && $_SERVER['SERVER_PORT']!=443)

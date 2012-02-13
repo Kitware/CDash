@@ -728,12 +728,9 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
           AND site.id=t1.siteid
           ";
   $build2grouprule = pdo_query($sql);
-  $authors = array();
   $projectname = get_project_name($projectid);
   $summary = "The following expected builds for the project *".$projectname."* didn't submit yesterday:\n";
   $missingbuilds = 0;
-
-  $currentURI = get_server_URI();
 
   $serverName = $CDASH_SERVER_NAME;
   if(strlen($serverName) == 0)

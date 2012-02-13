@@ -368,7 +368,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
   $serverURI = get_server_URI();
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
-  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));
     }
@@ -728,12 +728,10 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     $summaryEmail .= $useremail;
     }
 
-
-
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
   $currentURI = get_server_URI();
-  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     }
@@ -903,7 +901,7 @@ function send_email_fix_to_user($userid,$emailtext,$Build,$Project)
   $serverURI = get_server_URI();
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
-  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));
     }
@@ -1028,7 +1026,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
   $serverURI = get_server_URI();
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
-  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));
     }
