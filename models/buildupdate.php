@@ -167,9 +167,14 @@ class BuildUpdate
 
     // Find the update id from a similar build
     $query = pdo_query("SELECT updateid FROM build2update AS b2u, build AS b
-                        WHERE b.id=b2u.builid AND b.stamp='".$stamp."'
+                        WHERE b.id=b2u.buildid AND b.stamp='".$stamp."'
                           AND b.siteid=".qnum($siteid)." AND b.name='".$name.
-                          "' AND b.buildid!=".qnum($this->BuildId));
+                          "' AND b.id!=".qnum($this->BuildId));
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("BuildUpdate AssociateBuild",0,$this->BuildId);
+      return false;
+      }
     if(pdo_num_rows($query)>0)
       {
       $query_array = pdo_fetch_array($query);
