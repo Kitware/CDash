@@ -34,7 +34,7 @@ function add_build($build, $clientscheduleid=0)
     require_once('models/buildupdate.php');
     $BuildUpdate = new BuildUpdate();
     $BuildUpdate->BuildId = $build->Id;
-    $BuildUpdate->AssociateBuild($build->SiteId, $build->Name, $build->Stamp);
+    $BuildUpdate->AssociateBuild($build->SiteId, $build->Name, $build->GetStamp());
     }
 
   if($clientscheduleid != 0)
