@@ -51,14 +51,14 @@ class BuildUpdate
       return false;
       }
 
-    // Remove any previous updates if not shared
+    // Remove previous updates
     $query = pdo_query("SELECT updateid FROM build2update WHERE buildid=".qnum($this->BuildId));
     if(pdo_num_rows($query)==1)
       {
       $query_array = pdo_fetch_array($query);
       $updateid = $query_array['updateid'];
 
-      // Check if this is shared
+      // If the buildupdate and updatefile are not shared we delete them as well
       $query = pdo_query("SELECT buildid FROM build2update WHERE updateid=".qnum($updateid));
       if(pdo_num_rows($query)==1)
         {
