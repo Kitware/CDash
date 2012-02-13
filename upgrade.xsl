@@ -91,6 +91,7 @@
 <div id="Upgrade-1-6-Status"></div>
 <div id="Upgrade-1-8-Status"></div>
 <div id="Upgrade-2-0-Status"></div>
+<div id="Upgrade-2-1-Status"></div>
 <br/><div id="DoneStatus"></div><br/>
 
 <br/>

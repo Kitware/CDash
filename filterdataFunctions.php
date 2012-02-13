@@ -265,23 +265,22 @@ class IndexPhpFilters extends DefaultFilters
     break;
 
     case 'testtimestatus':
-    {
+      {
       $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)";
-    }
+      }
     break;
 
     case 'updatedfiles':
-    {
-      $buildid_clause = get_updates_buildid_clause("b.id");
-      $sql_field = "(SELECT COUNT(buildid) FROM updatefile WHERE ".$buildid_clause.")";
-    }
+      {
+      $sql_field = "(SELECT COUNT(uf.updateid) FROM updatefile AS uf, build2update AS b2u WHERE b2u.updateid=uf.updateid AND b2u.buildid=b.id)";
+      }
     break;
 
     case 'updateduration':
-    {
-      $buildid_clause = get_updates_buildid_clause("b.id");
-      $sql_field = "IF((SELECT COUNT(*) FROM buildupdate WHERE ".$buildid_clause.")>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM buildupdate WHERE ".$buildid_clause."),0)";
-    }
+      {
+      $sql_field = "IF((SELECT COUNT(*) FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1)
+                    FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id),0)";
+      }
     break;
 
     case 'updateerrors':

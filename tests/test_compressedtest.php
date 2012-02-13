@@ -40,7 +40,7 @@ class CompressedTestCase extends KWWebTestCase
     $projectid = $result[0]['id'];
 
     $content = $this->connect($this->url.'/createProject.php?edit=1&projectid='.$projectid);
-    if(!$content) {$this->fail('Cannot connect to edit project page'); return;} 
+    if(!$content) {$this->fail('Cannot connect to edit project page'); return;}
     $this->setField('robotname','itkrobot');
     $this->setField('robotregex','^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
     $this->clickSubmitByName('Update');
@@ -49,19 +49,19 @@ class CompressedTestCase extends KWWebTestCase
     $result = $this->db->query($query);
     if($result[0]['robotname'] != 'itkrobot')
       {
-      $this->fail('Robot name not set correctly got'.$result[0]['robotname'].' instead of itkrobot');  
+      $this->fail('Robot name not set correctly got'.$result[0]['robotname'].' instead of itkrobot');
       return;
       }
     if($result[0]['authorregex'] != '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^')
       {
-      $this->fail('Robot regex not set correctly got '.$result[0]['authorregex'].' instead of ^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');  
+      $this->fail('Robot regex not set correctly got '.$result[0]['authorregex'].' instead of ^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
       return;
       }
-    $this->pass('Test passed');   
+    $this->pass('Test passed');
     }
 
   function testCheckCompressedTest()
-    { 
+    {
     echo "2. testCheckCompressedTest\n";
     $content = $this->connect($this->url.'?project=TestCompressionExample&date=2009-12-18');
     if(!$content)
@@ -93,11 +93,11 @@ class CompressedTestCase extends KWWebTestCase
       $this->assertTrue(false,'The webpage does not match right the content exepected');
       return;
       }
-    $this->pass('Test passed');   
+    $this->pass('Test passed');
     }
 
   function testCheckUnCompressedTest()
-    { 
+    {
     echo "3. testCheckUnCompressedTest\n";
     $content = $this->connect($this->url.'?project=TestCompressionExample&date=2009-12-18');
     if(!$content)
@@ -128,13 +128,13 @@ class CompressedTestCase extends KWWebTestCase
        {
        $this->assertTrue(false,'The webpage does not match right the content exepected');
        return;
-       } 
-     $this->pass('Test passed');    
-     } 
+       }
+     $this->pass('Test passed');
+     }
 
    /** */
    function testGITUpdate()
-    { 
+    {
     echo "4. testGITUpdate\n";
     $file = dirname(__FILE__)."/data/git-Update.xml";
     if(!$this->submission('TestCompressionExample',$file))
@@ -146,7 +146,7 @@ class CompressedTestCase extends KWWebTestCase
     if(!$content)
       {
       return;
-      } 
+      }
     $content = $this->analyse($this->clickLink('22'));
     $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample&amp;rev=23a41258921e1cba8581ee2fa5add00f817f39fe';
     if(!$this->findString($content,$expected))
@@ -170,7 +170,7 @@ class CompressedTestCase extends KWWebTestCase
       return;
       }
 
-    $this->pass('Test passed'); 
+    $this->pass('Test passed');
     }
 }
 

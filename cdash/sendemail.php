@@ -217,10 +217,9 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
   $userids = array();
   $committeremails = array();
 
-  $buildid_clause = get_updates_buildid_clause(qnum($buildid));
-
   // Check if we know to whom we should send the email
-  $updatefiles = pdo_query("SELECT author,email,committeremail FROM updatefile WHERE ".$buildid_clause);
+  $updatefiles = pdo_query("SELECT author,email,committeremail FROM updatefile AS uf,build2update AS b2u
+                            WHERE b2u.updateid=uf.updateid AND b2u.buildid=".qnum($buildid));
   add_last_sql_error("sendmail",$projectid,$buildid);
   while($updatefiles_array = pdo_fetch_array($updatefiles))
     {
@@ -369,7 +368,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
   $serverURI = get_server_URI();
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
-  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));
     }
@@ -381,9 +380,8 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
     {
     $information = "\n\n*Update*\n";
 
-    $buildid_clause = get_updates_buildid_clause(qnum($buildid));
-
-    $update = pdo_query("SELECT command,status FROM buildupdate WHERE ".$buildid_clause);
+    $update = pdo_query("SELECT command,status FROM buildupdate AS u,build2update AS b2u
+                            WHERE b2u.updateid=u.id AND b2u.buildid=".qnum($buildid));
     $update_array = pdo_fetch_array($update);
 
     $information .= "Status: ".$update_array["status"]." (".$serverURI."/viewUpdate.php?buildid=".$buildid.")\n";
@@ -679,10 +677,9 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     $summaryEmail .= $user_array["email"];
     }
 
-  $buildid_clause = get_updates_buildid_clause(qnum($buildid));
-
   // Select the users that are part of this build
-  $authors = pdo_query("SELECT author FROM updatefile WHERE ".$buildid_clause);
+  $authors = pdo_query("SELECT author FROM updatefile AS uf,build2update AS b2u
+                        WHERE b2u.updateid=uf.updateid AND b2u.buildid=".qnum($buildid));
   add_last_sql_error("sendmail");
   while($authors_array = pdo_fetch_array($authors))
     {
@@ -731,12 +728,10 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     $summaryEmail .= $useremail;
     }
 
-
-
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
   $currentURI = get_server_URI();
-  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
     }
@@ -906,7 +901,7 @@ function send_email_fix_to_user($userid,$emailtext,$Build,$Project)
   $serverURI = get_server_URI();
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
-  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));
     }
@@ -1031,7 +1026,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
   $serverURI = get_server_URI();
   // In the case of asynchronous submission, the serverURI contains /cdash
   // we need to remove it
-  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));
     }

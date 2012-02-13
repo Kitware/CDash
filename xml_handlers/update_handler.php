@@ -103,7 +103,7 @@ class UpdateHandler extends AbstractHandler
 
       // Insert the update
       $this->Update->Insert();
-
+            
       //Compute the update statistics
       $this->Build->ComputeUpdateStatistics();
       }

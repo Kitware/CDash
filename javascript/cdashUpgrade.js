@@ -5,9 +5,9 @@ function sendAjax(divname,ajaxurl,text,nextstep)
    type: "GET",
    url: ajaxurl,
    success: function(msg){
-    
+
     $(divname).html(msg);
-    
+
     var index = msg.indexOf(':');
     var prefix = '';
     var error = '';
@@ -16,10 +16,10 @@ function sendAjax(divname,ajaxurl,text,nextstep)
       prefix = msg.substr(0,index);
       error = msg.substr(index+1);
       }
-    
+
     if(prefix != "ERROR" && prefix != "WARNING")
       {
-      $(divname).html(text+": <img src=\"images/check.gif\"/>"); 
+      $(divname).html(text+": <img src=\"images/check.gif\"/>");
       nextstep();
       }
     else if(prefix == "WARNING")
@@ -71,16 +71,24 @@ function upgrade_tables()
    {
    nextstep = upgrade_2_0;
    }
-  
+  else if(version < 2.0)
+   {
+   nextstep = upgrade_2_0;
+   }
+  else if(version < 2.1)
+   {
+   nextstep = upgrade_2_1;
+   }
+
   if(nextstep != '')
-    {   
+    {
     var text = "Upgrading tables";
     $("#Upgrade-Tables-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-    sendAjax("#Upgrade-Tables-Status","upgrade.php?upgrade-tables=1",text,nextstep); 
+    sendAjax("#Upgrade-Tables-Status","upgrade.php?upgrade-tables=1",text,nextstep);
     }
   else
     {
-    $("#Upgrade-Tables-Status").html("Your installation is already up to date");  
+    $("#Upgrade-Tables-Status").html("Your installation is already up to date");
     }
 }
 
@@ -88,49 +96,56 @@ function upgrade_0_8()
 {
   var text = "Applying 0.8 patches";
   $("#Upgrade-0-8-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-0-8-Status","upgrade.php?upgrade-0-8=1",text,upgrade_1_0);  
+  sendAjax("#Upgrade-0-8-Status","upgrade.php?upgrade-0-8=1",text,upgrade_1_0);
 }
 
 function upgrade_1_0()
 {
   var text = "Applying 1.0 patches";
   $("#Upgrade-1-0-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-0-Status","upgrade.php?upgrade-1-0=1",text,upgrade_1_2);  
+  sendAjax("#Upgrade-1-0-Status","upgrade.php?upgrade-1-0=1",text,upgrade_1_2);
 }
 
 function upgrade_1_2()
 {
   var text = "Applying 1.2 patches";
   $("#Upgrade-1-2-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-2-Status","upgrade.php?upgrade-1-2=1",text,upgrade_1_4);  
+  sendAjax("#Upgrade-1-2-Status","upgrade.php?upgrade-1-2=1",text,upgrade_1_4);
 }
 
 function upgrade_1_4()
 {
   var text = "Applying 1.4 patches";
   $("#Upgrade-1-4-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-4-Status","upgrade.php?upgrade-1-4=1",text,upgrade_1_6);  
+  sendAjax("#Upgrade-1-4-Status","upgrade.php?upgrade-1-4=1",text,upgrade_1_6);
 }
 
 function upgrade_1_6()
 {
   var text = "Applying 1.6 patches";
   $("#Upgrade-1-6-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-6-Status","upgrade.php?upgrade-1-6=1",text,upgrade_1_8);  
+  sendAjax("#Upgrade-1-6-Status","upgrade.php?upgrade-1-6=1",text,upgrade_1_8);
 }
 
 function upgrade_1_8()
 {
   var text = "Applying 1.8 patches";
   $("#Upgrade-1-8-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-8-Status","upgrade.php?upgrade-1-8=1",text,done);  
+  sendAjax("#Upgrade-1-8-Status","upgrade.php?upgrade-1-8=1",text,done);
 }
 
 function upgrade_2_0()
 {
   var text = "Applying 2.0 patches";
   $("#Upgrade-2-0-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-2-0-Status","upgrade.php?upgrade-2-0=1",text,done);  
+  sendAjax("#Upgrade-2-0-Status","upgrade.php?upgrade-2-0=1",text,done);
+}
+
+function upgrade_2_1()
+{
+  var text = "Applying 2.1 patches";
+  $("#Upgrade-2-1-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  sendAjax("#Upgrade-2-1-Status","upgrade.php?upgrade-2-1=1",text,done);
 }
 
 // empty function needed

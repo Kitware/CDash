@@ -245,7 +245,9 @@ switch($testRow["status"])
 $xml .= "<update>";
 // Return the status
 $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
-                                FROM buildupdate WHERE buildid='$buildid'"));
+                                              FROM buildupdate,build2update AS b2u
+                                              WHERE b2u.updateid=buildupdate.id
+                                              AND b2u.buildid='$buildid'"));
 if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
   {
   $xml .= add_XML_value("status",$status_array["status"]);

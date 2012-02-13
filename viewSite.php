@@ -224,10 +224,11 @@ else
   }
 
 $testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, SUM(".$timediff.") AS elapsed
-              FROM build, buildupdate
+              FROM build, buildupdate, build2update
               WHERE
                 build.submittime > ".$timestampadd."
-                AND buildupdate.buildid = build.id
+                AND build2update.buildid = build.id
+                AND buildupdate.id = build2update.updateid
                 AND build.siteid = '$siteid'
                 GROUP BY projectid,buildname,buildtype
                 ORDER BY elapsed

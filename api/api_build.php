@@ -128,8 +128,9 @@ class BuildAPI extends CDashAPI
 
     $builds = array();
     $query = pdo_query("SELECT nfiles, builderrors, buildwarnings, testnotrun, testfailed
-                FROM build,buildupdate WHERE build.projectid=".$projectid."
-                AND buildupdate.buildid=build.id
+                FROM build,buildupdate,build2update WHERE build.projectid=".$projectid."
+                AND buildupdate.id=build2update.updateid
+                AND build2update.buildid=build.id
                 AND nfiles>0
                 AND build.starttime<NOW()
                 ORDER BY build.starttime DESC LIMIT 1000"); // limit the request

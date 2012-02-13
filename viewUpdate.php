@@ -101,7 +101,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
   $xml .= "<updates>";
   // Return the status
   $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
-                                  FROM buildupdate WHERE buildid='$buildid'"));
+                                  FROM buildupdate,build2update AS b2u WHERE buildupdate.id=b2u.updateid AND b2u.buildid='$buildid'"));
   if(strlen($status_array["status"]) > 0 && $status_array["status"]!="0")
     {
     $xml .= add_XML_value("status",$status_array["status"]);
@@ -120,9 +120,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
   $xml .= "<javascript>";
 
-  $buildid_clause = get_updates_buildid_clause($buildid);
-
-  $updatedfiles = pdo_query("SELECT * FROM updatefile WHERE ".$buildid_clause."
+  $updatedfiles = pdo_query("SELECT * FROM updatefile AS uf,build2update AS b2u WHERE uf.updateid=b2u.updateid AND b2u.buildid=".$buildid."
                               ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
 
   function sort_array_by_directory($a,$b)

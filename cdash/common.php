@@ -551,6 +551,14 @@ function stripslashes_if_gpc_magic_quotes( $string )
 function get_server_URI($localhost=false)
 {
   include("cdash/config.php");
+
+  // If the base URL is set and no localhost we just return the base URL
+  // This is the case when
+  if(!$localhost && $CDASH_BASE_URL != '')
+    {
+    return $CDASH_BASE_URL;
+    }
+
   $currentPort="";
   $httpprefix="http://";
   if($_SERVER['SERVER_PORT']!=80 && $_SERVER['SERVER_PORT']!=443)
@@ -1040,7 +1048,6 @@ function remove_build($buildid)
 
   pdo_query("DELETE FROM buildinformation WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM builderrordiff WHERE buildid IN ".$buildids);
-  pdo_query("DELETE FROM buildupdate WHERE buildid IN ".$buildids);
 
   pdo_query("DELETE FROM configure WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM configureerror WHERE buildid IN ".$buildids);
@@ -1116,7 +1123,6 @@ function remove_build($buildid)
     pdo_query("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN ".$dynids);
     }
   pdo_query("DELETE FROM dynamicanalysis WHERE buildid IN ".$buildids);
-  pdo_query("DELETE FROM updatefile WHERE buildid IN ".$buildids);
 
   // Delete the note if not shared
   $noteids = '(';
@@ -1141,6 +1147,29 @@ function remove_build($buildid)
     }
 
   pdo_query("DELETE FROM build2note WHERE buildid IN ".$buildids);
+
+  // Delete the update if not shared
+  $updateids = '(';
+  $build2update = pdo_query("SELECT a.updateid,count(b.updateid) AS c
+                           FROM build2update AS a LEFT JOIN build2update AS b
+                           ON (a.updateid=b.updateid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids."
+                           GROUP BY a.updateid HAVING count(b.updateid)=0");
+  while($build2update_array = pdo_fetch_array($build2update))
+    {
+    // Update is not shared we delete
+    if($updateids != '(')
+      {
+      $updateids .= ',';
+      }
+    $updateids .= $build2update_array["updateid"];
+    }
+  $updateids .= ')';
+  if(strlen($updateids)>2)
+    {
+    pdo_query("DELETE FROM buildupdate WHERE id IN ".$updateids);
+    pdo_query("DELETE FROM updatefile WHERE updateid IN ".$updateids);
+    }
+  pdo_query("DELETE FROM build2update WHERE buildid IN ".$buildids);
 
   // Delete the test if not shared
   $build2test = pdo_query("SELECT a.testid,count(b.testid) AS c
@@ -2037,16 +2066,5 @@ function web_api_authenticate($projectid, $token)
   $result = pdo_query("SELECT * FROM apitoken WHERE projectid=$projectid AND token='$token' AND expiration_date > '$now'");
   return pdo_num_rows($result) != 0;
   }
-
-
-function get_updates_buildid_clause($buildid_str, $field_str = 'buildid')
-  {
-  $buildid_clause = " ".$field_str." IN (SELECT id FROM build ".
-    "WHERE (stamp, siteid, name)=".
-    "(SELECT stamp, siteid, name FROM build WHERE id=".$buildid_str.")) ";
-
-  return $buildid_clause;
-  }
-
 
 ?>
