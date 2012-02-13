@@ -181,7 +181,7 @@ class BuildUpdate
       $updateid = $query_array['updateid'];
 
       pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
-                   (".qnum($this->BuildId).",".qnum($updateid));
+                   (".qnum($this->BuildId).",".qnum($updateid).")");
       }
      return true;
     } // end AssociateBuild()
