@@ -165,6 +165,13 @@ class BuildUpdate
       return false;
       }
 
+    // If we already have something in the databse we return
+    $query = pdo_query("SELECT updateid FROM build2update WHERE buildid=".qnum($this->BuildId));
+    if(pdo_num_rows($query)>0)
+      {
+      return true;
+      }
+
     // Find the update id from a similar build
     $query = pdo_query("SELECT updateid FROM build2update AS b2u, build AS b
                         WHERE b.id=b2u.buildid AND b.stamp='".$stamp."'
