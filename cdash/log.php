@@ -84,8 +84,8 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
         if(file_exists($currentfile))
           {
           $gz = gzopen($newfile,'wb');
-          $f = fopen($currentfile,'r');
-          while (!feof($f))
+          $f = fopen($currentfile,'rb');
+          while($f && !feof($f))
             {
             gzwrite($gz, fread($f, 8192));
             }
@@ -103,8 +103,8 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
     else
       {
       $gz = gzopen($logFile.'.0.gz','wb');
-      $f = fopen($logFile,'r');
-      while (!feof($f))
+      $f = fopen($logFile,'rb');
+      while($f && !feof($f))
         {
         gzwrite($gz, fread($f, 8192));
         }

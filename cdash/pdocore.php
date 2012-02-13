@@ -74,7 +74,7 @@ function pdo_error($link_identifier = NULL)
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
     {
     $error_info = get_link_identifier($link_identifier)->errorInfo();
-    if(isset($error_info[2]))
+    if(isset($error_info[2]) && $error_info[0] != '00000')
       {
       return $error_info[2];
       }
