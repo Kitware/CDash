@@ -60,11 +60,13 @@ class BuildUpdateFile
       $this->CheckinDate = "1980-01-01";
       }
     $this->Author = pdo_real_escape_string($this->Author);
+    $this->UpdateId = pdo_real_escape_string($this->UpdateId);
 
     // Check if we have a robot file for this build
-    $robot = pdo_query("SELECT authorregex FROM projectrobot,build
+    $robot = pdo_query("SELECT authorregex FROM projectrobot,build,build2update
                 WHERE projectrobot.projectid=build.projectid
-                AND build.id=".qnum($this->BuildId)." AND robotname='".$this->Author."'");
+                AND build2update.buildid=build.id
+                AND build2update.updateid=".qnum($this->UpdateId)." AND robotname='".$this->Author."'");
 
     if(pdo_num_rows($robot)>0)
       {
@@ -83,7 +85,6 @@ class BuildUpdateFile
     $this->Log = pdo_real_escape_string($this->Log);
     $this->Revision = pdo_real_escape_string($this->Revision);
     $this->PriorRevision = pdo_real_escape_string($this->PriorRevision);
-    $this->BuildId = pdo_real_escape_string($this->BuildId);
 
     $query = "INSERT INTO updatefile (updateid,filename,checkindate,author,email,log,revision,priorrevision,status,committer,committeremail)
               VALUES (".qnum($this->UpdateId).",'$this->Filename','$this->CheckinDate','$this->Author','$this->Email',
