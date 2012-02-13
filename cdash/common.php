@@ -1142,14 +1142,13 @@ function remove_build($buildid)
 
   // Delete the update if not shared
   $updateids = '(';
-
   $build2update = pdo_query("SELECT a.updateid,count(b.updateid) AS c
                            FROM build2update AS a LEFT JOIN build2update AS b
                            ON (a.updateid=b.updateid AND b.buildid NOT IN ".$buildids.") WHERE a.buildid IN ".$buildids."
                            GROUP BY a.updateid HAVING count(b.updateid)=0");
   while($build2update_array = pdo_fetch_array($build2update))
     {
-    // Note is not shared we delete
+    // Update is not shared we delete
     if($updateids != '(')
       {
       $updateids .= ',';

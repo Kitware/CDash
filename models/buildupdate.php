@@ -51,9 +51,9 @@ class BuildUpdate
       return false;
       }
 
-    // Remove any previous updates
+    // Remove any previous updates if not shared
     $query = pdo_query("SELECT updateid FROM build2update WHERE buildid=".qnum($this->BuildId));
-    if(pdo_num_rows($query)>0)
+    if(pdo_num_rows($query)==1)
       {
       $query_array = pdo_fetch_array($query);
       $updateid = $query_array['updateid'];
@@ -71,13 +71,13 @@ class BuildUpdate
         add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
         return false;
         }
+      }
 
-      $query = "DELETE FROM build2update WHERE updateid=".qnum($updateid);
-      if(!pdo_query($query))
-        {
-        add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
-        return false;
-        }
+    $query = "DELETE FROM build2update WHERE buildid=".qnum($this->BuildId);
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
+      return false;
       }
 
     $this->StartTime = pdo_real_escape_string($this->StartTime);
