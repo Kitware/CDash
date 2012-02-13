@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -32,7 +32,7 @@ if(!isset($buildid) || !is_numeric($buildid))
   echo "Not a valid buildid!";
   return;
   }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -46,13 +46,9 @@ $siteid = $build_array["siteid"];
 $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
-$project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
-$project_array = pdo_fetch_array($project);
-
-$buildid_clause = get_updates_buildid_clause("b.id", "bu.buildid");
-
 // Find the other builds
-$previousbuilds = pdo_query("SELECT b.id,b.starttime,bu.nfiles FROM build as b,buildupdate as bu WHERE ".$buildid_clause."
+$previousbuilds = pdo_query("SELECT b.id,b.starttime,bu.nfiles FROM build as b,build2update AS b2u, buildupdate as bu
+                             WHERE b2u.updateid=bu.id AND b2u.buildid=b.id
                                AND b.siteid='$siteid' AND b.type='$buildtype' AND b.name='$buildname'
                                AND b.projectid='$projectid' AND b.starttime<='$starttime' ORDER BY b.starttime ASC");
 ?>
@@ -75,11 +71,11 @@ $(function () {
     $i++;
       }
     ?>
-    
+
     var options = {
       lines: { show: true },
       points: { show: true },
-      xaxis: { mode: "time" }, 
+      xaxis: { mode: "time" },
       grid: {backgroundColor: "#fffaff",
       clickable: true,
       hoverable: true,
@@ -88,19 +84,19 @@ $(function () {
       selection: { mode: "x" },
       colors: ["#0000FF", "#dba255", "#919733"]
     };
-  
+
     $("#grapholder").bind("selected", function (event, area) {
     plot = $.plot($("#grapholder"), [{label: "Number of changed files",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
      });
-  
+
    $("#grapholder").bind("plotclick", function (e, pos, item) {
        if (item) {
            plot.highlight(item.series, item.datapoint);
            buildid = buildids[item.datapoint[0]];
            window.location = "buildSummary.php?buildid="+buildid;
-           }      
+           }
     });
-   
+
   plot = $.plot($("#grapholder"), [{label: "Number of changed files",  data: d1}],options);
 });
 </script>

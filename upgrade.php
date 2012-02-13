@@ -878,7 +878,19 @@ if(isset($_GET['upgrade-2-0']))
 if(isset($_GET['upgrade-2-2']))
   {
   AddTableIndex('updatefile','author');
-  
+
+  // We need to move the buildupdate build ids to the build2update table
+  $query = pdo_query("SELECT buildid FROM buildupdate");
+  while($query_array = pdo_fetch_array($query))
+      {
+      pdo_query("INSERT INTO build2update (buildid,updateid) VALUES ('".$query_array['buildid']."','".$query_array['buildid']."')");
+      }
+  RemoveTableIndex("buildupdate","buildid");
+  RenameTableField("buildupdate","buildid","id","int(11)","bigint","0");
+  ModifyTableField("buildupdate","id","int(11)","bigint","",true,true);
+  AddTablePrimaryKey("buildupdate","id");
+  RenameTableField("updatefile","buildid","updateid","int(11)","bigint","0");
+
   // Set the database version
   setVersion();
 

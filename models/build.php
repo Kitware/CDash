@@ -496,7 +496,7 @@ class Build
         {
         $this->Id = pdo_insert_id("build");
         }
-        
+
       // Add the groupid
       if($this->GroupId)
         {
@@ -1058,19 +1058,18 @@ class Build
       $testdiff = $ntests;
       }
 
-    $buildid_clause = get_updates_buildid_clause(qnum($this->Id));
-
     // Find the number of different users
-    $nauthors_array = pdo_fetch_array(pdo_query("SELECT count(author) FROM (SELECT author FROM updatefile
-                                                WHERE ".$buildid_clause." GROUP BY author) AS test"));
+    $nauthors_array = pdo_fetch_array(pdo_query("SELECT count(author) FROM (SELECT uf.author FROM updatefile AS uf,build2update AS b2u
+                                                WHERE b2u.updateid=uf.updateid AND b2u.buildid=".qnum($this->Id)." GROUP BY author) AS test"));
     add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
     $nauthors = $nauthors_array[0];
 
     $newbuild = 1;
     $previousauthor = "";
     // Loop through the updated files
-    $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile WHERE ".$buildid_clause." ".
-                             "AND checkindate>'1980-01-01T00:00:00' ORDER BY author ASC, checkindate ASC");
+    $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile AS uf,build2update AS b2u
+                             WHERE b2u.updateid=uf.updateid AND b2u.buildid=".qnum($this->Id).
+                             " AND checkindate>'1980-01-01T00:00:00' ORDER BY author ASC, checkindate ASC");
     add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
     $nupdatedfiles = pdo_num_rows($updatefiles);
 
@@ -1110,7 +1109,7 @@ class Build
     } // end function ComputeUpdateStatistics
 
 
-  /** Helper function for ComputeUpdateStatistics */
+  /** Helper function for AddUpdateStatistics */
   private function AddUpdateStatistics($author,$checkindate,$firstbuild,
                                        $warningdiff,$errordiff,$testdiff)
     {

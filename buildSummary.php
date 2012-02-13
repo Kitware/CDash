@@ -298,24 +298,22 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
 
   $xml .= "</build>";
 
-  $buildid_clause = get_updates_buildid_clause(qnum($buildid));
-
   // Update
-  $buildupdate = pdo_query("SELECT * FROM buildupdate WHERE ".$buildid_clause);
+  $buildupdate = pdo_query("SELECT * FROM buildupdate AS u ,build2update AS b2u WHERE b2u.updateid=u.id AND b2u.buildid=".qnum($buildid));
 
   if(pdo_num_rows($buildupdate)>0) // show the update only if we have one
     {
     $xml .= "<update>";
 
     // Checking for locally modify files
-    $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE ".$buildid_clause.
-      " AND author='Local User'");
+    $updatelocal = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($buildid)
+      ." AND author='Local User'");
     $nerrors = pdo_num_rows($updatelocal);
     $nwarnings = 0;
     $xml .= add_XML_value("nerrors",$nerrors);
     $xml .= add_XML_value("nwarnings",$nwarnings);
 
-    $update = pdo_query("SELECT buildid FROM updatefile WHERE ".$buildid_clause);
+    $update = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($buildid));
     $nupdates = pdo_num_rows($update);
     $xml .= add_XML_value("nupdates",$nupdates);
 
@@ -402,9 +400,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='notrun'"));
     $npreviousnotruntests = $nfail_array[0];
 
-    $buildid_clause = get_updates_buildid_clause(qnum($previousbuildid));
-
-    $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE ".$buildid_clause.
+    $updatelocal = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($previousbuildid).
       " AND author='Local User'");
     $nupdateerrors = pdo_num_rows($updatelocal);
     $nupdatewarnings = 0;

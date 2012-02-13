@@ -283,16 +283,14 @@ if ($session_OK)
         $xml .= add_XML_value("configureclass","normal");
         }
 
-      $buildid_clause = get_updates_buildid_clause($buildid);
-
       // Update
-      $update = pdo_query("SELECT buildid FROM updatefile WHERE ".$buildid_clause);
+      $update = pdo_query("SELECT uf.updateid FROM updatefile AS uf,build2update AS b2u WHERE uf.updateid=b2u.updateid AND b2u.buildid=".$buildid);
       $nupdates = pdo_num_rows($update);
       $xml .= add_XML_value("update", $nupdates);
 
       // Find locally modified files
-      $updatelocal = pdo_query("SELECT buildid FROM updatefile WHERE ".$buildid_clause.
-        " AND author='Local User'");
+      $updatelocal = pdo_query("SELECT uf.updateid FROM updatefile AS uf,build2update AS b2u WHERE uf.updateid=b2u.updateid AND b2u.buildid=".$buildid.
+        " AND uf.author='Local User'");
 
       // Set the color
       if(pdo_num_rows($updatelocal)>0)

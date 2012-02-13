@@ -27,6 +27,16 @@ function add_build($build, $clientscheduleid=0)
   $build->GroupId = $buildGroup->GetGroupIdFromRule($build);
 
   $build->Save();
+
+  // If the build is part of a subproject we link the update file
+  if(isset($build->SubProjectName) && $build->SubProjectName!='')
+    {
+    require_once('models/buildupdate.php');
+    $BuildUpdate = new $BuildUpdate();
+    $BuildUpdate->BuildId = $build->Id;
+    $BuildUpdate->AssociateBuild($build->SiteId, $build->Name, $build->Stamp);
+    }
+
   if($clientscheduleid != 0)
     {
     require_once('models/clientjobschedule.php');

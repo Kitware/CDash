@@ -120,7 +120,7 @@ CREATE INDEX "builderror_crc32" on "builderror" ("crc32");
 -- Table: buildupdate
 --
 CREATE TABLE "buildupdate" (
-  "buildid" bigint DEFAULT '0' NOT NULL,
+  "id" SERIAL NOT NULL,
   "starttime" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "command" text NOT NULL,
@@ -130,9 +130,17 @@ CREATE TABLE "buildupdate" (
   "warnings" smallint DEFAULT '-1',
   "revision" character varying(60) DEFAULT '0' NOT NULL,
   "priorrevision" character varying(60) DEFAULT '0' NOT NULL,
-  "path" character varying(255) DEFAULT '' NOT NULL
+  "path" character varying(255) DEFAULT '' NOT NULL,
+   PRIMARY KEY ("id")
 );
-CREATE INDEX "buildid2" on "buildupdate" ("buildid");
+
+
+CREATE TABLE "build2update" (
+  "buildid" bigint NOT NULL,
+  "updateid" bigint NOT NULL,
+  PRIMARY KEY ("buildid")
+);
+CREATE INDEX "build2update_updateid" on "build2update" ("updateid");
 
 --
 -- Table: configure
@@ -415,7 +423,7 @@ CREATE TABLE "buildtesttime" (
 -- Table: updatefile
 --
 CREATE TABLE "updatefile" (
-  "buildid" bigint DEFAULT '0' NOT NULL,
+  "updateid" bigint DEFAULT '0' NOT NULL,
   "filename" character varying(255) DEFAULT '' NOT NULL,
   "checkindate" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
   "author" character varying(255) DEFAULT '' NOT NULL,
@@ -427,7 +435,7 @@ CREATE TABLE "updatefile" (
   "priorrevision" character varying(60) DEFAULT '0' NOT NULL,
   "status" character varying(12) DEFAULT '' NOT NULL
 );
-CREATE INDEX "buildid9" on "updatefile" ("buildid");
+CREATE INDEX "updatefile_updateid" on "updatefile" ("updateid");
 CREATE INDEX "updatefile_author" on "updatefile" ("author");
 
 --

@@ -1041,6 +1041,7 @@ function remove_build($buildid)
   pdo_query("DELETE FROM buildinformation WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM builderrordiff WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM buildupdate WHERE buildid IN ".$buildids);
+  pdo_query("DELETE FROM build2update WHERE buildid IN ".$buildids);
 
   pdo_query("DELETE FROM configure WHERE buildid IN ".$buildids);
   pdo_query("DELETE FROM configureerror WHERE buildid IN ".$buildids);
@@ -2037,16 +2038,5 @@ function web_api_authenticate($projectid, $token)
   $result = pdo_query("SELECT * FROM apitoken WHERE projectid=$projectid AND token='$token' AND expiration_date > '$now'");
   return pdo_num_rows($result) != 0;
   }
-
-
-function get_updates_buildid_clause($buildid_str, $field_str = 'buildid')
-  {
-  $buildid_clause = " ".$field_str." IN (SELECT id FROM build ".
-    "WHERE (stamp, siteid, name)=".
-    "(SELECT stamp, siteid, name FROM build WHERE id=".$buildid_str.")) ";
-
-  return $buildid_clause;
-  }
-
 
 ?>

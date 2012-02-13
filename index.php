@@ -699,17 +699,16 @@ function generate_main_dashboard_XML($projectid,$date)
   $userupdatesql = "";
   if(isset($_SESSION['cdash']))
     {
-    $buildid_clause = get_updates_buildid_clause("b.id");
-    $userupdatesql = "(SELECT count(updatefile.buildid) FROM updatefile,user2project,
+    $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
                       user2repository
-                      WHERE ".$buildid_clause." AND user2project.projectid=b.projectid
+                      WHERE build2update.buildid=b.id
+                      AND build2update.updateid=updatefile.updateid
+                      AND user2project.projectid=b.projectid
                       AND user2project.userid='".$_SESSION['cdash']['loginid']."'
                       AND user2repository.userid=user2project.userid
                       AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
                       AND user2repository.credential=updatefile.author) AS userupdates,";
     }
-
-  $buildid_clause = get_updates_buildid_clause("b.id", "bu.buildid");
 
   $sql =  "SELECT b.id,b.siteid,
                   bu.status AS updatestatus,
@@ -751,7 +750,8 @@ function generate_main_dashboard_XML($projectid,$date)
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
                   FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql.",
                   build AS b
-                  LEFT JOIN buildupdate AS bu ON ".$buildid_clause."
+                  LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
+                  LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
                   LEFT JOIN configure AS c ON (c.buildid=b.id)
                   LEFT JOIN buildinformation AS i ON (i.buildid=b.id)
                   LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)

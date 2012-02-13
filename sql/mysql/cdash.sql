@@ -148,7 +148,7 @@ CREATE TABLE `builderror` (
 -- 
 
 CREATE TABLE `buildupdate` (
-  `buildid` int(11) NOT NULL default '0',
+  `id` int(11) NOT NULL default '0',
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `command` text NOT NULL,
@@ -159,8 +159,17 @@ CREATE TABLE `buildupdate` (
   `revision` varchar(60) NOT NULL default '0',
   `priorrevision` varchar(60) NOT NULL default '0',
   `path` varchar(255) NOT NULL default '',
-  KEY `buildid` (`buildid`)
+  PRIMARY  KEY(`id`)
 );
+
+
+CREATE TABLE IF NOT EXISTS `build2update` (
+  `buildid` bigint(11) NOT NULL,
+  `updateid` bigint(11) NOT NULL,
+  PRIMARY  KEY(`buildid`),
+  KEY `updateid` (`updateid`)
+);
+
 
 -- --------------------------------------------------------
 
@@ -513,7 +522,7 @@ CREATE TABLE `buildtesttime` (
 -- 
 
 CREATE TABLE `updatefile` (
-  `buildid` int(11) NOT NULL default '0',
+  `updateid` int(11) NOT NULL default '0',
   `filename` varchar(255) NOT NULL default '',
   `checkindate` timestamp NOT NULL default '1980-01-01 00:00:00',
   `author` varchar(255) NOT NULL default '',
@@ -524,7 +533,7 @@ CREATE TABLE `updatefile` (
   `revision` varchar(60) NOT NULL default '0',
   `priorrevision` varchar(60) NOT NULL default '0',
   `status` varchar(12) NOT NULL default '',
-  KEY `buildid` (`buildid`),
+  KEY `updateid` (`updateid`),
   KEY `author` (`author`)
 );
 
@@ -1322,7 +1331,6 @@ CREATE TABLE IF NOT EXISTS `apitoken` (
   `expiration_date` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
   KEY `token` (`token`)
 );
-
 
 --
 -- Change the table maximum size to be more than 4GB

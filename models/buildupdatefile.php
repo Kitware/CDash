@@ -24,45 +24,45 @@ class BuildUpdateFile
   var $Email;
   var $Committer;
   var $CommitterEmail;
-  var $Log;  
-  var $Revision;  
+  var $Log;
+  var $Revision;
   var $PriorRevision;
   var $Status; //MODIFIED | CONFLICTING | UPDATED
-  var $BuildId;
+  var $UpdateId;
 
   // Insert the update
   function Insert()
     {
-    if(strlen($this->BuildId)==0)
+    if(strlen($this->UpdateId)==0)
       {
-      echo "BuildUpdateFile:Insert BuildId not set";
+      echo "BuildUpdateFile:Insert UpdateId not set";
       return false;
       }
 
     $this->Filename = pdo_real_escape_string($this->Filename);
-    
+
     // Sometimes the checkin date is not found in that case we put the usual date
     if($this->CheckinDate == "Unknown")
       {
       $this->CheckinDate = "1980-01-01";
       }
-      
+
     if(strtotime($this->CheckinDate) === false && is_numeric($this->CheckinDate))
       {
       $this->CheckinDate = date(FMT_DATETIME,$this->CheckinDate);
       }
     else if(strtotime($this->CheckinDate) !== false)
-      {  
+      {
       $this->CheckinDate = date(FMT_DATETIME,strtotime($this->CheckinDate));
       }
     else
       {
-      $this->CheckinDate = "1980-01-01"; 
-      }  
+      $this->CheckinDate = "1980-01-01";
+      }
     $this->Author = pdo_real_escape_string($this->Author);
 
     // Check if we have a robot file for this build
-    $robot = pdo_query("SELECT authorregex FROM projectrobot,build 
+    $robot = pdo_query("SELECT authorregex FROM projectrobot,build
                 WHERE projectrobot.projectid=build.projectid
                 AND build.id=".qnum($this->BuildId)." AND robotname='".$this->Author."'");
 
@@ -85,14 +85,14 @@ class BuildUpdateFile
     $this->PriorRevision = pdo_real_escape_string($this->PriorRevision);
     $this->BuildId = pdo_real_escape_string($this->BuildId);
 
-    $query = "INSERT INTO updatefile (buildid,filename,checkindate,author,email,log,revision,priorrevision,status,committer,committeremail)
-              VALUES (".qnum($this->BuildId).",'$this->Filename','$this->CheckinDate','$this->Author','$this->Email',
+    $query = "INSERT INTO updatefile (updateid,filename,checkindate,author,email,log,revision,priorrevision,status,committer,committeremail)
+              VALUES (".qnum($this->UpdateId).",'$this->Filename','$this->CheckinDate','$this->Author','$this->Email',
                       '$this->Log','$this->Revision','$this->PriorRevision','$this->Status','$this->Committer','$this->CommitterEmail')";
-    
-    
+
+
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildUpdateFile Insert",0,$this->BuildId);
+      add_last_sql_error("BuildUpdateFile Insert",0,$this->UpdateId);
       return false;
       }
     } // end function insert
