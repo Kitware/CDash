@@ -58,26 +58,30 @@ class BuildUpdate
       $query_array = pdo_fetch_array($query);
       $updateid = $query_array['updateid'];
 
-      $query = "DELETE FROM buildupdate WHERE id=".qnum($updateid);
+      // Check if this is shared
+      $query = pdo_query("SELECT buildid FROM build2update WHERE updateid=".qnum($updateid));
+      if(pdo_num_rows($query)==1)
+        {
+        $query = "DELETE FROM buildupdate WHERE id=".qnum($updateid);
+        if(!pdo_query($query))
+          {
+          add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
+          return false;
+          }
+
+        $query = "DELETE FROM updatefile WHERE updateid=".qnum($updateid);
+        if(!pdo_query($query))
+          {
+          add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
+          return false;
+          }
+        }
+      $query = "DELETE FROM build2update WHERE buildid=".qnum($this->BuildId);
       if(!pdo_query($query))
         {
         add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
         return false;
         }
-
-      $query = "DELETE FROM updatefile WHERE updateid=".qnum($updateid);
-      if(!pdo_query($query))
-        {
-        add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
-        return false;
-        }
-      }
-
-    $query = "DELETE FROM build2update WHERE buildid=".qnum($this->BuildId);
-    if(!pdo_query($query))
-      {
-      add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
-      return false;
       }
 
     $this->StartTime = pdo_real_escape_string($this->StartTime);
