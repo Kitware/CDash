@@ -32,7 +32,7 @@ function add_build($build, $clientscheduleid=0)
   if(isset($build->SubProjectName) && $build->SubProjectName!='')
     {
     require_once('models/buildupdate.php');
-    $BuildUpdate = new $BuildUpdate();
+    $BuildUpdate = new BuildUpdate();
     $BuildUpdate->BuildId = $build->Id;
     $BuildUpdate->AssociateBuild($build->SiteId, $build->Name, $build->Stamp);
     }
