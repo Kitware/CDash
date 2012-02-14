@@ -110,8 +110,9 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
         }
       fclose($f);
       gzclose($gz);
+      unlink($logFile);
       }
-    }
+    } // end log rotation
 
   $error = "";
   if($type != LOG_TESTING)
@@ -160,9 +161,6 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
     $ErrorLog->ResourceId = $resourceid;
 
     $ErrorLog->Insert();
-
-    // Clean the log more than 10 days
-    $ErrorLog->Clean(10);
     }
 }
 
