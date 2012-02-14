@@ -416,7 +416,7 @@ function AddTablePrimaryKey($table,$field)
     }
   else
     {
-    pdo_query("ALTER TABLE ".$table." ADD PRIMARY KEY ( ".$field." )");
+    pdo_query("ALTER IGNORE TABLE ".$table." ADD PRIMARY KEY ( ".$field." )");
     }
   //add_last_sql_error("AddTablePrimaryKey");
   add_log("Done adding primarykey $field to $table","AddTablePrimaryKey");
@@ -886,8 +886,9 @@ if(isset($_GET['upgrade-2-1']))
       }
   RemoveTableIndex("buildupdate","buildid");
   RenameTableField("buildupdate","buildid","id","int(11)","bigint","0");
-  ModifyTableField("buildupdate","id","int(11)","bigint","",true,true);
   AddTablePrimaryKey("buildupdate","id");
+  ModifyTableField("buildupdate","id","int(11)","bigint","",true,true);
+
   RenameTableField("updatefile","buildid","updateid","int(11)","bigint","0");
 
   // Set the database version
