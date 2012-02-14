@@ -124,7 +124,7 @@ if($Submit)
   {
   // Remove any slashes, etc...
   $Name = stripslashes_if_gpc_magic_quotes($_POST["name"]);
-  $Name = preg_replace("/[^a-zA-Z0-9s+-.]/", "",$Name);
+  $Name = preg_replace("/[^a-zA-Z0-9\s+-.]/", "",$Name);
 
   // Check that the name are different
   if(!$Project->ExistsByName($Name))
