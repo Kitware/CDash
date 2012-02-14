@@ -55,63 +55,69 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
   $maxlogsize = $CDASH_LOG_FILE_MAXSIZE_MB*1024*1024/10.0;
   if(file_exists($logFile) && filesize($logFile)>$maxlogsize)
     {
-    for($i=9;$i>=0;$i--)
+    $tmplogfile = $logfile.".tmp";
+    if(!file_exists($tmplogfile))
       {
-      // If we don't have compression we just rename the files
+      rename($logFile,$tmplogfile); // This should be quick so we can keep logging
+
+      for($i=9;$i>=0;$i--)
+        {
+        // If we don't have compression we just rename the files
+        if(!function_exists("gzwrite"))
+          {
+          $currentfile = $logFile.".".$i.".txt";
+          $j = $i+1;
+          $newfile = $logFile.".".$j.".txt";
+          if(file_exists($newfile))
+            {
+            unlink($newfile);
+            }
+          if(file_exists($currentfile))
+            {
+            rename($currentfile,$newfile);
+            }
+          }
+        else
+          {
+          $currentfile = $logFile.".".$i.".gz";
+          $j = $i+1;
+          $newfile = $logFile.".".$j.".gz";
+          if(file_exists($newfile))
+            {
+            unlink($newfile);
+            }
+          if(file_exists($currentfile))
+            {
+            $gz = gzopen($newfile,'wb');
+            $f = fopen($currentfile,'rb');
+            while($f && !feof($f))
+              {
+              gzwrite($gz, fread($f, 8192));
+              }
+            fclose($f);
+            gzclose($gz);
+            }
+          }
+        }
+
+      // Move the current backup
       if(!function_exists("gzwrite"))
         {
-        $currentfile = $logFile.".".$i.".txt";
-        $j = $i+1;
-        $newfile = $logFile.".".$j.".txt";
-        if(file_exists($newfile))
-          {
-          unlink($newfile);
-          }
-        if(file_exists($currentfile))
-          {
-          rename($currentfile,$newfile);
-          }
+        rename($tmplogfile,$logFile.'.0.txt');
         }
       else
         {
-        $currentfile = $logFile.".".$i.".gz";
-        $j = $i+1;
-        $newfile = $logFile.".".$j.".gz";
-        if(file_exists($newfile))
+        $gz = gzopen($logFile.'.0.gz','wb');
+        $f = fopen($tmplogfile,'rb');
+        while($f && !feof($f))
           {
-          unlink($newfile);
+          gzwrite($gz, fread($f, 8192));
           }
-        if(file_exists($currentfile))
-          {
-          $gz = gzopen($newfile,'wb');
-          $f = fopen($currentfile,'rb');
-          while($f && !feof($f))
-            {
-            gzwrite($gz, fread($f, 8192));
-            }
-          fclose($f);
-          gzclose($gz);
-          }
+        fclose($f);
+        gzclose($gz);
+        unlink($tmplogfile);
         }
-      }
-
-    // Move the current backup
-    if(!function_exists("gzwrite"))
-      {
-      rename($logFile,$logFile.'.0.txt');
-      }
-    else
-      {
-      $gz = gzopen($logFile.'.0.gz','wb');
-      $f = fopen($logFile,'rb');
-      while($f && !feof($f))
-        {
-        gzwrite($gz, fread($f, 8192));
-        }
-      fclose($f);
-      gzclose($gz);
-      unlink($logFile);
-      }
+      } // end tmp file doesn't exist
     } // end log rotation
 
   $error = "";
