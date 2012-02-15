@@ -127,14 +127,14 @@ function upgrade_1_8()
 {
   var text = "Applying 1.8 patches";
   $("#Upgrade-1-8-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-1-8-Status","upgrade.php?upgrade-1-8=1",text,done);
+  sendAjax("#Upgrade-1-8-Status","upgrade.php?upgrade-1-8=1",text,upgrade_2_0);
 }
 
 function upgrade_2_0()
 {
   var text = "Applying 2.0 patches";
   $("#Upgrade-2-0-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
-  sendAjax("#Upgrade-2-0-Status","upgrade.php?upgrade-2-0=1",text,done);
+  sendAjax("#Upgrade-2-0-Status","upgrade.php?upgrade-2-0=1",text,upgrade_2_2);
 }
 
 function upgrade_2_2()
