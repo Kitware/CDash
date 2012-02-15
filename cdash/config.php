@@ -95,7 +95,7 @@ $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 // Warn about unregistered committers: default to '1' to keep
 // the behavior the same as previous versions. Set to '0' to
 // avoid "is not registered (or has no email)" warning messages.
-$CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS = '1';
+$CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS = '0';
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
 $CDASH_FORWARDING_IP='192.%'; // should be an SQL format
