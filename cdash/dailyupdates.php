@@ -716,6 +716,12 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME", $db);
 
+  $currentURI = get_server_URI();
+  if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
+    {
+    $currentURI = substr($currentURI,0,strrpos($currentURI,"/"));
+    }
+
   $currentEndUTCTime =  gmdate(FMT_DATETIME,$currentstarttime);
   $currentBeginUTCTime =  gmdate(FMT_DATETIME,$currentstarttime-3600*24);
   $sql = "SELECT buildtype,buildname,siteid,groupid,site.name FROM (SELECT g.siteid,g.buildtype,g.buildname,g.groupid FROM build2grouprule as g  LEFT JOIN build as b ON(
@@ -729,7 +735,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
           ";
   $build2grouprule = pdo_query($sql);
   $projectname = get_project_name($projectid);
-  $summary = "The following expected builds for the project *".$projectname."* didn't submit yesterday:\n";
+  $summary = "The following expected build(s) for the project *".$projectname."* didn't submit yesterday:\n";
   $missingbuilds = 0;
 
   $serverName = $CDASH_SERVER_NAME;
@@ -761,8 +767,9 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
     if($email!="")
       {
       $missingTitle = "CDash [".$projectname."] - Missing Build for ".$sitename;
-      $missingSummary = "The following expected build for the project ".$projectname." didn't submit yesterday:\n";
+      $missingSummary = "The following expected build(s) for the project ".$projectname." didn't submit yesterday:\n";
       $missingSummary .= "* ".$sitename." - ".$buildname." (".$builtype.")\n";
+      $missingSummary .= "\n".$currentURI."/index.php?project=".urlencode($projectname)."\n";
       $missingSummary .= "\n-CDash on ".$serverName."\n";
 
       if(mail("$email", $missingTitle, $missingSummary,
@@ -783,6 +790,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
   // of missing builds
   if($missingbuilds == 1)
     {
+    $summary .= "\n".$currentURI."/index.php?project=".urlencode($projectname)."\n";
     $summary .= "\n-CDash on ".$serverName."\n";
 
     $title = "CDash [".$projectname."] - Missing Builds";
@@ -818,7 +826,7 @@ function sendEmailExpectedBuilds($projectid,$currentstarttime)
 }
 
 /** Remove the buildemail that have been there from more than 48h */
-function cleanBuildEmail($projectid)
+function cleanBuildEmail()
 {
   include("cdash/config.php");
   include_once("cdash/common.php");
@@ -991,7 +999,7 @@ function addDailyChanges($projectid)
     sendEmailExpectedBuilds($projectid,$currentstarttime);
 
     // cleanBuildEmail
-    cleanBuildEmail($projectid);
+    cleanBuildEmail();
     cleanUserTemp();
 
     // If the status of daily update is set to 2 that means we should send an email
