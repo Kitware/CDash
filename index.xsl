@@ -1135,7 +1135,7 @@
       <xsl:if test="faildiff > 0"><sub>+<xsl:value-of select="faildiff"/></sub></xsl:if>
       <xsl:if test="faildiff &lt; 0"><sub><xsl:value-of select="faildiff"/></sub></xsl:if>
       </td>
-      <td align="left">
+      <td align="center">
       <xsl:if test="/cdash/dashboard/displaylabels=0">
        <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
@@ -1252,7 +1252,7 @@
         </xsl:attribute>
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="defectcount"/></a>
       </td>
-      <td align="left">
+      <td align="center">
       <xsl:if test="/cdash/dashboard/displaylabels=0">
         <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>

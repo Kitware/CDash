@@ -1494,8 +1494,8 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       else
         {
-        $xml .= add_XML_value("date",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
-        $xml .= add_XML_value("dateelapsed",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
+        $xml .= add_XML_value("dateelapsed",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+        $xml .= add_XML_value("date",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
         }
 
       // Are there labels for this build?
@@ -1549,8 +1549,8 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       else
         {
-        $xml .= add_XML_value("date",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
-        $xml .= add_XML_value("dateelapsed",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
+        $xml .= add_XML_value("dateelapsed",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+        $xml .= add_XML_value("date",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
         }
 
       // Are there labels for this build?
