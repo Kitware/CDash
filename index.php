@@ -1484,9 +1484,19 @@ function generate_main_dashboard_XML($projectid,$date)
         }
 
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
-      $submittimestamp = strtotime($build_array["submittime"]." UTC");
-      $xml .= add_XML_value("date",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
-      $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
+      $xml .= add_XML_value("datefull",$starttimestamp); // use the default timezone
+
+      // If the data is more than 24h old then we switch from an elapsed to a normal representation
+      if(time()-$starttimestamp<86400)
+        {
+        $xml .= add_XML_value("date",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+        $xml .= add_XML_value("dateelapsed",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
+        }
+      else
+        {
+        $xml .= add_XML_value("date",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+        $xml .= add_XML_value("dateelapsed",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
+        }
 
       // Are there labels for this build?
       //
@@ -1529,9 +1539,19 @@ function generate_main_dashboard_XML($projectid,$date)
         }
       $xml .= "  <defectcount>".$defectcounts."</defectcount>";
       $starttimestamp = strtotime($build_array["starttime"]." UTC");
-      $submittimestamp = strtotime($build_array["submittime"]." UTC");
-      $xml .= add_XML_value("date",date(FMT_DATETIMETZ,$starttimestamp)); // use the default timezone
-      $xml .= add_XML_value("submitdate",date(FMT_DATETIMETZ,$submittimestamp));// use the default timezone
+      $xml .= add_XML_value("datefull",$starttimestamp); // use the default timezone
+
+      // If the data is more than 24h old then we switch from an elapsed to a normal representation
+      if(time()-$starttimestamp<86400)
+        {
+        $xml .= add_XML_value("date",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+        $xml .= add_XML_value("dateelapsed",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
+        }
+      else
+        {
+        $xml .= add_XML_value("date",date(FMT_DATETIMEDISPLAY,$starttimestamp)); // use the default timezone
+        $xml .= add_XML_value("dateelapsed",time_difference(time()-$starttimestamp,false,'ago')); // use the default timezone
+        }
 
       // Are there labels for this build?
       //

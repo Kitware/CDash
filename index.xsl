@@ -1139,7 +1139,12 @@
       <xsl:if test="/cdash/dashboard/displaylabels=0">
        <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
-      <xsl:value-of select="date"/></td>
+      <span class="sorttime" style="display:none"><xsl:value-of select="datefull"/></span>
+      <span class="builddateelapsed">
+         <xsl:attribute name="alt"><xsl:value-of select="date"/>
+         <xsl:value-of select="dateelapsed"/>
+      </span>
+      </td>
 
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <td class="nob" align="left">
@@ -1252,7 +1257,12 @@
         <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
 
-      <xsl:value-of select="date"/></td>
+      <span class="sorttime" style="display:none"><xsl:value-of select="datefull"/></span>
+      <span class="builddateelapsed">
+         <xsl:attribute name="alt"><xsl:value-of select="date"/>
+         <xsl:value-of select="dateelapsed"/>
+      </span>
+      </td>
 
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <td class="nob" align="left">
