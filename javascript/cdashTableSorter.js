@@ -590,7 +590,7 @@ $(document).ready(function() {
                 2: { sorter:'percentage'},
                 3: { sorter:'dynanalysismetric'},
                 4: { sorter:'dynanalysismetric'},
-                5: { sorter:'text'},
+                5: { sorter:'elapsedtime'},
                 6: { sorter:'text'}
             },
           debug: false,
@@ -607,7 +607,7 @@ $(document).ready(function() {
                 1: { sorter:'text'},
                 2: { sorter:'text'},
                 3: { sorter:'dynanalysismetric'}, // not percent but same format
-                4: { sorter:'text'},
+                4: { sorter:'elapsedtime'},
                 5: { sorter:'text'}
             },
           debug: false,

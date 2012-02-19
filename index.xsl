@@ -1135,11 +1135,16 @@
       <xsl:if test="faildiff > 0"><sub>+<xsl:value-of select="faildiff"/></sub></xsl:if>
       <xsl:if test="faildiff &lt; 0"><sub><xsl:value-of select="faildiff"/></sub></xsl:if>
       </td>
-      <td align="left">
+      <td align="center">
       <xsl:if test="/cdash/dashboard/displaylabels=0">
        <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
-      <xsl:value-of select="date"/></td>
+      <span class="sorttime" style="display:none"><xsl:value-of select="datefull"/></span>
+      <span class="builddateelapsed">
+         <xsl:attribute name="alt"><xsl:value-of select="date"/></xsl:attribute>
+         <xsl:value-of select="dateelapsed"/>
+      </span>
+      </td>
 
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <td class="nob" align="left">
@@ -1247,12 +1252,17 @@
         </xsl:attribute>
         <a><xsl:attribute name="href">viewDynamicAnalysis.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="defectcount"/></a>
       </td>
-      <td align="left">
+      <td align="center">
       <xsl:if test="/cdash/dashboard/displaylabels=0">
         <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
 
-      <xsl:value-of select="date"/></td>
+      <span class="sorttime" style="display:none"><xsl:value-of select="datefull"/></span>
+      <span class="builddateelapsed">
+         <xsl:attribute name="alt"><xsl:value-of select="date"/></xsl:attribute>
+         <xsl:value-of select="dateelapsed"/>
+      </span>
+      </td>
 
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <td class="nob" align="left">
