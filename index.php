@@ -143,6 +143,7 @@ function generate_index_table()
       $xml .= "<lastbuild>".date(FMT_DATETIMEDISPLAY,$lastbuild)."</lastbuild>";
       $xml .= "<lastbuilddate>".date(FMT_DATE,$lastbuild)."</lastbuilddate>";
       $xml .= "<lastbuild_elapsed>".time_difference(time()-$lastbuild,false,'ago')."</lastbuild_elapsed>";
+      $xml .= "<lastbuilddatefull>".$lastbuild."</lastbuilddatefull>";
       $xml .= "<activitylevel>high</activitylevel>";
       }
 
