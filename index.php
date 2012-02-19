@@ -1227,6 +1227,10 @@ function generate_main_dashboard_XML($projectid,$date)
       {
       $buildplatform='linux';
       }
+    else if(strtolower(substr($build_array["osname"],0,7)) == 'freebsd')
+      {
+      $buildplatform='freebsd';
+      }
 
     $xml .= add_XML_value("buildplatform",$buildplatform);
     if(isset($build_array["userupdates"]))
