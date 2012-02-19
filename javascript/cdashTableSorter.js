@@ -515,13 +515,12 @@ $(document).ready(function() {
   if($tabs.length==0)
     {
     $tabs = $("#indexTable");
-     $tabs.each(function(index) {
+    $tabs.each(function(index) {
     $(this).tablesorter({
         headers: {
            0: { sorter:'buildname'},
-           1: { sorter:'digit'},
-           2: { sorter:'text'},
-           3: { sorter:'text'}
+           1: { sorter:'text'},
+           2: { sorter:'elapsedtime'}
           },
           debug: false,
           widgets: ['zebra']
