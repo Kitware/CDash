@@ -1141,7 +1141,7 @@
       </xsl:if>
       <span class="sorttime" style="display:none"><xsl:value-of select="datefull"/></span>
       <span class="builddateelapsed">
-         <xsl:attribute name="alt"><xsl:value-of select="date"/>
+         <xsl:attribute name="alt"><xsl:value-of select="date"/></xsl:attribute>
          <xsl:value-of select="dateelapsed"/>
       </span>
       </td>
@@ -1259,7 +1259,7 @@
 
       <span class="sorttime" style="display:none"><xsl:value-of select="datefull"/></span>
       <span class="builddateelapsed">
-         <xsl:attribute name="alt"><xsl:value-of select="date"/>
+         <xsl:attribute name="alt"><xsl:value-of select="date"/></xsl:attribute>
          <xsl:value-of select="dateelapsed"/>
       </span>
       </td>
