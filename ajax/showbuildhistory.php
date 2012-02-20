@@ -47,9 +47,6 @@ $siteid = $build_array["siteid"];
 $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
-$project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
-$project_array = pdo_fetch_array($project);
-
 // Find the other builds
 $previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build.builderrors,
                              build.buildwarnings,build.testfailed,
@@ -60,7 +57,7 @@ $previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build
                              configure.warnings AS configurewarnings
                              FROM build
                              JOIN build2update ON (build2update.buildid=build.id)
-                             JOIN buildupdate ON (buildupdate.updateid=buildupdate.id)
+                             JOIN buildupdate ON (build2update.updateid=buildupdate.id)
                              JOIN configure ON (configure.buildid=build.id)
                              WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
                              AND build.projectid='$projectid' AND build.starttime<='$starttime'
