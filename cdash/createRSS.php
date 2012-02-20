@@ -97,7 +97,7 @@ function CreateRSSFeed($projectid)
     $description = "A new ".$build_array["type"]." submission from ".$site_array["name"]." - ".$build_array["name"]." is available: ";
     $description .= $nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
 
-    $pubDate = date(DATE_RFC822);
+    $pubDate = date(DATE_RSS);
     $date = date(DATE_W3C);
 
     fputs($fp,"<item>\n");
