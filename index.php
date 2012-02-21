@@ -663,6 +663,7 @@ function generate_main_dashboard_XML($projectid,$date)
         $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"];
         $divname = str_replace("+","_",$divname);
         $divname = str_replace(".","_",$divname);
+        $divname = str_replace(':',"_",$divname);
         $divname = str_replace(' ',"_",$divname);
 
         $xml .= add_XML_value("expecteddivname",$divname);
