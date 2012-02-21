@@ -196,9 +196,14 @@ $(document).ready(function() {
         },
         format: function(s) {
             // format your data for normalization
-            var i = s.indexOf("<b");
+            var i = s.indexOf("<a");
+            if(i == -1)
+              {
+              var t = s.substr(0,s.length-1);
+              return t.toLowerCase();
+              }
             var j = s.indexOf(">",i);
-            var k = s.indexOf("</b>",j);
+            var k = s.indexOf("</a>",j);
             var t = s.substr(j+1,k-j-2);
             return t.toLowerCase();
         },
@@ -262,9 +267,9 @@ $(document).ready(function() {
         },
         format: function(s) {
             // format your data for normalization
-            var i = s.indexOf("<b");
+            var i = s.indexOf("<a");
             var j = s.indexOf(">",i);
-            var k = s.indexOf("</b>",j);
+            var k = s.indexOf("</a>",j);
             var t = s.substr(j+1,k-j-1);
             return t.toLowerCase();
         },
@@ -588,8 +593,8 @@ $(document).ready(function() {
                 0: { sorter:'text'},
                 1: { sorter:'text'},
                 2: { sorter:'percentage'},
-                3: { sorter:'dynanalysismetric'},
-                4: { sorter:'dynanalysismetric'},
+                3: { sorter:'numericvalue'},
+                4: { sorter:'numericvalue'},
                 5: { sorter:'elapsedtime'},
                 6: { sorter:'text'}
             },
@@ -606,7 +611,7 @@ $(document).ready(function() {
                 0: { sorter:'text'},
                 1: { sorter:'text'},
                 2: { sorter:'text'},
-                3: { sorter:'dynanalysismetric'}, // not percent but same format
+                3: { sorter:'numericvalue'}, // not percent but same format
                 4: { sorter:'elapsedtime'},
                 5: { sorter:'text'}
             },
