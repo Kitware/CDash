@@ -197,6 +197,11 @@ $(document).ready(function() {
         format: function(s) {
             // format your data for normalization
             var i = s.indexOf("<a");
+            if(i == -1)
+              {
+              var t = s.substr(0,s.length-1);
+              return t.toLowerCase();
+              }
             var j = s.indexOf(">",i);
             var k = s.indexOf("</a>",j);
             var t = s.substr(j+1,k-j-2);
