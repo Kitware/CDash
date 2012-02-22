@@ -810,12 +810,12 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
       if(mail("$summaryEmail", $title, $messagePlainText,
            "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
-        add_log("summary email sent to: ".$email,"sendemail ".$Project->Name,LOG_INFO);
+        add_log("summary email sent to: ".$summaryEmail,"sendemail ".$Project->Name,LOG_INFO);
         return;
         }
       else
         {
-        add_log("cannot send summary email to: ".$email,"sendemail ".$Project->Name,LOG_ERR);
+        add_log("cannot send summary email to: ".$summaryEmail,"sendemail ".$Project->Name,LOG_ERR);
         }
       }
     } // end $summaryEmail!=""
