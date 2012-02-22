@@ -169,7 +169,7 @@ function time_difference($duration,$compact=false,$suffix='',$displayms=false)
   $duration -= $mins*60;
   $secs = floor($duration);
   $duration -= $secs;
-  $msecs = round($duration*100);
+  $msecs = round($duration*1000);
 
   $diff = '';
   if($compact)
