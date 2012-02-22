@@ -613,7 +613,7 @@
            <xsl:attribute name="alt"><xsl:value-of select="builddate"/>
            <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Update time: <xsl:value-of select="update/time"/>
            <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Configure time: <xsl:value-of select="configure/time"/>
-           <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Compilation time: <xsl:value-of select="compilation/time"/></xsl:attribute>
+           <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Compilation time: <xsl:value-of select="compilation/time"/>
            <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Test time: <xsl:value-of select="test/time"/></xsl:attribute>
            <xsl:value-of select="builddateelapsed"/>
         </span>
