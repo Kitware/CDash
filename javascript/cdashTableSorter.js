@@ -117,7 +117,7 @@ $(document).ready(function() {
         format: function(s) {
             // format your data for normalization
             var t = s;
-            var i = s.indexOf("<a href");
+            var i = s.indexOf("<a ");
             if(i>0)
               {
               var j = s.indexOf(">",i);
