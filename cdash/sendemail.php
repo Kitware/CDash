@@ -591,7 +591,8 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
   include("cdash/config.php");
   require_once("models/userproject.php");
   require_once("models/user.php");
-
+  require_once("models/project.php");
+  
   $Project = new Project();
   $Project->Id = $projectid;
   $Project->Fill();
