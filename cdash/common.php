@@ -1965,29 +1965,29 @@ function check_email_category($name,$emailcategory)
 }
 
 /** Return the byte value with proper extension */
-function getByteValueWithExtension($value)
+function getByteValueWithExtension($value,$base=1024)
+  {
+  $valueext = "";
+  if($value>$base)
     {
-    $valueext = "";
-    if($value>1024)
-      {
-      $value /= 1024;
-      $value = $value;
-      $valueext = "K";
-      }
-    if($value>1024)
-      {
-      $value /= 1024;
-      $value = $value;
-      $valueext = "M";
-      }
-    if($value>1024)
-      {
-      $value /= 1024;
-      $value = $value;
-      $valueext = "G";
-      }
-    return round($value,2).$valueext;
+    $value /= $base;
+    $value = $value;
+    $valueext = "K";
     }
+  if($value>$base)
+    {
+    $value /= $base;
+    $value = $value;
+    $valueext = "M";
+    }
+  if($value>$base)
+    {
+    $value /= $base;
+    $value = $value;
+    $valueext = "G";
+    }
+  return round($value,2).$valueext;
+  }
 
 /** Given a query that returns a set of rows,
   * each of which contains a 'text' field,
