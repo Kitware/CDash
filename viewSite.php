@@ -152,8 +152,8 @@ $xml .= add_XML_value("processormodelid",$siteinformation_array["processormodeli
 $xml .= add_XML_value("processorcachesize",$siteinformation_array["processorcachesize"]);
 $xml .= add_XML_value("numberlogicalcpus",$siteinformation_array["numberlogicalcpus"]);
 $xml .= add_XML_value("numberphysicalcpus",$siteinformation_array["numberphysicalcpus"]);
-$xml .= add_XML_value("totalvirtualmemory",getByteValueWithExtension($siteinformation_array["totalvirtualmemory"]*1000000)."iB");
-$xml .= add_XML_value("totalphysicalmemory",getByteValueWithExtension($siteinformation_array["totalphysicalmemory"]*1000000)."iB");
+$xml .= add_XML_value("totalvirtualmemory",getByteValueWithExtension($siteinformation_array["totalvirtualmemory"]*1048576)."iB");
+$xml .= add_XML_value("totalphysicalmemory",getByteValueWithExtension($siteinformation_array["totalphysicalmemory"]*1048576)."iB");
 $xml .= add_XML_value("logicalprocessorsperphysical",$siteinformation_array["logicalprocessorsperphysical"]);
 $xml .= add_XML_value("processorclockfrequency",getByteValueWithExtension($siteinformation_array["processorclockfrequency"]*1000000,1000)."Hz");
 if($projectid && $project_array['showipaddresses'])
