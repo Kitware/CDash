@@ -211,7 +211,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
       {
       return;
       }
-    elseif(!$this->findString($content,'<b>Total Physical Memory: </b>14.31MiB<br />'))
+    elseif(!$this->findString($content,'<b>Total Physical Memory: </b>15MiB<br />'))
       {
       $this->assertTrue(false,'The webpage does not match the expected content');
       return;
