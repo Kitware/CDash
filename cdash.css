@@ -780,6 +780,7 @@ div#header {
 }
 
 div#headertop {
+  position: relative;
   width:100%;
   background-color: #2D2D2D;
   background-image: none;
@@ -839,20 +840,17 @@ span#subheadername  {
 }
 
 div#feedicon {
-  clear: both;
+  position: absolute;
   width: 14px;
-  float: right;
-  top: -26px;
-  left: -5px;
-  position: relative;
+  right: 3px;
+  top: 5px;
 }
 
 div#datetime {
-  position: relative;
-  clear: both;
+  position: absolute;
   width: 300px;
-  float: right;
-  top: -12px;
+  right: 0px;
+  top: 4px;
 }
 
 div#topmenu {
@@ -883,15 +881,16 @@ div#topmenu a:hover {
  padding: 0;
  font-family: Arial, Helvetica, sans-serif;
  z-index: 1000;
- position: relative;
  left: 55px;
  top: -10px;
+  position: relative;
 }
 
 #navigation ul {
  list-style: none;
  margin: 0;
  padding: 0;
+  z-index: 1000;
 }
 
 #navigation li {
@@ -939,12 +938,14 @@ div#topmenu a:hover {
    background-color: #6699CC;
    position: relative;
    width: 110px;
+   z-index: 5000;
 }
 
 #navigation li ul li {
    background-color: #6699CC;
    width: 110px;
    text-align: left;
+   z-index: 5000;
 }
 
 #navigation li:hover ul li.endsubmenu {
@@ -980,8 +981,6 @@ div#topmenu a:hover {
 
 /** Footer */
 #footer {
-  position: relative;
-  clear: both;
   background-color: #FFFFFF;
   border-top: solid 1px #BBBBBB;
   width: 485px;
@@ -996,9 +995,8 @@ div#topmenu a:hover {
 }
 
 #kitwarelogo {
-  position: relative;
-  top: 5px;
-  left: 10px;
+  margin-top: 3px;
+  margin-left: 5px;
   float: left;
   width: 135px;
 }
@@ -1008,11 +1006,11 @@ div#topmenu a:hover {
 }
 
 #footerlogo {
-  position: relative;
   top: 3px;
   float: left;
-  width: 350px;
+  width: 340px;
   height: 10px;
+  margin-right: 5px;
 }
 
 #footerlogo a {
@@ -1046,7 +1044,6 @@ div#index_top {
 }
 
 div#updatechanges {
-  position: relative;
   width: 600px;
   padding-left: 5px;
 }
