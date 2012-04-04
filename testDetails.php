@@ -60,7 +60,7 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 // If we have a fileid we download it
 if(isset($_GET["fileid"]) && is_numeric($_GET["fileid"]))
   {
-  $result = pdo_query("SELECT value,name FROM testmeasurement WHERE testid=$testid");
+  $result = pdo_query("SELECT id,value,name FROM testmeasurement WHERE testid=$testid AND type='file' ORDER BY id");
   for($i=0;$i<$_GET["fileid"];$i++)
     {
     $result_array = pdo_fetch_array($result);
