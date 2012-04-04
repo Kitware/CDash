@@ -70,7 +70,7 @@
         </li><li id="Back">
         <a>
         <xsl:attribute name="href"><xsl:value-of select="cdash/menu/back"/></xsl:attribute>
-        Back</a><ul></ul>
+        Back</a>
         </li>
         </xsl:when>
         <xsl:otherwise>
