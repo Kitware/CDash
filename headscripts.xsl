@@ -31,6 +31,7 @@
     <!-- Include the sorting -->
     <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascript/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascript/jquery.metadata.js" type="text/javascript" charset="utf-8"></script>
 
@@ -40,6 +41,7 @@
    <!-- include jqModal -->
   <script src="javascript/jqModal.js" type="text/javascript" charset="utf-8"></script>
   <link type="text/css" rel="stylesheet" media="all" href="javascript/jqModal.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="javascript/jquery.dataTables.css" />
 
   <!-- call the local/headerscripts to add new functionalities -->
   <xsl:if test="/cdash/uselocaldirectory=1">

@@ -19,6 +19,7 @@
          </link>
        <xsl:call-template name="headscripts"/>
        <script src="javascript/cdashCoverageGraph.js" type="text/javascript" charset="utf-8"></script>
+       <script src="javascript/cdashViewCoverage.js" type="text/javascript" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
 
@@ -132,213 +133,89 @@ Show coverage over time
    <xsl:value-of select="cdash/coverage/coveragetype"/>
 </xsl:attribute>
 </input>
+<input type="hidden" name="buildid" id="buildid">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coverage/buildid"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageStatus" id="coverageStatus">
+<xsl:attribute name="value">
+   <xsl:value-of select="/cdash/coverage/status"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageNLow" id="coverageNLow">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coveragefilestatus/low"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageNMedium" id="coverageNMedium">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coveragefilestatus/medium"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageNSatisfactory" id="coverageNSatisfactory">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageNComplete" id="coverageNComplete">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coveragefilestatus/complete"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageMetricError" id="coverageMetricError">
+<xsl:attribute name="value">
+   <xsl:value-of select="/cdash/coverage/metricerror"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageMetricPass" id="coverageMetricPass">
+<xsl:attribute name="value">
+   <xsl:value-of select="/cdash/coverage/metricpass"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="userid" id="userid">
+<xsl:attribute name="value">
+   <xsl:value-of select="/cdash/coverage/userid"/>
+</xsl:attribute>
+</input>
+<xsl:if test="count(//labels/label) > 0">
+  <input type="hidden" name="nlabels" id="nlabels" value="1"></input>
+</xsl:if>
+
 
 <table id="coverageTable" cellspacing="0" cellpadding="3">
- <xsl:attribute name="class">
-   tabb {sortlist: [[1,0],[2,0]]}
-</xsl:attribute>
-
 <thead>
   <tr class="table-heading1">
-    <th id="sort_0">Filename</th>
-    <th id="sort_1">Status</th>
-    <th id="sort_2">Percentage</th>
+    <th width="50%">Filename</th>
+    <th width="10%" align="center">Status</th>
+    <th align="center">Percentage</th>
 
     <!-- gcov -->
     <xsl:if test="cdash/coverage/coveragetype='gcov'">
-      <th id="sort_3">Line not covered</th>
-      <th id="sort_4">Priority</th>
+      <th width="10%" align="center">Lines not covered</th>
+      <th width="10%" align="center">Priority</th>
       <xsl:if test="/cdash/coverage/userid!=0">
-         <th id="sort_5">Author</th>
+         <th>Author</th>
       </xsl:if>
       <xsl:if test="count(//labels/label) > 0">
-          <th id="sort_6">Labels</th>
+          <th>Labels</th>
        </xsl:if>
     </xsl:if>
 
     <!-- bullseye -->
     <xsl:if test="cdash/coverage/coveragetype='bullseye'">
-        <th id="sort_3">Branch Points not covered</th>
-        <th id="sort_4">Functions not covered</th>
-        <th id="sort_5">Priority</th>
+        <th>Branch Points not covered</th>
+        <th>Functions not covered</th>
+        <th>Priority</th>
         <xsl:if test="/cdash/coverage/userid!=0">
-          <th id="sort_6">Author</th>
+          <th>Author</th>
         </xsl:if>
         <xsl:if test="count(//labels/label) > 0">
-          <th id="sort_7">Labels</th>
+          <th>Labels</th>
         </xsl:if>
     </xsl:if>
   </tr>
 </thead>
-
- <xsl:for-each select="cdash/coveragefile">
- <tr>
-   <td align="left">
-     <xsl:if test="covered=0">
-       <xsl:value-of select="fullpath"/>
-     </xsl:if>
-     <xsl:if test="covered=1">
-      <xsl:if test="/cdash/coverage/showcoveragecode=1">
-        <a>
-        <xsl:attribute name="href">viewCoverageFile.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;fileid=<xsl:value-of select="fileid"/></xsl:attribute>
-        <xsl:value-of select="fullpath"/>
-        </a>
-     </xsl:if>
-     <xsl:if test="/cdash/coverage/showcoveragecode=0">
-       <xsl:value-of select="fullpath"/>
-     </xsl:if>
-     </xsl:if>
-    </td>
-    <td align="center">
-      <xsl:choose>
-          <xsl:when test="covered=0 or coveragemetric &lt; /cdash/coverage/metricerror">
-             Low
-           </xsl:when>
-         <xsl:when test="covered=1 and coveragemetric >= /cdash/coverage/metricpass">
-            Satisfactory
-            </xsl:when>
-          <xsl:otherwise>
-            Medium
-           </xsl:otherwise>
-        </xsl:choose>
-    </td>
-    <td>
-      <div style="position:relative; width: 190px;">
-       <div style="position:relative; float:left;
-       width: 123px; height: 12px; background: #bdbdbd url('images/progressbar.gif') top left no-repeat;">
-       <div>
-         <xsl:attribute name="style">height: 12px;margin-left:1px;
-         <xsl:choose>
-          <xsl:when test="coveragemetric &lt; /cdash/coverage/metricerror">
-            background: #bdbdbd url('images/progressbg_red.gif') top left no-repeat;
-            </xsl:when>
-         <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
-            background: #bdbdbd url('images/progressbg_green.gif') top left no-repeat;
-            </xsl:when>
-          <xsl:otherwise>
-            background: #bdbdbd url('images/progressbg_orange.gif') top left no-repeat;
-           </xsl:otherwise>
-        </xsl:choose>
-
-         width:<xsl:value-of select="percentcoveragerounded"/>%;</xsl:attribute>
-       </div>
-       </div>
-       <div class="percentvalue" style="position:relative; float:left; margin-left:10px"><xsl:value-of select="percentcoverage"/>%</div>
-      </div>
-    </td>
-
-       <!-- gcov -->
-      <xsl:if test="/cdash/coverage/coveragetype='gcov'">
-       <td align="center">
-        <xsl:if test="covered>0">
-       <xsl:attribute name="class">
-         <xsl:choose>
-           <xsl:when test="coveragemetric &lt; /cdash/coverage/metricerror">
-             error
-             </xsl:when>
-          <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
-             normal
-             </xsl:when>
-           <xsl:otherwise>
-             warning
-            </xsl:otherwise>
-         </xsl:choose>
-       </xsl:attribute>
-       <xsl:value-of select="locuntested"/>/<xsl:value-of select="totalloc"/>
-      </xsl:if>
-       <xsl:if test="covered=0">
-         <xsl:attribute name="class">error</xsl:attribute>
-         <xsl:value-of select="locuntested"/>
-       </xsl:if>
-     </td>
-     </xsl:if>
-
-     <!-- bullseye -->
-     <xsl:if test="/cdash/coverage/coveragetype='bullseye'">
-     <!-- branches -->
-     <td align="center">
-        <xsl:if test="covered>0">
-       <xsl:attribute name="class">
-         <xsl:choose>
-           <xsl:when test="coveragemetric &lt;  /cdash/coverage/metricerror">
-             error
-             </xsl:when>
-          <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
-             normal
-             </xsl:when>
-           <xsl:otherwise>
-             warning
-            </xsl:otherwise>
-         </xsl:choose>
-       </xsl:attribute>
-       <xsl:value-of select="branchesuntested"/>/<xsl:value-of select="totalbranches"/>
-      </xsl:if>
-       <xsl:if test="covered=0">
-       <xsl:attribute name="class">error</xsl:attribute><xsl:value-of select="branchesuntested"/>
-       </xsl:if>
-     </td>
-
-      <!-- functions -->
-       <td align="center">
-       <xsl:if test="covered>0">
-       <xsl:attribute name="class">
-         <xsl:choose>
-           <xsl:when test="coveragemetric &lt;  /cdash/coverage/metricerror">
-             error
-             </xsl:when>
-          <xsl:when test="coveragemetric >= /cdash/coverage/metricpass">
-             normal
-             </xsl:when>
-           <xsl:otherwise>
-             warning
-            </xsl:otherwise>
-         </xsl:choose>
-       </xsl:attribute>
-       <xsl:value-of select="functionsuntested"/>/<xsl:value-of select="totalfunctions"/>
-      </xsl:if>
-       <xsl:if test="covered=0">
-         <xsl:attribute name="class">error</xsl:attribute>0
-       </xsl:if>
-     </td>
-     </xsl:if>
-
-    <!-- Priority -->
-     <td align="center">
-     <xsl:attribute name="class">
-        <xsl:choose>
-           <xsl:when test="priority='Urgent' or priority='High'">
-             error
-           </xsl:when>
-           <xsl:when test="priority='Medium'">
-             warning
-           </xsl:when>
-         </xsl:choose>
-       </xsl:attribute>
-    <xsl:value-of select="priority"/></td>
-
-    <!-- Authors -->
-    <xsl:if test="/cdash/coverage/userid!=0">
-      <td align="center">
-      <xsl:for-each select="author">
-        <xsl:value-of select="name"/>
-      </xsl:for-each>
-      </td>
-    </xsl:if>
-
-     <!-- Labels -->
-     <xsl:if test="count(//labels/label) > 0">
-      <td align="left" class="nob">
-        <xsl:for-each select="labels/label">
-          <xsl:if test="position() > 1">,
-          <xsl:text disable-output-escaping="yes"> </xsl:text>
-          </xsl:if>
-          <nobr><xsl:value-of select="."/></nobr>
-        </xsl:for-each>
-      </td>
-     </xsl:if>
-
-   </tr>
-  </xsl:for-each>
 </table>
 
 <!-- FOOTER -->

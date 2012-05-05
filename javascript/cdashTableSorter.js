@@ -71,7 +71,6 @@ $(document).ready(function() {
       }
    })
 
-
   /** Show/Hide time */
   $('.advancedview').click(function()
     {
@@ -426,7 +425,7 @@ $(document).ready(function() {
     }
 
   //Initialize the coverage table
-  if($tabs.length==0)
+  /*if($tabs.length==0)
     {
     $tabs = $("#coverageTable");
     if($("#coverageType").val() == "gcov")
@@ -444,7 +443,7 @@ $(document).ready(function() {
                },
              debug: false,
              widgets: ['zebra']
-           });
+           }).tablesorterPager({container: $("#pager")}); ;
          });
     }
     else //bull's eye
@@ -463,10 +462,11 @@ $(document).ready(function() {
               },
            debug: false,
            widgets: ['zebra']
-           });
+           }).tablesorterPager({container: $("#pager")}); ;
          });
        }
     } // end coverage
+  */
 
   // Initialize the userStatistics table
   if($tabs.length==0)

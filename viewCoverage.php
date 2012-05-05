@@ -28,7 +28,7 @@ set_time_limit(0);
 
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
-@$sortby = $_GET["sortby"];
+
 
 // Checks
 if(!isset($buildid) || !is_numeric($buildid))
@@ -41,11 +41,6 @@ if(!isset($buildid) || !is_numeric($buildid))
 if(!isset($userid))
   {
   $userid = 0;
-  }
-
-if(!$sortby)
-  {
-  $sortby = "status";
   }
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
@@ -160,7 +155,6 @@ $xml .= "</menu>";
   $xml .= add_XML_value("totalcovered",$ncoveredfiles);
   $xml .= add_XML_value("totalfiles",$nfiles);
   $xml .= add_XML_value("buildid",$buildid);
-  $xml .= add_XML_value("sortby",$sortby);
   $xml .= add_XML_value("userid",$userid);
 
 
@@ -169,18 +163,18 @@ $xml .= "</menu>";
   $nsatisfactorycoveredfiles = 0;
   $coveragetype = "gcov"; // default coverage to avoid warning
 
+  $t0 = time();
+
   // Coverage files
-  $coveragefile = pdo_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested,c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested
-                               FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=1");
+  $coveragefile = pdo_query("SELECT c.locuntested,c.loctested,
+                                    c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested
+                            FROM coverage AS c
+                            WHERE c.buildid='$buildid' AND c.covered=1");
+
 
   $covfile_array = array();
   while($coveragefile_array = pdo_fetch_array($coveragefile))
     {
-    $covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
-    $covfile["fullpath"] = $coveragefile_array["fullpath"];
-    $covfile["fileid"] = $coveragefile_array["fileid"];
-    $covfile["locuntested"] = $coveragefile_array["locuntested"];
-    $covfile["loctested"] = $coveragefile_array["loctested"];
     $covfile["covered"] = 1;
 
     // Compute the coverage metric for bullseye
@@ -197,20 +191,12 @@ $xml .= "</menu>";
         $metric += $coveragefile_array["branchstested"]/($coveragefile_array["branchstested"]+$coveragefile_array["branchsuntested"]);
         $metric /= 2.0;
         }
-      $covfile["branchesuntested"] = $coveragefile_array["branchsuntested"];
-      $covfile["branchestested"] = $coveragefile_array["branchstested"];
-      $covfile["functionsuntested"] = $coveragefile_array["functionsuntested"];
-      $covfile["functionstested"] = $coveragefile_array["functionstested"];
-
-
-      $covfile["percentcoverage"] = sprintf("%3.2f",$metric*100);
       $covfile["coveragemetric"] = $metric;
       $coveragetype = "bullseye";
       }
     else // coverage metric for gcov
       {
-      $covfile["percentcoverage"] = sprintf("%3.2f",$covfile["loctested"]/($covfile["loctested"]+$covfile["locuntested"])*100);
-      $covfile["coveragemetric"] = ($covfile["loctested"]+10)/($covfile["loctested"]+$covfile["locuntested"]+10);
+      $covfile["coveragemetric"] = ($coveragefile_array["loctested"]+10)/($coveragefile_array["loctested"]+$coveragefile_array["locuntested"]+10);
       $coveragetype = "gcov";
       }
 
@@ -220,110 +206,32 @@ $xml .= "</menu>";
       $nsatisfactorycoveredfiles++;
       }
 
-    // Add the priority
-    $CoverageFile2User = new CoverageFile2User();
-    $CoverageFile2User->ProjectId = $projectid;
-    $CoverageFile2User->FullPath = $covfile["fullpath"];
-    $covfile["priority"] = $CoverageFile2User->GetPriority();
-
-    // If the user is logged in we set the users
-    if($userid>0)
-      {
-      $covfile["user"] = $CoverageFile2User->GetAuthors();
-      }
-
     $covfile_array[] = $covfile;
     }
 
-   // Add the coverage type
+  // Add the coverage type
   $xml .= add_XML_value("coveragetype",$coveragetype);
+  if(isset($_GET['status']))
+    {
+    $xml .= add_XML_value("status",$_GET['status']);
+    }
+  else
+    {
+    $xml .= add_XML_value("status",0);
+    }
 
   $xml .= add_XML_value("totalsatisfactorilycovered",$nsatisfactorycoveredfiles);
   $xml .= add_XML_value("totalunsatisfactorilycovered",$nfiles-$nsatisfactorycoveredfiles);
 
   $xml .= "</coverage>";
 
-  // Do the sorting
-  function sort_array($a,$b)
-    {
-    global $sortby;
-    if($sortby == "filename")
-      {
-      return $a["fullpath"]>$b["fullpath"] ? 1:0;
-      }
-    else if($sortby == "status")
-      {
-      return $a["coveragemetric"]>$b["coveragemetric"] ? 1:0;
-      }
-    else if($sortby == "percentage")
-      {
-      return $a["percentcoverage"]>$b["percentcoverage"] ? 1:0;
-      }
-    else if($sortby == "lines")
-      {
-      return $a["locuntested"]<$b["locuntested"] ? 1:0;
-      }
-    else if($sortby == "branches")
-      {
-      return $a["branchesuntested"]<$b["branchesuntested"] ? 1:0;
-      }
-    else if($sortby == "functions")
-      {
-      return $a["functionsuntested"]<$b["functionsuntested"] ? 1:0;
-      }
-    else if($sortby == "priority")
-      {
-      return $a["priority"]<$b["priority"] ? 1:0;
-      }
-    else if($sortby == "user")
-      {
-      if(isset($a["user"][0]) && !isset($b["user"][0]))
-        {
-        return 0;
-        }
-      if(!isset($a["user"][0]) && isset($b["user"][0]))
-        {
-        return 1;
-        }
-      if(!isset($a["user"][0]) && !isset($b["user"][0]))
-        {
-        return 0;
-        }
-      return $a["user"][0]<$b["user"][0] ? 1:0;
-      }
-    }
-
-  usort($covfile_array,"sort_array");
-
   // Add the untested files
-  $coveragefile = pdo_query("SELECT cf.fullpath FROM coverage AS c,coveragefile AS cf WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=0");
+  $coveragefile = pdo_query("SELECT c.buildid FROM coverage AS c
+                             WHERE c.buildid='$buildid' AND c.covered=0");
   while($coveragefile_array = pdo_fetch_array($coveragefile))
     {
-    $covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
-    $covfile["fullpath"] = $coveragefile_array["fullpath"];
-    $covfile["fileid"] = 0;
     $covfile["covered"] = 0;
-    $covfile["locuntested"] = 0;
-    $covfile["loctested"] = 0;
-    $covfile["branchesuntested"] = 0;
-    $covfile["branchestested"] = 0;
-    $covfile["functionsuntested"] = 0;
-    $covfile["functionstested"] = 0;
-    $covfile["percentcoverage"] = 0;
     $covfile["coveragemetric"] = 0;
-
-    // Add the priority
-    $CoverageFile2User = new CoverageFile2User();
-    $CoverageFile2User->ProjectId = $projectid;
-    $CoverageFile2User->FullPath = $covfile["fullpath"];
-    $covfile["priority"] = $CoverageFile2User->GetPriority();
-
-    // If the user is logged in we set the users
-    if($userid>0)
-      {
-      $covfile["user"] = $CoverageFile2User->GetAuthors();
-      }
-
     $covfile_array[] = $covfile;
     }
 
@@ -339,88 +247,20 @@ $xml .= "</menu>";
     if($covfile["covered"]==0 || $covfile["coveragemetric"] < $metricerror)
       {
       $ncoveragefiles[0]++;
-      $coveragestatus = 0; // low
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] == 1.0)
       {
       $ncoveragefiles[3]++;
-      $coveragestatus = 3; // complete
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] >= $metricpass)
       {
       $ncoveragefiles[2]++;
-      $coveragestatus = 2; // satisfactory
       }
     else
       {
       $ncoveragefiles[1]++; // medium
-      $coveragestatus = 1;
       }
-
-    if(isset($_GET['status']) && $_GET['status'] != $coveragestatus)
-      {
-      continue;
-      }
-    else if(!isset($_GET['status']) && $coveragestatus!=0) // low by default
-      {
-      continue;
-      }
-
-    $xml .= "<coveragefile>";
-    $xml .= add_XML_value("filename",$covfile["filename"]);
-    $xml .= add_XML_value("fullpath",$covfile["fullpath"]);
-    $xml .= add_XML_value("locuntested",$covfile["locuntested"]);
-    $xml .= add_XML_value("totalloc",$covfile["loctested"]+$covfile["locuntested"]);
-    $xml .= add_XML_value("covered",$covfile["covered"]);
-    $xml .= add_XML_value("fileid",$covfile["fileid"]);
-    $xml .= add_XML_value("percentcoverage",$covfile["percentcoverage"]);
-    // For display purposes
-    $roundedpercentage = round($covfile["percentcoverage"]);
-    if($roundedpercentage>98) {$roundedpercentage = 98;};
-    $xml .= add_XML_value("percentcoveragerounded",$roundedpercentage); // used for progress bar
-    $xml .= add_XML_value("coveragemetric",$covfile["coveragemetric"]);
-    $xml .= add_XML_value("functionsuntested",@$covfile["functionsuntested"]);
-    $xml .= add_XML_value("totalfunctions",@$covfile["functionstested"]+@$covfile["functionsuntested"]);
-    $xml .= add_XML_value("branchesuntested",@$covfile["branchesuntested"]);
-    $xml .= add_XML_value("totalbranches",@$covfile["branchestested"]+@$covfile["branchesuntested"]);
-
-    // Get the priority
-    $priority = "NA";
-    switch($covfile["priority"])
-      {
-      case 0: $priority = "None"; break;
-      case 1: $priority = "Low"; break;
-      case 2: $priority = "Medium"; break;
-      case 3: $priority = "High"; break;
-      case 4: $priority = "Urgent"; break;
-       }
-    $xml .= add_XML_value("priority",$priority);
-
-    // Set the authors of the file
-    if($userid>0)
-      {
-      foreach(@$covfile["user"] as $authorid)
-        {
-        $xml .= "<author>";
-        $xml .= add_XML_value("id",$authorid);
-        $User = new User();
-        $User->Id = $authorid;
-        $xml .= add_XML_value("name",$User->GetName());
-        $xml .= "</author>";
-        }
-      }
-
-    // Set the labels
-    $fileid = $covfile['fileid'];
-    $xml .= get_labels_xml_from_query_results(
-      "SELECT text FROM label, label2coveragefile WHERE ".
-      "label.id=label2coveragefile.labelid AND ".
-      "label2coveragefile.coveragefileid='$fileid' AND ".
-      "label2coveragefile.buildid='$buildid' ".
-      "ORDER BY text ASC");
-    $xml .= "</coveragefile>";
     }
-
 
   // Show the number of files covered by status
   $xml .= "<coveragefilestatus>";
@@ -431,6 +271,7 @@ $xml .= "</menu>";
   $xml .= "</coveragefilestatus>";
 
   $xml .= "</cdash>";
+
 
 // Now doing the xslt transition
 generate_XSLT($xml,"viewCoverage");
