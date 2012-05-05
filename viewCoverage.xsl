@@ -178,10 +178,11 @@ Show coverage over time
    <xsl:value-of select="/cdash/coverage/userid"/>
 </xsl:attribute>
 </input>
-<xsl:if test="count(//labels/label) > 0">
-  <input type="hidden" name="nlabels" id="nlabels" value="1"></input>
-</xsl:if>
-
+<input type="hidden" name="displaylabels" id="displaylabels">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coverage/displaylabels"/>
+</xsl:attribute>
+</input>
 
 <table id="coverageTable" cellspacing="0" cellpadding="3">
 <thead>
@@ -197,7 +198,7 @@ Show coverage over time
       <xsl:if test="/cdash/coverage/userid!=0">
          <th>Author</th>
       </xsl:if>
-      <xsl:if test="count(//labels/label) > 0">
+      <xsl:if test="cdash/coverage/displaylabels=1">
           <th>Labels</th>
        </xsl:if>
     </xsl:if>
@@ -210,7 +211,7 @@ Show coverage over time
         <xsl:if test="/cdash/coverage/userid!=0">
           <th>Author</th>
         </xsl:if>
-        <xsl:if test="count(//labels/label) > 0">
+         <xsl:if test="cdash/coverage/displaylabels=1">
           <th>Labels</th>
         </xsl:if>
     </xsl:if>

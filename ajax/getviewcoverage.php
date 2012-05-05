@@ -477,26 +477,25 @@ if($userid)
       $row[] = $author;
       }
 
-     // Seventh colum (Label)
-     // Check if we have labels
-     $fileid = $covfile['fileid'];
-     $labels = '';
-     $coveragelabels = pdo_query("SELECT text FROM label, label2coveragefile WHERE ".
-                                 "label.id=label2coveragefile.labelid AND ".
-                                 "label2coveragefile.coveragefileid='$fileid' AND ".
-                                 "label2coveragefile.buildid='$buildid' ".
-                                 "ORDER BY text ASC");
-     while($coveragelabels_array = pdo_fetch_array($coveragelabels))
-       {
-       if($labels!='')
-         {
-         $labels .= ', ';
-         }
-       $labels .= $coveragelabels_array['text'];
-       }
-
-    if($labels != '')
+    // Seventh colum (Label)
+    if(isset($_GET['displaylabels']) && $_GET['displaylabels']==1)
       {
+      $fileid = $covfile['fileid'];
+      $labels = '';
+      $coveragelabels = pdo_query("SELECT text FROM label, label2coveragefile WHERE ".
+                                  "label.id=label2coveragefile.labelid AND ".
+                                  "label2coveragefile.coveragefileid='$fileid' AND ".
+                                  "label2coveragefile.buildid='$buildid' ".
+                                  "ORDER BY text ASC");
+      while($coveragelabels_array = pdo_fetch_array($coveragelabels))
+        {
+        if($labels!='')
+          {
+          $labels .= ', ';
+          }
+        $labels .= $coveragelabels_array['text'];
+        }
+
       $row[] = $labels;
       }
 

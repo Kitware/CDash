@@ -57,7 +57,7 @@ if(!isset($projectid) || $projectid==0 || !is_numeric($projectid))
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-$project = pdo_query("SELECT name,coveragethreshold,nightlytime,showcoveragecode FROM project WHERE id='$projectid'");
+$project = pdo_query("SELECT name,coveragethreshold,nightlytime,showcoveragecode,displaylabels    FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project) == 0)
   {
   echo "This project doesn't exist.";
@@ -80,6 +80,8 @@ if(!$project_array["showcoveragecode"] && $role<2)
   {
   $projectshowcoveragecode = 0;
   }
+
+$projectdisplaylabels = $project_array["displaylabels"];
 
 $xml = '<?xml version="1.0"?><cdash>';
 $xml .= "<title>CDash : ".$projectname."</title>";
@@ -159,6 +161,7 @@ $xml .= "</menu>";
 
 
   $xml .= add_XML_value("showcoveragecode",$projectshowcoveragecode);
+  $xml .= add_XML_value("displaylabels",$projectdisplaylabels);
 
   $nsatisfactorycoveredfiles = 0;
   $coveragetype = "gcov"; // default coverage to avoid warning

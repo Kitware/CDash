@@ -20,7 +20,7 @@ $(document).ready(function() {
             aoData.push( { "name": "metricerror", "value": $('#coverageMetricError').val() } );
             aoData.push( { "name": "metricpass", "value": $('#coverageMetricPass').val() } );
             aoData.push( { "name": "userid", "value": $('#userid').val() } );
-            aoData.push( { "name": "nlabels", "value": $('#nlabels').val() } );
+            aoData.push( { "name": "displaylabels", "value": $('#displaylabels').val() } );
         },
       "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
             $('td:eq(3)', nRow).addClass($('td:eq(3) span', nRow).attr("class"));
