@@ -194,6 +194,8 @@ $xml .= "</menu>";
         $metric += $coveragefile_array["branchstested"]/($coveragefile_array["branchstested"]+$coveragefile_array["branchsuntested"]);
         $metric /= 2.0;
         }
+
+      $covfile["percentcoverage"] = sprintf("%3.2f",$metric*100);
       $covfile["coveragemetric"] = $metric;
       $coveragetype = "bullseye";
       }
@@ -201,6 +203,7 @@ $xml .= "</menu>";
       {
       $covfile["coveragemetric"] = ($coveragefile_array["loctested"]+10)/($coveragefile_array["loctested"]+$coveragefile_array["locuntested"]+10);
       $coveragetype = "gcov";
+      $covfile["percentcoverage"] = sprintf("%3.2f",$coveragefile_array["loctested"]/($coveragefile_array["loctested"]+$coveragefile_array["locuntested"])*100);
       }
 
     // Add the number of satisfactory covered files
@@ -243,34 +246,45 @@ $xml .= "</menu>";
   $ncoveragefiles[1] = 0;
   $ncoveragefiles[2] = 0;
   $ncoveragefiles[3] = 0;
+  $ncoveragefiles[4] = 0;
+  $ncoveragefiles[5] = 0;
 
   foreach($covfile_array as $covfile)
     {
-    // Show only the low coverage
-    if($covfile["covered"]==0 || $covfile["coveragemetric"] < $metricerror)
+    if($covfile["covered"]==0)
       {
-      $ncoveragefiles[0]++;
+      $ncoveragefiles[0]++; // no coverage
+      }
+    else if($covfile["covered"]==1 && $covfile["coveragemetric"] < $metricerror &&  $covfile["percentcoverage"] == 0 )
+      {
+      $ncoveragefiles[1]++; // zero
+      }
+    else if($covfile["covered"]==1 && $covfile["coveragemetric"] < $metricerror)
+      {
+      $ncoveragefiles[2]++; // low
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] == 1.0)
       {
-      $ncoveragefiles[3]++;
+      $ncoveragefiles[5]++; // complete
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] >= $metricpass)
       {
-      $ncoveragefiles[2]++;
+      $ncoveragefiles[4]++; // satisfactory
       }
     else
       {
-      $ncoveragefiles[1]++; // medium
+      $ncoveragefiles[3]++; // medium
       }
     }
 
   // Show the number of files covered by status
   $xml .= "<coveragefilestatus>";
-  $xml .= add_XML_value("low",$ncoveragefiles[0]);
-  $xml .= add_XML_value("medium",$ncoveragefiles[1]);
-  $xml .= add_XML_value("satisfactory",$ncoveragefiles[2]);
-  $xml .= add_XML_value("complete",$ncoveragefiles[3]);
+  $xml .= add_XML_value("no",$ncoveragefiles[0]);
+  $xml .= add_XML_value("zero",$ncoveragefiles[1]);
+  $xml .= add_XML_value("low",$ncoveragefiles[2]);
+  $xml .= add_XML_value("medium",$ncoveragefiles[3]);
+  $xml .= add_XML_value("satisfactory",$ncoveragefiles[4]);
+  $xml .= add_XML_value("complete",$ncoveragefiles[5]);
   $xml .= "</coveragefilestatus>";
 
   $xml .= "</cdash>";

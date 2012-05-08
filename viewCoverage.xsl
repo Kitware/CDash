@@ -121,10 +121,12 @@ Show coverage over time
 <br/>
 
 <!-- Links -->
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/></xsl:attribute>Low (<xsl:value-of select="cdash/coveragefilestatus/low"/>)</a> |
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=1</xsl:attribute>Medium (<xsl:value-of select="cdash/coveragefilestatus/medium"/>)</a> |
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=2</xsl:attribute>Satisfactory (<xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>)</a> |
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=3</xsl:attribute>Complete (<xsl:value-of select="cdash/coveragefilestatus/complete"/>)</a>
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/></xsl:attribute>Not covered (<xsl:value-of select="cdash/coveragefilestatus/no"/>)</a> |
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=1</xsl:attribute>Zero (<xsl:value-of select="cdash/coveragefilestatus/zero"/>)</a> |
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=2</xsl:attribute>Low (<xsl:value-of select="cdash/coveragefilestatus/low"/>)</a> |
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=3</xsl:attribute>Medium (<xsl:value-of select="cdash/coveragefilestatus/medium"/>)</a> |
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=4</xsl:attribute>Satisfactory (<xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>)</a> |
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=5</xsl:attribute>Complete (<xsl:value-of select="cdash/coveragefilestatus/complete"/>)</a>
 <br/>
 
 <!--  Coverage table -->
@@ -141,6 +143,16 @@ Show coverage over time
 <input type="hidden" name="coverageStatus" id="coverageStatus">
 <xsl:attribute name="value">
    <xsl:value-of select="/cdash/coverage/status"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageNNo" id="coverageNNo">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coveragefilestatus/no"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageNZero" id="coverageNZero">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coveragefilestatus/zero"/>
 </xsl:attribute>
 </input>
 <input type="hidden" name="coverageNLow" id="coverageNLow">

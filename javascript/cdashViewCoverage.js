@@ -13,6 +13,8 @@ $(document).ready(function() {
        "fnServerParams": function ( aoData ) {
             aoData.push( { "name": "buildid", "value": $('#buildid').val() } );
             aoData.push( { "name": "status", "value": $('#coverageStatus').val() } );
+            aoData.push( { "name": "nno", "value": $('#coverageNNo').val() } );
+            aoData.push( { "name": "nzero", "value": $('#coverageNZero').val() } );
             aoData.push( { "name": "nlow", "value": $('#coverageNLow').val() } );
             aoData.push( { "name": "nmedium", "value": $('#coverageNMedium').val() } );
             aoData.push( { "name": "nsatisfactory", "value": $('#coverageNSatisfactory').val() } );

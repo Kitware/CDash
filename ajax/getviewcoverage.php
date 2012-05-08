@@ -314,21 +314,29 @@ if($userid)
   foreach($covfile_array as $covfile)
     {
     // Show only the low coverage
-    if(($covfile["covered"]==0 || $covfile["coveragemetric"] < $_GET['metricerror']))
+    if($covfile["covered"]==0)
       {
-      $filestatus = 0; //low
+      $filestatus = 0; //no
+      }
+    else if($covfile["covered"]==1 && $covfile["coveragemetric"] < $_GET['metricerror'] && $covfile["percentcoverage"] == 0.0)
+      {
+      $filestatus = 1; //zero
+      }
+    else if(($covfile["covered"]==1 && $covfile["coveragemetric"] < $_GET['metricerror']))
+      {
+      $filestatus = 2; //low
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] == 1.0)
       {
-      $filestatus = 3; //complete
+      $filestatus = 5; //complete
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] >= $_GET['metricpass'])
       {
-      $filestatus = 2; // satisfactory
+      $filestatus = 4; // satisfactory
       }
     else
       {
-      $filestatus = 1; // medium
+      $filestatus = 3; // medium
       }
 
     if($status != $filestatus)
@@ -364,10 +372,12 @@ if($userid)
     // Second column (Status)
     switch($status)
       {
-      case 0: $row[] = "Low"; break;
-      case 1: $row[] = "Medium"; break;
-      case 2: $row[] = "Satifactory"; break;
-      case 3: $row[] = "Complete"; break;
+      case 0: $row[] = "No"; break;
+      case 1: $row[] = "Zero"; break;
+      case 2: $row[] = "Low"; break;
+      case 3: $row[] = "Medium"; break;
+      case 4: $row[] = "Satifactory"; break;
+      case 5: $row[] = "Complete"; break;
       }
 
     // Third column (Percentage)
@@ -378,9 +388,11 @@ if($userid)
     switch($status)
       {
       case 0: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_red.gif') top left no-repeat;"; break;
-      case 1: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_orange.gif') top left no-repeat;"; break;
-      case 2: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_green.gif') top left no-repeat;"; break;
-      case 3: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_green.gif') top left no-repeat;"; break;
+      case 1: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_red.gif') top left no-repeat;"; break;
+      case 2: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_red.gif') top left no-repeat;"; break;
+      case 3: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_orange.gif') top left no-repeat;"; break;
+      case 4: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_green.gif') top left no-repeat;"; break;
+      case 5: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_green.gif') top left no-repeat;"; break;
       }
     $thirdcolumn .= 'width:'.$roundedpercentage.'%;">';
     $thirdcolumn .='</div></div><div class="percentvalue" style="position:relative; float:left; margin-left:10px">'.$covfile["percentcoverage"].'%</div></div>';
@@ -400,9 +412,11 @@ if($userid)
         switch($status)
           {
           case 0: $fourthcolumn .= ' class="error">'; break;
-          case 1: $fourthcolumn .= ' class="warning">'; break;
-          case 2: $fourthcolumn .= ' class="normal">'; break;
-          case 3: $fourthcolumn .= ' class="normal">'; break;
+          case 1: $fourthcolumn .= ' class="error">'; break;
+          case 2: $fourthcolumn .= ' class="error">'; break;
+          case 3: $fourthcolumn .= ' class="warning">'; break;
+          case 4: $fourthcolumn .= ' class="normal">'; break;
+          case 5: $fourthcolumn .= ' class="normal">'; break;
           }
         $totalloc = $covfile["loctested"]+$covfile["locuntested"];
         $fourthcolumn .= $covfile["locuntested"].'/'.$totalloc.'</span>';
@@ -421,9 +435,11 @@ if($userid)
         switch($status)
           {
           case 0: $fourthcolumn .= ' class="error">'; break;
-          case 1: $fourthcolumn .= ' class="warning">'; break;
-          case 2: $fourthcolumn .= ' class="normal">'; break;
-          case 3: $fourthcolumn .= ' class="normal">'; break;
+          case 1: $fourthcolumn .= ' class="error">'; break;
+          case 2: $fourthcolumn .= ' class="error">'; break;
+          case 3: $fourthcolumn .= ' class="warning">'; break;
+          case 4: $fourthcolumn .= ' class="normal">'; break;
+          case 5: $fourthcolumn .= ' class="normal">'; break;
           }
         $totalloc = @$covfile["branchestested"]+@$covfile["branchesuntested"];
         $fourthcolumn .= $covfile["branchesuntested"].'/'.$totalloc.'</span>';
@@ -441,9 +457,11 @@ if($userid)
         switch($status)
           {
           case 0: $fourthcolumn2 .= ' class="error">'; break;
-          case 1: $fourthcolumn2 .= ' class="warning">'; break;
-          case 2: $fourthcolumn2 .= ' class="normal">'; break;
-          case 3: $fourthcolumn2 .= ' class="normal">'; break;
+          case 1: $fourthcolumn2 .= ' class="error">'; break;
+          case 2: $fourthcolumn2 .= ' class="error">'; break;
+          case 3: $fourthcolumn2 .= ' class="warning">'; break;
+          case 4: $fourthcolumn2 .= ' class="normal">'; break;
+          case 5: $fourthcolumn2 .= ' class="normal">'; break;
           }
         $totalfunctions = @$covfile["functionstested"]+@$covfile["functionsuntested"];
         $fourthcolumn2 .= $covfile["functionsuntested"].'/'.$totalfunctions.'</span>';
@@ -504,10 +522,12 @@ if($userid)
 
   switch($status)
     {
-    case 0: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["nlow"]; break;
-    case 1: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["nmedium"]; break;
-    case 2: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["nsatisfactory"]; break;
-    case 3: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["ncomplete"]; break;
+    case 0: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["nno"]; break;
+    case 1: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["nzero"]; break;
+    case 2: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["nlow"]; break;
+    case 3: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["nmedium"]; break;
+    case 4: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["nsatisfactory"]; break;
+    case 5: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["ncomplete"]; break;
     }
 
     echo json_encode( $output );
