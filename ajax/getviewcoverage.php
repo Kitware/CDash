@@ -318,7 +318,7 @@ if($userid)
       {
       $filestatus = 0; //no
       }
-    else if($covfile["covered"]==1 && $covfile["coveragemetric"] < $_GET['metricerror'] && $covfile["percentcoverage"] == 0.0)
+    else if($covfile["covered"]==1 && $covfile["percentcoverage"] == 0.0)
       {
       $filestatus = 1; //zero
       }

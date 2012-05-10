@@ -255,7 +255,7 @@ $xml .= "</menu>";
       {
       $ncoveragefiles[0]++; // no coverage
       }
-    else if($covfile["covered"]==1 && $covfile["coveragemetric"] < $metricerror &&  $covfile["percentcoverage"] == 0 )
+    else if($covfile["covered"]==1 && $covfile["percentcoverage"] == 0 )
       {
       $ncoveragefiles[1]++; // zero
       }
