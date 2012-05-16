@@ -10,14 +10,17 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-require_once("../cdash/config.php");
-require_once("../cdash/pdo.php");
-require_once("../cdash/common.php");
+$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
+set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
+
+require_once("cdash/config.php");
+require_once("cdash/pdo.php");
+require_once("cdash/common.php");
 
 $testid = $_GET["testid"];
 $buildid = $_GET["buildid"];
@@ -39,7 +42,7 @@ if(!isset($measurementname) || !is_string($measurementname))
   echo "Not a valid measurementname!";
   return;
   }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -49,7 +52,7 @@ $test_array = pdo_fetch_array($test);
 $testname = $test_array["name"];
 
 
-$build = pdo_query("SELECT name,type,siteid,projectid,starttime 
+$build = pdo_query("SELECT name,type,siteid,projectid,starttime
 FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
 
@@ -73,7 +76,7 @@ AND build.name = '$buildname'
 AND build2test.testid IN (SELECT id FROM test WHERE name = '$testname')
 ORDER BY build.starttime DESC
 ");
-      
+
 ?>
 
 &nbsp;
@@ -90,10 +93,10 @@ $(function () {
       $t['y'] = $build_array["value"];
       $t['builid'] = $build_array["id"];
       $t['testid'] = $build_array["testid"];
-      
+
       $tarray[]=$t;
       }
-    
+
     $tarray = array_reverse($tarray);
     foreach($tarray as $axis)
   {
@@ -101,15 +104,15 @@ $(function () {
       buildids[<?php echo $axis['x']; ?>]=<?php echo $axis['builid']; ?>;
       testids[<?php echo $axis['x']; ?>]=<?php echo $axis['testid']; ?>;
       d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
-    <?php 
+    <?php
       $t = $axis['x'];
       } ?>
- 
+
   var options = {
     //bars: { show: true,  barWidth: 35000000, lineWidth:0.9  },
-    lines: { show: true }, 
+    lines: { show: true },
     points: { show: true },
-    xaxis: { mode: "time"}, 
+    xaxis: { mode: "time"},
     grid: {backgroundColor: "#fffaff",
       clickable: true,
       hoverable: true,
@@ -119,13 +122,13 @@ $(function () {
     selection: { mode: "x" },
     colors: ["#0000FF", "#dba255", "#919733"]
   };
-  
+
     var divname = <? echo("\"#$measurementname"."grapholder\""); ?>;
-    
+
     $(divname).bind("selected", function (event, area) {
-    plot = $.plot($(divname), [{label: <? echo("\"$measurementname\""); ?>,  data: d1}], 
+    plot = $.plot($(divname), [{label: <? echo("\"$measurementname\""); ?>,  data: d1}],
            $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
-    
+
     });
 
     $(divname).bind("plotclick", function (e, pos, item) {
@@ -134,10 +137,10 @@ $(function () {
             buildid = buildids[item.datapoint[0]];
             testid = testids[item.datapoint[0]];
             window.location = "testDetails.php?test="+testid+"&build="+buildid;
-            }      
+            }
      });
 
-    plot = $.plot($(divname), 
+    plot = $.plot($(divname),
                   [{label: <? echo("\"$measurementname\""); ?> ,data: d1}],
                   $.extend(true,{}, options, {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}})
                  );
