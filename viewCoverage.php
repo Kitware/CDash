@@ -64,6 +64,24 @@ if(pdo_num_rows($project) == 0)
   exit();
   }
 
+
+function compute_percentcoverage($loctested, $locuntested)
+{
+  $loc = $loctested + $locuntested;
+
+  if($loc>0)
+    {
+    $percentcoverage = round($loctested/$loc*100, 2);
+    }
+  else
+    {
+    $percentcoverage = 0;
+    }
+
+  return $percentcoverage;
+}
+
+
 $role=0;
 $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
 if(pdo_num_rows($user2project)>0)
@@ -126,15 +144,9 @@ $xml .= "</menu>";
   $xml .= add_XML_value("loctested",$coverage_array["loctested"]);
   $xml .= add_XML_value("locuntested",$coverage_array["locuntested"]);
 
-  $loc = $coverage_array["loctested"]+$coverage_array["locuntested"];
-  if($loc>0)
-    {
-    $percentcoverage = round($coverage_array["loctested"]/$loc*100,2);
-    }
-  else
-    {
-    $percentcoverage = 0;
-    }
+  $percentcoverage = compute_percentcoverage(
+    $coverage_array["loctested"], $coverage_array["locuntested"]);
+
   $xml .= add_XML_value("loc",$loc);
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
   $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
@@ -144,6 +156,56 @@ $xml .= "</menu>";
   // Below this number of the coverage is red
   $metricerror = 0.7*($project_array["coveragethreshold"]/100);
   $xml .= add_XML_value("metricerror",$metricerror);
+
+
+  // Only execute the label-related queries if labels are being
+  // displayed:
+  //
+  if ($projectdisplaylabels)
+    {
+    // Get the set of labels involved:
+    //
+    $labels = array();
+
+    $covlabels = pdo_all_rows_query(
+      "SELECT DISTINCT id, text FROM label, label2coveragefile WHERE ".
+      "label.id=label2coveragefile.labelid AND ".
+      "label2coveragefile.buildid=".qnum($buildid));
+    foreach($covlabels as $row)
+      {
+      $labels[$row['id']] = $row['text'];
+      }
+
+    // For each label, compute the percentcoverage for files with
+    // that label:
+    //
+    if (count($labels) > 0)
+      {
+      $xml .= "<labels>";
+
+      foreach ($labels as $id => $label)
+        {
+        $row = pdo_single_row_query(
+          "SELECT COUNT(*) AS c, SUM(loctested) AS loctested, SUM(locuntested) AS locuntested ".
+          "FROM label2coveragefile, coverage WHERE ".
+          "label2coveragefile.labelid=".qnum($id)." AND ".
+          "label2coveragefile.buildid=".qnum($buildid)." AND ".
+          "coverage.buildid=label2coveragefile.buildid AND ".
+          "coverage.fileid=label2coveragefile.coveragefileid");
+
+        $loctested = $row['loctested'];
+        $locuntested = $row['locuntested'];
+        $percentcoverage = compute_percentcoverage($loctested, $locuntested);
+
+        $xml .= "<label>";
+        $xml .= add_XML_value("name", $label);
+        $xml .= add_XML_value("percentcoverage", $percentcoverage);
+        $xml .= "</label>";
+        }
+
+      $xml .= "</labels>";
+      }
+    }
 
 
   $coveredfiles = pdo_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");

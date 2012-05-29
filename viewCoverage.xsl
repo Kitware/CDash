@@ -82,6 +82,41 @@
          </table>
 
       </td>
+
+      <xsl:if test="count(cdash/coverage/labels/label) > 0">
+      <td align="top">
+         <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
+            <tr>
+               <th colspan="2" class="table-heading1">Summary By Label</th>
+            </tr>
+
+            <tr>
+               <th class="table-heading1">Label</th>
+               <th class="table-heading1">Percent Coverage</th>
+            </tr>
+
+            <xsl:for-each select="cdash/coverage/labels/label">
+            <tr class="treven">
+               <td align="right"><xsl:value-of select="./name"/></td>
+               <td align="center">
+               <xsl:attribute name="class">
+                <xsl:choose>
+                  <xsl:when test="./percentcoverage >= /cdash/coverage/percentagegreen">
+                    normal
+                  </xsl:when>
+                  <xsl:otherwise>
+                    warning
+                  </xsl:otherwise>
+                </xsl:choose>
+                </xsl:attribute>
+               <xsl:value-of select="./percentcoverage"/>
+               </td>
+            </tr>
+            </xsl:for-each>
+         </table>
+      </td>
+      </xsl:if>
+
       <td valign="Top" align="right">
          <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" width="350">
             <tr class="table-heading1">
