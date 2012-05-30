@@ -31,6 +31,9 @@ include("models/user.php");
 
 set_time_limit(0);
 
+$noforcelogin = 1;
+require('login.php');
+
 $buildid = $_GET["buildid"];
 if(!isset($buildid) || !is_numeric($buildid))
   {
