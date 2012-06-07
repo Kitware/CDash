@@ -148,7 +148,7 @@ class UploadHandler extends AbstractHandler
         }
 
       // Create tmp file
-      $this->TmpFilename = tempnam($GLOBALS[CDASH_UPLOAD_DIRECTORY], 'tmp'); // TODO Handle error
+      $this->TmpFilename = tempnam($GLOBALS['CDASH_UPLOAD_DIRECTORY'], 'tmp'); // TODO Handle error
       if (empty($this->TmpFilename))
         {
         add_log("Failed to create temporary filename", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
@@ -249,12 +249,19 @@ class UploadHandler extends AbstractHandler
         {
         $this->UploadFile->IsUrl = false;
 
-        $upload_dir = realpath($GLOBALS[CDASH_UPLOAD_DIRECTORY]).'/'.$this->UploadFile->Sha1Sum;
+        $upload_dir = realpath($GLOBALS['CDASH_UPLOAD_DIRECTORY']);
+        if (!$upload_dir)
+          {
+          add_log("realpath cannot resolve CDASH_UPLOAD_DIRECTORY '".
+            $GLOBALS['CDASH_UPLOAD_DIRECTORY']."' with cwd '".getcwd()."'",
+            __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);
+          }
+        $upload_dir .= '/'.$this->UploadFile->Sha1Sum;
 
         $uploadfilepath = $upload_dir.'/'.$this->UploadFile->Sha1Sum;
 
         // Check if upload directory should be created
-        if (!file_exists($GLOBALS[CDASH_UPLOAD_DIRECTORY].'/'.$upload_file_sha1))
+        if (!file_exists($upload_dir))
           {
           $success = mkdir($upload_dir);
           if (!$success)
@@ -266,7 +273,7 @@ class UploadHandler extends AbstractHandler
           }
 
         // Check if file has already been referenced
-        if (!file_exists($GLOBALS[CDASH_UPLOAD_DIRECTORY].'/'.$upload_file_sha1.'/'.$upload_file_sha1))
+        if (!file_exists($uploadfilepath))
           {
           $success = rename($this->TmpFilename, $uploadfilepath);
           if (!$success)

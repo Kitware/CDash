@@ -73,7 +73,7 @@ $CDASH_CSS_FILE = 'cdash.css';
 // Backup directory
 $CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR.'/backup';
 // Upload directory (absolute or relative)
-$CDASH_UPLOAD_DIRECTORY = 'upload';
+$CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR.'/upload';
 // The relative path from the CDash root dir to the $CDASH_UPLOAD_DIRECTORY (for downloading)
 // http://<CDASH_URL>/<CDASH_DIR>/$CDASH_DOWNLOAD_RELATIVE_URL/<SHA-1>/<FILENAME>
 // Note that this must be a relative path to the same directory specified by $CDASH_UPLOAD_DIRECTORY
