@@ -59,8 +59,6 @@ $xml .= '<sitename>'.$Site->GetName().'</sitename>';
 
 $uploadFilesOrURLs = $Build->GetUploadedFilesOrUrls();
 
-add_log("uploadFilesOrURLs '".var_export($uploadFilesOrURLs, true)."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
-
 foreach($uploadFilesOrURLs as $uploadFileOrURL)
   {
   if(!$uploadFileOrURL->IsUrl)
@@ -109,8 +107,6 @@ foreach($uploadFilesOrURLs as $uploadFileOrURL)
   }
 
 $xml .= "</cdash>";
-
-add_log("uploadFilesOrURLs '".$xml."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
 
 generate_XSLT($xml, "viewFiles", true);
 ?>
