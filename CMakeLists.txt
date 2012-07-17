@@ -60,6 +60,16 @@ make_directory("${CDASH_COVERAGE_DIR}")
 configure_file(${CDash_SOURCE_DIR}/tests/append_coverage.php.in
                ${CDash_BINARY_DIR}/append_coverage.php)
 
+# For coverage builds on apache web servers, provide a default
+# .htaccess file, but only if explicitly asked to:
+if(CDASH_CONFIGURE_HTACCESS_FILE)
+  configure_file(
+    ${CDash_SOURCE_DIR}/htaccess.in
+    ${CDash_SOURCE_DIR}/.htaccess)
+    # Yes, the output of this configure_file is intentionally in the
+    # source directory
+endif()
+
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
 if(CDASH_USE_SELENIUM)
