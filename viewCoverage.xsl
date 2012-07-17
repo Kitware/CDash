@@ -1,6 +1,7 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
+   <xsl:include href="filterdataTemplate.xsl"/>
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
    <!-- Local includes -->
@@ -19,6 +20,7 @@
          </link>
        <xsl:call-template name="headscripts"/>
        <script src="javascript/cdashCoverageGraph.js" type="text/javascript" charset="utf-8"></script>
+       <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
        <script src="javascript/cdashViewCoverage.js" type="text/javascript" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
@@ -33,6 +35,7 @@
 </xsl:choose>
 
 <h3>Coverage started on <xsl:value-of select="cdash/coverage/starttime"/></h3>
+
 <table width="100%">
    <tr>
       <td>
@@ -163,6 +166,11 @@ Show coverage over time
 <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=4</xsl:attribute>Satisfactory (<xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>)</a> |
 <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=5</xsl:attribute>Complete (<xsl:value-of select="cdash/coveragefilestatus/complete"/>)</a>
 <br/>
+
+<!-- Filters? -->
+<xsl:if test="count(cdash/filterdata) = 1">
+  <xsl:call-template name="filterdata" select="."/>
+</xsl:if>
 
 <!--  Coverage table -->
 <input type="hidden" name="coverageType" id="coverageType">

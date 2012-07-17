@@ -23,6 +23,7 @@ include_once("cdash/common.php");
 include("cdash/version.php");
 include("models/coveragefile2user.php");
 include("models/user.php");
+require_once("filterdataFunctions.php");
 
 set_time_limit(0);
 
@@ -42,9 +43,6 @@ if(!isset($userid))
   {
   $userid = 0;
   }
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
 
 $build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid,siteid,type,name FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
@@ -348,6 +346,15 @@ $xml .= "</menu>";
   $xml .= add_XML_value("satisfactory",$ncoveragefiles[4]);
   $xml .= add_XML_value("complete",$ncoveragefiles[5]);
   $xml .= "</coveragefilestatus>";
+
+  // Filters:
+  //
+  // On this page, we don't need the 'sql' or its friend 'limit' from
+  // the filterdata, since the actual sql query is deferred until
+  // ajax/getviewcoverage.php (called by cdashViewCoverage.js).
+  //
+  $filterdata = get_filterdata_from_request();
+  $xml .= $filterdata['xml'];
 
   $xml .= "</cdash>";
 

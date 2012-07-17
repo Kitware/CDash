@@ -395,6 +395,96 @@ class QueryTestsPhpFilters extends DefaultFilters
 }
 
 
+class ViewCoveragePhpFilters extends DefaultFilters
+{
+  public function getDefaultFilter()
+  {
+    return array(
+      'field' => 'filename',
+      'fieldtype' => 'string',
+      'compare' => 63,
+      'value' => '',
+    );
+  }
+
+  public function getFilterDefinitionsXML()
+  {
+    $xml = '';
+
+    $xml .= getFilterDefinitionXML('coveredlines', 'Covered Lines', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('filename', 'Filename', 'string', '', '');
+    $xml .= getFilterDefinitionXML('labels', 'Labels', 'string', '', '');
+    //$xml .= getFilterDefinitionXML('percentage', 'Percentage', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('priority', 'Priority', 'string', '', '');
+    //$xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
+    $xml .= getFilterDefinitionXML('totallines', 'Total Lines', 'number', '', '0');
+    $xml .= getFilterDefinitionXML('uncoveredlines', 'Uncovered Lines', 'number', '', '0');
+
+    return $xml;
+  }
+
+  public function getSqlField($field)
+  {
+  $sql_field = '';
+  switch (strtolower($field))
+  {
+    case 'coveredlines':
+    {
+      $sql_field = "c.loctested";
+    }
+    break;
+
+    case 'filename':
+    {
+      $sql_field = "cf.fullpath";
+    }
+    break;
+
+    case 'labels':
+    {
+      $sql_field = "(SELECT GROUP_CONCAT(text) AS labels FROM (SELECT label.text, coverage.fileid, coverage.buildid FROM label, label2coveragefile, coverage WHERE label2coveragefile.labelid=label.id AND label2coveragefile.buildid=coverage.buildid AND label2coveragefile.coveragefileid=coverage.fileid) AS filelabels WHERE fileid=c.fileid AND buildid=c.buildid)";
+    }
+    break;
+
+    //case 'percentage':
+    //{
+    //  $sql_field = "TODO.percentage";
+    //}
+    //break;
+
+    case 'priority':
+    {
+      $sql_field = "cfp.priority";
+    }
+    break;
+
+    //case 'status':
+    //{
+    //  $sql_field = "TODO.status";
+    //}
+    //break;
+
+    case 'totallines':
+    {
+      $sql_field = "(c.loctested + c.locuntested)";
+    }
+    break;
+
+    case 'uncoveredlines':
+    {
+      $sql_field = "c.locuntested";
+    }
+    break;
+
+    default:
+      trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
+    break;
+  }
+  return $sql_field;
+  }
+}
+
+
 class ViewTestPhpFilters extends DefaultFilters
 {
   public function getDefaultFilter()
@@ -480,6 +570,13 @@ function createPageSpecificFilters($page_id)
     case 'queryTests.php':
     {
       return new QueryTestsPhpFilters();
+    }
+    break;
+
+    case 'viewCoverage.php':
+    case 'getviewcoverage.php':
+    {
+      return new ViewCoveragePhpFilters();
     }
     break;
 

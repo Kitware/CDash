@@ -175,10 +175,10 @@ Filter Definitions:<br/>
       <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">treven</xsl:if>
     </xsl:attribute>
   <td>
-      <input type="hidden" name="filtercount">
+      <input type="hidden" name="filtercount" id="id_filtercount">
         <xsl:attribute name="value"><xsl:value-of select="count(cdash/filterdata/filters/filter)"/></xsl:attribute>
       </input>
-      <input type="hidden" name="showfilters" value="1" />
+      <input type="hidden" name="showfilters" id="id_showfilters" value="1" />
       <input type="submit" name="apply" value="Apply" />
       <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
       <input type="submit" name="clear" value="Clear" />

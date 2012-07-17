@@ -28,6 +28,7 @@ include_once("cdash/common.php");
 include("cdash/version.php");
 include("models/coveragefile2user.php");
 include("models/user.php");
+require_once("filterdataFunctions.php");
 
 set_time_limit(0);
 
@@ -46,9 +47,6 @@ if(isset($_GET['userid']) && is_numeric($_GET['userid']))
   {
   $userid = $_GET['userid'];
   }
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
 
 // Find the project variables
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
@@ -131,12 +129,34 @@ if($userid)
   $SQLDisplayAuthors = ' LEFT JOIN coveragefile2user AS cfu ON (cfu.fileid=cf.id) ';
   }
 
+  // Filters:
+  //
+  $filterdata = get_filterdata_from_request();
+  $filter_sql = $filterdata['sql'];
+  $limit_sql = '';
+  if ($filterdata['limit']>0)
+  {
+    $limit_sql = ' LIMIT '.$filterdata['limit'];
+  }
+
   // Coverage files
-  $coveragefile = pdo_query("SELECT cf.fullpath,c.fileid,c.locuntested,c.loctested,
-                                    c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested,cfp.priority ".$SQLDisplayAuthor."
-                            FROM coverage AS c,coveragefile AS cf".$SQLDisplayAuthors."
-                            LEFT JOIN coveragefilepriority AS cfp ON (cfp.fullpath=cf.fullpath AND projectid=".qnum($projectid).")
-                            WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=1".$SQLsearchTerm);
+  $sql = "SELECT cf.fullpath,c.fileid,".
+         "c.locuntested,c.loctested,".
+         "c.branchstested,c.branchsuntested,".
+         "c.functionstested,c.functionsuntested,".
+         "cfp.priority ".$SQLDisplayAuthor." ".
+         "FROM coverage AS c,coveragefile AS cf ".
+         $SQLDisplayAuthors." ".
+         "LEFT JOIN coveragefilepriority AS cfp ON ".
+         "(cfp.fullpath=cf.fullpath AND projectid=".qnum($projectid).") ".
+         "WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=1 ".
+         $filter_sql." ".$SQLsearchTerm.$limit_sql;
+  $coveragefile = pdo_query($sql);
+  if (FALSE === $coveragefile)
+    {
+    add_log('error: pdo_query failed: ' . pdo_error(),
+      __FILE__, LOG_ERR);
+    }
 
   $covfile_array = array();
   while($coveragefile_array = pdo_fetch_array($coveragefile))
@@ -278,9 +298,16 @@ if($userid)
   // Add the untested files if the coverage is low
   if($coveragestatus == 0)
     {
-    $coveragefile = pdo_query("SELECT cf.fullpath,cfp.priority".$SQLDisplayAuthor." FROM coverage AS c,coveragefile AS cf ".$SQLDisplayAuthors."
-                              LEFT JOIN coveragefilepriority AS cfp ON (cfp.fullpath=cf.fullpath AND projectid=".qnum($projectid).")
-                              WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=0".$SQLsearchTerm);
+    $sql = "SELECT cf.fullpath,cfp.priority".$SQLDisplayAuthor." FROM coverage AS c,coveragefile AS cf ".$SQLDisplayAuthors."
+              LEFT JOIN coveragefilepriority AS cfp ON (cfp.fullpath=cf.fullpath AND projectid=".qnum($projectid).")
+              WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=0 ".
+              $SQLsearchTerm;
+    $coveragefile = pdo_query($sql);
+    if (FALSE === $coveragefile)
+      {
+      add_log('error: pdo_query 2 failed: ' . pdo_error(),
+        __FILE__, LOG_ERR);
+      }
     while($coveragefile_array = pdo_fetch_array($coveragefile))
       {
       $covfile["filename"] = substr($coveragefile_array["fullpath"],strrpos($coveragefile_array["fullpath"],"/")+1);
@@ -533,5 +560,5 @@ if($userid)
     case 5: $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET["ncomplete"]; break;
     }
 
-    echo json_encode( $output );
+  echo json_encode( $output );
 ?>
