@@ -40,7 +40,7 @@ function pdo_single_row_query($qry)
   if (FALSE === $result)
   {
     add_log('error: pdo_query failed: ' . pdo_error(),
-      'pdo_single_row_query');
+      'pdo_single_row_query', LOG_ERR);
     return array();
   }
 
@@ -48,9 +48,10 @@ function pdo_single_row_query($qry)
   if (0 !== $num_rows && 1 !== $num_rows)
   {
     add_log('error: at most 1 row should be returned, not ' . $num_rows,
-      'pdo_single_row_query');
+      'pdo_single_row_query', LOG_ERR);
     add_log('warning: returning the first row anyway even though result ' .
-      'contains ' . $num_rows . ' rows', 'pdo_single_row_query');
+      'contains ' . $num_rows . ' rows',
+      'pdo_single_row_query', LOG_WARNING);
   }
 
   $row = pdo_fetch_array($result);
@@ -70,7 +71,8 @@ function pdo_all_rows_query($qry)
   $result = pdo_query($qry);
   if (FALSE === $result)
   {
-    add_log('error: pdo_query failed: ' . pdo_error(), 'pdo_all_rows_query');
+    add_log('error: pdo_query failed: ' . pdo_error(),
+      'pdo_all_rows_query', LOG_ERR);
     return array();
   }
 
