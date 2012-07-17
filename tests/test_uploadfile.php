@@ -92,8 +92,9 @@ class UploadFileTestCase extends KWWebTestCase
     $this->FileId = $query[0]['id'];
     $this->Sha1Sum = $query[0]['sha1sum'];
 
-    global $CDASH_UPLOAD_DIRECTORY;
-    $dirName = dirname(__FILE__).'/../'.$CDASH_UPLOAD_DIRECTORY.'/'.$this->Sha1Sum;
+    global $cdashpath;
+    global $CDASH_DOWNLOAD_RELATIVE_URL;
+    $dirName = $cdashpath.'/'.$CDASH_DOWNLOAD_RELATIVE_URL.'/'.$this->Sha1Sum;
     if(!is_dir($dirName))
       {
       $this->fail("Directory $dirName was not created");
