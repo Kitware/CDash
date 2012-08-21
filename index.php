@@ -851,7 +851,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $build_row['buildids'][] = $buildid;
     $build_row['maxstarttime'] = $build_row['starttime'];
 
-    // One more query for the labels
+    // More queries for the labels
     $build_row['labels'] = array();
     $label_rows = pdo_all_rows_query(
       "SELECT text FROM label, label2build ".
@@ -859,8 +859,20 @@ function generate_main_dashboard_XML($projectid,$date)
       "AND label2build.labelid=label.id");
     foreach($label_rows as $label_row)
       {
-      $build_row['labels'][] = $label_row['text'];
+      $build_row['labels'][$label_row['text']] = 1;
       }
+
+    $label_rows = pdo_all_rows_query(
+      "SELECT text FROM label, label2test ".
+      "WHERE label2test.buildid='$buildid' ".
+      "AND label2test.labelid=label.id "
+      "GROUP BY labelid");
+    foreach($label_rows as $label_row)
+      {
+      $build_row['labels'][$label_row['text']] = 1;
+      }
+
+    $build_row['labels'] = array_keys($build_row['labels']);
 
     // Updates
     if(!empty($build_row['updatestarttime']))
