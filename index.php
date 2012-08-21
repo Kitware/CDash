@@ -865,7 +865,7 @@ function generate_main_dashboard_XML($projectid,$date)
     $label_rows = pdo_all_rows_query(
       "SELECT text FROM label, label2test ".
       "WHERE label2test.buildid='$buildid' ".
-      "AND label2test.labelid=label.id "
+      "AND label2test.labelid=label.id ".
       "GROUP BY labelid");
     foreach($label_rows as $label_row)
       {
