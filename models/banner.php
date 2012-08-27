@@ -21,16 +21,16 @@ class Banner
 {
   private $ProjectId;
   private $Text;
-  
+
   function __construct()
     {
     $this->ProjectId = -1;
     }
-  
+
   /** Return the text */
-  function GetText()  
+  function GetText()
     {
-    $query = pdo_query("SELECT text FROM banner WHERE projectid=".qnum($this->ProjectId));  
+    $query = pdo_query("SELECT text FROM banner WHERE projectid=".qnum($this->ProjectId));
     if(pdo_num_rows($query) == 0)
       {
       return false;
@@ -41,38 +41,38 @@ class Banner
       {
       return false;
       }
-    return $this->Text;  
+    return $this->Text;
     }
-  
+
   /** Set the project id */
   function SetProjectId($projectid)
     {
     $this->ProjectId = $projectid;
-    }      
-  
+    }
+
   /** Return if exists */
   function Exists()
     {
-    $query = pdo_query("SELECT count(*) AS c FROM banner WHERE projectid=".qnum($this->ProjectId));  
+    $query = pdo_query("SELECT count(*) AS c FROM banner WHERE projectid=".qnum($this->ProjectId));
     $query_array = pdo_fetch_array($query);
     if($query_array['c']>0)
       {
       return true;
       }
     return false;
-    }      
-        
+    }
+
   // Save the banner in the database
   function SetText($text)
     {
     if($this->ProjectId==-1)
       {
       echo "Banner::SetText(): no ProjectId specified";
-      return false;    
+      return false;
       }
 
-    $this->Text = $text;
-    
+    $this->Text = pdo_real_escape_string($text);
+
     // Check if the project is already
     if($this->Exists())
       {
@@ -88,15 +88,15 @@ class Banner
         }
       }
     else // insert
-      {    
+      {
       $query = "INSERT INTO banner (projectid,text)
-                VALUES (".qnum($this->ProjectId).",'".$this->Text."')";                     
+                VALUES (".qnum($this->ProjectId).",'".$this->Text."')";
       if(!pdo_query($query))
         {
         add_last_sql_error("Banner:SetText",$this->ProjectId);
         echo $query;
         return false;
-         }  
+         }
        }
     return true;
     }  // end SetText
