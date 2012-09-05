@@ -320,7 +320,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
   $command = '"'.$gitcommand.'" --git-dir="'.$gitdir.'" fetch '.$gitroot;
   if($branch != '')
     {
-    $command .= ' '.$branch.":".$branch;
+    $command .= ' +'.$branch.":".$branch;
     }
 
   $raw_output = `$command`;
