@@ -36,6 +36,7 @@ function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
 interface PageSpecificFilters
 {
   public function getDefaultFilter();
+  public function getDefaultShowLimit();
   public function getFilterDefinitionsXML();
   public function getSqlField($field);
 }
@@ -48,6 +49,11 @@ class DefaultFilters implements PageSpecificFilters
     trigger_error(
       'DefaultFilters::getDefaultFilter not implemented: subclass should override',
       E_USER_WARNING);
+  }
+
+  public function getDefaultShowLimit()
+  {
+    return true;
   }
 
   public function getFilterDefinitionsXML()
@@ -407,6 +413,13 @@ class ViewCoveragePhpFilters extends DefaultFilters
     );
   }
 
+  public function getDefaultShowLimit()
+  {
+    // Do not show the limit field on this page, since the data table
+    // has paging capabilities
+    return false;
+  }
+
   public function getFilterDefinitionsXML()
   {
     $xml = '';
@@ -609,6 +622,7 @@ function filterdata_XML($filterdata)
   $pageId = $filterdata['pageId']; // id of the "calling page"...
   $pageSpecificFilters = $filterdata['pageSpecificFilters']; // an instance of PageSpecificFilters
   $showfilters = $filterdata['showfilters']; // 0 or 1
+  $showlimit = $filterdata['showlimit']; // 0 or 1
 
   $xml = '<filterdata>';
   $xml .= add_XML_value('debug', $debug);
@@ -617,6 +631,7 @@ function filterdata_XML($filterdata)
   $xml .= add_XML_value('pageId', $pageId);
   $xml .= add_XML_value('script', $_SERVER['SCRIPT_NAME']);
   $xml .= add_XML_value('showfilters', $showfilters);
+  $xml .= add_XML_value('showlimit', $showlimit);
 
   $xml .= '<filterdefinitions>';
   $xml .= $pageSpecificFilters->getFilterDefinitionsXML();
@@ -860,6 +875,7 @@ function get_filterdata_from_request($page_id = '')
 
   @$filtercount = $_REQUEST['filtercount'];
   @$showfilters = $_REQUEST['showfilters'];
+  @$showlimit = $_REQUEST['showlimit'];
   @$limit = intval($_REQUEST['limit']);
   if (!is_int($limit))
   {
@@ -1020,6 +1036,20 @@ function get_filterdata_from_request($page_id = '')
   else
     {
     $filterdata['showfilters'] = 0;
+    }
+
+  if (!array_key_exists('showlimit', $_REQUEST))
+    {
+    $showlimit = $pageSpecificFilters->getDefaultShowLimit();
+    }
+
+  if ($showlimit)
+    {
+    $filterdata['showlimit'] = 1;
+    }
+  else
+    {
+    $filterdata['showlimit'] = 0;
     }
 
   $filterdata['sql'] = $sql;

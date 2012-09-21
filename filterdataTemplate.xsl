@@ -159,6 +159,14 @@ Filter Definitions:<br/>
       <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 0">treven</xsl:if>
       <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">trodd</xsl:if>
     </xsl:attribute>
+  <xsl:if test="cdash/filterdata/showlimit = 0">
+  <td>
+      <input type="hidden" id="id_limit" name="limit">
+        <xsl:attribute name="value"><xsl:value-of select="cdash/filterdata/limit"/></xsl:attribute>
+      </input>
+  </td>
+  </xsl:if>
+  <xsl:if test="cdash/filterdata/showlimit = 1">
   <td>
       Limit results to
       <input type="text" size="3" onblur="filters_onblur(this)" onchange="filters_onchange(this)"
@@ -167,12 +175,19 @@ Filter Definitions:<br/>
       </input>
       rows (0 for unlimited)
   </td>
+  </xsl:if>
   </tr>
 
   <tr>
     <xsl:attribute name="class">
-      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 0">trodd</xsl:if>
-      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">treven</xsl:if>
+      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 0">
+      <xsl:if test="cdash/filterdata/showlimit = 0">treven</xsl:if>
+      <xsl:if test="cdash/filterdata/showlimit = 1">trodd</xsl:if>
+      </xsl:if>
+      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">
+      <xsl:if test="cdash/filterdata/showlimit = 0">trodd</xsl:if>
+      <xsl:if test="cdash/filterdata/showlimit = 1">treven</xsl:if>
+      </xsl:if>
     </xsl:attribute>
   <td>
       <input type="hidden" name="filtercount" id="id_filtercount">
@@ -189,8 +204,14 @@ Filter Definitions:<br/>
 
   <tr>
     <xsl:attribute name="class">
-      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 0">trodd</xsl:if>
-      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">treven</xsl:if>
+      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 0">
+      <xsl:if test="cdash/filterdata/showlimit = 0">trodd</xsl:if>
+      <xsl:if test="cdash/filterdata/showlimit = 1">treven</xsl:if>
+      </xsl:if>
+      <xsl:if test="count(cdash/filterdata/filters/filter) mod 2 = 1">
+      <xsl:if test="cdash/filterdata/showlimit = 0">treven</xsl:if>
+      <xsl:if test="cdash/filterdata/showlimit = 1">trodd</xsl:if>
+      </xsl:if>
     </xsl:attribute>
   <td>
     <div id="div_filtersAsUrl"/>

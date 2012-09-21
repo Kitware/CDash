@@ -5,6 +5,7 @@ $(document).ready(function() {
       "bServerSide": true,
       "bAutoWidth" : false,
       "bSortClasses": false,
+      "bFilter": false,
       "iDisplayLength":  25,
       "sPaginationType": "full_numbers",
       "sAjaxSource": "ajax/getviewcoverage.php",
