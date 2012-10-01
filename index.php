@@ -488,53 +488,74 @@ function generate_main_dashboard_XML($projectid,$date)
     }
 
   // If we have a subproject
-  if(isset($_GET["subproject"]))
+  $subproject_name = pdo_real_escape_string($_GET["subproject"]);
+  $subprojectid = false;
+
+  if($subproject_name)
     {
-    // Add an extra URL argument for the menu
-    $xml .= add_XML_value("extraurl","&subproject=".urlencode($_GET["subproject"]));
-    $xml .= add_XML_value("subprojectname",$_GET["subproject"]);
-
-    $xml .= "<subproject>";
-
     $SubProject = new SubProject();
-    $SubProject->Name = $_GET["subproject"];
+    $SubProject->Name = $subproject_name;
     $SubProject->ProjectId = $projectid;
     $subprojectid = $SubProject->GetIdFromName();
 
-    $xml .= add_XML_value("name",$SubProject->Name );
-
-    $rowparity = 0;
-    $dependencies = $SubProject->GetDependencies();
-    foreach($dependencies as $dependency)
+    if($subprojectid)
       {
-      $xml .= "<dependency>";
-      $DependProject = new SubProject();
-      $DependProject->Id = $dependency;
-      $xml .= add_XML_value("rowparity",$rowparity);
-      $xml .= add_XML_value("name",$DependProject->GetName());
-      $xml .= add_XML_value("name_encoded",urlencode($DependProject->GetName()));
-      $xml .= add_XML_value("nbuilderror",$DependProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nbuildwarning",$DependProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nbuildpass",$DependProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nconfigureerror",$DependProject->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nconfigurewarning",$DependProject->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("nconfigurepass",$DependProject->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("ntestpass",$DependProject->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("ntestfail",$DependProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
-      $xml .= add_XML_value("ntestnotrun",$DependProject->GetNumberOfNotRunTests($beginning_UTCDate,$end_UTCDate));
-      if(strlen($DependProject->GetLastSubmission()) == 0)
+      // Add an extra URL argument for the menu
+      $xml .= add_XML_value("extraurl", "&subproject=".urlencode($subproject_name));
+      $xml .= add_XML_value("subprojectname", $subproject_name);
+
+      $xml .= "<subproject>";
+
+      $xml .= add_XML_value("name", $SubProject->Name);
+
+      $rowparity = 0;
+      $dependencies = $SubProject->GetDependencies();
+      if($dependencies)
         {
-        $xml .= add_XML_value("lastsubmission","NA");
+        foreach($dependencies as $dependency)
+          {
+          $xml .= "<dependency>";
+          $DependProject = new SubProject();
+          $DependProject->Id = $dependency;
+          $xml .= add_XML_value("rowparity",$rowparity);
+          $xml .= add_XML_value("name",$DependProject->GetName());
+          $xml .= add_XML_value("name_encoded",urlencode($DependProject->GetName()));
+          $xml .= add_XML_value("nbuilderror",$DependProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
+          $xml .= add_XML_value("nbuildwarning",$DependProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
+          $xml .= add_XML_value("nbuildpass",$DependProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
+          $xml .= add_XML_value("nconfigureerror",$DependProject->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
+          $xml .= add_XML_value("nconfigurewarning",$DependProject->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
+          $xml .= add_XML_value("nconfigurepass",$DependProject->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
+          $xml .= add_XML_value("ntestpass",$DependProject->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
+          $xml .= add_XML_value("ntestfail",$DependProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
+          $xml .= add_XML_value("ntestnotrun",$DependProject->GetNumberOfNotRunTests($beginning_UTCDate,$end_UTCDate));
+          if(strlen($DependProject->GetLastSubmission()) == 0)
+            {
+            $xml .= add_XML_value("lastsubmission","NA");
+            }
+          else
+            {
+            $xml .= add_XML_value("lastsubmission",$DependProject->GetLastSubmission());
+            }
+          $rowparity = ($rowparity==1) ? 0:1;
+          $xml .= "</dependency>";
+          }
         }
-      else
-        {
-        $xml .= add_XML_value("lastsubmission",$DependProject->GetLastSubmission());
-        }
-      $rowparity = ($rowparity==1) ? 0:1;
-      $xml .= "</dependency>";
+      $xml .= "</subproject>";
       }
-    $xml .= "</subproject>";
-    } // end isset(subproject)
+    else
+      {
+      add_log("Subproject '$subproject_name' does not exist",
+        __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+        LOG_WARNING);
+      }
+    }
+  else
+    {
+    add_log("Empty subproject URL parameter",
+      __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+      LOG_WARNING);
+    }
 
   if(isset($testingdataurl))
     {
@@ -678,7 +699,7 @@ function generate_main_dashboard_XML($projectid,$date)
   // add a request for the subproject
   $subprojectsql = "";
   $subprojecttablesql = "";
-  if(isset($_GET["subproject"]))
+  if($subproject_name && is_numeric($subprojectid))
     {
     $subprojecttablesql = ",subproject2build AS sp2b";
     $subprojectsql = " AND sp2b.buildid=b.id AND sp2b.subprojectid=".$subprojectid;

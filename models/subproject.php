@@ -445,7 +445,10 @@ class SubProject
     {
     if(!$this->Name || !$this->ProjectId)
       {
-      echo "SubProject GetIdFromName(): Name or ProjectId not set";
+      add_log(
+        "Name='".$this->Name."' or ProjectId='".$this->ProjectId."' not set",
+        "SubProject::GetIdFromName",
+        LOG_WARNING);
       return false;
       }
 
@@ -467,7 +470,10 @@ class SubProject
     {
     if(!$this->Id)
       {
-      echo "SubProject GetDependencies(): Id not set";
+      add_log(
+        "Id='".$this->Id."' not set",
+        "SubProject::GetDependencies",
+        LOG_WARNING);
       return false;
       }
 
