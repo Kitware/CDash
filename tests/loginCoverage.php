@@ -15,7 +15,7 @@ class LoginTestCase extends KWWebTestCase
   function testLogin()
     {
     $content = $this->login('baduser@badhost.com');
-    $this->assertText("This user doesn't exist.");
+    $this->assertText("Wrong email or password.");
 
     $content = $this->login('simpletest@localhost', 'badpasswd');
     $this->assertText("Wrong email or password.");

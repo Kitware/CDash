@@ -38,7 +38,7 @@ function databaseAuthenticate($email,$password,$SessionCachePolicy,$rememberme)
   if(pdo_num_rows($result)==0)
     {
     pdo_free_result($result);
-    $loginerror = "This user doesn't exist.";
+    $loginerror = "Wrong email or password.";
     return false;
     }
 
@@ -384,7 +384,7 @@ function auth($SessionCachePolicy='private_no_expire')
       if(pdo_num_rows($result)==0)
         {
         pdo_free_result($result);
-        $loginerror = "This user doesn't exist.";
+        $loginerror = "Wrong email or password.";
         return false;
         }
 
