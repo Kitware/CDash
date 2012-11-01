@@ -43,9 +43,11 @@ class ClientOS
       10 => "XP",
       11 => "NT",
       12 => "2000",
+      13 => "Lion",
+      14 => "MountainLion",
       );
     }
-  
+
   /** Get name */
   function GetName()
     {
