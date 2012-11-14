@@ -85,7 +85,7 @@
 <br/>
 
 <xsl:if test="string-length(cdash/upgradewarning)>0">
-  <p style="color:red"><b>The current database shema doesn't match the version of CDash you are running,
+  <p style="color:red"><b>The current database schema doesn't match the version of CDash you are running,
     upgrade your database structure in the <a href="upgrade.php">Administration/CDash maintenance panel of CDash</a></b></p>
 </xsl:if>
 
