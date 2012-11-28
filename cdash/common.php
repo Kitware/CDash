@@ -148,6 +148,12 @@ function XMLStrFormat($str)
   return $str;
 }
 
+/** Redirect to the error page */
+function redirect_error($text='')
+{
+  setcookie('cdash_error',$text);
+  header( 'Location: '.get_server_URI().'/error.php' );
+}
 
 function time_difference($duration,$compact=false,$suffix='',$displayms=false)
 {

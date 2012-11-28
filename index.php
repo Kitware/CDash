@@ -384,9 +384,7 @@ function generate_main_dashboard_XML($projectid,$date)
     }
   else
     {
-    //$projectname = "NA";
-    echo "This project doesn't exist. Maybe the URL you are trying to access is wrong.<br>";
-    echo '<a href="index.php">Go to the list of dashboards</a>';
+    redirect_error('This project doesn\'t exist. Maybe the URL you are trying to access is wrong.');
     return false;
     }
 
