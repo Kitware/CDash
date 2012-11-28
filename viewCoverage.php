@@ -30,7 +30,6 @@ set_time_limit(0);
 @$buildid = $_GET["buildid"];
 @$date = $_GET["date"];
 
-
 // Checks
 if(!isset($buildid) || !is_numeric($buildid))
   {
@@ -355,9 +354,7 @@ $xml .= "</menu>";
   //
   $filterdata = get_filterdata_from_request();
   $xml .= $filterdata['xml'];
-
   $xml .= "</cdash>";
-
 
 // Now doing the xslt transition
 generate_XSLT($xml,"viewCoverage");

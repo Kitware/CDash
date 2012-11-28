@@ -26,6 +26,9 @@ require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
 require_once 'xml_handlers/upload_handler.php';
+require_once 'xml_handlers/testing_nunit_handler.php';
+require_once 'xml_handlers/testing_junit_handler.php';
+require_once 'xml_handlers/coverage_junit_handler.php';
 
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=true,
@@ -79,6 +82,11 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     $handler = new CoverageHandler($projectid, $scheduleid);
     $file = "Coverage";
     }
+  else if(preg_match('/<report/', $content))
+    {
+    $handler = new CoverageJUnitHandler($projectid, $scheduleid);
+    $file = "Coverage";
+    }
   else if(preg_match('/<Notes/', $content))
     {
     $handler = new NoteHandler($projectid, $scheduleid);
@@ -98,6 +106,16 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     {
     $handler = new UploadHandler($projectid, $scheduleid);
     $file = "Upload";
+    }
+  else if(preg_match('/<test-results/', $content))
+    {
+    $handler = new TestingNUnitHandler($projectid, $scheduleid);
+    $file = "Test";
+    }
+  else if(preg_match('/<testsuite/', $content))
+    {
+    $handler = new TestingJUnitHandler($projectid, $scheduleid);
+    $file = "Test";
     }
 
   if($handler == NULL)
