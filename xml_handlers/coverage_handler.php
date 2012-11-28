@@ -129,19 +129,6 @@ class CoverageHandler extends AbstractHandler
       // Insert coverage summary
       $this->CoverageSummary->Insert();
       $this->CoverageSummary->ComputeDifference();
-
-      foreach($this->CoverageSummary->GetCoverages() as $coverage)
-        {
-        $fileid = $coverage->CoverageFile->Id;
-        $fullpath = $coverage->CoverageFile->FullPath;
-        $loctested = $coverage->LocTested;
-        $locuntested = $coverage->LocUntested;
-        $branchstested = $coverage->BranchesTested;
-        $branchsuntested = $coverage->BranchesUntested;
-        $functionstested = $coverage->FunctionsTested;
-        $functionsuntested = $coverage->FunctionsUntested;
-        }
-
       }
     else if($name=='FILE')
       {
