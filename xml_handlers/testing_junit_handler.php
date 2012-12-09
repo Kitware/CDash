@@ -128,6 +128,14 @@ class TestingJUnitHandler extends AbstractHandler
           case 'os.version' : $this->Build->Information->OSVersion = $attributes['VALUE']; break;
           case 'java.vm.name' : $this->Build->Information->CompilerName = $attributes['VALUE']; break;
           case 'java.vm.version' : $this->Build->Information->CompilerVersion = $attributes['VALUE']; break;
+          case 'hostname':
+            if(empty($this->Site->Name))
+              {
+              $this->Site->Name = $attributes['VALUE'];
+              $this->Site->Insert();
+              $this->Build->SiteId = $this->Site->Id;
+              }
+            break;
           }
         }
       }
@@ -195,22 +203,35 @@ class TestingJUnitHandler extends AbstractHandler
       // timestamp is 'timestamp'
       if($this->HasSiteTag == false)
         {
-        $this->Site->Name = $attributes['HOSTNAME'];
-        $this->Site->Insert();
+        // Hostname is not necessarily defined
+        if(isset($attributes['HOSTNAME']) && !empty($attributes['HOSTNAME']))
+          {
+          $this->Site->Name = $attributes['HOSTNAME'];
+          $this->Site->Insert();
+          $this->Build->SiteId = $this->Site->Id;
+          }
 
         $this->Build->Information = new BuildInformation();
 
-        $this->Build->SiteId = $this->Site->Id;
         $this->Build->Name = $attributes['NAME'];
 
         // Construct a CMake-Like build stamp
         // We assume Nightly
-        $stamp = date("Ymd-Hi",strtotime($attributes['TIMESTAMP'])).'-Nightly';
+        // If the TIMESTAMP attribute is not defined we take the current timestamp
+        if(!isset($attributes['TIMESTAMP']))
+          {
+          $timestamp = time();
+          }
+        else
+          {
+          $timestamp = strtotime($attributes['TIMESTAMP']);
+          }
+        $stamp = date("Ymd-Hi",$timestamp).'-Nightly';
         $this->Build->SetStamp($stamp);
         $this->Append = false;
         }
 
-      $this->StartTimeStamp = strtotime($attributes['TIMESTAMP']);
+      $this->StartTimeStamp = $timestamp;
       $this->EndTimeStamp = $this->StartTimeStamp+$attributes['TIME'];
       $this->Build->SaveTotalTestsTime($attributes['TIME']);
       }
