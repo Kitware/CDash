@@ -215,7 +215,7 @@ class SubProject
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array['submittime'];
+    return date(FMT_DATETIMESTD,strtotime($project_array['submittime']. "UTC"));
     }
 
   /** Get the number of warning builds given a date range */
