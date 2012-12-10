@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -22,7 +22,7 @@ include('login.php');
 include('cdash/version.php');
 include("models/project.php");
 
-if ($session_OK) 
+if ($session_OK)
 {
 @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
@@ -34,7 +34,7 @@ if(!isset($userid) || !is_numeric($userid))
   echo "Not a valid userid!";
   return;
   }
-  
+
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
@@ -42,7 +42,7 @@ $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Build Groups</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Build Groups</menusubtitle>";
-  
+
 @$projectid = $_GET["projectid"];
 
 // If the projectid is not set and there is only one project we go directly to the page
@@ -81,19 +81,19 @@ if($projectid && is_numeric($projectid))
     {
     $user2project_array = pdo_fetch_array($user2project);
     $role = $user2project_array["role"];
-    }  
+    }
   }
-    
+
 if($user_array["admin"]!=1 && $role<=1)
   {
   echo "You don't have the permissions to access this page";
   return;
   }
-  
+
 $sql = "SELECT id,name FROM project";
 if($user_array["admin"] != 1)
   {
-  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
+  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
   }
 $projects = pdo_query($sql);
 while($project_array = pdo_fetch_array($projects))
@@ -107,7 +107,7 @@ while($project_array = pdo_fetch_array($projects))
       }
    $xml .= "</availableproject>";
    }
-  
+
 // If we should change the position
 @$up= $_GET["up"];
 if($up)
@@ -119,15 +119,15 @@ if($up)
     echo "Not a valid Groupid!";
     return;
     }
-  
+
   $groupposition_array = pdo_fetch_array(pdo_query("SELECT position FROM buildgroupposition WHERE buildgroupid='$Groupid' AND endtime='1980-01-01 00:00:00'"));
   $position = $groupposition_array["position"];
-  
+
   if($position > 1)
     {
     // Compute the new position
     $newpos = $position - 1;
-    
+
     // Update the group occupying the position
     $occupyinggroup_array = pdo_fetch_array(pdo_query("SELECT g.id FROM buildgroup AS g, buildgroupposition as bg
                                                            WHERE g.id=bg.buildgroupid AND bg.position='$newpos' AND g.projectid='$projectid'
@@ -153,14 +153,14 @@ if($down)
     echo "Not a valid Groupid!";
     return;
     }
-    
+
   $groupposition_array = pdo_fetch_array(pdo_query("SELECT position FROM buildgroupposition WHERE buildgroupid='$Groupid' AND endtime='1980-01-01 00:00:00'"));
   $position = $groupposition_array["position"];
-  
+
   if($position < pdo_num_rows(pdo_query("SELECT id FROM buildgroup WHERE projectid='$projectid' AND endtime='1980-01-01 00:00:00'")))
     {
     // Compute the new position
-    $newpos = $position + 1;  
+    $newpos = $position + 1;
     // Update the group occupying the position
     $occupyinggroup_array = pdo_fetch_array(pdo_query("SELECT g.id FROM buildgroup AS g, buildgroupposition as bg
                                                            WHERE g.id=bg.buildgroupid AND bg.position='$newpos' AND g.projectid='$projectid'
@@ -171,7 +171,7 @@ if($down)
 
     // Update the group
     pdo_query("UPDATE buildgroupposition SET position='$newpos' WHERE buildgroupid='$Groupid' AND endtime='1980-01-01 00:00:00'");
-  
+
     }
 }
 
@@ -181,20 +181,20 @@ if($submitDescription)
   {
   $Groupid = $_POST["groupid"];
   $Description = $_POST["description"];
-  $sql = "UPDATE buildgroup SET description='$Description' WHERE id='$Groupid'"; 
+  $sql = "UPDATE buildgroup SET description='$Description' WHERE id='$Groupid'";
   if(!pdo_query("$sql"))
     {
     echo pdo_error();
     }
   } // end submitDescription group
-    
+
 // If we should rename a group
 @$Rename = $_POST["rename"];
 if($Rename)
   {
   $Groupid = $_POST["groupid"];
   $Newname = $_POST["newname"];
-  $sql = "UPDATE buildgroup SET name='$Newname' WHERE id='$Groupid'"; 
+  $sql = "UPDATE buildgroup SET name='$Newname' WHERE id='$Groupid'";
   if(!pdo_query("$sql"))
     {
     echo pdo_error();
@@ -206,30 +206,30 @@ if($Rename)
 if($CreateGroup)
   {
   $Name = $_POST["name"];
- 
+
   // Avoid creating a group that is Nightly, Experimental or Continuous
   if($Name == "Nightly" || $Name == "Experimental" || $Name == "Continuous")
     {
-     $xml .= add_XML_value("warning","You cannot a group named 'Nightly','Experimental' or 'Continous'");
+     $xml .= add_XML_value("warning","You cannot create a group named 'Nightly','Experimental' or 'Continuous'");
     }
   else
     {
     // Find the last position available
-    $groupposition_array = pdo_fetch_array(pdo_query("SELECT bg.position,bg.starttime FROM buildgroup AS g, buildgroupposition AS bg 
-                                                          WHERE g.id=bg.buildgroupid AND g.projectid='$projectid' 
+    $groupposition_array = pdo_fetch_array(pdo_query("SELECT bg.position,bg.starttime FROM buildgroup AS g, buildgroupposition AS bg
+                                                          WHERE g.id=bg.buildgroupid AND g.projectid='$projectid'
                                                           AND bg.endtime='1980-01-01 00:00:00' ORDER BY bg.position DESC LIMIT 1"));
     $newposition = $groupposition_array["position"]+1;
     $starttime = '1980-01-01 00:00:00';
     $endtime = '1980-01-01 00:00:00';
-      
+
     // Insert the new group
-    $sql = "INSERT INTO buildgroup (name,projectid,starttime,endtime,description) VALUES ('$Name','$projectid','$starttime','$endtime','')"; 
+    $sql = "INSERT INTO buildgroup (name,projectid,starttime,endtime,description) VALUES ('$Name','$projectid','$starttime','$endtime','')";
     if(pdo_query("$sql"))
       {
       $newgroupid = pdo_insert_id("buildgroup");
-  
+
       // Create a new position for this group
-      pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime) VALUES ('$newgroupid','$newposition','$starttime','$endtime')");   
+      pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime) VALUES ('$newgroupid','$newposition','$starttime','$endtime')");
       }
     else
       {
@@ -244,46 +244,46 @@ if($CreateGroup)
 if($DeleteGroup)
   {
   $Groupid = $_POST["groupid"];
- 
+
   // We delete all the build2grouprule associated with the group
-  pdo_query("DELETE FROM build2grouprule WHERE groupid='$Groupid'"); 
- 
+  pdo_query("DELETE FROM build2grouprule WHERE groupid='$Groupid'");
+
   // We delete the buildgroup
-  pdo_query("DELETE FROM buildgroup WHERE id='$Groupid'"); 
+  pdo_query("DELETE FROM buildgroup WHERE id='$Groupid'");
 
   // Restore the builds that were associated with this group
-  $oldbuilds = pdo_query("SELECT id,type FROM build WHERE id IN (SELECT buildid AS id FROM build2group WHERE groupid='$Groupid')"); 
+  $oldbuilds = pdo_query("SELECT id,type FROM build WHERE id IN (SELECT buildid AS id FROM build2group WHERE groupid='$Groupid')");
   echo pdo_error();
   while($oldbuilds_array = pdo_fetch_array($oldbuilds))
     {
     // Move the builds
     $buildid = $oldbuilds_array["id"];
     $buildtype = $oldbuilds_array["type"];
-     
+
     // Find the group corresponding to the build type
-    $grouptype_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'")); 
-    echo pdo_error();   
+    $grouptype_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'"));
+    echo pdo_error();
     $grouptype = $grouptype_array["id"];
-     
-    pdo_query("UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'"); 
-    echo pdo_error();   
+
+    pdo_query("UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'");
+    echo pdo_error();
     }
 
   // We delete the buildgroupposition and update the position of the other groups
-  pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid='$Groupid'"); 
+  pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid='$Groupid'");
 
   $buildgroupposition = pdo_query("SELECT bg.buildgroupid FROM buildgroupposition as bg, buildgroup as g
-                                        WHERE g.projectid='$projectid' AND bg.buildgroupid=g.id ORDER BY bg.position ASC"); 
-   
+                                        WHERE g.projectid='$projectid' AND bg.buildgroupid=g.id ORDER BY bg.position ASC");
+
   $p = 1;
   while($buildgroupposition_array = pdo_fetch_array($buildgroupposition))
     {
     $buildgroupid = $buildgroupposition_array["buildgroupid"];
-    pdo_query("UPDATE buildgroupposition SET position='$p' WHERE buildgroupid='$buildgroupid'"); 
+    pdo_query("UPDATE buildgroupposition SET position='$p' WHERE buildgroupid='$buildgroupid'");
     $p++;
     }
   } // end DeleteGroup
- 
+
 
 @$GlobalMove = $_POST["globalMove"];
 @$ExpectedMove = $_POST["expectedMove"];
@@ -299,26 +299,26 @@ if($GlobalMove)
   else
     {
     foreach($Movebuilds as $buildid)
-      {  
+      {
       // Find information about the build
       $build_array = pdo_fetch_array(pdo_query("SELECT type,name,siteid FROM build WHERE id='$buildid'"));
       $buildtype = $build_array['type'];
-      $buildname = $build_array['name'];  
-      $siteid = $build_array['siteid']; 
-      
+      $buildname = $build_array['name'];
+      $siteid = $build_array['siteid'];
+
       // Remove the group
       $prevgroup = pdo_fetch_array(pdo_query("SELECT groupid FROM build2group WHERE buildid='$buildid'"));
-      $prevgroupid = $prevgroup["groupid"]; 
-                          
-      // Update the previous group          
+      $prevgroupid = $prevgroup["groupid"];
+
+      // Update the previous group
       pdo_query("UPDATE build2group SET groupid='$GroupSelection' WHERE groupid='$prevgroupid' AND buildid='$buildid'");
-        
-      // Delete any previous rules       
+
+      // Delete any previous rules
       pdo_query("DELETE FROM build2grouprule WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
                    AND buildname='$buildname' AND siteid='$siteid'");
-             
+
       // Add the new rule
-      pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
+      pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime)
             VALUES ('$GroupSelection','$buildtype','$buildname','$siteid','$ExpectedMove','1980-01-01 00:00:00','1980-01-01 00:00:00')");
       }
     }
@@ -364,22 +364,22 @@ if($projectid>0)
   {
   $currentUTCTime =  gmdate(FMT_DATETIME);
   $beginUTCTime = gmdate(FMT_DATETIME,time()-3600*7*24); // 7 days
- 
+
   $sql = "";
   if($show>0)
     {
     $sql = "AND g.id='$show'";
     }
- 
-  
-  $builds = pdo_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,g.id as groupid 
+
+
+  $builds = pdo_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,g.id as groupid
                          FROM build AS b, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp, site as s
                          WHERE b.starttime<'$currentUTCTime' AND b.starttime>'$beginUTCTime'
-                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id  
+                         AND b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id
                          AND s.id = b.siteid ".$sql." ORDER BY b.name ASC");
-  
+
   echo pdo_error();
- 
+
   $names = array();
   while($build_array = pdo_fetch_array($builds))
     {
@@ -393,11 +393,11 @@ if($projectid>0)
       $names[] = $build_array['sitename'].$build_array['name'].$build_array['type'];
       }
     }
-  
-  // Add expected builds  
-  $builds = pdo_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,g.id as groupid 
-                         FROM site AS s,build AS b,build2group AS b2g,buildgroup as g 
-                         WHERE 
+
+  // Add expected builds
+  $builds = pdo_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,g.id as groupid
+                         FROM site AS s,build AS b,build2group AS b2g,buildgroup as g
+                         WHERE
                          g.id=b2g.groupid AND b2g.buildid=b.id AND g.endtime='1980-01-01 00:00:00'
                          AND b.projectid='$projectid' AND s.id = b.siteid ".$sql." ORDER BY b.name ASC");
   echo pdo_error();
@@ -438,12 +438,12 @@ if($projectid>0)
   $xml .= add_XML_value("id",$project_array['id']);
   $xml .= add_XML_value("name",$project_array['name']);
   $xml .= add_XML_value("name_encoded",urlencode($project_array['name']));
-  
+
   // Display the current groups
 
   $groups = pdo_query("SELECT g.id,g.name,g.description,g.summaryemail,g.emailcommitters,g.includesubprojectotal,
-                              gp.position,g.starttime FROM buildgroup AS g, buildgroupposition AS gp 
-                         WHERE g.id=gp.buildgroupid AND g.projectid='$projectid' 
+                              gp.position,g.starttime FROM buildgroup AS g, buildgroupposition AS gp
+                         WHERE g.id=gp.buildgroupid AND g.projectid='$projectid'
                          AND g.endtime='1980-01-01 00:00:00' AND gp.endtime='1980-01-01 00:00:00'
                          ORDER BY gp.position ASC");
   $color = 0;
@@ -459,7 +459,7 @@ if($projectid>0)
       {
       $xml .= add_XML_value("bgcolor","#DDDDDD");
       $color = 0;
-      }  
+      }
     if($show == $group_array['id'])
       {
       $xml .= add_XML_value("selected","1");
@@ -469,7 +469,7 @@ if($projectid>0)
     $xml .= add_XML_value("description",$group_array['description']);
     $xml .= add_XML_value("summaryemail",$group_array['summaryemail']);
     $xml .= add_XML_value("emailcommitters",$group_array['emailcommitters']);
-    $xml .= add_XML_value("includeinsummary",$group_array['includesubprojectotal']); 
+    $xml .= add_XML_value("includeinsummary",$group_array['includesubprojectotal']);
     $xml .= add_XML_value("position",$group_array['position']);
     $xml .= add_XML_value("startdate",$group_array['starttime']);
     $xml .= "</group>";
