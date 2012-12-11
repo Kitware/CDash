@@ -90,8 +90,11 @@ class CoverageJUnitHandler extends AbstractHandler
       }
     else if($parent == 'REPORT' && $name == 'SESSIONINFO')
       {
-      $this->StartTimeStamp = $attributes['START'];
-      $this->EndTimeStamp = $attributes['DUMP'];
+      // timestamp are in miliseconds
+      $this->StartTimeStamp = substr($attributes['START'],0,-3);
+      $this->EndTimeStamp = substr($attributes['DUMP'],0,-3);
+
+
       }
     else if($parent == 'REPORT' && $name == 'COUNTER')
       {
