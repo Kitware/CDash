@@ -260,8 +260,8 @@ Show coverage over time
 
     <!-- bullseye -->
     <xsl:if test="cdash/coverage/coveragetype='bullseye'">
-        <th>Branch Points not covered</th>
-        <th>Functions not covered</th>
+        <th width="10%" align="center">Branch Points not covered</th>
+        <th width="10%" align="center">Functions not covered</th>
         <th>Priority</th>
         <xsl:if test="/cdash/coverage/userid!=0">
           <th>Author</th>

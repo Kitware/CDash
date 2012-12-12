@@ -455,6 +455,7 @@ if($userid)
       } // end gcov
     else if($coveragetype == 'bullseye')
       {
+      $fourthcolumn = '<span';
       // branches
       if($covfile["covered"]==0)
         {
@@ -476,7 +477,7 @@ if($userid)
         }
        $row[] = $fourthcolumn;
 
-       $fourthcolumn2 = '';
+       $fourthcolumn2 = '<span';
        //functions
        if($covfile["covered"]==0)
         {
