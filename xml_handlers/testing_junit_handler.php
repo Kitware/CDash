@@ -100,6 +100,7 @@ class TestingJUnitHandler extends AbstractHandler
         {
         $this->Build->Name = "(empty)";
         }
+
       $this->Build->SetStamp($attributes['BUILDSTAMP']);
       $this->Build->Generator = $attributes['GENERATOR'];
       $this->Build->Information = $buildInformation;
@@ -229,6 +230,12 @@ class TestingJUnitHandler extends AbstractHandler
         $stamp = date("Ymd-Hi",$timestamp).'-Nightly';
         $this->Build->SetStamp($stamp);
         $this->Append = false;
+        }
+      else if(!isset($attributes['TIMESTAMP']))
+        {
+        $stamp = $this->Build->GetStamp();
+        $timestamp = mktime(substr($stamp,9,2),substr($stamp,11,2),0,
+                            substr($stamp,6,2),substr($stamp,4,2),substr($stamp,0,4));
         }
 
       $this->StartTimeStamp = $timestamp;
