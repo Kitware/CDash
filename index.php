@@ -342,7 +342,7 @@ function get_multiple_builds_hyperlink($build_row, $filterdata)
 
 
 /** Generate the main dashboard XML */
-function generate_main_dashboard_XML($projectid,$date)
+function generate_main_dashboard_XML($project_instance, $date)
 {
   $start = microtime_float();
   $noforcelogin = 1;
@@ -364,6 +364,8 @@ function generate_main_dashboard_XML($projectid,$date)
     echo "Error selecting CDash database<br>\n";
     return;
     }
+
+  $projectid = $project_instance->Id;
 
   $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
   if(pdo_num_rows($project)>0)
@@ -547,12 +549,6 @@ function generate_main_dashboard_XML($projectid,$date)
         __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
         LOG_WARNING);
       }
-    }
-  else
-    {
-    add_log("Empty subproject URL parameter",
-      __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-      LOG_WARNING);
     }
 
   if(isset($testingdataurl))
@@ -990,12 +986,7 @@ function generate_main_dashboard_XML($projectid,$date)
   //
   $collapse = 0;
 
-  global $Project;
-    // warning: tightly coupled to global $Project defined at the bottom of
-    // this script -- it would be better to refactor and pass $Project in to
-    // this function as a parameter...
-
-  if ($Project->GetNumberOfSubProjects()>0)
+  if ($project_instance->GetNumberOfSubProjects() > 0)
     {
     $collapse = 1;
     }
@@ -1666,7 +1657,7 @@ function generate_main_dashboard_XML($projectid,$date)
 
 
 /** Generate the subprojects dashboard */
-function generate_subprojects_dashboard_XML($projectid,$date)
+function generate_subprojects_dashboard_XML($project_instance, $date)
 {
   $start = microtime_float();
   $noforcelogin = 1;
@@ -1689,9 +1680,8 @@ function generate_subprojects_dashboard_XML($projectid,$date)
     return;
     }
 
-  $Project = new Project();
-  $Project->Id = $projectid;
-  $Project->Fill();
+  $Project = $project_instance;
+  $projectid = $project_instance->Id;
 
   $homeurl = make_cdash_url(htmlentities($Project->HomeUrl));
 
@@ -1923,6 +1913,8 @@ else
   // Check if the project has any subproject
   $Project = new Project();
   $Project->Id = $projectid;
+  $Project->Fill();
+
   $displayProject = false;
   if(isset($_GET["display"]) && $_GET["display"]=="project")
     {
@@ -1931,13 +1923,13 @@ else
 
   if(!$displayProject && !isset($_GET["subproject"]) && $Project->GetNumberOfSubProjects() > 0)
     {
-    $xml = generate_subprojects_dashboard_XML($projectid,$date);
+    $xml = generate_subprojects_dashboard_XML($Project, $date);
     // Now doing the xslt transition
     generate_XSLT($xml,"indexsubproject");
     }
   else
     {
-    $xml = generate_main_dashboard_XML($projectid,$date);
+    $xml = generate_main_dashboard_XML($Project, $date);
     // Now doing the xslt transition
     if($xml)
       {

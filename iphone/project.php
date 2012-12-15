@@ -16,9 +16,10 @@ include_once("../models/project.php");
 $projectid = get_project_id($projectname);
 $Project = new Project();
 $Project->Id = $projectid;
+$Project->Fill();
 
 @$date = $_GET["date"];
-$xml = generate_main_dashboard_XML($projectid,$date);
+$xml = generate_main_dashboard_XML($Project, $date);
 // Now doing the xslt transition
 generate_XSLT($xml,"project");
 ?>

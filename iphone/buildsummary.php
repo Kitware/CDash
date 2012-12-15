@@ -16,7 +16,6 @@ $FormatTextForIphone = 1;
 
 include("../buildSummary.php");
 
-//$xml = generate_main_dashboard_XML($projectid,$date);
 // Now doing the xslt transition
 generate_XSLT($xml,"buildsummary");
 ?>

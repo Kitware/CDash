@@ -36,8 +36,9 @@ else
   // Check if the project has any subproject 
   $Project = new Project();
   $Project->Id = $projectid;
+  $Project->Fill();
 
-  $xml = generate_main_dashboard_XML($projectid, $date);
+  $xml = generate_main_dashboard_XML($Project, $date);
 
   generate_XSLT($xml, 'viewIssues');
   }
