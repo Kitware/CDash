@@ -1261,3 +1261,12 @@ CREATE TABLE "build2uploadfile" (
 );
 CREATE INDEX "build2uploadfile_fileid" on "build2uploadfile" ("fileid");
 CREATE INDEX "build2uploadfile_buildid" on "build2uploadfile" ("buildid");
+
+--
+-- Table: submission2ip
+--
+CREATE TABLE "submission2ip" (
+  "submissionid" bigint NOT NULL UNIQUE,
+  "ip" character varying(255) DEFAULT '' NOT NULL,
+  PRIMARY KEY("submissionid")
+);

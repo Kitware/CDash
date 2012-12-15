@@ -108,4 +108,24 @@ function pdo_get_field_value($qry, $fieldname, $default)
 }
 
 
+// pdo_insert_query executes the given query, expected to be an INSERT
+// query, and logs an error if there was one.
+//
+// Returns TRUE on success, FALSE on error.
+//
+function pdo_insert_query($qry)
+{
+  $result = pdo_query($qry);
+
+  if (FALSE === $result)
+  {
+    add_log('error: pdo_query failed: ' . pdo_error(),
+      'pdo_insert_query', LOG_ERR);
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+
 ?>

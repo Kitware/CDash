@@ -85,7 +85,24 @@ class Site
       return false;
       }
     } 
-    
+
+  function LookupIP()
+    {
+    $this->Ip = $_SERVER['REMOTE_ADDR'];
+
+    // In the async case, look up the IP recorded when the file was
+    // originally submitted...
+    global $PHP_ERROR_SUBMISSION_ID;
+    $submission_id = $PHP_ERROR_SUBMISSION_ID;
+    if ($submission_id)
+      {
+      $this->Ip = pdo_get_field_value(
+        "SELECT ip FROM submission2ip WHERE submissionid=".qnum($submission_id),
+        'ip', ''
+        );
+      }
+    }
+
   /** Insert a new site */
   function Insert()
     {
@@ -96,7 +113,7 @@ class Site
     
     if(strlen($this->Ip)==0)
       {
-      $this->Ip = $_SERVER['REMOTE_ADDR'];
+      $this->LookupIP();
       }
         
     // Get the geolocation

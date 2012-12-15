@@ -4,3 +4,9 @@ CREATE TABLE IF NOT EXISTS `build2update` (
   PRIMARY  KEY(`buildid`),
   KEY `updateid` (`updateid`)
 );
+
+CREATE TABLE IF NOT EXISTS `submission2ip` (
+  `submissionid` bigint(11) NOT NULL,
+  `ip` varchar(255) NOT NULL default '',
+  PRIMARY KEY (`submissionid`)
+);

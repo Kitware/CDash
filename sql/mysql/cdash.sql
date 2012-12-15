@@ -1332,6 +1332,12 @@ CREATE TABLE IF NOT EXISTS `apitoken` (
   KEY `token` (`token`)
 );
 
+CREATE TABLE IF NOT EXISTS `submission2ip` (
+  `submissionid` bigint(11) NOT NULL,
+  `ip` varchar(255) NOT NULL default '',
+  PRIMARY KEY (`submissionid`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 

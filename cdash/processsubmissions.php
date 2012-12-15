@@ -410,6 +410,9 @@ function DeleteOldSubmissionRecords($projectid)
     "projectid='$projectid' AND finished<'$one_week_ago_utc' AND ".
     "finished!='1980-01-01 00:00:00'");
   add_last_sql_error("DeleteOldSubmissionRecords");
+
+  // TODO: remove submission2ip and client_jobschedule2submission
+  // entries where the submissionid no longer exists...
 }
 
 

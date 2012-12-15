@@ -165,6 +165,12 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
       pdo_query("INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ".
         "VALUES ('$clientscheduleid','$submissionid')");
       }
+
+    // Save submitter IP in the database in the async case, so we have a valid
+    // IP at Site::Insert time when processing rather than 'localhost's IP:
+    pdo_insert_query("INSERT INTO submission2ip (submissionid, ip) ".
+        "VALUES ('$submissionid', '".$_SERVER['REMOTE_ADDR']."')");
+
     $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid;
 
     $ch = curl_init();
