@@ -95,7 +95,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 
     // The removal of the builds are done asynchronously so we might need to wait a little bit
     // in order for the process to be done
-    sleep(5); // 5 seconds
+    sleep(10); // seconds
 
     // Check that the first test is gone
     if(!$query = pdo_query("SELECT id FROM build WHERE projectid='$projectid' AND stamp='20090223-0100-Nightly'"))
