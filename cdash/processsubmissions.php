@@ -405,14 +405,30 @@ function DeleteOldSubmissionRecords($projectid)
 
   $one_week_ago_utc = gmdate(FMT_DATETIMESTD, time()-$seconds);
 
-  pdo_query("DELETE FROM submission WHERE ".
+  $ids = pdo_all_rows_query("SELECT id FROM submission WHERE ".
     "(status=2 OR status=3 OR status=4 OR status=5) AND ".
     "projectid='$projectid' AND finished<'$one_week_ago_utc' AND ".
     "finished!='1980-01-01 00:00:00'");
-  add_last_sql_error("DeleteOldSubmissionRecords");
 
-  // TODO: remove submission2ip and client_jobschedule2submission
-  // entries where the submissionid no longer exists...
+  $count = count($ids);
+  if (0 == $count)
+    {
+    // Nothing to delete!
+    return;
+    }
+
+  $idset = "(";
+  foreach($ids as $id)
+    {
+    $idset .= "'$id', ";
+    }
+  // Avoid conditional ", " emission in the loop. OK to repeat an
+  // element in this DELETE IN type of query:
+  $idset .= "'".$ids[0]."')";
+
+  pdo_delete_query("DELETE FROM submission WHERE id IN ".$idset);
+  pdo_delete_query("DELETE FROM client_jobschedule2submission WHERE submissionid IN ".$idset);
+  pdo_delete_query("DELETE FROM submission2ip WHERE submissionid IN ".$idset);
 }
 
 
