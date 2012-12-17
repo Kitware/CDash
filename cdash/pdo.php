@@ -148,7 +148,7 @@ function pdo_query_and_log_if_failed($qry, $caller)
 //
 function pdo_insert_query($qry)
 {
-  return pdo_query_and_log_if_failed($qry, 'pdo_insert_query')
+  return pdo_query_and_log_if_failed($qry, 'pdo_insert_query');
 }
 
 
@@ -159,7 +159,7 @@ function pdo_insert_query($qry)
 //
 function pdo_delete_query($qry)
 {
-  return pdo_query_and_log_if_failed($qry, 'pdo_delete_query')
+  return pdo_query_and_log_if_failed($qry, 'pdo_delete_query');
 }
 
 
