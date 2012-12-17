@@ -108,6 +108,39 @@ function pdo_get_field_value($qry, $fieldname, $default)
 }
 
 
+// pdo_query_and_log_if_failed executes the given query, could be any
+// type of query, and logs an error if there was one.
+//
+// Returns TRUE on success, FALSE on error.
+//
+function pdo_query_and_log_if_failed($qry, $caller)
+{
+  $result = pdo_query($qry);
+
+  if (FALSE === $result)
+  {
+    add_log('error: pdo_query failed: ' . pdo_error(),
+      $caller, LOG_ERR);
+
+    // Also log a bit of the query so we can tell where it came from:
+    if (strlen($qry) > 100)
+    {
+      $log_qry = substr($qry, 0, 100) . '...';
+    }
+    else
+    {
+      $log_qry = $qry;
+    }
+    add_log('query: '.$log_qry,
+      $caller, LOG_INFO);
+
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+
 // pdo_insert_query executes the given query, expected to be an INSERT
 // query, and logs an error if there was one.
 //
@@ -115,16 +148,18 @@ function pdo_get_field_value($qry, $fieldname, $default)
 //
 function pdo_insert_query($qry)
 {
-  $result = pdo_query($qry);
+  return pdo_query_and_log_if_failed($qry, 'pdo_insert_query')
+}
 
-  if (FALSE === $result)
-  {
-    add_log('error: pdo_query failed: ' . pdo_error(),
-      'pdo_insert_query', LOG_ERR);
-    return FALSE;
-  }
 
-  return TRUE;
+// pdo_delete_query executes the given query, expected to be a DELETE
+// query, and logs an error if there was one.
+//
+// Returns TRUE on success, FALSE on error.
+//
+function pdo_delete_query($qry)
+{
+  return pdo_query_and_log_if_failed($qry, 'pdo_delete_query')
 }
 
 
