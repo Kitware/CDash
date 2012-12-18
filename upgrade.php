@@ -1311,7 +1311,6 @@ if($Cleanup)
   delete_unused_rows('buildinformation','buildid','build');
   delete_unused_rows('buildnote','buildid','build');
   delete_unused_rows('buildtesttime','buildid','build');
-  delete_unused_rows('buildupdate','buildid','build');
   delete_unused_rows('configure','buildid','build');
   delete_unused_rows('configureerror','buildid','build');
   delete_unused_rows('configureerrordiff','buildid','build');
@@ -1324,7 +1323,6 @@ if($Cleanup)
   delete_unused_rows('subproject2build','buildid','build');
   delete_unused_rows('summaryemail','buildid','build');
   delete_unused_rows('testdiff','buildid','build');
-  delete_unused_rows('updatefile','buildid','build');
 
   delete_unused_rows('dynamicanalysisdefect','dynamicanalysisid','dynamicanalysis');
   delete_unused_rows('subproject2subproject','subprojectid','subproject');
