@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -40,7 +40,7 @@ if(!isset($testid) || !is_numeric($testid))
   echo "Not a valid testid!";
   return;
   }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -73,7 +73,7 @@ ORDER BY build.starttime DESC
 ");
 ?>
 
-    
+
 <br>
 <script language="javascript" type="text/javascript">
 $(function () {
@@ -81,12 +81,12 @@ $(function () {
   var ty = [];
   ty.push([-1,"Failed"]);
   ty.push([1,"Passed"]);
-  
+
   <?php
     $tarray = array();
     while($build_array = pdo_fetch_array($previousbuilds))
       {
-      $t['x'] = strtotime($build_array["starttime"])*1000; 
+      $t['x'] = strtotime($build_array["starttime"])*1000;
       if(strtolower($build_array["status"]) == "passed")
         {
         $t['y'] = 1;
@@ -99,41 +99,41 @@ $(function () {
     ?>
     <?php
       }
-    
+
     $tarray = array_reverse($tarray);
     foreach($tarray as $axis)
       {
     ?>
       d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
-    <?php 
+    <?php
       $t = $axis['x'];
       } ?>
 
   var options = {
     bars: { show: true,
       barWidth: 35000000,
-      lineWidth: 0.9 
+      lineWidth: 0.9
       },
     //points: { show: true },
-    yaxis: { ticks: ty, min: -1.2, max: 1.2 }, 
-    xaxis: { mode: "time" }, 
+    yaxis: { ticks: ty, min: -1.2, max: 1.2 },
+    xaxis: { mode: "time" },
     grid: {backgroundColor: "#fffaff"},
     selection: { mode: "x" },
     colors: ["#0000FF", "#dba255", "#919733"]
   };
-  
-  $("#passinggrapholder").bind("selected", function (event, area) {
-  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],
+
+  $("#graph_holder").bind("selected", function (event, area) {
+  $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],
          $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
   });
 
 <?php if(isset($zoomout))
 {
 ?>
-  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],options);
+  $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],options);
 <?php } else { ?>
-  $.plot($("#passinggrapholder"), [{label: "Failed/Passed",  data: d1}],
-$.extend(true,{},options,{xaxis: { min: <?php echo $t-2000000000?>,max: <?php echo $t+50000000 ?>}} )); 
+  $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],
+$.extend(true,{},options,{xaxis: { min: <?php echo $t-2000000000?>,max: <?php echo $t+50000000 ?>}} ));
 <?php } ?>
 });
 

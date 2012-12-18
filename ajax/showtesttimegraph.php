@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -41,7 +41,7 @@ if(!isset($testid) || !is_numeric($testid))
   echo "Not a valid testid!";
   return;
   }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -51,7 +51,7 @@ $test_array = pdo_fetch_array($test);
 $testname = $test_array["name"];
 
 
-$build = pdo_query("SELECT name,type,siteid,projectid,starttime 
+$build = pdo_query("SELECT name,type,siteid,projectid,starttime
 FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
 
@@ -93,7 +93,7 @@ $(function () {
     ?>
     <?php
       }
-    
+
     $tarray = array_reverse($tarray);
     foreach($tarray as $axis)
       {
@@ -101,15 +101,15 @@ $(function () {
       buildids[<?php echo $axis['x']; ?>]=<?php echo $axis['builid']; ?>;
       testids[<?php echo $axis['x']; ?>]=<?php echo $axis['testid']; ?>;
       d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
-    <?php 
+    <?php
       $t = $axis['x'];
       } ?>
- 
+
   var options = {
     //bars: { show: true,  barWidth: 35000000, lineWidth:0.9  },
-    lines: { show: true }, 
+    lines: { show: true },
     points: { show: true },
-    xaxis: { mode: "time"}, 
+    xaxis: { mode: "time"},
     grid: {backgroundColor: "#fffaff",
       clickable: true,
       hoverable: true,
@@ -119,36 +119,36 @@ $(function () {
     selection: { mode: "x" },
     colors: ["#0000FF", "#dba255", "#919733"]
   };
-    
-    $("#timegrapholder").bind("selected", function (event, area) {
-    plot = $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  data: d1}], 
+
+    $("#graph_holder").bind("selected", function (event, area) {
+    plot = $.plot($("#graph_holder"), [{label: "Execution Time (seconds)",  data: d1}],
            $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
-    
+
     });
 
-    $("#timegrapholder").bind("plotclick", function (e, pos, item) {
+    $("#graph_holder").bind("plotclick", function (e, pos, item) {
         if (item) {
             plot.highlight(item.series, item.datapoint);
             buildid = buildids[item.datapoint[0]];
             testid = testids[item.datapoint[0]];
             window.location = "testDetails.php?test="+testid+"&build="+buildid;
-            }      
+            }
      });
 
 <?php if(isset($zoomout))
 {
 ?>
-    plot = $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",data: d1}],options);
+    plot = $.plot($("#graph_holder"), [{label: "Execution Time (seconds)",data: d1}],options);
 <?php } else { ?>
 
-    plot = $.plot($("#timegrapholder"), [{label: "Execution Time (seconds)",  
+    plot = $.plot($("#graph_holder"), [{label: "Execution Time (seconds)",
                                             data: d1}],
           $.extend(true,{}, options,
-                                    {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}} 
+                                    {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}}
 ));
 
 <?php }
-?>    
+?>
 });
 
 

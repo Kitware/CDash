@@ -10,3 +10,14 @@ CREATE TABLE "submission2ip" (
   "ip" character varying(255) DEFAULT '' NOT NULL,
   PRIMARY KEY("submissionid")
 );
+
+CREATE TABLE "measurement" (
+  "id" serial NOT NULL,
+  "projectid" bigint NOT NULL,
+  "name" character varying(40) NOT NULL,
+  "testpage" smallint NOT NULL DEFAULT '0',
+  "summarypage" smallint NOT NULL DEFAULT '0',
+  PRIMARY KEY("id")
+);
+CREATE INDEX "measurement_projectid" on "measurement" ("projectid");
+CREATE INDEX "measurement_name" on "measurement" ("name");

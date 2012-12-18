@@ -1,54 +1,3 @@
-function showtesttimegraph_click(buildid,testid,zoomout)
-{
-  if(zoomout)
-    {
-    $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid+"&zoomout=1");
-    return;
-    }
-  else if($("#timegraph").html() != "" && $("#timegrapholder").is(":visible"))
-    {
-    $("#timegrapholder").hide(); //fadeOut('medium');
-    $("#timegraphoptions").html("");
-    return;
-    }
-
-
-  $("#timegraph").fadeIn('slow');
-  $("#timegraph").html("fetching...<img src=images/loading.gif></img>");
-  $("#timegrapholder").attr("style","width:800px;height:400px;");
-
-  $("#timegraphoptions").html("<a href=javascript:showtesttimegraph_click("+buildid+","+testid+",true)>Zoom out</a>");
-  $("#timegraph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid,{},function(){
-  $("#timegrapholder").fadeIn('slow');
-  $("#timegraphoptions").show();
-});
-}
-
-function showtestpassinggraph_click(buildid,testid,zoomout)
-{
-  if(zoomout)
-    {
-    $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid+"&zoomout=1");
-    return;
-    }
-  else if($("#passinggraph").html() != "" && $("#passinggrapholder").is(":visible"))
-    {
-    $("#passinggrapholder").hide(); //fadeOut('medium');
-    $("#passinggraphoptions").html("");
-    return;
-    }
-
-  $("#passinggraph").fadeIn('slow');
-  $("#passinggraph").html("fetching...<img src=images/loading.gif></img>");
-  $("#passinggrapholder").attr("style","width:800px;height:400px;");
-
-  $("#passinggraphoptions").html("<a href=javascript:showtestpassinggraph_click("+buildid+","+testid+",true)>Zoom out</a>");
-  $("#passinggraph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid,{},function(){
-  $("#passinggrapholder").fadeIn('slow');
-  $("#passinggraphoptions").show();
-  });
-}
-
 function showtestfailuregraph_click(projectid,testname,starttime,zoomout)
 {
    if(zoomout)
@@ -74,26 +23,6 @@ function showtestfailuregraph_click(projectid,testname,starttime,zoomout)
   });
 }
 
-function shownamedmeasurementgraph_click(buildid,testid,measurement)
-{
-  var divname = "#"+measurement+"graph";
-  if($(divname).html() != "" && $(divname+"older").is(":visible"))
-    {
-    $(divname+"older").hide(); //fadeOut('medium');
-    $(divname+"options").html("");
-    return;
-    }
-
-  $(divname).fadeIn('slow');
-  $(divname).html("fetching...<img src=images/loading.gif></img>");
-  $(divname+"older").attr("style","width:800px;height:400px;");
-
-  $(divname).load("ajax/showtestmeasurementdatagraph.php?testid="+testid+"&buildid="+buildid+"&measurement="+measurement,{},function(){
-  $(divname+"older").fadeIn('slow');
-  $(divname+"options").show();
-  });
-}
-
 function showcommandline_click()
 {
   if($('#commandline').is(":visible"))
@@ -106,3 +35,65 @@ function showcommandline_click()
     }
   $('#commandline').toggle();
 }
+
+function displaygraph_selected(buildid,testid,zoomout)
+{
+  var measurementname = $('#GraphSelection').val();
+
+  if(measurementname == 0)
+    {
+    $("#graph_holder").hide();
+    $("#graph_options").html("");
+    return;
+    }
+  else if(measurementname == 'TestTimeGraph')
+    {
+    $("#graph_holder").attr("style","width:800px;height:400px;");
+
+    if(zoomout)
+      {
+      $("#graph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid+"&zoomout=1");
+      return;
+      }
+
+    $("#graph").fadeIn('slow');
+    $("#graph").html("fetching...<img src=images/loading.gif></img>");
+
+    $("#graph_options").html("<a href=javascript:displaygraph_selected("+buildid+","+testid+",true)>Zoom out</a>");
+    $("#graph").load("ajax/showtesttimegraph.php?testid="+testid+"&buildid="+buildid,{},function(){
+      $("#graph_holder").fadeIn('slow');
+      $("#graph_options").show();
+      });
+    }
+  else if(measurementname == 'TestPassingGraph')
+    {
+    $("#graph_holder").attr("style","width:800px;height:400px;");
+
+    if(zoomout)
+      {
+      $("#graph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid+"&zoomout=1");
+      return;
+      }
+
+    $("#graph").fadeIn('slow');
+    $("#graph").html("fetching...<img src=images/loading.gif></img>");
+
+    $("#graph_options").html("<a href=javascript:displaygraph_selected("+buildid+","+testid+",true)>Zoom out</a>");
+    $("#graph").load("ajax/showtestpassinggraph.php?testid="+testid+"&buildid="+buildid,{},function(){
+      $("#graph_holder").fadeIn('slow');
+      $("#graph_options").show();
+      });
+    }
+  else
+    {
+    $("#graph").fadeIn('slow');
+    $("#graph").html("fetching...<img src=images/loading.gif></img>");
+    $("#graph_holder").attr("style","width:800px;height:400px;");
+
+    $("#graph").load("ajax/showtestmeasurementdatagraph.php?testid="+testid+"&buildid="+buildid+"&measurement="+measurementname,{},function(){
+      $("#graph_holder").fadeIn('slow');
+      $("#graph_options").show();
+      });
+    }
+}
+

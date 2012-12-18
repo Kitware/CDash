@@ -61,7 +61,14 @@ Show Test Failure Trend
     <th id="sort_2">Build Stamp</th>
     <th id="sort_3">Status</th>
     <th id="sort_4">Time (s)</th>
-    <th id="sort_5" class="nob">Build Revision</th>
+    <th id="sort_5">Build Revision</th>
+<xsl:for-each select='/cdash/columnname'>
+  <xsl:variable name='index_col' select='count(preceding-sibling::columnname) + 1'/>
+    <th>
+      <xsl:attribute name="id">sort_<xsl:value-of select="$index_col+5" /></xsl:attribute>
+      <xsl:value-of select="/cdash/columnname[position()=$index_col]" />
+    </th>
+</xsl:for-each>
   </tr>
 </thead>
 
@@ -94,11 +101,14 @@ Show Test Failure Trend
     <td>
       <xsl:value-of select="time"/>
     </td>
-    <td class="nob">
+    <td>
       <a><xsl:attribute name="href"><xsl:value-of select="update/revisionurl"/></xsl:attribute>
          <xsl:value-of select="update/revision"/>
       </a>
     </td>
+    <xsl:call-template name="recurse">
+      <xsl:with-param name="num" select="number('1')" />
+    </xsl:call-template>
   </tr>
 </xsl:for-each>
 </table>
@@ -116,5 +126,20 @@ Show Test Failure Trend
 </xsl:choose>
 </body>
 </html>
+</xsl:template>
+<xsl:template name="recurse">
+  <xsl:param name="num" />
+  <xsl:variable name="colcount"><xsl:value-of select='/cdash/columncount'/></xsl:variable>
+  <xsl:if test="not($num = $colcount+1)">
+    <td align="right">
+      <xsl:if test='buildid = /cdash/etests/etest/buildid'>
+        <xsl:variable name='index' select='$colcount*count(preceding-sibling::build[buildid = /cdash/etests/etest/buildid])+$num' />
+        <xsl:value-of select="/cdash/etests/etest[position()=$index]/value" />
+      </xsl:if>
+    </td>
+    <xsl:call-template name="recurse">
+      <xsl:with-param name="num" select="$num + 1" />
+    </xsl:call-template>
+  </xsl:if>
 </xsl:template>
 </xsl:stylesheet>

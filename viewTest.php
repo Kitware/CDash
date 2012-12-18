@@ -231,7 +231,7 @@ $sql = "SELECT bt.status,bt.newstatus,bt.timestatus,t.id,bt.time,t.details,t.nam
        "FROM test as t,build2test as bt " .
        "WHERE bt.buildid='$buildid' AND t.id=bt.testid " . $status . " " .
        $filter_sql . " " .$limitnew.
-       "ORDER BY " . $order. $limit_sql;
+       "ORDER BY t.id" . $limit_sql;
 
 $result = pdo_query($sql);
 
@@ -239,6 +239,101 @@ $numPassed = 0;
 $numFailed = 0;
 $numNotRun = 0;
 $numTimeFailed = 0;
+
+
+$columns = array();
+$getcolumnnumber=pdo_query("SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
+JOIN testmeasurement ON (test.id = testmeasurement.testid)
+JOIN build2test ON (build2test.testid = test.id)
+JOIN build ON (build.id = build2test.buildid)
+JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+WHERE build.id='$buildid'
+AND measurement.testpage=1
+GROUP by testmeasurement.name
+"); // We need to keep the count of columns for correct column-data assign
+while($row=pdo_fetch_array($getcolumnnumber))
+  {
+  $xml .= add_XML_value("columnname",$row["name"])."\n";
+  $columns[]=$row["name"];
+  }
+
+$columncount=pdo_num_rows($getcolumnnumber);
+// If at least one column is selected
+if($onlypassed) $extras="AND build2test.status='passed'";
+elseif($onlyfailed) $extras="AND build2test.status='failed'";
+elseif($onlynotrun) $extras="AND build2test.status='notrun'";
+$extras.=" ORDER BY test.id, testmeasurement.name";
+
+if($columncount>0) $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid,
+        build2test.status, build2test.timestatus, test.name, testmeasurement.name,
+        testmeasurement.value, build.starttime,
+        build2test.time, measurement.testpage FROM `test`
+JOIN testmeasurement ON (test.id = testmeasurement.testid)
+JOIN build2test ON (build2test.testid = test.id)
+JOIN build ON (build.id = build2test.buildid)
+JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+WHERE build.id='$buildid'
+AND measurement.testpage=1
+$extras
+");
+
+$xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname and the value.
+$i=0;
+$currentcolumn=-1;
+$checkarray = array();
+while($etestquery && $row=pdo_fetch_array($etestquery))
+  {
+  if(!isset($checkarray[$row["name"]]) || !in_array($row["id"],$checkarray[$row["name"]]))
+    {
+    for($columnkey=0;$columnkey<$columncount;$columnkey++)
+      {
+      if($columns[$columnkey]==$row['name'])
+        {
+        $columnkey+=1;
+        break;
+        }
+      }
+    $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
+    if($currentcolumn!=$columnkey-1) // If data does not belong to this column
+      {
+      for($t=0;$t<$columncount;$t++)
+        {
+        if(($currentcolumn+$t)%$columncount!=$columnkey-1) // Add blank values till you find the required column
+          {
+          $xml .="<etest>\n";
+          $xml .= add_XML_value("name","");
+          $xml .= add_XML_value("testid", "");
+          $xml .= add_XML_value("value", "");
+          $xml .= "\n</etest>\n";
+          }
+        else
+          {
+          $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
+          break;
+          }
+        }
+      // Add correct values to correct column
+      $xml .="<etest>\n";
+      $xml .= add_XML_value("name",$row["name"]);
+      $xml .= add_XML_value("testid", $row["id"]);
+      $xml .= add_XML_value("value", $row["value"]);
+      $xml .= "\n</etest>\n";
+      $checkarray[$row["name"]][$i]=$row["id"];
+      }
+    else
+      {
+      // Add correct values to correct column
+      $xml .="<etest>\n";
+      $xml .= add_XML_value("name",$row["name"]);
+      $xml .= add_XML_value("testid", $row["id"]);
+      $xml .= add_XML_value("value", $row["value"]);
+      $xml .= "\n</etest>\n";
+      $checkarray[$row["name"]][$i]=$row["id"];
+      }
+    }
+  $i++;
+  }
+$xml .= "</etests>\n";
 
 // Gather test info
 $xml .= "<tests>\n";
@@ -269,6 +364,7 @@ while($row = pdo_fetch_array($result))
   $testid = $row["id"];
   $detailsLink = "testDetails.php?test=$testid&build=$buildid";
   $xml .= add_XML_value("detailsLink", $detailsLink);
+  $xml .= add_XML_value("id", $testid);
 
   if($projectshowtesttime)
     {
@@ -328,8 +424,8 @@ $xml .= add_XML_value("numTimeFailed", $numTimeFailed);
 
 $end = microtime_float();
 $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
+$xml .= "<columncount>$columncount</columncount>";
 $xml .= "</cdash>";
-
 // Now doing the xslt transition
 generate_XSLT($xml,"viewTest");
 ?>

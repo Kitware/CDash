@@ -88,10 +88,6 @@ else
   $xml .= add_XML_value("nonext","1");
   }
 $xml .= "</menu>";
-
-//get information about all the builds for the given date and project
-$xml .= "<builds>\n";
-
 $testName = pdo_real_escape_string($testName);
 list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $beginning_timestamp = $currentstarttime;
@@ -100,13 +96,110 @@ $end_timestamp = $currentstarttime+3600*24;
 $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
 
+$getcolumnnumber=pdo_query("SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
+JOIN testmeasurement ON (test.id = testmeasurement.testid)
+JOIN build2test ON (build2test.testid = test.id)
+JOIN build ON (build.id = build2test.buildid)
+JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+WHERE test.name='$testName'
+AND build.starttime>='$beginning_UTCDate'
+AND build.starttime<'$end_UTCDate'
+AND test.projectid=$projectid
+AND measurement.summarypage= 1
+GROUP by testmeasurement.name
+"); // We need to keep the count of columns for correct column-data assign
+while($row=pdo_fetch_array($getcolumnnumber))
+  {
+  $xml .= add_XML_value("columnname",$row["name"])."\n";
+  $columns[]=$row["name"];
+  }
+
+$columncount=pdo_num_rows($getcolumnnumber);
+// If at least one column is selected
+if($columncount>0) $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name,
+        testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM `test`
+JOIN testmeasurement ON (test.id = testmeasurement.testid)
+JOIN build2test ON (build2test.testid = test.id)
+JOIN build ON (build.id = build2test.buildid)
+JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+WHERE test.name='$testName'
+AND build.starttime>='$beginning_UTCDate'
+AND build.starttime<'$end_UTCDate'
+AND test.projectid=$projectid
+AND measurement.summarypage= 1
+ORDER BY build2test.buildid, testmeasurement.name
+");
+$xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname, test date and the value.
+$i=0;
+$currentcolumn=-1;
+while($row=@pdo_fetch_array($etestquery))
+  {
+  if(!@in_array($row["id"],$checkarray[$row["name"]]))
+    {
+    for($columnkey=0;$columnkey<$columncount;$columnkey++)
+      {
+      if($columns[$columnkey]==$row['name'])
+        {
+        $columnkey+=1;
+        break;
+        }
+      }
+
+    $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
+    if($currentcolumn!=$columnkey-1)
+      {  // If data does not belong to this column
+      for($t=0;$t<$columncount;$t++)
+        { // Add blank values till you find the required column
+        if(($currentcolumn+$t)%$columncount!=$columnkey-1)
+          {
+          $xml .="<etest>\n";
+          $xml .= add_XML_value("name","");
+          $xml .= add_XML_value("testid", "");
+          $xml .= add_XML_value("buildid", "");
+          $xml .= add_XML_value("value", "");
+          $xml .= "\n</etest>\n";
+          }
+        else
+          {
+          $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
+          break;
+          }
+        }
+      // Add correct values to correct column
+      $xml .="<etest>\n";
+      $xml .= add_XML_value("name",$row["name"]);
+      $xml .= add_XML_value("testid", $row["id"]);
+      $xml .= add_XML_value("buildid", $row["buildid"]);
+      $xml .= add_XML_value("value", $row["value"]);
+      $xml .= "\n</etest>\n";
+      $checkarray[$row["name"]][$i]=$row["buildid"];
+      }
+    else
+      {
+      // Add correct values to correct column
+      $xml .="<etest>\n";
+      $xml .= add_XML_value("name",$row["name"]);
+      $xml .= add_XML_value("testid", $row["id"]);
+      $xml .= add_XML_value("buildid", $row["buildid"]);
+      $xml .= add_XML_value("value", $row["value"]);
+      $xml .= "\n</etest>\n";
+      $checkarray[$row["name"]][$i]=$row["buildid"];
+      }
+    }
+  $i++;
+  }
+
+$xml .= "</etests>\n";
+//Get information about all the builds for the given date and project
+$xml .= "<builds>\n";
+
 // Add the date/time
 $xml .= add_XML_value("projectid",$projectid);
 $xml .= add_XML_value("currentstarttime",$currentstarttime);
 $xml .= add_XML_value("teststarttime",date(FMT_DATETIME,$beginning_timestamp));
 $xml .= add_XML_value("testendtime",date(FMT_DATETIME,$end_timestamp));
 
-$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.time,build2test.testid AS testid,site.name AS sitename
+$query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.buildid,build2test.time,build2test.testid AS testid,site.name AS sitename
           FROM build
           JOIN build2test ON (build.id = build2test.buildid)
           JOIN site ON (build.siteid = site.id)
@@ -114,7 +207,7 @@ $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.ti
           AND build.starttime>='$beginning_UTCDate'
           AND build.starttime<'$end_UTCDate'
           AND build2test.testid IN (SELECT id FROM test WHERE name='$testName')
-          ORDER BY build2test.status";
+          ORDER BY build2test.buildid";
 
 $result = pdo_query($query);
 
@@ -156,6 +249,7 @@ while($row = pdo_fetch_array($result))
 //$xml .= add_XML_value("details", $row["details"]) . "\n";
 
   $buildLink = "viewTest.php?buildid=$buildid";
+  $xml .= add_XML_value("buildid", $buildid);
   $xml .= add_XML_value("buildLink", $buildLink);
   $testid = $row["testid"];
   $testLink = "testDetails.php?test=$testid&build=$buildid";
@@ -181,8 +275,9 @@ $xml .= "</builds>\n";
 
 $end = microtime_float();
 $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
+$count=count($columns);
+$xml .= "<columncount>$count</columncount>";
 $xml .= "</cdash>\n";
-
 // Now doing the xslt transition
 generate_XSLT($xml,"testSummary");
 ?>

@@ -134,6 +134,23 @@
       <th class="nob">Labels</th>
     </xsl:if>
 </xsl:if>
+    <xsl:for-each select='/cdash/columnname'>
+      <xsl:variable name='index_col' select='count(preceding-sibling::columnname) + 1'/>
+    <xsl:choose>
+      <xsl:when test="/cdash/onlypassed=1 or /cdash/onlyfailed=1">
+        <th>
+          <xsl:attribute name="id">sort_<xsl:value-of select="$index_col+3" /></xsl:attribute>
+          <xsl:value-of select="/cdash/columnname[position()=$index_col]" />
+        </th>
+      </xsl:when>
+      <xsl:otherwise>
+        <th>
+          <xsl:attribute name="id">sort_<xsl:value-of select="$index_col+4" /></xsl:attribute>
+          <xsl:value-of select="/cdash/columnname[position()=$index_col]" />
+        </th>
+      </xsl:otherwise>
+    </xsl:choose>
+    </xsl:for-each>
   </tr>
 </thead>
 <xsl:for-each select="cdash/tests/test">
@@ -206,6 +223,10 @@
       </xsl:for-each>
     </td>
     </xsl:if>
+    <xsl:call-template name="recurse">
+      <xsl:with-param name="num" select="number('1')" />
+    </xsl:call-template>
+
   </tr>
 </xsl:for-each>
 </table>
@@ -225,5 +246,21 @@
 
 </body>
 </html>
+</xsl:template>
+<xsl:template name="recurse">
+    <xsl:param name="num" />
+    <xsl:variable name="colcount"><xsl:value-of select='/cdash/columncount'/></xsl:variable>
+    <xsl:if test="not($num = $colcount+1)">
+      <td align="right">
+        <xsl:if test='id = /cdash/etests/etest/testid'>
+          <xsl:variable name='index' select='$colcount*count(preceding-sibling::test[id = /cdash/etests/etest/testid])+$num' />
+          <xsl:value-of select="/cdash/etests/etest[position()=$index]/value" />
+        </xsl:if>
+      </td>
+        <xsl:call-template name="recurse">
+        <xsl:with-param name="num" select="$num + 1" />
+      </xsl:call-template>
+    </xsl:if>
+
 </xsl:template>
 </xsl:stylesheet>

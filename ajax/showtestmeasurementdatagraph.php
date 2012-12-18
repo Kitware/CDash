@@ -78,7 +78,6 @@ ORDER BY build.starttime DESC
 ");
 
 ?>
-
 &nbsp;
 <script language="javascript" type="text/javascript">
 $(function () {
@@ -123,10 +122,10 @@ $(function () {
     colors: ["#0000FF", "#dba255", "#919733"]
   };
 
-    var divname = <? echo("\"#$measurementname"."grapholder\""); ?>;
+    var divname = '#graph_holder';
 
     $(divname).bind("selected", function (event, area) {
-    plot = $.plot($(divname), [{label: <? echo("\"$measurementname\""); ?>,  data: d1}],
+    plot = $.plot($(divname), [{label: <?php echo("\"$measurementname\""); ?>,  data: d1}],
            $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
 
     });
@@ -141,10 +140,8 @@ $(function () {
      });
 
     plot = $.plot($(divname),
-                  [{label: <? echo("\"$measurementname\""); ?> ,data: d1}],
+                  [{label: <?php echo("\"$measurementname\""); ?> ,data: d1}],
                   $.extend(true,{}, options, {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}})
                  );
 });
-
-
 </script>

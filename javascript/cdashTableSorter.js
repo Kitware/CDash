@@ -337,7 +337,7 @@ $(document).ready(function() {
                 1: { sorter:'buildname'},
                 2: { sorter:'buildname'},
                 3: { sorter:'elapsedtime'},
-                4: { sorter:'text'}
+                4: { sorter:'digit'}
             },
           debug: false,
           widgets: ['zebra']
@@ -353,8 +353,32 @@ $(document).ready(function() {
                 1: { sorter:'buildname'},
                 2: { sorter:'buildname'},
                 3: { sorter:'elapsedtime'},
-                4: { sorter:'text'},
-                5: { sorter:'text'}
+                4: { sorter:'digit'},
+                5: { sorter:'digit'}
+            },
+          debug: false,
+          widgets: ['zebra']
+        });
+      });
+    }
+  else if(nrows>6)
+    {
+    $tabs.each(function(index) {
+    $(this).tablesorter({
+           headers: {
+               0: { sorter:'buildname'},
+               1: { sorter:'buildname'},
+               2: { sorter:'buildname'},
+               3: { sorter:'elapsedtime'},
+               4: { sorter:'digit'},
+               5: { sorter:'digit'},
+               6: { sorter:'digit'},
+               7: { sorter:'digit'},
+               8: { sorter:'digit'},
+               9: { sorter:'digit'},
+               10: { sorter:'digit'},
+               11: { sorter:'digit'},
+               12: { sorter:'digit'}
             },
           debug: false,
           widgets: ['zebra']

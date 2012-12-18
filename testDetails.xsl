@@ -9,6 +9,25 @@
 <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
+
+<!-- Template XSL to replace nl by <br> -->
+<xsl:template name="nl2br">
+  <xsl:param name="string"/>
+    <xsl:value-of select="normalize-space(substring-before($string,'&#10;'))"/>
+  <xsl:choose>
+    <xsl:when test="contains($string,'&#10;')">
+    <br />
+    <xsl:call-template name="nl2br">
+      <xsl:with-param name="string" select="substring-after($string,'&#10;')"/>
+    </xsl:call-template>
+    </xsl:when>
+  <xsl:otherwise>
+    <xsl:value-of select="$string"/>
+  </xsl:otherwise>
+</xsl:choose>
+</xsl:template>
+
+
 <xsl:template match="/">
 <html>
 <head>
@@ -118,10 +137,6 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
      <tr>
       <th class="measurement"><xsl:value-of select="name"/></th>
       <td>
-        <xsl:if test="type='numeric/double'">
-          <a><xsl:attribute name="href">javascript:shownamedmeasurementgraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>,"<xsl:value-of select="name" />");</xsl:attribute>[Graph]</a>
-        </xsl:if>
-
         <xsl:if test="type!='file'">
           <xsl:value-of select="value" disable-output-escaping="yes"/>
         </xsl:if>
@@ -138,50 +153,38 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
 </table>
 <br/>
 
-<!-- Named Measurement Graphs -->
-<xsl:for-each select="/cdash/test/measurements/measurement">
-  <xsl:if test="type='numeric/double'">
-  <div>
-    <xsl:attribute name="id"><xsl:value-of select="name" />graphoptions</xsl:attribute>
-  </div>
-  <div>
-    <xsl:attribute name="id"><xsl:value-of select="name" />graph</xsl:attribute>
-  </div>
-  <center>
-    <div>
-      <xsl:attribute name="id"><xsl:value-of select="name" />grapholder</xsl:attribute>
-    </div>
-  </center>
-  </xsl:if>
-</xsl:for-each>
-
 <!-- Show command line -->
 <img src="images/console.png"/>
 <a id="commandlinelink" href="javascript:showcommandline_click()">Show Command Line</a>
 <div id="commandline" style="display:none">
-  <xsl:value-of select="cdash/test/command"/>
+  <xsl:call-template name="nl2br">
+    <xsl:with-param name="string" select="cdash/test/command"/>
+  </xsl:call-template>
 </div>
 <br/>
-<!-- Timing Graph -->
-<img src="images/graph.png"/>
-<a>
-<xsl:attribute name="href">javascript:showtesttimegraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>Show Test Time Graph
-</a>
-<div id="timegraphoptions"></div>
-<div id="timegraph"></div>
-<center>
-<div id="timegrapholder"></div>
-</center>
-<!-- Pass/Fail Graph -->
-<img src="images/graph.png"/>
-<a>
-<xsl:attribute name="href">javascript:showtestpassinggraph_click(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>)</xsl:attribute>Show Failing/Passing Graph
-</a>
-<div id="passinggraphoptions"></div>
-<div id="passinggraph"></div>
-<center>
-<div id="passinggrapholder"></div>
-</center>
+
+<!-- Pull down menu to see the graphs -->
+<img src="images/graph.png"/> Display graphs: <select id="GraphSelection">
+  <xsl:attribute name="onchange">javascript:displaygraph_selected(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>,false)</xsl:attribute>
+  <option value="0">Select...</option>
+  <option value="TestTimeGraph">Test Time</option>
+  <option value="TestPassingGraph">Failing/Passing</option>
+  <xsl:for-each select="/cdash/test/measurements/measurement">
+  <xsl:if test="type='numeric/double'">
+    <option>
+    <xsl:attribute name="value"><xsl:value-of select="name"/></xsl:attribute>
+    <xsl:value-of select="name" />
+    </option>
+  </xsl:if>
+  </xsl:for-each>
+</select>
+<br/>
+
+<!-- Graph holder -->
+<div id="graph_options"></div>
+<div id="graph"></div>
+<div id="graph_holder"></div>
+
 <br/>
 <b>Test output</b>
 <pre>
