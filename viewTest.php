@@ -171,7 +171,7 @@ if(pdo_num_rows($buildinformation)>0)
     }
   }
 $xml .= "</build>\n";
-
+$xml .= "<csvlink>".htmlspecialchars($_SERVER["REQUEST_URI"])."&amp;export=csv</csvlink>";
 $xml .= "<project>";
 $xml .= add_XML_value("showtesttime", $projectshowtesttime);
 $xml .= "</project>";
@@ -276,6 +276,127 @@ WHERE build.id='$buildid'
 AND measurement.testpage=1
 $extras
 ");
+
+
+if($_GET['export']=="csv") // If user wants to export as CSV file
+  {
+  header("Cache-Control: public");
+  header("Content-Description: File Transfer");
+  header("Content-Disposition: attachment; filename=testExport.csv"); // Prepare some headers to download
+  header("Content-Type: application/octet-stream;"); 
+  header("Content-Transfer-Encoding: binary");
+  $filecontent = "Name,Time,Details,Status,Time Status"; // Standard columns
+  
+  // Store named measurements in an array
+  while($row = pdo_fetch_array($etestquery))
+    {
+    $etest[$row['id']][$row['name']]=$row['value'];
+    }
+  
+  for($c=0;$c<count($columns);$c++) $filecontent .= ",".$columns[$c]; // Add selected columns to the next
+  
+  $filecontent .= "\n";
+
+  while($row = pdo_fetch_array($result))
+    {
+    $currentStatus = $row["status"];
+    $testName = $row["name"];
+
+    $filecontent .= "$testName,{$row["time"]},{$row["details"]},";
+ 
+    if($projectshowtesttime)
+      {
+      if($row["timestatus"] < $testtimemaxstatus)
+        {
+        $filecontent.="Passed,";
+        }
+      else
+        {
+        $filecontent.="Failed,";
+        }
+      } // end projectshowtesttime
+
+  switch($currentStatus)
+    {
+    case "passed":
+      $filecontent.="Passed,";
+      break;
+    case "failed":
+      $filecontent.="Failed,";
+      break;
+    case "notrun":
+      $filecontent.="Not Run,";
+      break;
+    }
+    // start writing test results
+    for($t=0;$t<count($columns);$t++) $filecontent .= $etest[$row['id']][$columns[$t]].",";
+    $filecontent .= "\n";
+  }
+  echo ($filecontent); // Start file download
+  die; // to suppress unwanted output
+  }
+
+
+$xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname and the value.
+$i=0;
+$currentcolumn=-1;
+while($row=@pdo_fetch_array($etestquery)) 
+  {
+  if(!@in_array($row["id"],$checkarray[$row["name"]])) 
+    {
+    for($columnkey=0;$columnkey<$columncount;$columnkey++) 
+      {
+      if($columns[$columnkey]==$row['name']) 
+        {
+        $columnkey+=1;
+        break;
+        }
+      }
+    $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
+    if($currentcolumn!=$columnkey-1) // If data does not belong to this column
+      {
+      for($t=0;$t<$columncount;$t++) 
+        {
+        if(($currentcolumn+$t)%$columncount!=$columnkey-1) // Add blank values till you find the required column
+          {
+          $xml .="<etest>\n";
+          $xml .= add_XML_value("name","");
+          $xml .= add_XML_value("testid", "");
+          $xml .= add_XML_value("value", "");
+          $xml .= "\n</etest>\n";
+          }
+        else 
+          {
+          $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
+          break;
+          }
+        }
+      // Add correct values to correct column      
+      $xml .="<etest>\n";
+      $xml .= add_XML_value("name",$row["name"]);
+      $xml .= add_XML_value("testid", $row["id"]);
+      $xml .= add_XML_value("value", $row["value"]);
+      $xml .= "\n</etest>\n";
+      $checkarray[$row["name"]][$i]=$row["id"];
+      }
+    else
+      {
+      // Add correct values to correct column
+      $xml .="<etest>\n";
+      $xml .= add_XML_value("name",$row["name"]);
+      $xml .= add_XML_value("testid", $row["id"]);
+      $xml .= add_XML_value("value", $row["value"]);
+      $xml .= "\n</etest>\n";
+      $checkarray[$row["name"]][$i]=$row["id"];
+      }
+    }
+  $i++;
+  }
+$xml .= "</etests>\n";
+
+
+
+
 
 $xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname and the value.
 $i=0;

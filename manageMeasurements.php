@@ -64,7 +64,7 @@ if($submit=="Save")
       if($showT[$id[$i]]=='') $showT[$id[$i]]=0;
       if($showS[$id[$i]]=='') $showS[$id[$i]]=0;
       pdo_query("UPDATE measurement SET name='$newName', testpage='".$showT[$id[$i]]."', summarypage='".$showS[$id[$i]]."' WHERE id='".$id[$i]."'");
-      $i;
+      $i++;
       }
     }
   }
@@ -81,8 +81,8 @@ $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<backurl>user.php</backurl>";
-$xml .= "<title>CDash - Measurements</title>";
-$xml .= "<menutitle>CDash</menutitle>";
+$xml .= "<title>CDash - ".$projectname." Measurements</title>";
+$xml .= "<menutitle>".$projectname."</menutitle>";
 $xml .= "<menusubtitle>Measurements</menusubtitle>";
 
 if($projectid>0)

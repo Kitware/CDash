@@ -96,7 +96,7 @@
   <xsl:value-of select="cdash/numTimeFailed"/> failed for timing,
   <xsl:value-of select="cdash/numNotRun"/> not run.
 </xsl:if>
-</h3><br/>
+</h3>
 
 <!-- Hide a div for javascript to know if time status is on -->
 <xsl:if test="/cdash/project/showtesttime=1">
@@ -231,10 +231,11 @@
 </xsl:for-each>
 </table>
 <br/>
+<a><xsl:attribute name="href"><xsl:value-of select="cdash/csvlink"/></xsl:attribute>Download Table as CSV File</a>
+<br/>
 
 <!-- FOOTER -->
 <br/>
-
 <xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>

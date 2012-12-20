@@ -199,6 +199,21 @@ $xml .= add_XML_value("currentstarttime",$currentstarttime);
 $xml .= add_XML_value("teststarttime",date(FMT_DATETIME,$beginning_timestamp));
 $xml .= add_XML_value("testendtime",date(FMT_DATETIME,$end_timestamp));
 
+$columncount=pdo_num_rows($getcolumnnumber);
+// If at least one column is selected
+if($columncount>0) $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name, testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM `test` 
+JOIN testmeasurement ON (test.id = testmeasurement.testid)
+JOIN build2test ON (build2test.testid = test.id)
+JOIN build ON (build.id = build2test.buildid)
+JOIN measurements ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+WHERE test.name='$testName'
+AND build.starttime>='$beginning_UTCDate'
+AND build.starttime<'$end_UTCDate'
+AND test.projectid=$projectid
+AND measurement.summarypage= 1
+ORDER BY build2test.buildid, testmeasurement.name
+");
+
 $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.buildid,build2test.time,build2test.testid AS testid,site.name AS sitename
           FROM build
           JOIN build2test ON (build.id = build2test.buildid)
@@ -210,6 +225,69 @@ $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.bu
           ORDER BY build2test.buildid";
 
 $result = pdo_query($query);
+
+if($_GET['export']=="csv") // If user wants to export as CSV file
+  {
+  header("Cache-Control: public");
+  header("Content-Description: File Transfer");
+  header("Content-Disposition: attachment; filename=testExport.csv"); // Prepare some headers to download
+  header("Content-Type: application/octet-stream;"); 
+  header("Content-Transfer-Encoding: binary");
+  $filecontent = "Site,Build Name,Build Stamp,Status,Time(s)"; // Standard columns
+  
+  // Store named measurements in an array
+  while($row = pdo_fetch_array($etestquery))
+    {
+    $etest[$row['buildid']][$row['name']]=$row['value'];
+    }
+  
+  for($c=0;$c<count($columns);$c++) {
+    $filecontent .= ",".$columns[$c]; // Add selected columns to the next
+  }
+  
+  $filecontent .= "\n";
+
+  while($row = pdo_fetch_array($result))
+    {
+    $currentStatus = $row["status"];
+
+    $filecontent .= "{$row["sitename"]},{$row["name"]},{$row["stamp"]},{$row["time"]},";
+ 
+    if($projectshowtesttime)
+      {
+      if($row["timestatus"] < $testtimemaxstatus)
+        {
+        $filecontent.="Passed,";
+        }
+      else
+        {
+        $filecontent.="Failed,";
+        }
+      } // end projectshowtesttime
+
+  switch($currentStatus)
+    {
+    case "passed":
+      $filecontent.="Passed,";
+      break;
+    case "failed":
+      $filecontent.="Failed,";
+      break;
+    case "notrun":
+      $filecontent.="Not Run,";
+      break;
+    }
+    // start writing test results
+    for($t=0;$t<count($columns);$t++) $filecontent .= $etest[$row['id']][$columns[$t]].",";
+    $filecontent .= "\n";
+  }
+  echo ($filecontent); // Start file download
+  die; // to suppress unwanted output
+  }
+
+
+
+
 
 //now that we have the data we need, generate some XML
 while($row = pdo_fetch_array($result))
@@ -272,7 +350,7 @@ while($row = pdo_fetch_array($result))
   $xml .= "</build>\n";
   }
 $xml .= "</builds>\n";
-
+$xml .= "<csvlink>".htmlspecialchars($_SERVER["REQUEST_URI"])."&amp;export=csv</csvlink>";
 $end = microtime_float();
 $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
 $count=count($columns);

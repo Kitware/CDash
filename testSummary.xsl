@@ -51,7 +51,10 @@ Show Test Failure Trend
 <center>
 <div id="testfailuregrapholder"></div>
 </center>
+<a><xsl:attribute name="href"><xsl:value-of select="cdash/csvlink"/></xsl:attribute>Download Table as CSV File</a>
 <br/>
+<br/>
+
 <!-- Test Summary table -->
 <table id="testSummaryTable" cellspacing="0" cellpadding="3" class="tabb">
 <thead>
