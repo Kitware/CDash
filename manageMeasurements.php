@@ -20,6 +20,8 @@ include('login.php');
 include_once("cdash/common.php");
 include_once("models/project.php");
 
+if ($session_OK)
+{
 $projectid = $_REQUEST["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
@@ -134,5 +136,5 @@ $xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml,"manageMeasurements");
-
+} // end if session
 ?>
