@@ -86,10 +86,16 @@ function displaygraph_selected(buildid,testid,zoomout)
     }
   else
     {
+    $("#graph_holder").attr("style","width:800px;height:400px;");
+    if(zoomout)
+      {
+      $("#graph").load("ajax/showtestmeasurementdatagraph.php?testid="+testid+"&buildid="+buildid+"&measurement="+measurementname+"&zoomout=1");
+      return;
+      }
     $("#graph").fadeIn('slow');
     $("#graph").html("fetching...<img src=images/loading.gif></img>");
-    $("#graph_holder").attr("style","width:800px;height:400px;");
 
+    $("#graph_options").html("<a href=javascript:displaygraph_selected("+buildid+","+testid+",true)>Zoom out</a>");
     $("#graph").load("ajax/showtestmeasurementdatagraph.php?testid="+testid+"&buildid="+buildid+"&measurement="+measurementname,{},function(){
       $("#graph_holder").fadeIn('slow');
       $("#graph_options").show();
