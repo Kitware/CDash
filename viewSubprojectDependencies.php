@@ -57,10 +57,8 @@ if($projectid == 0)
 
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
     
-  $xml = '<?xml version="1.0"?><cdash>';
+  $xml = begin_XML_for_XSLT();
   $xml .= "<title>CDash - Subproject dependencies - ".$projectname."</title>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid);

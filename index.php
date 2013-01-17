@@ -33,10 +33,8 @@ function generate_index_table()
   include('cdash/version.php');
   include_once('models/banner.php');
 
-  $xml = '<?xml version="1.0"?'.'><cdash>';
+  $xml = begin_XML_for_XSLT();
   $xml .= add_XML_value("title","CDash");
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
 
   $Banner = new Banner;
   $Banner->SetProjectId(0);

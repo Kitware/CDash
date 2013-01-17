@@ -31,9 +31,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
-$xml = "<cdash>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash - Backup</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Backup</menusubtitle>";

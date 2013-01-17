@@ -23,9 +23,8 @@ include_once("cdash/version.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>Recover password</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
   {
   $xml .= add_XML_value("noregister","1");

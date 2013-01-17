@@ -36,9 +36,7 @@ $Site->Id = $Build->SiteId;
 $build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 
-$xml = '<?xml version="1.0"?><cdash>';
-$xml .= add_XML_value("cssfile",$CDASH_CSS_FILE);
-$xml .= add_XML_value("version",$CDASH_VERSION);
+$xml = begin_XML_for_XSLT();
 $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");

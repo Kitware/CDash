@@ -102,10 +102,8 @@ if(pdo_num_rows($query) > 0)
   }
  }
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$sitename."</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
 
 @$projectid = $_GET["project"];
 if($projectid)

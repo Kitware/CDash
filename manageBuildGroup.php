@@ -35,9 +35,7 @@ if(!isset($userid) || !is_numeric($userid))
   return;
   }
 
-$xml = "<cdash>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
+$xml = begin_XML_for_XSLT();
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Build Groups</title>";
 $xml .= "<menutitle>CDash</menutitle>";

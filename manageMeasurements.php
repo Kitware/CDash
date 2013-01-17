@@ -79,9 +79,7 @@ if($_POST['del'] && count($selection)>0)
     }
   }
 
-$xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
+$xml = begin_XML_for_XSLT();
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - ".$projectname." Measurements</title>";
 $xml .= "<menutitle>".$projectname."</menutitle>";

@@ -22,10 +22,8 @@ require_once("cdash/pdo.php");
 include("cdash/common.php");
 include('cdash/version.php');
 
-$xml = '<?xml version="1.0"?'.'><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= add_XML_value("title","CDash");
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
 $xml .= "<date>".date("r")."</date>";
 

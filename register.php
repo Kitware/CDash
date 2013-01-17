@@ -194,10 +194,8 @@ function RegisterForm($regerror)
     die("You cannot access this page. Contact your administrator if you think that's an error.");
     }
 
-  $xml = '<?xml version="1.0"?><cdash>';
+  $xml = begin_XML_for_XSLT();
   $xml .= "<title>CDash - Registration</title>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
   $xml .= "<error>" . $regerror . "</error>";
   $xml .= "</cdash>";
 

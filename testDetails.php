@@ -106,13 +106,9 @@ $date = get_dashboard_date_from_build_starttime($buildRow["starttime"], $project
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
 
-$xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$projectname."</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
-
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
-
 $xml .= "<project>";
 $xml .= add_XML_value("showtesttime", $project_array["showtesttime"]) . "\n";
 $xml .= "</project>";

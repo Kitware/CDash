@@ -13,9 +13,7 @@ include("../user.php");
 
 if(empty($xml))
   {
-  $xml = "<cdash>";
-  $xml .= add_XML_value("cssfile",$CDASH_CSS_FILE);
-  $xml .= add_XML_value("version",$CDASH_VERSION);
+  $xml = begin_XML_for_XSLT();
   $xml .= add_XML_value("showlogin","1");
   $xml .= "</cdash>";  
   }

@@ -36,10 +36,8 @@ $projectname = pdo_real_escape_string($projectname);
 $project = pdo_query("SELECT id,nightlytime FROM project WHERE name='$projectname'");
 $project_array = pdo_fetch_array($project);
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>".$projectname." : Test Overview</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 $nightlytime = $project_array["nightlytime"];

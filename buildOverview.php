@@ -32,10 +32,8 @@ if(!isset($projectname) || strlen($projectname)==0)
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>".$projectname." : Build Overview</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 // Get some information about the specified project

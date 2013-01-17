@@ -25,10 +25,8 @@ if ($session_OK)
   {
   include_once("cdash/common.php");
   
-  $xml = '<?xml version="1.0"?><cdash>';
+  $xml = begin_XML_for_XSLT();
   $xml .= "<title>CDash - My Profile</title>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
   $xml .= "<backurl>user.php</backurl>";
   $xml .= "<title>CDash - My Profile</title>";
   $xml .= "<menutitle>CDash</menutitle>";

@@ -33,9 +33,7 @@ if ($session_OK)
   @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
 
-  $xml = "<cdash>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
+  $xml = begin_XML_for_XSLT();
   $xml .= "<backurl>user.php</backurl>";
   $xml .= "<title>CDash - Subscribe to a project</title>";
   $xml .= "<menutitle>CDash</menutitle>";

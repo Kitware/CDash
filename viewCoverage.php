@@ -98,10 +98,8 @@ if(!$project_array["showcoveragecode"] && $role<2)
 
 $projectdisplaylabels = $project_array["displaylabels"];
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$projectname."</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 $xml .= "<buildid>".$buildid."</buildid>";
 

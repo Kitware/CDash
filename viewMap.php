@@ -38,10 +38,8 @@ if($projectid == -1)
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : Sites map for ".$projectname."</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
 $xml .= "<backurl>index.php?project=".urlencode($projectname)."&#38;date=$date</backurl>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Build location</menusubtitle>";

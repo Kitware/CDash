@@ -83,9 +83,7 @@ if ($session_OK)
 
 $nRepositories = 0;
 
-$xml = "<cdash>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
+$xml = begin_XML_for_XSLT();
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "<user><id>".$userid."</id></user>";
 $xml .= add_XML_value("manageclient",$CDASH_MANAGE_CLIENTS);

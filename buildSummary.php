@@ -56,12 +56,9 @@ function format_for_iphone($text)
   return $text;
 }
 
-$xml = '<?xml version="1.0"?'.'><cdash>';
+$xml = begin_XML_for_XSLT();
 $projectname = get_project_name($projectid);
 $xml .= "<title>CDash : ".$projectname."</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
-
 
 // Find the last submit date
 $siteid = $build_array["siteid"];

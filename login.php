@@ -407,10 +407,8 @@ function LoginForm($loginerror)
   include_once("cdash/common.php");
   include("cdash/version.php");
 
-  $xml = "<cdash>";
+  $xml = begin_XML_for_XSLT();
   $xml .= "<title>Login</title>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
   if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
     {
     $xml .= add_XML_value("noregister","1");

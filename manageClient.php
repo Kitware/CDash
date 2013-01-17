@@ -83,9 +83,7 @@ if($session_OK)
     return;
     }
 
-  $xml = "<cdash>";
-  $xml .= add_XML_value("cssfile",$CDASH_CSS_FILE);
-  $xml .= add_XML_value("version",$CDASH_VERSION);
+  $xml = begin_XML_for_XSLT();
   $xml .= add_XML_value("manageclient",$CDASH_MANAGE_CLIENTS);
 
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");

@@ -77,10 +77,8 @@ else if(isset($_POST["deletelogs"]))
   exit();
   }
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>Error Log - ".$projectname."</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
 
 if($buildid)
   {

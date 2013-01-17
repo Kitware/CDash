@@ -292,10 +292,8 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 $dates = get_related_dates($projectname, $date);
 
-$xml = '<?xml version="1.0"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$projectname."</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
 
 $gmdate = gmdate(FMT_DATE,$dates['nightly-0']);
 

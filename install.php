@@ -42,9 +42,7 @@ if($CDASH_PRODUCTION_MODE)
   return;
   }
 
-$xml = "<cdash>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
+$xml = begin_XML_for_XSLT();
 
 if(!isset($CDASH_DB_TYPE))
   {

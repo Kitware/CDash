@@ -64,11 +64,8 @@ $starttime = $build_array["starttime"];
 
 $date = get_dashboard_date_from_build_starttime($starttime, $project_array["nightlytime"]);
 
-$xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
+$xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$projectname."</title>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
-
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 // Menu

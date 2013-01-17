@@ -38,9 +38,7 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 
 @$projectid = $_GET["projectid"]; 
     
-$xml = "<cdash>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
+$xml = begin_XML_for_XSLT();
 
 //get date info here
 @$dayTo = $_POST["dayFrom"];
