@@ -1010,10 +1010,11 @@ div#banner {
 }
 
 div#index_top {
+  position: relative;
   width: 100%;
   padding-top: 8px;
   padding-bottom: 1px;
-  height: 15px;
+  height: 35px;
   margin: 0px;
 }
 
@@ -1027,6 +1028,12 @@ div#labelshowfilters {
   top: -18px;
   float: right;
   width: 100px;
+}
+
+div#labelcolorblind {
+  position: absolute;
+  bottom: 0px;
+  right: 20px;
 }
 
 div#helpmenu {

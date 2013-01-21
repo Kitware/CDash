@@ -13,6 +13,13 @@
 </a>
 </div>
 
+<div id="labelcolorblind">
+<a id="label_colorblind" href="javascript:colorblind_toggle();">
+<xsl:if test="cdash/filterdata/colorblind = 0">Switch to colorblind-friendly palette</xsl:if>
+<xsl:if test="cdash/filterdata/colorblind != 0">Switch to classic palette</xsl:if>
+</a>
+</div>
+
 <div id="div_showfilters">
 <xsl:if test="cdash/filterdata/showfilters = 0">
   <xsl:attribute name="style">display: none;</xsl:attribute>

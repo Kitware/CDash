@@ -390,10 +390,8 @@ function generate_main_dashboard_XML($project_instance, $date)
 
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 
-  $xml = '<?xml version="1.0"?'.'><cdash>';
+  $xml = begin_XML_for_XSLT();
   $xml .= "<title>CDash - ".$projectname."</title>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
 
   $Banner = new Banner;
   $Banner->SetProjectId(0);
@@ -486,7 +484,7 @@ function generate_main_dashboard_XML($project_instance, $date)
     }
 
   // If we have a subproject
-  $subproject_name = pdo_real_escape_string($_GET["subproject"]);
+  $subproject_name = pdo_real_escape_string(@$_GET["subproject"]);
   $subprojectid = false;
 
   if($subproject_name)
@@ -1685,10 +1683,8 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
 
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-  $xml = '<?xml version="1.0"?'.'><cdash>';
+  $xml = begin_XML_for_XSLT();
   $xml .= "<title>CDash - ".$Project->Name."</title>";
-  $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-  $xml .= "<version>".$CDASH_VERSION."</version>";
 
   $Banner = new Banner;
   $Banner->SetProjectId(0);

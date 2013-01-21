@@ -2076,10 +2076,23 @@ function web_api_authenticate($projectid, $token)
 function begin_XML_for_XSLT()
   {
   global $CDASH_CSS_FILE, $CDASH_VERSION;
+
+  // check if user has specified a preference for color scheme
+  if (array_key_exists("colorblind", $_COOKIE))
+    {
+    if ($_COOKIE["colorblind"] == 1)
+      {
+      $CDASH_CSS_FILE = "colorblind.css";
+      }
+    else
+      {
+      $CDASH_CSS_FILE = "cdash.css";
+      }
+    }
+
   $xml = '<?xml version="1.0" encoding="utf-8"?><cdash>';
   $xml .= add_XML_value("cssfile", $CDASH_CSS_FILE);
   $xml .= add_XML_value("version", $CDASH_VERSION);
-  file_put_contents("/tmp/bad2.txt", $xml);
   return $xml;
   }
 

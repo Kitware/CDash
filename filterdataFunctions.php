@@ -623,6 +623,7 @@ function filterdata_XML($filterdata)
   $pageSpecificFilters = $filterdata['pageSpecificFilters']; // an instance of PageSpecificFilters
   $showfilters = $filterdata['showfilters']; // 0 or 1
   $showlimit = $filterdata['showlimit']; // 0 or 1
+  $colorblind = $filterdata['colorblind']; // 0 or 1
 
   $xml = '<filterdata>';
   $xml .= add_XML_value('debug', $debug);
@@ -632,6 +633,7 @@ function filterdata_XML($filterdata)
   $xml .= add_XML_value('script', $_SERVER['SCRIPT_NAME']);
   $xml .= add_XML_value('showfilters', $showfilters);
   $xml .= add_XML_value('showlimit', $showlimit);
+  $xml .= add_XML_value('colorblind', $colorblind);
 
   $xml .= '<filterdefinitions>';
   $xml .= $pageSpecificFilters->getFilterDefinitionsXML();
@@ -854,6 +856,7 @@ function get_sql_compare_and_value($compare, $value)
 //
 function get_filterdata_from_request($page_id = '')
 {
+  global $CDASH_CSS_FILE;
   $sql = '';
   $xml = '';
   $clauses = 0;
@@ -1036,6 +1039,22 @@ function get_filterdata_from_request($page_id = '')
   else
     {
     $filterdata['showfilters'] = 0;
+    }
+
+  if (array_key_exists("colorblind", $_COOKIE))
+    {
+    $filterdata['colorblind'] = intval($_COOKIE["colorblind"]);
+    }
+  else
+    {
+    if ($CDASH_CSS_FILE === 'colorblind.css')
+      {
+      $filterdata['colorblind'] = 1;
+      }
+    else
+      {
+      $filterdata['colorblind'] = 0;
+      }
     }
 
   if (!array_key_exists('showlimit', $_REQUEST))
