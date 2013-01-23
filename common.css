@@ -1031,9 +1031,10 @@ div#labelshowfilters {
 }
 
 div#labelcolorblind {
-  position: absolute;
-  bottom: 0px;
-  right: 20px;
+  position: relative;
+  top: -18px;
+  float: right;
+  margin-right: 10px;
 }
 
 div#helpmenu {

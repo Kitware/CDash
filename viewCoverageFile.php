@@ -164,18 +164,18 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $linenumber = $i+1;
     $line = htmlentities($line);
 
-    $file_array[$i] = '<span class="lineNum">'.str_pad($linenumber,5,' ', STR_PAD_LEFT).'</span>';
+    $file_array[$i] = '<span class="warning">'.str_pad($linenumber,5,' ', STR_PAD_LEFT).'</span>';
 
     if(array_key_exists($i,$linecodes))
       {
       $code = $linecodes[$i];
       if($code==0)
         {
-        $file_array[$i] .= '<span class="lineNoCov">';
+        $file_array[$i] .= '<span class="error">';
         }
       else
         {
-        $file_array[$i] .= '<span class="lineCov">';
+        $file_array[$i] .= '<span class="normal">';
         }
       $file_array[$i] .= str_pad($code,5,' ', STR_PAD_LEFT)." | ".$line;
       $file_array[$i] .= "</span>";
