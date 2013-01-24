@@ -569,6 +569,7 @@ $xml .= AddCVSViewer("github","GitHub",$Project->CvsViewerType);
 $xml .= AddCVSViewer("cgit","cgit",$Project->CvsViewerType);
 $xml .= AddCVSViewer("redmine","Redmine",$Project->CvsViewerType);
 $xml .= AddCVSViewer("hgweb","hgweb",$Project->CvsViewerType);
+$xml .= AddCVSViewer("allura","SourceForge Allura",$Project->CvsViewerType);
 
 $xml .= add_XML_value("nrepositories",$nRepositories); // should be at the end
 

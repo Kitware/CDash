@@ -339,6 +339,30 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
   return make_cdash_url($diff_url);
 }
 
+/** Return the SourceForge Allura URL */
+function get_allura_diff_url($projecturl, $directory, $file, $revision)
+{
+  if($revision != '')
+    {
+    $prev_revision = get_previous_revision($revision);
+    if($prev_revision != $revision) //diff
+      {
+      $diff_url = $projecturl."/".$revision."/tree/trunk/".$directory."/".$file."?diff=".$prev_revision;
+      }
+    else //view
+      {
+      $diff_url = $projecturl."/".$revision."/tree/trunk/";
+      }
+    }
+  else //log
+    {
+    $diff_url = $projecturl."/".$revision;
+    }
+
+  return make_cdash_url($diff_url);
+}
+
+
 /** Return the Loggerhead URL */
 function get_loggerhead_diff_url($projecturl, $directory, $file, $revision)
 {
@@ -541,6 +565,13 @@ function get_viewvc_1_1_revision_url($projecturl, $revision, $priorrevision)
 function get_websvn_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl."?view=revision&revision=".$revision;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the SourceForge Allura URL */
+function get_allura_revision_url($projecturl, $revision, $priorrevision)
+{
+  $revision_url = $projecturl."/".$revision;
   return make_cdash_url($revision_url);
 }
 

@@ -1254,6 +1254,7 @@ class Project
       break;
 
       case 'websvn':
+      case 'allura':
         return "svn";
       break;
 
