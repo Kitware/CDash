@@ -94,8 +94,8 @@ function displaygraph_selected(buildid,testid,zoomout)
       }
     $("#graph").fadeIn('slow');
     $("#graph").html("fetching...<img src=images/loading.gif></img>");
-
-    $("#graph_options").html("<a href=javascript:displaygraph_selected("+buildid+","+testid+",true)>Zoom out</a>");
+    $("#graph_options").html("<a href=javascript:displaygraph_selected('"+buildid+"','"+testid+"','"+measurementname+"',true)>Zoom out</a> \n\
+                              <br/> <a href='ajax/showtestmeasurementdatagraph.php?testid="+testid+"&buildid="+buildid+"&measurement="+measurementname+"&export=csv'>Export as CSV File</a>");
     $("#graph").load("ajax/showtestmeasurementdatagraph.php?testid="+testid+"&buildid="+buildid+"&measurement="+measurementname,{},function(){
       $("#graph_holder").fadeIn('slow');
       $("#graph_options").show();
