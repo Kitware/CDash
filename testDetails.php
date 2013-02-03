@@ -192,6 +192,12 @@ $xml .= add_XML_value("time", $testRow["time"]);
 $xml .= add_XML_value("command", $testRow["command"]);
 $xml .= add_XML_value("details", $testRow["details"]);
 
+// Helper function to remove bad characters for XML parser
+function utf8_for_xml($string)
+  {
+  return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
+  }
+
 if($CDASH_USE_COMPRESSION)
   {
   if($CDASH_DB_TYPE == "pgsql")
@@ -208,16 +214,16 @@ if($CDASH_USE_COMPRESSION)
   @$uncompressedrow = gzuncompress($testRow["output"]);
   if($uncompressedrow !== false)
     {
-    $xml .= add_XML_value("output",$uncompressedrow);
+    $xml .= add_XML_value("output",utf8_for_xml($uncompressedrow));
     }
   else
     {
-    $xml .= add_XML_value("output", $testRow['output']);
+    $xml .= add_XML_value("output", utf8_for_xml($testRow['output']));
     }
   }
 else
   {
-  $xml .= add_XML_value("output", $testRow['output']);
+  $xml .= add_XML_value("output", utf8_for_xml($testRow['output']));
   }
 
 $xml .= add_XML_value("summaryLink", $summaryLink);
