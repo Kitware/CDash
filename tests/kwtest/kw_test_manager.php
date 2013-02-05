@@ -54,7 +54,7 @@ class TestManager
     }
   function runFileTest(&$reporter, $file)
   {
-    $test = &new GroupTest('All Tests');
+    $test = &new TestSuite('All Tests');
     if($this->testDir !== null)
       {
       $path = $this->testDir.  "/" . $file;
@@ -64,7 +64,7 @@ class TestManager
       $path = $file;
       }
     print "$path\n";
-    $test->addTestFile($path);
+    $test->addFile($path);
     return $test->run($reporter);
   }
   /**
@@ -74,10 +74,10 @@ class TestManager
      */
   function runAllTests(&$reporter) {
     $testsFile = $this->getTestCaseList();
-    $test = &new GroupTest('All Tests');
+    $test = &new TestSuite('All Tests');
     foreach($testsFile as $path=>$file)
       {
-      $test->addTestFile($path);
+      $test->addFile($path);
       }
     return $test->run($reporter);
   }
@@ -213,7 +213,7 @@ class CDashTestManager extends TestManager
      * @return the result of the test
      * @param object $reporter
      */
-   function runAllTests($reporter)
+   function runAllTests(&$reporter)
      {
      $reporter->paintTestCaseList($this->getTestCaseList());
      parent::runAllTests($reporter);
@@ -479,7 +479,7 @@ class CDashTestManager extends TestManager
 
 class HtmlTestManager extends TestManager
 {
-   function runAllTests($reporter)
+   function runAllTests(&$reporter)
      {
      $this->_uninstalldb4test($this->database['host'],
                               $this->database['port'],

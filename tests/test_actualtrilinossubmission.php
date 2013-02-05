@@ -13,7 +13,7 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
     }
 
 
-  function createProject($project)
+  function createProjectWithName($project)
     {
     $content = $this->connect($this->url);
     if (!$content)
@@ -61,8 +61,8 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
 
   function createProjects()
     {
-    $this->createProject("TrilinosDriver");
-    $this->createProject("Trilinos");
+    $this->createProjectWithName("TrilinosDriver");
+    $this->createProjectWithName("Trilinos");
     }
 
 
