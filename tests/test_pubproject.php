@@ -92,8 +92,8 @@ class PubProjectTestCase extends KWWebTestCase
       }
 //  $this->analyse($this->clickLink('Edit project'));
 //  echo $this->analyse($this->setField('projectSelection','ProjectTest'));
-    $description = $this->_browser->getField('description');
-    $public      = $this->_browser->getField('public');
+    $description = $this->getBrowser()->getField('description');
+    $public      = $this->getBrowser()->getField('public');
     $descriptionExpected = 'This is a project test for cdash';
     if(strcmp($description,$descriptionExpected) != 0)
       {
@@ -115,7 +115,7 @@ class PubProjectTestCase extends KWWebTestCase
     $this->back();
     $this->post($this->getUrl(),array('Delete'=>true));
     $headerExpected = "window.location='user.php'";
-    $content = $this->_browser->getContent();
+    $content = $this->getBrowser()->getContent();
     if($this->findString($content,$headerExpected))
       {
       $msg  = "We have well been redirecting to user.php\n";
