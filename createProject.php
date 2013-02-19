@@ -518,6 +518,7 @@ else
   $xml .= "<project>";
   // Initialize the variables for creation
   $xml .= add_XML_value("emailbrokensubmission","1");
+  $xml .= add_XML_value("showcoveragecode","1");
   $xml .= add_XML_value("autoremovetimeframe","60");
   $xml .= add_XML_value("autoremovemaxbuilds","500");
   $xml .= add_XML_value("uploadquota","1");
