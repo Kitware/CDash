@@ -114,80 +114,86 @@ while($row=pdo_fetch_array($getcolumnnumber))
 
 $columncount=pdo_num_rows($getcolumnnumber);
 // If at least one column is selected
-if($columncount>0) $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name,
-        testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM `test`
-JOIN testmeasurement ON (test.id = testmeasurement.testid)
-JOIN build2test ON (build2test.testid = test.id)
-JOIN build ON (build.id = build2test.buildid)
-JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-WHERE test.name='$testName'
-AND build.starttime>='$beginning_UTCDate'
-AND build.starttime<'$end_UTCDate'
-AND test.projectid=$projectid
-AND measurement.summarypage= 1
-ORDER BY build2test.buildid, testmeasurement.name
-");
-$xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname, test date and the value.
-$i=0;
-$currentcolumn=-1;
-while($row=@pdo_fetch_array($etestquery))
+if($columncount>0)
   {
-  if(!@in_array($row["id"],$checkarray[$row["name"]]))
-    {
-    for($columnkey=0;$columnkey<$columncount;$columnkey++)
-      {
-      if($columns[$columnkey]==$row['name'])
-        {
-        $columnkey+=1;
-        break;
-        }
-      }
+  $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name,
+        testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM `test`
+  JOIN testmeasurement ON (test.id = testmeasurement.testid)
+  JOIN build2test ON (build2test.testid = test.id)
+  JOIN build ON (build.id = build2test.buildid)
+  JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+  WHERE test.name='$testName'
+  AND build.starttime>='$beginning_UTCDate'
+  AND build.starttime<'$end_UTCDate'
+  AND test.projectid=$projectid
+  AND measurement.summarypage= 1
+  ORDER BY build2test.buildid, testmeasurement.name
+  ");
 
-    $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
-    if($currentcolumn!=$columnkey-1)
-      {  // If data does not belong to this column
-      for($t=0;$t<$columncount;$t++)
-        { // Add blank values till you find the required column
-        if(($currentcolumn+$t)%$columncount!=$columnkey-1)
+  $xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname, test date and the value.
+  $i=0;
+  $currentcolumn=-1;
+
+
+  while($row=@pdo_fetch_array($etestquery))
+    {
+    if(!@in_array($row["id"],$checkarray[$row["name"]]))
+      {
+      for($columnkey=0;$columnkey<$columncount;$columnkey++)
+        {
+        if($columns[$columnkey]==$row['name'])
           {
-          $xml .="<etest>\n";
-          $xml .= add_XML_value("name","");
-          $xml .= add_XML_value("testid", "");
-          $xml .= add_XML_value("buildid", "");
-          $xml .= add_XML_value("value", "");
-          $xml .= "\n</etest>\n";
-          }
-        else
-          {
-          $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
+          $columnkey+=1;
           break;
           }
         }
-      // Add correct values to correct column
-      $xml .="<etest>\n";
-      $xml .= add_XML_value("name",$row["name"]);
-      $xml .= add_XML_value("testid", $row["id"]);
-      $xml .= add_XML_value("buildid", $row["buildid"]);
-      $xml .= add_XML_value("value", $row["value"]);
-      $xml .= "\n</etest>\n";
-      $checkarray[$row["name"]][$i]=$row["buildid"];
+
+      $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
+      if($currentcolumn!=$columnkey-1)
+        {  // If data does not belong to this column
+        for($t=0;$t<$columncount;$t++)
+          { // Add blank values till you find the required column
+          if(($currentcolumn+$t)%$columncount!=$columnkey-1)
+            {
+            $xml .="<etest>\n";
+            $xml .= add_XML_value("name","");
+            $xml .= add_XML_value("testid", "");
+            $xml .= add_XML_value("buildid", "");
+            $xml .= add_XML_value("value", "");
+            $xml .= "\n</etest>\n";
+            }
+          else
+            {
+            $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
+            break;
+            }
+          }
+        // Add correct values to correct column
+        $xml .="<etest>\n";
+        $xml .= add_XML_value("name",$row["name"]);
+        $xml .= add_XML_value("testid", $row["id"]);
+        $xml .= add_XML_value("buildid", $row["buildid"]);
+        $xml .= add_XML_value("value", $row["value"]);
+        $xml .= "\n</etest>\n";
+        $checkarray[$row["name"]][$i]=$row["buildid"];
+        }
+      else
+        {
+        // Add correct values to correct column
+        $xml .="<etest>\n";
+        $xml .= add_XML_value("name",$row["name"]);
+        $xml .= add_XML_value("testid", $row["id"]);
+        $xml .= add_XML_value("buildid", $row["buildid"]);
+        $xml .= add_XML_value("value", $row["value"]);
+        $xml .= "\n</etest>\n";
+        $checkarray[$row["name"]][$i]=$row["buildid"];
+        }
       }
-    else
-      {
-      // Add correct values to correct column
-      $xml .="<etest>\n";
-      $xml .= add_XML_value("name",$row["name"]);
-      $xml .= add_XML_value("testid", $row["id"]);
-      $xml .= add_XML_value("buildid", $row["buildid"]);
-      $xml .= add_XML_value("value", $row["value"]);
-      $xml .= "\n</etest>\n";
-      $checkarray[$row["name"]][$i]=$row["buildid"];
-      }
+    $i++;
     }
-  $i++;
+  $xml .= "</etests>\n";
   }
 
-$xml .= "</etests>\n";
 //Get information about all the builds for the given date and project
 $xml .= "<builds>\n";
 
@@ -199,18 +205,21 @@ $xml .= add_XML_value("testendtime",date(FMT_DATETIME,$end_timestamp));
 
 $columncount=pdo_num_rows($getcolumnnumber);
 // If at least one column is selected
-if($columncount>0) $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name, testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM `test` 
-JOIN testmeasurement ON (test.id = testmeasurement.testid)
-JOIN build2test ON (build2test.testid = test.id)
-JOIN build ON (build.id = build2test.buildid)
-JOIN measurements ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-WHERE test.name='$testName'
-AND build.starttime>='$beginning_UTCDate'
-AND build.starttime<'$end_UTCDate'
-AND test.projectid=$projectid
-AND measurement.summarypage= 1
-ORDER BY build2test.buildid, testmeasurement.name
-");
+if($columncount>0)
+  {
+  $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name, testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM `test`
+    JOIN testmeasurement ON (test.id = testmeasurement.testid)
+    JOIN build2test ON (build2test.testid = test.id)
+    JOIN build ON (build.id = build2test.buildid)
+    JOIN measurements ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+    WHERE test.name='$testName'
+    AND build.starttime>='$beginning_UTCDate'
+    AND build.starttime<'$end_UTCDate'
+    AND test.projectid=$projectid
+    AND measurement.summarypage= 1
+    ORDER BY build2test.buildid, testmeasurement.name
+    ");
+  }
 
 $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.buildid,build2test.time,build2test.testid AS testid,site.name AS sitename
           FROM build
@@ -229,20 +238,20 @@ if($_GET['export']=="csv") // If user wants to export as CSV file
   header("Cache-Control: public");
   header("Content-Description: File Transfer");
   header("Content-Disposition: attachment; filename=testExport.csv"); // Prepare some headers to download
-  header("Content-Type: application/octet-stream;"); 
+  header("Content-Type: application/octet-stream;");
   header("Content-Transfer-Encoding: binary");
   $filecontent = "Site,Build Name,Build Stamp,Status,Time(s)"; // Standard columns
-  
+
   // Store named measurements in an array
   while($row = pdo_fetch_array($etestquery))
     {
     $etest[$row['buildid']][$row['name']]=$row['value'];
     }
-  
+
   for($c=0;$c<count($columns);$c++) {
     $filecontent .= ",".$columns[$c]; // Add selected columns to the next
   }
-  
+
   $filecontent .= "\n";
 
   while($row = pdo_fetch_array($result))
@@ -250,7 +259,7 @@ if($_GET['export']=="csv") // If user wants to export as CSV file
     $currentStatus = $row["status"];
 
     $filecontent .= "{$row["sitename"]},{$row["name"]},{$row["stamp"]},{$row["time"]},";
- 
+
     if($projectshowtesttime)
       {
       if($row["timestatus"] < $testtimemaxstatus)
@@ -282,10 +291,6 @@ if($_GET['export']=="csv") // If user wants to export as CSV file
   echo ($filecontent); // Start file download
   die; // to suppress unwanted output
   }
-
-
-
-
 
 //now that we have the data we need, generate some XML
 while($row = pdo_fetch_array($result))
