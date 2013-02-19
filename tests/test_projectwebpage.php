@@ -144,7 +144,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $url = substr($jsonobj['aaData'][6][0],9,43);
     $url = str_replace('&#38;','&',$url);
     $content = $this->connect($this->url.'/'.$url);
-    $expected = '<span class="lineCov">    1 | #ifndef __itkNormalVectorDiffusionFunction_txx</span><br><span class="lineNum">   18</span><span class="lineCov">    2 | #define __itkNormalVectorDiffusionFunction_txx</span><br>';
+    $expected = '<span class="normal">    1 | #ifndef __itkNormalVectorDiffusionFunction_txx</span><br><span class="warning">   18</span><span class="normal">    2 | #define __itkNormalVectorDiffusionFunction_txx</span><br>';
 
     if(!$this->findString($content,$expected))
        {
