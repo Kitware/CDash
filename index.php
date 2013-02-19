@@ -877,7 +877,7 @@ function generate_main_dashboard_XML($project_instance, $date)
       "SELECT text FROM label, label2test ".
       "WHERE label2test.buildid='$buildid' ".
       "AND label2test.labelid=label.id ".
-      "GROUP BY labelid");
+      "GROUP BY labelid,text");
     foreach($label_rows as $label_row)
       {
       $build_row['labels'][$label_row['text']] = 1;
