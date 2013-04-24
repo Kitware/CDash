@@ -55,7 +55,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
   $maxlogsize = $CDASH_LOG_FILE_MAXSIZE_MB*1024*1024/10.0;
   if(file_exists($logFile) && filesize($logFile)>$maxlogsize)
     {
-    $tmplogfile = $logfile.".tmp";
+    $tmplogfile = $logFile.".tmp";
     if(!file_exists($tmplogfile))
       {
       rename($logFile,$tmplogfile); // This should be quick so we can keep logging
