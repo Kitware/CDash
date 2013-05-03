@@ -64,8 +64,11 @@ $starttime = $build_array["starttime"];
 
 $date = get_dashboard_date_from_build_starttime($starttime, $project_array["nightlytime"]);
 
+
 $xml = begin_XML_for_XSLT();
+
 $xml .= "<title>CDash : ".$projectname."</title>";
+
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
 
 // Menu
@@ -264,21 +267,21 @@ $extras.=" ORDER BY test.id, testmeasurement.name";
 if($columncount>0)
   {
   $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid,
-        build2test.status, build2test.timestatus, test.name, testmeasurement.name,
-        testmeasurement.value, build.starttime,
-        build2test.time, measurement.testpage FROM `test`
+  build2test.status, build2test.timestatus, test.name, testmeasurement.name,
+  testmeasurement.value, build.starttime,
+  build2test.time, measurement.testpage FROM `test`
   JOIN testmeasurement ON (test.id = testmeasurement.testid)
   JOIN build2test ON (build2test.testid = test.id)
   JOIN build ON (build.id = build2test.buildid)
   JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-  WHERE build.id='$buildid'
+  WHERE build.id= '$buildid'
   AND measurement.testpage=1
   $extras
-  ");
+");
   }
 
 
-if($_GET['export']=="csv") // If user wants to export as CSV file
+if(@$_GET['export']=="csv") // If user wants to export as CSV file
   {
   header("Cache-Control: public");
   header("Content-Description: File Transfer");
@@ -338,6 +341,7 @@ if($_GET['export']=="csv") // If user wants to export as CSV file
 $xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname and the value.
 $i=0;
 $currentcolumn=-1;
+$prevtestid=0;
 if($columncount>0)
   {
   while($row=pdo_fetch_array($etestquery))
@@ -451,6 +455,33 @@ if($columncount>0)
         $xml .= "\n</etest>\n";
         $checkarray[$row["name"]][$i]=$row["id"];
         }
+      $prevtestid=$row["id"];
+      }
+    else
+      {
+      if ($prevtestid!=$row["id"] and $prevtestid!=0 and $currentcolumn!=0)
+        {
+          $xml .="<etest>\n";
+          $xml .= add_XML_value("name","");
+          $xml .= add_XML_value("testid", "");
+          $xml .= add_XML_value("value", "");
+          $xml .= "\n</etest>\n";
+          $xml .="<etest>\n";
+          $xml .= add_XML_value("name","");
+          $xml .= add_XML_value("testid", "");
+          $xml .= add_XML_value("value", "");
+          $xml .= "\n</etest>\n";
+
+
+        }
+      // Add correct values to correct column
+      $xml .="<etest>\n";
+      $xml .= add_XML_value("name",$row["name"]);
+      $xml .= add_XML_value("testid", $row["id"]);
+      $xml .= add_XML_value("value", $row["value"]);
+      $xml .= "\n</etest>\n";
+      $checkarray[$row["name"]][$i]=$row["id"];
+      $prevtestid=$row["id"];
       }
     $i++;
     }

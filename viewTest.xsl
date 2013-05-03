@@ -137,11 +137,21 @@
     <xsl:for-each select='/cdash/columnname'>
       <xsl:variable name='index_col' select='count(preceding-sibling::columnname) + 1'/>
     <xsl:choose>
-      <xsl:when test="/cdash/onlypassed=1 or /cdash/onlyfailed=1">
-        <th>
-          <xsl:attribute name="id">sort_<xsl:value-of select="$index_col+3" /></xsl:attribute>
-          <xsl:value-of select="/cdash/columnname[position()=$index_col]" />
-        </th>
+      <xsl:when test="/cdash/onlyfailed=1 or /cdash/onlypassed=1">
+  <xsl:choose>
+        <xsl:when test="/cdash/showtesttime=0 or /cdash/onlypassed=1">
+          <th>
+            <xsl:attribute name="id">sort_<xsl:value-of select="$index_col+3" /></xsl:attribute>
+            <xsl:value-of select="/cdash/columnname[position()=$index_col]" />
+          </th>
+        </xsl:when>
+        <xsl:otherwise>
+          <th>
+            <xsl:attribute name="id">sort_<xsl:value-of select="$index_col+4" /></xsl:attribute>
+            <xsl:value-of select="/cdash/columnname[position()=$index_col]" />
+          </th>
+        </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
         <th>

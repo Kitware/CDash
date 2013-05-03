@@ -94,15 +94,14 @@ ORDER BY build.starttime DESC
   {
   header("Cache-Control: public");
   header("Content-Description: File Transfer");
-  $exportfilename = $measurementname.".csv";
-  header("Content-Disposition: attachment; filename=".$exportfilename); // Prepare some headers to download
-  header("Content-Type: application/octet-stream;");
+  header("Content-Disposition: attachment; filename=".$testname."_".$measurementname.".csv"); // Prepare some headers to download
+  header("Content-Type: application/octet-stream;"); 
   header("Content-Transfer-Encoding: binary");
   $filecontent = "Date;$measurementname\n"; // Standard columns
   for($c=0;$c<count($tarray);$c++) $filecontent .= "{$time[$c]};{$tarray[$c]['y']}\n";
   echo ($filecontent); // Start file download
   die; // to suppress unwanted output
-
+  
   }
 ?>
 &nbsp;
@@ -134,14 +133,14 @@ $(function () {
       hoverFill: '#444',
       hoverRadius: 4
     },
-    selection: { mode: "x" },
+    selection: { mode: "xy" },
     colors: ["#0000FF", "#dba255", "#919733"]
   };
 
     var divname = '#graph_holder';
 
     $(divname).bind("selected", function (event, area) {
-    plot = $.plot($(divname), [{label: <?php echo("\"$measurementname\""); ?>, data: d1}],
+    plot = $.plot($(divname), [{label: <?php echo("\"$measurementname <a href='ajax/showtestmeasurementdatagraph.php?testid=$testid&buildid=$buildid&measurement=$measurementname&export=csv'>Export as CSV</a>\""); ?>, data: d1}],
            $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }, yaxis: { min: 0}}));
 
     });
@@ -158,12 +157,12 @@ $(function () {
 <?php if(isset($zoomout))
 {
 ?>
-  plot = $.plot($(divnplot = $.plot($(divname),
-                  [{label: <?php echo("\".$measurementname\""); ?> ,data: d1}], options))
+    plot = $.plot($(divnplot = $.plot($(divname),
+                  [{label: <?php echo("\"$measurementname\""); ?> ,data: d1}], options,{xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}, yaxis: { min: 0}}))
           );
 <?php } else { ?>
     plot = $.plot($(divname),
-                  [{label: <?php echo("\".$measurementname\""); ?> ,data: d1}],
+                  [{label: <?php echo("\"$measurementname\""); ?> ,data: d1}],
                   $.extend(true,{}, options, {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}, yaxis: { min: 0}})
                  );
 <?php }
