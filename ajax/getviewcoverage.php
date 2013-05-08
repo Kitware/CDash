@@ -414,16 +414,18 @@ if($userid)
     $thirdcolumn = '<div style="position:relative; width: 190px;">
        <div style="position:relative; float:left;
        width: 123px; height: 12px; background: #bdbdbd url(\'images/progressbar.gif\') top left no-repeat;">
-       <div style="height: 12px;margin-left:1px;';
+       <div class=';
     switch($status)
       {
-      case 0: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_red.gif') top left no-repeat;"; break;
-      case 1: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_red.gif') top left no-repeat;"; break;
-      case 2: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_red.gif') top left no-repeat;"; break;
-      case 3: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_orange.gif') top left no-repeat;"; break;
-      case 4: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_green.gif') top left no-repeat;"; break;
-      case 5: $thirdcolumn .= " background: #bdbdbd url('images/progressbg_green.gif') top left no-repeat;"; break;
+      case 0: $thirdcolumn .= '"error" '; break;
+      case 1: $thirdcolumn .= '"error" '; break;
+      case 2: $thirdcolumn .= '"error" '; break;
+      case 3: $thirdcolumn .= '"warning" '; break;
+      case 4: $thirdcolumn .= '"normal" '; break;
+      case 5: $thirdcolumn .= '"normal" '; break;
       }
+    $thirdcolumn .= 'style="height: 10px;margin-left:1px; ';
+    $thirdcolumn .= 'border-top:1px solid grey; border-top:1px solid grey; ';
     $thirdcolumn .= 'width:'.$roundedpercentage.'%;">';
     $thirdcolumn .='</div></div><div class="percentvalue" style="position:relative; float:left; margin-left:10px">'.$covfile["percentcoverage"].'%</div></div>';
     $row[] = $thirdcolumn;
