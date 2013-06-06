@@ -15,6 +15,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+require_once("cdash/cdashmail.php");
+
 
 /** Check the email preferences for errors */
 function checkEmailPreferences($emailcategory,$errors,$fixes=false)
@@ -808,7 +810,7 @@ function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
     else
       {
       // Send the email
-      if(mail("$summaryEmail", $title, $messagePlainText,
+      if(cdashmail("$summaryEmail", $title, $messagePlainText,
            "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
         add_log("summary email sent to: ".$summaryEmail,"sendemail ".$Project->Name,LOG_INFO);
@@ -1000,7 +1002,7 @@ function send_email_fix_to_user($userid,$emailtext,$Build,$Project)
   else
     {
     // Send the email
-    if(mail("$email", $title, $messagePlainText,
+    if(cdashmail("$email", $title, $messagePlainText,
      "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
       {
       add_log("email sent to: ".$email." with fixes ".$titleerrors." for build ".$Build->Id,"sendemail ".$Project->Name,LOG_INFO);
@@ -1147,7 +1149,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
   else
     {
     // Send the email
-    if(mail("$emailaddress", $title, $messagePlainText,
+    if(cdashmail("$emailaddress", $title, $messagePlainText,
      "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
       {
       add_log("email sent to: ".$emailaddress." with errors ".$titleerrors." for build ".$Build->Id,"sendemail ".$Project->Name,LOG_INFO);

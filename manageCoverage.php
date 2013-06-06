@@ -25,6 +25,7 @@ include_once("models/coverage.php");
 include_once("models/build.php");
 include_once("models/user.php");
 include_once("models/site.php");
+require_once("cdash/cdashmail.php");
 
 if ($session_OK)
 {
@@ -283,7 +284,7 @@ if(isset($_POST["sendEmail"]))
       $User->Id=$userid;
       $email = $User->GetEmail();
 
-      mail("$email", $title, $messagePlainText,
+      cdashmail("$email", $title, $messagePlainText,
           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" );
 
       $xml .= add_XML_value("warning","*The email has been sent successfully.");

@@ -19,6 +19,7 @@
 include_once('models/dailyupdatefile.php');
 include_once('models/buildgrouprule.php');
 include_once('models/buildgroupposition.php');
+require_once("cdash/cdashmail.php");
 
 /** Main project class */
 class Project
@@ -1227,7 +1228,7 @@ class Project
         }
       $emailbody .= "\n-CDash on ".$serverName."\n";
 
-      if(mail("$email", $emailtitle, $emailbody,
+      if(cdashmail("$email", $emailtitle, $emailbody,
        "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0" ))
         {
         add_log("email sent to: ".$email,"Project::SendEmailToAdmin");
