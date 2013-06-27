@@ -69,13 +69,17 @@ function get_link_identifier($link_identifier=NULL)
 /** */
 function pdo_error($link_identifier = NULL)
 {
-  global $CDASH_DB_TYPE;
+  global $CDASH_DB_TYPE, $CDASH_PRODUCTION_MODE;
 
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
     {
     $error_info = get_link_identifier($link_identifier)->errorInfo();
     if(isset($error_info[2]) && $error_info[0] != '00000')
       {
+      if($CDASH_PRODUCTION_MODE)
+        {
+        return "SQL error encountered, query hidden.";
+        }
       return $error_info[2];
       }
     else
@@ -85,7 +89,16 @@ function pdo_error($link_identifier = NULL)
     }
   else
     {
-    return mysql_error(get_link_identifier($link_identifier));
+    $error = mysql_error(get_link_identifier($link_identifier));
+    if(!$error)
+      {
+      return $error;
+      }
+    if($CDASH_PRODUCTION_MODE)
+      {
+      return "SQL error encountered, query hidden.";
+      }
+    return $error;
     }
 }
 
