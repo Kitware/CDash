@@ -105,7 +105,7 @@ if(pdo_num_rows($query) > 0)
 $xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$sitename."</title>";
 
-@$projectid = $_GET["project"];
+@$projectid = pdo_real_escape_numeric($_GET["project"]);
 if($projectid)
   {
   $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime,showipaddresses FROM project WHERE id='$projectid'"));

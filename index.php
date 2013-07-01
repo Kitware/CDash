@@ -1902,7 +1902,7 @@ if(!isset($projectname)) // if the project name is not set we display the table 
 else
   {
   $projectid = get_project_id($projectname);
-  @$date = $_GET["date"];
+  $date = pdo_real_escape_string(@$_GET["date"]);
 
   // Check if the project has any subproject
   $Project = new Project();

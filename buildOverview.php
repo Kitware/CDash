@@ -22,7 +22,7 @@ include("cdash/version.php");
 $noforcelogin = 1;
 include('login.php');
 
-@$projectname = $_GET["project"];
+@$projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
 if(!isset($projectname) || strlen($projectname)==0)
   {
   die("Error: project not specified<br>\n");

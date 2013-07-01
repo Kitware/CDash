@@ -876,10 +876,10 @@ function get_filterdata_from_request($page_id = '')
   $pageSpecificFilters = createPageSpecificFilters($page_id);
   $filterdata['pageSpecificFilters'] = $pageSpecificFilters;
 
-  @$filtercount = $_REQUEST['filtercount'];
-  @$showfilters = $_REQUEST['showfilters'];
-  @$showlimit = $_REQUEST['showlimit'];
-  @$limit = intval($_REQUEST['limit']);
+  $filtercount = pdo_real_escape_numeric(@$_REQUEST['filtercount']);
+  $showfilters = pdo_real_escape_numeric(@$_REQUEST['showfilters']);
+  $showlimit = pdo_real_escape_numeric(@$_REQUEST['showlimit']);
+  $limit = intval(pdo_real_escape_numeric(@$_REQUEST['limit']));
   if (!is_int($limit))
   {
     $limit = 0;

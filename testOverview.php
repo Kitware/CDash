@@ -22,7 +22,7 @@ include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php"); 
 
-@$projectname = $_GET["project"];
+@$projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
 if(!isset($projectname))
   {
   die("Error: project not specified<br>\n");
@@ -32,7 +32,6 @@ if(!isset($projectname))
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$projectname = pdo_real_escape_string($projectname);
 $project = pdo_query("SELECT id,nightlytime FROM project WHERE name='$projectname'");
 $project_array = pdo_fetch_array($project);
 
