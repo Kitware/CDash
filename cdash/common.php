@@ -2096,4 +2096,22 @@ function begin_XML_for_XSLT()
   return $xml;
   }
 
+function redirect_to_https()
+  {
+  if (!isset($_SERVER['HTTPS']) || !$_SERVER['HTTPS'])
+    {
+    // if request is not secure, redirect to secure url if available
+    $url = 'https://' . $_SERVER['HTTP_HOST']
+                        . $_SERVER['REQUEST_URI'];
+
+    $https_check = @fsockopen($_SERVER['HTTP_HOST']);
+    if ($https_check)
+      {
+      header('Location: ' . $url);
+      exit;
+      }
+    }
+  }
+
+
 ?>
