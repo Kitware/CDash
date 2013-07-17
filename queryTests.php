@@ -29,7 +29,7 @@ require_once("filterdataFunctions.php");
 
 @$date = $_GET["date"];
 
-@$projectname = $_GET["project"];
+@$projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
 
 
 $start = microtime_float();
