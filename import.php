@@ -46,11 +46,12 @@ if(!isset($dayFrom))
 }
 else
 {
-  $monthFrom = $_POST["monthFrom"];
-  $yearFrom = $_POST["yearFrom"];
-  $dayTo = $_POST["dayTo"];
-  $monthTo = $_POST["monthTo"];
-  $yearTo = $_POST["yearTo"];
+  $dayFrom = pdo_real_escape_numeric($dayFrom);
+  $monthFrom = pdo_real_escape_numeric($_POST["monthFrom"]);
+  $yearFrom = pdo_real_escape_numeric($_POST["yearFrom"]);
+  $dayTo = pdo_real_escape_numeric($_POST["dayTo"]);
+  $monthTo = pdo_real_escape_numeric($_POST["monthTo"]);
+  $yearTo = pdo_real_escape_numeric($_POST["yearTo"]);
 }
   
 $xml = begin_XML_for_XSLT();
@@ -81,8 +82,8 @@ $xml .= "</cdash>";
 @$Submit = $_POST["Submit"];
 if($Submit)
 {
-  $directory = $_POST["directory"];
-  $projectid = $_POST["project"];
+  $directory = htmlspecialchars(pdo_real_escape_string($_POST["directory"]));
+  $projectid = pdo_real_escape_numeric($_POST["project"]);
   
   // Checks
   if(!isset($projectid) || !is_numeric($projectid))

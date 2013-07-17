@@ -112,8 +112,8 @@ if(isset($_POST["changePrioritySelected"]))
   {
   foreach($_POST['selectionFiles'] as $key => $value)
     {
-    $CoverageFile2User->FullPath = $value;
-    $CoverageFile2User->SetPriority($_POST['prioritySelectedSelection']);
+    $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($value));
+    $CoverageFile2User->SetPriority(pdo_real_escape_numeric($_POST['prioritySelectedSelection']));
     }
   }
 
@@ -122,7 +122,7 @@ if(isset($_POST["removeAuthorsSelected"]))
   {
   foreach($_POST['selectionFiles'] as $key => $value)
     {
-    $CoverageFile2User->FullPath = $value;
+    $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($value));
     $CoverageFile2User->RemoveAuthors();
     }
   }
@@ -132,8 +132,8 @@ if(isset($_POST["addAuthorsSelected"]))
   {
   foreach($_POST['selectionFiles'] as $key => $value)
     {
-    $CoverageFile2User->UserId = $_POST["userSelectedSelection"];
-    $CoverageFile2User->FullPath = $value;
+    $CoverageFile2User->UserId = pdo_real_escape_numeric($_POST["userSelectedSelection"]);
+    $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($value));
     $CoverageFile2User->Insert();
     }
   }
@@ -141,8 +141,8 @@ if(isset($_POST["addAuthorsSelected"]))
 // Add an author manually
 if(isset($_POST["addAuthor"]))
   {
-  $CoverageFile2User->UserId = $_POST["userSelection"];
-  $CoverageFile2User->FullPath = $_POST["fullpath"];
+  $CoverageFile2User->UserId = pdo_real_escape_numeric($_POST["userSelection"]);
+  $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($_POST["fullpath"]));
   $CoverageFile2User->Insert();
   } // end add author
 
@@ -307,8 +307,8 @@ if(isset($_POST['prioritySelection']))
   {
   $CoverageFile2User = new CoverageFile2User();
   $CoverageFile2User->ProjectId = $projectid;
-  $CoverageFile2User->FullPath = $_POST['fullpath'];
-  $CoverageFile2User->SetPriority($_POST['prioritySelection']);
+  $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($_POST['fullpath']));
+  $CoverageFile2User->SetPriority(pdo_real_escape_numeric($_POST['prioritySelection']));
   }
 
 

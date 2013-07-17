@@ -31,7 +31,7 @@ if ($session_OK)
     echo "Not a valid usersessionid!";
     return;
     }
-   
+
   $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
 
   if($user_array["admin"]!=1)
@@ -39,13 +39,19 @@ if ($session_OK)
     echo "You don't have the permissions to access this page!";
     return;
     }
-  
+
   $xml = begin_XML_for_XSLT();
   $xml .= "<backurl>user.php</backurl>";
   $xml .= "<title>CDash - Manage Users</title>";
   $xml .= "<menutitle>CDash</menutitle>";
   $xml .= "<menusubtitle>Manage Users</menusubtitle>";
-  
+
+  @$postuserid = $_POST["userid"];
+  if ($postuserid != NULL)
+    {
+    $postuserid = pdo_real_escape_numeric($postuserid);
+    }
+
   if(isset($_POST["adduser"])) // arrive from register form 
     {
     $email = $_POST["email"];
@@ -93,10 +99,10 @@ if ($session_OK)
     }
   else if(isset($_POST["makenormaluser"]))
     {
-    if($_POST["userid"] > 1)
+    if($postuserid > 1)
       {
-      $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$_POST["userid"]."'"));
-      pdo_query("UPDATE ".qid("user")." SET admin=0 WHERE id='".$_POST["userid"]."'");
+      $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
+      pdo_query("UPDATE ".qid("user")." SET admin=0 WHERE id='".$postuserid."'");
       $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." is not administrator anymore.</warning>";
       }
     else
@@ -106,14 +112,14 @@ if ($session_OK)
     }
   else if(isset($_POST["makeadmin"]))
     {
-    $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$_POST["userid"]."'"));
-    pdo_query("UPDATE ".qid("user")." SET admin=1 WHERE id='".$_POST["userid"]."'");
+    $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
+    pdo_query("UPDATE ".qid("user")." SET admin=1 WHERE id='".$postuserid."'");
     $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." is now an administrator.</warning>";
     }
   else if(isset($_POST["removeuser"]))
     {
-    $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$_POST["userid"]."'"));
-    pdo_query("DELETE FROM ".qid("user")." WHERE id='".$_POST["userid"]."'");
+    $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
+    pdo_query("DELETE FROM ".qid("user")." WHERE id='".$postuserid."'");
     $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." has been removed.</warning>";
     }
     

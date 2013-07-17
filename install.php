@@ -160,8 +160,8 @@ else
 @$Submit = $_POST["Submit"];
 if($Submit)
 {
-  $admin_email = $_POST["admin_email"];
-  $admin_password = $_POST["admin_password"];
+  $admin_email = htmlspecialchars(pdo_real_escape_string($_POST["admin_email"]));
+  $admin_password = htmlspecialchars(pdo_real_escape_string($_POST["admin_password"]));
 
   $valid_email = true;
 

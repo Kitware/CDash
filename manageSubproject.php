@@ -102,7 +102,7 @@ $Subproject->SetProjectId($projectid);
 @$addSubproject = $_POST["addSubproject"];
 if(isset($addSubproject))
   {
-  $Subproject->Name = $_POST["newsubproject"];
+  $Subproject->Name = htmlspecialchars(pdo_real_escape_string($_POST["newsubproject"]));
   $Subproject->Save();
   }
 
@@ -124,7 +124,7 @@ if(isset($_GET["removeDependency"]))
 // If we should add a dependency
 if(isset($_POST["addDependency"]))
   {
-  $Subproject->Id = $_POST["dependencyid"];
+  $Subproject->Id = pdo_real_escape_numeric($_POST["dependencyid"]);
   $Subproject->AddDependency($_POST["dependency_selection_".$Subproject->Id]);
   }
 

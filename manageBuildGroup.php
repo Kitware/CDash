@@ -63,6 +63,7 @@ if($submitAutoRemoveSettings)
 {
   foreach($_POST as $key=>$value)
     {
+    $value = pdo_real_escape_numeric($value);
     if(substr($key, 0, 20) == 'autoremovetimeframe_' && is_numeric($value))
       {
       list(,$id) = explode('_',$key);
@@ -181,8 +182,8 @@ if($down)
 @$submitDescription = $_POST["submitDescription"];
 if($submitDescription)
   {
-  $Groupid = $_POST["groupid"];
-  $Description = $_POST["description"];
+  $Groupid = pdo_real_escape_numeric($_POST["groupid"]);
+  $Description = htmlspecialchars(pdo_real_escape_string($_POST["description"]));
   $sql = "UPDATE buildgroup SET description='$Description' WHERE id='$Groupid'";
   if(!pdo_query("$sql"))
     {
@@ -194,8 +195,8 @@ if($submitDescription)
 @$Rename = $_POST["rename"];
 if($Rename)
   {
-  $Groupid = $_POST["groupid"];
-  $Newname = $_POST["newname"];
+  $Groupid = pdo_real_escape_numeric($_POST["groupid"]);
+  $Newname = htmlspecialchars(pdo_real_escape_string($_POST["newname"]));
   $sql = "UPDATE buildgroup SET name='$Newname' WHERE id='$Groupid'";
   if(!pdo_query("$sql"))
     {
@@ -207,7 +208,7 @@ if($Rename)
 @$CreateGroup = $_POST["createGroup"];
 if($CreateGroup)
   {
-  $Name = $_POST["name"];
+  $Name = htmlspecialchars(pdo_real_escape_string($_POST["name"]));
 
   // Avoid creating a group that is Nightly, Experimental or Continuous
   if($Name == "Nightly" || $Name == "Experimental" || $Name == "Continuous")
@@ -245,7 +246,7 @@ if($CreateGroup)
 @$DeleteGroup = $_POST["deleteGroup"];
 if($DeleteGroup)
   {
-  $Groupid = $_POST["groupid"];
+  $Groupid = pdo_real_escape_numeric($_POST["groupid"]);
 
   // We delete all the build2grouprule associated with the group
   pdo_query("DELETE FROM build2grouprule WHERE groupid='$Groupid'");
@@ -348,6 +349,11 @@ if(isset($_POST["groupid"]))
     {
     $IncludeInSummary = 0;
     }
+
+  $EmailCommitters = pdo_real_escape_numeric($EmailCommitters);
+  $IncludeInSummary = pdo_real_escape_numeric($IncludeInSummary);
+  $Groupid = pdo_real_escape_numeric($Groupid);
+  $SummaryEmail = pdo_real_escape_numeric($SummaryEmail);
 
   $sql = "UPDATE buildgroup SET summaryemail='$SummaryEmail', ".
     "emailcommitters='$EmailCommitters', ".

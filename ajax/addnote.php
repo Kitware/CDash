@@ -55,8 +55,8 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 @$AddNote = $_POST["AddNote"];
 if($AddNote)
   {
-  $TextNote = $_POST["TextNote"];
-  $Status = $_POST["Status"];
+  $TextNote = htmlspecialchars(pdo_real_escape_string($_POST["TextNote"]));
+  $Status = pdo_real_escape_numeric($_POST["Status"]);
   if(strlen($TextNote)>0)
     {
     $now = gmdate(FMT_DATETIME);

@@ -77,6 +77,11 @@ $xml .= "</menu>";
 
 // Return the available groups
 @$groupSelection = $_POST["groupSelection"];
+if ($groupSelection != NULL)
+  {
+  $groupSelection = pdo_real_escape_numeric($groupSelection);
+  }
+
 if(!isset($groupSelection))
   {  
   $groupSelection = 0;

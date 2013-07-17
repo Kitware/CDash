@@ -44,6 +44,11 @@ if(!isset($siteid) || !is_numeric($siteid))
 @$submit = $_POST["submit"];
 
 @$groupid = $_POST["groupid"];
+if ($groupid != NULL)
+  {
+  $groupid = pdo_real_escape_numeric($groupid);
+  }
+
 @$expected = $_POST["expected"];
 @$markexpected = $_POST["markexpected"];
 @$previousgroupid= $_POST["previousgroupid"];

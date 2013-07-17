@@ -322,42 +322,42 @@ if($session_OK)
     $clientJobSchedule = new ClientJobSchedule();
     $clientJobSchedule->UserId = $userid;
     $clientJobSchedule->ProjectId = $Project->Id;
-    $clientJobSchedule->BuildNameSuffix = $_POST['buildnamesuffix'];
-    $clientJobSchedule->BuildConfiguration = $_POST['buildconfiguration'];
-    $clientJobSchedule->Tag = $_POST['tag'];
+    $clientJobSchedule->BuildNameSuffix = htmlspecialchars(pdo_real_escape_string($_POST['buildnamesuffix']));
+    $clientJobSchedule->BuildConfiguration = htmlspecialchars(pdo_real_escape_string($_POST['buildconfiguration']));
+    $clientJobSchedule->Tag = htmlspecialchars(pdo_real_escape_string($_POST['tag']));
     $clientJobSchedule->Enable = 1;
 
     if(strlen($_POST['module'])>0)
       {
-      $clientJobSchedule->Module = $_POST['module'];
+      $clientJobSchedule->Module = htmlspecialchars(pdo_real_escape_string($_POST['module']));
       }
 
     if(strlen($_POST['otherrepository'])>0)
       {
-      $clientJobSchedule->Repository = $_POST['otherrepository'];
+      $clientJobSchedule->Repository = htmlspecialchars(pdo_real_escape_string($_POST['otherrepository']));
       }
     else
       {
-      $clientJobSchedule->Repository = $_POST['repository'];
+      $clientJobSchedule->Repository = htmlspecialchars(pdo_real_escape_string($_POST['repository']));
       }
 
     if(!isset($_POST['enable']))
       {
       $clientJobSchedule->Enable = 0;
       }
-    $clientJobSchedule->StartDate = $_POST['startdate'];
+    $clientJobSchedule->StartDate = htmlspecialchars(pdo_real_escape_string($_POST['startdate']));
     if(empty($clientJobSchedule->StartDate))
       {
       $clientJobSchedule->StartDate = date("Y-m-d H:i:s");
       }
-    $clientJobSchedule->EndDate = $_POST['enddate'];
+    $clientJobSchedule->EndDate = htmlspecialchars(pdo_real_escape_string($_POST['enddate']));
     if(empty($clientJobSchedule->EndDate))
       {
       $clientJobSchedule->EndDate = '1980-01-01 00:00:00';
       }
-    $clientJobSchedule->StartTime = $_POST['starttime'];
-    $clientJobSchedule->Type = $_POST['type'];
-    $clientJobSchedule->RepeatTime = $_POST['repeat'];
+    $clientJobSchedule->StartTime = htmlspecialchars(pdo_real_escape_string($_POST['starttime']));
+    $clientJobSchedule->Type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
+    $clientJobSchedule->RepeatTime = htmlspecialchars(pdo_real_escape_string($_POST['repeat']));
     $clientJobSchedule->CMakeCache = stripslashes_if_gpc_magic_quotes($_POST['cmakecache']);
     $clientJobSchedule->Description = stripslashes_if_gpc_magic_quotes($_POST['description']);
     $clientJobSchedule->ClientScript = stripslashes_if_gpc_magic_quotes($_POST['clientscript']);

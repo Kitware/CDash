@@ -37,21 +37,21 @@ if ($session_OK)
 
   $userid = $_SESSION['cdash']['loginid'];
 
-  @$updateprofile = $_POST["updateprofile"]; 
-  if($updateprofile) 
+  @$updateprofile = $_POST["updateprofile"];
+  if($updateprofile)
     {
-    $institution = pdo_real_escape_string($_POST["institution"]); 
-    $email = pdo_real_escape_string($_POST["email"]); 
-   
+    $institution = pdo_real_escape_string($_POST["institution"]);
+    $email = pdo_real_escape_string($_POST["email"]);
+
     if(strlen($email)<3 || strpos($email,"@")===FALSE)
       {
-      $xml .= "<error>Email should be a valid address.</error>";  
+      $xml .= "<error>Email should be a valid address.</error>";
       }
     else
-      { 
-      $lname = pdo_real_escape_string($_POST["lname"]); 
-      $fname = pdo_real_escape_string($_POST["fname"]);  
-     
+      {
+      $lname = pdo_real_escape_string($_POST["lname"]);
+      $fname = pdo_real_escape_string($_POST["fname"]);
+
       if(pdo_query("UPDATE ".qid("user")." SET email='$email',
                    institution='$institution',
                    firstname='$fname',
@@ -66,15 +66,15 @@ if ($session_OK)
       add_last_sql_error("editUser.php");
       }
     }
- 
-   
+
+
  // Update the password
  @$updatepassword = $_POST["updatepassword"];
- if($updatepassword) 
+ if($updatepassword)
     {
-   $passwd = $_POST["passwd"]; 
-   $passwd2 = $_POST["passwd2"]; 
-  
+   $passwd = htmlspecialchars(pdo_real_escape_string($_POST["passwd"]));
+   $passwd2 = htmlspecialchars(pdo_real_escape_string($_POST["passwd2"]));
+
   if(strlen($passwd)<5)
     {
    $xml .= "<error>Password should be at least 5 characters.</error>";
@@ -111,7 +111,7 @@ if ($session_OK)
 
   // Update the credentials
  @$updatecredentials = $_POST["updatecredentials"];
- if($updatecredentials) 
+ if($updatecredentials)
     {
     $credentials = $_POST["credentials"];
     $UserProject = new UserProject();
@@ -120,8 +120,8 @@ if ($session_OK)
     $credentials[] = $user_array["email"];
     $UserProject->UpdateCredentials($credentials);
     } // end update credentials
-  
-    
+
+
   // List the credentials
   // First the email one (which cannot be changed)
   $credential = pdo_query("SELECT credential FROM user2repository WHERE userid='$userid'

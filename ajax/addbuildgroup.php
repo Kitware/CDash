@@ -64,7 +64,17 @@ $projectid = $build_array["projectid"];
 @$submit = $_POST["submit"];
 
 @$groupid = $_POST["groupid"];
+if ($groupid != NULL)
+  {
+  $groupid = pdo_real_escape_numeric($groupid);
+  }
+
 @$expected = $_POST["expected"];
+if ($expected != NULL)
+  {
+  $expected = pdo_real_escape_numeric($expected);
+  }
+
 @$definerule = $_POST["definerule"];
 @$markexpected = $_POST["markexpected"];
 

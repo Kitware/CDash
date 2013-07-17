@@ -117,7 +117,7 @@ $Banner->SetProjectId($projectid);
 @$updateMessage = $_POST["updateMessage"];
 if(isset($updateMessage))
   {
-  $Banner->SetText($_POST["message"]);
+  $Banner->SetText(htmlspecialchars(pdo_real_escape_string($_POST["message"])));
   }
 
 

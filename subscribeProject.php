@@ -175,6 +175,11 @@ if ($session_OK)
     $EmailCategory = $emailcategory_update+$emailcategory_configure+$emailcategory_warning+$emailcategory_error+$emailcategory_test+$emailcategory_dynamicanalysis;
     if(pdo_num_rows($user2project)>0)
       {
+      $Role = pdo_real_escape_numeric($Role);
+      $EmailType = pdo_real_escape_numeric($EmailType);
+      $EmailCategory = pdo_real_escape_numeric($EmailCategory);
+      $EmailMissingSites = pdo_real_escape_numeric($EmailMissingSites);
+      $EmailSuccess = pdo_real_escape_numeric($EmailSuccess);
       pdo_query("UPDATE user2project SET role='$Role',emailtype='$EmailType',
                          emailcategory='$EmailCategory',
                          emailmissingsites='$EmailMissingSites',

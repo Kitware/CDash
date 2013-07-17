@@ -334,8 +334,23 @@ function auth($SessionCachePolicy='private_no_expire')
   if(isset($_POST["sent"])) // arrive from login form
     {
     @$login = $_POST["login"];
+    if ($login != NULL)
+      {
+      $login = htmlspecialchars(pdo_real_escape_string($login));
+      }
+
     @$passwd = $_POST["passwd"];
+    if ($passwd != NULL)
+      {
+      $passwd = htmlspecialchars(pdo_real_escape_string($passwd));
+      }
+
     @$rememberme = $_POST["rememberme"];
+    if ($rememberme != NULL)
+      {
+      $rememberme = pdo_real_escape_numeric($rememberme);
+      }
+
     return authenticate($login,$passwd,$SessionCachePolicy,$rememberme);
     }
   else

@@ -81,9 +81,25 @@ if ($session_OK)
 // Form post
 @$adduser = $_POST["adduser"];
 @$removeuser = $_POST["removeuser"];
+
 @$userid = $_POST["userid"];
+if ($userid != NULL)
+  {
+  $userid = pdo_real_escape_numeric($userid);
+  }
+
 @$role = $_POST["role"];
+if ($role != NULL)
+  {
+  $role = pdo_real_escape_numeric($role);
+  }
+
 @$emailtype = $_POST["emailtype"];
+if ($emailtype != NULL)
+  {
+  $emailtype = pdo_real_escape_numeric($emailtype);
+  }
+
 @$credentials = $_POST["credentials"];
 @$repositoryCredential = $_POST["repositoryCredential"];
 @$updateuser = $_POST["updateuser"];
@@ -198,7 +214,7 @@ function register_user($projectid,$email,$firstName,$lastName,$repositoryCredent
 
 if(isset($_POST["sendEmailToSiteMaintainers"]))
   {
-  $emailMaintainers = $_POST["emailMaintainers"];
+  $emailMaintainers = htmlspecialchars(pdo_real_escape_string($_POST["emailMaintainers"]));
   if(strlen($emailMaintainers)<50)
     {
     $xml .= "<error>The email should be more than 50 characters.</error>";
@@ -242,8 +258,20 @@ if(isset($_POST["sendEmailToSiteMaintainers"]))
 if($registerUser)
 {
   @$email = $_POST["registeruseremail"];
+  if ($email != NULL)
+    {
+    $email = htmlspecialchars(pdo_real_escape_string($email));
+    }
   @$firstName = $_POST["registeruserfirstname"];
+  if ($firstName != NULL)
+    {
+    $firstName = htmlspecialchars(pdo_real_escape_string($firstName));
+    }
   @$lastName = $_POST["registeruserlastname"];
+  if ($lastName != NULL)
+    {
+    $lastName = htmlspecialchars(pdo_real_escape_string($lastName));
+    }
   @$repositoryCredential = $_POST["registeruserrepositorycredential"];
 
   if(strlen($email)<3 || strlen($firstName)<2 || strlen($lastName)<2)

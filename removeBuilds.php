@@ -45,7 +45,7 @@ if ($projectid != NULL)
 $xml = begin_XML_for_XSLT();
 
 //get date info here
-@$dayTo = $_POST["dayFrom"];
+@$dayTo = pdo_real_escape_numeric($_POST["dayFrom"]);
 if(!isset($dayTo))
   {
   $time = strtotime("2000-01-01 00:00:00");
@@ -68,12 +68,12 @@ if(!isset($dayTo))
   }
 else
   {
-  $dayFrom = $_POST["dayFrom"];
-  $monthFrom = $_POST["monthFrom"];
-  $yearFrom = $_POST["yearFrom"];
-  $dayTo = $_POST["dayTo"];
-  $monthTo = $_POST["monthTo"];
-  $yearTo = $_POST["yearTo"];
+  $dayFrom = pdo_real_escape_numeric($_POST["dayFrom"]);
+  $monthFrom = pdo_real_escape_numeric($_POST["monthFrom"]);
+  $yearFrom = pdo_real_escape_numeric($_POST["yearFrom"]);
+  $dayTo = pdo_real_escape_numeric($_POST["dayTo"]);
+  $monthTo = pdo_real_escape_numeric($_POST["monthTo"]);
+  $yearTo = pdo_real_escape_numeric($_POST["yearTo"]);
   } 
   
 $xml = "<cdash>";

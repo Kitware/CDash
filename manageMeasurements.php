@@ -22,7 +22,7 @@ include_once("models/project.php");
 
 if ($session_OK)
 {
-$projectid = $_REQUEST["projectid"];
+$projectid = pdo_real_escape_numeric($_REQUEST["projectid"]);
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 // Checks
@@ -41,9 +41,9 @@ if(pdo_num_rows($project)>0)
   }
 
 $submit=$_POST['submit'];
-$nameN=$_POST['nameN'];
-$showTN=$_POST['showTN'];
-$showSN=$_POST['showSN'];
+$nameN = htmlspecialchars(pdo_real_escape_string($_POST['nameN']));
+$showTN = htmlspecialchars(pdo_real_escape_string($_POST['showTN']));
+$showSN = htmlspecialchars(pdo_real_escape_string($_POST['showSN']));
 
 $id=$_POST['id'];
 $name=$_POST['name'];

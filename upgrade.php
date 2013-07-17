@@ -962,6 +962,10 @@ if(isset($_POST["CompressTestOutput"]))
 if($ComputeTestTiming)
 {
   @$TestTimingDays = $_POST["TestTimingDays"];
+  if ($TestTimingDays != NULL)
+    {
+    $TestTimingDays = pdo_real_escape_numeric($TestTimingDays);
+    }
   if(is_numeric($TestTimingDays) && $TestTimingDays>0)
     {
     ComputeTestTiming($TestTimingDays);
@@ -977,6 +981,10 @@ if($ComputeTestTiming)
 if($ComputeUpdateStatistics)
 {
   @$UpdateStatisticsDays = $_POST["UpdateStatisticsDays"];
+  if ($UpdateStatisticsDays != NULL)
+    {
+    $UpdateStatisticsDays = pdo_real_escape_numeric($UpdateStatisticsDays);
+    }
   if(is_numeric($UpdateStatisticsDays) && $UpdateStatisticsDays>0)
     {
     ComputeUpdateStatistics($UpdateStatisticsDays);
