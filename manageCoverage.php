@@ -47,12 +47,17 @@ $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Coverage</menusubtitle>";
 
 @$projectid = $_GET["projectid"];
+if ($projectid != NULL)
+  {
+  $projectid = pdo_real_escape_numeric($projectid);
+  }
+
 $Project = new Project;
 
 $buildid = 0;
 if(isset($_GET['buildid']))
   {
-  $buildid = $_GET['buildid'];
+  $buildid = pdo_real_escape_numeric($_GET['buildid']);
   }
 
 // If the projectid is not set and there is only one project we go directly to the page
@@ -144,8 +149,8 @@ if(isset($_POST["addAuthor"]))
 // Remove an author manually
 if(isset($_GET["removefileid"]))
   {
-  $CoverageFile2User->UserId = $_GET["removeuserid"];
-  $CoverageFile2User->FileId = $_GET["removefileid"];
+  $CoverageFile2User->UserId = pdo_real_escape_numeric($_GET["removeuserid"]);
+  $CoverageFile2User->FileId = pdo_real_escape_numeric($_GET["removefileid"]);
   $CoverageFile2User->Remove();
   } // end remove author
 

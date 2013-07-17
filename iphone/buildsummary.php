@@ -12,7 +12,16 @@ $NoXSLGenerate = 1;
 $FormatTextForIphone = 1;
 
 @$buildid = $_GET["project"];
+if ($buildid != NULL)
+  {
+  $buildid = pdo_real_escape_numeric($buildid);
+  }
+
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
 include("../buildSummary.php");
 

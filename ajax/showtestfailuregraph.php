@@ -26,9 +26,9 @@ require_once("cdash/config.php");
 require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
-$projectid = $_GET["projectid"];
-$testname = $_GET["testname"];
-$starttime = $_GET["starttime"];
+$projectid = pdo_real_escape_numeric($_GET["projectid"]);
+$testname = htmlspecialchars(pdo_real_escape_string($_GET["testname"]));
+$starttime = pdo_real_escape_numeric($_GET["starttime"]);
 @$zoomout = $_GET["zoomout"];
 
 if(!isset($projectid) || !is_numeric($projectid))

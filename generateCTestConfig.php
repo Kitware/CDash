@@ -24,6 +24,11 @@ require_once("models/project.php");
 require_once("models/subproject.php");
 
 @$projectid = $_GET["projectid"];
+if ($projectid != NULL)
+  {
+  $projectid = pdo_real_escape_numeric($projectid);
+  }
+
 // Checks
 if(!isset($projectid) || !is_numeric($projectid))
   {

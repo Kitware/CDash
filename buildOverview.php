@@ -22,13 +22,23 @@ include("cdash/version.php");
 $noforcelogin = 1;
 include('login.php');
 
-@$projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
+@$projectname = $_GET["project"];
+if ($projectname != NULL)
+  {
+  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+  }
+
 if(!isset($projectname) || strlen($projectname)==0)
   {
   die("Error: project not specified<br>\n");
   }
+
 @$date = $_GET["date"];
- 
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 

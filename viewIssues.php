@@ -30,8 +30,13 @@ if(!isset($projectname ))
   }
 else
   {
+  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
   $projectid = get_project_id($projectname);
   @$date = $_GET["date"];
+  if ($date != NULL)
+    {
+    $date = htmlspecialchars(pdo_real_escape_string($date));
+    }
 
   // Check if the project has any subproject 
   $Project = new Project();

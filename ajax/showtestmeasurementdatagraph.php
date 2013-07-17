@@ -22,10 +22,10 @@ require_once("cdash/config.php");
 require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
-$testid = $_GET["testid"];
-$buildid = $_GET["buildid"];
+$testid = pdo_real_escape_numeric($_GET["testid"]);
+$buildid = pdo_real_escape_numeric($_GET["buildid"]);
 $zoomout = $_GET["zoomout"];
-$measurementname = $_GET["measurement"];
+$measurementname = htmlspecialchars(pdo_real_escape_string($_GET["measurement"]));
 
 
 if(!isset($buildid) || !is_numeric($buildid))

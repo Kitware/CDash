@@ -30,11 +30,11 @@ require_once("cdash/common.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$siteid = $_GET["siteid"];
-$buildname = pdo_real_escape_string($_GET["buildname"]);
-$buildtype = pdo_real_escape_string($_GET["buildtype"]);
-$buildgroupid = $_GET["buildgroup"];
-$divname = $_GET["divname"];
+$siteid = pdo_real_escape_numeric($_GET["siteid"]);
+$buildname = htmlspecialchars(pdo_real_escape_string($_GET["buildname"]));
+$buildtype = htmlspecialchars(pdo_real_escape_string($_GET["buildtype"]));
+$buildgroupid = pdo_real_escape_numeric($_GET["buildgroup"]);
+$divname = htmlspecialchars(pdo_real_escape_string($_GET["divname"]));
 if(!isset($siteid) || !is_numeric($siteid))
   {
   echo "Not a valid siteid!";

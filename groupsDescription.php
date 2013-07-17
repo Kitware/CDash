@@ -38,7 +38,7 @@ pdo_select_db("$CDASH_DB_NAME",$db);
    <?php
     $i = 0;
    
-   $project = $_GET["project"];
+   $project = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
    $projectid = get_project_id($project);
    if($projectid<1)
      {

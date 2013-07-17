@@ -28,7 +28,16 @@ require_once("filterdataFunctions.php");
 set_time_limit(0);
 
 @$buildid = $_GET["buildid"];
+if ($buildid != NULL)
+  {
+  $buildid = pdo_real_escape_numeric($buildid);
+  }
+
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
 // Checks
 if(!isset($buildid) || !is_numeric($buildid))

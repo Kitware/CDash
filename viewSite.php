@@ -24,6 +24,11 @@ include("cdash/version.php");
 include("models/project.php");
 
 @$siteid = $_GET["siteid"];
+if ($siteid != NULL)
+  {
+  $siteid = pdo_real_escape_numeric($siteid);
+  }
+
 // Checks
 if(!isset($siteid) || !is_numeric($siteid))
   {
@@ -38,6 +43,10 @@ $site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'")
 $sitename = $site_array["name"];
 
 @$currenttime = $_GET["currenttime"];
+if ($currenttime != NULL)
+  {
+  $currenttime = pdo_real_escape_numeric($currenttime);
+  }
 
 $siteinformation_array = array();
 $siteinformation_array["description"] = "NA";

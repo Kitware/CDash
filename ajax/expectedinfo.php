@@ -30,11 +30,11 @@ require_once("cdash/common.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$siteid = $_GET["siteid"];
-$buildname = pdo_real_escape_string($_GET["buildname"]);
-$projectid = $_GET["projectid"];
-$buildtype = pdo_real_escape_string($_GET["buildtype"]);
-$currenttime = pdo_real_escape_string($_GET["currenttime"]);
+$siteid = pdo_real_escape_numeric($_GET["siteid"]);
+$buildname = htmlspecialchars(pdo_real_escape_string($_GET["buildname"]));
+$projectid = pdo_real_escape_numeric($_GET["projectid"]);
+$buildtype = htmlspecialchars(pdo_real_escape_string($_GET["buildtype"]));
+$currenttime = htmlspecialchars(pdo_real_escape_string($_GET["currenttime"]));
 
 // Checks
 if(!isset($siteid) || !is_numeric($siteid))

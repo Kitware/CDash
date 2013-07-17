@@ -277,12 +277,20 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
 // Repository nightly queries are for the 24 hours leading up to the
 // nightly start time for "$projectname" on "$date"
 @$projectname = $_GET["project"];
+if ($projectname != NULL)
+  {
+  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+  }
+
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$projectname = pdo_real_escape_string($projectname);
 $project = pdo_query("SELECT id,nightlytime,bugtrackerurl,bugtrackerfileurl FROM project WHERE name='$projectname'");
 $project_array = pdo_fetch_array($project);
 

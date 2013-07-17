@@ -35,7 +35,7 @@ set_time_limit(0);
 $noforcelogin = 1;
 require('login.php');
 
-$buildid = $_GET["buildid"];
+$buildid = pdo_real_escape_numeric($_GET["buildid"]);
 if(!isset($buildid) || !is_numeric($buildid))
   {
   echo "Not a valid buildid!";
@@ -45,7 +45,7 @@ if(!isset($buildid) || !is_numeric($buildid))
 $userid = 0;
 if(isset($_GET['userid']) && is_numeric($_GET['userid']))
   {
-  $userid = $_GET['userid'];
+  $userid = pdo_real_escape_numeric($_GET['userid']);
   }
 
 // Find the project variables
@@ -91,8 +91,8 @@ $end = 10000000;
 /** Paging */
 if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
   {
-  $start = $_GET['iDisplayStart'];
-  $end = $_GET['iDisplayStart']+$_GET['iDisplayLength'];
+  $start = pdo_real_escape_numeric($_GET['iDisplayStart']);
+  $end = pdo_real_escape_numeric($_GET['iDisplayStart']) + pdo_real_escape_numeric($_GET['iDisplayLength']);
   }
 
 /** Sorting */
@@ -118,7 +118,7 @@ if(isset($_GET['sSortDir_0']))
 $SQLsearchTerm = "";
 if ( isset($_GET['sSearch']) && $_GET['sSearch'] != "" )
   {
-  $SQLsearchTerm = " AND cf.fullpath LIKE '%".pdo_real_escape_string($_GET['sSearch'])."%'";
+  $SQLsearchTerm = " AND cf.fullpath LIKE '%".htmlspecialchars(pdo_real_escape_string($_GET['sSearch']))."%'";
   }
 
 $SQLDisplayAuthors = '';
@@ -226,7 +226,7 @@ if($userid)
   $status = 0;
   if(isset($_GET['status']))
     {
-    $status = $_GET['status'];
+    $status = pdo_real_escape_numeric($_GET['status']);
     }
 
   // Do the sorting

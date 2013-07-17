@@ -66,7 +66,7 @@ if ($session_OK)
   
   if(isset($_POST['unclaimsite']) && isset($_GET['siteid']))
     {
-    pdo_query("DELETE FROM site2user WHERE siteid=".qnum($_GET['siteid'])." AND userid=".qnum($userid));
+    pdo_query("DELETE FROM site2user WHERE siteid=".qnum(pdo_real_escape_numeric($_GET['siteid']))." AND userid=".qnum($userid));
     echo "<script language=\"javascript\">window.location='user.php'</script>";
     return;
     }
@@ -140,6 +140,10 @@ if ($session_OK)
     
   // If we have a projectid that means we should list all the sites
   @$projectid = $_GET["projectid"];
+  if ($projectid != NULL)
+    {
+    $projectid = pdo_real_escape_numeric($projectid);
+    }
   if(isset($projectid) && is_numeric($projectid))
     {
     $project_array = pdo_fetch_array(pdo_query("SELECT name FROM project WHERE id='$projectid'"));
@@ -175,6 +179,10 @@ if ($session_OK)
   
   // If we have a siteid we look if the user has claimed the site or not
   @$siteid = $_GET["siteid"];
+  if ($siteid != NULL)
+    {
+    $siteid = pdo_real_escape_numeric($siteid);
+    }
   if(isset($siteid) && is_numeric($siteid))
     {
     $xml .= "<user>";

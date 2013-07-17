@@ -24,7 +24,7 @@ include_once("models/project.php");
 include_once("models/subproject.php");
 include_once("models/user.php");
 
-if ($session_OK) 
+if ($session_OK)
 {
 @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
@@ -36,14 +36,19 @@ if(!isset($userid) || !is_numeric($userid))
   echo "Not a valid userid!";
   return;
   }
-  
+
 $xml = begin_XML_for_XSLT();
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Manage Subproject</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Subprojects</menusubtitle>";
-  
+
 @$projectid = $_GET["projectid"];
+if ($projectid != NULL)
+  {
+    $projectid = pdo_real_escape_numeric($projectid);
+  }
+
 $Project = new Project;
      
 // If the projectid is not set and there is only one project we go directly to the page
@@ -104,15 +109,15 @@ if(isset($addSubproject))
 // If delete is requested
 if(isset($_GET["delete"]))
   {
-  $Subproject->Id = $_GET["delete"];
+  $Subproject->Id = pdo_real_escape_numeric($_GET["delete"]);
   $Subproject->Delete();
   }
 
 // If we should remove a dependency
 if(isset($_GET["removeDependency"]))
   {
-  $Subproject->Id = $_GET["dependency"];
-  $Subproject->RemoveDependency($_GET["removeDependency"]);
+  $Subproject->Id = pdo_real_escape_numeric($_GET["dependency"]);
+  $Subproject->RemoveDependency(pdo_real_escape_numeric($_GET["removeDependency"]));
   }
 
 

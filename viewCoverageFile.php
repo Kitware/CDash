@@ -23,8 +23,20 @@ include_once("cdash/common.php");
 include("cdash/version.php");
 
 @$buildid = $_GET["buildid"];
+if ($buildid != NULL)
+  {
+  $buildid = pdo_real_escape_numeric($buildid);
+  }
 @$fileid = $_GET["fileid"];
+if ($fileid != NULL)
+  {
+  $fileid = pdo_real_escape_numeric($fileid);
+  }
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
 // Checks
 if(!isset($buildid) || !is_numeric($buildid))

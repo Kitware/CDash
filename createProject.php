@@ -38,6 +38,11 @@ if ($session_OK)
     }
 
   @$projectid = $_GET["projectid"];
+  if ($projectid != NULL)
+    {
+    $projectid = pdo_real_escape_numeric($projectid);
+    }
+
   @$edit = $_GET["edit"];
 
   $Project = new Project;

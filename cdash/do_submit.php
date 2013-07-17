@@ -159,7 +159,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
   if(function_exists("curl_init") == TRUE)
     {
     $currentURI = get_server_URI(true);
-    $clientscheduleid = isset($_GET["clientscheduleid"]) ? $_GET["clientscheduleid"] : 0;
+    $clientscheduleid = isset($_GET["clientscheduleid"]) ? pdo_real_escape_numeric($_GET["clientscheduleid"]) : 0;
     if($clientscheduleid !== 0)
       {
       pdo_query("INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ".

@@ -24,7 +24,16 @@ include_once("cdash/repository.php");
 include("cdash/version.php");
 
 @$buildid = $_GET["buildid"];
+if ($buildid != NULL)
+  {
+  $buildid = pdo_real_escape_numeric($buildid);
+  }
+
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
 // Checks
 if(!isset($buildid) || !is_numeric($buildid))
@@ -97,6 +106,10 @@ $xml .= "</menu>";
   $xml .= "</build>";
 
   @$type = $_GET["type"];
+  if ($type != NULL)
+    {
+    $type = pdo_real_escape_numeric($type);
+    }
   if(!isset($type))
     {
     $type = 0;

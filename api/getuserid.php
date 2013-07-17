@@ -40,7 +40,7 @@ if(strlen($_GET['author']) == 0)
   return;
   }
 
-$author = pdo_real_escape_string($_GET['author']);
+$author = htmlspecialchars(pdo_real_escape_string($_GET['author']));
 
 // First, try the simplest query, where the author string is simply exactly
 // equal to the user's email:
@@ -67,7 +67,7 @@ if(strlen($_GET['project'])==0)
   return;
   }
 
-$project = pdo_real_escape_string($_GET['project']);
+$project = htmlspecialchars(pdo_real_escape_string($_GET['project']));
 $projectid = get_project_id($project);
 if($projectid === -1)
   {

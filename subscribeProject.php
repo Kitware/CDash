@@ -44,7 +44,16 @@ if ($session_OK)
   $xml .= "<menusubtitle>Subscription</menusubtitle>";
 
   @$projectid = $_GET["projectid"];
+  if ($projectid != NULL)
+    {
+    $projectid = pdo_real_escape_numeric($projectid);
+    }
+
   @$edit = $_GET["edit"];
+  if ($edit != NULL)
+    {
+    $edit = pdo_real_escape_numeric($edit);
+    }
 
   // Checks
   if(!isset($projectid) || !is_numeric($projectid))

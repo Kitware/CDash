@@ -29,14 +29,14 @@ include_once("cdash/repository.php");
 include('cdash/version.php');
 
 
-$testid = $_GET["test"];
+$testid = pdo_real_escape_numeric($_GET["test"]);
 // Checks
 if(!isset($testid) || !is_numeric($testid))
   {
   die('Error: no test id supplied in query string');
   }
 
-$buildid = $_GET["build"];
+$buildid = pdo_real_escape_numeric($_GET["build"]);
 if(!isset($buildid) || !is_numeric($buildid))
   {
   die('Error: no build id supplied in query string');

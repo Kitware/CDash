@@ -484,12 +484,13 @@ function generate_main_dashboard_XML($project_instance, $date)
     }
 
   // If we have a subproject
-  $subproject_name = pdo_real_escape_string(@$_GET["subproject"]);
+  $subproject_name = @$_GET["subproject"];
   $subprojectid = false;
 
   if($subproject_name)
     {
     $SubProject = new SubProject();
+    $subproject_name = htmlspecialchars(pdo_real_escape_string($subproject_name));
     $SubProject->Name = $subproject_name;
     $SubProject->ProjectId = $projectid;
     $subprojectid = $SubProject->GetIdFromName();
@@ -1901,8 +1902,14 @@ if(!isset($projectname)) // if the project name is not set we display the table 
   }
 else
   {
+  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
   $projectid = get_project_id($projectname);
-  $date = pdo_real_escape_string(@$_GET["date"]);
+
+  @$date = $_GET["date"];
+  if ($date != NULL)
+    {
+    $date = htmlspecialchars(pdo_real_escape_string($date));
+    }
 
   // Check if the project has any subproject
   $Project = new Project();

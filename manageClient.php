@@ -44,7 +44,7 @@ if($session_OK)
     $User = new User();
     $User->Id = $userid;
     $ClientJobSchedule = new ClientJobSchedule();
-    $ClientJobSchedule->Id = $_GET['removeschedule'];
+    $ClientJobSchedule->Id = pdo_real_escape_numeric($_GET['removeschedule']);
 
     if(!$User->IsAdmin() && $ClientJobSchedule->GetOwner()!=$userid)
       {
@@ -63,11 +63,11 @@ if($session_OK)
 
   if(isset($_GET['projectid']))
     {
-    $projectid = $_GET['projectid'];
+    $projectid = pdo_real_escape_numeric($_GET['projectid']);
     }
   else
     {
-    $scheduleid = $_GET['scheduleid'];
+    $scheduleid = pdo_real_escape_numeric($_GET['scheduleid']);
     $ClientJobSchedule = new ClientJobSchedule();
     $ClientJobSchedule->Id = $scheduleid;
     $projectid = $ClientJobSchedule->GetProjectId();

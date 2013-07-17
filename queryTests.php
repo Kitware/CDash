@@ -28,8 +28,16 @@ require_once("filterdataFunctions.php");
 
 
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
-@$projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
+@$projectname = $_GET["project"];
+if ($projectname != NULL)
+  {
+  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+  }
 
 
 $start = microtime_float();

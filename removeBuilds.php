@@ -36,8 +36,12 @@ if(pdo_select_db("$CDASH_DB_NAME",$db) === FALSE)
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
 
-@$projectid = $_GET["projectid"]; 
-    
+@$projectid = $_GET["projectid"];
+if ($projectid != NULL)
+  {
+  $projectid = pdo_real_escape_numeric($projectid);
+  }
+
 $xml = begin_XML_for_XSLT();
 
 //get date info here

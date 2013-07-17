@@ -7,6 +7,6 @@ set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
 require_once("cdash/dailyupdates.php");
 
-$projectid = $_GET['projectid'];
+$projectid = pdo_real_escape_numeric($_GET['projectid']);
 addDailyChanges($projectid);
 ?>

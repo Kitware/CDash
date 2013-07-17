@@ -30,7 +30,7 @@ require_once("cdash/common.php");
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
-$projectid = $_GET["projectid"];
+$projectid = pdo_real_escape_numeric($_GET["projectid"]);
 if(!isset($projectid) || !is_numeric($projectid))
   {
   echo "Not a valid projectid!";

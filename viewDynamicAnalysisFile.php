@@ -23,8 +23,16 @@ include_once("cdash/common.php");
 include("cdash/version.php");
 
 @$id = $_GET["id"];
-@$date = $_GET["date"];
+if ($id != NULL)
+  {
+  $id = pdo_real_escape_numeric($id);
+  }
 
+@$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
 /** Get the previous file id dynamicanalysis*/
 function get_previous_fileid_dynamicanalysis($filename,$projectid,$siteid,$buildtype,$buildname,$starttime)

@@ -43,8 +43,8 @@ function client_submit()
       return 0;
       }
 
-    $sitename = $_GET['sitename'];
-    $systemname = $_GET['systemname'];
+    $sitename = htmlspecialchars(pdo_real_escape_string($_GET['sitename']));
+    $systemname = htmlspecialchars(pdo_real_escape_string($_GET['systemname']));
 
     // Should get the site id
     $ClientSite = new ClientSite();
@@ -68,7 +68,7 @@ function client_submit()
       }
 
     $ClientJobSchedule = new ClientJobSchedule();
-    $ClientJobSchedule->SiteId = $_GET['siteid'];
+    $ClientJobSchedule->SiteId = pdo_real_escape_numeric($_GET['siteid']);
 
     $jobid = $ClientJobSchedule->HasJob();
     if($jobid>0) // if we have something to do
@@ -82,7 +82,7 @@ function client_submit()
     return 1;
     }
   else if(isset($_GET['submitinfo']))
-    {      
+    {
     if(!isset($_GET['sitename']) || !isset($_GET['systemname']))
       {
       echo "0";
@@ -102,8 +102,8 @@ function client_submit()
 
     // Add/Update the site
     $ClientSite = new ClientSite();
-    $ClientSite->Name = $_GET['sitename'];
-    $ClientSite->SystemName = $_GET['systemname'];
+    $ClientSite->Name = htmlspecialchars(pdo_real_escape_string($_GET['sitename']));
+    $ClientSite->SystemName = htmlspecialchars(pdo_real_escape_string($_GET['systemname']));
     $ClientSite->Host = 'none';
     $ClientSite->OsId = $ClientOS->Id;
     $ClientSite->BaseDirectory = $xml->system->basedirectory;
@@ -211,7 +211,7 @@ function client_submit()
       return 1;
       }
     $ClientJob = new ClientJob();
-    $ClientJob->SiteId = $_GET['siteid'];
+    $ClientJob->SiteId = pdo_real_escape_numeric($_GET['siteid']);
     $ClientJob->SetFinished();
     return 1;
     }
@@ -228,7 +228,7 @@ function client_submit()
       return 1;
       }
     $ClientJob = new ClientJob();
-    $ClientJob->SiteId = $_GET['siteid'];
+    $ClientJob->SiteId = pdo_real_escape_numeric($_GET['siteid']);
     $ClientJob->SetFailed();
     return 1;
     }

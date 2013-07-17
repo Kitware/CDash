@@ -45,11 +45,11 @@ if(client_submit())
   return;
   }
 
-$expected_md5 = isset($_GET['MD5']) ? $_GET['MD5'] : '';
+$expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
 $file_path='php://input';
 $fp = fopen($file_path, 'r');
 
-$projectname = $_GET["project"];
+$projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
 $projectid = get_project_id($projectname);
 
 // If not a valid project we return

@@ -36,7 +36,7 @@ if(!isset($_GET['method']))
   echo "Method should be set: method=...";
   return;
   }
-$method = $_GET['method'];
+$method = htmlspecialchars(pdo_real_escape_string($_GET['method']));
 
 $classname = ucfirst($method).'API';
 $class = new $classname;

@@ -26,13 +26,13 @@ require_once("cdash/config.php");
 require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
-$projectid = $_GET["projectid"];
+$projectid = pdo_real_escape_numeric($_GET["projectid"]);
 if(!isset($projectid) || !is_numeric($projectid))
   {
   echo "Not a valid projectid!";
   return;
   }
-$timestamp = $_GET["timestamp"];
+$timestamp = pdo_real_escape_numeric($_GET["timestamp"]);
   
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);

@@ -26,8 +26,22 @@ include("models/user.php");
 include_once("models/errorlog.php");
 
 @$buildid = $_GET["buildid"];
+if ($buildid != NULL)
+  {
+  $buildid = pdo_real_escape_numeric($buildid);
+  }
+
 @$projectid = $_GET["projectid"];
+if ($projectid != NULL)
+  {
+  $projectid = pdo_real_escape_numeric($projectid);
+  }
+
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
 // Checks if the project id is set
 if(!isset($projectid) || !is_numeric($projectid))

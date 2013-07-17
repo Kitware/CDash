@@ -31,10 +31,11 @@ require_once("cdash/pdo.php");
 @$stamp = $_GET['stamp'];
 @$name = $_GET['name'];
 
-$project = pdo_real_escape_string($project);
-$site = pdo_real_escape_string($site);
-$stamp = pdo_real_escape_string($stamp);
-$name = pdo_real_escape_string($name);
+$project = htmlspecialchars(pdo_real_escape_string($project));
+$site = htmlspecialchars(pdo_real_escape_string($site));
+$siteid = pdo_real_escape_numeric($siteid);
+$stamp = htmlspecialchars(pdo_real_escape_string($stamp));
+$name = htmlspecialchars(pdo_real_escape_string($name));
 
 $projectid = get_project_id($project);
 

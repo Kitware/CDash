@@ -26,7 +26,7 @@ if(!isset($_GET['buildid']))
   return;
   }
 
-$buildid = $_GET['buildid'];
+$buildid = pdo_real_escape_numeric($_GET['buildid']);
 $Build = new Build();
 $Build->Id = $buildid;
 $Build->FillFromId($buildid);

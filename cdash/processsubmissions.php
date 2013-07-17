@@ -526,6 +526,11 @@ else
 {
   echo "no argc, context is web browser or some other non-command-line...\n";
   @$projectid = $_GET['projectid'];
+  if ($projectid != NULL)
+    {
+    $projectid = pdo_real_escape_numeric($projectid);
+    }
+
   @$force = $_GET['force'];
 }
 

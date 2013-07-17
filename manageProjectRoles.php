@@ -37,6 +37,10 @@ if ($session_OK)
     }
 
   @$projectid = $_GET["projectid"];
+  if ($projectid != NULL)
+    {
+    $projectid = pdo_real_escape_numeric($projectid);
+    }
 
   // If the projectid is not set and there is only one project we go directly to the page
   if(!isset($projectid))

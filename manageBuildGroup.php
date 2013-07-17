@@ -42,6 +42,10 @@ $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Build Groups</menusubtitle>";
 
 @$projectid = $_GET["projectid"];
+if ($projectid != NULL)
+  {
+  $projectid = pdo_real_escape_numeric($projectid);
+  }
 
 // If the projectid is not set and there is only one project we go directly to the page
 if(!isset($projectid))
@@ -110,7 +114,7 @@ while($project_array = pdo_fetch_array($projects))
 @$up= $_GET["up"];
 if($up)
 {
-  $Groupid = $_GET["groupid"];
+  $Groupid = pdo_real_escape_numeric($_GET["groupid"]);
   // Checks
   if(!isset($Groupid) || !is_numeric($Groupid))
     {
@@ -144,7 +148,7 @@ if($up)
 @$down= $_GET["down"];
 if($down)
 {
-  $Groupid = $_GET["groupid"];
+  $Groupid = pdo_real_escape_numeric($_GET["groupid"]);
   // Checks
   if(!isset($Groupid) || !is_numeric($Groupid))
     {

@@ -29,12 +29,12 @@ include_once("cdash/common.php");
 include_once("cdash/repository.php");
 include("cdash/version.php");
 
-$date = $_GET["date"];
+$date = htmlspecialchars(pdo_real_escape_string($_GET["date"]));
 if(!isset($date) || strlen($date)==0)
   {
   die('Error: no date supplied in query string');
   }
-$projectid = $_GET["project"];
+$projectid = pdo_real_escape_numeric($_GET["project"]);
 if(!isset($projectid))
   {
   die('Error: no project supplied in query string');
@@ -46,7 +46,7 @@ if(!isset($projectid) || !is_numeric($projectid))
   return;
   }
 
-$testName = $_GET["name"];
+$testName = htmlspecialchars(pdo_real_escape_string($_GET["name"]));
 if(!isset($testName))
   {
   die('Error: no test name supplied in query string');

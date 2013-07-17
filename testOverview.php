@@ -28,6 +28,10 @@ if(!isset($projectname))
   die("Error: project not specified<br>\n");
   }
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
@@ -72,11 +76,15 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 // Return the available groups
 @$groupSelection = $_POST["groupSelection"];
+if ($groupSelection != NULL)
+  {
+  $groupSelection = pdo_real_escape_numeric($groupSelection);
+  }
 if(!isset($groupSelection))
-  {  
+  {
   $groupSelection = 0;
   }
-  
+
 $buildgroup = pdo_query("SELECT id,name FROM buildgroup WHERE projectid='$projectid'");
 while($buildgroup_array = pdo_fetch_array($buildgroup))
 {
@@ -94,7 +102,7 @@ $groupSelectionSQL = "";
 if($groupSelection>0)
   {
   $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
-  }  
+  }
 
 // Get each build that was submitted on this date
 $rlike = "RLIKE";

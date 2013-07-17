@@ -26,9 +26,19 @@ require_once("models/subproject.php");
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
-  
+
 @$projectname = $_GET["project"];
+if ($projectname != NULL)
+  {
+  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+  }
+
 @$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
+
 $projectid = get_project_id($projectname);
 
 if($projectid == 0)

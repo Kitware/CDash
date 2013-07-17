@@ -44,6 +44,10 @@ $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Banner</menusubtitle>";
   
 @$projectid = $_GET["projectid"];
+if ($projectid != NULL)
+  {
+  $projectid = pdo_real_escape_numeric($projectid);
+  }
 
 if(empty($projectid))
   {

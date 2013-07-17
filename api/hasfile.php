@@ -25,7 +25,7 @@ set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 require_once("cdash/common.php");
 require_once("cdash/pdo.php");
 
-$md5sums_get = isset($_GET['md5sums']) ? $_GET['md5sums'] : '';
+$md5sums_get = isset($_GET['md5sums']) ? htmlspecialchars(pdo_real_escape_string($_GET['md5sums'])) : '';
 if($md5sums_get == '')
   {
   echo "md5sum not specified";

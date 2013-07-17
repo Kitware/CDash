@@ -31,13 +31,18 @@ $noforcelogin = 1;
 include('login.php');
 
 @$userid = $_GET["userid"];
+if ($userid != NULL)
+  {
+  $userid = pdo_real_escape_numeric($userid);
+  }
+
 if(!$userid && !isset($_SESSION['cdash']))
   {
   echo "Not a valid user id";
   return;
   }
 
-$buildid = $_GET["buildid"];
+$buildid = pdo_real_escape_numeric($_GET["buildid"]);
 if(!isset($buildid) || !is_numeric($buildid))
   {
   echo "Not a valid buildid!";

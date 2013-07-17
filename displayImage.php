@@ -18,7 +18,7 @@
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 
-$imgid = $_GET["imgid"];
+$imgid = pdo_real_escape_numeric($_GET["imgid"]);
 // Checks
 if(!isset($imgid) || !is_numeric($imgid))
   {

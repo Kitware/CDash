@@ -27,7 +27,7 @@ require_once("cdash/config.php");
 require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
-$buildid = $_GET["buildid"];
+$buildid = pdo_real_escape_numeric($_GET["buildid"]);
 if(!isset($buildid) || !is_numeric($buildid))
   {
   echo "Not a valid buildid!";

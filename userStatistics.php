@@ -35,6 +35,10 @@ if(!isset($userid) || !is_numeric($userid))
 $xml = begin_XML_for_XSLT();
 
 @$projectname = $_GET["project"];
+if ($projectname != NULL)
+  {
+  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+  }
 $projectid = get_project_id($projectname);
 if($projectid)
   {
@@ -51,6 +55,10 @@ $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>User Stats</menusubtitle>";
  
 @$projectid = $_GET["projectid"];
+if ($projectid != NULL)
+  {
+  $projectid = pdo_real_escape_numeric($projectid);
+  }
 
 // If the projectid is not set and there is only one project we go directly to the page
 if(!isset($projectid))

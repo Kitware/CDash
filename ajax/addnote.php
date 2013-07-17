@@ -29,8 +29,8 @@ require_once("cdash/common.php");
 $noforcelogin = 1;
 require('login.php');
 
-$buildid = $_GET["buildid"];
-$userid = $_GET["userid"];
+$buildid = pdo_real_escape_numeric($_GET["buildid"]);
+$userid = pdo_real_escape_numeric($_GET["userid"]);
 
 if(!$userid || !$buildid || !isset($_SESSION['cdash']))
   {
