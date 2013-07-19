@@ -891,7 +891,7 @@ function get_filterdata_from_request($page_id = '')
     $filtercount = 0;
   }
 
-  @$filtercombine = $_REQUEST['filtercombine'];
+  @$filtercombine =  htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
   if (strtolower($filtercombine) == 'or')
   {
     $sql_combine = 'OR';
@@ -913,9 +913,9 @@ function get_filterdata_from_request($page_id = '')
       continue;
       }
 
-    $fieldinfo = $_REQUEST['field'.$i];
-    $compare = $_REQUEST['compare'.$i];
-    $value = $_REQUEST['value'.$i];
+    $fieldinfo =  htmlspecialchars(pdo_real_escape_string($_REQUEST['field'.$i]));
+    $compare =  htmlspecialchars(pdo_real_escape_string($_REQUEST['compare'.$i]));
+    $value =  htmlspecialchars(pdo_real_escape_string($_REQUEST['value'.$i]));
     @$add = $_REQUEST['add'.$i];
     @$remove = $_REQUEST['remove'.$i];
 

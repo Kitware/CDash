@@ -199,6 +199,10 @@ function echo_submission_table()
     {
     $limit = 25;
     }
+  else
+    {
+    $limit = pdo_real_escape_numeric($limit);
+    }
 
   $rows = pdo_all_rows_query(
     "SELECT * FROM " . qid("submission") . " ORDER BY id DESC LIMIT " . $limit

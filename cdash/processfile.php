@@ -41,6 +41,7 @@ if (!is_numeric($projectid) || $projectid == 0)
     'processfile.php: projectid no good',
     E_USER_ERROR);
   }
+$projectid = pdo_real_escape_numeric($projectid);
 
 if (!$filename)
   {
@@ -48,6 +49,7 @@ if (!$filename)
     'processfile.php: filename no good',
     E_USER_ERROR);
   }
+$filename = htmlspecialchars(pdo_real_escape_string($filename));
 
 if (!isset($callit))
   {
