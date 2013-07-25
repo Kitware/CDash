@@ -260,6 +260,7 @@ class ClientJobSchedule
               "','".$cmakecache."','".$clientscript."','".$this->Repository."','".$this->Module."','".$this->BuildNameSuffix.
               "','".$this->Tag."','".$this->BuildConfiguration."','".$description."')";
       pdo_query($sql);
+      add_last_sql_error("ClientJobSchedule::Save");
       $this->Id = pdo_insert_id('client_jobschedule');
       add_last_sql_error("ClientJobSchedule::Save");
       }

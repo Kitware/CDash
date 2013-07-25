@@ -348,6 +348,7 @@ class BuildAPI extends CDashAPI
       $clientJobSchedule->BuildConfiguration = pdo_real_escape_string($this->Parameters['configuration']);
       }
 
+    $clientJobSchedule->StartDate = date("Y-m-d H:i:s");
     $clientJobSchedule->StartTime = date("Y-m-d H:i:s");
     $clientJobSchedule->EndDate = '1980-01-01 00:00:00';
     $clientJobSchedule->RepeatTime = 0; // No repeat
