@@ -157,10 +157,20 @@ function redirect_error($text='')
 
 function time_difference($duration,$compact=false,$suffix='',$displayms=false)
 {
-  // If it's in the future
-  if($duration<0)
+  // If it's "in the future" -- probably indicates server time syncing is not
+  // working well...
+  if($duration < 30)
     {
-    return 'Some time in the future';
+    if($duration > -300)
+      {
+      // For "close" (less than 5 minutes diff)
+      return 'just now';
+      }
+    else
+      {
+      // For "larger" negative diffs (more than 5 minutes)
+      return 'Some time in the future';
+      }
     }
 
   $years = floor($duration/31557600);
