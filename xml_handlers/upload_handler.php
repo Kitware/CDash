@@ -111,8 +111,8 @@ class UploadHandler extends AbstractHandler
       if($buildid==0)
         {
         $this->Build->ProjectId = $this->projectid;
-        $this->Build->StartTime = $start_time;
-        $this->Build->EndTime = $start_time;
+        $this->Build->StartTime =  gmdate(FMT_DATETIME);
+        $this->Build->EndTime =  gmdate(FMT_DATETIME);
         $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         $this->Build->SetSubProject($this->SubProjectName);
         $this->Build->Append = $this->Append;
