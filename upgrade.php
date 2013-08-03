@@ -39,7 +39,6 @@ $xml .= "<minversion>".$version_array['major'].".".$version_array['minor']."</mi
 @$CreateDefaultGroups = $_POST["CreateDefaultGroups"];
 @$AssignBuildToDefaultGroups = $_POST["AssignBuildToDefaultGroups"];
 @$FixBuildBasedOnRule = $_POST["FixBuildBasedOnRule"];
-@$FixNewTableTest = $_POST["FixNewTableTest"];
 @$DeleteBuildsWrongDate = $_POST["DeleteBuildsWrongDate"];
 @$CheckBuildsWrongDate = $_POST["CheckBuildsWrongDate"];
 @$ComputeTestTiming = $_POST["ComputeTestTiming"];
@@ -1465,130 +1464,6 @@ if($DeleteBuildsWrongDate)
     remove_build($buildid);
     }
 }
-
-/** */
-if($FixNewTableTest)
-  {
-  $num = pdo_fetch_array(pdo_query("SELECT COUNT(id) FROM test"));
-  $n = $num[0];
-  echo $n;
-
-  $step = 5000;
-  for($j=280682;$j<=$n;$j+=$step)
-    {
-  $oldtest = pdo_query("SELECT * from test ORDER BY id ASC LIMIT $j,$step");
-  while($oldtest_array = pdo_fetch_array($oldtest))
-    {
-    // Create the variables
-    $oldtestid = $oldtest_array["id"];
-    $buildid = $oldtest_array["buildid"];
-    $name = $oldtest_array["name"];
-    $status = $oldtest_array["status"];
-    $path = $oldtest_array["path"];
-    $fullname = $oldtest_array["fullname"];
-    $command = stripslashes($oldtest_array["command"]);
-    $time = $oldtest_array["time"];
-    $details = $oldtest_array["details"];
-    $output = stripslashes($oldtest_array["output"]);
-
-    // Add the images
-    $images = array();
-
-    $oldimages = pdo_query("SELECT * from test2image WHERE testid='$oldtestid'");
-    while($oldimages_array = pdo_fetch_array($oldimages))
-      {
-      $image["id"]=$oldimages_array["imgid"];
-      $image["role"]=$oldimages_array["role"];
-      $images[] = $image;
-      }
-
-
-   // Do the processing
-
-    $command = addslashes($command);
-    $output = addslashes($output);
-
-    // Check if the test doesn't exist
-    $test = pdo_query("SELECT id FROM test2 WHERE name='$name' AND path='$path' AND fullname='$fullname' AND command='$command' AND output='$output' LIMIT 1");
-
-    $testexists = false;
-
-    if(pdo_num_rows($test) > 0) // test exists
-      {
-      while($test_array = pdo_fetch_array($test))
-        {
-        $currentid = $test_array["id"];
-        $sql = "SELECT count(imgid) FROM test2image2 WHERE testid='$currentid' ";
-
-        // need to double check that the images are the same as well
-        $i=0;
-        foreach($images as $image)
-          {
-          $imgid = $image["id"];
-          if($i==0)
-            {
-            $sql .= "AND (";
-            }
-
-          if($i>0)
-            {
-            $sql .= " OR";
-            }
-
-          $sql .= " imgid='$imagid' ";
-
-          $i++;
-          if($i==count($images))
-            {
-            $sql .= ")";
-            }
-          } // end for each image
-
-         $nimage_array = pdo_fetch_array(pdo_query($sql));
-         $nimages = $nimage_array[0];
-
-         if($nimages == count($images))
-           {
-           $testid = $test_array["id"];
-           $testexists = true;
-           break;
-           }
-         } // end while test_array
-       }
-
-    if(!$testexists)
-      {
-      // Need to create a new test
-      $query = "INSERT INTO test2 (name,path,fullname,command,details, output)
-                VALUES ('$name','$path','$fullname','$command', '$details', '$output')";
-      if(pdo_query("$query"))
-        {
-        $testid = pdo_insert_id("test2");
-        foreach($images as $image)
-          {
-          $imgid = $image["id"];
-          $role = $image["role"];
-          $query = "INSERT INTO test2image2(imgid, testid, role)
-                    VALUES('$imgid', '$testid', '$role')";
-          if(!pdo_query("$query"))
-            {
-            echo pdo_error();
-            }
-          }
-        }
-      else
-        {
-        echo pdo_error();
-        }
-      }
-
-    // Add into build2test
-    pdo_query("INSERT INTO build2test (buildid,testid,status,time)
-                 VALUES ('$buildid','$testid','$status','$time')");
-    } // end loop test
-    } // end loop $j
-  } // end submit
-
 
 if($FixBuildBasedOnRule)
   {
