@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -20,7 +20,7 @@ require_once("cdash/pdo.php");
 
 $imgid = pdo_real_escape_numeric($_GET["imgid"]);
 // Checks
-if(!isset($imgid) || !is_numeric($imgid))
+if(empty($imgid) || !isset($imgid) || !is_numeric($imgid))
   {
   echo "Not a valid imgid!";
   return;
@@ -55,7 +55,7 @@ switch($img_array["extension"])
 if($CDASH_DB_TYPE == "pgsql")
   {
   $buf = "";
-  while(!feof($img_array["img"])) 
+  while(!feof($img_array["img"]))
     {
     $buf .= fread($img_array["img"], 2048);
     }
