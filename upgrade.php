@@ -76,7 +76,7 @@ if(isset($_GET['upgrade-tables']))
            $result = pdo_query($query);
            if (!$result)
              {
-             if($db_type != "pgsql") // postgresql doesn't know CREATE TABLE IF NOT EXITS so we don't die
+             if($db_type != "pgsql") // postgresql < 9.1 doesn't know CREATE TABLE IF NOT EXISTS so we don't die
                {
                die(pdo_error());
                }
