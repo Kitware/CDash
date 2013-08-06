@@ -21,15 +21,31 @@ require_once('login.php');
 
 function echo_currently_processing_submissions()
 {
-  $current_time = pdo_single_row_query("SELECT UTC_TIMESTAMP()");
+  include "cdash/config.php";
 
-  $rows = pdo_all_rows_query(
-    "SELECT project.name, submission.*, " .
-    "  ROUND(TIMESTAMPDIFF(SECOND, created, UTC_TIMESTAMP)/3600, 2) AS hours_ago ".
-    "FROM " . qid("project") . ", " . qid("submission") . " " .
-    "WHERE project.id = submission.projectid " .
-    "AND status = 1"
-    );
+  if($CDASH_DB_TYPE == "pgsql")
+    {
+    $sql_query = "SELECT now() AT TIME ZONE 'UTC'";
+    }
+  else
+    {
+    $sql_query = "SELECT UTC_TIMESTAMP()";
+    }
+  $current_time = pdo_single_row_query($sql_query);
+
+  $sql_query = "SELECT project.name, submission.*, ";
+  if($CDASH_DB_TYPE == "pgsql")
+    {
+    $sql_query .= "round((extract(EPOCH FROM now() - created)/3600)::numeric, 2) AS hours_ago ";
+    }
+  else
+    {
+    $sql_query .= "ROUND(TIMESTAMPDIFF(SECOND, created, UTC_TIMESTAMP)/3600, 2) AS hours_ago ";
+    }
+
+  $sql_query .= "FROM " . qid("project") . ", " . qid("submission") . " " .
+                "WHERE project.id = submission.projectid AND status = 1";
+  $rows = pdo_all_rows_query($sql_query);
 
   $sep = ', ';
 
@@ -104,15 +120,32 @@ function echo_pending_submissions()
 
 function echo_average_wait_time($projectid)
 {
-  $sql_query = "SELECT TIMESTAMPDIFF(HOUR, created, UTC_TIMESTAMP) as hours_ago, ".
-    "TIME_FORMAT(CONVERT_TZ(created, '+00:00', '-04:00'), '%l:00 %p') AS time_local, ".
-    "COUNT(created) AS num_files, ".
-    "ROUND(AVG(TIMESTAMPDIFF(SECOND, created, started))/3600, 1) AS avg_hours_delay, ".
-    "AVG(TIMESTAMPDIFF(SECOND, started, finished)) AS mean, ".
-    "MIN(TIMESTAMPDIFF(SECOND, started, finished)) AS shortest, ".
-    "MAX(TIMESTAMPDIFF(SECOND, started, finished)) AS longest ".
-    "FROM `submission` WHERE status = 2 AND projectid = $projectid ".
-    "GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48";
+  include "cdash/config.php";
+
+  if($CDASH_DB_TYPE == "pgsql")
+    {
+    $sql_query = "SELECT extract(EPOCH FROM now() - created)/3600 as hours_ago, ".
+      "current_time AS time_local, ".
+      "count(created) AS num_files, ".
+      "round(avg((extract(EPOCH FROM started - created)/3600)::numeric), 1) AS avg_hours_delay, ".
+      "avg(extract(EPOCH FROM finished - started)) AS mean, ".
+      "min(extract(EPOCH FROM finished - started)) AS shortest, ".
+      "max(extract(EPOCH FROM finished - started)) AS longest ".
+      "FROM submission WHERE status = 2 AND projectid = $projectid ".
+      "GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48";
+    }
+  else
+    {
+    $sql_query = "SELECT TIMESTAMPDIFF(HOUR, created, UTC_TIMESTAMP) as hours_ago, ".
+      "TIME_FORMAT(CONVERT_TZ(created, '+00:00', '-04:00'), '%l:00 %p') AS time_local, ".
+      "COUNT(created) AS num_files, ".
+      "ROUND(AVG(TIMESTAMPDIFF(SECOND, created, started))/3600, 1) AS avg_hours_delay, ".
+      "AVG(TIMESTAMPDIFF(SECOND, started, finished)) AS mean, ".
+      "MIN(TIMESTAMPDIFF(SECOND, started, finished)) AS shortest, ".
+      "MAX(TIMESTAMPDIFF(SECOND, started, finished)) AS longest ".
+      "FROM `submission` WHERE status = 2 AND projectid = $projectid ".
+      "GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48";
+    }
 
   $rows = pdo_all_rows_query($sql_query);
 
