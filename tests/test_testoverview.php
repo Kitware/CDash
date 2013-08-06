@@ -16,9 +16,9 @@ class TestOverviewTestCase extends KWWebTestCase
     {
     $this->login();
     $this->get($this->url."/testOverview.php");
-    if(strpos($this->getBrowser()->getContentAsText(), "project not specified") === false)
+    if(strpos($this->getBrowser()->getContentAsText(), " project not found") === false)
       {
-      $this->fail("'project not specified' not found when expected");
+      $this->fail("' project not found' not found when expected");
       return 1;
       }
     $this->get($this->url."/testOverview.php?project=InsightExample");
