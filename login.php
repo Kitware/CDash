@@ -84,7 +84,7 @@ function databaseAuthenticate($email,$password,$SessionCachePolicy,$rememberme)
       setcookie($cookiename,$value, $time);
 
       // Update the user key
-      pdo_query("UPDATE user SET cookiekey='".$key."' WHERE id=".qnum($user_array['id']));
+      pdo_query("UPDATE ".qid("user")." SET cookiekey='".$key."' WHERE id=".qnum($user_array['id']));
       }
 
     session_name("CDash");
@@ -220,7 +220,7 @@ function ldapAuthenticate($email,$password,$SessionCachePolicy,$rememberme)
             setcookie($cookiename,$value, $time);
 
             // Update the user key
-            pdo_query("UPDATE user SET cookiekey='".$key."' WHERE id=".qnum($userid));
+            pdo_query("UPDATE ".qid("user")." SET cookiekey='".$key."' WHERE id=".qnum($userid));
             }
 
           session_name("CDash");
@@ -324,7 +324,7 @@ function auth($SessionCachePolicy='private_no_expire')
       $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
       pdo_select_db("$CDASH_DB_NAME",$db);
 
-      pdo_query("UPDATE user SET cookiekey='' WHERE id=".qnum($cookieuseridkey));
+      pdo_query("UPDATE ".qid("user")." SET cookiekey='' WHERE id=".qnum($cookieuseridkey));
       setcookie ("CDash-".$_SERVER['SERVER_NAME'], "", time() - 3600);
       }
     echo "<script language=\"javascript\">window.location='index.php'</script>";
