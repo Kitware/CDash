@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -46,10 +46,10 @@ $xml = begin_XML_for_XSLT();
 
 //get date info here
 @$dayTo = pdo_real_escape_numeric($_POST["dayFrom"]);
-if(!isset($dayTo))
+if(!isset($dayTo) || empty($dayTo))
   {
   $time = strtotime("2000-01-01 00:00:00");
-  
+
   if(isset($projectid)) // find the first and last builds
     {
     $sql = "SELECT starttime FROM build WHERE projectid=".qnum($projectid)." ORDER BY starttime ASC LIMIT 1";
@@ -61,10 +61,10 @@ if(!isset($dayTo))
     }
   $dayFrom = date('d',$time);
   $monthFrom = date('m',$time);
-  $yearFrom = date('Y',$time);     
+  $yearFrom = date('Y',$time);
   $dayTo = date('d');
   $yearTo = date('Y');
-  $monthTo = date('m');     
+  $monthTo = date('m');
   }
 else
   {
@@ -74,8 +74,8 @@ else
   $dayTo = pdo_real_escape_numeric($_POST["dayTo"]);
   $monthTo = pdo_real_escape_numeric($_POST["monthTo"]);
   $yearTo = pdo_real_escape_numeric($_POST["yearTo"]);
-  } 
-  
+  }
+
 $xml = "<cdash>";
 $xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
 $xml .= "<version>".$CDASH_VERSION."</version>";
@@ -98,7 +98,7 @@ while($projects_array = pdo_fetch_array($projects))
       }
    $xml .= "</availableproject>";
    }
-   
+
 $xml .= "<dayFrom>".$dayFrom."</dayFrom>";
 $xml .= "<monthFrom>".$monthFrom."</monthFrom>";
 $xml .= "<yearFrom>".$yearFrom."</yearFrom>";
@@ -114,9 +114,9 @@ if(isset($submit))
   $begin = $yearFrom."-".$monthFrom."-".$dayFrom." 00:00:00";
   $end = $yearTo."-".$monthTo."-".$dayTo." 00:00:00";
   $sql = "SELECT id FROM build WHERE projectid=".qnum($projectid)." AND starttime<='$end' AND starttime>='$begin' ORDER BY starttime ASC";
-    
+
   $build = pdo_query($sql);
-  
+
   $builds = array();
   while($build_array = pdo_fetch_array($build))
     {
@@ -126,7 +126,7 @@ if(isset($submit))
   remove_build($builds);
   $xml .= add_XML_value("alert","Removed ".count($builds)." builds.");
   }
-  
+
 $xml .= "</cdash>";
 generate_XSLT($xml,"removeBuilds");
 ?>
