@@ -159,7 +159,7 @@ function time_difference($duration,$compact=false,$suffix='',$displayms=false)
 {
   // If it's "in the future" -- probably indicates server time syncing is not
   // working well...
-  if($duration < 30)
+  if(($duration < 0) || ($duration < 30 && $compact == false && $suffix == 'ago'))
     {
     if($duration > -300)
       {
@@ -259,7 +259,7 @@ function time_difference($duration,$compact=false,$suffix='',$displayms=false)
       }
     else if($displayms && $msecs>0)
       {
-      $diff = $msecs. ' milisecond';
+      $diff = $msecs. ' millisecond';
       if($msecs>1) {$diff .= 's';}
       }
     }
