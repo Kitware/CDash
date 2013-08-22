@@ -406,7 +406,7 @@ if($userid)
       case 1: $row[] = "Zero"; break;
       case 2: $row[] = "Low"; break;
       case 3: $row[] = "Medium"; break;
-      case 4: $row[] = "Satifactory"; break;
+      case 4: $row[] = "Satisfactory"; break;
       case 5: $row[] = "Complete"; break;
       }
 
