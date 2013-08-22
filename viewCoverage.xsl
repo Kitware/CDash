@@ -88,15 +88,18 @@
 
       <xsl:if test="count(cdash/coverage/labels/label) > 0">
       <td align="top">
-         <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
+         <table id="viewCoverage" border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
+         <xsl:attribute name="class">tabb <xsl:value-of select="/cdash/sortlist"/></xsl:attribute>
+         <thead>
             <tr>
                <th colspan="2" class="table-heading1">Summary By Label</th>
             </tr>
 
-            <tr>
-               <th class="table-heading1">Label</th>
-               <th class="table-heading1">Percent Coverage</th>
+            <tr class="table-heading1">
+               <th id="sort_0">Label</th>
+               <th id="sort_1">Percent Coverage</th>
             </tr>
+         </thead>
 
             <xsl:for-each select="cdash/coverage/labels/label">
             <tr class="treven">
