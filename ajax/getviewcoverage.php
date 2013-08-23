@@ -501,6 +501,12 @@ if($userid)
         }
        $row[] = $fourthcolumn2;
        } // end bullseye
+     else
+       {
+       // avoid displaying a DataTables warning to our user if coveragetype is
+       // blank or unrecognized.
+       $row[] = $fourthcolumn;
+       }
 
     // Fifth column (Priority)
     // Get the priority
