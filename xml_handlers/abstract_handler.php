@@ -77,6 +77,11 @@ abstract class AbstractHandler implements SaxHandler
     return $this->Site->Name;
     }
 
+  public function getSiteId()
+    {
+    return $this->Site->Id;
+    }
+
   public function getBuildStamp()
     {
     return $this->Build->GetStamp();

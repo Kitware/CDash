@@ -41,10 +41,6 @@ function checkEmailPreferences($emailcategory,$errors,$fixes=false)
     $dynamicanalysis=$errors['dynamicanalysis_errors'];
     }
 
-  if($updates>0 && check_email_category("update",$emailcategory))
-    {
-    return true;
-    }
   if($configures>0 && check_email_category("configure",$emailcategory))
     {
     return true;
@@ -206,6 +202,31 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
       $errors['fixes']['test_fixes'] = $error_differences['testfailednegative']+$error_differences['testnotrunnegative'];
       }
     } // end has previous build
+
+  return $errors;
+}
+
+/** Check for update errors for a given build. */
+function check_email_update_errors($buildid)
+{
+  // Includes
+  require_once("models/buildupdate.php");
+  require_once("models/build.php");
+
+  $errors = array();
+  $errors['errors'] = true;
+  $errors['hasfixes'] = false;
+
+  // Update errors
+  $BuildUpdate = new BuildUpdate();
+  $BuildUpdate->BuildId = $buildid;
+  $errors['update_errors'] = $BuildUpdate->GetNumberOfErrors();
+
+  // Green build we return
+  if( $errors['update_errors'] == 0 )
+    {
+    $errors['errors'] = false;
+    }
 
   return $errors;
 }
@@ -1308,6 +1329,116 @@ function getHandlerErrorKeyPrefix($handler)
   return "none";
 }
 
+/** function to send email to site maintainers when the update
+  * step fails */
+function send_update_email($handler,$projectid)
+{
+  include("cdash/config.php");
+  include_once("cdash/common.php");
+  require_once("cdash/pdo.php");
+  require_once("models/build.php");
+  require_once("models/project.php");
+  require_once("models/buildgroup.php");
+
+  $Project = new Project();
+  $Project->Id = $projectid;
+  $Project->Fill();
+
+  // If we shouldn't sent any emails we stop
+  if($Project->EmailBrokenSubmission == 0)
+    {
+    return;
+    }
+
+  // If the handler has a buildid (it should), we use it
+  if(isset($handler->BuildId) && $handler->BuildId>0)
+    {
+    $buildid = $handler->BuildId;
+    }
+  else
+    {
+    // Get the build id
+    $name = $handler->getBuildName();
+    $stamp = $handler->getBuildStamp();
+    $sitename = $handler->getSiteName();
+    $buildid = get_build_id($name,$stamp,$projectid,$sitename);
+    }
+
+  if($buildid<0)
+    {
+    return;
+    }
+
+  //  Check if the group as no email
+  $Build = new Build();
+  $Build->Id = $buildid;
+  $groupid = $Build->GetGroup();
+
+  $BuildGroup = new BuildGroup();
+  $BuildGroup->Id = $groupid;
+
+  // If we specified no email we stop here
+  if($BuildGroup->GetSummaryEmail()==2)
+    {
+    return;
+    }
+
+  // Send out update errors to site maintainers
+  $update_errors = check_email_errors($buildid);
+  if($update_errors['errors'])
+    {
+    // Find the site maintainer(s)
+    $sitename = $handler->getSiteName();
+    $siteid = $handler->getSiteId();
+    $to_address = "";
+    $email_addresses =
+      pdo_query("SELECT email FROM ".qid("user").",site2user WHERE ".qid("user").".id=site2user.userid AND site2user.siteid='$siteid'");
+    while($email_addresses_array = pdo_fetch_array($email_addresses))
+      {
+      if($to_address != "")
+        {
+        $to_address .= ", ";
+        }
+      $to_address .= $email_addresses_array["email"];
+      }
+
+    if($to_address != "")
+      {
+      // Generate the email to send
+      $subject = "CDash [".$Project->Name."] - Update Errors for ".$sitename;
+
+      $update_info = pdo_query("SELECT command,status FROM buildupdate AS u,build2update AS b2u
+                              WHERE b2u.updateid=u.id AND b2u.buildid=".qnum($buildid));
+      $update_array = pdo_fetch_array($update_info);
+
+      $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
+      $body .= "*Update Errors*\n";
+      $body .= "Status: ".$update_array["status"]." (".$serverURI."/viewUpdate.php?buildid=".$buildid.")\n";
+
+      $header =
+        "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0";
+
+      if($CDASH_TESTING_MODE)
+        {
+        add_log($to_address, "TESTING: EMAIL",LOG_TESTING);
+        add_log($subject, "TESTING: EMAILTITLE",LOG_TESTING);
+        add_log($body, "TESTING: EMAILBODY",LOG_TESTING);
+        }
+      else
+        {
+        if(cdashmail("$to_address", $subject, $body, $header))
+          {
+          add_log("email sent to: ".$to_address,"sendEmailExpectedBuilds");
+          return;
+          }
+        else
+          {
+          add_log("cannot send email to: ".$to_address,"sendEmailExpectedBuilds");
+          }
+        }
+      }
+    }
+}
 
 /** Main function to send email if necessary */
 function sendemail($handler,$projectid)

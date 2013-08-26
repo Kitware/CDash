@@ -74,8 +74,11 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
     }
 
   // Send the emails if necessary
-  if($handler instanceof UpdateHandler ||
-     $handler instanceof TestingHandler ||
+  if($handler instanceof UpdateHandler)
+    {
+    send_update_email($handler, $projectid);
+    }
+  if($handler instanceof TestingHandler ||
      $handler instanceof BuildHandler ||
      $handler instanceof ConfigureHandler ||
      $handler instanceof DynamicAnalysisHandler)
