@@ -106,14 +106,21 @@ class Site
   /** Insert a new site */
   function Insert()
     {
-    if($this->Exists())
-      {
-      return $this->Id;
-      }
-    
+    $justSetIP = false;
+
     if(strlen($this->Ip)==0)
       {
       $this->LookupIP();
+      $justSetIP = true;
+      }
+
+    if($this->Exists())
+      {
+      if ($justSetIP)
+        {
+        $this->Update();
+        }
+      return $this->Id;
       }
         
     // Get the geolocation
