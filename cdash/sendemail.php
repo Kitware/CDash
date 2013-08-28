@@ -1384,7 +1384,7 @@ function send_update_email($handler,$projectid)
     }
 
   // Send out update errors to site maintainers
-  $update_errors = check_email_errors($buildid);
+  $update_errors = check_email_update_errors($buildid);
   if($update_errors['errors'])
     {
     // Find the site maintainer(s)
