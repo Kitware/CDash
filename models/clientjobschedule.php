@@ -838,7 +838,7 @@ class ClientJobSchedule
       case CDASH_JOB_CONTINUOUS: $buildtype="Continuous";break;
       }
     $ctest_script = '#'.$this->Id."\n";
-    $ctest_script = '#'.$Project->Name."\n";
+    $ctest_script .= '#'.$Project->Name."\n";
     $ctest_script .= 'SET(JOB_BUILDTYPE '.$buildtype.')'."\n";
     $ctest_script .= 'SET(PROJECT_NAME "'.$Project->Name.'")'."\n";
     if(strlen($this->GetModule())>0)
