@@ -58,9 +58,10 @@ class CoverageSummary
     while($coverage_array = pdo_fetch_array($coverage))
       {
       $fileid = $coverage_array["fileid"];
-      // Make sur the file is not shared
+      // Make sure the file is not shared
       $numfiles = pdo_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
-      if($numfiles[0]==1)
+      $numfiles_array = pdo_fetch_row($numfiles);
+      if($numfiles_array[0]==1)
         {
         pdo_query("DELETE FROM coveragefile WHERE id='$fileid'");
         }
