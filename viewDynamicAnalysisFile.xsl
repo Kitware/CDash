@@ -58,7 +58,7 @@
 </xsl:attribute>
 <xsl:value-of select="cdash/dynamicanalysis/status"/>
 </font>
-<pre><xsl:value-of select="cdash/dynamicanalysis/log"/></pre>
+<pre><xsl:value-of disable-output-escaping="yes" select="cdash/dynamicanalysis/log"/></pre>
  <br/>
 
 <!-- FOOTER -->
