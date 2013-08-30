@@ -151,7 +151,7 @@ $xml .= "</menu>";
   $percentcoverage = compute_percentcoverage(
     $coverage_array["loctested"], $coverage_array["locuntested"]);
 
-  $xml .= add_XML_value("loc",$loc);
+  $xml .= add_XML_value("loc",$coverage_array["loctested"]+$coverage_array["locuntested"]);
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
   $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
   // Above this number of the coverage is green
