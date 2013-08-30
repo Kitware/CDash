@@ -1157,3 +1157,8 @@ img {
 #executiontime img {
   padding-right: 3px;
 }
+
+textarea {
+  font-size: 14px;
+  font-family: Courier New, Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono, monospace;
+}
