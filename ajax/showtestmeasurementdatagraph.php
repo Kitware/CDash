@@ -24,7 +24,7 @@ require_once("cdash/common.php");
 
 $testid = pdo_real_escape_numeric($_GET["testid"]);
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-$zoomout = $_GET["zoomout"];
+@$zoomout = $_GET["zoomout"];
 $measurementname = htmlspecialchars(pdo_real_escape_string($_GET["measurement"]));
 
 
@@ -83,7 +83,7 @@ ORDER BY build.starttime DESC
     while($build_array = pdo_fetch_array($previousbuilds))
       {
       $t['x'] = strtotime($build_array["starttime"])*1000;
-    $time[] = date("Y-m-d H:i:s",strtotime($build_array["starttime"]));
+      $time[] = date("Y-m-d H:i:s",strtotime($build_array["starttime"]));
       $t['y'] = $build_array["value"];
       $t['builid'] = $build_array["id"];
       $t['testid'] = $build_array["testid"];
