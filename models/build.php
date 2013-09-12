@@ -552,8 +552,8 @@ class Build
         // Compute the number of errors and warnings (this speeds up the display of the main table)
         if($this->InsertErrors)
           {
-          $nbuilderrors = 0;
-          $nbuildwarnings = 0;
+          $nbuilderrors = $this->GetNumberOfErrors();
+          $nbuildwarnings = $this->GetNumberOfWarnings();
           foreach($this->Errors as $error)
             {
             if($error->Type == 0)
