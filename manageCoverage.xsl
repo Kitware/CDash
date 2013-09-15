@@ -219,7 +219,7 @@
 <table width="100%" border="0">
 <tr>
     <td valign="top" width="10%"><div align="right"><b>Upload file:</b></div></td>
-    <td><div align="left">(format: filename:authors1,authors2)</div>
+    <td><div align="left">(format: filename:author1,author2)</div>
     <input type="file" name="authorsFile"/><input type="submit" name="uploadAuthorsFile" value="Upload authors file"/> </td>
   </tr>
 </table>
