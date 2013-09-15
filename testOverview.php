@@ -125,24 +125,30 @@ while($buildRow = pdo_fetch_array($buildResult))
 
 //find all the tests that were performed for this project on this date
 //skip tests that passed on all builds
-$firstTime = TRUE;
-$testQuery = "";
-foreach($builds as $id)
-{
-if($firstTime)
+if(count($builds) > 0)
   {
-  $testQuery =
-    "SELECT DISTINCT test.name FROM test,build2test WHERE (build2test.buildid='$id'";
-  $firstTime = FALSE;
+  $testQuery = "SELECT DISTINCT test.name FROM test,build2test WHERE (";
+  $firstTime = TRUE;
+  foreach($builds as $id)
+    {
+    if($firstTime)
+      {
+      $testQuery .= "build2test.buildid='$id'";
+      $firstTime = FALSE;
+      }
+    else
+      {
+      $testQuery .= " OR build2test.buildid='$id'";
+      }
+    }
+  $testQuery .= ") AND build2test.testid=test.id AND build2test.status NOT LIKE 'passed'";
+  @$testResult = pdo_query($testQuery);
   }
 else
   {
-  $testQuery .= " OR build2test.buildid='$id'";
+  $testResult = FALSE;
   }
-}
-$testQuery .= ") AND build2test.testid=test.id AND build2test.status NOT LIKE 'passed'";
 
-@$testResult = pdo_query($testQuery);
 if($testResult !== FALSE)
   {
   $tests = array();
@@ -150,42 +156,42 @@ if($testResult !== FALSE)
     {
     array_push($tests, $testRow["name"]);
     }
-  natcasesort($tests);
-  
-  //now generate some XML
-  $xml .= "<tests>\n";
-  $previousLetter = "";
-  $firstSection = TRUE;
-  foreach($tests as $testName)
+
+  if(count($tests) > 0)
     {
-    $letter = strtolower(substr($testName, 0, 1));
-    if($letter != $previousLetter)
+    natcasesort($tests);
+
+    //now generate some XML
+    $xml .= "<tests>\n";
+    $previousLetter = "";
+    $firstSection = TRUE;
+    foreach($tests as $testName)
       {
-      if($firstSection)
+      $letter = strtolower(substr($testName, 0, 1));
+      if($letter != $previousLetter)
         {
-        $xml .= "<section>\n";
-        $firstSection = FALSE;
+        if($firstSection)
+          {
+          $xml .= "<section>\n";
+          $firstSection = FALSE;
+          }
+        else
+          {
+          $xml .= "</section>\n<section>";
+          }
+        $xml .= add_XML_value("sectionName", $letter) . "\n";
+        $previousLetter = $letter;
         }
-      else
-        {
-        $xml .= "</section>\n<section>";
-        }
-      $xml .= add_XML_value("sectionName", $letter) . "\n";
-      $previousLetter = $letter;
+      $xml .= "<test>\n";
+      $xml .= add_XML_value("testName", $testName) . "\n";
+      $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$today";
+      $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
+      $xml .= "</test>\n";
       }
-    $xml .= "<test>\n";
-    $xml .= add_XML_value("testName", $testName) . "\n";
-    $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$today";
-    $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
-    $xml .= "</test>\n";
-    }
-    
-  if(count($tests)>0)
-    {
     $xml .= "</section>\n";
+    $xml .= "</tests>\n";
     }
-  $xml .= "</tests>\n";
-  }  
+  }
 $xml .= "</cdash>";
 
 generate_XSLT($xml, "testOverview");
