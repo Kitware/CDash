@@ -198,18 +198,10 @@ if($userid)
       $coveragetype = "gcov";
       }
 
-    // Add the number of satisfactory covered files
-    if($covfile["coveragemetric"]>=0.7)
-      {
-      $nsatisfactorycoveredfiles++;
-      }
-
     // Add the priority
     $CoverageFile2User = new CoverageFile2User();
     $CoverageFile2User->ProjectId = $projectid;
     $CoverageFile2User->FullPath = $covfile["fullpath"];
-    //$covfile["priority"] = $CoverageFile2User->GetPriority();
-
 
     $covfile["priority"] = $coveragefile_array["priority"];
 
