@@ -897,7 +897,7 @@ class ClientJobSchedule
       }
 
     $ctest_script .= 'set(CTEST_DROP_SITE "'.$serverName.'")'."\n";
-    $dropLocation  = dirname($_SERVER['PHP_SELF'])."/submit.php?project=".$Project->Name;
+    $dropLocation  = dirname($_SERVER['PHP_SELF'])."/submit.php?project=".urlencode($Project->Name);
     $dropLocation .= "&clientscheduleid=".$this->Id;
     $ctest_script .= 'set(CTEST_DROP_LOCATION "'.$dropLocation.'")'."\n";
     $ctest_script .= 'set(JOB_DROP_LOCATION "'.$dropLocation.'")'."\n";
