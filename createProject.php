@@ -37,13 +37,13 @@ if ($session_OK)
     return;
     }
 
+  @$edit = $_GET["edit"];
+
   @$projectid = $_GET["projectid"];
   if ($projectid != NULL)
     {
     $projectid = pdo_real_escape_numeric($projectid);
     }
-
-  @$edit = $_GET["edit"];
 
   $Project = new Project;
 
@@ -57,17 +57,16 @@ if ($session_OK)
       }
     }
 
-  $User = new User;
-  $User->Id = $userid;
-  $Project->Id = $projectid;
-
   // If the projectid is set, make sure that it's valid
-  if(isset($projectid) && !$Project->Exists())
+  $Project->Id = $projectid;
+  if(isset($projectid) && $projectid>0 && !$Project->Exists())
     {
     echo "This project doesn't exists.";
     return;
     }
 
+  $User = new User;
+  $User->Id = $userid;
   $role = $Project->GetUserRole($userid);
 
   // If we are editing a project make sure we have the right to do so
