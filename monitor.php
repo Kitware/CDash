@@ -143,7 +143,7 @@ function echo_average_wait_time($projectid)
       "AVG(TIMESTAMPDIFF(SECOND, started, finished)) AS mean, ".
       "MIN(TIMESTAMPDIFF(SECOND, started, finished)) AS shortest, ".
       "MAX(TIMESTAMPDIFF(SECOND, started, finished)) AS longest ".
-      "FROM `submission` WHERE status = 2 AND projectid = $projectid ".
+      "FROM submission WHERE status = 2 AND projectid = $projectid ".
       "GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48";
     }
 

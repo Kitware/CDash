@@ -117,7 +117,7 @@ $columncount=pdo_num_rows($getcolumnnumber);
 if($columncount>0)
   {
   $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name,
-        testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM `test`
+        testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM test
   JOIN testmeasurement ON (test.id = testmeasurement.testid)
   JOIN build2test ON (build2test.testid = test.id)
   JOIN build ON (build.id = build2test.buildid)
@@ -207,7 +207,7 @@ $columncount=pdo_num_rows($getcolumnnumber);
 // If at least one column is selected
 if($columncount>0)
   {
-  $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name, testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM `test`
+  $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid, build2test.status, build2test.timestatus, test.name, testmeasurement.name, testmeasurement.value, build.starttime, build2test.time, measurement.testpage FROM test
     JOIN testmeasurement ON (test.id = testmeasurement.testid)
     JOIN build2test ON (build2test.testid = test.id)
     JOIN build ON (build.id = build2test.buildid)
