@@ -892,7 +892,7 @@ if(isset($_GET['upgrade-2-2']))
   setVersion();
 
   // Put that the upgrade is done in the log
-  add_log("Upgrade done.","upgrade-2-0");
+  add_log("Upgrade done.","upgrade-2-2");
   return;
   }
 

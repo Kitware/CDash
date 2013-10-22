@@ -447,7 +447,7 @@
                         <td></td>
                         <td>
                           <div align="right">
-                            <strong>Repository ViewerURL:</strong>
+                            <strong>Repository Viewer URL:</strong>
                           </div>
                         </td>
                         <td>
@@ -470,7 +470,7 @@
                             <ul>
                               <li> ViewCVS:
                                 public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=CMake
-            </li>
+                              </li>
                               <li>
                                 WebSVN:
                                 <a
@@ -515,10 +515,8 @@
                           <span class="help_content" id="svnViewerType_help">
                             <b>Repository View Type</b>
                             <br />
-                            Current CDash supports ViewCVS, Trac, Fisheye, ViewVC,
-                            WebSVN and CVSTrac as repository viewers. Select the
-                            appropriate viewer depending on your current
-                            configuration.
+                            Select an appropriate repository viewer depending on
+                            your current configuration.
                           </span>
                           <span class="help_content" id="svnRepository_help">
                             <b>Repository</b>
@@ -528,17 +526,17 @@
                             the anonymous access, for instance
                             :pserver:anoncvs@myproject.org:/cvsroot/MyProject. If the
                             project needs ssh access, make sure that the user running
-                            the webserver running CDash as the proper ssh keys.
+                            the webserver running CDash has the proper ssh keys.
                           </span>
                           <span class="help_content" id="svnUsername_help">
                             <b>Username</b>
                             <br />
-                            Optional. Provide a username if you do not wish to use anonymous SVN access.
+                            Optional. Provide a username if you do not wish to use anonymous access to your repository.
                           </span>
                           <span class="help_content" id="svnPassword_help">
                             <b>Password</b>
                             <br />
-                            The SVN password corresponding to the above user.  WARNING: this password will be stored in plaintext in the database.
+                            The password corresponding to the above user.  WARNING: this password will be stored in plaintext in the database.
                           </span>
                         </td>
                       </tr>
@@ -655,7 +653,7 @@
                             </input>
                             <xsl:text disable-output-escaping="yes"> </xsl:text>
                             <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project" target="blank">
-                            <img onmouseover="showHelp('svnUsername_help');" src="images/help.gif" border="0"/></a>
+                            <img onmouseover="showHelp('svnPassword_help');" src="images/help.gif" border="0"/></a>
                           </td>
                         </tr>
                       </xsl:for-each>

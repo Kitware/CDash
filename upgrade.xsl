@@ -44,7 +44,7 @@
 <b><xsl:value-of select="cdash/alert"/></b>
 </xsl:if>
 <br/><br/>
-<b>Current CDash database schema:</b> <xsl:value-of select="cdash/minversion"/>
+<b>Current CDash database schema: </b> <xsl:value-of select="cdash/minversion"/>
 <br/>
 <form name="form1" enctype="multipart/form-data" method="post" action="">
 <table border="0">

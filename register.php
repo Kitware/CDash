@@ -164,7 +164,7 @@ function register()
             add_log("cannot send email to: ".$email,"Registration",LOG_ERR);
             }
 
-          $reg = "A confirmation email has been sent. Check your email (including your spam account) to confirm your registration!\n";
+          $reg = "A confirmation email has been sent. Check your email (including your spam folder) to confirm your registration!\n";
           $reg .= "You need to activate your account within 24 hours.";
           return 0;
           }

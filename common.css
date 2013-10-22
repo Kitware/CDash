@@ -873,7 +873,7 @@ div#topmenu a:hover {
   padding: 0;
   position: relative;
   text-align: center;
-  width: 100px;
+  width: 105px;
   font-size: 1em;
 }
 
@@ -884,7 +884,7 @@ div#topmenu a:hover {
  text-decoration: none;
  margin: 0px;
  border: 0px;
- width: 110px;
+ width: 115px;
 }
 
 #navigation li:hover a {
@@ -894,7 +894,7 @@ div#topmenu a:hover {
  -khtml-border-radius: 6px 6px 0px 0px;
  border-radius: 6px 6px 0px 0px;
  display: block;
- width: 110px;
+ width: 115px;
 }
 
 
@@ -905,19 +905,19 @@ div#topmenu a:hover {
 
 #navigation li:hover li {
   display: block;
-   width: 110px;
+   width: 115px;
 }
 
 #navigation li ul {
    background-color: #6699CC;
    position: relative;
-   width: 110px;
+   width: 115px;
    z-index: 5000;
 }
 
 #navigation li ul li {
    background-color: #6699CC;
-   width: 110px;
+   width: 115px;
    text-align: left;
    z-index: 5000;
 }
@@ -948,7 +948,7 @@ div#topmenu a:hover {
   -webkit-border-radius: 0px 0px 0px 0px;
   -khtml-border-radius: 0px 0px 0px 0px;
    border-radius: 0px 0px 0px 0px;
-   width: 100px;
+   width: 105px;
    left: 0px;
    padding-left: 10px;
 }
