@@ -11,6 +11,8 @@
  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  PURPOSE.  See the above copyright notices for more information.
  =========================================================================*/
+$noforcelogin = 1;
+
 require_once("cdash/pdo.php");
 include_once('cdash/common.php');
 include("cdash/version.php");
