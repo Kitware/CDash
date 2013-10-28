@@ -46,7 +46,7 @@ $xml = begin_XML_for_XSLT();
 
 //get date info here
 @$dayTo = pdo_real_escape_numeric($_POST["dayFrom"]);
-if(!isset($dayTo) || empty($dayTo))
+if(empty($dayTo))
   {
   $time = strtotime("2000-01-01 00:00:00");
 

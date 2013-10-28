@@ -205,7 +205,7 @@ class TestingJUnitHandler extends AbstractHandler
       if($this->HasSiteTag == false)
         {
         // Hostname is not necessarily defined
-        if(isset($attributes['HOSTNAME']) && !empty($attributes['HOSTNAME']))
+        if(!empty($attributes['HOSTNAME']))
           {
           $this->Site->Name = $attributes['HOSTNAME'];
           $this->Site->Insert();

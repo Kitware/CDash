@@ -20,7 +20,7 @@ require_once("cdash/pdo.php");
 
 $imgid = pdo_real_escape_numeric($_GET["imgid"]);
 // Checks
-if(empty($imgid) || !isset($imgid) || !is_numeric($imgid))
+if(empty($imgid) || !is_numeric($imgid))
   {
   echo "Not a valid imgid!";
   return;
