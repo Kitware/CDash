@@ -66,7 +66,7 @@ foreach($uploadFilesOrURLs as $uploadFileOrURL)
   if(!$uploadFileOrURL->IsUrl)
     {
     $xml .= '<uploadfile>';
-    $xml .= '<id>'.$uploadFile->Id.'</id>';
+    $xml .= '<id>'.$uploadFileOrURL->Id.'</id>';
     $xml .= '<href>'.$CDASH_DOWNLOAD_RELATIVE_URL.'/'.$uploadFileOrURL->Sha1Sum.'/'.$uploadFileOrURL->Filename.'</href>';
     $xml .= '<sha1sum>'.$uploadFileOrURL->Sha1Sum.'</sha1sum>';
     $xml .= '<filename>'.$uploadFileOrURL->Filename.'</filename>';
@@ -89,7 +89,7 @@ foreach($uploadFilesOrURLs as $uploadFileOrURL)
       $filesize /= 1024;
       $ext = "Gb";
       }
-    if($dbsize>1024)
+    if($filesize>1024)
       {
       $filesize /= 1024;
       $ext = "Tb";
