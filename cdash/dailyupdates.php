@@ -427,7 +427,7 @@ function get_svn_repository_commits($svnroot, $dates, $username='', $password=''
   $ustring = (isset($username) && strlen($username)!=0) ? "--username $username" : '';
   $pstring = (isset($password) && strlen($password)!=0) ? "--password $password" : '';
 
-  $raw_output = `svn log $ustring $pstring $svnroot -r $svnrevision -v 2>&1`;
+  $raw_output = `svn log --trust-server-cert --non-interactive $ustring $pstring $svnroot -r $svnrevision -v 2>&1`;
   //$raw_output = `svn help log`;
 
   $lines = explode("\n", $raw_output);
