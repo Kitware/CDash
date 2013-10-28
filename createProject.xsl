@@ -28,9 +28,9 @@
            <xsl:call-template name="headscripts_local"/>
         </xsl:if>
 
-        <xsl:comment><![CDATA[[if IE]></xsl:comment>
+        <xsl:comment><![CDATA[[if IE]>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
-          <xsl:comment><![ endif]]></xsl:comment>
+          <![endif]]]></xsl:comment>
         <script type="text/javascript" src="javascript/jquery-1.6.2.js"></script>
         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
         <script type="text/javascript" src="javascript/cdashCreateProject.js"></script>
@@ -500,7 +500,7 @@
                                 <xsl:attribute name="value"><xsl:value-of
                                   select="value" /></xsl:attribute>
                                 <xsl:if test="selected=1">
-                                  <xsl:attribute name="selected">true</xsl:attribute>
+                                  <xsl:attribute name="selected">selected</xsl:attribute>
                                 </xsl:if>
                                 <xsl:value-of select="description" />
                               </option>
@@ -1167,7 +1167,7 @@
                               <a
                                 href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                                 target="blank">
-                                <img onmouseover="showHelp('ctestConfig_help');"
+                                <img onmouseover="showHelp('blockList_help');"
                                   src="images/help.gif" border="0" />
                               </a>
                             </strong>
@@ -1197,7 +1197,7 @@
 
                           </table>
                         </td>
-                        <span class="help_content" id="ctestConfig_help">
+                        <span class="help_content" id="blockList_help">
                           <b>Block List</b>
                           <br />
                           Submission to CDash can be blocked given a sitename,
@@ -1278,11 +1278,11 @@
                     <div class="tab_help"></div>
                     <table width="100%">
                         <tr>
-                          <td valign="top" align="righ"><strong>CTest Template Script:</strong>
+                          <td valign="top" align="right"><strong>CTest Template Script:</strong>
                           </td>
                           <td >
                            <textarea name="ctestTemplateScript" onchange="saveChanges();"
-                            onfocus="$('.ctesttemplatescript_help').html('');" id="description" cols="80"
+                            onfocus="$('.ctesttemplatescript_help').html('');" id="ctestScript" cols="80"
                             rows="30" wrap="off">
                             <xsl:value-of select="cdash/project/ctesttemplatescript" />
                           </textarea>

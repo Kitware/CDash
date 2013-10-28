@@ -36,7 +36,7 @@
 <h3 style="background: #b0c4de">Notes for <xsl:value-of select="cdash/build/site"/>--<xsl:value-of select="cdash/build/buildname"/>-<xsl:value-of select="cdash/build/stamp"/></h3>
 <xsl:for-each select="cdash/note">
   <p>
-    <img SRC="images/document.png" ALT="Notes" border="0" ALIGN="texttop"/>
+    <img src="images/document.png" alt="Notes" border="0" align="top"/>
     <b> <xsl:value-of select="time"/></b>
     <b> -- <xsl:value-of select="name"/></b><br/>
     <pre>

@@ -74,7 +74,7 @@
 <div style="color: red;"><xsl:value-of select="cdash/error" /><br/></div>
 
 <!-- Main -->
-<form method="post" action="register.php" name="regform" onSubmit="doSubmit();">
+<form method="post" action="register.php" name="regform" onsubmit="doSubmit();">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
 <tbody>
 <tr class="treven">

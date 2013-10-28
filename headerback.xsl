@@ -6,8 +6,6 @@
     <xsl:include href="local/headscripts.xsl"/>
 
     <xsl:template name="headerback">
-<link rel="shortcut icon" href="favicon.ico"/>
-
 
 <div id="header">
  <div id="headertop">

@@ -21,18 +21,18 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-         <xsl:comment><![CDATA[[if IE]></xsl:comment>
+         <xsl:comment><![CDATA[[if IE]>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
-          <xsl:comment><![ endif]]></xsl:comment>
+          <![endif]]]></xsl:comment>
           <!-- Include project roles -->
-          <script src="javascript/jquery-1.6.2.js"></script>
-          <script src="javascript/cdashProjectRole.js"></script>
-          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
+          <script src="javascript/jquery-1.6.2.js" type="text/javascript"></script>
+          <script src="javascript/cdashProjectRole.js" type="text/javascript"></script>
+          <script src="javascript/ui.tabs.js" type="text/javascript"></script>
 
 
         <!-- Functions to confirm the email -->
         <xsl:text disable-output-escaping="yes">
-              &lt;script language="JavaScript"&gt;
+              &lt;script type="text/javascript"&gt;
               function confirmEmail() {
                  if (window.confirm("Are you sure you want to send this email to all site maintainers?")){
                     return true;
@@ -103,7 +103,7 @@
             <xsl:for-each select="cdash/cvsuser">
             <tr>
             <td><input type="checkbox" value="1">
-            <xsl:attribute name="checked">true</xsl:attribute>
+            <xsl:attribute name="checked">checked</xsl:attribute>
             <xsl:attribute name="name">cvsuser[<xsl:value-of select="id"/>]</xsl:attribute>
             </input>
             </td>

@@ -19,9 +19,9 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-          <xsl:comment><![CDATA[[if IE]></xsl:comment>
-        <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
-        <xsl:comment><![ endif]]></xsl:comment>
+         <xsl:comment><![CDATA[[if IE]>
+          <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
+          <![endif]]]></xsl:comment>
          <xsl:call-template name="headscripts"/>
           <script type="text/javascript">
           function saveChanges()
@@ -33,7 +33,7 @@
          <script type="text/javascript" src="javascript/cdashUserLabels.js"></script>
          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
        </head>
-       <body bgcolor="#ffffff" onLoad="opt.init(document.forms[1])">
+       <body bgcolor="#ffffff" onload="opt.init(document.forms[1])">
 
 <xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
@@ -97,7 +97,7 @@
         <table width="800" >
           <tr>
             <td></td>
-            <td><input type="radio" onchange="saveChanges();" name="role" value="0" checked="true">
+            <td><input type="radio" onchange="saveChanges();" name="role" value="0" checked="checked">
             <xsl:if test="/cdash/role=0">
             <xsl:attribute name="checked"></xsl:attribute>
             </xsl:if>
@@ -120,7 +120,7 @@
             </tr>
           <tr>
             <td></td>
-            <td ><input type="radio" onchange="saveChanges();" name="role" value="2" checked="true">
+            <td ><input type="radio" onchange="saveChanges();" name="role" value="2" checked="checked">
             <xsl:if test="/cdash/role=2">
             <xsl:attribute name="checked"></xsl:attribute>
             </xsl:if>
@@ -364,7 +364,7 @@
           <tr>
             <td align="right">
              Available Labels (last 7 days)<br/>
-             <select name="movelabels[]" size="15" multiple="true" id="movelabels" onDblClick="rightTransfer()">
+             <select name="movelabels[]" size="15" multiple="multiple" id="movelabels" ondblclick="rightTransfer()">
                 <xsl:for-each select="/cdash/project/label">
                 <option>
                   <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -379,7 +379,7 @@
             </td>
             <td align="left">
              Email Labels <br/>
-            <select name="emaillabels[]" size="15" multiple="true" id="emaillabels" onDblClick="leftTransfer()">
+            <select name="emaillabels[]" size="15" multiple="multiple" id="emaillabels" ondblclick="leftTransfer()">
                 <xsl:for-each select="/cdash/project/labelemail">
                 <option>
                   <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>

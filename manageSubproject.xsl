@@ -21,11 +21,11 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-         <xsl:comment><![CDATA[[if IE]></xsl:comment>
+         <xsl:comment><![CDATA[[if IE]>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
-          <xsl:comment><![ endif]]></xsl:comment>
-          <script src="javascript/jquery-1.6.2.js"></script>
-          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
+          <![endif]]]></xsl:comment>
+          <script src="javascript/jquery-1.6.2.js" type="text/javascript"></script>
+          <script src="javascript/ui.tabs.js" type="text/javascript"></script>
        </head>
        <body bgcolor="#ffffff">
 

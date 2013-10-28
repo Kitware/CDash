@@ -95,20 +95,20 @@ Show Activity Graph
 </h3>
 
 <xsl:text disable-output-escaping="yes">&lt;script type="text/javascript">var Icons = "images/";&lt;/script&gt;</xsl:text>
-<script type="text/javascript" SRC="javascript/tree.js"></script>
+<script type="text/javascript" src="javascript/tree.js"></script>
 
-<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Expand all';return true;" onClick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Collapse all';return true;" onClick="contract()">Collapse all</a>
+<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Expand all';return true;" onclick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Collapse all';return true;" onclick="contract()">Collapse all</a>
 
 <p></p>
 <xsl:text disable-output-escaping="yes">
-&lt;script LANGUAGE="JavaScript"&gt;</xsl:text><xsl:value-of select="cdash/updates/javascript"/>
+&lt;script type="text/javascript" language="JavaScript"&gt;</xsl:text><xsl:value-of select="cdash/updates/javascript"/>
 <xsl:text disable-output-escaping="yes">
 &lt;/script&gt;
 </xsl:text>
 
-<script type="text/javascript" SRC="javascript/tree_init.js"></script>
+<script type="text/javascript" src="javascript/tree_init.js"></script>
 <br/>
-<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Expand all';return true;" onClick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onMouseOver="window.parent.status='Collapse all';return true;" onClick="contract()">Collapse all</a>
+<a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Expand all';return true;" onclick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Collapse all';return true;" onclick="contract()">Collapse all</a>
 <br/>
 
 <!-- FOOTER -->

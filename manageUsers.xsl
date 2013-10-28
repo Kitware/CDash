@@ -23,11 +23,11 @@
          </link>
 
         <!-- Include project roles -->
-        <script src="javascript/jquery-1.6.2.js"></script>
-        <script src="javascript/cdashManageUsers.js"></script>
+        <script src="javascript/jquery-1.6.2.js" type="text/javascript"></script>
+        <script src="javascript/cdashManageUsers.js" type="text/javascript"></script>
         <!-- Functions to confirm the email -->
         <xsl:text disable-output-escaping="yes">
-              &lt;script language="JavaScript"&gt;
+              &lt;script language="JavaScript" type="text/javascript"&gt;
               function confirmRemove() {
                  if (window.confirm("Are you sure you want to remove this user from the database?")){
                     return true;

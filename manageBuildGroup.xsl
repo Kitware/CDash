@@ -21,11 +21,11 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-         <xsl:comment><![CDATA[[if IE]></xsl:comment>
+         <xsl:comment><![CDATA[[if IE]>
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
-          <xsl:comment><![ endif]]></xsl:comment>
-          <script src="javascript/jquery-1.6.2.js"></script>
-          <script type="text/javascript" src="javascript/ui.tabs.js"></script>
+          <![endif]]]></xsl:comment>
+         <script src="javascript/jquery-1.6.2.js" type="text/javascript"></script>
+         <script src="javascript/ui.tabs.js" type="text/javascript"></script>
 
        <!-- Functions to confirm the remove -->
   <xsl:text disable-output-escaping="yes">
@@ -150,28 +150,28 @@ project page</a>
                <br/>
                <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="1">
                <xsl:if test="summaryemail=1">
-                 <xsl:attribute name="checked">1</xsl:attribute>
+                 <xsl:attribute name="checked">checked</xsl:attribute>
                 </xsl:if>
                </input>
                Summary email
                <br/>
                <input name="summaryEmail" onclick="form.submit();" type="checkbox" value="2">
                <xsl:if test="summaryemail=2">
-                 <xsl:attribute name="checked">1</xsl:attribute>
+                 <xsl:attribute name="checked">checked</xsl:attribute>
                 </xsl:if>
                </input>
                No email
                <br/>
                <input name="emailCommitters" onclick="form.submit();" type="checkbox" value="1">
                <xsl:if test="emailcommitters != 0">
-                 <xsl:attribute name="checked">1</xsl:attribute>
+                 <xsl:attribute name="checked">checked</xsl:attribute>
                </xsl:if>
                </input>
                Email committers
                <br/>
                <input name="includeInSummary" onclick="form.submit();" type="checkbox" value="1">
                <xsl:if test="includeinsummary=1">
-                 <xsl:attribute name="checked">1</xsl:attribute>
+                 <xsl:attribute name="checked">checked</xsl:attribute>
                 </xsl:if>
                </input>
                Included in subproject summary
@@ -243,7 +243,7 @@ project page</a>
               <tr>
               <td><div align="right"></div></td>
               <td>
-               <select name="movebuilds[]" size="15" multiple="true" id="movebuilds">
+               <select name="movebuilds[]" size="15" multiple="multiple" id="movebuilds">
                   <xsl:for-each select="cdash/currentbuild">
                   <option>
                   <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>

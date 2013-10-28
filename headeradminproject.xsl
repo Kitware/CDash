@@ -3,8 +3,6 @@
 
     <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="UTF-8"/>
     <xsl:template name="headeradminproject">
-<link rel="shortcut icon" href="favicon.ico"/>
-
 
 <div id="header">
  <div id="headertop">

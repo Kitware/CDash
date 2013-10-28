@@ -126,10 +126,10 @@
       <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="/cdash/project/id"/>&#38;buildid=<xsl:value-of select="/cdash/project/buildid"/></xsl:attribute>
       <select onchange="this.form.submit();" name="prioritySelection">
       <option value="0">Choose Priority</option>
-      <option value="1"><xsl:if test="priority=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Low</option>
-      <option value="2"><xsl:if test="priority=2"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Medium</option>
-      <option value="3"><xsl:if test="priority=3"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>High</option>
-      <option value="4"><xsl:if test="priority=4"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Urgent</option>
+      <option value="1"><xsl:if test="priority=1"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Low</option>
+      <option value="2"><xsl:if test="priority=2"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Medium</option>
+      <option value="3"><xsl:if test="priority=3"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>High</option>
+      <option value="4"><xsl:if test="priority=4"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Urgent</option>
       </select>
       <input type="hidden" name="fullpath"><xsl:attribute name="value"><xsl:value-of select="fullpath"/></xsl:attribute></input>
       </form>
@@ -192,10 +192,10 @@
     <td>
       <select name="prioritySelectedSelection">
       <option value="0">Choose Priority</option>
-      <option value="1"><xsl:if test="priority=1"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Low</option>
-      <option value="2"><xsl:if test="priority=2"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Medium</option>
-      <option value="3"><xsl:if test="priority=3"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>High</option>
-      <option value="4"><xsl:if test="priority=4"><xsl:attribute name="selected">true</xsl:attribute></xsl:if>Urgent</option>
+      <option value="1"><xsl:if test="priority=1"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Low</option>
+      <option value="2"><xsl:if test="priority=2"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Medium</option>
+      <option value="3"><xsl:if test="priority=3"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>High</option>
+      <option value="4"><xsl:if test="priority=4"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Urgent</option>
       </select>
       <input type="submit" name="changePrioritySelected" value="Change priority of selected files >>"/></td>
   </tr>

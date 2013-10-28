@@ -74,7 +74,7 @@
 <div style="position:relative;">
 <div style="float:left; padding-right:20px;">
 <!-- Display the table of maintainers -->
-<table id="maintainerTable" witdh="100%" cellspacing="0" class="tabb">
+<table id="maintainerTable" width="100%" cellspacing="0" class="tabb">
 <thead>
   <tr class="table-heading1">
     <th id="sort_0">Site Name</th>

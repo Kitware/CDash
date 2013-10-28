@@ -123,7 +123,7 @@
       </td>
       </xsl:if>
 
-      <td valign="Top" align="right">
+      <td valign="top" align="right">
          <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" width="350">
             <tr class="table-heading1">
                <th>Coverage Legend</th>
