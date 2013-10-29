@@ -289,6 +289,93 @@ function get_cvs_repository_commits($cvsroot, $dates)
  return $commits;
 } // end get_cvs_repository_commits
 
+/** Get the Perforce repository commits */
+function get_p4_repository_commits($root, $branch, $dates)
+{
+  include('cdash/config.php');
+  $commits = array();
+  $users = array();
+
+  // Add the command line specified by the user in the "Repository" field
+  // of the project settings "Repository" tab and set the message language
+  // to be English
+  $p4command = $CDASH_P4_COMMAND." ".$root." -L en";
+
+  // Perforce needs the dates separated with / and not with -
+  $fromtime = str_replace("-", "/", gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1));
+  $totime = str_replace("-", "/", gmdate(FMT_DATETIMESTD, $dates['nightly-0']));
+
+  // "Branch" is the file spec for the root directory of the P4 client
+  // Example: //depot/myproject/...
+  $raw_output = `$p4command changes $branch@"$fromtime","$totime" 2>&1`;
+  $lines = explode("\n", $raw_output);
+
+  // Enumerate the changelists between the two given dates and p4 describe
+  // them to get a list of files commited
+  foreach($lines as $line)
+    {
+    if(preg_match("/^Change ([0-9]+) on/", $line, $matches))
+      {
+      $raw_output = `$p4command describe -s $matches[1]`;
+      $describe_lines = explode("\n", $raw_output);
+
+      $commit = array();
+      $comment = "";
+
+      // Parse the changelist description and add each file modified to the
+      // commits list
+      foreach($describe_lines as $dline)
+        {
+        // Commit header
+        if(preg_match("/^Change ([0-9]+) by (.+)@(.+) on (.*)$/", $dline, $matches))
+          {
+          $commit['revision'] = $matches[1];
+          $commit['priorrevision'] = '';
+          $commit['comment'] = '';
+          $commit['time'] = gmdate(FMT_DATETIME,strtotime($matches[4]));
+
+          $user = $matches[2];
+          if(isset($users[$user]) && $users[$user] != '')
+            {
+            $commit['author'] = $users[$user]['name'];
+            $commit['email'] = $users[$user]['email'];
+            }
+          else
+            {
+            $raw_output = `$p4command users -m 1 $user`;
+            if(preg_match("/^(.+) <(.*)> \((.*)\) accessed (.*)$/", $raw_output, $matches))
+              {
+              $newuser = array();
+              $newuser['username'] = $matches[1];
+              $newuser['email'] = $matches[2];
+              $newuser['name'] = $matches[3];
+              $newuser['time'] = $matches[4];
+              $users[$user] = $newuser;
+
+              $commit['author'] = $newuser['name'];
+              $commit['email'] = $newuser['email'];
+              }
+            }
+          }
+        // File specification
+        else if(preg_match("/^\\.\\.\\. (.*)#[0-9]+ ([^ ]+)$/", $dline, $matches))
+          {
+          $commit['filename'] = $matches[1];
+          $commit['directory'] = remove_directory_from_filename($commit['filename']);
+          $commits[$directory."/".$filename.";".$commit['revision']] = $commit;
+          }
+        // Anything else that begins with a tab is a comment line
+        else if(strlen($dline)>0 && $dline[0] == "\t")
+          {
+            $commit['comment' ] = $commit['comment'].trim(substr($dline, 1))."\n";
+          }
+        }
+      }
+    }
+
+  return $commits;
+}
+
 /** Get the GIT repository commits */
 function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision)
 {
@@ -665,6 +752,11 @@ function get_repository_commits($projectid, $dates)
       if ($cvsviewer == "loggerhead")
         {
         $new_commits = get_bzr_repository_commits($root, $dates);
+        }
+      else if($cvsviewer == "p4web")
+        {
+        $branch = $repositories_array["branch"];
+        $new_commits = get_p4_repository_commits($root, $branch, $dates);
         }
       else if($cvsviewer == "gitweb" || $cvsviewer == "gitorious" || $cvsviewer == "github")
         {
