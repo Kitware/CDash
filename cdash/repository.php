@@ -195,6 +195,26 @@ function get_fisheye_diff_url($projecturl, $directory, $file, $revision)
   return make_cdash_url($diff_url);
 }
 
+/** Return the P4Web URL */
+function get_p4web_diff_url($projecturl, $directory, $file, $revision)
+{
+  $diff_url = rtrim($projecturl, '/').($directory ? ("/".$directory) : "")."/".$file;
+
+  if($revision != '')
+    {
+    $prev_revision = get_previous_revision($revision);
+    if($prev_revision != $revision)
+      {
+      $diff_url .= "?ac=207&sr1=".$prev_revision."&sr2=".$revision;
+      }
+    else
+      {
+      $diff_url .= "?ac=64&sr=".$revision;
+      }
+    }
+  return make_cdash_url($diff_url);
+}
+
 /** Return the CVSTrac URL */
 function get_cvstrac_diff_url($projecturl, $directory, $file, $revision)
 {
@@ -537,6 +557,13 @@ function get_hgweb_revision_url($projecturl, $revision, $priorrevision)
 function get_fisheye_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = $projecturl."?r=".$revision;;
+  return make_cdash_url($revision_url);
+}
+
+/** Return the P4Web URL */
+function get_p4web_revision_url($projecturl, $revision, $priorrevision)
+{
+  $revision_url = $project_url."?ac=64&sr=".$revision;
   return make_cdash_url($revision_url);
 }
 

@@ -559,22 +559,25 @@ if(strlen($Project->CvsViewerType)==0)
   $Project->CvsViewerType = "viewcvs";
   }
 
-$xml .= AddCVSViewer("viewcvs","ViewCVS",$Project->CvsViewerType); // first should be lower case
-$xml .= AddCVSViewer("trac","Trac",$Project->CvsViewerType);
-$xml .= AddCVSViewer("fisheye","Fisheye",$Project->CvsViewerType);
+// Put the repository viewers in alphabetical orders
+// first should be lower case
+$xml .= AddCVSViewer("cgit","CGit",$Project->CvsViewerType);
 $xml .= AddCVSViewer("cvstrac","CVSTrac",$Project->CvsViewerType);
+$xml .= AddCVSViewer("fisheye","Fisheye",$Project->CvsViewerType);
+$xml .= AddCVSViewer("github","GitHub",$Project->CvsViewerType);
+$xml .= AddCVSViewer("gitorious","Gitorious",$Project->CvsViewerType);
+$xml .= AddCVSViewer("gitweb","GitWeb",$Project->CvsViewerType);
+$xml .= AddCVSViewer("gitweb2","GitWeb2",$Project->CvsViewerType);
+$xml .= AddCVSViewer("hgweb","Hgweb",$Project->CvsViewerType);
+$xml .= AddCVSViewer("loggerhead","Loggerhead",$Project->CvsViewerType);
+$xml .= AddCVSViewer("p4web","P4Web",$Project->CvsViewerType);
+$xml .= AddCVSViewer("redmine","Redmine",$Project->CvsViewerType);
+$xml .= AddCVSViewer("allura","SourceForge Allura",$Project->CvsViewerType);
+$xml .= AddCVSViewer("trac","Trac",$Project->CvsViewerType);
+$xml .= AddCVSViewer("viewcvs","ViewCVS",$Project->CvsViewerType);
 $xml .= AddCVSViewer("viewvc","ViewVC",$Project->CvsViewerType);
 $xml .= AddCVSViewer("viewvc_1_1","ViewVC1.1",$Project->CvsViewerType);
 $xml .= AddCVSViewer("websvn","WebSVN",$Project->CvsViewerType);
-$xml .= AddCVSViewer("loggerhead","Loggerhead",$Project->CvsViewerType);
-$xml .= AddCVSViewer("gitweb","GitWeb",$Project->CvsViewerType);
-$xml .= AddCVSViewer("gitweb2","GitWeb2",$Project->CvsViewerType);
-$xml .= AddCVSViewer("gitorious","Gitorious",$Project->CvsViewerType);
-$xml .= AddCVSViewer("github","GitHub",$Project->CvsViewerType);
-$xml .= AddCVSViewer("cgit","cgit",$Project->CvsViewerType);
-$xml .= AddCVSViewer("redmine","Redmine",$Project->CvsViewerType);
-$xml .= AddCVSViewer("hgweb","hgweb",$Project->CvsViewerType);
-$xml .= AddCVSViewer("allura","SourceForge Allura",$Project->CvsViewerType);
 
 $xml .= add_XML_value("nrepositories",$nRepositories); // should be at the end
 
