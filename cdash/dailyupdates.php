@@ -312,10 +312,12 @@ function get_p4_repository_commits($root, $branch, $dates)
 
   // Enumerate the changelists between the two given dates and p4 describe
   // them to get a list of files commited
-  foreach($lines as $line)
+  $currentrevision = "";
+  foreach(array_reverse($lines) as $line)
     {
     if(preg_match("/^Change ([0-9]+) on/", $line, $matches))
       {
+      $currentrevision = $matches[1];
       $raw_output = `$p4command describe -s $matches[1]`;
       $describe_lines = explode("\n", $raw_output);
 
@@ -373,7 +375,10 @@ function get_p4_repository_commits($root, $branch, $dates)
       }
     }
 
-  return $commits;
+  $results['currentrevision'] = $currentrevision;
+  $results['commits'] = $commits;
+
+  return $results;
 }
 
 /** Get the GIT repository commits */
@@ -756,7 +761,17 @@ function get_repository_commits($projectid, $dates)
       else if($cvsviewer == "p4web")
         {
         $branch = $repositories_array["branch"];
-        $new_commits = get_p4_repository_commits($root, $branch, $dates);
+        $results = get_p4_repository_commits($root, $branch, $dates);
+
+        // Update the current revision
+        if(isset($results['currentrevision']))
+          {
+          $currentdate = gmdate(FMT_DATE, $dates['nightly-0']);
+          $prevrev = pdo_query("UPDATE dailyupdate SET revision='".$results['currentrevision']."'
+                                WHERE projectid='$projectid' AND date='".$currentdate."'");
+          add_last_sql_error("get_repository_commits");
+          }
+        $new_commits = $results['commits'];
         }
       else if($cvsviewer == "gitweb" || $cvsviewer == "gitorious" || $cvsviewer == "github")
         {
