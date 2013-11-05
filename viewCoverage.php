@@ -273,7 +273,7 @@ $xml .= "</menu>";
       }
 
     // Add the number of satisfactory covered files
-    if($covfile["coveragemetric"]>=0.7)
+    if($covfile["coveragemetric"]>=$metricpass)
       {
       $nsatisfactorycoveredfiles++;
       }

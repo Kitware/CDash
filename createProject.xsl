@@ -789,7 +789,7 @@
                             CDash marks the coverage has passed (green) if the global
                             coverage for a build or specific files is above this
                             threshold. It is recommended to set the coverage threshold
-                            to a high value and decrease it when the coverage is
+                            to a high value and increase it when the coverage is
                             getting higher.
                           </span>
                         </td>
