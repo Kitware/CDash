@@ -299,7 +299,7 @@ function get_p4_repository_commits($root, $branch, $dates)
   // Add the command line specified by the user in the "Repository" field
   // of the project settings "Repository" tab and set the message language
   // to be English
-  $p4command = $CDASH_P4_COMMAND." ".$root." -L en";
+  $p4command = '"'.$CDASH_P4_COMMAND.'" '.$root." -L en";
 
   // Perforce needs the dates separated with / and not with -
   $fromtime = str_replace("-", "/", gmdate(FMT_DATETIMESTD, $dates['nightly-1']+1));
