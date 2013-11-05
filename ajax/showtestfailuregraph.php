@@ -59,7 +59,7 @@ for($beginning_timestamp = $starttime; $beginning_timestamp>$starttime-3600*24*7
   $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
   $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
 
-  $query = "SELECT min(starttime) AS starttime,count(*)
+  $query = "SELECT min(starttime) AS starttime, count(*) AS count
             FROM build
             JOIN build2test ON (build.id = build2test.buildid)
             WHERE build.projectid = '$projectid'
@@ -71,7 +71,7 @@ for($beginning_timestamp = $starttime; $beginning_timestamp>$starttime-3600*24*7
   $result = pdo_query($query);
   echo pdo_error();
   $result_array = pdo_fetch_array($result);
-  $failures[$beginning_timestamp]=$result_array["count(*)"];
+  $failures[$beginning_timestamp]=$result_array['count'];
   }
 ?>
 
