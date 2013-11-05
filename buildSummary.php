@@ -329,15 +329,13 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   $configure_array = pdo_fetch_array($configure);
 
   $nerrors = 0;
-
   if($configure_array["status"]!=0)
     {
     $nerrors = 1;
     }
 
-  $nwarnings = 0;
   $xml .= add_XML_value("nerrors",$nerrors);
-  $xml .= add_XML_value("nwarnings",$nwarnings);
+  $xml .= add_XML_value("nwarnings",$configure_array['warnings']);
 
 
   $xml .= add_XML_value("status",$configure_array["status"]);
@@ -412,9 +410,8 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
       {
       $nconfigureerrors = 1;
       }
-    $nconfigurewarnings = 0;
     $xml .= add_XML_value("nconfigureerrors",$nconfigureerrors);
-    $xml .= add_XML_value("nconfigurewarnings",$nconfigurewarnings);
+    $xml .= add_XML_value("nconfigurewarnings",$configure_array['warnings']);
 
     $xml .= add_XML_value("nerrors",$npreviousbuilderrors);
     $xml .= add_XML_value("nwarnings",$npreviousbuildwarnings);
