@@ -19,12 +19,11 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=Failed");
     $this->waitForPageToLoad("30000");
-    $this->click("link=Show Test Time Graph");
+    $this->select("GraphSelection", "label=Test Time");
     $this->click("link=Zoom out");
-    $this->click("link=Show Test Time Graph");
-    $this->click("link=Show Failing/Passing Graph");
+    $this->select("GraphSelection", "label=Test Time");
+    $this->select("GraphSelection", "label=Failing/Passing");
     $this->click("link=Zoom out");
-    $this->click("link=Show Failing/Passing Graph");
     $this->click("link=curl");
     $this->waitForPageToLoad("30000");
     $this->click("link=Show Test Failure Trend");
