@@ -18,7 +18,7 @@ set(CTEST_CMAKE_GENERATOR "@CMAKE_GENERATOR@")
 set(CTEST_PROJECT_NAME "@ProjectName@")
 
 #coverage stuff
-if(CTEST_C_COMPILER MATCHES "gcc")
+if(CTEST_C_COMPILER MATCHES "cc")
   SET(ENV{CXXFLAGS}
   "-g -O0 -fprofile-arcs -ftest-coverage -Wno-deprecated -W -Wall")
   SET(ENV{CFLAGS} "-g -O0 -fprofile-arcs -ftest-coverage -W -Wall")
