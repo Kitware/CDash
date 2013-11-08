@@ -38,9 +38,18 @@ if (PHP_VERSION >= 5) {
         $xml = new DomDocument;
         $xsl = new DomDocument;
 
+        $phpversion = explode('.', PHP_VERSION);
+        $phpversionid = $phpversion[0] * 10000 + $phpversion[1] * 100 + $phpversion[2];
+
         // Load the xml document and the xsl template
-        $xml->loadXML($args[$xml_arg]);
-        $xsl->loadXML(file_get_contents($xsl_arg));
+        if($phpversionid >= 50302 && LIBXML_VERSION >= 20700) {
+            $xmlOptions = LIBXML_PARSEHUGE;
+        } else {
+            $xmlOptions = 0;
+        }
+
+        $xml->loadXML($args[$xml_arg], $xmlOptions);
+        $xsl->loadXML(file_get_contents($xsl_arg), $xmlOptions);
 
         // Load the xsl template
         $xsltproc->importStyleSheet($xsl);
