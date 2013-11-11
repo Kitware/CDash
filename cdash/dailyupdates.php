@@ -390,11 +390,12 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
   $gitcommand = $CDASH_GIT_COMMAND;
   $gitlocaldirectory = $CDASH_DEFAULT_GIT_DIRECTORY;
 
-  // Check that the default git directory exists
-  if(empty($gitlocaldirectory) || !file_exists($gitlocaldirectory))
+  // Check that the default git directory exists and is writable
+  if(empty($gitlocaldirectory) || !is_writable($gitlocaldirectory))
     {
     add_log("CDASH_DEFAULT_GIT_DIRECTORY is not set in config or not writable.","get_git_repository_commits");
-    return $commits;
+    $results['commits'] = $commits;
+    return $results;
     }
 
   $pos = strrpos($gitroot,'/');
@@ -487,7 +488,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
       }
     else if(strlen($line)>0 && $line[0] == ' ')
       {
-      $commit['comment'] .= trim($line).'\n';
+      $commit['comment'] .= trim($line)."\n";
       }
     }
 
