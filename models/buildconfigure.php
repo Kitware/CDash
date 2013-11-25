@@ -156,65 +156,43 @@ class BuildConfigure
     }  // end insert            
 
 
-  /** Extract the position of the next warning from $log */
-  function GetNextConfigureWarningPosition($log, $position)
-    {
-    // Use input $position as starting point:
-    //
-    $pos1 = strpos($log, 'CMake Warning', $position);
-
-    $pos2 = strpos($log, 'Warning:', $position);
-
-    // Return the smaller of the values as new $position value.
-    // (Or 'false' if both are false...)
-    //
-    if($pos1 !== false)
-      {
-      if($pos2 !== false)
-        {
-        $position = min($pos1, $pos2);
-        }
-      else
-        {
-        $position = $pos1;
-        }
-      }
-    else
-      {
-      $position = $pos2;
-      }
-
-    return $position;
-    } 
-
   /** Compute the warnings from the log. In the future we might want to add errors */
   function ComputeErrors()
     {
-    $nwarnings = 0;  
-    // Add the warnings in the configurewarningtable
-    $position = $this->GetNextConfigureWarningPosition($this->Log, 0);
+    $nwarnings = 0;
+    $log_lines = explode("\n",$this->Log);
+    $numlines = count($log_lines);
 
-    while($position !== false)
+    for($l = 0; $l < $numlines; $l++)
       {
-      $warning = "";
-      $endline = strpos($this->Log,'\n',$position);
-
-      if($endline !== false)
+      if(($pos = stripos($log_lines[$l], 'warning')) !== false &&
+         strpos($log_lines[$l], ':', $pos + 7) !== false)
         {
-        $warning = substr($this->Log,$position,$endline-$position);
-        }
-      else
-        {
-        $warning = substr($this->Log,$position);
-        }
+        $precontext = "";
+        $postcontext = "";
 
-      $warning = pdo_real_escape_string($warning);
+        // Get 2 lines of precontext
+        $pre_start = max($l-2, 0);
+        for($j = $pre_start; $j < $l; $j++)
+          {
+          $precontext .= $log_lines[$j]."\n";
+          }
 
-      pdo_query("INSERT INTO configureerror (buildid,type,text) 
-                  VALUES ('$this->BuildId','1','$warning')");
-      add_last_sql_error("BuildConfigure ComputeErrors",0,$this->BuildId);
-      $nwarnings++;
-      $position = $this->GetNextConfigureWarningPosition($this->Log, $position+1);
+        // Get 5 lines of postcontext
+        $post_end = min($l+6, $numlines);
+        for($j = $l+1; $j < $post_end; $j++)
+          {
+          $postcontext .= $log_lines[$j]."\n";
+          }
+
+        // Add the warnings in the configureerror table
+        $warning = pdo_real_escape_string($precontext. $log_lines[$l]."\n" .$postcontext);
+
+        pdo_query("INSERT INTO configureerror (buildid,type,text)
+                   VALUES ('$this->BuildId','1','$warning')");
+        add_last_sql_error("BuildConfigure ComputeErrors",0,$this->BuildId);
+        $nwarnings++;
+        }
       }
    
     pdo_query("UPDATE configure SET warnings=".qnum($nwarnings)." WHERE buildid=".qnum($this->BuildId));
