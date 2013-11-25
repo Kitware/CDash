@@ -325,7 +325,7 @@ $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date
 $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_project($projectname,$date));
 $xml .= "</menu>";
 
-$dailyupdate = pdo_query("SELECT df.filename,df.revision,df.priorrevision,df.author,df.email,df.log
+$dailyupdate = pdo_query("SELECT df.filename,df.revision,df.priorrevision,df.author,df.email,df.log,df.checkindate
                             FROM dailyupdatefile AS df,dailyupdate AS du
                             WHERE du.date='$gmdate' and du.projectid='$projectid'
                             AND df.dailyupdateid = du.id");
