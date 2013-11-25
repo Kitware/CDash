@@ -48,7 +48,7 @@ class DailyUpdate
       $sql = " ORDER BY dailyupdate.id DESC LIMIT 1";
       }
     
-    $query = pdo_query("SELECT DISTINCT up.userid FROM user2project AS up,user2repository AS ur,dailyupdatefile,dailyupdate 
+    $query = pdo_query("SELECT DISTINCT up.userid,dailyupdate.id FROM user2project AS up,user2repository AS ur,dailyupdatefile,dailyupdate
                         WHERE dailyupdatefile.dailyupdateid=dailyupdate.id 
                         AND dailyupdate.projectid=up.projectid
                         AND ur.credential=dailyupdatefile.author
