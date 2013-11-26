@@ -50,10 +50,10 @@ class Example extends CDashSeleniumTestCase
     $this->click("link=[mark as non expected]");
     $this->waitForPageToLoad("30000");
 
-    // Remove the 3rd build listed: "tr[3]"...
+    // Remove the 2nd build listed: "tr[2]"...
     //
     $folder_button =
-      "//table[@id='project_5_15']/tbody[1]/tr[3]/td[2]/a[3]/img";
+      "//table[@id='project_5_15']/tbody[1]/tr[2]/td[2]/a[3]/img";
     $this->sleepWaitingForElement($folder_button);
     $this->click($folder_button);
     $this->sleepWaitingForElement("link=[remove this build]");
