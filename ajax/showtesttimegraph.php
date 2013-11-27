@@ -116,7 +116,7 @@ $(function () {
       hoverFill: '#444',
       hoverRadius: 4
     },
-    selection: { mode: "x" },
+    selection: { mode: "xy" },
     colors: ["#0000FF", "#dba255", "#919733"]
   };
 

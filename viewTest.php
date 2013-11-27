@@ -224,15 +224,16 @@ $filterdata = get_filterdata_from_request();
 $filter_sql = $filterdata['sql'];
 $limit_sql = '';
 if ($filterdata['limit']>0)
-{
+  {
   $limit_sql = ' LIMIT '.$filterdata['limit'];
-}
+  }
 $xml .= $filterdata['xml'];
 
 $limitnew = "";
 if($onlydelta)
   {
   $limitnew = " AND newstatus=1 ";
+  $onlydelta_extra = " AND build2test.newstatus=1 ";
   }
 
 $sql = "SELECT bt.status,bt.newstatus,bt.timestatus,t.id,bt.time,t.details,t.name " .
@@ -259,6 +260,7 @@ WHERE build.id='$buildid'
 AND measurement.testpage=1
 GROUP by testmeasurement.name
 "); // We need to keep the count of columns for correct column-data assign
+
 while($row=pdo_fetch_array($getcolumnnumber))
   {
   $xml .= add_XML_value("columnname",$row["name"])."\n";
@@ -283,9 +285,9 @@ if($columncount>0)
   JOIN build ON (build.id = build2test.buildid)
   JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
   WHERE build.id= '$buildid'
-  AND measurement.testpage=1
+  AND measurement.testpage=1 $onlydelta_extra
   $extras
-");
+  ");
   }
 
 
@@ -304,8 +306,10 @@ if(@$_GET['export']=="csv") // If user wants to export as CSV file
     $etest[$row['id']][$row['name']]=$row['value'];
     }
 
-  for($c=0;$c<count($columns);$c++) $filecontent .= ",".$columns[$c]; // Add selected columns to the next
-
+  for($c=0;$c<count($columns);$c++)
+    {
+    $filecontent .= ",".$columns[$c]; // Add selected columns to the next
+    }
   $filecontent .= "\n";
 
   while($row = pdo_fetch_array($result))
@@ -327,22 +331,22 @@ if(@$_GET['export']=="csv") // If user wants to export as CSV file
         }
       } // end projectshowtesttime
 
-  switch($currentStatus)
-    {
-    case "passed":
-      $filecontent.="Passed,";
-      break;
-    case "failed":
-      $filecontent.="Failed,";
-      break;
-    case "notrun":
-      $filecontent.="Not Run,";
-      break;
-    }
+    switch($currentStatus)
+      {
+      case "passed":
+        $filecontent.="Passed,";
+        break;
+      case "failed":
+        $filecontent.="Failed,";
+        break;
+      case "notrun":
+        $filecontent.="Not Run,";
+        break;
+      }
     // start writing test results
     for($t=0;$t<count($columns);$t++) $filecontent .= $etest[$row['id']][$columns[$t]].",";
     $filecontent .= "\n";
-  }
+    }
   echo ($filecontent); // Start file download
   die; // to suppress unwanted output
   }
@@ -350,137 +354,89 @@ $xml .= "<etests>\n"; // Start creating etests for each column with matching bui
 $i=0;
 $currentcolumn=-1;
 $prevtestid=0;
-if($columncount>0)
+$checkarray = array();
+while($etestquery && $row=pdo_fetch_array($etestquery))
   {
-  while($row=pdo_fetch_array($etestquery))
+  if(!isset($checkarray[$row["name"]]) || !in_array($row["id"],$checkarray[$row["name"]]))
     {
-    if(!@in_array($row["id"],$checkarray[$row["name"]]))
+    for($columnkey=0;$columnkey<$columncount;$columnkey++)
       {
-      for($columnkey=0;$columnkey<$columncount;$columnkey++)
+      if($columns[$columnkey]==$row['name'])
         {
-        if($columns[$columnkey]==$row['name'])
-          {
-          $columnkey+=1;
-          break;
-          }
-        }
-      $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
-      if($currentcolumn!=$columnkey-1) // If data does not belong to this column
-        {
-        for($t=0;$t<$columncount;$t++)
-          {
-          if(($currentcolumn+$t)%$columncount!=$columnkey-1) // Add blank values till you find the required column
-            {
-            $xml .="<etest>\n";
-            $xml .= add_XML_value("name","");
-            $xml .= add_XML_value("testid", "");
-            $xml .= add_XML_value("value", "");
-            $xml .= "\n</etest>\n";
-            }
-          else
-            {
-            $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
-            break;
-            }
-          }
-        // Add correct values to correct column
-        $xml .="<etest>\n";
-        $xml .= add_XML_value("name",$row["name"]);
-        $xml .= add_XML_value("testid", $row["id"]);
-        $xml .= add_XML_value("value", $row["value"]);
-        $xml .= "\n</etest>\n";
-        $checkarray[$row["name"]][$i]=$row["id"];
-        }
-      else
-        {
-        // Add correct values to correct column
-        $xml .="<etest>\n";
-        $xml .= add_XML_value("name",$row["name"]);
-        $xml .= add_XML_value("testid", $row["id"]);
-        $xml .= add_XML_value("value", $row["value"]);
-        $xml .= "\n</etest>\n";
-        $checkarray[$row["name"]][$i]=$row["id"];
+        $columnkey+=1;
+        break;
         }
       }
-    $i++;
-    }
-    }
-$xml .= "</etests>\n";
-
-
-$xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname and the value.
-$i=0;
-$currentcolumn=-1;
-$checkarray = array();
-if($columncount>0)
-  {
-  while($etestquery && $row=pdo_fetch_array($etestquery))
-    {
-    if(!isset($checkarray[$row["name"]]) || !in_array($row["id"],$checkarray[$row["name"]]))
+    $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
+    if($currentcolumn==0)
       {
-      for($columnkey=0;$columnkey<$columncount;$columnkey++)
+      $prevtestid=$row["id"];
+      }
+    if($currentcolumn!=$columnkey-1) // If data does not belong to this column
+      {
+      for($t=0;$t<$columncount;$t++)
         {
-        if($columns[$columnkey]==$row['name'])
+        if(($currentcolumn+$t)%$columncount!=$columnkey-1) // Add blank values till you find the required column
           {
-          $columnkey+=1;
+          $xml .="<etest>\n";
+          $xml .= add_XML_value("name","");
+          $xml .= add_XML_value("testid", $row["id"]);
+          $xml .= add_XML_value("value", "");
+          $xml .= "\n</etest>\n";
+          $prevtestid=$row["id"];
+          }
+        else
+          {
+          $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
           break;
           }
         }
-      $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
-      if($currentcolumn!=$columnkey-1) // If data does not belong to this column
+      // Add correct values to correct column
+      if($prevtestid==$row["id"] and $currentcolumn!=0)
         {
-        for($t=0;$t<$columncount;$t++)
+        $xml .="<etest>\n";
+        $xml .= add_XML_value("name",$row["name"]);
+        $xml .= add_XML_value("testid", $row["id"]);
+        $xml .= add_XML_value("value", $row["value"]);
+        $xml .= "\n</etest>\n";
+        $checkarray[$row["name"]][$i]=$row["id"];
+        $prevtestid=$row["id"];
+        }
+      else
+        {
+        if($prevtestid!=$row["id"] and $prevtestid!=0 and $currentcolumn!=0)
           {
-          if(($currentcolumn+$t)%$columncount!=$columnkey-1) // Add blank values till you find the required column
+          for($t=0;$t<$columncount;$t++)
             {
             $xml .="<etest>\n";
             $xml .= add_XML_value("name","");
             $xml .= add_XML_value("testid", "");
-            $xml .= add_XML_value("value", "");
+            $xml .= add_XML_value("rowcheck", "");
             $xml .= "\n</etest>\n";
             }
-          else
-            {
-            $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
-            break;
-            }
           }
-        // Add correct values to correct column
+
         $xml .="<etest>\n";
         $xml .= add_XML_value("name",$row["name"]);
         $xml .= add_XML_value("testid", $row["id"]);
         $xml .= add_XML_value("value", $row["value"]);
         $xml .= "\n</etest>\n";
         $checkarray[$row["name"]][$i]=$row["id"];
+        $prevtestid=$row["id"];
         }
-      else
-        {
-        // Add correct values to correct column
-        $xml .="<etest>\n";
-        $xml .= add_XML_value("name",$row["name"]);
-        $xml .= add_XML_value("testid", $row["id"]);
-        $xml .= add_XML_value("value", $row["value"]);
-        $xml .= "\n</etest>\n";
-        $checkarray[$row["name"]][$i]=$row["id"];
-        }
-      $prevtestid=$row["id"];
       }
     else
       {
       if ($prevtestid!=$row["id"] and $prevtestid!=0 and $currentcolumn!=0)
         {
+        for($t=0;$t<$columncount;$t++)
+          {
           $xml .="<etest>\n";
           $xml .= add_XML_value("name","");
           $xml .= add_XML_value("testid", "");
           $xml .= add_XML_value("value", "");
           $xml .= "\n</etest>\n";
-          $xml .="<etest>\n";
-          $xml .= add_XML_value("name","");
-          $xml .= add_XML_value("testid", "");
-          $xml .= add_XML_value("value", "");
-          $xml .= "\n</etest>\n";
-
-
+          }
         }
       // Add correct values to correct column
       $xml .="<etest>\n";
@@ -491,8 +447,8 @@ if($columncount>0)
       $checkarray[$row["name"]][$i]=$row["id"];
       $prevtestid=$row["id"];
       }
-    $i++;
     }
+  $i++;
   }
 $xml .= "</etests>\n";
 

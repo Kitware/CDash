@@ -130,14 +130,14 @@ if($columncount>0)
   ORDER BY build2test.buildid, testmeasurement.name
   ");
 
-  $xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname, test date and the value.
+  $xml .= "<etests>\n"; // Start creating etests for each column with matching buildid, testname and the value.
   $i=0;
   $currentcolumn=-1;
-
-
-  while($row=@pdo_fetch_array($etestquery))
+  $prevtestid=0;
+  $checkarray = array();
+  while($etestquery && $row=pdo_fetch_array($etestquery))
     {
-    if(!@in_array($row["id"],$checkarray[$row["name"]]))
+    if(!isset($checkarray[$row["name"]]) || !in_array($row["id"],$checkarray[$row["name"]]))
       {
       for($columnkey=0;$columnkey<$columncount;$columnkey++)
         {
@@ -147,20 +147,24 @@ if($columncount>0)
           break;
           }
         }
-
       $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
-      if($currentcolumn!=$columnkey-1)
-        {  // If data does not belong to this column
+      if($currentcolumn==0)
+        {
+        $prevtestid=$row["id"];
+        }
+      if($currentcolumn!=$columnkey-1) // If data does not belong to this column
+        {
         for($t=0;$t<$columncount;$t++)
-          { // Add blank values till you find the required column
-          if(($currentcolumn+$t)%$columncount!=$columnkey-1)
+          {
+          if(($currentcolumn+$t)%$columncount!=$columnkey-1) // Add blank values till you find the required column
             {
             $xml .="<etest>\n";
             $xml .= add_XML_value("name","");
-            $xml .= add_XML_value("testid", "");
-            $xml .= add_XML_value("buildid", "");
+            $xml .= add_XML_value("testid", $row["id"]);
+            $xml .= add_XML_value("buildid", $row["buildid"]);
             $xml .= add_XML_value("value", "");
             $xml .= "\n</etest>\n";
+            $prevtestid=$row["id"];
             }
           else
             {
@@ -169,16 +173,59 @@ if($columncount>0)
             }
           }
         // Add correct values to correct column
-        $xml .="<etest>\n";
-        $xml .= add_XML_value("name",$row["name"]);
-        $xml .= add_XML_value("testid", $row["id"]);
-        $xml .= add_XML_value("buildid", $row["buildid"]);
-        $xml .= add_XML_value("value", $row["value"]);
-        $xml .= "\n</etest>\n";
-        $checkarray[$row["name"]][$i]=$row["buildid"];
+        if($prevtestid==$row["id"] and $currentcolumn!=0)
+          {
+          $xml .="<etest>\n";
+          $xml .= add_XML_value("name",$row["name"]);
+          $xml .= add_XML_value("testid", $row["id"]);
+          $xml .= add_XML_value("buildid", $row["buildid"]);
+          $xml .= add_XML_value("value", $row["value"]);
+          $xml .= "\n</etest>\n";
+          $checkarray[$row["name"]][$i]=$row["id"];
+          $prevtestid=$row["id"];
+          }
+        else
+          {
+          if($prevtestid!=$row["id"] and $prevtestid!=0 and $currentcolumn!=0)
+            {
+            for($t=0;$t<$columncount;$t++)
+              {
+              $xml .="<etest>\n";
+              $xml .= add_XML_value("name","");
+              $xml .= add_XML_value("testid", "");
+              $xml .= add_XML_value("buildid", "");
+              $xml .= add_XML_value("rowcheck", "-");
+              $xml .= "\n</etest>\n";
+              }
+            }
+
+          $xml .="<etest>\n";
+          $xml .= add_XML_value("name",$row["name"]);
+          $xml .= add_XML_value("testid", $row["id"]);
+          $xml .= add_XML_value("buildid", $row["buildid"]);
+          $xml .= add_XML_value("value", $row["value"]);
+          $xml .= "\n</etest>\n";
+          $checkarray[$row["name"]][$i]=$row["id"];
+          $prevtestid=$row["id"];
+          }
+
         }
       else
         {
+        if ($prevtestid!=$row["id"] and $prevtestid!=0 and $currentcolumn!=0)
+          {
+          for($t=0;$t<$columncount;$t++)
+            {
+            $xml .="<etest>\n";
+            $xml .= add_XML_value("name","");
+            $xml .= add_XML_value("testid", "");
+            $xml .= add_XML_value("buildid", "");
+            $xml .= add_XML_value("value", "");
+            $xml .= "\n</etest>\n";
+            }
+
+
+          }
         // Add correct values to correct column
         $xml .="<etest>\n";
         $xml .= add_XML_value("name",$row["name"]);
@@ -186,14 +233,14 @@ if($columncount>0)
         $xml .= add_XML_value("buildid", $row["buildid"]);
         $xml .= add_XML_value("value", $row["value"]);
         $xml .= "\n</etest>\n";
-        $checkarray[$row["name"]][$i]=$row["buildid"];
+        $checkarray[$row["name"]][$i]=$row["id"];
+        $prevtestid=$row["id"];
         }
       }
     $i++;
     }
   $xml .= "</etests>\n";
   }
-
 //Get information about all the builds for the given date and project
 $xml .= "<builds>\n";
 
@@ -259,7 +306,7 @@ if($_GET['export']=="csv") // If user wants to export as CSV file
     $currentStatus = $row["status"];
 
     $filecontent .= "{$row["sitename"]},{$row["name"]},{$row["stamp"]},{$row["time"]},";
-
+ 
     if($projectshowtesttime)
       {
       if($row["timestatus"] < $testtimemaxstatus)
