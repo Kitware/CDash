@@ -43,6 +43,7 @@ $(document).ready(function() {
       {
       $.cookie('cdash_refresh', null);
       $(this).css('font-weight','normal');
+      return false;
       }
     else
       {
@@ -103,6 +104,7 @@ $(document).ready(function() {
         });
       $.cookie('cdash_'+projectname+'_advancedview','1');
       }
+      return false;
     });
 
   /** Build name */

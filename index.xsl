@@ -833,10 +833,10 @@
          <div class="jqmWindow" id="groupsdescription">Loading group description...</div>
 </div>
 <div id="autorefresh">
-         <a href="#" class="autorefresh">Auto-refresh</a>
+         <a href="" class="autorefresh">Auto-refresh</a>
 </div>
 <div id="advancedview">
-         <a href="#" class="advancedview">Advanced View</a>
+         <a href="" class="advancedview">Advanced View</a>
 </div>
 
 <!-- Filters? -->
