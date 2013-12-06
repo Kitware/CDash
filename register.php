@@ -17,7 +17,7 @@
 =========================================================================*/
 
 include_once("cdash/common.php");
-
+include_once('cdash/version.php');
 redirect_to_https();
 
 include_once("cdash/config.php");
@@ -192,7 +192,6 @@ function RegisterForm($regerror)
   include("cdash/config.php");
   require_once("cdash/pdo.php");
   include_once("cdash/common.php");
-  include_once('cdash/version.php');
 
   if(isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1)
     {

@@ -18,6 +18,7 @@
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 include("cdash/common.php");
+include('cdash/version.php');
 require_once("models/project.php");
 require_once("models/buildfailure.php");
 require_once("filterdataFunctions.php");
@@ -30,7 +31,6 @@ function generate_index_table()
   include("cdash/config.php");
   require_once("cdash/pdo.php");
   include('login.php');
-  include('cdash/version.php');
   include_once('models/banner.php');
 
   $xml = begin_XML_for_XSLT();
@@ -347,7 +347,6 @@ function generate_main_dashboard_XML($project_instance, $date)
   include_once("cdash/config.php");
   require_once("cdash/pdo.php");
   include('login.php');
-  include('cdash/version.php');
   include_once("models/banner.php");
   include_once("models/subproject.php");
 
@@ -1661,7 +1660,6 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
   include_once("cdash/config.php");
   require_once("cdash/pdo.php");
   include('login.php');
-  include('cdash/version.php');
   include_once("models/banner.php");
   include_once("models/subproject.php");
 
