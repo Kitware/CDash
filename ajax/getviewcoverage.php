@@ -288,7 +288,7 @@ if($userid)
   usort($covfile_array,"sort_array");
 
   // Add the untested files if the coverage is low
-  if($coveragestatus == 0)
+  if($status == 0)
     {
     $sql = "SELECT cf.fullpath,cfp.priority".$SQLDisplayAuthor." FROM coverage AS c,coveragefile AS cf ".$SQLDisplayAuthors."
               LEFT JOIN coveragefilepriority AS cfp ON (cfp.fullpath=cf.fullpath AND projectid=".qnum($projectid).")
