@@ -269,10 +269,10 @@ while($row=pdo_fetch_array($getcolumnnumber))
 
 $columncount=pdo_num_rows($getcolumnnumber);
 // If at least one column is selected
-if($onlypassed) $extras="AND build2test.status='passed'";
-elseif($onlyfailed) $extras="AND build2test.status='failed'";
-elseif($onlynotrun) $extras="AND build2test.status='notrun'";
-$extras.=" ORDER BY test.id, testmeasurement.name";
+$extras = "";
+if($onlypassed) $extras .= "AND build2test.status='passed'";
+elseif($onlyfailed) $extras .= "AND build2test.status='failed'";
+elseif($onlynotrun) $extras .= "AND build2test.status='notrun'";
 
 if($columncount>0)
   {
@@ -287,6 +287,7 @@ if($columncount>0)
   WHERE build.id= '$buildid'
   AND measurement.testpage=1 $onlydelta_extra
   $extras
+  ORDER BY test.id, testmeasurement.name
   ");
   }
 
