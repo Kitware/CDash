@@ -46,10 +46,14 @@
 <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="cdash/site/id"/></xsl:attribute>
 <xsl:if test="cdash/user/siteclaimed=0">Are you maintaining this site? [claim this site]</xsl:if><xsl:if test="cdash/user/siteclaimed=1">[edit site description]</xsl:if></a>
 <br/>
-<br/>
 </xsl:if>
 
 <!-- Main -->
+<xsl:if test="cdash/site/outoforder=1">
+   <br/><span style="color:red"><b>This site has been marked as temporarly out of order by its maintainer.</b></span>
+   <br/>
+ </xsl:if>
+
 <xsl:if test="cdash/site/processorclockfrequency='0Hz'">
   No system information available at this time.
 </xsl:if>

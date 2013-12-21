@@ -413,6 +413,7 @@ CREATE TABLE `site` (
   `ip` varchar(255) NOT NULL default '',
   `latitude` varchar(10) NOT NULL default '',
   `longitude` varchar(10) NOT NULL default '',
+  `outoforder` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) ;

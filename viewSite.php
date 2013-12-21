@@ -163,6 +163,7 @@ $xml .= add_XML_value("totalvirtualmemory",getByteValueWithExtension($siteinform
 $xml .= add_XML_value("totalphysicalmemory",getByteValueWithExtension($siteinformation_array["totalphysicalmemory"]*1048576)."iB");
 $xml .= add_XML_value("logicalprocessorsperphysical",$siteinformation_array["logicalprocessorsperphysical"]);
 $xml .= add_XML_value("processorclockfrequency",getByteValueWithExtension($siteinformation_array["processorclockfrequency"]*1000000,1000)."Hz");
+$xml .= add_XML_value("outoforder",$site_array["outoforder"]);
 if($projectid && $project_array['showipaddresses'])
   {
   $xml .= add_XML_value("ip",$site_array["ip"]);

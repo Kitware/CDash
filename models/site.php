@@ -25,22 +25,28 @@ class Site
   var $Ip;
   var $Latitude;
   var $Longitude;
-    
+  var $OutOfOrder;
+
+  function __construct()
+    {
+    $this->OutOfOrder = 0;
+    }
+
   function SetInformation($information)
     {
     $information->SiteId = $this->Id;
     $information->Save();
     }
-    
-  /** Check if the site already exists */  
+
+  /** Check if the site already exists */
   function Exists()
     {
     // If no id specify return false
     if(!$this->Id && !$this->Name)
       {
-      return false;    
+      return false;
       }
-    
+
     if($this->Id)
       {
       $query = pdo_query("SELECT count(*) AS c FROM site WHERE id=".qnum($this->Id));
@@ -60,9 +66,9 @@ class Site
         return true;
         }
       }
-    return false;  
+    return false;
     }
-  
+
   /** Update a site */
   function Update()
     {
@@ -70,21 +76,23 @@ class Site
       {
       return;
       }
-      
+
     // Update the project
     $query = "UPDATE site SET";
     $query .= " name='".$this->Name."'";
     $query .= ",ip='".$this->Ip."'";
     $query .= ",latitude='".$this->Latitude."'";
     $query .= ",longitude='".$this->Longitude."'";
+    $query .= ",outoforder='".$this->OutOfOrder."'";
+
     $query .= " WHERE id='".$this->Id."'";
-      
+
     if(!pdo_query($query))
       {
       add_last_sql_error("Site Update");
       return false;
       }
-    } 
+    }
 
   function LookupIP()
     {
@@ -122,15 +130,15 @@ class Site
         }
       return $this->Id;
       }
-        
+
     // Get the geolocation
     if(strlen($this->Latitude)==0)
       {
       $location = get_geolocation($this->Ip);
       $this->Latitude = $location['latitude'];
-      $this->Longitude = $location['longitude'];  
+      $this->Longitude = $location['longitude'];
       }
-                                          
+
     if(pdo_query("INSERT INTO site (name,ip,latitude,longitude)
                   VALUES ('$this->Name','$this->Ip','$this->Latitude','$this->Longitude')"))
       {
@@ -141,7 +149,7 @@ class Site
       add_last_sql_error("Site Insert");
       return false;
       }
-    } // end function save  
+    } // end function save
 
   // Get the name of the size
   function GetName()
@@ -149,16 +157,16 @@ class Site
     if(!$this->Id)
       {
       echo "Site::GetName(): Id not set";
-      return false;    
+      return false;
       }
-    
+
     $query = pdo_query("SELECT name FROM site WHERE id=".qnum($this->Id));
     if(!$query)
       {
       add_last_sql_error("Site GetName");
       return false;
-      }  
-      
+      }
+
     $site_array = pdo_fetch_array($query);
     return $site_array['name'];
     } // end GetName()

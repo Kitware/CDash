@@ -888,6 +888,8 @@ if(isset($_GET['upgrade-2-2']))
   ModifyTableField("buildupdate","id","int(11)","bigint","",true,true);
   RenameTableField("updatefile","buildid","updateid","int(11)","bigint","0");
 
+  AddTableField('site', 'outoforder', 'tinyint(1)', 'smallint', '0');
+
   // Set the database version
   setVersion();
 

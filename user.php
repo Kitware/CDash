@@ -189,8 +189,9 @@ if ($session_OK)
     {
     $siteid = $site2user_array["siteid"];
     $site["id"] = $siteid;
-    $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
+    $site_array = pdo_fetch_array(pdo_query("SELECT name,outoforder FROM site WHERE id='$siteid'"));
     $site["name"] = $site_array["name"];
+    $site["outoforder"] = $site_array["outoforder"];
     $claimedsites[] = $site;
 
     if(strlen($siteidwheresql)>0)
@@ -365,6 +366,8 @@ if ($session_OK)
     $xml .= "<claimedsite>";
     $xml .= add_XML_value("id",$site["id"]);
     $xml .= add_XML_value("name",$site["name"]);
+    $xml .= add_XML_value("outoforder",$site["outoforder"]);
+
 
     $siteid = $site["id"];
 

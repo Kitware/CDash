@@ -226,7 +226,8 @@
       <td align="center"><b>Site</b></td>
 
       <xsl:for-each select="cdash/claimedsiteproject">
-        <td align="center" id="nob"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute><xsl:value-of select="name"/></a></td>
+        <td align="center" id="nob"><a><xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute><xsl:value-of select="name"/></a>
+        </td>
       </xsl:for-each>
     </tr>
 
@@ -235,6 +236,9 @@
   <tr class="treven">
       <td align="center" >
         <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute><xsl:value-of select="name"/></a>
+         <xsl:if test="outoforder=1">
+           <img border="0" src="images/flag.png" title="flag"></img>
+        </xsl:if>
       </td>
 
       <xsl:for-each select="project">

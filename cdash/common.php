@@ -675,7 +675,8 @@ function update_site($siteid,$name,
            $totalphysicalmemory,
            $logicalprocessorsperphysical,
            $processorclockfrequency,
-           $description,$ip,$latitude,$longitude,$nonewrevision=false)
+           $description,$ip,$latitude,$longitude,$nonewrevision=false,
+           $outoforder=0)
 {
   include("cdash/config.php");
   require_once("cdash/pdo.php");
@@ -688,6 +689,7 @@ function update_site($siteid,$name,
 
   $latitude = pdo_real_escape_string($latitude);
   $longitude = pdo_real_escape_string($longitude);
+  $outoforder = pdo_real_escape_string($outoforder);
   $ip = pdo_real_escape_string($ip);
   $name = pdo_real_escape_string($name);
   $processoris64bits = pdo_real_escape_string($processoris64bits);
@@ -705,7 +707,7 @@ function update_site($siteid,$name,
   $description = pdo_real_escape_string($description);
 
   // Update the basic information first
-  pdo_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude' WHERE id='$siteid'");
+  pdo_query ("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude',outoforder='$outoforder' WHERE id='$siteid'");
 
   add_last_sql_error("update_site");
 
@@ -751,7 +753,7 @@ function update_site($siteid,$name,
    {
    if($$name!="NA" && strlen($$name)>0)
     {
-     $nonewrevision = false;
+    $nonewrevision = false;
     $newrevision2 = true;
     $noinformation = 0;
     break;

@@ -2,13 +2,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headerback.xsl"/> 
-    
+   <xsl:include href="headerback.xsl"/>
+
    <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headerback.xsl"/> 
+   <xsl:include href="local/headerback.xsl"/>
 
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <xsl:template match="/">
       <html>
@@ -20,16 +20,16 @@
          </link>
             </head>
        <body bgcolor="#ffffff">
-         
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headerback_local"/>
 </xsl:when>
 <xsl:otherwise>
   <xsl:call-template name="headerback"/>
 </xsl:otherwise>
-</xsl:choose>     
-     
+</xsl:choose>
+
 <br/>
 
 <xsl:if test="string-length(cdash/warning)>0">
@@ -65,17 +65,17 @@
     </td>
   </tr>
   </xsl:for-each>
-  
+
    <tr>
     <td></td>
     <td bgcolor="#FFFFFF"></td>
-  </tr> 
+  </tr>
   <tr>
     <td></td>
     <td bgcolor="#FFFFFF">
      <input type="submit" name="claimsites" value="Update claimed sites"/>
     </td>
-  </tr> 
+  </tr>
 </table>
 </form>
 </xsl:if>
@@ -96,14 +96,14 @@
    <tr>
     <td></td>
     <td bgcolor="#FFFFFF"></td>
-  </tr> 
+  </tr>
   <tr>
     <td></td>
     <td bgcolor="#FFFFFF">
      <input type="hidden" name="claimsiteid"><xsl:attribute name="value"><xsl:value-of select="cdash/user/site/id"/></xsl:attribute></input>
      <input type="submit" name="claimsite" value="Claim Site"/>
     </td>
-  </tr> 
+  </tr>
 </table>
 </form>
 </xsl:if>
@@ -118,7 +118,7 @@
    <tr>
     <td></td>
     <td bgcolor="#FFFFFF"></td>
-  </tr> 
+  </tr>
   <tr>
     <td bgcolor="#EEEEEE"><strong>Name:</strong> <input name="site_name" type="text" size="20">
     <xsl:attribute name="value"><xsl:value-of select="cdash/user/site/name"/></xsl:attribute>
@@ -211,7 +211,7 @@
     </input>
     <input type="submit" name="geolocation" value="Retrieve geolocation"/>
     </td>
-  </tr> 
+  </tr>
    <tr>
     <td bgcolor="#EEEEEE"><strong>Latitude:</strong> <input name="site_latitude" type="text" size="30">
     <xsl:attribute name="value"><xsl:value-of select="cdash/user/site/latitude"/></xsl:attribute>
@@ -223,23 +223,31 @@
     <xsl:attribute name="value"><xsl:value-of select="cdash/user/site/longitude"/></xsl:attribute>
     </input>
     </td>
-  </tr> 
+  </tr>
   <tr>
-    <td bgcolor="#EEEEEE"><strong>Force new description revision:</strong> 
+    <td bgcolor="#EEEEEE"><strong>Force new description revision:</strong>
   <input name="newdescription_revision" type="checkbox"/>
      (check this box only if the system has been upgraded, i.e memory upgrade,...)
     </td>
-  </tr> 
- 
- 
- 
+  </tr>
+ <tr>
+    <td bgcolor="#EEEEEE"><strong>Mark site as temporary out of order:</strong>
+    <input name="outoforder" value="1" type="checkbox">
+    <xsl:if test="cdash/user/site/outoforder=1">
+      <xsl:attribute name="checked"></xsl:attribute>
+    </xsl:if>
+    </input>
+    </td>
+  </tr>
+
+
   <tr>
     <td bgcolor="#FFFFFF">
      <input type="hidden" name="claimsiteid"><xsl:attribute name="value"><xsl:value-of select="cdash/user/site/id"/></xsl:attribute></input>
      <input type="submit" name="updatesite" value="Update Site >>"/>
      <input type="submit" name="unclaimsite" value="Unclaim Site >>"/>
     </td>
-  </tr> 
+  </tr>
 </table>
 </form>
 </xsl:if>
@@ -250,7 +258,7 @@
 <!-- FOOTER -->
 <br/>
 
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

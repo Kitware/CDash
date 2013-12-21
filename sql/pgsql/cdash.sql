@@ -323,6 +323,7 @@ CREATE TABLE "site" (
   "ip" character varying(255) DEFAULT '' NOT NULL,
   "latitude" character varying(10) DEFAULT '' NOT NULL,
   "longitude" character varying(10) DEFAULT '' NOT NULL,
+  "outoforder" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name3" on "site" ("name");

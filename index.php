@@ -50,7 +50,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT id FROM measurement LIMIT 1") )
+  if(!pdo_query("SELECT outoforder FROM site LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -614,7 +614,7 @@ function generate_main_dashboard_XML($project_instance, $date)
 
     $currentUTCTime =  gmdate(FMT_DATETIME,$currentstarttime+3600*24);
     $xml = "";
-    $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name FROM build2grouprule AS g,site as s
+    $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name,s.outoforder FROM build2grouprule AS g,site as s
                                   WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid
                                   AND g.starttime<'$currentUTCTime' AND (g.endtime>'$currentUTCTime' OR g.endtime='1980-01-01 00:00:00')
                                   ");
@@ -625,10 +625,12 @@ function generate_main_dashboard_XML($project_instance, $date)
         {
         $site = $build2grouprule_array["name"];
         $siteid = $build2grouprule_array["siteid"];
+        $siteoutoforder = $build2grouprule_array["outoforder"];
         $buildtype = $build2grouprule_array["buildtype"];
         $buildname = $build2grouprule_array["buildname"];
         $xml .= "<build>";
         $xml .= add_XML_value("site",$site);
+        $xml .= add_XML_value("siteoutoforder",$siteoutoforder);
         $xml .= add_XML_value("siteid",$siteid);
         $xml .= add_XML_value("buildname",$buildname);
         $xml .= add_XML_value("buildtype",$buildtype);
@@ -751,6 +753,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,"
                   .$userupdatesql."
                   s.name AS sitename,
+                  s.outoforder AS siteoutoforder,
                   b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
                   b.builderrors AS countbuilderrors,
                   b.buildwarnings AS countbuildwarnings,
@@ -1230,6 +1233,7 @@ function generate_main_dashboard_XML($project_instance, $date)
 
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
     $xml .= add_XML_value("site", $build_array["sitename"]);
+    $xml .= add_XML_value("siteoutoforder", $build_array["siteoutoforder"]);
     $xml .= add_XML_value("siteid", $siteid);
     $xml .= add_XML_value("buildname", $build_array["name"]);
 
