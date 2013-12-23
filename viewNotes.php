@@ -42,44 +42,58 @@ if(!isset($buildid) || !is_numeric($buildid))
  
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
-  
-$build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));  
+
+$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-if(!isset($date) || strlen($date)==0)
-{ 
-  $currenttime = time();
-}
-else
-{
-  $currenttime = mktime("23","59","0",date2month($date),date2day($date),date2year($date));
-}
-    
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if(pdo_num_rows($project)>0)
-{
-  $project_array = pdo_fetch_array($project);  
-  $projectname = $project_array["name"];  
-}
+$siteid = $build_array["siteid"];
+$buildtype = $build_array["type"];
+$buildname = $build_array["name"];
+$starttime = $build_array["starttime"];
 
-$previousdate = date(FMT_DATE,$currenttime-24*3600); 
-$nextdate = date(FMT_DATE,$currenttime+24*3600);
+$project_array = pdo_fetch_array(pdo_query("SELECT * FROM project WHERE id='$projectid'"));
+$projectname = $project_array["name"];
 
 $xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$projectname."</title>";
 
-$xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
-  
+$date = get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]);
+$xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
+
+// Menu
+$xml .= "<menu>";
+$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".$date);
+$previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+if($previousbuildid>0)
+  {
+  $xml .= add_XML_value("previous","viewNotes.php?buildid=".$previousbuildid);
+  }
+else
+  {
+  $xml .= add_XML_value("noprevious","1");
+  }
+$xml .= add_XML_value("current","viewNotes.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));
+$nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
+if($nextbuildid>0)
+  {
+  $xml .= add_XML_value("next","viewNotes.php?buildid=".$nextbuildid);
+  }
+else
+  {
+  $xml .= add_XML_value("nonext","1");
+  }
+$xml .= "</menu>";
+
 // Build
 $xml .= "<build>";
-$build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-$build_array = pdo_fetch_array($build); 
-$siteid = $build_array["siteid"];
+
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $xml .= add_XML_value("site",$site_array["name"]);
-$xml .= add_XML_value("buildname",$build_array["name"]);
-$xml .= add_XML_value("buildid",$build_array["id"]);
+$xml .= add_XML_value("siteid",$siteid);
+$xml .= add_XML_value("buildname",$buildname);
+$xml .= add_XML_value("buildid",$buildid);
+$xml .= add_XML_value("stamp",$build_array["stamp"]);
 $xml .= "</build>";
   
   

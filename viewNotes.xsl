@@ -33,17 +33,26 @@
 
 <br/>
 
-<h3 style="background: #b0c4de">Notes for <xsl:value-of select="cdash/build/site"/>--<xsl:value-of select="cdash/build/buildname"/>-<xsl:value-of select="cdash/build/stamp"/></h3>
+<table border="0">
+<tr><td align="left"><b>Site: </b><a>
+<xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="cdash/build/siteid"/></xsl:attribute>
+<xsl:value-of select="cdash/build/site"/></a></td></tr>
+<tr><td align="left"><b>Build Name: </b><a>
+<xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/buildid"/></xsl:attribute>
+<xsl:value-of select="cdash/build/buildname"/></a></td></tr>
+<tr><td align="left"><b>Stamp: </b><xsl:value-of select="cdash/build/stamp"/></td></tr>
+</table>
+<br/>
+
 <xsl:for-each select="cdash/note">
-  <p>
-    <img src="images/document.png" alt="Notes" border="0" align="top"/>
-    <b> <xsl:value-of select="time"/></b>
-    <b> -- <xsl:value-of select="name"/></b><br/>
-    <pre>
-      <xsl:value-of select="text"/>
-    </pre></p>
-    <br/>
-  </xsl:for-each>
+  <img src="images/document.png" alt="Notes" border="0" align="top"/>
+  <b> <xsl:value-of select="time"/></b>
+  <b> -- <xsl:value-of select="name"/></b><br/>
+  <pre>
+    <xsl:value-of select="text"/>
+  </pre>
+  <br/>
+</xsl:for-each>
 <!-- FOOTER -->
 <br/>
 
