@@ -765,14 +765,14 @@ class Project
       return false;
       }
 
-    $project = pdo_query("SELECT count(*) FROM subproject WHERE projectid=".qnum($this->Id));
+    $project = pdo_query("SELECT count(*) AS c FROM subproject WHERE projectid=".qnum($this->Id));
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfSubprojects",$this->Id);
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return $project_array['c'];
     }
 
   /** Get the subproject ids*/
