@@ -28,12 +28,12 @@ $(document).ready(function() {
     }
 
   // Check if we have a cookie for refreshing the page
-   var refresh_cookie = $.cookie('cdash_refresh');
-   if(refresh_cookie)
-      {
-      $('.autorefresh').css('font-weight','bold');
-      setTimeout( function(){if($.cookie('cdash_refresh')) location.reload()},refresh_cookie); // do the refresh
-      }
+  var refresh_cookie = $.cookie('cdash_refresh');
+  if(refresh_cookie)
+    {
+    $('.autorefresh').css('font-weight','bold');
+    setTimeout( function(){if($.cookie('cdash_refresh')) location.reload()},refresh_cookie); // do the refresh
+    }
 
   /** Enable the autorefresh */
   $('.autorefresh').click(function() {

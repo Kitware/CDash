@@ -796,6 +796,8 @@
          <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
          <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
          <xsl:call-template name="headscripts"/>
+         <script src="javascript/cdashFeed.js" type="text/javascript" charset="utf-8"></script>
+
        </head>
        <body bgcolor="#ffffff">
 
@@ -831,17 +833,29 @@
          <b><xsl:value-of select="cdash/updates/timestamp"/></b>
   </div>
 
+<div id="settings">
+<img src="images/settings.png"/>
+<ul>
+  <li><a href="" class="advancedview">Advanced View</a></li>
+  <li><a href="" class="autorefresh">Auto-refresh</a></li>
+  <li><a id="label_colorblind" href="javascript:colorblind_toggle();">
+<xsl:if test="cdash/filterdata/colorblind = 0">Colorblind palette</xsl:if>
+<xsl:if test="cdash/filterdata/colorblind != 0">Classic palette</xsl:if>
+</a></li>
+<li>
+<a id="label_showfilters" href="javascript:filters_toggle();">
+<xsl:if test="cdash/filterdata/showfilters = 0">Show Filters</xsl:if>
+<xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
+</a>
+</li>
+  <li><a href="" class="showfeed">Hide Feed</a></li>
+  <li><a href="" class="helptrigger">Help</a></li>
+</ul>
+</div>
 
  <div id="helpmenu">
-         <a href="#" class="helptrigger">Help</a>
          <div class="jqmWindow" id="help">Loading help...</div>
          <div class="jqmWindow" id="groupsdescription">Loading group description...</div>
-</div>
-<div id="autorefresh">
-         <a href="" class="autorefresh">Auto-refresh</a>
-</div>
-<div id="advancedview">
-         <a href="" class="advancedview">Advanced View</a>
 </div>
 
 <!-- Filters? -->
@@ -849,6 +863,8 @@
   <xsl:call-template name="filterdata" select="."/>
 </xsl:if>
 </div>
+
+<div id="feed"></div>
 
 </xsl:if>
 

@@ -21,6 +21,7 @@ require_once('models/label.php');
 require_once('models/site.php');
 require_once('models/test.php');
 require_once('models/image.php');
+require_once('models/feed.php');
 
 class TestingHandler extends AbstractHandler
 {
@@ -53,6 +54,7 @@ class TestingHandler extends AbstractHandler
     $this->NumberTestsFailed=0;
     $this->NumberTestsNotRun=0;
     $this->NumberTestsPassed=0;
+    $this->Feed = new Feed();
     }
 
   /** Destructor */
@@ -281,6 +283,9 @@ class TestingHandler extends AbstractHandler
                                       $this->NumberTestsFailed,
                                       $this->NumberTestsNotRun);
       $this->Build->ComputeTestTiming();
+
+      // Insert the build into the feed
+      $this->Feed->InsertTest($this->projectid,$this->Build->Id);
       }
     } // end endElement
 

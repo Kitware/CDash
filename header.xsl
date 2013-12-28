@@ -196,6 +196,11 @@
  </xsl:attribute>
  </input>
 
+ <input type="hidden" id="projectid">
+ <xsl:attribute name="value"><xsl:value-of select="cdash/dashboard/projectid"/>
+ </xsl:attribute>
+ </input>
+
 <div id="calendar" class="ui-datepicker-calendar" ></div>
 
 

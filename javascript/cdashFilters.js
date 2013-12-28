@@ -357,15 +357,15 @@ function colorblind_toggle()
   newSheet.setAttribute("rel", "stylesheet");
   newSheet.setAttribute("type", "text/css");
 
-  if ($("#label_colorblind").html() == "Switch to classic palette")
+  if ($("#label_colorblind").html() == "Classic palette")
     {
     $.cookie("colorblind", 0, { expires: 365 } );
-    $("#label_colorblind").html("Switch to colorblind-friendly palette");
+    $("#label_colorblind").html("Colorblind palette");
     newSheet.setAttribute("href", "cdash.css");
     }
   else
     {
-    $("#label_colorblind").html("Switch to classic palette");
+    $("#label_colorblind").html("Classic palette");
     $.cookie("colorblind", 1, { expires: 365 } );
     newSheet.setAttribute("href", "colorblind.css");
     }

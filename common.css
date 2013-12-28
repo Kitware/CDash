@@ -1014,13 +1014,14 @@ div#index_top {
   width: 100%;
   padding-top: 8px;
   padding-bottom: 1px;
-  height: 35px;
+  height: 20px;
   margin: 0px;
 }
 
 div#updatechanges {
   width: 600px;
   padding-left: 5px;
+  float: left;
 }
 
 div#labelshowfilters {
@@ -1161,4 +1162,73 @@ img {
 textarea {
   font-size: 14px;
   font-family: Courier New, Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono, monospace;
+}
+
+#settings {
+  float: right;
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+}
+
+
+#settings ul{
+  position: relative;
+  background-color: #EEEEEE;
+  width: 110px;
+  right: 130px;
+  list-style: none;
+  margin: 0px;
+  display: none;
+  border: 1px solid #90bade;
+  z-index: 5000;
+}
+
+#settings ul li {
+  position: relative;
+  display: block;
+  width: 110px;
+  height: 20px;
+  z-index: 5000;
+}
+
+#settings ul li a{
+  color: #003366;
+  text-decoration: none;
+  position: relative;
+  width: 140px;
+  height: 20px;
+  left: -40px;
+  padding-left: 10px;
+  display: block;
+}
+
+#settings ul li:hover a{
+  text-decoration: none;
+  background-color: #CCCCCC;
+}
+
+#settings ul.visible {
+  display: block;
+}
+
+#feed {
+  clear: both;
+  display: block;
+  position: relative;
+  padding-bottom: 5px;
+  width: 100%;
+  color: #015173;
+}
+
+#feed a{
+  color: #015173;
+}
+
+#feedmore a {
+  font-size: 0.8em;
+  float: right;
+  margin-right: 5px;
+  margin-bottom: 5px;
 }

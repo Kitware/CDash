@@ -20,6 +20,7 @@ require_once('models/build.php');
 require_once('models/label.php');
 require_once('models/site.php');
 require_once('models/buildfailure.php');
+require_once('models/feed.php');
 
 class BuildHandler extends AbstractHandler
 {
@@ -35,6 +36,7 @@ class BuildHandler extends AbstractHandler
     $this->Build = new Build();
     $this->Site = new Site();
     $this->Append = false;
+    $this->Feed = new Feed();
     }
 
   public function startElement($parser, $name, $attributes)
@@ -133,6 +135,9 @@ class BuildHandler extends AbstractHandler
       add_build($this->Build, $this->scheduleid);
 
       $this->Build->ComputeDifferences();
+
+      // Insert the build into the feed
+      $this->Feed->InsertBuild($this->projectid,$this->Build->Id);
       }
     else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE')
       {

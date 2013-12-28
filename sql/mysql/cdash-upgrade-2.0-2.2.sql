@@ -22,3 +22,16 @@ CREATE TABLE IF NOT EXISTS `measurement` (
   KEY `projectid` (`projectid`),
   KEY `name` (`name`)
 );
+
+
+CREATE TABLE IF NOT EXISTS `feed` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `projectid` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `buildid` bigint(20) NOT NULL,
+  `type` int(11) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `projectid` (`projectid`),
+  KEY `date` (`date`)
+);

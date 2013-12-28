@@ -19,6 +19,7 @@ require_once 'xml_handlers/abstract_handler.php';
 require_once('models/build.php');
 require_once('models/site.php');
 require_once('models/buildupdate.php');
+require_once('models/feed.php');
 
 /** Write the updates in one block
  *  In case of a lot of updates this might take up some memory */
@@ -36,6 +37,7 @@ class UpdateHandler extends AbstractHandler
     parent::__construct($projectID, $scheduleID);
     $this->Build = new Build();
     $this->Site = new Site();
+    $this->Feed = new Feed();
     }
 
   /** Start element */
@@ -103,15 +105,18 @@ class UpdateHandler extends AbstractHandler
 
       // Insert the update
       $this->Update->Insert();
-            
-      //Compute the update statistics
+
+      // We need to work the magic here to have a good description
+      $this->Feed->InsertUpdate($this->projectid,$buildid);
+
+      // Compute the update statistics
       $this->Build->ComputeUpdateStatistics();
       }
     else if($name=='UPDATED' || $name=='CONFLICTING' || $name=='MODIFIED')
-       {
-       $this->Update->AddFile($this->UpdateFile);
-       unset($this->UpdateFile);
-       }
+      {
+      $this->Update->AddFile($this->UpdateFile);
+      unset($this->UpdateFile);
+      }
     } // end function endElement
 
   /** Text */
