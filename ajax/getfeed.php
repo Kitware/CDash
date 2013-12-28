@@ -43,7 +43,6 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 $feed = new Feed();
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-
 // Return when the feed was seen
 function get_elapsed_time($date)
   {
@@ -118,7 +117,21 @@ $feeds = $feed->GetFeed($projectid,5); // display the last five submissions
 foreach($feeds as $f)
   {
   ?>
- <?php echo get_elapsed_time($f["date"])." ago: " ?>
+ <?php
+   $elapsedtime = get_elapsed_time($f["date"]);
+   if($elapsedtime == '')
+     {
+     $elapsedtime = 'Some time';
+     }
+   if($elapsedtime == '0m')
+     {
+     echo "Just now: ";
+     }
+   else
+     {
+     echo $elapsedtime." ago: ";
+     }
+    ?>
  <?php //echo get_feed_type($f["type"]) ?>
 <?php echo get_feed_link($f["type"],$f["buildid"],$f["description"]); ?>
 <br/>
