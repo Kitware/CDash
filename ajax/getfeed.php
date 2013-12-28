@@ -47,7 +47,7 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 function get_elapsed_time($date)
   {
   $lastpingtime = '';
-  $diff = time()-strtotime($date);
+  $diff = time()-strtotime($date." UTC");
   $days = $diff/(3600*24);
   if(floor($days)>0)
     {
