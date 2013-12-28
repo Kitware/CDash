@@ -279,7 +279,7 @@ $xml .= "</menu>";
       }
 
     // Build failure table
-    $errors = pdo_query("SELECT * FROM buildfailure WHERE buildid='$buildid' and type='$type' ORDER BY id ASC");
+    $errors = pdo_query("SELECT * FROM buildfailure WHERE buildid='$buildid' and type='$type'".$extrasql." ORDER BY id ASC");
     while($error_array = pdo_fetch_array($errors))
       {
       $lxml = "<error>";
