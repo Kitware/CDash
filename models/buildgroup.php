@@ -118,7 +118,7 @@ class BuildGroup
         add_last_sql_error("Buildgroup Insert",$this->ProjectId);
         return false;
         }
-      
+
       if(!$this->Id)
         {
         $this->Id = pdo_insert_id("buildgroup");
@@ -157,6 +157,10 @@ class BuildGroup
     else // we don't have any rules we use the type
       {
       $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
+      if(pdo_num_rows($buildgroup)==0) // if the group does not exist we assign it to experimental
+        {
+        $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='Experimental' AND projectid='$projectid'");
+        }
       $buildgroup_array = pdo_fetch_array($buildgroup);
       return $buildgroup_array["id"];
       }
