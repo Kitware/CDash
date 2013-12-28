@@ -123,6 +123,8 @@ foreach($feeds as $f)
 <?php echo get_feed_link($f["type"],$f["buildid"],$f["description"]); ?>
 <br/>
 <?php  } // End looping through feed ?>
+<?php if(count($feeds)>0) { ?>
 <div id="feedmore"><a href="viewFeed.php?projectid=<?php echo $projectid; ?>">See full feed</a></div>
+<?php } ?>
 
 
