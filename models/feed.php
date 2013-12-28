@@ -44,7 +44,7 @@ class Feed
   function InsertTest($projectid,$buildid)
     {
     $build = new Build();
-    $build->Id = $buildid;
+    $build->FillFromId($buildid);
     if($build->GetPreviousBuildId() == 0) // if we don't have a previous build then we need to count ourselves
       {
       $query = pdo_query("SELECT name FROM build WHERE id=".$buildid);
@@ -139,7 +139,7 @@ class Feed
   function InsertBuild($projectid,$buildid)
     {
     $build = new Build();
-    $build->Id = $buildid;
+    $build->FillFromId($buildid);
     if($build->GetPreviousBuildId() == 0) // if we don't have a previous build then we need to count ourselves
       {
       $query = pdo_query("SELECT name FROM build WHERE id=".$buildid);
