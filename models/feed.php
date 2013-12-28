@@ -67,7 +67,7 @@ class Feed
         $this->Insert($projectid,$buildid,Feed::TypeTestFailing,$description);
         }
 
-      $positives = pdo_query("SELECT count(*) FROM build2test WHERE status='notrun'");
+      $positives = pdo_query("SELECT count(*) FROM build2test WHERE buildid='$buildid' AND status='notrun'");
       $positives_array  = pdo_fetch_array($positives);
       $npositives = $positives_array[0];
       if($npositives>0)
