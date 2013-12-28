@@ -264,8 +264,13 @@ if($DeleteGroup)
     $buildtype = $oldbuilds_array["type"];
 
     // Find the group corresponding to the build type
-    $grouptype_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'"));
+    $query = pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'");
+    if(pdo_num_rows($query) == 0)
+      {
+      $query = pdo_query("SELECT id FROM buildgroup WHERE name='Experimental' AND projectid='$projectid'");
+      }
     echo pdo_error();
+    $grouptype_array = pdo_fetch_array($query);
     $grouptype = $grouptype_array["id"];
 
     pdo_query("UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'");
