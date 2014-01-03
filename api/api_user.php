@@ -37,7 +37,7 @@ class UserAPI extends CDashAPI
       }
 
     $projectid = get_project_id($this->Parameters['project']);
-    if(!is_numeric($projectid))
+    if(!is_numeric($projectid) || $projectid <= 0)
       {
       echo "Project not found";
       return;
