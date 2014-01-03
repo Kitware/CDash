@@ -22,14 +22,12 @@
 $cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
-// Return a tree of coverage directory with the number of line covered
-// and not covered
 include_once('api.php');
 
 class CoverageAPI extends CDashAPI
 {
-  
-  /** Return the coverage per directory */
+  /** Return the coverage per directory with the number of lines
+    * covered and not covered */
   private function CoveragePerDirectory()
     {
     include_once('../cdash/common.php');  
