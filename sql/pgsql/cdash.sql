@@ -1288,7 +1288,7 @@ CREATE TABLE "feed" (
   "id" serial NOT NULL,
   "projectid" bigint NOT NULL,
   "date" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "builid" bigint NOT NULL DEFAULT '0',
+  "buildid" bigint NOT NULL DEFAULT '0',
   "type" bigint NOT NULL DEFAULT '0',
   "description" character varying(255) NOT NULL,
   PRIMARY KEY ("id")
