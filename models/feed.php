@@ -36,7 +36,7 @@ class Feed
 
   function __construct()
     {
-    $this->Type = TypeUnknown;
+    $this->Type = Feed::TypeUnknown;
     $this->Description = "";
     }
 
