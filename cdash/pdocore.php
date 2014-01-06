@@ -105,6 +105,8 @@ function pdo_error($link_identifier = NULL)
 /** Return true if the given index exists for the column */
 function pdo_check_index_exists($tablename,$columnname)
 {
+  global $CDASH_DB_TYPE;
+   
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
     {
     echo "NOT IMPLEMENTED";
