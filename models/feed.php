@@ -290,6 +290,8 @@ class Feed
       $c = count($authors)-2;
       $description .= ' and '.$c." others";
       }
+
+    $description = pdo_real_escape_string($description);
     $this->Insert($projectid,$buildid,Feed::TypeUpdate,$description);
     }
 
