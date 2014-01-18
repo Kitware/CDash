@@ -237,7 +237,7 @@ class Feed
       return false;
       }
     $query_array = pdo_fetch_array($query);
-    if($query_array[0]["c"]>1) // if we have more than one we return
+    if($query_array['c']>1) // if we have more than one we return
       {
       return;
       }
