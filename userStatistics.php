@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -20,7 +20,7 @@ include_once("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include('cdash/version.php');
-      
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -31,7 +31,7 @@ if(!isset($userid) || !is_numeric($userid))
   echo "Not a valid userid!";
   return;
   }
-  
+
 $xml = begin_XML_for_XSLT();
 
 @$projectname = $_GET["project"];
@@ -42,18 +42,18 @@ if ($projectname != NULL)
 $projectid = get_project_id($projectname);
 if($projectid)
   {
-  $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));  
+  $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));
   $xml .= "<backurl>user.php";
   $xml .= "</backurl>";
   }
-else  
+else
   {
   $xml .= "<backurl>index.php</backurl>";
   }
 $xml .= "<title>CDash - User Statistics</title>";
 $xml .= "<menutitle>CDash</menutitle>";
-$xml .= "<menusubtitle>User Stats</menusubtitle>";
- 
+$xml .= "<menusubtitle>User Statistics</menusubtitle>";
+
 @$projectid = $_GET["projectid"];
 if ($projectid != NULL)
   {
@@ -70,7 +70,7 @@ if(!isset($projectid))
     $projectid = $project_array["id"];
     }
 }
-  
+
 $role=0;
 
 $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
@@ -81,21 +81,21 @@ if($projectid && is_numeric($projectid))
     {
     $user2project_array = pdo_fetch_array($user2project);
     $role = $user2project_array["role"];
-    }  
+    }
   }
-    
+
 if($user_array["admin"]!=1 && $role<=1)
   {
   echo "You don't have the permissions to access this page";
   return;
   }
- 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);   
-  
+
+checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
+
 $sql = "SELECT id,name FROM project";
 if($user_array["admin"] != 1)
   {
-  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)"; 
+  $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
   }
 $projects = pdo_query($sql);
 while($project_array = pdo_fetch_array($projects))
@@ -118,17 +118,17 @@ if($projectid>0)
   $xml .= add_XML_value("id",$project_array['id']);
   $xml .= add_XML_value("name",$project_array['name']);
   $xml .= "</project>";
-  
+
   $range = "thisweek";
   if(isset($_POST["range"]))
   {
     $range = $_POST["range"];
     $xml .= add_XML_value("datarange",$range);
   }
-  
+
   // Find the list of the best submitters for the project
   $now = time();
-  
+
   if($range=="thisweek")
     {
     // find the current day of the week
@@ -164,26 +164,26 @@ if($projectid>0)
     $end = $now-$day*3600*24;
     $beginning = $now;
     }
-  
+
   $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning);
-  $end_UTCDate = gmdate(FMT_DATETIME,$end);                                                      
-  
-  $endselect = "select f.userid, f.checkindate, f.totalbuilds, f.nfixedwarnings, 
-                       f.nfailedwarnings, f.nfixederrors, f.nfailederrors, 
+  $end_UTCDate = gmdate(FMT_DATETIME,$end);
+
+  $endselect = "select f.userid, f.checkindate, f.totalbuilds, f.nfixedwarnings,
+                       f.nfailedwarnings, f.nfixederrors, f.nfailederrors,
                        f.nfixedtests, f.nfailedtests, f.totalupdatedfiles
   from (
      select userid, max(checkindate) as checkindate
      from userstatistics WHERE checkindate<'$end_UTCDate' AND checkindate>='$beginning_UTCDate' AND projectid='$projectid' group by userid
   ) as x inner join userstatistics as f on f.userid=x.userid AND f.checkindate=x.checkindate";
-  
+
   $startselect = "select f.userid, f.checkindate, f.totalbuilds, f.nfixedwarnings,
-                         f.nfailedwarnings, f.nfixederrors, f.nfailederrors, 
+                         f.nfailedwarnings, f.nfixederrors, f.nfailederrors,
                          f.nfixedtests, f.nfailedtests, f.totalupdatedfiles
   from (
      select userid, max(checkindate) as checkindate
      from userstatistics WHERE checkindate<'$beginning_UTCDate' AND projectid='$projectid' group by userid
   ) as x inner join userstatistics as f on f.userid=x.userid AND f.checkindate=x.checkindate";
-    
+
   // First loop through the endselect
   $users = array();
   $endquery = pdo_query($endselect);
@@ -200,7 +200,7 @@ if($projectid>0)
     $user['totalupdatedfiles'] = $endquery_array['totalupdatedfiles'];
     $users[$endquery_array['userid']] = $user;
     }
-  
+
   $startquery = pdo_query($startselect);
   while($startquery_array = pdo_fetch_array($startquery))
     {
@@ -211,20 +211,20 @@ if($projectid>0)
       $users[$startquery_array['userid']]['nfailederrors'] -= $startquery_array['nfailederrors'];
       $users[$startquery_array['userid']]['nfixederrors'] -= $startquery_array['nfixederrors'];
       $users[$startquery_array['userid']]['nfailedtests'] -= $startquery_array['nfailedtests'];
-      $users[$startquery_array['userid']]['nfixedtests'] -= $startquery_array['nfixedtests']; 
+      $users[$startquery_array['userid']]['nfixedtests'] -= $startquery_array['nfixedtests'];
       $users[$startquery_array['userid']]['totalbuilds'] -= $startquery_array['totalbuilds'];
-      $users[$startquery_array['userid']]['totalupdatedfiles'] -= $startquery_array['totalupdatedfiles'];  
+      $users[$startquery_array['userid']]['totalupdatedfiles'] -= $startquery_array['totalupdatedfiles'];
       }
     }
-  
+
   // Compute the total score
   $alpha_warning = 0.2;
   $alpha_error = 0.5;
   $alpha_test = 0.3;
   $fixingvsfailing = 0.2;
-  
+
   foreach($users as $key=>$user)
-    { 
+    {
     if($user['totalbuilds']==0)
       {
       $users[$key]['totalbuilds'] = 1;
@@ -239,10 +239,10 @@ if($projectid>0)
     }
 
   foreach($users as $key=>$user)
-    {  
+    {
     $xml .= "<user>";
     $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id=".qnum($key)));
-  
+
     $xml .= add_XML_value("name",$user_array['firstname']." ".$user_array['lastname']);
     $xml .= add_XML_value("id",$key);
     $score=$alpha_test*$fixingvsfailing*$user['nfixedtests'];
@@ -252,24 +252,24 @@ if($projectid>0)
     $score+=$alpha_warning*$fixingvsfailing*$user['nfixedwarnings'];
     $score-=$alpha_warning*(1-$fixingvsfailing)*$user['nfailedwarnings'];
     $score /= $user['totalbuilds'];
-    
+
     $xml .= add_XML_value("score",round($score,3));
     $xml .= add_XML_value("failed_errors",$user['nfailederrors']);
-    $xml .= add_XML_value("fixed_errors",$user['nfixederrors']);  
+    $xml .= add_XML_value("fixed_errors",$user['nfixederrors']);
     $xml .= add_XML_value("failed_warnings",$user['nfailedwarnings']);
     $xml .= add_XML_value("fixed_warnings",$user['nfixedwarnings']);
     $xml .= add_XML_value("failed_tests",$user['nfailedtests']);
     $xml .= add_XML_value("fixed_tests",$user['nfixedtests']);
     $xml .= add_XML_value("totalupdatedfiles",$user['totalupdatedfiles']);
     $xml .= "</user>";
-    }    
+    }
 
   } // end if project found
-  
-// order by score by default  
+
+// order by score by default
 $xml .= add_XML_value("sortlist","{sortlist: [[1,1]]}"); // score
 $xml .= "</cdash>";
-  
+
 // Now doing the xslt transition
 generate_XSLT($xml,"userStatistics");
 
