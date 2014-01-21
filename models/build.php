@@ -1067,7 +1067,7 @@ class Build
     $newbuild = 1;
     $previousauthor = "";
     // Loop through the updated files
-    $updatefiles = pdo_query("SELECT author,checkindate,filename FROM updatefile AS uf,build2update AS b2u
+    $updatefiles = pdo_query("SELECT author,email,checkindate,filename FROM updatefile AS uf,build2update AS b2u
                              WHERE b2u.updateid=uf.updateid AND b2u.buildid=".qnum($this->Id).
                              " AND checkindate>'1980-01-01T00:00:00' ORDER BY author ASC, checkindate ASC");
     add_last_sql_error("Build:ComputeUpdateStatistics",$this->ProjectId,$this->Id);
@@ -1078,6 +1078,7 @@ class Build
       $checkindate = $updatefiles_array["checkindate"];
       $author = $updatefiles_array["author"];
       $filename = $updatefiles_array["filename"];
+      $email = $updatefiles_array["email"];
 
       if($author != $previousauthor)
         {
@@ -1099,7 +1100,7 @@ class Build
         $testdiff /= $nupdatedfiles;
         }
 
-      $this->AddUpdateStatistics($author,$checkindate,$newbuild,
+      $this->AddUpdateStatistics($author,$email,$checkindate,$newbuild,
                                  $warningdiff,$errordiff,$testdiff);
 
       $newbuild = 0;
@@ -1110,14 +1111,14 @@ class Build
 
 
   /** Helper function for AddUpdateStatistics */
-  private function AddUpdateStatistics($author,$checkindate,$firstbuild,
+  private function AddUpdateStatistics($author,$email,$checkindate,$firstbuild,
                                        $warningdiff,$errordiff,$testdiff)
     {
     // Find the userid from the author name
     $user2project = pdo_query("SELECT up.userid FROM user2project AS up,user2repository AS ur
                                WHERE up.userid=ur.userid
                                AND up.projectid=".qnum($this->ProjectId)."
-                               AND ur.credential='$author'
+                               AND (ur.credential='$author' OR ur.credential='$email')
                                AND (ur.projectid=0 OR ur.projectid=".qnum($this->ProjectId).")"
                                );
     if(pdo_num_rows($user2project)==0)
@@ -1266,7 +1267,8 @@ class Build
     } // end AddUpdateStatistics
 
 
-  /** Find the errors associated with a user */
+  /** Find the errors associated with a user
+   *  For now the author is not used, we assume that the filename is sufficient */
   private function FindRealErrors($type,$author,$buildid,$filename)
     {
     $errortype=0;
@@ -1274,10 +1276,18 @@ class Build
       {
       $errortype=1;
       }
+
     $errors = pdo_query("SELECT count(*) FROM builderror WHERE type=".qnum($errortype)."
-                          AND sourcefile LIKE '%$filename%' AND buildid=".qnum($this->Id));
+                          AND sourcefile LIKE '%$filename%' AND buildid=".qnum($buildid));
     $errors_array  = pdo_fetch_array($errors);
-    return $errors_array[0];
+    $nerrors = $errors_array[0];
+    // Adding the buildfailure
+    $failures = pdo_query("SELECT count(*) FROM buildfailure WHERE type=".qnum($errortype)."
+                          AND sourcefile LIKE '%$filename%' AND buildid=".qnum($buildid));
+    $failures_array  = pdo_fetch_array($failures);
+    $nerrors += $failures_array[0];
+
+    return $nerrors;
     } // end FindRealErrors
 
   /** Return the name of a build */
