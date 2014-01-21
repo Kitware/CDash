@@ -28,7 +28,7 @@ $userid = $_SESSION['cdash']['loginid'];
 // Checks
 if(!isset($userid) || !is_numeric($userid))
   {
-  echo "Not a valid userid!";
+  echo "You should be logged in to see this page!";
   return;
   }
 
@@ -161,9 +161,10 @@ if($projectid>0)
     {
     // find the current day of the month
     $day = date("z");
-    $end = $now-$day*3600*24;
-    $beginning = $now;
+    $beginning = $now-$day*3600*24;
+    $end = $now;
     }
+
 
   $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning);
   $end_UTCDate = gmdate(FMT_DATETIME,$end);
