@@ -152,10 +152,17 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
     $file['author'] = $file_array["author"];
     $file['status'] = $file_array["status"];
 
-    // Only display email if the user is logged int
+    // Only display email if the user is logged in
     if(isset($_SESSION['cdash']))
       {
-      $file['email'] = get_author_email($projectname, $file['author']);
+      if($file_array['email'] == '')
+        {
+        $file['email'] = get_author_email($projectname, $file['author']);
+        }
+      else
+        {
+        $file['email'] = $file_array['email'];
+        }
       }
     else
       {
