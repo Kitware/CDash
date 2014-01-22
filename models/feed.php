@@ -295,7 +295,15 @@ class Feed
     $this->Insert($projectid,$buildid,Feed::TypeUpdate,$description);
     }
 
-  /** Insert a new site */
+  /** Delete the old feeds */
+  function DeleteOld($projectid,$days)
+    {
+    $secondsinday = 86400; // == 3600*24;
+    $olddate_utc = gmdate(FMT_DATETIMESTD, time()-$days*$secondsinday);
+    pdo_delete_query("DELETE FROM feed WHERE projectid=".$projectid." AND date<".$olddate_utc);
+    } // end DeleteOld()
+
+  /** Insert a new feed */
   function Insert($projectid,$buildid,$type,$description="")
     {
     $this->ProjectId = $projectid;
@@ -314,6 +322,9 @@ class Feed
       add_last_sql_error("Feed Insert");
       return false;
       }
+
+    // Delete the old feed (30 days)
+    $this->DeleteOld($projectid,30);
 
     } // end function insert
 
