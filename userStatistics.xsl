@@ -34,33 +34,6 @@
 
 <br/>
 
-<table width="100%"  border="0">
-  <tr>
-    <td width="10%"><div align="right"><strong>Project:</strong></div></td>
-    <td width="90%" >
-    <form name="form1" method="post">
-    <xsl:attribute name="action">userStatistics.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
-    <select onchange="location = 'userStatistics.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
-        <option>
-        <xsl:attribute name="value">0</xsl:attribute>
-        Choose...
-        </option>
-
-        <xsl:for-each select="cdash/availableproject">
-        <option>
-        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-        <xsl:if test="selected=1">
-        <xsl:attribute name="selected"></xsl:attribute>
-        </xsl:if>
-        <xsl:value-of select="name"/>
-        </option>
-        </xsl:for-each>
-        </select>
-      </form>
-    </td>
-  </tr>
-</table>
-
 <!-- If a project has been selected -->
 <xsl:if test="count(cdash/project)>0">
 <form method="post">
@@ -82,36 +55,81 @@ Last Month</option>
 <option value="thisyear">
 <xsl:if test="/cdash/datarange='thisyear'"><xsl:attribute name="selected"></xsl:attribute></xsl:if>
 This Year</option>
+<option value="lastyear">
+<xsl:if test="/cdash/datarange='lastyear'"><xsl:attribute name="selected"></xsl:attribute></xsl:if>
+Last Year</option>
 </select>
 </form>
 <br/>
 
-<table id="userStatistics" cellspacing="0">
+<table id="userStatistics" cellspacing="0" width="100%">
 <xsl:attribute name="class">tabb <xsl:value-of select="/cdash/sortlist"/></xsl:attribute>
 <thead>
   <tr class="table-heading1">
-    <th id="sort_0">Username</th>
-    <th id="sort_1">Score</th>
-    <th id="sort_2">Updated Files</th>
-    <th id="sort_3">Failed Errors</th>
-    <th id="sort_4">Fixed Errors</th>
-    <th id="sort_5">Failed Warnings</th>
-    <th id="sort_6">Fixed Warnings</th>
-    <th id="sort_7">Failed Tests</th>
-    <th id="sort_8" class="nob">Fixed Tests</th>
+    <th id="sort_0" width="20%">Developer</th>
+    <th id="sort_1" width="10%">Score</th>
+    <th id="sort_2" width="10%">Updated Files</th>
+    <th id="sort_3" width="10%">Failed Errors</th>
+    <th id="sort_4" width="10%">Fixed Errors</th>
+    <th id="sort_5" width="10%">Failed Warnings</th>
+    <th id="sort_6" width="10%">Fixed Warnings</th>
+    <th id="sort_7" width="10%">Failed Tests</th>
+    <th id="sort_8" class="nob" width="10%">Fixed Tests</th>
   </tr>
 </thead>
 <xsl:for-each select="cdash/user">
   <tr>
    <td align="center"><xsl:value-of select="name"/></td>
-   <td align="center"><xsl:value-of select="score"/></td>
+   <td align="center">
+     <xsl:attribute name="class">
+       <xsl:choose><xsl:when test="score &lt; 0">error</xsl:when></xsl:choose>
+       <xsl:choose><xsl:when test="score >= 0">normal</xsl:when></xsl:choose>
+     </xsl:attribute>
+     <xsl:choose><xsl:when test="score >= 0"><image src="images/smiley-good.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score >= 0.5"><image src="images/smiley-good.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score >= 0.8"><image src="images/smiley-good.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score &lt; 0"><image src="images/smiley-bad.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score &lt; -0.3"><image src="images/smiley-bad.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score &lt; -0.4"><image src="images/smiley-bad.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score &lt; -0.7"><image src="images/smiley-bad.png"/></xsl:when></xsl:choose>
+     <a href="" style="display:none"><xsl:value-of select="score"/></a>
+   </td>
    <td align="center"><xsl:value-of select="totalupdatedfiles"/></td>
-   <td align="center"><xsl:value-of select="failed_errors"/></td>
-   <td align="center"><xsl:value-of select="fixed_errors"/></td>
-   <td align="center"><xsl:value-of select="failed_warnings"/></td>
-   <td align="center"><xsl:value-of select="fixed_warnings"/></td>
-   <td align="center"><xsl:value-of select="failed_tests"/></td>
-   <td align="center"><xsl:value-of select="fixed_tests"/></td>
+   <td align="center">
+     <xsl:attribute name="class">
+       <xsl:choose><xsl:when test="failed_errors > 0">error</xsl:when></xsl:choose>
+     </xsl:attribute>
+     <xsl:value-of select="failed_errors"/>
+   </td>
+   <td align="center">
+     <xsl:attribute name="class">
+       <xsl:choose><xsl:when test="fixed_errors > 0">normal</xsl:when></xsl:choose>
+     </xsl:attribute>
+     <xsl:value-of select="fixed_errors"/>
+   </td>
+   <td align="center">
+     <xsl:attribute name="class">
+       <xsl:choose><xsl:when test="failed_warnings > 0">error</xsl:when></xsl:choose>
+     </xsl:attribute>
+     <xsl:value-of select="failed_warnings"/>
+   </td>
+   <td align="center"><xsl:attribute name="class">
+       <xsl:choose><xsl:when test="fixed_warnings > 0">normal</xsl:when></xsl:choose>
+     </xsl:attribute>
+     <xsl:value-of select="fixed_warnings"/>
+   </td>
+   <td align="center">
+     <xsl:attribute name="class">
+       <xsl:choose><xsl:when test="failed_tests > 0">error</xsl:when></xsl:choose>
+     </xsl:attribute>
+   <xsl:value-of select="failed_tests"/>
+   </td>
+   <td align="center">
+     <xsl:attribute name="class">
+       <xsl:choose><xsl:when test="fixed_tests > 0">normal</xsl:when></xsl:choose>
+     </xsl:attribute>
+   <xsl:value-of select="fixed_tests"/>
+   </td>
 
   </tr>
 </xsl:for-each>

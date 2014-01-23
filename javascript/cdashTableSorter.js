@@ -502,7 +502,7 @@ $(document).ready(function() {
      $(this).tablesorter({
             headers: {
                 0: { sorter:'text'},
-                1: { sorter:'digit'},
+                1: { sorter:'numericvalue'},
                 2: { sorter:'digit'},
                 3: { sorter:'digit'},
                 4: { sorter:'digit'},

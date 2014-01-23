@@ -53,17 +53,19 @@ function get_elapsed_time($date)
     {
     $lastpingtime .= floor($days)." days ";
     $diff = $diff-(floor($days)*3600*24);
+    return $lastpingtime;
     }
   $hours = $diff/(3600);
   if(floor($hours)>0)
     {
-    $lastpingtime .= floor($hours)."h ";
+    $lastpingtime .= floor($hours)." hours ";
     $diff = $diff-(floor($hours)*3600);
+    return $lastpingtime;
     }
   $minutes = $diff/(60);
   if($minutes>0)
     {
-    $lastpingtime .= floor($minutes)."m";
+    $lastpingtime .= floor($minutes)." minutes";
     }
 
   return $lastpingtime;
@@ -129,7 +131,7 @@ foreach($feeds as $f)
      }
    else
      {
-     echo $elapsedtime." ago: ";
+     echo "<b>".$elapsedtime." ago: </b>";
      }
     ?>
  <?php //echo get_feed_type($f["type"]) ?>
