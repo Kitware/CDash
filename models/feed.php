@@ -300,7 +300,7 @@ class Feed
     {
     $secondsinday = 86400; // == 3600*24;
     $olddate_utc = gmdate(FMT_DATETIMESTD, time()-$days*$secondsinday);
-    pdo_delete_query("DELETE FROM feed WHERE projectid=".$projectid." AND date<".$olddate_utc);
+    pdo_delete_query("DELETE FROM feed WHERE projectid='$projectid' AND date<'$olddate_utc'");
     } // end DeleteOld()
 
   /** Insert a new feed */
