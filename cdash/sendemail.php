@@ -1184,6 +1184,7 @@ function send_email_to_user($userid, $emailtext, $Build, $Project)
 function send_error_email($userid, $emailaddress, $sendEmail, $errors,
   $Build, $Project, $prefix = 'none')
 {
+  include("cdash/config.php");
   $emailtext = array();
   $emailtext['nerror'] = 0;
 
@@ -1319,7 +1320,9 @@ function sendemail($handler,$projectid)
   $Project = new Project();
   $Project->Id = $projectid;
   $Project->Fill();
-
+ 
+  $sendEmail = NULL;
+  
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
     {
     include_once("local/sendemail.php");
