@@ -86,6 +86,7 @@ if($Submit && $filemask)
         {
         ctest_parse($handle,$projectid);
         fclose($handle);
+        unset($handle);
         }
       else
         {

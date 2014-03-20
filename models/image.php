@@ -40,6 +40,7 @@ class Image
       $h = fopen($this->Filename,"rb");
       $this->Data = addslashes(fread($h,filesize($this->Filename)));
       fclose($h);
+      unset($h);
       }
     }
 

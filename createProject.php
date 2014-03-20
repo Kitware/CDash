@@ -263,6 +263,7 @@ if($Submit)
         $contents = addslashes(fread($handle,$_FILES['logo']['size']));
         $filetype = $_FILES['logo']['type'];
         fclose($handle);
+        unset($handle);
         }
 
       if($contents)
@@ -390,6 +391,7 @@ if($Update || $AddRepository)
       $contents = addslashes(fread($handle,$_FILES['logo']['size']));
       $filetype = $_FILES['logo']['type'];
       fclose($handle);
+      unset($handle);
       }
     $Project->AddLogo($contents,$filetype);
     }

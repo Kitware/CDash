@@ -45,10 +45,6 @@ if(client_submit())
   return;
   }
 
-$expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
-$file_path='php://input';
-$fp = fopen($file_path, 'r');
-
 $projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
 $projectid = get_project_id($projectname);
 
@@ -66,6 +62,10 @@ if($projectid == -1)
 // Catch the fatal errors during submission
 register_shutdown_function('PHPErrorHandler',$projectid);
 
+$expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
+$file_path='php://input';
+$fp = fopen($file_path, 'r');
+
 // If the submission is asynchronous we store in the database
 if($CDASH_ASYNCHRONOUS_SUBMISSION)
   {
@@ -76,4 +76,5 @@ else
   do_submit($fp, $projectid, $expected_md5, true);
   }
 fclose($fp);
+unset($fp);
 ?>

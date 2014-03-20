@@ -50,6 +50,7 @@ if(!empty($lastcheck))
 $handle = fopen($lastcheckfile,"wb");  
 fwrite($handle,time());
 fclose($handle);
+unset($handle);
 
 $files = glob($directory.'/*.xml');
 $filelist = array();
@@ -83,6 +84,7 @@ foreach($filelist as $filename)
     $handle = fopen($filename,"r");
     ctest_parse($handle,$projectid);
     fclose($handle);
+    unset($handle);
     }
   else
     {

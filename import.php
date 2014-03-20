@@ -155,6 +155,7 @@ if($Submit)
         //ctest_parse($xml_array,$projectid);
         ctest_parse($handle,$projectid, false);
         fclose($handle);
+        unset($handle);
         }
       echo "<br>Done for the day".$currentDay."<br>\n";
       flush();
