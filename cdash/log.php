@@ -139,13 +139,27 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
 
   $log_pre_exists = file_exists($logFile);
 
-  error_log($error, 3, $logFile);
+  $logged = error_log($error, 3, $logFile);
+
+  // If there was a problem logging to cdash.log, echo and send it to
+  // PHP's system log:
+  //
+  if (!$logged)
+    {
+    echo "warning: problem logging error to $logFile\n";
+    echo "  $error\n";
+    echo "\n";
+    echo "attempting to send to PHP's system log now\n";
+    echo "\n";
+
+    error_log($error, 0);
+    }
 
   // If we just created the logFile, then give it group write permissions
   // so that command-line invocations of CDash functions can also write to
   // the same log file.
   //
-  if (!$log_pre_exists)
+  if (!$log_pre_exists && $logged && file_exists($logFile))
     {
     chmod($logFile, 0664);
     }
