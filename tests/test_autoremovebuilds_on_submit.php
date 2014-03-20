@@ -21,6 +21,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     $handle = fopen($filename, "r");
     $contents = fread($handle, filesize($filename));
     fclose($handle);
+    unset($handle);
     $handle = fopen($filename, "w");
     $lines = explode("\n", $contents);
     foreach($lines as $line)
@@ -37,6 +38,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
       }
     fclose($handle);
+    unset($handle);
     }
 
 

@@ -112,6 +112,7 @@ function CreateRSSFeed($projectid)
   fputs($fp, "</channel>\n");
   fputs($fp, "</rss>\n");
   fclose($fp);
+  unset($fp);
 }
 
 ?>

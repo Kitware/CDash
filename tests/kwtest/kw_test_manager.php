@@ -421,6 +421,7 @@ class CDashTestManager extends TestManager
     $fp = fopen($filename,'r');
     $content = fread($fp,filesize($filename));
     fclose($fp);
+    unset($fp);
     $output = split($regex,$content);
     foreach($output as $message)
       {
@@ -473,6 +474,7 @@ class CDashTestManager extends TestManager
       curl_exec($ch);
       curl_close($ch);
       fclose($fp);
+      unset($fp);
     }
 }
 

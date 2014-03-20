@@ -103,6 +103,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     }
   while(!$fp);
   fclose($fp);
+  unset($fp);
 
   $outfile = fopen($filename, 'w');
 
@@ -116,10 +117,12 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
       add_log("Cannot write to file ($filename)", "do_submit_asynchronous",
         LOG_ERR, $projectid);
       fclose($outfile);
+      unset($outfile);
       return;
       }
     }
   fclose($outfile);
+  unset($outfile);
 
   $md5sum = md5_file($filename);
   $md5error = false;

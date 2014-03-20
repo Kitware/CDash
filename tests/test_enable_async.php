@@ -18,6 +18,7 @@ class EnableAsynchronousTestCase extends KWWebTestCase
     $handle = fopen($filename, "r");
     $contents = fread($handle, filesize($filename));
     fclose($handle);
+    unset($handle);
     $handle = fopen($filename, "w");
     $lines = explode("\n", $contents);
     foreach($lines as $line)
@@ -33,6 +34,7 @@ class EnableAsynchronousTestCase extends KWWebTestCase
         }
       }
     fclose($handle);
+    unset($handle);
     $this->pass("Passed");
     }
 }

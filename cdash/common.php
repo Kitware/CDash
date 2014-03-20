@@ -127,6 +127,7 @@ function generate_XSLT($xml,$pageName,$only_in_local=false)
      $inF=fopen($CDASH_DEBUG_XML,"w");
      fwrite($inF, $tmp);
      fclose($inF);
+     unset($inF);
     }
   $xslpage = $pageName.".xsl";
 

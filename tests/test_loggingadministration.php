@@ -21,6 +21,7 @@ class LoggingAdministrationTestCase extends KWWebTestCase
     $handle = fopen($this->logfilename, "w");
     fwrite($handle, "test log file");
     fclose($handle);
+    unset($handle);
 
     $this->login();
 

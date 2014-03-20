@@ -50,6 +50,8 @@ function ProcessFile($projectid, $filename)
     $PHP_ERROR_SUBMISSION_ID = 0;
 
     fclose($fp);
+    unset($fp);
+
     // delete the temporary backup file since we now have a better-named one
     unlink($filename);
     $new_status = 2; // done, did call do_submit, finished normally

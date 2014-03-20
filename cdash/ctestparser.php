@@ -223,6 +223,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     echo "ERROR: Cannot write to file ($filename)";
     add_log("Cannot write to file ($filename)", "ctest_parse",LOG_ERR);
     fclose($handle);
+    unset($handle);
     return $handler;
     }
 
@@ -234,10 +235,12 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
       echo "ERROR: Cannot write to file ($filename)";
       add_log("Cannot write to file ($filename)", "ctest_parse",LOG_ERR);
       fclose($handle);
+      unset($handle);
       return $filename;
       }
     }
   fclose($handle);
+  unset($handle);
 
   if($do_checksum == true)
     {
@@ -292,6 +295,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
   xml_parse($parser, null, true);
   xml_parser_free($parser);
   fclose($parseHandle);
+  unset($parseHandle);
 
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
     {

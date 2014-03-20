@@ -307,6 +307,7 @@ class KWWebTestCase extends WebTestCase {
     $page = curl_exec($ch);
     curl_close($ch);
     fclose($fp);
+    unset($fp);
     return $page;
     }
 

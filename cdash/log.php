@@ -95,7 +95,9 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
               gzwrite($gz, fread($f, 8192));
               }
             fclose($f);
+            unset($f);
             gzclose($gz);
+            unset($gz);
             }
           }
         }
@@ -114,7 +116,9 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
           gzwrite($gz, fread($f, 8192));
           }
         fclose($f);
+        unset($f);
         gzclose($gz);
+        unset($gz);
         unlink($tmplogfile);
         }
       } // end tmp file doesn't exist
