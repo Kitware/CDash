@@ -305,12 +305,38 @@ class UploadHandler extends AbstractHandler
         if ($createSymlink)
           {
           // Create symlink
-          $success = symlink($uploadfilepath, $upload_dir.'/'.$symlinkName);
+          if (function_exists("symlink"))
+            {
+            $success = symlink($uploadfilepath, $upload_dir.'/'.$symlinkName);
+            }
+          else
+            {
+            $success = 0;
+            }
+
           if (!$success)
             {
-            add_log("Failed to create symlink [target:'".$uploadfilepath."', name: '".$upload_dir.'/'.$symlinkName."']", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
-            $this->UploadError = true;
-            return;
+            // Log actual non-testing symlink failure as an error:
+            $level = LOG_ERR;
+
+            // But if testing, log as info only:
+            if ($GLOBALS['CDASH_TESTING_MODE'])
+              {
+              $level = LOG_INFO;
+              }
+
+            add_log("Failed to create symlink [target:'".$uploadfilepath."', name: '".$upload_dir.'/'.$symlinkName."']", __FILE__.':'.__LINE__.' - '.__FUNCTION__, $level);
+
+            // Fall back to a full copy if symlink does not exist, or if it failed:
+            $success = copy($uploadfilepath, $upload_dir.'/'.$symlinkName);
+
+            if (!$success)
+              {
+              add_log("Failed to copy file (symlink fallback) [target:'".$uploadfilepath."', name: '".$upload_dir.'/'.$symlinkName."']", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
+
+              $this->UploadError = true;
+              return;
+              }
             }
           }
         }
