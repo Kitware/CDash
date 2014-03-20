@@ -83,6 +83,11 @@ class ImportTestCase extends KWWebTestCase
       return 1;
       }
 
+    echo "content:\n";
+    echo $content;
+    echo "\n";
+    echo "endcontent\n";
+
     $this->pass("Passed");
     return 0;
     }
