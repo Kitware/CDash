@@ -204,7 +204,7 @@ class UploadHandler extends AbstractHandler
       unset($whandle);
 
       // Delete base64 encoded file
-      $success = unlink($this->Base64TmpFilename);
+      $success = cdash_unlink($this->Base64TmpFilename);
       if (!$success)
         {
         add_log("Failed to delete file '".$this->Base64TmpFilename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);
@@ -221,7 +221,7 @@ class UploadHandler extends AbstractHandler
                 "than the total upload quota for this project ($Project->UploadQuota bytes)",
                 __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_ERR);
         $this->UploadError = true;
-        unlink($this->TmpFilename);
+        cdash_unlink($this->TmpFilename);
         return;
         }
 
@@ -245,7 +245,7 @@ class UploadHandler extends AbstractHandler
         // Read content of the file
         $url_length = 255; // max length of 'uploadfile.filename' field
         $this->UploadFile->Filename = trim(file_get_contents($this->TmpFilename, NULL, NULL, 0, $url_length));
-        unlink($this->TmpFilename);
+        cdash_unlink($this->TmpFilename);
         add_log("this->UploadFile->Filename '".$this->UploadFile->Filename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
         }
       else
@@ -289,7 +289,7 @@ class UploadHandler extends AbstractHandler
         else
           {
           // Delete decoded temporary file since it has already been addressed
-          $success = unlink($this->TmpFilename);
+          $success = cdash_unlink($this->TmpFilename);
           if (!$success)
             {
             add_log("Failed to delete file '".$this->TmpFilename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_WARNING);

@@ -4,6 +4,9 @@ require_once(dirname(__FILE__) . '/simpletest/unit_tester.php');
 require_once(dirname(__FILE__) . '/simpletest/mock_objects.php');
 require_once(dirname(__FILE__) . '/simpletest/web_tester.php');
 require_once(dirname(__FILE__) . '/kw_db.php');
+require_once(dirname(__FILE__) . '/kw_unlink.php');
+
+
 /**
  * The test manager interface kw tests with simpletest test.
  *
@@ -42,14 +45,14 @@ class TestManager
       else
         {
         // Delete file:
-        unlink($logfilename);
+        cdash_testsuite_unlink($logfilename);
         }
       }
 
     $filenames = glob(dirname($logfilename)."/*.xml");
     foreach($filenames as $filename)
       {
-      unlink($filename);
+      cdash_testsuite_unlink($filename);
       }
     }
   function runFileTest(&$reporter, $file)
@@ -362,7 +365,7 @@ class CDashTestManager extends TestManager
     if (file_exists($logfilename))
       {
       // delete the log file -- result is success/failure
-      $result = unlink($logfilename);
+      $result = cdash_testsuite_unlink($logfilename);
       }
     else
       {

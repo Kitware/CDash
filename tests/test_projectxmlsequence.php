@@ -5,6 +5,8 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
+require_once('tests/kwtest/kw_unlink.php');
+
 class ProjectXmlSequenceTestCase extends KWWebTestCase
 {
   function __construct()
@@ -47,7 +49,7 @@ class ProjectXmlSequenceTestCase extends KWWebTestCase
 //    echo "copying log file to [$logcopy]\n";
 //    if(file_exists($logcopy))
 //      {
-//      unlink($logcopy);
+//      cdash_testsuite_unlink($logcopy);
 //      }
 //    copy($this->logfilename, $logcopy);
 

@@ -1,4 +1,5 @@
 <?php
+require_once(dirname(__FILE__) . '/kw_unlink.php');
 
 /**#@+
  *  include other SimpleTest class files
@@ -114,7 +115,7 @@ class KWWebTestCase extends WebTestCase {
       else
         {
         // Delete file:
-        unlink($filename);
+        cdash_testsuite_unlink($filename);
         }
       }
     }

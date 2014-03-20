@@ -443,6 +443,7 @@ function checkUserPolicy($userid,$projectid,$onlyreturn=0)
   return true;
 }
 
+
 /** Clean the backup directory */
 function clean_backup_directory()
 {
@@ -452,7 +453,7 @@ function clean_backup_directory()
     {
     if(file_exists($filename) && time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600)
       {
-      unlink($filename);
+      cdash_unlink($filename);
       }
     }
 }
@@ -1312,7 +1313,7 @@ function unlink_uploaded_file($fileid)
   else
     {
     // Just delete the symlink, keep the content around
-    unlink($CDASH_UPLOAD_DIRECTORY.'/'.$sha1sum.'/'.$symlinkname);
+    cdash_unlink($CDASH_UPLOAD_DIRECTORY.'/'.$sha1sum.'/'.$symlinkname);
     return 0;
     }
 }
@@ -1367,7 +1368,7 @@ function rmdirr($dir)
         if (is_dir($dir.'/'.$object))
           rmdirr($dir.'/'.$object);
         else
-          unlink($dir.'/'.$object);
+          cdash_unlink($dir.'/'.$object);
         }
       }
     reset($objects);

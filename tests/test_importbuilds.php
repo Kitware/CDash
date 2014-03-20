@@ -8,6 +8,7 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 require_once('cdash/pdo.php');
 require_once('models/image.php');
 require_once('models/testimage.php');
+require_once('tests/kwtest/kw_unlink.php');
 
 class ImportBuildsTestCase extends KWWebTestCase
 {
@@ -30,7 +31,7 @@ class ImportBuildsTestCase extends KWWebTestCase
     $checkFile = dirname(__FILE__)."/data/SubProjectExample/lastcheck";
     if(file_exists($checkFile))
       {
-      unlink($checkFile);
+      cdash_testsuite_unlink($checkFile);
       }
 
     $argc = 1;
@@ -66,7 +67,7 @@ class ImportBuildsTestCase extends KWWebTestCase
       }
 
     $this->pass("Passed");
-    unlink($checkFile);
+    cdash_testsuite_unlink($checkFile);
     $this->deleteLog($this->logfilename);
 
     $this->stopCodeCoverage();

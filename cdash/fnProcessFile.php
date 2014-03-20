@@ -53,7 +53,7 @@ function ProcessFile($projectid, $filename)
     unset($fp);
 
     // delete the temporary backup file since we now have a better-named one
-    unlink($filename);
+    cdash_unlink($filename);
     $new_status = 2; // done, did call do_submit, finished normally
     }
   else

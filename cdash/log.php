@@ -19,6 +19,35 @@ require_once("cdash/defines.php");
 require_once("cdash/pdocore.php");
 require_once("models/errorlog.php");
 
+
+function cdash_unlink($filename)
+{
+  $success = unlink($filename);
+
+//  $try_count = 1;
+//
+//  while(file_exists($filename) && $try_count < 60)
+//  {
+//    usleep(1000000); // == 1000 ms, == 1.0 seconds
+//
+//    $success = unlink($filename);
+//    $try_count++;
+//  }
+
+  if (file_exists($filename))
+  {
+    throw new Exception("file still exists after unlink: $filename");
+  }
+
+  if (!$success)
+  {
+    throw new Exception("unlink returned non-success: $success for $filename");
+  }
+
+  return $success;
+}
+
+
 /** Add information to the log file */
 function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                  $resourcetype=0, $resourceid=0)
@@ -70,7 +99,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
           $newfile = $logFile.".".$j.".txt";
           if(file_exists($newfile))
             {
-            unlink($newfile);
+            cdash_unlink($newfile);
             }
           if(file_exists($currentfile))
             {
@@ -84,7 +113,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
           $newfile = $logFile.".".$j.".gz";
           if(file_exists($newfile))
             {
-            unlink($newfile);
+            cdash_unlink($newfile);
             }
           if(file_exists($currentfile))
             {
@@ -119,7 +148,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
         unset($f);
         gzclose($gz);
         unset($gz);
-        unlink($tmplogfile);
+        cdash_unlink($tmplogfile);
         }
       } // end tmp file doesn't exist
     } // end log rotation
