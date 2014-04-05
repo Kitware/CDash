@@ -19,10 +19,9 @@
 $path = dirname(__FILE__);
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-require_once("cdash/autoremove.php");
-// Open the database connection
 include("cdash/config.php");
 require_once("cdash/pdo.php");
+require_once("cdash/autoremove.php");
 
 if($argc != 2)
 {
