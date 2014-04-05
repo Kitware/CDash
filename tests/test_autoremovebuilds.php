@@ -14,6 +14,22 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
     parent::__construct();
     }
 
+  function launchViaCommandLine($arg1)
+    {
+    global $cdashpath;
+    global $PHP_EXE;
+    $cmd = "\"$PHP_EXE\" \"$cdashpath/autoRemoveBuilds.php\"";
+    if ($arg1)
+      {
+      $cmd = $cmd." \"$arg1\"";
+      }
+    echo "Running command line:\n";
+    echo "  cmd='${cmd}'\n";
+    passthru($cmd);
+    echo "\n";
+    echo "Done with command line\n";
+    }
+
   function testAutoRemoveBuilds()
     {
     $this->startCodeCoverage();
@@ -26,7 +42,7 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
     $argc = 1;
 
     ob_start();
-    include('autoRemoveBuilds.php');
+    $this->launchViaCommandLine("");
     $output = ob_get_contents();
     ob_end_clean();
 
@@ -41,7 +57,7 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
     $argc = 2;
 
     ob_start();
-    include('autoRemoveBuilds.php');
+    $this->launchViaCommandLine("InsightExample");
     $output = ob_get_contents();
     ob_end_clean();
 
