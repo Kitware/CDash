@@ -23,6 +23,7 @@ require_once("models/project.php");
 require_once("models/buildfailure.php");
 require_once("filterdataFunctions.php");
 
+set_time_limit(0);
 
 /** Generate the index table */
 function generate_index_table()
@@ -803,6 +804,24 @@ function generate_main_dashboard_XML($project_instance, $date)
   $lastGroupPosition = $groupposition_array["position"];
 
 
+  // By default, do not collapse rows. But if the project has subprojects, then
+  // collapse rows with common build name, site and group. (But different
+  // subprojects/labels...)
+  //
+  // Look for a '&collapse=0' or '&collapse=1' to override the default.
+  //
+  $collapse = 0;
+
+  if ($project_instance->GetNumberOfSubProjects() > 0)
+    {
+    $collapse = 1;
+    }
+  if (array_key_exists('collapse', $_REQUEST))
+    {
+    $collapse = $_REQUEST['collapse'];
+    }
+
+
   // Fetch all the rows of builds into a php array.
   // Compute additional fields for each row that we'll need to generate the xml.
   //
@@ -972,109 +991,85 @@ function generate_main_dashboard_XML($project_instance, $date)
     $countbuildnotes = pdo_single_row_query("SELECT count(*) AS c FROM buildnote WHERE buildid='".$buildid."'");
     $build_row['countbuildnotes'] = $countbuildnotes['c'];
 
-    //  Save the row in '$build_rows'
-    $build_rows[] = $build_row;
-    }
-
-
-  // By default, do not collapse rows. But if the project has subprojects, then
-  // collapse rows with common build name, site and group. (But different
-  // subprojects/labels...)
-  //
-  // Look for a '&collapse=0' or '&collapse=1' to override the default.
-  //
-  $collapse = 0;
-
-  if ($project_instance->GetNumberOfSubProjects() > 0)
-    {
-    $collapse = 1;
-    }
-  if (array_key_exists('collapse', $_REQUEST))
-    {
-    $collapse = $_REQUEST['collapse'];
-    }
-
-
-  // This loop assumes that only build rows that are originally next to each
-  // other in $build_rows are candidates for collapsing...
-  //
-  if($collapse)
-    {
-    $build_rows_collapsed = array();
-
-    foreach($build_rows as $build_row)
+    if(!$collapse)
       {
-      $idx = count($build_rows_collapsed) - 1;
+      $build_rows[] = $build_row;
+      }
+    else
+      {
+      // This assumes that only build rows that are originally next to each
+      // other in $build_rows are candidates for collapsing...
+      //
+      $idx = count($build_rows) - 1;
 
-      if (($idx >= 0) &&
-        should_collapse_rows($build_rows_collapsed[$idx], $build_row))
+      if (($idx >= 0) && should_collapse_rows($build_rows[$idx], $build_row))
         {
-        // Append to existing last row, $build_rows_collapsed[$idx]:
+        // Append to existing last row, $build_rows[$idx]:
         //
 
-    //  id
-    //  name
-    //  siteid
-    //  type
-    //  generator
-        if ($build_row['starttime'] < $build_rows_collapsed[$idx]['starttime'])
+      //  id
+      //  name
+      //  siteid
+      //  type
+      //  generator
+        if ($build_row['starttime'] < $build_rows[$idx]['starttime'])
           {
-          $build_rows_collapsed[$idx]['starttime'] = $build_row['starttime'];
+          $build_rows[$idx]['starttime'] = $build_row['starttime'];
           }
-        if ($build_row['maxstarttime'] > $build_rows_collapsed[$idx]['maxstarttime'])
+        if ($build_row['maxstarttime'] > $build_rows[$idx]['maxstarttime'])
           {
-          $build_rows_collapsed[$idx]['maxstarttime'] = $build_row['maxstarttime'];
+          $build_rows[$idx]['maxstarttime'] = $build_row['maxstarttime'];
           }
-    //  endtime
-    //  submittime
-    //  groupname
-    //  position
-    //  groupid
-    //  buildids (array of buildids for summary rows)
-        $build_rows_collapsed[$idx]['buildids'][] = $build_row['id'];
-    //  sitename
-        $build_rows_collapsed[$idx]['countbuildnotes'] += $build_row['countbuildnotes'];
-        $build_rows_collapsed[$idx]['countnotes'] += $build_row['countnotes'];
-        $build_rows_collapsed[$idx]['labels'] = array_merge($build_rows_collapsed[$idx]['labels'], $build_row['labels']);
+      //  endtime
+      //  submittime
+      //  groupname
+      //  position
+      //  groupid
+      //  buildids (array of buildids for summary rows)
+        $build_rows[$idx]['buildids'][] = $build_row['id'];
+      //  sitename
+        $build_rows[$idx]['countbuildnotes'] += $build_row['countbuildnotes'];
+        $build_rows[$idx]['countnotes'] += $build_row['countnotes'];
+        $build_rows[$idx]['labels'] = array_merge($build_rows[$idx]['labels'], $build_row['labels']);
 
-    //  countupdatefiles - use one number here, not the sum...
-    //  each non-collapsed row is the same set of updates
-        //$build_rows_collapsed[$idx]['countupdatefiles'] += $build_row['countupdatefiles'];
+      //  countupdatefiles - use one number here, not the sum...
+      //  each non-collapsed row is the same set of updates
+          //$build_rows[$idx]['countupdatefiles'] += $build_row['countupdatefiles'];
 
-    //  updatestatus
-        $build_rows_collapsed[$idx]['updateduration'] += $build_row['updateduration'];
-        $build_rows_collapsed[$idx]['countupdateerrors'] += $build_row['countupdateerrors'];
-        $build_rows_collapsed[$idx]['countupdatewarnings'] += $build_row['countupdatewarnings'];
+      //  updatestatus
+        $build_rows[$idx]['updateduration'] += $build_row['updateduration'];
+        $build_rows[$idx]['countupdateerrors'] += $build_row['countupdateerrors'];
+        $build_rows[$idx]['countupdatewarnings'] += $build_row['countupdatewarnings'];
 
-        $build_rows_collapsed[$idx]['buildduration'] += $build_row['buildduration'];
-        $build_rows_collapsed[$idx]['countbuilderrors'] += $build_row['countbuilderrors'] > 0 ? $build_row['countbuilderrors'] : 0;
-        $build_rows_collapsed[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'] > 0 ? $build_row['countbuildwarnings'] : 0;
-        $build_rows_collapsed[$idx]['countbuilderrordiffp'] += $build_row['countbuilderrordiffp'];
-        $build_rows_collapsed[$idx]['countbuilderrordiffn'] += $build_row['countbuilderrordiffn'];
-        $build_rows_collapsed[$idx]['countbuildwarningdiffp'] += $build_row['countbuildwarningdiffp'];
-        $build_rows_collapsed[$idx]['countbuildwarningdiffn'] += $build_row['countbuildwarningdiffn'];
+        $build_rows[$idx]['buildduration'] += $build_row['buildduration'];
+        $build_rows[$idx]['countbuilderrors'] += $build_row['countbuilderrors'] > 0 ? $build_row['countbuilderrors'] : 0;
+        $build_rows[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'] > 0 ? $build_row['countbuildwarnings'] : 0;
+        $build_rows[$idx]['countbuilderrordiffp'] += $build_row['countbuilderrordiffp'];
+        $build_rows[$idx]['countbuilderrordiffn'] += $build_row['countbuilderrordiffn'];
+        $build_rows[$idx]['countbuildwarningdiffp'] += $build_row['countbuildwarningdiffp'];
+        $build_rows[$idx]['countbuildwarningdiffn'] += $build_row['countbuildwarningdiffn'];
 
-        $build_rows_collapsed[$idx]['hasconfigurestatus'] += $build_row['hasconfigurestatus'];
-        $build_rows_collapsed[$idx]['countconfigureerrors'] += $build_row['countconfigureerrors'];
-        $build_rows_collapsed[$idx]['countconfigurewarnings'] += $build_row['countconfigurewarnings'];
-        $build_rows_collapsed[$idx]['countconfigurewarningdiff'] += $build_row['countconfigurewarningdiff'];
-        $build_rows_collapsed[$idx]['configureduration'] += $build_row['configureduration'];
+        $build_rows[$idx]['hasconfigurestatus'] += $build_row['hasconfigurestatus'];
+        $build_rows[$idx]['countconfigureerrors'] += $build_row['countconfigureerrors'];
+        $build_rows[$idx]['countconfigurewarnings'] += $build_row['countconfigurewarnings'];
+        $build_rows[$idx]['countconfigurewarningdiff'] += $build_row['countconfigurewarningdiff'];
+        $build_rows[$idx]['configureduration'] += $build_row['configureduration'];
 
         //  test
-        $build_rows_collapsed[$idx]['hastest'] += $build_row['hastest'];
-        $build_rows_collapsed[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'] > 0 ? $build_row['counttestsnotrun'] : 0;
-        $build_rows_collapsed[$idx]['counttestsnotrundiffp'] += $build_row['counttestsnotrundiffp'];
-        $build_rows_collapsed[$idx]['counttestsnotrundiffn'] += $build_row['counttestsnotrundiffn'];
-        $build_rows_collapsed[$idx]['counttestsfailed'] += $build_row['counttestsfailed'] > 0 ? $build_row['counttestsfailed'] : 0;
-        $build_rows_collapsed[$idx]['counttestsfaileddiffp'] += $build_row['counttestsfaileddiffp'];
-        $build_rows_collapsed[$idx]['counttestsfaileddiffn'] += $build_row['counttestsfaileddiffn'];
-        $build_rows_collapsed[$idx]['counttestspassed'] += $build_row['counttestspassed'] > 0 ? $build_row['counttestspassed'] : 0;
-        $build_rows_collapsed[$idx]['counttestspasseddiffp'] += $build_row['counttestspasseddiffp'];
-        $build_rows_collapsed[$idx]['counttestspasseddiffn'] += $build_row['counttestspasseddiffn'];
-        $build_rows_collapsed[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'] > 0 ? $build_row['countteststimestatusfailed'] : 0;
-        $build_rows_collapsed[$idx]['countteststimestatusfaileddiffp'] += $build_row['countteststimestatusfaileddiffp'];
-        $build_rows_collapsed[$idx]['countteststimestatusfaileddiffn'] += $build_row['countteststimestatusfaileddiffn'];
-        $build_rows_collapsed[$idx]['testsduration'] += $build_row['testsduration'];
+        $build_rows[$idx]['hastest'] += $build_row['hastest'];
+        $build_rows[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'] > 0 ? $build_row['counttestsnotrun'] : 0;
+        $build_rows[$idx]['counttestsnotrundiffp'] += $build_row['counttestsnotrundiffp'];
+        $build_rows[$idx]['counttestsnotrundiffn'] += $build_row['counttestsnotrundiffn'];
+        $build_rows[$idx]['counttestsfailed'] += $build_row['counttestsfailed'] > 0 ? $build_row['counttestsfailed'] : 0;
+        $build_rows[$idx]['counttestsfaileddiffp'] += $build_row['counttestsfaileddiffp'];
+        $build_rows[$idx]['counttestsfaileddiffn'] += $build_row['counttestsfaileddiffn'];
+        $build_rows[$idx]['counttestspassed'] += $build_row['counttestspassed'] > 0 ? $build_row['counttestspassed'] : 0;
+        $build_rows[$idx]['counttestspasseddiffp'] += $build_row['counttestspasseddiffp'];
+        $build_rows[$idx]['counttestspasseddiffn'] += $build_row['counttestspasseddiffn'];
+        $build_rows[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'] > 0 ? $build_row['countteststimestatusfailed'] : 0;
+        $build_rows[$idx]['countteststimestatusfaileddiffp'] += $build_row['countteststimestatusfaileddiffp'];
+        $build_rows[$idx]['countteststimestatusfaileddiffn'] += $build_row['countteststimestatusfaileddiffn'];
+        $build_rows[$idx]['testsduration'] += $build_row['testsduration'];
         }
       else
         {
@@ -1104,14 +1099,10 @@ function generate_main_dashboard_XML($project_instance, $date)
           {
           $build_row['countteststimestatusfailed'] = 0;
           }
-
-        $build_rows_collapsed[] = $build_row;
+        $build_rows[] = $build_row;
         }
       }
-
-    $build_rows = $build_rows_collapsed;
     }
-
 
   // Generate the xml from the (possibly collapsed) rows of builds:
   //
