@@ -184,7 +184,17 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-    curl_exec($ch);
+    if ($CDASH_USE_HTTPS)
+      {
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+      }
+    if (curl_exec($ch) === false)
+      {
+      add_log(
+        "cURL error: ". curl_error($ch),
+        "do_submit_asynchronous",
+        LOG_ERR, $projectid);
+      }
     curl_close($ch);
     }
   else // synchronously
