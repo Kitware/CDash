@@ -106,7 +106,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
   unset($fp);
 
   $outfile = fopen($filename, 'w');
-
+  
   // Save the file in the backup directory
   while(!feof($filehandle))
     {
@@ -120,10 +120,19 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
       unset($outfile);
       return;
       }
-    }
+    } 
   fclose($outfile);
   unset($outfile);
 
+  // Sends the file size to the local parser
+  if($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/ctestparser.php"))
+    {
+    require_once("local/ctestparser.php");
+    $localParser = new LocalParser();
+    $filesize = filesize($filename);
+    $localParser->SetFileSize($projectid,$filesize);
+    }
+  
   $md5sum = md5_file($filename);
   $md5error = false;
 
