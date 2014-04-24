@@ -197,7 +197,11 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
       {
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
       }
-    if (curl_exec($ch) === false)
+      
+    // It's likely that the process timesout because the processing takes more
+    // than 1s to run. This is OK as we just need to trigger it.
+    // 28 = CURLE_OPERATION_TIMEDOUT
+    if (curl_exec($ch) === false && curl_errno($ch) != 28)
       {
       add_log(
         "cURL error: ". curl_error($ch).' for request: '.$request,
