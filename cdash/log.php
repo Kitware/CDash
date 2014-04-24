@@ -57,7 +57,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
   global $CDASH_LOG_LEVEL;
   
   // Check if we are within the log level
-  if($type!= LOG_TESTING && $type<$CDASH_LOG_LEVEL)
+  if($type!= LOG_TESTING && $type>$CDASH_LOG_LEVEL)
     {
     return;
     }
