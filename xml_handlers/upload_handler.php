@@ -246,7 +246,7 @@ class UploadHandler extends AbstractHandler
         $url_length = 255; // max length of 'uploadfile.filename' field
         $this->UploadFile->Filename = trim(file_get_contents($this->TmpFilename, NULL, NULL, 0, $url_length));
         cdash_unlink($this->TmpFilename);
-        add_log("this->UploadFile->Filename '".$this->UploadFile->Filename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
+        //add_log("this->UploadFile->Filename '".$this->UploadFile->Filename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
         }
       else
         {
