@@ -200,7 +200,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     if (curl_exec($ch) === false)
       {
       add_log(
-        "cURL error: ". curl_error($ch),
+        "cURL error: ". curl_error($ch).' for request: '.$request,
         "do_submit_asynchronous",
         LOG_ERR, $projectid);
       }
