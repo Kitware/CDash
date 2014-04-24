@@ -15,7 +15,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-$noforcelogin = 1;
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
@@ -25,6 +24,9 @@ include("models/project.php");
 include("models/user.php");
 include_once("models/errorlog.php");
 
+if($session_OK)
+{  
+  
 @$buildid = $_GET["buildid"];
 if ($buildid != NULL)
   {
@@ -59,7 +61,7 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 $userid = $_SESSION['cdash']['loginid'];
 $User = new User;
 $User->Id = $userid;
-
+  
 $Project = new Project;
 $role = 0;
 
@@ -147,4 +149,6 @@ $xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml,"viewErrorLog");
+} //endif session OK
+
 ?>
