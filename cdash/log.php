@@ -54,6 +54,14 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
 {
   global $CDASH_LOG_FILE;
   global $CDASH_LOG_FILE_MAXSIZE_MB;
+  global $CDASH_LOG_LEVEL;
+  
+  // Check if we are within the log level
+  if($type!= LOG_TESTING && $type<$CDASH_LOG_LEVEL)
+    {
+    return;
+    }
+  
   $logFile = $CDASH_LOG_FILE;
   if($buildid == 0 && isset($GLOBALS['PHP_ERROR_BUILD_ID'])) //use the global build id as a default if it's set
     {
