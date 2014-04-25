@@ -283,8 +283,25 @@ else
   }
 
 //get any images associated with this test
+$query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' AND (role='TestImage' "
+        . "OR role='ValidImage' OR role='DifferenceImage2') ORDER BY id";
+$result = pdo_query($query);
+if(pdo_num_rows($result)>0)
+  {
+  $xml .= "<compareimages>";
+  while($row = pdo_fetch_array($result))
+    {
+    $xml .= "<image>";
+    $xml .= add_XML_value("imgid", $row["imgid"]);
+    $xml .= add_XML_value("role", $row["role"]);
+    $xml .= "</image>";
+    }
+  $xml .= "</compareimages>";
+  }
+  
 $xml .= "<images>";
-$query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' ORDER BY id";
+$query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' AND role!='TestImage' "
+        . "AND role!='ValidImage' AND role!='DifferenceImage2' ORDER BY id";
 $result = pdo_query($query);
 while($row = pdo_fetch_array($result))
   {

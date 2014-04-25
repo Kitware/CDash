@@ -42,7 +42,9 @@
   <xsl:call-template name="headscripts"/>
   <!-- Include JavaScript -->
   <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script>
-
+  <script src="javascript/jquery.mobile-1.4.0.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="javascript/je_compare-1.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+  <link type="text/css" rel="stylesheet" href="javascript/je_compare_style-1.0.0.css" />
 </head>
 <body bgcolor="#ffffff">
 
@@ -65,15 +67,6 @@
 </xsl:attribute>
 <xsl:value-of select="cdash/test/time"/>s</span>
 </div>
-
-<!--
-  <tr>
-      <th class="measurement">Completion Status</th>
-      <td>
-        <xsl:value-of select="cdash/test/details"/>
-      </td>
-   </tr>
--->
 
 <br/>
 <b>Test: </b>
@@ -122,18 +115,35 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
 <br/>
 <!-- Display the measurements -->
 <table>
-<xsl:for-each select="cdash/test/images/image">
-  <tr>
-    <th class="measurement"><xsl:value-of select="role"/></th>
-    <td>
-      <img>
- <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="imgid"/>
- </xsl:attribute>
-      </img>
-    </td>
-  </tr>
+<xsl:if test="cdash/test/compareimages">  
+<tr>
+<th class="measurement">Interactive Image</th>
+<td>
+<div class="je_compare">
+<xsl:for-each select="cdash/test/compareimages/image">
+<img>
+  <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="imgid"/></xsl:attribute>
+  <xsl:attribute name="alt"><xsl:value-of select="role"/></xsl:attribute>
+</img>
 </xsl:for-each>
-  <xsl:for-each select="/cdash/test/measurements/measurement">
+</div>
+  </td>
+   </tr>
+</xsl:if>
+
+<xsl:for-each select="cdash/test/images/image">
+<tr>
+<th class="measurement"><xsl:value-of select="role"/></th>
+<td>
+    <img>
+  <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="imgid"/></xsl:attribute>
+  <xsl:attribute name="alt"><xsl:value-of select="role"/></xsl:attribute>
+</img>
+  </td>
+   </tr>
+</xsl:for-each>
+
+<xsl:for-each select="/cdash/test/measurements/measurement">
      <tr>
       <th class="measurement"><xsl:value-of select="name"/></th>
       <td>
@@ -152,6 +162,9 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
    </xsl:for-each>
 </table>
 <br/>
+
+
+
 
 <!-- Show command line -->
 <img src="images/console.png"/>

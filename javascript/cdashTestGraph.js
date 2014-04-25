@@ -1,3 +1,7 @@
+$(function () {
+  $('.je_compare').je_compare({caption: true});
+});
+
 function showtestfailuregraph_click(projectid,testname,starttime,zoomout)
 {
    if(zoomout)
