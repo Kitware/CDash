@@ -12,12 +12,15 @@ $(document).ready(function() {
       "fnServerParams": function ( aoData ) {
             aoData.push( { "name": "buildid", "value": $('#buildid').val() } );
             aoData.push( { "name": "status", "value": $('#coverageStatus').val() } );
+            aoData.push( { "name": "dir", "value": $('#coverageDir').val() } );
+            aoData.push( { "name": "ndirectories", "value": $('#coverageNDirectories').val() } );
             aoData.push( { "name": "nno", "value": $('#coverageNNo').val() } );
             aoData.push( { "name": "nzero", "value": $('#coverageNZero').val() } );
             aoData.push( { "name": "nlow", "value": $('#coverageNLow').val() } );
             aoData.push( { "name": "nmedium", "value": $('#coverageNMedium').val() } );
             aoData.push( { "name": "nsatisfactory", "value": $('#coverageNSatisfactory').val() } );
             aoData.push( { "name": "ncomplete", "value": $('#coverageNComplete').val() } );
+            aoData.push( { "name": "nall", "value": $('#coverageNAll').val() } );
             aoData.push( { "name": "metricerror", "value": $('#coverageMetricError').val() } );
             aoData.push( { "name": "metricpass", "value": $('#coverageMetricPass').val() } );
             aoData.push( { "name": "userid", "value": $('#userid').val() } );

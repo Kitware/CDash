@@ -322,6 +322,81 @@ function filters_create_hyperlink()
 }
 
 
+function filters_preserve_link(status)
+{
+  //
+  // This function is similar to create_hyperlink function above.
+  // Helps keep filters when switching from one coverage category
+  // to another.
+
+  n = countFilters();
+  s = new String(window.location);
+
+  // Preserve any pre-existing '&collapse=0' or '&collapse=1':
+  //
+  collapse_str = '';
+
+  idx = s.indexOf('&collapse=1', 0);
+  if (idx > 0)
+    {
+    collapse_str = '&collapse=1';
+    }
+
+  idx = s.indexOf('&collapse=0', 0);
+  if (idx > 0)
+    {
+    collapse_str = '&collapse=0';
+    }
+
+  // If the current window.location already has a &filtercount=... (and other
+  // filter stuff), trim it off and just use part that comes before that:
+  //
+  idx = s.indexOf("&filtercount=", 0);
+  if (idx > 0)
+    {
+    s = s.substr(0, idx);
+    }
+  idx = s.indexOf("&dir=", 0);
+  if (idx > 0)
+    {
+    s = s.substr(0, idx);
+    }
+    
+  s = s + "&filtercount=" + n;
+
+  idx = s.indexOf("&value", 0);
+  if (idx > 0)
+  {
+//     s = s.substr(0, idx);
+    s = s + "&showfilters=1";
+  }
+
+  l = $("#id_limit").attr("value");
+  if (l != 0)
+  {
+    s = s + "&limit=" + l;
+  }
+
+  if (n > 1)
+  {
+    s = s + "&filtercombine=" + $("#id_filtercombine").attr("value");
+  }
+
+  for (i=1; i<=n; ++i)
+  {
+    s = s + "&field" + i + "=" + escape($("#id_field"+i).attr("value"));
+    s = s + "&compare" + i + "=" + escape($("#id_compare"+i).attr("value"));
+    s = s + "&value" + i + "=" + escape($("#id_value"+i).attr("value"));
+  }
+
+  s = s + "&status=" + status;
+
+  s = s + collapse_str;
+
+  location.href = s;
+}
+
+
 function filters_field_onblur(o)
 {
 }

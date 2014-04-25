@@ -274,6 +274,7 @@ if($onlypassed) $extras .= "AND build2test.status='passed'";
 elseif($onlyfailed) $extras .= "AND build2test.status='failed'";
 elseif($onlynotrun) $extras .= "AND build2test.status='notrun'";
 
+$etestquery = NULL;
 if($columncount>0)
   {
   $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid,

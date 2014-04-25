@@ -162,13 +162,22 @@ Show coverage over time
 <br/>
 
 <!-- Links -->
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/></xsl:attribute>No Executable Code (<xsl:value-of select="cdash/coveragefilestatus/no"/>)</a> |
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=1</xsl:attribute>Zero (<xsl:value-of select="cdash/coveragefilestatus/zero"/>)</a> |
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=2</xsl:attribute>Low (<xsl:value-of select="cdash/coveragefilestatus/low"/>)</a> |
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=3</xsl:attribute>Medium (<xsl:value-of select="cdash/coveragefilestatus/medium"/>)</a> |
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=4</xsl:attribute>Satisfactory (<xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>)</a> |
-<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="/cdash/coverage/buildid"/>&#38;status=5</xsl:attribute>Complete (<xsl:value-of select="cdash/coveragefilestatus/complete"/>)</a>
+<a><xsl:attribute name="href">javascript:filters_preserve_link(-1)</xsl:attribute>Directories (<xsl:value-of select="cdash/coveragefilestatus/directories"/>)</a> |
+<a><xsl:attribute name="href">javascript:filters_preserve_link(0)</xsl:attribute>No Executable Code (<xsl:value-of select="cdash/coveragefilestatus/no"/>)</a> |
+<a><xsl:attribute name="href">javascript:filters_preserve_link(1)</xsl:attribute>Zero (<xsl:value-of select="cdash/coveragefilestatus/zero"/>)</a> |
+<a><xsl:attribute name="href">javascript:filters_preserve_link(2)</xsl:attribute>Low (<xsl:value-of select="cdash/coveragefilestatus/low"/>)</a> |
+<a><xsl:attribute name="href">javascript:filters_preserve_link(3)</xsl:attribute>Medium (<xsl:value-of select="cdash/coveragefilestatus/medium"/>)</a> |
+<a><xsl:attribute name="href">javascript:filters_preserve_link(4)</xsl:attribute>Satisfactory (<xsl:value-of select="cdash/coveragefilestatus/satisfactory"/>)</a> |
+<a><xsl:attribute name="href">javascript:filters_preserve_link(5)</xsl:attribute>Complete (<xsl:value-of select="cdash/coveragefilestatus/complete"/>)</a> |
+<a><xsl:attribute name="href">javascript:filters_preserve_link(6)</xsl:attribute>All (<xsl:value-of select="cdash/coveragefilestatus/all"/>)</a>
 <br/>
+
+<div id="labelshowfilters">
+<a id="label_showfilters" href="javascript:filters_toggle();">
+<xsl:if test="cdash/filterdata/showfilters = 0">Show Filters<xsl:if test="cdash/filtercount > 0"> (<xsl:value-of select="cdash/filtercount"/>)</xsl:if></xsl:if>
+<xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
+</a>
+</div>
 
 <!-- Filters? -->
 <xsl:if test="count(cdash/filterdata) = 1">
@@ -189,6 +198,16 @@ Show coverage over time
 <input type="hidden" name="coverageStatus" id="coverageStatus">
 <xsl:attribute name="value">
    <xsl:value-of select="/cdash/coverage/status"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageDir" id="coverageDir">
+<xsl:attribute name="value">
+   <xsl:value-of select="/cdash/coverage/dir"/>
+</xsl:attribute>
+</input>
+<input type="hidden" name="coverageNDirectories" id="coverageNDirectories">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coveragefilestatus/directories"/>
 </xsl:attribute>
 </input>
 <input type="hidden" name="coverageNNo" id="coverageNNo">
@@ -221,10 +240,14 @@ Show coverage over time
    <xsl:value-of select="cdash/coveragefilestatus/complete"/>
 </xsl:attribute>
 </input>
+<input type="hidden" name="coverageNAll" id="coverageNAll">
+<xsl:attribute name="value">
+   <xsl:value-of select="cdash/coveragefilestatus/all"/>
+</xsl:attribute>
+</input>
 <input type="hidden" name="coverageMetricError" id="coverageMetricError">
 <xsl:attribute name="value">
-   <xsl:value-of select="/cdash/coverage/metricerror"/>
-</xsl:attribute>
+   <xsl:value-of select="/cdash/coverage/metricerror"/></xsl:attribute>
 </input>
 <input type="hidden" name="coverageMetricPass" id="coverageMetricPass">
 <xsl:attribute name="value">
@@ -245,8 +268,15 @@ Show coverage over time
 <table id="coverageTable" cellspacing="0" cellpadding="3">
 <thead>
   <tr class="table-heading1">
-    <th width="50%">Filename</th>
-    <th width="10%" align="center">Status</th>
+    <xsl:choose>
+    <xsl:when test="cdash/coverage/status=-1">  
+      <th width="50%">Directory</th>
+    </xsl:when>
+    <xsl:otherwise>
+       <th width="50%">Filename</th>  
+    </xsl:otherwise>
+    </xsl:choose>
+  <th width="10%" align="center">Status</th>
     <th align="center">Percentage</th>
 
     <!-- gcov -->

@@ -39,6 +39,15 @@ if ($date != NULL)
   $date = htmlspecialchars(pdo_real_escape_string($date));
   }
 
+if(isset($_GET["value1"]) && strlen($_GET["value1"])>0)
+  {
+  $filtercount = $_GET["filtercount"];
+  }
+else
+  {
+  $filtercount = 0;
+  }
+
 // Checks
 if(!isset($buildid) || !is_numeric($buildid))
   {
@@ -140,6 +149,12 @@ else
   }
 $xml .= "</menu>";
 
+$xml .= add_XML_value("filtercount",$filtercount);
+if($filtercount>0)
+  {
+  $xml .= add_XML_value("showfilters",1);
+  }
+
   // coverage
   $xml .= "<coverage>";
   $coverage = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
@@ -236,11 +251,13 @@ $xml .= "</menu>";
 
   // Coverage files
   $coveragefile = pdo_query("SELECT c.locuntested,c.loctested,
-                                    c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested
-                            FROM coverage AS c
-                            WHERE c.buildid='$buildid' AND c.covered=1");
+                                    c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested,
+                                    cf.fullpath
+                            FROM coverage AS c, coveragefile AS cf 
+                            WHERE c.buildid='$buildid' AND c.covered=1 AND c.fileid=cf.id");
 
 
+  $directories = array();
   $covfile_array = array();
   while($coveragefile_array = pdo_fetch_array($coveragefile))
     {
@@ -277,7 +294,18 @@ $xml .= "</menu>";
       {
       $nsatisfactorycoveredfiles++;
       }
-
+    
+    // Store the directories path only for non-complete (100% coverage) files
+    if($covfile["coveragemetric"] != 1.0)
+      {
+      $fullpath = $coveragefile_array["fullpath"];
+      if(substr($fullpath,0,2)=="./")
+        {
+        $fullpath = substr($fullpath,2);  
+        }
+      $fullpath = dirname($fullpath);
+      $directories[$fullpath]=1;
+      }
     $covfile_array[] = $covfile;
     }
 
@@ -289,9 +317,13 @@ $xml .= "</menu>";
     }
   else
     {
-    $xml .= add_XML_value("status",0);
+    $xml .= add_XML_value("status",-1);
     }
-
+  if(isset($_GET['dir']))
+    {
+    $xml .= add_XML_value("dir",$_GET['dir']);
+    }
+    
   $xml .= add_XML_value("totalsatisfactorilycovered",$nsatisfactorycoveredfiles);
   $xml .= add_XML_value("totalunsatisfactorilycovered",$nfiles-$nsatisfactorycoveredfiles);
 
@@ -308,49 +340,54 @@ $xml .= "</menu>";
     }
 
   $ncoveragefiles = array();
-  $ncoveragefiles[0] = 0;
+  $ncoveragefiles[0] = count($directories);
   $ncoveragefiles[1] = 0;
   $ncoveragefiles[2] = 0;
   $ncoveragefiles[3] = 0;
   $ncoveragefiles[4] = 0;
   $ncoveragefiles[5] = 0;
-
+  $ncoveragefiles[6] = 0;
+  $ncoveragefiles[7] = 0;
+    
   foreach($covfile_array as $covfile)
     {
     if($covfile["covered"]==0)
       {
-      $ncoveragefiles[0]++; // no coverage
+      $ncoveragefiles[1]++; // no coverage
       }
     else if($covfile["covered"]==1 && $covfile["percentcoverage"] == 0 )
       {
-      $ncoveragefiles[1]++; // zero
+      $ncoveragefiles[2]++; // zero
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] < $metricerror)
       {
-      $ncoveragefiles[2]++; // low
+      $ncoveragefiles[3]++; // low
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] == 1.0)
       {
-      $ncoveragefiles[5]++; // complete
+      $ncoveragefiles[6]++; // complete
       }
     else if($covfile["covered"]==1 && $covfile["coveragemetric"] >= $metricpass)
       {
-      $ncoveragefiles[4]++; // satisfactory
+      $ncoveragefiles[5]++; // satisfactory
       }
     else
       {
-      $ncoveragefiles[3]++; // medium
+      $ncoveragefiles[4]++; // medium
       }
+    $ncoveragefiles[7]++; // all
     }
 
   // Show the number of files covered by status
   $xml .= "<coveragefilestatus>";
-  $xml .= add_XML_value("no",$ncoveragefiles[0]);
-  $xml .= add_XML_value("zero",$ncoveragefiles[1]);
-  $xml .= add_XML_value("low",$ncoveragefiles[2]);
-  $xml .= add_XML_value("medium",$ncoveragefiles[3]);
-  $xml .= add_XML_value("satisfactory",$ncoveragefiles[4]);
-  $xml .= add_XML_value("complete",$ncoveragefiles[5]);
+  $xml .= add_XML_value("directories",$ncoveragefiles[0]);
+  $xml .= add_XML_value("no",$ncoveragefiles[1]);
+  $xml .= add_XML_value("zero",$ncoveragefiles[2]);
+  $xml .= add_XML_value("low",$ncoveragefiles[3]);
+  $xml .= add_XML_value("medium",$ncoveragefiles[4]);
+  $xml .= add_XML_value("satisfactory",$ncoveragefiles[5]);
+  $xml .= add_XML_value("complete",$ncoveragefiles[6]);
+  $xml .= add_XML_value("all",$ncoveragefiles[7]);
   $xml .= "</coveragefilestatus>";
 
   // Filters:
@@ -362,7 +399,6 @@ $xml .= "</menu>";
   $filterdata = get_filterdata_from_request();
   $xml .= $filterdata['xml'];
   $xml .= "</cdash>";
-
 // Now doing the xslt transition
 generate_XSLT($xml,"viewCoverage");
 ?>
