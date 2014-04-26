@@ -86,7 +86,7 @@ $CDASH_USER_CREATE_PROJECTS = false;
 // CDash creates 10 files spanning the total size allocated
 $CDASH_LOG_FILE_MAXSIZE_MB = 50;
 // Log level
-$CDASH_LOG_LEVEL = LOG_INFO;
+$CDASH_LOG_LEVEL = LOG_WARNING;
 // Using external authentication
 $CDASH_EXTERNAL_AUTH = '0';
 // Backup timeframe
