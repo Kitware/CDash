@@ -274,7 +274,28 @@ if($onlypassed) $extras .= "AND build2test.status='passed'";
 elseif($onlyfailed) $extras .= "AND build2test.status='failed'";
 elseif($onlynotrun) $extras .= "AND build2test.status='notrun'";
 
+$getalltestlistsql="SELECT test.id
+  FROM test
+  JOIN build2test ON (build2test.testid = test.id)
+  JOIN build ON (build.id = build2test.buildid)
+  WHERE build.id='$buildid'
+  $extras
+  ORDER BY test.id
+";
+
+// Allocate empty array for all possible measurements
+$getalltestlist=pdo_query($getalltestlistsql);
+
+while($row = pdo_fetch_array($getalltestlist))
+  {
+    for($i=0;$i<$columncount;$i++)
+      {
+      $tmpr[$row['id']][$columns[$i]]="";
+      }
+  }
+
 $etestquery = NULL;
+
 if($columncount>0)
   {
   $etestquery=pdo_query("SELECT test.id, test.projectid, build2test.buildid,
@@ -357,101 +378,25 @@ $i=0;
 $currentcolumn=-1;
 $prevtestid=0;
 $checkarray = array();
+
+// Overwrite the empty values with the correct ones if exists
 while($etestquery && $row=pdo_fetch_array($etestquery))
   {
-  if(!isset($checkarray[$row["name"]]) || !in_array($row["id"],$checkarray[$row["name"]]))
-    {
-    for($columnkey=0;$columnkey<$columncount;$columnkey++)
-      {
-      if($columns[$columnkey]==$row['name'])
-        {
-        $columnkey+=1;
-        break;
-        }
-      }
-    $currentcolumn=($currentcolumn+1)%$columncount; // Go to next column
-    if($currentcolumn==0)
-      {
-      $prevtestid=$row["id"];
-      }
-    if($currentcolumn!=$columnkey-1) // If data does not belong to this column
-      {
-      for($t=0;$t<$columncount;$t++)
-        {
-        if(($currentcolumn+$t)%$columncount!=$columnkey-1) // Add blank values till you find the required column
-          {
-          $xml .="<etest>\n";
-          $xml .= add_XML_value("name","");
-          $xml .= add_XML_value("testid", $row["id"]);
-          $xml .= add_XML_value("value", "");
-          $xml .= "\n</etest>\n";
-          $prevtestid=$row["id"];
-          }
-        else
-          {
-          $currentcolumn=($currentcolumn+$t)%$columncount; // Go to next column again
-          break;
-          }
-        }
-      // Add correct values to correct column
-      if($prevtestid==$row["id"] and $currentcolumn!=0)
-        {
-        $xml .="<etest>\n";
-        $xml .= add_XML_value("name",$row["name"]);
-        $xml .= add_XML_value("testid", $row["id"]);
-        $xml .= add_XML_value("value", $row["value"]);
-        $xml .= "\n</etest>\n";
-        $checkarray[$row["name"]][$i]=$row["id"];
-        $prevtestid=$row["id"];
-        }
-      else
-        {
-        if($prevtestid!=$row["id"] and $prevtestid!=0 and $currentcolumn!=0)
-          {
-          for($t=0;$t<$columncount;$t++)
-            {
-            $xml .="<etest>\n";
-            $xml .= add_XML_value("name","");
-            $xml .= add_XML_value("testid", "");
-            $xml .= add_XML_value("rowcheck", "");
-            $xml .= "\n</etest>\n";
-            }
-          }
-
-        $xml .="<etest>\n";
-        $xml .= add_XML_value("name",$row["name"]);
-        $xml .= add_XML_value("testid", $row["id"]);
-        $xml .= add_XML_value("value", $row["value"]);
-        $xml .= "\n</etest>\n";
-        $checkarray[$row["name"]][$i]=$row["id"];
-        $prevtestid=$row["id"];
-        }
-      }
-    else
-      {
-      if ($prevtestid!=$row["id"] and $prevtestid!=0 and $currentcolumn!=0)
-        {
-        for($t=0;$t<$columncount;$t++)
-          {
-          $xml .="<etest>\n";
-          $xml .= add_XML_value("name","");
-          $xml .= add_XML_value("testid", "");
-          $xml .= add_XML_value("value", "");
-          $xml .= "\n</etest>\n";
-          }
-        }
-      // Add correct values to correct column
-      $xml .="<etest>\n";
-      $xml .= add_XML_value("name",$row["name"]);
-      $xml .= add_XML_value("testid", $row["id"]);
-      $xml .= add_XML_value("value", $row["value"]);
-      $xml .= "\n</etest>\n";
-      $checkarray[$row["name"]][$i]=$row["id"];
-      $prevtestid=$row["id"];
-      }
-    }
-  $i++;
+  $tmpr[$row['id']][$row['name']]=$row['value'];
   }
+
+// Write everything we have in the array
+foreach ($tmpr as $testid => $testname) {
+    foreach ($testname as $val) {
+        $xml .="<etest>\n";
+        $xml .= add_XML_value("name",key($testname));
+        $xml .= add_XML_value("testid", $testid);
+        $xml .= add_XML_value("value", $val);
+        $xml .= "\n</etest>\n";
+    }
+}
+
+
 $xml .= "</etests>\n";
 
 // Gather test info
