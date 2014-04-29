@@ -35,7 +35,7 @@ function generate_index_table()
   include_once('models/banner.php');
 
   $xml = begin_XML_for_XSLT();
-  $xml .= add_XML_value("title","CDash - Continuous Integration Server");
+  $xml .= add_XML_value("title","CDash - Continuous Integration Made Easy");
 
   $Banner = new Banner;
   $Banner->SetProjectId(0);
