@@ -165,7 +165,8 @@ $xml .= "</menu>";
   $xml .= "<dynamicanalysis>";
   $xml .= add_XML_value("status",ucfirst($dyn_array["status"]));
   $xml .= add_XML_value("filename",$dyn_array["name"]);
-  $xml .= add_XML_value("log",$dyn_array["log"]);
+  // Only display the first 1MB of the log (in case it's huge)
+  $xml .= add_XML_value("log",substr($dyn_array["log"],0,1024*1024));
   $href = "testSummary.php?project=".$projectid."&name=".$dyn_array["name"];
   if($date)
     {
