@@ -120,11 +120,11 @@ $starttime = $buildRow["starttime"];
 
 // Helper function
 function findTest($buildid,$testName)
-{
-  $test = pdo_query("SELECT build2test.testid FROM build2test,test
+{            
+  $test = pdo_query("SELECT build2test.testid FROM build2test
                             WHERE build2test.buildid=".qnum($buildid)."
-                            AND test.id=build2test.testid
-                            AND test.name='$testName'");
+                            AND build2test.testid IN (SELECT id FROM test
+                                 WHERE name='$testName')");
   if(pdo_num_rows($test)>0)
     {
     $test_array = pdo_fetch_array($test);
@@ -139,7 +139,8 @@ $previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname
 $gotprevious = false;
 if($previousbuildid>0)
   {
-  if($previoustestid = findTest($previousbuildid,$testName))
+  $previoustestid = findTest($previousbuildid,$testName);
+  if($previoustestid)
     {
     $xml .= add_XML_value("previous","testDetails.php?test=".$previoustestid."&build=".$previousbuildid);
     $gotprevious = true;
