@@ -284,8 +284,8 @@ $getalltestlistsql="SELECT test.id
 ";
 
 // Allocate empty array for all possible measurements
+$tmpr = array();
 $getalltestlist=pdo_query($getalltestlistsql);
-
 while($row = pdo_fetch_array($getalltestlist))
   {
     for($i=0;$i<$columncount;$i++)
