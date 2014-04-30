@@ -70,11 +70,11 @@ function generate_index_table()
  if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql"))
    {
    $rows = pdo_query("SHOW table STATUS");
-    $dbsize = 0;
-    while ($row = pdo_fetch_array($rows))
-      {
-      $dbsize += $row['Data_length'] + $row['Index_length'];
-      }
+   $dbsize = 0;
+   while ($row = pdo_fetch_array($rows))
+     {
+     $dbsize += $row['Data_length'] + $row['Index_length'];
+     }
 
    $ext = "b";
    if($dbsize>1024)
@@ -123,7 +123,13 @@ function generate_index_table()
     $xml .= "</user>";
     }
 
-  $projects = get_projects($userid);
+  $showallprojects = 0;
+  if(isset($_GET['allprojects']) && $_GET['allprojects'] == 1)
+    {
+    $showallprojects = 1;  
+    }
+    
+  $projects = get_projects(!$showallprojects);
   $row=0;
   foreach($projects as $project)
     {
@@ -145,27 +151,9 @@ function generate_index_table()
       $xml .= "<lastbuilddatefull>".$lastbuild."</lastbuilddatefull>";
       $xml .= "<activitylevel>high</activitylevel>";
       }
-
-    // Display if the project is considered active or not
-    $dayssincelastsubmission = $CDASH_ACTIVE_PROJECT_DAYS+1;
-    if($project['last_build'] != 'NA')
-      {
-      $dayssincelastsubmission = (time()-strtotime($project['last_build']))/86400;
-      }
-
-    if($dayssincelastsubmission > $CDASH_ACTIVE_PROJECT_DAYS)
-      {
-      $xml .= "<active>0</active>";
-      }
-    else
-      {
-      $xml .= "<active>1</active>";
-      }
-
-    $uploadsizeGB = round($project['uploadsize'] / (1024.0*1024.0*1024.0), 2);
-
+      
     $xml .= "<activity>";
-    if($project['nbuilds'] == 0)
+    if(!isset($project['nbuilds']) || $project['nbuilds'] == 0)
       {
       $xml .= "none";
       }
@@ -184,8 +172,8 @@ function generate_index_table()
 
     $xml .= "</activity>";
 
-
-    $xml .= '<uploadsize>'.$uploadsizeGB.'</uploadsize>';
+    //$uploadsizeGB = round($project['uploadsize'] / (1024.0*1024.0*1024.0), 2);
+    //$xml .= '<uploadsize>'.$uploadsizeGB.'</uploadsize>';
     $xml .= "<row>".$row."</row>";
     $xml .= "</project>";
     if($row == 0)
@@ -197,6 +185,9 @@ function generate_index_table()
       $row = 0;
       }
     }
+
+  $xml .= '<allprojects>'.$showallprojects.'</allprojects>'; 
+  $xml .= '<nprojects>'.get_number_public_projects().'</nprojects>';  
   $xml .= "</cdash>";
   return $xml;
 }

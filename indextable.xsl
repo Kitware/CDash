@@ -104,10 +104,6 @@
  <tbody>
    <xsl:for-each select="cdash/project">
    <tr>
-   <xsl:if test="active=0">
-   <xsl:attribute name="class">nonactive</xsl:attribute>
-   </xsl:if>
-
    <td align="center" >
      <a>
      <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
@@ -117,7 +113,7 @@
     <td align="center" class="nob">
     <span class="sorttime" style="display:none"><xsl:value-of select="lastbuilddatefull"/></span>
     <a class="builddateelapsed">
-     <xsl:attribute name="alt"><xsl:value-of select="lastbuild"/> (<xsl:value-of select="uploadsize"/> GB)</xsl:attribute>
+      <xsl:attribute name="alt"><xsl:value-of select="lastbuild"/> <!-- (<xsl:value-of select="uploadsize"/> GB) --></xsl:attribute> 
       <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
       <xsl:value-of select="lastbuild_elapsed"/>
     </a>
@@ -137,8 +133,14 @@
 </tr>
 <tr>
 <td height="1" colspan="14" align="right">
-<div id="showold"><a href="#" onclick="javascript:showoldproject()">Show all <xsl:value-of select="count(cdash/project)"/> projects</a></div>
-<div id="hideold"><a href="#" onclick="javascript:hideoldproject()">Hide old projects</a></div>
+<div id="showold">
+<xsl:if test="cdash/allprojects=0">
+<a href="index.php?allprojects=1">Show all <xsl:value-of select="cdash/nprojects"/> projects</a>
+ </xsl:if>
+ <xsl:if test="cdash/allprojects=1">
+    <a href="index.php">Hide old projects</a>
+ </xsl:if>
+</div>
 </td>
 </tr>
 </table>

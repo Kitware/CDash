@@ -458,8 +458,22 @@ function clean_backup_directory()
     }
 }
 
-/** return an array of projects */
-function get_projects()
+/** return the total number of public projects */
+function get_number_public_projects()
+{
+  include("cdash/config.php");
+  require_once("cdash/pdo.php");
+
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+  pdo_select_db("$CDASH_DB_NAME",$db);
+
+  $buildquery = pdo_query("SELECT count(id) FROM project WHERE public='1'");
+  $buildquery_array = pdo_fetch_array($buildquery);
+  return $buildquery_array[0];
+}
+
+/** return an array of public projects */
+function get_projects($onlyactive=true)
 {
   $projects = array();
 
@@ -487,18 +501,33 @@ function get_projects()
       $project['last_build'] = $lastbuild_array["submittime"];
       }
 
-    // Get the number of builds in the past 7 days
-    $submittime_UTCDate = gmdate(FMT_DATETIME,time()-604800);
-    $buildquery = pdo_query("SELECT count(id) FROM build WHERE projectid='$projectid' AND starttime>'".$submittime_UTCDate."'");
-    echo pdo_error();
-    $buildquery_array = pdo_fetch_array($buildquery);
-    $project['nbuilds'] = $buildquery_array[0];
+    // Display if the project is considered active or not
+    $dayssincelastsubmission = $CDASH_ACTIVE_PROJECT_DAYS+1;
+    if($project['last_build'] != 'NA')
+      {
+      $dayssincelastsubmission = (time()-strtotime($project['last_build']))/86400;
+      }
+    $project['dayssincelastsubmission'] = $dayssincelastsubmission;
+            
+    if($project['last_build'] != 'NA' && $project['dayssincelastsubmission']<=$CDASH_ACTIVE_PROJECT_DAYS)
+      {
+      // Get the number of builds in the past 7 days
+      $submittime_UTCDate = gmdate(FMT_DATETIME,time()-604800);
+      $buildquery = pdo_query("SELECT count(id) FROM build WHERE projectid='$projectid' AND starttime>'".$submittime_UTCDate."'");
+      echo pdo_error();
+      $buildquery_array = pdo_fetch_array($buildquery);
+      $project['nbuilds'] = $buildquery_array[0];
+      }
+    
+    /** Not showing the upload size for now for performance reasons */
+    //$Project = new Project;
+    //$Project->Id = $project['id'];
+    //$project['uploadsize'] = $Project->GetUploadsTotalSize();
 
-    $Project = new Project;
-    $Project->Id = $project['id'];
-    $project['uploadsize'] = $Project->GetUploadsTotalSize();
-
-    $projects[] = $project;
+    if(!$onlyactive || $project['dayssincelastsubmission'] <= $CDASH_ACTIVE_PROJECT_DAYS)
+      {
+      $projects[] = $project;
+      }
     }
 
   return $projects;
