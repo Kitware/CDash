@@ -66,50 +66,6 @@ function generate_index_table()
    }
  $xml .= "</dashboard> ";
 
- // Show the size of the database
- if(!isset($CDASH_DB_TYPE) || ($CDASH_DB_TYPE == "mysql"))
-   {
-   $rows = pdo_query("SHOW table STATUS");
-   $dbsize = 0;
-   while ($row = pdo_fetch_array($rows))
-     {
-     $dbsize += $row['Data_length'] + $row['Index_length'];
-     }
-
-   $ext = "b";
-   if($dbsize>1024)
-     {
-     $dbsize /= 1024;
-     $ext = "Kb";
-     }
-   if($dbsize>1024)
-     {
-     $dbsize /= 1024;
-     $ext = "Mb";
-     }
-   if($dbsize>1024)
-     {
-     $dbsize /= 1024;
-     $ext = "Gb";
-     }
-   if($dbsize>1024)
-     {
-     $dbsize /= 1024;
-     $ext = "Tb";
-     }
-
-   $xml .= "<database>";
-   $xml .= add_XML_value("size",round($dbsize,1).$ext);
-   $xml .= "</database>";
-   }
-  else
-    {
-    // no equivalent yet for other databases
-    $xml .= "<database>";
-    $xml .= add_XML_value("size","NA");
-    $xml .= "</database>";
-    }
-
   // User
   $userid = 0;
   if(isset($_SESSION['cdash']))
