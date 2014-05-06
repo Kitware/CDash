@@ -63,6 +63,10 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
       $scheduleid = $row[0];
       }
     }
+  else if(isset($_GET["clientscheduleid"]))
+    {
+    $scheduleid = pdo_real_escape_numeric($_GET["clientscheduleid"]);
+    }
 
   // Parse the XML file
   $handler = ctest_parse($filehandle,$projectid, $expected_md5, $do_checksum, $scheduleid);
