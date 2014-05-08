@@ -242,44 +242,66 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
   fclose($handle);
   unset($handle);
 
+  // Helper function to display the message
+  function displayReturnStatus($statusarray)
+    {
+    include 'cdash/version.php';
+    echo "<cdash version=\"$CDASH_VERSION\">\n";
+    foreach($statusarray as $key=>$value)
+      {
+      echo "  <".$key.">".$value."</".$key.">\n";
+      }
+    echo "</cdash>\n";
+    }
+    
+  $statusarray = array();
+  $statusarray['status'] = 'OK';
+  $statusarray['message'] = '';
   if($do_checksum == true)
     {
     $md5sum = md5_file($filename);
     $md5error = false;
-
-    echo "<cdash version=\"$CDASH_VERSION\">\n";
     if($expected_md5 == '' || $expected_md5 == $md5sum)
       {
-      echo "  <status>OK</status>\n";
-      echo "  <message></message>\n";
+      $statusarray['status'] = 'OK';
       }
     else
       {
-      echo "  <status>ERROR</status>\n";
-      echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
+      $statusarray['status'] = 'ERROR';
+      $statusarray['message'] = 'Checksum failed for file. Expected '.$expected_md5.' but got '.$md5sum;
       $md5error = true;
       }
-    echo "  <md5>$md5sum</md5>\n";
-    echo "</cdash>\n";
-
+      
+    $statusarray['md5'] = $md5sum;
     if($md5error)
       {
+      displayReturnStatus($statusarray);
       add_log("Checksum failure on file: $filename", "ctest_parse", LOG_ERR, $projectid);
       return FALSE;
       }
     }
 
+  $parsingerror = '';   
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
     {
-    $localParser->StartParsing();
+    $parsingerror = $localParser->StartParsing();
+    if($parsingerror != '')
+      {
+      $statusarray['status'] = 'ERROR';
+      $statusarray['message'] = $parsingerror;
+      displayReturnStatus($statusarray);
+      exit();
+      }
     }
   if(!$parseHandle = fopen($filename, 'r'))
     {
-    echo "ERROR: Cannot open file ($filename)";
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = "ERROR: Cannot open file ($filename)";
+    displayReturnStatus($statusarray);
     add_log("Cannot open file ($filename)", "parse_xml_file",LOG_ERR);
     return $handler;
     }
-
+    
   //burn the first 8192 since we have already parsed it
   $content = fread($parseHandle, 8192);
   while(!feof($parseHandle))
@@ -288,7 +310,14 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
 
     if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
       {
-      $localParser->ParseFile();
+      $parsingerror = $localParser->ParseFile();
+      if($parsingerror != '')
+        {
+        $statusarray['status'] = 'ERROR';
+        $statusarray['message'] = $parsingerror;
+        displayReturnStatus($statusarray);
+        exit();
+        }
       }
     xml_parse($parser,$content, false);
     }
@@ -299,8 +328,10 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
 
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
     {
-    $localParser->EndParsingFile();
+    $parsingerror = $localParser->EndParsingFile();
     }
+ 
+  displayReturnStatus($statusarray);
   return $handler;
 }
 ?>
