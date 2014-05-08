@@ -758,8 +758,7 @@ function generate_main_dashboard_XML($project_instance, $date)
   // Look for a '&collapse=0' or '&collapse=1' to override the default.
   //
   $collapse = 0;
-
-  if ($project_instance->GetNumberOfSubProjects() > 0)
+  if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0)
     {
     $collapse = 1;
     }
@@ -1862,7 +1861,7 @@ else
     $displayProject = true;
     }
 
-  if(!$displayProject && !isset($_GET["subproject"]) && $Project->GetNumberOfSubProjects() > 0)
+  if(!$displayProject && !isset($_GET["subproject"]) && $Project->GetNumberOfSubProjects($date) > 0)
     {
     $xml = generate_subprojects_dashboard_XML($Project, $date);
     // Now doing the xslt transition

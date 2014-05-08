@@ -757,7 +757,7 @@ class Project
     }
 
   /** Get the number of subproject */
-  function GetNumberOfSubProjects()
+  function GetNumberOfSubProjects($date=NULL)
     {
     if(!$this->Id)
       {
@@ -765,7 +765,12 @@ class Project
       return false;
       }
 
-    $project = pdo_query("SELECT count(*) AS c FROM subproject WHERE projectid=".qnum($this->Id));
+     if($date == NULL)
+      {
+      $date = gmdate(FMT_DATETIME);
+      }
+      
+    $project = pdo_query("SELECT count(*) AS c FROM subproject WHERE projectid=".qnum($this->Id)." AND (endtime='1980-01-01 00:00:00' OR endtime>'".$date."')");
     if(!$project)
       {
       add_last_sql_error("Project GetNumberOfSubprojects",$this->Id);
