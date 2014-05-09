@@ -48,8 +48,13 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 $start = microtime_float();
 
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array["projectid"];
+if(empty($build_array))
+  {
+  echo "This build does not exist. Maybe it has been deleted.";
+  exit();
+  }
 
+$projectid = $build_array["projectid"];
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if(pdo_num_rows($project)>0)
   {
