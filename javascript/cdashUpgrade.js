@@ -75,6 +75,10 @@ function upgrade_tables()
    {
    nextstep = upgrade_2_2;
    }
+  else if(version < 2.4)
+   {
+   nextstep = upgrade_2_4;
+   }
 
   if(nextstep != '')
     {
@@ -143,6 +147,14 @@ function upgrade_2_2()
   $("#Upgrade-2-2-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-2-2-Status","upgrade.php?upgrade-2-2=1",text,done);
 }
+
+function upgrade_2_4()
+{
+  var text = "Applying 2.4 patches";
+  $("#Upgrade-2-4-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  sendAjax("#Upgrade-2-4-Status","upgrade.php?upgrade-2-4=1",text,done);
+}
+
 
 // empty function needed
 function done()

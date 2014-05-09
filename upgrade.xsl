@@ -92,7 +92,10 @@
 <div id="Upgrade-1-8-Status"></div>
 <div id="Upgrade-2-0-Status"></div>
 <div id="Upgrade-2-2-Status"></div>
-<br/><div id="DoneStatus"></div><br/>
+<div id="Upgrade-2-4-Status"></div>
+<br/>
+<div id="DoneStatus"></div>
+<br/>
 
 <br/>
 <!-- FOOTER -->
