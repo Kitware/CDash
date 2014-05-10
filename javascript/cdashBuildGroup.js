@@ -27,6 +27,7 @@ function buildgroup_click(buildid)
 function buildnosubmission_click(siteid,buildname,divname,buildgroupid,buildtype)
 {
   buildname = URLencode(buildname);
+  buildtype = URLencode(buildtype);
 
   var group = "#infoexpected_"+divname;
   if($(group).html() != "" && $(group).is(":visible"))
