@@ -164,12 +164,12 @@ $alpha_test = 0.3;
 
 $weight = (1-$alpha_warning)+(1-$alpha_error)+(1-$alpha_test);
 
-$max['nfailederrors'] = 0;
-$max['nfixederrors'] = 0;
-$max['nfailedwarnings'] = 0;
-$max['nfixedwarnings'] = 0;
-$max['nfailedtests'] = 0;
-$max['nfixedtests'] = 0;
+$max['nfailederrors'] = 1;
+$max['nfixederrors'] = 1;
+$max['nfailedwarnings'] = 1;
+$max['nfixedwarnings'] = 1;
+$max['nfailedtests'] = 1;
+$max['nfixedtests'] = 1;
 
 foreach($users as $key=>$user)
   {

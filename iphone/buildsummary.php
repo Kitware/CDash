@@ -4,6 +4,14 @@ set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
 require_once("cdash/pdo.php");
 
+@$buildid = $_GET["buildid"];
+// Checks
+if(!isset($buildid) || !is_numeric($buildid))
+  {
+  echo "Not a valid buildid!";
+  return;
+  }
+
 // Put the CDash root directory in the path
 $splitchar = '/';
 if(DIRECTORY_SEPARATOR == '\\')

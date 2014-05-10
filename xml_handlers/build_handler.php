@@ -144,7 +144,7 @@ class BuildHandler extends AbstractHandler
       global $CDASH_LARGE_TEXT_LIMIT;
       $threshold = $CDASH_LARGE_TEXT_LIMIT;
 
-      if ($threshold > 0)
+      if ($threshold > 0 && isset($this->Error->StdOutput))
         {
         $outlen = strlen($this->Error->StdOutput);
         if ($outlen > $threshold)
