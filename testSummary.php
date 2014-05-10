@@ -62,6 +62,7 @@ if(pdo_num_rows($project)>0)
   $project_array = pdo_fetch_array($project);
   $projectname = $project_array["name"];
   $nightlytime = $project_array["nightlytime"];
+  $projectshowtesttime = $project_array["showtesttime"];
   }
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
@@ -106,6 +107,8 @@ AND test.projectid=$projectid
 AND measurement.summarypage= 1
 GROUP by testmeasurement.name
 "); // We need to keep the count of columns for correct column-data assign
+
+$columns = array();
 while($row=pdo_fetch_array($getcolumnnumber))
   {
   $xml .= add_XML_value("columnname",$row["name"])."\n";
@@ -280,7 +283,7 @@ $query = "SELECT build.id,build.name,build.stamp,build2test.status,build2test.bu
 
 $result = pdo_query($query);
 
-if($_GET['export']=="csv") // If user wants to export as CSV file
+if(isset($_GET['export']) && $_GET['export']=="csv") // If user wants to export as CSV file
   {
   header("Cache-Control: public");
   header("Content-Description: File Transfer");
@@ -290,7 +293,7 @@ if($_GET['export']=="csv") // If user wants to export as CSV file
   $filecontent = "Site,Build Name,Build Stamp,Status,Time(s)"; // Standard columns
 
   // Store named measurements in an array
-  while($row = pdo_fetch_array($etestquery))
+  while(isset($etestquery) && $row = pdo_fetch_array($etestquery))
     {
     $etest[$row['buildid']][$row['name']]=$row['value'];
     }
