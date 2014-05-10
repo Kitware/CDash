@@ -30,6 +30,18 @@ require_once 'xml_handlers/testing_nunit_handler.php';
 require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/coverage_junit_handler.php';
 
+// Helper function to display the message
+function displayReturnStatus($statusarray)
+{
+  include 'cdash/version.php';
+  echo "<cdash version=\"$CDASH_VERSION\">\n";
+  foreach($statusarray as $key=>$value)
+    {
+    echo "  <".$key.">".$value."</".$key.">\n";
+    }
+  echo "</cdash>\n";
+}
+    
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=true,
                      $scheduleid=0)
@@ -241,18 +253,6 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     }
   fclose($handle);
   unset($handle);
-
-  // Helper function to display the message
-  function displayReturnStatus($statusarray)
-    {
-    include 'cdash/version.php';
-    echo "<cdash version=\"$CDASH_VERSION\">\n";
-    foreach($statusarray as $key=>$value)
-      {
-      echo "  <".$key.">".$value."</".$key.">\n";
-      }
-    echo "</cdash>\n";
-    }
     
   $statusarray = array();
   $statusarray['status'] = 'OK';
