@@ -45,6 +45,12 @@ $projectid = $build_array["projectid"];
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
+@$date = $_GET["date"];
+if ($date != NULL)
+  {
+  $date = htmlspecialchars(pdo_real_escape_string($date));
+  }
+
 $xml = begin_XML_for_XSLT();
 $xml .= get_cdash_dashboard_xml(get_project_name($projectid),$date);
 

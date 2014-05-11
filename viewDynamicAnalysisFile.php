@@ -112,7 +112,12 @@ if(pdo_num_rows($project)>0)
   $project_array = pdo_fetch_array($project);
   $projectname = $project_array["name"];  
   }
-
+else
+  {
+  echo "This build doesn't exist. Maybe it has been deleted.";
+  return;
+  }
+  
 list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
 

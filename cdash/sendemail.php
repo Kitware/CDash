@@ -1404,6 +1404,14 @@ function send_update_email($handler,$projectid)
 
     if($to_address != "")
       {
+      $serverURI = get_server_URI();
+      // In the case of asynchronous submission, the serverURI contains /cdash
+      // we need to remove it
+      if($CDASH_BASE_URL=='' && $CDASH_ASYNCHRONOUS_SUBMISSION)
+        {
+        $serverURI = substr($serverURI,0,strrpos($serverURI,"/"));
+        }
+
       // Generate the email to send
       $subject = "CDash [".$Project->Name."] - Update Errors for ".$sitename;
 
