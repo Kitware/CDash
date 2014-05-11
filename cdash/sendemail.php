@@ -609,7 +609,7 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
 
 
 /** Send a summary email */
-function sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid)
+function sendsummaryemail($projectid,$groupid,$errors,$buildid)
 {
   include("cdash/config.php");
   require_once("models/userproject.php");
@@ -1561,7 +1561,7 @@ function sendemail($handler,$projectid)
   if($BuildGroup->GetSummaryEmail()==1)
     {
     // Send the summary email
-    sendsummaryemail($projectid,$dashboarddate,$groupid,$errors,$buildid);
+    sendsummaryemail($projectid,$groupid,$errors,$buildid);
 
     if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php"))
       {
