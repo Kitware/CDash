@@ -36,6 +36,11 @@ $Site = new Site();
 $Site->Id = $Build->SiteId;
 
 $build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));
+if(!isset($build_array["projectid"]))
+  {
+  echo "Build does not exist. Maybe it has been deleted.";
+  return;
+  }
 $projectid = $build_array["projectid"];
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
