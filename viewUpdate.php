@@ -57,7 +57,12 @@ if(pdo_num_rows($project)>0)
   $svnurl = $project_array["cvsurl"];
   $projectname = $project_array["name"];
   }
-
+else
+  {
+  echo "This build doesn't exist. Maybe it has been deleted.";
+  return;
+  }
+  
 $xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$projectname."</title>";
 
