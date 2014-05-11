@@ -1147,7 +1147,7 @@ function addDailyChanges($projectid)
         $nfail_array = pdo_fetch_array(pdo_query($sql));
         $nfailingtests = $nfail_array[0];
 
-        sendsummaryemail($projectid,$project_array["name"],$date,$groupid,$nbuildwarnings,$nbuilderrors,$nfailingtests);
+        sendsummaryemail($projectid,$groupid,$nbuildwarnings,$nbuilderrors,$nfailingtests);
         }
       }
 
