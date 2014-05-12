@@ -301,7 +301,7 @@ if(pdo_num_rows($result)>0)
   }
   
 $xml .= "<images>";
-$query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' AND role!='TestImage' "
+$query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' "
         . "AND role!='ValidImage' AND role!='DifferenceImage2' ORDER BY id";
 $result = pdo_query($query);
 while($row = pdo_fetch_array($result))
