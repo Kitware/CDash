@@ -25,7 +25,7 @@ IF(${CDASH_SITE_ID} EQUAL "0")
   MESSAGE(FATAL_ERROR "Cannot define site id")
 ENDIF(${CDASH_SITE_ID} EQUAL "0")
 
-MESSAGE("SiteId="${CDASH_SITE_ID})
+MESSAGE("SiteId=${CDASH_SITE_ID}")
 
 # Start the loop
 while (${CTEST_ELAPSED_TIME} LESS 36000)
