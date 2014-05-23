@@ -137,7 +137,7 @@ function echo_average_wait_time($projectid)
   else
     {
     $sql_query = "SELECT TIMESTAMPDIFF(HOUR, created, UTC_TIMESTAMP) as hours_ago, ".
-      "TIME_FORMAT(CONVERT_TZ(created, '+00:00', '-04:00'), '%l:00 %p') AS time_local, ".
+      "TIME_FORMAT(CONVERT_TZ(created, '+00:00', 'SYSTEM'), '%l:00 %p') AS time_local, ".
       "COUNT(created) AS num_files, ".
       "ROUND(AVG(TIMESTAMPDIFF(SECOND, created, started))/3600, 1) AS avg_hours_delay, ".
       "AVG(TIMESTAMPDIFF(SECOND, started, finished)) AS mean, ".
