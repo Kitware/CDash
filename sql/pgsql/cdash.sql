@@ -286,6 +286,7 @@ CREATE TABLE "project" (
   "imageid" bigint DEFAULT '0' NOT NULL,
   "public" smallint DEFAULT '1' NOT NULL,
   "coveragethreshold" smallint DEFAULT '70' NOT NULL,
+  "coveragethreshold2" smallint DEFAULT '70' NOT NULL,
   "testingdataurl" character varying(255) DEFAULT '' NOT NULL,
   "nightlytime" character varying(50) DEFAULT '00:00:00' NOT NULL,
   "googletracker" character varying(50) DEFAULT '' NOT NULL,
@@ -774,6 +775,7 @@ CREATE TABLE "subproject" (
   "projectid" bigint NOT NULL,
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "core" smallint NOT NULL DEFAULT '1',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "projectid5" on "subproject" ("projectid");

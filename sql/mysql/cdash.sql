@@ -373,6 +373,7 @@ CREATE TABLE `project` (
   `imageid` int(11) NOT NULL default '0',
   `public` tinyint(4) NOT NULL default '1',
   `coveragethreshold` smallint(6) NOT NULL default '70',
+  `coveragethreshold2` smallint(6) NOT NULL default '70',
   `testingdataurl` varchar(255) NOT NULL default '',
   `nightlytime` varchar(50) NOT NULL default '00:00:00',
   `googletracker` varchar(50) NOT NULL default '',
@@ -854,6 +855,7 @@ CREATE TABLE `subproject` (
   `projectid` int(11) NOT NULL,
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `core` tinyint(1) NOT NULL default '1';
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`)
 );

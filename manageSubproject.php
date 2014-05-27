@@ -128,6 +128,22 @@ if(isset($_POST["addDependency"]))
   $Subproject->AddDependency($_POST["dependency_selection_".$Subproject->Id]);
   }
 
+// If we should mark a subproject as core or non-core
+// (These are only called via AJAX, so we exit once they have been processed)
+if(isset($_GET["core"]))
+  {
+  $Subproject->Id = pdo_real_escape_numeric($_GET["subprojectid"]);
+  if ($Subproject->SetCore($_GET["core"]))
+    {
+    echo "Success";
+    }
+  else
+    {
+    echo "Failure";
+    }
+  exit;
+  }
+
 /** We start generating the XML here */
 // List the available project
 if($projectid>=0)
@@ -148,6 +164,7 @@ if($projectid>=0)
       $xml .= "<subproject>";
       $xml .= add_XML_value("id",$subprojectid);
       $xml .= add_XML_value("name",$SubProject1->GetName());
+      $xml .= add_XML_value("core",$SubProject1->GetCore());
       
       $dependencies = $SubProject1->GetDependencies();
       

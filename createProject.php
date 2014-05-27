@@ -146,6 +146,7 @@ if($Submit)
       }
 
     $Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
+    $Project->CoverageThreshold2 = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold2"]);
     $Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
     $Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]);
     @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
@@ -336,6 +337,7 @@ if($Update || $AddRepository)
     }
 
   @$Project->CoverageThreshold = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold"]);
+  @$Project->CoverageThreshold2 = stripslashes_if_gpc_magic_quotes($_POST["coverageThreshold2"]);
   @$Project->NightlyTime = stripslashes_if_gpc_magic_quotes($_POST["nightlyTime"]);
   @$Project->GoogleTracker = stripslashes_if_gpc_magic_quotes($_POST["googleTracker"]);
   @$Project->EmailBrokenSubmission = stripslashes_if_gpc_magic_quotes($_POST["emailBrokenSubmission"]);
@@ -440,6 +442,7 @@ if($projectid>0)
   $xml .= add_XML_value("public",$Project->Public);
   $xml .= add_XML_value("imageid",$Project->ImageId);
   $xml .= add_XML_value("coveragethreshold",$Project->CoverageThreshold);
+  $xml .= add_XML_value("coveragethreshold2",$Project->CoverageThreshold2);
   $xml .= add_XML_value("nightlytime",$Project->NightlyTime);
   $xml .= add_XML_value("testingdataurl",$Project->TestingDataUrl);
   $xml .= add_XML_value("googletracker",$Project->GoogleTracker);

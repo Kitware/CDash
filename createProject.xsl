@@ -798,6 +798,39 @@
                         <td></td>
                         <td>
                           <div align="right">
+                            <strong>Secondary Coverage Threshold:</strong>
+                          </div>
+                        </td>
+                        <td>
+                          <input onchange="saveChanges();" onfocus="showHelp('CoverageThres2_help');"
+                            name="coverageThreshold2" type="text" id="coverageThreshold2"
+                            size="2" value="70">
+                            <xsl:attribute name="value">
+                  <xsl:if
+                              test="string-length(cdash/project/coveragethreshold2)=0">70</xsl:if>
+                  <xsl:value-of select="cdash/project/coveragethreshold2" />
+                  </xsl:attribute>
+                          </input>
+                          <xsl:text disable-output-escaping="yes"> </xsl:text>
+                          <a
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                            target="blank">
+                            <img onmouseover="showHelp('CoverageThres2_help');"
+                              src="images/help.gif" border="0" />
+                          </a>
+                          <span class="help_content" id="CoverageThres2_help">
+                            <b>Secondary coverage threshold</b>
+                            <br />
+                            This is a separate coverage threshold used for non-core
+                            subprojects.  If you are not using this feature of CDash,
+                            it is safe to leave it at the default value.
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
                             <strong>Enable test timing:</strong>
                           </div>
                         </td>

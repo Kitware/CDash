@@ -901,6 +901,12 @@ if(isset($_GET['upgrade-2-2']))
 // 2.4 Upgrade
 if(isset($_GET['upgrade-2-4']))
   {
+  // Support for core vs. non-core subprojects
+  AddTableField('subproject', 'core', 'tinyint(1)', 'smallint', '1');
+
+  // Support for separate non-core coverage threshold
+  AddTableField('project', 'coveragethreshold2', 'smallint(6)', 'smallint', '70');
+
   // Set the database version
   setVersion();
 

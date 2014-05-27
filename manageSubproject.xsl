@@ -26,6 +26,7 @@
           <![endif]]]></xsl:comment>
           <script src="javascript/jquery-1.6.2.js" type="text/javascript"></script>
           <script src="javascript/ui.tabs.js" type="text/javascript"></script>
+          <script src="javascript/cdashManageSubproject.js" type="text/javascript"></script>
        </head>
        <body bgcolor="#ffffff">
 
@@ -98,11 +99,29 @@
             <td width="90%">
             <table width="100%" border="0">
             <tr>
-            <td width="10%"><xsl:value-of select="name"/></td>
-            <td align="left" width="10%"><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;delete=<xsl:value-of select="id"/>
+            <td width="15%"><xsl:value-of select="name"/></td>
+            <td align="left" width="5%"><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;delete=<xsl:value-of select="id"/>
             </xsl:attribute>
             [x]</a></td>
-            <td align="left" width="80%">
+            <td align="right" width="20%">
+              <a href="javascript:void(0)" class="subproject_core">
+                <xsl:attribute name="data-projectid">
+                  <xsl:value-of select="/cdash/project/id"/>
+                </xsl:attribute>
+                <xsl:attribute name="data-subprojectid">
+                  <xsl:value-of select="id"/>
+                </xsl:attribute>
+                <xsl:if test="core=1">
+                  <xsl:attribute name="data-core">0</xsl:attribute>
+                  [Mark as non-core]
+                </xsl:if>
+                <xsl:if test="core=0">
+                  <xsl:attribute name="data-core">1</xsl:attribute>
+                  [Mark as core]
+                </xsl:if>
+              </a>
+            </td>
+            <td align="right" width="60%">
             <form method="post">
             <xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/></xsl:attribute>
             <xsl:attribute name="name">form_add_dependency_<xsl:value-of select="id"/></xsl:attribute>
@@ -127,7 +146,7 @@
                 </option>
                 </xsl:for-each>
                 </select>
-                <input type="submit" name="addDependency" value="Add dependency"/>
+                <input type="submit" name="addDependency" value="Add"/>
               </form>
             </td>
             </tr>

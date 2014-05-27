@@ -200,6 +200,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     if ($CDASH_USE_HTTPS)
       {
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
       }
       
     // It's likely that the process timesout because the processing takes more

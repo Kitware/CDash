@@ -35,6 +35,7 @@ class Project
   var $ImageId;
   var $Public;
   var $CoverageThreshold;
+  var $CoverageThreshold2;
   var $TestingDataUrl;
   var $NightlyTime;
   var $GoogleTracker;
@@ -220,6 +221,7 @@ class Project
       $query .= ",bugtrackerfileurl='".$BugTrackerFileUrl."'";
       $query .= ",public=".qnum($this->Public);
       $query .= ",coveragethreshold=".qnum($this->CoverageThreshold);
+      $query .= ",coveragethreshold2=".qnum($this->CoverageThreshold2);
       $query .= ",testingdataurl='".$TestingDataUrl."'";
       $query .= ",nightlytime='".$NightlyTime."'";
       $query .= ",googletracker='".$GoogleTracker."'";
@@ -324,13 +326,13 @@ class Project
       // Trim the name
       $this->Name = trim($this->Name);
       $this->Initialize();
-      $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,testingdataurl,
+      $query = "INSERT INTO project(".$id."name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,coveragethreshold2,testingdataurl,
                                     nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
                                     ,displaylabels,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
                  VALUES (".$idvalue."'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
-                 ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",'$TestingDataUrl','$NightlyTime',
+                 ".qnum($this->Public).",".qnum($this->ImageId).",".qnum($this->CoverageThreshold).",".qnum($this->CoverageThreshold2).",'$TestingDataUrl','$NightlyTime',
                  '$GoogleTracker',".qnum($this->EmailBrokenSubmission).",".qnum($this->EmailRedundantFailures).","
                  .qnum($this->EmailLowCoverage).",".qnum($this->EmailTestTimingChanged).",'$CvsViewerType',".qnum($this->TestTimeStd)
                  .",".qnum($this->TestTimeStdThreshold).",".qnum($this->TestTimeMaxStatus).",".qnum($this->EmailMaxItems).",".qnum($this->EmailMaxChars).","
@@ -450,6 +452,7 @@ class Project
       $this->ImageId = $project_array['imageid'];
       $this->Public = $project_array['public'];
       $this->CoverageThreshold = $project_array['coveragethreshold'];
+      $this->CoverageThreshold2 = $project_array['coveragethreshold2'];
       $this->TestingDataUrl = $project_array['testingdataurl'];
       $this->NightlyTime = $project_array['nightlytime'];
       $this->GoogleTracker = $project_array['googletracker'];
@@ -754,6 +757,32 @@ class Project
     $this->CoverageThreshold = $project_array['coveragethreshold'];
 
     return $this->CoverageThreshold;
+    }
+
+  /** Get the coveragethreshold2 */
+  function GetCoverageThreshold2()
+    {
+    if(strlen($this->CoverageThreshold2)>0)
+      {
+      return $this->CoverageThreshold2;
+      }
+
+    if(!$this->Id)
+      {
+      echo "Project GetCoverageThreshold2(): Id not set";
+      return false;
+      }
+
+    $project = pdo_query("SELECT coveragethreshold2 FROM project WHERE id=".qnum($this->Id));
+    if(!$project)
+      {
+      add_last_sql_error("Project GetCoverageThreshold2",$this->Id);
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    $this->CoverageThreshold2 = $project_array['coveragethreshold2'];
+
+    return $this->CoverageThreshold2;
     }
 
   /** Get the number of subproject */

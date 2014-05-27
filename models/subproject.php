@@ -23,6 +23,7 @@ class SubProject
   var $Name;
   var $Id;
   var $ProjectId;
+  var $Core;
 
   function __construct()
     {
@@ -39,7 +40,7 @@ class SubProject
     return false;
     }
 
-  /** Delete a project */
+  /** Delete a subproject */
   function Delete($keephistory=true)
     {
     if(!$this->Id)
@@ -81,7 +82,7 @@ class SubProject
       }
     }
 
-  /** Return if a project exists */
+  /** Return if a subproject exists */
   function Exists()
     {
     // If no id specify return false
@@ -99,7 +100,7 @@ class SubProject
     return false;
     }
 
-  // Save the project in the database
+  // Save the subproject in the database
   function Save()
     {
     // Check if the project is already
@@ -112,6 +113,7 @@ class SubProject
       $query = "UPDATE subproject SET ";
       $query .= "name='".$this->Name."'";
       $query .= ",projectid=".qnum($this->ProjectId);
+      $query .= ",core=".qnum($this->Core);
       $query .= " WHERE id=".qnum($this->Id)."";
 
       if(!pdo_query($query))
@@ -151,8 +153,8 @@ class SubProject
 
       $starttime = gmdate(FMT_DATETIME);
       $endtime = "1980-01-01 00:00:00";
-      $query = "INSERT INTO subproject(".$id."name,projectid,starttime,endtime)
-                 VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId)
+      $query = "INSERT INTO subproject(".$id."name,projectid,core,starttime,endtime)
+                 VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId).",".qnum($this->Core)
                  .",'".$starttime."','".$endtime."')";
 
       if(!pdo_query($query))
@@ -170,7 +172,7 @@ class SubProject
     return true;
     }
 
-  /** Get the Name of the project */
+  /** Get the Name of the subproject */
   function GetName()
     {
     if(strlen($this->Name)>0)
@@ -194,6 +196,45 @@ class SubProject
     $this->Name = $project_array['name'];
 
     return $this->Name;
+    }
+
+  /** Return whether or not this is a core subproject */
+  function GetCore()
+    {
+    if(strlen($this->Core)>0)
+      {
+      return $this->Core;
+      }
+
+    if(!$this->Id)
+      {
+      echo "SubProject GetCore(): Id not set";
+      return false;
+      }
+
+    $project = pdo_query("SELECT core FROM subproject WHERE id=".qnum($this->Id));
+    if(!$project)
+      {
+      add_last_sql_error("SubProject GetCore");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    $this->Core = $project_array['core'];
+
+    return $this->Core;
+    }
+
+  /** Function to set whether or not this is a core subproject */
+  function SetCore($core)
+    {
+    if($core == 0 || $core == 1)
+      {
+      $this->Core = $core;
+      // make sure Name is set for this object before calling Save
+      $this->GetName();
+      return $this->Save();
+      }
+    return false;
     }
 
   /** Get the last submission of the subproject*/
@@ -575,7 +616,7 @@ class SubProject
     return true;
     } // end RemoveDependency
 
-}  // end class Project
+}  // end class SubProject
 
 
 
