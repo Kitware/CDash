@@ -855,7 +855,7 @@ CREATE TABLE `subproject` (
   `projectid` int(11) NOT NULL,
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `core` tinyint(1) NOT NULL default '1';
+  `core` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`)
 );
