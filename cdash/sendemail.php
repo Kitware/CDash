@@ -615,11 +615,13 @@ function sendsummaryemail($projectid,$groupid,$errors,$buildid)
   require_once("models/userproject.php");
   require_once("models/user.php");
   require_once("models/project.php");
-
+  require_once("models/build.php");
+  require_once("models/site.php");
+  
   $Project = new Project();
   $Project->Id = $projectid;
   $Project->Fill();
-
+  
   // Check if the email has been sent
   $date = ""; // now
   list ($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date,$Project->NightlyTime);
@@ -789,6 +791,11 @@ function sendsummaryemail($projectid,$groupid,$errors,$buildid)
   // Send the email
   if($summaryEmail != "")
     {
+    $Build = new Build();
+    $Build->FillFromId($buildid);
+    $Site = new Site();
+    $Site->Id = $Build->SiteId;
+
     $summaryemail_array = pdo_fetch_array(pdo_query("SELECT name FROM buildgroup WHERE id=$groupid"));
     add_last_sql_error("sendsummaryemail");
 
@@ -798,6 +805,8 @@ function sendsummaryemail($projectid,$groupid,$errors,$buildid)
     $messagePlainText .= "You have been identified as one of the authors who have checked in changes that are part of this submission ";
     $messagePlainText .= "or you are listed in the default contact list.\n\n";
 
+    $messagePlainText .= "Site name: ".$Site->GetName()."\n";
+    $messagePlainText .= "Build name: ".$Build->Name." (".$Build->Type.")\n";
     $messagePlainText .= "To see this dashboard:\n";
     $messagePlainText .= $currentURI;
     $messagePlainText .= "/index.php?project=".urlencode($Project->Name)."&date=".$today;
