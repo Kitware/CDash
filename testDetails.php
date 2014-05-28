@@ -285,7 +285,7 @@ else
 
 //get any images associated with this test
 $query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' AND (role='TestImage' "
-        . "OR role='ValidImage' OR role='DifferenceImage2') ORDER BY id";
+        . "OR role='ValidImage' OR role='BaselineImage' OR role='DifferenceImage2') ORDER BY id";
 $result = pdo_query($query);
 if(pdo_num_rows($result)>0)
   {
@@ -302,7 +302,7 @@ if(pdo_num_rows($result)>0)
   
 $xml .= "<images>";
 $query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' "
-        . "AND role!='ValidImage' AND role!='DifferenceImage2' ORDER BY id";
+        . "AND role!='ValidImage' AND role!='BaselineImage' AND role!='DifferenceImage2' ORDER BY id";
 $result = pdo_query($query);
 while($row = pdo_fetch_array($result))
   {
