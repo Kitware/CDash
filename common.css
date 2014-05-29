@@ -1080,8 +1080,9 @@ div#div_showfilters {
   float: left;
 }
 
-.platformicon{
-  margin-right: 5px;
+.icon {
+  margin-left: 1px;
+  margin-right: 1px;
 }
 
 .builddateelapsed {
