@@ -51,7 +51,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT id FROM feed LIMIT 1") )
+  if(!pdo_query("SELECT coveragethreshold2 FROM project LIMIT 1") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
