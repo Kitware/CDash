@@ -418,8 +418,9 @@ function DeleteOldSubmissionRecords($projectid)
     }
 
   $idset = "(";
-  foreach($ids as $id)
+  foreach($ids as $id_row)
     {
+    $id = $id_row["id"];
     $idset .= "'$id', ";
     }
   // Avoid conditional ", " emission in the loop. OK to repeat an
