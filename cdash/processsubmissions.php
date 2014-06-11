@@ -425,7 +425,7 @@ function DeleteOldSubmissionRecords($projectid)
     }
   // Avoid conditional ", " emission in the loop. OK to repeat an
   // element in this DELETE IN type of query:
-  $idset .= "'".$ids[0]."')";
+  $idset .= "'".$ids[0]["id"]."')";
 
   pdo_delete_query("DELETE FROM submission WHERE id IN ".$idset);
   pdo_delete_query("DELETE FROM client_jobschedule2submission WHERE submissionid IN ".$idset);
