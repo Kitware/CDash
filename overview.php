@@ -64,6 +64,7 @@ $xml .= "</menu>";
 function gather_overview_data($start_date, $end_date, $group_id)
 {
   global $projectid;
+  global $haveNonCore;
 
   $num_configure_warnings = 0;
   $num_configure_errors = 0;
@@ -75,8 +76,11 @@ function gather_overview_data($start_date, $end_date, $group_id)
   // for coverage
   $core_tested = 0;
   $core_untested = 0;
-  $non_core_tested = 0;
-  $non_core_untested = 0;
+  if ($haveNonCore)
+    {
+    $non_core_tested = 0;
+    $non_core_untested = 0;
+    }
 
   $builds_query = "SELECT b.id, b.builderrors, b.buildwarnings, b.testfailed,
                    c.status AS configurestatus, c.warnings AS configurewarnings,
@@ -123,12 +127,12 @@ function gather_overview_data($start_date, $end_date, $group_id)
       $num_failing_tests += $build_row["testfailed"];
       }
 
-    if ($build_row["subprojectcore"] == 0)
+    if ($haveNonCore && $build_row["subprojectcore"] == 0)
       {
       $non_core_tested += $build_row["loctested"];
       $non_core_untested += $build_row["locuntested"];
       }
-    else if ($build_row["subprojectcore"] == 1)
+    else
       {
       $core_tested += $build_row["loctested"];
       $core_untested += $build_row["locuntested"];
@@ -141,15 +145,28 @@ function gather_overview_data($start_date, $end_date, $group_id)
   $return_values["build_errors"] = $num_build_errors;
   $return_values["failing_tests"] = $num_failing_tests;
 
-  if ($core_tested + $core_untested > 0)
+  if ($haveNonCore)
     {
-    $return_values["core_coverage"] =
-      round($core_tested / ($core_tested + $core_untested) * 100, 2);
+    if ($core_tested + $core_untested > 0)
+      {
+      $return_values["core coverage"] =
+        round($core_tested / ($core_tested + $core_untested) * 100, 2);
+      }
+    if ($non_core_tested + $non_core_untested > 0)
+      {
+      file_put_contents("/tmp/zackdebug.txt", "Found a non-core value\n", FILE_APPEND);
+      $return_values["non-core coverage"] =
+        round($non_core_tested / ($non_core_tested + $non_core_untested) * 100, 2);
+      }
     }
-  if ($non_core_tested + $non_core_untested > 0)
+  else
     {
-    $return_values["non_core_coverage"] =
-      round($non_core_tested / ($non_core_tested + $non_core_untested) * 100, 2);
+    file_put_contents("/tmp/zackdebug.txt", "We don't have non-core\n", FILE_APPEND);
+    if ($core_tested + $core_untested > 0)
+      {
+      $return_values["coverage"] =
+        round($core_tested / ($core_tested + $core_untested) * 100, 2);
+      }
     }
 
   return $return_values;
@@ -185,9 +202,8 @@ foreach($measurements as $measurement)
   }
 
 
+// This logic will need to change if we abstract way core vs. non-core
 $coverage_data = array();
-// These groups will need to change if we abstract way core vs. non-core
-$coverage_group_names = array("core", "non_core");
 
 // Get core & non-core coverage thresholds
 $query = "SELECT coveragethreshold, coveragethreshold2 FROM project
@@ -196,20 +212,36 @@ $project = pdo_query($query);
 add_last_sql_error("overview :: coveragethreshold", $projectid);
 $project_array = pdo_fetch_array($project);
 
+// Detect if this project has any non-core subprojects
+$haveNonCore = false;
+$query = "SELECT * FROM subproject WHERE projectid='$projectid' AND core != 1";
+if (pdo_num_rows(pdo_query($query)) > 0)
+  {
+  $haveNonCore = true;
+  $coverage_group_names = array("core coverage", "non-core coverage");
+  $coverage_thresholds =
+    array("core coverage"     => $project_array["coveragethreshold"],
+          "non-core coverage" => $project_array["coveragethreshold2"]);
+  }
+else
+  {
+  $coverage_group_names = array("coverage");
+  $coverage_thresholds =
+    array("coverage" => $project_array["coveragethreshold"]);
+  }
+add_last_sql_error("overview :: detect-non-core", $projectid);
+
 foreach($coverage_group_names as $coverage_group_name)
   {
   $coverage_data[$coverage_group_name] = array();
-  $linechart_data[$coverage_group_name . "_coverage"] = array();
+  $linechart_data[$coverage_group_name] = array();
   $coverage_data[$coverage_group_name]["previous"] = 0;
   $coverage_data[$coverage_group_name]["current"] = 0;
+  $threshold = $coverage_thresholds[$coverage_group_name];
+  $coverage_data[$coverage_group_name]["low"] = 0.7 * $threshold;
+  $coverage_data[$coverage_group_name]["medium"] = $threshold;
+  $coverage_data[$coverage_group_name]["satisfactory"] = 100;
   }
-
-$coverage_data["core"]["low"] = 0.7 * $project_array["coveragethreshold"];
-$coverage_data["core"]["medium"] = $project_array["coveragethreshold"];
-$coverage_data["core"]["satisfactory"] = 100;
-$coverage_data["non_core"]["low"] = 0.7 * $project_array["coveragethreshold2"];
-$coverage_data["non_core"]["medium"] = $project_array["coveragethreshold2"];
-$coverage_data["non_core"]["satisfactory"] = 100;
 
 // gather up the relevant stats
 foreach($build_groups as $build_group)
@@ -232,10 +264,9 @@ foreach($build_groups as $build_group)
   // time through this (outer) foreach loop.
   foreach($coverage_group_names as $coverage_group_name)
     {
-    $key_name = $coverage_group_name . "_coverage";
-    if (array_key_exists($key_name, $data))
+    if (array_key_exists($coverage_group_name, $data))
       {
-      $coverage_data[$coverage_group_name]["current"] = $data[$key_name];
+      $coverage_data[$coverage_group_name]["current"] = $data[$coverage_group_name];
       }
     }
 
@@ -257,11 +288,11 @@ foreach($build_groups as $build_group)
     // coverage too
     foreach($coverage_group_names as $coverage_group_name)
       {
-      $key_name = $coverage_group_name . "_coverage";
-      if (array_key_exists($key_name, $data))
+      if (array_key_exists($coverage_group_name, $data))
         {
-        $coverage_value = $data[$key_name];
-        $linechart_data[$key_name][] = array('x' => $i, 'y' => $coverage_value);
+        $coverage_value = $data[$coverage_group_name];
+        $linechart_data[$coverage_group_name][] =
+          array('x' => $i, 'y' => $coverage_value);
         }
       }
     }
@@ -270,22 +301,25 @@ foreach($build_groups as $build_group)
 // compute previous coverage value
 foreach($coverage_group_names as $coverage_group_name)
   {
-  $key_name = $coverage_group_name . "_coverage";
-
   // isolate the previous coverage value.  This is typically the
   // second to last coverage data point that we collected, but
   // we're careful to check for the case where only a single point
   // was recovered.
-  $num_points = count($linechart_data[$key_name]);
+  $num_points = count($linechart_data[$coverage_group_name]);
   if ($num_points > 1)
     {
     $coverage_data[$coverage_group_name]["previous"] =
-      $linechart_data[$key_name][$num_points - 2]['y'];
+      $linechart_data[$coverage_group_name][$num_points - 2]['y'];
     }
   else
     {
-    $prev_point = end($linechart_data[$key_name]);
+    $prev_point = end($linechart_data[$coverage_group_name]);
     $coverage_data[$coverage_group_name]["previous"] = $prev_point['y'];
+    }
+  if (!isset($coverage_data[$coverage_group_name]["previous"]))
+    {
+    $coverage_data[$coverage_group_name]["previous"] =
+      $coverage_data[$coverage_group_name]["current"];
     }
   }
 
@@ -317,8 +351,8 @@ foreach($measurements as $measurement)
 foreach($coverage_group_names as $coverage_group_name)
   {
   $xml .= "<coverage>";
-  $xml .= add_XML_value("name", "$coverage_group_name");
-  $xml .= add_XML_value("nice_name", str_replace("_", " ", $coverage_group_name));
+  $xml .= add_XML_value("name", preg_replace("/[ -]/", "_", $coverage_group_name));
+  $xml .= add_XML_value("nice_name", "$coverage_group_name");
   $xml .= add_XML_value("low", $coverage_data[$coverage_group_name]["low"]);
   $xml .= add_XML_value("medium",
     $coverage_data[$coverage_group_name]["medium"]);
@@ -329,7 +363,7 @@ foreach($coverage_group_names as $coverage_group_name)
   $xml .= add_XML_value("previous",
     $coverage_data[$coverage_group_name]["previous"]);
   $xml .= add_XML_value("chart",
-    json_encode($linechart_data[$coverage_group_name . "_coverage"]));
+    json_encode($linechart_data[$coverage_group_name]));
   $xml .= "</coverage>";
   }
 

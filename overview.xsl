@@ -49,11 +49,11 @@
 
           <xsl:for-each select='/cdash/coverage'>
             var <xsl:value-of select="name"/> = <xsl:value-of select="chart"/>;
-            makeLineChart("<xsl:value-of select="nice_name"/> coverage",
-                            "#<xsl:value-of select="name"/>_coverage_chart svg",
+            makeLineChart("<xsl:value-of select="nice_name"/>",
+                            "#<xsl:value-of select="name"/>_chart svg",
                             <xsl:value-of select="name"/>);
-            makeBulletChart("<xsl:value-of select="nice_name"/> coverage",
-              "#<xsl:value-of select="name"/>_coverage_bullet svg",
+            makeBulletChart("<xsl:value-of select="nice_name"/>",
+              "#<xsl:value-of select="name"/>_bullet svg",
               <xsl:value-of select="low"/>,
               <xsl:value-of select="medium"/>,
               <xsl:value-of select="satisfactory"/>,
@@ -104,14 +104,14 @@
 
           <xsl:for-each select='/cdash/coverage'>
             <tr class="row" style="height:50px;">
-              <td class="col-md-1"><b><xsl:value-of select="nice_name"/> coverage</b></td>
+              <td class="col-md-1"><b><xsl:value-of select="nice_name"/></b></td>
               <td class="col-md-1">
                 <xsl:value-of select="current"/>%
               </td>
-              <td id="{name}_coverage_chart" class="col-md-1" style="height:50px;">
+              <td id="{name}_chart" class="col-md-1" style="height:50px;">
                 <svg></svg>
               </td>
-              <td id="{name}_coverage_bullet" class="col-md-4" colspan="4" style="height:50px; width:100%;">
+              <td id="{name}_bullet" class="col-md-4" colspan="4" style="height:50px;">
                 <svg></svg>
               </td>
             </tr>

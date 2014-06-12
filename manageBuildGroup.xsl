@@ -85,7 +85,7 @@
             $("#loading").attr("src", "images/loading.gif");
             $.ajax(
               {
-              url: "manageBuildGroup.php",
+              url: "manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/>",
               type: "POST",
               data: {saveLayout : newLayout},
               success: function(data)

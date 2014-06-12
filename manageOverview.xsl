@@ -66,7 +66,7 @@
               $("#loading").attr("src", "images/loading.gif");
               $.ajax(
                 {
-                url: "manageOverview.php",
+                url: "manageOverview.php?projectid=<xsl:value-of select="cdash/project/id"/>",
                 type: "POST",
                 data: {saveLayout : newLayout},
                 success: function(data)
