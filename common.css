@@ -605,6 +605,34 @@ a.grouptrigger:visited{
 }
 
 /* Skin */
+
+/* new jquery tabs */
+.ui-state-default {
+  background: none !important;
+  background-color: #4d75ca !important;
+}
+
+.ui-state-active, .ui-state-hover {
+  background: none !important;
+  background-color: #ffffff !important;
+}
+
+.ui-corner-top a {
+  color: #000000 !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+.ui-widget-header {
+  background: none !important;
+  background-color: #ececec !important;
+}
+
+/* old jquery tabs */
+
 .tabs-nav {
     list-style: none;
     margin: 0;
@@ -1227,4 +1255,8 @@ textarea {
   float: right;
   margin-right: 5px;
   margin-bottom: 5px;
+}
+
+.parent_row {
+ font-weight: bold;
 }

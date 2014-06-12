@@ -235,6 +235,22 @@ if($Submit)
     $BuildGroup->SummaryEmail = 2; // default to "No Email" for the Experimental group
     $Project->AddBuildGroup($BuildGroup);
 
+    // Set up overview page to initially contain just the "Nightly" group
+    $groups = $Project->GetBuildGroups();
+    foreach ($groups as $group)
+      {
+      if ($group['name'] == "Nightly")
+        {
+        $buildgroupid = $group['id'];
+        $query =
+          "INSERT INTO overviewbuildgroups (projectid, buildgroupid, position)
+           VALUES ('$projectid', '$buildgroupid', '1')";
+        pdo_query($query);
+        add_last_sql_error("CreateProject :: DefaultOverview", $projectid);
+        break;
+        }
+      }
+
     // Add administrator to the project
     $UserProject = new UserProject;
     $UserProject->Role = 2;

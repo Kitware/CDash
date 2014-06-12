@@ -154,16 +154,29 @@ class BuildGroup
       $build2grouprule_array = pdo_fetch_array($build2grouprule);
       return $build2grouprule_array["groupid"];
       }
-    else // we don't have any rules we use the type
+
+    // 2) Check for buildname-based groups
+    $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
+                                 WHERE b2g.buildtype='$type' AND b2g.siteid='-1' AND '$name' LIKE b2g.buildname
+                                 AND (b2g.groupid=bg.id AND bg.projectid='$projectid')
+                                 AND '$starttime'>b2g.starttime
+                                 AND ('$starttime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
+
+    if(pdo_num_rows($build2grouprule)>0)
       {
-      $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
-      if(pdo_num_rows($buildgroup)==0) // if the group does not exist we assign it to experimental
-        {
-        $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='Experimental' AND projectid='$projectid'");
-        }
-      $buildgroup_array = pdo_fetch_array($buildgroup);
-      return $buildgroup_array["id"];
+      $build2grouprule_array = pdo_fetch_array($build2grouprule);
+      return $build2grouprule_array["groupid"];
       }
+
+    // If we reach this far, none of the rules matched.
+    // Just use the default group for the build type.
+    $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
+    if(pdo_num_rows($buildgroup)==0) // if the group does not exist we assign it to experimental
+      {
+      $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='Experimental' AND projectid='$projectid'");
+      }
+    $buildgroup_array = pdo_fetch_array($buildgroup);
+    return $buildgroup_array["id"];
     }
 
   // Return the value of summaryemail

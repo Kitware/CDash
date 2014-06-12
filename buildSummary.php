@@ -365,6 +365,15 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
 
   $xml .= "</test>";
 
+  // Coverage
+  $coverage_array = pdo_fetch_array(pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'"));
+  if ($coverage_array)
+    {
+    $coverage_percent = round($coverage_array["loctested"] /
+      ($coverage_array["loctested"]+$coverage_array["locuntested"]) * 100, 2);
+    $xml .= add_XML_value("coverage", $coverage_percent);
+    }
+
   // Previous build
   // Find the previous build
   if($lastsubmitbuild > 0)

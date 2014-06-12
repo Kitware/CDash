@@ -111,72 +111,38 @@ while($project_array = pdo_fetch_array($projects))
    $xml .= "</availableproject>";
    }
 
-// If we should change the position
-@$up= $_GET["up"];
-if($up)
-{
-  $Groupid = pdo_real_escape_numeric($_GET["groupid"]);
-  // Checks
-  if(!isset($Groupid) || !is_numeric($Groupid))
+// check if we are changing the order of the build groups
+if (isset($_POST['saveLayout']))
+  {
+  $inputRows = json_decode($_POST['saveLayout'], true);
+
+  if (count($inputRows) > 0)
     {
-    echo "Not a valid Groupid!";
-    return;
+    // remove old build group layout for this project
+    pdo_query(
+      "DELETE bgp FROM buildgroupposition AS bgp
+       LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
+       WHERE bg.projectid = '$projectid'");
+    add_last_sql_error("manageBuildGroup::saveLayout::DELETE", $projectid);
+
+    // construct query to insert the new layout
+    $query = "INSERT INTO buildgroupposition (buildgroupid, position) VALUES ";
+    foreach ($inputRows as $inputRow)
+      {
+      $query .= "(" .
+        qnum(pdo_real_escape_numeric($inputRow["buildgroupid"])) . ", " .
+        qnum(pdo_real_escape_numeric($inputRow["position"])) . "), ";
+      }
+
+    // remove the trailing comma and space, then insert our new values
+    $query = rtrim($query, ", ");
+    pdo_query($query);
+    add_last_sql_error("manageOverview::saveLayout::INSERT", $projectid);
     }
 
-  $groupposition_array = pdo_fetch_array(pdo_query("SELECT position FROM buildgroupposition WHERE buildgroupid='$Groupid' AND endtime='1980-01-01 00:00:00'"));
-  $position = $groupposition_array["position"];
-
-  if($position > 1)
-    {
-    // Compute the new position
-    $newpos = $position - 1;
-
-    // Update the group occupying the position
-    $occupyinggroup_array = pdo_fetch_array(pdo_query("SELECT g.id FROM buildgroup AS g, buildgroupposition as bg
-                                                           WHERE g.id=bg.buildgroupid AND bg.position='$newpos' AND g.projectid='$projectid'
-                              AND bg.endtime='1980-01-01 00:00:00'
-                              "));
-    $occupyinggroupid = $occupyinggroup_array["id"];
-    pdo_query("UPDATE buildgroupposition SET position='$position' WHERE buildgroupid='$occupyinggroupid' AND endtime='1980-01-01 00:00:00'");
-
-    // Update the group
-    pdo_query("UPDATE buildgroupposition SET position='$newpos' WHERE buildgroupid='$Groupid' AND endtime='1980-01-01 00:00:00'");
-
-    }
-}
-
-// If we should change the position
-@$down= $_GET["down"];
-if($down)
-{
-  $Groupid = pdo_real_escape_numeric($_GET["groupid"]);
-  // Checks
-  if(!isset($Groupid) || !is_numeric($Groupid))
-    {
-    echo "Not a valid Groupid!";
-    return;
-    }
-
-  $groupposition_array = pdo_fetch_array(pdo_query("SELECT position FROM buildgroupposition WHERE buildgroupid='$Groupid' AND endtime='1980-01-01 00:00:00'"));
-  $position = $groupposition_array["position"];
-
-  if($position < pdo_num_rows(pdo_query("SELECT id FROM buildgroup WHERE projectid='$projectid' AND endtime='1980-01-01 00:00:00'")))
-    {
-    // Compute the new position
-    $newpos = $position + 1;
-    // Update the group occupying the position
-    $occupyinggroup_array = pdo_fetch_array(pdo_query("SELECT g.id FROM buildgroup AS g, buildgroupposition as bg
-                                                           WHERE g.id=bg.buildgroupid AND bg.position='$newpos' AND g.projectid='$projectid'
-                              AND bg.endtime='1980-01-01 00:00:00'
-                              "));
-    $occupyinggroupid = $occupyinggroup_array["id"];
-    pdo_query("UPDATE buildgroupposition SET position='$position' WHERE buildgroupid='$occupyinggroupid' AND endtime='1980-01-01 00:00:00'");
-
-    // Update the group
-    pdo_query("UPDATE buildgroupposition SET position='$newpos' WHERE buildgroupid='$Groupid' AND endtime='1980-01-01 00:00:00'");
-
-    }
-}
+  // since this is called by AJAX, we don't need to render the page below.
+  exit(0);
+  }
 
 // If we should update the description
 @$submitDescription = $_POST["submitDescription"];
@@ -370,6 +336,39 @@ if(isset($_POST["groupid"]))
     }
 }
 
+// define a group by build name
+@$DefineByBuildName = $_POST["defineByBuildName"];
+if($DefineByBuildName)
+  {
+  $Groupid = pdo_real_escape_numeric($_POST["groupBuildNameSelection"]);
+  if ($Groupid > 0)
+    {
+    $BuildNameMatch = "%" . htmlspecialchars(pdo_real_escape_string($_POST["buildNameMatch"])) . "%";
+    $BuildType = htmlspecialchars(pdo_real_escape_string($_POST["buildType"]));
+    $sql = "INSERT INTO build2grouprule (groupid, buildtype, buildname, siteid)
+            VALUES ('$Groupid', '$BuildType', '$BuildNameMatch', '-1')";
+    if(!pdo_query("$sql"))
+      {
+      echo pdo_error();
+      }
+    }
+  } // end define by build name
+
+// delete the rules for a build group
+@$DeleteBuildGroupRules = $_POST["deleteBuildGroupRules"];
+if($DeleteBuildGroupRules)
+  {
+  $Groupid = pdo_real_escape_numeric($_POST["deleteRulesForGroup"]);
+  if ($Groupid > 0)
+    {
+    $sql = "DELETE FROM build2grouprule WHERE groupid = '$Groupid'";
+    if(!pdo_query("$sql"))
+      {
+      echo pdo_error();
+      }
+    }
+  } // end delete build group rules
+
 /** We start generating the XML here */
 
 // Find the recent builds for this project
@@ -459,20 +458,9 @@ if($projectid>0)
                          WHERE g.id=gp.buildgroupid AND g.projectid='$projectid'
                          AND g.endtime='1980-01-01 00:00:00' AND gp.endtime='1980-01-01 00:00:00'
                          ORDER BY gp.position ASC");
-  $color = 0;
   while($group_array = pdo_fetch_array($groups))
     {
     $xml .= "<group>";
-    if($color == 0)
-      {
-      $xml .= add_XML_value("bgcolor","#FFFFFF");
-      $color = 1;
-      }
-    else
-      {
-      $xml .= add_XML_value("bgcolor","#DDDDDD");
-      $color = 0;
-      }
     if($show == $group_array['id'])
       {
       $xml .= add_XML_value("selected","1");

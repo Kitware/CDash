@@ -709,6 +709,8 @@ function generate_main_dashboard_XML($project_instance, $date)
                   b.testfailed AS counttestsfailed,
                   b.testpassed AS counttestspassed,
                   b.testtimestatusfailed AS countteststimestatusfailed,
+                  sp.id AS subprojectid,
+                  sp.core AS subprojectcore,
                   g.name as groupname,gp.position,g.id as groupid,
                   (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
@@ -726,6 +728,8 @@ function generate_main_dashboard_XML($project_instance, $date)
                   LEFT JOIN testdiff AS tfailed_diff ON (tfailed_diff.buildid=b.id AND tfailed_diff.type=1)
                   LEFT JOIN testdiff AS tpassed_diff ON (tpassed_diff.buildid=b.id AND tpassed_diff.type=2)
                   LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
+                  LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
+                  LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
                   WHERE s.id=b.siteid AND ".$date_clause."
                    b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id
                    AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
@@ -767,6 +771,24 @@ function generate_main_dashboard_XML($project_instance, $date)
     $collapse = $_REQUEST['collapse'];
     }
 
+  // Check if we need to summarize core & non-core subproject covearge
+  // This happens when (1) we have subprojects, (2) we're not collapsing rows,
+  // and (3) some subprojects are categorized as core, and others are categorized
+  // as non-core.
+  $summarizeCoreCoverage = false;
+  if ($collapse == false && $project_instance->GetNumberOfSubProjects($end_UTCDate) > 0)
+    {
+    $core_array = pdo_fetch_array(pdo_query(
+      "SELECT COUNT(IF(core=1, core, NULL)) AS core, COUNT(IF(core=0, core, NULL)) AS noncore FROM subproject"));
+    if ($core_array && $core_array["core"] > 0 && $core_array["noncore"] > 0)
+      {
+      $summarizeCoreCoverage = true;
+      }
+    }
+  $nonCoreTested = 0;
+  $nonCoreUntested = 0;
+  $coreTested = 0;
+  $coreUntested = 0;
 
   // Fetch all the rows of builds into a php array.
   // Compute additional fields for each row that we'll need to generate the xml.
@@ -1414,6 +1436,7 @@ function generate_main_dashboard_XML($project_instance, $date)
 
     // Coverage
     //
+
     $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = pdo_fetch_array($coverages))
       {
@@ -1424,8 +1447,23 @@ function generate_main_dashboard_XML($project_instance, $date)
 
       @$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
 
+      $coverageThreshold = $project_array["coveragethreshold"];
+      if ($build_array["subprojectcore"] == 0)
+        {
+        $coverageThreshold = $project_array["coveragethreshold2"];
+        $nonCoreTested += $coverage_array["loctested"];
+        $nonCoreUntested += $coverage_array["locuntested"];
+        $xml .= "  <core>0</core>";
+        }
+      else if ($build_array["subprojectcore"] == 1)
+        {
+        $coreTested += $coverage_array["loctested"];
+        $coreUntested += $coverage_array["locuntested"];
+        $xml .= "  <core>1</core>";
+        }
+
       $xml .= "  <percentage>".$percent."</percentage>";
-      $xml .= "  <percentagegreen>".$project_array["coveragethreshold"]."</percentagegreen>";
+      $xml .= "  <percentagegreen>".$coverageThreshold."</percentagegreen>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
 
@@ -1557,6 +1595,21 @@ function generate_main_dashboard_XML($project_instance, $date)
     $xml .= "</buildgroup>";
     }
 
+  // generate core & non-core coverage .xml here
+  if ( ($nonCoreTested != 0 || $nonCoreUntested != 0) &&
+       ($coreTested != 0 || $coreUntested != 0) )
+    {
+    $coreCoverage = round($coreTested / ($coreTested + $coreUntested) *100, 2);
+    $nonCoreCoverage = round($nonCoreTested / ($nonCoreTested + $nonCoreUntested) *100, 2);
+    $xml .= add_XML_value("coreCoverage",$coreCoverage);
+    $xml .= add_XML_value("coreTested",$coreTested);
+    $xml .= add_XML_value("coreUntested",$coreUntested);
+    $xml .= add_XML_value("coreThreshold",$project_array["coveragethreshold"]);
+    $xml .= add_XML_value("nonCoreCoverage",$nonCoreCoverage);
+    $xml .= add_XML_value("nonCoreTested",$nonCoreTested);
+    $xml .= add_XML_value("nonCoreUntested",$nonCoreUntested);
+    $xml .= add_XML_value("nonCoreThreshold",$project_array["coveragethreshold2"]);
+    }
 
   // Fill in the rest of the info
   $prevpos = $previousgroupposition+1;

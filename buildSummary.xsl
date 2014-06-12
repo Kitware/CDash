@@ -495,6 +495,16 @@ Test (<xsl:value-of select="cdash/test/npassed"/>  passed, <xsl:value-of select=
 <br/>
 <br/>
 
+<xsl:if test="cdash/coverage">
+<!-- Coverage -->
+<div class="title-divider" id="Stage4">
+  Coverage (<xsl:value-of select="cdash/coverage"/>%)
+</div>
+<a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>View Coverage Summary</a>
+<br/>
+<br/>
+</xsl:if>
+
 <!-- FOOTER -->
 <br/>
 <xsl:choose>

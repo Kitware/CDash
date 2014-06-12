@@ -61,7 +61,13 @@ if(!isset($userid))
   $userid = 0;
   }
 
-$build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid,siteid,type,name FROM build WHERE id='$buildid'"));
+$query = "SELECT b.starttime, b.projectid, b.siteid, b.type, b.name, sp.core
+          FROM build AS b
+          LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
+          LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
+          WHERE b.id='$buildid'";
+
+$build_array = pdo_fetch_array(pdo_query($query));
 $projectid = $build_array["projectid"];
 
 if(!isset($projectid) || $projectid==0 || !is_numeric($projectid))
@@ -72,7 +78,9 @@ if(!isset($projectid) || $projectid==0 || !is_numeric($projectid))
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-$project = pdo_query("SELECT name,coveragethreshold,nightlytime,showcoveragecode,displaylabels    FROM project WHERE id='$projectid'");
+$query = "SELECT name, coveragethreshold, coveragethreshold2, nightlytime,
+          showcoveragecode, displaylabels FROM project WHERE id='$projectid'";
+$project = pdo_query($query);
 if(pdo_num_rows($project) == 0)
   {
   echo "This project doesn't exist.";
@@ -125,6 +133,11 @@ $siteid = $build_array["siteid"];
 $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
 $starttime = $build_array["starttime"];
+$threshold = $project_array["coveragethreshold"];
+if ($build_array["core"] == 0)
+  {
+  $threshold = $project_array["coveragethreshold2"];
+  }
 
 $xml .= "<menu>";
 $xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]));
@@ -168,12 +181,12 @@ if($filtercount>0)
 
   $xml .= add_XML_value("loc",$coverage_array["loctested"]+$coverage_array["locuntested"]);
   $xml .= add_XML_value("percentcoverage",$percentcoverage);
-  $xml .= add_XML_value("percentagegreen",$project_array["coveragethreshold"]);
+  $xml .= add_XML_value("percentagegreen",$threshold);
   // Above this number of the coverage is green
-  $metricpass = $project_array["coveragethreshold"]/100;
+  $metricpass = $threshold/100;
   $xml .= add_XML_value("metricpass",$metricpass);
   // Below this number of the coverage is red
-  $metricerror = 0.7*($project_array["coveragethreshold"]/100);
+  $metricerror = 0.7*($threshold/100);
   $xml .= add_XML_value("metricerror",$metricerror);
 
 

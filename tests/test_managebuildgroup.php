@@ -20,56 +20,6 @@ class ManageBuildGroupTestCase extends KWWebTestCase
       }
     $this->get($this->url."/manageBuildGroup.php?projectid=$this->projectid");
 
-    //test down
-    $content = $this->get($this->url."/manageBuildGroup.php?projectid=$this->projectid&groupid=4&down=1");
-    //make sure nightly comes after continuous
-    $foundContinuous = false;
-    $lines = explode("\n", $content);
-    foreach($lines as $line)
-      {
-      if(strpos($line, "Continuous") !== false)
-        {
-        $foundContinuous = true;
-        }
-      if(strpos($line, "Nightly") !== false)
-        {
-        if(!$foundContinuous)
-          {
-          $this->fail("Nightly should be below continuous");
-          return 1;
-          }
-        else
-          {
-          break;
-          }
-        }
-      }
-
-    //test up
-    $content = $this->get($this->url."/manageBuildGroup.php?projectid=$this->projectid&groupid=4&up=1");
-    //make sure nightly comes before continuous
-    $foundContinuous = false;
-    $lines = explode("\n", $content);
-    foreach($lines as $line)
-      {
-      if(strpos($line, "Continuous") !== false)
-        {
-        $foundContinuous = true;
-        }
-      if(strpos($line, "Nightly") !== false)
-        {
-        if($foundContinuous)
-          {
-          $this->fail("Nightly should be above continuous");
-          return 1;
-          }
-        else
-          {
-          break;
-          }
-        }
-      }
-
     //test update description
     $this->setFieldByName("description", "Test builds");
     $content = $this->clickSubmitByName("submitDescription");

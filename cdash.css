@@ -10,3 +10,7 @@
 .Passed { background-color : #8aba5a; }
 .Failed { background-color : #fdba76; }
 .Not Run { background-color : #ff6666; }
+
+.nv-rangeMin {fill: #de6868 !important; }
+.nv-rangeAvg {fill: #fdb66d !important; }
+.nv-rangeMax {fill: #8aba5a !important; }

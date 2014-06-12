@@ -1298,4 +1298,14 @@ CREATE TABLE "feed" (
 CREATE INDEX "feed_projectid" on "feed" ("projectid");
 CREATE INDEX "feed_date" on "feed" ("date");
 
+--
+-- Table: overviewbuildgroups
+--
+CREATE TABLE "overviewbuildgroups" (
+  "projectid" bigint NOT NULL,
+  "buildgroupid" bigint NOT NULL,
+  "position" bigint NOT NULL
+);
+CREATE INDEX "overviewbuildgroups_projectid" on "overviewbuildgroups" ("projectid");
+CREATE INDEX "overviewbuildgroups_buildgroupid" on "overviewbuildgroups" ("buildgroupid");
 
