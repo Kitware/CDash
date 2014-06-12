@@ -30,6 +30,7 @@
         <script src="javascript/jquery-1.10.2.js"/>
         <script src="javascript/jquery-ui-1.10.4.min.js"/>
         <script src="javascript/cdashSortable.js"></script>
+        <script src="javascript/cdashTableCollapse.js"></script> <!-- for restripe() -->
         <script>
         // copied from old tabs.js.  Needs a new home (not here)...
         function showHelpTop(id_div)
@@ -39,27 +40,12 @@
 
         $(function() {
 
-          // function to alternate the color of the rows in our group table
-          function restripe()
-            {
-            $( "#sortable tr" ).each(function () {
-              $(this).removeClass("trodd");
-              $(this).removeClass("treven");
-            });
-            $( "#sortable tr:odd" ).each(function () {
-              $(this).addClass("trodd");
-            });
-            $( "#sortable tr:even" ).each(function () {
-              $(this).addClass("treven");
-            });
-            }
-
           // setup sortable table rows
           $( "#sortable" ).sortable(
             {
             stop: function(event, ui)
               {
-              restripe();
+              restripe("#sortable");
               }
             }
           );
@@ -100,7 +86,7 @@
               });
             });
 
-          restripe();
+          restripe("#sortable");
           $( "#wizard" ).tabs();
 
         });

@@ -27,7 +27,9 @@
         <xsl:value-of select="cdash/coreUntested"/>
       </td>
       <td align="center"></td>
-      <td class="nob" align="left"><b>All core packages</b></td>
+      <td class="nob" align="left"><b>All core packages</b>
+        <div class="glyphicon glyphicon-folder-open"/>
+      </td>
     </tr>
 
   <xsl:for-each select="cdash/buildgroup/coverage[core='1']">
@@ -55,7 +57,9 @@
         <xsl:value-of select="cdash/nonCoreUntested"/>
       </td>
       <td align="center"></td>
-      <td class="nob" align="left"><b>All non-core packages</b></td>
+      <td class="nob" align="left"><b>All non-core packages</b>
+        <div class="glyphicon glyphicon-folder-open"/>
+      </td>
     </tr>
 
   <xsl:for-each select="cdash/buildgroup/coverage[core='0']">

@@ -282,7 +282,7 @@ foreach($build_groups as $build_group)
     foreach($measurements as $measurement)
       {
       $linechart_data[$measurement][$build_group["name"]][] =
-        array('x' => $i, 'y' => $data[$measurement]);
+        array('x' => $chart_end_timestamp * 1000, 'y' => $data[$measurement]);
       }
 
     // coverage too
@@ -292,7 +292,7 @@ foreach($build_groups as $build_group)
         {
         $coverage_value = $data[$coverage_group_name];
         $linechart_data[$coverage_group_name][] =
-          array('x' => $i, 'y' => $coverage_value);
+          array('x' => $chart_end_timestamp * 1000, 'y' => $coverage_value);
         }
       }
     }

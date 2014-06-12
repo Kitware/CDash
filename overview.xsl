@@ -43,7 +43,8 @@
                 <xsl:value-of select="chart"/>;
               makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="$measurement_nice_name"/>",
                             "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/>_chart svg",
-                            <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/>);
+                            <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/>,
+                            true);
             </xsl:for-each>
           </xsl:for-each>
 
@@ -51,7 +52,8 @@
             var <xsl:value-of select="name"/> = <xsl:value-of select="chart"/>;
             makeLineChart("<xsl:value-of select="nice_name"/>",
                             "#<xsl:value-of select="name"/>_chart svg",
-                            <xsl:value-of select="name"/>);
+                            <xsl:value-of select="name"/>,
+                            true);
             makeBulletChart("<xsl:value-of select="nice_name"/>",
               "#<xsl:value-of select="name"/>_bullet svg",
               <xsl:value-of select="low"/>,

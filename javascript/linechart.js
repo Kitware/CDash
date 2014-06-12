@@ -1,4 +1,4 @@
-function makeLineChart(chartName, elementName, inputData) {
+function makeLineChart(chartName, elementName, inputData, date) {
   var chart;
 
   nv.addGraph(function() {
@@ -9,6 +9,13 @@ function makeLineChart(chartName, elementName, inputData) {
       showYAxis: false,
       margin: {top: 2, right: 2, bottom: 2, left: 2},
     });
+
+    if (date) {
+      chart.xAxis.tickFormat(function(d) {
+        return d3.time.format('%a, %d %b %Y')(new Date(d))
+      });
+      chart.xScale(d3.time.scale()); //fixes misalignment of timescale with line graph
+    }
 
     var chart_data = [{
       values: inputData,

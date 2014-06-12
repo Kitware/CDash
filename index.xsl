@@ -796,6 +796,7 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
+        <link rel="stylesheet" href="css/bootstrap.min.css"/>
 
          <!-- Include JavaScript -->
          <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
@@ -1135,7 +1136,7 @@
       </xsl:if>
    </tr>
 </thead>
-<tbody>
+<tbody id="coveragebody">
 
   <xsl:choose>
     <xsl:when test="cdash/coreCoverage">

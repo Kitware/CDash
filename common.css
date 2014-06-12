@@ -192,6 +192,9 @@ height: expression(this.height > 110 ? 110: true);
 .tabb tbody tr.odd {
   background-color: #ececec;
 }
+.tabb tbody tr.even {
+  background-color: #ffffff;
+}
 .tabb thead tr .header {
   background-repeat: no-repeat;
   background-position: bottom center;
@@ -208,11 +211,11 @@ background-color: #adcae6
 ;
 }
 
- .treven {
+ .treven, tr.even {
  background-color : #ececec;
  margin: 0px;
 }
- .trodd {
+ .trodd, tr.odd {
  background-color : #ffffff;
  margin: 0px;
  border: 0px;
