@@ -23,7 +23,7 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("//tr[5]/td[2]/a[6]/img");
     $this->waitForPageToLoad("30000");
-    $this->click("//div[@id='wizard']/ul/li[3]/a/span");
+    $this->click("//a[@id='ui-id-3']");
     $this->addSelection("movebuilds", "label=CDashTestingSite CDash-CTest-sameImage [Experimental] Experimental");
     $this->click("expectedMove");
     $this->select("groupSelection", "label=Experimental");
@@ -38,7 +38,7 @@ class Example extends CDashSeleniumTestCase
     // code in a smoke-test fashion.
     //
     $folder_button =
-      "//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[3]/img";
+      "//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/div[3]/a[2]/img";
     $this->sleepWaitingForElement($folder_button);
     $this->click($folder_button);
     $this->sleepWaitingForElement("link=[mark as expected]");
@@ -53,7 +53,7 @@ class Example extends CDashSeleniumTestCase
     // Remove the 2nd build listed: "tr[2]"...
     //
     $folder_button =
-      "//table[@id='project_5_15']/tbody[1]/tr[2]/td[2]/a[3]/img";
+      "//table[@id='project_5_15']/tbody[1]/tr[2]/td[2]/div[3]/a[2]/img";
     $this->sleepWaitingForElement($folder_button);
     $this->click($folder_button);
     $this->sleepWaitingForElement("link=[remove this build]");

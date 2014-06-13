@@ -25,7 +25,7 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
 
     $folder_button =
-      "//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/a[3]/img";
+      "//table[@id='project_5_15']/tbody/tr/td[2]/div[3]/a[2]/img";
 
     $this->sleepWaitingForElement($folder_button);
     $this->click($folder_button);
