@@ -152,13 +152,12 @@ while($build_array = pdo_fetch_array($builds))
     $xml .= "<warning>";
     }
   $xml .= "<line>".$build_array["sourceline"]."</line>";
-  $text = htmlentities($build_array["text"]);
-  $textarray = explode("\n",$text);
+  $textarray = explode("\n",$build_array["text"]);
   foreach($textarray as $text)
     {
     if(strlen($text)>0)
       {
-      $xml .= "<text>".$text."</text>";
+      $xml .= add_XML_value("text",$text);
       }
     }
   $xml .= "<sitename>".$build_array["name"]."</sitename>";  
