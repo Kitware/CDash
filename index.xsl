@@ -83,12 +83,8 @@
       <td align="center" colspan="2" width="10%" class="timeheader botl">Configure</td>
       <td align="center" colspan="2" width="10%" class="timeheader botl">Build</td>
       <td align="center" colspan="3" width="15%" class="timeheader botl">Test</td>
-      <th align="center" width="20%">
-      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
-      <xsl:if test="/cdash/dashboard/displaylabels=0">
-        <xsl:attribute name="class">nob</xsl:attribute>
-      </xsl:if>
-      Build Time</th>
+      <td align="center" width="20%" class="timeheader botl"></td>
+
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <th align="center" rowspan="2" width="5%" class="nob">
         <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_15</xsl:attribute>
@@ -130,9 +126,16 @@
       <th align="center" width="5%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_12</xsl:attribute>
       Pass</th>
+
       <th align="center" width="5%" class="advancedviewitem">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_13</xsl:attribute>
       Time</th>
+      <th align="center" width="20%">
+      <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
+      <xsl:if test="/cdash/dashboard/displaylabels=0">
+        <xsl:attribute name="class">nob</xsl:attribute>
+      </xsl:if>
+      Build Time</th>
    </tr>
    </thead>
 
@@ -288,7 +291,7 @@
       </td>
 
       <td align="right" class="advancedviewitem">
-        <span class="sorttime" style="display:none"><xsl:value-of select="update/timefull"/></span>
+        <span class="sorttime" style="display:none">sorttime=<xsl:value-of select="update/timefull"/>#</span>
         <xsl:value-of select="update/time"/>
         <xsl:if test="string-length(update/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
@@ -345,7 +348,7 @@
 
 
       <td align="center" class="advancedviewitem">
-      <span class="sorttime" style="display:none"><xsl:value-of select="configure/timefull"/></span>
+      <span class="sorttime" style="display:none">sorttime=<xsl:value-of select="configure/timefull"/>#</span>
       <xsl:value-of select="configure/time"/>
       <xsl:if test="string-length(configure/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
@@ -436,7 +439,7 @@
       </td>
 
       <td align="center" class="advancedviewitem">
-      <span class="sorttime" style="display:none"><xsl:value-of select="compilation/timefull"/></span>
+      <span class="sorttime" style="display:none">sorttime=<xsl:value-of select="compilation/timefull"/>#</span>
       <xsl:value-of select="compilation/time"/>
       <xsl:if test="string-length(compilation/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
       </td>
@@ -563,7 +566,7 @@
         </xsl:choose>
       </xsl:attribute>
       <xsl:if test="string-length(test/timestatus)=0">
-         <span class="sorttime" style="display:none"><xsl:value-of select="test/timefull"/></span>
+         <span class="sorttime" style="display:none">sorttime=<xsl:value-of select="test/timefull"/>#</span>
        </xsl:if>
       <div>
        <xsl:if test="test/ntimediffp > 0 or test/ntimediffn > 0">
@@ -617,7 +620,7 @@
           </span>
         </xsl:when>
         <xsl:otherwise>
-        <span class="sorttime" style="display:none"><xsl:value-of select="builddatefull"/></span>
+        <span class="sorttime" style="display:none">sorttime=<xsl:value-of select="builddatefull"/>#</span>
         <span class="builddateelapsed">
            <xsl:attribute name="alt"><xsl:value-of select="builddate"/>
            <xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>Update time: <xsl:value-of select="update/time"/>
@@ -1252,7 +1255,7 @@
         <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
 
-      <span class="sorttime" style="display:none"><xsl:value-of select="datefull"/></span>
+      <span class="sorttime" style="display:none">sorttime=<xsl:value-of select="datefull"/>#</span>
       <span class="builddateelapsed">
          <xsl:attribute name="alt"><xsl:value-of select="date"/></xsl:attribute>
          <xsl:value-of select="dateelapsed"/>

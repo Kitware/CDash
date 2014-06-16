@@ -15,6 +15,9 @@ class Example extends CDashSeleniumTestCase
   public function testSortTestTiming()
   {
     $this->open($this->webPath."/index.php?project=InsightExample&date=2010-07-07");
+    $this->click("id=feed");
+    $this->click("css=#settings > img");
+    $this->click("link=Advanced View");
     $this->click("sort13sort_13");
     $this->click("sort13sort_13");
     try {

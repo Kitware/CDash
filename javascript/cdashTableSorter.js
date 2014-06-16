@@ -221,14 +221,12 @@ $(document).ready(function() {
             return false;
         },
         format: function(s) {
-            // format your data for normalization
-            var i = s.indexOf("<span");
-            if(i == -1) return s;
-
-            var j = s.indexOf(">",i);
-            var k = s.indexOf("</span>",j);
-            var t = s.substr(j+1,k-j-1);
-            return t.toLowerCase();
+            // extract the numerical time value from our custom format
+            var t = s.match(/sorttime=([0-9.]+)#/);
+            if (t == null) {
+              return s;
+            }
+            return t[1];
         },
         // set type, either numeric or text
         type: 'numeric'
