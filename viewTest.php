@@ -278,7 +278,7 @@ $getalltestlistsql="SELECT test.id
   FROM test
   JOIN build2test ON (build2test.testid = test.id)
   JOIN build ON (build.id = build2test.buildid)
-  WHERE build.id='$buildid'
+  WHERE build.id='$buildid' $onlydelta_extra
   $extras
   ORDER BY test.id
 ";
