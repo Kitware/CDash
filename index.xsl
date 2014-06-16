@@ -83,7 +83,7 @@
       <td align="center" colspan="2" width="10%" class="timeheader botl">Configure</td>
       <td align="center" colspan="2" width="10%" class="timeheader botl">Build</td>
       <td align="center" colspan="3" width="15%" class="timeheader botl">Test</td>
-      <th align="center" rowspan="2" width="20%">
+      <th align="center" width="20%">
       <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_14</xsl:attribute>
       <xsl:if test="/cdash/dashboard/displaylabels=0">
         <xsl:attribute name="class">nob</xsl:attribute>
