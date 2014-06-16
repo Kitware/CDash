@@ -46,6 +46,12 @@
   <xsl:call-template name="filterdata" select="."/>
   <br/>
 </xsl:if>
+<div id="labelshowfilters">
+  <a id="label_showfilters" href="javascript:filters_toggle();">
+  <xsl:if test="cdash/filterdata/showfilters = 0">Show Filters</xsl:if>
+  <xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
+  </a>
+</div>
 
 <!-- Hide a div for javascript to know if time status is on -->
 <xsl:if test="/cdash/project/showtesttime=1">
