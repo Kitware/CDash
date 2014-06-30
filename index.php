@@ -641,8 +641,7 @@ function generate_main_dashboard_XML($project_instance, $date)
   $subprojecttablesql = "";
   if($subproject_name && is_numeric($subprojectid))
     {
-    $subprojecttablesql = ",subproject2build AS sp2b";
-    $subprojectsql = " AND sp2b.buildid=b.id AND sp2b.subprojectid=".$subprojectid;
+    $subprojectsql = " AND sp2b.subprojectid=".$subprojectid;
     }
 
 
@@ -714,7 +713,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   g.name as groupname,gp.position,g.id as groupid,
                   (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
-                  FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp ".$subprojecttablesql.",
+                  FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp,
                   build AS b
                   LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
                   LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
