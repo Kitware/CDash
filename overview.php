@@ -154,14 +154,12 @@ function gather_overview_data($start_date, $end_date, $group_id)
       }
     if ($non_core_tested + $non_core_untested > 0)
       {
-      file_put_contents("/tmp/zackdebug.txt", "Found a non-core value\n", FILE_APPEND);
       $return_values["non-core coverage"] =
         round($non_core_tested / ($non_core_tested + $non_core_untested) * 100, 2);
       }
     }
   else
     {
-    file_put_contents("/tmp/zackdebug.txt", "We don't have non-core\n", FILE_APPEND);
     if ($core_tested + $core_untested > 0)
       {
       $return_values["coverage"] =

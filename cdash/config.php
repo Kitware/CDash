@@ -149,6 +149,10 @@ $CDASH_MAX_UPLOAD_QUOTA = '10';
 // Maximum size of large text fields, in php-strlen units, 0 for unlimited
 $CDASH_LARGE_TEXT_LIMIT = '0';
 
+// for Google oauth2 support
+$GOOGLE_CLIENT_ID = '';
+$GOOGLE_CLIENT_SECRET = '';
+
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';
 if ((strpos(__FILE__,'config.local.php') === FALSE) && file_exists($localConfig) )

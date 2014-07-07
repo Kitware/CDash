@@ -263,6 +263,7 @@ function ldapAuthenticate($email,$password,$SessionCachePolicy,$rememberme)
   return false;
 }
 
+
 /** authentication */
 function authenticate($email,$password,$SessionCachePolicy,$rememberme)
 {
@@ -300,6 +301,9 @@ function auth($SessionCachePolicy='private_no_expire')
   include "cdash/config.php";
   $loginid= 1231564132;
 
+
+
+
   if(isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH
      && isset($_SERVER['REMOTE_USER']))
     {
@@ -316,16 +320,19 @@ function auth($SessionCachePolicy='private_no_expire')
     session_destroy();
 
     // Remove the cookie if we have one
-    $cookiename = str_replace('.','_',"CDash-".$_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
-    if(isset($_COOKIE[$cookiename]))
+    $cookienames = array("CDash", str_replace('.','_',"CDash-".$_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
+    foreach ($cookiesnames as $cookiename)
       {
-      $cookievalue = $_COOKIE[$cookiename];
-      $cookieuseridkey = substr($cookievalue,0,strlen($cookievalue)-33);
-      $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-      pdo_select_db("$CDASH_DB_NAME",$db);
+      if(isset($_COOKIE[$cookiename]))
+        {
+        $cookievalue = $_COOKIE[$cookiename];
+        $cookieuseridkey = substr($cookievalue,0,strlen($cookievalue)-33);
+        $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+        pdo_select_db("$CDASH_DB_NAME",$db);
 
-      pdo_query("UPDATE ".qid("user")." SET cookiekey='' WHERE id=".qnum($cookieuseridkey));
-      setcookie ("CDash-".$_SERVER['SERVER_NAME'], "", time() - 3600);
+        pdo_query("UPDATE ".qid("user")." SET cookiekey='' WHERE id=".qnum($cookieuseridkey));
+        setcookie ("CDash-".$_SERVER['SERVER_NAME'], "", time() - 3600);
+        }
       }
     echo "<script language=\"javascript\">window.location='index.php'</script>";
     return 0;
@@ -442,6 +449,15 @@ function LoginForm($loginerror)
     {
     $xml .= "<allowlogincookie>1</allowlogincookie>";
     }
+
+
+  if($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '')
+    {
+    $xml .= "<oauth2>";
+    $xml .= add_XML_value("client", $GOOGLE_CLIENT_ID);
+    $xml .= "</oauth2>";
+    }
+
   $xml .= "</cdash>";
 
   if(!isset($NoXSLGenerate))
@@ -459,6 +475,17 @@ $stamp = md5(srand(5));
 $session_OK = 0;
 
 if(!auth(@$SessionCachePolicy) && !@$noforcelogin):                 // authentication failed
+
+  // Create a session with a random "state" value.
+  // This is used by Google OAuth2 to prevent forged logins.
+  session_name("CDash");
+  session_cache_limiter($SessionCachePolicy);
+  session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
+  @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
+  session_start();
+  $sessionArray = array ("state" => md5(rand()));
+  $_SESSION['cdash'] = $sessionArray;
+
   LoginForm($loginerror); // display login form
   $session_OK=0;
 else:                        // authentication was successful

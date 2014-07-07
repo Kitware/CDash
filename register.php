@@ -201,6 +201,30 @@ function RegisterForm($regerror)
   $xml = begin_XML_for_XSLT();
   $xml .= "<title>CDash - Registration</title>";
   $xml .= "<error>" . $regerror . "</error>";
+  if(isset($_GET["firstname"]))
+    {
+    $xml .= "<firstname>" . $_GET["firstname"] . "</firstname>";
+    }
+  else
+    {
+    $xml .= "<firstname></firstname>";
+    }
+  if(isset($_GET["lastname"]))
+    {
+    $xml .= "<lastname>" . $_GET["lastname"] . "</lastname>";
+    }
+  else
+    {
+    $xml .= "<lastname></lastname>";
+    }
+  if(isset($_GET["email"]))
+    {
+    $xml .= "<email>" . $_GET["email"] . "</email>";
+    }
+  else
+    {
+    $xml .= "<email></email>";
+    }
   $xml .= "</cdash>";
 
   generate_XSLT($xml,"register");

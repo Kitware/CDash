@@ -79,15 +79,33 @@
 <tbody>
 <tr class="treven">
   <td width="20%" height="2" class="nob"><div align="right"> First Name: </div></td>
-  <td  width="80%" height="2" class="nob"><input class="textbox" name="fname" size="20"/></td>
+  <td  width="80%" height="2" class="nob">
+    <input class="textbox" name="fname" size="20">
+    <xsl:attribute name="value">
+      <xsl:value-of select="cdash/firstname"/>
+    </xsl:attribute>
+    </input>
+  </td>
 </tr>
 <tr class="trodd">
   <td width="20%" height="2" class="nob"><div align="right"> Last Name: </div></td>
-  <td  width="80%" height="2" class="nob"><input class="textbox" name="lname" size="20"/></td>
+  <td  width="80%" height="2" class="nob">
+    <input class="textbox" name="lname" size="20">
+    <xsl:attribute name="value">
+      <xsl:value-of select="cdash/lastname"/>
+    </xsl:attribute>
+    </input>
+  </td>
 </tr>
 <tr class="treven">
   <td width="20%" height="2" class="nob"><div align="right"> Email: </div></td>
-  <td  width="80%" height="2" class="nob"><input class="textbox" name="email" size="20"/></td>
+  <td  width="80%" height="2" class="nob">
+    <input class="textbox" name="email" size="20">
+    <xsl:attribute name="value">
+      <xsl:value-of select="cdash/email"/>
+    </xsl:attribute>
+    </input>
+  </td>
 </tr>
 <tr class="trodd">
     <td width="20%" height="2" class="nob"><div align="right">Password: </div></td>
