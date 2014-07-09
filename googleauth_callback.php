@@ -1,8 +1,11 @@
 <?
+include_once("cdash/common.php");
+include("cdash/config.php");
+require_once("cdash/pdo.php");
+
   /** Google authentication */
   function googleAuthenticate($code)
   {
-    require_once("cdash/common.php");
     include("cdash/config.php");
     global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $CDASH_DB_NAME;
     $SessionCachePolicy = 'private_no_expire';
@@ -89,19 +92,11 @@
 
     if(pdo_num_rows($result)==0)
       {
+      // if no match is found, redirect to pre-filled out registration page
       pdo_free_result($result);
-
-      // store email & name in the session so we can retrieve it later
-      // to pre-populate the registration form
-      $sessionArray = array(
-        "email" => $email,
-        "firstname" => $resp->name->givenName,
-        "lastname" => $resp->name->familyName,
-        "ID" => session_id(),
-        "valid" => 0);
-      $_SESSION['cdash'] = $sessionArray;
-      session_write_close();
-
+      $firstname = $resp->name->givenName;
+      $lastname = $resp->name->familyName;
+      header("Location: register.php?firstname=$firstname&lastname=$lastname&email=$email");
       return false;
       }
 
@@ -117,6 +112,7 @@
     $_SESSION['cdash'] = $sessionArray;
     session_write_close();
     pdo_free_result($result);
+    header("Location: user.php");
     return true;                               // authentication succeeded
   }
 

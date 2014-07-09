@@ -19,34 +19,8 @@ function oauth2Login() {
       '&redirect_uri=' + REDIRECT + '&response_type=' + TYPE + '&state=' +
       STATE;
 
-    // open the Google authentication popup window
-    var win = window.open(_url, "Login with Google", 'width=800, height=600');
-
-    // poll for it to change its URL to our redirect page
-    var pollTimer = window.setInterval(function() {
-      try {
-        if (win.document.URL.indexOf(REDIRECT) != -1) {
-          // once it does, stop polling and close the window
-          window.clearInterval(pollTimer);
-          win.close();
-
-          // redirect the user based on whether or not they logged in
-          // successfully.
-          $.get('api/checkSession.php', function(data) {
-            if( data == "Expired" ) {
-              window.location = "register.php";
-            } else if (data == "Active" ) {
-              window.location = "user.php";
-            } else {
-              var obj = JSON.parse(data);
-              window.location = "register.php?firstname=" + obj.firstname + "&lastname=" + obj.lastname + "&email=" + obj.email;
-            }
-          });
-        }
-      } catch(e) {
-        // pass
-      }
-    }, 100);
+    // redirect to the Google authentication page
+    window.location = _url;
   });
 }
 

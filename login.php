@@ -321,7 +321,7 @@ function auth($SessionCachePolicy='private_no_expire')
 
     // Remove the cookie if we have one
     $cookienames = array("CDash", str_replace('.','_',"CDash-".$_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
-    foreach ($cookiesnames as $cookiename)
+    foreach ($cookienames as $cookiename)
       {
       if(isset($_COOKIE[$cookiename]))
         {
@@ -482,7 +482,10 @@ if(!auth(@$SessionCachePolicy) && !@$noforcelogin):                 // authentic
   session_cache_limiter($SessionCachePolicy);
   session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
   @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
-  session_start();
+  if(!isset($_SESSION))
+    {
+    session_start();
+    }
   $sessionArray = array ("state" => md5(rand()));
   $_SESSION['cdash'] = $sessionArray;
 
