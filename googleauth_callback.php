@@ -17,10 +17,34 @@ require_once("cdash/pdo.php");
     @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
     session_start();
 
-    // Validate the state anti-forgery token
-    if ($_GET["state"] != $_SESSION['cdash']['state'])
+    if (!isset($_GET["state"]))
       {
-      add_log("state anti-forgery token mismatch: " . $_GET["state"] .
+      add_log("no state value passed via GET", LOG_ERR);
+      return;
+      }
+
+    // Both the anti-forgery token and the user's requested URL are specified
+    // in the same "state" GET parameter.  Split them out here.
+    $splitState = explode("_AND_STATE_IS_", $_GET["state"]);
+    if (sizeof($splitState) != 2)
+      {
+      add_log("Expected two values after splitting state parameter, found " .
+        sizeof($splitState), LOG_ERR);
+      return;
+      }
+    $requestedURI = $splitState[0];
+    @$state = $splitState[1];
+
+    // don't send the user back to login.php if that's where they came from
+    if (strpos($requestedURI, "login.php") !== false)
+      {
+      $requestedURI = "user.php";
+      }
+
+    // check that the anti-forgery token is valid
+    if ($state != $_SESSION['cdash']['state'])
+      {
+      add_log("state anti-forgery token mismatch: " . $state .
         " vs " . $_SESSION['cdash']['state'], LOG_ERR);
       return;
       }
@@ -112,7 +136,7 @@ require_once("cdash/pdo.php");
     $_SESSION['cdash'] = $sessionArray;
     session_write_close();
     pdo_free_result($result);
-    header("Location: user.php");
+    header("Location: $requestedURI");
     return true;                               // authentication succeeded
   }
 

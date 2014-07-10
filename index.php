@@ -68,7 +68,7 @@ function generate_index_table()
 
   // User
   $userid = 0;
-  if(isset($_SESSION['cdash']))
+  if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
     {
     $xml .= "<user>";
     $userid = $_SESSION['cdash']['loginid'];
