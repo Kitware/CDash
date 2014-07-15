@@ -8,7 +8,7 @@ var TYPE        =   'code';
 function oauth2Login() {
   // construct redirect URI
   var REDIRECT = window.location.href;
-  REDIRECT = REDIRECT.substring(0, REDIRECT.lastIndexOf("/"));
+  REDIRECT = REDIRECT.substring(0, REDIRECT.lastIndexOf(window.location.pathname));
   REDIRECT += "/googleauth_callback.php";
 
   // get state (anti-forgery token) from session via CDash API
