@@ -1205,7 +1205,9 @@ function generate_main_dashboard_XML($project_instance, $date)
       {
       $buildplatform='mac';
       }
-    else if(strtolower(substr($build_array["osname"],0,5)) == 'linux')
+    else if(strtolower(substr($build_array["osname"],0,5)) == 'linux'
+            || strtolower(substr($build_array["osname"],0,3)) == 'aix'
+            )
       {
       $buildplatform='linux';
       }
