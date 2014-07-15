@@ -136,9 +136,9 @@ class BuildAPI extends CDashAPI
     $builds = array();
 
     // Finds all the buildid 
-    $query = pdo_query("SELECT b.name,b.id,bi.osname,b.starttime,b.endtime,b.submittime,b.builderrors,b.buildwarnings,b.testnotrun,b.testfailed,b.testpassed
-                        FROM build AS b, buildupdate AS bu, build2update AS b2u, buildinformation AS bi WHERE
-                        b2u.buildid=b.id AND b2u.updateid=bu.id AND bi.buildid=b.id AND 
+    $query = pdo_query("SELECT b.name,b.id, b.starttime,b.endtime,b.submittime,b.builderrors,b.buildwarnings,b.testnotrun,b.testfailed,b.testpassed
+                        FROM build AS b, buildupdate AS bu, build2update AS b2u WHERE
+                        b2u.buildid=b.id AND b2u.updateid=bu.id AND 
                         bu.revision='".$revision."' AND b.projectid='".$projectid."'   "); // limit the request
 
     echo pdo_error();
@@ -147,10 +147,17 @@ class BuildAPI extends CDashAPI
       {
       $build['id'] = $query_array['id'];
       $build['name'] = $query_array['name'];
-      $build['os'] = $query_array['osname'];
       $build['starttime'] = $query_array['starttime'];
       $build['endtime'] = $query_array['endtime'];
       $build['submittime'] = $query_array['submittime'];
+      
+      // Finds the osname
+      $infoquery = pdo_query("SELECT osname FROM buildinformation WHERE buildid='".$build['id']."'");  
+      if(pdo_num_rows($infoquery)>0)
+        {
+        $query_infoarray = pdo_fetch_array($infoquery);
+        $build['os'] = $query_infoarray['osname'];
+        }
       
       // Finds the configuration errors
       $configquery = pdo_query("SELECT count(*) AS c FROM configureerror WHERE buildid='".$build['id']."' AND type='0'");  
