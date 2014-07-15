@@ -609,7 +609,6 @@ function get_server_URI($localhost=false)
   include("cdash/config.php");
 
   // If the base URL is set and no localhost we just return the base URL
-  // This is the case when
   if(!$localhost && $CDASH_BASE_URL != '')
     {
     return $CDASH_BASE_URL;
