@@ -614,6 +614,11 @@ function get_server_URI($localhost=false)
     return $CDASH_BASE_URL;
     }
 
+  if(!$CDASH_CURL_REQUEST_LOCALHOST && $CDASH_BASE_URL != '')
+    {
+    return $CDASH_BASE_URL;
+    }
+      
   $currentPort="";
   $httpprefix="http://";
   if($_SERVER['SERVER_PORT']!=80 && $_SERVER['SERVER_PORT']!=443)
