@@ -140,7 +140,7 @@ $(function () {
     var divname = '#graph_holder';
 
     $(divname).bind("selected", function (event, area) {
-    plot = $.plot($(divname), [{label: <?php echo("\"$measurementname <a href='ajax/showtestmeasurementdatagraph.php?testid=$testid&buildid=$buildid&measurement=$measurementname&export=csv'>Export as CSV</a>\""); ?>, data: d1}],
+    plot = $.plot($(divname), [{label: <?php echo("\"$measurementname <a href='ajax/showtestmeasurementdatagraph.php?testid=$testid&buildid=$buildid&measurement=".urlencode($measurementname)."&export=csv'>Export as CSV</a>\""); ?>, data: d1}],
            $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }, yaxis: { min: 0}}));
 
     });
