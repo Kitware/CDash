@@ -902,17 +902,13 @@ function get_filterdata_from_request($page_id = '')
   }
 
   $sql = 'AND (';
-
-  $offset=0;
-
-  for ($i = 1; $i <= $filtercount+$offset; ++$i)
+    
+  for ($i = 1; $i <= $filtercount; ++$i)
   {
     if(empty($_REQUEST['field'.$i]))
       {
-      $offset++;
       continue;
       }
-
     $fieldinfo =  htmlspecialchars(pdo_real_escape_string($_REQUEST['field'.$i]));
     $compare =  htmlspecialchars(pdo_real_escape_string($_REQUEST['compare'.$i]));
     $value =  htmlspecialchars(pdo_real_escape_string($_REQUEST['value'.$i]));
