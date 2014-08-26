@@ -57,6 +57,10 @@ class UpdateHandler extends AbstractHandler
      $this->UpdateFile = new BuildUpdateFile();
      $this->UpdateFile->Status = $name;
      }
+   else if($name=='UPDATERETURNSTATUS')
+     { 
+     $this->Update->Status = '';
+     }
     }
 
   /** End element */
@@ -173,7 +177,7 @@ class UpdateHandler extends AbstractHandler
           $this->Update->Path = $data;
           break;
         case 'UPDATERETURNSTATUS':
-          $this->Update->Status = $data;
+          $this->Update->Status .= $data;
           break;
         }
       }

@@ -401,6 +401,9 @@ Stage: Update (<xsl:value-of select="cdash/update/nerrors"/> errors, <xsl:value-
 <br/><b>Number of Updates: </b>
 <a><xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>
 <xsl:value-of select="cdash/update/nupdates"/></a>
+<xsl:if test="cdash/update/status">
+  <br/><b>Update Status: </b><xsl:value-of select="cdash/update/status"/>
+</xsl:if>
 <br/><br/>
 </xsl:if>
 

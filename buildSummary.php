@@ -301,11 +301,18 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
   if(pdo_num_rows($buildupdate)>0) // show the update only if we have one
     {
     $xml .= "<update>";
-
+    $update_array = pdo_fetch_array($buildupdate);
     // Checking for locally modify files
     $updatelocal = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($buildid)
       ." AND author='Local User'");
     $nerrors = pdo_num_rows($updatelocal);
+    
+    // Check also if the status is not zero
+    if(strlen($update_array["status"]) > 0 && $update_array["status"]!="0")
+      {
+      $nerrors += 1;
+      $xml .= add_XML_value("status",$update_array["status"]);
+      }
     $nwarnings = 0;
     $xml .= add_XML_value("nerrors",$nerrors);
     $xml .= add_XML_value("nwarnings",$nwarnings);
@@ -313,8 +320,7 @@ $xml .= get_cdash_dashboard_xml($projectname,$date);
     $update = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($buildid));
     $nupdates = pdo_num_rows($update);
     $xml .= add_XML_value("nupdates",$nupdates);
-
-    $update_array = pdo_fetch_array($buildupdate);
+    
     $xml .= add_XML_value("command",$update_array["command"]);
     $xml .= add_XML_value("type",$update_array["type"]);
     $xml .= add_XML_value("starttime",date(FMT_DATETIMETZ,strtotime($update_array["starttime"]." UTC")));

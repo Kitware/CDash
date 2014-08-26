@@ -93,6 +93,7 @@ class BuildUpdate
       {
       $this->Type = 'NA';
       }
+      
     $this->Status = pdo_real_escape_string($this->Status);
     $this->Revision = pdo_real_escape_string($this->Revision);
     $this->PriorRevision = pdo_real_escape_string($this->PriorRevision);
@@ -153,7 +154,7 @@ class BuildUpdate
     if(strlen($updatestatus_array["status"]) > 0 &&
        $updatestatus_array["status"]!="0")
       {
-     return 1;
+      return 1;
       }
 
     return 0;
