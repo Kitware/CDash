@@ -1,0 +1,6 @@
+*~
+.svn
+backup
+cdash/config.local.php
+rss
+tests/config.test.local.php
