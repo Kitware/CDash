@@ -16,7 +16,7 @@ d3.chart.dependencyedgebundling = function(options) {
   var textRadius ;
   var innerRadius = radius - textRadius;
   var txtLinkGap = 5;
-  
+
   function resetDimension(){
     radius = diameter / 2;
     innerRadius = radius - textRadius;
@@ -28,7 +28,7 @@ d3.chart.dependencyedgebundling = function(options) {
   // Lazily construct the package hierarchy
   var packageHierarchy = function (classes) {
     var map = {};
-    
+
     function setparent(name, data) {
       var node = map[name];
       if (!node) {
@@ -40,7 +40,7 @@ d3.chart.dependencyedgebundling = function(options) {
         }
       }
     }
-    
+
     setparent("", null);
     classes.forEach(function(d) {
       setparent(d.name, d);
@@ -113,7 +113,7 @@ d3.chart.dependencyedgebundling = function(options) {
           .attr("height", diameter)
         .append("g")
           .attr("transform", "translate(" + radius + "," + radius + ")");
-      
+
       // get all the link and node
       var link = svg.append("g").selectAll(".link"),
           node = svg.append("g").selectAll(".node");
@@ -138,7 +138,7 @@ d3.chart.dependencyedgebundling = function(options) {
           .text(function(d) { return d.key; })
           .on("mouseover", mouseovered)
           .on("mouseout", mouseouted);
-       
+
       function mouseovered(d) {
 
         node

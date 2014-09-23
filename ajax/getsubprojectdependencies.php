@@ -1,20 +1,4 @@
 <?php
-/*=========================================================================
-
-  Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: getsubprojectdependencies.php 3334 2013-07-17 20:01:03Z zack.galbreath $
-  Language:  PHP
-  Date:      $Date: 2013-07-17 20:01:03 +0000 (Wed, 17 Jul 2013) $
-  Version:   $Revision: 3334 $
-
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
 
 $cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
@@ -27,6 +11,8 @@ require_once("cdash/common.php");
 include('login.php');
 require_once("models/project.php");
 require_once("models/subproject.php");
+
+file_put_contents("/tmp/zackdebug.txt", "we get this far");
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
@@ -58,9 +44,9 @@ if(pdo_num_rows($project)>0)
   $svnurl = make_cdash_url(htmlentities($project_array["cvsurl"]));
   $homeurl = make_cdash_url(htmlentities($project_array["homeurl"]));
   $bugurl = make_cdash_url(htmlentities($project_array["bugtrackerurl"]));
-  $googletracker = htmlentities($project_array["googletracker"]);  
+  $googletracker = htmlentities($project_array["googletracker"]);
   $docurl = make_cdash_url(htmlentities($project_array["documentationurl"]));
-  $projectpublic =  $project_array["public"]; 
+  $projectpublic =  $project_array["public"];
   $projectname = $project_array["name"];
   }
 else
@@ -69,7 +55,7 @@ else
   }
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
-  
+
 $Project = new Project();
 $Project->Id = $projectid;
 $subprojectids = $Project->GetSubprojects();
@@ -93,7 +79,7 @@ foreach($subprojectids as $subprojectid)
     {
     if(array_key_exists($depprojid,$subprojs))
       {
-      $deparray[]=$subprojs[$depprojid]->GetName(); 
+      $deparray[]=$subprojs[$depprojid]->GetName();
       }
     }
   if (!empty($deparray))
@@ -102,5 +88,6 @@ foreach($subprojectids as $subprojectid)
     }
   $result[] = $subarray;
   } // end foreach subprojects
+  file_put_contents("/tmp/zackdebug.txt", "here is result: $result");
   echo json_encode($result);
 ?>

@@ -385,6 +385,10 @@
 <xsl:attribute name="href">viewSubprojectDependencies.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
 [View Subproject Dependencies]
 </a>
+<a>
+<xsl:attribute name="href">viewSubprojectDependenciesGraph.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
+[Graph]
+</a>
 
 <br/>
 <!-- FOOTER -->
