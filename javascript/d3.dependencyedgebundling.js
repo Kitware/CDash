@@ -26,17 +26,16 @@ d3.chart.dependencyedgebundling = function(options) {
   function autoDimension(){
     // automatically resize the dimension based on total number of nodes
   }
-  // Lazily construct the package hierarchy
+  // construct the package hierarchy by group
   var packageHierarchy = function (classes) {
     var map = {};
-
     function setparent(name, data) {
       var node = map[name];
       if (!node) {
         node = map[name] = data || {name: name, children: []};
         if (name.length) {
           if (data && data.group){
-            node.parent = map[data.group];
+            node.parent = setparent(data.group, null);
             node.parent.children.push(node);
           }
           else {
@@ -46,10 +45,9 @@ d3.chart.dependencyedgebundling = function(options) {
           node.key = name;
         }
       }
+      return node;
     }
-    setparent("", null);
-    setparent("Core", null);
-    setparent("Non-Core", null);
+    setparent("",null);
     classes.forEach(function(d) {
       setparent(d.name, d);
     });
@@ -181,7 +179,7 @@ d3.chart.dependencyedgebundling = function(options) {
 
     });
   }
-  
+
   chart.mouseOvered = function (d) {
     if (!arguments.length) return d;
     _mouseOvered = d;

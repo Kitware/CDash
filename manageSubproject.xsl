@@ -86,8 +86,6 @@
       </ul>
   <div id="fragment-1" class="tab_content" >
       <div class="tab_help"></div>
-      <form name="formnewgroup" method="post">
-        <xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
         <table width="800"  border="0">
           <tr>
             <td><div align="right"></div></td>
@@ -103,23 +101,35 @@
             <td align="left" width="5%"><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;delete=<xsl:value-of select="id"/>
             </xsl:attribute>
             [x]</a></td>
-            <td align="right" width="20%">
-              <a href="javascript:void(0)" class="subproject_core">
+            <td align="right" width="30%">
+              <div>
+              <select class="subproject_core">
+                <option value="0">
+                <xsl:if test="core=0">
+                <xsl:attribute name="selected"></xsl:attribute>
+                </xsl:if>
+                Non-Core</option>
+                <option value="1">
+                <xsl:if test="core=1">
+                <xsl:attribute name="selected"></xsl:attribute>
+                </xsl:if>
+                Core</option>
+                <option value="2">
+                <xsl:if test="core=2">
+                <xsl:attribute name="selected"></xsl:attribute>
+                </xsl:if>
+                Third Party</option>
+              </select>
+              <button class="changeSubprojectGroup" disabled="disabled">
                 <xsl:attribute name="data-projectid">
                   <xsl:value-of select="/cdash/project/id"/>
                 </xsl:attribute>
                 <xsl:attribute name="data-subprojectid">
                   <xsl:value-of select="id"/>
                 </xsl:attribute>
-                <xsl:if test="core=1">
-                  <xsl:attribute name="data-core">0</xsl:attribute>
-                  [Mark as non-core]
-                </xsl:if>
-                <xsl:if test="core=0">
-                  <xsl:attribute name="data-core">1</xsl:attribute>
-                  [Mark as core]
-                </xsl:if>
-              </a>
+              Modify
+              </button>
+              </div>
             </td>
             <td align="right" width="60%">
             <form method="post">
@@ -165,7 +175,6 @@
           </tr>
           </xsl:for-each>
         </table>
-        </form>
     </div>
     <div id="fragment-2" class="tab_content" >
       <div class="tab_help"></div>

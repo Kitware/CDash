@@ -227,7 +227,7 @@ class SubProject
   /** Function to set whether or not this is a core subproject */
   function SetCore($core)
     {
-    if($core == 0 || $core == 1)
+    if($core >= 0 || $core <= 2)
       {
       $this->Core = $core;
       // make sure Name is set for this object before calling Save

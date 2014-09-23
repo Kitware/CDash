@@ -51,7 +51,7 @@
               }
               return 0;
             }
-            
+
             function mouseOvered(d) {
               var header1Text = "Name: " + d.key + ", Group: " + d.group;
               $('#header1').html(header1Text);
@@ -66,7 +66,7 @@
                   dependents += p.key + ", ";
                 }
               });
-              
+
               if (dependents) {
                 dependents = "Dependents: " + dependents.substring(0,dependents.length-2);
                 $('#dependents').html(dependents);

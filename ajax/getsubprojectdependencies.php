@@ -71,7 +71,19 @@ foreach($subprojectids as $subprojectid)
   {
   $SubProject = $subprojs[$subprojectid];
   $subarray = array("name"=>$SubProject->GetName(), "id"=>$subprojectid);
-  $subarray['group'] = $SubProject->GetCore() ? "Core" : "Non-Core";
+  $grp = $SubProject->GetCore();
+  if ($grp == 0)
+    {
+    $subarray['group'] = "Core";
+    }
+  else if ($grp == 1)
+    {
+    $subarray['group'] = "Non-Core";
+    }
+  else if ($grp == 2)
+    {
+    $subarray['group'] = "Third Party";
+    }
   $dependencies = $SubProject->GetDependencies($date);
   $deparray = array();
   foreach($dependencies as $depprojid)
