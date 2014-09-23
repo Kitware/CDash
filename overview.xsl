@@ -27,7 +27,6 @@
         </link>
 
         <!-- Include JavaScript -->
-        <script src="javascript/jquery-1.10.2.js" type="text/javascript"></script>
         <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/cdashAddNote.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/d3.min.js" type="text/javascript" charset="utf-8"></script>
