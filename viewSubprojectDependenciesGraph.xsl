@@ -53,6 +53,12 @@
             }
             
             function mouseOvered(d) {
+              if (d.depends) {
+                console.log(d.depends);
+              }
+              d3.selectAll('.node--source').each(function (p) {
+                console.log(p);
+              });
               $('.curGroup').text("Group: " + d.group).show();
             }
 
@@ -105,17 +111,21 @@
 </xsl:choose>
 
 <!-- Main -->
-<div style="position:relative; left:20px; overflow:hidden;">
-<h3>Subproject Dependencies Graph</h3>
-<label for="selectedsort">Sorted by:</label>
+<div style="position:relative; top:10px; left:20px; overflow:hidden;">
+<label style="font-size:1.2em;"><b>Subproject Dependencies Graph</b></label>
+<label for="selectedsort" style="margin-left:80px; font-size:.95em;">Sorted by:</label>
 <select id="selectedsort">
   <option value="0" selected="selected">subproject name</option>
   <option value="1">subproject id</option>
 </select>
 <button onclick="download_svg()" style="float:right; width:200px; margin-right:30px">Export as svg file</button>
-<label class="curGroup" style="margin-left:20px; display:None;"></label>
+<label class="curGroup" style="margin-left:80px; display:None;"></label>
 </div>
-<div id="chart_placeholder"></div>
+<div class='hint' style="position:relative; top:20px; left:20px; font-size:0.9em; width:350px; color:#999;">
+This circle plot captures the interrelationships among subgroups. Mouse over any of the subgroup in this graph to see incoming links (dependents) in green and the outgoing links (dependencies) in red.
+</div>
+<div id="chart_placeholder" style="position:relative; left:250px; top:-40px">
+</div>
 
 <script>
   function download_svg() {
