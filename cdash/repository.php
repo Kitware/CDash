@@ -761,6 +761,11 @@ function get_revision_url($projectid, $revision, $priorrevision)
 
 function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output)
 {
+  // set a reasonable default revision if none was specified
+  if (empty($revision))
+    {
+    $revision = "master";
+    }
 
   $repo_link = "<a href='$projecturl/blob/$revision";
   $pattern = "&$source_dir/([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
