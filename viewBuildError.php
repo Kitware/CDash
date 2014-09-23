@@ -2,10 +2,10 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id$
+  Module:    $Id: viewBuildError.php 3475 2014-05-09 06:54:04Z jjomier $
   Language:  PHP
-  Date:      $Date$
-  Version:   $Revision$
+  Date:      $Date: 2014-05-09 06:54:04 +0000 (Fri, 09 May 2014) $
+  Version:   $Revision: 3475 $
 
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
@@ -47,7 +47,14 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 
 $start = microtime_float();
 
-$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
+$build_query = "SELECT build.id, build.projectid, build.siteid, build.type,
+                       build.name, build.starttime, buildupdate.revision
+                FROM build
+                LEFT JOIN build2update ON (build2update.buildid = build.id)
+                LEFT JOIN buildupdate ON (buildupdate.id = build2update.updateid)
+                WHERE build.id = '$buildid'";
+$build_array = pdo_fetch_array(pdo_query($build_query));
+
 if(empty($build_array))
   {
   echo "This build does not exist. Maybe it has been deleted.";
@@ -67,12 +74,11 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 $xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$projectname."</title>";
 
-$build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-$build_array = pdo_fetch_array($build);
 $siteid = $build_array["siteid"];
 $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
 $starttime = $build_array["starttime"];
+$revision = $build_array["revision"];
 
 $date = get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]);
 $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
@@ -162,7 +168,7 @@ $xml .= "</menu>";
       $projectCvsUrl = $project_array["cvsurl"];
       $file = basename($error_array["sourcefile"]);
       $directory = dirname($error_array["sourcefile"]);
-      $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file);
+      $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file,$revision);
 
 
       $lxml .= add_XML_value("cvsurl",$cvsurl);
@@ -238,7 +244,7 @@ $xml .= "</menu>";
         $projectCvsUrl = $project_array["cvsurl"];
         $file = basename($error_array["sourcefile"]);
         $directory = dirname($error_array["sourcefile"]);
-        $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file);
+        $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file,$revision);
         $lxml .= add_XML_value("cvsurl",$cvsurl);
         }
       $errorid++;
@@ -265,18 +271,40 @@ $xml .= "</menu>";
       $lxml .= add_XML_value("id",$errorid);
       $lxml .= add_XML_value("new",$error_array["newstatus"]);
       $lxml .= add_XML_value("logline",$error_array["logline"]);
-      $lxml .= add_XML_value("text",$error_array["text"]);
-      $lxml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
-      $lxml .= add_XML_value("sourceline",$error_array["sourceline"]);
-      $lxml .= add_XML_value("precontext",$error_array["precontext"]);
-      $lxml .= add_XML_value("postcontext",$error_array["postcontext"]);
 
       $projectCvsUrl = $project_array["cvsurl"];
-      $file = basename($error_array["sourcefile"]);
-      $directory = dirname($error_array["sourcefile"]);
-      $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file);
+      $text = $error_array["text"];
+
+      // Detect if the source directory has already been replaced by CTest with /.../
+      $pattern = "&/.../(.*?)/&";
+      $matches = array();
+      preg_match($pattern, $text, $matches);
+      if (sizeof($matches) > 1)
+        {
+        $file = $error_array["sourcefile"];
+        $directory = $matches[1];
+        }
+      else
+        {
+        $file = basename($error_array["sourcefile"]);
+        $directory = dirname($error_array["sourcefile"]);
+        }
+
+      $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file,$revision);
 
       $lxml .= add_XML_value("cvsurl",$cvsurl);
+      // when building without launchers, CTest truncates the source dir to /.../
+      // use this pattern to linkify compiler output.
+      $precontext = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array["precontext"]);
+      $text = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array["text"]);
+      $postcontext = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array["postcontext"]);
+
+      $lxml .= add_XML_value("precontext", $precontext);
+      $lxml .= add_XML_value("text", $text);
+      $lxml .= add_XML_value("postcontext", $postcontext);
+      $lxml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
+      $lxml .= add_XML_value("sourceline",$error_array["sourceline"]);
+
       $errorid++;
       $lxml .= "</error>";
 
@@ -327,7 +355,7 @@ $xml .= "</menu>";
         $projectCvsUrl = $project_array["cvsurl"];
         $file = basename($error_array["sourcefile"]);
         $directory = dirname($error_array["sourcefile"]);
-        $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file);
+        $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file,$revision);
         $lxml .= add_XML_value("cvsurl",$cvsurl);
 
         $source_dir = get_source_dir($projectid, $projectCvsUrl, $directory);
@@ -338,8 +366,14 @@ $xml .= "</menu>";
           }
         }
 
-      $lxml .= add_XML_value("stderror", $stderror);
-      $lxml .= add_XML_value("stdoutput", $stdoutput);
+      if ($stderror)
+        {
+        $lxml .= add_XML_value("stderror", $stderror);
+        }
+      if ($stdoutput)
+        {
+        $lxml .= add_XML_value("stdoutput", $stdoutput);
+        }
       $lxml .= add_XML_value("exitcondition",$error_array["exitcondition"]);
       $errorid++;
       $lxml .= "</error>";

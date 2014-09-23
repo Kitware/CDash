@@ -106,9 +106,17 @@
 <tr>
 <th class="measurement"><nobr> <xsl:value-of select="/cdash/errortypename"/> </nobr></th>
 <td>
-<pre><xsl:value-of select="precontext"/></pre>
-<b><pre><xsl:value-of select="text"/></pre></b>
-<pre><xsl:value-of select="postcontext"/></pre>
+<pre class="compiler-output">
+  <xsl:value-of select="precontext" disable-output-escaping="yes" />
+</pre>
+<b>
+  <pre class="compiler-output">
+    <xsl:value-of select="text" disable-output-escaping="yes" />
+  </pre>
+</b>
+<pre class="compiler-output">
+  <xsl:value-of select="postcontext" disable-output-escaping="yes" />
+</pre>
 </td>
 </tr>
 </xsl:if>
