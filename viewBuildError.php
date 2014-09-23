@@ -319,23 +319,8 @@ $xml .= "</menu>";
         "label2buildfailure.buildfailureid='$buildfailureid' ".
         "ORDER BY text ASC");
 
-      $lxml .= add_XML_value("stderror",$error_array["stderror"]);
-      $rows = substr_count($error_array["stderror"],"\n")+1;
-      if ($rows > 10)
-        {
-        $rows = 10;
-        }
-      $lxml .= add_XML_value("stderrorrows",$rows);
-
-      $lxml .= add_XML_value("stdoutput",$error_array["stdoutput"]);
-      $rows = substr_count($error_array["stdoutput"],"\n")+1;
-      if ($rows > 10)
-        {
-        $rows = 10;
-        }
-      $lxml .= add_XML_value("stdoutputrows",$rows);
-
-      $lxml .= add_XML_value("exitcondition",$error_array["exitcondition"]);
+      $stderror = $error_array["stderror"];
+      $stdoutput = $error_array["stdoutput"];
 
       if(isset($error_array["sourcefile"]))
         {
@@ -344,10 +329,20 @@ $xml .= "</menu>";
         $directory = dirname($error_array["sourcefile"]);
         $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file);
         $lxml .= add_XML_value("cvsurl",$cvsurl);
+
+        $source_dir = get_source_dir($projectid, $projectCvsUrl, $directory);
+        if ($source_dir !== NULL)
+          {
+          $stderror = linkify_compiler_output($projectCvsUrl, $source_dir, $revision, $stderror);
+          $stdoutput = linkify_compiler_output($projectCvsUrl, $source_dir, $revision, $stdoutput);
+          }
         }
+
+      $lxml .= add_XML_value("stderror", $stderror);
+      $lxml .= add_XML_value("stdoutput", $stdoutput);
+      $lxml .= add_XML_value("exitcondition",$error_array["exitcondition"]);
       $errorid++;
       $lxml .= "</error>";
-
       $xml .= $lxml;
       }
     } // end if onlydeltan

@@ -2,10 +2,10 @@
 /*=========================================================================
 
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id$
+  Module:    $Id: repository.php 3381 2013-10-29 08:39:13Z jjomier $
   Language:  PHP
-  Date:      $Date$
-  Version:   $Revision$
+  Date:      $Date: 2013-10-29 08:39:13 +0000 (Tue, 29 Oct 2013) $
+  Version:   $Revision: 3381 $
 
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
@@ -489,11 +489,56 @@ function get_gitorious_diff_url($projecturl, $directory, $file, $revision)
   return get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, 'blobs');
 }
 
+/** Return the source directory for a source file */
+function get_source_dir($projectid, $projecturl, $file_path)
+{
+  if(!is_numeric($projectid))
+    {
+    return;
+    }
+
+  $project = pdo_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
+  $cvsviewertype = strtolower($project_array["cvsviewertype"]);
+
+  $target_fn = $cvsviewertype.'_get_source_dir';
+
+  if(function_exists($target_fn))
+    {
+    return $target_fn($projecturl, $file_path);
+    }
+  else
+    {
+    return NULL;
+    }
+}
+
+/** Extract the source directory from a Github URL and a full path to
+  * a source file.  This only works properly if the source dir's name matches
+  * the repo's name, ie it was not renamed as it was cloned.
+ **/
+function github_get_source_dir($projecturl, $file_path)
+{
+  $repo_name = basename($projecturl);
+  $offset = stripos($file_path, $repo_name);
+  $offset += strlen($repo_name);
+  return substr($file_path, 0, $offset);
+}
+
 /** Return the GitHub diff URL */
 function get_github_diff_url($projecturl, $directory, $file, $revision)
 {
-  // GitHub uses 'blob' or 'tree' (singular, no s)
-  return get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, 'blob');
+  // get the source dir
+  $source_dir = github_get_source_dir($projecturl, $directory);
+
+  // remove it from the beginning of our path if it is found
+  if (substr($directory, 0, strlen($source_dir)) == $source_dir) {
+      $directory = substr($directory, strlen($source_dir));
+  }
+
+  $diff_url = "$projecturl/blob/$revision";
+  $diff_url .= "$directory/$file";
+  return make_cdash_url($diff_url);
 }
 
 /** Return the cgit diff URL */
@@ -697,6 +742,21 @@ function get_revision_url($projectid, $revision, $priorrevision)
     {
     return get_viewcvs_revision_url($projecturl,$revision);
     }
+}
+
+function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output)
+{
+
+  $repo_link = "<a href='$projecturl/blob/$revision";
+  $pattern = "&$source_dir/([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
+  $replacement = "$repo_link/$1#L$2'>$1:$2</a>";
+
+  // create links for source files
+  $compiler_output = preg_replace($pattern, $replacement, $compiler_output);
+
+  // remove base dir from other (binary) paths
+  $base_dir = dirname($source_dir) . "/";
+  return str_replace($base_dir, "", $compiler_output);
 }
 
 ?>

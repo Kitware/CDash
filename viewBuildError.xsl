@@ -49,7 +49,11 @@
 
 <xsl:for-each select="cdash/errors/error">
 <br/>
-<table width="100%">
+<table style="table-layout:fixed; width:100%">
+<colgroup>
+  <col style="width: 115px"/>
+  <col/>
+</colgroup>
 
 <xsl:if test="sourceline">
 <tr style="background-color: #b0c4de; font-weight: bold">
@@ -197,10 +201,9 @@
 <tr>
 <th class="measurement"><nobr> Standard Output </nobr></th>
 <td>
-<textarea readonly="readonly" name="stdout" wrap="off" style="width: 100%">
-  <xsl:attribute name="rows"><xsl:value-of select="stdoutputrows"/></xsl:attribute>
+<pre class="compiler-output" name="stdout">
 <xsl:value-of select="stdoutput"/>
-</textarea>
+</pre>
 </td>
 </tr>
 </xsl:if>
@@ -209,10 +212,9 @@
 <tr>
 <th class="measurement"><nobr>Standard Error</nobr></th>
 <td>
-<textarea readonly="readonly" name="stderr" wrap="off" style="width: 100%">
-  <xsl:attribute name="rows"><xsl:value-of select="stderrorrows"/></xsl:attribute>
-<xsl:value-of select="stderror"/>
-</textarea>
+<pre class="compiler-output" name="stderr">
+<xsl:value-of select="stderror" disable-output-escaping="yes" />
+</pre>
 </td>
 </tr>
 </xsl:if>
