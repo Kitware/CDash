@@ -49,13 +49,13 @@
           </xsl:for-each>
 
           <xsl:for-each select='/cdash/coverage'>
-            var <xsl:value-of select="name"/> = <xsl:value-of select="chart"/>;
-            makeLineChart("<xsl:value-of select="nice_name"/>",
-                            "#<xsl:value-of select="name"/>_chart svg",
-                            <xsl:value-of select="name"/>,
+            var <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/> = <xsl:value-of select="chart"/>;
+            makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
+                            "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>_chart svg",
+                            <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>,
                             true);
-            makeBulletChart("<xsl:value-of select="nice_name"/>",
-              "#<xsl:value-of select="name"/>_bullet svg",
+            makeBulletChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
+              "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>_bullet svg",
               <xsl:value-of select="low"/>,
               <xsl:value-of select="medium"/>,
               <xsl:value-of select="satisfactory"/>,
@@ -78,6 +78,7 @@
         </xsl:choose>
 
         <table class="table-bordered table-responsive table-condensed container-fluid">
+          <caption><h4>Build Info</h4></caption>
           <tr class="row">
               <th class="col-md-1"> </th>
                 <xsl:for-each select='/cdash/group'>
@@ -103,22 +104,27 @@
               </xsl:for-each>
             </tr>
           </xsl:for-each>
+        </table> <!-- end of build info table -->
 
-          <xsl:for-each select='/cdash/coverage'>
-            <tr class="row" style="height:50px;">
-              <td class="col-md-1"><b><xsl:value-of select="nice_name"/></b></td>
-              <td class="col-md-1">
-                <xsl:value-of select="current"/>%
-              </td>
-              <td id="{name}_chart" class="col-md-1" style="height:50px;">
-                <svg></svg>
-              </td>
-              <td id="{name}_bullet" class="col-md-4" colspan="4" style="height:50px;">
-                <svg></svg>
-              </td>
-            </tr>
-          </xsl:for-each>
-        </table>
+        <xsl:if test="/cdash/coverage">
+          <table class="table-bordered table-responsive table-condensed container-fluid">
+            <caption><h4>Coverage</h4></caption>
+            <xsl:for-each select='/cdash/coverage'>
+              <tr class="row" style="height:50px;">
+                <td class="col-md-1"><b><xsl:value-of select="group_name"/><xsl:text> </xsl:text><xsl:value-of select="nice_name"/></b></td>
+                <td class="col-md-1">
+                  <xsl:value-of select="current"/>%
+                </td>
+                <td id="{group_name_clean}_{name}_chart" class="col-md-1" style="height:50px;">
+                  <svg></svg>
+                </td>
+                <td id="{group_name_clean}_{name}_bullet" class="col-md-4" colspan="4" style="height:50px;">
+                  <svg></svg>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:if> <!-- end of coverage -->
 
         <!-- FOOTER -->
         <br/>

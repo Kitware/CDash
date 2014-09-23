@@ -234,16 +234,21 @@ else
   }
 add_last_sql_error("overview :: detect-non-core", $projectid);
 
-foreach($coverage_group_names as $coverage_group_name)
+foreach($build_groups as $build_group)
   {
-  $coverage_data[$coverage_group_name] = array();
-  $linechart_data[$coverage_group_name] = array();
-  $coverage_data[$coverage_group_name]["previous"] = 0;
-  $coverage_data[$coverage_group_name]["current"] = 0;
-  $threshold = $coverage_thresholds[$coverage_group_name];
-  $coverage_data[$coverage_group_name]["low"] = 0.7 * $threshold;
-  $coverage_data[$coverage_group_name]["medium"] = $threshold;
-  $coverage_data[$coverage_group_name]["satisfactory"] = 100;
+    $overview_data[$build_group["name"]] = array();
+    $linechart_data[$build_group["name"]] = array();
+  foreach($coverage_group_names as $coverage_group_name)
+    {
+    $coverage_data[$build_group["name"]][$coverage_group_name] = array();
+    $linechart_data[$build_group["name"]][$coverage_group_name] = array();
+    $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] = 0;
+    $coverage_data[$build_group["name"]][$coverage_group_name]["current"] = 0;
+    $threshold = $coverage_thresholds[$coverage_group_name];
+    $coverage_data[$build_group["name"]][$coverage_group_name]["low"] = 0.7 * $threshold;
+    $coverage_data[$build_group["name"]][$coverage_group_name]["medium"] = $threshold;
+    $coverage_data[$build_group["name"]][$coverage_group_name]["satisfactory"] = 100;
+    }
   }
 
 // gather up the relevant stats
@@ -274,14 +279,12 @@ foreach($build_groups as $build_group)
       }
     }
 
-  // here we assume that coverage will only be performed by one
-  // of the build groups, otherwise this data will be overwritten each
-  // time through this (outer) foreach loop.
   foreach($coverage_group_names as $coverage_group_name)
     {
     if (array_key_exists($coverage_group_name, $data))
       {
-      $coverage_data[$coverage_group_name]["current"] = $data[$coverage_group_name];
+      $coverage_data[$build_group["name"]][$coverage_group_name]["current"] =
+        $data[$coverage_group_name];
       }
     }
 
@@ -317,7 +320,7 @@ foreach($build_groups as $build_group)
       if (array_key_exists($coverage_group_name, $data))
         {
         $coverage_value = $data[$coverage_group_name];
-        $linechart_data[$coverage_group_name][] =
+        $linechart_data[$build_group["name"]][$coverage_group_name][] =
           array('x' => $chart_end_timestamp * 1000, 'y' => $coverage_value);
         }
       }
@@ -325,27 +328,30 @@ foreach($build_groups as $build_group)
   }
 
 // compute previous coverage value
-foreach($coverage_group_names as $coverage_group_name)
+foreach($build_groups as $build_group)
   {
-  // isolate the previous coverage value.  This is typically the
-  // second to last coverage data point that we collected, but
-  // we're careful to check for the case where only a single point
-  // was recovered.
-  $num_points = count($linechart_data[$coverage_group_name]);
-  if ($num_points > 1)
+  foreach($coverage_group_names as $coverage_group_name)
     {
-    $coverage_data[$coverage_group_name]["previous"] =
-      $linechart_data[$coverage_group_name][$num_points - 2]['y'];
-    }
-  else
-    {
-    $prev_point = end($linechart_data[$coverage_group_name]);
-    $coverage_data[$coverage_group_name]["previous"] = $prev_point['y'];
-    }
-  if (!isset($coverage_data[$coverage_group_name]["previous"]))
-    {
-    $coverage_data[$coverage_group_name]["previous"] =
-      $coverage_data[$coverage_group_name]["current"];
+    // isolate the previous coverage value.  This is typically the
+    // second to last coverage data point that we collected, but
+    // we're careful to check for the case where only a single point
+    // was recovered.
+    $num_points = count($linechart_data[$build_group["name"]][$coverage_group_name]);
+    if ($num_points > 1)
+      {
+      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] =
+        $linechart_data[$build_group["name"]][$coverage_group_name][$num_points - 2]['y'];
+      }
+    else
+      {
+      $prev_point = end($linechart_data[$build_group["name"]][$coverage_group_name]);
+      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] = $prev_point['y'];
+      }
+    if (!isset($coverage_data[$build_group["name"]][$coverage_group_name]["previous"]))
+      {
+      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] =
+        $coverage_data[$build_group["name"]][$coverage_group_name]["current"];
+      }
     }
   }
 
@@ -374,26 +380,38 @@ foreach($measurements as $measurement)
   $xml .= "</measurement>";
   }
 
-foreach($coverage_group_names as $coverage_group_name)
+foreach($build_groups as $build_group)
   {
-  $xml .= "<coverage>";
-  $xml .= add_XML_value("name", preg_replace("/[ -]/", "_", $coverage_group_name));
-  $xml .= add_XML_value("nice_name", "$coverage_group_name");
-  $xml .= add_XML_value("low", $coverage_data[$coverage_group_name]["low"]);
-  $xml .= add_XML_value("medium",
-    $coverage_data[$coverage_group_name]["medium"]);
-  $xml .= add_XML_value("satisfactory",
-    $coverage_data[$coverage_group_name]["satisfactory"]);
-  $xml .= add_XML_value("current",
-    $coverage_data[$coverage_group_name]["current"]);
-  $xml .= add_XML_value("previous",
-    $coverage_data[$coverage_group_name]["previous"]);
-  $xml .= add_XML_value("chart",
-    json_encode($linechart_data[$coverage_group_name]));
-  $xml .= "</coverage>";
+  foreach($coverage_group_names as $coverage_group_name)
+    {
+    // skip groups that don't have any coverage info
+    if (empty($linechart_data[$build_group["name"]][$coverage_group_name]))
+      {
+      continue;
+      }
+    $xml .= "<coverage>";
+    $xml .= add_XML_value("name", preg_replace("/[ -]/", "_", $coverage_group_name));
+    $xml .= add_XML_value("nice_name", "$coverage_group_name");
+    $xml .= add_XML_value("group_name", $build_group["name"]);
+    $xml .= add_XML_value("group_name_clean", str_replace(" ", "_", $build_group["name"]));
+    $xml .= add_XML_value("low", $coverage_data[$build_group["name"]][$coverage_group_name]["low"]);
+    $xml .= add_XML_value("medium",
+      $coverage_data[$build_group["name"]][$coverage_group_name]["medium"]);
+    $xml .= add_XML_value("satisfactory",
+      $coverage_data[$build_group["name"]][$coverage_group_name]["satisfactory"]);
+    $xml .= add_XML_value("current",
+      $coverage_data[$build_group["name"]][$coverage_group_name]["current"]);
+    $xml .= add_XML_value("previous",
+      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"]);
+    $xml .= add_XML_value("chart",
+      json_encode($linechart_data[$build_group["name"]][$coverage_group_name]));
+    $xml .= "</coverage>";
+    }
   }
 
 $xml .= "</cdash>";
+
+file_put_contents("/tmp/zackdebug.xml", $xml);
 
 // Now do the xslt transition
 if(!isset($NoXSLGenerate))
