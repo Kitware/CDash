@@ -53,17 +53,30 @@
             }
             
             function mouseOvered(d) {
+              var toolTip = "&lt;p&gt;Group: " + d.group + "&lt;\p&gt;";
               if (d.depends) {
-                console.log(d.depends);
+                toolTip += "&lt;p&gt;Depends: ";
+                toolTip += d.depends.join(", ") + "&lt;/p&gt;";
               }
+              var dependents = "";
               d3.selectAll('.node--source').each(function (p) {
-                console.log(p);
+                if (p.key) {
+                  dependents += p.key + ", ";
+                }
               });
-              $('.curGroup').text("Group: " + d.group).show();
+              
+              if (dependents) {
+                toolTip += "Dependents: " + dependents.substring(0,dependents.length-2);
+              }
+              $('#header1').html(toolTip);
+              d3.select("#toolTip").style("left", (d3.event.pageX + 20) + "px")
+                      .style("top", (d3.event.pageY + 5) + "px")
+                      .style("opacity", ".9");
             }
 
             function mouseOuted(d) {
-              $('.curGroup').text("").hide();
+              $('#header1').text("");
+              d3.select("#toolTip").style("opacity", "0");
             }
 
             function resetDepView() {
@@ -119,14 +132,17 @@
   <option value="1">subproject id</option>
 </select>
 <button onclick="download_svg()" style="float:right; width:200px; margin-right:30px">Export as svg file</button>
-<label class="curGroup" style="margin-left:80px; display:None;"></label>
 </div>
 <div class='hint' style="position:relative; top:20px; left:20px; font-size:0.9em; width:350px; color:#999;">
 This circle plot captures the interrelationships among subgroups. Mouse over any of the subgroup in this graph to see incoming links (dependents) in green and the outgoing links (dependencies) in red.
 </div>
-<div id="chart_placeholder" style="position:relative; left:250px; top:-40px">
+<div id="chart_placeholder" style="position:relative; left:150px; top:-60px">
 </div>
-
+  <!-- Tooltip -->
+<div id="toolTip" class="tooltip" style="opacity:0;">
+    <div id="header1" class="header"></div>
+    <div  class="tooltipTail"></div>
+</div>
 <script>
   function download_svg() {
     var e = document.createElement('script');
@@ -140,6 +156,7 @@ This circle plot captures the interrelationships among subgroups. Mouse over any
     e.setAttribute('class', 'svg-crowbar');
     document.body.appendChild(e);
   }
+
 </script>
 <!-- FOOTER -->
 <br/>

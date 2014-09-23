@@ -52,3 +52,61 @@
   stroke: #2ca02c;
 }
 
+div.tooltip {
+    position: absolute; /* reference for measurement */
+    text-align: left;
+    pointer-events: none; /* 'none' tells the mouse to ignore the rectangle */
+    background: #E0E0E0;
+    padding: 10px;
+    border: 1px solid #D5D5D5;
+    font-family: arial,helvetica,sans-serif;
+    position: absolute;
+    font-size: 1.1em;
+    color: #333;
+    padding: 10px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.9);
+    color: #000;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    border:1px solid rgba(200,200,200,0.85);
+    z-index: 10000;
+}
+
+div.tooltipTail {
+    position: absolute;
+    left:-7px;
+    top: 12px;
+    width: 7px;
+    height: 13px;
+    background: url("../images/tail_white.png") 50% 0%;
+}
+
+div.toolTipBody {
+    position:absolute;
+    height:100px;
+    width:230px;
+}
+
+#toolTip .header {
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 2px;
+    color:#3300FF;
+}
+
+div.header-rule{
+    height:1px;
+    margin:1px auto 3px;
+    margin-top:7px;
+    margin-bottom:7px;
+    background:#ddd;
+    width:125px;
+}
+
+div.header1{
+    text-align: left;
+    font-size: 12px;
+    margin-bottom: 2px;
+    color:black;
+}
