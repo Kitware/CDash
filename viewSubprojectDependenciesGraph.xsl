@@ -53,10 +53,12 @@
             }
             
             function mouseOvered(d) {
-              var toolTip = "&lt;p&gt;Group: " + d.group + "&lt;\p&gt;";
+              var header1Text = "Name: " + d.key + ", Group: " + d.group;
+              $('#header1').html(header1Text);
               if (d.depends) {
-                toolTip += "&lt;p&gt;Depends: ";
-                toolTip += d.depends.join(", ") + "&lt;/p&gt;";
+                var depends = "&lt;p&gt;Depends: ";
+                depends += d.depends.join(", ") + "&lt;/p&gt;";
+                $('#dependency').html(depends);
               }
               var dependents = "";
               d3.selectAll('.node--source').each(function (p) {
@@ -66,16 +68,18 @@
               });
               
               if (dependents) {
-                toolTip += "Dependents: " + dependents.substring(0,dependents.length-2);
+                dependents = "Dependents: " + dependents.substring(0,dependents.length-2);
+                $('#dependents').html(dependents);
               }
-              $('#header1').html(toolTip);
-              d3.select("#toolTip").style("left", (d3.event.pageX + 20) + "px")
+              d3.select("#toolTip").style("left", (d3.event.pageX + 40) + "px")
                       .style("top", (d3.event.pageY + 5) + "px")
                       .style("opacity", ".9");
             }
 
             function mouseOuted(d) {
               $('#header1').text("");
+              $('#dependents').text("");
+              $('#dependency').text("");
               d3.select("#toolTip").style("opacity", "0");
             }
 
@@ -141,6 +145,8 @@ This circle plot captures the interrelationships among subgroups. Mouse over any
   <!-- Tooltip -->
 <div id="toolTip" class="tooltip" style="opacity:0;">
     <div id="header1" class="header"></div>
+    <div id="dependency" style="color:#d62728;"></div>
+    <div id="dependents" style="color:#2ca02c;"></div>
     <div  class="tooltipTail"></div>
 </div>
 <script>

@@ -92,7 +92,8 @@ div.toolTipBody {
     text-align: left;
     font-size: 14px;
     margin-bottom: 2px;
-    color:#3300FF;
+    color:#000;
+    font-weight: 700;
 }
 
 div.header-rule{
