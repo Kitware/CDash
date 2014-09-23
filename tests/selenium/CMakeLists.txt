@@ -12,7 +12,7 @@ function(add_selenium_test TestName)
   )
   set_tests_properties(
     ${TestName} PROPERTIES
-    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*;.*Skipped: [1-9]+.*"
   )
 endfunction(add_selenium_test)
 
