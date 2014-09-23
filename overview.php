@@ -71,6 +71,7 @@ function gather_overview_data($start_date, $end_date, $group_id, $filter)
   $num_build_warnings = 0;
   $num_build_errors = 0;
   $num_failing_tests = 0;
+  $dynamic_analysis = array();
   $return_values = array();
 
   // for coverage
@@ -172,6 +173,51 @@ function gather_overview_data($start_date, $end_date, $group_id, $filter)
       }
     }
 
+  // handle dynamic analysis defects separately
+  //
+  // temporarily disable for style builds:
+  if ($filter != "AND b.name LIKE '%.style'")
+    {
+    $defects_query = "SELECT da.checker AS checker,
+                      sum(dd.value) AS defects
+                      FROM build AS b
+                      LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
+                      LEFT JOIN dynamicanalysis as da ON (da.buildid = b.id)
+                      LEFT JOIN dynamicanalysisdefect as dd ON (dd.dynamicanalysisid=da.id)
+                      WHERE b.projectid = '$projectid'
+                      AND b.starttime < '$end_date'
+                      AND b.starttime >= '$start_date'
+                      AND b2g.groupid = '$group_id'
+                      AND checker IS NOT NULL
+                      GROUP BY checker";
+
+    $defects_array = pdo_query($defects_query);
+    add_last_sql_error("gather_overview_data", $group_id);
+
+    while($defect_row = pdo_fetch_array($defects_array))
+      {
+      // make sure this row has both checker & defect info for us
+      if (!array_key_exists("checker", $defect_row) ||
+          !array_key_exists("defects", $defect_row) ||
+          !is_numeric($defect_row["defects"]))
+        {
+        continue;
+        }
+
+      file_put_contents("/tmp/zackdebug.txt", "DA row:\n" . print_r($defect_row, true) . "\n\n", FILE_APPEND);
+
+      if (!array_key_exists($defect_row["checker"], $dynamic_analysis))
+        {
+        $dynamic_analysis[$defect_row["checker"]] = $defect_row["defects"];
+        }
+      else
+        {
+        $dynamic_analysis[$defect_row["checker"]] += $defect_row["defects"];
+        }
+      }
+      $return_values["dynamic_analysis"] = $dynamic_analysis;
+    }
+
   return $return_values;
 }
 
@@ -251,6 +297,14 @@ foreach($build_groups as $build_group)
     }
   }
 
+
+// used to keep track of current dynamic analysis defects.
+$dynamic_analysis_data = array();
+
+// used to keep track of the different types of dynamic analysis
+// that are being performed on our build groups of interest.
+$dynamic_analysis_types = array();
+
 // gather up the relevant stats
 foreach($build_groups as $build_group)
   {
@@ -288,6 +342,26 @@ foreach($build_groups as $build_group)
       }
     }
 
+  if (array_key_exists("dynamic_analysis", $data) &&
+      !empty($data["dynamic_analysis"]))
+    {
+      foreach(array_keys($data["dynamic_analysis"]) as $checker)
+        {
+        if (!in_array($checker, $dynamic_analysis_types))
+          {
+          $dynamic_analysis_types[] = $checker;
+          }
+        if (!array_key_exists($checker, $dynamic_analysis_data))
+          {
+          $dynamic_analysis_data[$checker] = array();
+          }
+        // store how many defects were detected by this checker
+        // for this build group
+        $dynamic_analysis_data[$checker][$build_group["name"]] =
+          $data["dynamic_analysis"][$checker];
+        }
+    }
+
   // for charting purposes, we also pull data from the past two weeks
   for($i = -13; $i < 1; $i++)
     {
@@ -311,6 +385,32 @@ foreach($build_groups as $build_group)
         {
         $linechart_data[$measurement][$build_group["name"]][] =
           array('x' => $chart_end_timestamp * 1000, 'y' => $data[$measurement]);
+        }
+      }
+
+    // dynamic analysis
+    if (array_key_exists("dynamic_analysis", $data) &&
+        !empty($data["dynamic_analysis"]))
+      {
+      foreach(array_keys($data["dynamic_analysis"]) as $checker)
+        {
+        // add this DA checker to our list if its the first time we've
+        // encountered it.
+        if (!in_array($checker, $dynamic_analysis_types))
+          {
+          $dynamic_analysis_types[] = $checker;
+          }
+        // similarly, make sure this checker / build group combination have
+        // an array where they can store their line chart data.
+        if (!array_key_exists($checker, $linechart_data[$build_group["name"]]))
+          {
+          $linechart_data[$build_group["name"]][$checker] = array();
+          }
+
+        // add this dynamic analysis data point to our line chart data.
+        $num_defects = $data["dynamic_analysis"][$checker];
+        $linechart_data[$build_group["name"]][$checker][] =
+          array('x' => $chart_end_timestamp * 1000, 'y' => $num_defects);
         }
       }
 
@@ -407,6 +507,31 @@ foreach($build_groups as $build_group)
       json_encode($linechart_data[$build_group["name"]][$coverage_group_name]));
     $xml .= "</coverage>";
     }
+  }
+
+foreach($dynamic_analysis_types as $checker)
+  {
+  $xml .= "<dynamicanalysis>";
+  $xml .= add_XML_value("name", preg_replace("/[ -]/", "_", $checker));
+  $xml .= add_XML_value("nice_name", "$checker");
+
+  foreach($build_groups as $build_group)
+    {
+    // skip groups that don't have any data for this tool
+    if (empty($linechart_data[$build_group["name"]][$checker]))
+      {
+      continue;
+      }
+    $xml .= "<group>";
+    $xml .= add_XML_value("group_name", $build_group["name"]);
+    $xml .= add_XML_value("group_name_clean", str_replace(" ", "_", $build_group["name"]));
+    $xml .= add_XML_value("chart",
+      json_encode($linechart_data[$build_group["name"]][$checker]));
+    $xml .= add_XML_value("value",
+        $dynamic_analysis_data[$checker][$build_group["name"]]);
+    $xml .= "</group>";
+    }
+  $xml .= "</dynamicanalysis>";
   }
 
 $xml .= "</cdash>";

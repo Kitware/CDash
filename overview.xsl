@@ -35,6 +35,7 @@
 
         <!-- Generate line charts -->
         <script type="text/javascript">
+          <!-- build info section -->
           <xsl:for-each select='/cdash/measurement'>
             <xsl:variable name="measurement_name" select="name"/>
             <xsl:variable name="measurement_nice_name" select="nice_name"/>
@@ -48,6 +49,7 @@
             </xsl:for-each>
           </xsl:for-each>
 
+          <!-- coverage section -->
           <xsl:for-each select='/cdash/coverage'>
             var <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/> = <xsl:value-of select="chart"/>;
             makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
@@ -62,6 +64,20 @@
               <xsl:value-of select="current"/>,
               <xsl:value-of select="previous"/>,
               25);
+          </xsl:for-each>
+
+          <!-- dynamic analysis section -->
+          <xsl:for-each select='/cdash/dynamicanalysis'>
+            <xsl:variable name="checker_name" select="name"/>
+            <xsl:variable name="checker_nice_name" select="nice_name"/>
+            <xsl:for-each select='group'>
+              var <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/> =
+                <xsl:value-of select="chart"/>;
+              makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="$checker_nice_name"/>",
+                            "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/>_chart svg",
+                            <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/>,
+                            true);
+            </xsl:for-each>
           </xsl:for-each>
         </script>
       </head>
@@ -78,7 +94,7 @@
         </xsl:choose>
 
         <table class="table-bordered table-responsive table-condensed container-fluid">
-          <caption><h4>Build Info</h4></caption>
+          <caption class="h4">Configure / Build / Test</caption>
           <tr class="row">
               <th class="col-md-1"> </th>
                 <xsl:for-each select='/cdash/group'>
@@ -108,7 +124,7 @@
 
         <xsl:if test="/cdash/coverage">
           <table class="table-bordered table-responsive table-condensed container-fluid">
-            <caption><h4>Coverage</h4></caption>
+            <caption class="h4">Coverage</caption>
             <xsl:for-each select='/cdash/coverage'>
               <tr class="row" style="height:50px;">
                 <td class="col-md-1"><b><xsl:value-of select="group_name"/><xsl:text> </xsl:text><xsl:value-of select="nice_name"/></b></td>
@@ -125,6 +141,33 @@
             </xsl:for-each>
           </table>
         </xsl:if> <!-- end of coverage -->
+
+        <xsl:if test="/cdash/dynamicanalysis">
+          <table class="table-bordered table-responsive table-condensed container-fluid" style="width:100%;">
+            <caption class="h4">Dynamic Analysis</caption>
+            <xsl:for-each select='/cdash/dynamicanalysis'>
+              <xsl:variable name="checker_name" select="name"/>
+              <xsl:variable name="checker_nice_name" select="nice_name"/>
+              <xsl:for-each select='group'>
+                <tr class="row">
+                  <td class="col-md-1">
+                    <b><xsl:value-of select="$checker_nice_name"/></b>
+                  </td>
+                  <td class="col-md-1">
+                    <xsl:value-of select="group_name"/>
+                  </td>
+                  <td class="col-md-1">
+                    <xsl:value-of select="value"/>
+                  </td>
+                  <td class="col-md-1" id="{group_name_clean}_{$checker_name}_chart" style="height:51px;">
+                    <svg></svg>
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </xsl:for-each>
+          </table>
+        </xsl:if> <!-- end of dynamic analysis -->
+
 
         <!-- FOOTER -->
         <br/>
