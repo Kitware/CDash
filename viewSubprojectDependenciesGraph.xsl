@@ -44,6 +44,7 @@
                 .call(chart);
             });
           });
+
         </script>
        </head>
        <body bgcolor="#ffffff">
@@ -59,8 +60,25 @@
 
 <!-- Main -->
 <h3>Subproject Dependencies</h3>
+<button onclick="download_svg()">Export as svg file</button>
+<div style="font-size:10px">
+</div>
 <div id="chart_placeholder"></div>
 
+<script>
+  function download_svg() {
+    var e = document.createElement('script');
+
+    if (window.location.protocol === 'https:') {
+      e.setAttribute('src', 'https://rawgit.com/NYTimes/svg-crowbar/gh-pages/svg-crowbar.js');
+    } 
+    else { 
+      e.setAttribute('src', 'http://nytimes.github.com/svg-crowbar/svg-crowbar.js'); 
+    } 
+    e.setAttribute('class', 'svg-crowbar');
+    document.body.appendChild(e);
+  }
+</script>
 <!-- FOOTER -->
 <br/>
 <xsl:choose>
