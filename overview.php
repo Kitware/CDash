@@ -55,9 +55,9 @@ $xml .= "<title>CDash Overview : ".$projectname."</title>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
 $xml .= "<menu>";
-$xml .= add_XML_value("previous", "overview.php?projectid=$projectid&date=$previousdate");
-$xml .= add_XML_value("current", "overview.php?projectid=$projectid");
-$xml .= add_XML_value("next", "overview.phpv?projectid=$projectid&date=$nextdate");
+$xml .= add_XML_value("previous", "overview.php?project=$projectname&date=$previousdate");
+$xml .= add_XML_value("current", "overview.php?project=$projectname");
+$xml .= add_XML_value("next", "overview.phpv?project=$projectname&date=$nextdate");
 $xml .= "</menu>";
 
 // function to query database for relevant info
