@@ -17,8 +17,9 @@
         <xsl:call-template name="headscripts"/>
 
         <!-- Include static css -->
-        <link href="css/nv.d3.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="css/nv.d3.css" type="text/css"/>
+        <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="css/jquery.jqplot.min.css" type="text/css" />
 
         <!-- Include CDash's css -->
         <link rel="StyleSheet" type="text/css">
@@ -26,12 +27,16 @@
         </link>
 
         <!-- Include JavaScript -->
+        <script src="javascript/jquery-1.10.2.js" type="text/javascript"></script>
         <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/cdashAddNote.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/d3.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/nv.d3.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/linechart.js" type="text/javascript" charset="utf-8"></script>
         <script src="javascript/bulletchart.js" type="text/javascript" charset="utf-8"></script>
+        <script src="javascript/jquery.jqplot.min.js" type="text/javascript"></script>
+        <script src="javascript/plugins/jqplot.dateAxisRenderer.min.js" type="text/javascript"></script>
+        <script src="javascript/plugins/jqplot.highlighter.min.js" type="text/javascript"></script>
 
         <!-- Generate line charts -->
         <script type="text/javascript">
@@ -43,7 +48,7 @@
               var <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/> =
                 <xsl:value-of select="chart"/>;
               makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="$measurement_nice_name"/>",
-                            "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/>_chart svg",
+                            "<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/>_chart",
                             <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/>,
                             true);
             </xsl:for-each>
@@ -53,7 +58,7 @@
           <xsl:for-each select='/cdash/coverage'>
             var <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/> = <xsl:value-of select="chart"/>;
             makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
-                            "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>_chart svg",
+                            "<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>_chart",
                             <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>,
                             true);
             makeBulletChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
@@ -74,7 +79,7 @@
               var <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/> =
                 <xsl:value-of select="chart"/>;
               makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="$checker_nice_name"/>",
-                            "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/>_chart svg",
+                            "<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/>_chart",
                             <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/>,
                             true);
             </xsl:for-each>
@@ -98,7 +103,7 @@
           <tr class="row">
               <th class="col-md-1"> </th>
                 <xsl:for-each select='/cdash/group'>
-                  <th class="col-md-2" colspan="2">
+                  <th class="col-md-2 border-right border-left" colspan="2">
                     <xsl:value-of select="name"/>
                   </th>
                 </xsl:for-each>
@@ -107,15 +112,15 @@
           <xsl:for-each select='/cdash/measurement'>
             <xsl:variable name="measurement_name" select="name"/>
             <tr class="row">
-              <td class="col-md-1">
+              <td class="col-md-1 border-right">
                 <b><xsl:value-of select="nice_name"/></b>
               </td>
               <xsl:for-each select='group'>
-                <td class="col-md-1">
+                <td class="col-md-1 border-left">
                   <xsl:value-of select="value"/>
                 </td>
-                <td class="col-md-1" id="{group_name_clean}_{$measurement_name}_chart" style="height:51px;">
-                  <svg></svg>
+                <td class="col-md-1 border-right">
+                  <div id="{group_name_clean}_{$measurement_name}_chart" class="overview-line-chart"></div>
                 </td>
               </xsl:for-each>
             </tr>
@@ -131,8 +136,8 @@
                 <td class="col-md-1">
                   <xsl:value-of select="current"/>%
                 </td>
-                <td id="{group_name_clean}_{name}_chart" class="col-md-1" style="height:50px;">
-                  <svg></svg>
+                <td class="col-md-1">
+                  <div id="{group_name_clean}_{name}_chart" class="overview-line-chart"></div>
                 </td>
                 <td id="{group_name_clean}_{name}_bullet" class="col-md-4" colspan="4" style="height:50px;">
                   <svg></svg>
@@ -159,8 +164,8 @@
                   <td class="col-md-1">
                     <xsl:value-of select="value"/>
                   </td>
-                  <td class="col-md-1" id="{group_name_clean}_{$checker_name}_chart" style="height:51px;">
-                    <svg></svg>
+                  <td class="col-md-1">
+                    <div id="{group_name_clean}_{$checker_name}_chart" class="overview-line-chart"></div>
                   </td>
                 </tr>
               </xsl:for-each>

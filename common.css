@@ -1270,3 +1270,16 @@ textarea {
   border: 1px inset #ccc;
   overflow-x:scroll;
 }
+
+/* used in overview.php */
+.border-right {
+  border-right: 2px black solid !important;
+}
+.border-left {
+  border-left: 2px black solid !important;
+}
+.overview-line-chart {
+  height:100px;
+  width:200px;
+}
+

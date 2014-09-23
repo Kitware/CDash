@@ -369,6 +369,8 @@ foreach($build_groups as $build_group)
     $chart_end_timestamp = $end_timestamp + ($i * 3600 * 24);
     $chart_beginning_UTCDate = gmdate(FMT_DATETIME, $chart_beginning_timestamp);
     $chart_end_UTCDate = gmdate(FMT_DATETIME, $chart_end_timestamp);
+    // to be passed on to javascript chart renderes
+    $chart_data_date = gmdate("M d Y H:i:s", $chart_end_timestamp);
 
     $data = gather_overview_data($chart_beginning_UTCDate, $chart_end_UTCDate,
                                  $build_group["id"], $without_style_filter);
@@ -379,12 +381,12 @@ foreach($build_groups as $build_group)
       if ($measurement === 'style_errors')
         {
         $linechart_data[$measurement][$build_group["name"]][] =
-          array('x' => $chart_end_timestamp * 1000, 'y' => $style_data['build_errors']);
+          array($chart_data_date, $style_data['build_errors']);
         }
       else
         {
         $linechart_data[$measurement][$build_group["name"]][] =
-          array('x' => $chart_end_timestamp * 1000, 'y' => $data[$measurement]);
+          array($chart_data_date, $data[$measurement]);
         }
       }
 
@@ -410,7 +412,7 @@ foreach($build_groups as $build_group)
         // add this dynamic analysis data point to our line chart data.
         $num_defects = $data["dynamic_analysis"][$checker];
         $linechart_data[$build_group["name"]][$checker][] =
-          array('x' => $chart_end_timestamp * 1000, 'y' => $num_defects);
+          array($chart_data_date, (int)$num_defects);
         }
       }
 
@@ -421,7 +423,7 @@ foreach($build_groups as $build_group)
         {
         $coverage_value = $data[$coverage_group_name];
         $linechart_data[$build_group["name"]][$coverage_group_name][] =
-          array('x' => $chart_end_timestamp * 1000, 'y' => $coverage_value);
+          array($chart_data_date, $coverage_value);
         }
       }
     }
