@@ -83,6 +83,22 @@
                             true);
             </xsl:for-each>
           </xsl:for-each>
+
+          <!-- static analysis section -->
+          <xsl:for-each select='/cdash/staticanalysis'>
+            <xsl:variable name="group_name" select="group_name"/>
+            <xsl:variable name="group_name_clean" select="group_name_clean"/>
+
+            <xsl:for-each select='measurement'>
+              var <xsl:value-of select="$group_name_clean"/>_<xsl:value-of select="name"/> =
+                <xsl:value-of select="chart"/>;
+              makeLineChart("<xsl:value-of select="$group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
+                            "<xsl:value-of select="$group_name_clean"/>_<xsl:value-of select="name"/>_chart",
+                            <xsl:value-of select="$group_name_clean"/>_<xsl:value-of select="name"/>,
+                            true);
+            </xsl:for-each>
+          </xsl:for-each>
+
         </script>
       </head>
 
@@ -130,7 +146,7 @@
           <table class="table-bordered table-responsive table-condensed container-fluid">
             <caption class="h4">Coverage</caption>
             <xsl:for-each select='/cdash/coverage'>
-              <tr class="row" style="height:50px;">
+              <tr class="row" style="height:100px;">
                 <td class="col-md-1"><b><xsl:value-of select="group_name"/><xsl:text> </xsl:text><xsl:value-of select="nice_name"/></b></td>
                 <td class="col-md-1">
                   <xsl:value-of select="current"/>%
@@ -138,7 +154,7 @@
                 <td class="col-md-1">
                   <div id="{group_name_clean}_{name}_chart" class="overview-line-chart"></div>
                 </td>
-                <td id="{group_name_clean}_{name}_bullet" class="col-md-4" colspan="4" style="height:50px;">
+                <td id="{group_name_clean}_{name}_bullet" class="col-md-4" colspan="4" style="height:100px;">
                   <svg></svg>
                 </td>
               </tr>
@@ -172,6 +188,30 @@
           </table>
         </xsl:if> <!-- end of dynamic analysis -->
 
+        <xsl:if test="/cdash/staticanalysis">
+          <table class="table-bordered table-responsive table-condensed container-fluid" style="width:100%;">
+            <caption class="h4">Static Analysis</caption>
+            <xsl:for-each select='/cdash/staticanalysis'>
+              <xsl:variable name="group_name_clean" select="group_name_clean"/>
+              <tr class="row">
+                <td class="col-md-1">
+                  <b><xsl:value-of select="group_name"/></b>
+                </td>
+                <xsl:for-each select='measurement'>
+                  <td class="col-md-1">
+                    <xsl:value-of select="nice_name"/>
+                  </td>
+                  <td class="col-md-1">
+                    <xsl:value-of select="value"/>
+                  </td>
+                  <td class="col-md-1">
+                    <div id="{$group_name_clean}_{name}_chart" class="overview-line-chart"></div>
+                  </td>
+                </xsl:for-each>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:if> <!-- end of static analysis -->
 
         <!-- FOOTER -->
         <br/>
