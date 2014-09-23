@@ -28,14 +28,13 @@ class Example extends CDashSeleniumTestCase
   $this->click("css=#admin > ul > li.endsubmenu > a");
   $this->waitForPageToLoad("30000");
 
-  $this->select("id=newColumn", "label=Experimental");
-  $this->click("id=addColumn");
-  $this->click("//li[@id='13']/div/div");
+  $this->select("id=newBuildColumn", "label=Experimental");
+  $this->click("id=addBuildColumn");
   $this->click("id=saveLayout");
   $this->click("link=Go to overview");
   $this->waitForPageToLoad("30000");
 
-  $this->assertEquals("14.29%", $this->getText("//tr[7]/td[2]"));
+  $this->assertEquals("14.29%", $this->getText("//table[2]//tr[1]//td[2]"));
   }
 }
 ?>
