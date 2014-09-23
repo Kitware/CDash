@@ -1,0 +1,54 @@
+.node {
+  /* font: 400 14px "Helvetica Neue", Helvetica, Arial, sans-serif; */
+  font-weight: 400;
+  font-size: 13px;
+  fill: #888;
+  font-family: 'Open Sans', sans-serif;
+  opacity: 0.8;
+}
+
+.node:hover {
+  fill: #000;
+  cursor: hand;
+  cursor: pointer;
+}
+
+.link {
+  stroke: steelblue;
+  stroke-opacity: .4;
+  fill: none;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.node:hover,
+.node--source,
+.node--target {
+  fill: #000;
+  font-weight: 700;
+  opacity: 1;
+}
+
+.node--source {
+  fill: #2ca02c;
+}
+
+.node--target {
+  fill: #d62728;
+}
+
+.link--source,
+.link--target {
+  stroke-opacity: 1;
+  stroke-width: 2px;
+  opacity: 1;
+}
+
+.link--source {
+  stroke: #d62728;
+}
+
+.link--target {
+  stroke: #2ca02c;
+}
+
