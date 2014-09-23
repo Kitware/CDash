@@ -53,7 +53,7 @@
             }
             
             function mouseOvered(d) {
-              $('.curGroup').text(d.group).show();
+              $('.curGroup').text("Group: " + d.group).show();
             }
 
             function mouseOuted(d) {
@@ -112,8 +112,8 @@
   <option value="0" selected="selected">subproject name</option>
   <option value="1">subproject id</option>
 </select>
-<label class="curGroup" style="margin-left:20px; display:None;"></label>
 <button onclick="download_svg()" style="float:right; width:200px; margin-right:30px">Export as svg file</button>
+<label class="curGroup" style="margin-left:20px; display:None;"></label>
 </div>
 <div id="chart_placeholder"></div>
 
