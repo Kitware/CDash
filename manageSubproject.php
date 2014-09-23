@@ -157,21 +157,27 @@ if($projectid>=0)
     $xml .= add_XML_value("name",$Project->GetName());
     
     $subprojectids = $Project->GetSubProjects();
+
+    $subprojs = array(); # array to store all subprojects
     foreach($subprojectids as $subprojectid)
       {
-      $SubProject1 = new SubProject();
-      $SubProject1->Id = $subprojectid;
+      $SubProject = new SubProject();
+      $SubProject->Id = $subprojectid;
+      $subprojs[$subprojectid] = $SubProject;
+      }
+    foreach($subprojectids as $subprojectid)
+      {
+      $SubProject = $subprojs[$subprojectid];
       $xml .= "<subproject>";
       $xml .= add_XML_value("id",$subprojectid);
-      $xml .= add_XML_value("name",$SubProject1->GetName());
-      $xml .= add_XML_value("core",$SubProject1->GetCore());
+      $xml .= add_XML_value("name",$SubProject->GetName());
+      $xml .= add_XML_value("core",$SubProject->GetCore());
       
-      $dependencies = $SubProject1->GetDependencies();
+      $dependencies = $SubProject->GetDependencies();
       
       foreach($dependencies as $dependency)
         {
-        $Dependency = new SubProject();
-        $Dependency->Id = $dependency;
+        $Dependency = $subprojs[$dependency];
         $xml .= "<dependency>";
         $xml .= add_XML_value("id",$dependency);
         $xml .= add_XML_value("name",$Dependency->GetName());
@@ -186,8 +192,7 @@ if($projectid>=0)
            {
            continue;
            }
-        $Dependency = new SubProject();
-        $Dependency->Id = $dependency;
+        $Dependency = $subprojs[$dependency];
         $xml .= "<availabledependency>";
         $xml .= add_XML_value("id",$dependency);
         $xml .= add_XML_value("name",$Dependency->GetName());
