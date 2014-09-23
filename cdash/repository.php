@@ -470,6 +470,18 @@ function get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, $b
   return make_cdash_url($diff_url);
 }
 
+/** Return the Stash diff URL */
+function get_stash_diff_url($projecturl, $directory, $file, $revision)
+{
+  $diff_url = $projecturl . "/browse/";
+  if($directory)
+    {
+    $diff_url .= $directory . "/";
+    }
+  $diff_url .= $file . "?until=" . $revision;
+  return make_cdash_url($diff_url);
+}
+
 /** Return the Gitorious diff URL */
 function get_gitorious_diff_url($projecturl, $directory, $file, $revision)
 {
@@ -571,6 +583,13 @@ function get_p4web_revision_url($projecturl, $revision, $priorrevision)
 function get_cvstrac_revision_url($projecturl, $revision, $priorrevision)
 {
   $revision_url = ""; // not implemented
+  return make_cdash_url($revision_url);
+}
+
+/** Return the Stash revision URL */
+function get_stash_revision_url($projecturl, $revision, $priorrevision)
+{
+  $revision_url = $projecturl. "/commits/" . $revision;
   return make_cdash_url($revision_url);
 }
 

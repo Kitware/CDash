@@ -590,6 +590,7 @@ $xml .= AddCVSViewer("gitorious","Gitorious",$Project->CvsViewerType);
 $xml .= AddCVSViewer("gitweb","GitWeb",$Project->CvsViewerType);
 $xml .= AddCVSViewer("gitweb2","GitWeb2",$Project->CvsViewerType);
 $xml .= AddCVSViewer("hgweb","Hgweb",$Project->CvsViewerType);
+$xml .= AddCVSViewer("stash","Atlassian Stash",$Project->CvsViewerType);
 $xml .= AddCVSViewer("loggerhead","Loggerhead",$Project->CvsViewerType);
 $xml .= AddCVSViewer("p4web","P4Web",$Project->CvsViewerType);
 $xml .= AddCVSViewer("redmine","Redmine",$Project->CvsViewerType);
