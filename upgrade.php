@@ -907,6 +907,10 @@ if(isset($_GET['upgrade-2-4']))
   // Support for separate non-core coverage threshold
   AddTableField('project', 'coveragethreshold2', 'smallint(6)', 'smallint', '70');
 
+  // Support for larger types
+  ModifyTableField("buildfailure","workingdirectory","VARCHAR( 512)","VARCHAR( 512 )","",true,false);
+  ModifyTableField("buildfailure","outputfile","VARCHAR( 512)","VARCHAR( 512 )","",true,false);
+  
   // Set the database version
   setVersion();
 
