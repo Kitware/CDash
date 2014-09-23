@@ -1811,6 +1811,89 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
   // Look for the subproject
   $row=0;
   $subprojectids = $Project->GetSubProjects();
+  $subprojProp = array();
+  foreach($subprojectids as $subprojectid)
+    {
+    $SubProject = new SubProject();
+    $SubProject->Id = $subprojectid;
+    $subprojProp[$subprojectid] = array('name'=>$SubProject->GetName());
+    }
+  $testSubProj = new SubProject();
+  $result = $testSubProj->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['nbuilderror'] = $row[1];
+        }
+    }
+  $result = $testSubProj->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['nbuildwarning'] = $row[1];
+        }
+    }
+  $result = $testSubProj->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['nbuildpass'] = $row[1];
+        }
+    }
+  $result = $testSubProj->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['nconfigureerror'] = $row[1];
+        }
+    }
+  $result = $testSubProj->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['nconfigurewarning'] = $row[1];
+        }
+    }
+  $result = $testSubProj->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['nconfigurepass'] = $row[1];
+        }
+    }
+  $result = $testSubProj->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['ntestpass'] = $row[1];
+        }
+    }
+  $result = $testSubProj->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['ntestfail'] = $row[1];
+        }
+    }
+  $result = $testSubProj->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate, True);
+  if ($result)
+    {
+      foreach ($result as $row)
+        {
+          $subprojProp[$row['subprojectid']]['ntestnotrun'] = $row[1];
+        }
+    }
+  $reportArray = array('nbuilderror', 'nbuildwarning', 'nbuildpass',
+                       'nconfigureerror', 'nconfigurewarning', 'nconfigurepass',
+                       'ntestpass', 'ntestfail', 'ntestnotrun');
   foreach($subprojectids as $subprojectid)
     {
     $SubProject = new SubProject();
@@ -1820,15 +1903,12 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
     $xml .= add_XML_value("name",$SubProject->GetName());
     $xml .= add_XML_value("name_encoded",urlencode($SubProject->GetName()));
 
-    $xml .= add_XML_value("nbuilderror",$SubProject->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nbuildwarning",$SubProject->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nbuildpass",$SubProject->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nconfigureerror",$SubProject->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nconfigurewarning",$SubProject->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("nconfigurepass",$SubProject->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("ntestpass",$SubProject->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("ntestfail",$SubProject->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
-    $xml .= add_XML_value("ntestnotrun",$SubProject->GetNumberOfNotRunTests($beginning_UTCDate,$end_UTCDate));
+    foreach ($reportArray as $reportnum)
+      {
+      $reportval = array_key_exists($reportnum, $subprojProp[$subprojectid]) ?
+                   $subprojProp[$subprojectid][$reportnum] : 0;
+      $xml .= add_XML_value($reportnum, $reportval);
+      }
     if(strlen($SubProject->GetLastSubmission()) == 0)
       {
       $xml .= add_XML_value("lastsubmission","NA");
