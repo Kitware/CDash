@@ -61,7 +61,7 @@ $xml .= add_XML_value("next", "overview.phpv?projectid=$projectid&date=$nextdate
 $xml .= "</menu>";
 
 // function to query database for relevant info
-function gather_overview_data($start_date, $end_date, $group_id)
+function gather_overview_data($start_date, $end_date, $group_id, $filter)
 {
   global $projectid;
   global $haveNonCore;
@@ -96,6 +96,11 @@ function gather_overview_data($start_date, $end_date, $group_id)
                    AND b.starttime < '$end_date'
                    AND b.starttime >= '$start_date'
                    AND b2g.groupid = '$group_id'";
+
+  if (!empty($filter))
+    {
+    $builds_query .= $filter;
+    }
 
   $builds_array = pdo_query($builds_query);
   add_last_sql_error("gather_overview_data", $group_id);
@@ -172,7 +177,8 @@ function gather_overview_data($start_date, $end_date, $group_id)
 
 
 $measurements = array("configure_warnings", "configure_errors",
-                      "build_warnings", "build_errors", "failing_tests");
+                      "build_warnings", "build_errors", "failing_tests",
+                      "style_errors");
 
 // get the build groups that are included in this project's overview
 $query =
@@ -198,7 +204,6 @@ foreach($measurements as $measurement)
     $linechart_data[$measurement][$build_group["name"]] = array();
     }
   }
-
 
 // This logic will need to change if we abstract way core vs. non-core
 $coverage_data = array();
@@ -249,12 +254,24 @@ foreach($build_groups as $build_group)
   $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
   $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
 
+  $without_style_filter = "AND b.name NOT LIKE '%.style'";
   $data = gather_overview_data($beginning_UTCDate, $end_UTCDate,
-                               $build_group["id"]);
+                               $build_group["id"], $without_style_filter);
+
+  $with_style_filter = "AND b.name LIKE '%.style'";
+  $style_data = gather_overview_data($beginning_UTCDate, $end_UTCDate,
+                                     $build_group["id"], $with_style_filter);
 
   foreach($measurements as $measurement)
     {
-    $overview_data[$measurement][$build_group["name"]] = $data[$measurement];
+    if ($measurement === 'style_errors')
+      {
+      $overview_data[$measurement][$build_group["name"]] = $style_data['build_errors'];
+      }
+    else
+      {
+      $overview_data[$measurement][$build_group["name"]] = $data[$measurement];
+      }
     }
 
   // here we assume that coverage will only be performed by one
@@ -275,12 +292,23 @@ foreach($build_groups as $build_group)
     $chart_end_timestamp = $end_timestamp + ($i * 3600 * 24);
     $chart_beginning_UTCDate = gmdate(FMT_DATETIME, $chart_beginning_timestamp);
     $chart_end_UTCDate = gmdate(FMT_DATETIME, $chart_end_timestamp);
+
     $data = gather_overview_data($chart_beginning_UTCDate, $chart_end_UTCDate,
-                                 $build_group["id"]);
+                                 $build_group["id"], $without_style_filter);
+    $style_data = gather_overview_data($chart_beginning_UTCDate, $chart_end_UTCDate,
+                                 $build_group["id"], $with_style_filter);
     foreach($measurements as $measurement)
       {
-      $linechart_data[$measurement][$build_group["name"]][] =
-        array('x' => $chart_end_timestamp * 1000, 'y' => $data[$measurement]);
+      if ($measurement === 'style_errors')
+        {
+        $linechart_data[$measurement][$build_group["name"]][] =
+          array('x' => $chart_end_timestamp * 1000, 'y' => $style_data['build_errors']);
+        }
+      else
+        {
+        $linechart_data[$measurement][$build_group["name"]][] =
+          array('x' => $chart_end_timestamp * 1000, 'y' => $data[$measurement]);
+        }
       }
 
     // coverage too
