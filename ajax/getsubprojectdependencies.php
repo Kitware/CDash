@@ -12,8 +12,6 @@ include('login.php');
 require_once("models/project.php");
 require_once("models/subproject.php");
 
-file_put_contents("/tmp/zackdebug.txt", "we get this far");
-
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
 
@@ -73,6 +71,7 @@ foreach($subprojectids as $subprojectid)
   {
   $SubProject = $subprojs[$subprojectid];
   $subarray = array("name"=>$SubProject->GetName());
+  $subarray['group'] = $SubProject->GetCore() ? "Core" : "Non-Core";
   $dependencies = $SubProject->GetDependencies($date);
   $deparray = array();
   foreach($dependencies as $depprojid)
@@ -88,6 +87,5 @@ foreach($subprojectids as $subprojectid)
     }
   $result[] = $subarray;
   } // end foreach subprojects
-  file_put_contents("/tmp/zackdebug.txt", "here is result: $result");
-  echo json_encode($result);
+echo json_encode($result);
 ?>

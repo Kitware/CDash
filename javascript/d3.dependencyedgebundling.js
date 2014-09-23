@@ -34,14 +34,21 @@ d3.chart.dependencyedgebundling = function(options) {
       if (!node) {
         node = map[name] = data || {name: name, children: []};
         if (name.length) {
-          node.parent = map[""];
-          node.parent.children.push(node);
+          if (data && data.group){
+            node.parent = map[data.group];
+            node.parent.children.push(node);
+          }
+          else {
+            node.parent = map[""];
+            node.parent.children.push(node);
+          }
           node.key = name;
         }
       }
     }
-
     setparent("", null);
+    setparent("Core", null);
+    setparent("Non-Core", null);
     classes.forEach(function(d) {
       setparent(d.name, d);
     });
