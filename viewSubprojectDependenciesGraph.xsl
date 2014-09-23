@@ -24,28 +24,66 @@
 
         <script type="text/javascript" src="javascript/d3.min.js"></script>
         <script type="text/javascript" src="javascript/d3.dependencyedgebundling.js"></script>
-
         <script>
-          $(function(){
-            var chart = d3.chart.dependencyedgebundling();
-            var rooturl = location.host;
-            var projname = "<xsl:value-of select="cdash/dashboard/projectname"/>";
-            var ajaxlink = "ajax/getsubprojectdependencies.php?project=" + projname;
-            console.log(ajaxlink);
-            d3.json(ajaxlink, function(error, classes) {
-              if (error){
-                errormsg = "json error " + error + " data: " + classes;
-                console.log(errormsg);
-                document.write(errormsg);
-                return;
-              }
-              d3.select('#chart_placeholder')
-                .datum(classes)
-                .call(chart);
-            });
-          });
-
+          var projname = "<xsl:value-of select="cdash/dashboard/projectname"/>";
         </script>
+        <xsl:text disable-output-escaping="yes">
+          &lt;script&gt;
+            var chart = d3.chart.dependencyedgebundling();
+            var dataroot;
+            function sort_by_name (a, b) {
+              if (a.name &lt; b.name) {
+                return -1;
+              }
+              if (a.name &gt; b.name) {
+                return 1;
+              }
+              return 0;
+            }
+
+            function sort_by_id (a, b) {
+              if (a.id &lt; b.id) {
+                return -1;
+              }
+              if (a.id &gt; b.id) {
+                return 1;
+              }
+              return 0;
+            }
+
+            function resetDepView() {
+              d3.select('#chart_placeholder svg').remove();
+              d3.select('#chart_placeholder')
+                .datum(dataroot)
+                .call(chart);
+            }
+            $(function(){
+              $('#selectedsort').on("change", function(e) {
+                selected = $(this).val();
+                if (parseInt(selected) === 1) {
+                  dataroot.sort(sort_by_id);
+                } else if (parseInt(selected) === 0) {
+                  dataroot.sort(sort_by_name);
+                }
+                resetDepView(dataroot);
+              });
+              var rooturl = location.host;
+              var ajaxlink = "ajax/getsubprojectdependencies.php?project=" + projname;
+              console.log(ajaxlink);
+              d3.json(ajaxlink, function(error, classes) {
+                if (error){
+                  errormsg = "json error " + error + " data: " + classes;
+                  console.log(errormsg);
+                  document.write(errormsg);
+                  return;
+                }
+                dataroot = classes;
+                dataroot.sort(sort_by_name);
+                resetDepView(dataroot);
+              });
+            });
+          &lt;/script&gt;
+        </xsl:text>
        </head>
        <body bgcolor="#ffffff">
 
@@ -60,8 +98,13 @@
 
 <!-- Main -->
 <h3>Subproject Dependencies</h3>
-<button onclick="download_svg()">Export as svg file</button>
 <div style="font-size:10px">
+<label for="selectedsort">Sorted by:</label>
+<select id="selectedsort">
+  <option value="0" selected="selected">subproject name</option>
+  <option value="1">subproject id</option>
+</select>
+<button onclick="download_svg()">Export as svg file</button>
 </div>
 <div id="chart_placeholder"></div>
 

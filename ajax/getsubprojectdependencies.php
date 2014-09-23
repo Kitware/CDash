@@ -70,7 +70,7 @@ foreach($subprojectids as $subprojectid)
 foreach($subprojectids as $subprojectid)
   {
   $SubProject = $subprojs[$subprojectid];
-  $subarray = array("name"=>$SubProject->GetName());
+  $subarray = array("name"=>$SubProject->GetName(), "id"=>$subprojectid);
   $subarray['group'] = $SubProject->GetCore() ? "Core" : "Non-Core";
   $dependencies = $SubProject->GetDependencies($date);
   $deparray = array();
