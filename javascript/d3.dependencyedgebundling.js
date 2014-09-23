@@ -16,6 +16,7 @@ d3.chart.dependencyedgebundling = function(options) {
   var textRadius ;
   var innerRadius = radius - textRadius;
   var txtLinkGap = 5;
+  var _mouseOvered, _mouseOuted;
 
   function resetDimension(){
     radius = diameter / 2;
@@ -161,6 +162,7 @@ d3.chart.dependencyedgebundling = function(options) {
             .classed("node--target", function(n) { return n.target; })
             .classed("node--source", function(n) { return n.source; });
 
+        _mouseOvered(d);
       }
 
       function mouseouted(d) {
@@ -170,12 +172,27 @@ d3.chart.dependencyedgebundling = function(options) {
 
         node
             .classed("node--target", false)
-            .classed("node--source", false);
+            .classed("node--source", false)
+            .text(function(d) {return d.key;});
+
+        _mouseOuted(d);
 
       }
 
     });
   }
+  
+  chart.mouseOvered = function (d) {
+    if (!arguments.length) return d;
+    _mouseOvered = d;
+    return chart;
+  };
+
+  chart.mouseOuted = function (d) {
+    if (!arguments.length) return d;
+    _mouseOuted = d;
+    return chart;
+  };
 
   return chart;
 };

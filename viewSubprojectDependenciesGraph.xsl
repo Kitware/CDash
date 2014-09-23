@@ -30,6 +30,7 @@
         <xsl:text disable-output-escaping="yes">
           &lt;script&gt;
             var chart = d3.chart.dependencyedgebundling();
+            chart.mouseOvered(mouseOvered).mouseOuted(mouseOuted);
             var dataroot;
             function sort_by_name (a, b) {
               if (a.name &lt; b.name) {
@@ -50,6 +51,14 @@
               }
               return 0;
             }
+            
+            function mouseOvered(d) {
+              $('.curGroup').text(d.group).show();
+            }
+
+            function mouseOuted(d) {
+              $('.curGroup').text("").hide();
+            }
 
             function resetDepView() {
               d3.select('#chart_placeholder svg').remove();
@@ -69,7 +78,6 @@
               });
               var rooturl = location.host;
               var ajaxlink = "ajax/getsubprojectdependencies.php?project=" + projname;
-              console.log(ajaxlink);
               d3.json(ajaxlink, function(error, classes) {
                 if (error){
                   errormsg = "json error " + error + " data: " + classes;
@@ -97,14 +105,15 @@
 </xsl:choose>
 
 <!-- Main -->
-<h3>Subproject Dependencies</h3>
-<div style="font-size:10px">
+<div style="position:relative; left:20px; overflow:hidden;">
+<h3>Subproject Dependencies Graph</h3>
 <label for="selectedsort">Sorted by:</label>
 <select id="selectedsort">
   <option value="0" selected="selected">subproject name</option>
   <option value="1">subproject id</option>
 </select>
-<button onclick="download_svg()">Export as svg file</button>
+<label class="curGroup" style="margin-left:20px; display:None;"></label>
+<button onclick="download_svg()" style="float:right; width:200px; margin-right:30px">Export as svg file</button>
 </div>
 <div id="chart_placeholder"></div>
 
