@@ -103,7 +103,7 @@ class BuildFailure
     $query = "INSERT INTO buildfailure (buildid,type,workingdirectory,stdoutput,stderror,exitcondition,
               language,targetname,outputfile,outputtype,sourcefile,newstatus,crc32)
               VALUES (".qnum($this->BuildId).",".qnum($this->Type).",'$workingDirectory',
-              '$stdOutput','$stdError',".qnum($exitCondition).",
+              '$stdOutput','$stdError','$exitCondition',
               '$language','$targetName','$outputFile','$outputType','$sourceFile',0,".qnum($crc32).")";                     
     if(!pdo_query($query))
       {
