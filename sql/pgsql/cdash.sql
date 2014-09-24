@@ -1299,13 +1299,14 @@ CREATE INDEX "feed_projectid" on "feed" ("projectid");
 CREATE INDEX "feed_date" on "feed" ("date");
 
 --
--- Table: overviewbuildgroups
+-- Table: overview_components
 --
-CREATE TABLE "overviewbuildgroups" (
+CREATE TABLE "overview_components" (
   "projectid" bigint NOT NULL,
   "buildgroupid" bigint NOT NULL,
-  "position" bigint NOT NULL
+  "position" bigint NOT NULL,
+  "type" text DEFAULT 'build' NOT NULL,
 );
-CREATE INDEX "overviewbuildgroups_projectid" on "overviewbuildgroups" ("projectid");
-CREATE INDEX "overviewbuildgroups_buildgroupid" on "overviewbuildgroups" ("buildgroupid");
+CREATE INDEX "overview_components_projectid" on "overview_components" ("projectid");
+CREATE INDEX "overview_components_buildgroupid" on "overview_components" ("buildgroupid");
 
