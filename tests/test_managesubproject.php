@@ -43,9 +43,9 @@ class ManageSubprojectTestCase extends KWWebTestCase
       return 1;
       }
 
-    if(!$this->setFieldByName("dependency_selection_2", "3"))
+    if(!$this->setFieldByName("dependency_selection_19", "3"))
       {
-      $this->fail("Set dependency_selection_2 returned false");
+      $this->fail("Set dependency_selection_19 returned false");
       return 1;
       }
     $this->clickSubmitByName("addDependency");

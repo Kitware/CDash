@@ -74,11 +74,11 @@ foreach($subprojectids as $subprojectid)
   $grp = $SubProject->GetCore();
   if ($grp == 0)
     {
-    $subarray['group'] = "Core";
+    $subarray['group'] = "Non-Core";
     }
   else if ($grp == 1)
     {
-    $subarray['group'] = "Non-Core";
+    $subarray['group'] = "Core";
     }
   else if ($grp == 2)
     {

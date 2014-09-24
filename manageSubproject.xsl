@@ -46,10 +46,10 @@
 <b>Warning: <xsl:value-of select="cdash/warning"/></b><br/><br/>
 </xsl:if>
 
-<table   border="0">
+<table border="0">
   <tr>
     <td width="10%"><div align="right"><strong>Project:</strong></div></td>
-    <td width="90%" >
+    <td width="40%" >
     <form name="form1" method="post">
     <xsl:attribute name="action">manageSubproject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
     <select onchange="location = 'manageSubproject.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
@@ -69,6 +69,15 @@
         </xsl:for-each>
         </select>
       </form>
+    </td>
+    <td width="10%"><div align="right"><strong>Display:</strong></div></td>
+    <td width="10%" >
+      <select id="displayChooser">
+        <option>All</option>
+        <option>Non-Core</option>
+        <option>Core</option>
+        <option>Third Party</option>
+      </select>
     </td>
   </tr>
 </table>
@@ -92,7 +101,18 @@
             <td ><strong>Current Subprojects</strong></td>
           </tr>
           <xsl:for-each select="cdash/project/subproject">
+            <xsl:sort select="name"/>
           <tr>
+
+            <!-- set class to subproject group.  Used to filter display. -->
+            <xsl:attribute name="class">
+              <xsl:choose>
+                <xsl:when test="core=0">noncore</xsl:when>
+                <xsl:when test="core=1">core</xsl:when>
+                <xsl:when test="core=2">thirdparty</xsl:when>
+              </xsl:choose>
+            </xsl:attribute>
+
             <td width="10%"></td>
             <td width="90%">
             <table width="100%" border="0">
@@ -139,7 +159,7 @@
             <input type="hidden" name="dependencyid">
             <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
             </input>
-            <select>
+            <select class="dependency_selector">
                <xsl:attribute name="name">dependency_selection_<xsl:value-of select="id"/></xsl:attribute>
                 <option>
                 <xsl:attribute name="value">-1</xsl:attribute>
@@ -156,7 +176,7 @@
                 </option>
                 </xsl:for-each>
                 </select>
-                <input type="submit" name="addDependency" value="Add"/>
+                <input type="submit" name="addDependency" value="Add" disabled="disabled" />
               </form>
             </td>
             </tr>
