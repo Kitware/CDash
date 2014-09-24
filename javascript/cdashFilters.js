@@ -298,7 +298,7 @@ function filters_create_hyperlink()
   s = s + "&filtercount=" + n;
   s = s + "&showfilters=1";
 
-  l = $("#id_limit").attr("value");
+  l = $("#id_limit").val();
   if (l != 0)
   {
     s = s + "&limit=" + l;
@@ -306,14 +306,14 @@ function filters_create_hyperlink()
 
   if (n > 1)
   {
-    s = s + "&filtercombine=" + $("#id_filtercombine").attr("value");
+    s = s + "&filtercombine=" + $("#id_filtercombine").val();
   }
 
   for (i=1; i<=n; ++i)
   {
-    s = s + "&field" + i + "=" + escape($("#id_field"+i).attr("value"));
-    s = s + "&compare" + i + "=" + escape($("#id_compare"+i).attr("value"));
-    s = s + "&value" + i + "=" + escape($("#id_value"+i).attr("value"));
+    s = s + "&field" + i + "=" + escape($("#id_field"+i).val());
+    s = s + "&compare" + i + "=" + escape($("#id_compare"+i).val());
+    s = s + "&value" + i + "=" + escape($("#id_value"+i).val());
   }
 
   s = s + collapse_str;
