@@ -665,6 +665,8 @@ function sanitize_string($input_string)
   $retval = str_replace(" ", "_", $input_string);
   // replace - with _
   $retval = str_replace("-", "_", $retval);
+  // replace . with _
+  $retval = str_replace(".", "_", $retval);
   return $retval;
 }
 
