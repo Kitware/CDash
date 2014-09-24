@@ -243,8 +243,8 @@ if($Submit)
         {
         $buildgroupid = $group['id'];
         $query =
-          "INSERT INTO overviewbuildgroups (projectid, buildgroupid, position)
-           VALUES ('$projectid', '$buildgroupid', '1')";
+          "INSERT INTO overview_components (projectid, buildgroupid, position, type)
+           VALUES ('$projectid', '$buildgroupid', '1', 'build')";
         pdo_query($query);
         add_last_sql_error("CreateProject :: DefaultOverview", $projectid);
         break;
