@@ -258,7 +258,6 @@ if($DeleteGroup)
     }
   } // end DeleteGroup
 
-
 @$GlobalMove = $_POST["globalMove"];
 @$ExpectedMove = $_POST["expectedMove"];
 @$Movebuilds = $_POST["movebuilds"];
@@ -355,10 +354,10 @@ if($DefineByBuildName)
   } // end define by build name
 
 // delete the rules for a build group
-@$DeleteBuildGroupRules = $_POST["deleteBuildGroupRules"];
-if($DeleteBuildGroupRules)
+@$DeleteWildcardRules = $_POST["deleteWildcardRules"];
+if($DeleteWildcardRules)
   {
-  $Groupid = pdo_real_escape_numeric($_POST["deleteRulesForGroup"]);
+  $Groupid = pdo_real_escape_numeric($_POST["deleteWildcardRules"]);
   if ($Groupid > 0)
     {
     $sql = "DELETE FROM build2grouprule WHERE groupid = '$Groupid'";
@@ -393,6 +392,7 @@ if($projectid>0)
   echo pdo_error();
 
   $names = array();
+
   while($build_array = pdo_fetch_array($builds))
     {
     // Avoid adding the same build twice
@@ -407,26 +407,32 @@ if($projectid>0)
     }
 
   // Add expected builds
-  $builds = pdo_query("SELECT b.id,s.name AS sitename,b.name,b.type,g.name as groupname,g.id as groupid
-                         FROM site AS s,build AS b,build2group AS b2g,buildgroup as g
-                         WHERE
-                         g.id=b2g.groupid AND b2g.buildid=b.id AND g.endtime='1980-01-01 00:00:00'
-                         AND b.projectid='$projectid' AND s.id = b.siteid ".$sql." ORDER BY b.name ASC");
+  $builds = pdo_query(
+    "SELECT b.id ,s.name AS sitename, b.name, b.type, g.name as groupname,
+            g.id as groupid
+     FROM site AS s, build AS b, build2group AS b2g, buildgroup AS g,
+            build2grouprule AS b2gr
+     WHERE g.id = b2g.groupid AND b2g.buildid = b.id AND
+            b2gr.expected = 1 AND b2gr.groupid = g.id AND
+            g.endtime='1980-01-01 00:00:00' AND b.projectid='$projectid' AND
+            s.id = b.siteid ".$sql."
+     ORDER BY b.name ASC");
   echo pdo_error();
 
   while($build_array = pdo_fetch_array($builds))
     {
+    $build_name = $build_array['sitename'].$build_array['name'].$build_array['type'];
     // Avoid adding the same build twice
-    if(array_search($build_array['sitename'].$build_array['name'].$build_array['type'],$names) === FALSE)
+    if(in_array($build_name ,$names) === FALSE)
       {
       $xml .= "<currentbuild>";
       $xml .= add_XML_value("id",$build_array['id']);
       $xml .= add_XML_value("name",$build_array['sitename']." ".$build_array['name']." [".$build_array['type']."] ".$build_array['groupname']." (expected)");
       $xml .= "</currentbuild>";
-      $names[] = $build_array['sitename'].$build_array['name'].$build_array['type'];
+      $names[] = $build_name;
       }
     }
-}
+  }
 
 $Project = new Project();
 $Project->Id = $projectid;
@@ -477,6 +483,26 @@ if($projectid>0)
     }
   $xml .= "</project>";
   }
+
+  // Generate XML for the wildcard groups here
+  $wildcards = pdo_query("
+    SELECT bg.name, bg.id, b2gr.buildtype, b2gr.buildname
+    FROM build2grouprule AS b2gr, buildgroup AS bg
+    WHERE b2gr.buildname LIKE '\%%\%' AND b2gr.groupid = bg.id AND
+          bg.projectid='$projectid'");
+  echo pdo_error();
+
+  while($wildcard_array = pdo_fetch_array($wildcards))
+    {
+    $xml .= "<wildcard>";
+    $xml .= add_XML_value("groupname", $wildcard_array['name']);
+    $xml .= add_XML_value("groupid", $wildcard_array['id']);
+    $xml .= add_XML_value("buildtype", $wildcard_array['buildtype']);
+    $match = $wildcard_array["buildname"];
+    $match = str_replace("%", "", $match);
+    $xml .= add_XML_value("match", $match);
+    $xml .= "</wildcard>";
+    }
 
 $xml .= "</cdash>";
 

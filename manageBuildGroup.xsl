@@ -165,7 +165,7 @@
                   <li><a href="#fragment-2">Create new group</a></li>
                   <li><a href="#fragment-3">Global Move</a></li>
                   <li><a href="#fragment-4">Auto-Remove Settings</a></li>
-                  <li><a href="#fragment-5">Define Group by Build Name</a></li>
+                  <li><a href="#fragment-5">Wildcard Groups</a></li>
                 </ul>
                 <div id="fragment-1" class="tab_content" >
                   <div class="tab_help_top"></div>
@@ -375,7 +375,7 @@
                 <div id="fragment-5" class="tab_content" >
                   <form name="definegroupbybuildname" method="post">
                     <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
-                    The build names of <select name="groupBuildNameSelection">
+                    <select name="groupBuildNameSelection">
                       <option>
                         <xsl:attribute name="value">0</xsl:attribute>
                         Choose...
@@ -387,8 +387,8 @@
                         </option>
                       </xsl:for-each>
                     </select>
-                    match <input name="buildNameMatch" type="text" id="buildNameMatch" size="20"/>
-                    and their type is <select name="buildType">
+                    builds contain <input name="buildNameMatch" type="text" id="buildNameMatch" size="12"/>
+                    in their name, and their type is <select name="buildType">
                       <option>Nightly</option>
                       <option>Continuous</option>
                       <option>Experimental</option>
@@ -397,24 +397,40 @@
                     <input type="submit" name="defineByBuildName" value="Define Group"/>
                     <br/>
                   </form>
-                  <br/><br/>
-                  <form name="deleterules" method="post">
-                    <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
-                    Delete build group rules for <select name="deleteRulesForGroup">
-                      <option>
-                        <xsl:attribute name="value">0</xsl:attribute>
-                        Choose...
-                      </option>
-                      <xsl:for-each select="cdash/project/group">
-                        <option>
-                          <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                          <xsl:value-of select="name"/>
-                        </option>
-                      </xsl:for-each>
-                    </select>
-                    <input type="submit" name="deleteBuildGroupRules" value="Delete Rules"/>
-                    <br/>
-                  </form>
+
+                  <hr/>
+
+                  <xsl:if test="count(cdash/wildcard)>0">
+                    <form name="deletewildcardrules" method="post">
+                      <xsl:attribute name="action">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
+                      <table class="table-striped" style="width:100%;">
+                        <caption class="h4">Existing Wildcard Rules</caption>
+                        <thead>
+                          <th>Group Name</th>
+                          <th>Matches</th>
+                          <th>Build Type</th>
+                          <th>Delete?</th>
+                        </thead>
+                        <tbody>
+                        <xsl:for-each select="cdash/wildcard">
+                          <tr>
+                            <td><xsl:value-of select="groupname"/></td>
+                            <td><xsl:value-of select="match"/></td>
+                            <td><xsl:value-of select="buildtype"/></td>
+                            <td>
+                              <button type="submit" name="deleteWildcardRules" class="btn btn-danger">
+                                <xsl:attribute name="value">
+                                  <xsl:value-of select="groupid"/>
+                                </xsl:attribute>
+                              X
+                              </button>
+                            </td>
+                          </tr>
+                        </xsl:for-each>
+                        </tbody>
+                      </table>
+                    </form>
+                  </xsl:if>
                 </div> <!-- fragment -->
               </div> <!-- wizard -->
             </xsl:if>
