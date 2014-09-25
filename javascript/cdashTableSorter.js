@@ -144,7 +144,10 @@ $(document).ready(function() {
           // This gets rid of the little +1 / -1 that show changes
           // from the previous days dashboard.
           if (typeof(s) == "string") {
-            s = s.match(/\d+/)[0];
+            var numArray = s.match(/\d+/);
+            if (numArray != null) {
+              s = numArray[0];
+            }
           }
           return s;
         },
