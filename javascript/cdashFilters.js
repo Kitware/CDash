@@ -47,11 +47,11 @@ function addFilter(indexSelected)
     }
     //create new element
   $(".filterFields[number='"+(indexSelected)+"']").after('<tr class="'+class_filed+' filterFields" number="'+(indexSelected+1)+'" id="filter'+(indexSelected+1)+'">'+string+'</tr>');
-  previousValue=$(".filterFields[number='"+(indexSelected)+"'] input[type='text']").attr("value");
+  previousValue=$(".filterFields[number='"+(indexSelected)+"'] input[type='text']").val();
   $(".filterFields[number='"+(indexSelected+1)+"'] input[type='text']").attr("value",previousValue);
-  selectOption=$(".filterFields[number='"+(indexSelected)+"'] select:first").attr("value");
+  selectOption=$(".filterFields[number='"+(indexSelected)+"'] select:first").val();
   $(".filterFields[number='"+(indexSelected+1)+"'] select:first option").each(function(){
-          if ($(this).attr("value") == selectOption) {
+          if ($(this).val() == selectOption) {
             $(this).attr("selected",true);
           };
      });
@@ -60,9 +60,9 @@ function addFilter(indexSelected)
 
   content=$(".filterFields[number='"+(indexSelected)+"'] select:last").html();
   $(".filterFields[number='"+(indexSelected+1)+"'] select:last").html(content);
-  selectOption=$(".filterFields[number='"+(indexSelected)+"'] select:last").attr("value");
+  selectOption=$(".filterFields[number='"+(indexSelected)+"'] select:last").val();
   $(".filterFields[number='"+(indexSelected+1)+"'] select:last option").each(function(){
-          if ($(this).attr("value") == selectOption) {
+          if ($(this).val() == selectOption) {
             $(this).attr("selected",true);
           };
      });
@@ -371,7 +371,7 @@ function filters_preserve_link(status)
     s = s + "&showfilters=1";
   }
 
-  l = $("#id_limit").attr("value");
+  l = $("#id_limit").val();
   if (l != 0)
   {
     s = s + "&limit=" + l;
@@ -379,14 +379,14 @@ function filters_preserve_link(status)
 
   if (n > 1)
   {
-    s = s + "&filtercombine=" + $("#id_filtercombine").attr("value");
+    s = s + "&filtercombine=" + $("#id_filtercombine").val();
   }
 
   for (i=1; i<=n; ++i)
   {
-    s = s + "&field" + i + "=" + escape($("#id_field"+i).attr("value"));
-    s = s + "&compare" + i + "=" + escape($("#id_compare"+i).attr("value"));
-    s = s + "&value" + i + "=" + escape($("#id_value"+i).attr("value"));
+    s = s + "&field" + i + "=" + escape($("#id_field"+i).val());
+    s = s + "&compare" + i + "=" + escape($("#id_compare"+i).val());
+    s = s + "&value" + i + "=" + escape($("#id_value"+i).val());
   }
 
   s = s + "&status=" + status;
