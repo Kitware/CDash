@@ -52,9 +52,9 @@ class InstallTestCase extends KWWebTestCase
       return 1;
       }
     $this->clickSubmitByName("Submit");
-    if(strpos($this->getBrowser()->getContentAsText(), "sucessfully created") === false)
+    if(strpos($this->getBrowser()->getContentAsText(), "successfully created") === false)
       {
-      $this->fail("'sucessfully created' not found when expected");
+      $this->fail("'successfully created' not found when expected\nHere's what I see instead:\n");
       return 1;
       }
     $this->pass("Passed");

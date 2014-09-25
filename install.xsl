@@ -77,7 +77,7 @@ Click here to access the <a href="index.php">main CDash page</a><br/><br/>
 <br/>
 <xsl:choose>
 <xsl:when test="cdash/db_created=1">
-<b>The CDash database has been sucessfully created!</b><br/>
+<b>The CDash database has been successfully created!</b><br/>
 Click here to  <a href="createProject.php">create a new project.</a>
 </xsl:when>
 <xsl:otherwise>

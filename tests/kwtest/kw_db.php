@@ -279,10 +279,29 @@ class dbo_pgsql extends dbo
      $this->dbconnect = null;
      }
 
-   function create($db)
-     {
+   /* attempt to connect to the default postgres database.
+    * currently we try two different names: 'host' and 'postgres'
+    */
+   function connectToHostDb()
+   {
      $this->setDb('host');
      $this->connect();
+     if ($this->dbconnect)
+       {
+       return;
+       }
+     $this->setDb('postgres');
+     $this->connect();
+     if (!$this->dbconnect)
+       {
+       echo "Error connecting to host postgres database.\n";
+       echo "Tried names 'host' and 'postgres'\n";
+       }
+   }
+
+   function create($db)
+     {
+     $this->connectToHostDb();
      if(!pg_query($this->dbconnect,"CREATE DATABASE $db"))
       {
       $this->disconnect();
@@ -295,8 +314,7 @@ class dbo_pgsql extends dbo
 
    function drop($db)
      {
-     $this->setDb('host');
-     $this->connect();
+     $this->connectToHostDb();
      if(!pg_query($this->dbconnect,"DROP DATABASE $db"))
        {
        $this->disconnect();
