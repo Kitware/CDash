@@ -140,48 +140,13 @@ $(document).ready(function() {
             return false;
         },
         format: function(s) {
-          // format your data for normalization
-            // Remove the <sub></sub>
-            var i = s.indexOf("<sub>");
-            if(i!=-1)
-              {
-              j = s.indexOf("</sub>");
-              s = s.substr(0,i)+s.substr(j+6);
-              }
-
-            // Remove the <div></div>
-            i = s.indexOf("<div");
-            if(i!=-1)
-              {
-              j = s.indexOf(">",i);
-              s = s.substr(0,i)+s.substr(j+1);
-              }
-            i = s.indexOf("</div>");
-            if(i!=-1)
-              {
-              s = s.substr(0,i)+s.substr(i+6);
-              }
-
-            var i = s.indexOf("<a href");
-            if(i==-1) // IE
-              {
-              i = s.indexOf("<A href");
-              }
-
-            // We don't have a <a href
-            if(i==-1)
-              {
-              return s;
-              }
-
-            var j = s.indexOf(">",i);
-            var k = s.indexOf("</a>",j);
-            if(k==-1) // IE
-              {
-              k = s.indexOf("</A>");
-              }
-            var t = s.substr(j+1,k-j-1);
-            return t.toLowerCase();
+          // Extract first integer from input string.
+          // This gets rid of the little +1 / -1 that show changes
+          // from the previous days dashboard.
+          if (typeof(s) == "string") {
+            s = s.match(/\d+/)[0];
+          }
+          return s;
         },
         // set type, either numeric or text
         type: 'numeric'
@@ -571,22 +536,22 @@ $(document).ready(function() {
         }
        $(this).tablesorter({
               headers: {
-                  0: { sorter:'buildname'},
-                  1: { sorter:'buildname'},
-                  2: { sorter:'numericvalue'},
-                  3: { sorter:'elapsedtime'},
-                  4: { sorter:'numericvalue'},
-                  5: { sorter:'numericvalue'},
-                  6: { sorter:'elapsedtime'},
-                  7: { sorter:'numericvalue'},
-                  8: { sorter:'numericvalue'},
-                  9: { sorter:'elapsedtime'},
-                  10: { sorter:'numericvalue'},
-                  11: { sorter:'numericvalue'},
-                  12: { sorter:'numericvalue'},
-                  13: { sorter:'elapsedtime'},
-                  14: { sorter:'elapsedtime'},
-                  15: { sorter:'text'}
+                  0: { sorter:'buildname'},     // site
+                  1: { sorter:'buildname'},     // build name
+                  2: { sorter:'numericvalue'},  // update files
+                  3: { sorter:'elapsedtime'},   // update time
+                  4: { sorter:'numericvalue'},  // config error
+                  5: { sorter:'numericvalue'},  // config warning
+                  6: { sorter:'elapsedtime'},   // configure time
+                  7: { sorter:'numericvalue'},  // build error
+                  8: { sorter:'numericvalue'},  // build warning
+                  9: { sorter:'elapsedtime'},   // build time
+                  10: { sorter:'numericvalue'}, // tests not run
+                  11: { sorter:'numericvalue'}, // test failed
+                  12: { sorter:'numericvalue'}, // test passed
+                  13: { sorter:'elapsedtime'},  // test time
+                  14: { sorter:'elapsedtime'},  // build time
+                  15: { sorter:'text'}          // labels
               },
             debug: false,
             widgets: ['zebra']

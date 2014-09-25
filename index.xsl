@@ -86,9 +86,7 @@
       <td align="center" width="20%" class="timeheader botl"></td>
 
       <xsl:if test="/cdash/dashboard/displaylabels=1">
-        <th align="center" rowspan="2" width="5%" class="nob">
-        <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_15</xsl:attribute>
-        Labels</th>
+        <td align="center" width="5%" class="timeheader botl"></td>
       </xsl:if>
    </tr>
 
@@ -136,6 +134,11 @@
         <xsl:attribute name="class">nob</xsl:attribute>
       </xsl:if>
       Build Time</th>
+      <xsl:if test="/cdash/dashboard/displaylabels=1">
+        <th align="center" rowspan="2" width="5%" class="nob">
+        <xsl:attribute name="id">sort<xsl:value-of select="id"/>sort_15</xsl:attribute>
+        Labels</th>
+      </xsl:if>
    </tr>
    </thead>
 
