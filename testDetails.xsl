@@ -104,6 +104,11 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
 <br/>
 </xsl:if>
 
+<xsl:if test="cdash/test/details!=''">
+  <b>Test Details: </b><xsl:value-of select="cdash/test/details"/>
+  <br/>
+</xsl:if>
+
 <xsl:if test="cdash/project/showtesttime=1">
 <br/>
   <b>Test Timing: </b><font>
@@ -112,6 +117,7 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
         </xsl:attribute><xsl:value-of select="cdash/test/timestatus"/>
       </font>
 </xsl:if>
+
 <br/>
 <!-- Display the measurements -->
 <table>
