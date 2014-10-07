@@ -108,7 +108,7 @@ if(isset($_GET['iSortCol_0']))
     case 5: $sortby="priority";break;
     }
   }
-
+  
 $sortdir = "asc";
 if(isset($_GET['sSortDir_0']))
   {
@@ -302,8 +302,7 @@ if($userid)
       return $a["user"][0]<$b["user"][0] ? 1:0;
       }
     }
-  usort($covfile_array,"sort_array");
-
+  
   // Contruct the directory view
   if($status == -1)
     {
@@ -355,7 +354,8 @@ if($userid)
       $directory_array[$fullpath]["coveragemetric"] = sprintf("%3.2f",$covdir["coveragemetric"]/$covdir["nfiles"]);
       }
               
-    $covfile_array = array_merge($covfile_array,$directory_array);  
+    $covfile_array = array_merge($covfile_array,$directory_array);
+    //$covfile_array = $directory_array;
     }
   else if($status == 0)   // Add the untested files if the coverage is low
     {
@@ -398,6 +398,8 @@ if($userid)
     "sEcho" => intval($_GET['sEcho']),
     "aaData" => array()
   );
+
+  usort($covfile_array,"sort_array");
 
   $ncoveragefiles = 0;
   $filestatus = -1;
