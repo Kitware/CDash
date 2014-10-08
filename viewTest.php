@@ -230,6 +230,7 @@ if ($filterdata['limit']>0)
 $xml .= $filterdata['xml'];
 
 $limitnew = "";
+$onlydelta_extra = "";
 if($onlydelta)
   {
   $limitnew = " AND newstatus=1 ";

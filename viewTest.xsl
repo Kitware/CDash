@@ -76,6 +76,12 @@
 <xsl:if test="count(cdash/filterdata) = 1">
   <xsl:call-template name="filterdata" select="."/>
 </xsl:if>
+<div id="labelshowfilters">
+  <a id="label_showfilters" href="javascript:filters_toggle();">
+  <xsl:if test="cdash/filterdata/showfilters = 0">Show Filters</xsl:if>
+  <xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
+  </a>
+</div>
 
 <h3>
 <xsl:if test="cdash/onlypassed=1">
