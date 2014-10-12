@@ -25,8 +25,8 @@ require_once("cdash/common.php");
 $testid = pdo_real_escape_numeric($_GET["testid"]);
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
 @$zoomout = $_GET["zoomout"];
-$measurementname = htmlspecialchars(pdo_real_escape_string($_GET["measurement"]));
-
+$measurement = preg_replace('/[^\da-z]/i', "", $_GET["measurement"]);
+$measurementname = htmlspecialchars(pdo_real_escape_string(stripslashes($measurement)));
 
 if(!isset($buildid) || !is_numeric($buildid))
   {
@@ -79,18 +79,18 @@ AND build2test.testid IN (SELECT id FROM test WHERE name = '$testname')
 ORDER BY build.starttime DESC
 ");
 
-    $tarray = array();
-    while($build_array = pdo_fetch_array($previousbuilds))
-      {
-      $t['x'] = strtotime($build_array["starttime"])*1000;
-      $time[] = date("Y-m-d H:i:s",strtotime($build_array["starttime"]));
-      $t['y'] = $build_array["value"];
-      $t['builid'] = $build_array["id"];
-      $t['testid'] = $build_array["testid"];
+$tarray = array();
+while($build_array = pdo_fetch_array($previousbuilds))
+  {
+  $t['x'] = strtotime($build_array["starttime"])*1000;
+  $time[] = date("Y-m-d H:i:s",strtotime($build_array["starttime"]));
+  $t['y'] = $build_array["value"];
+  $t['builid'] = $build_array["id"];
+  $t['testid'] = $build_array["testid"];
 
-      $tarray[]=$t;
-      }
-    if($_GET['export']=="csv") // If user wants to export as CSV file
+  $tarray[]=$t;
+  }
+if(@$_GET['export']=="csv") // If user wants to export as CSV file
   {
   header("Cache-Control: public");
   header("Content-Description: File Transfer");
@@ -101,7 +101,6 @@ ORDER BY build.starttime DESC
   for($c=0;$c<count($tarray);$c++) $filecontent .= "{$time[$c]};{$tarray[$c]['y']}\n";
   echo ($filecontent); // Start file download
   die; // to suppress unwanted output
-  
   }
 ?>
 &nbsp;
