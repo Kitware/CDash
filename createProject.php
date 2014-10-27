@@ -586,6 +586,7 @@ $xml .= AddCVSViewer("cgit","CGit",$Project->CvsViewerType);
 $xml .= AddCVSViewer("cvstrac","CVSTrac",$Project->CvsViewerType);
 $xml .= AddCVSViewer("fisheye","Fisheye",$Project->CvsViewerType);
 $xml .= AddCVSViewer("github","GitHub",$Project->CvsViewerType);
+$xml .= AddCVSViewer("gitlab","GitLab",$Project->CvsViewerType);
 $xml .= AddCVSViewer("gitorious","Gitorious",$Project->CvsViewerType);
 $xml .= AddCVSViewer("gitweb","GitWeb",$Project->CvsViewerType);
 $xml .= AddCVSViewer("gitweb2","GitWeb2",$Project->CvsViewerType);
