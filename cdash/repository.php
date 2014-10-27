@@ -556,6 +556,15 @@ function get_github_diff_url($projecturl, $directory, $file, $revision)
   return make_cdash_url($diff_url);
 }
 
+/** Return the GitLab diff URL */
+function get_gitlab_diff_url($projecturl, $directory, $file, $revision)
+{
+  // GitLab uses 'blob' or 'tree' (singular, no s)
+  return get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, 'blob');
+}
+
+
+
 /** Return the cgit diff URL */
 function get_cgit_diff_url($projecturl, $directory, $file, $revision)
 {
@@ -716,6 +725,12 @@ function get_gitorious_revision_url($projecturl, $revision, $priorrevision)
 
 /** Return the GitHub revision URL */
 function get_github_revision_url($projecturl, $revision, $priorrevision)
+{
+  return get_gitorious_revision_url($projecturl, $revision, $priorrevision);
+}
+
+/** Return the GitLab revision URL */
+function get_gitlab_revision_url($projecturl, $revision, $priorrevision)
 {
   return get_gitorious_revision_url($projecturl, $revision, $priorrevision);
 }
