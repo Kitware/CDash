@@ -595,8 +595,11 @@ function gather_overview_data($start_date, $end_date, $group_id)
     {
     // make sure this row has both checker & defect info for us
     if (!array_key_exists("checker", $defect_row) ||
-        !array_key_exists("defects", $defect_row) ||
-        !is_numeric($defect_row["defects"]))
+        !array_key_exists("defects", $defect_row))
+      {
+      continue;
+      }
+    if (!is_numeric($defect_row["defects"]) && !is_null($defect_row["defects"]))
       {
       continue;
       }
