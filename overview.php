@@ -668,12 +668,12 @@ function gather_static_data($start_date, $end_date, $group_id)
 
 function sanitize_string($input_string)
 {
-  // replace spaces with underscores
+  // replace various chars that trip up javascript with underscores.
   $retval = str_replace(" ", "_", $input_string);
-  // replace - with _
   $retval = str_replace("-", "_", $retval);
-  // replace . with _
   $retval = str_replace(".", "_", $retval);
+  $retval = str_replace("(", "_", $retval);
+  $retval = str_replace(")", "_", $retval);
   return $retval;
 }
 
