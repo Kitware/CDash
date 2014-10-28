@@ -599,7 +599,11 @@ function gather_overview_data($start_date, $end_date, $group_id)
       {
       continue;
       }
-    if (!is_numeric($defect_row["defects"]) && !is_null($defect_row["defects"]))
+    if (is_null($defect_row["defects"]))
+      {
+      $defect_row["defects"] = 0;
+      }
+    if (!is_numeric($defect_row["defects"]))
       {
       continue;
       }
