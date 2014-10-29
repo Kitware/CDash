@@ -1269,6 +1269,7 @@ textarea {
   font-family: Courier New, Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono, monospace;
   border: 1px inset #ccc;
   overflow-x:scroll;
+  max-height:350px;
 }
 
 /* used in overview.php */
