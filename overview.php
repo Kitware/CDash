@@ -595,8 +595,15 @@ function gather_overview_data($start_date, $end_date, $group_id)
     {
     // make sure this row has both checker & defect info for us
     if (!array_key_exists("checker", $defect_row) ||
-        !array_key_exists("defects", $defect_row) ||
-        !is_numeric($defect_row["defects"]))
+        !array_key_exists("defects", $defect_row))
+      {
+      continue;
+      }
+    if (is_null($defect_row["defects"]))
+      {
+      $defect_row["defects"] = 0;
+      }
+    if (!is_numeric($defect_row["defects"]))
       {
       continue;
       }
@@ -661,12 +668,12 @@ function gather_static_data($start_date, $end_date, $group_id)
 
 function sanitize_string($input_string)
 {
-  // replace spaces with underscores
+  // replace various chars that trip up javascript with underscores.
   $retval = str_replace(" ", "_", $input_string);
-  // replace - with _
   $retval = str_replace("-", "_", $retval);
-  // replace . with _
   $retval = str_replace(".", "_", $retval);
+  $retval = str_replace("(", "_", $retval);
+  $retval = str_replace(")", "_", $retval);
   return $retval;
 }
 
