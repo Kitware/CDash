@@ -318,7 +318,7 @@ class BuildAPI extends CDashAPI
                FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg, build2group AS b2g
                WHERE b.projectid=".$projectid." AND b.siteid=s.id AND si.siteid=s.id
                AND bg.name='".$group."' AND b.testfailed>0 AND b2g.buildid=b.id AND b2g.groupid=bg.id
-               AND b.starttime>'$currentUTCTime' AND b.starttime<NOW() GROUP BY fullname ORDER BY buildid");
+               AND b.starttime>'$currentUTCTime' AND b.starttime<UTC_TIMESTAMP() GROUP BY fullname ORDER BY buildid");
       }
     $sites = array();
     $buildids = '';
