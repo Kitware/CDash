@@ -51,7 +51,8 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SHOW KEYS FROM label2build WHERE Key_name = 'labelid';") )
+  $dbTest = pdo_query("SHOW KEYS FROM label2build WHERE Key_name = 'labelid';");
+  if (pdo_num_rows($dbTest) < 1)
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
