@@ -245,4 +245,116 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     }
 }
 
+/** Function to deal with the external tool mechanism */
+function post_submit()
+{   
+  // we expect a POST wit the following values
+  $vars = array('projectname','buildname','buildstamp','sitename','track','type','starttime','endtime','datafilesmd5');
+  foreach($vars as $var)
+    {
+    if(!isset($_POST[$var]) || empty($_POST[$var]))
+      {
+      $response_array['status'] = 1;
+      $response_array['description'] = 'Variable \''.$var.'\' not set but required.';
+      echo json_encode($response_array);
+      return;    
+      } 
+    }
+    
+  $projectname = htmlspecialchars(pdo_real_escape_string($_POST['projectname']));
+  $buildname = htmlspecialchars(pdo_real_escape_string($_POST['buildname']));
+  $buildstamp = htmlspecialchars(pdo_real_escape_string($_POST['buildstamp']));
+  $sitename = htmlspecialchars(pdo_real_escape_string($_POST['sitename']));
+  $track = htmlspecialchars(pdo_real_escape_string($_POST['track']));
+  $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
+  $starttime = htmlspecialchars(pdo_real_escape_string($_POST['starttime']));
+  $endtime = htmlspecialchars(pdo_real_escape_string($_POST['endtime']));
+  
+  // Check if we have the CDash@Home scheduleid
+  $scheduleid=0;
+  if(isset($_POST["clientscheduleid"]))
+    {
+    $scheduleid = pdo_real_escape_numeric($_POST["clientscheduleid"]);
+    }
+    
+  // Add the build
+  $build = new Build();
+  
+  $build->ProjectId = get_project_id($projectname);
+  $build->StartTime = gmdate(FMT_DATETIME, $starttime);
+  $build->EndTime = gmdate(FMT_DATETIME, $endtime);
+  $build->SubmitTime = gmdate(FMT_DATETIME);
+  $build->Name = $buildname;
+  $build->InsertErrors = false; // we have no idea if we have errors at this point
+  $build->SetStamp($buildstamp);
+  
+  // Get the site id
+  $site = new Site();
+  $site->Name = $sitename;
+  $site->Insert();
+  $build->SiteId = $site->Id;
+     
+  // TODO: Check the append and labels and generator and other optional
+  if(isset($_POST["generator"]))
+    {
+    $build->Generator = htmlspecialchars(pdo_real_escape_string($_POST['generator'])); 
+    }
+  if(isset($_POST["append"]))
+    {
+    $build->Append = htmlspecialchars(pdo_real_escape_string($_POST['append'])); 
+    } 
+  //$this->Build->SetSubProject($this->SubProjectName); 
+   
+  $buildid = add_build($build,$scheduleid);
+    
+  // Returns the OK submission
+  $response_array['status'] = 0;
+  $response_array['buildid'] = $buildid;
+ 
+  echo json_encode($response_array);  
+}
+
+/** Function to deal with the external tool mechanism */
+function put_submit_file()
+{   
+  // we expect a GET wit the following values
+  $vars = array('buildid','type');
+  foreach($vars as $var)
+    {
+    if(!isset($_GET[$var]) || empty($_GET[$var]))
+      {
+      $response_array['status'] = 1;
+      $response_array['description'] = 'Variable \''.$var.'\' not set but required.';
+      echo json_encode($response_array);
+      return;    
+      } 
+    } 
+  
+  if(!is_numeric($_GET['buildid']))
+    {
+    $response_array['status'] = 1;
+    $response_array['description'] = 'Variable \'buildid\' is not numeric.';
+    echo json_encode($response_array);
+    return;    
+    }
+  
+  $buildid = $_GET['buildid'];
+  $type = htmlspecialchars(pdo_real_escape_string($_GET['type']));
+  
+  // Reads the file 
+  $file_path='php://input';
+  $filehandler = fopen($file_path, 'r');
+  while(!feof($filehandler))
+    {
+    $content = fread($filehandler, 8192);
+    echo $content;
+    }
+  fclose($filehandler);
+  unset($filehandler);  
+  
+  // Returns the OK submission
+  $response_array['status'] = 0;
+  
+  echo json_encode($response_array);  
+}
 ?>
