@@ -248,8 +248,10 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 /** Function to deal with the external tool mechanism */
 function post_submit()
 {   
+  include("models/buildfile.php");
+    
   // we expect a POST wit the following values
-  $vars = array('projectname','buildname','buildstamp','sitename','track','type','starttime','endtime','datafilesmd5');
+  $vars = array('project','build','stamp','site','track','type','starttime','endtime','datafilesmd5');
   foreach($vars as $var)
     {
     if(!isset($_POST[$var]) || empty($_POST[$var]))
@@ -261,10 +263,10 @@ function post_submit()
       } 
     }
     
-  $projectname = htmlspecialchars(pdo_real_escape_string($_POST['projectname']));
-  $buildname = htmlspecialchars(pdo_real_escape_string($_POST['buildname']));
-  $buildstamp = htmlspecialchars(pdo_real_escape_string($_POST['buildstamp']));
-  $sitename = htmlspecialchars(pdo_real_escape_string($_POST['sitename']));
+  $projectname = htmlspecialchars(pdo_real_escape_string($_POST['project']));
+  $buildname = htmlspecialchars(pdo_real_escape_string($_POST['build']));
+  $buildstamp = htmlspecialchars(pdo_real_escape_string($_POST['stamp']));
+  $sitename = htmlspecialchars(pdo_real_escape_string($_POST['site']));
   $track = htmlspecialchars(pdo_real_escape_string($_POST['track']));
   $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
   $starttime = htmlspecialchars(pdo_real_escape_string($_POST['starttime']));
@@ -311,12 +313,28 @@ function post_submit()
   $response_array['status'] = 0;
   $response_array['buildid'] = $buildid;
  
+  $buildfile = new BuildFile();
+  
+  // Check if the files exists
+  foreach($_POST['datafilesmd5'] as $md5) 
+    {
+    $buildfile->md5 = $md5;
+    if(!$buildfile->MD5Exists())
+      {
+      $response_array['datafilesmd5'][] = 0;
+      }
+    else
+      {
+      $response_array['datafilesmd5'][] = 1;
+      }
+    }
   echo json_encode($response_array);  
 }
 
 /** Function to deal with the external tool mechanism */
 function put_submit_file()
 {   
+  include("models/buildfile.php");
   // we expect a GET wit the following values
   $vars = array('buildid','type');
   foreach($vars as $var)
@@ -338,17 +356,51 @@ function put_submit_file()
     return;    
     }
   
-  $buildid = $_GET['buildid'];
-  $type = htmlspecialchars(pdo_real_escape_string($_GET['type']));
+  $buildfile = new BuildFile();
+  $buildfile->BuildId = $_GET['buildid'];
+  $buildfile->Type = htmlspecialchars(pdo_real_escape_string($_GET['type']));
+  $buildfile->md5 = htmlspecialchars(pdo_real_escape_string($_GET['md5']));
+  $buildfile->Filename = htmlspecialchars(pdo_real_escape_string($_GET['filename']));
+  if(!$buildfile->Insert())
+    {
+    $response_array['status'] = 1;
+    $response_array['description'] = 'Cannot insert buildfile into database. The file might already exist.';
+    echo json_encode($response_array);
+    return;
+    }
   
-  // Reads the file 
+  // We are currently not checking the md5 and trusting the sender
+  // but we should add that in the future
+  // $md5sum = md5_file($filename);
+  
+  // Write the file in the upload directory
+  global $CDASH_UPLOAD_DIRECTORY;
+  $uploadDir = $CDASH_UPLOAD_DIRECTORY;
+  $filename = $uploadDir."/".$buildfile->md5;
+  if(!$handle = fopen($filename, 'w'))
+    {
+    $response_array['status'] = 1;
+    $response_array['description'] = "Cannot open file ($filename)";
+    echo json_encode($response_array);
+    return;
+    }
+  
+  // Read the input file
   $file_path='php://input';
   $filehandler = fopen($file_path, 'r');
   while(!feof($filehandler))
     {
     $content = fread($filehandler, 8192);
-    echo $content;
+    if (fwrite($handle, $content) === FALSE)
+      {
+      $response_array['status'] = 1;
+      $response_array['description'] = "Cannot write to file ($filename)";
+      echo json_encode($response_array);
+      return;
+      }
     }
+  fclose($handle);
+  unset($handle);  
   fclose($filehandler);
   unset($filehandler);  
   

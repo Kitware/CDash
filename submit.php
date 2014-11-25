@@ -46,7 +46,7 @@ if(client_submit())
   }
   
 // If we have a POST we forward to the new submission process
-if(isset($_POST['projectname']))
+if(isset($_POST['project']))
   {
   post_submit();
   return;
