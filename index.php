@@ -51,7 +51,7 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT 1 FROM overview_components") )
+  if(!pdo_query("SELECT buildid FROM buildfile") )
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
