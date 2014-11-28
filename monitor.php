@@ -90,7 +90,7 @@ function echo_pending_submissions()
     qid("project") . ", " . qid("submission") . " " .
     "WHERE project.id = submission.projectid " .
     "AND status = 0 " .
-    "GROUP BY project.id"
+    "GROUP BY project.name,project.id"
     );
 
   $sep = ', ';
