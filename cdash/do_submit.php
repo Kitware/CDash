@@ -305,8 +305,13 @@ function post_submit()
     {
     $build->Append = htmlspecialchars(pdo_real_escape_string($_POST['append'])); 
     } 
-  //$this->Build->SetSubProject($this->SubProjectName); 
-   
+    
+  if(isset($_POST["subproject"]))
+    {  
+    $subprojectname = htmlspecialchars(pdo_real_escape_string($_POST['subproject']));
+    $this->Build->SetSubProject($subprojectname); 
+    }
+    
   $buildid = add_build($build,$scheduleid);
     
   // Returns the OK submission
