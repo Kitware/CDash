@@ -135,6 +135,7 @@ function pdo_fetch_array($result, $result_type = PDO::FETCH_BOTH)
 {
   global $CDASH_DB_TYPE;
 
+  if($result === false) return false;
   if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
     {
     return $result->fetch($result_type);
