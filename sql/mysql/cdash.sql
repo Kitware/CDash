@@ -1373,6 +1373,17 @@ CREATE TABLE IF NOT EXISTS `overview_components` (
   KEY (`buildgroupid`)
 );
 
+CREATE TABLE IF NOT EXISTS `buildfile` (
+  `buildid` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `md5` varchar(40) NOT NULL,
+  `type` varchar(32) NOT NULL DEFAULT "",
+  KEY (`buildid`),
+  KEY (`filename`),
+  KEY (`type`),
+  KEY (`md5`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 -- 
