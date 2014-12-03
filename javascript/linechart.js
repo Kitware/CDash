@@ -1,5 +1,5 @@
-function makeLineChart(chartName, elementName, inputData, project,
-                       hasSubprojects, sort) {
+function makeLineChart(elementName, inputData, project, anchor, hasSubprojects,
+                       sort) {
   jQuery(function(){
 
     // setup the chart
@@ -36,6 +36,7 @@ function makeLineChart(chartName, elementName, inputData, project,
         if (sort) {
           url += "&sort=" + sort;
         }
+        url += "#" + anchor;
         window.location.href = url;
       }
     );
