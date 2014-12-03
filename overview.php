@@ -31,6 +31,9 @@ $Project = new Project();
 $Project->Id = $projectid;
 $Project->Fill();
 
+// check if this project has subprojects.
+$hasSubprojects = ($Project->GetNumberOfSubProjects() > 0);
+
 // make sure the user has access to this project
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
@@ -59,6 +62,7 @@ $xml .= add_XML_value("previous", "overview.php?project=$projectname&date=$previ
 $xml .= add_XML_value("current", "overview.php?project=$projectname");
 $xml .= add_XML_value("next", "overview.phpv?project=$projectname&date=$nextdate");
 $xml .= "</menu>";
+$xml .= add_XML_value("hasSubprojects", $hasSubprojects);
 
 // configure/build/test data that we care about.
 $build_measurements = array("configure_warnings", "configure_errors",
@@ -66,6 +70,14 @@ $build_measurements = array("configure_warnings", "configure_errors",
 
 // for static analysis, we only care about errors & warnings.
 $static_measurements = array("errors", "warnings");
+
+// information on how to sort by the various build measurements
+$sort = array(
+  "configure_warnings" => "[[5,1]]",
+  "configure_errors"   => "[[4,1]]",
+  "build_warnings"     => "[[8,1]]",
+  "build_errors"       => "[[7,1]]",
+  "failing_tests"      => "[[11,1]]");
 
 // get the build groups that are included in this project's overview,
 // split up by type (currently only static analysis and general builds).
@@ -346,6 +358,8 @@ foreach($build_measurements as $measurement)
   $xml .= "<measurement>";
   $xml .= add_XML_value("name", $measurement);
   $xml .= add_XML_value("nice_name", sanitize_string($measurement));
+  $xml .= add_XML_value("sort", $sort[$measurement]);
+
   foreach($build_groups as $build_group)
     {
     $xml .= "<group>";
@@ -448,6 +462,7 @@ foreach($static_groups as $static_group)
     $xml .= "<measurement>";
     $xml .= add_XML_value("name", $measurement);
     $xml .= add_XML_value("nice_name", sanitize_string($measurement));
+    $xml .= add_XML_value("sort", $sort["build_" . $measurement]);
     $xml .= add_XML_value("value",
       $overview_data[$measurement][$static_group["name"]]);
     $xml .= add_XML_value("chart",

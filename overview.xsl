@@ -43,13 +43,17 @@
           <xsl:for-each select='/cdash/measurement'>
             <xsl:variable name="measurement_name" select="name"/>
             <xsl:variable name="measurement_nice_name" select="nice_name"/>
+            <xsl:variable name="sort" select="sort"/>
             <xsl:for-each select='group'>
               var <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/> =
                 <xsl:value-of select="chart"/>;
               makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="$measurement_nice_name"/>",
                             "<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/>_chart",
                             <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$measurement_name"/>,
-                            true);
+                            "<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>",
+                            "<xsl:value-of select="/cdash/hasSubprojects"/>",
+                            "<xsl:value-of select="$sort"/>"
+                            );
             </xsl:for-each>
           </xsl:for-each>
 
@@ -59,7 +63,10 @@
             makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
                             "<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>_chart",
                             <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>,
-                            true);
+                            "<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>",
+                            "<xsl:value-of select="/cdash/hasSubprojects"/>",
+                            ""
+                            );
             makeBulletChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
               "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>_bullet svg",
               <xsl:value-of select="low"/>,
@@ -80,7 +87,10 @@
               makeLineChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="$checker_nice_name"/>",
                             "<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/>_chart",
                             <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/>,
-                            true);
+                            "<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>",
+                            "<xsl:value-of select="/cdash/hasSubprojects"/>",
+                            ""
+                            );
             </xsl:for-each>
           </xsl:for-each>
 
@@ -95,7 +105,10 @@
               makeLineChart("<xsl:value-of select="$group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
                             "<xsl:value-of select="$group_name_clean"/>_<xsl:value-of select="name"/>_chart",
                             <xsl:value-of select="$group_name_clean"/>_<xsl:value-of select="name"/>,
-                            true);
+                            "<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>",
+                            "<xsl:value-of select="/cdash/hasSubprojects"/>",
+                            "<xsl:value-of select="sort"/>"
+                            );
             </xsl:for-each>
           </xsl:for-each>
 
