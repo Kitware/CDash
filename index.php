@@ -149,14 +149,24 @@ function generate_index_table()
 }
 
 
-function add_default_buildgroup_sortlist($groupname)
+function add_buildgroup_sortlist($groupname)
 {
-  // Sort settings should probably be definable/overrideable by the user as well on the users page,
-  // or perhaps by the project admin on the project page. This function simply bases the default
-  // sort ordering for a group based on the groupname.
+  // This function defines how the build group tables should be sorted.
+  // This information can be provided as a query string, otherwise we apply
+  // some default ordering here.  Default sort ordering for a group is based
+  // on the groupname.
+  //
+  // Sort settings should probably be definable/overrideable by the user as wel
+  // on the users page, or perhaps by the project admin on the project page.
   //
   $st = '';
   $xml = '';
+
+  if(isset($_GET["sort"]))
+    {
+    $xml .= add_XML_value("sortlist", "{sortlist: " . $_GET["sort"] . "}");
+    return $xml;
+    }
 
   $gn = strtolower($groupname);
 
@@ -1137,7 +1147,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                                                 AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate'  OR gp.endtime='1980-01-01 00:00:00')
                                                 "));
         $xml .= "<buildgroup>";
-        $xml .= add_default_buildgroup_sortlist($group['name']);
+        $xml .= add_buildgroup_sortlist($group['name']);
         $xml .= add_XML_value("name",$group["name"]);
         $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
         $xml .= add_XML_value("id",$group["id"]);
@@ -1164,7 +1174,7 @@ function generate_main_dashboard_XML($project_instance, $date)
       $totalfail= 0;
       $totalpass = 0;
       $totalTestsDuration = 0;
-      $xml .= add_default_buildgroup_sortlist($groupname);
+      $xml .= add_buildgroup_sortlist($groupname);
       $xml .= add_XML_value("name",$groupname);
       $xml .= add_XML_value("linkname",str_replace(" ","_",$groupname));
       $xml .= add_XML_value("id",$build_array["groupid"]);
@@ -1626,7 +1636,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                                                                                      AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate'  OR gp.endtime='1980-01-01 00:00:00')"));
 
     $xml .= "<buildgroup>";
-    $xml .= add_default_buildgroup_sortlist($group['name']);
+    $xml .= add_buildgroup_sortlist($group['name']);
     $xml .= add_XML_value("id",$group["id"]);
     $xml .= add_XML_value("name",$group["name"]);
     $xml .= add_XML_value("linkname",str_replace(" ","_",$group["name"]));
