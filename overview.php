@@ -232,7 +232,7 @@ foreach($build_groups as $build_group)
     $chart_beginning_UTCDate = gmdate(FMT_DATETIME, $chart_beginning_timestamp);
     $chart_end_UTCDate = gmdate(FMT_DATETIME, $chart_end_timestamp);
     // to be passed on to javascript chart renderers
-    $chart_data_date = gmdate("M d Y H:i:s", $chart_end_timestamp);
+    $chart_data_date = gmdate("M d Y H:i:s", ($chart_end_timestamp + $chart_beginning_timestamp) / 2.0);
 
     $data = gather_overview_data($chart_beginning_UTCDate, $chart_end_UTCDate,
                                  $build_group["id"]);
@@ -333,7 +333,7 @@ foreach($static_groups as $static_group)
     $chart_beginning_UTCDate = gmdate(FMT_DATETIME, $chart_beginning_timestamp);
     $chart_end_UTCDate = gmdate(FMT_DATETIME, $chart_end_timestamp);
     // to be passed on to javascript chart renderers
-    $chart_data_date = gmdate("M d Y H:i:s", $chart_end_timestamp);
+    $chart_data_date = gmdate("M d Y H:i:s", ($chart_end_timestamp + $chart_beginning_timestamp) / 2.0);
 
     $data = gather_static_data($chart_beginning_UTCDate, $chart_end_UTCDate,
                                  $static_group["id"]);
