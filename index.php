@@ -173,10 +173,10 @@ function add_default_buildgroup_sortlist($groupname)
   switch($st)
     {
     case 'SortAsNightly':
-      $xml .= add_XML_value("sortlist", "{sortlist: [[4,1],[7,1],[11,1],[10,1],[5,1],[8,1],[1,0]]}");
+      $xml .= add_XML_value("sortlist", "{sortlist: [[4,1],[7,1],[11,1],[10,1],[5,1],[8,1]]}");
         // Theoretically, most important to least important:
         //   configure errors DESC, build errors DESC, tests failed DESC, tests not run DESC,
-        //   configure warnings DESC, build warnings DESC, build name ASC
+        //   configure warnings DESC, build warnings DESC
       break;
 
     case 'SortByTime':

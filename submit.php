@@ -44,7 +44,19 @@ if(client_submit())
   {
   return;
   }
-
+  
+// If we have a POST we forward to the new submission process
+if(isset($_POST['project']))
+  {
+  post_submit();
+  return;
+  }
+if(isset($_GET['buildid']))
+  {
+  put_submit_file();
+  return;
+  }
+  
 $projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
 $projectid = get_project_id($projectname);
 

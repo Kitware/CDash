@@ -1478,7 +1478,7 @@ class Project
       add_log('Upload quota exceeded, removing old files', 'Project::CullUploadedFiles',
               LOG_INFO, $this->Id);
 
-      $query = pdo_query("SELECT DISTINCT build.id AS id
+      $query = pdo_query("SELECT DISTINCT build.id AS id, build.starttime
                                FROM build, build2uploadfile, uploadfile
                                WHERE build.projectid=".qnum($this->Id)." AND
                                build.id=build2uploadfile.buildid AND
