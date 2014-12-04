@@ -250,7 +250,7 @@ function post_submit()
 {
   include("models/buildfile.php");
 
-  // we expect a POST wit the following values
+  // We expect POST to contain the following values.
   $vars = array('project','build','stamp','site','track','type','starttime','endtime','datafilesmd5');
   foreach($vars as $var)
     {
@@ -340,7 +340,8 @@ function post_submit()
 function put_submit_file()
 {
   include("models/buildfile.php");
-  // we expect a GET wit the following values
+
+  // We expect GET to contain the following values:
   $vars = array('buildid','type');
   foreach($vars as $var)
     {
@@ -353,6 +354,7 @@ function put_submit_file()
       }
     }
 
+  // Verify buildid.
   if(!is_numeric($_GET['buildid']))
     {
     $response_array['status'] = 1;
@@ -361,6 +363,7 @@ function put_submit_file()
     return;
     }
 
+  // Abort early if we already have this file.
   $buildfile = new BuildFile();
   $buildfile->BuildId = $_GET['buildid'];
   $buildfile->Type = htmlspecialchars(pdo_real_escape_string($_GET['type']));
@@ -374,45 +377,7 @@ function put_submit_file()
     return;
     }
 
-  // We are currently not checking the md5 and trusting the sender
-  // but we should add that in the future
-  // $md5sum = md5_file($filename);
-
-  // Write the file in the backup directory (same place as other submissions).
-  global $CDASH_BACKUP_DIRECTORY;
-  $uploadDir = $CDASH_BACKUP_DIRECTORY;
-  $filename = $uploadDir."/".$buildfile->md5;
-  if(!$handle = fopen($filename, 'w'))
-    {
-    $response_array['status'] = 1;
-    $response_array['description'] = "Cannot open file ($filename)";
-    echo json_encode($response_array);
-    return;
-    }
-
-  // Read the input file
-  $bytes = 0;
-  $file_path='php://input';
-  $filehandler = fopen($file_path, 'r');
-  while(!feof($filehandler))
-    {
-    $content = fread($filehandler, 8192);
-    $bytes += strlen($content);
-    if (fwrite($handle, $content) === FALSE)
-      {
-      $response_array['status'] = 1;
-      $response_array['description'] = "Cannot write to file ($filename)";
-      echo json_encode($response_array);
-      return;
-      }
-    }
-  fclose($handle);
-  unset($handle);
-  fclose($filehandler);
-  unset($filehandler);
-
   // Get the ID of the project associated with this build.
-  $buildfile->BuildId = $_GET['buildid'];
   $row = pdo_single_row_query(
     "SELECT projectid FROM build WHERE id = $buildfile->BuildId");
   if(empty($row))
@@ -424,12 +389,47 @@ function put_submit_file()
     }
   $projectid = $row[0];
 
+  // Begin writing this file to the backup directory.
+  global $CDASH_BACKUP_DIRECTORY;
+  $uploadDir = $CDASH_BACKUP_DIRECTORY;
+  $filename = $uploadDir."/".$buildfile->md5;
+  if(!$handle = fopen($filename, 'w'))
+    {
+    $response_array['status'] = 1;
+    $response_array['description'] = "Cannot open file ($filename)";
+    echo json_encode($response_array);
+    return;
+    }
+
+  // Read the data 1 KB at a time and write to the file.
+  $putdata = fopen("php://input", "r");
+  while ($data = fread($putdata, 1024))
+    {
+    fwrite($handle, $data);
+    }
+  // Close the streams.
+  fclose($handle);
+  fclose($putdata);
+
+  // Check that the md5sum of the file matches what we were expecting.
+  $md5sum = md5_file($filename);
+  if($md5sum != $buildfile->md5)
+    {
+    $response_array['status'] = 1;
+    $response_array['description'] =
+      "md5 mismatch. expected: $buildfile->md5, received: $md5sum";
+    unlink($filename);
+    $buildfile->Delete();
+    echo json_encode($response_array);
+    return;
+    }
+
   global $CDASH_ASYNCHRONOUS_SUBMISSION;
   if($CDASH_ASYNCHRONOUS_SUBMISSION)
     {
     // Create a new entry in the submission table for this file.
+    $bytes = filesize($filename);
     $now_utc = gmdate(FMT_DATETIMESTD);
-    $filename = $uploadDir."/$buildfile->md5";
     pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
       "VALUES ('$filename','$projectid','0','0','$bytes','$buildfile->md5','$now_utc')");
     }
