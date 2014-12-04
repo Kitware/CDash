@@ -41,7 +41,7 @@ function displayReturnStatus($statusarray)
     }
   echo "</cdash>\n";
 }
-    
+
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=true,
                      $scheduleid=0)
@@ -253,7 +253,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     }
   fclose($handle);
   unset($handle);
-    
+
   $statusarray = array();
   $statusarray['status'] = 'OK';
   $statusarray['message'] = '';
@@ -271,7 +271,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
       $statusarray['message'] = 'Checksum failed for file. Expected '.$expected_md5.' but got '.$md5sum;
       $md5error = true;
       }
-      
+
     $statusarray['md5'] = $md5sum;
     if($md5error)
       {
@@ -281,7 +281,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
       }
     }
 
-  $parsingerror = '';   
+  $parsingerror = '';
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php"))
     {
     $parsingerror = $localParser->StartParsing();
@@ -301,7 +301,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     add_log("Cannot open file ($filename)", "parse_xml_file",LOG_ERR);
     return $handler;
     }
-    
+
   //burn the first 8192 since we have already parsed it
   $content = fread($parseHandle, 8192);
   while(!feof($parseHandle))
@@ -330,7 +330,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     {
     $parsingerror = $localParser->EndParsingFile();
     }
- 
+
   displayReturnStatus($statusarray);
   return $handler;
 }

@@ -115,7 +115,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
   unset($fp);
 
   $outfile = fopen($filename, 'w');
-  
+
   // Save the file in the backup directory
   while(!feof($filehandle))
     {
@@ -129,7 +129,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
       unset($outfile);
       return;
       }
-    } 
+    }
   fclose($outfile);
   unset($outfile);
 
@@ -141,7 +141,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
     $filesize = filesize($filename);
     $localParser->SetFileSize($projectid,$filesize);
     }
-  
+
   $md5sum = md5_file($filename);
   $md5error = false;
 
@@ -247,9 +247,9 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
 
 /** Function to deal with the external tool mechanism */
 function post_submit()
-{   
+{
   include("models/buildfile.php");
-    
+
   // we expect a POST wit the following values
   $vars = array('project','build','stamp','site','track','type','starttime','endtime','datafilesmd5');
   foreach($vars as $var)
@@ -259,10 +259,10 @@ function post_submit()
       $response_array['status'] = 1;
       $response_array['description'] = 'Variable \''.$var.'\' not set but required.';
       echo json_encode($response_array);
-      return;    
-      } 
+      return;
+      }
     }
-    
+
   $projectname = htmlspecialchars(pdo_real_escape_string($_POST['project']));
   $buildname = htmlspecialchars(pdo_real_escape_string($_POST['build']));
   $buildstamp = htmlspecialchars(pdo_real_escape_string($_POST['stamp']));
@@ -271,17 +271,17 @@ function post_submit()
   $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
   $starttime = htmlspecialchars(pdo_real_escape_string($_POST['starttime']));
   $endtime = htmlspecialchars(pdo_real_escape_string($_POST['endtime']));
-  
+
   // Check if we have the CDash@Home scheduleid
   $scheduleid=0;
   if(isset($_POST["clientscheduleid"]))
     {
     $scheduleid = pdo_real_escape_numeric($_POST["clientscheduleid"]);
     }
-    
+
   // Add the build
   $build = new Build();
-  
+
   $build->ProjectId = get_project_id($projectname);
   $build->StartTime = gmdate(FMT_DATETIME, $starttime);
   $build->EndTime = gmdate(FMT_DATETIME, $endtime);
@@ -289,39 +289,39 @@ function post_submit()
   $build->Name = $buildname;
   $build->InsertErrors = false; // we have no idea if we have errors at this point
   $build->SetStamp($buildstamp);
-  
+
   // Get the site id
   $site = new Site();
   $site->Name = $sitename;
   $site->Insert();
   $build->SiteId = $site->Id;
-     
+
   // TODO: Check the append and labels and generator and other optional
   if(isset($_POST["generator"]))
     {
-    $build->Generator = htmlspecialchars(pdo_real_escape_string($_POST['generator'])); 
+    $build->Generator = htmlspecialchars(pdo_real_escape_string($_POST['generator']));
     }
   if(isset($_POST["append"]))
     {
-    $build->Append = htmlspecialchars(pdo_real_escape_string($_POST['append'])); 
-    } 
-    
-  if(isset($_POST["subproject"]))
-    {  
-    $subprojectname = htmlspecialchars(pdo_real_escape_string($_POST['subproject']));
-    $this->Build->SetSubProject($subprojectname); 
+    $build->Append = htmlspecialchars(pdo_real_escape_string($_POST['append']));
     }
-    
+
+  if(isset($_POST["subproject"]))
+    {
+    $subprojectname = htmlspecialchars(pdo_real_escape_string($_POST['subproject']));
+    $this->Build->SetSubProject($subprojectname);
+    }
+
   $buildid = add_build($build,$scheduleid);
-    
+
   // Returns the OK submission
   $response_array['status'] = 0;
   $response_array['buildid'] = $buildid;
- 
+
   $buildfile = new BuildFile();
-  
+
   // Check if the files exists
-  foreach($_POST['datafilesmd5'] as $md5) 
+  foreach($_POST['datafilesmd5'] as $md5)
     {
     $buildfile->md5 = $md5;
     if(!$buildfile->MD5Exists())
@@ -333,12 +333,12 @@ function post_submit()
       $response_array['datafilesmd5'][] = 1;
       }
     }
-  echo json_encode($response_array);  
+  echo json_encode($response_array);
 }
 
 /** Function to deal with the external tool mechanism */
 function put_submit_file()
-{   
+{
   include("models/buildfile.php");
   // we expect a GET wit the following values
   $vars = array('buildid','type');
@@ -349,18 +349,18 @@ function put_submit_file()
       $response_array['status'] = 1;
       $response_array['description'] = 'Variable \''.$var.'\' not set but required.';
       echo json_encode($response_array);
-      return;    
-      } 
-    } 
-  
+      return;
+      }
+    }
+
   if(!is_numeric($_GET['buildid']))
     {
     $response_array['status'] = 1;
     $response_array['description'] = 'Variable \'buildid\' is not numeric.';
     echo json_encode($response_array);
-    return;    
+    return;
     }
-  
+
   $buildfile = new BuildFile();
   $buildfile->BuildId = $_GET['buildid'];
   $buildfile->Type = htmlspecialchars(pdo_real_escape_string($_GET['type']));
@@ -373,11 +373,11 @@ function put_submit_file()
     echo json_encode($response_array);
     return;
     }
-  
+
   // We are currently not checking the md5 and trusting the sender
   // but we should add that in the future
   // $md5sum = md5_file($filename);
-  
+
   // Write the file in the backup directory (same place as other submissions).
   global $CDASH_BACKUP_DIRECTORY;
   $uploadDir = $CDASH_BACKUP_DIRECTORY;
@@ -389,7 +389,7 @@ function put_submit_file()
     echo json_encode($response_array);
     return;
     }
-  
+
   // Read the input file
   $bytes = 0;
   $file_path='php://input';
@@ -407,9 +407,9 @@ function put_submit_file()
       }
     }
   fclose($handle);
-  unset($handle);  
+  unset($handle);
   fclose($filehandler);
-  unset($filehandler);  
+  unset($filehandler);
 
   global $CDASH_ASYNCHRONOUS_SUBMISSION;
   if($CDASH_ASYNCHRONOUS_SUBMISSION)
@@ -438,10 +438,10 @@ function put_submit_file()
     // TODO: synchronous processing.
     }
 
-  
+
   // Returns the OK submission
   $response_array['status'] = 0;
-  
-  echo json_encode($response_array);  
+
+  echo json_encode($response_array);
 }
 ?>
