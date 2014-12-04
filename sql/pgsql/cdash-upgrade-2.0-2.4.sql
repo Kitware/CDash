@@ -12,11 +12,11 @@ CREATE INDEX "overview_components_buildgroupid" on "overview_components" ("build
 
 CREATE TABLE "buildfile" (
   "buildid" bigint NOT NULL,
-  "filename` character varying(255) NOT NULL,
+  "filename" character varying(255) NOT NULL,
   "md5" character varying(40) NOT NULL,
   "type" character varying(32) NOT NULL
 );
 CREATE INDEX "buildfile_buildid" on "buildfile" ("buildid");
-CREATE INDEX "buildfile_buildid" on "filename" ("filename");
-CREATE INDEX "buildfile_buildid" on "type" ("type");
-CREATE INDEX "buildfile_buildid" on "md5" ("md5");
+CREATE INDEX "buildfile_filename" on "filename" ("filename");
+CREATE INDEX "buildfile_type" on "type" ("type");
+CREATE INDEX "buildfile_md5" on "md5" ("md5");
