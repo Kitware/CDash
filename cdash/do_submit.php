@@ -411,22 +411,22 @@ function put_submit_file()
   fclose($filehandler);
   unset($filehandler);
 
+  // Get the ID of the project associated with this build.
+  $buildfile->BuildId = $_GET['buildid'];
+  $row = pdo_single_row_query(
+    "SELECT projectid FROM build WHERE id = $buildfile->BuildId");
+  if(empty($row))
+    {
+    $response_array['status'] = 1;
+    $response_array['description'] = "Cannot find projectid for build #$buildfile->BuildId";
+    echo json_encode($response_array);
+    return;
+    }
+  $projectid = $row[0];
+
   global $CDASH_ASYNCHRONOUS_SUBMISSION;
   if($CDASH_ASYNCHRONOUS_SUBMISSION)
     {
-    // Get the ID of the project associated with this build.
-    $buildfile->BuildId = $_GET['buildid'];
-    $row = pdo_single_row_query(
-      "SELECT projectid FROM build WHERE id = $buildfile->BuildId");
-    if(empty($row))
-      {
-      $response_array['status'] = 1;
-      $response_array['description'] = "Cannot find projectid for build #$buildfile->BuildId";
-      echo json_encode($response_array);
-      return;
-      }
-    $projectid = $row[0];
-
     // Create a new entry in the submission table for this file.
     $now_utc = gmdate(FMT_DATETIMESTD);
     $filename = $uploadDir."/$buildfile->md5";
@@ -435,9 +435,10 @@ function put_submit_file()
     }
   else
     {
-    // TODO: synchronous processing.
+    // synchronous processing.
+    $handle = fopen($filename, 'r');
+    do_submit($handle, $projectid, $buildfile->md5, false);
     }
-
 
   // Returns the OK submission
   $response_array['status'] = 0;
