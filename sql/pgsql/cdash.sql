@@ -718,6 +718,8 @@ CREATE TABLE "label2build" (
   "buildid" bigint NOT NULL,
   PRIMARY KEY ("labelid", "buildid")
 );
+CREATE INDEX "labelid" on "label2build" ("labelid");
+CREATE INDEX "buildid" on "label2build" ("buildid");
 
 --
 -- Table: label2buildfailure

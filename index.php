@@ -51,7 +51,8 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  if(!pdo_query("SELECT buildid FROM buildfile") )
+  $dbTest = pdo_query("SHOW KEYS FROM label2build WHERE Key_name = 'labelid';");
+  if (pdo_num_rows($dbTest) < 1)
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -194,11 +195,8 @@ function add_default_buildgroup_sortlist($groupname)
 function should_collapse_rows($row1, $row2)
 {
   //
-  // The SQL query should return results that are ordered by these fields
-  // such that adjacent rows from the query results are candidates for
-  // collapsing according to this function. (i.e. - the "ORDER BY" clause of
-  // the SQL query is coupled to this function in terms of whether the
-  // "collapse" feature will work as expected...)
+  // The results of the SQL query should be sorted such that adjacent rows
+  // are candidates for collapsing according to this function.
   //
   if(
        ($row1['name'] == $row2['name'])
@@ -648,7 +646,7 @@ function generate_main_dashboard_XML($project_instance, $date)
   // Use this as the default date clause, but if $filterdata has a date clause,
   // then cancel this one out:
   //
-  $date_clause = "b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' AND ";
+  $date_clause = "AND b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' ";
 
   if($filterdata['hasdateclause'])
     {
@@ -697,7 +695,8 @@ function generate_main_dashboard_XML($project_instance, $date)
                   tpassed_diff.difference_negative AS counttestspasseddiffn,
                   tstatusfailed_diff.difference_positive AS countteststimestatusfaileddiffp,
                   tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,
-                  (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,"
+                  (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,
+                  (SELECT count(buildid) FROM buildnote WHERE buildid=b.id) AS countbuildnotes,"
                   .$userupdatesql."
                   s.name AS sitename,
                   s.outoforder AS siteoutoforder,
@@ -711,10 +710,14 @@ function generate_main_dashboard_XML($project_instance, $date)
                   sp.id AS subprojectid,
                   sp.core AS subprojectcore,
                   g.name as groupname,gp.position,g.id as groupid,
+                  GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,
                   (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
-                  FROM site AS s, build2group AS b2g,buildgroup AS g, buildgroupposition AS gp,
-                  build AS b
+                  FROM build AS b
+                  LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
+                  LEFT JOIN buildgroup AS g ON (g.id=b2g.groupid)
+                  LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid=g.id)
+                  LEFT JOIN site AS s ON (s.id=b.siteid)
                   LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
                   LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
                   LEFT JOIN configure AS c ON (c.buildid=b.id)
@@ -729,15 +732,41 @@ function generate_main_dashboard_XML($project_instance, $date)
                   LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
                   LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
                   LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
-                  WHERE s.id=b.siteid AND ".$date_clause."
-                   b.projectid='$projectid' AND b2g.buildid=b.id AND gp.buildgroupid=g.id AND b2g.groupid=g.id
-                   AND gp.starttime<'$end_UTCDate' AND (gp.endtime>'$end_UTCDate' OR gp.endtime='1980-01-01 00:00:00')
-                  ".$subprojectsql." ".$filter_sql." ORDER BY gp.position ASC,b.name ASC,b.siteid ASC,b.stamp DESC".$limit_sql;
-
+                  LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
+                  LEFT JOIN label AS l ON (l.id = l2b.labelid)
+                  WHERE b.projectid='$projectid' ".$date_clause."
+                  ".$subprojectsql." ".$filter_sql." ".$limit_sql
+                  ." GROUP BY b.id";
 
   // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = pdo_query($sql);
   echo pdo_error();
+
+  // Sort results from this query.
+  // We used to do this in MySQL with the following directive:
+  // ORDER BY gp.position ASC,b.name ASC,b.siteid ASC,b.stamp DESC
+  // But this dramatically impacted performance when the number of rows was
+  // relatively large (in the thousands).  So now we accomplish the same
+  // sorting within PHP instead.
+  $build_data = array();
+  while($build_row = pdo_fetch_array($builds))
+    {
+    $build_data[] = $build_row;
+    }
+  $positions = array();
+  $names = array();
+  $siteids = array();
+  $stamps = array();
+  foreach ($build_data as $key => $row)
+    {
+    $positions[$key]  = $row['position'];
+    $names[$key]  = $row['name'];
+    $siteids[$key]  = $row['siteid'];
+    $stamps[$key]  = $row['stamp'];
+    }
+  array_multisort($positions, SORT_ASC, $names, SORT_ASC, $siteids, SORT_ASC,
+                  $stamps, SORT_DESC, $build_data);
+
 
   // The SQL results are ordered by group so this should work
   // Group position have to be continuous
@@ -793,7 +822,7 @@ function generate_main_dashboard_XML($project_instance, $date)
   // Compute additional fields for each row that we'll need to generate the xml.
   //
   $build_rows = array();
-  while($build_row = pdo_fetch_array($builds))
+  foreach ($build_data as $build_row)
     {
     // Fields that come from the initial query:
     //  id
@@ -809,30 +838,16 @@ function generate_main_dashboard_XML($project_instance, $date)
     //  groupname
     //  position
     //  groupid
-    //
-    // Fields that we add by doing further queries based on buildid:
-    //  maxstarttime
-    //  buildids (array of buildids for summary rows)
-    //  sitename
-    //  countbuildnotes (added by users)
-    //  labels
     //  countupdatefiles
     //  updatestatus
-    //  updateduration
-    //  countupdateerrors
     //  countupdatewarnings
-    //  buildduration
-    //  countbuilderrors
     //  countbuildwarnings
+    //  countbuilderrors
     //  countbuilderrordiff
     //  countbuildwarningdiff
     //  configurestatus
-    //  hasconfigurestatus
-    //  countconfigureerrors
     //  countconfigurewarnings
     //  countconfigurewarningdiff
-    //  configureduration
-    //  test
     //  counttestsnotrun
     //  counttestsnotrundiff
     //  counttestsfailed
@@ -843,6 +858,19 @@ function generate_main_dashboard_XML($project_instance, $date)
     //  countteststimestatusfaileddiff
     //  testsduration
     //
+    // Fields that we add within this loop:
+    //  maxstarttime
+    //  buildids (array of buildids for summary rows)
+    //  countbuildnotes (added by users)
+    //  labels
+    //  updateduration
+    //  countupdateerrors
+    //  buildduration
+    //  hasconfigurestatus
+    //  countconfigureerrors
+    //  configureduration
+    //  test
+    //
 
     $buildid = $build_row['id'];
     $groupid = $build_row['groupid'];
@@ -851,28 +879,8 @@ function generate_main_dashboard_XML($project_instance, $date)
     $build_row['buildids'][] = $buildid;
     $build_row['maxstarttime'] = $build_row['starttime'];
 
-    // More queries for the labels
-    $build_row['labels'] = array();
-    $label_rows = pdo_all_rows_query(
-      "SELECT text FROM label, label2build ".
-      "WHERE label2build.buildid='$buildid' ".
-      "AND label2build.labelid=label.id");
-    foreach($label_rows as $label_row)
-      {
-      $build_row['labels'][$label_row['text']] = 1;
-      }
-
-    $label_rows = pdo_all_rows_query(
-      "SELECT text FROM label, label2test ".
-      "WHERE label2test.buildid='$buildid' ".
-      "AND label2test.labelid=label.id ".
-      "GROUP BY labelid,text");
-    foreach($label_rows as $label_row)
-      {
-      $build_row['labels'][$label_row['text']] = 1;
-      }
-
-    $build_row['labels'] = array_keys($build_row['labels']);
+    // Split out labels
+    $build_row['labels'] = explode(",", $build_row['labels']);
 
     // Updates
     if(!empty($build_row['updatestarttime']))
@@ -953,10 +961,6 @@ function generate_main_dashboard_XML($project_instance, $date)
       {
       $build_row['testsduration'] = round($build_row['testsduration'],1); //already in minutes
       }
-
-    // Build notes
-    $countbuildnotes = pdo_single_row_query("SELECT count(*) AS c FROM buildnote WHERE buildid='".$buildid."'");
-    $build_row['countbuildnotes'] = $countbuildnotes['c'];
 
     if(!$collapse)
       {
@@ -1567,7 +1571,6 @@ function generate_main_dashboard_XML($project_instance, $date)
       $xml .= "</dynamicanalysis>";
       }  // end dynamicanalysis
     } // end looping through builds
-
 
   if(pdo_num_rows($builds)>0)
     {
