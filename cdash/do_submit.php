@@ -378,9 +378,9 @@ function put_submit_file()
   // but we should add that in the future
   // $md5sum = md5_file($filename);
   
-  // Write the file in the upload directory
-  global $CDASH_UPLOAD_DIRECTORY;
-  $uploadDir = $CDASH_UPLOAD_DIRECTORY;
+  // Write the file in the backup directory (same place as other submissions).
+  global $CDASH_BACKUP_DIRECTORY;
+  $uploadDir = $CDASH_BACKUP_DIRECTORY;
   $filename = $uploadDir."/".$buildfile->md5;
   if(!$handle = fopen($filename, 'w'))
     {
@@ -391,11 +391,13 @@ function put_submit_file()
     }
   
   // Read the input file
+  $bytes = 0;
   $file_path='php://input';
   $filehandler = fopen($file_path, 'r');
   while(!feof($filehandler))
     {
     $content = fread($filehandler, 8192);
+    $bytes += strlen($content);
     if (fwrite($handle, $content) === FALSE)
       {
       $response_array['status'] = 1;
@@ -408,6 +410,34 @@ function put_submit_file()
   unset($handle);  
   fclose($filehandler);
   unset($filehandler);  
+
+  global $CDASH_ASYNCHRONOUS_SUBMISSION;
+  if($CDASH_ASYNCHRONOUS_SUBMISSION)
+    {
+    // Get the ID of the project associated with this build.
+    $buildfile->BuildId = $_GET['buildid'];
+    $row = pdo_single_row_query(
+      "SELECT projectid FROM build WHERE id = $buildfile->BuildId");
+    if(empty($row))
+      {
+      $response_array['status'] = 1;
+      $response_array['description'] = "Cannot find projectid for build #$buildfile->BuildId";
+      echo json_encode($response_array);
+      return;
+      }
+    $projectid = $row[0];
+
+    // Create a new entry in the submission table for this file.
+    $now_utc = gmdate(FMT_DATETIMESTD);
+    $filename = $uploadDir."/$buildfile->Filename";
+    pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
+      "VALUES ('$filename','$projectid','0','0','$bytes','$buildfile->md5','$now_utc')");
+    }
+  else
+    {
+    // TODO: synchronous processing.
+    }
+
   
   // Returns the OK submission
   $response_array['status'] = 0;
