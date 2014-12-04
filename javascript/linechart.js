@@ -43,11 +43,11 @@ function makeLineChart(elementName, inputData, project, anchor, hasSubprojects,
 
     // Change X axis to tightly fit the data.
     var highest_value = chart.axes.xaxis._dataBounds.max;
-    chart.axes.xaxis.max = highest_value;
-
     var lowest_value = chart.axes.xaxis._dataBounds.min;
-    chart.axes.xaxis.min = lowest_value;
-
-    chart.replot();
+    if (highest_value > lowest_value) {
+      chart.axes.xaxis.max = highest_value;
+      chart.axes.xaxis.min = lowest_value;
+      chart.replot();
+    }
   });
 }

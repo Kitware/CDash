@@ -276,6 +276,13 @@ foreach($build_groups as $build_group)
         $coverage_value = $data[$coverage_group_name];
         $linechart_data[$build_group["name"]][$coverage_group_name][] =
           array($chart_data_date, $coverage_value);
+
+        // assign this date's coverage value as "current" if we don't have one yet.
+        if ($coverage_data[$build_group["name"]][$coverage_group_name]["current"] == 0)
+          {
+          $coverage_data[$build_group["name"]][$coverage_group_name]["current"] =
+            $data[$coverage_group_name];
+          }
         }
       }
     }
@@ -291,20 +298,20 @@ foreach($build_groups as $build_group)
     // we're careful to check for the case where only a single point
     // was recovered.
     $num_points = count($linechart_data[$build_group["name"]][$coverage_group_name]);
+
+    // normal case: get the value from the 2nd to last data point.
     if ($num_points > 1)
       {
       $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] =
         $linechart_data[$build_group["name"]][$coverage_group_name][$num_points - 2][1];
       }
+    // singular case: just make previous & current hold the same value.
+    // We do this because nvd3's bullet chart implementation does not support
+    // leaving the "marker" off of the chart.
     else
       {
       $prev_point = end($linechart_data[$build_group["name"]][$coverage_group_name]);
       $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] = $prev_point[1];
-      }
-    if (!isset($coverage_data[$build_group["name"]][$coverage_group_name]["previous"]))
-      {
-      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] =
-        $coverage_data[$build_group["name"]][$coverage_group_name]["current"];
       }
     }
   }
