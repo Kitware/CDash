@@ -25,6 +25,9 @@ if(!isset($projectname))
   echo "Not a valid project!";
   return;
   }
+
+$start = microtime_float();
+
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 $projectid = get_project_id($projectname);
 $Project = new Project();
@@ -479,6 +482,8 @@ foreach($static_groups as $static_group)
   $xml .= "</staticanalysis>";
   }
 
+$end = microtime_float();
+$xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
 $xml .= "</cdash>";
 
 // Now do the xslt transition
