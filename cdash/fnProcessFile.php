@@ -28,7 +28,7 @@ require_once("cdash/do_submit.php");
 
 // Try to open the file and process it (call "do_submit" on it)
 //
-function ProcessFile($projectid, $filename)
+function ProcessFile($projectid, $filename, $md5)
 {
   unset($fp);
 
@@ -46,7 +46,7 @@ function ProcessFile($projectid, $filename)
   if($fp)
     {
     global $PHP_ERROR_SUBMISSION_ID;
-    do_submit($fp, $projectid, '', false, $PHP_ERROR_SUBMISSION_ID);
+    do_submit($fp, $projectid, $md5, false, $PHP_ERROR_SUBMISSION_ID);
     $PHP_ERROR_SUBMISSION_ID = 0;
 
     fclose($fp);

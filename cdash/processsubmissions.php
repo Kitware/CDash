@@ -288,7 +288,7 @@ function ResetApparentlyStalledSubmissions($projectid)
 //
 function ProcessSubmissions($projectid)
 {
-  $qs = "SELECT id, filename, filesize, attempts FROM submission ".
+  $qs = "SELECT id, filename, filesize, filemd5sum, attempts FROM submission ".
     "WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1";
 
   $query = pdo_query($qs);
@@ -329,6 +329,7 @@ function ProcessSubmissions($projectid)
     $submission_id = $query_array['id'];
     $filename = $query_array['filename'];
     $new_attempts = $query_array['attempts'] + 1;
+    $md5 = $query_array['filemd5sum'];
 
     // Mark the submissionprocessing table each time through the loop so that
     // we do not become known as an "apparently stalled" processor...
@@ -368,7 +369,7 @@ function ProcessSubmissions($projectid)
           E_USER_ERROR);
         }
 
-      $new_status = ProcessFile($projectid, $filename);
+      $new_status = ProcessFile($projectid, $filename, $md5);
       }
 
     $PHP_ERROR_SUBMISSION_ID = 0;

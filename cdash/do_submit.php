@@ -429,7 +429,7 @@ function put_submit_file()
 
     // Create a new entry in the submission table for this file.
     $now_utc = gmdate(FMT_DATETIMESTD);
-    $filename = $uploadDir."/$buildfile->Filename";
+    $filename = $uploadDir."/$buildfile->md5";
     pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
       "VALUES ('$filename','$projectid','0','0','$bytes','$buildfile->md5','$now_utc')");
     }

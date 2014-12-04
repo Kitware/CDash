@@ -59,6 +59,40 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     $localParser->BufferSizeMB =8192/(1024*1024);
     }
 
+  // Check if this is a new style PUT submission.
+  if ($expected_md5)
+    {
+    $row = pdo_single_row_query(
+      "SELECT * FROM buildfile WHERE md5='$expected_md5'");
+    if(!empty($row))
+      {
+      $type = $row['type'];
+
+      // Include the handler file for this type of submission.
+      $include_file = "xml_handlers/" . $type . "_handler.php";
+      if (stream_resolve_include_path($include_file) === false)
+        {
+        add_log("No handler include file for $type (tried $include_file)", "ctest_parse",
+          LOG_ERR, $projectid);
+        return;
+        }
+      require_once($include_file);
+
+      // Instantiate the handler.
+      $className = $type . "Handler";
+      if (!class_exists($className))
+        {
+        add_log("No handler class for $type", "ctest_parse",
+          LOG_ERR, $projectid);
+        return;
+        }
+
+      $handler = new $className($projectid, $scheduleid);
+      return $handler->Parse($filehandler);
+      }
+    }
+
+
   $content = fread($filehandler, 8192);
   $handler = null;
   $parser = xml_parser_create();
