@@ -794,7 +794,9 @@ CREATE TABLE IF NOT EXISTS `label` (
 CREATE TABLE `label2build` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`buildid`)
+  PRIMARY KEY (`labelid`,`buildid`),
+  KEY `labelid` (`labelid`),
+  KEY `buildid` (`buildid`)
 );
 
 -- 
