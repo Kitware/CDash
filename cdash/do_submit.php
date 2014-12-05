@@ -211,30 +211,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5='')
         "VALUES ('$submissionid', '".$_SERVER['REMOTE_ADDR']."')");
 
     // Call process submissions via cURL.
-    $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid;
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $request);
-    curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-    if ($CDASH_USE_HTTPS)
-      {
-      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-      }
-
-    // It's likely that the process timesout because the processing takes more
-    // than 1s to run. This is OK as we just need to trigger it.
-    // 28 = CURLE_OPERATION_TIMEDOUT
-    if (curl_exec($ch) === false && curl_errno($ch) != 28)
-      {
-      add_log(
-        "cURL error: ". curl_error($ch).' for request: '.$request,
-        "do_submit_asynchronous",
-        LOG_ERR, $projectid);
-      }
-    curl_close($ch);
+    trigger_process_submissions($projectid);
     }
   else // synchronously
     {
@@ -432,6 +409,9 @@ function put_submit_file()
     $now_utc = gmdate(FMT_DATETIMESTD);
     pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ".
       "VALUES ('$filename','$projectid','0','0','$bytes','$buildfile->md5','$now_utc')");
+
+    // Trigger the processing loop in case it's not already running.
+    trigger_process_submissions($projectid);
     }
   else
     {
@@ -445,4 +425,36 @@ function put_submit_file()
 
   echo json_encode($response_array);
 }
+
+// Trigger processsubmissions.php using cURL.
+function trigger_process_submissions($projectid)
+{
+  global $CDASH_USE_HTTPS;
+  $currentURI = get_server_URI(true);
+  $request = $currentURI."/cdash/processsubmissions.php?projectid=".$projectid;
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $request);
+  curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+  if ($CDASH_USE_HTTPS)
+    {
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    }
+
+  // It's likely that the process timesout because the processing takes more
+  // than 1s to run. This is OK as we just need to trigger it.
+  // 28 = CURLE_OPERATION_TIMEDOUT
+  if (curl_exec($ch) === false && curl_errno($ch) != 28)
+    {
+    add_log(
+      "cURL error: ". curl_error($ch).' for request: '.$request,
+      "do_submit_asynchronous",
+      LOG_ERR, $projectid);
+    }
+  curl_close($ch);
+}
+
 ?>
