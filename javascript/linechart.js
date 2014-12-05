@@ -37,7 +37,7 @@ function makeLineChart(elementName, inputData, project, anchor, hasSubprojects,
           url += "&sort=" + sort;
         }
         url += "#" + anchor;
-        window.location.href = url;
+        window.open(url, '_blank');
       }
     );
 
