@@ -392,7 +392,7 @@ function put_submit_file()
   // Begin writing this file to the backup directory.
   global $CDASH_BACKUP_DIRECTORY;
   $uploadDir = $CDASH_BACKUP_DIRECTORY;
-  $filename = $uploadDir."/".$buildfile->md5;
+  $filename = $uploadDir . "/" . $buildfile->BuildId . "_" . $buildfile->md5;
   if(!$handle = fopen($filename, 'w'))
     {
     $response_array['status'] = 1;
