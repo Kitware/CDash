@@ -25,11 +25,17 @@ if(!isset($projectname))
   echo "Not a valid project!";
   return;
   }
+
+$start = microtime_float();
+
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 $projectid = get_project_id($projectname);
 $Project = new Project();
 $Project->Id = $projectid;
 $Project->Fill();
+
+// check if this project has subprojects.
+$hasSubprojects = ($Project->GetNumberOfSubProjects() > 0);
 
 // make sure the user has access to this project
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
@@ -59,6 +65,7 @@ $xml .= add_XML_value("previous", "overview.php?project=$projectname&date=$previ
 $xml .= add_XML_value("current", "overview.php?project=$projectname");
 $xml .= add_XML_value("next", "overview.phpv?project=$projectname&date=$nextdate");
 $xml .= "</menu>";
+$xml .= add_XML_value("hasSubprojects", $hasSubprojects);
 
 // configure/build/test data that we care about.
 $build_measurements = array("configure_warnings", "configure_errors",
@@ -66,6 +73,14 @@ $build_measurements = array("configure_warnings", "configure_errors",
 
 // for static analysis, we only care about errors & warnings.
 $static_measurements = array("errors", "warnings");
+
+// information on how to sort by the various build measurements
+$sort = array(
+  "configure_warnings" => "[[5,1]]",
+  "configure_errors"   => "[[4,1]]",
+  "build_warnings"     => "[[8,1]]",
+  "build_errors"       => "[[7,1]]",
+  "failing_tests"      => "[[11,1]]");
 
 // get the build groups that are included in this project's overview,
 // split up by type (currently only static analysis and general builds).
@@ -220,7 +235,7 @@ foreach($build_groups as $build_group)
     $chart_beginning_UTCDate = gmdate(FMT_DATETIME, $chart_beginning_timestamp);
     $chart_end_UTCDate = gmdate(FMT_DATETIME, $chart_end_timestamp);
     // to be passed on to javascript chart renderers
-    $chart_data_date = gmdate("M d Y H:i:s", $chart_end_timestamp);
+    $chart_data_date = gmdate("M d Y H:i:s", ($chart_end_timestamp + $chart_beginning_timestamp) / 2.0);
 
     $data = gather_overview_data($chart_beginning_UTCDate, $chart_end_UTCDate,
                                  $build_group["id"]);
@@ -264,6 +279,13 @@ foreach($build_groups as $build_group)
         $coverage_value = $data[$coverage_group_name];
         $linechart_data[$build_group["name"]][$coverage_group_name][] =
           array($chart_data_date, $coverage_value);
+
+        // assign this date's coverage value as "current" if we don't have one yet.
+        if ($coverage_data[$build_group["name"]][$coverage_group_name]["current"] == 0)
+          {
+          $coverage_data[$build_group["name"]][$coverage_group_name]["current"] =
+            $data[$coverage_group_name];
+          }
         }
       }
     }
@@ -279,20 +301,20 @@ foreach($build_groups as $build_group)
     // we're careful to check for the case where only a single point
     // was recovered.
     $num_points = count($linechart_data[$build_group["name"]][$coverage_group_name]);
+
+    // normal case: get the value from the 2nd to last data point.
     if ($num_points > 1)
       {
       $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] =
         $linechart_data[$build_group["name"]][$coverage_group_name][$num_points - 2][1];
       }
+    // singular case: just make previous & current hold the same value.
+    // We do this because nvd3's bullet chart implementation does not support
+    // leaving the "marker" off of the chart.
     else
       {
       $prev_point = end($linechart_data[$build_group["name"]][$coverage_group_name]);
       $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] = $prev_point[1];
-      }
-    if (!isset($coverage_data[$build_group["name"]][$coverage_group_name]["previous"]))
-      {
-      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] =
-        $coverage_data[$build_group["name"]][$coverage_group_name]["current"];
       }
     }
   }
@@ -321,7 +343,7 @@ foreach($static_groups as $static_group)
     $chart_beginning_UTCDate = gmdate(FMT_DATETIME, $chart_beginning_timestamp);
     $chart_end_UTCDate = gmdate(FMT_DATETIME, $chart_end_timestamp);
     // to be passed on to javascript chart renderers
-    $chart_data_date = gmdate("M d Y H:i:s", $chart_end_timestamp);
+    $chart_data_date = gmdate("M d Y H:i:s", ($chart_end_timestamp + $chart_beginning_timestamp) / 2.0);
 
     $data = gather_static_data($chart_beginning_UTCDate, $chart_end_UTCDate,
                                  $static_group["id"]);
@@ -346,6 +368,8 @@ foreach($build_measurements as $measurement)
   $xml .= "<measurement>";
   $xml .= add_XML_value("name", $measurement);
   $xml .= add_XML_value("nice_name", sanitize_string($measurement));
+  $xml .= add_XML_value("sort", $sort[$measurement]);
+
   foreach($build_groups as $build_group)
     {
     $xml .= "<group>";
@@ -448,6 +472,7 @@ foreach($static_groups as $static_group)
     $xml .= "<measurement>";
     $xml .= add_XML_value("name", $measurement);
     $xml .= add_XML_value("nice_name", sanitize_string($measurement));
+    $xml .= add_XML_value("sort", $sort["build_" . $measurement]);
     $xml .= add_XML_value("value",
       $overview_data[$measurement][$static_group["name"]]);
     $xml .= add_XML_value("chart",
@@ -457,6 +482,8 @@ foreach($static_groups as $static_group)
   $xml .= "</staticanalysis>";
   }
 
+$end = microtime_float();
+$xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
 $xml .= "</cdash>";
 
 // Now do the xslt transition
