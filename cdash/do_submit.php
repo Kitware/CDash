@@ -418,6 +418,10 @@ function put_submit_file()
     // synchronous processing.
     $handle = fopen($filename, 'r');
     do_submit($handle, $projectid, $buildfile->md5, false);
+
+    // The file is given a more appropriate name during do_submit, so we can
+    // delete the old file now.
+    unlink($filename);
     }
 
   // Returns the OK submission
