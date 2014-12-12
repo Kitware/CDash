@@ -369,7 +369,10 @@ function put_submit_file()
   // Begin writing this file to the backup directory.
   global $CDASH_BACKUP_DIRECTORY;
   $uploadDir = $CDASH_BACKUP_DIRECTORY;
-  $filename = $uploadDir . "/" . $buildfile->BuildId . "_" . $buildfile->md5;
+  $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
+  $filename = $uploadDir . "/" . $buildfile->BuildId . "_" . $buildfile->md5
+    . ".$ext";
+
   if(!$handle = fopen($filename, 'w'))
     {
     $response_array['status'] = 1;
