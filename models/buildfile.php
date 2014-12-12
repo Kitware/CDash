@@ -31,19 +31,19 @@ class BuildFile
       echo "BuildFile::Insert(): BuildId not set<br>";
       return false;
       }
-      
+
     if(!$this->Type)
       {
       echo "BuildFile::Insert(): Type not set<br>";
       return false;
       }
-    
+
     if(!$this->md5)
       {
       echo "BuildFile::Insert(): md5 not set<br>";
       return false;
       }
-      
+
     if(!$this->Filename)
       {
       echo "BuildFile::Insert(): Filename not set<br>";
@@ -53,7 +53,7 @@ class BuildFile
     $filename = pdo_real_escape_string($this->Filename);
     $type = pdo_real_escape_string($this->Type);
     $md5 = pdo_real_escape_string($this->md5);
-    
+
     // Check if we already have a row
     $query = "SELECT buildid FROM buildfile WHERE buildid=".qnum($this->BuildId)." AND md5='".$md5."'";
     $query_result = pdo_query($query);
@@ -62,12 +62,12 @@ class BuildFile
       add_last_sql_error("BuildFile Insert",0,$this->BuildId);
       return false;
       }
-    
+
     if(pdo_num_rows($query_result)>0)
       {
       return false;
       }
-    
+
     $query = "INSERT INTO buildfile (buildid,type,filename,md5)
               VALUES (".qnum($this->BuildId).",'".$type."','".$filename."','".$md5."')";
     if(!pdo_query($query))
@@ -75,14 +75,14 @@ class BuildFile
       add_last_sql_error("BuildFile Insert",0,$this->BuildId);
       return false;
       }
-      
+
     return true;
     } // end insert
-    
+
   function MD5Exists()
     {
     $md5 = pdo_real_escape_string($this->md5);
-    
+
     $query = "SELECT buildid FROM buildfile WHERE md5='".$md5."'";
     $query_result = pdo_query($query);
     if(!$query_result)
@@ -90,13 +90,23 @@ class BuildFile
       add_last_sql_error("BuildFile MD5Exists",0,$md5);
       return false;
       }
-    
+
     if(pdo_num_rows($query_result)==0)
       {
       return false;
       }
     return true;
     } // end MD5Exists
-    
+
+  /** Delete this BuildFile */
+  function Delete()
+    {
+    if(!$this->BuildId || !$this->md5)
+      {
+      return false;
+      }
+    pdo_query("DELETE FROM buildfile WHERE buildid=$this->BuildId AND md5='$this->md5'");
+    }
+
 }
 ?>
