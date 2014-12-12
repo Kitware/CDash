@@ -17,8 +17,8 @@
 =========================================================================*/
 class CoverageSummary
 {
-  var $LocTested;
-  var $LocUntested;
+  var $LocTested = 0;
+  var $LocUntested = 0;
   var $BuildId;
   private $Coverages;
 
@@ -134,21 +134,32 @@ class CoverageSummary
         {
         $fullpath = $coverage->CoverageFile->FullPath;
 
+        // GcovTarHandler creates its own coveragefiles, no need to do
+        // it again here.
+        $fileid = -1;
+        if (!empty($coverage->CoverageFile->Crc32))
+          {
+          $fileid = $coverage->CoverageFile->Id;
+          }
+
         // Create an empty file if doesn't exists
-        $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE fullpath='$fullpath' AND file IS NULL");
-        if(pdo_num_rows($coveragefile)==0)
+        if ($fileid === -1)
           {
-          // Do not compute the crc32, that means it's a temporary file
-          // Only when the crc32 is computed it means that the file is valid
-          pdo_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
-          $fileid = pdo_insert_id("coveragefile");
+          $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE fullpath='$fullpath' AND file IS NULL");
+          if(pdo_num_rows($coveragefile)==0)
+            {
+            // Do not compute the crc32, that means it's a temporary file
+            // Only when the crc32 is computed it means that the file is valid
+            pdo_query ("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+            $fileid = pdo_insert_id("coveragefile");
+            }
+          else
+            {
+            $coveragefile_array = pdo_fetch_array($coveragefile);
+            $fileid = $coveragefile_array["id"];
+            }
+          $coverage->CoverageFile->Id = $fileid;
           }
-        else
-          {
-          $coveragefile_array = pdo_fetch_array($coveragefile);
-          $fileid = $coveragefile_array["id"];
-          }
-        $coverage->CoverageFile->Id = $fileid;
 
         $covered = $coverage->Covered;
         $loctested = $coverage->LocTested;

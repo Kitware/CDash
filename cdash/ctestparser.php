@@ -190,7 +190,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
       LOG_ERR, $projectid);
     return true;
     }
-  $handler = new $className($projectid, $scheduleid);
+  $handler = new $className($buildid);
 
   // Parse the file.
   $handler->Parse($filehandler);

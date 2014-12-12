@@ -104,6 +104,18 @@ class CoverageFile
                                    WHERE c.fileid=cf.id AND c.buildid=".qnum($buildid)."
                                    AND cf.fullpath='$this->FullPath' ORDER BY cf.id ASC");
       $coveragefile_array = pdo_fetch_array($coveragefile);
+
+      // The GcovTarHandler creates coveragefiles before coverages
+      // so we need a simpler query in this case.
+      if (empty($coveragefile_array))
+        {
+        $coveragefile = pdo_query(
+          "SELECT id, file FROM coveragefile
+           WHERE fullpath='$this->FullPath' AND file IS NULL
+           ORDER BY id ASC");
+        $coveragefile_array = pdo_fetch_array($coveragefile);
+        }
+
       $this->Id = $coveragefile_array["id"];
       pdo_query("UPDATE coveragefile SET file='$file',crc32='$this->Crc32' WHERE id=".qnum($this->Id)); 
       add_last_sql_error("CoverageFile:Update");
