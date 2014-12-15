@@ -119,17 +119,24 @@ class GCovTarHandler
 
     $path = str_replace($this->SourceDirectory, ".", trim($path));
     $coverageFile->FullPath = $path;
+    $lineNumber = 0;
 
     // The lack of rewind is intentional.
     while (!$file->eof())
       {
       $gcovLine = $file->current();
-      $fields = explode(":", $gcovLine);
+
+      // "Ordinary" entries in a .gcov file take the following format:
+      // <lineNumber>: <timesHit>: <source code at that line>
+      // So we check if this line matches the format & parse the
+      // data out of it if so.
+      $fields = explode(":", $gcovLine, 3);
       if (count($fields) > 2)
         {
         // Separate out delimited values from this line.
         $timesHit = trim($fields[0]);
         $lineNumber = trim($fields[1]);
+
         $sourceLine = trim($fields[2]);
 
         if ($lineNumber > 0)
@@ -161,8 +168,60 @@ class GCovTarHandler
           }
 
         $coverageFileLog->AddLine($lineNumber - 1, $timesHit);
+        $file->next();
         }
-      $file->next();
+
+      // Otherwise we read through a block of these lines that doesn't
+      // follow this format.  Such lines typically contain branch or
+      // function level coverage data.
+      else
+        {
+        $coveredBranches = 0;
+        $uncoveredBranches = 0;
+        $throwBranches = 0;
+        $fallthroughBranches = 0;
+        while (count($fields) < 3 && !$file->eof())
+          {
+          // Parse branch coverage here.
+          if(substr($gcovLine, 0, 6) === "branch")
+            {
+            // Figure out whether this branch was covered or not.
+            if (strpos($gcovLine, "taken 0%") !== false)
+              {
+              $uncoveredBranches += 1;
+              }
+            else
+              {
+              $coveredBranches += 1;
+              }
+
+            // Also keep track of the different types of branches encountered.
+            if (strpos($gcovLine, "(throw)") !== false)
+              {
+              $throwBranches += 1;
+              }
+            else if (strpos($gcovLine, "(fallthrough)") !== false)
+              {
+              $fallthroughBranches += 1;
+              }
+            }
+
+
+          $file->next();
+          $gcovLine = $file->current();
+          $fields = explode(":", $gcovLine);
+          }
+
+        // Don't report branch coverage for this line if we only
+        // encountered (throw) and (fallthrough) branches here.
+        $totalBranches = $coveredBranches + $uncoveredBranches;
+        if ($totalBranches > 0 &&
+            $totalBranches > ($throwBranches + $fallthroughBranches))
+          {
+          $coverageFileLog->AddBranch($lineNumber - 1, $coveredBranches,
+                                      $totalBranches);
+          }
+        }
       }
 
 
