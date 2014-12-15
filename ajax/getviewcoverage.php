@@ -173,7 +173,7 @@ if($userid)
       {
       $fullpath = substr($fullpath,2);  
       }
-    if(isset($_GET['dir']) && $_GET['dir']!='')
+    if(isset($_GET['dir']) && $_GET['dir']!='' && $_GET['dir'] != '.')
       {  
       $fullpath = substr($fullpath,strlen($_GET['dir'])+1);
       } 
