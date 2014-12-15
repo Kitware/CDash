@@ -8,6 +8,7 @@ class GCovTarHandler
   private $BuildId;
   private $CoverageSummary;
   private $SourceDirectory;
+  private $BinaryDirectory;
 
   public function __construct($buildid)
     {
@@ -15,6 +16,7 @@ class GCovTarHandler
     $this->CoverageSummary = new CoverageSummary();
     $this->CoverageSummary->BuildId = $this->BuildId;
     $this->SourceDirectory = '';
+    $this->BinaryDirectory = '';
     }
 
 
@@ -50,16 +52,18 @@ class GCovTarHandler
         {
         $jsonContents = file_get_contents($fileinfo->getRealPath());
         $jsonDecoded = json_decode($jsonContents, true);
-        if (is_null($jsonDecoded) || !array_key_exists("Source", $jsonDecoded))
+        if (is_null($jsonDecoded) || !array_key_exists("Source", $jsonDecoded)
+          || !array_key_exists("Binary", $jsonDecoded))
           {
           $this->DeleteDirectory($dirName);
           return false;
           }
         $this->SourceDirectory = $jsonDecoded['Source'];
+        $this->BinaryDirectory = $jsonDecoded['Binary'];
         break;
         }
       }
-    if (empty($this->SourceDirectory))
+    if (empty($this->SourceDirectory) || empty($this->BinaryDirectory))
       {
       $this->DeleteDirectory($dirName);
       return false;
@@ -117,7 +121,21 @@ class GCovTarHandler
       return;
       }
 
-    $path = str_replace($this->SourceDirectory, ".", trim($path));
+    // If this source file isn't from the source or binary directory
+    // we shouldn't include it in our coverage report.
+    if (strpos($path, $this->SourceDirectory) !== false)
+      {
+      $path = str_replace($this->SourceDirectory, ".", trim($path));
+      }
+    else if (strpos($path, $this->BinaryDirectory) !== false)
+      {
+      $path = str_replace($this->BinaryDirectory, ".", trim($path));
+      }
+    else
+      {
+      return;
+      }
+
     $coverageFile->FullPath = $path;
     $lineNumber = 0;
 
