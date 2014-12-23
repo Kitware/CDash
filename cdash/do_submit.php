@@ -289,7 +289,14 @@ function post_submit()
     $this->Build->SetSubProject($subprojectname);
     }
 
-  $buildid = add_build($build,$scheduleid);
+  // Check if this build already exists.
+  $buildid = $build->GetIdFromName($subprojectname);
+
+  // If not, add a new one.
+  if ($buildid === 0)
+    {
+    $buildid = add_build($build,$scheduleid);
+    }
 
   // Returns the OK submission
   $response_array['status'] = 0;
