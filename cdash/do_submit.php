@@ -273,14 +273,14 @@ function post_submit()
   $site->Insert();
   $build->SiteId = $site->Id;
 
-  // TODO: Check the append and labels and generator and other optional
+  // Make this an "append" build, so that it doesn't result in a separate row
+  // from the rest of the "normal" submission.
+  $build->Append = true;
+
+  // TODO: Check the labels and generator and other optional
   if(isset($_POST["generator"]))
     {
     $build->Generator = htmlspecialchars(pdo_real_escape_string($_POST['generator']));
-    }
-  if(isset($_POST["append"]))
-    {
-    $build->Append = htmlspecialchars(pdo_real_escape_string($_POST['append']));
     }
 
   if(isset($_POST["subproject"]))
