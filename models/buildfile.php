@@ -79,23 +79,21 @@ class BuildFile
     return true;
     } // end insert
 
+  // Returns the buildid associated with this file's MD5 if it has been
+  // uploaded previously, false otherwise.
   function MD5Exists()
     {
     $md5 = pdo_real_escape_string($this->md5);
 
-    $query = "SELECT buildid FROM buildfile WHERE md5='".$md5."'";
-    $query_result = pdo_query($query);
-    if(!$query_result)
+    $row = pdo_single_row_query(
+      "SELECT buildid FROM buildfile WHERE md5='".$md5."'");
+
+    if (empty($row))
       {
-      add_last_sql_error("BuildFile MD5Exists",0,$md5);
       return false;
       }
 
-    if(pdo_num_rows($query_result)==0)
-      {
-      return false;
-      }
-    return true;
+    return $row[0];
     } // end MD5Exists
 
   /** Delete this BuildFile */

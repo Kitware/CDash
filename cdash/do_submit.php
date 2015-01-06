@@ -283,6 +283,7 @@ function post_submit()
     $build->Generator = htmlspecialchars(pdo_real_escape_string($_POST['generator']));
     }
 
+  $subprojectname = "";
   if(isset($_POST["subproject"]))
     {
     $subprojectname = htmlspecialchars(pdo_real_escape_string($_POST['subproject']));
@@ -308,13 +309,19 @@ function post_submit()
   foreach($_POST['datafilesmd5'] as $md5)
     {
     $buildfile->md5 = $md5;
-    if(!$buildfile->MD5Exists())
+    $old_buildid = $buildfile->MD5Exists();
+    if(!$old_buildid)
       {
       $response_array['datafilesmd5'][] = 0;
       }
     else
       {
       $response_array['datafilesmd5'][] = 1;
+
+      // Associate this build file with the new build if it has been previously
+      // uploaded.
+      require_once("copy_build_data.php");
+      copy_build_data($old_buildid, $buildid, $type);
       }
     }
   echo json_encode($response_array);
