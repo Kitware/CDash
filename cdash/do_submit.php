@@ -287,7 +287,7 @@ function post_submit()
   if(isset($_POST["subproject"]))
     {
     $subprojectname = htmlspecialchars(pdo_real_escape_string($_POST['subproject']));
-    $this->Build->SetSubProject($subprojectname);
+    $build->SetSubProject($subprojectname);
     }
 
   // Check if this build already exists.
