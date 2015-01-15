@@ -342,7 +342,6 @@ if($userid)
         $directory_array[$fullpath]["functionsuntested"] += $covfile["functionsuntested"];
         $directory_array[$fullpath]["functionstested"] += $covfile["functionstested"];
         }
-      $directory_array[$fullpath]["percentcoverage"] += $covfile["percentcoverage"];
       $directory_array[$fullpath]["coveragemetric"] += $covfile["coveragemetric"];
       $directory_array[$fullpath]["nfiles"]++;
       }
@@ -350,7 +349,8 @@ if($userid)
     // Compute the average
     foreach($directory_array as $fullpath => $covdir)
       {
-      $directory_array[$fullpath]["percentcoverage"] = sprintf("%3.2f",$covdir["percentcoverage"]/$covdir["nfiles"]);
+      $directory_array[$fullpath]["percentcoverage"] = sprintf("%3.2f",
+        100.0 * ($covdir["loctested"] / ( $covdir["loctested"] + $covdir["locuntested"])));
       $directory_array[$fullpath]["coveragemetric"] = sprintf("%3.2f",$covdir["coveragemetric"]/$covdir["nfiles"]);
       }
 
