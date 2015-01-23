@@ -135,7 +135,7 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   // Configure errors
   $BuildConfigure = new BuildConfigure();
   $BuildConfigure->BuildId = $buildid;
-  $errors['configure_errors'] = $BuildConfigure->GetNumberOfErrors();
+  $errors['configure_errors'] = $BuildConfigure->ComputeErrors();
 
   // Build errors and warnings
   $Build = new Build();

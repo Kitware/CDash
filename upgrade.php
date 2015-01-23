@@ -897,7 +897,7 @@ if(isset($_GET['upgrade-2-2']))
   add_log("Upgrade done.","upgrade-2-2");
   return;
   }
-  
+
 // 2.4 Upgrade
 if(isset($_GET['upgrade-2-4']))
   {
@@ -910,7 +910,15 @@ if(isset($_GET['upgrade-2-4']))
   // Support for larger types
   ModifyTableField("buildfailure","workingdirectory","VARCHAR( 512)","VARCHAR( 512 )","",true,false);
   ModifyTableField("buildfailure","outputfile","VARCHAR( 512)","VARCHAR( 512 )","",true,false);
-  
+
+  // Support for parent builds
+  AddTableField('build', 'parentid', 'int(11)', 'int', '0');
+  AddTableIndex('build', 'parentid');
+
+  // Cache configure results similar to build & test
+  AddTableField('build', 'configureerrors', 'smallint(6)', 'smallint', '-1');
+  AddTableField('build', 'configurewarnings', 'smallint(6)', 'smallint', '-1');
+
   // Set the database version
   setVersion();
 

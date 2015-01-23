@@ -113,11 +113,24 @@ class ConfigureHandler extends AbstractHandler
         $this->Configure->Delete();
         }
       $this->Configure->Insert();
+
       // Insert errors from the log file
+      $this->Configure->ComputeWarnings();
       $this->Configure->ComputeErrors();
 
       $this->Build->Id = $buildid;
       $this->Build->ComputeConfigureDifferences();
+
+      // Record the number of warnings & errors with the build.
+      $this->Build->SetNumberOfConfigureWarnings(
+        $this->Configure->NumberOfWarnings);
+      $this->Build->SetNumberOfConfigureErrors(
+        $this->Configure->NumberOfErrors);
+
+      // Update the tally of warnings & errors in the parent build,
+      // if applicable.
+      $this->Build->UpdateParentConfigureNumbers(
+        $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
       }
     else if($name == 'LABEL')
       {

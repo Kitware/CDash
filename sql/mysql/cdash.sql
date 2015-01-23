@@ -19,6 +19,7 @@ CREATE TABLE `build` (
   `id` int(11) NOT NULL auto_increment,
   `siteid` int(11) NOT NULL default '0',
   `projectid` int(11) NOT NULL default '0',
+  `parentid` int(11) NOT NULL default '0',
   `stamp` varchar(255) NOT NULL default '',
   `name` varchar(255) NOT NULL default '',
   `type` varchar(255) NOT NULL default '',
@@ -28,6 +29,8 @@ CREATE TABLE `build` (
   `submittime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `command` text NOT NULL,
   `log` text NOT NULL,
+  `configureerrors` smallint(6) DEFAULT '-1',
+  `configurewarnings` smallint(6) DEFAULT '-1',
   `builderrors` smallint(6) DEFAULT '-1',
   `buildwarnings` smallint(6) DEFAULT '-1',
   `testnotrun` smallint(6) DEFAULT '-1',
@@ -41,7 +44,8 @@ CREATE TABLE `build` (
   KEY `siteid` (`siteid`),
   KEY `stamp` (`stamp`),
   KEY `type` (`type`),
-  KEY `name` (`name`)
+  KEY `name` (`name`),
+  KEY `parentid` (`parentid`)
 );
 
 

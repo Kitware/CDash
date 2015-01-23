@@ -83,9 +83,9 @@ function generate_index_table()
   $showallprojects = 0;
   if(isset($_GET['allprojects']) && $_GET['allprojects'] == 1)
     {
-    $showallprojects = 1;  
+    $showallprojects = 1;
     }
-    
+
   $projects = get_projects(!$showallprojects);
   $row=0;
   foreach($projects as $project)
@@ -108,7 +108,7 @@ function generate_index_table()
       $xml .= "<lastbuilddatefull>".$lastbuild."</lastbuilddatefull>";
       $xml .= "<activitylevel>high</activitylevel>";
       }
-      
+
     $xml .= "<activity>";
     if(!isset($project['nbuilds']) || $project['nbuilds'] == 0)
       {
@@ -143,12 +143,11 @@ function generate_index_table()
       }
     }
 
-  $xml .= '<allprojects>'.$showallprojects.'</allprojects>'; 
-  $xml .= '<nprojects>'.get_number_public_projects().'</nprojects>';  
+  $xml .= '<allprojects>'.$showallprojects.'</allprojects>';
+  $xml .= '<nprojects>'.get_number_public_projects().'</nprojects>';
   $xml .= "</cdash>";
   return $xml;
 }
-
 
 function add_buildgroup_sortlist($groupname)
 {
@@ -201,41 +200,9 @@ function add_buildgroup_sortlist($groupname)
   return $xml;
 }
 
-
-function should_collapse_rows($row1, $row2)
+/** Get a link to a page showing the children of a given parent build. */
+function get_child_builds_hyperlink($parentid, $filterdata, $date)
 {
-  //
-  // The results of the SQL query should be sorted such that adjacent rows
-  // are candidates for collapsing according to this function.
-  //
-  if(
-       ($row1['name'] == $row2['name'])
-    && ($row1['siteid'] == $row2['siteid'])
-    && ($row1['position'] == $row2['position'])
-    && ($row1['stamp'] == $row2['stamp'])
-    )
-    {
-    return true;
-    }
-
-  return false;
-}
-
-
-function get_multiple_builds_hyperlink($build_row, $filterdata)
-{
-  //
-  // This function is closely related to the javascript function
-  // filters_create_hyperlink in cdashFilters.js.
-  //
-  // If you are making changes to this function, look over there and see if
-  // similar changes need to be made in javascript...
-  //
-  // javascript window.location and php $_SERVER['REQUEST_URI'] are equivalent,
-  // but the window.location property includes the 'http://server' whereas the
-  // $_SERVER['REQUEST_URI'] does not...
-  //
-
   $baseurl = $_SERVER['REQUEST_URI'];
 
   // If the current REQUEST_URI already has a &filtercount=... (and other
@@ -243,57 +210,49 @@ function get_multiple_builds_hyperlink($build_row, $filterdata)
   //
   $idx = strpos($baseurl, "&filtercount=");
   if ($idx !== FALSE)
-  {
-    $baseurl = substr($baseurl, 0, $idx);
-  }
-
-  // Gather up string representing existing filters so that we simply apply
-  // some extra filters for buildname, site and stamp to get the page
-  // that shows the builds the user expects. (Match his existing filter
-  // criteria in addition to adding our extra fields here. Do not allow user
-  // to override the fields we need to specify...)
-  //
-  // This can only be done effectively with the current filters implementation
-  // when the filtercombine parameter is 'and' -- hence the != 'or' test...
-  // (Because to specify our 3 filter parameters, we need to use 'and'...)
-  //
-  $existing_filter_params = '';
-  $n = 3;
-  if (strtolower($filterdata['filtercombine']) != 'or')
-  {
-    $count = count($filterdata['filters']);
-    for ($i = 0; $i<$count; $i++)
     {
-      $filter = $filterdata['filters'][$i];
+    $baseurl = substr($baseurl, 0, $idx);
+    }
 
-      if ($filter['field'] != 'buildname' &&
-          $filter['field'] != 'site' &&
-          $filter['field'] != 'stamp' &&
-          $filter['compare'] != 0 &&
-          $filter['compare'] != 20 &&
-          $filter['compare'] != 40 &&
-          $filter['compare'] != 60 &&
-          $filter['compare'] != 80)
+  // Similarly trim off &display=..., as that parameter is implied
+  // when viewing the results of a single (parent) build.
+  $idx = strpos($baseurl, "&display=");
+  if ($idx !== FALSE)
+    {
+    $baseurl = substr($baseurl, 0, $idx);
+    }
+
+  // Preserve any filters the user had specified.
+  $existing_filter_params = '';
+  $n = 0;
+  $count = count($filterdata['filters']);
+  for ($i = 0; $i<$count; $i++)
+    {
+    $filter = $filterdata['filters'][$i];
+
+    if ($filter['field'] != 'buildname' &&
+        $filter['field'] != 'site' &&
+        $filter['field'] != 'stamp' &&
+        $filter['compare'] != 0 &&
+        $filter['compare'] != 20 &&
+        $filter['compare'] != 40 &&
+        $filter['compare'] != 60 &&
+        $filter['compare'] != 80)
       {
-        $n++;
+      $n++;
 
-        $existing_filter_params .=
-          '&field' . $n . '=' . $filter['field'] . '/' . $filter['fieldtype'] .
-          '&compare' . $n . '=' . $filter['compare'] .
-          '&value' . $n . '=' . htmlspecialchars($filter['value']);
+      $existing_filter_params .=
+        '&field' . $n . '=' . $filter['field'] . '/' . $filter['fieldtype'] .
+        '&compare' . $n . '=' . $filter['compare'] .
+        '&value' . $n . '=' . htmlspecialchars($filter['value']);
       }
     }
-  }
 
-  return $baseurl .
-    '&filtercount=' . $n . '&showfilters=1&filtercombine=and' .
-    '&field1=buildname/string&compare1=61&value1=' . htmlspecialchars($build_row['name']) .
-    '&field2=site/string&compare2=61&value2=' . htmlspecialchars($build_row['sitename']) .
-    '&field3=buildstamp/string&compare3=61&value3=' . htmlspecialchars($build_row['stamp']) .
-    $existing_filter_params .
-    '&collapse=0';
+  // Construct & return our URL.
+  $url = "$baseurl&date=$date&parentid=$parentid";
+  $url .= $existing_filter_params;
+  return $url;
 }
-
 
 /** Generate the main dashboard XML */
 function generate_main_dashboard_XML($project_instance, $date)
@@ -663,6 +622,17 @@ function generate_main_dashboard_XML($project_instance, $date)
     $date_clause = '';
     }
 
+  if(isset($_GET["parentid"]))
+    {
+    // If we have a parentid, then we should only show children of that build.
+    $parent_clause ="AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
+    }
+  else
+    {
+    // Otherwise, we should only show builds that are not children.
+    $parent_clause ="AND (b.parentid = -1 OR b.parentid = 0) ";
+    }
+
   $build_rows = array();
 
   // If the user is logged in we display if the build has some changes for him
@@ -680,7 +650,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                       AND user2repository.credential=updatefile.author) AS userupdates,";
     }
 
-  $sql =  "SELECT b.id,b.siteid,
+  $sql =  "SELECT b.id,b.siteid,b.parentid,
                   bu.status AS updatestatus,
                   i.osname AS osname,
                   bu.starttime AS updatestarttime,
@@ -690,7 +660,6 @@ function generate_main_dashboard_XML($project_instance, $date)
                   c.status AS configurestatus,
                   c.starttime AS configurestarttime,
                   c.endtime AS configureendtime,
-                  c.warnings AS countconfigurewarnings,
                   be_diff.difference_positive AS countbuilderrordiffp,
                   be_diff.difference_negative AS countbuilderrordiffn,
                   bw_diff.difference_positive AS countbuildwarningdiffp,
@@ -711,6 +680,8 @@ function generate_main_dashboard_XML($project_instance, $date)
                   s.name AS sitename,
                   s.outoforder AS siteoutoforder,
                   b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
+                  b.configureerrors AS countconfigureerrors,
+                  b.configurewarnings AS countconfigurewarnings,
                   b.builderrors AS countbuilderrors,
                   b.buildwarnings AS countbuildwarnings,
                   b.testnotrun AS counttestsnotrun,
@@ -744,7 +715,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
                   LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
                   LEFT JOIN label AS l ON (l.id = l2b.labelid)
-                  WHERE b.projectid='$projectid' ".$date_clause."
+                  WHERE b.projectid='$projectid' $parent_clause $date_clause
                   ".$subprojectsql." ".$filter_sql." ".$limit_sql
                   ." GROUP BY b.id";
 
@@ -792,32 +763,17 @@ function generate_main_dashboard_XML($project_instance, $date)
 
   $lastGroupPosition = $groupposition_array["position"];
 
-
-  // By default, do not collapse rows. But if the project has subprojects, then
-  // collapse rows with common build name, site and group. (But different
-  // subprojects/labels...)
-  //
-  // Look for a '&collapse=0' or '&collapse=1' to override the default.
-  //
-  $collapse = 0;
-  if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0)
-    {
-    $collapse = 1;
-    }
-  if (array_key_exists('collapse', $_REQUEST))
-    {
-    $collapse = $_REQUEST['collapse'];
-    }
-
   // Check if we need to summarize core & non-core subproject covearge
-  // This happens when (1) we have subprojects, (2) we're not collapsing rows,
-  // and (3) some subprojects are categorized as core, and others are categorized
-  // as non-core.
+  // This happens when (1) we have subprojects, (2) we're looking at the children
+  // of a specific build, and (3) some subprojects are categorized as core,
+  // and others are categorized as non-core.
   $summarizeCoreCoverage = false;
-  if ($collapse == false && $project_instance->GetNumberOfSubProjects($end_UTCDate) > 0)
+  if ( isset($_GET["parentid"]) && $_GET["parentid"] > 0 &&
+       $project_instance->GetNumberOfSubProjects($end_UTCDate) > 0)
     {
     $core_array = pdo_fetch_array(pdo_query(
-      "SELECT COUNT(IF(core=1, core, NULL)) AS core, COUNT(IF(core=0, core, NULL)) AS noncore FROM subproject"));
+      "SELECT COUNT(IF(core=1, core, NULL)) AS core,
+              COUNT(IF(core=0, core, NULL)) AS noncore FROM subproject"));
     if ($core_array && $core_array["core"] > 0 && $core_array["noncore"] > 0)
       {
       $summarizeCoreCoverage = true;
@@ -856,6 +812,7 @@ function generate_main_dashboard_XML($project_instance, $date)
     //  countbuilderrordiff
     //  countbuildwarningdiff
     //  configurestatus
+    //  countconfigureerrors
     //  countconfigurewarnings
     //  countconfigurewarningdiff
     //  counttestsnotrun
@@ -877,7 +834,6 @@ function generate_main_dashboard_XML($project_instance, $date)
     //  countupdateerrors
     //  buildduration
     //  hasconfigurestatus
-    //  countconfigureerrors
     //  configureduration
     //  test
     //
@@ -885,12 +841,35 @@ function generate_main_dashboard_XML($project_instance, $date)
     $buildid = $build_row['id'];
     $groupid = $build_row['groupid'];
     $siteid = $build_row['siteid'];
+    $parentid = $build_row['parentid'];
 
     $build_row['buildids'][] = $buildid;
     $build_row['maxstarttime'] = $build_row['starttime'];
 
     // Split out labels
-    $build_row['labels'] = explode(",", $build_row['labels']);
+    if (empty($build_row['labels']))
+      {
+      $build_row['labels'] = array();
+      }
+    else
+      {
+      $build_row['labels'] = explode(",", $build_row['labels']);
+      }
+
+    // If this is a parent build get the labels from all the children too.
+    if ($parentid == -1)
+      {
+      $query = "SELECT l.text FROM build AS b
+        INNER JOIN label2build AS l2b ON l2b.buildid = b.id
+        INNER JOIN label AS l ON l.id = l2b.labelid
+        WHERE b.parentid='$buildid'";
+
+      $childLabelsResult = pdo_query($query);
+      while($childLabelsArray = pdo_fetch_array($childLabelsResult))
+        {
+        $build_row['labels'][] = $childLabelsArray['text'];
+        }
+      }
 
     // Updates
     if(!empty($build_row['updatestarttime']))
@@ -934,20 +913,22 @@ function generate_main_dashboard_XML($project_instance, $date)
       $build_row['countbuildwarningdiffn'] = 0;
       }
 
+    if ($build_row['countconfigureerrors'] < 0)
+      {
+      $build_row['countconfigureerrors'] = 0;
+      }
+    if ($build_row['countconfigurewarnings'] < 0)
+      {
+      $build_row['countconfigurewarnings'] = 0;
+      }
+
     $build_row['hasconfigurestatus'] = 0;
-    $build_row['countconfigureerrors'] = 0;
     $build_row['configureduration'] = 0;
 
     if(strlen($build_row['configurestatus'])>0)
       {
       $build_row['hasconfigurestatus'] = 1;
-      $build_row['countconfigureerrors'] = $build_row['configurestatus'];
       $build_row['configureduration'] = round((strtotime($build_row["configureendtime"])-strtotime($build_row["configurestarttime"]))/60, 1);
-      }
-
-    if(empty($build_row['countconfigurewarnings']))
-      {
-      $build_row['countconfigurewarnings'] = 0;
       }
 
     if(empty($build_row['countconfigurewarningdiff']))
@@ -972,120 +953,10 @@ function generate_main_dashboard_XML($project_instance, $date)
       $build_row['testsduration'] = round($build_row['testsduration'],1); //already in minutes
       }
 
-    if(!$collapse)
-      {
-      $build_rows[] = $build_row;
-      }
-    else
-      {
-      // This assumes that only build rows that are originally next to each
-      // other in $build_rows are candidates for collapsing...
-      //
-      $idx = count($build_rows) - 1;
-
-      if (($idx >= 0) && should_collapse_rows($build_rows[$idx], $build_row))
-        {
-        // Append to existing last row, $build_rows[$idx]:
-        //
-
-      //  id
-      //  name
-      //  siteid
-      //  type
-      //  generator
-        if ($build_row['starttime'] < $build_rows[$idx]['starttime'])
-          {
-          $build_rows[$idx]['starttime'] = $build_row['starttime'];
-          }
-        if ($build_row['maxstarttime'] > $build_rows[$idx]['maxstarttime'])
-          {
-          $build_rows[$idx]['maxstarttime'] = $build_row['maxstarttime'];
-          }
-      //  endtime
-      //  submittime
-      //  groupname
-      //  position
-      //  groupid
-      //  buildids (array of buildids for summary rows)
-        $build_rows[$idx]['buildids'][] = $build_row['id'];
-      //  sitename
-        $build_rows[$idx]['countbuildnotes'] += $build_row['countbuildnotes'];
-        $build_rows[$idx]['countnotes'] += $build_row['countnotes'];
-        $build_rows[$idx]['labels'] = array_merge($build_rows[$idx]['labels'], $build_row['labels']);
-
-      //  countupdatefiles - use one number here, not the sum...
-      //  each non-collapsed row is the same set of updates
-          //$build_rows[$idx]['countupdatefiles'] += $build_row['countupdatefiles'];
-
-      //  updatestatus
-        $build_rows[$idx]['updateduration'] += $build_row['updateduration'];
-        $build_rows[$idx]['countupdateerrors'] += $build_row['countupdateerrors'];
-        $build_rows[$idx]['countupdatewarnings'] += $build_row['countupdatewarnings'];
-
-        $build_rows[$idx]['buildduration'] += $build_row['buildduration'];
-        $build_rows[$idx]['countbuilderrors'] += $build_row['countbuilderrors'] > 0 ? $build_row['countbuilderrors'] : 0;
-        $build_rows[$idx]['countbuildwarnings'] += $build_row['countbuildwarnings'] > 0 ? $build_row['countbuildwarnings'] : 0;
-        $build_rows[$idx]['countbuilderrordiffp'] += $build_row['countbuilderrordiffp'];
-        $build_rows[$idx]['countbuilderrordiffn'] += $build_row['countbuilderrordiffn'];
-        $build_rows[$idx]['countbuildwarningdiffp'] += $build_row['countbuildwarningdiffp'];
-        $build_rows[$idx]['countbuildwarningdiffn'] += $build_row['countbuildwarningdiffn'];
-
-        $build_rows[$idx]['hasconfigurestatus'] += $build_row['hasconfigurestatus'];
-        $build_rows[$idx]['countconfigureerrors'] += $build_row['countconfigureerrors'];
-        $build_rows[$idx]['countconfigurewarnings'] += $build_row['countconfigurewarnings'];
-        $build_rows[$idx]['countconfigurewarningdiff'] += $build_row['countconfigurewarningdiff'];
-        $build_rows[$idx]['configureduration'] += $build_row['configureduration'];
-
-        //  test
-        $build_rows[$idx]['hastest'] += $build_row['hastest'];
-        $build_rows[$idx]['counttestsnotrun'] += $build_row['counttestsnotrun'] > 0 ? $build_row['counttestsnotrun'] : 0;
-        $build_rows[$idx]['counttestsnotrundiffp'] += $build_row['counttestsnotrundiffp'];
-        $build_rows[$idx]['counttestsnotrundiffn'] += $build_row['counttestsnotrundiffn'];
-        $build_rows[$idx]['counttestsfailed'] += $build_row['counttestsfailed'] > 0 ? $build_row['counttestsfailed'] : 0;
-        $build_rows[$idx]['counttestsfaileddiffp'] += $build_row['counttestsfaileddiffp'];
-        $build_rows[$idx]['counttestsfaileddiffn'] += $build_row['counttestsfaileddiffn'];
-        $build_rows[$idx]['counttestspassed'] += $build_row['counttestspassed'] > 0 ? $build_row['counttestspassed'] : 0;
-        $build_rows[$idx]['counttestspasseddiffp'] += $build_row['counttestspasseddiffp'];
-        $build_rows[$idx]['counttestspasseddiffn'] += $build_row['counttestspasseddiffn'];
-        $build_rows[$idx]['countteststimestatusfailed'] += $build_row['countteststimestatusfailed'] > 0 ? $build_row['countteststimestatusfailed'] : 0;
-        $build_rows[$idx]['countteststimestatusfaileddiffp'] += $build_row['countteststimestatusfaileddiffp'];
-        $build_rows[$idx]['countteststimestatusfaileddiffn'] += $build_row['countteststimestatusfaileddiffn'];
-        $build_rows[$idx]['testsduration'] += $build_row['testsduration'];
-        }
-      else
-        {
-        // Add new row, but don't let accumulators start out negative:
-        //
-        if ($build_row['countbuilderrors'] < 0)
-          {
-          $build_row['countbuilderrors'] = 0;
-          }
-        if ($build_row['countbuildwarnings'] < 0)
-          {
-          $build_row['countbuildwarnings'] = 0;
-          }
-        if ($build_row['counttestsnotrun'] < 0)
-          {
-          $build_row['counttestsnotrun'] = 0;
-          }
-        if ($build_row['counttestsfailed'] < 0)
-          {
-          $build_row['counttestsfailed'] = 0;
-          }
-        if ($build_row['counttestspassed'] < 0)
-          {
-          $build_row['counttestspassed'] = 0;
-          }
-        if ($build_row['countteststimestatusfailed'] < 0)
-          {
-          $build_row['countteststimestatusfailed'] = 0;
-          }
-        $build_rows[] = $build_row;
-        }
-      }
+    $build_rows[] = $build_row;
     }
 
-  // Generate the xml from the (possibly collapsed) rows of builds:
+  // Generate the xml from the rows of builds:
   //
   $totalUpdatedFiles = 0;
   $totalUpdateError = 0;
@@ -1196,11 +1067,16 @@ function generate_main_dashboard_XML($project_instance, $date)
     $buildid = $build_array["id"];
     $groupid = $build_array["groupid"];
     $siteid = $build_array["siteid"];
-    $countbuildids = count($build_array['buildids']);
-    $xml .= add_XML_value("countbuildids", $countbuildids);
-    if ($countbuildids>1)
+
+    $countChildrenResult = pdo_single_row_query(
+      "SELECT count(id) AS nchildren FROM build WHERE parentid=".qnum($buildid));
+
+    $countchildren = $countChildrenResult['nchildren'];
+    $xml .= add_XML_value("countchildren", $countchildren);
+    if ($countchildren>0)
       {
-      $xml .= add_XML_value("multiplebuildshyperlink", get_multiple_builds_hyperlink($build_array, $filterdata));
+      $xml .= add_XML_value("multiplebuildshyperlink",
+        get_child_builds_hyperlink($build_array["id"], $filterdata, $gmdate));
       }
 
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
@@ -1342,28 +1218,27 @@ function generate_main_dashboard_XML($project_instance, $date)
 
     $xml .= "<configure>";
 
+    $xml .= add_XML_value("error", $build_array['countconfigureerrors']);
+    $totalConfigureError += $build_array['countconfigureerrors'];
+
+    $nconfigurewarnings = $build_array['countconfigurewarnings'];
+    $xml .= add_XML_value("warning", $nconfigurewarnings);
+    $totalConfigureWarning += $nconfigurewarnings;
+
+    $diff = $build_array['countconfigurewarningdiff'];
+    if($diff!=0)
+      {
+      $xml .= add_XML_value("warningdiff", $diff);
+      }
+
     if($build_array['hasconfigurestatus'] != 0)
       {
-      $xml .= add_XML_value("error", $build_array['countconfigureerrors']);
-      $totalConfigureError += $build_array['countconfigureerrors'];
-
-      $nconfigurewarnings = $build_array['countconfigurewarnings'];
-      $xml .= add_XML_value("warning", $nconfigurewarnings);
-      $totalConfigureWarning += $nconfigurewarnings;
-
-      $diff = $build_array['countconfigurewarningdiff'];
-      if($diff!=0)
-        {
-        $xml .= add_XML_value("warningdiff", $diff);
-        }
-
       $duration = $build_array['configureduration'];
       $totalConfigureDuration += $duration;
       $xml .= add_XML_value("time",time_difference($duration*60.0,true));
       $xml .= add_XML_value("timefull",$duration);
       }
     $xml .= "</configure>";
-
 
     if($build_array['hastest'] != 0)
       {
@@ -1806,15 +1681,15 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
 
   // Get some information about the project
   $xml .= "<project>";
-  $xml .= add_XML_value("nbuilderror",$Project->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("nbuildwarning",$Project->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("nbuildpass",$Project->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("nconfigureerror",$Project->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("nconfigurewarning",$Project->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("nconfigurepass",$Project->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("ntestpass",$Project->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("ntestfail",$Project->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate));
-  $xml .= add_XML_value("ntestnotrun",$Project->GetNumberOfNotRunTests($beginning_UTCDate,$end_UTCDate));
+  $xml .= add_XML_value("nbuilderror",$Project->GetNumberOfErrorBuilds($beginning_UTCDate,$end_UTCDate, true));
+  $xml .= add_XML_value("nbuildwarning",$Project->GetNumberOfWarningBuilds($beginning_UTCDate,$end_UTCDate, true));
+  $xml .= add_XML_value("nbuildpass",$Project->GetNumberOfPassingBuilds($beginning_UTCDate,$end_UTCDate, true));
+  $xml .= add_XML_value("nconfigureerror",$Project->GetNumberOfErrorConfigures($beginning_UTCDate,$end_UTCDate, true));
+  $xml .= add_XML_value("nconfigurewarning",$Project->GetNumberOfWarningConfigures($beginning_UTCDate,$end_UTCDate, true));
+  $xml .= add_XML_value("nconfigurepass",$Project->GetNumberOfPassingConfigures($beginning_UTCDate,$end_UTCDate, true));
+  $xml .= add_XML_value("ntestpass",$Project->GetNumberOfPassingTests($beginning_UTCDate,$end_UTCDate, true));
+  $xml .= add_XML_value("ntestfail",$Project->GetNumberOfFailingTests($beginning_UTCDate,$end_UTCDate, true));
+  $xml .= add_XML_value("ntestnotrun",$Project->GetNumberOfNotRunTests($beginning_UTCDate,$end_UTCDate, true));
   if(strlen($Project->GetLastSubmission()) == 0)
     {
     $xml .= add_XML_value("lastsubmission","NA");
@@ -1916,7 +1791,6 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
     $SubProject = new SubProject();
     $SubProject->Id = $subprojectid;
     $xml .= "<subproject>";
-    $xml .= add_XML_value("row",$row);
     $xml .= add_XML_value("name",$SubProject->GetName());
     $xml .= add_XML_value("name_encoded",urlencode($SubProject->GetName()));
 
@@ -1953,8 +1827,6 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
 
   return $xml;
 } // end
-
-
 
 
 // Check if we can connect to the database
@@ -2007,7 +1879,8 @@ else
   $Project->Fill();
 
   $displayProject = false;
-  if(isset($_GET["display"]) && $_GET["display"]=="project")
+  if( (isset($_GET["display"]) && $_GET["display"]=="project") ||
+      (isset($_GET["parentid"]) && $_GET["parentid"] > 0) )
     {
     $displayProject = true;
     }

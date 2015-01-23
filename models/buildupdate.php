@@ -124,9 +124,24 @@ class BuildUpdate
     $updateid = pdo_insert_id("buildupdate");
     $query = "INSERT INTO build2update (buildid,updateid)
               VALUES (".qnum($this->BuildId).",".qnum($updateid).")";
+
     if(!pdo_query($query))
       {
       add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
+      return false;
+      }
+
+    // If this is a parent build, make sure that all of its children
+    // are also associated with a buildupdate.
+    $query = "
+      INSERT INTO build2update (buildid,updateid)
+      SELECT id, '$updateid' FROM build
+      LEFT JOIN build2update ON build.id = build2update.buildid
+      WHERE build2update.buildid IS NULL
+      and build.parentid=".qnum($this->BuildId);
+    if(!pdo_query($query))
+      {
+      add_last_sql_error("BuildUpdate Child Insert",0,$this->BuildId);
       return false;
       }
 
@@ -195,7 +210,32 @@ class BuildUpdate
       pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
                    (".qnum($this->BuildId).",".qnum($updateid).")");
       add_last_sql_error("BuildUpdate AssociateBuild",0,$this->BuildId);
+
+      // check if this build's parent also needs to be associated with
+      // this update.
+      $parent = pdo_single_row_query(
+        "SELECT parentid FROM build WHERE id=".qnum($this->BuildId));
+      if ($parent && array_key_exists('parentid', $parent))
+        {
+        $parentid = $parent['parentid'];
+        if ($parentid < 1)
+          {
+          return true;
+          }
+
+        $query = pdo_query(
+          "SELECT updateid FROM build2update WHERE buildid=".qnum($parentid));
+        if(pdo_num_rows($query)>0)
+          {
+          return true;
+          }
+
+        pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
+                     (".qnum($parentid).",".qnum($updateid).")");
+        add_last_sql_error("BuildUpdate AssociateBuild",0,$parentid);
+        }
       }
+
      return true;
     } // end AssociateBuild()
 }
