@@ -2,6 +2,7 @@
 
 require_once('models/coverage.php');
 require_once('cdash/config.php');
+require_once('models/label.php');
 
 class GCovTarHandler
 {
@@ -9,6 +10,7 @@ class GCovTarHandler
   private $CoverageSummary;
   private $SourceDirectory;
   private $BinaryDirectory;
+  private $Labels;
 
   public function __construct($buildid)
     {
@@ -17,8 +19,8 @@ class GCovTarHandler
     $this->CoverageSummary->BuildId = $this->BuildId;
     $this->SourceDirectory = '';
     $this->BinaryDirectory = '';
+    $this->Labels = array();
     }
-
 
   /**
    * Parse a tarball of .gcov files.
@@ -63,10 +65,22 @@ class GCovTarHandler
         break;
         }
       }
+
     if (empty($this->SourceDirectory) || empty($this->BinaryDirectory))
       {
       $this->DeleteDirectory($dirName);
       return false;
+      }
+
+    // Check if the optional Labels.json file was included
+    $iterator->rewind();
+    foreach ($iterator as $fileinfo)
+      {
+      if ($fileinfo->getFilename() == "Labels.json")
+        {
+        $this->ParseLabelsFile($fileinfo);
+        break;
+        }
       }
 
     // Recursively search for .gcov files and parse them.
@@ -265,10 +279,55 @@ class GCovTarHandler
     $coverageFileLog->FileId = $coverageFile->Id;
     $coverageFileLog->Insert();
 
+    // Add any labels.
+    if (array_key_exists($path, $this->Labels))
+      {
+      foreach($this->Labels[$path] as $labelText)
+        {
+        $label = new Label();
+        $label->SetText($labelText);
+        $coverage->AddLabel($label);
+        }
+      }
+
     // Add this Coverage to our summary.
     $this->CoverageSummary->AddCoverage($coverage);
     }
 
+  /**
+    * Parse the Labels.json file.
+   **/
+  function ParseLabelsFile($fileinfo)
+    {
+    // read the file & decode the JSON.
+    $jsonContents = file_get_contents($fileinfo->getRealPath());
+    $jsonDecoded = json_decode($jsonContents, true);
+    if (is_null($jsonDecoded) || !array_key_exists("sources", $jsonDecoded))
+      {
+      return;
+      }
+
+    $sources = $jsonDecoded["sources"];
+    foreach ($sources as $source)
+      {
+      $path = $source["file"];
+      if (strpos($path, $this->SourceDirectory) !== false)
+        {
+        $path = str_replace($this->SourceDirectory, ".", trim($path));
+        }
+      else if (strpos($path, $this->BinaryDirectory) !== false)
+        {
+        $path = str_replace($this->BinaryDirectory, ".", trim($path));
+        }
+      else
+        {
+        continue;
+        }
+
+      $this->Labels[$path] = $source["labels"];
+      file_put_contents("/tmp/zackdebug.txt", "labels[$path] just got " . print_r($source["labels"], true) . "\n", FILE_APPEND);
+      }
+    }
 
   /**
     * PHP won't let you delete a non-empty directory, so we first have to
