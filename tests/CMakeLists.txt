@@ -88,6 +88,7 @@ add_php_test(testmodel)
 add_php_test(buildmodel)
 add_php_test(projectxmlsequence)
 add_php_test(uploadfile)
+add_php_test(branchcoverage)
 
 add_subdirectory(ctest)
 
