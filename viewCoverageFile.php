@@ -171,12 +171,50 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
       }
     }
 
+  // Detect if we have branch coverage or not.
+  $hasBranchCoverage = false;
+  foreach(array_keys($linecodes) as $key)
+    {
+    if ($key[0] == 'b')
+      {
+      $hasBranchCoverage = true;
+      break;
+      }
+    }
+  if ($hasBranchCoverage)
+    {
+    }
+
   foreach($file_array as $line)
     {
     $linenumber = $i+1;
     $line = htmlentities($line);
 
     $file_array[$i] = '<span class="warning">'.str_pad($linenumber,5,' ', STR_PAD_LEFT).'</span>';
+
+    if ($hasBranchCoverage)
+      {
+      if(array_key_exists("b$i", $linecodes))
+        {
+        $code = $linecodes["b$i"];
+
+        // Branch coverage data is stored as <# covered> / <total branches>.
+        $branchCoverageData = explode('/', $code);
+        if ($branchCoverageData[0] != $branchCoverageData[1])
+          {
+          $file_array[$i] .= '<span class="error">';
+          }
+        else
+          {
+          $file_array[$i] .= '<span class="normal">';
+          }
+        $file_array[$i] .= str_pad($code, 5,' ', STR_PAD_LEFT) ."</span>";
+        }
+      else
+        {
+        $file_array[$i] .= str_pad('',5,' ', STR_PAD_LEFT);
+        }
+      }
 
     if(array_key_exists($i,$linecodes))
       {

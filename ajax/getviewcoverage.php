@@ -108,7 +108,7 @@ if(isset($_GET['iSortCol_0']))
     case 5: $sortby="priority";break;
     }
   }
-  
+
 $sortdir = "asc";
 if(isset($_GET['sSortDir_0']))
   {
@@ -143,7 +143,7 @@ if($userid)
     {
     $SQLsearchTerm .= " AND cf.fullpath LIKE '%".htmlspecialchars(pdo_real_escape_string($_GET['dir']))."%'";
     }
-    
+
   // Coverage files
   $sql = "SELECT cf.fullpath,c.fileid,".
          "c.locuntested,c.loctested,".
@@ -171,13 +171,13 @@ if($userid)
     // Remove the ./ so that it's cleaner
     if(substr($fullpath,0,2)=="./")
       {
-      $fullpath = substr($fullpath,2);  
+      $fullpath = substr($fullpath,2);
       }
-    if(isset($_GET['dir']) && $_GET['dir']!='')
-      {  
+    if(isset($_GET['dir']) && $_GET['dir']!='' && $_GET['dir'] != '.')
+      {
       $fullpath = substr($fullpath,strlen($_GET['dir'])+1);
-      } 
-      
+      }
+
     $covfile["fullpath"] = $fullpath;
     $covfile["fileid"] = $coveragefile_array["fileid"];
     $covfile["locuntested"] = $coveragefile_array["locuntested"];
@@ -229,7 +229,7 @@ if($userid)
     $covfile_array[] = $covfile;
     }
 
-    
+
 
   // Add the coverage type
   $status = -1;
@@ -302,7 +302,7 @@ if($userid)
       return $a["user"][0]<$b["user"][0] ? 1:0;
       }
     }
-  
+
   // Contruct the directory view
   if($status == -1)
     {
@@ -328,7 +328,7 @@ if($userid)
         $directory_array[$fullpath]["coveragemetric"] = 0;
         $directory_array[$fullpath]["nfiles"] = 0;
         }
-                      
+
       $directory_array[$fullpath]["fullpath"] = $fullpath;
       $directory_array[$fullpath]["locuntested"] += $covfile["locuntested"];
       $directory_array[$fullpath]["loctested"] += $covfile["loctested"];
@@ -338,22 +338,22 @@ if($userid)
         $directory_array[$fullpath]["branchestested"] += $covfile["branchestested"];
         }
       if(isset($covfile["functionsuntested"]))
-        {  
+        {
         $directory_array[$fullpath]["functionsuntested"] += $covfile["functionsuntested"];
         $directory_array[$fullpath]["functionstested"] += $covfile["functionstested"];
         }
-      $directory_array[$fullpath]["percentcoverage"] += $covfile["percentcoverage"];
       $directory_array[$fullpath]["coveragemetric"] += $covfile["coveragemetric"];
       $directory_array[$fullpath]["nfiles"]++;
       }
-          
+
     // Compute the average
     foreach($directory_array as $fullpath => $covdir)
       {
-      $directory_array[$fullpath]["percentcoverage"] = sprintf("%3.2f",$covdir["percentcoverage"]/$covdir["nfiles"]);
+      $directory_array[$fullpath]["percentcoverage"] = sprintf("%3.2f",
+        100.0 * ($covdir["loctested"] / ( $covdir["loctested"] + $covdir["locuntested"])));
       $directory_array[$fullpath]["coveragemetric"] = sprintf("%3.2f",$covdir["coveragemetric"]/$covdir["nfiles"]);
       }
-              
+
     $covfile_array = array_merge($covfile_array,$directory_array);
     //$covfile_array = $directory_array;
     }
@@ -526,7 +526,7 @@ if($userid)
       case 4: $thirdcolumn .= '"normal" '; break;
       case 5: $thirdcolumn .= '"normal" '; break;
       case 6:
-      case -1:    
+      case -1:
         if(($covfile["coveragemetric"] < $_GET['metricerror']))
           {
           $thirdcolumn .= '"error"'; //low
@@ -571,7 +571,7 @@ if($userid)
           case 4: $fourthcolumn .= ' class="normal">'; break;
           case 5: $fourthcolumn .= ' class="normal">'; break;
           case 6:
-          case -1:    
+          case -1:
             if(($covfile["coveragemetric"] < $_GET['metricerror']))
               {
               $fourthcolumn .= ' class="error">'; //low
@@ -614,7 +614,7 @@ if($userid)
           case 4: $fourthcolumn .= ' class="normal">'; break;
           case 5: $fourthcolumn .= ' class="normal">'; break;
           case 6:
-          case -1:    
+          case -1:
             if(($covfile["coveragemetric"] < $_GET['metricerror']))
               {
               $fourthcolumn .= ' class="error">'; //low
@@ -655,7 +655,7 @@ if($userid)
           case 4: $fourthcolumn2 .= ' class="normal">'; break;
           case 5: $fourthcolumn2 .= ' class="normal">'; break;
           case 6:
-          case -1:    
+          case -1:
             if(($covfile["coveragemetric"] < $_GET['metricerror']))
               {
               $fourthcolumn2 .= ' class="error">'; //low

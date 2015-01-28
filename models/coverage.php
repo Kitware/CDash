@@ -27,12 +27,12 @@ class Coverage
 {  
   var $BuildId;
   var $Covered;
-  var $LocTested;
-  var $LocUntested;
-  var $BranchesTested;
-  var $BranchesUntested;
-  var $FunctionsTested;
-  var $FunctionsUntested;
+  var $LocTested = 0;
+  var $LocUntested = 0;
+  var $BranchesTested = 0;
+  var $BranchesUntested = 0;
+  var $FunctionsTested = 0;
+  var $FunctionsUntested = 0;
   var $CoverageFile;
   var $Labels;
 

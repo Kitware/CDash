@@ -49,7 +49,7 @@ function ProcessFile($projectid, $filename, $md5)
     do_submit($fp, $projectid, $md5, false, $PHP_ERROR_SUBMISSION_ID);
     $PHP_ERROR_SUBMISSION_ID = 0;
 
-    fclose($fp);
+    @fclose($fp);
     unset($fp);
 
     // delete the temporary backup file since we now have a better-named one

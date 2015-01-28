@@ -273,23 +273,31 @@ function post_submit()
   $site->Insert();
   $build->SiteId = $site->Id;
 
-  // TODO: Check the append and labels and generator and other optional
+  // Make this an "append" build, so that it doesn't result in a separate row
+  // from the rest of the "normal" submission.
+  $build->Append = true;
+
+  // TODO: Check the labels and generator and other optional
   if(isset($_POST["generator"]))
     {
     $build->Generator = htmlspecialchars(pdo_real_escape_string($_POST['generator']));
     }
-  if(isset($_POST["append"]))
-    {
-    $build->Append = htmlspecialchars(pdo_real_escape_string($_POST['append']));
-    }
 
+  $subprojectname = "";
   if(isset($_POST["subproject"]))
     {
     $subprojectname = htmlspecialchars(pdo_real_escape_string($_POST['subproject']));
-    $this->Build->SetSubProject($subprojectname);
+    $build->SetSubProject($subprojectname);
     }
 
-  $buildid = add_build($build,$scheduleid);
+  // Check if this build already exists.
+  $buildid = $build->GetIdFromName($subprojectname);
+
+  // If not, add a new one.
+  if ($buildid === 0)
+    {
+    $buildid = add_build($build,$scheduleid);
+    }
 
   // Returns the OK submission
   $response_array['status'] = 0;
@@ -301,13 +309,19 @@ function post_submit()
   foreach($_POST['datafilesmd5'] as $md5)
     {
     $buildfile->md5 = $md5;
-    if(!$buildfile->MD5Exists())
+    $old_buildid = $buildfile->MD5Exists();
+    if(!$old_buildid)
       {
       $response_array['datafilesmd5'][] = 0;
       }
     else
       {
       $response_array['datafilesmd5'][] = 1;
+
+      // Associate this build file with the new build if it has been previously
+      // uploaded.
+      require_once("copy_build_data.php");
+      copy_build_data($old_buildid, $buildid, $type);
       }
     }
   echo json_encode($response_array);
@@ -369,7 +383,10 @@ function put_submit_file()
   // Begin writing this file to the backup directory.
   global $CDASH_BACKUP_DIRECTORY;
   $uploadDir = $CDASH_BACKUP_DIRECTORY;
-  $filename = $uploadDir . "/" . $buildfile->BuildId . "_" . $buildfile->md5;
+  $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
+  $filename = $uploadDir . "/" . $buildfile->BuildId . "_" . $buildfile->md5
+    . ".$ext";
+
   if(!$handle = fopen($filename, 'w'))
     {
     $response_array['status'] = 1;
@@ -418,6 +435,10 @@ function put_submit_file()
     // synchronous processing.
     $handle = fopen($filename, 'r');
     do_submit($handle, $projectid, $buildfile->md5, false);
+
+    // The file is given a more appropriate name during do_submit, so we can
+    // delete the old file now.
+    unlink($filename);
     }
 
   // Returns the OK submission
