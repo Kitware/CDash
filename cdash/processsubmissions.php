@@ -395,20 +395,19 @@ function ProcessSubmissions($projectid)
 }
 
 
-// Retire submission records after a week. But keep them around for a week
-// to enable analyzing submission timings.
+// Retire submission records after a week (by default).
+// But keep them around for a week to enable analyzing submission timings.
 //
 function DeleteOldSubmissionRecords($projectid)
 {
-  // Number of seconds in an 8-day week:
-  //
-  $seconds = 691200; // == 60 * 60 * 24 * 8;
+  global $CDASH_ASYNC_EXPIRATION_TIME;
 
-  $one_week_ago_utc = gmdate(FMT_DATETIMESTD, time()-$seconds);
+  $delete_time =
+    gmdate(FMT_DATETIMESTD, time() - $CDASH_ASYNC_EXPIRATION_TIME);
 
   $ids = pdo_all_rows_query("SELECT id FROM submission WHERE ".
     "(status=2 OR status=3 OR status=4 OR status=5) AND ".
-    "projectid='$projectid' AND finished<'$one_week_ago_utc' AND ".
+    "projectid='$projectid' AND finished<'$delete_time' AND ".
     "finished!='1980-01-01 00:00:00'");
 
   $count = count($ids);

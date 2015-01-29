@@ -284,8 +284,12 @@ class TestingHandler extends AbstractHandler
                                       $this->NumberTestsNotRun);
       $this->Build->ComputeTestTiming();
 
-      // Insert the build into the feed
-      $this->Feed->InsertTest($this->projectid,$this->Build->Id);
+      global $CDASH_ENABLE_FEED;
+      if ($CDASH_ENABLE_FEED)
+        {
+        // Insert the build into the feed
+        $this->Feed->InsertTest($this->projectid,$this->Build->Id);
+        }
       }
     } // end endElement
 

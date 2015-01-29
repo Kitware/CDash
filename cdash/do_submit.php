@@ -95,8 +95,12 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
     sendemail($handler, $projectid);
     }
 
-  // Create the RSS feed
-  CreateRSSFeed($projectid);
+  global $CDASH_ENABLE_FEED;
+  if ($CDASH_ENABLE_FEED)
+    {
+    // Create the RSS feed
+    CreateRSSFeed($projectid);
+    }
 }
 
 /** Asynchronous submission */

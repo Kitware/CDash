@@ -325,7 +325,6 @@ class GCovTarHandler
         }
 
       $this->Labels[$path] = $source["labels"];
-      file_put_contents("/tmp/zackdebug.txt", "labels[$path] just got " . print_r($source["labels"], true) . "\n", FILE_APPEND);
       }
     }
 

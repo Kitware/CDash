@@ -110,8 +110,12 @@ class UpdateHandler extends AbstractHandler
       // Insert the update
       $this->Update->Insert();
 
-      // We need to work the magic here to have a good description
-      $this->Feed->InsertUpdate($this->projectid,$buildid);
+      global $CDASH_ENABLE_FEED;
+      if ($CDASH_ENABLE_FEED)
+        {
+        // We need to work the magic here to have a good description
+        $this->Feed->InsertUpdate($this->projectid,$buildid);
+        }
 
       // Compute the update statistics
       $this->Build->ComputeUpdateStatistics();
