@@ -136,8 +136,12 @@ class BuildHandler extends AbstractHandler
 
       $this->Build->ComputeDifferences();
 
-      // Insert the build into the feed
-      $this->Feed->InsertBuild($this->projectid,$this->Build->Id);
+      global $CDASH_ENABLE_FEED;
+      if ($CDASH_ENABLE_FEED)
+        {
+        // Insert the build into the feed
+        $this->Feed->InsertBuild($this->projectid,$this->Build->Id);
+        }
       }
     else if($name=='WARNING' || $name=='ERROR' || $name=='FAILURE')
       {

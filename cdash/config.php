@@ -44,6 +44,8 @@ $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;
+// How long to keep finished async submissions in the DB
+$CDASH_ASYNC_EXPIRATION_TIME = 691200; // 8 days.
 // Main title and subtitle for the index page
 $CDASH_MAININDEX_TITLE = 'CDash';
 $CDASH_MAININDEX_SUBTITLE = 'Projects';
@@ -152,6 +154,10 @@ $CDASH_LARGE_TEXT_LIMIT = '0';
 // for Google oauth2 support
 $GOOGLE_CLIENT_ID = '';
 $GOOGLE_CLIENT_SECRET = '';
+
+// Should we use CDash's feed feature?  Disabling this feature can improve
+// submission processing time.
+$CDASH_ENABLE_FEED = 1;
 
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';
