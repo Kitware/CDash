@@ -72,14 +72,13 @@ class GCovTarHandler
       return false;
       }
 
-    // Check if the optional Labels.json file was included
+    // Check if any Labels.json files were included
     $iterator->rewind();
     foreach ($iterator as $fileinfo)
       {
       if ($fileinfo->getFilename() == "Labels.json")
         {
         $this->ParseLabelsFile($fileinfo);
-        break;
         }
       }
 
@@ -307,9 +306,26 @@ class GCovTarHandler
       return;
       }
 
+    // Parse out any target-wide labels first.  These apply to
+    // every source file found below.
+    $target_labels = array();
+    if (array_key_exists("target", $jsonDecoded))
+      {
+      $target = $jsonDecoded["target"];
+      if (array_key_exists("labels", $target))
+        {
+        $target_labels = $target["labels"];
+        }
+      }
+
     $sources = $jsonDecoded["sources"];
     foreach ($sources as $source)
       {
+      if (!array_key_exists("file", $source))
+        {
+        continue;
+        }
+
       $path = $source["file"];
       if (strpos($path, $this->SourceDirectory) !== false)
         {
@@ -324,7 +340,14 @@ class GCovTarHandler
         continue;
         }
 
-      $this->Labels[$path] = $source["labels"];
+      $source_labels = $target_labels;
+
+      if (array_key_exists("labels", $source))
+        {
+        $source_labels = array_merge($source_labels, $source["labels"]);
+        }
+
+      $this->Labels[$path] = $source_labels;
       }
     }
 
