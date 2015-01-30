@@ -44,7 +44,8 @@
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <td class="nob" align="left">
         <xsl:if test="count(labels/label)=0">(none)</xsl:if>
-        <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
+        <xsl:if test="count(labels/label)=1"><xsl:value-of select="labels/label"/></xsl:if>
+        <xsl:if test="count(labels/label)>1">(<xsl:value-of select="count(labels/label)"/> labels)</xsl:if>
         </td>
       </xsl:if>
    </tr>
