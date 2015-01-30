@@ -161,11 +161,11 @@
             <xsl:if test="count(cdash/project)>0">
               <div id="wizard">
                 <ul>
-                  <li><a href="#fragment-1">Current groups</a></li>
-                  <li><a href="#fragment-2">Create new group</a></li>
-                  <li><a href="#fragment-3">Global Move</a></li>
-                  <li><a href="#fragment-4">Auto-Remove Settings</a></li>
-                  <li><a href="#fragment-5">Wildcard Groups</a></li>
+                  <li class="tabs"><a href="#fragment-1">Current groups</a></li>
+                  <li class="tabs"><a href="#fragment-2">Create new group</a></li>
+                  <li class="tabs"><a href="#fragment-3">Global Move</a></li>
+                  <li class="tabs"><a href="#fragment-4">Auto-Remove Settings</a></li>
+                  <li class="tabs"><a href="#fragment-5">Wildcard Groups</a></li>
                 </ul>
                 <div id="fragment-1" class="tab_content" >
                   <div class="tab_help_top"></div>
