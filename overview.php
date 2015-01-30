@@ -529,7 +529,8 @@ function gather_overview_data($start_date, $end_date, $group_id)
                    WHERE b.projectid = '$projectid'
                    AND b.starttime < '$end_date'
                    AND b.starttime >= '$start_date'
-                   AND b2g.groupid = '$group_id'";
+                   AND b2g.groupid = '$group_id'
+                   AND b.parentid > 0";
 
   $builds_array = pdo_query($builds_query);
   add_last_sql_error("gather_overview_data", $group_id);
