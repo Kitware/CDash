@@ -625,7 +625,9 @@ function generate_main_dashboard_XML($project_instance, $date)
   if(isset($_GET["parentid"]))
     {
     // If we have a parentid, then we should only show children of that build.
+    // Date becomes irrelevant in this case.
     $parent_clause ="AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
+    $date_clause = "";
     }
   else
     {
