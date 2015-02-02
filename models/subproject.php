@@ -240,6 +240,12 @@ class SubProject
   /** Get the last submission of the subproject*/
   function GetLastSubmission()
     {
+    global $CDASH_SHOW_LAST_SUBMISSION;
+    if (!$CDASH_SHOW_LAST_SUBMISSION)
+      {
+      return false;
+      }
+
     if(!$this->Id)
       {
       echo "SubProject GetLastSubmission(): Id not set";
