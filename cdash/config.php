@@ -159,6 +159,11 @@ $GOOGLE_CLIENT_SECRET = '';
 // submission processing time.
 $CDASH_ENABLE_FEED = 1;
 
+// Should we show the last submission for a project or subproject?
+// Disabling this feature can improve rendering performance of index.php
+// for projects with lots of subproject builds.
+$CDASH_SHOW_LAST_SUBMISSION = 1;
+
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';
 if ((strpos(__FILE__,'config.local.php') === FALSE) && file_exists($localConfig) )

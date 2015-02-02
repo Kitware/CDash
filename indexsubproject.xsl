@@ -64,7 +64,9 @@
      <td align="center" colspan="3" width="20%"><b>Configure</b></td>
      <td align="center" colspan="3" width="20%"><b>Build</b></td>
      <td align="center" colspan="3" width="20%"><b>Test</b></td>
-     <td align="center" rowspan="2" width="20%" class="nob"><b>Last submission</b></td>
+     <xsl:if test="/cdash/showlastsubmission">
+       <td align="center" rowspan="2" width="20%" class="nob"><b>Last submission</b></td>
+     </xsl:if>
   </tr>
    <tr class="table-heading">
      <td align="center"><b>Error</b></td>
@@ -209,7 +211,9 @@
     <xsl:value-of select="/cdash/project/ntestpass"/>
     </xsl:if>
     </td>
-    <td align="center" class="nob"><xsl:value-of select="/cdash/project/lastsubmission"/></td>
+    <xsl:if test="/cdash/showlastsubmission">
+      <td align="center" class="nob"><xsl:value-of select="/cdash/project/lastsubmission"/></td>
+    </xsl:if>
     </tr>
 </table>
 
@@ -224,7 +228,9 @@
      <td align="center" colspan="3" width="20%"><b>Configure</b></td>
      <td align="center" colspan="3" width="20%"><b>Build</b></td>
      <td align="center" colspan="3" width="20%"><b>Test</b></td>
-     <th align="center" rowspan="2" width="20%" class="nob" id="sort_10"><b>Last submission</b></th>
+     <xsl:if test="/cdash/showlastsubmission">
+       <th align="center" rowspan="2" width="20%" class="nob" id="sort_10"><b>Last submission</b></th>
+     </xsl:if>
   </tr>
    <tr class="table-heading">
      <th align="center" id="sort_1"><b>Error</b></th>
@@ -367,7 +373,9 @@
     </xsl:if>
     </td>
 
-    <td align="center" class="nob"><xsl:value-of select="lastsubmission"/></td>
+    <xsl:if test="/cdash/showlastsubmission">
+      <td align="center" class="nob"><xsl:value-of select="lastsubmission"/></td>
+    </xsl:if>
     </tr>
    </xsl:for-each>
 </tbody>

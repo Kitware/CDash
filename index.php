@@ -1716,6 +1716,12 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
     $xml .= "</banner>";
     }
 
+  global $CDASH_SHOW_LAST_SUBMISSION;
+  if ($CDASH_SHOW_LAST_SUBMISSION)
+    {
+    $xml .= "<showlastsubmission>1</showlastsubmission>";
+    }
+
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$Project->NightlyTime);
 
   $svnurl = make_cdash_url(htmlentities($Project->CvsUrl));
