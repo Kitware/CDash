@@ -201,7 +201,7 @@ function add_buildgroup_sortlist($groupname)
 }
 
 /** Get a link to a page showing the children of a given parent build. */
-function get_child_builds_hyperlink($parentid, $filterdata, $date)
+function get_child_builds_hyperlink($parentid, $filterdata)
 {
   $baseurl = $_SERVER['REQUEST_URI'];
 
@@ -249,7 +249,7 @@ function get_child_builds_hyperlink($parentid, $filterdata, $date)
     }
 
   // Construct & return our URL.
-  $url = "$baseurl&date=$date&parentid=$parentid";
+  $url = "$baseurl&parentid=$parentid";
   $url .= $existing_filter_params;
   return $url;
 }
@@ -1078,7 +1078,7 @@ function generate_main_dashboard_XML($project_instance, $date)
     if ($countchildren>0)
       {
       $xml .= add_XML_value("multiplebuildshyperlink",
-        get_child_builds_hyperlink($build_array["id"], $filterdata, $gmdate));
+        get_child_builds_hyperlink($build_array["id"], $filterdata));
       }
 
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
