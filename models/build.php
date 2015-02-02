@@ -1554,28 +1554,50 @@ class Build
       $numWarnings = 0;
       }
 
-    // Create the parent build here.  Note how parent builds
-    // are indicated by parentid == -1.
-    $query = "INSERT INTO build
-      (parentid, siteid, projectid, stamp, name, type, generator,
-       starttime, endtime, submittime, builderrors, buildwarnings)
-      VALUES
-      ('-1','$this->SiteId','$this->ProjectId','$this->Stamp',
-        '$this->Name','$this->Type','$this->Generator',
-        '$this->StartTime','$this->EndTime','$this->SubmitTime',
-        $numErrors,$numWarnings)";
-    if(!pdo_query($query))
+    // Check if there's an existing build that should be the parent.
+    // This would be a standalone build (parent=0) with no subproject
+    // that matches our name, site, and stamp.
+    $query = "SELECT id FROM build
+              WHERE parentid = 0 AND name = '$this->Name' AND
+                    siteid = '$this->SiteId' AND stamp = '$this->Stamp'";
+    $result = pdo_query($query);
+    if(pdo_num_rows($result) > 0)
       {
-      add_last_sql_error("Build Insert Parent",$this->ProjectId,$this->Id);
-      return false;
-      }
+      $result_array = pdo_fetch_array($result);
+      $parentId = $result_array['id'];
+      $this->ParentId = $parentId;
 
-    $parentId = pdo_insert_id("build");
+      // Mark it as a parent (parentid of -1) and update its tally of
+      // build errors & warnings.
+      pdo_query("UPDATE build SET parentid = -1 WHERE id = $parentId");
+      $this->UpdateParentBuild($numErrors, $numWarnings);
+      }
+    else
+      {
+      // Create the parent build here.  Note how parent builds
+      // are indicated by parentid == -1.
+      $query = "INSERT INTO build
+        (parentid, siteid, projectid, stamp, name, type, generator,
+         starttime, endtime, submittime, builderrors, buildwarnings)
+        VALUES
+        ('-1','$this->SiteId','$this->ProjectId','$this->Stamp',
+          '$this->Name','$this->Type','$this->Generator',
+          '$this->StartTime','$this->EndTime','$this->SubmitTime',
+          $numErrors,$numWarnings)";
+      if(!pdo_query($query))
+        {
+        add_last_sql_error("Build Insert Parent",$this->ProjectId,$this->Id);
+        return false;
+        }
+
+      $parentId = pdo_insert_id("build");
+      }
 
     // Since we just created a parent we should also update any existing
     // builds that should be a child of this parent but aren't yet.
     // This happens when Update.xml is parsed first, because it doesn't
     // contain info about what subproject it came from.
+    // TODO: maybe we don't need this any more?
     $query =
       "UPDATE build SET parentid=$parentId
        WHERE parentid=0 AND siteid='$this->SiteId' AND
@@ -1583,7 +1605,7 @@ class Build
     if(!pdo_query($query))
       {
       add_last_sql_error(
-        "Build Insert Update Parent",$this->ProjectId,$parentid);
+        "Build Insert Update Parent",$this->ProjectId,$parentId);
       }
 
     return $parentId;
@@ -1615,12 +1637,12 @@ class Build
       {
       $parent['buildwarnings'] = 0;
       }
-    if ($newErrors > 0)
+    if ($newErrors > -1)
       {
       $numErrors = $parent['builderrors'] + $newErrors;
       $clauses[] = "`builderrors` = $numErrors";
       }
-    if ($newWarnings > 0)
+    if ($newWarnings > -1)
       {
       $numWarnings = $parent['buildwarnings'] + $newWarnings;
       $clauses[] = "`buildwarnings` = $numWarnings";
