@@ -610,17 +610,17 @@ a.grouptrigger:visited{
 /* Skin */
 
 /* new jquery tabs */
-.ui-state-default {
+.tabs.ui-state-default {
   background: none !important;
   background-color: #4d75ca !important;
 }
 
-.ui-state-active, .ui-state-hover {
+.tabs.ui-state-active, .tabs.ui-state-hover {
   background: none !important;
   background-color: #ffffff !important;
 }
 
-.ui-corner-top a {
+.tabs.ui-corner-top a {
   color: #000000 !important;
   font-size: 12px !important;
   font-weight: bold !important;
@@ -629,7 +629,7 @@ a.grouptrigger:visited{
   white-space: nowrap !important;
 }
 
-.ui-widget-header {
+.tabs.ui-widget-header {
   background: none !important;
   background-color: #ececec !important;
 }
