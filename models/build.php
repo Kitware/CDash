@@ -139,9 +139,22 @@ class Build
       return $this->SubProjectId;
       }
 
-    add_log('Could not retrieve SubProjectId for subproject: '.$subproject,'Build::SetSubProject',LOG_ERR,
-            $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
-    return false;
+    // If the subproject wasn't found, add it here.
+    // A proper Project.xml file will still need to be uploaded later to
+    // load dependency data.
+    $subProject = new SubProject();
+    $subProject->SetProjectId($this->ProjectId);
+    $subProject->Name = $subproject;
+    $subProject->Save();
+
+    // Insert the label too.
+    $Label = new Label;
+    $Label->Text = $subProject->Name;
+    $Label->Insert();
+
+    add_log('New subproject detected: '.$subproject,'Build::SetSubProject',
+            LOG_INFO, $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
+    return true;
     }
 
   /** Return the subproject id */
