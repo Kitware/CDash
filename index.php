@@ -1072,13 +1072,14 @@ function generate_main_dashboard_XML($project_instance, $date)
 
     $countChildrenResult = pdo_single_row_query(
       "SELECT count(id) AS nchildren FROM build WHERE parentid=".qnum($buildid));
-
     $countchildren = $countChildrenResult['nchildren'];
     $xml .= add_XML_value("countchildren", $countchildren);
+    $child_builds_hyperlink = "";
     if ($countchildren>0)
       {
-      $xml .= add_XML_value("multiplebuildshyperlink",
-        get_child_builds_hyperlink($build_array["id"], $filterdata));
+      $child_builds_hyperlink =
+        get_child_builds_hyperlink($build_array["id"], $filterdata);
+      $xml .= add_XML_value("multiplebuildshyperlink", $child_builds_hyperlink);
       }
 
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
@@ -1333,6 +1334,19 @@ function generate_main_dashboard_XML($project_instance, $date)
     // Coverage
     //
 
+    // Determine if this is a parent build with no actual coverage of its own.
+    $linkToChildCoverage = false;
+    if ($countchildren > 0)
+      {
+      $countChildrenResult = pdo_single_row_query(
+        "SELECT count(fileid) AS nfiles FROM coverage
+         WHERE buildid=".qnum($buildid));
+      if ($countChildrenResult['nfiles'] == 0)
+        {
+        $linkToChildCoverage = true;
+        }
+      }
+
     $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
     while($coverage_array = pdo_fetch_array($coverages))
       {
@@ -1340,6 +1354,10 @@ function generate_main_dashboard_XML($project_instance, $date)
       $xml .= "  <site>".$build_array["sitename"]."</site>";
       $xml .= "  <buildname>".$build_array["name"]."</buildname>";
       $xml .= "  <buildid>".$build_array["id"]."</buildid>";
+      if ($linkToChildCoverage)
+        {
+        $xml .= add_XML_value("childlink", "$child_builds_hyperlink#Coverage");
+        }
 
       @$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
 
