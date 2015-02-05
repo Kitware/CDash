@@ -15,7 +15,7 @@
     CDash
    <xsl:choose>
      <xsl:when test="(count(/cdash/user/admin)=1 and /cdash/user/admin!=0) or (count(/cdash/user_is_admin)=1 and /cdash/user_is_admin!=0)">
-       <a href="svninfo.php"><xsl:value-of select="/cdash/version"/></a>
+       <a href="gitinfo.php"><xsl:value-of select="/cdash/version"/></a>
      </xsl:when>
      <xsl:otherwise>
        <xsl:value-of select="/cdash/version"/>
