@@ -160,16 +160,31 @@ Filter Definitions:<br/>
   </td>
   </xsl:if>
   <xsl:if test="cdash/filterdata/showlimit = 1">
-  <td>
-      Limit results to
-      <input type="text" size="3" onblur="filters_onblur(this)" onchange="filters_onchange(this)"
-             id="id_limit" name="limit" align="center">
-        <xsl:attribute name="value"><xsl:value-of select="cdash/filterdata/limit"/></xsl:attribute>
-      </input>
-      rows (0 for unlimited)
-  </td>
+    <xsl:if test="cdash/filterdata/pageId != 'graphViewer.php'">
+    <td>
+        Limit results to
+        <input type="text" size="3" onblur="filters_onblur(this)" onchange="filters_onchange(this)"
+              id="id_limit" name="limit" align="center">
+          <xsl:attribute name="value"><xsl:value-of select="cdash/filterdata/limit"/></xsl:attribute>
+        </input>
+        rows (0 for unlimited)
+    </td>
+    </xsl:if>
   </xsl:if>
   </tr>
+
+  <xsl:if test="cdash/filterdata/pageId = 'graphViewer.php'">
+    <tr>
+    <td>
+      Between (yyyy-mm-dd): <input type='text' id='starttime' name='starttime'>
+                    <xsl:attribute name="value"><xsl:value-of select="cdash/starttime" /></xsl:attribute>
+                  </input>
+      and <input type='text' id='endtime' name='endtime'>
+                    <xsl:attribute name="value"><xsl:value-of select="cdash/endtime" /></xsl:attribute>
+                </input> (leave any field blank to remove limit in that direction).
+    </td>
+    </tr>
+  </xsl:if>
 
   <tr>
     <xsl:attribute name="class">

@@ -106,4 +106,23 @@ function displaygraph_selected(buildid,testid,zoomout)
       });
     }
 }
+function displaygraph_viewerphp(measurementname,testname,sitename,graph,starttime,endtime,zoomout)
+{
 
+      $("#graph_holder_"+graph).attr("style","width:800px;height:400px;");
+      if(zoomout)
+        {
+        $("#graph_"+graph).load("ajax/showtestmeasurementdatagraphviewerphp.php?test="+testname+"&site="+sitename+"&measurement="+measurementname+"&graph="+graph+"&starttime="+starttime+"&endtime="+endtime+"&zoomout=1");
+        return;
+        }
+
+        $("#graph_"+graph).fadeIn('slow');
+        $("#graph_"+graph).html("fetching...<img src=images/loading.gif></img>");
+        $("#graph_options_"+graph).html("<a href=javascript:displaygraph_viewerphp('"+measurementname+"','"+testname+"','"+sitename+"','"+graph+"','"+starttime+"','"+endtime+"',true)>Zoom out</a> \n\
+                                  <br/> <a href='ajax/showtestmeasurementdatagraphviewerphp.php?test="+testname+"&site="+sitename+"&measurement="+measurementname+"&graph="+graph+"&starttime="+starttime+"&endtime="+endtime+"&export=csv'>Export as CSV File</a>");
+        $("#graph_"+graph).load("ajax/showtestmeasurementdatagraphviewerphp.php?test="+testname+"&site="+sitename+"&measurement="+measurementname+"&graph="+graph+"&starttime="+starttime+"&endtime="+endtime,{},function(){
+          $("#graph_holder_"+graph).fadeIn('slow');
+          $("#graph_options_"+graph).show();
+          });
+
+}
