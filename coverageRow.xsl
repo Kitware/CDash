@@ -6,22 +6,55 @@
 <xsl:template name="coverageRow">
    <tr class="child_row">
       <td align="left" class="paddt"><xsl:value-of select="site"/></td>
-      <td align="left" class="paddt"><xsl:value-of select="buildname"/></td>
+
+      <td align="left" class="paddt">
+      <xsl:choose>
+        <xsl:when test="childlink">
+          <a>
+            <xsl:attribute name="href">
+              <xsl:value-of select="childlink"/>
+            </xsl:attribute>
+            <xsl:value-of select="buildname"/>
+          </a>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="buildname"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      </td>
+
       <td align="center">
         <xsl:attribute name="class">
-        <xsl:choose>
-          <xsl:when test="percentage >= percentagegreen">
-            normal
-            </xsl:when>
-          <xsl:otherwise>
-            warning
-           </xsl:otherwise>
-        </xsl:choose>
+          <xsl:choose>
+            <xsl:when test="percentage >= percentagegreen">
+              normal
+              </xsl:when>
+            <xsl:otherwise>
+              warning
+             </xsl:otherwise>
+          </xsl:choose>
         </xsl:attribute>
-      <a><xsl:attribute name="href">viewCoverage.php?buildid=<xsl:value-of select="buildid"/></xsl:attribute><xsl:value-of select="percentage"/>%</a>
-      <xsl:if test="percentagediff > 0"><sub>+<xsl:value-of select="percentagediff"/>%</sub></xsl:if>
-      <xsl:if test="percentagediff &lt; 0"><sub><xsl:value-of select="percentagediff"/>%</sub></xsl:if>
+        <a>
+          <xsl:attribute name="href">
+            <xsl:choose>
+              <xsl:when test="childlink">
+                <xsl:value-of select="childlink"/>
+              </xsl:when>
+              <xsl:otherwise>
+                viewCoverage.php?buildid=<xsl:value-of select="buildid"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+          <xsl:value-of select="percentage"/>%
+        </a>
+        <xsl:if test="percentagediff > 0">
+          <sub>+<xsl:value-of select="percentagediff"/>%</sub>
+        </xsl:if>
+        <xsl:if test="percentagediff &lt; 0">
+          <sub><xsl:value-of select="percentagediff"/>%</sub>
+        </xsl:if>
       </td>
+
       <td align="center" ><xsl:value-of select="pass"/>
       <xsl:if test="passdiff > 0"><sub>+<xsl:value-of select="passdiff"/></sub></xsl:if>
       <xsl:if test="passdiff &lt; 0"><sub><xsl:value-of select="passdiff"/></sub></xsl:if>
@@ -44,7 +77,8 @@
       <xsl:if test="/cdash/dashboard/displaylabels=1">
         <td class="nob" align="left">
         <xsl:if test="count(labels/label)=0">(none)</xsl:if>
-        <xsl:if test="count(labels/label)!=0"><xsl:value-of select="labels/label"/></xsl:if>
+        <xsl:if test="count(labels/label)=1"><xsl:value-of select="labels/label"/></xsl:if>
+        <xsl:if test="count(labels/label)>1">(<xsl:value-of select="count(labels/label)"/> labels)</xsl:if>
         </td>
       </xsl:if>
    </tr>

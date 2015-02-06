@@ -483,7 +483,7 @@ foreach($static_groups as $static_group)
   }
 
 $end = microtime_float();
-$xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
+$xml .= "<generationtime>".round($end-$global_start,3)."</generationtime>";
 $xml .= "</cdash>";
 
 // Now do the xslt transition
@@ -517,19 +517,18 @@ function gather_overview_data($start_date, $end_date, $group_id)
     }
 
   $builds_query = "SELECT b.id, b.builderrors, b.buildwarnings, b.testfailed,
-                   c.status AS configurestatus, c.warnings AS configurewarnings,
+                   b.configureerrors, b.configurewarnings,
                    cs.loctested AS loctested, cs.locuntested AS locuntested,
                    sp.id AS subprojectid, sp.core AS subprojectcore
                    FROM build AS b
                    LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
-                   LEFT JOIN configure AS c ON (c.buildid=b.id)
                    LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
                    LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
                    LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
                    WHERE b.projectid = '$projectid'
-                   AND b.starttime < '$end_date'
-                   AND b.starttime >= '$start_date'
-                   AND b2g.groupid = '$group_id'";
+                   AND b.starttime BETWEEN '$start_date' AND '$end_date'
+                   AND b2g.groupid = '$group_id'
+                   AND b.parentid < 1";
 
   $builds_array = pdo_query($builds_query);
   add_last_sql_error("gather_overview_data", $group_id);
@@ -541,9 +540,9 @@ function gather_overview_data($start_date, $end_date, $group_id)
       $num_configure_warnings += $build_row["configurewarnings"];
       }
 
-    if ($build_row["configurestatus"] != 0)
+    if ($build_row["configureerrors"] > 0)
       {
-      $num_configure_errors++;
+      $num_configure_errors += $build_row["configureerrors"];
       }
 
     if ($build_row["buildwarnings"] > 0)

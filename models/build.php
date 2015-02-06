@@ -31,6 +31,7 @@ class Build
   var $Id;
   var $SiteId;
   var $ProjectId;
+  var $ParentId;
   private $Stamp;
   var $Name;
   var $Type;
@@ -129,17 +130,31 @@ class Build
       return false;
       }
 
+    $this->SubProjectName = $subproject;
+
     if(pdo_num_rows($query)>0)
       {
       $query_array = pdo_fetch_array($query);
       $this->SubProjectId = $query_array['id'];
-      $this->SubProjectName = $subproject;
       return $this->SubProjectId;
       }
 
-    add_log('Could not retrieve SubProjectId for subproject: '.$subproject,'Build::SetSubProject',LOG_ERR,
-            $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
-    return false;
+    // If the subproject wasn't found, add it here.
+    // A proper Project.xml file will still need to be uploaded later to
+    // load dependency data.
+    $subProject = new SubProject();
+    $subProject->SetProjectId($this->ProjectId);
+    $subProject->Name = $subproject;
+    $subProject->Save();
+
+    // Insert the label too.
+    $Label = new Label;
+    $Label->Text = $subProject->Name;
+    $Label->Insert();
+
+    add_log('New subproject detected: '.$subproject,'Build::SetSubProject',
+            LOG_INFO, $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
+    return true;
     }
 
   /** Return the subproject id */
@@ -481,11 +496,25 @@ class Build
         $nbuildwarnings = -1;
         }
 
-      $query = "INSERT INTO build (".$id."siteid,projectid,stamp,name,type,generator,starttime,endtime,submittime,command,log,
-                                   builderrors,buildwarnings)
+      $parentId = 0;
+      $justCreatedParent = false;
+      if ($this->SubProjectName)
+        {
+        $parentId = $this->GetParentBuildId();
+        if ($parentId == 0)
+          {
+          // This is the first subproject to submit for a new build.
+          // Create a new parent build for it.
+          $parentId = $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
+          $justCreatedParent = true;
+          }
+        }
+      $this->ParentId = $parentId;
+
+      $query = "INSERT INTO build (".$id."siteid,projectid,stamp,name,type,generator,starttime,endtime,submittime,command,log,builderrors,buildwarnings,parentid)
                 VALUES (".$idvalue."'$this->SiteId','$this->ProjectId','$this->Stamp','$this->Name',
                         '$this->Type','$this->Generator','$this->StartTime',
-                        '$this->EndTime','$this->SubmitTime','$this->Command','$this->Log',$nbuilderrors,$nbuildwarnings)";
+                        '$this->EndTime','$this->SubmitTime','$this->Command','$this->Log',$nbuilderrors,$nbuildwarnings, $this->ParentId)";
       if(!pdo_query($query))
         {
         add_last_sql_error("Build Insert",$this->ProjectId,$this->Id);
@@ -505,6 +534,23 @@ class Build
           {
           add_last_sql_error("Build Insert",$this->ProjectId,$this->Id);
           return false;
+          }
+        // Associate the parent with this group too.
+        if ($this->ParentId > 0)
+          {
+          $result = pdo_query(
+            "SELECT groupid FROM build2group WHERE buildid=".qnum($this->ParentId));
+          if(pdo_num_rows($result) == 0)
+            {
+            $query =
+              "INSERT INTO build2group (groupid,buildid)
+               VALUES ('$this->GroupId','$this->ParentId')";
+            if(!pdo_query($query))
+              {
+              add_last_sql_error("Build Insert",$this->ProjectId,$this->ParentId);
+              return false;
+              }
+            }
           }
         }
 
@@ -539,6 +585,12 @@ class Build
         $this->Information->BuildId = $this->Id;
         $this->Information->Save();
         }
+
+      // Update parent's tally of total build errors & warnings.
+      if (!$justCreatedParent)
+        {
+        $this->UpdateParentBuild($nbuilderrors, $nbuildwarnings);
+        }
       }
     else
       {
@@ -571,6 +623,33 @@ class Build
           $nbuilderrors = -1;
           $nbuildwarnings = -1;
           }
+
+      if ($this->SubProjectName)
+        {
+        $newErrors = 0;
+        $newWarnings = 0;
+        if ($nbuilderrors > 0 || $nbuildwarnings > 0)
+          {
+          // If we are adding errors or warnings to this build we need to know
+          // how many builderrors & buildwarnings it had previously so we can
+          // update the parent's tally properly.
+          $priorResult = pdo_single_row_query(
+            "SELECT builderrors, buildwarnings FROM build
+             WHERE id=".qnum($this->Id));
+          if ($priorResult['builderrors'] == -1)
+            {
+            $priorResult['builderrors'] = 0;
+            }
+          if ($priorResult['buildwarnings'] == -1)
+            {
+            $priorResult['buildwarnings'] = 0;
+            }
+          $newErrors = $nbuilderrors - $priorResult['builderrors'];
+          $newWarnings = $nbuildwarnings - $priorResult['buildwarnings'];
+          }
+        $this->ParentId = $this->GetParentBuildId();
+        $this->UpdateParentBuild($newErrors, $newWarnings);
+        }
 
         include('cdash/config.php');
         if($CDASH_DB_TYPE == 'pgsql') // pgsql doesn't have concat...
@@ -686,6 +765,15 @@ class Build
       {
       return;
       }
+
+    // If this is a subproject build, we also have to update its parents test numbers.
+    $newFailed = $numberTestsFailed - $this->GetNumberOfFailedTests();
+    $newNotRun = $numberTestsNotRun - $this->GetNumberOfNotRunTests();
+    $newPassed = $numberTestsPassed - $this->GetNumberOfPassedTests();
+    $this->ParentId = $this->GetParentBuildId();
+    $this->UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed);
+
+    // Update this build's test numbers.
     pdo_query("UPDATE build SET testnotrun='$numberTestsNotRun',
                                 testfailed='$numberTestsFailed',
                                 testpassed='$numberTestsPassed' WHERE id=".qnum($this->Id));
@@ -1445,5 +1533,279 @@ class Build
       }
     return $allUploadedFiles;
     }
+
+  /** Get the parent's build id */
+  function GetParentBuildId()
+    {
+    if(!$this->SiteId || !$this->Name || !$this->Stamp)
+      {
+      return 0;
+      }
+
+    $parent = pdo_single_row_query(
+      "SELECT id FROM build WHERE parentid=-1 AND
+       siteid='$this->SiteId' AND name='$this->Name' AND stamp='$this->Stamp'");
+
+    if ($parent && array_key_exists('id', $parent))
+      {
+      return $parent['id'];
+      }
+    return 0;
+    }
+
+  /** Create a new build as a parent of $this.
+    * Assumes many fields have been set prior to calling this function.
+    **/
+  function CreateParentBuild($numErrors, $numWarnings)
+    {
+    if ($numErrors < 0)
+      {
+      $numErrors = 0;
+      }
+    if ($numWarnings < 0)
+      {
+      $numWarnings = 0;
+      }
+
+    // Check if there's an existing build that should be the parent.
+    // This would be a standalone build (parent=0) with no subproject
+    // that matches our name, site, and stamp.
+    $query = "SELECT id FROM build
+              WHERE parentid = 0 AND name = '$this->Name' AND
+                    siteid = '$this->SiteId' AND stamp = '$this->Stamp'";
+    $result = pdo_query($query);
+    if(pdo_num_rows($result) > 0)
+      {
+      $result_array = pdo_fetch_array($result);
+      $parentId = $result_array['id'];
+      $this->ParentId = $parentId;
+
+      // Mark it as a parent (parentid of -1) and update its tally of
+      // build errors & warnings.
+      pdo_query("UPDATE build SET parentid = -1 WHERE id = $parentId");
+      $this->UpdateParentBuild($numErrors, $numWarnings);
+      }
+    else
+      {
+      // Create the parent build here.  Note how parent builds
+      // are indicated by parentid == -1.
+      $query = "INSERT INTO build
+        (parentid, siteid, projectid, stamp, name, type, generator,
+         starttime, endtime, submittime, builderrors, buildwarnings)
+        VALUES
+        ('-1','$this->SiteId','$this->ProjectId','$this->Stamp',
+          '$this->Name','$this->Type','$this->Generator',
+          '$this->StartTime','$this->EndTime','$this->SubmitTime',
+          $numErrors,$numWarnings)";
+      if(!pdo_query($query))
+        {
+        add_last_sql_error("Build Insert Parent",$this->ProjectId,$this->Id);
+        return false;
+        }
+
+      $parentId = pdo_insert_id("build");
+      }
+
+    // Since we just created a parent we should also update any existing
+    // builds that should be a child of this parent but aren't yet.
+    // This happens when Update.xml is parsed first, because it doesn't
+    // contain info about what subproject it came from.
+    // TODO: maybe we don't need this any more?
+    $query =
+      "UPDATE build SET parentid=$parentId
+       WHERE parentid=0 AND siteid='$this->SiteId' AND
+             name='$this->Name' AND stamp='$this->Stamp'";
+    if(!pdo_query($query))
+      {
+      add_last_sql_error(
+        "Build Insert Update Parent",$this->ProjectId,$parentId);
+      }
+
+    return $parentId;
+    }
+
+  /**
+   * Update our parent build so that it is an accurate summary
+   * of all of its subprojects.
+   **/
+  function UpdateParentBuild($newErrors, $newWarnings)
+    {
+    if ($this->ParentId < 1)
+      {
+      return;
+      }
+
+    $clauses = array();
+
+    $parent = pdo_single_row_query(
+      "SELECT builderrors, buildwarnings, starttime, endtime
+       FROM build WHERE id='$this->ParentId'");
+
+    // Check if we need to modify builderrors or buildwarnings.
+    if ($parent['builderrors'] == -1)
+      {
+      $parent['builderrors'] = 0;
+      }
+    if ($parent['buildwarnings'] == -1)
+      {
+      $parent['buildwarnings'] = 0;
+      }
+    if ($newErrors > -1)
+      {
+      $numErrors = $parent['builderrors'] + $newErrors;
+      $clauses[] = "`builderrors` = $numErrors";
+      }
+    if ($newWarnings > -1)
+      {
+      $numWarnings = $parent['buildwarnings'] + $newWarnings;
+      $clauses[] = "`buildwarnings` = $numWarnings";
+      }
+
+    // Check if we need to modify starttime or endtime.
+    if (strtotime($parent['starttime']) > strtotime($this->StartTime))
+      {
+      $clauses[] = "`starttime` = '$this->StartTime'";
+      }
+    if (strtotime($parent['endtime']) < strtotime($this->EndTime))
+      {
+      $clauses[] = "`endtime` = '$this->EndTime'";
+      }
+
+    $num_clauses = count($clauses);
+    if ($num_clauses > 0)
+      {
+      $query = "UPDATE `build` SET " . $clauses[0];
+      for ($i = 1; $i < $num_clauses; $i++)
+        {
+        $query .= ", " . $clauses[$i];
+        }
+      $query .= " WHERE `id` = '$this->ParentId'";
+      if(!pdo_query($query))
+        {
+        add_last_sql_error("UpdateParentBuild",$this->ProjectId,$this->ParentId);
+        return false;
+        }
+      }
+    }
+
+  /** Update the testing numbers for our parent build. */
+  function UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed)
+    {
+    if ($this->ParentId < 1)
+      {
+      return;
+      }
+
+    $numFailed = 0;
+    $numNotRun = 0;
+    $numPassed = 0;
+
+    $parent = pdo_single_row_query(
+      "SELECT testfailed, testnotrun, testpassed
+       FROM build WHERE id=".qnum($this->ParentId));
+
+    // Don't let the -1 default value screw up our math.
+    if ($parent['testfailed'] == -1)
+      {
+      $parent['testfailed'] = 0;
+      }
+    if ($parent['testnotrun'] == -1)
+      {
+      $parent['testnotrun'] = 0;
+      }
+    if ($parent['testpassed'] == -1)
+      {
+      $parent['testpassed'] = 0;
+      }
+
+    $numFailed = $newFailed + $parent['testfailed'];
+    $numNotRun = $newNotRun + $parent['testnotrun'];
+    $numPassed = $newPassed + $parent['testpassed'];
+
+    pdo_query(
+      "UPDATE build SET testnotrun='$numNotRun',
+                        testfailed='$numFailed',
+                        testpassed='$numPassed'
+                    WHERE id=".qnum($this->ParentId));
+
+    add_last_sql_error("Build:UpdateParentTestNumbers",$this->ProjectId,$this->Id);
+
+    // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
+    // so for now it isn't being updated for parent builds.
+    }
+
+  /** Set number of configure warnings for this build. */
+  function SetNumberOfConfigureWarnings($numWarnings)
+    {
+    if(!$this->Id || !is_numeric($this->Id))
+      {
+      return;
+      }
+
+    pdo_query(
+      "UPDATE build SET configurewarnings='$numWarnings'
+                    WHERE id=".qnum($this->Id));
+
+    add_last_sql_error("Build:SetNumberOfConfigureWarnings",
+      $this->ProjectId,$this->Id);
+    }
+
+  /** Set number of configure errors for this build. */
+  function SetNumberOfConfigureErrors($numErrors)
+    {
+    if(!$this->Id || !is_numeric($this->Id))
+      {
+      return;
+      }
+
+    pdo_query(
+      "UPDATE build SET configureerrors='$numErrors'
+                    WHERE id=".qnum($this->Id));
+
+    add_last_sql_error("Build:SetNumberOfConfigureErrors",
+      $this->ProjectId,$this->Id);
+    }
+
+  /**
+    * Update the tally of configure errors & warnings for this build's
+    * parent.
+   **/
+  function UpdateParentConfigureNumbers($newWarnings, $newErrors)
+    {
+    $this->ParentId = $this->GetParentBuildId();
+    if ($this->ParentId < 1)
+      {
+      return;
+      }
+
+    $numErrors = 0;
+    $numWarnings = 0;
+
+    $parent = pdo_single_row_query(
+      "SELECT configureerrors, configurewarnings
+       FROM build WHERE id=".qnum($this->ParentId));
+
+    // Don't let the -1 default value screw up our math.
+    if ($parent['configureerrors'] == -1)
+      {
+      $parent['configureerrors'] = 0;
+      }
+    if ($parent['configurewarnings'] == -1)
+      {
+      $parent['configurewarnings'] = 0;
+      }
+
+    $numErrors = $newErrors + $parent['configureerrors'];
+    $numWarnings = $newWarnings + $parent['configurewarnings'];
+
+    pdo_query(
+      "UPDATE build SET configureerrors='$numErrors',
+                        configurewarnings='$numWarnings'
+                    WHERE id=".qnum($this->ParentId));
+
+    add_last_sql_error("Build:UpdateParentConfigureNumbers",
+      $this->ProjectId,$this->Id);
+    }
+
 } // end class Build
 ?>

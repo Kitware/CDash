@@ -122,6 +122,39 @@ class CoverageSummary
       return false;
       }
 
+    // If this is a child build then update the parent's summary as well.
+    $parent = pdo_single_row_query(
+      "SELECT parentid FROM build WHERE id=".qnum($this->BuildId));
+    if ($parent && array_key_exists('parentid', $parent))
+      {
+      $parentid = $parent['parentid'];
+      if ($parentid > 0)
+        {
+        $exists = pdo_query(
+          "SELECT * FROM coveragesummary WHERE buildid=".qnum($parentid));
+        if (pdo_num_rows($exists) == 0)
+          {
+          $query =
+            "INSERT INTO coveragesummary (buildid,loctested,locuntested)
+                    VALUES (".qnum($parentid).",".qnum($this->LocTested).",".
+                              qnum($this->LocUntested).")";
+          }
+        else
+          {
+          $query =
+            "UPDATE coveragesummary SET
+             `loctested` = `loctested` + " . qnum($this->LocTested) . ",
+             `locuntested` = `locuntested` + " . qnum($this->LocUntested) . "
+             WHERE buildid=" . qnum($parentid);
+          }
+        if(!pdo_query($query))
+          {
+          add_last_sql_error("CoverageSummary Parent Update");
+          return false;
+          }
+        }
+      }
+
     // Add the coverages
     // Construct the SQL query
     if(count($this->Coverages)>0)

@@ -26,6 +26,7 @@ class CoverageFileLog
   function __construct()
     {
     $this->Lines = array();
+    $this->Branches = array();
     }
 
   function AddLine($number,$code)

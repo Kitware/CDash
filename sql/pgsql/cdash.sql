@@ -5,6 +5,7 @@ CREATE TABLE "build" (
   "id" serial NOT NULL,
   "siteid" bigint DEFAULT '0' NOT NULL,
   "projectid" bigint DEFAULT '0' NOT NULL,
+  "parentid" bigint DEFAULT '0' NOT NULL,
   "stamp" character varying(255) DEFAULT '' NOT NULL,
   "name" character varying(255) DEFAULT '' NOT NULL,
   "type" character varying(255) DEFAULT '' NOT NULL,
@@ -14,6 +15,8 @@ CREATE TABLE "build" (
   "submittime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "command" text NOT NULL,
   "log" text NOT NULL,
+  "configureerrors" smallint DEFAULT '-1',
+  "configurewarnings" smallint DEFAULT '-1',
   "builderrors" smallint DEFAULT '-1',
   "buildwarnings" smallint DEFAULT '-1',
   "testnotrun" smallint DEFAULT '-1',
@@ -29,6 +32,7 @@ CREATE INDEX "siteid" on "build" ("siteid");
 CREATE INDEX "stamp" on "build" ("stamp");
 CREATE INDEX "type" on "build" ("type");
 CREATE INDEX "name" on "build" ("name");
+CREATE INDEX "parentid" on "build" ("parentid");
 
 --
 -- Table: buildgroup

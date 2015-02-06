@@ -164,11 +164,11 @@
       </xsl:if>
       <div style="float: left; margin: 0px 4px;">
       <a class="buildinfo">
-        <xsl:if test="countbuildids=1">
+        <xsl:if test="countchildren=0">
         <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
         <xsl:attribute name="href"><xsl:value-of select="multiplebuildshyperlink"/>
         </xsl:attribute>
         </xsl:if>
@@ -187,18 +187,18 @@
      <xsl:text>&#x20;</xsl:text>
 
       <div style="float:left;">
-      <xsl:if test="string-length(note)>0 and countbuildids=1">
+      <xsl:if test="string-length(note)>0 and countchildren=0">
         <a class="advancedviewitem" title="View notes"><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="images/document.png" alt="Notes" class="icon"/></a>
       </xsl:if>
 
-      <xsl:if test="upload-file-count>0 and countbuildids=1">
+      <xsl:if test="upload-file-count>0 and countchildren=0">
       <a><xsl:attribute name="href">viewFiles.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute>
          <xsl:attribute name="title"><xsl:value-of select="upload-file-count" /> files uploaded with this build</xsl:attribute>
       <img src="images/package.png" alt="Files" class="icon"/></a>
       </xsl:if>
 
       <!-- If the build has errors or test failing -->
-      <xsl:if test="(compilation/error > 0 or test/fail > 0) and countbuildids=1">
+      <xsl:if test="(compilation/error > 0 or test/fail > 0) and countchildren=0">
       <a href="javascript:;">
       <xsl:attribute name="onclick">javascript:buildinfo_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
       <img src="images/Info.png" alt="info" class="icon"></img>
@@ -214,7 +214,7 @@
       </xsl:if>
 
       <!-- Display the note icon -->
-      <xsl:if test="buildnote>0 and countbuildids=1">
+      <xsl:if test="buildnote>0 and countchildren=0">
       <a name="Build Notes" class="jTip">
       <xsl:attribute name="id">buildnote_<xsl:value-of select="buildid"/></xsl:attribute>
       <xsl:attribute name="href">ajax/buildnote.php?buildid=<xsl:value-of select="buildid"/>&amp;width=350&amp;link=buildSummary.php%3Fbuildid%3D<xsl:value-of select="buildid"/></xsl:attribute>
@@ -223,14 +223,14 @@
       </xsl:if>
 
       <!-- If we have error logs -->
-      <xsl:if test="nerrorlog>0 and countbuildids=1">
+      <xsl:if test="nerrorlog>0 and countchildren=0">
       <a class="tooltip">
       <xsl:attribute name="title"><xsl:value-of select="nerrorlog"/> errors in the CDash log</xsl:attribute>
       <xsl:attribute name="href">viewErrorLog.php?buildid=<xsl:value-of select="buildid"/>&amp;projectid=<xsl:value-of select="/cdash/dashboard/projectid"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute><img src="images/warningsmall.png" alt="errorlogs" class="icon"/></a>
       </xsl:if>
 
       <!-- If user is admin of the project propose to group this build -->
-      <xsl:if test="/cdash/user/admin=1 and (countbuildids=1 or expected=1)">
+      <xsl:if test="/cdash/user/admin=1 and (countchildren=0 or expected=1)">
         <xsl:if test="string-length(buildid)>0">
         <a>
         <xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
@@ -247,13 +247,13 @@
       </div>
 
 
-      <xsl:if test="string-length(buildid)>0 and countbuildids=1">
+      <xsl:if test="string-length(buildid)>0 and countchildren=0">
       <div>
       <xsl:attribute name="id">buildgroup_<xsl:value-of select="buildid"/></xsl:attribute>
       </div>
       </xsl:if>
 
-      <xsl:if test="string-length(expecteddivname)>0 and (countbuildids=1 or expected=1)">
+      <xsl:if test="string-length(expecteddivname)>0 and (countchildren=0 or expected=1)">
       <div>
       <xsl:attribute name="id">infoexpected_<xsl:value-of select="expecteddivname"/></xsl:attribute>
       </div>
@@ -281,14 +281,14 @@
             </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-        <xsl:if test="countbuildids=1">
+        <xsl:if test="countchildren=0">
         <xsl:if test="userupdates>0"><img src="images/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if><a>
         <xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="update/files"/>
         </a>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
           <xsl:value-of select="update/files"/>
         </xsl:if>
       </td>
@@ -310,14 +310,14 @@
            </xsl:when>
         </xsl:choose>
       </xsl:attribute>
-        <xsl:if test="countbuildids=1">
+        <xsl:if test="countchildren=0">
         <a>
         <xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="configure/error"/>
         </a>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
           <xsl:value-of select="configure/error"/>
         </xsl:if>
       <xsl:if test="string-length(configure/error)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
@@ -334,19 +334,19 @@
            </xsl:when>
         </xsl:choose>
       </xsl:attribute>
-        <xsl:if test="countbuildids=1">
+        <xsl:if test="countchildren=0">
         <a>
         <xsl:attribute name="href">viewConfigure.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="configure/warning"/>
         </a>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
           <xsl:value-of select="configure/warning"/>
         </xsl:if>
       <xsl:if test="string-length(configure/warning)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      <xsl:if test="configure/nwarningdiff > 0 and countbuildids=1"><sub>+<xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
-      <xsl:if test="configure/nwarningdiff &lt; 0 and countbuildids=1"><sub><xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
+      <xsl:if test="configure/nwarningdiff > 0 and countchildren=0"><sub>+<xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
+      <xsl:if test="configure/nwarningdiff &lt; 0 and countchildren=0"><sub><xsl:value-of select="configure/nwarningdiff"/></sub></xsl:if>
       </td>
 
 
@@ -373,24 +373,24 @@
        <xsl:if test="compilation/nerrordiffp > 0 or compilation/nerrordiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
        </xsl:if>
-        <xsl:if test="countbuildids=1">
+        <xsl:if test="countchildren=0">
         <a>
         <xsl:attribute name="href">viewBuildError.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="compilation/error"/>
         </a>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
           <xsl:value-of select="compilation/error"/>
         </xsl:if>
       <xsl:if test="string-length(compilation/error)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      <xsl:if test="compilation/nerrordiffp > 0 and countbuildids=1">
+      <xsl:if test="compilation/nerrordiffp > 0 and countchildren=0">
       <a class="sup">
         <xsl:attribute name="href">viewBuildError.php?onlydeltap&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
         +<xsl:value-of select="compilation/nerrordiffp"/>
       </a>
       </xsl:if>
-      <xsl:if test="compilation/nerrordiffn > 0 and countbuildids=1">
+      <xsl:if test="compilation/nerrordiffn > 0 and countchildren=0">
       <a>
       <xsl:attribute name="href">viewBuildError.php?onlydeltan&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
       <span class="sub">-<xsl:value-of select="compilation/nerrordiffn"/></span>
@@ -414,24 +414,24 @@
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
        </xsl:if>
 
-        <xsl:if test="countbuildids=1">
+        <xsl:if test="countchildren=0">
         <a>
         <xsl:attribute name="href">viewBuildError.php?type=1&#38;buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="compilation/warning"/>
         </a>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
           <xsl:value-of select="compilation/warning"/>
         </xsl:if>
       <xsl:if test="string-length(compilation/warning)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      <xsl:if test="compilation/nwarningdiffp > 0 and countbuildids=1">
+      <xsl:if test="compilation/nwarningdiffp > 0 and countchildren=0">
       <a class="sup">
         <xsl:attribute name="href">viewBuildError.php?type=1&#38;onlydeltap&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
         +<xsl:value-of select="compilation/nwarningdiffp"/>
       </a>
       </xsl:if>
-      <xsl:if test="compilation/nwarningdiffn > 0 and countbuildids=1">
+      <xsl:if test="compilation/nwarningdiffn > 0 and countchildren=0">
       <a>
       <xsl:attribute name="href">viewBuildError.php?type=1&#38;onlydeltan&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
       <span class="sub">-<xsl:value-of select="compilation/nwarningdiffn"/></span>
@@ -463,24 +463,24 @@
        <xsl:if test="test/nnotrundiffp > 0 or test/nnotrundiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
        </xsl:if>
-        <xsl:if test="countbuildids=1">
+        <xsl:if test="countchildren=0">
         <a>
         <xsl:attribute name="href">viewTest.php?onlynotrun&#38;buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="test/notrun"/>
         </a>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
           <xsl:value-of select="test/notrun"/>
         </xsl:if>
       <xsl:if test="string-length(test/notrun)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      <xsl:if test="test/nnotrundiffp > 0 and countbuildids=1">
+      <xsl:if test="test/nnotrundiffp > 0 and countchildren=0">
       <a class="sup">
         <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
         +<xsl:value-of select="test/nnotrundiffp"/>
       </a>
       </xsl:if>
-      <xsl:if test="test/nnotrundiffn > 0 and countbuildids=1">
+      <xsl:if test="test/nnotrundiffn > 0 and countchildren=0">
       <span class="sub">-<xsl:value-of select="test/nnotrundiffn"/></span>
       </xsl:if>
       </div>
@@ -501,22 +501,22 @@
        <xsl:if test="test/nfaildiffp > 0 or test/nfaildiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
        </xsl:if>
-        <xsl:if test="countbuildids=1">
+        <xsl:if test="countchildren=0">
         <a>
         <xsl:attribute name="href">viewTest.php?onlyfailed&#38;buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="test/fail"/>
         </a>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
           <xsl:value-of select="test/fail"/>
         </xsl:if>
       <xsl:if test="string-length(test/fail)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      <xsl:if test="test/nfaildiffp > 0 and countbuildids=1"><a class="sup">
+      <xsl:if test="test/nfaildiffp > 0 and countchildren=0"><a class="sup">
         <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/></xsl:attribute>
         +<xsl:value-of select="test/nfaildiffp"/></a>
       </xsl:if>
-      <xsl:if test="test/nfaildiffn > 0 and countbuildids=1"><span class="sub">-<xsl:value-of select="test/nfaildiffn"/></span>
+      <xsl:if test="test/nfaildiffn > 0 and countchildren=0"><span class="sub">-<xsl:value-of select="test/nfaildiffn"/></span>
       </xsl:if>
       </div>
       </td>
@@ -533,25 +533,25 @@
        <xsl:if test="test/npassdiffp > 0 or test/npassdiffn > 0">
           <xsl:attribute name="class">valuewithsub</xsl:attribute>
        </xsl:if>
-       <xsl:if test="countbuildids=1">
+       <xsl:if test="countchildren=0">
         <a>
         <xsl:attribute name="href">viewTest.php?onlypassed&#38;buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="test/pass"/>
         </a>
         </xsl:if>
-        <xsl:if test="countbuildids!=1">
+        <xsl:if test="countchildren!=0">
           <xsl:value-of select="test/pass"/>
         </xsl:if>
       <xsl:if test="string-length(test/fail)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-      <xsl:if test="test/npassdiffp > 0 and countbuildids=1">
+      <xsl:if test="test/npassdiffp > 0 and countchildren=0">
       <a class="sup">
         <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>+<xsl:value-of select="test/npassdiffp"/>
       </a>
       </xsl:if>
 
-      <xsl:if test="test/npassdiffn > 0 and countbuildids=1">
+      <xsl:if test="test/npassdiffn > 0 and countchildren=0">
       <span class="sub">-<xsl:value-of select="test/npassdiffn"/></span>
       </xsl:if>
       </div>
@@ -591,13 +591,13 @@
            <xsl:when test="string-length(test/timestatus)>0">
              <xsl:value-of select="test/time"/>
              <xsl:if test="string-length(test/time)=0"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if>
-             <xsl:if test="test/ntimediffp > 0 and countbuildids=1">
+             <xsl:if test="test/ntimediffp > 0 and countchildren=0">
              <a class="sup">
               <xsl:attribute name="href">viewTest.php?onlydelta&#38;buildid=<xsl:value-of select="buildid"/>
               </xsl:attribute>+<xsl:value-of select="test/ntimediffp"/>
              </a>
              </xsl:if>
-             <xsl:if test="test/ntimediffn > 0 and countbuildids=1">
+             <xsl:if test="test/ntimediffn > 0 and countchildren=0">
               <span class="sub">-<xsl:value-of select="test/ntimediffn"/></span>
               </xsl:if>
            </xsl:when>
