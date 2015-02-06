@@ -256,7 +256,7 @@ class Build
   /** Fill the current build information from the buildid */
   function FillFromId($buildid)
     {
-    $query = pdo_query("SELECT projectid,starttime,siteid,name,type FROM build WHERE id=".qnum($buildid));
+    $query = pdo_query("SELECT projectid,starttime,siteid,name,type,parentid FROM build WHERE id=".qnum($buildid));
     if(!$query)
       {
       add_last_sql_error("Build:FillFromId()",$this->ProjectId,$this->Id);
@@ -269,6 +269,7 @@ class Build
     $this->StartTime = $build_array["starttime"];
     $this->SiteId = $build_array["siteid"];
     $this->ProjectId = $build_array["projectid"];
+    $this->ParentId = $build_array["parentid"];
 
     $subprojectid = $this->QuerySubProjectId($buildid);
     if ($subprojectid)
