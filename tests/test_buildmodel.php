@@ -135,9 +135,11 @@ class BuildModelTestCase extends KWWebTestCase
 
     $build->ProjectId = '2';
     $build->SiteId = '1';
-    if($build->SetSubProject('8567') !== false)
+    $build->SetSubProject('8567');
+    if(strpos(file_get_contents($this->logfilename),
+              "New subproject detected") === false)
       {
-      $this->fail("SetSubProject didn't return false for invalid subproject id");
+      $this->fail("'New subproject detected' not found in log after calling SetSubProject for invalid subproject id");
       return 1;
       }
 
