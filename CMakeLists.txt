@@ -57,8 +57,8 @@ endif(NOT CDASH_DB_TYPE)
 
 set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
 make_directory("${CDASH_COVERAGE_DIR}")
-configure_file(${CDash_SOURCE_DIR}/tests/append_coverage.php.in
-               ${CDash_BINARY_DIR}/append_coverage.php)
+configure_file(${CDash_SOURCE_DIR}/tests/prepend_coverage.php.in
+               ${CDash_BINARY_DIR}/prepend_coverage.php)
 
 # For coverage builds on apache web servers, provide a default
 # .htaccess file, but only if explicitly asked to:
