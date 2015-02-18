@@ -723,7 +723,7 @@ CREATE TABLE "label2build" (
   PRIMARY KEY ("labelid", "buildid")
 );
 CREATE INDEX "labelid" on "label2build" ("labelid");
-CREATE INDEX "buildid" on "label2build" ("buildid");
+CREATE INDEX "label2build_buildid" on "label2build" ("buildid");
 
 --
 -- Table: label2buildfailure
@@ -1324,9 +1324,9 @@ CREATE TABLE "buildfile" (
   "type" character varying(32) NOT NULL
 );
 CREATE INDEX "buildfile_buildid" on "buildfile" ("buildid");
-CREATE INDEX "buildfile_filename" on "filename" ("filename");
-CREATE INDEX "buildfile_type" on "type" ("type");
-CREATE INDEX "buildfile_md5" on "md5" ("md5");
+CREATE INDEX "buildfile_filename" on "buildfile" ("filename");
+CREATE INDEX "buildfile_type" on "buildfile" ("type");
+CREATE INDEX "buildfile_md5" on "buildfile" ("md5");
 
 
 
