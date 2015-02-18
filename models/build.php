@@ -1654,33 +1654,33 @@ class Build
     if ($newErrors > -1)
       {
       $numErrors = $parent['builderrors'] + $newErrors;
-      $clauses[] = "`builderrors` = $numErrors";
+      $clauses[] = "builderrors = $numErrors";
       }
     if ($newWarnings > -1)
       {
       $numWarnings = $parent['buildwarnings'] + $newWarnings;
-      $clauses[] = "`buildwarnings` = $numWarnings";
+      $clauses[] = "buildwarnings = $numWarnings";
       }
 
     // Check if we need to modify starttime or endtime.
     if (strtotime($parent['starttime']) > strtotime($this->StartTime))
       {
-      $clauses[] = "`starttime` = '$this->StartTime'";
+      $clauses[] = "starttime = '$this->StartTime'";
       }
     if (strtotime($parent['endtime']) < strtotime($this->EndTime))
       {
-      $clauses[] = "`endtime` = '$this->EndTime'";
+      $clauses[] = "endtime = '$this->EndTime'";
       }
 
     $num_clauses = count($clauses);
     if ($num_clauses > 0)
       {
-      $query = "UPDATE `build` SET " . $clauses[0];
+      $query = "UPDATE build SET " . $clauses[0];
       for ($i = 1; $i < $num_clauses; $i++)
         {
         $query .= ", " . $clauses[$i];
         }
-      $query .= " WHERE `id` = '$this->ParentId'";
+      $query .= " WHERE id = '$this->ParentId'";
       if(!pdo_query($query))
         {
         add_last_sql_error("UpdateParentBuild",$this->ProjectId,$this->ParentId);
