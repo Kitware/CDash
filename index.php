@@ -652,6 +652,17 @@ function generate_main_dashboard_XML($project_instance, $date)
                       AND user2repository.credential=updatefile.author) AS userupdates,";
     }
 
+
+  // Postgres differs from MySQL on how to aggregate results
+  // into a single column.
+  $label_sql = "";
+  $groupby_sql = "";
+  if($CDASH_DB_TYPE != 'pgsql')
+    {
+    $label_sql = "GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,";
+    $groupby_sql = " GROUP BY b.id";
+    }
+
   $sql =  "SELECT b.id,b.siteid,b.parentid,
                   bu.status AS updatestatus,
                   i.osname AS osname,
@@ -693,7 +704,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   sp.id AS subprojectid,
                   sp.core AS subprojectcore,
                   g.name as groupname,gp.position,g.id as groupid,
-                  GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,
+                  $label_sql
                   (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
                   FROM build AS b
@@ -719,7 +730,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   LEFT JOIN label AS l ON (l.id = l2b.labelid)
                   WHERE b.projectid='$projectid' $parent_clause $date_clause
                   ".$subprojectsql." ".$filter_sql." ".$limit_sql
-                  ." GROUP BY b.id";
+                  .$groupby_sql;
 
   // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = pdo_query($sql);

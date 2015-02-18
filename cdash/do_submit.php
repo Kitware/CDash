@@ -73,7 +73,10 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
     $scheduleid = pdo_real_escape_numeric($_GET["clientscheduleid"]);
     }
 
-  pdo_query("START TRANSACTION");
+  if($CDASH_DB_TYPE != 'pgsql')
+    {
+    pdo_query("START TRANSACTION");
+    }
   // Parse the XML file
   $handler = ctest_parse($filehandle,$projectid, $expected_md5, $do_checksum, $scheduleid);
   //this is the md5 checksum fail case
@@ -82,7 +85,10 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
     //no need to log an error since ctest_parse already did
     return;
     }
-  pdo_query("COMMIT");
+  if($CDASH_DB_TYPE != 'pgsql')
+    {
+    pdo_query("COMMIT");
+    }
 
   // Send the emails if necessary
   if($handler instanceof UpdateHandler)
