@@ -52,6 +52,10 @@ if ($date != NULL)
   }
 list ($previousdate, $currentstarttime, $nextdate) = get_dates($date, $Project->NightlyTime);
 
+// Date range is currently hardcoded to two weeks in the past.
+// This could become a configurable value instead.
+$date_range = 14;
+
 // begin .xml that is used to render this page
 $xml = begin_XML_for_XSLT();
 $xml .= get_cdash_dashboard_xml($projectname,$date);
@@ -108,255 +112,294 @@ while($group_row = pdo_fetch_array($group_rows))
     }
   }
 
-// initialize our storage data structures here.
-//
-// overview_data generally contains all the relevant numbers
-// pertaining to the most recent day's builds.
-//
-// linechart_data, on the other hand, contains data points going
-// back two weeks.  As the name suggests, this data is used
-// as the input to the line charts on this page.
-$overview_data = array();
-foreach($build_measurements as $measurement)
-  {
-  $overview_data[$measurement] = array();
-  $linechart_data[$measurement] = array();
-  foreach($build_groups as $build_group)
-    {
-    $linechart_data[$measurement][$build_group["name"]] = array();
-    }
-  }
-
-// How we handle coverage_data will need to change if we abstract way
-// core vs. non-core into arbitrary subproject groups.
-$coverage_data = array();
-
-// Get core & non-core coverage thresholds
+// Record coverage threshold(s) for this project.
 $query = "SELECT coveragethreshold, coveragethreshold2 FROM project
           WHERE id='$projectid'";
 $project = pdo_query($query);
 add_last_sql_error("overview :: coveragethreshold", $projectid);
 $project_array = pdo_fetch_array($project);
+$thresh1 = $project_array["coveragethreshold"];
+$thresh2 = $project_array["coveragethreshold2"];
 
 // Detect if this project has any non-core subprojects
-$haveNonCore = false;
+$have_non_core = false;
 $query = "SELECT * FROM subproject WHERE projectid='$projectid' AND core != 1";
+$coverage_thresholds = array();
 if (pdo_num_rows(pdo_query($query)) > 0)
   {
-  $haveNonCore = true;
+  $have_non_core = true;
   $coverage_group_names = array("core coverage", "non-core coverage");
-  $coverage_thresholds =
-    array("core coverage"     => $project_array["coveragethreshold"],
-          "non-core coverage" => $project_array["coveragethreshold2"]);
+  $coverage_thresholds["core coverage"] = array();
+  $coverage_thresholds["core coverage"]["low"] = 0.7 * $thresh1;
+  $coverage_thresholds["core coverage"]["medium"] = $thresh1;
+  $coverage_thresholds["core coverage"]["satisfactory"] = 100;
+  $coverage_thresholds["non-core coverage"] = array();
+  $coverage_thresholds["non-core coverage"]["low"] = 0.7 * $thresh2;
+  $coverage_thresholds["non-core coverage"]["medium"] = $thresh2;
+  $coverage_thresholds["non-core coverage"]["satisfactory"] = 100;
   }
 else
   {
   $coverage_group_names = array("coverage");
-  $coverage_thresholds =
-    array("coverage" => $project_array["coveragethreshold"]);
+  $coverage_thresholds["coverage"] = array();
+  $coverage_thresholds["coverage"]["low"] = 0.7 * $thresh1;
+  $coverage_thresholds["coverage"]["medium"] = $thresh1;
+  $coverage_thresholds["coverage"]["satisfactory"] = 100;
   }
 add_last_sql_error("overview :: detect-non-core", $projectid);
 
-// initialize storage for coverage data
-foreach($build_groups as $build_group)
-  {
-    $overview_data[$build_group["name"]] = array();
-    $linechart_data[$build_group["name"]] = array();
-  foreach($coverage_group_names as $coverage_group_name)
-    {
-    $coverage_data[$build_group["name"]][$coverage_group_name] = array();
-    $linechart_data[$build_group["name"]][$coverage_group_name] = array();
-    $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] = 0;
-    $coverage_data[$build_group["name"]][$coverage_group_name]["current"] = 0;
-    $threshold = $coverage_thresholds[$coverage_group_name];
-    $coverage_data[$build_group["name"]][$coverage_group_name]["low"] = 0.7 * $threshold;
-    $coverage_data[$build_group["name"]][$coverage_group_name]["medium"] = $threshold;
-    $coverage_data[$build_group["name"]][$coverage_group_name]["satisfactory"] = 100;
-    }
-  }
+// Initialize our storage data structures.
+//
+// overview_data holds most of the information about our builds.  It is a
+// multi-dimensional array with the following structure:
+//
+//   overview_data[day][build group][measurement]
+//
+// Coverage and dynamic analysis are a bit more complicated, so we
+// store their results separately.  Here is how their data structures
+// are defined:
+//   coverage_data[day][build group][coverage group] = percent_coverage
+//   dynamic_analysis_data[day][group][checker] = num_defects
 
-// used to keep track of current dynamic analysis defects.
+$overview_data = array();
+$coverage_data = array();
 $dynamic_analysis_data = array();
 
-// used to keep track of the different types of dynamic analysis
-// that are being performed on our build groups of interest.
-$dynamic_analysis_types = array();
-
-// gather up the relevant stats for the general build groups
-foreach($build_groups as $build_group)
+for ($i = 0; $i < $date_range; $i++)
   {
-  $beginning_timestamp = $currentstarttime;
-  $end_timestamp = $currentstarttime + 3600 * 24;
-  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
-
-  $data = gather_overview_data($beginning_UTCDate, $end_UTCDate,
-                               $build_group["id"]);
-
-  foreach($build_measurements as $measurement)
+  $overview_data[$i] = array();
+  foreach($build_groups as $build_group)
     {
-    $overview_data[$measurement][$build_group["name"]] = $data[$measurement];
-    }
+    $build_group_name = $build_group["name"];
 
-  foreach($coverage_group_names as $coverage_group_name)
-    {
-    if (array_key_exists($coverage_group_name, $data))
+    // overview
+    $overview_data[$i][$build_group_name] = array();
+
+    // coverage
+    foreach($coverage_group_names as $coverage_group_name)
       {
-      $coverage_data[$build_group["name"]][$coverage_group_name]["current"] =
-        $data[$coverage_group_name];
-      }
-    }
-
-  if (array_key_exists("dynamic_analysis", $data) &&
-      !empty($data["dynamic_analysis"]))
-    {
-      foreach(array_keys($data["dynamic_analysis"]) as $checker)
-        {
-        if (!in_array($checker, $dynamic_analysis_types))
-          {
-          $dynamic_analysis_types[] = $checker;
-          }
-        if (!array_key_exists($checker, $dynamic_analysis_data))
-          {
-          $dynamic_analysis_data[$checker] = array();
-          }
-        // store how many defects were detected by this checker
-        // for this build group
-        $dynamic_analysis_data[$checker][$build_group["name"]] =
-          $data["dynamic_analysis"][$checker];
-        }
-    }
-
-  // for charting purposes, we also pull data from the past two weeks
-  for($i = -13; $i < 1; $i++)
-    {
-    $chart_beginning_timestamp = $beginning_timestamp + ($i * 3600 * 24);
-    $chart_end_timestamp = $end_timestamp + ($i * 3600 * 24);
-    $chart_beginning_UTCDate = gmdate(FMT_DATETIME, $chart_beginning_timestamp);
-    $chart_end_UTCDate = gmdate(FMT_DATETIME, $chart_end_timestamp);
-    // to be passed on to javascript chart renderers
-    $chart_data_date = gmdate("M d Y H:i:s", ($chart_end_timestamp + $chart_beginning_timestamp) / 2.0);
-
-    $data = gather_overview_data($chart_beginning_UTCDate, $chart_end_UTCDate,
-                                 $build_group["id"]);
-    foreach($build_measurements as $measurement)
-      {
-      $linechart_data[$measurement][$build_group["name"]][] =
-        array($chart_data_date, $data[$measurement]);
+      $coverage_data[$i][$build_group_name][$coverage_group_name] = array();
+      $coverage_array =
+        &$coverage_data[$i][$build_group_name][$coverage_group_name];
+      $coverage_array["loctested"] = 0;
+      $coverage_array["locuntested"] = 0;
+      $coverage_array["percent"] = 0;
       }
 
     // dynamic analysis
-    if (array_key_exists("dynamic_analysis", $data) &&
-        !empty($data["dynamic_analysis"]))
-      {
-      foreach(array_keys($data["dynamic_analysis"]) as $checker)
-        {
-        // add this DA checker to our list if its the first time we've
-        // encountered it.
-        if (!in_array($checker, $dynamic_analysis_types))
-          {
-          $dynamic_analysis_types[] = $checker;
-          }
-        // similarly, make sure this checker / build group combination have
-        // an array where they can store their line chart data.
-        if (!array_key_exists($checker, $linechart_data[$build_group["name"]]))
-          {
-          $linechart_data[$build_group["name"]][$checker] = array();
-          }
+    $dynamic_analysis_data[$i][$build_group_name] = array();
+    }
 
-        // add this dynamic analysis data point to our line chart data.
-        $num_defects = $data["dynamic_analysis"][$checker];
-        $linechart_data[$build_group["name"]][$checker][] =
-          array($chart_data_date, (int)$num_defects);
-        }
-      }
-
-    // coverage too
-    foreach($coverage_group_names as $coverage_group_name)
-      {
-      if (array_key_exists($coverage_group_name, $data))
-        {
-        $coverage_value = $data[$coverage_group_name];
-        $linechart_data[$build_group["name"]][$coverage_group_name][] =
-          array($chart_data_date, $coverage_value);
-
-        // assign this date's coverage value as "current" if we don't have one yet.
-        if ($coverage_data[$build_group["name"]][$coverage_group_name]["current"] == 0)
-          {
-          $coverage_data[$build_group["name"]][$coverage_group_name]["current"] =
-            $data[$coverage_group_name];
-          }
-        }
-      }
+  // overview_data also needs to represent the static groups (if any)
+  foreach($static_groups as $static_group)
+    {
+    $static_group_name = $static_group["name"];
+    $overview_data[$i][$static_group_name] = array();
     }
   }
 
-// compute previous coverage value (used by bullet charts)
-foreach($build_groups as $build_group)
+// Get the beginning and end of our relevant date rate.
+$beginning_timestamp = $currentstarttime - (($date_range - 1) * 3600 * 24);
+$end_timestamp = $currentstarttime + 3600 * 24;
+$start_date = gmdate(FMT_DATETIME,$beginning_timestamp);
+$end_date = gmdate(FMT_DATETIME,$end_timestamp);
+
+// Perform a query to get info about all of our builds that fall within this
+// time range.
+$builds_query =
+  "SELECT b.id,
+   b.builderrors AS build_errors,
+   b.buildwarnings AS build_warnings,
+   b.testfailed AS failing_tests,
+   b.configureerrors AS configure_errors,
+   b.configurewarnings AS configure_warnings, b.starttime,
+   cs.loctested AS loctested, cs.locuntested AS locuntested,
+   sp.id AS subprojectid, sp.core AS subprojectcore,
+   b2g.groupid AS groupid
+   FROM build AS b
+   LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
+   LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
+   LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
+   LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
+   WHERE b.projectid = '$projectid'
+   AND b.starttime BETWEEN '$start_date' AND '$end_date'
+   AND b.parentid IN (-1, 0)";
+$builds_array = pdo_query($builds_query);
+add_last_sql_error("gather_overview_data");
+
+while($build_row = pdo_fetch_array($builds_array))
   {
-  foreach($coverage_group_names as $coverage_group_name)
+  // get what day this build is for.
+  $day = get_day_index($build_row["starttime"]);
+
+  $static_name = get_static_group_name($build_row["groupid"]);
+  // Special handling for static builds, as we don't need to record as
+  // much data about them.
+  if ($static_name)
     {
-    // isolate the previous coverage value.  This is typically the
-    // second to last coverage data point that we collected, but
-    // we're careful to check for the case where only a single point
-    // was recovered.
-    $num_points = count($linechart_data[$build_group["name"]][$coverage_group_name]);
-
-    // normal case: get the value from the 2nd to last data point.
-    if ($num_points > 1)
-      {
-      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] =
-        $linechart_data[$build_group["name"]][$coverage_group_name][$num_points - 2][1];
-      }
-    // singular case: just make previous & current hold the same value.
-    // We do this because nvd3's bullet chart implementation does not support
-    // leaving the "marker" off of the chart.
-    else
-      {
-      $prev_point = end($linechart_data[$build_group["name"]][$coverage_group_name]);
-      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"] = $prev_point[1];
-      }
-    }
-  }
-
-// gather up data for static analysis
-foreach($static_groups as $static_group)
-  {
-  $beginning_timestamp = $currentstarttime;
-  $end_timestamp = $currentstarttime + 3600 * 24;
-  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
-
-  $data = gather_static_data($beginning_UTCDate, $end_UTCDate,
-                               $static_group["id"]);
-
-  foreach($static_measurements as $measurement)
-    {
-    $overview_data[$measurement][$static_group["name"]] = $data[$measurement];
-    }
-
-  // for charting purposes, we also pull data from the past two weeks
-  for($i = -13; $i < 1; $i++)
-    {
-    $chart_beginning_timestamp = $beginning_timestamp + ($i * 3600 * 24);
-    $chart_end_timestamp = $end_timestamp + ($i * 3600 * 24);
-    $chart_beginning_UTCDate = gmdate(FMT_DATETIME, $chart_beginning_timestamp);
-    $chart_end_UTCDate = gmdate(FMT_DATETIME, $chart_end_timestamp);
-    // to be passed on to javascript chart renderers
-    $chart_data_date = gmdate("M d Y H:i:s", ($chart_end_timestamp + $chart_beginning_timestamp) / 2.0);
-
-    $data = gather_static_data($chart_beginning_UTCDate, $chart_end_UTCDate,
-                                 $static_group["id"]);
     foreach($static_measurements as $measurement)
       {
-      $linechart_data[$measurement][$static_group["name"]][] =
-        array($chart_data_date, $data[$measurement]);
+      if (!array_key_exists($measurement, $overview_data[$day][$static_name]))
+        {
+        $overview_data[$day][$static_name][$measurement] =
+          intval($build_row["build_$measurement"]);
+        }
+      else
+        {
+        $overview_data[$day][$static_name][$measurement] +=
+          $build_row["build_$measurement"];
+        }
+      // Don't let our measurements be thrown off by CDash's tendency
+      // to store -1s in the database.
+      $overview_data[$day][$static_name][$measurement] =
+        max(0, $overview_data[$day][$static_name][$measurement]);
+      }
+    continue;
+    }
+
+  $group_name = get_build_group_name($build_row["groupid"]);
+
+  // Skip this build if it's not from a group that is represented by
+  // the overview dashboard.
+  if (!$group_name)
+    {
+    continue;
+    }
+
+  // From here on out, we're dealing with "build" (not static) groups.
+  foreach($build_measurements as $measurement)
+    {
+    if (!array_key_exists($measurement, $overview_data[$day][$group_name]))
+      {
+      $overview_data[$day][$group_name][$measurement] =
+        intval($build_row[$measurement]);
+      }
+    else
+      {
+      $overview_data[$day][$group_name][$measurement] +=
+        $build_row[$measurement];
+      }
+    // Don't let our measurements be thrown off by CDash's tendency
+    // to store -1s in the database.
+    $overview_data[$day][$group_name][$measurement] =
+      max(0, $overview_data[$day][$group_name][$measurement]);
+    }
+
+  if ($have_non_core)
+    {
+    if ($build_row["subprojectcore"] == 0)
+      {
+      $coverage_data[$day][$group_name]["non-core coverage"]["loctested"] +=
+        $build_row["loctested"];
+      $coverage_data[$day][$group_name]["non-core coverage"]["locuntested"] +=
+        $build_row["locuntested"];
+      }
+    else
+      {
+      $coverage_data[$day][$group_name]["core coverage"]["loctested"] +=
+        $build_row["loctested"];
+      $coverage_data[$day][$group_name]["core coverage"]["locuntested"] +=
+        $build_row["locuntested"];
+      }
+    }
+  else
+    {
+    $coverage_data[$day][$group_name]["coverage"]["loctested"] +=
+      $build_row["loctested"];
+    $coverage_data[$day][$group_name]["coverage"]["locuntested"] +=
+      $build_row["locuntested"];
+    }
+  }
+
+// Compute coverage percentages here.
+for ($i = 0; $i < $date_range; $i++)
+  {
+  foreach($build_groups as $build_group)
+    {
+    $build_group_name = $build_group["name"];
+    foreach($coverage_group_names as $coverage_group_name)
+      {
+      $coverage_array =
+        &$coverage_data[$i][$build_group_name][$coverage_group_name];
+      $total_loc =
+        $coverage_array["loctested"] + $coverage_array["locuntested"];
+      if ($total_loc == 0)
+        {
+        continue;
+        }
+      $coverage_array["percent"] =
+        round(($coverage_array["loctested"] / $total_loc) * 100, 2);
       }
     }
   }
 
-// now that the data has been collected, we can generate the .xml data
-// start with general build groups.
+// Dynamic analysis is handled here with a separate query.
+$defects_query =
+  "SELECT da.checker AS checker, dd.value AS defects,
+          b2g.groupid AS groupid, b.starttime AS starttime
+   FROM build AS b
+   LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
+   LEFT JOIN dynamicanalysis as da ON (da.buildid = b.id)
+   LEFT JOIN dynamicanalysisdefect as dd ON (dd.dynamicanalysisid=da.id)
+   WHERE b.projectid = '$projectid'
+   AND b.starttime BETWEEN '$start_date' AND '$end_date'
+   AND checker IS NOT NULL";
+$defects_array = pdo_query($defects_query);
+add_last_sql_error("gather_dynamic_analysis_data");
+
+// Keep track of the different types of dynamic analysis that are being
+// performed on our build groups of interest.
+$dynamic_analysis_types = array();
+
+while($defect_row = pdo_fetch_array($defects_array))
+  {
+  $group_name = get_build_group_name($defect_row["groupid"]);
+  // Is this a valid groupid?
+  if (!$group_name)
+    {
+    continue;
+    }
+
+  // make sure this row has both checker & defect info for us
+  if (!array_key_exists("checker", $defect_row) ||
+      !array_key_exists("defects", $defect_row))
+    {
+    continue;
+    }
+  if (is_null($defect_row["defects"]))
+    {
+    $defect_row["defects"] = 0;
+    }
+  if (!is_numeric($defect_row["defects"]))
+    {
+    continue;
+    }
+
+  // Get the day that these results are for.
+  $day = get_day_index($defect_row["starttime"]);
+
+  // add this DA checker to our list if its the first time we've
+  // encountered it.
+  $checker = $defect_row["checker"];
+  if (!in_array($checker, $dynamic_analysis_types))
+    {
+    $dynamic_analysis_types[] = $checker;
+    }
+
+  // Record this defect value for this checker & build group.
+  $dynamic_analysis_array = &$dynamic_analysis_data[$day][$group_name];
+  if (!array_key_exists($checker, $dynamic_analysis_array))
+    {
+    $dynamic_analysis_array[$checker] = $defect_row["defects"];
+    }
+  else
+    {
+    $dynamic_analysis_array[$checker] += $defect_row["defects"];
+    }
+  }
+
+// Now that the data has been collected we can generate the XML.
+// Start with the general build groups.
 foreach($build_groups as $build_group)
   {
   $xml .= "<group>";
@@ -375,9 +418,11 @@ foreach($build_measurements as $measurement)
     $xml .= "<group>";
     $xml .= add_XML_value("group_name", $build_group["name"]);
     $xml .= add_XML_value("group_name_clean", sanitize_string($build_group["name"]));
-    $xml .= add_XML_value("value", $overview_data[$measurement][$build_group["name"]]);
-    // JSON encode linechart data to make it easier to use on the client side
-    $xml .= add_XML_value("chart", json_encode($linechart_data[$measurement][$build_group["name"]]));
+    $value = get_current_value($build_group["name"], $measurement);
+    $xml .= add_XML_value("value", $value);
+
+    $chart_data = get_chart_data($build_group["name"], $measurement);
+    $xml .= add_XML_value("chart", $chart_data);
     $xml .= "</group>";
     }
   $xml .= "</measurement>";
@@ -388,27 +433,43 @@ foreach($build_groups as $build_group)
   {
   foreach($coverage_group_names as $coverage_group_name)
     {
-    // skip groups that don't have any coverage info
-    if (empty($linechart_data[$build_group["name"]][$coverage_group_name]))
+    // Skip groups that don't have any coverage.
+    $found = false;
+    for ($i = 0; $i < $date_range; $i++)
+      {
+      $cov = &$coverage_data[$i][$build_group["name"]][$coverage_group_name];
+      $loc_total = $cov["loctested"] + $cov["locuntested"];
+      if ($loc_total > 0)
+        {
+        $found = true;
+        break;
+        }
+      }
+    if (!$found)
       {
       continue;
       }
+
     $xml .= "<coverage>";
     $xml .= add_XML_value("name", preg_replace("/[ -]/", "_", $coverage_group_name));
     $xml .= add_XML_value("nice_name", "$coverage_group_name");
     $xml .= add_XML_value("group_name", $build_group["name"]);
     $xml .= add_XML_value("group_name_clean", sanitize_string($build_group["name"]));
-    $xml .= add_XML_value("low", $coverage_data[$build_group["name"]][$coverage_group_name]["low"]);
+    $xml .= add_XML_value("low",
+      $coverage_thresholds[$coverage_group_name]["low"]);
     $xml .= add_XML_value("medium",
-      $coverage_data[$build_group["name"]][$coverage_group_name]["medium"]);
+      $coverage_thresholds[$coverage_group_name]["medium"]);
     $xml .= add_XML_value("satisfactory",
-      $coverage_data[$build_group["name"]][$coverage_group_name]["satisfactory"]);
-    $xml .= add_XML_value("current",
-      $coverage_data[$build_group["name"]][$coverage_group_name]["current"]);
-    $xml .= add_XML_value("previous",
-      $coverage_data[$build_group["name"]][$coverage_group_name]["previous"]);
-    $xml .= add_XML_value("chart",
-      json_encode($linechart_data[$build_group["name"]][$coverage_group_name]));
+      $coverage_thresholds[$coverage_group_name]["satisfactory"]);
+
+    list($current_value, $previous_value) =
+      get_recent_coverage_values($build_group["name"], $coverage_group_name);
+    $xml .= add_XML_value("current", $current_value);
+    $xml .= add_XML_value("previous", $previous_value);
+
+    $chart_data =
+      get_coverage_chart_data($build_group["name"], $coverage_group_name);
+    $xml .= add_XML_value("chart", $chart_data);
     $xml .= "</coverage>";
     }
   }
@@ -422,25 +483,32 @@ foreach($dynamic_analysis_types as $checker)
 
   foreach($build_groups as $build_group)
     {
-    // skip groups that don't have any data for this tool
-    if (empty($linechart_data[$build_group["name"]][$checker]))
+    // Skip groups that don't have any data for this tool.
+    $found = false;
+    for ($i = 0; $i < $date_range; $i++)
+      {
+      if (array_key_exists($checker,
+        $dynamic_analysis_data[$i][$build_group["name"]]))
+        {
+        $found = true;
+        break;
+        }
+      }
+    if (!$found)
       {
       continue;
       }
+
     $xml .= "<group>";
     $xml .= add_XML_value("group_name", $build_group["name"]);
-    $xml .= add_XML_value("group_name_clean", sanitize_string($build_group["name"]));
-    $xml .= add_XML_value("chart",
-      json_encode($linechart_data[$build_group["name"]][$checker]));
-    if (array_key_exists($checker, $dynamic_analysis_data))
-      {
-      $xml .= add_XML_value("value",
-          $dynamic_analysis_data[$checker][$build_group["name"]]);
-      }
-    else
-      {
-      $xml .= add_XML_value("value", "N/A");
-      }
+    $xml .= add_XML_value("group_name_clean",
+      sanitize_string($build_group["name"]));
+
+    $chart_data = get_DA_chart_data($build_group["name"], $checker);
+    $xml .= add_XML_value("chart", $chart_data);
+
+    $value = get_current_DA_value($build_group["name"], $checker);
+    $xml .= add_XML_value("value", $value);
     $xml .= "</group>";
     }
   $xml .= "</dynamicanalysis>";
@@ -449,13 +517,21 @@ foreach($dynamic_analysis_types as $checker)
 // static analysis
 foreach($static_groups as $static_group)
   {
-  // skip this group if no data was found for it.
+  // Skip this group if no data was found for it.
   $found = false;
-  foreach($static_measurements as $measurement)
+  for ($i = 0; $i < $date_range; $i++)
     {
-    if (!empty($linechart_data[$measurement][$static_group["name"]]))
+    $static_array = &$overview_data[$i][$static_group["name"]];
+    foreach($static_measurements as $measurement)
       {
-      $found = true;
+      if (array_key_exists($measurement, $static_array))
+        {
+        $found = true;
+        break;
+        }
+      }
+    if ($found)
+      {
       break;
       }
     }
@@ -473,10 +549,11 @@ foreach($static_groups as $static_group)
     $xml .= add_XML_value("name", $measurement);
     $xml .= add_XML_value("nice_name", sanitize_string($measurement));
     $xml .= add_XML_value("sort", $sort["build_" . $measurement]);
-    $xml .= add_XML_value("value",
-      $overview_data[$measurement][$static_group["name"]]);
-    $xml .= add_XML_value("chart",
-      json_encode($linechart_data[$measurement][$static_group["name"]]));
+    $value = get_current_value($static_group["name"], $measurement);
+    $xml .= add_XML_value("value", $value);
+
+    $chart_data = get_chart_data($static_group["name"], $measurement);
+    $xml .= add_XML_value("chart", $chart_data);
     $xml .= "</measurement>";
     }
   $xml .= "</staticanalysis>";
@@ -493,214 +570,218 @@ if(!isset($NoXSLGenerate))
   }
 
 
-// function to query database for general build info
-function gather_overview_data($start_date, $end_date, $group_id)
-{
-  global $projectid;
-  global $haveNonCore;
-
-  $num_configure_warnings = 0;
-  $num_configure_errors = 0;
-  $num_build_warnings = 0;
-  $num_build_errors = 0;
-  $num_failing_tests = 0;
-  $dynamic_analysis = array();
-  $return_values = array();
-
-  // for coverage
-  $core_tested = 0;
-  $core_untested = 0;
-  if ($haveNonCore)
-    {
-    $non_core_tested = 0;
-    $non_core_untested = 0;
-    }
-
-  $builds_query = "SELECT b.id, b.builderrors, b.buildwarnings, b.testfailed,
-                   b.configureerrors, b.configurewarnings,
-                   cs.loctested AS loctested, cs.locuntested AS locuntested,
-                   sp.id AS subprojectid, sp.core AS subprojectcore
-                   FROM build AS b
-                   LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
-                   LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
-                   LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-                   LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
-                   WHERE b.projectid = '$projectid'
-                   AND b.starttime BETWEEN '$start_date' AND '$end_date'
-                   AND b2g.groupid = '$group_id'
-                   AND b.parentid < 1";
-
-  $builds_array = pdo_query($builds_query);
-  add_last_sql_error("gather_overview_data", $group_id);
-
-  while($build_row = pdo_fetch_array($builds_array))
-    {
-    if ($build_row["configurewarnings"] > 0)
-      {
-      $num_configure_warnings += $build_row["configurewarnings"];
-      }
-
-    if ($build_row["configureerrors"] > 0)
-      {
-      $num_configure_errors += $build_row["configureerrors"];
-      }
-
-    if ($build_row["buildwarnings"] > 0)
-      {
-      $num_build_warnings += $build_row["buildwarnings"];
-      }
-
-    if ($build_row["builderrors"] > 0)
-      {
-      $num_build_errors += $build_row["builderrors"];
-      }
-
-    if ($build_row["testfailed"] > 0)
-      {
-      $num_failing_tests += $build_row["testfailed"];
-      }
-
-    if ($haveNonCore && $build_row["subprojectcore"] == 0)
-      {
-      $non_core_tested += $build_row["loctested"];
-      $non_core_untested += $build_row["locuntested"];
-      }
-    else
-      {
-      $core_tested += $build_row["loctested"];
-      $core_untested += $build_row["locuntested"];
-      }
-    }
-
-  $return_values["configure_warnings"] = $num_configure_warnings;
-  $return_values["configure_errors"] = $num_configure_errors;
-  $return_values["build_warnings"] = $num_build_warnings;
-  $return_values["build_errors"] = $num_build_errors;
-  $return_values["failing_tests"] = $num_failing_tests;
-
-  if ($haveNonCore)
-    {
-    if ($core_tested + $core_untested > 0)
-      {
-      $return_values["core coverage"] =
-        round($core_tested / ($core_tested + $core_untested) * 100, 2);
-      }
-    if ($non_core_tested + $non_core_untested > 0)
-      {
-      $return_values["non-core coverage"] =
-        round($non_core_tested / ($non_core_tested + $non_core_untested) * 100, 2);
-      }
-    }
-  else
-    {
-    if ($core_tested + $core_untested > 0)
-      {
-      $return_values["coverage"] =
-        round($core_tested / ($core_tested + $core_untested) * 100, 2);
-      }
-    }
-
-  // handle dynamic analysis defects separately
-  $defects_query = "SELECT da.checker AS checker,
-                    sum(dd.value) AS defects
-                    FROM build AS b
-                    LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
-                    LEFT JOIN dynamicanalysis as da ON (da.buildid = b.id)
-                    LEFT JOIN dynamicanalysisdefect as dd ON (dd.dynamicanalysisid=da.id)
-                    WHERE b.projectid = '$projectid'
-                    AND b.starttime < '$end_date'
-                    AND b.starttime >= '$start_date'
-                    AND b2g.groupid = '$group_id'
-                    AND checker IS NOT NULL
-                    GROUP BY checker";
-
-  $defects_array = pdo_query($defects_query);
-  add_last_sql_error("gather_overview_data", $group_id);
-
-  while($defect_row = pdo_fetch_array($defects_array))
-    {
-    // make sure this row has both checker & defect info for us
-    if (!array_key_exists("checker", $defect_row) ||
-        !array_key_exists("defects", $defect_row))
-      {
-      continue;
-      }
-    if (is_null($defect_row["defects"]))
-      {
-      $defect_row["defects"] = 0;
-      }
-    if (!is_numeric($defect_row["defects"]))
-      {
-      continue;
-      }
-    if (!array_key_exists($defect_row["checker"], $dynamic_analysis))
-      {
-      $dynamic_analysis[$defect_row["checker"]] = $defect_row["defects"];
-      }
-    else
-      {
-      $dynamic_analysis[$defect_row["checker"]] += $defect_row["defects"];
-      }
-    }
-
-  // add dynamic analysis data to our return package if we found any
-  // relevant data.
-  if (!empty($dynamic_analysis))
-    {
-    $return_values["dynamic_analysis"] = $dynamic_analysis;
-    }
-
-  return $return_values;
-}
-
-// simplified version of gather_overview_data that just collects build errors
-// and warnings for static analysis build groups.
-function gather_static_data($start_date, $end_date, $group_id)
-{
-  global $projectid;
-
-  $num_build_warnings = 0;
-  $num_build_errors = 0;
-  $return_values = array();
-
-  $builds_query = "SELECT b.id, b.builderrors, b.buildwarnings
-                   FROM build AS b
-                   LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
-                   WHERE b.projectid = '$projectid'
-                   AND b.starttime < '$end_date'
-                   AND b.starttime >= '$start_date'
-                   AND b2g.groupid = '$group_id'";
-
-  $builds_array = pdo_query($builds_query);
-  add_last_sql_error("gather_overview_data", $group_id);
-
-  while($build_row = pdo_fetch_array($builds_array))
-    {
-    if ($build_row["buildwarnings"] > 0)
-      {
-      $num_build_warnings += $build_row["buildwarnings"];
-      }
-
-    if ($build_row["builderrors"] > 0)
-      {
-      $num_build_errors += $build_row["builderrors"];
-      }
-    }
-
-  $return_values["errors"] = $num_build_errors;
-  $return_values["warnings"] = $num_build_warnings;
-  return $return_values;
-}
-
+// Replace various characters that trip up Javascript with underscores.
 function sanitize_string($input_string)
 {
-  // replace various chars that trip up javascript with underscores.
   $retval = str_replace(" ", "_", $input_string);
   $retval = str_replace("-", "_", $retval);
   $retval = str_replace(".", "_", $retval);
   $retval = str_replace("(", "_", $retval);
   $retval = str_replace(")", "_", $retval);
   return $retval;
+}
+
+
+// Check if a given groupid belongs to one of our general overview groups.
+function get_build_group_name($id)
+{
+  global $build_groups;
+  foreach ($build_groups as $build_group)
+    {
+    if($build_group["id"] == $id)
+      {
+      return $build_group["name"];
+      }
+    }
+  return false;
+}
+
+
+// Check if a given groupid belongs to one of our static analysis groups.
+function get_static_group_name($id)
+{
+  global $static_groups;
+  foreach ($static_groups as $static_group)
+    {
+    if($static_group["id"] == $id)
+      {
+      return $static_group["name"];
+      }
+    }
+  return false;
+}
+
+
+// Convert a MySQL datetime into the number of days since the beginning of our
+// time range.
+function get_day_index($datetime)
+{
+  global $beginning_timestamp, $date_range;
+  $timestamp = strtotime($datetime) - $beginning_timestamp;
+  $day = (int) ($timestamp / (3600 * 24));
+
+  // Just to be safe, clamp the return value of this function to
+  // (0, date_range - 1)
+  if ($day < 0)
+    {
+    $day = 0;
+    }
+  else if ($day > $date_range - 1)
+    {
+    $day = $date_range - 1;
+    }
+
+  return $day;
+}
+
+
+// Get most recent value for a given group & measurement.
+function get_current_value($group_name, $measurement)
+{
+  global $date_range, $overview_data;
+  for ($i = $date_range - 1; $i > -1; $i--)
+    {
+    if (array_key_exists($measurement, $overview_data[$i][$group_name]))
+      {
+      return $overview_data[$i][$group_name][$measurement];
+      }
+    }
+  return false;
+}
+
+
+// Get most recent dynamic analysis value for a given group & checker.
+function get_current_DA_value($group_name, $checker)
+{
+  global $date_range, $dynamic_analysis_data;
+  for ($i = $date_range - 1; $i > -1; $i--)
+    {
+    if (array_key_exists($checker, $dynamic_analysis_data[$i][$group_name]))
+      {
+      return $dynamic_analysis_data[$i][$group_name][$checker];
+      }
+    }
+  return "N/A";
+}
+
+
+// Get a Javascript-compatible date representing the $ith date of our
+// time range.
+function get_date_from_index($i)
+{
+  global $beginning_timestamp;
+  $chart_beginning_timestamp = $beginning_timestamp + ($i * 3600 * 24);
+  $chart_end_timestamp = $beginning_timestamp + (($i + 1) * 3600 * 24);
+  // to be passed on to javascript chart renderers
+  $chart_date = gmdate("M d Y H:i:s",
+    ($chart_end_timestamp + $chart_beginning_timestamp) / 2.0);
+  return $chart_date;
+}
+
+
+// Get line chart data for configure/build/test metrics.
+function get_chart_data($group_name, $measurement)
+{
+  global $date_range, $overview_data;
+  $chart_data = array();
+
+  for ($i = 0; $i < $date_range; $i++)
+    {
+    if (!array_key_exists($measurement, $overview_data[$i][$group_name]))
+      {
+      continue;
+      }
+    $chart_date = get_date_from_index($i);
+    $chart_data[] =
+      array($chart_date, $overview_data[$i][$group_name][$measurement]);
+    }
+
+  // JSON encode the chart data to make it easier to use on the client side.
+  return json_encode($chart_data);
+}
+
+
+// Get line chart data for coverage
+function get_coverage_chart_data($build_group_name, $coverage_group_name)
+{
+  global $date_range, $coverage_data;
+  $chart_data = array();
+
+  for ($i = 0; $i < $date_range; $i++)
+    {
+    $coverage_array =
+      &$coverage_data[$i][$build_group_name][$coverage_group_name];
+    $total_loc =
+      $coverage_array["loctested"] + $coverage_array["locuntested"];
+    if ($total_loc == 0)
+      {
+      continue;
+      }
+
+    $chart_date = get_date_from_index($i);
+    $chart_data[] = array($chart_date, $coverage_array["percent"]);
+    }
+  return json_encode($chart_data);
+}
+
+
+// Get the current & previous coverage percentage value.
+// These are used by the bullet chart.
+function get_recent_coverage_values($build_group_name, $coverage_group_name)
+{
+  global $date_range, $coverage_data;
+  $current_value_found = false;
+  $current_value = 0;
+
+  for ($i = $date_range - 1; $i > -1; $i--)
+    {
+    $coverage_array =
+      &$coverage_data[$i][$build_group_name][$coverage_group_name];
+    $total_loc =
+      $coverage_array["loctested"] + $coverage_array["locuntested"];
+    if ($total_loc == 0)
+      {
+      continue;
+      }
+    if (!$current_value_found)
+      {
+      $current_value = $coverage_array["percent"];
+      $current_value_found = true;
+      }
+    else
+      {
+      $previous_value = $coverage_array["percent"];
+      return array($current_value, $previous_value);
+      }
+    }
+
+  // Reaching this line implies that we only found a single day's worth
+  // of coverage for these groups.  In this case, we make previous & current
+  // hold the same value.  We do this because nvd3's bullet chart implementation
+  // does not support leaving the "marker" off of the chart.
+  return array($current_value, $current_value);
+}
+
+
+// Get line chart data for dynamic analysis
+function get_DA_chart_data($group_name, $checker)
+{
+  global $date_range, $dynamic_analysis_data;
+  $chart_data = array();
+
+  for ($i = 0; $i < $date_range; $i++)
+    {
+    $dynamic_analysis_array = &$dynamic_analysis_data[$i][$group_name];
+    if (!array_key_exists($checker, $dynamic_analysis_array))
+      {
+      continue;
+      }
+
+    $chart_date = get_date_from_index($i);
+    $chart_data[] =
+      array($chart_date, $dynamic_analysis_data[$i][$group_name][$checker]);
+    }
+  return json_encode($chart_data);
 }
 
 ?>
