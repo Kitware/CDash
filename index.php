@@ -51,8 +51,17 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  $dbTest = pdo_query("SHOW KEYS FROM label2build WHERE Key_name = 'labelid';");
-  if (pdo_num_rows($dbTest) < 1)
+  $dbField = "TABLE_SCHEMA";
+  if($CDASH_DB_TYPE == 'pgsql')
+    {
+    $dbField = "TABLE_CATALOG";
+    }
+  $query =
+    "SELECT is_nullable FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE table_name = 'build' AND column_name = 'command' AND
+       $dbField='$CDASH_DB_NAME'";
+  $dbTest = pdo_single_row_query($query);
+  if ($dbTest['is_nullable'] != "NO")
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
