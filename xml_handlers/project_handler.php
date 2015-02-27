@@ -24,6 +24,7 @@ require_once('models/label.php');
 
 class ProjectHandler extends AbstractHandler
 {
+  private $Project;
   private $SubProject;
   private $Dependencies; // keep an array of dependencies in order to remove them
   private $Subprojects; // keep an array of supbprojects in order to remove them
@@ -40,6 +41,9 @@ class ProjectHandler extends AbstractHandler
     // database.
     //
     $this->ProjectNameMatches = true;
+    $this->Project = new Project();
+    $this->Project->Id = $projectid;
+    $this->Project->Fill();
     }
 
 
@@ -180,11 +184,8 @@ class ProjectHandler extends AbstractHandler
 
     if($name=='PROJECT')
       {
-      //add_log("Processing ".count($this->Subprojects)." subprojects", "ProjectHandler:endElement", LOG_INFO, $this->projectid);
-
       foreach($this->Subprojects as $subproject)
         {
-        //add_log("Adjust dependencies for $subproject->Name", "ProjectHandler:endElement", LOG_INFO, $this->projectid);
 
         // Remove dependencies that do not exist anymore, but only for those
         // relationships where both sides are present in $this->Subprojects.
@@ -195,8 +196,6 @@ class ProjectHandler extends AbstractHandler
           {
           if (array_key_exists($removeid, $this->Subprojects))
             {
-            //$dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$removeid'", "name", "$removeid");
-            //add_log("Removing dependency $dep from $subproject->Name", "ProjectHandler:endElement", LOG_INFO, $this->projectid);
             $subproject->RemoveDependency($removeid);
             }
           else
@@ -216,8 +215,6 @@ class ProjectHandler extends AbstractHandler
           {
           if (array_key_exists($addid, $this->Subprojects))
             {
-            //$dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$addid'", "name", "$addid");
-            //add_log("Adding dependency $dep to $subproject->Name", "ProjectHandler:endElement", LOG_INFO, $this->projectid);
             $subproject->AddDependency($addid);
             }
           else
@@ -229,8 +226,26 @@ class ProjectHandler extends AbstractHandler
           }
         }
 
-      //add_log("Done processing ".count($this->Subprojects)." subprojects", "ProjectHandler:endElement", LOG_INFO, $this->projectid);
-      //add_log("=========================================================", "ProjectHandler:endElement", LOG_INFO, $this->projectid);
+      // Delete old subprojects that weren't included in this file.
+      $previousSubProjectIds = $this->Project->GetSubProjects();
+      foreach ($previousSubProjectIds as $previousId)
+        {
+        $found = false;
+        foreach ($this->Subprojects as $subproject)
+          {
+          if ($subproject->Id == $previousId)
+            {
+            $found = true;
+            break;
+            }
+          }
+        if (!$found)
+          {
+          $subProjectToRemove = new SubProject();
+          $subProjectToRemove->Id = $previousId;
+          $subProjectToRemove->Delete();
+          }
+        }
       }
    } // end endElement
 
