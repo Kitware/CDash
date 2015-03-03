@@ -20,6 +20,7 @@ function copy_build_data($old_buildid, $new_buildid, $type)
   switch ($type)
     {
     case "GcovTar":
+    case "JavaJSONTar":
       copy_coverage_data($old_buildid, $new_buildid);
     }
 }
