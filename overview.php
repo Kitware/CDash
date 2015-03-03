@@ -214,16 +214,14 @@ $builds_query =
    b.configureerrors AS configure_errors,
    b.configurewarnings AS configure_warnings, b.starttime,
    cs.loctested AS loctested, cs.locuntested AS locuntested,
-   sp.id AS subprojectid, sp.core AS subprojectcore,
    b2g.groupid AS groupid
    FROM build AS b
    LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
    LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
-   LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-   LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
    WHERE b.projectid = '$projectid'
    AND b.starttime BETWEEN '$start_date' AND '$end_date'
    AND b.parentid IN (-1, 0)";
+
 $builds_array = pdo_query($builds_query);
 add_last_sql_error("gather_overview_data");
 
@@ -285,29 +283,53 @@ while($build_row = pdo_fetch_array($builds_array))
       max(0, $overview_data[$day][$group_name][$measurement]);
     }
 
-  if ($have_non_core)
+  // Check if coverage was performed for this build.
+  if ($build_row["loctested"] + $build_row["locuntested"] > 0)
     {
-    if ($build_row["subprojectcore"] == 0)
+    if ($have_non_core)
       {
-      $coverage_data[$day][$group_name]["non-core coverage"]["loctested"] +=
-        $build_row["loctested"];
-      $coverage_data[$day][$group_name]["non-core coverage"]["locuntested"] +=
-        $build_row["locuntested"];
+      // We need to query the children of this build to determine
+      // core vs. non-core coverage.
+      $child_builds_query =
+        "SELECT b.id,
+        cs.loctested AS loctested, cs.locuntested AS locuntested,
+        sp.id AS subprojectid, sp.core AS subprojectcore
+        FROM build AS b
+        LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
+        LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
+        LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
+        WHERE b.parentid=" . qnum($build_row["id"]);
+      $child_builds_array = pdo_query($child_builds_query);
+      add_last_sql_error("gather_overview_data");
+      while($child_build_row = pdo_fetch_array($child_builds_array))
+        {
+        if ($build_row["loctested"] + $build_row["locuntested"] == 0)
+          {
+          continue;
+          }
+        if ($child_build_row["subprojectcore"] == 0)
+          {
+          $coverage_data[$day][$group_name]["non-core coverage"]["loctested"] +=
+            $child_build_row["loctested"];
+          $coverage_data[$day][$group_name]["non-core coverage"]["locuntested"]
+            += $child_build_row["locuntested"];
+          }
+        else
+          {
+          $coverage_data[$day][$group_name]["core coverage"]["loctested"] +=
+            $child_build_row["loctested"];
+          $coverage_data[$day][$group_name]["core coverage"]["locuntested"] +=
+            $child_build_row["locuntested"];
+          }
+        }
       }
     else
       {
-      $coverage_data[$day][$group_name]["core coverage"]["loctested"] +=
+      $coverage_data[$day][$group_name]["coverage"]["loctested"] +=
         $build_row["loctested"];
-      $coverage_data[$day][$group_name]["core coverage"]["locuntested"] +=
+      $coverage_data[$day][$group_name]["coverage"]["locuntested"] +=
         $build_row["locuntested"];
       }
-    }
-  else
-    {
-    $coverage_data[$day][$group_name]["coverage"]["loctested"] +=
-      $build_row["loctested"];
-    $coverage_data[$day][$group_name]["coverage"]["locuntested"] +=
-      $build_row["locuntested"];
     }
   }
 
