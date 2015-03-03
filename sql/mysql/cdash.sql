@@ -45,7 +45,8 @@ CREATE TABLE `build` (
   KEY `stamp` (`stamp`),
   KEY `type` (`type`),
   KEY `name` (`name`),
-  KEY `parentid` (`parentid`)
+  KEY `parentid` (`parentid`),
+  KEY `projectid_parentid_starttime` (`projectid`,`parentid`,`starttime`)
 );
 
 
