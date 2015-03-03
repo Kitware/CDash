@@ -80,8 +80,8 @@ if (isset($_POST['saveLayout']))
       $query .= "(" .
         qnum(pdo_real_escape_numeric($projectid)) . ", " .
         qnum(pdo_real_escape_numeric($inputRow["buildgroupid"])) . ", " .
-        qnum(pdo_real_escape_numeric($inputRow["position"])) . ", " .
-        qnum(pdo_real_escape_string($inputRow["type"])) . "), ";
+        qnum(pdo_real_escape_numeric($inputRow["position"])) . ", '" .
+        pdo_real_escape_string($inputRow["type"]) . "'), ";
       }
 
     // remove the trailing comma and space, then insert our new values

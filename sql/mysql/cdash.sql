@@ -27,8 +27,8 @@ CREATE TABLE `build` (
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `submittime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `command` text NOT NULL,
-  `log` text NOT NULL,
+  `command` text NOT NULL DEFAULT '',
+  `log` text NOT NULL DEFAULT '',
   `configureerrors` smallint(6) DEFAULT '-1',
   `configurewarnings` smallint(6) DEFAULT '-1',
   `builderrors` smallint(6) DEFAULT '-1',
@@ -45,7 +45,8 @@ CREATE TABLE `build` (
   KEY `stamp` (`stamp`),
   KEY `type` (`type`),
   KEY `name` (`name`),
-  KEY `parentid` (`parentid`)
+  KEY `parentid` (`parentid`),
+  KEY `projectid_parentid_starttime` (`projectid`,`parentid`,`starttime`)
 );
 
 

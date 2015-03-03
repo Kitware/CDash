@@ -24,9 +24,9 @@ function echo_svn_output($cmd)
   // Assumes being able to run 'svn' on the web server in the CDash
   // directory...
   //
-  $svn_output = `svn $cmd`;
+  $svn_output = `git $cmd`;
 
-  echo '<h3>svn ' . $cmd . '</h3>';
+  echo '<h3>git ' . $cmd . '</h3>';
   echo '<pre>';
   echo htmlentities($svn_output);
   echo '</pre>';
@@ -64,7 +64,7 @@ if ($session_OK)
   if ($user_is_admin)
     {
     echo_svn_output('--version');
-    echo_svn_output('info');
+    echo_svn_output('remote -v');
     echo_svn_output('status');
     echo_svn_output('diff');
 

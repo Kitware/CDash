@@ -16,14 +16,15 @@
 
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
-include_once('models/test.php');
-include_once('models/buildusernote.php');
-include_once('models/builderrordiff.php');
-include_once('models/builderror.php');
-include_once('models/buildinformation.php');
-include_once('models/label.php');
-include_once('models/constants.php');
 include_once('cdash/ctestparserutils.php');
+include_once('models/builderror.php');
+include_once('models/builderrordiff.php');
+include_once('models/buildinformation.php');
+include_once('models/buildusernote.php');
+include_once('models/constants.php');
+include_once('models/label.php');
+include_once('models/subproject.php');
+include_once('models/test.php');
 include_once('models/uploadfile.php');
 
 class Build
@@ -153,7 +154,7 @@ class Build
     $Label->Insert();
 
     add_log('New subproject detected: '.$subproject,'Build::SetSubProject',
-            LOG_INFO, $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
+            LOG_WARNING, $this->ProjectId,$this->Id,CDASH_OBJECT_BUILD,$this->Id);
     return true;
     }
 
@@ -1654,33 +1655,33 @@ class Build
     if ($newErrors > -1)
       {
       $numErrors = $parent['builderrors'] + $newErrors;
-      $clauses[] = "`builderrors` = $numErrors";
+      $clauses[] = "builderrors = $numErrors";
       }
     if ($newWarnings > -1)
       {
       $numWarnings = $parent['buildwarnings'] + $newWarnings;
-      $clauses[] = "`buildwarnings` = $numWarnings";
+      $clauses[] = "buildwarnings = $numWarnings";
       }
 
     // Check if we need to modify starttime or endtime.
     if (strtotime($parent['starttime']) > strtotime($this->StartTime))
       {
-      $clauses[] = "`starttime` = '$this->StartTime'";
+      $clauses[] = "starttime = '$this->StartTime'";
       }
     if (strtotime($parent['endtime']) < strtotime($this->EndTime))
       {
-      $clauses[] = "`endtime` = '$this->EndTime'";
+      $clauses[] = "endtime = '$this->EndTime'";
       }
 
     $num_clauses = count($clauses);
     if ($num_clauses > 0)
       {
-      $query = "UPDATE `build` SET " . $clauses[0];
+      $query = "UPDATE build SET " . $clauses[0];
       for ($i = 1; $i < $num_clauses; $i++)
         {
         $query .= ", " . $clauses[$i];
         }
-      $query .= " WHERE `id` = '$this->ParentId'";
+      $query .= " WHERE id = '$this->ParentId'";
       if(!pdo_query($query))
         {
         add_last_sql_error("UpdateParentBuild",$this->ProjectId,$this->ParentId);

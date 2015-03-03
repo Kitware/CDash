@@ -51,8 +51,17 @@ function generate_index_table()
   $xml .= "<date>".date("r")."</date>";
 
   // Check if the database is up to date
-  $dbTest = pdo_query("SHOW KEYS FROM label2build WHERE Key_name = 'labelid';");
-  if (pdo_num_rows($dbTest) < 1)
+  $dbField = "TABLE_SCHEMA";
+  if($CDASH_DB_TYPE == 'pgsql')
+    {
+    $dbField = "TABLE_CATALOG";
+    }
+  $query =
+    "SELECT is_nullable FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE table_name = 'build' AND column_name = 'command' AND
+       $dbField='$CDASH_DB_NAME'";
+  $dbTest = pdo_single_row_query($query);
+  if ($dbTest['is_nullable'] != "NO")
     {
     $xml .= "<upgradewarning>1</upgradewarning>";
     }
@@ -652,6 +661,17 @@ function generate_main_dashboard_XML($project_instance, $date)
                       AND user2repository.credential=updatefile.author) AS userupdates,";
     }
 
+
+  // Postgres differs from MySQL on how to aggregate results
+  // into a single column.
+  $label_sql = "";
+  $groupby_sql = "";
+  if($CDASH_DB_TYPE != 'pgsql')
+    {
+    $label_sql = "GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,";
+    $groupby_sql = " GROUP BY b.id";
+    }
+
   $sql =  "SELECT b.id,b.siteid,b.parentid,
                   bu.status AS updatestatus,
                   i.osname AS osname,
@@ -693,7 +713,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   sp.id AS subprojectid,
                   sp.core AS subprojectcore,
                   g.name as groupname,gp.position,g.id as groupid,
-                  GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,
+                  $label_sql
                   (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
                   FROM build AS b
@@ -719,7 +739,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   LEFT JOIN label AS l ON (l.id = l2b.labelid)
                   WHERE b.projectid='$projectid' $parent_clause $date_clause
                   ".$subprojectsql." ".$filter_sql." ".$limit_sql
-                  ." GROUP BY b.id";
+                  .$groupby_sql;
 
   // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
   $builds = pdo_query($sql);

@@ -13,8 +13,8 @@ CREATE TABLE "build" (
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "submittime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "command" text NOT NULL,
-  "log" text NOT NULL,
+  "command" text DEFAULT '' NOT NULL,
+  "log" text DEFAULT '' NOT NULL,
   "configureerrors" smallint DEFAULT '-1',
   "configurewarnings" smallint DEFAULT '-1',
   "builderrors" smallint DEFAULT '-1',
@@ -33,6 +33,7 @@ CREATE INDEX "stamp" on "build" ("stamp");
 CREATE INDEX "type" on "build" ("type");
 CREATE INDEX "name" on "build" ("name");
 CREATE INDEX "parentid" on "build" ("parentid");
+CREATE INDEX "projectid_parentid_starttime" ON "build" (projectid,parentid,starttime);
 
 --
 -- Table: buildgroup
@@ -723,7 +724,7 @@ CREATE TABLE "label2build" (
   PRIMARY KEY ("labelid", "buildid")
 );
 CREATE INDEX "labelid" on "label2build" ("labelid");
-CREATE INDEX "buildid" on "label2build" ("buildid");
+CREATE INDEX "label2build_buildid" on "label2build" ("buildid");
 
 --
 -- Table: label2buildfailure
@@ -1324,9 +1325,9 @@ CREATE TABLE "buildfile" (
   "type" character varying(32) NOT NULL
 );
 CREATE INDEX "buildfile_buildid" on "buildfile" ("buildid");
-CREATE INDEX "buildfile_filename" on "filename" ("filename");
-CREATE INDEX "buildfile_type" on "type" ("type");
-CREATE INDEX "buildfile_md5" on "md5" ("md5");
+CREATE INDEX "buildfile_filename" on "buildfile" ("filename");
+CREATE INDEX "buildfile_type" on "buildfile" ("type");
+CREATE INDEX "buildfile_md5" on "buildfile" ("md5");
 
 
 

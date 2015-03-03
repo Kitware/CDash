@@ -308,16 +308,25 @@ function RenameTableField($table,$field,$newfield,$mySQLType,$pgSqlType,$default
 function AddTableIndex($table,$field)
 {
   include("cdash/config.php");
+
+  $index_name = $field;
+  // Support for multiple column indices
+  if (is_array($field))
+    {
+    $index_name = implode("_", $field);
+    $field = implode(",", $field);
+    }
+
   if(!pdo_check_index_exists($table,$field))
     {
     add_log("Adding index $field to $table","AddTableIndex");
     if($CDASH_DB_TYPE == "pgsql")
       {
-      @pdo_query("CREATE INDEX ".$table."_".$field."_idx ON \"".$table."\" (\"".$field."\")");
+      @pdo_query("CREATE INDEX $index_name ON $table ($field)");
       }
     else
       {
-      pdo_query("ALTER TABLE ".$table." ADD INDEX ( ".$field." )");
+      pdo_query("ALTER TABLE $table ADD INDEX $index_name ($field)");
       add_last_sql_error("AddTableIndex");
       }
     add_log("Done adding index $field to $table","AddTableIndex");
@@ -918,6 +927,11 @@ if(isset($_GET['upgrade-2-4']))
   // Cache configure results similar to build & test
   AddTableField('build', 'configureerrors', 'smallint(6)', 'smallint', '-1');
   AddTableField('build', 'configurewarnings', 'smallint(6)', 'smallint', '-1');
+
+  // Add new multi-column index to build table.
+  // This improves the rendering speed of overview.php.
+  $multi_index = array("projectid", "parentid", "starttime");
+  AddTableIndex("build", $multi_index);
 
   // Set the database version
   setVersion();

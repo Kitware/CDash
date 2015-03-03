@@ -37,7 +37,7 @@ if(TEST_CLIENT_MANAGEMENT)
     requestwork_1 PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   )
-  add_test(client_pass ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2},pass)
+  add_test(client_pass ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2})
   set_tests_properties(
     client_pass PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
@@ -49,7 +49,7 @@ if(TEST_CLIENT_MANAGEMENT)
     requestwork_2 PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   )
-  add_test(client_fail ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2},fail)
+  add_test(client_fail ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT2})
   set_tests_properties(
     client_fail PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
