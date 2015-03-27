@@ -94,6 +94,7 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
   if($handler instanceof UpdateHandler)
     {
     send_update_email($handler, $projectid);
+    sendemail($handler, $projectid);
     }
   if($handler instanceof TestingHandler ||
      $handler instanceof BuildHandler ||

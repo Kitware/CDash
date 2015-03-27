@@ -117,7 +117,6 @@ function checkEmailLabel($projectid, $userid, $buildid, $emailcategory=62)
 function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus,$checkpreviouserrors)
 {
   // Includes
-  require_once("models/buildupdate.php");
   require_once("models/buildconfigure.php");
   require_once("models/build.php");
   require_once("models/buildtest.php");
@@ -126,11 +125,6 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   $errors = array();
   $errors['errors'] = true;
   $errors['hasfixes'] = false;
-
-  // Update errors
-  $BuildUpdate = new BuildUpdate();
-  $BuildUpdate->BuildId = $buildid;
-  $errors['update_errors'] = $BuildUpdate->GetNumberOfErrors();
 
   // Configure errors
   $BuildConfigure = new BuildConfigure();
