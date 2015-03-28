@@ -149,8 +149,7 @@ function check_email_errors($buildid,$checktesttimeingchanged,$testtimemaxstatus
   $errors['dynamicanalysis_errors'] = $DynamicAnalysis->GetNumberOfErrors();
 
   // Green build we return
-  if( $errors['update_errors'] == 0
-     && $errors['configure_errors'] == 0
+  if( $errors['configure_errors'] == 0
      && $errors['build_errors'] == 0
      && $errors['build_warnings'] ==0
      && $errors['test_errors'] ==0
