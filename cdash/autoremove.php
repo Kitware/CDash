@@ -61,6 +61,21 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force=false)
    add_log($s, 'removeBuildsGroupwise');
    print "  -- " . $s . "\n";
    remove_build($buildids);
+
+  // Remove any scheduled jobs that are older than our cutoff date
+  // and not due to repeat again.
+  $sql =
+    "SELECT id FROM client_jobschedule
+    WHERE projectid=$projectid AND startdate < $cutoffdate
+    AND (repeattime = 0.00 OR
+      (enddate < $cutoffdate AND enddate != '1980-01-01 00:00:00'))";
+  $jobs = pdo_query($sql);
+  while($job = pdo_fetch_array($jobs))
+    {
+    $ClientJobSchedule = new ClientJobSchedule();
+    $ClientJobSchedule->Id = $job['id'];
+    $ClientJobSchedule->Remove();
+    }
 }
 
 /** Remove the first builds that are at the beginning of the queue */
