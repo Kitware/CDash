@@ -64,16 +64,21 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force=false)
 
   // Remove any scheduled jobs that are older than our cutoff date
   // and not due to repeat again.
+  require_once('models/constants.php');
+  require_once('models/clientjobschedule.php');
   $sql =
-    "SELECT id FROM client_jobschedule
-    WHERE projectid=$projectid AND startdate < $cutoffdate
-    AND (repeattime = 0.00 OR
-      (enddate < $cutoffdate AND enddate != '1980-01-01 00:00:00'))";
+    "SELECT scheduleid FROM client_job AS cj
+    LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
+    WHERE cj.status > ".  CDASH_JOB_RUNNING . "
+    AND cjs.projectid=$projectid AND cj.startdate < '$cutoffdate'
+    AND (cjs.repeattime = 0.00 OR
+      (cjs.enddate < '$cutoffdate' AND cjs.enddate != '1980-01-01 00:00:00'))";
+
   $jobs = pdo_query($sql);
   while($job = pdo_fetch_array($jobs))
     {
     $ClientJobSchedule = new ClientJobSchedule();
-    $ClientJobSchedule->Id = $job['id'];
+    $ClientJobSchedule->Id = $job['scheduleid'];
     $ClientJobSchedule->Remove();
     }
 }
