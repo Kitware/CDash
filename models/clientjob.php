@@ -127,4 +127,16 @@ class ClientJob
     add_last_sql_error("ClientJob::Save");
     }   // end Save
 
+  /** Remove a job */
+  function Remove()
+    {
+    if(!$this->Id)
+      {
+      add_log("ClientJob::Remove","Id not set");
+      return;
+      }
+    pdo_query("DELETE FROM client_job WHERE id=".qnum($this->Id));
+    add_last_sql_error("ClientJob::Remove");
+    }   // end Remove
+
 } // end class proJob
