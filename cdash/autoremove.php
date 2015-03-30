@@ -61,26 +61,6 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force=false)
    add_log($s, 'removeBuildsGroupwise');
    print "  -- " . $s . "\n";
    remove_build($buildids);
-
-  // Remove any scheduled jobs that are older than our cutoff date
-  // and not due to repeat again.
-  require_once('models/constants.php');
-  require_once('models/clientjobschedule.php');
-  $sql =
-    "SELECT scheduleid FROM client_job AS cj
-    LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
-    WHERE cj.status > ".  CDASH_JOB_RUNNING . "
-    AND cjs.projectid=$projectid AND cj.startdate < '$cutoffdate'
-    AND (cjs.repeattime = 0.00 OR
-      (cjs.enddate < '$cutoffdate' AND cjs.enddate != '1980-01-01 00:00:00'))";
-
-  $jobs = pdo_query($sql);
-  while($job = pdo_fetch_array($jobs))
-    {
-    $ClientJobSchedule = new ClientJobSchedule();
-    $ClientJobSchedule->Id = $job['scheduleid'];
-    $ClientJobSchedule->Remove();
-    }
 }
 
 /** Remove the first builds that are at the beginning of the queue */
@@ -125,6 +105,26 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
   add_log($s, 'removeFirstBuilds');
   print "  -- " . $s . "\n"; // for "interactive" command line feedback
   remove_build($buildids);
+
+  // Remove any scheduled jobs that are older than our cutoff date
+  // and not due to repeat again.
+  require_once('models/constants.php');
+  require_once('models/clientjobschedule.php');
+  $sql =
+    "SELECT scheduleid FROM client_job AS cj
+    LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
+    WHERE cj.status > ".  CDASH_JOB_RUNNING . "
+    AND cjs.projectid=$projectid AND cj.startdate < '$startdate'
+    AND (cjs.repeattime = 0.00 OR
+      (cjs.enddate < '$startdate' AND cjs.enddate != '1980-01-01 00:00:00'))";
+
+  $jobs = pdo_query($sql);
+  while($job = pdo_fetch_array($jobs))
+    {
+    $ClientJobSchedule = new ClientJobSchedule();
+    $ClientJobSchedule->Id = $job['scheduleid'];
+    $ClientJobSchedule->Remove();
+    }
 }
 
 ?>
