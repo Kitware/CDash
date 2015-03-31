@@ -143,7 +143,7 @@ class BuildFailure
           return false;
           }  
         
-        $argumentids[] = pdo_insert_id("buildfailure");
+        $argumentids[] = pdo_insert_id("buildfailureargument");
         }
       }
     
