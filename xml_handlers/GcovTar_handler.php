@@ -86,7 +86,7 @@ class GCovTarHandler
     $iterator->rewind();
     foreach ($iterator as $fileinfo)
       {
-      if ($fileinfo->getExtension() == "gcov")
+      if (pathinfo($fileinfo->getFilename(), PATHINFO_EXTENSION) == "gcov")
         {
         $this->ParseGcovFile($fileinfo);
         }
