@@ -315,7 +315,7 @@ class Feed
     if(pdo_query("INSERT INTO feed (projectid,buildid,type,date,description)
                   VALUES ('$this->ProjectId','$this->BuildId','$this->Type','$this->Date','$this->Description')"))
       {
-      $this->Id = pdo_insert_id("site");
+      $this->Id = pdo_insert_id("feed");
       }
     else
       {
