@@ -30,8 +30,8 @@ function copy_build_data($old_buildid, $new_buildid, $type)
  **/
 function copy_coverage_data($old_buildid, $new_buildid)
 {
-  $tables_to_copy =
-    ["coverage", "coveragefilelog", "coveragesummary", "coveragesummarydiff"];
+  $tables_to_copy = array(
+    "coverage", "coveragefilelog", "coveragesummary", "coveragesummarydiff");
 
   foreach ($tables_to_copy as $table)
     {
