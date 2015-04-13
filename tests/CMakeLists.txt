@@ -71,7 +71,6 @@ add_php_test(testenv)
 add_php_test(testoverview)
 add_php_test(userstatistics)
 add_php_test(user)
-add_php_test(viewbuilderror)
 add_php_test(viewchanges)
 add_php_test(viewconfigure)
 add_php_test(viewdynamicanalysis)
@@ -92,6 +91,8 @@ add_php_test(branchcoverage)
 add_php_test(javajsoncoverage)
 
 add_subdirectory(ctest)
+
+add_subdirectory(js/e2e_tests)
 
 if(CDASH_USE_SELENIUM)
   file(MAKE_DIRECTORY ${CDash_BINARY_DIR}/cmake.git)
