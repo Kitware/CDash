@@ -1,4 +1,6 @@
-find_program(PROTRACTOR_EXE protractor)
+find_program(
+  PROTRACTOR_EXE protractor
+  PATHS ${CDash_SOURCE_DIR}/node_modules/protractor/bin)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/conf.js.in

@@ -4,3 +4,4 @@ backup
 cdash/config.local.php
 tests/config.test.local.php
 /nbproject/private/
+node_modules
