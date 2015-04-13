@@ -177,7 +177,7 @@ if($projectid>=0)
       
       foreach($dependencies as $dependency)
         {
-        if (!in_array($dependency, $subprojs))
+        if (!array_key_exists($dependency, $subprojs))
           {
           continue;
           }
