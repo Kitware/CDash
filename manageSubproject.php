@@ -177,6 +177,10 @@ if($projectid>=0)
       
       foreach($dependencies as $dependency)
         {
+        if (!array_key_exists($dependency, $subprojs))
+          {
+          continue;
+          }
         $Dependency = $subprojs[$dependency];
         $xml .= "<dependency>";
         $xml .= add_XML_value("id",$dependency);

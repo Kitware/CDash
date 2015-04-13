@@ -61,11 +61,14 @@ class SubProject
       $keephistory = false;
       }
 
+    // Regardless of whether or not we're performing a "soft delete",
+    // we should remove any dependencies on this subproject.
+    pdo_query(
+      "DELETE FROM subproject2subproject WHERE dependsonid=".qnum($this->Id));
     if(!$keephistory)
       {
       pdo_query("DELETE FROM subproject2build WHERE subprojectid=".qnum($this->Id));
       pdo_query("DELETE FROM subproject2subproject WHERE subprojectid=".qnum($this->Id));
-      pdo_query("DELETE FROM subproject2subproject WHERE dependsonid=".qnum($this->Id));
       pdo_query("DELETE FROM subproject WHERE id=".qnum($this->Id));
       }
     else
