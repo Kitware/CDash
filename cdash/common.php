@@ -2245,4 +2245,140 @@ function __json_encode( $data )
   return $json;
   }
 
+function begin_JSON_response()
+{
+  global $CDASH_CSS_FILE, $CDASH_VERSION;
+
+  // check if user has specified a preference for color scheme
+  if (array_key_exists("colorblind", $_COOKIE))
+    {
+    if ($_COOKIE["colorblind"] == 1)
+      {
+      $CDASH_CSS_FILE = "colorblind.css";
+      }
+    else
+      {
+      $CDASH_CSS_FILE = "cdash.css";
+      }
+    }
+
+  $response = array();
+  $response['cssfile'] = $CDASH_CSS_FILE;
+  $response['version'] = $CDASH_VERSION;
+  return $response;
+}
+
+function get_dashboard_JSON($projectname, $date, &$response)
+{
+  include("cdash/config.php");
+  require_once("cdash/pdo.php");
+
+  $projectid = get_project_id($projectname);
+  if($projectid == -1)
+    {
+    return;
+    }
+
+  $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+  if(!$db)
+    {
+    echo "Error connecting to CDash database server<br>\n";
+    exit(0);
+    }
+
+  if(!pdo_select_db("$CDASH_DB_NAME",$db))
+    {
+    echo "Error selecting CDash database<br>\n";
+    exit(0);
+    }
+
+  $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+  if(pdo_num_rows($project)>0)
+    {
+    $project_array = pdo_fetch_array($project);
+    }
+  else
+    {
+    $project_array = array();
+    $project_array["cvsurl"] = "unknown";
+    $project_array["bugtrackerurl"] = "unknown";
+    $project_array["documentationurl"] = "unknown";
+    $project_array["homeurl"] = "unknown";
+    $project_array["googletracker"] = "unknown";
+    $project_array["name"] = $projectname;
+    $project_array["nightlytime"] = "00:00:00";
+    }
+
+  list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
+
+  $response['datetime'] = date("l, F d Y H:i:s",time());
+  $response['date'] = $date;
+  $response['unixtimestamp'] = $currentstarttime;
+  $response['startdate'] = date("l, F d Y H:i:s",$currentstarttime);
+  $response['svn'] = make_cdash_url(htmlentities($project_array["cvsurl"]));
+  $response['bugtracker'] = make_cdash_url(htmlentities($project_array["bugtrackerurl"]));
+  $response['googletracker'] = htmlentities($project_array["googletracker"]);
+  $response['documentation'] = make_cdash_url(htmlentities($project_array["documentationurl"]));
+  $response['projectid'] = $projectid;
+  $response['projectname'] = $project_array["name"];
+  $response['projectname_encoded'] = urlencode($project_array["name"]);
+  $response['projectpublic'] = $project_array["public"];
+  $response['previousdate'] = $previousdate;
+  $response['nextdate'] = $nextdate;
+  $response['logoid'] = getLogoID($projectid);
+
+  if(empty($project_array["homeurl"]))
+    {
+    $response['home'] = "index.php?project=".urlencode($project_array["name"]);
+    }
+  else
+    {
+    $response['home'] = make_cdash_url(htmlentities($project_array["homeurl"]));
+    }
+
+  if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
+    {
+    include_once("local/models/proProject.php");
+    $pro= new proProject;
+    $pro->ProjectId=$projectid;
+    $response['proedition'] = $pro->GetEdition(1);
+    }
+
+  $userid = 0;
+  if(isset($_SESSION['cdash']))
+    {
+    $userid = $_SESSION['cdash']['loginid'];
+
+    // Is the user super administrator
+    $userquery = pdo_query("SELECT admin FROM ".qid('user')." WHERE id='$userid'");
+    $user_array = pdo_fetch_array($userquery);
+    $response['admin'] = $user_array[0];
+
+    // Is the user administrator of the project
+    $userquery = pdo_query("SELECT role FROM user2project WHERE userid=".qnum($userid)." AND projectid=".qnum($projectid));
+    $user_array = pdo_fetch_array($userquery);
+    $response['projectrole'] = $user_array[0];
+    }
+  $response['userid'] = $userid;
+}
+
+function get_dashboard_JSON_by_name($projectname, $date, &$response)
+{
+  get_dashboard_JSON($projectname, $date, $response);
+}
+
+function get_labels_JSON_from_query_results($qry, &$response)
+  {
+  $rows = pdo_all_rows_query($qry);
+  if (count($rows)>0)
+    {
+    $labels = array();
+    foreach($rows as $row)
+      {
+      $labels[] = $row['text'];
+      }
+    $response['labels'] = $labels;
+    }
+  }
+
 ?>

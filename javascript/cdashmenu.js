@@ -1,3 +1,5 @@
+var queryString = {};
+
 $(document).ready(function()
   {
   tooltip();
@@ -45,6 +47,15 @@ $(document).ready(function()
     window.location = "index.php?project=" + project.value + "&date=" + dateStr.substr(6, 4) + dateStr.substr(0, 2) + dateStr.substr(3, 2);
     $('#calendar').hide();
     }
+
+  // Load query string parameters into javascript
+  var match,
+      pl     = /\+/g,  // Regex for replacing addition symbol with a space
+      search = /([^&=]+)=?([^&]*)/g,
+      decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+      query  = window.location.search.substring(1);
+  while (match = search.exec(query))
+     queryString[decode(match[1])] = decode(match[2]);
 
   // Quick links
   /* $('.quicklink').hide();

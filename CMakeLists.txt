@@ -62,6 +62,7 @@ configure_file(${CDash_SOURCE_DIR}/tests/prepend_coverage.php.in
 
 # For coverage builds on apache web servers, provide a default
 # .htaccess file, but only if explicitly asked to:
+option(CDASH_CONFIGURE_HTACCESS_FILE "Create .htaccess file for coverage testing?" OFF)
 if(CDASH_CONFIGURE_HTACCESS_FILE)
   configure_file(
     ${CDash_SOURCE_DIR}/htaccess.in

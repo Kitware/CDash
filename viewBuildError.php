@@ -1,391 +1,238 @@
-<?php
-/*=========================================================================
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-  Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: viewBuildError.php 3475 2014-05-09 06:54:04Z jjomier $
-  Language:  PHP
-  Date:      $Date: 2014-05-09 06:54:04 +0000 (Fri, 09 May 2014) $
-  Version:   $Revision: 3475 $
+<html lang="en" ng-app="CDash" ng-controller="BuildErrorController">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="cdash.css" /> <!-- TODO: handle switch -->
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+    <script src="javascript/jquery-1.10.2.js"></script>
+    <script src="javascript/jquery.flot.min.js"></script>
+    <script src="javascript/jquery.flot.time.min.js"></script>
+    <script src="javascript/jquery.flot.selection.min.js"></script>
+    <script src="javascript/tooltip.js"></script>
+    <link rel="stylesheet" type="text/css" href="javascript/jquery.qtip.min.css" />
+    <script src="javascript/jquery.qtip.min.js"></script>
+    <script src="javascript/jquery-ui-1.10.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="javascript/jquery-ui-1.8.16.css" />
+    <script src="javascript/cdashmenu.js"></script>
+    <script src="javascript/jquery.cookie.js"></script>
+    <script src="javascript/jquery.tablesorter.js"></script>
+    <script src="javascript/jquery.dataTables.min.js"></script>
+    <script src="javascript/cdashTableSorter.js"></script>
+    <script src="javascript/jquery.metadata.js"></script>
+    <script src="javascript/jtip.js"></script>
+    <script src="javascript/jqModal.js"></script>
+    <link rel="stylesheet" type="text/css" href="javascript/jqModal.css" />
+    <link rel="stylesheet" type="text/css" href="javascript/jquery.dataTables.css" />
+    <script src="javascript/cdashBuildError.js"></script>
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
+    <script src="javascript/angular.min.js"></script>
+    <script src="javascript/cdash_angular.js"></script>
+    <script src="javascript/builderror.js"></script>
 
-=========================================================================*/
-$noforcelogin = 1;
-include("cdash/config.php");
-require_once("cdash/pdo.php");
-include('login.php');
-include_once("cdash/common.php");
-include_once("cdash/repository.php");
-include("cdash/version.php");
+    <title>CDash : {{cdash.project}}</title>
+  </head>
 
-@$buildid = $_GET["buildid"];
-if ($buildid != NULL)
-  {
-  $buildid = pdo_real_escape_numeric($buildid);
-  }
+  <body bgcolor="#ffffff">
+    <ng-include src="'header.php'"></ng-include>
+    <br/>
+    <table border="0">
+      <tr>
+        <td align="left">
+          <b>Site: </b>
+          <a href="viewSite.php?siteid={{cdash.build.siteid}}">
+            {{cdash.build.site}}
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <b>Build Name: </b>
+          {{cdash.build.buildname}}
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <b>Build Time: </b>
+          {{cdash.build.starttime}}
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          &#x20;
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          Found <b>{{cdash.errors.length}}</b>&#x20;{{cdash.errortypename}}s
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <a href="viewBuildError.php?type={{cdash.nonerrortype}}&buildid={{cdash.build.buildid}}">
+            {{cdash.nonerrortypename}}s are here.
+          </a>
+        </td>
+      </tr>
+    </table>
 
-@$date = $_GET["date"];
-if ($date != NULL)
-  {
-  $date = htmlspecialchars(pdo_real_escape_string($date));
-  }
+    <br/>
+    <table ng-repeat="error in cdash.errors" style="table-layout:fixed; width:100%">
+      <colgroup>
+        <col style="width: 115px"/>
+        <col/>
+      </colgroup>
 
-// Checks
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
+      <tr ng-if="error.sourceline" style="background-color: #b0c4de; font-weight: bold">
+        <th colspan="2" align="left">
+          <img ng-if="error.new == -1" src="images/flaggreen.gif" title="flag"/>
+          <img ng-if="error.new == 1" src="images/flag.png" title="flag"/>
+          <pre ng-if="error.new == 0" style="height: 0px;"></pre>
+        </th>
+      </tr>
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+      <tr style="background-color: #b0c4de; font-weight: bold" ng-if="error.targetname">
+        <th colspan="2">
+          {{cdash.errortypename}} while building
+          <code>{{error.language}}</code> {{error.outputtype}} "
+          <code>{{error.outputfile}}</code>"
+          in target {{error.targetname}}
+        </th>
+      </tr>
 
-$start = microtime_float();
+      <tr ng-if="cdash.cvsurl">
+        <th class="measurement">
+          <nobr> Repository </nobr>
+        </th>
+        <td>
+          <a href="{{cdash.cvsurl}}">
+            {{cdash.cvsurl}}
+          </a>
+        </td>
+      </tr>
 
-$build_query = "SELECT build.id, build.projectid, build.siteid, build.type,
-                       build.name, build.starttime, buildupdate.revision
-                FROM build
-                LEFT JOIN build2update ON (build2update.buildid = build.id)
-                LEFT JOIN buildupdate ON (buildupdate.id = build2update.updateid)
-                WHERE build.id = '$buildid'";
-$build_array = pdo_fetch_array(pdo_query($build_query));
+      <tr ngif="error.logline">
+        <th class="measurement">
+          <nobr>Build Log Line </nobr>
+        </th>
+        <td>
+          {{error.logline}}
+        </td>
+      </tr>
 
-if(empty($build_array))
-  {
-  echo "This build does not exist. Maybe it has been deleted.";
-  exit();
-  }
+      <tr ngif="error.precontext || error.postcontext">
+        <th class="measurement">
+          <nobr> {{cdash.errortypename}} </nobr>
+        </th>
+        <td>
+          <pre class="compiler-output">{{error.precontext}}</pre>
+          <b>
+            <pre class="compiler-output" ng-bind-html="error.text"></pre>
+          </b>
+          <pre class="compiler-output">{{error.postcontext}}</pre>
+        </td>
+      </tr>
 
-$projectid = $build_array["projectid"];
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if(pdo_num_rows($project)>0)
-  {
-  $project_array = pdo_fetch_array($project);
-  $projectname = $project_array["name"];
-  }
+      <tr ng-if="error.sourcefile && error.targetname">
+        <th class="measurement">
+          <nobr>Source File</nobr>
+        </th>
+        <td>
+          {{error.sourcefile}}
+        </td>
+      </tr>
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
+      <tr ng-if="error.labels">
+        <th class="measurement">
+          <div ng-if="error.labels.length=1">Label</div>
+          <div ng-if="error.labels.length>1">Labels</div>
+        </th>
+        <td>
+          <div ng-repeat="label in error.labels">
+          {{label}}
+          </div>
+        </td>
+      </tr>
 
-$xml = begin_XML_for_XSLT();
-$xml .= "<title>CDash : ".$projectname."</title>";
+      <tr ng-if="error.argumentfirst">
+        <th class="measurement" style="width: 1%">Command</th>
+        <td>
+          <div style="margin-left: 25px; text-indent: -25px;">
 
-$siteid = $build_array["siteid"];
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$starttime = $build_array["starttime"];
-$revision = $build_array["revision"];
+            <div ng-if="error.argument">
+              <span ng-hide="error.argument.length>4" id="showarguments_{{error.id}}">
+                <a href="#" onclick="return showArguments({{error.id}});">
+                  [+]
+                </a>
+                <nobr>"<font class="argument">{{error.argumentfirst}}</font>"</nobr>
+              </span>
 
-$date = get_dashboard_date_from_build_starttime($build_array["starttime"],$project_array["nightlytime"]);
-$xml .= get_cdash_dashboard_xml_by_name($projectname,$date);
+              <span ng-hide="error.argument.length>3" id="argumentlist_{{error.id}}">
+                <a href="#" onclick="return hideArguments({{error.id}});">
+                  [-]
+                </a>
+                <nobr>"<font class="argument">{{error.argumentfirst}}</font>"</nobr>
+                <div ng-repeat="argument in error.arguments">
+                  "<font class="argument">{{argument}}</font>"</nobr>
+                </div>
+              </span>
+            </div>
 
-$xml .= "<menu>";
-$xml .= add_XML_value("back","index.php?project=".urlencode($projectname)."&date=".$date);
-$previousbuildid = get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
-if($previousbuildid>0)
-  {
-  $xml .= add_XML_value("previous","viewBuildError.php?buildid=".$previousbuildid);
-  }
-else
-  {
-  $xml .= add_XML_value("noprevious","1");
-  }
-$xml .= add_XML_value("current","viewBuildError.php?buildid=".get_last_buildid($projectid,$siteid,$buildtype,$buildname,$starttime));
-$nextbuildid = get_next_buildid($projectid,$siteid,$buildtype,$buildname,$starttime);
-if($nextbuildid>0)
-  {
-  $xml .= add_XML_value("next","viewBuildError.php?buildid=".$nextbuildid);
-  }
-else
-  {
-  $xml .= add_XML_value("nonext","1");
-  }
-$xml .= "</menu>";
+            <div ng-if="!error.argument">
+              <nobr>"<font class="argument">{{error.argumentfirst}}</font>"</nobr>
 
-  // Build
-  $xml .= "<build>";
-  $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-  $xml .= add_XML_value("site",$site_array["name"]);
-  $xml .= add_XML_value("siteid",$siteid);
-  $xml .= add_XML_value("buildname",$build_array["name"]);
-  $xml .= add_XML_value("starttime",date(FMT_DATETIMETZ,strtotime($build_array["starttime"]."UTC")));
-  $xml .= add_XML_value("buildid",$build_array["id"]);
-  $xml .= "</build>";
+              <div ng-repeat="argument in error.arguments">
+                "<font class="argument">{{argument}}</font>"</nobr>
+              </div>
+            </div>
 
-  @$type = $_GET["type"];
-  if ($type != NULL)
-    {
-    $type = pdo_real_escape_numeric($type);
-    }
-  if(!isset($type))
-    {
-    $type = 0;
-    }
+          </div>
+        </td>
+      </tr>
 
-  // Set the error
-  if($type == 0)
-    {
-    $xml .= add_XML_value("errortypename","Error");
-    $xml .= add_XML_value("nonerrortypename","Warning");
-    $xml .= add_XML_value("nonerrortype","1");
-    }
-  else
-    {
-    $xml .= add_XML_value("errortypename","Warning");
-    $xml .= add_XML_value("nonerrortypename","Error");
-    $xml .= add_XML_value("nonerrortype","0");
-    }
+      <tr ng-if="error.workingdirectory">
+        <th class="measurement" style="width: 1%">
+          Directory
+        </th>
+        <td>
+          {{error.workingdirectory}}
+        </td>
+      </tr>
 
-  $xml .= "<errors>";
+      <tr ng-if="error.exitcondition">
+        <th class="measurement">
+          <nobr> Exit Condition </nobr>
+        </th>
+        <td>
+          {{error.exitcondition}}
+        </td>
+      </tr>
 
-  if(isset($_GET["onlydeltan"]))
-    {
-    // Build error table
-    $errors = pdo_query("SELECT *
-               FROM (SELECT * FROM builderror WHERE buildid=".$previousbuildid."
-               AND type=".$type.") AS builderrora
-               LEFT JOIN (SELECT crc32 as crc32b FROM builderror WHERE buildid=".$buildid."
-               AND type=".$type.") AS builderrorb
-               ON builderrora.crc32=builderrorb.crc32b WHERE builderrorb.crc32b IS NULL");
+      <tr ng-if="error.stdoutput">
+        <th class="measurement">
+          <nobr> Standard Output </nobr>
+        </th>
+        <td>
+          <pre class="compiler-output" name="stdout">{{error.stdoutput}}</pre>
+        </td>
+      </tr>
 
-    $errorid = 0;
-    while($error_array = pdo_fetch_array($errors))
-      {
-      $lxml = "<error>";
-      $lxml .= add_XML_value("id",$errorid);
-      $lxml .= add_XML_value("new","-1");
-      $lxml .= add_XML_value("logline",$error_array["logline"]);
-      $lxml .= add_XML_value("text",$error_array["text"]);
-      $lxml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
-      $lxml .= add_XML_value("sourceline",$error_array["sourceline"]);
-      $lxml .= add_XML_value("precontext",$error_array["precontext"]);
-      $lxml .= add_XML_value("postcontext",$error_array["postcontext"]);
+      <tr ng-if="error.stderror">
+        <th class="measurement">
+          <nobr> Standard Error </nobr>
+        </th>
+        <td>
+          <pre class="compiler-error" name="stderr">
+            {{error.stderror}}
+          </pre>
+        </td>
+      </tr>
+    </table>
 
-      $projectCvsUrl = $project_array["cvsurl"];
-      $file = basename($error_array["sourcefile"]);
-      $directory = dirname($error_array["sourcefile"]);
-      $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file,$revision);
-
-
-      $lxml .= add_XML_value("cvsurl",$cvsurl);
-      $errorid++;
-      $lxml .= "</error>";
-
-      $xml .= $lxml;
-      }
-
-    // Build failure table
-    $errors = pdo_query("SELECT *
-               FROM (SELECT * FROM buildfailure WHERE buildid=".$previousbuildid."
-               AND type=".$type.") AS builderrora
-               LEFT JOIN (SELECT crc32 as crc32b FROM buildfailure WHERE buildid=".$buildid."
-               AND type=".$type.") AS builderrorb
-               ON builderrora.crc32=builderrorb.crc32b WHERE builderrorb.crc32b IS NULL");
-
-   while($error_array = pdo_fetch_array($errors))
-      {
-      $lxml = "<error>";
-      $lxml .= add_XML_value("id",$errorid);
-      $lxml .= add_XML_value("language",$error_array["language"]);
-      $lxml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
-      $lxml .= add_XML_value("targetname",$error_array["targetname"]);
-      $lxml .= add_XML_value("outputfile",$error_array["outputfile"]);
-      $lxml .= add_XML_value("outputtype",$error_array["outputtype"]);
-      $lxml .= add_XML_value("workingdirectory",$error_array["workingdirectory"]);
-
-      $buildfailureid = $error_array["id"];
-      $arguments = pdo_query("SELECT bfa.argument FROM buildfailureargument AS bfa,buildfailure2argument AS bf2a
-                              WHERE bf2a.buildfailureid='$buildfailureid' AND bf2a.argumentid=bfa.id ORDER BY bf2a.place ASC");
-
-      $i=0;
-      while($argument_array = pdo_fetch_array($arguments))
-        {
-        if($i == 0)
-          {
-          $lxml .= add_XML_value("argumentfirst",$argument_array["argument"]);
-          }
-        else
-          {
-          $lxml .= add_XML_value("argument",$argument_array["argument"]);
-          }
-        $i++;
-        }
-
-      $lxml .= get_labels_xml_from_query_results(
-        "SELECT text FROM label, label2buildfailure WHERE ".
-        "label.id=label2buildfailure.labelid AND ".
-        "label2buildfailure.buildfailureid='$buildfailureid' ".
-        "ORDER BY text ASC");
-
-      $lxml .= add_XML_value("stderror",$error_array["stderror"]);
-      $rows = substr_count($error_array["stderror"],"\n")+1;
-      if ($rows > 10)
-        {
-        $rows = 10;
-        }
-      $lxml .= add_XML_value("stderrorrows",$rows);
-
-      $lxml .= add_XML_value("stdoutput",$error_array["stdoutput"]);
-      $rows = substr_count($error_array["stdoutput"],"\n")+1;
-      if ($rows > 10)
-        {
-        $rows = 10;
-        }
-      $lxml .= add_XML_value("stdoutputrows",$rows);
-
-      $lxml .= add_XML_value("exitcondition",$error_array["exitcondition"]);
-
-      if(isset($error_array["sourcefile"]))
-        {
-        $projectCvsUrl = $project_array["cvsurl"];
-        $file = basename($error_array["sourcefile"]);
-        $directory = dirname($error_array["sourcefile"]);
-        $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file,$revision);
-        $lxml .= add_XML_value("cvsurl",$cvsurl);
-        }
-      $errorid++;
-      $lxml .= "</error>";
-
-      $xml .= $lxml;
-      }
-
-    }
-  else
-    {
-    $extrasql = "";
-    if(isset($_GET["onlydeltap"]))
-      {
-      $extrasql = " AND newstatus='1'";
-      }
-
-    // Build error table
-    $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' AND type='$type'".$extrasql." ORDER BY logline ASC");
-    $errorid = 0;
-    while($error_array = pdo_fetch_array($errors))
-      {
-      $lxml = "<error>";
-      $lxml .= add_XML_value("id",$errorid);
-      $lxml .= add_XML_value("new",$error_array["newstatus"]);
-      $lxml .= add_XML_value("logline",$error_array["logline"]);
-
-      $projectCvsUrl = $project_array["cvsurl"];
-      $text = $error_array["text"];
-
-      // Detect if the source directory has already been replaced by CTest with /.../
-      $pattern = "&/.../(.*?)/&";
-      $matches = array();
-      preg_match($pattern, $text, $matches);
-      if (sizeof($matches) > 1)
-        {
-        $file = $error_array["sourcefile"];
-        $directory = $matches[1];
-        }
-      else
-        {
-        $file = basename($error_array["sourcefile"]);
-        $directory = dirname($error_array["sourcefile"]);
-        }
-
-      $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file,$revision);
-
-      $lxml .= add_XML_value("cvsurl",$cvsurl);
-      // when building without launchers, CTest truncates the source dir to /.../
-      // use this pattern to linkify compiler output.
-      $precontext = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array["precontext"]);
-      $text = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array["text"]);
-      $postcontext = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array["postcontext"]);
-
-      $lxml .= add_XML_value("precontext", $precontext);
-      $lxml .= add_XML_value("text", $text);
-      $lxml .= add_XML_value("postcontext", $postcontext);
-      $lxml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
-      $lxml .= add_XML_value("sourceline",$error_array["sourceline"]);
-
-      $errorid++;
-      $lxml .= "</error>";
-
-      $xml .= $lxml;
-      }
-
-    // Build failure table
-    $errors = pdo_query("SELECT * FROM buildfailure WHERE buildid='$buildid' and type='$type'".$extrasql." ORDER BY id ASC");
-    while($error_array = pdo_fetch_array($errors))
-      {
-      $lxml = "<error>";
-      $lxml .= add_XML_value("id",$errorid);
-      $lxml .= add_XML_value("language",$error_array["language"]);
-      $lxml .= add_XML_value("sourcefile",$error_array["sourcefile"]);
-      $lxml .= add_XML_value("targetname",$error_array["targetname"]);
-      $lxml .= add_XML_value("outputfile",$error_array["outputfile"]);
-      $lxml .= add_XML_value("outputtype",$error_array["outputtype"]);
-      $lxml .= add_XML_value("workingdirectory",$error_array["workingdirectory"]);
-
-      $buildfailureid = $error_array["id"];
-      $arguments = pdo_query("SELECT bfa.argument FROM buildfailureargument AS bfa,buildfailure2argument AS bf2a
-                              WHERE bf2a.buildfailureid='$buildfailureid' AND bf2a.argumentid=bfa.id ORDER BY bf2a.place ASC");
-      $i=0;
-      while($argument_array = pdo_fetch_array($arguments))
-        {
-        if($i == 0)
-          {
-          $lxml .= add_XML_value("argumentfirst",$argument_array["argument"]);
-          }
-        else
-          {
-          $lxml .= add_XML_value("argument",$argument_array["argument"]);
-          }
-        $i++;
-        }
-
-      $lxml .= get_labels_xml_from_query_results(
-        "SELECT text FROM label, label2buildfailure WHERE ".
-        "label.id=label2buildfailure.labelid AND ".
-        "label2buildfailure.buildfailureid='$buildfailureid' ".
-        "ORDER BY text ASC");
-
-      $stderror = $error_array["stderror"];
-      $stdoutput = $error_array["stdoutput"];
-
-      if(isset($error_array["sourcefile"]))
-        {
-        $projectCvsUrl = $project_array["cvsurl"];
-        $file = basename($error_array["sourcefile"]);
-        $directory = dirname($error_array["sourcefile"]);
-        $cvsurl = get_diff_url($projectid,$projectCvsUrl,$directory,$file,$revision);
-        $lxml .= add_XML_value("cvsurl",$cvsurl);
-
-        $source_dir = get_source_dir($projectid, $projectCvsUrl, $directory);
-        if ($source_dir !== NULL)
-          {
-          $stderror = linkify_compiler_output($projectCvsUrl, $source_dir, $revision, $stderror);
-          $stdoutput = linkify_compiler_output($projectCvsUrl, $source_dir, $revision, $stdoutput);
-          }
-        }
-
-      if ($stderror)
-        {
-        $lxml .= add_XML_value("stderror", $stderror);
-        }
-      if ($stdoutput)
-        {
-        $lxml .= add_XML_value("stdoutput", $stdoutput);
-        }
-      $lxml .= add_XML_value("exitcondition",$error_array["exitcondition"]);
-      $errorid++;
-      $lxml .= "</error>";
-      $xml .= $lxml;
-      }
-    } // end if onlydeltan
-
-  $xml .= "</errors>";
-  $end = microtime_float();
-  $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
-  $xml .= "</cdash>";
-
-// Now doing the xslt transition
-generate_XSLT($xml,"viewBuildError");
-?>
+    <!-- FOOTER -->
+    <br/>
+    <ng-include src="'footer.php'"></ng-include>
+  </body>
+</html>
