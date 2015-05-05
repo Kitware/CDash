@@ -761,7 +761,7 @@ class Project
     {
     if(!$this->Id)
       {
-      echo "Project GetNumberOfSubprojects(): Id not set";
+      echo "Project GetNumberOfSubProjects(): Id not set";
       return false;
       }
 
@@ -773,7 +773,7 @@ class Project
     $project = pdo_query("SELECT count(*) AS c FROM subproject WHERE projectid=".qnum($this->Id)." AND (endtime='1980-01-01 00:00:00' OR endtime>'".$date."')");
     if(!$project)
       {
-      add_last_sql_error("Project GetNumberOfSubprojects",$this->Id);
+      add_last_sql_error("Project GetNumberOfSubProjects",$this->Id);
       return false;
       }
     $project_array = pdo_fetch_array($project);
@@ -785,7 +785,7 @@ class Project
     {
     if(!$this->Id)
       {
-      echo "Project GetNumberOfSubprojects(): Id not set";
+      echo "Project GetNumberOfSubProjects(): Id not set";
       return false;
       }
 
@@ -1554,6 +1554,39 @@ class Project
         }
       }
     }
+
+    /**
+     * Return the list of subproject groups that belong to this project.
+     */
+    function GetSubProjectGroups()
+      {
+      if(!$this->Id)
+        {
+        add_log('Id not set', 'Project::GetSubProjectGroups', LOG_ERR);
+        return false;
+        }
+      include_once('models/subprojectgroup.php');
+
+      $query = pdo_query(
+        "SELECT id FROM subprojectgroup WHERE projectid=".qnum($this->Id)."
+         AND endtime='1980-01-01 00:00:00'");
+      if(!$query)
+        {
+        add_last_sql_error("Project::GetSubProjectGroups", $this->Id);
+        return false;
+        }
+
+      $subProjectGroups = array();
+      while($result = pdo_fetch_array($query))
+        {
+        $subProjectGroup = new SubProjectGroup();
+        // SetId automatically loads the rest of the group's data.
+        $subProjectGroup->SetId($result['id']);
+        $subProjectGroups[] = $subProjectGroup;
+        }
+      return $subProjectGroups;
+      }
+
 }  // end class Project
 
 ?>

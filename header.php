@@ -9,7 +9,7 @@
         <span ng-if="cdash.userid > 0">
           My CDash
         </span>
-        <span ng-if="cdash.userid == 0">
+        <span ng-if="!cdash.userid || cdash.userid == 0">
           Login
         </span>
       </a>
@@ -29,7 +29,7 @@
     <div id="headerlogo">
       <a href="{{cdash.home}}">
         <img ng-if="cdash.logoid>0" id="projectlogo" border="0" height="50px" src="displayImage.php?imgid={{cdash.logoid}}"/>
-        <img ng-if="cdash.logoid==0" id="projectlogo" border="0" height="50px" src="images/cdash.gif"/>
+        <img ng-if="! cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="images/cdash.gif"/>
       </a>
     </div>
     <div id="headername">
@@ -166,7 +166,7 @@
               </a>
             </li>
             <li>
-              <a href="manageSubproject.php?projectid={{cdash.projectid}}">
+              <a href="manageSubProject.php?projectid={{cdash.projectid}}">
                 SubProjects
               </a>
             </li>

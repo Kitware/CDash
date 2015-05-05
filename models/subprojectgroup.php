@@ -382,6 +382,19 @@ class SubProjectGroup
         }
       }
 
+    // Make sure there's only one default group per project.
+    if ($this->IsDefault)
+      {
+      $query =
+        "UPDATE subprojectgroup SET is_default=0
+         WHERE projectid=".qnum($this->ProjectId)." AND id!=".qnum($this->Id);
+      if(!pdo_query($query))
+        {
+        add_last_sql_error("SubProjectGroup Update Default");
+        return false;
+        }
+      }
+
     return true;
     }
 

@@ -35,7 +35,7 @@ $Project->Id = $projectid;
 $Project->Fill();
 
 // check if this project has subprojects.
-$hasSubprojects = ($Project->GetNumberOfSubProjects() > 0);
+$hasSubProjects = ($Project->GetNumberOfSubProjects() > 0);
 
 // make sure the user has access to this project
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
@@ -69,7 +69,7 @@ $xml .= add_XML_value("previous", "overview.php?project=$projectname&date=$previ
 $xml .= add_XML_value("current", "overview.php?project=$projectname");
 $xml .= add_XML_value("next", "overview.phpv?project=$projectname&date=$nextdate");
 $xml .= "</menu>";
-$xml .= add_XML_value("hasSubprojects", $hasSubprojects);
+$xml .= add_XML_value("hasSubProjects", $hasSubProjects);
 
 // configure/build/test data that we care about.
 $build_measurements = array("configure_warnings", "configure_errors",

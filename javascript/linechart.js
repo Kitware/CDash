@@ -1,4 +1,4 @@
-function makeLineChart(elementName, inputData, project, anchor, hasSubprojects,
+function makeLineChart(elementName, inputData, project, anchor, hasSubProjects,
                        sort) {
   jQuery(function(){
 
@@ -30,7 +30,7 @@ function makeLineChart(elementName, inputData, project, anchor, hasSubprojects,
 
         // Redirect the user to this project's index page for the given date.
         var url = "index.php?project=" + project + "&date=" + date;
-        if (hasSubprojects) {
+        if (hasSubProjects) {
           url += "&display=project";
         }
         if (sort) {

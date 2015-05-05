@@ -2265,6 +2265,14 @@ function begin_JSON_response()
   $response = array();
   $response['cssfile'] = $CDASH_CSS_FILE;
   $response['version'] = $CDASH_VERSION;
+
+  $userid = 0;
+  if(isset($_SESSION['cdash']))
+    {
+    $userid = $_SESSION['cdash']['loginid'];
+    }
+  $response['userid'] = $userid;
+
   return $response;
 }
 

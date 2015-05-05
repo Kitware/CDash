@@ -465,7 +465,7 @@ function generate_main_dashboard_XML($project_instance, $date)
       }
     else
       {
-      add_log("Subproject '$subproject_name' does not exist",
+      add_log("SubProject '$subproject_name' does not exist",
         __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
         LOG_WARNING);
       }
@@ -711,7 +711,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   b.testpassed AS counttestspassed,
                   b.testtimestatusfailed AS countteststimestatusfailed,
                   sp.id AS subprojectid,
-                  sp.core AS subprojectcore,
+                  sp.groupid AS subprojectgroup,
                   g.name as groupname,gp.position,g.id as groupid,
                   $label_sql
                   (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
@@ -785,11 +785,11 @@ function generate_main_dashboard_XML($project_instance, $date)
 
   $lastGroupPosition = $groupposition_array["position"];
 
-  // Check if we need to summarize core & non-core subproject covearge
-  // This happens when (1) we have subprojects, (2) we're looking at the children
-  // of a specific build, and (3) some subprojects are categorized as core,
-  // and others are categorized as non-core.
-  $summarizeCoreCoverage = false;
+  // Check if we need to summarize coverage by subproject groups.
+  // This happens when (1) we have subprojects,
+  // (2) we're looking at the children of a specific build, and
+  // (3) not all of the subprojects belong to a single group.
+  $summarizeCoverageByGroup = false;
   if ( isset($_GET["parentid"]) && $_GET["parentid"] > 0 &&
        $project_instance->GetNumberOfSubProjects($end_UTCDate) > 0)
     {
@@ -798,7 +798,7 @@ function generate_main_dashboard_XML($project_instance, $date)
               COUNT(IF(core=0, core, NULL)) AS noncore FROM subproject"));
     if ($core_array && $core_array["core"] > 0 && $core_array["noncore"] > 0)
       {
-      $summarizeCoreCoverage = true;
+      $summarizeCoverageByGroup = true;
       }
     }
   $nonCoreTested = 0;
@@ -1753,7 +1753,7 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
   foreach($subprojectids as $subprojectid)
     {
     $SubProject = new SubProject();
-    $SubProject->Id = $subprojectid;
+    $SubProject->SetId($subprojectid);
     $subprojProp[$subprojectid] = array('name'=>$SubProject->GetName());
     }
   $testSubProj = new SubProject();
@@ -1835,7 +1835,7 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
   foreach($subprojectids as $subprojectid)
     {
     $SubProject = new SubProject();
-    $SubProject->Id = $subprojectid;
+    $SubProject->SetId($subprojectid);
     $xml .= "<subproject>";
     $xml .= add_XML_value("name",$SubProject->GetName());
     $xml .= add_XML_value("name_encoded",urlencode($SubProject->GetName()));

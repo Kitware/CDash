@@ -56,7 +56,7 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 
 $Project = new Project();
 $Project->Id = $projectid;
-$subprojectids = $Project->GetSubprojects();
+$subprojectids = $Project->GetSubProjects();
 sort($subprojectids);
 $result = array(); # array to store the all the result
 $subprojs = array();

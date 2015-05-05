@@ -331,7 +331,7 @@ class SubProject
     if (empty($row))
       {
       // Create the group if it doesn't exist yet.
-      $subprojectGroup = new SubprojectGroup();
+      $subprojectGroup = new SubProjectGroup();
       $subprojectGroup->SetName($groupName);
       $subprojectGroup->SetProjectId($this->ProjectId);
       if ($subprojectGroup->Save() === false)
