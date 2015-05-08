@@ -26,7 +26,6 @@
     <script src="javascript/jqModal.js"></script>
     <link rel="stylesheet" type="text/css" href="javascript/jqModal.css" />
     <link rel="stylesheet" type="text/css" href="javascript/jquery.dataTables.css" />
-    <script src="javascript/cdashBuildError.js"></script>
 
     <script src="javascript/angular.min.js"></script>
     <script src="javascript/cdash_angular.js"></script>
@@ -104,7 +103,7 @@
 
       <tr ng-if="cdash.cvsurl">
         <th class="measurement">
-          <nobr> Repository </nobr>
+          <span class="nobr"> Repository </span>
         </th>
         <td>
           <a href="{{cdash.cvsurl}}">
@@ -113,18 +112,18 @@
         </td>
       </tr>
 
-      <tr ngif="error.logline">
+      <tr ng-if="error.logline">
         <th class="measurement">
-          <nobr>Build Log Line </nobr>
+          <span class="nobr">Build Log Line </span>
         </th>
         <td>
           {{error.logline}}
         </td>
       </tr>
 
-      <tr ngif="error.precontext || error.postcontext">
+      <tr ng-if="error.precontext || error.postcontext">
         <th class="measurement">
-          <nobr> {{cdash.errortypename}} </nobr>
+          <span class="nobr"> {{cdash.errortypename}} </span>
         </th>
         <td>
           <pre class="compiler-output">{{error.precontext}}</pre>
@@ -137,7 +136,7 @@
 
       <tr ng-if="error.sourcefile && error.targetname">
         <th class="measurement">
-          <nobr>Source File</nobr>
+          <span class="nobr">Source File</span>
         </th>
         <td>
           {{error.sourcefile}}
@@ -160,34 +159,20 @@
         <th class="measurement" style="width: 1%">Command</th>
         <td>
           <div style="margin-left: 25px; text-indent: -25px;">
+            <span id="showarguments_{{error.id}}" ng-hide="error.showArguments">
+              <a href="#" ng-click="error.showArguments = ! error.showArguments">
+                [+]
+              </a>
+              <span class="nobr">"<font class="argument">{{error.argumentfirst}}</font>"</span>
+            </span>
 
-            <div ng-if="error.argument">
-              <span ng-hide="error.argument.length>4" id="showarguments_{{error.id}}">
-                <a href="#" onclick="return showArguments({{error.id}});">
-                  [+]
-                </a>
-                <nobr>"<font class="argument">{{error.argumentfirst}}</font>"</nobr>
-              </span>
-
-              <span ng-hide="error.argument.length>3" id="argumentlist_{{error.id}}">
-                <a href="#" onclick="return hideArguments({{error.id}});">
-                  [-]
-                </a>
-                <nobr>"<font class="argument">{{error.argumentfirst}}</font>"</nobr>
-                <div ng-repeat="argument in error.arguments">
-                  "<font class="argument">{{argument}}</font>"</nobr>
-                </div>
-              </span>
-            </div>
-
-            <div ng-if="!error.argument">
-              <nobr>"<font class="argument">{{error.argumentfirst}}</font>"</nobr>
-
-              <div ng-repeat="argument in error.arguments">
-                "<font class="argument">{{argument}}</font>"</nobr>
-              </div>
-            </div>
-
+            <span id="argumentlist_{{error.id}}" ng-show="error.showArguments">
+              <a href="#" ng-click="error.showArguments = ! error.showArguments">
+                [-]
+              </a>
+              <span class="nobr">"<font class="argument">{{error.argumentfirst}}</font>"</span>
+              <span ng-repeat="argument in error.arguments track by $index">"<font class="argument nobr">{{argument}}</font>" </span>
+            </span>
           </div>
         </td>
       </tr>
@@ -203,7 +188,7 @@
 
       <tr ng-if="error.exitcondition">
         <th class="measurement">
-          <nobr> Exit Condition </nobr>
+          <span class="nobr"> Exit Condition </span>
         </th>
         <td>
           {{error.exitcondition}}
@@ -212,7 +197,7 @@
 
       <tr ng-if="error.stdoutput">
         <th class="measurement">
-          <nobr> Standard Output </nobr>
+          <span class="nobr"> Standard Output </span>
         </th>
         <td>
           <pre class="compiler-output" name="stdout">{{error.stdoutput}}</pre>
@@ -221,10 +206,10 @@
 
       <tr ng-if="error.stderror">
         <th class="measurement">
-          <nobr> Standard Error </nobr>
+          <span class="nobr"> Standard Error </span>
         </th>
         <td>
-          <pre class="compiler-error" name="stderr">
+          <pre class="compiler-output" name="stderr">
             {{error.stderror}}
           </pre>
         </td>
