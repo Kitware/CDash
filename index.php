@@ -786,25 +786,24 @@ function generate_main_dashboard_XML($project_instance, $date)
   $lastGroupPosition = $groupposition_array["position"];
 
   // Check if we need to summarize coverage by subproject groups.
-  // This happens when (1) we have subprojects,
-  // (2) we're looking at the children of a specific build, and
-  // (3) not all of the subprojects belong to a single group.
-  $summarizeCoverageByGroup = false;
+  // This happens when we have subprojects and we're looking at the children
+  // of a specific build.
+  $subproject_groups = array();
+  $subproject_group_coverage = array();
   if ( isset($_GET["parentid"]) && $_GET["parentid"] > 0 &&
        $project_instance->GetNumberOfSubProjects($end_UTCDate) > 0)
     {
-    $core_array = pdo_fetch_array(pdo_query(
-      "SELECT COUNT(IF(core=1, core, NULL)) AS core,
-              COUNT(IF(core=0, core, NULL)) AS noncore FROM subproject"));
-    if ($core_array && $core_array["core"] > 0 && $core_array["noncore"] > 0)
+    $groups = $project_instance->GetSubProjectGroups();
+    foreach ($groups as $group)
       {
-      $summarizeCoverageByGroup = true;
+      // Create an Id -> Object mapping for our subproject groups.
+      $subproject_groups[$group->GetId()] = $group;
+      // Also keep track of coverage info on a per-group basis.
+      $subproject_group_coverage[$group->GetId()] = array();
+      $subproject_group_coverage[$group->GetId()]["tested"] = 0;
+      $subproject_group_coverage[$group->GetId()]["untested"] = 0;
       }
     }
-  $nonCoreTested = 0;
-  $nonCoreUntested = 0;
-  $coreTested = 0;
-  $coreUntested = 0;
 
   // Fetch all the rows of builds into a php array.
   // Compute additional fields for each row that we'll need to generate the xml.
@@ -1382,18 +1381,16 @@ function generate_main_dashboard_XML($project_instance, $date)
       @$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
 
       $coverageThreshold = $project_array["coveragethreshold"];
-      if ($build_array["subprojectcore"] == 0)
+      if ($build_array["subprojectgroup"])
         {
-        $coverageThreshold = $project_array["coveragethreshold2"];
-        $nonCoreTested += $coverage_array["loctested"];
-        $nonCoreUntested += $coverage_array["locuntested"];
-        $xml .= "  <core>0</core>";
-        }
-      else if ($build_array["subprojectcore"] == 1)
-        {
-        $coreTested += $coverage_array["loctested"];
-        $coreUntested += $coverage_array["locuntested"];
-        $xml .= "  <core>1</core>";
+        $groupId = $build_array["subprojectgroup"];
+        $coverageThreshold =
+          $subproject_groups[$groupId]->GetCoverageThreshold();
+        $subproject_group_coverage[$groupId]["tested"] +=
+          $coverage_array["loctested"];
+        $subproject_group_coverage[$groupId]["untested"] +=
+          $coverage_array["locuntested"];
+        $xml .= "  <group>$groupId</group>";
         }
 
       $xml .= "  <percentage>".$percent."</percentage>";
@@ -1528,20 +1525,29 @@ function generate_main_dashboard_XML($project_instance, $date)
     $xml .= "</buildgroup>";
     }
 
-  // generate core & non-core coverage .xml here
-  if ( ($nonCoreTested != 0 || $nonCoreUntested != 0) &&
-       ($coreTested != 0 || $coreUntested != 0) )
+  // generate subproject coverage by group here.
+  if (!empty($subproject_groups))
     {
-    $coreCoverage = round($coreTested / ($coreTested + $coreUntested) *100, 2);
-    $nonCoreCoverage = round($nonCoreTested / ($nonCoreTested + $nonCoreUntested) *100, 2);
-    $xml .= add_XML_value("coreCoverage",$coreCoverage);
-    $xml .= add_XML_value("coreTested",$coreTested);
-    $xml .= add_XML_value("coreUntested",$coreUntested);
-    $xml .= add_XML_value("coreThreshold",$project_array["coveragethreshold"]);
-    $xml .= add_XML_value("nonCoreCoverage",$nonCoreCoverage);
-    $xml .= add_XML_value("nonCoreTested",$nonCoreTested);
-    $xml .= add_XML_value("nonCoreUntested",$nonCoreUntested);
-    $xml .= add_XML_value("nonCoreThreshold",$project_array["coveragethreshold2"]);
+    foreach ($subproject_groups as $groupid => $group)
+      {
+      $group_cov = $subproject_group_coverage[$groupid];
+      $tested = $group_cov['tested'];
+      $untested = $group_cov['untested'];
+      if ($tested == 0 && $untested == 0)
+        {
+        continue;
+        }
+      $coverage = round($tested / ($tested + $untested) * 100, 2);
+
+      $xml .= "<subprojectgroup>";
+      $xml .= add_XML_value("name", $group->GetName());
+      $xml .= add_XML_value("id", $group->GetId());
+      $xml .= add_XML_value("threshold", $group->GetCoverageThreshold());
+      $xml .= add_XML_value("coverage", $coverage);
+      $xml .= add_XML_value("tested", $tested);
+      $xml .= add_XML_value("untested", $untested);
+      $xml .= "</subprojectgroup>";
+      }
     }
 
   // Fill in the rest of the info

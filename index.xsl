@@ -785,7 +785,7 @@
    <xsl:include href="filterdataTemplate.xsl"/>
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="coreCoverage.xsl"/>
+   <xsl:include href="subprojectGroupCoverage.xsl"/>
 
    <!-- Include local common files -->
    <xsl:include href="local/header.xsl"/>
@@ -1145,8 +1145,8 @@
 <tbody id="coveragebody">
 
   <xsl:choose>
-    <xsl:when test="cdash/coreCoverage">
-      <xsl:call-template name="coreCoverage"/>
+    <xsl:when test="count(cdash/subprojectgroup)>0">
+      <xsl:call-template name="subprojectGroupCoverage"/>
     </xsl:when>
     <xsl:otherwise>
       <xsl:for-each select="cdash/buildgroup/coverage">
