@@ -61,7 +61,7 @@ if(!isset($userid))
   $userid = 0;
   }
 
-$query = "SELECT b.starttime, b.projectid, b.siteid, b.type, b.name, sp.core
+$query = "SELECT b.starttime, b.projectid, b.siteid, b.type, b.name, sp.groupid
           FROM build AS b
           LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
           LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
@@ -78,8 +78,9 @@ if(!isset($projectid) || $projectid==0 || !is_numeric($projectid))
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
-$query = "SELECT name, coveragethreshold, coveragethreshold2, nightlytime,
-          showcoveragecode, displaylabels FROM project WHERE id='$projectid'";
+$query =
+  "SELECT name, coveragethreshold nightlytime, showcoveragecode, displaylabels
+   FROM project WHERE id='$projectid'";
 $project = pdo_query($query);
 if(pdo_num_rows($project) == 0)
   {
@@ -134,9 +135,16 @@ $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
 $starttime = $build_array["starttime"];
 $threshold = $project_array["coveragethreshold"];
-if ($build_array["core"] == 0)
+if ($build_array["groupid"] > 0)
   {
-  $threshold = $project_array["coveragethreshold2"];
+  $row = pdo_single_row_query(
+    "SELECT coveragethreshold FROM subprojectgroup
+     WHERE projectid=".qnum($projectid)."
+     AND id=".qnum($build_array["groupid"]));
+  if (!empty($row) && isset($row['coveragethreshold']))
+    {
+    $threshold = $row["coveragethreshold"];
+    }
   }
 
 $xml .= "<menu>";
