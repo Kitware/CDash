@@ -35,7 +35,7 @@ $Project->Id = $projectid;
 $Project->Fill();
 
 // check if this project has subprojects.
-$hasSubProjects = ($Project->GetNumberOfSubProjects() > 0);
+$has_subprojects = ($Project->GetNumberOfSubProjects() > 0);
 
 // make sure the user has access to this project
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
@@ -69,7 +69,7 @@ $xml .= add_XML_value("previous", "overview.php?project=$projectname&date=$previ
 $xml .= add_XML_value("current", "overview.php?project=$projectname");
 $xml .= add_XML_value("next", "overview.phpv?project=$projectname&date=$nextdate");
 $xml .= "</menu>";
-$xml .= add_XML_value("hasSubProjects", $hasSubProjects);
+$xml .= add_XML_value("has_subprojects", $has_subprojects);
 
 // configure/build/test data that we care about.
 $build_measurements = array("configure_warnings", "configure_errors",
@@ -112,41 +112,51 @@ while($group_row = pdo_fetch_array($group_rows))
     }
   }
 
-// Record coverage threshold(s) for this project.
-$query = "SELECT coveragethreshold, coveragethreshold2 FROM project
-          WHERE id='$projectid'";
+// Get default coverage threshold for this project.
+$query = "SELECT coveragethreshold FROM project WHERE id='$projectid'";
 $project = pdo_query($query);
 add_last_sql_error("overview :: coveragethreshold", $projectid);
 $project_array = pdo_fetch_array($project);
-$thresh1 = $project_array["coveragethreshold"];
-$thresh2 = $project_array["coveragethreshold2"];
 
-// Detect if this project has any non-core subprojects
-$have_non_core = false;
-$query = "SELECT * FROM subproject WHERE projectid='$projectid' AND core != 1";
+$has_subproject_groups = false;
+$subproject_groups = array();
+$coverage_group_names = array();
 $coverage_thresholds = array();
-if (pdo_num_rows(pdo_query($query)) > 0)
+if ($has_subprojects)
   {
-  $have_non_core = true;
-  $coverage_group_names = array("core coverage", "non-core coverage");
-  $coverage_thresholds["core coverage"] = array();
-  $coverage_thresholds["core coverage"]["low"] = 0.7 * $thresh1;
-  $coverage_thresholds["core coverage"]["medium"] = $thresh1;
-  $coverage_thresholds["core coverage"]["satisfactory"] = 100;
-  $coverage_thresholds["non-core coverage"] = array();
-  $coverage_thresholds["non-core coverage"]["low"] = 0.7 * $thresh2;
-  $coverage_thresholds["non-core coverage"]["medium"] = $thresh2;
-  $coverage_thresholds["non-core coverage"]["satisfactory"] = 100;
+  // Detect if the subprojects are split up into groups.
+  $groups = $Project->GetSubProjectGroups();
+  if (is_array($groups) && !empty($groups))
+    {
+    $has_subproject_groups = true;
+
+    // Store subproject groups in an array keyed by id.
+    // Also store the low, medium, satisfactory threshold values for this group.
+
+    foreach($groups as $group)
+      {
+      $subproject_groups[$group->GetId()] = $group;
+      $group_name = $group->GetName();
+      $threshold = $group->GetCoverageThreshold();
+      $coverage_group_names[] = $group_name;
+
+      $coverage_thresholds[$group_name] = array();
+      $coverage_thresholds[$group_name]["low"] = 0.7 * $threshold;
+      $coverage_thresholds[$group_name]["medium"] = $threshold;
+      $coverage_thresholds[$group_name]["satisfactory"] = 100;
+      }
+    }
   }
-else
+
+if (!$has_subproject_groups)
   {
   $coverage_group_names = array("coverage");
+  $threshold = $project_array["coveragethreshold"];
   $coverage_thresholds["coverage"] = array();
-  $coverage_thresholds["coverage"]["low"] = 0.7 * $thresh1;
-  $coverage_thresholds["coverage"]["medium"] = $thresh1;
+  $coverage_thresholds["coverage"]["low"] = 0.7 * $threshold;
+  $coverage_thresholds["coverage"]["medium"] = $threshold;
   $coverage_thresholds["coverage"]["satisfactory"] = 100;
   }
-add_last_sql_error("overview :: detect-non-core", $projectid);
 
 // Initialize our storage data structures.
 //
@@ -286,14 +296,14 @@ while($build_row = pdo_fetch_array($builds_array))
   // Check if coverage was performed for this build.
   if ($build_row["loctested"] + $build_row["locuntested"] > 0)
     {
-    if ($have_non_core)
+    if ($has_subproject_groups)
       {
-      // We need to query the children of this build to determine
-      // core vs. non-core coverage.
+      // We need to query the children of this build to split up
+      // coverage into subproject groups.
       $child_builds_query =
         "SELECT b.id,
         cs.loctested AS loctested, cs.locuntested AS locuntested,
-        sp.id AS subprojectid, sp.core AS subprojectcore
+        sp.id AS subprojectid, sp.groupid AS subprojectgroupid
         FROM build AS b
         LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
         LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
@@ -307,20 +317,15 @@ while($build_row = pdo_fetch_array($builds_array))
           {
           continue;
           }
-        if ($child_build_row["subprojectcore"] == 0)
-          {
-          $coverage_data[$day][$group_name]["non-core coverage"]["loctested"] +=
-            $child_build_row["loctested"];
-          $coverage_data[$day][$group_name]["non-core coverage"]["locuntested"]
-            += $child_build_row["locuntested"];
-          }
-        else
-          {
-          $coverage_data[$day][$group_name]["core coverage"]["loctested"] +=
-            $child_build_row["loctested"];
-          $coverage_data[$day][$group_name]["core coverage"]["locuntested"] +=
-            $child_build_row["locuntested"];
-          }
+
+        // Record coverage for this subproject group.
+        $subproject_group_id = $child_build_row["subprojectgroupid"];
+        $subproject_group_name =
+          $subproject_groups[$subproject_group_id]->GetName();
+        $coverage_data[$day][$group_name][$subproject_group_name]["loctested"] +=
+          $child_build_row["loctested"];
+        $coverage_data[$day][$group_name][$subproject_group_name]["locuntested"] +=
+          $child_build_row["locuntested"];
         }
       }
     else
