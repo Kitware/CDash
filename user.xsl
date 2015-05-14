@@ -113,7 +113,7 @@
           <xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>
           <img  src="images/edit2.png" border="0" alt="editproject" /></a>
           <a class="tooltip" title="Manage subprojects" >
-          <xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
+          <xsl:attribute name="href">manageSubProject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
           <img  src="images/subproject.png" border="0" alt="subproject" /></a>
           <a class="tooltip" title="Manage project groups" >
           <xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
@@ -331,7 +331,7 @@
     <tr class="trodd"><td id="nob"><a href="createProject.php">Create new project</a></td></tr>
     <tr class="treven"><td id="nob"><a href="createProject.php?edit=1">Edit project</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">Manage project roles</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="manageSubproject.php">Manage subproject</a></td></tr>
+    <tr class="treven"><td id="nob"><a href="manageSubProject.php">Manage subproject</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="manageBuildGroup.php">Manage project groups</a></td></tr>
     <tr class="treven"><td id="nob"><a href="manageCoverage.php">Manage project coverage</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="manageBanner.php">Manage banner message</a></td></tr>

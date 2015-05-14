@@ -129,7 +129,7 @@
 
 <!-- Main -->
 <div style="position:relative; top:10px; left:20px; overflow:hidden;">
-<label style="font-size:1.2em;"><b>Subproject Dependencies Graph</b></label>
+<label style="font-size:1.2em;"><b>SubProject Dependencies Graph</b></label>
 <label for="selectedsort" style="margin-left:80px; font-size:.95em;">Sorted by:</label>
 <select id="selectedsort">
   <option value="0" selected="selected">subproject name</option>

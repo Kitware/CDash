@@ -53,7 +53,7 @@ if($projectid == 0)
   checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
 
   $xml = begin_XML_for_XSLT();
-  $xml .= "<title>CDash - Subproject dependencies Graph - ".$projectname."</title>";
+  $xml .= "<title>CDash - SubProject dependencies Graph - ".$projectname."</title>";
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid);
@@ -113,5 +113,5 @@ if($projectid == 0)
 $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml,"viewSubprojectDependenciesGraph");
+generate_XSLT($xml,"viewSubProjectDependenciesGraph");
 ?>

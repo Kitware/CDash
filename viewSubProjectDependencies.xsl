@@ -31,7 +31,7 @@
 </xsl:choose>
 
 <!-- Main -->
-<h3>Subproject Dependencies</h3>
+<h3>SubProject Dependencies</h3>
 <table xmlns:lxslt="http://xml.apache.org/xslt" cellspacing="0" border="0" width="100%">
    <tr align="center" bgcolor="#CCCCCC">
      <td></td>
