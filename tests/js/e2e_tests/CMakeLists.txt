@@ -18,3 +18,4 @@ function(add_protractor_test test_name)
 endfunction()
 
 add_protractor_test(viewBuildError)
+add_protractor_test(manageSubProject)

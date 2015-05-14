@@ -81,7 +81,6 @@ add_php_test(viewmap)
 
 add_php_test(editautoremovesettings)
 add_php_test(groupsdescription)
-add_php_test(managesubproject)
 add_php_test(viewsubprojectdependencies)
 add_php_test(testmodel)
 add_php_test(buildmodel)
