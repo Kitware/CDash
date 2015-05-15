@@ -209,9 +209,7 @@
           <span class="nobr"> Standard Error </span>
         </th>
         <td>
-          <pre class="compiler-output" name="stderr">
-            {{error.stderror}}
-          </pre>
+          <pre class="compiler-output" name="stderr">{{error.stderror}}</pre>
         </td>
       </tr>
     </table>
