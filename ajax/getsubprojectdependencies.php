@@ -58,12 +58,20 @@ $Project = new Project();
 $Project->Id = $projectid;
 $subprojectids = $Project->GetSubProjects();
 sort($subprojectids);
+
+$subproject_groups = array();
+$groups = $Project->GetSubProjectGroups();
+foreach($groups as $group)
+  {
+  $subproject_groups[$group->GetId()] = $group;
+  }
+
 $result = array(); # array to store the all the result
 $subprojs = array();
 foreach($subprojectids as $subprojectid)
   {
   $SubProject = new SubProject();
-  $SubProject->Id = $subprojectid;
+  $SubProject->SetId($subprojectid);
   $subprojs[$subprojectid] = $SubProject;
   }
 
@@ -71,18 +79,10 @@ foreach($subprojectids as $subprojectid)
   {
   $SubProject = $subprojs[$subprojectid];
   $subarray = array("name"=>$SubProject->GetName(), "id"=>$subprojectid);
-  $grp = $SubProject->GetCore();
-  if ($grp == 0)
+  $groupid = $SubProject->GetGroupId();
+  if ($groupid > 0)
     {
-    $subarray['group'] = "Non-Core";
-    }
-  else if ($grp == 1)
-    {
-    $subarray['group'] = "Core";
-    }
-  else if ($grp == 2)
-    {
-    $subarray['group'] = "Third Party";
+    $subarray['group'] = $subproject_groups[$groupid]->GetName();
     }
   $dependencies = $SubProject->GetDependencies($date);
   $deparray = array();

@@ -29,10 +29,6 @@ class Example extends CDashSeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->click("link=NOX");
     $this->waitForPageToLoad("30000");
-    $this->click("link=SubProjects");
-    $this->waitForPageToLoad("30000");
-    $this->click("//tr[3]/td[2]/table/tbody/tr[1]/td[2]/a");
-    $this->waitForPageToLoad("30000");
   }
 }
 ?>

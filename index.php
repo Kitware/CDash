@@ -414,9 +414,9 @@ function generate_main_dashboard_XML($project_instance, $date)
     {
     $SubProject = new SubProject();
     $subproject_name = htmlspecialchars(pdo_real_escape_string($subproject_name));
-    $SubProject->Name = $subproject_name;
-    $SubProject->ProjectId = $projectid;
-    $subprojectid = $SubProject->GetIdFromName();
+    $SubProject->SetName($subproject_name);
+    $SubProject->SetProjectId($projectid);
+    $subprojectid = $SubProject->GetId();
 
     if($subprojectid)
       {
@@ -426,7 +426,7 @@ function generate_main_dashboard_XML($project_instance, $date)
 
       $xml .= "<subproject>";
 
-      $xml .= add_XML_value("name", $SubProject->Name);
+      $xml .= add_XML_value("name", $SubProject->GetName());
 
       $rowparity = 0;
       $dependencies = $SubProject->GetDependencies();
@@ -436,7 +436,7 @@ function generate_main_dashboard_XML($project_instance, $date)
           {
           $xml .= "<dependency>";
           $DependProject = new SubProject();
-          $DependProject->Id = $dependency;
+          $DependProject->SetId($dependency);
           $xml .= add_XML_value("rowparity",$rowparity);
           $xml .= add_XML_value("name",$DependProject->GetName());
           $xml .= add_XML_value("name_encoded",urlencode($DependProject->GetName()));

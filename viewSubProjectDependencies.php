@@ -143,7 +143,7 @@ if($projectid == 0)
     {
     $xml .= "<subproject>";  
     $SubProject = new SubProject();
-    $SubProject->Id = $subprojectid;
+    $SubProject->SetId($subprojectid);
     
     if($row == 0)
       {
