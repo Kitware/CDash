@@ -1163,6 +1163,10 @@ textarea {
   max-height:350px;
 }
 
+.nobr {
+  white-space:nowrap;
+}
+
 /* used in manageSubProject.php */
 .tab-content {
     border-left: 1px solid #ddd;

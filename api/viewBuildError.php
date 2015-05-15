@@ -209,6 +209,7 @@ if(isset($_GET["onlydeltan"]))
              bf2a.argumentid=bfa.id ORDER BY bf2a.place ASC");
 
     $i=0;
+    $arguments_response = array();
     while($argument_array = pdo_fetch_array($arguments))
       {
       if($i == 0)
@@ -217,10 +218,11 @@ if(isset($_GET["onlydeltan"]))
         }
       else
         {
-        $error_response['argument'] = $argument_array['argument'];
+        $arguments_response[] = $argument_array['argument'];
         }
       $i++;
       }
+    $error_response['arguments'] = $arguments_response;
 
     get_labels_xml_from_query_results(
       "SELECT text FROM label, label2buildfailure
@@ -334,6 +336,7 @@ else
        WHERE bf2a.buildfailureid='$buildfailureid' AND bf2a.argumentid=bfa.id
        ORDER BY bf2a.place ASC");
     $i=0;
+    $arguments_response = array();
     while($argument_array = pdo_fetch_array($arguments))
       {
       if($i == 0)
@@ -342,10 +345,11 @@ else
         }
       else
         {
-        $error_response['argument'] = $argument_array['argument'];
+        $arguments_response[] = $argument_array['argument'];
         }
       $i++;
       }
+    $error_response['arguments'] = $arguments_response;
 
     get_labels_JSON_from_query_results(
       "SELECT text FROM label, label2buildfailure
