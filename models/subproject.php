@@ -17,16 +17,60 @@
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
 
+include_once('models/subprojectgroup.php');
+
 /** Main subproject class */
 class SubProject
 {
-  var $Name;
-  var $Id;
-  var $ProjectId;
-  var $Core;
+  private $Name;
+  private $Id;
+  private $ProjectId;
+  private $GroupId;
 
   function __construct()
     {
+    $this->Name = "";
+    $this->Id = 0;
+    $this->GroupId = 0;
+    $this->ProjectId = 0;
+    }
+
+  /** Function to get the id */
+  function GetId()
+    {
+    return $this->Id;
+    }
+
+  /** Function to set the id.  Also loads remaining data for this
+    * subproject from the database.
+   **/
+  function SetId($id)
+    {
+    if (!is_numeric($id))
+      {
+      return false;
+      }
+
+    $this->Id = $id;
+
+    $row = pdo_single_row_query(
+      "SELECT name, projectid, groupid FROM subproject
+       WHERE id=".qnum($this->Id). " AND endtime='1980-01-01 00:00:00'");
+    if (empty($row))
+      {
+      return false;
+      }
+
+    $this->Name = $row['name'];
+    $this->ProjectId = $row['projectid'];
+    $this->GroupId = $row['groupid'];
+    return true;
+    }
+
+  /** Function to get the project id */
+  function GetProjectId()
+    {
+    return $this->ProjectId;
     }
 
   /** Function to set the project id */
@@ -35,6 +79,10 @@ class SubProject
     if(is_numeric($projectid))
       {
       $this->ProjectId = $projectid;
+      if ($this->Name != "")
+        {
+        $this->Fill();
+        }
       return true;
       }
     return false;
@@ -43,7 +91,7 @@ class SubProject
   /** Delete a subproject */
   function Delete($keephistory=true)
     {
-    if(!$this->Id)
+    if($this->Id < 1)
       {
       return false;
       }
@@ -65,6 +113,7 @@ class SubProject
     // we should remove any dependencies on this subproject.
     pdo_query(
       "DELETE FROM subproject2subproject WHERE dependsonid=".qnum($this->Id));
+
     if(!$keephistory)
       {
       pdo_query("DELETE FROM subproject2build WHERE subprojectid=".qnum($this->Id));
@@ -89,7 +138,7 @@ class SubProject
   function Exists()
     {
     // If no id specify return false
-    if(!$this->Id)
+    if($this->Id < 1)
       {
       return false;
       }
@@ -106,7 +155,19 @@ class SubProject
   // Save the subproject in the database
   function Save()
     {
-    // Check if the project is already
+    // Assign it to the default group if necessary.
+    if ($this->GroupId < 1)
+      {
+      $row = pdo_single_row_query(
+        "SELECT id from subprojectgroup
+         WHERE projectid=".qnum($this->ProjectId)." AND is_default=1");
+      if (!empty($row))
+        {
+        $this->GroupId = $row['id'];
+        }
+      }
+
+    // Check if the subproject already exists.
     if($this->Exists())
       {
       // Trim the name
@@ -116,7 +177,7 @@ class SubProject
       $query = "UPDATE subproject SET ";
       $query .= "name='".$this->Name."'";
       $query .= ",projectid=".qnum($this->ProjectId);
-      $query .= ",core=".qnum($this->Core);
+      $query .= ",groupid=".qnum($this->GroupId);
       $query .= " WHERE id=".qnum($this->Id)."";
 
       if(!pdo_query($query))
@@ -138,7 +199,7 @@ class SubProject
       // Trim the name
       $this->Name = trim($this->Name);
 
-      // Make sure it's no already in the database
+      // Double check that it's not already in the database.
       $query = pdo_query("SELECT id FROM subproject WHERE name='".$this->Name."' AND projectid=".qnum($this->ProjectId)
                          ." AND endtime='1980-01-01 00:00:00'");
       if(!$query)
@@ -156,9 +217,10 @@ class SubProject
 
       $starttime = gmdate(FMT_DATETIME);
       $endtime = "1980-01-01 00:00:00";
-      $query = "INSERT INTO subproject(".$id."name,projectid,core,starttime,endtime)
-                 VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId).",".qnum($this->Core)
-                 .",'".$starttime."','".$endtime."')";
+      $query =
+        "INSERT INTO subproject(".$id."name,projectid,groupid,starttime,endtime)
+         VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId).",".
+                 qnum($this->GroupId).",'".$starttime."','".$endtime."')";
 
       if(!pdo_query($query))
         {
@@ -166,7 +228,7 @@ class SubProject
         return false;
         }
 
-      if(!$this->Id)
+      if($this->Id < 1)
         {
         $this->Id = pdo_insert_id("subproject");
         }
@@ -183,7 +245,7 @@ class SubProject
       return $this->Name;
       }
 
-    if(!$this->Id)
+    if($this->Id < 1)
       {
       echo "SubProject GetName(): Id not set";
       return false;
@@ -201,43 +263,86 @@ class SubProject
     return $this->Name;
     }
 
-  /** Return whether or not this is a core subproject */
-  function GetCore()
+  /** Set the Name of the subproject. */
+  function SetName($name)
     {
-    if(strlen($this->Core)>0)
+    $this->Name = pdo_real_escape_string($name);
+    if ($this->ProjectId > 0)
       {
-      return $this->Core;
+      $this->Fill();
       }
-
-    if(!$this->Id)
-      {
-      echo "SubProject GetCore(): Id not set";
-      return false;
-      }
-
-    $project = pdo_query("SELECT core FROM subproject WHERE id=".qnum($this->Id));
-    if(!$project)
-      {
-      add_last_sql_error("SubProject GetCore");
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    $this->Core = $project_array['core'];
-
-    return $this->Core;
     }
 
-  /** Function to set whether or not this is a core subproject */
-  function SetCore($core)
+  /** Populate the ivars of an existing subproject.
+    * Called automatically once name & projectid are set.
+   **/
+  function Fill()
     {
-    if($core >= 0 || $core <= 2)
+    if($this->Name == "" || $this->ProjectId == 0)
       {
-      $this->Core = $core;
-      // make sure Name is set for this object before calling Save
-      $this->GetName();
-      return $this->Save();
+      add_log(
+        "Name='".$this->Name."' or ProjectId='".$this->ProjectId."' not set",
+        "SubProject::Fill",
+        LOG_WARNING);
+      return false;
       }
-    return false;
+
+    $row = pdo_single_row_query(
+      "SELECT id, groupid FROM subproject
+       WHERE projectid=".qnum($this->ProjectId). "
+       AND name='$this->Name' AND endtime='1980-01-01 00:00:00'");
+
+    if (empty($row))
+      {
+      return false;
+      }
+
+    $this->Id = $row['id'];
+    $this->GroupId = $row['groupid'];
+    return true;
+    }
+
+  /** Get the group that this subproject belongs to. */
+  function GetGroupId()
+    {
+    if($this->Id < 1)
+      {
+      echo "SubProject GetGroupId(): Id not set";
+      return false;
+      }
+
+    $row = pdo_single_row_query(
+      "SELECT groupid FROM subproject WHERE id=".qnum($this->Id));
+    if(empty($row))
+      {
+      return false;
+      }
+    $this->GroupId = $row['groupid'];
+
+    return $this->GroupId;
+    }
+
+  /** Function to set this subproject's group. */
+  function SetGroup($groupName)
+    {
+    $groupName = pdo_real_escape_string($groupName);
+    $row = pdo_single_row_query(
+      "SELECT id from subprojectgroup WHERE name = '$groupName'");
+    if (empty($row))
+      {
+      // Create the group if it doesn't exist yet.
+      $subprojectGroup = new SubProjectGroup();
+      $subprojectGroup->SetName($groupName);
+      $subprojectGroup->SetProjectId($this->ProjectId);
+      if ($subprojectGroup->Save() === false)
+        {
+        return false;
+        }
+      $this->GroupId = $subprojectGroup->GetId();
+      return true;
+      }
+    $this->GroupId = $row['id'];
+    return true;
     }
 
   /** Get the last submission of the subproject*/
@@ -249,7 +354,7 @@ class SubProject
       return false;
       }
 
-    if(!$this->Id)
+    if($this->Id < 1)
       {
       echo "SubProject GetLastSubmission(): Id not set";
       return false;
@@ -271,7 +376,7 @@ class SubProject
   /** Get the number of warning builds given a date range */
   function GetNumberOfWarningBuilds($startUTCdate,$endUTCdate, $allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfWarningBuilds(): Id not set";
       return false;
@@ -322,7 +427,7 @@ class SubProject
   /** Get the number of error builds given a date range */
   function GetNumberOfErrorBuilds($startUTCdate, $endUTCdate, $allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfErrorBuilds(): Id not set";
       return false;
@@ -375,7 +480,7 @@ class SubProject
   /** Get the number of failing builds given a date range */
   function GetNumberOfPassingBuilds($startUTCdate,$endUTCdate,$allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfPassingBuilds(): Id not set";
       return false;
@@ -428,7 +533,7 @@ class SubProject
   /** Get the number of failing configure given a date range */
   function GetNumberOfWarningConfigures($startUTCdate,$endUTCdate, $allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfWarningConfigures(): Id not set";
       return false;
@@ -482,7 +587,7 @@ class SubProject
   /** Get the number of failing configure given a date range */
   function GetNumberOfErrorConfigures($startUTCdate,$endUTCdate,$allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfErrorConfigures(): Id not set";
       return false;
@@ -536,7 +641,7 @@ class SubProject
   /** Get the number of failing configure given a date range */
   function GetNumberOfPassingConfigures($startUTCdate,$endUTCdate,$allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfPassingConfigures(): Id not set";
       return false;
@@ -590,7 +695,7 @@ class SubProject
   /** Get the number of tests given a date range */
   function GetNumberOfPassingTests($startUTCdate,$endUTCdate,$allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfPassingTests(): Id not set";
       return false;
@@ -643,7 +748,7 @@ class SubProject
   /** Get the number of tests given a date range */
   function GetNumberOfFailingTests($startUTCdate,$endUTCdate,$allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfFailingTests(): Id not set";
       return false;
@@ -696,7 +801,7 @@ class SubProject
   /** Get the number of tests given a date range */
   function GetNumberOfNotRunTests($startUTCdate,$endUTCdate,$allSubProjects=False)
     {
-    if(!$allSubProjects && !$this->Id)
+    if(!$allSubProjects && $this->Id < 1)
       {
       echo "SubProject GetNumberOfNotRunTests(): Id not set";
       return false;
@@ -746,35 +851,10 @@ class SubProject
       }
     }
 
-  /** Get the id of the subproject from the name */
-  function GetIdFromName()
-    {
-    if(!$this->Name || !$this->ProjectId)
-      {
-      add_log(
-        "Name='".$this->Name."' or ProjectId='".$this->ProjectId."' not set",
-        "SubProject::GetIdFromName",
-        LOG_WARNING);
-      return false;
-      }
-
-    $project = pdo_query("SELECT id FROM subproject WHERE projectid=".qnum($this->ProjectId).
-                         " AND name='".$this->Name."' AND endtime='1980-01-01 00:00:00'");
-
-    if(!$project)
-      {
-      add_last_sql_error("SubProject GetIdFromName");
-      return false;
-      }
-    $project_array = pdo_fetch_array($project);
-    $this->Id = $project_array['id'];
-    return $this->Id;
-    }
-
   /** Get the subprojectids of the subprojects depending on this one */
   function GetDependencies($date=NULL)
     {
-    if(!$this->Id)
+    if($this->Id < 1)
       {
       add_log(
         "Id='".$this->Id."' not set",
@@ -809,7 +889,7 @@ class SubProject
   /** Add a dependency */
   function AddDependency($subprojectid)
     {
-    if(!$this->Id)
+    if($this->Id < 1)
       {
       echo "SubProject AddDependency(): Id not set";
       return false;
@@ -856,7 +936,7 @@ class SubProject
   /** Remove a dependency */
   function RemoveDependency($subprojectid)
     {
-    if(!$this->Id)
+    if($this->Id < 1)
       {
       echo "SubProject RemoveDependency(): Id not set";
       return false;

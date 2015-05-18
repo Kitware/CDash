@@ -378,7 +378,6 @@ CREATE TABLE `project` (
   `imageid` int(11) NOT NULL default '0',
   `public` tinyint(4) NOT NULL default '1',
   `coveragethreshold` smallint(6) NOT NULL default '70',
-  `coveragethreshold2` smallint(6) NOT NULL default '70',
   `testingdataurl` varchar(255) NOT NULL default '',
   `nightlytime` varchar(50) NOT NULL default '00:00:00',
   `googletracker` varchar(50) NOT NULL default '',
@@ -860,10 +859,28 @@ CREATE TABLE `subproject` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `projectid` int(11) NOT NULL,
+  `groupid` int(11) NOT NULL,
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `core` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
+  KEY `groupid` (`groupid`),
+  KEY `projectid` (`projectid`)
+);
+
+
+--
+-- Table structure for table `subprojectgroup`
+--
+CREATE TABLE `subprojectgroup` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `projectid` int(11) NOT NULL,
+  `coveragethreshold` smallint(6) NOT NULL default '70',
+  `is_default` tinyint(1) NOT NULL,
+  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  PRIMARY KEY  (`id`),
+  KEY `name` (`name`),
   KEY `projectid` (`projectid`)
 );
 

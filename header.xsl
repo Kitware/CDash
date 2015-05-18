@@ -184,7 +184,7 @@
         <li><a><xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Coverage</a></li>
         <li><a><xsl:attribute name="href">manageBanner.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Banner</a></li>
         <li><a><xsl:attribute name="href">manageMeasurements.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Measurements</a></li>
-        <li><a><xsl:attribute name="href">manageSubproject.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>SubProjects</a></li>
+        <li><a><xsl:attribute name="href">manageSubProject.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>SubProjects</a></li>
         <li class="endsubmenu"><a><xsl:attribute name="href">manageOverview.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Overview</a></li>
         </ul>
         </li>

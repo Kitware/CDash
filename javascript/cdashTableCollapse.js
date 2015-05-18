@@ -31,13 +31,13 @@ $(document).ready(function(){
     })
 
     var folderIcon = $(this).find(".glyphicon");
-    if (folderIcon.hasClass("glyphicon-folder-open")) {
-      folderIcon.removeClass("glyphicon-folder-open");
-      folderIcon.addClass("glyphicon-folder-close");
+    if (folderIcon.hasClass("glyphicon-chevron-down")) {
+      folderIcon.removeClass("glyphicon-chevron-down");
+      folderIcon.addClass("glyphicon-chevron-right");
     }
     else {
-      folderIcon.removeClass("glyphicon-folder-close");
-      folderIcon.addClass("glyphicon-folder-open");
+      folderIcon.removeClass("glyphicon-chevron-right");
+      folderIcon.addClass("glyphicon-chevron-down");
     }
 
   restripe("#" + $(this).closest("tbody").attr('id'));

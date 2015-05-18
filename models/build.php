@@ -145,12 +145,12 @@ class Build
     // load dependency data.
     $subProject = new SubProject();
     $subProject->SetProjectId($this->ProjectId);
-    $subProject->Name = $subproject;
+    $subProject->SetName($subproject);
     $subProject->Save();
 
     // Insert the label too.
     $Label = new Label;
-    $Label->Text = $subProject->Name;
+    $Label->Text = $subProject->GetName();
     $Label->Insert();
 
     add_log('New subproject detected: '.$subproject,'Build::SetSubProject',

@@ -390,11 +390,11 @@
 <br/>
 <!-- Add link to view the subproject dependencies -->
 <a>
-<xsl:attribute name="href">viewSubprojectDependencies.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
-[View Subproject Dependencies]
+<xsl:attribute name="href">viewSubProjectDependencies.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
+[View SubProject Dependencies]
 </a>
 <a>
-<xsl:attribute name="href">viewSubprojectDependenciesGraph.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
+<xsl:attribute name="href">viewSubProjectDependenciesGraph.php?project=<xsl:value-of select="/cdash/dashboard/projectname_encoded"/><xsl:if test="string-length(/cdash/dashboard/date)>0">&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:if></xsl:attribute>
 [Graph]
 </a>
 

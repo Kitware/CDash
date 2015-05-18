@@ -27,7 +27,7 @@ class ProjectHandler extends AbstractHandler
   private $Project;
   private $SubProject;
   private $Dependencies; // keep an array of dependencies in order to remove them
-  private $Subprojects; // keep an array of supbprojects in order to remove them
+  private $SubProjects; // keep an array of supbprojects in order to remove them
   private $ProjectNameMatches;
 
 
@@ -70,23 +70,27 @@ class ProjectHandler extends AbstractHandler
 
     if($name=='PROJECT')
       {
-      $this->Subprojects = array();
+      $this->SubProjects = array();
       $this->Dependencies = array();
       }
     else if($name=='SUBPROJECT')
       {
       $this->SubProject = new SubProject();
       $this->SubProject->SetProjectId($this->projectid);
-      $this->SubProject->Name = $attributes['NAME'];
+      $this->SubProject->SetName($attributes['NAME']);
+      if (array_key_exists("GROUP", $attributes))
+        {
+        $this->SubProject->SetGroup($attributes['GROUP']);
+        }
       $this->SubProject->Save();
 
       // Insert the label
       $Label = new Label;
-      $Label->Text = $this->SubProject->Name;
+      $Label->Text = $this->SubProject->GetName();
       $Label->Insert();
 
-      $this->Subprojects[$this->SubProject->Id] = $this->SubProject;
-      $this->Dependencies[$this->SubProject->Id] = array();
+      $this->SubProjects[$this->SubProject->GetId()] = $this->SubProject;
+      $this->Dependencies[$this->SubProject->GetId()] = array();
       }
     else if($name=='DEPENDENCY')
       {
@@ -96,24 +100,26 @@ class ProjectHandler extends AbstractHandler
       //      this submission)
       //
       $dependentProject = new SubProject();
-      $dependentProject->Name = $attributes['NAME'];
+      $dependentProject->SetName($attributes['NAME']);
       $dependentProject->SetProjectId($this->projectid);
-      $dependencyid = $dependentProject->GetIdFromName();
+      // The subproject's Id is automatically loaded once its name & projectid
+      // are set.
+      $dependencyid = $dependentProject->GetId();
 
       $added = false;
 
       if ($dependencyid !== false && is_numeric($dependencyid))
         {
-        if (array_key_exists($dependencyid, $this->Subprojects))
+        if (array_key_exists($dependencyid, $this->SubProjects))
           {
-          $this->Dependencies[$this->SubProject->Id][] = $dependencyid;
+          $this->Dependencies[$this->SubProject->GetId()][] = $dependencyid;
           $added = true;
           }
         }
 
       if (!$added)
         {
-        add_log("Project.xml DEPENDENCY of ".$this->SubProject->Name.
+        add_log("Project.xml DEPENDENCY of ".$this->SubProject->GetName().
           " not mentioned earlier in file: ".$attributes['NAME'],
           "ProjectHandler:startElement", LOG_WARNING, $this->projectid);
         }
@@ -160,7 +166,7 @@ class ProjectHandler extends AbstractHandler
       $LabelEmail->ProjectId = $this->projectid;
 
       $Label = new Label;
-      $Label->SetText($this->SubProject->Name);
+      $Label->SetText($this->SubProject->GetName());
       $labelid = $Label->GetIdFromText();
       if(!empty($labelid))
         {
@@ -184,17 +190,17 @@ class ProjectHandler extends AbstractHandler
 
     if($name=='PROJECT')
       {
-      foreach($this->Subprojects as $subproject)
+      foreach($this->SubProjects as $subproject)
         {
 
         // Remove dependencies that do not exist anymore, but only for those
-        // relationships where both sides are present in $this->Subprojects.
+        // relationships where both sides are present in $this->SubProjects.
         //
         $dependencyids = $subproject->GetDependencies();
-        $removeids = array_diff($dependencyids, $this->Dependencies[$subproject->Id]);
+        $removeids = array_diff($dependencyids, $this->Dependencies[$subproject->GetId()]);
         foreach($removeids as $removeid)
           {
-          if (array_key_exists($removeid, $this->Subprojects))
+          if (array_key_exists($removeid, $this->SubProjects))
             {
             $subproject->RemoveDependency($removeid);
             }
@@ -202,8 +208,8 @@ class ProjectHandler extends AbstractHandler
             {
             $dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$removeid'", "name", "$removeid");
             add_log(
-              "Not removing dependency $dep($removeid) from $subproject->Name ".
-              "because it is not a Subproject element in this Project.xml file",
+              "Not removing dependency $dep($removeid) from $subproject->GetName() ".
+              "because it is not a SubProject element in this Project.xml file",
               "ProjectHandler:endElement", LOG_WARNING, $this->projectid);
             }
           }
@@ -211,9 +217,9 @@ class ProjectHandler extends AbstractHandler
         // Add dependencies that were queued up as we processed the DEPENDENCY
         // elements:
         //
-        foreach($this->Dependencies[$subproject->Id] as $addid)
+        foreach($this->Dependencies[$subproject->GetId()] as $addid)
           {
-          if (array_key_exists($addid, $this->Subprojects))
+          if (array_key_exists($addid, $this->SubProjects))
             {
             $subproject->AddDependency($addid);
             }
@@ -231,9 +237,9 @@ class ProjectHandler extends AbstractHandler
       foreach ($previousSubProjectIds as $previousId)
         {
         $found = false;
-        foreach ($this->Subprojects as $subproject)
+        foreach ($this->SubProjects as $subproject)
           {
-          if ($subproject->Id == $previousId)
+          if ($subproject->GetId() == $previousId)
             {
             $found = true;
             break;
@@ -242,7 +248,7 @@ class ProjectHandler extends AbstractHandler
         if (!$found)
           {
           $subProjectToRemove = new SubProject();
-          $subProjectToRemove->Id = $previousId;
+          $subProjectToRemove->SetId($previousId);
           $subProjectToRemove->Delete();
           }
         }

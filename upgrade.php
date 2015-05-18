@@ -910,11 +910,11 @@ if(isset($_GET['upgrade-2-2']))
 // 2.4 Upgrade
 if(isset($_GET['upgrade-2-4']))
   {
-  // Support for core vs. non-core subprojects
-  AddTableField('subproject', 'core', 'tinyint(1)', 'smallint', '1');
-
-  // Support for separate non-core coverage threshold
-  AddTableField('project', 'coveragethreshold2', 'smallint(6)', 'smallint', '70');
+  // Support for subproject groups
+  AddTableField('subproject', 'groupid', 'int(11)', 'bigint', '0');
+  AddTableIndex('subproject', 'groupid');
+  RemoveTableField("subproject", "core");
+  RemoveTableField('project', 'coveragethreshold2');
 
   // Support for larger types
   ModifyTableField("buildfailure","workingdirectory","VARCHAR( 512)","VARCHAR( 512 )","",true,false);

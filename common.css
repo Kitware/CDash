@@ -381,115 +381,6 @@ background-color: #adcae6
  padding-left: 143px;
 }
 
-.nav {
- list-style: none;
- margin: 0;
- padding: 0;
- font-family: Arial, Helvetica, sans-serif;
- z-index: 100;
- position: relative;
-}
-
-.nav ul {
- list-style: none;
- margin: 0;
- padding: 0;
-}
-
-.nav li {
-  float: left;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  /*opacity: 1.0;*/
-}
-
-.nav li a, .nav li a:link, .nav li a:active, .nav li a:visited {
- font: bold 1.00em/25px Arial, Helvetica, sans-serif;
- color: #FFFFFF;
- display: block;
- text-decoration: none;
- margin: 0px;
- padding-top: 1px;
- padding-right: 13px;
- padding-bottom: 2px;
- padding-left: 13px;
- background-image: url(images/menub1.gif);
- background-position: right bottom;
-}
-
-.nav li a:hover {
- color: #FFFFFF;
- background-image: url(images/menub2.gif);
- background-position: right bottom;
-}
-
-#nav-one li:hover a,
-#nav-one li.sfHover a {
-  background: #ccc;
-  color: #000;
-}
-#nav-one li:hover ul a,
-#nav-one li.sfHover ul a {
-  background: #FFFFFF;
-  color: #959595;
-}
-#nav-one li:hover ul a:hover,
-#nav-one li.sfHover ul a:hover {
-  background: #ccc;
-  color: #000;
-}
-
-.nav li ul {
-  background: #FFFFFF;
-  list-style: none;
-  margin: 0;
-  width: 100px;
-  position: absolute;
-  top: -999em;
-  left: -1px;
-}
-
-.nav li:hover ul,
-.nav li.sfHover ul {
-  top: 25px;
-}
-
-.nav ul li {
-  border: 0;
-  float: none;
-}
-.nav ul li div {
-
-}
-
-.nav ul li a {
- padding-right: 20px;
- width: 80px;
- white-space: nowrap;
- background-image: none;
- border-top-width: 0px;
- border-right-width: 1px;
- border-bottom-width: 1px;
- border-left-width: 1px;
- border-top-style: solid;
- border-right-style: solid;
- border-bottom-style: solid;
- border-left-style: solid;
- border-top-color: #000;
- border-right-color: #000;
- border-bottom-color: #000;
- border-left-color: #000;
-}
-
-.nav ul li a:hover {
-  background: #ccc;
-  color: #000;
-}
-.nav li a.submm{
- background-color: #3a596d;
- background-image: none;
-}
 #submm{
  background-color: #3a596d;
  background-image: none;
@@ -1272,7 +1163,17 @@ textarea {
   max-height:350px;
 }
 
-.nobr { white-space:nowrap; }
+.nobr {
+  white-space:nowrap;
+}
+
+/* used in manageSubProject.php */
+.tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
 
 /* used in overview.php */
 .border-right {
@@ -1284,5 +1185,20 @@ textarea {
 .overview-line-chart {
   height:100px;
   width:200px;
+}
+
+/* for angular animations */
+.repeat-item.ng-enter,
+.repeat-item.ng-leave {
+  -webkit-transition:0.5s linear all;
+  transition:0.5s linear all;
+}
+.repeat-item.ng-enter,
+.repeat-item.ng-leave.ng-leave-active {
+  opacity:0;
+}
+.repeat-item.ng-leave,
+.repeat-item.ng-enter.ng-enter-active {
+  opacity:1;
 }
 

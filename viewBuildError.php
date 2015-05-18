@@ -28,8 +28,9 @@
     <link rel="stylesheet" type="text/css" href="javascript/jquery.dataTables.css" />
 
     <script src="javascript/angular.min.js"></script>
+    <script src="javascript/angular-animate.min.js"></script>
     <script src="javascript/cdash_angular.js"></script>
-    <script src="javascript/builderror.js"></script>
+    <script src="javascript/controllers/viewBuildError.js"></script>
 
     <title>CDash : {{cdash.project}}</title>
   </head>

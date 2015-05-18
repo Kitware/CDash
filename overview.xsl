@@ -52,7 +52,7 @@
                             "<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>",
                             "<xsl:value-of select="group_name_clean"/>",
 
-                            "<xsl:value-of select="/cdash/hasSubprojects"/>",
+                            "<xsl:value-of select="/cdash/hasSubProjects"/>",
                             "<xsl:value-of select="$sort"/>");
             </xsl:for-each>
           </xsl:for-each>
@@ -64,7 +64,7 @@
                           <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>,
                           "<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>",
                           "Coverage",
-                          "<xsl:value-of select="/cdash/hasSubprojects"/>",
+                          "<xsl:value-of select="/cdash/hasSubProjects"/>",
                           "");
             makeBulletChart("<xsl:value-of select="group_name"/>" + " " + "<xsl:value-of select="nice_name"/>",
               "#<xsl:value-of select="group_name_clean"/>_<xsl:value-of select="name"/>_bullet svg",
@@ -87,7 +87,7 @@
                             <xsl:value-of select="group_name_clean"/>_<xsl:value-of select="$checker_name"/>,
                             "<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>",
                             "DynamicAnalysis",
-                            "<xsl:value-of select="/cdash/hasSubprojects"/>",
+                            "<xsl:value-of select="/cdash/hasSubProjects"/>",
                             "");
             </xsl:for-each>
           </xsl:for-each>
@@ -104,7 +104,7 @@
                             <xsl:value-of select="$group_name_clean"/>_<xsl:value-of select="name"/>,
                             "<xsl:value-of select="/cdash/dashboard/projectname_encoded"/>",
                             "<xsl:value-of select="$group_name_clean"/>",
-                            "<xsl:value-of select="/cdash/hasSubprojects"/>",
+                            "<xsl:value-of select="/cdash/hasSubProjects"/>",
                             "<xsl:value-of select="sort"/>");
             </xsl:for-each>
           </xsl:for-each>

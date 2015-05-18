@@ -73,7 +73,7 @@ $ctestconfig .= "set(CTEST_DROP_SITE_CDASH TRUE)\n";
 // Add the subproject
 $Project = new Project();
 $Project->Id = $projectid;
-$subprojectids = $Project->GetSubprojects();
+$subprojectids = $Project->GetSubProjects();
 
 function get_graph_depth($a,$value)
   {
