@@ -39,7 +39,6 @@ describe("manageSubProject", function() {
     });
   });
 
-
   it("can remove a dependency", function() {
     // Get the first subproject & expand its details.
     browser.get('manageSubProject.php?projectid=8');
@@ -52,6 +51,7 @@ describe("manageSubProject", function() {
     deleteIcon.isDisplayed().then(function () {
       // Click on it.
       deleteIcon.click();
+      browser.waitForAngular();
 
       // Verify that it no longer depends on Aristos.
       var found = subproject.all(by.repeater('dep in details.dependencies')).reduce(function(acc, elem) {
@@ -78,8 +78,8 @@ describe("manageSubProject", function() {
 
     browser.get('manageSubProject.php?projectid=8#groups');
     var rows = element(by.tagName('tbody')).all(by.tagName('tr'));
-    expect(rows.get(0).element(by.name("group_name")).getAttribute("value")).toBe("group1");
-    expect(rows.get(1).element(by.name("group_name")).getAttribute("value")).toBe("gorup2");
+    expect(rows.get(0).element(by.name("group_name")).getAttribute("value")).toBe("gorup2");
+    expect(rows.get(1).element(by.name("group_name")).getAttribute("value")).toBe("group1");
   });
 
 
@@ -88,10 +88,12 @@ describe("manageSubProject", function() {
 
     // Change name to group2, change its threshold to 65,
     // and make it the default group.
-    var row = element(by.tagName('tbody')).all(by.tagName('tr')).get(1);
+    var row = element(by.tagName('tbody')).all(by.tagName('tr')).get(0);
 
     row.element(by.name("group_name")).clear();
     row.element(by.name("group_name")).sendKeys("group2");
+    // Changing this name causes the row to be re-sorted
+    row = element(by.tagName('tbody')).all(by.tagName('tr')).get(1);
     row.element(by.name("groupRadio")).click();
     row.element(by.name("coverage_threshold")).clear();
     row.element(by.name("coverage_threshold")).sendKeys("65");
@@ -100,7 +102,7 @@ describe("manageSubProject", function() {
 
     // Verify these changes.
     browser.get('manageSubProject.php?projectid=8#groups');
-    var row = element(by.tagName('tbody')).all(by.tagName('tr')).get(1);
+    row = element(by.tagName('tbody')).all(by.tagName('tr')).get(1);
     expect(row.element(by.name("group_name")).getAttribute("value")).toBe("group2");
     expect(row.element(by.name("coverage_threshold")).getAttribute("value")).toBe("65");
     expect(row.element(by.name("groupRadio")).getAttribute('checked')).toBeTruthy();
@@ -168,6 +170,7 @@ describe("manageSubProject", function() {
       // Click on it and make sure that 'aaaNewSubProject' doesn't appear
       // on the page anymore.
       deleteIcon.click();
+      browser.waitForAngular();
       expect(element(by.id('current')).getInnerHtml()).not.toContain("aaaNewSubProject");
 
       // Reload the page to make sure it's really gone from the database too.
