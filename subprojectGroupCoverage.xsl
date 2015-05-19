@@ -9,8 +9,10 @@
   <xsl:for-each select="cdash/subprojectgroup">
     <xsl:variable name="groupid" select="id"/>
     <tr class="parent_row">
-      <td></td>
-      <td align="left" class="paddt"></td>
+      <td class="paddt" align="left">
+        <b><xsl:value-of select="name"/></b>
+        <div class="glyphicon glyphicon-chevron-down"/>
+      </td>
 
       <td align="center">
         <xsl:attribute name="class"><xsl:choose>
@@ -32,10 +34,6 @@
       </td>
 
       <td align="center"></td>
-      <td class="nob" align="left">
-        <b><xsl:value-of select="name"/></b>
-        <div class="glyphicon glyphicon-chevron-down"/>
-      </td>
     </tr>
 
     <xsl:for-each select="/cdash/buildgroup/coverage[group=$groupid]">

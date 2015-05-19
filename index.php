@@ -191,10 +191,19 @@ function add_buildgroup_sortlist($groupname)
   switch($st)
     {
     case 'SortAsNightly':
-      $xml .= add_XML_value("sortlist", "{sortlist: [[4,1],[7,1],[11,1],[10,1],[5,1],[8,1]]}");
-        // Theoretically, most important to least important:
-        //   configure errors DESC, build errors DESC, tests failed DESC, tests not run DESC,
-        //   configure warnings DESC, build warnings DESC
+      // Theoretically, most important to least important:
+      //   configure errors DESC, build errors DESC, tests failed DESC,
+      //   tests not run DESC, configure warnings DESC, build warnings DESC
+      if (isset($_GET["parentid"]))
+        {
+        // child build view begins with one text column (not two),
+        // so adjust indices accordingly.
+        $xml .= add_XML_value("sortlist", "{sortlist: [[3,1],[6,1],[11,1],[10,1],[4,1],[7,1]]}");
+        }
+      else
+        {
+        $xml .= add_XML_value("sortlist", "{sortlist: [[4,1],[7,1],[11,1],[10,1],[5,1],[8,1]]}");
+        }
       break;
 
     case 'SortByTime':
@@ -334,6 +343,7 @@ function generate_main_dashboard_XML($project_instance, $date)
     $xml .= add_XML_value("text",$text);
     $xml .= "</banner>";
     }
+  $sitexml = "";
 
   list ($previousdate, $currentstarttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
   $logoid = getLogoID($projectid);
@@ -364,6 +374,15 @@ function generate_main_dashboard_XML($project_instance, $date)
   else
     {
     $xml .= "<home>".$homeurl."</home>";
+    }
+
+  if(isset($_GET["parentid"]))
+    {
+    $xml .= "<childview>1</childview>";
+    }
+  else
+    {
+    $xml .= "<childview>0</childview>";
     }
 
   if($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/models/proProject.php"))
@@ -1102,12 +1121,8 @@ function generate_main_dashboard_XML($project_instance, $date)
       }
 
     $xml .= add_XML_value("type", strtolower($build_array["type"]));
-    $xml .= add_XML_value("site", $build_array["sitename"]);
-    $xml .= add_XML_value("siteoutoforder", $build_array["siteoutoforder"]);
-    $xml .= add_XML_value("siteid", $siteid);
-    $xml .= add_XML_value("buildname", $build_array["name"]);
 
-    // Trying to determing the platform based on the OSName and the buildname
+    // Attempt to determine the platform based on the OSName and the buildname
     $buildplatform = '';
     if(strtolower(substr($build_array["osname"],0,7)) == 'windows')
       {
@@ -1132,7 +1147,23 @@ function generate_main_dashboard_XML($project_instance, $date)
       $buildplatform='gnu';
       }
 
-    $xml .= add_XML_value("buildplatform",$buildplatform);
+    if(isset($_GET["parentid"]) && empty($sitexml))
+      {
+      $sitexml .= add_XML_value("site", $build_array["sitename"]);
+      $sitexml .= add_XML_value("siteoutoforder", $build_array["siteoutoforder"]);
+      $sitexml .= add_XML_value("siteid", $siteid);
+      $sitexml .= add_XML_value("buildname", $build_array["name"]);
+      $sitexml .= add_XML_value("buildplatform",$buildplatform);
+      }
+    else
+      {
+      $xml .= add_XML_value("site", $build_array["sitename"]);
+      $xml .= add_XML_value("siteoutoforder", $build_array["siteoutoforder"]);
+      $xml .= add_XML_value("siteid", $siteid);
+      $xml .= add_XML_value("buildname", $build_array["name"]);
+      $xml .= add_XML_value("buildplatform",$buildplatform);
+      }
+
     if(isset($build_array["userupdates"]))
       {
       $xml .= add_XML_value("userupdates", $build_array["userupdates"]);
@@ -1579,6 +1610,10 @@ function generate_main_dashboard_XML($project_instance, $date)
 
   $end = microtime_float();
   $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
+  if (!empty($sitexml))
+    {
+    $xml .= $sitexml;
+    }
   $xml .= "</cdash>";
 
   return $xml;
@@ -1949,7 +1984,14 @@ else
     // Now doing the xslt transition
     if($xml)
       {
-      generate_XSLT($xml,"index");
+      if(isset($_GET["parentid"]))
+        {
+        generate_XSLT($xml,"indexchildren");
+        }
+      else
+        {
+        generate_XSLT($xml,"index");
+        }
       }
     }
   }

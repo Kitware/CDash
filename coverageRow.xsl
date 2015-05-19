@@ -5,23 +5,32 @@
 
 <xsl:template name="coverageRow">
    <tr class="child_row">
-      <td align="left" class="paddt"><xsl:value-of select="site"/></td>
+      <xsl:if test="/cdash/dashboard/childview=0">
+        <td align="left" class="paddt"><xsl:value-of select="site"/></td>
 
-      <td align="left" class="paddt">
-      <xsl:choose>
-        <xsl:when test="childlink">
-          <a>
-            <xsl:attribute name="href">
-              <xsl:value-of select="childlink"/>
-            </xsl:attribute>
+        <td align="left" class="paddt">
+        <xsl:choose>
+          <xsl:when test="childlink">
+            <a>
+              <xsl:attribute name="href">
+                <xsl:value-of select="childlink"/>
+              </xsl:attribute>
+              <xsl:value-of select="buildname"/>
+            </a>
+          </xsl:when>
+          <xsl:otherwise>
             <xsl:value-of select="buildname"/>
-          </a>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="buildname"/>
-        </xsl:otherwise>
-      </xsl:choose>
-      </td>
+          </xsl:otherwise>
+        </xsl:choose>
+        </td>
+      </xsl:if>
+      <xsl:if test="/cdash/dashboard/childview=1">
+        <td align="left" class="paddt">
+          <xsl:if test="count(labels/label)=0">(none)</xsl:if>
+          <xsl:if test="count(labels/label)=1"><xsl:value-of select="labels/label"/></xsl:if>
+          <xsl:if test="count(labels/label)>1">(<xsl:value-of select="count(labels/label)"/> labels)</xsl:if>
+        </td>
+      </xsl:if>
 
       <td align="center">
         <xsl:attribute name="class">
@@ -74,12 +83,14 @@
       </span>
       </td>
 
-      <xsl:if test="/cdash/dashboard/displaylabels=1">
-        <td class="nob" align="left">
-        <xsl:if test="count(labels/label)=0">(none)</xsl:if>
-        <xsl:if test="count(labels/label)=1"><xsl:value-of select="labels/label"/></xsl:if>
-        <xsl:if test="count(labels/label)>1">(<xsl:value-of select="count(labels/label)"/> labels)</xsl:if>
-        </td>
+      <xsl:if test="/cdash/dashboard/childview=0">
+        <xsl:if test="/cdash/dashboard/displaylabels=1">
+          <td class="nob" align="left">
+          <xsl:if test="count(labels/label)=0">(none)</xsl:if>
+          <xsl:if test="count(labels/label)=1"><xsl:value-of select="labels/label"/></xsl:if>
+          <xsl:if test="count(labels/label)>1">(<xsl:value-of select="count(labels/label)"/> labels)</xsl:if>
+          </td>
+        </xsl:if>
       </xsl:if>
    </tr>
 
