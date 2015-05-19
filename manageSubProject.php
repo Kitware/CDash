@@ -207,7 +207,7 @@
                   </thead>
 
                   <tbody>
-                    <tr class="form-group repeat-item" ng-repeat="group in cdash.groups">
+                    <tr class="form-group repeat-item" ng-repeat="group in cdash.groups | orderBy:'name'">
                       <td class="col-md-3">
                         <input name="group_name" type="text" class="form-control" ng-model="group.name"></input>
                       </td>

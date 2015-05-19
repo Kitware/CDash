@@ -210,8 +210,11 @@ function rest_post()
       htmlspecialchars(pdo_real_escape_string($_POST['newsubproject']));
     $SubProject->SetName($newSubProject);
 
-    $newSubProject =
-    $SubProject->SetGroup(htmlspecialchars(pdo_real_escape_string($_POST['group'])));
+    if (isset($_POST['group']))
+      {
+      $SubProject->SetGroup(
+        htmlspecialchars(pdo_real_escape_string($_POST['group'])));
+      }
 
     $SubProject->Save();
 
@@ -233,7 +236,10 @@ function rest_post()
     $newGroup =
       htmlspecialchars(pdo_real_escape_string($_POST['newgroup']));
     $Group->SetName($newGroup);
-    $Group->SetIsDefault($_POST['isdefault']);
+    if (isset($_POST['isdefault']))
+      {
+      $Group->SetIsDefault($_POST['isdefault']);
+      }
     $Group->SetCoverageThreshold(pdo_real_escape_numeric($_POST['threshold']));
     $Group->Save();
 
