@@ -161,16 +161,16 @@
         <td>
           <div style="margin-left: 25px; text-indent: -25px;">
             <span id="showarguments_{{error.id}}" ng-hide="error.showArguments">
-              <a href="#" ng-click="error.showArguments = ! error.showArguments">
+              <span style="cursor: pointer" ng-click="error.showArguments = ! error.showArguments">
                 [+]
-              </a>
+              </span>
               <span class="nobr">"<font class="argument">{{error.argumentfirst}}</font>"</span>
             </span>
 
             <span id="argumentlist_{{error.id}}" ng-show="error.showArguments">
-              <a href="#" ng-click="error.showArguments = ! error.showArguments">
+              <span style="cursor: pointer" ng-click="error.showArguments = ! error.showArguments">
                 [-]
-              </a>
+              </span>
               <span class="nobr">"<font class="argument">{{error.argumentfirst}}</font>"</span>
               <span ng-repeat="argument in error.arguments track by $index">"<font class="argument nobr">{{argument}}</font>" </span>
             </span>
