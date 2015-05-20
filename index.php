@@ -620,7 +620,6 @@ function generate_main_dashboard_XML($project_instance, $date)
     $subprojectsql = " AND sp2b.subprojectid=".$subprojectid;
     }
 
-
   // Use this as the default date clause, but if $filterdata has a date clause,
   // then cancel this one out:
   //
@@ -631,6 +630,7 @@ function generate_main_dashboard_XML($project_instance, $date)
     $date_clause = '';
     }
 
+  $parent_clause = "";
   if(isset($_GET["parentid"]))
     {
     // If we have a parentid, then we should only show children of that build.
@@ -638,9 +638,9 @@ function generate_main_dashboard_XML($project_instance, $date)
     $parent_clause ="AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
     $date_clause = "";
     }
-  else
+  else if (empty($subprojectsql))
     {
-    // Otherwise, we should only show builds that are not children.
+    // Only show builds that are not children.
     $parent_clause ="AND (b.parentid = -1 OR b.parentid = 0) ";
     }
 
