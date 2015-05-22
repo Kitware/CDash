@@ -1627,18 +1627,33 @@ function get_author_email($projectname, $author)
   return $email;
 }
 
-/** Get the previous build id */
-function get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime)
+/** Get the N previous buildids.  N defaults to 1. */
+function get_previous_buildid($projectid,$siteid,$buildtype,$buildname,$starttime, $n=1)
 {
   $previousbuild = pdo_query("SELECT id FROM build
                               WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                              AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
+                              AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT $n");
 
-  if(pdo_num_rows($previousbuild)>0)
+  if(pdo_num_rows($previousbuild) < 1)
+    {
+    return 0;
+    }
+
+  if ($n ===  1)
     {
     $previousbuild_array = pdo_fetch_array($previousbuild);
     return $previousbuild_array["id"];
     }
+  else
+    {
+    $previous_buildids = array();
+    while ($previousbuild_array = pdo_fetch_array($previousbuild))
+      {
+      $previous_buildids[] = $previousbuild_array["id"];
+      }
+    return $previous_buildids;
+    }
+
   return 0;
 }
 

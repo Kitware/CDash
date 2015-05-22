@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash" ng-controller="ViewTestController">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="cdash.css" /> <!-- TODO: handle switch -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <title>{{cdash.title || "CDash : View test"}}</title>
+
+    <script src="javascript/jquery-1.10.2.js"></script>
+    <script src="javascript/jquery-ui-1.10.4.min.js"></script>
+    <script src="javascript/bootstrap.min.js"></script>
+    <script src="javascript/tooltip.js"></script> <!-- TODO: replace with bootstrap -->
+    <script src="javascript/cdashmenu.js"></script>
+
+    <script src="javascript/tabNavigation.js"></script>
+    <script src="javascript/angular.min.js"></script>
+    <script src="javascript/angular-animate.min.js"></script>
+    <script src="javascript/angular-ui-sortable.min.js"></script>
+    <script src="javascript/cdash_angular.js"></script>
+    <script src="javascript/controllers/viewTest.js"></script>
+
+<!-- TODO:
+<xsl:include href="filterdataTemplate.xsl"/>
+<script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
+-->
+
+  </head>
+
+  <body bgcolor="#ffffff">
+    <ng-include src="'views/header.html'"></ng-include>
+    <br/>
+
+    <div ng-if="cdash.requirelogin == 1">
+      Please <a href="user.php">login</a> to view this page.
+    </div>
+
+    <div ng-if="cdash.requirelogin != 1">
+      <h3>Testing started on {{cdash.build.testtime}}</h3>
+
+      <table border="0">
+        <tr>
+          <td align="right">
+            <b>Site Name:</b>
+          </td>
+          <td>
+            <a href="viewSite.php?siteid={{cdash.build.siteid}}">{{cdash.build.site}}</a>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="right">
+            <b>Build Name:</b>
+          </td>
+          <td>
+            <a href="buildSummary.php?buildid={{cdash.build.buildid}}">{{cdash.build.buildname}}</a>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="right">
+            <b>Total time:</b>
+          </td>
+          <td>
+            {{cdash.totaltime}}
+          </td>
+        </tr>
+
+        <!-- Display Operating System information  -->
+        <tr xsl:if="cdash.build.osname">
+          <td align="right">
+            <b>OS Name:</b>
+          </td>
+          <td>
+            {{cdash.build.osname}}
+          </td>
+        </tr>
+
+        <tr ng-if="cdash.build.osplatform">
+          <td align="right">
+            <b>OS Platform:</b>
+          </td>
+          <td>
+            {{cdash.build.osplatform}}
+          </td>
+        </tr>
+
+        <tr ng-if="cdash.build.osrelease">
+          <td align="right">
+            <b>OS Release:</b>
+          </td>
+          <td>
+            {{cdash.build.osrelease}}
+          </td>
+        </tr>
+
+        <tr ng-if="cdash.build.osversion">
+          <td align="right">
+            <b>OS Version:</b>
+          </td>
+          <td>
+            {{cdash.build.osversion}}
+          </td>
+        </tr>
+
+        <!-- Display Compiler information  -->
+        <tr ng-if="cdash.build.compilername">
+          <td align="right">
+            <b>Compiler Name:</b>
+          </td>
+          <td>
+            {{cdash.build.compilername}}
+          </td>
+        </tr>
+
+        <tr ng-if="cdash.build.compilerversion">
+          <td align="right">
+            <b>Compiler Version:</b>
+          </td>
+          <td>
+            {{cdash.build.compilerversion}}
+          </td>
+        </tr>
+      </table>
+
+  <!-- Filters?
+  <xsl:if test="count(cdash/filterdata) = 1">
+    <xsl:call-template name="filterdata" select="."/>
+  </xsl:if>
+  <div id="labelshowfilters">
+    <a id="label_showfilters" href="javascript:filters_toggle();">
+    <xsl:if test="cdash/filterdata/showfilters = 0">Show Filters</xsl:if>
+    <xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
+    </a>
+  </div>
+   -->
+
+      <div ng-switch="cdash.display">
+        <h3 ng-switch-when="onlypassed">{{cdash.numPassed}} tests passed.</h3>
+        <h3 ng-switch-when="onlyfailed">{{cdash.numFailed}} tests failed.</h3>
+        <h3 ng-switch-when="onlynotrun">{{cdash.numNotRun}} tests not run.</h3>
+        <h3 ng-switch-when="onlytimestatus">{{cdash.numTimeFailed}} tests failed for timing reasons.</h3>
+        <h3 ng-switch-default>
+          {{cdash.numPassed}} passed,
+          {{cdash.numFailed}} failed,
+          {{cdash.numTimeFailed}} failed for timing,
+          {{cdash.numNotRun}} not run.
+        </h3>
+      </div>
+
+      <!-- Hide a div for javascript to know if time status is on -->
+      <div ng-if="cdash.project.showtesttime == 1" id="showtesttimediv" style="display:none"></div>
+
+      <table id="viewTestTable" cellspacing="0" class="tabb">
+        <thead>
+          <tr class="table-heading1">
+
+            <th style="cursor: pointer" ng-click="orderByField='name'; reverseSort = !reverseSort">
+              Name
+              <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'name', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+            </th>
+
+            <th style="cursor: pointer" ng-click="orderByField='status'; reverseSort = !reverseSort">
+              Status
+              <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'status', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+            </th>
+
+            <th ng-if="cdash.build.showtesttime == 1"  style="cursor: pointer" ng-click="orderByField='timestatus'; reverseSort = !reverseSort">
+              Time Status
+              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'timeExecFull', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+            </th>
+
+            <th ng-if="cdash.build.showtesttime == 1"  style="cursor: pointer" ng-click="orderByField='execTimeFull'; reverseSort = !reverseSort">
+              Time
+              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'timeExecFull', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+            </th>
+
+            <th ng-if="cdash.displaydetails == 1" style="cursor: pointer" ng-click="$parent.orderByField='details'; $parent.reverseSort = !$parent.reverseSort">
+              Details
+              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'details', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+            </th>
+
+            <!-- currently unsortable -->
+            <th ng-if="cdash.build.displaylabels == 1">
+              Labels
+            </th>
+
+            <th ng-if="cdash.displayhistory == 1" style="cursor: pointer" ng-click="$parent.orderByField='history'; $parent.reverseSort = !$parent.reverseSort">
+              History
+              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'history', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+            </th>
+
+            <th ng-if="cdash.displaysummary == 1" style="cursor: pointer" ng-click="$parent.orderByField='summary'; $parent.reverseSort = !$parent.reverseSort">
+              Summary
+              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'summary', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+            </th>
+
+            <!-- TODO: test measurements -->
+          </tr>
+        </thead>
+
+        <tr ng-repeat="test in cdash.tests |orderBy:orderByField:reverseSort" ng-class-odd="'odd'" ng-class-even="'even'">
+          <td>
+            <img ng-if="test.new == 1 && test.timestatus == 'Passed' && test.status == 'Passed'" src="images/flaggreen.gif" title="flag"/>
+            <img ng-if="test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')" src="images/flag.png" title="flag"/>
+            <a href="{{test.detailsLink}}">{{test.name}}</a>
+          </td>
+
+          <td align="center" ng-class="test.statusclass">
+            <a href="{{test.detailsLink}}">{{test.status}}</a>
+          </td>
+
+          <td ng-if="cdash.project.showtesttime == 1" align="center" ng-class="test.timestatusclass">
+            <a href="{{test.detailsLink}}">{{test.timestatus}}</a>
+          </td>
+
+          <td ng-if="cdash.project.showtesttime == 1" align="right">
+            <span style="display:none">{{test.execTimeFull}}</span>
+            {{test.execTime}}
+          </td>
+
+          <td ng-if="cdash.displaydetails == 1">
+            {{test.details}}
+          </td>
+
+          <td ng-if="cdash.build.displaylabels == 1" align="left">
+            <span ng-repeat="label in test.labels">{{label}}</span>
+          </td>
+
+          <td ng-if="cdash.displayhistory == 1" align="center" ng-class="test.historyclass">
+            {{test.history}}
+          </td>
+
+          <td ng-if="cdash.displaysummary == 1" align="center" ng-class="test.summaryclass">
+            <a href="{{test.summaryLink}}">{{test.summary}}</a>
+          </td>
+
+        </tr>
+      </table>
+
+      <br/>
+      <a href="{{cdash.csvlink}}">Download Table as CSV File</a>
+    </div>
+
+
+    <!-- FOOTER -->
+    <br/>
+    <ng-include src="'views/footer.html'"></ng-include>
+  </body>
+</html>
