@@ -39,11 +39,11 @@
     <ng-include src="'header.php'"></ng-include>
     <br/>
 
-    <div ng-if="cdash.requirelogin=1">
+    <div ng-if="cdash.requirelogin == 1">
       Please <a href="user.php">login</a> to view this page.
     </div>
 
-    <div ng-if="cdash.requirelogin!=1">
+    <div ng-if="cdash.requirelogin != 1">
       <table border="0">
         <tr>
           <td align="left">
