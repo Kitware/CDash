@@ -20,7 +20,6 @@ set_include_path(__DIR__.'/..');
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 include_once("cdash/common.php");
-include('login.php');
 include_once("cdash/repository.php");
 include("cdash/version.php");
 
@@ -39,7 +38,8 @@ if ($date != NULL)
 // Checks
 if(!isset($buildid) || !is_numeric($buildid))
   {
-  echo "Not a valid buildid!";
+  $response['error'] = "Not a valid buildid!";
+  echo json_encode($response);
   return;
   }
 
@@ -58,8 +58,9 @@ $build_array = pdo_fetch_array(pdo_query($build_query));
 
 if(empty($build_array))
   {
-  echo "This build does not exist. Maybe it has been deleted.";
-  exit();
+  $response['error'] = "This build does not exist. Maybe it has been deleted.";
+  echo json_encode($response);
+  return;
   }
 
 $projectid = $build_array["projectid"];
@@ -70,7 +71,12 @@ if(pdo_num_rows($project)>0)
   $projectname = $project_array["name"];
   }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"]);
+if (!checkUserPolicy(@$_SESSION['cdash']['loginid'],$project_array["id"], 1))
+  {
+  $response['requirelogin'] = '1';
+  echo json_encode($response);
+  return;
+  }
 
 $response = begin_JSON_response();
 $response['title'] = "CDash : $projectname";
