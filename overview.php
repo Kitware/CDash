@@ -588,6 +588,7 @@ foreach($static_groups as $static_group)
 
 $end = microtime_float();
 $xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
+$xml .= add_XML_value("hasSubProjects", $has_subprojects);
 $xml .= "</cdash>";
 
 // Now do the xslt transition
