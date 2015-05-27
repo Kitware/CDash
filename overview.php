@@ -69,7 +69,7 @@ $xml .= add_XML_value("previous", "overview.php?project=$projectname&date=$previ
 $xml .= add_XML_value("current", "overview.php?project=$projectname");
 $xml .= add_XML_value("next", "overview.phpv?project=$projectname&date=$nextdate");
 $xml .= "</menu>";
-$xml .= add_XML_value("has_subprojects", $has_subprojects);
+$xml .= add_XML_value("hasSubProjects", $has_subprojects);
 
 // configure/build/test data that we care about.
 $build_measurements = array("configure_warnings", "configure_errors",
