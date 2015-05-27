@@ -29,6 +29,7 @@
 
     <script src="javascript/angular.min.js"></script>
     <script src="javascript/angular-animate.min.js"></script>
+    <script src="javascript/angular-ui-sortable.min.js"></script>
     <script src="javascript/cdash_angular.js"></script>
     <script src="javascript/controllers/viewBuildError.js"></script>
 

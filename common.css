@@ -189,10 +189,10 @@ height: expression(this.height > 110 ? 110: true);
  padding-bottom: 4px;
 }
 
-.tabb tbody tr.odd {
+.odd, .tabb tbody tr.odd {
   background-color: #ececec;
 }
-.tabb tbody tr.even {
+.even, .tabb tbody tr.even {
   background-color: #ffffff;
 }
 .tabb thead tr .header {
@@ -1167,7 +1167,7 @@ textarea {
   white-space:nowrap;
 }
 
-/* used in manageSubProject.php */
+/* used for tabbed content on AngularJS pages */
 .tab-content {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -1201,4 +1201,15 @@ textarea {
 .repeat-item.ng-enter.ng-enter-active {
   opacity:1;
 }
-
+.animate-show {
+  -moz-transition:all linear 0.3s;
+  -o-transition:all linear 0.3s;
+  transition:all linear 0.3s;
+  display:inline!important;
+  -webkit-transition:all linear 0.3s;
+  transition:all linear 0.3s;
+  opacity:1;
+}
+.animate-show.ng-hide {
+  opacity: 0;
+}
