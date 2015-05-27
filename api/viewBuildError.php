@@ -20,6 +20,7 @@ set_include_path(__DIR__.'/..');
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 include_once("cdash/common.php");
+include('login.php');
 include_once("cdash/repository.php");
 include("cdash/version.php");
 
