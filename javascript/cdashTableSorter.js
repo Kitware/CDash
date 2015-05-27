@@ -537,28 +537,52 @@ $(document).ready(function() {
         {
         return;
         }
-       $(this).tablesorter({
-              headers: {
-                  0: { sorter:'buildname'},     // site
-                  1: { sorter:'buildname'},     // build name
-                  2: { sorter:'numericvalue'},  // update files
-                  3: { sorter:'elapsedtime'},   // update time
-                  4: { sorter:'numericvalue'},  // config error
-                  5: { sorter:'numericvalue'},  // config warning
-                  6: { sorter:'elapsedtime'},   // configure time
-                  7: { sorter:'numericvalue'},  // build error
-                  8: { sorter:'numericvalue'},  // build warning
-                  9: { sorter:'elapsedtime'},   // build time
-                  10: { sorter:'numericvalue'}, // tests not run
-                  11: { sorter:'numericvalue'}, // test failed
-                  12: { sorter:'numericvalue'}, // test passed
-                  13: { sorter:'elapsedtime'},  // test time
-                  14: { sorter:'elapsedtime'},  // build time
-                  15: { sorter:'text'}          // labels
-              },
-            debug: false,
-            widgets: ['zebra']
-          });
+
+       if ($(this).hasClass("childbuild")) {
+         $(this).tablesorter({
+                headers: {
+                    0: { sorter:'text'},          // labels
+                    1: { sorter:'numericvalue'},  // update files
+                    2: { sorter:'elapsedtime'},   // update time
+                    3: { sorter:'numericvalue'},  // config error
+                    4: { sorter:'numericvalue'},  // config warning
+                    5: { sorter:'elapsedtime'},   // configure time
+                    6: { sorter:'numericvalue'},  // build error
+                    7: { sorter:'numericvalue'},  // build warning
+                    8: { sorter:'elapsedtime'},   // build time (advanced)
+                    9: { sorter:'numericvalue'},  // tests not run
+                    10: { sorter:'numericvalue'}, // test failed
+                    11: { sorter:'numericvalue'}, // test passed
+                    12: { sorter:'elapsedtime'},  // test time
+                    13: { sorter:'elapsedtime'},  // build time
+                },
+              debug: false,
+              widgets: ['zebra']
+            });
+       } else {
+         $(this).tablesorter({
+                headers: {
+                    0: { sorter:'buildname'},     // site
+                    1: { sorter:'buildname'},     // build name
+                    2: { sorter:'numericvalue'},  // update files
+                    3: { sorter:'elapsedtime'},   // update time
+                    4: { sorter:'numericvalue'},  // config error
+                    5: { sorter:'numericvalue'},  // config warning
+                    6: { sorter:'elapsedtime'},   // configure time
+                    7: { sorter:'numericvalue'},  // build error
+                    8: { sorter:'numericvalue'},  // build warning
+                    9: { sorter:'elapsedtime'},   // build time
+                    10: { sorter:'numericvalue'}, // tests not run
+                    11: { sorter:'numericvalue'}, // test failed
+                    12: { sorter:'numericvalue'}, // test passed
+                    13: { sorter:'elapsedtime'},  // test time
+                    14: { sorter:'elapsedtime'},  // build time
+                    15: { sorter:'text'}          // labels
+                },
+              debug: false,
+              widgets: ['zebra']
+            });
+      }
 
       // Get the cookie
       var cookiename = "cdash_table_sort_"+tableid;
@@ -598,18 +622,32 @@ $(document).ready(function() {
     // Initialize the dynamic analysis table
     $tabs = $("#dynamicanalysistable");
     $tabs.each(function(index) {
-     $(this).tablesorter({
-            headers: {
-                0: { sorter:'text'},
-                1: { sorter:'text'},
-                2: { sorter:'text'},
-                3: { sorter:'numericvalue'}, // not percent but same format
-                4: { sorter:'elapsedtime'},
-                5: { sorter:'text'}
-            },
-          debug: false,
-          widgets: ['zebra']
-        });
+
+     if ($(this).hasClass("child")) {
+       $(this).tablesorter({
+              headers: {
+                  0: { sorter:'text'},
+                  1: { sorter:'text'},
+                  2: { sorter:'numericvalue'}, // not percent but same format
+                  3: { sorter:'elapsedtime'}
+              },
+            debug: false,
+            widgets: ['zebra']
+          });
+     } else {
+       $(this).tablesorter({
+              headers: {
+                  0: { sorter:'text'},
+                  1: { sorter:'text'},
+                  2: { sorter:'text'},
+                  3: { sorter:'numericvalue'}, // not percent but same format
+                  4: { sorter:'elapsedtime'},
+                  5: { sorter:'text'}
+              },
+            debug: false,
+            widgets: ['zebra']
+          });
+     }
       });
     } // end indextable
 
