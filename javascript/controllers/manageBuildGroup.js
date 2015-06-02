@@ -2,7 +2,7 @@ CDash.filter('filter_builds', function() {
   // Filter the builds based on what group they belong to.
   return function(input, group) {
     if (typeof group === 'undefined' || group === null) {
-      // "No filtering required for default "All" group.
+      // No filtering required for default "All" group.
       return input;
     }
 
@@ -17,6 +17,23 @@ CDash.filter('filter_builds', function() {
     return output;
   };
 })
+
+.filter('filter_groups', function() {
+  // Filter BuildGroups based on their type
+  return function(input, type) {
+    if (typeof type === 'undefined' || type === null) {
+      return input;
+    }
+    var output = [];
+    for (var i = 0; i < input.length; i++) {
+      if (input[i].type === type) {
+        output.push(input[i]);
+      }
+    }
+    return output;
+  };
+})
+
 .controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http) {
   $http({
     url: 'api/manageBuildGroup.php',
@@ -41,13 +58,21 @@ CDash.filter('filter_builds', function() {
       };
     }
 
+    // Define different types of buildgroups.
+    $scope.cdash.buildgrouptypes = [
+      {name: "Daily", value: "Daily"},
+      {name: "Latest", value: "Latest"}
+    ];
+    $scope.buildType = $scope.cdash.buildgrouptypes[0];
+
   });
 
   /** create a new buildgroup */
-  $scope.createBuildGroup = function(newBuildGroup) {
+  $scope.createBuildGroup = function(newBuildGroup, type) {
     var parameters = {
       projectid: $scope.cdash.project.id,
-      newbuildgroup: newBuildGroup
+      newbuildgroup: newBuildGroup,
+      type: type
     };
     $http.post('api/buildgroup.php', parameters)
     .success(function(buildgroup) {
@@ -60,6 +85,10 @@ CDash.filter('filter_builds', function() {
 
         // Add this new buildgroup to our scope.
         $scope.cdash.buildgroups.push(buildgroup);
+
+        if (type != "Daily") {
+          $scope.cdash.dynamics.push(buildgroup);
+        }
       }
     });
   };
@@ -195,5 +224,61 @@ CDash.filter('filter_builds', function() {
       }
     });
   };
+
+
+  /** add a build row to a dynamic group */
+  $scope.addDynamicRow = function(dynamic, buildgroup, site, match) {
+    var parameters = {
+      projectid: $scope.cdash.project.id,
+      dynamic: dynamic,
+      buildgroup: buildgroup,
+      site: site,
+      match: match
+    };
+    $http.post('api/buildgroup.php', parameters)
+    .success(function(rule) {
+      if (rule.error) {
+        $scope.cdash.error = rule.error;
+      }
+      else {
+        // Add this new rule to our scope.
+        var idx = $scope.cdash.dynamics.indexOf(dynamic);
+        if (idx > -1) {
+          if ($scope.cdash.dynamics[idx].rules) {
+            $scope.cdash.dynamics[idx].rules.push(rule);
+          } else {
+            $scope.cdash.dynamics[idx].rules = [rule];
+          }
+        }
+        $("#dynamic_defined").show();
+        $("#dynamic_defined").delay(3000).fadeOut(400);
+      }
+    });
+  };
+
+  $scope.deleteDynamicRule = function(dynamic, rule) {
+    var parameters = {
+      projectid: $scope.cdash.project.id,
+      dynamic: dynamic,
+      rule: rule
+    };
+    $http({
+      url: 'api/buildgroup.php',
+      method: 'DELETE',
+      params: parameters
+    }).success(function() {
+      // Find the index of the dynamic group in question.
+      var idx1 = $scope.cdash.dynamics.indexOf(dynamic);
+      if (idx1 > -1) {
+        // Then find the index of the rule that's being removed.
+        var idx2 = $scope.cdash.dynamics[idx1].rules.indexOf(rule);
+        if (idx2 > -1) {
+          // And remove it from our scope.
+          $scope.cdash.dynamics[idx1].rules.splice(idx2, 1);
+        }
+      }
+    });
+  };
+
 
 });

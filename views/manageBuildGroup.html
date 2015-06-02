@@ -96,6 +96,11 @@
               <strong>Wildcard BuildGroups</strong>
             </a>
           </li>
+          <li role="presentation">
+            <a href="#dynamic" aria-controls="dynamic" role="tab" data-toggle="tab">
+              <strong>Dynamic BuildGroups</strong>
+            </a>
+          </li>
         </ul>
 
         <div class="tab-content container">
@@ -207,11 +212,27 @@
                 <strong>Create a new BuildGroup</strong>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-12 form-horizontal">
-                <label for="newBuildGroupName">New BuildGroup name:</label>
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="newBuildGroupName">Name:</label>
                 <input name="newBuildGroupName" class="form-control" type="text" size="40" ng-model="newBuildGroupName" />
-                <button class="btn btn-default" ng-click="createBuildGroup(newBuildGroupName)">Create BuildGroup</button>
+              </div>
+              <div class="form-group">
+                <label for="newBuildGroupType">Build Type:</label>
+                <select name="newBuildGroupType" ng-model="buildType" ng-options="type.name for type in cdash.buildgrouptypes" class="form-control">
+                </select>
+                <p class="help-block">
+                  <dl class="dl-horizontal">
+                    <dt>Daily</dt>
+                    <dd>Builds are shown on a day-by-day basis (default).</dd>
+                    <dt>Latest</dt>
+                    <dd>The most recent content is displayed for this BuildGroup, no matter when it was submitted.  Contents are defined under the <em>Dynamic</em> tab.</dd>
+                  </dl>
+                </p>
+
+              </div>
+              <div class="form-group">
+                <button class="btn btn-default" ng-click="createBuildGroup(newBuildGroupName, buildType.value)">Create BuildGroup</button>
                 <img id="buildgroup_created" src="images/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
               </div>
             </div>
@@ -222,7 +243,7 @@
 
               <div class="form-group">
                 <label for="globalMoveSelectionType"> Show:</label>
-                <select name="globalMoveSelectionType" ng-model="cdash.filteredBuildGroup" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
+                <select name="globalMoveSelectionType" ng-model="filteredBuildGroup" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
                   <option value="">All</option>
                 </select>
                 <p class="help-block">
@@ -231,13 +252,13 @@
               </div>
 
               <div class="form-group">
-                <select name="movebuilds[]" size="15" multiple="multiple" id="movebuilds" ng-model="cdash.movebuilds" ng-options="build as build.name for build in cdash.currentbuilds | orderBy:'name' | filter_builds:cdash.filteredBuildGroup" class="repeat-item form-control">
+                <select name="movebuilds[]" size="15" multiple="multiple" id="movebuilds" ng-model="movebuilds" ng-options="build as build.name for build in cdash.currentbuilds | orderBy:'name' | filter_builds:filteredBuildGroup" class="repeat-item form-control">
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="buildgroupSelection"> Move to BuildGroup: </label>
-                <select name="buildgroupSelection" ng-model="cdash.buildgroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
+                <label for="destBuildGroupSelection"> Move to BuildGroup: </label>
+                <select name="destBuildGroupSelection" ng-model="destBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
                   <option value="">Choose...</option>
                 </select>
                 <p class="help-block">
@@ -252,7 +273,7 @@
               </div>
 
               <div class="form-group">
-                <button type="submit" class="btn btn-default" ng-click="moveBuilds(cdash.movebuilds, cdash.buildgroupSelection, expected)">Move selected build(s) to group</button>
+                <button type="submit" class="btn btn-default" ng-click="moveBuilds(movebuilds, destBuildGroupSelection, expected)">Move selected build(s) to group</button>
                 <img id="builds_moved" src="images/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
               </div>
             </div>
@@ -261,14 +282,14 @@
           <div role="tabpanel" class="tab-pane" id="wildcard">
             <div class="form-horizontal">
               <div class="form-group">
-                <label for="buildgroupSelection">Define Wildcard rule for:</label>
-                <select name="buildgroupSelection" ng-model="cdash.buildgroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
+                <label for="wildcardBuildGroupSelection">Define Wildcard rule for:</label>
+                <select name="wildcardBuildGroupSelection" ng-model="wildcardBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
                   <option value="">Choose...</option>
                 </select>
               </div>
               <div class="form-group">
-                <label for="buildNameMatch">Build Names should contain:</label>
-                <input name="buildNameMatch" type="text" ng-model="buildNameMatch" size="12" class="form-control"/>
+                <label for="wildcardBuildNameMatch">Build Names should contain:</label>
+                <input name="wildcardBuildNameMatch" type="text" ng-model="wildcardBuildNameMatch" size="12" class="form-control"/>
               </div>
               <div class="form-group">
                 <label for="buildType">Build Type:</label>
@@ -280,14 +301,14 @@
               </div>
 
               <div class="form-group">
-                <button type="submit" class="btn btn-default" ng-click="addWildcardRule(cdash.buildgroupSelection, buildType, buildNameMatch)">Define BuildGroup</button>
+                <button type="submit" class="btn btn-default" ng-click="addWildcardRule(wildcardBuildGroupSelection, buildType, wildcardBuildNameMatch)">Define BuildGroup</button>
                 <img id="wildcard_defined" src="images/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
               </div>
             </div>
 
             <hr/>
 
-            <form name="deletewildcardrules" method="post" ng-if="cdash.wildcards" action="{{'manageBuildGroup.php?projectid=' + cdash.project.id}}">
+            <div name="existingwildcardrules" ng-if="cdash.wildcards.length > 0">
               <table class="table-striped" style="width:100%;">
                 <caption class="h4">Existing Wildcard Rules</caption>
                 <thead>
@@ -307,8 +328,72 @@
                   </tr>
                 </tbody>
               </table>
-            </form>
+            </div>
           </div> <!-- wildcard -->
+
+          <div role="tabpanel" class="tab-pane" id="dynamic">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="dynamicSelection">Add a build row to the following dynamic group:</label>
+                <select name="dynamicSelection" ng-model="dynamicSelection" ng-options="dynamic as dynamic.name for dynamic in cdash.dynamics | orderBy:'name'" class="form-control">
+                  <option value="">Choose...</option>
+                </select>
+              </div>
+            </div>
+
+            <hr/>
+
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="parentBuildGroupSelection">Show the most recent build from the following group:</label>
+                <select name="parentBuildGroupSelection" ng-model="parentBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name' | filter_groups:'Daily'" class="form-control">
+                  <option value="">Any</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="siteSelection">and the following site:</label>
+                <select name="siteSelection" ng-model="siteSelection" ng-options="site as site.name for site in cdash.sites | orderBy:'name'" class="form-control">
+                  <option value="">Any</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dynamicBuildNameMatch">whose build name contains:</label>
+                <input name="dynamicBuildNameMatch" type="text" ng-model="dynamicBuildNameMatch" size="12" class="form-control"/>
+                <p class="help-block">
+                  Leave blank to ignore this criterion.
+                </p>
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-default" ng-click="addDynamicRow(dynamicSelection, parentBuildGroupSelection, siteSelection, dynamicBuildNameMatch)">Add content to BuildGroup</button>
+                <img id="dynamic_defined" src="images/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+              </div>
+            </div>
+
+            <div ng-if="dynamicSelection.rules.length > 0" name="existingdynamicrows">
+              <table class="table-striped" style="width:100%;">
+                <caption class="h4">Existing Build Rows</caption>
+                <thead>
+                  <th>Group to draw builds from</th>
+                  <th>Site</th>
+                  <th>Build name contains</th>
+                  <th>Delete?</th>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="rule in dynamicSelection.rules" class="repeat-item">
+                    <td>{{rule.parentgroupname}}</td>
+                    <td>{{rule.sitename}}</td>
+                    <td>{{rule.match}}</td>
+                    <td>
+                      <span ng-click="deleteDynamicRule(dynamicSelection, rule)" class="glyphicon glyphicon-trash animate-show" style="cursor: pointer;"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </div> <!-- dynamic -->
         </div> <!-- tab-content -->
       </div> <!-- tabpanel -->
     </div> <!-- container -->

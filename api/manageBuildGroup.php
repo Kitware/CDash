@@ -126,8 +126,8 @@ if($show>0)
   }
 
 $builds = pdo_query("
-  SELECT b.id, s.name AS sitename, b.name, b.type, g.name as groupname,
-         g.id as groupid
+  SELECT b.id, s.name AS sitename, s.id AS siteid, b.name, b.type,
+         g.name as groupname, g.id as groupid
   FROM build AS b, build2group AS b2g, buildgroup AS g,
        buildgroupposition AS gp, site as s
   WHERE b.starttime<'$currentUTCTime' AND b.starttime>'$beginUTCTime' AND
@@ -144,6 +144,7 @@ if (!empty($err))
 
 $build_names = array();
 $currentbuilds = array();
+$sites = array();
 while($build_array = pdo_fetch_array($builds))
   {
   // Avoid adding the same build twice
@@ -161,12 +162,19 @@ while($build_array = pdo_fetch_array($builds))
     $currentbuild['groupid'] = $build_array['groupid'];
     $currentbuilds[] = $currentbuild;
     }
+  $site = array();
+  $site['id'] = $build_array['siteid'];
+  $site['name'] = $build_array['sitename'];
+  if (!in_array($site, $sites))
+    {
+    $sites[] = $site;
+    }
   }
 
 // Add expected builds
 $builds = pdo_query(
-  "SELECT b.id ,s.name AS sitename, b.name, b.type, g.name as groupname,
-          g.id as groupid
+  "SELECT b.id, s.name AS sitename, s.id AS siteid, b.name, b.type,
+          g.name as groupname, g.id as groupid
    FROM site AS s, build AS b, build2group AS b2g, buildgroup AS g,
           build2grouprule AS b2gr
    WHERE g.id = b2g.groupid AND b2g.buildid = b.id AND
@@ -195,14 +203,23 @@ while($build_array = pdo_fetch_array($builds))
       $build_array['groupname']." (expected)";
     $currentbuilds[] = $currentbuild;
     }
+  $site = array();
+  $site['id'] = $build_array['siteid'];
+  $site['name'] = $build_array['sitename'];
+  if (!in_array($site, $sites))
+    {
+    $sites[] = $site;
+    }
   }
 $response['currentbuilds'] = $currentbuilds;
+$response['sites'] = $sites;
 
 // Get the BuildGroups for this Project.
 $Project = new Project();
 $Project->Id = $projectid;
 $buildgroups = $Project->GetBuildGroups();
 $buildgroups_response = array();
+$dynamics_response = array();
 foreach($buildgroups as $buildgroup)
   {
   $buildgroup_response = array();
@@ -215,6 +232,7 @@ foreach($buildgroups as $buildgroup)
   $buildgroup_response['id'] = $buildgroup->GetId();
   $buildgroup_response['name'] = $buildgroup->GetName();
   $buildgroup_response['description'] = $buildgroup->GetDescription();
+  $buildgroup_response['type'] = $buildgroup->GetType();
   $buildgroup_response['summaryemail'] = $buildgroup->GetSummaryEmail();
   $buildgroup_response['emailcommitters'] = $buildgroup->GetEmailCommitters();
   $buildgroup_response['includesubprojecttotal'] =
@@ -225,8 +243,80 @@ foreach($buildgroups as $buildgroup)
     $buildgroup->GetAutoRemoveTimeFrame();
 
   $buildgroups_response[] = $buildgroup_response;
+
+  if ($buildgroup->GetType() != "Daily")
+    {
+    // Get the rules associated with this dynamic group.
+    $dynamic_response = $buildgroup_response;
+    $rules_result = pdo_query("
+      SELECT * FROM build2grouprule
+      WHERE groupid='".$dynamic_response['id']."'");
+    $err = pdo_error();
+    if (!empty($err))
+      {
+      $response['error'] = $err;
+      }
+
+    $rules = array();
+    while($rule_array = pdo_fetch_array($rules_result))
+      {
+      $rule = array();
+      $match = $rule_array['buildname'];
+      if (!empty($match))
+        {
+        $match = trim($match, "%");
+        }
+      $rule['match'] = $match;
+
+      $siteid = $rule_array['siteid'];
+      if (empty($siteid))
+        {
+        $rule['sitename'] = "Any";
+        $rule['siteid'] = 0;
+        }
+      else
+        {
+        foreach ($sites as $site)
+          {
+          if ($site['id'] == $siteid)
+            {
+            $rule['sitename'] = $site['name'];
+            $rule['siteid'] = $site['id'];
+            break;
+            }
+          }
+        }
+
+      $parentgroupid = $rule_array['parentgroupid'];
+      if (empty($parentgroupid))
+        {
+        $rule['parentgroupname'] = "Any";
+        $rule['parentgroupid'] = 0;
+        }
+      else
+        {
+        foreach ($buildgroups as $buildgroup)
+          {
+          if ($buildgroup->GetId() == $parentgroupid)
+            {
+            $rule['parentgroupname'] = $buildgroup->GetName();
+            $rule['parentgroupid'] = $parentgroupid;
+            break;
+            }
+          }
+        }
+
+      $rules[] = $rule;
+      }
+    if (!empty($rules))
+      {
+      $dynamic_response['rules'] = $rules;
+      }
+    $dynamics_response[] = $dynamic_response;
+    }
   }
 $response['buildgroups'] = $buildgroups_response;
+$response['dynamics'] = $dynamics_response;
 
 // Store some additional details about this project.
 $project_response = array();

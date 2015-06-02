@@ -189,6 +189,41 @@ function rest_delete()
       echo_error(pdo_error());
       }
     }
+
+  if (isset($_GET['dynamic']))
+    {
+    // Delete a dynamic build group rule.
+    $dynamic = json_decode($_GET['dynamic'], true);
+    $buildgroupid = pdo_real_escape_numeric($dynamic['id']);
+
+    $rule = json_decode($_GET['rule'], true);
+    $match = htmlspecialchars(pdo_real_escape_string($rule['match']));
+    if (!empty($match))
+      {
+      $match = "%" . $match . "%";
+      }
+
+    $parentgroupid = pdo_real_escape_numeric($rule['parentgroupid']);
+    $siteid = pdo_real_escape_numeric($rule['siteid']);
+
+    $sql =
+      "DELETE FROM build2grouprule
+       WHERE groupid='$buildgroupid' AND buildname = '$match'";
+    if ($siteid > 0)
+      {
+      $sql .= " AND siteid = '$siteid'";
+      }
+    if ($parentgroupid > 0)
+      {
+      $sql .= " AND parentgroupid = '$parentgroupid'";
+      }
+
+    if(!pdo_query($sql))
+      {
+      echo_error(pdo_error());
+      }
+    }
+
 }
 
 
@@ -212,7 +247,10 @@ function rest_post()
       return;
       }
 
+    $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
+
     $BuildGroup->SetName($name);
+    $BuildGroup->SetType($type);
     $BuildGroup->Save();
 
     // Respond with a JSON representation of this new buildgroup
@@ -266,7 +304,14 @@ function rest_post()
       }
 
     $builds = $_POST['builds'];
-    $expected = $_POST['expected'];
+    if (array_key_exists('expected', $_POST))
+      {
+      $expected = $_POST['expected'];
+      }
+    else
+      {
+      $expected = 0;
+      }
 
     foreach ($builds as $buildinfo)
       {
@@ -319,6 +364,77 @@ function rest_post()
     if(!pdo_query($sql))
       {
       echo_error(pdo_error());
+      }
+    }
+
+  if (isset($_POST['dynamic']) && !empty($_POST['dynamic']))
+    {
+    // Add a build row to a dynamic group
+    $groupid = pdo_real_escape_numeric($_POST['dynamic']['id']);
+
+    if (empty($_POST['buildgroup']))
+      {
+      $parentgroupid = 0;
+      }
+    else
+      {
+      $parentgroupid = pdo_real_escape_numeric($_POST['buildgroup']['id']);
+      }
+
+    if (empty($_POST['site']))
+      {
+      $siteid = 0;
+      }
+    else
+      {
+      $siteid = pdo_real_escape_numeric($_POST['site']['id']);
+      }
+
+    if (empty($_POST['match']))
+      {
+      $match = "";
+      }
+    else
+      {
+      $match = "%" .
+        htmlspecialchars(pdo_real_escape_string($_POST['match'])) . "%";
+      }
+
+    $sql =
+      "INSERT INTO build2grouprule (groupid, buildname, siteid, parentgroupid)
+       VALUES ('$groupid', '$match', '$siteid', '$parentgroupid')";
+    if(!pdo_query($sql))
+      {
+      echo_error(pdo_error());
+      }
+    else
+      {
+      // Respond with a JSON representation of this new rule.
+      $response = array();
+      $response['match'] =
+        htmlspecialchars(pdo_real_escape_string($_POST['match']));
+      $response['siteid'] = $siteid;
+      if ($siteid > 0)
+        {
+        $response['sitename'] =
+          htmlspecialchars(pdo_real_escape_string($_POST['site']['name']));
+        }
+      else
+        {
+        $response['sitename'] = 'Any';
+        }
+      $response['parentgroupid'] = $parentgroupid;
+      if ($parentgroupid > 0)
+        {
+        $response['parentgroupname'] =
+          htmlspecialchars(pdo_real_escape_string($_POST['buildgroup']['name']));
+        }
+      else
+        {
+        $response['parentgroupname'] = 'Any';
+        }
+      echo json_encode($response);
+      return;
       }
     }
 }
