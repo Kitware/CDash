@@ -43,7 +43,7 @@ function ProcessFile($projectid, $filename, $md5)
     $fp = fopen($filename, 'r');
     }
 
-  if($fp)
+  if(@$fp)
     {
     global $PHP_ERROR_SUBMISSION_ID;
     do_submit($fp, $projectid, $md5, false, $PHP_ERROR_SUBMISSION_ID);

@@ -21,22 +21,13 @@ class Example extends CDashSeleniumTestCase
     $this->type("passwd", "simpletest");
     $this->click("sent");
     $this->waitForPageToLoad("30000");
-    $this->click("//tr[5]/td[2]/a[6]/img");
-    $this->waitForPageToLoad("30000");
-    $this->click("//a[@id='ui-id-3']");
-    $this->addSelection("movebuilds", "label=CDashTestingSite CDash-CTest-sameImage [Experimental] Experimental");
-    $this->click("expectedMove");
-    $this->select("groupSelection", "label=Experimental");
-    $this->click("globalMove");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Dashboard");
-    $this->waitForPageToLoad("30000");
 
     // Mark the 1st build listed as expected: "tr[1]"
     // Then flip it and mark it as non expected.
     // This is just exercising the mark-as-expected / mark-as-non-expected
     // code in a smoke-test fashion.
     //
+    $this->open($this->webPath."/index.php?project=InsightExample");
     $folder_button =
       "//table[@id='project_5_15']/tbody[1]/tr[1]/td[2]/div[3]/a[2]/img";
     $this->sleepWaitingForElement($folder_button);

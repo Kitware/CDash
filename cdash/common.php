@@ -1847,7 +1847,7 @@ function get_cdash_dashboard_xml($projectname, $date)
   $xml .="</dashboard>";
 
   $userid = 0;
-  if(isset($_SESSION['cdash']))
+  if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
     {
     $xml .= "<user>";
     $userid = $_SESSION['cdash']['loginid'];

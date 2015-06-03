@@ -25,7 +25,6 @@ function checkEmailPreferences($emailcategory,$errors,$fixes=false)
 
   if($fixes)
     {
-    $updates = 0; // for fixes we don't use update
     $configures=$errors['fixes']['configure_fixes'];
     $builderrors=$errors['fixes']['builderror_fixes'];
     $buildwarnings=$errors['fixes']['buildwarning_fixes'];
@@ -33,7 +32,6 @@ function checkEmailPreferences($emailcategory,$errors,$fixes=false)
     }
   else
     {
-    $updates=$errors['update_errors'];
     $configures=$errors['configure_errors'];
     $builderrors=$errors['build_errors'];
     $buildwarnings=$errors['build_warnings'];
@@ -1377,7 +1375,7 @@ function send_update_email($handler,$projectid)
   $groupid = $Build->GetGroup();
 
   $BuildGroup = new BuildGroup();
-  $BuildGroup->Id = $groupid;
+  $BuildGroup->SetId($groupid);
 
   // If we specified no email we stop here
   if($BuildGroup->GetSummaryEmail()==2)
@@ -1506,7 +1504,7 @@ function sendemail($handler,$projectid)
   $groupid = $Build->GetGroup();
 
   $BuildGroup = new BuildGroup();
-  $BuildGroup->Id = $groupid;
+  $BuildGroup->SetId($groupid);
 
   // If we specified no email we stop here
   if($BuildGroup->GetSummaryEmail()==2)

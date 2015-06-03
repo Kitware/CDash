@@ -79,7 +79,7 @@ if(!isset($projectid) || $projectid==0 || !is_numeric($projectid))
 checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
 
 $query =
-  "SELECT name, coveragethreshold nightlytime, showcoveragecode, displaylabels
+  "SELECT name, coveragethreshold, nightlytime, showcoveragecode, displaylabels
    FROM project WHERE id='$projectid'";
 $project = pdo_query($query);
 if(pdo_num_rows($project) == 0)

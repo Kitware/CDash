@@ -18,7 +18,10 @@
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 
-$imgid = pdo_real_escape_numeric($_GET["imgid"]);
+if (array_key_exists("imgid", $_GET))
+  {
+  $imgid = pdo_real_escape_numeric($_GET["imgid"]);
+  }
 // Checks
 if(empty($imgid) || !is_numeric($imgid))
   {

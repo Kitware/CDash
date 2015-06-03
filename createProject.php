@@ -217,30 +217,32 @@ if($Submit)
       }
 
     // Add the default groups
-    $BuildGroup = new BuildGroup;
-    $BuildGroup->Id = '';
-    $BuildGroup->Name = 'Nightly';
-    $BuildGroup->Description = 'Nightly builds';
-    $BuildGroup->SummaryEmail = 0;
+    $BuildGroup = new BuildGroup();
+    $BuildGroup->SetName('Nightly');
+    $BuildGroup->SetDescription('Nightly builds');
+    $BuildGroup->SetSummaryEmail(0);
     $Project->AddBuildGroup($BuildGroup);
-    $BuildGroup->Id = '';
-    $BuildGroup->Name = 'Continuous';
-    $BuildGroup->Description = 'Continuous builds';
-    $BuildGroup->SummaryEmail = 0;
+
+    $BuildGroup = new BuildGroup();
+    $BuildGroup->SetName('Continuous');
+    $BuildGroup->SetDescription('Continuous builds');
+    $BuildGroup->SetSummaryEmail(0);
     $Project->AddBuildGroup($BuildGroup);
-    $BuildGroup->Id = '';
-    $BuildGroup->Name = 'Experimental';
-    $BuildGroup->Description = 'Experimental builds';
-    $BuildGroup->SummaryEmail = 2; // default to "No Email" for the Experimental group
+
+    $BuildGroup = new BuildGroup();
+    $BuildGroup->SetName('Experimental');
+    $BuildGroup->SetDescription('Experimental builds');
+    // default to "No Email" for the Experimental group
+    $BuildGroup->SetSummaryEmail(2);
     $Project->AddBuildGroup($BuildGroup);
 
     // Set up overview page to initially contain just the "Nightly" group
     $groups = $Project->GetBuildGroups();
     foreach ($groups as $group)
       {
-      if ($group['name'] == "Nightly")
+      if ($group->GetName() == "Nightly")
         {
-        $buildgroupid = $group['id'];
+        $buildgroupid = $group->GetId();
         $query =
           "INSERT INTO overview_components (projectid, buildgroupid, position, type)
            VALUES ('$projectid', '$buildgroupid', '1', 'build')";
@@ -398,7 +400,7 @@ if($Update || $AddRepository)
   $Project->Save();
 
   // Add the logo
-  if(strlen($_FILES['logo']['tmp_name'])>0)
+  if(array_key_exists('logo', $_FILES) && strlen($_FILES['logo']['tmp_name'])>0)
     {
     $handle = fopen($_FILES['logo']['tmp_name'],"r");
     $contents = 0;

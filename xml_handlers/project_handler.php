@@ -208,7 +208,8 @@ class ProjectHandler extends AbstractHandler
             {
             $dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$removeid'", "name", "$removeid");
             add_log(
-              "Not removing dependency $dep($removeid) from $subproject->GetName() ".
+              "Not removing dependency $dep($removeid) from ".
+              $subproject->GetName().
               "because it is not a SubProject element in this Project.xml file",
               "ProjectHandler:endElement", LOG_WARNING, $this->projectid);
             }

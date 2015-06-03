@@ -127,7 +127,7 @@ class Project
   /** Add a build group */
   function AddBuildGroup($buildgroup)
     {
-    $buildgroup->ProjectId = $this->Id;
+    $buildgroup->SetProjectId($this->Id);
     $buildgroup->Save();
     }
 
