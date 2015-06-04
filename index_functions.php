@@ -1,4 +1,4 @@
-<?
+<?php
 
 function get_dynamic_builds($projectid)
   {
