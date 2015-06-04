@@ -933,6 +933,10 @@ if(isset($_GET['upgrade-2-4']))
   $multi_index = array("projectid", "parentid", "starttime");
   AddTableIndex("build", $multi_index);
 
+  // Support for dynamic BuildGroups.
+  AddTableField('buildgroup', 'type', 'varchar(20)', 'character varying(20)', 'Daily');
+  AddTableField('build2grouprule', 'parentgroupid', 'int(11)', 'bigint', '0');
+
   // Set the database version
   setVersion();
 

@@ -22,6 +22,7 @@ include('cdash/version.php');
 require_once("models/project.php");
 require_once("models/buildfailure.php");
 require_once("filterdataFunctions.php");
+require_once("index_functions.php");
 
 set_time_limit(0);
 
@@ -756,7 +757,8 @@ function generate_main_dashboard_XML($project_instance, $date)
                   LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
                   LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
                   LEFT JOIN label AS l ON (l.id = l2b.labelid)
-                  WHERE b.projectid='$projectid' $parent_clause $date_clause
+                  WHERE b.projectid='$projectid' AND g.type='DAILY'
+                  $parent_clause $date_clause
                   ".$subprojectsql." ".$filter_sql." ".$limit_sql
                   .$groupby_sql;
 
@@ -775,6 +777,10 @@ function generate_main_dashboard_XML($project_instance, $date)
     {
     $build_data[] = $build_row;
     }
+
+  $dynamic_builds = get_dynamic_builds($projectid);
+  $build_data = array_merge($build_data, $dynamic_builds);
+
   $positions = array();
   $names = array();
   $siteids = array();
@@ -1529,7 +1535,7 @@ function generate_main_dashboard_XML($project_instance, $date)
       }  // end dynamicanalysis
     } // end looping through builds
 
-  if(pdo_num_rows($builds)>0)
+  if (pdo_num_rows($builds) + count($dynamic_builds) > 0)
     {
     if (!$filter_sql)
       {

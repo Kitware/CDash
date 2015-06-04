@@ -23,11 +23,11 @@ include('login.php');
 include_once('cdash/common.php');
 redirect_to_https();
 
-include('cdash/version.php');
-include("models/project.php");
-include("models/user.php");
-include("models/label.php");
-include("models/labelemail.php");
+require_once('cdash/version.php');
+require_once("models/project.php");
+require_once("models/user.php");
+require_once("models/label.php");
+require_once("models/labelemail.php");
 include_once("models/userproject.php");
 
 if ($session_OK)

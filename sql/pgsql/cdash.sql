@@ -48,12 +48,14 @@ CREATE TABLE "buildgroup" (
   "description" text DEFAULT '' NOT NULL,
   "summaryemail" smallint DEFAULT '0',
   "includesubprojectotal" smallint DEFAULT '1',
-  "emailcommitters" smallint DEFAULT '0',
+  "emailcommitters" smallint DEFAULT '0'
+  "buildtype" character varying(20) DEFAULT 'Daily' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "projectid2" on "buildgroup" ("projectid");
 CREATE INDEX "starttime2" on "buildgroup" ("starttime");
 CREATE INDEX "endtime" on "buildgroup" ("endtime");
+CREATE INDEX "buildgrouptype" on "buildgroup" ("type");
 
 --
 -- Table: buildgroupposition
@@ -84,6 +86,7 @@ CREATE INDEX "groupid" on "build2group" ("groupid");
 --
 CREATE TABLE "build2grouprule" (
   "groupid" bigint DEFAULT '0' NOT NULL,
+  "parentgroupid" bigint DEFAULT '0' NOT NULL,
   "buildtype" character varying(20) DEFAULT '' NOT NULL,
   "buildname" character varying(255) DEFAULT '' NOT NULL,
   "siteid" bigint DEFAULT '0' NOT NULL,
@@ -92,6 +95,7 @@ CREATE TABLE "build2grouprule" (
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL
 );
 CREATE INDEX "groupid2" on "build2grouprule" ("groupid");
+CREATE INDEX "parentgroupid" on "build2grouprule" ("parentgroupid");
 CREATE INDEX "buildtype" on "build2grouprule" ("buildtype");
 CREATE INDEX "buildname" on "build2grouprule" ("buildname");
 CREATE INDEX "siteid2" on "build2grouprule" ("siteid");

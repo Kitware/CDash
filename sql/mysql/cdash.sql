@@ -61,10 +61,12 @@ CREATE TABLE `buildgroup` (
   `summaryemail` tinyint(4) default '0',
   `includesubprojectotal` tinyint(4) default '1',
   `emailcommitters` tinyint(4) default '0',
+  `type` varchar(20) NOT NULL default 'Daily',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),
-  KEY `endtime` (`endtime`) 
+  KEY `endtime` (`endtime`),
+  KEY `type` (`type`)
 );
 
 -- --------------------------------------------------------
@@ -107,6 +109,7 @@ CREATE TABLE `build2group` (
 
 CREATE TABLE `build2grouprule` (
   `groupid` int(11) NOT NULL default '0',
+  `parentgroupid` int(11) NOT NULL default '0',
   `buildtype` varchar(20) NOT NULL default '',
   `buildname` varchar(255) NOT NULL default '',
   `siteid` int(11) NOT NULL default '0',
@@ -114,6 +117,7 @@ CREATE TABLE `build2grouprule` (
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   KEY `groupid` (`groupid`),
+  KEY `parentgroupid` (`parentgroupid`),
   KEY `buildtype` (`buildtype`),
   KEY `buildname` (`buildname`),
   KEY `siteid` (`siteid`),

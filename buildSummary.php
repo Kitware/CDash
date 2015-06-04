@@ -108,16 +108,16 @@ $xml .= "</menu>";
 $xml .= get_cdash_dashboard_xml($projectname,$date);
 
 // User
- if(isset($_SESSION['cdash']))
-   {
-   $xml .= "<user>";
-   $userid = $_SESSION['cdash']['loginid'];
-   $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
-   $user_array = pdo_fetch_array($user);
-   $xml .= add_XML_value("id",$userid);
-   $xml .= add_XML_value("admin",$user_array["admin"]);
-   $xml .= "</user>";
-   }
+if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
+  {
+  $xml .= "<user>";
+  $userid = $_SESSION['cdash']['loginid'];
+  $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
+  $user_array = pdo_fetch_array($user);
+  $xml .= add_XML_value("id",$userid);
+  $xml .= add_XML_value("admin",$user_array["admin"]);
+  $xml .= "</user>";
+  }
 
   // Notes
   $note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");

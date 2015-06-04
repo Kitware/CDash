@@ -19,20 +19,347 @@ include_once('build.php');
 
 class BuildGroup
 {
-  var $Id;
-  var $Name;
-  var $StartTime;
-  var $EndTime;
-  var $Description;
-  var $SummaryEmail;
-  var $ProjectId;
+  private $Id;
+  private $ProjectId;
+  private $Name;
+  private $StartTime;
+  private $EndTime;
+  private $Description;
+  private $SummaryEmail;
+  private $Type;
 
   function __construct()
     {
+    $this->Id = 0;
+    $this->Name = "";
+    $this->ProjectId = 0;
     $this->StartTime = '1980-01-01 00:00:00';
     $this->EndTime = '1980-01-01 00:00:00';
+    $this->AutoRemoveTimeFrame = 0;
+    $this->Description = "";
     $this->SummaryEmail = 0;
+    $this->IncludeSubProjectTotal = 1;
+    $this->EmailCommitters = 0;
+    $this->Type = "Daily";
     }
+
+
+  /** Get the id */
+  function GetId()
+    {
+    return $this->Id;
+    }
+
+
+  /** Set the id.  Also loads remaining data for this
+    * buildgroup from the database.
+   **/
+  function SetId($id)
+    {
+    if (!is_numeric($id))
+      {
+      return false;
+      }
+
+    $this->Id = $id;
+
+    $row = pdo_single_row_query(
+      "SELECT * FROM buildgroup WHERE id=".qnum($this->Id));
+    if (empty($row))
+      {
+      return false;
+      }
+
+    $this->FillFromRow($row);
+    return true;
+    }
+
+
+  /** Get the Name of the buildgroup */
+  function GetName()
+    {
+    if(strlen($this->Name)>0)
+      {
+      return $this->Name;
+      }
+
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetName(): Id not set", LOG_ERR);
+      return false;
+      }
+
+    $project = pdo_query("SELECT name FROM buildgroup WHERE id=".qnum($this->Id));
+    if(!$project)
+      {
+      add_last_sql_error("BuildGroup GetName");
+      return false;
+      }
+    $project_array = pdo_fetch_array($project);
+    $this->Name = $project_array['name'];
+
+    return $this->Name;
+    }
+
+
+  /** Set the Name of the buildgroup. */
+  function SetName($name)
+    {
+    $this->Name = pdo_real_escape_string($name);
+    if ($this->ProjectId > 0)
+      {
+      $this->Fill();
+      }
+    }
+
+
+  /** Get the project id */
+  function GetProjectId()
+    {
+    return $this->ProjectId;
+    }
+
+
+  /** Set the project id */
+  function SetProjectId($projectid)
+    {
+    if(is_numeric($projectid))
+      {
+      $this->ProjectId = $projectid;
+      if ($this->Name != "")
+        {
+        $this->Fill();
+        }
+      return true;
+      }
+    return false;
+    }
+
+
+  /** Get/Set the start time */
+  function GetStartTime()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetStartTime(): Id not set", LOG_ERR);
+      return false;
+      }
+    return $this->StartTime;
+    }
+  function SetStartTime($time)
+    {
+    $this->StartTime = pdo_real_escape_string($time);
+    }
+
+
+  /** Get/Set the end time */
+  function GetEndTime()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetEndTime(): Id not set", LOG_ERR);
+      return false;
+      }
+    return $this->EndTime;
+    }
+  function SetEndTime($time)
+    {
+    $this->EndTime = pdo_real_escape_string($time);
+    }
+
+
+  /** Get/Set the autoremove timeframe */
+  function GetAutoRemoveTimeFrame()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetAutoRemoveTimeFrame(): Id not set", LOG_ERR);
+      return false;
+      }
+    return $this->AutoRemoveTimeFrame;
+    }
+  function SetAutoRemoveTimeFrame($timeframe)
+    {
+    if (!is_numeric($timeframe))
+      {
+      return false;
+      }
+    $this->AutoRemoveTimeFrame = $timeframe;
+    }
+
+
+  /** Get/Set the description */
+  function GetDescription()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetDescription(): Id not set", LOG_ERR);
+      return false;
+      }
+    return $this->Description;
+    }
+  function SetDescription($desc)
+    {
+    $this->Description = pdo_real_escape_string($desc);
+    }
+
+
+  /** Get/Set the email settings for this BuildGroup.
+    * 0: project default settings
+    * 1: summary email
+    * 2: no email
+    **/
+  function GetSummaryEmail()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetSummaryEmail(): Id not set", LOG_ERR);
+      return false;
+      }
+    return $this->SummaryEmail;
+    }
+  function SetSummaryEmail($email)
+    {
+    if (!is_numeric($email))
+      {
+      return false;
+      }
+    $this->SummaryEmail = $email;
+    }
+
+
+  /** Get/Set whether or not this group should include subproject total. */
+  function GetIncludeSubProjectTotal()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetIncludeSubProjectTotal(): Id not set", LOG_ERR);
+      return false;
+      }
+    return $this->IncludeSubProjectTotal;
+    }
+  function SetIncludeSubProjectTotal($b)
+    {
+    if ($b)
+      {
+      $this->IncludeSubProjectTotal = 1;
+      }
+    else
+      {
+      $this->IncludeSubProjectTotal = 0;
+      }
+    }
+
+
+  /** Get/Set whether or not committers should be emailed for this group. */
+  function GetEmailCommitters()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetEmailCommitters(): Id not set", LOG_ERR);
+      return false;
+      }
+    return $this->EmailCommitters;
+    }
+  function SetEmailCommitters($b)
+    {
+    if ($b)
+      {
+      $this->EmailCommitters = 1;
+      }
+    else
+      {
+      $this->EmailCommitters = 0;
+      }
+    }
+
+
+  /** Get/Set the type */
+  function GetType()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetType(): Id not set", LOG_ERR);
+      return false;
+      }
+    return $this->Type;
+    }
+  function SetType($type)
+    {
+    $this->Type = pdo_real_escape_string($type);
+    }
+
+
+  /** Populate the ivars of an existing buildgroup.
+    * Called automatically once name & projectid are set.
+   **/
+  function Fill()
+    {
+    if($this->Name == "" || $this->ProjectId == 0)
+      {
+      add_log(
+        "Name='".$this->Name."' or ProjectId='".$this->ProjectId."' not set",
+        "BuildGroup::Fill",
+        LOG_WARNING);
+      return false;
+      }
+
+    $row = pdo_single_row_query(
+      "SELECT * FROM buildgroup
+       WHERE projectid=" . qnum($this->ProjectId) . " AND name='$this->Name'");
+
+    if (empty($row))
+      {
+      return false;
+      }
+
+    $this->FillFromRow($row);
+    return true;
+    }
+
+
+  /** Helper function for filling in a buildgroup instance */
+  function FillFromRow($row)
+    {
+    $this->Name = $row['name'];
+    $this->ProjectId = $row['projectid'];
+    $this->StartTime = $row['starttime'];
+    $this->EndTime = $row['endtime'];
+    $this->AutoRemoveTimeFrame = $row['autoremovetimeframe'];
+    $this->Description = $row['description'];
+    $this->SummaryEmail = $row['summaryemail'];
+    $this->IncludeSubProjectTotal = $row['includesubprojectotal'];
+    $this->EmailCommitters = $row['emailcommitters'];
+    $this->Type = $row['type'];
+    }
+
+
+  /** Get/Set this BuildGroup's position (the order it should appear in) */
+  function GetPosition()
+    {
+    if($this->Id < 1)
+      {
+      add_log("BuildGroup GetPosition(): Id not set", LOG_ERR);
+      return false;
+      }
+
+    $query = "
+      SELECT position FROM buildgroupposition
+      WHERE buildgroupid=" . qnum($this->Id) . "
+      ORDER BY position DESC LIMIT 1";
+    $result = pdo_query($query);
+
+    if(pdo_num_rows($result) < 1)
+      {
+      add_log(
+        "BuildGroup GetPosition(): no position found for buildgroup # $this->Id !",
+        LOG_ERR);
+      return false;
+      }
+    $query_array = pdo_fetch_array($result);
+    return $query_array['position'];
+    }
+
 
   function SetPosition($position)
     {
@@ -87,15 +414,19 @@ class BuildGroup
     if($this->Exists())
       {
       // Update the project
-      $query = "UPDATE buildgroup SET";
-      $query .= " name='".$this->Name."'";
-      $query .= ",projectid='".$this->ProjectId."'";
-      $query .= ",starttime='".$this->StartTime."'";
-      $query .= ",endtime='".$this->EndTime."'";
-      $query .= ",description='".$this->Description."'";
-      $query .= ",summaryemail='".$this->SummaryEmail."'";
-      $query .= " WHERE id='".$this->Id."'";
-
+      $query = "
+        UPDATE buildgroup SET
+          name='$this->Name',
+          projectid='$this->ProjectId',
+          starttime='$this->StartTime',
+          endtime='$this->EndTime',
+          autoremovetimeframe='$this->AutoRemoveTimeFrame',
+          description='$this->Description',
+          summaryemail='$this->SummaryEmail',
+          includesubprojectotal='$this->IncludeSubProjectTotal',
+          emailcommitters='$this->EmailCommitters',
+          type='$this->Type'
+        WHERE id='$this->Id'";
       if(!pdo_query($query))
         {
         add_last_sql_error("BuildGroup:Update",$this->ProjectId);
@@ -106,14 +437,23 @@ class BuildGroup
       {
       $id = "";
       $idvalue = "";
-      if($this->Id)
+      if($this->Id < 1)
         {
         $id = "id,";
         $idvalue = "'".$this->Id."',";
         }
 
-      if(!pdo_query("INSERT INTO buildgroup (".$id."name,projectid,starttime,endtime,description)
-                     VALUES (".$idvalue."'$this->Name','$this->ProjectId','$this->StartTime','$this->EndTime','$this->Description')"))
+      $query = "
+        INSERT INTO buildgroup
+          (".$id."name,projectid,starttime,endtime,autoremovetimeframe,
+           description,summaryemail,includesubprojectotal,emailcommitters, type)
+        VALUES
+          (".$idvalue."'$this->Name','$this->ProjectId','$this->StartTime',
+           '$this->EndTime','$this->AutoRemoveTimeFrame','$this->Description',
+           '$this->SummaryEmail','$this->IncludeSubProjectTotal',
+           '$this->EmailCommitters','$this->Type')";
+
+      if (!pdo_query($query))
         {
         add_last_sql_error("Buildgroup Insert",$this->ProjectId);
         return false;
@@ -127,11 +467,79 @@ class BuildGroup
       // Insert the default position for this group
       // Find the position for this group
       $position = $this->GetNextPosition();
-      pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime)
-                 VALUES ('".$this->Id."','".$position."','".$this->StartTime."','".$this->EndTime."')");
-
+      pdo_query("
+        INSERT INTO buildgroupposition
+          (buildgroupid,position,starttime,endtime)
+        VALUES
+          ('$this->Id','$position','$this->StartTime','$this->EndTime')");
       }
+    return true;
     } // end function save
+
+
+  /** Delete this BuildGroup. */
+  function Delete()
+    {
+    if (!$this->Exists())
+      {
+      return false;
+      }
+
+    // We delete all the build2grouprule associated with the group
+    pdo_query("DELETE FROM build2grouprule WHERE groupid='$this->Id'");
+
+    // We delete the buildgroup
+    pdo_query("DELETE FROM buildgroup WHERE id='$this->Id'");
+
+    // Restore the builds that were associated with this group
+    $oldbuilds = pdo_query("
+      SELECT id,type FROM build WHERE id IN
+        (SELECT buildid AS id FROM build2group WHERE groupid='$this->Id')");
+    echo pdo_error();
+    while($oldbuilds_array = pdo_fetch_array($oldbuilds))
+      {
+      // Move the builds
+      $buildid = $oldbuilds_array["id"];
+      $buildtype = $oldbuilds_array["type"];
+
+      // Find the group corresponding to the build type
+      $query = pdo_query("
+        SELECT id FROM buildgroup
+        WHERE name='$buildtype' AND projectid='$this->ProjectId'");
+      if(pdo_num_rows($query) == 0)
+        {
+        $query = pdo_query("
+          SELECT id FROM buildgroup
+          WHERE name='Experimental' AND projectid='$this->ProjectId'");
+        }
+      echo pdo_error();
+      $grouptype_array = pdo_fetch_array($query);
+      $grouptype = $grouptype_array["id"];
+
+      pdo_query("
+        UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'");
+      echo pdo_error();
+      }
+
+    // Delete the buildgroupposition and update the position
+    // of the other groups.
+    pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid='$this->Id'");
+    $buildgroupposition = pdo_query("
+      SELECT bg.buildgroupid FROM buildgroupposition AS bg, buildgroup AS g
+      WHERE g.projectid='$this->ProjectId' AND bg.buildgroupid=g.id
+      ORDER BY bg.position ASC");
+
+    $p = 1;
+    while($buildgroupposition_array = pdo_fetch_array($buildgroupposition))
+      {
+      $buildgroupid = $buildgroupposition_array["buildgroupid"];
+      pdo_query("
+        UPDATE buildgroupposition SET position='$p'
+        WHERE buildgroupid='$buildgroupid'");
+      $p++;
+      }
+    }
+
 
   function GetGroupIdFromRule($build)
     {
@@ -177,42 +585,6 @@ class BuildGroup
       }
     $buildgroup_array = pdo_fetch_array($buildgroup);
     return $buildgroup_array["id"];
-    }
-
-  // Return the value of summaryemail
-  function GetSummaryEmail()
-    {
-    if(!$this->Id)
-      {
-      echo "BuildGroup GetSummaryEmail(): Id not set";
-      return false;
-      }
-    $summaryemail = pdo_query("SELECT summaryemail FROM buildgroup WHERE id=".qnum($this->Id));
-    if(!$summaryemail)
-      {
-      add_last_sql_error("BuildGroup GetSummaryEmail",$this->ProjectId);
-      return false;
-      }
-
-    $summaryemail_array = pdo_fetch_array($summaryemail);
-    return $summaryemail_array["summaryemail"];
-    }
-
-  // Return the value of emailcommitters, 0 or 1
-  function GetEmailCommitters()
-    {
-    if(!$this->Id)
-      {
-      add_log('no BuildGroup Id, cannot query database, returning default value of 0',
-        'BuildGroup::GetEmailCommitters', LOG_ERR);
-      return 0;
-      }
-
-    $emailCommitters = pdo_get_field_value(
-      "SELECT emailcommitters FROM buildgroup WHERE id=".qnum($this->Id),
-      'emailcommitters', 0);
-
-    return $emailCommitters;
     }
 }
 

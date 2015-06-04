@@ -17,6 +17,7 @@
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
 include_once('models/dailyupdatefile.php');
+include_once('models/buildgroup.php');
 include_once('models/buildgrouprule.php');
 include_once('models/buildgroupposition.php');
 require_once("cdash/cdashmail.php");
@@ -126,7 +127,7 @@ class Project
   /** Add a build group */
   function AddBuildGroup($buildgroup)
     {
-    $buildgroup->ProjectId = $this->Id;
+    $buildgroup->SetProjectId($this->Id);
     $buildgroup->Save();
     }
 
@@ -662,16 +663,17 @@ class Project
    function GetBuildGroups()
      {
      $buildgroups = array();
-     $query = pdo_query("SELECT id,name,autoremovetimeframe FROM buildgroup
-                         WHERE projectid=".qnum($this->Id));
+     $query = pdo_query("
+       SELECT id FROM buildgroup
+       WHERE projectid=" . qnum($this->Id) . " AND
+             endtime='1980-01-01 00:00:00'");
 
      add_last_sql_error("Project GetBuildGroups",$this->Id);
-     while($buildgroup = pdo_fetch_array($query))
+     while($row = pdo_fetch_array($query))
        {
-       $group['id'] = $buildgroup['id'];
-       $group['name'] = $buildgroup['name'];
-       $group['autoremovetimeframe'] = $buildgroup['autoremovetimeframe'];
-       $buildgroups[] = $group;
+       $buildgroup = new BuildGroup();
+       $buildgroup->SetId($row['id']);
+       $buildgroups[] = $buildgroup;
        }
      return $buildgroups;
      } // end GetBuildGroups

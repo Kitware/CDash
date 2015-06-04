@@ -1,1 +1,1 @@
-var CDash = angular.module('CDash', ['ngAnimate']);
+var CDash = angular.module('CDash', ['ngAnimate', 'ui.sortable']);

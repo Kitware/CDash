@@ -277,6 +277,10 @@ class Build
       {
       $this->SubProjectId = $subprojectid;
       }
+
+    $result = pdo_fetch_array(pdo_query(
+      "SELECT groupid FROM build2group WHERE buildid='$buildid'"));
+    $this->GroupId = $result["groupid"];
     }
 
 
