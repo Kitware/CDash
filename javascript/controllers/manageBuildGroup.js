@@ -45,7 +45,7 @@ CDash.filter('filter_builds', function() {
     // Sort BuildGroups by position.
     if ($scope.cdash.buildgroups) {
       $scope.cdash.buildgroups.sort(function (a, b) {
-        return a.position > b.position;
+        return Number(a.position) > Number(b.position);
       });
 
       // Update positions when the user stops dragging.
