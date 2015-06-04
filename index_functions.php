@@ -114,6 +114,10 @@ function get_dynamic_builds($projectid)
               LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
               LEFT JOIN label AS l ON (l.id = l2b.labelid) $where $order";
       $build = pdo_single_row_query($sql);
+      if (empty($build))
+        {
+        continue;
+        }
       $build['groupname'] = $buildgroup_name;
       $build['groupid'] = $buildgroup_id;
       $build['position'] = $buildgroup_position;
