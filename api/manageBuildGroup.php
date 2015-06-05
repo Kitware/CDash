@@ -331,7 +331,7 @@ $wildcards = pdo_query("
   SELECT bg.name, bg.id, b2gr.buildtype, b2gr.buildname
   FROM build2grouprule AS b2gr, buildgroup AS bg
   WHERE b2gr.buildname LIKE '\%%\%' AND b2gr.groupid = bg.id AND
-        bg.projectid='$projectid'");
+        bg.type = 'Daily' AND bg.projectid='$projectid'");
 $err = pdo_error();
 if (!empty($err))
   {
