@@ -778,8 +778,12 @@ function generate_main_dashboard_XML($project_instance, $date)
     $build_data[] = $build_row;
     }
 
-  $dynamic_builds = get_dynamic_builds($projectid);
-  $build_data = array_merge($build_data, $dynamic_builds);
+  $dynamic_builds = array();
+  if (empty($filter_sql))
+    {
+    $dynamic_builds = get_dynamic_builds($projectid);
+    $build_data = array_merge($build_data, $dynamic_builds);
+    }
 
   $positions = array();
   $names = array();
