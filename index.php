@@ -757,7 +757,7 @@ function generate_main_dashboard_XML($project_instance, $date)
                   LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
                   LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
                   LEFT JOIN label AS l ON (l.id = l2b.labelid)
-                  WHERE b.projectid='$projectid' AND g.type='DAILY'
+                  WHERE b.projectid='$projectid' AND g.type='Daily'
                   $parent_clause $date_clause
                   ".$subprojectsql." ".$filter_sql." ".$groupby_sql
                   .$limit_sql;

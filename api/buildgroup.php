@@ -268,11 +268,27 @@ function rest_post()
     $inputRows = $_POST['newLayout'];
     if (count($inputRows) > 0)
       {
-      // remove old build group layout for this project
-      pdo_query(
-        "DELETE bgp FROM buildgroupposition AS bgp
-         LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
-         WHERE bg.projectid = '$projectid'");
+      // Remove old build group layout for this project.
+
+      global $CDASH_DB_TYPE;
+      if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE=="pgsql")
+        {
+        // We use a subquery here because postgres doesn't support
+        // JOINs in a DELETE statement.
+        $sql = "
+          DELETE FROM buildgroupposition WHERE buildgroupid IN
+            (SELECT bgp.buildgroupid FROM buildgroupposition AS bgp
+             LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
+             WHERE bg.projectid = '$projectid')";
+        }
+      else
+        {
+        $sql = "
+          DELETE bgp FROM buildgroupposition AS bgp
+          LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
+          WHERE bg.projectid = '$projectid'";
+        }
+      pdo_query($sql);
       add_last_sql_error("manageBuildGroup::newLayout::DELETE", $projectid);
 
       // construct query to insert the new layout
