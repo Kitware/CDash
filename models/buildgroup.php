@@ -437,7 +437,7 @@ class BuildGroup
       {
       $id = "";
       $idvalue = "";
-      if($this->Id < 1)
+      if($this->Id > 0)
         {
         $id = "id,";
         $idvalue = "'".$this->Id."',";

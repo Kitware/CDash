@@ -371,7 +371,13 @@ function auth($SessionCachePolicy='private_no_expire')
       $cookievalue = $_COOKIE[$cookiename];
       $cookiekey = substr($cookievalue,strlen($cookievalue)-33);
       $cookieuseridkey = substr($cookievalue,0,strlen($cookievalue)-33);
-      $sql="SELECT email,password,id FROM ".qid("user")." WHERE cookiekey='".pdo_real_escape_string($cookiekey)."' AND id='".pdo_real_escape_string($cookieuseridkey)."'";
+      $sql =
+        "SELECT email,password,id FROM ".qid("user")."
+         WHERE cookiekey='".pdo_real_escape_string($cookiekey)."'";
+      if (!empty($cookieuseridkey))
+        {
+        $sql .= " AND id='".pdo_real_escape_string($cookieuseridkey)."'";
+        }
       $result = pdo_query("$sql");
       if(pdo_num_rows($result) == 1)
         {

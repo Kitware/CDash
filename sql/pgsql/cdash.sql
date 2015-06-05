@@ -48,8 +48,8 @@ CREATE TABLE "buildgroup" (
   "description" text DEFAULT '' NOT NULL,
   "summaryemail" smallint DEFAULT '0',
   "includesubprojectotal" smallint DEFAULT '1',
-  "emailcommitters" smallint DEFAULT '0'
-  "buildtype" character varying(20) DEFAULT 'Daily' NOT NULL,
+  "emailcommitters" smallint DEFAULT '0',
+  "type" character varying(20) DEFAULT 'Daily' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "projectid2" on "buildgroup" ("projectid");
