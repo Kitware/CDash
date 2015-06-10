@@ -21,12 +21,7 @@
     <script src="javascript/angular-ui-sortable.min.js"></script>
     <script src="javascript/cdash_angular.js"></script>
     <script src="javascript/controllers/viewTest.js"></script>
-
-<!-- TODO:
-<xsl:include href="filterdataTemplate.xsl"/>
-<script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
--->
-
+    <script src="javascript/controllers/filters.js"></script>
   </head>
 
   <body bgcolor="#ffffff">
@@ -125,17 +120,8 @@
         </tr>
       </table>
 
-  <!-- Filters?
-  <xsl:if test="count(cdash/filterdata) = 1">
-    <xsl:call-template name="filterdata" select="."/>
-  </xsl:if>
-  <div id="labelshowfilters">
-    <a id="label_showfilters" href="javascript:filters_toggle();">
-    <xsl:if test="cdash/filterdata/showfilters = 0">Show Filters</xsl:if>
-    <xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
-    </a>
-  </div>
-   -->
+      <!-- Filters -->
+      <ng-include src="'views/filterdataTemplate.html'"></ng-include>
 
       <div ng-switch="cdash.display">
         <h3 ng-switch-when="onlypassed">{{cdash.numPassed}} tests passed.</h3>
