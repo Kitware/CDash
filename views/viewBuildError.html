@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html lang="en" ng-app="CDash" ng-controller="BuildErrorController">
-  <head>
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="cdash.css" /> <!-- TODO: handle switch -->
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
 
     <script src="javascript/jquery-1.10.2.js"></script>
     <script src="javascript/jquery.flot.min.js"></script>
@@ -31,12 +31,13 @@
     <script src="javascript/angular-animate.min.js"></script>
     <script src="javascript/angular-ui-sortable.min.js"></script>
     <script src="javascript/cdash_angular.js"></script>
+    <script src="javascript/controllers/head.js"></script>
     <script src="javascript/controllers/viewBuildError.js"></script>
 
     <title>CDash : {{cdash.project}}</title>
   </head>
 
-  <body bgcolor="#ffffff">
+  <body bgcolor="#ffffff" ng-controller="BuildErrorController">
     <ng-include src="'views/header.html'"></ng-include>
     <br/>
 

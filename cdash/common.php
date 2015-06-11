@@ -2262,23 +2262,9 @@ function __json_encode( $data )
 
 function begin_JSON_response()
 {
-  global $CDASH_CSS_FILE, $CDASH_VERSION;
-
-  // check if user has specified a preference for color scheme
-  if (array_key_exists("colorblind", $_COOKIE))
-    {
-    if ($_COOKIE["colorblind"] == 1)
-      {
-      $CDASH_CSS_FILE = "colorblind.css";
-      }
-    else
-      {
-      $CDASH_CSS_FILE = "cdash.css";
-      }
-    }
+  global $CDASH_VERSION;
 
   $response = array();
-  $response['cssfile'] = $CDASH_CSS_FILE;
   $response['version'] = $CDASH_VERSION;
 
   $userid = 0;
