@@ -159,9 +159,9 @@
               <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'timeExecFull', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
             </th>
 
-            <th ng-if="cdash.build.showtesttime == 1"  style="cursor: pointer" ng-click="orderByField='execTimeFull'; reverseSort = !reverseSort">
+            <th style="cursor: pointer" ng-click="orderByField='execTimeFull'; reverseSort = !reverseSort">
               Time
-              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'timeExecFull', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'execTimeFull', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
             <th ng-if="cdash.displaydetails == 1" style="cursor: pointer" ng-click="$parent.orderByField='details'; $parent.reverseSort = !$parent.reverseSort">
@@ -203,7 +203,7 @@
             <a href="{{test.detailsLink}}">{{test.timestatus}}</a>
           </td>
 
-          <td ng-if="cdash.project.showtesttime == 1" align="right">
+          <td align="right">
             <span style="display:none">{{test.execTimeFull}}</span>
             {{test.execTime}}
           </td>
