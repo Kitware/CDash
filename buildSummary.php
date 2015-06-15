@@ -172,8 +172,7 @@ if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
     "&field2=site/string&compare2=61&value2=" .
       urlencode($site_array["name"]) .
     "&field3=buildstamp/string&compare3=61&value3=" .
-      urlencode($build_array["stamp"]) .
-    "&collapse=0";
+      urlencode($build_array["stamp"]);
 
   $relatedBuildsLink = "index.php?project=" . urlencode($projectname) .
     "&display=project" . $filterString;

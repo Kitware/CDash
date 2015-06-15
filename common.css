@@ -1213,3 +1213,9 @@ textarea {
 .animate-show.ng-hide {
   opacity: 0;
 }
+
+/* used for angular table sorting */
+.glyphicon-none:before {
+  content: "\e113";
+  color: transparent !important;
+}

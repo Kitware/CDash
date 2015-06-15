@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html lang="en" ng-app="CDash" ng-controller="ManageSubProjectController">
-  <head>
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="cdash.css" /> <!-- TODO: handle switch -->
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <title>CDash - Manage SubProjects</title>
 
@@ -21,11 +21,12 @@
     <script src="javascript/angular-animate.min.js"></script>
     <script src="javascript/angular-ui-sortable.min.js"></script>
     <script src="javascript/cdash_angular.js"></script>
+    <script src="javascript/controllers/head.js"></script>
     <script src="javascript/controllers/manageSubProject.js"></script>
     <script src="javascript/controllers/subproject.js"></script>
   </head>
 
-  <body bgcolor="#ffffff">
+  <body bgcolor="#ffffff" ng-controller="ManageSubProjectController">
     <ng-include src="'views/headeradminproject.html'"></ng-include>
     <br/>
 
