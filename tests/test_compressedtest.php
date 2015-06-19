@@ -60,6 +60,7 @@ class CompressedTestCase extends KWWebTestCase
     $this->pass('Test passed');
     }
 
+/* Disabled.  TODO: convert to protractor
   function testCheckCompressedTest()
     {
     echo "2. testCheckCompressedTest\n";
@@ -131,6 +132,7 @@ class CompressedTestCase extends KWWebTestCase
        }
      $this->pass('Test passed');
      }
+     */
 
    /** */
    function testGITUpdate()
