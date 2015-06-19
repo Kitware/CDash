@@ -77,7 +77,7 @@ endif()
 add_selenium_test(addbuildgroup)
 add_selenium_test(expectedbuildgroup)
 add_selenium_test(buildinfogroup)
-add_selenium_test(showtestgraphs)
+# add_selenium_test(showtestgraphs)  Disabled.  TODO: convert to protractor.
 add_selenium_test(buildsummary)
 
 if(COVERAGE_COMMAND)
