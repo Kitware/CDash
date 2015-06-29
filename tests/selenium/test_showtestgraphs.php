@@ -14,10 +14,7 @@ class Example extends CDashSeleniumTestCase
 
   public function testShowTestGraphs()
   {
-    $this->open($this->webPath."/index.php?project=EmailProjectExample&date=2009-02-23");
-    $this->click("css=div.valuewithsub > a");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Failed");
+    $this->open($this->webPath."/testDetails.php?test=21&build=6");
     $this->waitForPageToLoad("30000");
     $this->select("GraphSelection", "label=Test Time");
     $this->click("link=Zoom out");
