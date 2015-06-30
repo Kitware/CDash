@@ -43,7 +43,9 @@ class JSCoverTarHandler
     $phar->extractTo($dirName);
 
     // Recursively search for .json files and parse them.
-    $iterator->rewind();
+    $iterator = new RecursiveIteratorIterator(
+      new RecursiveDirectoryIterator($dirName),
+      RecursiveIteratorIterator::CHILD_FIRST);
     foreach ($iterator as $fileinfo)
       {
       // need the longest extension, so getExtension() won't do here.
@@ -75,7 +77,7 @@ class JSCoverTarHandler
     }
 
   /**
-    * Parse an individual .java.json file.
+    * Parse an individual json file.
    **/
   function ParseJSCoverFile($fileinfo)
     {
@@ -92,8 +94,8 @@ class JSCoverTarHandler
       // Make sure it has the fields we expect.
       if (is_null($coverageEntry) ||
           !array_key_exists("source", $coverageEntry) ||
-          !array_key_exists("coverage", $coverageEntry) ||
-          //!array_key_exists("branchData", $coverageEntry)  //branchData can be found, not in test
+          !array_key_exists("coverage", $coverageEntry)
+          // || !array_key_exists("branchData", $coverageEntry)  //branchData can be found, not in test
           )
         {
         return;
@@ -104,12 +106,12 @@ class JSCoverTarHandler
       $coverageSummary = $this->CoverageSummaries['default'];
       $buildid = $coverageSummary->BuildId;
 
-      /* 
+      /*
       * JSON data is line based and has a coverage line for each line of source
       *
-      * Loop through the length of coverage lines 
+      * Loop through the length of coverage lines
       */
-      
+
       $coverageLines = $coverageEntry['coverage'];
       $fileLength = count($coverageLines);
       for ($i = 0; $i < $fileLength-1; $i++)
@@ -154,7 +156,7 @@ class JSCoverTarHandler
       $fileid = pdo_insert_id("coveragefile");
       }
     else
-      {      
+      {
       $coveragefile_array = pdo_fetch_array($sql);
       $fileid = $coveragefile_array["id"];
       }
@@ -168,7 +170,6 @@ class JSCoverTarHandler
     $coverageFileLog->Insert();
     // Add this Coverage to our summary.
     $coverageSummary->AddCoverage($coverage);
-    print_r($coverageSummary);
     }
 
 

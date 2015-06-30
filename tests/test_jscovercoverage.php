@@ -50,7 +50,6 @@ class JSCoverCoverageTestCase extends KWWebTestCase
     $filename  = dirname(__FILE__)."/data/JSCoverTest.tar";
 
     $put_result = $this->uploadfile($puturl, $filename);
-    echo "Put Result: $put_result";
     $put_json = json_decode($put_result, true);
 
     if ($put_json["status"] != 0)
@@ -64,9 +63,9 @@ class JSCoverCoverageTestCase extends KWWebTestCase
     // Verify that the coverage data was successfully parsed.
     $content = $this->get(
       $this->url."/viewCoverage.php?buildid=$buildid&status=6");
-    if(strpos($content, '86.36') === false)
+    if(strpos($content, '71.32') === false)
       {
-      $this->fail('\"86.36\" not found when expected');
+      $this->fail('\"71.32\" not found when expected');
       return 1;
       }
 
