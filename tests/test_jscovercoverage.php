@@ -59,13 +59,12 @@ class JSCoverCoverageTestCase extends KWWebTestCase
         $put_json["description"]. "\n");
       return 1;
       }
-
     // Verify that the coverage data was successfully parsed.
     $content = $this->get(
       $this->url."/viewCoverage.php?buildid=$buildid&status=6");
-    if(strpos($content, '71.32') === false)
+    if(strpos($content, '86.06') === false)
       {
-      $this->fail('\"71.32\" not found when expected');
+      $this->fail('\"86.06\" not found when expected');
       return 1;
       }
 
