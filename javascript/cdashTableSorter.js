@@ -164,6 +164,7 @@ $(document).ready(function() {
             return false;
         },
         format: function(s) {
+            s = s.trim();
             // format your data for normalization
             var i = s.indexOf("<a");
             if(i == -1)
@@ -498,20 +499,34 @@ $(document).ready(function() {
     // Initialize the coverage table
     $tabs = $("#coveragetable");
     $tabs.each(function(index) {
-     $(this).tablesorter({
-            headers: {
-                0: { sorter:'text'},
-                1: { sorter:'text'},
-                2: { sorter:'percentage'},
-                3: { sorter:'numericvalue'},
-                4: { sorter:'numericvalue'},
-                5: { sorter:'elapsedtime'},
-                6: { sorter:'text'}
-            },
+      if ($(this).hasClass("childbuild")) {
+        $(this).tablesorter({
+          headers: {
+            0: { sorter:'text'},         // subproject
+            1: { sorter:'percentage'}, // coverage %
+            2: { sorter:'numericvalue'}, // LOC tested
+            3: { sorter:'numericvalue'}, // LOC untested
+            4: { sorter:'elapsedtime'}   // date
+          },
           debug: false,
           widgets: ['zebra']
         });
-      });
+      } else {
+        $(this).tablesorter({
+          headers: {
+            0: { sorter:'text'},
+            1: { sorter:'text'},
+            2: { sorter:'numericvalue'},
+            3: { sorter:'numericvalue'},
+            4: { sorter:'numericvalue'},
+            5: { sorter:'elapsedtime'},
+            6: { sorter:'text'}
+          },
+          debug: false,
+          widgets: ['zebra']
+        });
+      }
+    });
 
     // Initialize the dynamic analysis table
     $tabs = $("#dynamicanalysistable");

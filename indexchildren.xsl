@@ -843,7 +843,7 @@
 </xsl:for-each>
 
 <!-- COVERAGE -->
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb childbuild" id="coveragetable">
     <xsl:if test="count(cdash/buildgroup/coverage)=0">
        <tr class="table-heading2 table-nobuild">
       <td colspan="1" class="nob">
