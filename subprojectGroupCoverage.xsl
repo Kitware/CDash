@@ -7,6 +7,7 @@
 <xsl:template name="subprojectGroupCoverage">
 
   <xsl:for-each select="cdash/subprojectgroup">
+    <xsl:sort select="name"/>
     <xsl:variable name="groupid" select="id"/>
     <tr class="parent_row">
       <td class="paddt" align="left">
@@ -40,6 +41,7 @@
     </tr>
 
     <xsl:for-each select="/cdash/buildgroup/coverage[group=$groupid]">
+      <xsl:sort select="percentage" data-type="number"/>
       <xsl:call-template name="coverageRow"/>
     </xsl:for-each>
 
