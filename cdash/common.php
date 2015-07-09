@@ -2377,17 +2377,35 @@ function get_dashboard_JSON_by_name($projectname, $date, &$response)
 }
 
 function get_labels_JSON_from_query_results($qry, &$response)
+{
+$rows = pdo_all_rows_query($qry);
+if (count($rows)>0)
   {
-  $rows = pdo_all_rows_query($qry);
-  if (count($rows)>0)
+  $labels = array();
+  foreach($rows as $row)
     {
-    $labels = array();
-    foreach($rows as $row)
-      {
-      $labels[] = $row['text'];
-      }
-    $response['labels'] = $labels;
+    $labels[] = $row['text'];
     }
+  $response['labels'] = $labels;
   }
+}
+
+function compute_percentcoverage($loctested, $locuntested)
+{
+  $loc = $loctested + $locuntested;
+
+  if($loc>0)
+    {
+    $percentcoverage = round($loctested/$loc*100, 2);
+    }
+  else
+    {
+    $percentcoverage = 100;
+    }
+
+  return $percentcoverage;
+}
+
+
 
 ?>

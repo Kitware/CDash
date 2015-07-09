@@ -37,10 +37,13 @@
           <xsl:choose>
             <xsl:when test="percentage >= percentagegreen">
               normal
-              </xsl:when>
-            <xsl:otherwise>
+            </xsl:when>
+            <xsl:when test="percentage >= percentageyellow">
               warning
-             </xsl:otherwise>
+            </xsl:when>
+            <xsl:otherwise>
+              error
+            </xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
         <a>

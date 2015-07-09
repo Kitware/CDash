@@ -16,11 +16,14 @@
 
       <td align="center">
         <xsl:attribute name="class"><xsl:choose>
-          <xsl:when test="coverage >= threshold">
+          <xsl:when test="coverage >= thresholdgreen">
             normal
           </xsl:when>
-          <xsl:otherwise>
+          <xsl:when test="coverage >= thresholdyellow">
             warning
+          </xsl:when>
+          <xsl:otherwise>
+            error
           </xsl:otherwise>
         </xsl:choose></xsl:attribute>
         <xsl:value-of select="coverage"/>%
