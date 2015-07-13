@@ -17,6 +17,7 @@
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
 include_once('cdash/ctestparserutils.php');
+include_once("cdash/repository.php");
 include_once('models/builderror.php');
 include_once('models/builderrordiff.php');
 include_once('models/buildinformation.php');
@@ -727,7 +728,6 @@ class Build
         {
         $url = get_server_URI(false);
         $url .= "/viewBuildError.php?buildid=$this->Id";
-        include_once("cdash/repository.php");
         post_pull_request_comment($this->ProjectId, $this->PullRequest,
           "This build experienced errors.", $url);
         }
@@ -811,6 +811,15 @@ class Build
                                 testpassed='$numberTestsPassed' WHERE id=".qnum($this->Id));
 
     add_last_sql_error("Build:UpdateTestNumbers",$this->ProjectId,$this->Id);
+
+    // Check if we should post test failures to a pull request.
+    if (isset($this->PullRequest) && $numberTestsFailed > 0)
+      {
+      $url = get_server_URI(false);
+      $url .= "/viewTest.php?onlyfailed&buildid=$this->Id";
+      post_pull_request_comment($this->ProjectId, $this->PullRequest,
+        "This build experienced failing tests.", $url);
+      }
     }
 
   /** Get the errors differences for the build */
