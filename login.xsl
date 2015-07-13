@@ -105,7 +105,7 @@
                 <tr class="table-heading">
                   <td width="10%" class="nob"></td>
                   <td width="70%" class="nob">
-                    <a href="#" id="oauth2LoginText" onClick='oauth2Login();'>
+                    <a href="" id="oauth2LoginText" onClick='oauth2Login();'>
                       Log in with your Google account
                     </a>
                   </td>

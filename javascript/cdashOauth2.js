@@ -14,9 +14,8 @@ function oauth2Login() {
   // get state (anti-forgery token) from session via CDash API
   $.get('api/getState.php', function(securityToken) {
     // overload state to contain both the URL that the user is attempting to
-    // access, as well as the anti-forgery token.  slice is used here to remove
-    // the trailing "#" from the currently URL
-    var STATE = encodeURIComponent(document.URL.slice(0, -1)) + "_AND_STATE_IS_" + securityToken;
+    // access, as well as the anti-forgery token.
+    var STATE = encodeURIComponent(document.URL) + "_AND_STATE_IS_" + securityToken;
 
     // construct Google authentication URL with the query string all filled out
     var _url = OAUTHURL + 'scope=' + SCOPE + '&client_id=' + CLIENTID +
