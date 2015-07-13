@@ -1419,7 +1419,9 @@ function generate_main_dashboard_XML($project_instance, $date)
         $xml .= add_XML_value("childlink", "$child_builds_hyperlink#Coverage");
         }
 
-      @$percent = round($coverage_array["loctested"]/($coverage_array["loctested"]+$coverage_array["locuntested"])*100,2);
+      $percent = round(
+        compute_percentcoverage($coverage_array["loctested"],
+                                $coverage_array["locuntested"]), 2);
 
       $coverageThreshold = $project_array["coveragethreshold"];
       if ($build_array["subprojectgroup"])
@@ -1436,6 +1438,7 @@ function generate_main_dashboard_XML($project_instance, $date)
 
       $xml .= "  <percentage>".$percent."</percentage>";
       $xml .= "  <percentagegreen>".$coverageThreshold."</percentagegreen>";
+      $xml .= "  <percentageyellow>".$coverageThreshold * 0.7."</percentageyellow>";
       $xml .= "  <fail>".$coverage_array["locuntested"]."</fail>";
       $xml .= "  <pass>".$coverage_array["loctested"]."</pass>";
 
@@ -1583,7 +1586,8 @@ function generate_main_dashboard_XML($project_instance, $date)
       $xml .= "<subprojectgroup>";
       $xml .= add_XML_value("name", $group->GetName());
       $xml .= add_XML_value("id", $group->GetId());
-      $xml .= add_XML_value("threshold", $group->GetCoverageThreshold());
+      $xml .= add_XML_value("thresholdgreen", $group->GetCoverageThreshold());
+      $xml .= add_XML_value("thresholdyellow", $group->GetCoverageThreshold() * 0.7);
       $xml .= add_XML_value("coverage", $coverage);
       $xml .= add_XML_value("tested", $tested);
       $xml .= add_XML_value("untested", $untested);

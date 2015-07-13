@@ -88,24 +88,6 @@ if(pdo_num_rows($project) == 0)
   exit();
   }
 
-
-function compute_percentcoverage($loctested, $locuntested)
-{
-  $loc = $loctested + $locuntested;
-
-  if($loc>0)
-    {
-    $percentcoverage = round($loctested/$loc*100, 2);
-    }
-  else
-    {
-    $percentcoverage = 0;
-    }
-
-  return $percentcoverage;
-}
-
-
 $role=0;
 $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
 if(pdo_num_rows($user2project)>0)
