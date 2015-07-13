@@ -556,6 +556,12 @@ function generate_main_dashboard_XML($project_instance, $date)
     {
     include('cdash/config.php');
 
+    if(isset($_GET["parentid"]))
+      {
+      // Don't add expected builds when viewing a single subproject result.
+      return;
+      }
+
     $currentUTCTime =  gmdate(FMT_DATETIME,$currentstarttime+3600*24);
     $xml = "";
     $build2grouprule = pdo_query("SELECT g.siteid,g.buildname,g.buildtype,s.name,s.outoforder FROM build2grouprule AS g,site as s
