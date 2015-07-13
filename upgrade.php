@@ -937,6 +937,9 @@ if(isset($_GET['upgrade-2-4']))
   AddTableField('buildgroup', 'type', 'varchar(20)', 'character varying(20)', 'Daily');
   AddTableField('build2grouprule', 'parentgroupid', 'int(11)', 'bigint', '0');
 
+  // Support for pull request notifications.
+  AddTableField('build', 'notified', 'tinyint(1)', 'smallint', '0');
+
   // Set the database version
   setVersion();
 
