@@ -799,4 +799,90 @@ function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_
   return $compiler_output;
 }
 
+/** Post a comment on a pull request */
+function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_url)
+{
+  if(!is_numeric($projectid))
+    {
+    return;
+    }
+
+  $project = pdo_query("SELECT cvsviewertype,cvsurl FROM project WHERE id='$projectid'");
+  $project_array = pdo_fetch_array($project);
+  $projecturl = $project_array['cvsurl'];
+
+  $cvsviewertype = strtolower($project_array["cvsviewertype"]);
+  $PR_func = 'post_'.$cvsviewertype.'_pull_request_comment';
+
+  if(function_exists($PR_func))
+    {
+    $PR_func($projectid, $pull_request, $comment, $cdash_url);
+    return;
+    }
+  else
+    {
+    add_log("PR commenting not implemented for '$cvsviewertype'",
+            "post_pull_request_comment()", LOG_WARNING);
+    }
+}
+
+function post_github_pull_request_comment($projectid, $pull_request, $comment, $cdash_url)
+{
+  $row = pdo_single_row_query(
+    "SELECT url, username, password FROM repositories
+    LEFT JOIN project2repositories AS p2r ON (p2r.repositoryid=repositories.id)
+    WHERE p2r.projectid='$projectid'");
+
+  if (empty($row) || !isset($row['url']) || !isset($row['username']) ||
+      !isset($row['password']))
+    {
+    add_log("Missing repository info for project #$projectid",
+            "post_github_pull_request_comment()", LOG_WARNING);
+    return;
+    }
+
+  /* Massage our github url into the API endpoint that we need to POST to.
+   * For a URL of the form:
+   * ...://github.com/<user>/<repo>
+   * We want:
+   * ...://api.github.com/repos/<user>/<repo>/issues/<PR#>/comments
+   */
+  $idx1 = strpos($row['url'], "github.com");
+  $idx2 = $idx1 + strlen("github.com/");
+  $post_url = substr($row['url'], 0, $idx2);
+  $post_url = str_replace("github.com", "api.github.com", $post_url);
+  $post_url .= "repos/";
+  $post_url .= substr($row['url'], $idx2);
+  $post_url .= "/issues/$pull_request/comments";
+
+  // Format our comment using Github's comment syntax.
+  $message = "[$comment]($cdash_url)";
+
+  $data = array("body" => $message);
+  $data_string = json_encode($data);
+
+  $ch = curl_init($post_url);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Content-Length: ' . strlen($data_string))
+  );
+  curl_setopt($ch, CURLOPT_HEADER, 1);
+  $userpwd = $row['username'] . ":" . $row['password'];
+  curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+
+  if (curl_exec($ch) === false)
+    {
+    add_log(
+      "cURL error: ". curl_error($ch),
+      "post_github_pull_request_comment",
+      LOG_ERR, $projectid);
+    }
+
+  curl_close($ch);
+}
+
 ?>

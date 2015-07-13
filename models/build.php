@@ -59,6 +59,10 @@ class Build
   // when the InsertErrors is false the build is created but not the errors and warnings
   var $InsertErrors;
 
+  // Used to comment on pull/merge requests when something goes wrong
+  // with this build.
+  private $PullRequest;
+
   function __construct()
     {
     $this->ProjectId = 0;
@@ -706,6 +710,28 @@ class Build
     // Add label associations regardless of how Build::Save gets called:
     //
     $this->InsertLabelAssociations();
+
+    // Check if we should post errors to a pull request.
+    if (isset($this->PullRequest))
+      {
+      $hasErrors = false;
+      foreach($this->Errors as $error)
+        {
+        if($error->Type == 0)
+          {
+          $hasErrors = true;
+          break;
+          }
+        }
+      if ($hasErrors)
+        {
+        $url = get_server_URI(false);
+        $url .= "/viewBuildError.php?buildid=$this->Id";
+        include_once("cdash/repository.php");
+        post_pull_request_comment($this->ProjectId, $this->PullRequest,
+          "This build experienced errors.", $url);
+        }
+      }
 
     return true;
     }
@@ -1811,6 +1837,17 @@ class Build
 
     add_last_sql_error("Build:UpdateParentConfigureNumbers",
       $this->ProjectId,$this->Id);
+    }
+
+  /** Get/set pull request for this build. */
+  function GetPullRequest()
+    {
+    return $this->PullRequest;
+    }
+
+  function SetPullRequest($pr)
+    {
+    $this->PullRequest = $pr;
     }
 
 } // end class Build

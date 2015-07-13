@@ -58,6 +58,11 @@ class BuildHandler extends AbstractHandler
       // Fill in the attribute
       foreach($attributes as $key=>$value)
         {
+        if ($key === 'CHANGEID')
+          {
+          $this->Build->SetPullRequest($value);
+          continue;
+          }
         $siteInformation->SetValue($key,$value);
         $buildInformation->SetValue($key,$value);
         }
