@@ -724,12 +724,31 @@ class Build
           break;
           }
         }
+
       if ($hasErrors)
         {
-        $url = get_server_URI(false);
-        $url .= "/viewBuildError.php?buildid=$this->Id";
-        post_pull_request_comment($this->ProjectId, $this->PullRequest,
-          "This build experienced errors.", $url);
+        $idToNotify = $this->Id;
+        if ($this->ParentId > 0)
+          {
+          $idToNotify = $this->ParentId;
+          }
+
+        $notified = true;
+        $row = pdo_single_row_query(
+          "SELECT notified FROM build WHERE id=".qnum($idToNotify));
+        if ($row && array_key_exists('notified', $row))
+          {
+          $notified = $row['notified'];
+          }
+
+        if (!$notified)
+          {
+          $url = get_server_URI(false);
+          $url .= "/viewBuildError.php?buildid=$this->Id";
+          post_pull_request_comment($this->ProjectId, $this->PullRequest,
+            "This build experienced errors.", $url);
+          pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
+          }
         }
       }
 
@@ -815,10 +834,27 @@ class Build
     // Check if we should post test failures to a pull request.
     if (isset($this->PullRequest) && $numberTestsFailed > 0)
       {
-      $url = get_server_URI(false);
-      $url .= "/viewTest.php?onlyfailed&buildid=$this->Id";
-      post_pull_request_comment($this->ProjectId, $this->PullRequest,
-        "This build experienced failing tests.", $url);
+      $idToNotify = $this->Id;
+      if ($this->ParentId > 0)
+        {
+        $idToNotify = $this->ParentId;
+        }
+
+      $notified = true;
+      $row = pdo_single_row_query(
+        "SELECT notified FROM build WHERE id=".qnum($idToNotify));
+      if ($row && array_key_exists('notified', $row))
+        {
+        $notified = $row['notified'];
+        }
+      if (!$notified)
+        {
+        $url = get_server_URI(false);
+        $url .= "/viewTest.php?onlyfailed&buildid=$this->Id";
+        post_pull_request_comment($this->ProjectId, $this->PullRequest,
+          "This build experienced failing tests.", $url);
+        pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
+        }
       }
     }
 
