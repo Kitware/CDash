@@ -16,7 +16,7 @@
 
 =========================================================================*/
 $noforcelogin = 1;
-set_include_path(__DIR__.'/..');
+include_once("api_setpath.php");
 include('cdash/config.php');
 require_once('cdash/pdo.php');
 include_once('cdash/common.php');

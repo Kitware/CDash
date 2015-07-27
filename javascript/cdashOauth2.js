@@ -12,7 +12,7 @@ function oauth2Login() {
   REDIRECT += "/googleauth_callback.php";
 
   // get state (anti-forgery token) from session via CDash API
-  $.get('api/getState.php', function(securityToken) {
+  $.get('api/v1/getState.php', function(securityToken) {
     // overload state to contain both the URL that the user is attempting to
     // access, as well as the anti-forgery token.
     var STATE = encodeURIComponent(document.URL) + "_AND_STATE_IS_" + securityToken;

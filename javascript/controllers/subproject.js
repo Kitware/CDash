@@ -9,7 +9,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
     else {
       queryString['subprojectid'] = id;
       $http({
-        url: 'api/subproject.php',
+        url: 'api/v1/subproject.php',
         method: 'GET',
         params: queryString
       }).success(function(details) {
@@ -36,7 +36,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
     };
 
     $http({
-      url: 'api/subproject.php',
+      url: 'api/v1/subproject.php',
       method: 'DELETE',
       params: parameters
     }).success(function(details) {
@@ -63,7 +63,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
     };
 
     $http({
-      url: 'api/subproject.php',
+      url: 'api/v1/subproject.php',
       method: 'PUT',
       params: parameters
     }).success(function(details) {
@@ -92,7 +92,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
     };
 
     $http({
-      url: 'api/subproject.php',
+      url: 'api/v1/subproject.php',
       method: 'DELETE',
       params: parameters
     }).success(function(details) {
@@ -120,7 +120,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
       groupname: $scope.details.group.name
     };
     $http({
-      url: 'api/subproject.php',
+      url: 'api/v1/subproject.php',
       method: 'PUT',
       params: parameters
     }).success(function(details) {
