@@ -24,8 +24,8 @@ class RepositoryAPI extends CDashAPI
   /** return the example URL  */
   private function ExampleURL()
     {
-    include_once('../cdash/common.php');
-    include_once('../cdash/repository.php');
+    include_once('cdash/common.php');
+    include_once('cdash/repository.php');
 
     if(!isset($this->Parameters['url']))
       {

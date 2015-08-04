@@ -85,7 +85,7 @@ class JavaJSONTarHandler
       }
 
     // Delete the directory when we're done.
-    $this->DeleteDirectory($dirName);
+    DeleteDirectory($dirName);
     return true;
     }
 
@@ -236,33 +236,6 @@ class JavaJSONTarHandler
 
     // Add this Coverage to our summary.
     $coverageSummary->AddCoverage($coverage);
-    }
-
-  /**
-    * PHP won't let you delete a non-empty directory, so we first have to
-    * search through it and delete each file & subdirectory that we find.
-   **/
-  function DeleteDirectory($dirName)
-    {
-    $iterator = new RecursiveIteratorIterator(
-      new RecursiveDirectoryIterator($dirName),
-      RecursiveIteratorIterator::CHILD_FIRST);
-    foreach ($iterator as $file)
-      {
-      if (in_array($file->getBasename(), array('.', '..')))
-        {
-        continue;
-        }
-      if ($file->isDir())
-        {
-        rmdir($file->getPathname());
-        }
-      if ($file->isFile() || $file->isLink())
-        {
-        unlink($file->getPathname());
-        }
-      }
-    rmdir($dirName);
     }
 
 } // end class
