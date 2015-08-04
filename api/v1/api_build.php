@@ -16,12 +16,7 @@
 
 =========================================================================*/
 
-// To be able to access files in this CDash installation regardless
-// of getcwd() value:
-//
-$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
-set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
-
+include_once("api_setpath.php");
 include_once('api.php');
 
 class BuildAPI extends CDashAPI
@@ -30,8 +25,8 @@ class BuildAPI extends CDashAPI
   /** Return the defects: builderrors, buildwarnings, testnotrun, testfailed. */
   private function ListDefects()
     {
-    include_once('../cdash/common.php');
-    include("../cdash/config.php");
+    include_once('cdash/common.php');
+    include("cdash/config.php");
 
     if(!isset($this->Parameters['project']))
       {
@@ -109,8 +104,8 @@ class BuildAPI extends CDashAPI
   /** Return the defects: builderrors, buildwarnings, testnotrun, testfailed. */
   private function RevisionStatus()
     {
-    include_once('../cdash/common.php');
-    include("../cdash/config.php");
+    include_once('cdash/common.php');
+    include("cdash/config.php");
 
     if(!isset($this->Parameters['project']))
       {
@@ -210,7 +205,7 @@ class BuildAPI extends CDashAPI
   /** Return the number of defects per number of checkins */
   private function ListCheckinsDefects()
     {
-    include_once('../cdash/common.php');
+    include_once('cdash/common.php');
     if(!isset($this->Parameters['project']))
       {
       echo "Project not set";
@@ -268,8 +263,8 @@ class BuildAPI extends CDashAPI
    *  array2: array1_id, test_fullname */
   private function ListSiteTestFailure()
     {
-    include("../cdash/config.php");
-    include_once('../cdash/common.php');
+    include("cdash/config.php");
+    include_once('cdash/common.php');
 
 
     if(!isset($this->Parameters['project']))
@@ -362,13 +357,13 @@ class BuildAPI extends CDashAPI
   /** Schedule a build */
   private function ScheduleBuild()
     {
-    include("../cdash/config.php");
-    include_once('../cdash/common.php');
-    include_once("../models/clientjobschedule.php");
-    include_once("../models/clientos.php");
-    include_once("../models/clientcmake.php");
-    include_once("../models/clientcompiler.php");
-    include_once("../models/clientlibrary.php");
+    include("cdash/config.php");
+    include_once('cdash/common.php');
+    include_once("models/clientjobschedule.php");
+    include_once("models/clientos.php");
+    include_once("models/clientcmake.php");
+    include_once("models/clientcompiler.php");
+    include_once("models/clientlibrary.php");
 
     if(!isset($this->Parameters['token']))
       {
@@ -535,13 +530,13 @@ class BuildAPI extends CDashAPI
    /** Return the status of a scheduled build */
    private function ScheduleStatus()
     {
-    include("../cdash/config.php");
-    include_once('../cdash/common.php');
-    include_once("../models/clientjobschedule.php");
-    include_once("../models/clientos.php");
-    include_once("../models/clientcmake.php");
-    include_once("../models/clientcompiler.php");
-    include_once("../models/clientlibrary.php");
+    include("cdash/config.php");
+    include_once('cdash/common.php');
+    include_once("models/clientjobschedule.php");
+    include_once("models/clientos.php");
+    include_once("models/clientcmake.php");
+    include_once("models/clientcompiler.php");
+    include_once("models/clientlibrary.php");
 
     $status = array();
     $status['scheduled'] = 0;

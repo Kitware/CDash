@@ -36,7 +36,7 @@ CDash.filter('filter_builds', function() {
 
 .controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http) {
   $http({
-    url: 'api/manageBuildGroup.php',
+    url: 'api/v1/manageBuildGroup.php',
     method: 'GET',
     params: queryString
   }).success(function(cdash) {
@@ -74,7 +74,7 @@ CDash.filter('filter_builds', function() {
       newbuildgroup: newBuildGroup,
       type: type
     };
-    $http.post('api/buildgroup.php', parameters)
+    $http.post('api/v1/buildgroup.php', parameters)
     .success(function(buildgroup) {
       if (buildgroup.error) {
         $scope.cdash.error = buildgroup.error;
@@ -100,7 +100,7 @@ CDash.filter('filter_builds', function() {
       projectid: $scope.cdash.project.id,
       newLayout: newLayout
     };
-    $http.post('api/buildgroup.php', parameters)
+    $http.post('api/v1/buildgroup.php', parameters)
     .success(function(resp) {
       if (resp.error) {
         $scope.cdash.error = resp.error;
@@ -119,7 +119,7 @@ CDash.filter('filter_builds', function() {
       buildgroup: buildgroup
     };
     $http({
-      url: 'api/buildgroup.php',
+      url: 'api/v1/buildgroup.php',
       method: 'PUT',
       params: parameters
     }).success(function(resp) {
@@ -142,7 +142,7 @@ CDash.filter('filter_builds', function() {
         buildgroupid: buildgroupid
       };
       $http({
-        url: 'api/buildgroup.php',
+        url: 'api/v1/buildgroup.php',
         method: 'DELETE',
         params: parameters
       }).success(function() {
@@ -171,7 +171,7 @@ CDash.filter('filter_builds', function() {
       group: group,
       expected: expected
     };
-    $http.post('api/buildgroup.php', parameters)
+    $http.post('api/v1/buildgroup.php', parameters)
     .success(function(buildgroup) {
       if (buildgroup.error) {
         $scope.cdash.error = buildgroup.error;
@@ -192,7 +192,7 @@ CDash.filter('filter_builds', function() {
       type: type,
       nameMatch: nameMatch
     };
-    $http.post('api/buildgroup.php', parameters)
+    $http.post('api/v1/buildgroup.php', parameters)
     .success(function(buildgroup) {
       if (buildgroup.error) {
         $scope.cdash.error = buildgroup.error;
@@ -212,7 +212,7 @@ CDash.filter('filter_builds', function() {
       wildcard: wildcard
     };
     $http({
-      url: 'api/buildgroup.php',
+      url: 'api/v1/buildgroup.php',
       method: 'DELETE',
       params: parameters
     }).success(function() {
@@ -235,7 +235,7 @@ CDash.filter('filter_builds', function() {
       site: site,
       match: match
     };
-    $http.post('api/buildgroup.php', parameters)
+    $http.post('api/v1/buildgroup.php', parameters)
     .success(function(rule) {
       if (rule.error) {
         $scope.cdash.error = rule.error;
@@ -263,7 +263,7 @@ CDash.filter('filter_builds', function() {
       rule: rule
     };
     $http({
-      url: 'api/buildgroup.php',
+      url: 'api/v1/buildgroup.php',
       method: 'DELETE',
       params: parameters
     }).success(function() {
