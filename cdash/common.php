@@ -2407,5 +2407,32 @@ function compute_percentcoverage($loctested, $locuntested)
 }
 
 
+/**
+  * PHP won't let you delete a non-empty directory, so we first have to
+  * search through it and delete each file & subdirectory that we find.
+ **/
+function DeleteDirectory($dirName)
+  {
+  $iterator = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator($dirName),
+    RecursiveIteratorIterator::CHILD_FIRST);
+  foreach ($iterator as $file)
+    {
+    if (in_array($file->getBasename(), array('.', '..')))
+      {
+      continue;
+      }
+    if ($file->isDir())
+      {
+      rmdir($file->getPathname());
+      }
+    if ($file->isFile() || $file->isLink())
+      {
+      unlink($file->getPathname());
+      }
+    }
+  rmdir($dirName);
+  }
+
 
 ?>
