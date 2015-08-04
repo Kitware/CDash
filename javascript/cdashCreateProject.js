@@ -51,7 +51,7 @@ function changeViewerType()
 
 
   //$('#repositoryurlexample').html(text);
-  $.getJSON('api/?method=repository&task=exampleurl&url='+$('#cvsURL').attr("value")+'&type='+$('#cvsviewertype').attr("value"), function(data) {
+  $.getJSON('api/v1/?method=repository&task=exampleurl&url='+$('#cvsURL').attr("value")+'&type='+$('#cvsviewertype').attr("value"), function(data) {
      $('#repositoryurlexample').html(data);
 
   });

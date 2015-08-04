@@ -16,12 +16,7 @@
 
 =========================================================================*/
 
-// To be able to access files in this CDash installation regardless
-// of getcwd() value:
-//
-$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
-set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
-
+include_once("api_setpath.php");
 require_once("cdash/common.php");
 require_once("cdash/pdo.php");
 

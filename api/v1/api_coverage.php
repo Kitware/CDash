@@ -16,12 +16,7 @@
 
 =========================================================================*/
 
-// To be able to access files in this CDash installation regardless
-// of getcwd() value:
-//
-$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
-set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
-
+include_once("api_setpath.php");
 include_once('api.php');
 
 class CoverageAPI extends CDashAPI
@@ -30,7 +25,7 @@ class CoverageAPI extends CDashAPI
     * covered and not covered */
   private function CoveragePerDirectory()
     {
-    include_once('../cdash/common.php');  
+    include_once('cdash/common.php');  
     if(!isset($this->Parameters['project']))  
       {
       echo "Project not set";

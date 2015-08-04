@@ -19,7 +19,7 @@ CDash.filter('filter_groups', function() {
 })
 .controller('ManageSubProjectController', function ManageSubProjectController($scope, $http) {
   $http({
-    url: 'api/manageSubProject.php',
+    url: 'api/v1/manageSubProject.php',
     method: 'GET',
     params: queryString
   }).success(function(cdash) {
@@ -32,7 +32,7 @@ CDash.filter('filter_groups', function() {
       newsubproject: newSubProject,
       group: groupName
     };
-    $http.post('api/subproject.php', parameters)
+    $http.post('api/v1/subproject.php', parameters)
     .success(function(subproj) {
       if (subproj.error) {
         $scope.cdash.error = subproj.error;
@@ -54,7 +54,7 @@ CDash.filter('filter_groups', function() {
       threshold: threshold,
       isdefault: isDefault
     };
-    $http.post('api/subproject.php', parameters)
+    $http.post('api/v1/subproject.php', parameters)
     .success(function(group) {
 
       // Update our default group if necessary.
@@ -76,7 +76,7 @@ CDash.filter('filter_groups', function() {
       is_default: is_default
     };
     $http({
-      url: 'api/subproject.php',
+      url: 'api/v1/subproject.php',
       method: 'PUT',
       params: parameters
     }).success(function(resp) {
@@ -96,7 +96,7 @@ CDash.filter('filter_groups', function() {
       groupid: groupId
     };
     $http({
-      url: 'api/subproject.php',
+      url: 'api/v1/subproject.php',
       method: 'DELETE',
       params: parameters
     }).success(function() {
