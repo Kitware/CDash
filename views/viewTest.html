@@ -154,7 +154,7 @@
               <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'status', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
-            <th ng-if="cdash.build.showtesttime == 1"  style="cursor: pointer" ng-click="orderByField='timestatus'; reverseSort = !reverseSort">
+            <th ng-if="cdash.project.showtesttime == 1"  style="cursor: pointer" ng-click="orderByField='timestatus'; reverseSort = !reverseSort">
               Time Status
               <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'timeExecFull', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
             </th>

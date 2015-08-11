@@ -16,12 +16,7 @@
 
 =========================================================================*/
 
-// To be able to access files in this CDash installation regardless
-// of getcwd() value:
-//
-$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
-set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
-
+include_once("api_setpath.php");
 include_once('api.php');
 
 class ProjectAPI extends CDashAPI
@@ -29,7 +24,7 @@ class ProjectAPI extends CDashAPI
   /** Return the list of all public projects */
   private function ListProjects()
     {
-    include_once('../cdash/common.php');
+    include_once('cdash/common.php');
     $query = pdo_query("SELECT id,name FROM project WHERE public=1 ORDER BY name ASC");
     while($query_array = pdo_fetch_array($query))
       {
@@ -47,7 +42,7 @@ class ProjectAPI extends CDashAPI
    */
   function Authenticate()
     {
-    include_once('../cdash/common.php');
+    include_once('cdash/common.php');
     if(!isset($this->Parameters['project']))
       {
       return array('status'=>false, 'message'=>"You must specify a project parameter.");
@@ -88,8 +83,8 @@ class ProjectAPI extends CDashAPI
    */
   function ListFiles()
     {
-    include_once('../cdash/common.php');
-    include_once('../models/project.php');
+    include_once('cdash/common.php');
+    include_once('models/project.php');
 
     global $CDASH_DOWNLOAD_RELATIVE_URL;
 

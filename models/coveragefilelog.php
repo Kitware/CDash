@@ -31,7 +31,14 @@ class CoverageFileLog
 
   function AddLine($number,$code)
     {
-    $this->Lines[$number] = $code;
+    if (array_key_exists($number, $this->Lines))
+      {
+      $this->Lines[$number] += $code;
+      }
+    else
+      {
+      $this->Lines[$number] = $code;
+      }
     }
 
   function AddBranch($number, $covered, $total)

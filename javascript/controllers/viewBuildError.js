@@ -1,7 +1,7 @@
 CDash.controller('BuildErrorController',
   function BuildErrorController($scope, $http, $sce) {
     $http({
-      url: 'api/viewBuildError.php',
+      url: 'api/v1/viewBuildError.php',
       method: 'GET',
       params: queryString
     }).success(function(cdash) {

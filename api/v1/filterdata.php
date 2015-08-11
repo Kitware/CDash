@@ -15,7 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-set_include_path(__DIR__.'/..');
+include_once("api_setpath.php");
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 include_once("cdash/common.php");

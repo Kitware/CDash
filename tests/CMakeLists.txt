@@ -86,6 +86,7 @@ add_php_test(projectxmlsequence)
 add_php_test(uploadfile)
 add_php_test(branchcoverage)
 add_php_test(javajsoncoverage)
+add_php_test(jscovercoverage)
 
 add_subdirectory(ctest)
 

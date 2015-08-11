@@ -307,49 +307,11 @@ CDash.controller('FiltersController', function FiltersController($scope, $http, 
   queryString['showlimit'] = 0;
 
   $http({
-    url: 'api/filterdata.php',
+    url: 'api/v1/filterdata.php',
     method: 'GET',
     params: queryString
   }).success(function(filterdata) {
     $scope.filterdata = filterdata;
   });
-
-/*
-  $scope.filterdata = {
-
-// used
-    "filtercombine": "",
-    "limit": 0,
-    "showfilters": 0,
-    "showlimit": 0,
-    "filters": [
-      {
-      "key":"filename",
-      "value":"",
-      "compare":63,
-      }
-    ],
-    "availablefilters": [
-      "coveredlines",
-      "filename",
-      "labels",
-      "priority",
-      "totallines",
-      "uncoveredlines",
-    ]
-
-// unused (as far as I can tell)
-    "filtercount": 0,
-    "pageId": "viewCoverage.php",
-    "script": "\/CDash\/api\/viewCoverage.php",
-
-// todo
-    "colorblind": 0,
-
-
-
-
-  };
-*/
 
 });

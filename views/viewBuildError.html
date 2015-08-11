@@ -130,16 +130,16 @@
           </td>
         </tr>
 
-        <tr ng-if="error.precontext || error.postcontext">
+        <tr>
           <th class="measurement">
             <span class="nobr"> {{cdash.errortypename}} </span>
           </th>
           <td>
-            <pre class="compiler-output">{{error.precontext}}</pre>
+            <pre ng-if="error.precontext" class="compiler-output">{{error.precontext}}</pre>
             <b>
               <pre class="compiler-output" ng-bind-html="error.text"></pre>
             </b>
-            <pre class="compiler-output">{{error.postcontext}}</pre>
+            <pre ng-if="error.postcontext" class="compiler-output">{{error.postcontext}}</pre>
           </td>
         </tr>
 
