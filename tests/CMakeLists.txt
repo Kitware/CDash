@@ -87,6 +87,9 @@ add_php_test(uploadfile)
 add_php_test(branchcoverage)
 add_php_test(javajsoncoverage)
 add_php_test(jscovercoverage)
+if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
+  add_php_test(github_PR_comment)
+endif()
 
 add_subdirectory(ctest)
 
