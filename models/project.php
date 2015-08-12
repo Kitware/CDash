@@ -166,6 +166,27 @@ class Project
     pdo_query("DELETE FROM projectrobot WHERE projectid=$this->Id");
     pdo_query("DELETE FROM projectjobscript WHERE projectid=$this->Id");
 
+    // Delete any repositories that aren't shared with other projects.
+    $repositories_query = pdo_query(
+      "SELECT repositoryid FROM project2repositories
+       WHERE projectid=".qnum($this->Id)."
+       ORDER BY repositoryid");
+    add_last_sql_error("Project DeleteRepositories1", $this->Id);
+    while($repository_array = pdo_fetch_array($repositories_query))
+      {
+      $repoid = $repository_array['repositoryid'];
+      $projects_query = pdo_query(
+        "SELECT projectid FROM project2repositories
+         WHERE repositoryid=".qnum($repoid));
+      add_last_sql_error("Project DeleteRepositories1", $this->Id);
+      if(pdo_num_rows($projects_query) > 1)
+        {
+        continue;
+        }
+      pdo_query("DELETE FROM repositories WHERE id=$repoid");
+      }
+    pdo_query("DELETE FROM project2repositories WHERE projectid=$this->Id");
+
     pdo_query("DELETE FROM project WHERE id=$this->Id");
     }
 
