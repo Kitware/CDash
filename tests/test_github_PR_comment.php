@@ -75,6 +75,7 @@ class GithubCommentTestCase extends KWWebTestCase
     $this->clickSubmitByName("Update");
 
     // Submit a failing test.
+    echo "Submitting Test.xml\n";
     if (!$this->submitPullRequestFile(
         dirname(__FILE__)."/data/GithubPR/Test.xml"))
       {
@@ -82,6 +83,7 @@ class GithubCommentTestCase extends KWWebTestCase
       }
 
     // Submit a broken build.
+    echo "Submitting Build.xml\n";
     if (!$this->submitPullRequestFile(
         dirname(__FILE__)."/data/GithubPR/Build.xml"))
       {
@@ -212,6 +214,7 @@ class GithubCommentTestCase extends KWWebTestCase
 
     // Clear the log.
     $this->deleteLog($this->logfilename);
+    return true;
     }
 
 }

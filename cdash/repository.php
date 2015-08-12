@@ -886,8 +886,6 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
     {
     $matches = array();
     preg_match("#/comments/(\d+)#", $retval, $matches);
-    print $matches[1];
-
     add_log(
       "Just posted comment #" . $matches[1],
       "post_github_pull_request_comment",
