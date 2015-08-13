@@ -154,7 +154,10 @@ class Feed
       $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".$buildid." AND type=0");
       $positives_array  = pdo_fetch_array($positives);
       $npositives = $positives_array[0];
-      $positives = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid=".$buildid." AND type=0");
+      $positives = pdo_query(
+        "SELECT count(*) FROM buildfailure AS bf
+         LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+         WHERE bf.buildid=".$buildid." AND bfd.type=0");
       $positives_array  = pdo_fetch_array($positives);
       $npositives += $positives_array[0];
 
@@ -169,7 +172,10 @@ class Feed
       $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".$buildid." AND type=1");
       $positives_array  = pdo_fetch_array($positives);
       $npositives = $positives_array[0];
-      $positives = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid=".$buildid." AND type=1");
+      $positives = pdo_query(
+        "SELECT count(*) FROM buildfailure AS bf
+         LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+         WHERE bf.buildid=".$buildid." AND bfd.type=1");
       $positives_array  = pdo_fetch_array($positives);
       $npositives += $positives_array[0];
 

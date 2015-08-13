@@ -54,7 +54,7 @@ class BuildFailure
   function AddArgument($argument)
     {
     $this->Arguments[]  = $argument;
-    }      
+    }
 
 
   function InsertLabelAssociations($id)
@@ -63,7 +63,7 @@ class BuildFailure
       {
       return;
       }
-      
+
     if($id)
       {
       foreach($this->Labels as $label)
@@ -85,9 +85,9 @@ class BuildFailure
     if(!$this->BuildId)
       {
       echo "BuildFailure::Insert(): BuildId not set<br>";
-      return false;    
+      return false;
       }
-    
+
     $workingDirectory = pdo_real_escape_string($this->WorkingDirectory);
     $stdOutput = pdo_real_escape_string($this->StdOutput);
     $stdError = pdo_real_escape_string($this->StdError);
@@ -98,24 +98,50 @@ class BuildFailure
     $outputType = pdo_real_escape_string($this->OutputType);
     $sourceFile = pdo_real_escape_string($this->SourceFile);
 
-    // Compute the crc32
-    $crc32 = crc32($outputFile.$stdOutput.$stdError.$sourceFile); 
-    $query = "INSERT INTO buildfailure (buildid,type,workingdirectory,stdoutput,stderror,exitcondition,
-              language,targetname,outputfile,outputtype,sourcefile,newstatus,crc32)
-              VALUES (".qnum($this->BuildId).",".qnum($this->Type).",'$workingDirectory',
-              '$stdOutput','$stdError','$exitCondition',
-              '$language','$targetName','$outputFile','$outputType','$sourceFile',0,".qnum($crc32).")";                     
+    // Compute the crc32.
+    $crc32 = crc32($outputFile . $stdOutput . $stdError . $sourceFile);
+
+    // Get details ID if it already exists, otherwise insert a new row.
+    $detailsResult = pdo_single_row_query(
+      "SELECT id FROM buildfailuredetails WHERE crc32=" . qnum($crc32));
+    if ($detailsResult && array_key_exists('id', $detailsResult))
+      {
+      $detailsId = $detailsResult['id'];
+      }
+    else
+      {
+      $query =
+        "INSERT INTO buildfailuredetails
+          (type, stdoutput, stderror, exitcondition, language, targetname,
+           outputfile, outputtype, crc32)
+         VALUES
+          (".qnum($this->Type).", '$stdOutput', '$stdError', '$exitCondition',
+           '$language', '$targetName', '$outputFile', '$outputType',".qnum($crc32).")";
+      if (!pdo_query($query))
+        {
+        add_last_sql_error("BuildFailure InsertDetails", 0, $this->BuildId);
+        }
+      $detailsId = pdo_insert_id("buildfailuredetails");
+      }
+
+    // Insert the buildfailure.
+    $query =
+      "INSERT INTO buildfailure
+         (buildid, detailsid, workingdirectory, sourcefile, newstatus)
+       VALUES
+         (".qnum($this->BuildId).", ".qnum($detailsId).", '$workingDirectory',
+          '$sourceFile', 0)";
     if(!pdo_query($query))
       {
-      add_last_sql_error("BuildFailure Insert",0,$this->BuildId);
+      add_last_sql_error("BuildFailure Insert", 0, $this->BuildId);
       return false;
-      }  
-   
+      }
+
     $id = pdo_insert_id("buildfailure");
-   
+
     // Insert the arguments
     $argumentids = array();
-    
+
     foreach($this->Arguments as $argument)
       {
       // Limit the argument to 255
@@ -136,17 +162,17 @@ class BuildFailure
         }
       else // insert the argument
         {
-        $query = "INSERT INTO buildfailureargument (argument) VALUES ('".$argumentescaped."')";                     
+        $query = "INSERT INTO buildfailureargument (argument) VALUES ('".$argumentescaped."')";
         if(!pdo_query($query))
           {
           add_last_sql_error("BuildFailure Insert",0,$this->BuildId);
           return false;
-          }  
-        
+          }
+
         $argumentids[] = pdo_insert_id("buildfailureargument");
         }
       }
-    
+
     // Insert the argument
     $query = "INSERT INTO buildfailure2argument (buildfailureid,argumentid,place) VALUES ";
     $i=0;
@@ -156,9 +182,9 @@ class BuildFailure
         {
         $query .= ",";
         }
-      $query .= "(".qnum($id).",".qnum($argumentid).",".qnum($i).")";   
+      $query .= "(".qnum($id).",".qnum($argumentid).",".qnum($i).")";
       $i++;
-      } 
+      }
 
     if(!pdo_query($query))
       {

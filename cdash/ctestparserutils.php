@@ -146,15 +146,46 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
   pdo_query($sqlquery);
   add_last_sql_error("compute_error_difference",0,$buildid);
 
-  // Same for buildfailure
-  $sqlquery = "UPDATE buildfailure SET newstatus=1 WHERE buildid=".$buildid." AND type=".$warning." AND crc32 IN
-               (SELECT crc32 FROM (SELECT crc32 FROM buildfailure WHERE buildid=".$buildid."
-               AND type=".$warning.") AS builderrora
-               LEFT JOIN (SELECT crc32 as crc32b FROM buildfailure WHERE buildid=".$previousbuildid."
-               AND type=".$warning.") AS builderrorb ON builderrora.crc32=builderrorb.crc32b
-               WHERE builderrorb.crc32b IS NULL)";
-  pdo_query($sqlquery);
-  add_last_sql_error("compute_error_difference",0,$buildid);
+  // Recurring buildfailures are represented by the buildfailuredetails table.
+  // Get a list of buildfailuredetails IDs for the current build and the
+  // previous build.
+  $current_failures = array();
+  $previous_failures = array();
+
+  $query =
+    "SELECT bf.detailsid FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
+     WHERE bf.buildid=$buildid AND bfd.type=$warning";
+  $result = pdo_query($query);
+  add_last_sql_error("compute_error_difference", 0, $buildid);
+  while($row = pdo_fetch_array($result))
+    {
+    $current_failures[] = $row['detailsid'];
+    }
+
+  $query =
+    "SELECT bf.detailsid FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
+     WHERE bf.buildid=$previousbuildid AND bfd.type=$warning";
+  $result = pdo_query($query);
+  add_last_sql_error("compute_error_difference", 0, $buildid);
+  while($row = pdo_fetch_array($result))
+    {
+    $previous_failures[] = $row['detailsid'];
+    }
+
+  // Check if any of these are new failures and mark them accordingly.
+  foreach($current_failures as $failure)
+    {
+    if (!in_array($failure, $previous_failures))
+      {
+      $query =
+        "UPDATE buildfailure SET newstatus=1
+         WHERE buildid=$buildid AND detailsid=$failure";
+      pdo_query($query);
+      add_last_sql_error("compute_error_difference", 0, $buildid);
+      }
+    }
 
   // Maybe we can get that from the query (don't know).
   $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".$buildid." AND type=".$warning." AND newstatus=1");
@@ -164,8 +195,7 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
   $positives_array  = pdo_fetch_array($positives);
   $npositives += $positives_array[0];
 
-  // Count the difference between the number of tests that were passing (or failing)
-  // and now that have a different one
+  // Count how many build defects were fixed since the previous build.
   $sqlquery = "SELECT count(*)
                FROM (SELECT crc32 FROM builderror WHERE buildid=".$previousbuildid."
                AND type=".$warning.") AS builderrora
@@ -176,15 +206,13 @@ function compute_error_difference($buildid,$previousbuildid,$warning)
   $negatives_array  = pdo_fetch_array($negatives);
   $nnegatives = $negatives_array[0];
 
-  $sqlquery = "SELECT count(*)
-               FROM (SELECT crc32 FROM buildfailure WHERE buildid=".$previousbuildid."
-               AND type=".$warning.") AS builderrora
-               LEFT JOIN (SELECT crc32 as crc32b FROM buildfailure WHERE buildid=".$buildid."
-               AND type=".$warning.") AS builderrorb
-               ON builderrora.crc32=builderrorb.crc32b WHERE builderrorb.crc32b IS NULL";
-  $negatives = pdo_query($sqlquery);
-  $negatives_array  = pdo_fetch_array($negatives);
-  $nnegatives += $negatives_array[0];
+  foreach($previous_failures as $failure)
+    {
+    if (!in_array($failure, $current_failures))
+      {
+      $nnegatives += 1;
+      }
+    }
 
   // Don't log if no diff
   if($npositives != 0 || $nnegatives != 0)

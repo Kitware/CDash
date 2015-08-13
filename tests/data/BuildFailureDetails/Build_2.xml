@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_buildfailure"
+	BuildStamp="20150813-1338-Experimental"
+	Name="elysium"
+	Generator="ctest-3.3.20150717-ga5412"
+	CompilerName=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-61-generic"
+	OSVersion="#100-Ubuntu SMP Wed Jul 29 11:21:34 UTC 2015"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<Build>
+		<StartDateTime>Aug 13 09:38 EDT</StartDateTime>
+		<StartBuildTime>1439473086</StartBuildTime>
+		<BuildCommand>/opt/cmake/bin/cmake --build . --config "Debug" -- -i</BuildCommand>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>foo</TargetName>
+				<Language>C++</Language>
+				<SourceFile>foo.cxx</SourceFile>
+				<OutputFile>CMakeFiles/foo.dir/foo.cxx.o</OutputFile>
+				<OutputType>object file</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/projects/tmp_for_tango/bin</WorkingDirectory>
+				<Argument>/usr/local/bin/c++</Argument>
+				<Argument>-o</Argument>
+				<Argument>CMakeFiles/foo.dir/foo.cxx.o</Argument>
+				<Argument>-c</Argument>
+				<Argument>/projects/tmp_for_tango/src/foo.cxx</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>/projects/tmp_for_tango/src/foo.cxx: In function ‘int main(int, char**)’:
+/projects/tmp_for_tango/src/foo.cxx:3:3: error: ‘foo’ was not declared in this scope
+   foo = asdf;
+   ^
+/projects/tmp_for_tango/src/foo.cxx:3:9: error: ‘asdf’ was not declared in this scope
+   foo = asdf;
+         ^</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>foo</TargetName>
+				<Language>C++</Language>
+				<OutputFile>foo</OutputFile>
+				<OutputType>executable</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/projects/tmp_for_tango/bin</WorkingDirectory>
+				<Argument>/usr/local/bin/c++</Argument>
+				<Argument>-lrt</Argument>
+				<Argument>CMakeFiles/foo.dir/foo.cxx.o</Argument>
+				<Argument>-o</Argument>
+				<Argument>foo</Argument>
+				<Argument>-rdynamic</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>c++: error: CMakeFiles/foo.dir/foo.cxx.o: No such file or directory</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Aug 13 09:38 EDT</EndDateTime>
+		<EndBuildTime>1439473086</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

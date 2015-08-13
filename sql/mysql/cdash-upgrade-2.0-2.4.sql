@@ -32,3 +32,19 @@ CREATE TABLE IF NOT EXISTS `subprojectgroup` (
   KEY `name` (`name`),
   KEY `projectid` (`projectid`)
 );
+
+CREATE TABLE IF NOT EXISTS `buildfailuredetails` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `type` tinyint(4) NOT NULL,
+  `stdoutput` mediumtext NOT NULL,
+  `stderror` mediumtext NOT NULL,
+  `exitcondition` varchar(255) NOT NULL,
+  `language` varchar(64) NOT NULL,
+  `targetname` varchar(255) NOT NULL,
+  `outputfile` varchar(512) NOT NULL,
+  `outputtype` varchar(255) NOT NULL,
+  `crc32` bigint(20) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `type` (`type`),
+  KEY `crc32` (`crc32`)
+);
