@@ -575,6 +575,7 @@ function createPageSpecificFilters($page_id)
   {
     case 'index.php':
     case 'project.php':
+    case 'viewChildren.php':
     {
       return new IndexPhpFilters();
     }

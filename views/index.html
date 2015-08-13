@@ -1,0 +1,828 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" type="text/css" href="javascript/jquery-ui-1.8.16.css" />
+    <link rel="stylesheet" type="text/css" href="javascript/jqModal.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+
+    <script src="javascript/jquery-1.10.2.js"></script>
+    <script src="javascript/jquery-ui-1.10.4.min.js"></script>
+    <script src="javascript/jquery.cookie.js"></script>
+    <script src="javascript/jqModal.js"></script>
+
+    <script src="javascript/angular.min.js"></script>
+    <script src="javascript/angular-animate.min.js"></script>
+    <script src="javascript/angular-ui-sortable.min.js"></script>
+    <script src="javascript/cdash_angular.js"></script>
+    <script src="javascript/controllers/head.js"></script>
+    <script src="javascript/controllers/index.js"></script>
+    <script src="javascript/controllers/filters.js"></script>
+
+    <title ng-bind="title">CDash</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="IndexController">
+
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+
+    <!-- TODO: use local header if it exists. -->
+    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/header.html'"></ng-include>
+
+    <div ng-if="cdash.future == 1">
+      CDash cannot predict the future (yet)...
+    </div>
+
+    <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && cdash.future != 1 && !cdash.error">
+      <div id="index_top" ng-if="cdash.updates">
+        <div name="banner" ng-repeat="banner in cdash.banners">
+          {{banner.text}}
+        </div>
+
+        <div id="updatechanges">
+          <span>
+            <span ng-if="cdash.updates.nchanges == -1">No update data</span>
+            <span ng-if="cdash.updates.nchanges == 0">No file changed</span>
+            <span ng-if="cdash.updates.nchanges > 0">
+              <a ng-href="{{cdash.updates.url}}">
+                <ng-pluralize count="cdash.updates.nchanges"
+                              when="{'1':     '{} file',
+                                     'other': '{} files'}">
+                </ng-pluralize>
+                changed by
+                <ng-pluralize count="cdash.updates.nauthors"
+                              when="{'1':     '{} author',
+                                     'other': '{} authors'}">
+                </ng-pluralize>
+              </a>
+            </span>
+            as of <b>{{cdash.updates.timestamp}}</b>
+          </span>
+        </div>
+
+        <div id="settings" ng-click="showsettings = ! showsettings">
+
+          <img src="images/settings.png"/>
+          <ul ng-show="showsettings">
+            <li>
+              <a id="label_advancedview" ng-click="cdash.advancedview=!cdash.advancedview">
+                <span ng-show="cdash.advancedview == 0">Advanced View</span>
+                <span ng-show="cdash.advancedview != 0">Simple View</span>
+              </a>
+            </li>
+            <li><a href="" class="autorefresh">Auto-refresh</a></li>
+            <li>
+              <a id="label_colorblind" href="javascript:;" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
+                <span ng-show="cdash.filterdata.colorblind == 0">Colorblind palette</span>
+                <span ng-show="cdash.filterdata.colorblind != 0">Classic palette</span>
+              </a>
+            </li>
+            <li>
+              <a id="label_showfilters" ng-click="showfilters=!showfilters">
+                <span ng-show="showfilters == 0">Show Filters</span>
+                <span ng-show="showfilters != 0">Hide Filters</span>
+              </a>
+            </li>
+            <li>
+              <a href="" ng-click="toggleFeed()" ng-show="!showFeed">
+                Show Feed
+              </a>
+              <a href="" ng-click="toggleFeed()" ng-show="showFeed">
+                Hide Feed
+              </a>
+            </li>
+            <li><a href="" class="helptrigger">Help</a></li>
+          </ul>
+        </div>
+
+        <div id="helpmenu">
+          <div class="jqmWindow" id="help">Loading help...</div>
+          <div class="jqmWindow" id="groupsdescription">Loading group description...</div>
+        </div>
+
+        <!-- Filters -->
+        <ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
+      </div> <!-- End index-top -->
+
+      <div ng-show="showFeed" id="feed" ng-include="'ajax/getfeed.php?projectid='+ cdash.projectid"></div>
+
+      <table ng-if="cdash.testingdataurl" width="100%" cellpadding="11" cellspacing="0">
+        <tr>
+          <td height="25" align="left">
+            Testing data for this project can be found at:
+            <a ng-href="{{cdash.testingdataurl}}">{{cdash.testingdataurl}}</a>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Display the site & build name common to all child builds. -->
+      <div ng-if="cdash.childview == 1">
+        <br/>
+        <div id="site" align="left">
+          <b>Site</b>:
+          <a ng-href="viewSite.php?siteid={{cdash.siteid}}&project={{cdash.projectid}}&currenttime={{cdash.unixtimestamp}}">
+            {{cdash.site}}
+          </a>
+          <img ng-if="cdash.siteoutoforder == 1" src="images/flag.png" title="flag"/>
+        </div>
+
+        <div id="buildname" align="left">
+          <b>Build Name</b>: {{cdash.buildname}}
+          <img ng-if="cdash.buildplatform" class="icon" alt="platform" ng-src="images/platform_{{cdash.buildplatform}}.png"/>
+        </div>
+        <br/>
+      </div>
+
+      <!-- Display subproject dependencies -->
+      <table ng-if="cdash.subproject.dependencies.length > 0" border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+        <tbody>
+          <tr class="table-heading1">
+            <td colspan="2" class="nob">
+              <h3>
+                <a href="#" class="grouptrigger">SubProject Dependencies</a>
+              </h3>
+            </td>
+            <td colspan="9" align="right" class="nob">
+            </td>
+          </tr>
+
+          <tr class="table-heading">
+            <td align="center" rowspan="2" width="20%"><b>Project</b></td>
+            <td align="center" colspan="3" width="20%"><b>Configure</b></td>
+            <td align="center" colspan="3" width="20%"><b>Build</b></td>
+            <td align="center" colspan="3" width="20%"><b>Test</b></td>
+            <td align="center" rowspan="2" width="20%" class="nob"><b>Last submission</b></td>
+          </tr>
+          <tr class="table-heading">
+            <td align="center"><b>Error</b></td>
+            <td align="center"><b>Warning</b></td>
+            <td align="center"><b>Pass</b></td>
+            <td align="center"><b>Error</b></td>
+            <td align="center"><b>Warning</b></td>
+            <td align="center"><b>Pass</b></td>
+            <td align="center"><b>Not Run</b></td>
+            <td align="center"><b>Fail</b></td>
+            <td align="center"><b>Pass</b></td>
+          </tr>
+
+          <tr ng-repeat="dep in cdash.subproject.dependencies" ng-class-odd="'odd'" ng-class-even="'even'">
+            <td align="center" class="paddt">
+              <a ng-href="index.php?project={{cdash.projectname_encoded}}&subproject={{dep.name_encoded}}&date={{cdash.date}}">
+                {{dep.name}}
+              </a>
+            </td>
+
+            <td align="center" ng-class="{'error': dep.nconfigureerror > 0, 'normal': dep.nconfigureerror == 0 && (dep.nconfigurewarning > 0 || dep.nconfigurepass > 0)}">
+              <span ng-if="dep.nconfigureerror != 0 || dep.nconfigurewarning != 0 || dep.nconfigurepass != 0">
+                {{dep.nconfigureerror}}
+              </span>
+            </td>
+
+            <td align="center" ng-class="{'warning': dep.nconfigurewarning > 0, 'normal': dep.nconfigurewarning == 0 && (dep.nconfigureerror > 0 || dep.nconfigurepass > 0)}">
+              <span ng-if="dep.nconfigureerror != 0 || dep.nconfigurewarning != 0 || dep.nconfigurepass != 0">
+                {{dep.nconfigurewarning}}
+              </span>
+            </td>
+
+            <td align="center" ng-class="{'normal': dep.nconfigureerror > 0 || dep.nconfigurewarning > 0 || dep.nconfigurepass > 0}">
+              <span ng-if="dep.nconfigureerror != 0 || dep.nconfigurewarning != 0 || dep.nconfigurepass != 0">
+                {{dep.nconfigurepass}}
+              </span>
+            </td>
+
+            <td align="center" ng-class="{'error': dep.nbuilderror > 0, 'normal': dep.nbuilderror == 0 && (dep.nbuildwarning > 0 || dep.nbuildpass > 0)}">
+              <span ng-if="dep.nbuilderror != 0 || dep.nbuildwarning != 0 || dep.nbuildpass != 0">
+                {{dep.nbuilderror}}
+              </span>
+            </td>
+
+            <td align="center" ng-class="{'warning': dep.nbuildwarning > 0, 'normal': dep.nbuildwarning == 0 && (dep.nbuilderror > 0 || dep.nbuildpass > 0)}">
+              <span ng-if="dep.nbuilderror != 0 || dep.nbuildwarning != 0 || dep.nbuildpass != 0">
+                {{dep.nbuildwarning}}
+              </span>
+            </td>
+
+            <td align="center" ng-class="{'normal': dep.nbuilderror > 0 || dep.nbuildwarning > 0 || dep.nbuildpass > 0}">
+              <span ng-if="dep.nbuilderror != 0 || dep.nbuildwarning != 0 || dep.nbuildpass != 0">
+                {{dep.nbuildpass}}
+              </span>
+            </td>
+
+            <td align="center" ng-class="{'warning': dep.ntestnotrun > 0, 'normal': dep.ntestnotrun == 0 && (dep.ntestfail > 0 || dep.ntestpass > 0)}">
+              <span ng-if="dep.ntestfail != 0 || dep.ntestnotrun != 0 || dep.ntestpass != 0">
+                {{dep.ntestnotrun}}
+              </span>
+            </td>
+
+            <td align="center" ng-class="{'error': dep.ntestfail > 0, 'normal': dep.ntestfail == 0 && (dep.ntestnotrun > 0 || dep.ntestpass > 0)}">
+              <span ng-if="dep.ntestfail != 0 || dep.ntestnotrun != 0 || dep.ntestpass != 0">
+                {{dep.ntestfail}}
+              </span>
+            </td>
+
+            <td align="center" ng-class="{'normal': dep.ntestfail > 0 || dep.ntestnotrun > 0 || dep.ntestpass > 0}">
+              <span ng-if="dep.ntestfail != 0 || dep.ntestnotrun != 0 || dep.ntestpass != 0">
+                {{dep.ntestpass}}
+              </span>
+            </td>
+
+            <td align="center"  class="nob">{{dep.lastsubmission}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- BuildGroups -->
+      <table ng-repeat="buildgroup in cdash.buildgroups | orderBy:'position'" border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="project_{{cdash.projectid}}_{{buildgroup.id}}">
+        <tr ng-if="buildgroup.builds.length == 0" class="table-heading1 table-nobuild">
+          <td colspan="1" class="nob">
+            <h3><a href="#" class="grouptrigger">No {{buildgroup.name}} Builds</a></h3>
+          </td>
+          <td align="right" class="nob" colspan="{{cdash.displaylabels == 1 ? 15 : 14}}">
+          </td>
+        </tr>
+
+        <thead ng-if="buildgroup.builds.length > 0">
+          <tr class="table-heading1" >
+            <td colspan="1" class="nob">
+              <h3 id="{{buildgroup.linkname}}"><a href="#" class="grouptrigger">{{buildgroup.name}}</a></h3>
+            </td>
+            <td align="right" class="nob" colspan="{{cdash.displaylabels == 1 ? 15 : 14}}">
+            </td>
+          </tr>
+
+          <tr class="table-heading">
+
+            <th ng-if="cdash.childview == 1" align="center" rowspan="2" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='label'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              SubProject
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'label', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th ng-if="cdash.childview != 1" align="center" rowspan="2" width="20%" style="cursor: pointer" ng-click="buildgroup.orderByField='site'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Site
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'site', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th ng-if="cdash.childview != 1" align="center" rowspan="2" width="25%" style="cursor: pointer" ng-click="buildgroup.orderByField='buildname'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Build Name
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'buildname', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <td align="center" colspan="{{1 + cdash.advancedview}}" width="5%" class="timeheader botl">Update</td>
+            <td align="center" colspan="{{2 + cdash.advancedview}}" width="10%" class="timeheader botl">Configure</td>
+            <td align="center" colspan="{{2 + cdash.advancedview}}" width="10%" class="timeheader botl">Build</td>
+            <td align="center" colspan="{{3 +  + cdash.advancedview}}" width="15%" class="timeheader botl">Test</td>
+            <td align="center" width="20%" class="timeheader botl"></td>
+            <td ng-if="cdash.childview != 1 && cdash.displaylabels == 1" align="center" width="5%" class="timeheader botl"></td>
+          </tr>
+
+          <tr class="table-heading">
+            <th align="center" width="3%" style="cursor: pointer" ng-click="buildgroup.orderByField='update.files'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Files
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'update.files', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='update.timefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Time
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'update.timefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th align="center" style="cursor: pointer" ng-click="buildgroup.orderByField='configure.error'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Error
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'configure.error', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th align="center" style="cursor: pointer" ng-click="buildgroup.orderByField='configure.warning'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Warn
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'configure.warning', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='configure.timefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Time
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'configure.timefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th align="center" style="cursor: pointer" ng-click="buildgroup.orderByField='compilation.error'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Error
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'compilation.error', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th align="center" style="cursor: pointer" ng-click="buildgroup.orderByField='compilation.warning'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Warn
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'compilation.warning', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='compilation.timefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Time
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'compilation.timefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='test.notrun'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Not Run
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'test.notrun', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='test.fail'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Fail
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'test.fail', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='test.pass'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Pass
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'test.pass', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='test.timefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Time
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'test.timefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th align="center" width="20%" style="cursor: pointer" ng-click="buildgroup.orderByField='builddatefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Build Time
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'builddatefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+
+            <th ng-show="cdash.childview != 1 && cdash.displaylabels == 1" align="center" rowspan="2" width="5%" class="nob" style="cursor: pointer" ng-click="buildgroup.orderByField='Labels'; buildgroup.reverseSort = !buildgroup.reverseSort">
+              Labels
+              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'Labels', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+            </th>
+         </tr>
+        </thead>
+
+        <tbody ng-if="buildgroup.builds.length > 0">
+          <tr ng-repeat="build in buildgroup.builds |orderBy:buildgroup.orderByField:buildgroup.reverseSort|showExpectedLast" ng-class-odd="'odd'" ng-class-even="'even'" valign="middle">
+
+            <!-- For child view, display the label(s) as a link to the build summary -->
+            <td ng-if="cdash.childview == 1" align="left" class="paddt">
+              <a ng-href="buildSummary.php?buildid={{build.id}}">
+                {{build.label}}
+              </a>
+              <!-- Icon for build errors / test failing -->
+              <a ng-if="build.compilation.error > 0 || build.test.fail > 0" href="javascript:;" ng-click="buildinfo_click(build.id)">
+                <img src="images/Info.png" alt="info" class="icon"></img>
+              </a>
+              <div ng-if="build.id" id="buildgroup_{{build.id}}"></div>
+            </td>
+
+            <!-- Otherwise, show build name & site on the row. -->
+            <td ng-if="cdash.childview != 1" align="left" class="paddt">
+              <a ng-href="viewSite.php?siteid={{build.siteid}}&project={{cdash.projectid}}&currenttime={{cdash.unixtimestamp}}">{{build.site}}</a>
+              <img ng-if="build.siteoutoforder == 1" border="0" src="images/flag.png" title="flag"></img>
+            </td>
+
+            <td ng-if="cdash.childview != 1" align="left">
+              <div ng-if="build.id && build.buildplatform.length > 0" style="float:left;">
+                <img class="icon" alt="platform" ng-src="images/platform_{{build.buildplatform}}.png"/>
+              </div>
+
+              <div ng-if="build.id" style="float: left; margin: 0px 4px;">
+                <a ng-if="build.numchildren == 0" class="buildinfo" alt="generator" ng-href="buildSummary.php?buildid={{build.id}}">
+                  {{build.buildname}}
+                </a>
+                <a ng-if="build.numchildren != 0" class="buildinfo" alt="generator" ng-href="{{build.multiplebuildshyperlink}}">
+                  {{build.buildname}}
+                </a>
+              </div>
+
+              <div ng-if="!build.id" style="float: left; margin: 0px 4px;">{{build.buildname}}</div>
+
+              <div style="float:left;">
+                <a ng-if="build.note.length > 0 && build.numchildren == 0" ng-show="cdash.advancedview != 0" title="View notes" ng-href="viewNotes.php?buildid={{build.id}}">
+                  <img src="images/document.png" alt="Notes" class="icon"/>
+                </a>
+
+                <a ng-if="build.upload-file-count > 0 && numchildren == 0" ng-href="viewFiles.php?buildid={{build.id}}" title="{{upload-file-count}} files uploaded with this build">
+                  <img src="images/package.png" alt="Files" class="icon"/>
+                </a>
+
+                <!-- If the build has errors or test failing -->
+                <a ng-if="build.numchildren == 0 && (build.compilation.error > 0 || build.test.fail > 0)" href="javascript:;" ng-click="buildinfo_click(build.id)">
+                  <img src="images/Info.png" alt="info" class="icon"></img>
+                </a>
+
+                <!-- If the build is expected -->
+                <a ng-if="build.expected == 1" href="javascript:;" nc-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
+                  <img src="images/Info.png" alt="info" class="icon"></img>
+                </a>
+
+                <!-- Display the note icon -->
+                <a ng-if="build.buildnote > 0 && build.numchildren == 0" name="Build Notes" class="jTip" id="buildnote_{{build.id}}" ng-href="ajax/buildnote.php?buildid={{build.id}}&width=350&link=buildSummary.php%3Fbuildid%3D{{build.id}}">
+                  <img src="images/note.png" alt="note" class="icon"></img>
+                </a>
+
+                <!-- If we have error logs -->
+                <a ng-if="build.nerrorlog > 0 && build.numchildren == 0" class="tooltip" title="{{build.nerrorlog}} errors in the CDash log" ng-href="viewErrorLog.php?buildid={{build.id}}&projectid={{cdash.projectid}}&date={{cdash.date}}">
+                  <img src="images/warningsmall.png" alt="errorlogs" class="icon"/>
+                </a>
+
+                <!-- If user is admin of the project propose to group this build -->
+                <div ng-if="cdash.user.admin == 1 && (build.numchildren == 0 || build.expected == 1)">
+                  <a ng-if="build.id" href="javascript:;" ng-click="buildgroup_click(build.id)">
+                    <img src="images/folder.png" class="icon"/>
+                  </a>
+                  <a ng-if="!build.id" href="javascript:;" ng-click="buildnosubmission_click(build.siteid, build.buildname, build.expecteddivname, build.buildgroupid, build.buildtype)">
+                    <img src="images/folder.png" class="icon"/>
+                  </a>
+                </div> <!-- end admin -->
+              </div>
+
+              <div ng-if="build.id && build.numchildren == 0" id="buildgroup_{{build.id}}"></div>
+
+              <div ng-if="build.expecteddivname && (build.numchildren == 0 || build.expected == 1)" id="infoexpected_{{build.expecteddivname}}"></div>
+            </td>
+
+            <td align="center" ng-class="{'error': build.update.errors == 1, 'warning': build.update.warning == 1, 'normal': build.update.defined == 1}">
+              <div ng-if="build.numchildren == 0">
+                <img ng-if="build.userupdates > 0" src="images/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/> 
+                <a ng-href="viewUpdate.php?buildid={{build.id}}">
+                  {{build.update.files}}
+                </a>
+              </div>
+
+              <div ng-if="build.numchildren != 0">
+                {{build.update.files}}
+              </div>
+            </td>
+
+            <td align="right" ng-show="cdash.advancedview != 0" ng-show="cdash.advancedview != 0">
+              {{build.update.time}}
+            </td>
+
+            <td align="center" ng-class="{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
+              <a ng-if="build.numchildren == 0" ng-href="viewConfigure.php?buildid={{build.id}}">
+                {{build.configure.error}}
+              </a>
+              <div ng-if="build.numchildren != 0">
+                {{build.configure.error}}
+              </div>
+            </td>
+
+            <td align="center" ng-class="{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
+              <xsl:if test="build.numchildren == 0">
+              <a ng-if="build.numchildren == 0" ng-href="viewConfigure.php?buildid={{build.id}}">
+                {{build.configure.warning}}
+              </a>
+              <div ng-if="build.numchildren != 0">
+                {{build.configure.warning}}
+              </div>
+              <sub ng-if="build.numchildren == 0 && build.configure.nwarningdiff > 0">+{{build.configure.nwarningdiff}}</sub>
+              <sub ng-if="build.numchildren == 0 && build.configure.nwarningdiff < 0">{{build.configure.nwarningdiff}}</sub>
+            </td>
+
+            <td align="center" ng-show="cdash.advancedview != 0">
+              {{build.configure.time}}
+            </td>
+
+            <td align="center" ng-class="{'error': build.compilation.error > 0, 'normal': build.compilation.error}">
+              <div ng-class="{'valuewithsub': build.compilation.nerrordiffp > 0 || build.compilation.nerrordiffn > 0}">
+                <a ng-if="build.numchildren == 0" ng-href="viewBuildError.php?buildid={{build.id}}">
+                  {{build.compilation.error}}
+                </a>
+                <div ng-if="build.numchildren != 0">
+                  {{build.compilation.error}}
+                </div>
+                <a ng-if="build.numchildren == 0 && build.compilation.nerrordiffp > 0" class="sup" ng-href="viewBuildError.php?onlydeltap&buildid={{build.id}}">
+                  +{{build.compilation.nerrordiffp}}
+                </a>
+
+                <a ng-if="build.numchildren == 0 && build.compilation.nerrordiffn > 0" ng-href="viewBuildError.php?onlydeltan&buildid={{build.id}}">
+                  <span class="sub">-{{build.compilation.nerrordiffn}}</span>
+                </a>
+              </div>
+            </td>
+
+            <td align="center" ng-class="{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning}">
+              <div ng-class="{'valuewithsub': build.compilation.nwarningdiffp > 0 || build.compilation.nwarningdiffn > 0}">
+                <a ng-if="build.numchildren == 0" ng-href="viewBuildError.php?type=1&buildid={{build.id}}">
+                  {{build.compilation.warning}}
+                </a>
+                <div ng-if="build.numchildren != 0">
+                  {{build.compilation.warning}}
+                </div>
+
+                <a ng-if="build.compilation.nwarningdiffp > 0 && build.numchildren == 0" class="sup" ng-href="viewBuildError.php?type=1&onlydeltap&buildid={{build.id}}">
+                  +{{build.compilation.nwarningdiffp}}
+                </a>
+                <a ng-if="build.compilation.nwarningdiffn > 0 && numchildren == 0" ng-href="viewBuildError.php?type=1&onlydeltan&buildid={{build.id}}">
+                  <span class="sub">-{{build.compilation.nwarningdiffn}}</span>
+                </a>
+              </div>
+            </td>
+
+            <td align="center" ng-show="cdash.advancedview != 0">
+              {{build.compilation.time}}
+            </td>
+
+            <td align="center" ng-class="{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
+              <div ng-class="{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
+                <a ng-if="build.numchildren == 0" ng-href="viewTest.php?onlynotrun&buildid={{build.id}}">
+                  {{build.test.notrun}}
+                </a>
+                <span ng-if="build.numchildren != 0">{{build.test.notrun}}</span>
+                <a ng-if="build.test.nnotrundiffp > 0 && build.numchildren == 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+                  +{{build.test.nnotrundiffp}}
+                </a>
+                <span ng-if="build.test.nnotrundiffn > 0 && build.numchildren == 0" class="sub">-{{build.test.nnotrundiffn}}</span>
+              </div>
+            </td>
+
+            <td align="center" ng-class="{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
+              <div ng-class="{'valuewithsub': build.test.nfaildiffp > 0 || build.test.nfaildiffn > 0}">
+                <a ng-if="build.numchildren == 0" ng-href="viewTest.php?onlyfailed&buildid={{build.id}}">
+                  {{build.test.fail}}
+                </a>
+                <span ng-if="build.numchildren != 0">{{build.test.fail}}</span>
+                <a ng-if="build.test.nfaildiffp > 0 && build.numchildren == 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+                  +{{build.test.nfaildiffp}}
+                </a>
+                <span ng-if="build.test.nfaildiffn > 0 && build.numchildren == 0" class="sub">
+                  -{{build.test.nfaildiffn}}
+                </span>
+              </div>
+            </td>
+
+            <td align="center" ng-class="{'normal': build.test.pass}">
+              <div ng-class="{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
+                <a ng-if="build.numchildren == 0" ng-href="viewTest.php?onlypassed&buildid={{build.id}}">
+                  {{build.test.pass}}
+                </a>
+                <span ng-if="build.numchildren != 0">
+                  {{build.test.pass}}
+                <span>
+                <a ng-if="build.test.npassdiffp > 0 && build.numchildren == 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+                  +{{build.test.npassdiffp}}
+                </a>
+
+                <span ng-if="build.test.npassdiffn > 0 && build.numchildren == 0" class="sub">
+                  -{{build.test.npassdiffn}}
+                </span>
+              </div>
+            </td>
+
+            <td align="center" ng-show="cdash.advancedview != 0" ng-class="{'error': build.test.timestatus > 0, 'normal': build.test.timestatus}">
+              <div ng-class="{'valuewithsub': build.build.test.ntimediffp > 0 || build.test.ntimediffn > 0}">
+                <div ng-if="build.test.timestatus > 0">
+                  <a ng-href="viewTest.php?onlytimestatus&buildid={{build.id}}">
+                    {{build.test.timestatus}}
+                  </a>
+                  <a ng-if="build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+                    +{{build.test.ntimediffp}}
+                  </a>
+                  <span ng-if="build.test.ntimediffn > 0" class="sub">
+                    -{{build.test.ntimediffn}}
+                  </span>
+                </div>
+
+                <span ng-if="build.test.timestatus">
+                  {{build.test.time}}
+                  <a ng-if="build.test.ntimediffp > 0 && build.numchildren == 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{buildid}}">
+                    +{{build.test.ntimediffp}}
+                  </a>
+                  <xsl:if test="">
+                  <span ng-if="build.test.ntimediffn > 0 && build.numchildren == 0" class="sub">
+                    -{{build.test.ntimediffn}}
+                  </span>
+                </span>
+
+                <span ng-if="!build.test.timestatus">
+                  {{build.test.time}}
+                </span>
+              </div>
+            </td>
+
+            <td align="center">
+              <span ng-if="!build.builddate" class="builddateelapsed" alt="Expected submit time: {{build.expectedstarttime}}">
+                Expected build
+              </span>
+
+              <div ng-if="build.builddate">
+                <span class="builddateelapsed" title="{{build.builddate}}, Update time: {{build.update.time}}, Configure time: {{build.configure.time}}, Compilation time: {{build.compilation.time}}, Test time: {{build.test.time}}">
+                  {{build.builddateelapsed}}
+                </span>
+              </div>
+            </td>
+
+            <!-- display the labels -->
+            <td ng-if="cdash.childview != 1 && cdash.displaylabels == 1" class="nob" align="left">
+              {{build.label}}
+            </td>
+          </tr>
+        </tbody>
+      </table> <!-- end BuildGroups -->
+
+      <!-- Coverage -->
+      <a name="Coverage"></a>
+      <table ng-if="cdash.coverages.length > 0 || cdash.coveragegroups.length > 0" border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
+        <thead>
+          <tr class="table-heading2">
+            <td colspan="1" class="nob">
+              <h3><a href="#" class="grouptrigger">Coverage</a></h3>
+            </td>
+            <td colspan="6" align="right" class="nob">
+            </td>
+          </tr>
+
+          <tr class="table-heading">
+            <!-- Site & Build Name for non-grouped coverage -->
+            <th ng-if="cdash.coverages.length > 0" align="center" width="20%" style="cursor: pointer" ng-click="$parent.coverageOrderByField='site'; $parent.coverageReverseSort = !$parent.coverageReverseSort">
+              Site
+              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.coverageOrderByField != 'site', 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
+            </th>
+
+            <th ng-if="cdash.coverages.length > 0" align="center" width="25%" style="cursor: pointer" ng-click="$parent.coverageOrderByField='buildname'; $parent.coverageReverseSort = !$parent.coverageReverseSort">
+              Build Name
+              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.coverageOrderByField != 'buildname', 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
+            </th>
+
+            <!-- SubProject name for grouped coverage -->
+            <th ng-if="cdash.coveragegroups.length > 0" align="center" width="20%" style="cursor: pointer" ng-click="$parent.coverageOrderByField='label'; $parent.coverageReverseSort = !$parent.coverageReverseSort">
+              SubProject
+              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.coverageOrderByField != 'label', 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
+            </th>
+
+            <!-- Fields common to both modes -->
+            <th align="center" width="10%" style="cursor: pointer" ng-click="coverageOrderByField='percentage'; coverageReverseSort = !coverageReverseSort">
+              Percentage
+              <span class="glyphicon" ng-class="{'glyphicon-none': coverageOrderByField != 'percentage', 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
+            </th>
+
+            <th align="center" width="10%" style="cursor: pointer" ng-click="coverageOrderByField='loctested'; coverageReverseSort = !coverageReverseSort">
+              LOC Tested
+              <span class="glyphicon" ng-class="{'glyphicon-none': coverageOrderByField != 'loctested', 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
+            </th>
+
+            <th align="center" width="10%" style="cursor: pointer" ng-click="coverageOrderByField='locuntested'; coverageReverseSort = !coverageReverseSort">
+              LOC Untested
+              <span class="glyphicon" ng-class="{'glyphicon-none': coverageOrderByField != 'locuntested', 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
+            </th>
+
+            <th align="center" width="15%" ng-class="{'nob': cdash.displaylabels == 0 && cdash.coveragegroups.length == 0}" style="cursor: pointer" ng-click="coverageOrderByField='datefull'; coverageReverseSort = !coverageReverseSort">
+              Date
+              <span class="glyphicon" ng-class="{'glyphicon-none': coverageOrderByField != 'datefull', 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
+            </th>
+
+            <!-- Conditionally display the labels -->
+            <th ng-if = "cdash.displaylabels == 1 && !cdash.coveragegroups" align="center" class="nob" width="10%">Labels</th>
+          </tr>
+        </thead>
+
+        <!-- Coverage groups -->
+        <tbody ng-repeat="group in cdash.coveragegroups |orderBy:coverageOrderByField:coverageReverseSort" id="coveragebody">
+          <tr class="parent_row">
+            <td class="paddt" align="left">
+              <b>{{group.label}}</b>
+              <div class="glyphicon"  ng-click="group.hidden = ! group.hidden" ng-class="{'glyphicon-chevron-down': !group.hidden, 'glyphicon-chevron-right': group.hidden}"></div>
+            </td>
+
+            <td align="center" ng-class="{'normal': group.percentage >= group.thresholdgreen, 'warning': group.percentage < group.thresholdgreen && group.percentage >= group.thresholdyellow, 'error': group.percentage < group.thresholdyellow}">
+              {{group.percentage}}%
+            </td>
+
+            <td align="center" >
+              {{group.loctested}}
+            </td>
+            <td align="center" >
+              {{group.locuntested}}
+            </td>
+
+            <td align="center"></td>
+          </tr>
+
+          <tr class="child_row" ng-show="!group.hidden" ng-repeat="coverage in group.coverages |orderBy:coverageOrderByField:coverageReverseSort" ng-class-odd="'odd'" ng-class-even="'even'">
+            <td align="left" class="paddt">
+              {{coverage.label}}
+            </td>
+
+            <td align="center" ng-class="{'normal': coverage.percentage >= group.thresholdgreen, 'warning': coverage.percentage < group.thresholdgreen && coverage.percentage >= group.thresholdyellow, 'error': coverage.percentage < group.thresholdyellow}">
+              <a ng-href="viewCoverage.php?buildid={{coverage.buildid}}">
+                {{coverage.percentage}}%
+              </a>
+              <sub ng-if="coverage.percentagediff > 0">+{{coverage.percentagediff}}%</sub>
+              <sub ng-if="coverage.percentagediff < 0">{{coverage.percentagediff}}%</sub>
+            </td>
+
+            <td align="center">
+              {{coverage.loctested}}
+              <sub ng-if="coverage.loctesteddiff > 0">+{{coverage.loctesteddiff}}</sub>
+              <sub ng-if="coverage.loctesteddiff < 0">{{coverage.loctesteddiff}}</sub>
+            </td>
+
+            <td align="center">
+              {{coverage.locuntested}}
+              <sub ng-if="coverage.locuntesteddiff > 0">+{{coverage.locuntesteddiff}}</sub>
+              <sub ng-if="coverage.locuntesteddiff < 0">{{coverage.locuntesteddiff}}</sub>
+            </td>
+
+            <td align="center" ng-class="{'nob': cdash.displaylabels == 0}">
+              <span class="builddateelapsed" alt="{{coverage.date}}">
+                {{coverage.dateelapsed}}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+
+        <!-- Ungrouped coverage -->
+        <tbody ng-if="!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
+          <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:coverageOrderByField:coverageReverseSort" ng-class-odd="'odd'" ng-class-even="'even'">
+            <td align="left" class="paddt">
+              {{coverage.site}}
+            </td>
+
+            <td align="left" class="paddt">
+              {{coverage.buildname}}
+            </td>
+
+            <td align="center" ng-class="{'normal': coverage.percentage >= cdash.thresholdgreen, 'warning': coverage.percentage < cdash.thresholdgreen && coverage.percentage >= cdash.thresholdyellow, 'error': coverage.percentage < cdash.thresholdyellow}">
+              <a ng-if="coverage.childlink" ng-href="{{coverage.childlink}}">
+                {{coverage.percentage}}%
+              </a>
+              <a ng-if="!coverage.childlink" ng-href="viewCoverage.php?buildid={{coverage.buildid}}">
+                {{coverage.percentage}}%
+              </a>
+              <sub ng-if="coverage.percentagediff > 0">+{{coverage.percentagediff}}%</sub>
+              <sub ng-if="coverage.percentagediff < 0">{{coverage.percentagediff}}%</sub>
+            </td>
+
+            <td align="center">
+              {{coverage.loctested}}
+              <sub ng-if="coverage.loctesteddiff > 0">+{{coverage.loctesteddiff}}</sub>
+              <sub ng-if="coverage.loctesteddiff < 0">{{coverage.loctesteddiff}}</sub>
+            </td>
+
+            <td align="center">
+              {{coverage.locuntested}}
+              <sub ng-if="coverage.locuntesteddiff > 0">+{{coverage.locuntesteddiff}}</sub>
+              <sub ng-if="coverage.locuntesteddiff < 0">{{coverage.locuntesteddiff}}</sub>
+            </td>
+
+            <td align="center" ng-class="{'nob': cdash.displaylabels == 0}">
+              <span class="builddateelapsed" alt="{{coverage.date}}">
+                {{coverage.dateelapsed}}
+              </span>
+            </td>
+
+            <td ng-if="cdash.displaylabels == 1" class="nob" align="left">
+              {{coverage.label}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table ng-if="cdash.coverages.length > 0 || cdash.coveragegroups.length > 0" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
+        </tr>
+      </table>
+
+      <!-- Dynamic analysis -->
+      <table ng-if="cdash.dynamicanalyses.length > 0" border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable">
+        <thead>
+          <tr class="table-heading3">
+            <td colspan="1" class="nob">
+              <h3><a href="#" class="grouptrigger">Dynamic Analysis</a></h3>
+            </td>
+            <td colspan="5" align="right" class="nob">
+            </td>
+          </tr>
+
+          <tr class="table-heading">
+            <th align="center" width="20%" id="sortdynanalysissort_0">SubProject</th>
+            <th align="center" width="20%" id="sortdynanalysissort_1">Checker</th>
+            <th align="center" width="10%" id="sortdynanalysissort_2">Defect Count</th>
+            <th align="center" class="nob" width="15%" id="sortdynanalysissort_3">Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr ng-repeat="da in cdash.dynamicanalyses">
+            <td align="left">
+              {{da.label}}
+            </td>
+
+            <td align="center">{{da.checker}}</td>
+
+            <td align="center" ng-class="{'error': da.status != 'passed', 'warning': da.defectcount > 0, 'normal': da.defectcount < 1}">
+              <a ng-href="viewDynamicAnalysis.php?buildid={{da.buildid}}">{{da.defectcount}}</a>
+            </td>
+            <td align="center" ng-class="{'nob': cdash.displaylabels == 0}">
+              <span class="builddateelapsed" alt="{{da.date}}">{{da.dateelapsed}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table ng-if="cdash.dynamicanalysis.length > 0" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
+        </tr>
+      </table>
+    </div> <!-- end index content -->
+
+    <!-- FOOTER TODO: local override -->
+    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/footer.html'"></ng-include>
+  </body>
+</html>

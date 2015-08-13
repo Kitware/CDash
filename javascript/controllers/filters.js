@@ -1,4 +1,4 @@
-CDash.controller('FiltersController', function FiltersController($scope, $http, $timeout) {
+CDash.controller('FiltersController', function FiltersController($scope, $rootScope, $http, $timeout) {
 
   // The different type of data filters that we support.
   $scope.filterdefinitions = {
@@ -303,13 +303,13 @@ CDash.controller('FiltersController', function FiltersController($scope, $http, 
 
   var url = window.location.pathname;
   var filename = url.substring(url.lastIndexOf('/')+1);
-  queryString['page_id'] = filename;
-  queryString['showlimit'] = 0;
+  $rootScope.queryString['page_id'] = filename;
+  $rootScope.queryString['showlimit'] = 0;
 
   $http({
     url: 'api/v1/filterdata.php',
     method: 'GET',
-    params: queryString
+    params: $rootScope.queryString
   }).success(function(filterdata) {
     $scope.filterdata = filterdata;
   });

@@ -425,24 +425,3 @@ function filters_onload(o)
 }
 
 
-function colorblind_toggle()
-{
-  var oldSheet = document.getElementsByTagName("link").item(0);
-  var newSheet = document.createElement("link");
-  newSheet.setAttribute("rel", "stylesheet");
-  newSheet.setAttribute("type", "text/css");
-
-  if ($("#label_colorblind").html() == "Classic palette")
-    {
-    $.cookie("colorblind", 0, { expires: 365 } );
-    $("#label_colorblind").html("Colorblind palette");
-    newSheet.setAttribute("href", "cdash.css");
-    }
-  else
-    {
-    $("#label_colorblind").html("Classic palette");
-    $.cookie("colorblind", 1, { expires: 365 } );
-    newSheet.setAttribute("href", "colorblind.css");
-    }
-  document.getElementsByTagName("head").item(0).replaceChild(newSheet, oldSheet);
-}

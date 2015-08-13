@@ -34,18 +34,14 @@
     <script src="javascript/controllers/head.js"></script>
     <script src="javascript/controllers/viewBuildError.js"></script>
 
-    <title>CDash : {{cdash.project}}</title>
+    <title ng-bind="title">CDash</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="BuildErrorController">
-    <ng-include src="'views/header.html'"></ng-include>
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/header.html'"></ng-include>
     <br/>
-
-    <img id="spinner" src="images/loading.gif" ng-show="loading" />
-
-    <div ng-if="cdash.requirelogin == 1">
-      Please <a href="user.php">login</a> to view this page.
-    </div>
 
     <div ng-if="cdash.requirelogin != 1 && !loading">
       <table border="0">
@@ -228,6 +224,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include src="'views/footer.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/footer.html'"></ng-include>
   </body>
 </html>

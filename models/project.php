@@ -792,7 +792,7 @@ class Project
       {
       $date = gmdate(FMT_DATETIME);
       }
-      
+
     $project = pdo_query("SELECT count(*) AS c FROM subproject WHERE projectid=".qnum($this->Id)." AND (endtime='1980-01-01 00:00:00' OR endtime>'".$date."')");
     if(!$project)
       {
@@ -800,7 +800,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array['c'];
+    return intval($project_array['c']);
     }
 
   /** Get the subproject ids*/
@@ -878,7 +878,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }
 
   /** Get the number of builds given a date range */
@@ -900,7 +900,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }
 
   /** Get the number of builds given per day */
@@ -958,7 +958,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    $count = $project_array[0];
+    $count = intval($project_array[0]);
     return $count;
     }
 
@@ -993,7 +993,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    $count = $project_array[0];
+    $count = intval($project_array[0]);
     return $count;
     }
 
@@ -1027,7 +1027,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }
 
   /** Get the number of failing configure given a date range */
@@ -1059,7 +1059,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }
 
   /** Get the number of failing configure given a date range */
@@ -1091,7 +1091,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }
 
   /** Get the number of failing configure given a date range */
@@ -1121,7 +1121,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }
 
   /** Get the number of tests given a date range */
@@ -1153,7 +1153,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }
 
   /** Get the number of tests given a date range */
@@ -1185,7 +1185,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }
 
   /** Get the number of tests given a date range */
@@ -1217,7 +1217,7 @@ class Project
       return false;
       }
     $project_array = pdo_fetch_array($project);
-    return $project_array[0];
+    return intval($project_array[0]);
     }  // end GetNumberOfNotRunTests()
 
   /** Get the labels ids for a given project */

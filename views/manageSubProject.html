@@ -27,16 +27,11 @@
   </head>
 
   <body bgcolor="#ffffff" ng-controller="ManageSubProjectController">
-    <ng-include src="'views/headeradminproject.html'"></ng-include>
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/header.html'"></ng-include>
     <br/>
 
-    <img id="spinner" src="images/loading.gif" ng-show="loading" />
-
-    <div>
-      {{cdash.error}}
-    </div>
-
-    <div class="container">
+    <div class="container" ng-if="!loading && cdash.requirelogin != 1">
       <div class="row">
         <!-- project selection form -->
         <div class="col-md-3">
@@ -245,6 +240,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include src="'views/footer.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/footer.html'"></ng-include>
   </body>
 </html>
