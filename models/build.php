@@ -17,6 +17,7 @@
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
 include_once('cdash/ctestparserutils.php');
+include_once("cdash/repository.php");
 include_once('models/builderror.php');
 include_once('models/builderrordiff.php');
 include_once('models/buildinformation.php');
@@ -58,6 +59,10 @@ class Build
   // Only the build.xml has information about errors and warnings
   // when the InsertErrors is false the build is created but not the errors and warnings
   var $InsertErrors;
+
+  // Used to comment on pull/merge requests when something goes wrong
+  // with this build.
+  private $PullRequest;
 
   function __construct()
     {
@@ -707,6 +712,46 @@ class Build
     //
     $this->InsertLabelAssociations();
 
+    // Check if we should post errors to a pull request.
+    if (isset($this->PullRequest))
+      {
+      $hasErrors = false;
+      foreach($this->Errors as $error)
+        {
+        if($error->Type == 0)
+          {
+          $hasErrors = true;
+          break;
+          }
+        }
+
+      if ($hasErrors)
+        {
+        $idToNotify = $this->Id;
+        if ($this->ParentId > 0)
+          {
+          $idToNotify = $this->ParentId;
+          }
+
+        $notified = true;
+        $row = pdo_single_row_query(
+          "SELECT notified FROM build WHERE id=".qnum($idToNotify));
+        if ($row && array_key_exists('notified', $row))
+          {
+          $notified = $row['notified'];
+          }
+
+        if (!$notified)
+          {
+          $url = get_server_URI(false);
+          $url .= "/viewBuildError.php?buildid=$this->Id";
+          post_pull_request_comment($this->ProjectId, $this->PullRequest,
+            "This build experienced errors.", $url);
+          pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
+          }
+        }
+      }
+
     return true;
     }
 
@@ -785,6 +830,32 @@ class Build
                                 testpassed='$numberTestsPassed' WHERE id=".qnum($this->Id));
 
     add_last_sql_error("Build:UpdateTestNumbers",$this->ProjectId,$this->Id);
+
+    // Check if we should post test failures to a pull request.
+    if (isset($this->PullRequest) && $numberTestsFailed > 0)
+      {
+      $idToNotify = $this->Id;
+      if ($this->ParentId > 0)
+        {
+        $idToNotify = $this->ParentId;
+        }
+
+      $notified = true;
+      $row = pdo_single_row_query(
+        "SELECT notified FROM build WHERE id=".qnum($idToNotify));
+      if ($row && array_key_exists('notified', $row))
+        {
+        $notified = $row['notified'];
+        }
+      if (!$notified)
+        {
+        $url = get_server_URI(false);
+        $url .= "/viewTest.php?onlyfailed&buildid=$this->Id";
+        post_pull_request_comment($this->ProjectId, $this->PullRequest,
+          "This build experienced failing tests.", $url);
+        pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
+        }
+      }
     }
 
   /** Get the errors differences for the build */
@@ -1811,6 +1882,17 @@ class Build
 
     add_last_sql_error("Build:UpdateParentConfigureNumbers",
       $this->ProjectId,$this->Id);
+    }
+
+  /** Get/set pull request for this build. */
+  function GetPullRequest()
+    {
+    return $this->PullRequest;
+    }
+
+  function SetPullRequest($pr)
+    {
+    $this->PullRequest = $pr;
     }
 
 } // end class Build

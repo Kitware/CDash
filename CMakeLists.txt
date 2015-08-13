@@ -16,6 +16,8 @@ option(CDASH_PRO "Are we testing CDashPro?" OFF)
 set(CMake_SOURCE_DIR CACHE FILEPATH "Path to CMake source dir.  Set this to import tests from CMake")
 set(CLIENT_TEST_SCRIPT1 CACHE FILEPATH "Path to client management test script")
 set(CLIENT_TEST_SCRIPT2 CACHE FILEPATH "Path to client management test script")
+set(CDASH_GITHUB_USERNAME "" CACHE STRING "Github user for testing")
+set(CDASH_GITHUB_PASSWORD "" CACHE STRING "Github user's password")
 
 get_filename_component(CDASH_DIR_NAME_DEFAULT ${CDash_SOURCE_DIR} NAME)
 set(CDASH_DIR_NAME "${CDASH_DIR_NAME_DEFAULT}" CACHE STRING "URL suffix. Ie 'http://<CDASH_SERVER>/<CDASH_DIR_NAME>'")
@@ -47,6 +49,8 @@ $configure = array(
   'cdash'            => 'http://www.cdash.org/CDash',
   'svnroot'          => '${CDash_SOURCE_DIR}',
   'cdashpro'         => '${CDASH_PRO}',
+  'github_username'  => '${CDASH_GITHUB_USERNAME}',
+  'github_password'  => '${CDASH_GITHUB_PASSWORD}'
   );
 ?>
 ")
