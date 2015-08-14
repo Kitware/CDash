@@ -528,53 +528,66 @@ function UpgradeBuildFailureTable($from_table='buildfailure', $to_table='buildfa
   AddTableField($from_table, 'detailsid', 'bigint(20)', 'bigserial', '0');
 
   // Iterate over buildfailure rows.
-  $result = pdo_query("SELECT * FROM $from_table");
-  while($row = pdo_fetch_array($result))
+  // We break this up into separate queries of 5,000 each because otherwise
+  // memory usage increases with each iteration of our loop.
+  $count_results = pdo_single_row_query(
+    "SELECT COUNT(1) AS numfails FROM $from_table");
+  $numfails = intval($count_results['numfails']);
+  $begin = 0;
+  $stride = 5000;
+  $end = $stride - 1;
+  while ($begin < $numfails)
     {
-    // Compute crc32 for this buildfailure's details.
-    $crc32 = crc32(
-      $row['outputfile'] . $row['stdoutput'] . $row['stderror'] .
-      $row['sourcefile']);
+    $result = pdo_query("SELECT * FROM $from_table LIMIT $begin,$end");
+    while($row = pdo_fetch_array($result))
+      {
+      // Compute crc32 for this buildfailure's details.
+      $crc32 = crc32(
+        $row['outputfile'] . $row['stdoutput'] . $row['stderror'] .
+        $row['sourcefile']);
 
-    // Get detailsid if it already exists, otherwise insert a new row.
-    $details_result = pdo_single_row_query(
-      "SELECT id FROM $to_table WHERE crc32=" . qnum($crc32));
-    if ($details_result && array_key_exists('id', $details_result))
-      {
-      $details_id = $details_result['id'];
-      }
-    else
-      {
-      $type = $row['type'];
-      $stdoutput = pdo_real_escape_string($row['stdoutput']);
-      $stderror = pdo_real_escape_string($row['stderror']);
-      $exitcondition = pdo_real_escape_string($row['exitcondition']);
-      $language = pdo_real_escape_string($row['language']);
-      $targetname = pdo_real_escape_string($row['targetname']);
-      $outputfile = pdo_real_escape_string($row['outputfile']);
-      $outputtype = pdo_real_escape_string($row['outputtype']);
+      // Get detailsid if it already exists, otherwise insert a new row.
+      $details_result = pdo_single_row_query(
+        "SELECT id FROM $to_table WHERE crc32=" . qnum($crc32));
+      if ($details_result && array_key_exists('id', $details_result))
+        {
+        $details_id = $details_result['id'];
+        }
+      else
+        {
+        $type = $row['type'];
+        $stdoutput = pdo_real_escape_string($row['stdoutput']);
+        $stderror = pdo_real_escape_string($row['stderror']);
+        $exitcondition = pdo_real_escape_string($row['exitcondition']);
+        $language = pdo_real_escape_string($row['language']);
+        $targetname = pdo_real_escape_string($row['targetname']);
+        $outputfile = pdo_real_escape_string($row['outputfile']);
+        $outputtype = pdo_real_escape_string($row['outputtype']);
+
+        $query =
+          "INSERT INTO $to_table
+            (type, stdoutput, stderror, exitcondition, language, targetname,
+             outputfile, outputtype, crc32)
+           VALUES
+            ('$type', '$stdoutput', '$stderror', '$exitcondition', '$language',
+             '$targetname', '$outputfile', '$outputtype','$crc32')";
+        if (!pdo_query($query))
+          {
+          add_last_sql_error("UpgradeBuildFailureTable::InsertDetails", 0, $row['id']);
+          }
+        $details_id = pdo_insert_id($to_table);
+        }
 
       $query =
-        "INSERT INTO $to_table
-          (type, stdoutput, stderror, exitcondition, language, targetname,
-           outputfile, outputtype, crc32)
-         VALUES
-          ('$type', '$stdoutput', '$stderror', '$exitcondition', '$language',
-           '$targetname', '$outputfile', '$outputtype','$crc32')";
+        "UPDATE $from_table SET detailsid=".qnum($details_id)."
+         WHERE id=".qnum($row['id']);
       if (!pdo_query($query))
         {
-        add_last_sql_error("UpgradeBuildFailureTable::InsertDetails", 0, $row['id']);
+        add_last_sql_error("UpgradeBuildFailureTable::UpdateDetailsId", 0, $details_id);
         }
-      $details_id = pdo_insert_id($to_table);
       }
-
-    $query =
-      "UPDATE $from_table SET detailsid=".qnum($details_id)."
-       WHERE id=".qnum($row['id']);
-    if (!pdo_query($query))
-      {
-      add_last_sql_error("UpgradeBuildFailureTable::UpdateDetailsId", 0, $details_id);
-      }
+    $begin += $stride;
+    $end = $stride;
     }
 
   // Remove old columns from buildfailure table.
