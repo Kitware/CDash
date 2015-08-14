@@ -54,8 +54,8 @@ function generate_index_table()
   // Check if the database is up to date
   $query = "SELECT * FROM information_schema.COLUMNS
             WHERE TABLE_SCHEMA = '$CDASH_DB_NAME'
-            AND TABLE_NAME = 'build'
-            AND COLUMN_NAME = 'notified'";
+            AND TABLE_NAME = 'buildfailuredetails'
+            AND COLUMN_NAME = 'id'";
   $dbTest = pdo_single_row_query($query);
   if (empty($dbTest))
     {
