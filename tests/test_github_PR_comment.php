@@ -11,7 +11,6 @@ class GithubCommentTestCase extends KWWebTestCase
   function __construct()
     {
     parent::__construct();
-    $this->OriginalConfigSettings = "";
     }
 
   function testGithubPRComment()
@@ -19,7 +18,6 @@ class GithubCommentTestCase extends KWWebTestCase
     echo "1. testGithubPRComment\n";
     global $configure;
 
-    $this->modifyConfigSettings();
     $this->login();
 
     // Create a project named CDash.
@@ -31,45 +29,38 @@ class GithubCommentTestCase extends KWWebTestCase
     $content = $this->connect($this->url.'/index.php?project=CDash');
     if(!$content)
       {
-      $this->restoreConfigSettings();
       return 1;
       }
 
     // Set its repository information.
     if(!$this->getProjectId())
       {
-      $this->restoreConfigSettings();
       return 1;
       }
     $this->get($this->url."/createProject.php?edit=1&projectid=$this->projectid#fragment-3");
     if(!$this->setFieldByName("cvsviewertype", "github"))
       {
       $this->fail("Set Viewer Type returned false");
-      $this->restoreConfigSettings();
       return 1;
       }
     if(!$this->setFieldByName("cvsRepository[0]", "https://github.com/Kitware/CDash"))
       {
       $this->fail("Set Repository returned false");
-      $this->restoreConfigSettings();
       return 1;
       }
     if(!$this->setFieldByName("cvsBranch[0]", "master"))
       {
       $this->fail("Set Branch returned false");
-      $this->restoreConfigSettings();
       return 1;
       }
     if(!$this->setFieldByName("cvsUsername[0]", $configure['github_username']))
       {
       $this->fail("Set Username returned false");
-      $this->restoreConfigSettings();
       return 1;
       }
     if(!$this->setFieldByName("cvsPassword[0]", $configure['github_password']))
       {
       $this->fail("Set Password returned false");
-      $this->restoreConfigSettings();
       return 1;
       }
     $this->clickSubmitByName("Update");
@@ -99,18 +90,15 @@ class GithubCommentTestCase extends KWWebTestCase
       "SELECT * FROM project WHERE id=$this->projectid"))
       {
       $this->fail("pdo_query returned false");
-      $this->restoreConfigSettings();
       return 1;
       }
     if(pdo_num_rows($query) > 0)
       {
       $this->fail("Project not deleted");
-      $this->restoreConfigSettings();
       return 1;
       }
 
     $this->pass('Test passed');
-    $this->restoreConfigSettings();
     }
 
   function getProjectId()
@@ -137,41 +125,6 @@ class GithubCommentTestCase extends KWWebTestCase
     return true;
     }
 
-  function modifyConfigSettings()
-    {
-    $filename = dirname(__FILE__)."/../cdash/config.local.php";
-    $handle = fopen($filename, "r");
-    $contents = fread($handle, filesize($filename));
-    $this->OriginalConfigSettings = $contents;
-    fclose($handle);
-    unset($handle);
-    $handle = fopen($filename, "w");
-    $lines = explode("\n", $contents);
-    foreach($lines as $line)
-      {
-      if(strpos($line, "?>") !== false)
-        {
-        fwrite($handle, '// test config settings injected by file [' . __FILE__ . "]\n");
-        fwrite($handle, '$CDASH_LOG_LEVEL = LOG_INFO;' . "\n");
-        }
-      if($line != '')
-        {
-        fwrite($handle, "$line\n");
-        }
-      }
-    fclose($handle);
-    unset($handle);
-    }
-
-  function restoreConfigSettings()
-    {
-    $filename = dirname(__FILE__)."/../cdash/config.local.php";
-    $handle = fopen($filename, "w");
-    fwrite($handle, $this->OriginalConfigSettings);
-    fclose($handle);
-    unset($handle);
-    }
-
   function submitPullRequestFile($file)
     {
     global $configure;
@@ -185,7 +138,6 @@ class GithubCommentTestCase extends KWWebTestCase
     if (preg_match("/Just posted comment #(\d+)/", $log_contents, $matches) != 1)
       {
       $this->fail("Log does not contain posted comment ID");
-      $this->restoreConfigSettings();
       return false;
       }
     $commentID = $matches[1];
@@ -208,7 +160,6 @@ class GithubCommentTestCase extends KWWebTestCase
     if ($result === false)
       {
       $this->fail("Failed to delete comment #$commentID");
-      $this->restoreConfigSettings();
       return false;
       }
 

@@ -889,7 +889,7 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
     add_log(
       "Just posted comment #" . $matches[1],
       "post_github_pull_request_comment",
-      LOG_INFO, $projectid);
+      LOG_TESTING, $projectid);
     }
 
   curl_close($ch);
