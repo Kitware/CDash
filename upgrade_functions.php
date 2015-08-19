@@ -533,12 +533,13 @@ function UpgradeBuildFailureTable($from_table='buildfailure', $to_table='buildfa
   $count_results = pdo_single_row_query(
     "SELECT COUNT(1) AS numfails FROM $from_table");
   $numfails = intval($count_results['numfails']);
-  $begin = 0;
+  $numconverted = 0;
+  $last_id = 0;
   $stride = 5000;
-  $end = $stride - 1;
-  while ($begin < $numfails)
+  while ($numconverted < $numfails)
     {
-    $result = pdo_query("SELECT * FROM $from_table LIMIT $begin,$end");
+    $result = pdo_query(
+      "SELECT * FROM $from_table WHERE id > $last_id ORDER BY id LIMIT $stride");
     while($row = pdo_fetch_array($result))
       {
       // Compute crc32 for this buildfailure's details.
@@ -585,9 +586,9 @@ function UpgradeBuildFailureTable($from_table='buildfailure', $to_table='buildfa
         {
         add_last_sql_error("UpgradeBuildFailureTable::UpdateDetailsId", 0, $details_id);
         }
+      $last_id = $row['id'];
       }
-    $begin += $stride;
-    $end = $stride;
+    $numconverted += $stride;
     }
 
   // Remove old columns from buildfailure table.
