@@ -320,6 +320,7 @@ function generate_main_dashboard_XML($project_instance, $date)
 
   $xml = begin_XML_for_XSLT();
   $xml .= "<title>CDash - ".$projectname."</title>";
+  $xml .= "<feed>$CDASH_ENABLE_FEED</feed>";
 
   $Banner = new Banner;
   $Banner->SetProjectId(0);
