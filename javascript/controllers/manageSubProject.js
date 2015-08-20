@@ -18,12 +18,15 @@ CDash.filter('filter_groups', function() {
   };
 })
 .controller('ManageSubProjectController', function ManageSubProjectController($scope, $http) {
+  $scope.loading = true;
   $http({
     url: 'api/v1/manageSubProject.php',
     method: 'GET',
     params: queryString
   }).success(function(cdash) {
     $scope.cdash = cdash;
+  }).finally(function() {
+    $scope.loading = false;
   });
 
   $scope.createSubProject = function(newSubProject, groupName) {

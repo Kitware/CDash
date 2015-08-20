@@ -34,6 +34,8 @@
     <ng-include src="'views/headeradminproject.html'"></ng-include>
     <br/>
 
+    <img id="spinner" src="images/loading.gif" ng-show="loading" />
+
     <div ng-show="cdash.error">
       <b>Error: {{cdash.error}}</b>
     </div>
@@ -45,7 +47,7 @@
       Please <a href="user.php">login</a> to view this page.
     </div>
 
-    <div class="container" ng-if="cdash.requirelogin != 1">
+    <div class="container" ng-if="cdash.requirelogin != 1 && !loading">
 
       <!-- project selection form -->
       <div class="row">

@@ -35,6 +35,7 @@ CDash.filter('filter_builds', function() {
 })
 
 .controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http) {
+  $scope.loading = true;
   $http({
     url: 'api/v1/manageBuildGroup.php',
     method: 'GET',
@@ -64,7 +65,8 @@ CDash.filter('filter_builds', function() {
       {name: "Latest", value: "Latest"}
     ];
     $scope.buildType = $scope.cdash.buildgrouptypes[0];
-
+  }).finally(function() {
+    $scope.loading = false;
   });
 
   /** create a new buildgroup */
