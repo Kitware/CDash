@@ -30,9 +30,11 @@
     <ng-include src="'views/headeradminproject.html'"></ng-include>
     <br/>
 
-  <div>
-    {{cdash.error}}
-  </div>
+    <img id="spinner" src="images/loading.gif" ng-show="loading" />
+
+    <div>
+      {{cdash.error}}
+    </div>
 
     <div class="container">
       <div class="row">

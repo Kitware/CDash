@@ -33,7 +33,9 @@
       Please <a href="user.php">login</a> to view this page.
     </div>
 
-    <div ng-if="cdash.requirelogin != 1">
+    <img id="spinner" src="images/loading.gif" ng-show="loading" />
+
+    <div ng-if="cdash.requirelogin != 1 && !loading">
       <h3>Testing started on {{cdash.build.testtime}}</h3>
 
       <table border="0">

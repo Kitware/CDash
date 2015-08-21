@@ -1,5 +1,6 @@
 CDash.controller('BuildErrorController',
   function BuildErrorController($scope, $http, $sce) {
+    $scope.loading = true;
     $http({
       url: 'api/v1/viewBuildError.php',
       method: 'GET',
@@ -12,5 +13,7 @@ CDash.controller('BuildErrorController',
         cdash.errors[i].text = $sce.trustAsHtml(cdash.errors[i].text);
       }
       $scope.cdash = cdash;
+    }).finally(function() {
+      $scope.loading = false;
     });
 });

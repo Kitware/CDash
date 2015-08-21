@@ -41,11 +41,13 @@
     <ng-include src="'views/header.html'"></ng-include>
     <br/>
 
+    <img id="spinner" src="images/loading.gif" ng-show="loading" />
+
     <div ng-if="cdash.requirelogin == 1">
       Please <a href="user.php">login</a> to view this page.
     </div>
 
-    <div ng-if="cdash.requirelogin != 1">
+    <div ng-if="cdash.requirelogin != 1 && !loading">
       <table border="0">
         <tr>
           <td align="left">
