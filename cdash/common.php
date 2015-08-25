@@ -2412,7 +2412,7 @@ function compute_percentcoverage($loctested, $locuntested)
   * search through it and delete each file & subdirectory that we find.
  **/
 function DeleteDirectory($dirName)
-  {
+{
   $iterator = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($dirName),
     RecursiveIteratorIterator::CHILD_FIRST);
@@ -2432,7 +2432,19 @@ function DeleteDirectory($dirName)
       }
     }
   rmdir($dirName);
-  }
+}
+
+function load_view($viewName)
+{
+  if (file_exists("local/views/$viewName.html"))
+    {
+    readfile("local/views/$viewName.html");
+    }
+  else
+    {
+    readfile("views/$viewName.html");
+    }
+}
 
 
 ?>

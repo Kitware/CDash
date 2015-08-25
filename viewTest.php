@@ -1,1 +1,4 @@
-<?php readfile("views/viewTest.html"); ?>
+<?php
+include_once("cdash/common.php");
+load_view("viewTest");
+?>
