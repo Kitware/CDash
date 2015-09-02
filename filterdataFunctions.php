@@ -134,7 +134,7 @@ class IndexPhpFilters extends DefaultFilters
 
     case 'builderrors':
     {
-      $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0'), IF((SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='0'), 0))";
+      $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0'), IF((SELECT COUNT(buildid) FROM buildfailure AS bf LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) WHERE bf.buildid=b.id AND bfd.type='0')>0, (SELECT COUNT(buildid) FROM buildfailure AS bf LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) WHERE bf.buildid=b.id AND bfd.type='0'), 0))";
     }
     break;
 
@@ -170,7 +170,7 @@ class IndexPhpFilters extends DefaultFilters
 
     case 'buildwarnings':
     {
-      $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1'), IF((SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM buildfailure WHERE buildid=b.id AND type='1'), 0))";
+      $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1'), IF((SELECT COUNT(buildid) FROM buildfailure AS bf LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) WHERE bf.buildid=b.id AND bfd.type='1')>0, (SELECT COUNT(buildid) FROM buildfailure AS bf LEFT JOIN buildfailuredetails ON (bfd.id=bf.detailsid) WHERE bf.buildid=b.id AND bfd.type='1'), 0))";
     }
     break;
 

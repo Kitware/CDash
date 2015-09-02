@@ -1451,8 +1451,11 @@ class Build
     $errors_array  = pdo_fetch_array($errors);
     $nerrors = $errors_array[0];
     // Adding the buildfailure
-    $failures = pdo_query("SELECT count(*) FROM buildfailure WHERE type=".qnum($errortype)."
-                          AND sourcefile LIKE '%$filename%' AND buildid=".qnum($buildid));
+    $failures = pdo_query(
+      "SELECT count(*) FROM buildfailure AS bf
+      LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+      WHERE bfd.type=".qnum($errortype)." AND
+            bf.sourcefile LIKE '%$filename%' AND bf.buildid=".qnum($buildid));
     $failures_array  = pdo_fetch_array($failures);
     $nerrors += $failures_array[0];
 
@@ -1500,15 +1503,21 @@ class Build
       }
     if(empty($labelarray) || isset($labelarray['build']['errors']))
       {
-      $sql .= "  OR label.id IN (SELECT labelid AS id FROM label2buildfailure,buildfailure
-                            WHERE label2buildfailure.buildfailureid=buildfailure.id AND buildfailure.type='0'
-                            AND buildfailure.buildid=".qnum($this->Id).")";
+      $sql .= "  OR label.id IN (
+                   SELECT l2bf.labelid AS id
+                   FROM label2buildfailure AS l2bf
+                   LEFT JOIN buildfailure AS bf ON (bf.id=l2bf.buildfailureid)
+                   LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+                   WHERE bfd.type='0' AND bf.buildid=".qnum($this->Id).")";
       }
     if(empty($labelarray) || isset($labelarray['build']['warnings']))
       {
-      $sql .= "  OR label.id IN (SELECT labelid AS id FROM label2buildfailure,buildfailure
-                            WHERE label2buildfailure.buildfailureid=buildfailure.id AND buildfailure.type='1'
-                            AND buildfailure.buildid=".qnum($this->Id).")";
+      $sql .= "  OR label.id IN (
+                   SELECT l2bf.labelid AS id
+                   FROM label2buildfailure AS l2bf
+                   LEFT JOIN buildfailure AS bf ON (bf.id=l2bf.buildfailureid)
+                   LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+                   WHERE bfd.type='1' AND bf.buildid=".qnum($this->Id).")";
       }
     if(empty($labelarray) || isset($labelarray['dynamicanalysis']['errors']))
       {

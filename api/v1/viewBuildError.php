@@ -189,83 +189,120 @@ if(isset($_GET["onlydeltan"]))
     $errors_response[] = $error_response;
     }
 
-  // Build failure table
-  $errors = pdo_query("SELECT *
-             FROM (SELECT * FROM buildfailure WHERE buildid=".$previousbuildid."
-             AND type=".$type.") AS builderrora
-             LEFT JOIN (SELECT crc32 as crc32b FROM buildfailure WHERE buildid=".$buildid."
-             AND type=".$type.") AS builderrorb
-             ON builderrora.crc32=builderrorb.crc32b WHERE builderrorb.crc32b IS NULL");
+  // Get buildfailures that occurred yesterday and not today.
+  $current_failures = array();
+  $previous_failures = array();
 
- while($error_array = pdo_fetch_array($errors))
+  $query =
+    "SELECT bf.detailsid FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
+     WHERE bf.buildid=$buildid AND bfd.type=$type";
+  $result = pdo_query($query);
+  add_last_sql_error("viewBuildError onlydeltan", 0, $buildid);
+  while($row = pdo_fetch_array($result))
     {
-    $error_response = array();
-    $error_response['id'] = $errorid;
-    $error_response['language'] = $error_array['language'];
-    $error_response['sourcefile'] = $error_array['sourcefile'];
-    $error_response['targetname'] = $error_array['targetname'];
-    $error_response['outputfile'] = $error_array['outputfile'];
-    $error_response['outputtype'] = $error_array['outputtype'];
-    $error_response['workingdirectory'] = $error_array['workingdirectory'];
+    $current_failures[] = $row['detailsid'];
+    }
 
-    $buildfailureid = $error_array['id'];
-    $arguments = pdo_query(
-      "SELECT bfa.argument FROM buildfailureargument AS bfa,
-              buildfailure2argument AS bf2a
-       WHERE bf2a.buildfailureid='$buildfailureid' AND
-             bf2a.argumentid=bfa.id ORDER BY bf2a.place ASC");
+  $query =
+    "SELECT bf.detailsid FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
+     WHERE bf.buildid=$previousbuildid AND bfd.type=$type";
+  $result = pdo_query($query);
+  add_last_sql_error("viewBuildError onlydeltan", 0, $buildid);
+  while($row = pdo_fetch_array($result))
+    {
+    $previous_failures[] = $row['detailsid'];
+    }
 
-    $i=0;
-    $arguments_response = array();
-    while($argument_array = pdo_fetch_array($arguments))
+  foreach($previous_failures as $failure)
+    {
+    if (!in_array($failure, $current_failures))
       {
-      if($i == 0)
+      $error_array = pdo_single_row_query(
+        "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
+                bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
+                bfd.exitcondition
+         FROM buildfailure AS bf
+         LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+         WHERE bf.buildid=$previousbuildid AND bfd.id=$failure");
+      add_last_sql_error("viewBuildError onlydeltan", $projectid);
+
+      if (!$error_array)
         {
-        $error_response['argumentfirst'] = $argument_array['argument'];
+        add_log('Expected results not returned', 'viewBuildError onlydeltan',
+                LOG_ERR, $projectid, 0, $buildid);
+        continue;
         }
-      else
+
+      $error_response = array();
+      $error_response['id'] = $errorid;
+      $error_response['language'] = $error_array['language'];
+      $error_response['sourcefile'] = $error_array['sourcefile'];
+      $error_response['targetname'] = $error_array['targetname'];
+      $error_response['outputfile'] = $error_array['outputfile'];
+      $error_response['outputtype'] = $error_array['outputtype'];
+      $error_response['workingdirectory'] = $error_array['workingdirectory'];
+
+      $buildfailureid = $error_array['id'];
+      $arguments = pdo_query(
+        "SELECT bfa.argument FROM buildfailureargument AS bfa,
+                buildfailure2argument AS bf2a
+         WHERE bf2a.buildfailureid='$buildfailureid' AND
+               bf2a.argumentid=bfa.id ORDER BY bf2a.place ASC");
+
+      $i=0;
+      $arguments_response = array();
+      while($argument_array = pdo_fetch_array($arguments))
         {
-        $arguments_response[] = $argument_array['argument'];
+        if($i == 0)
+          {
+          $error_response['argumentfirst'] = $argument_array['argument'];
+          }
+        else
+          {
+          $arguments_response[] = $argument_array['argument'];
+          }
+        $i++;
         }
-      $i++;
+      $error_response['arguments'] = $arguments_response;
+
+      get_labels_xml_from_query_results(
+        "SELECT text FROM label, label2buildfailure
+         WHERE label.id=label2buildfailure.labelid AND
+               label2buildfailure.buildfailureid='$buildfailureid'
+         ORDER BY text ASC", $error_response);
+
+      $error_response['stderror'] = $error_array['stderror'];
+      $rows = substr_count($error_array['stderror'], "\n") + 1;
+      if ($rows > 10)
+        {
+        $rows = 10;
+        }
+      $error_response['stderrorrows'] = $rows;
+
+      $error_response['stdoutput'] = $error_array['stdoutput'];
+      $rows = substr_count($error_array['stdoutput'], "\n") + 1;
+      if ($rows > 10)
+        {
+        $rows = 10;
+        }
+      $error_response['stdoutputrows'] = $rows;
+
+      $error_response['exitcondition'] = $error_array['exitcondition'];
+
+      if(isset($error_array['sourcefile']))
+        {
+        $projectCvsUrl = $project_array['cvsurl'];
+        $file = basename($error_array['sourcefile']);
+        $directory = dirname($error_array['sourcefile']);
+        $cvsurl =
+          get_diff_url($projectid, $projectCvsUrl, $directory, $file, $revision);
+        $error_response['cvsurl'] = $cvsurl;
+        }
+      $errorid++;
+      $errors_response[] = $error_response;
       }
-    $error_response['arguments'] = $arguments_response;
-
-    get_labels_xml_from_query_results(
-      "SELECT text FROM label, label2buildfailure
-       WHERE label.id=label2buildfailure.labelid AND
-             label2buildfailure.buildfailureid='$buildfailureid'
-       ORDER BY text ASC", $error_response);
-
-    $error_response['stderror'] = $error_array['stderror'];
-    $rows = substr_count($error_array['stderror'], "\n") + 1;
-    if ($rows > 10)
-      {
-      $rows = 10;
-      }
-    $error_response['stderrorrows'] = $rows;
-
-    $error_response['stdoutput'] = $error_array['stdoutput'];
-    $rows = substr_count($error_array['stdoutput'], "\n") + 1;
-    if ($rows > 10)
-      {
-      $rows = 10;
-      }
-    $error_response['stdoutputrows'] = $rows;
-
-    $error_response['exitcondition'] = $error_array['exitcondition'];
-
-    if(isset($error_array['sourcefile']))
-      {
-      $projectCvsUrl = $project_array['cvsurl'];
-      $file = basename($error_array['sourcefile']);
-      $directory = dirname($error_array['sourcefile']);
-      $cvsurl =
-        get_diff_url($projectid, $projectCvsUrl, $directory, $file, $revision);
-      $error_response['cvsurl'] = $cvsurl;
-      }
-    $errorid++;
-    $errors_response[] = $error_response;
     }
   }
 else
@@ -324,7 +361,15 @@ else
     }
 
   // Build failure table
-  $errors = pdo_query("SELECT * FROM buildfailure WHERE buildid='$buildid' and type='$type'".$extrasql." ORDER BY id ASC");
+  $errors = pdo_query(
+    "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
+            bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
+            bfd.exitcondition
+     FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+     WHERE bf.buildid='$buildid' AND bfd.type='$type'".$extrasql."
+     ORDER BY bf.id ASC");
+  add_last_sql_error("viewBuildError get_failures", $projectid);
   while($error_array = pdo_fetch_array($errors))
     {
     $error_response = array();

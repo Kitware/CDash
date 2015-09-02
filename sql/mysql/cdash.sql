@@ -912,8 +912,20 @@ CREATE TABLE `subproject2build` (
 CREATE TABLE `buildfailure` (
   `id` bigint(20) NOT NULL auto_increment,
   `buildid` bigint(20) NOT NULL,
-  `type` tinyint(4) NOT NULL,
+  `detailsid` bigint(20) NOT NULL,
   `workingdirectory` varchar(512) NOT NULL,
+  `sourcefile` varchar(512) NOT NULL,
+  `newstatus` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `buildid` (`buildid`),
+  KEY `detailsid` (`detailsid`),
+  KEY `newstatus` (`newstatus`)
+);
+
+
+CREATE TABLE `buildfailuredetails` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `type` tinyint(4) NOT NULL,
   `stdoutput` mediumtext NOT NULL,
   `stderror` mediumtext NOT NULL,
   `exitcondition` varchar(255) NOT NULL,
@@ -921,14 +933,10 @@ CREATE TABLE `buildfailure` (
   `targetname` varchar(255) NOT NULL,
   `outputfile` varchar(512) NOT NULL,
   `outputtype` varchar(255) NOT NULL,
-  `sourcefile` varchar(512) NOT NULL,
   `crc32` bigint(20) NOT NULL default '0',
-  `newstatus` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  KEY `buildid` (`buildid`),
   KEY `type` (`type`),
-  KEY `crc32` (`crc32`),
-  KEY `newstatus` (`newstatus`)
+  KEY `crc32` (`crc32`)
 );
 
 

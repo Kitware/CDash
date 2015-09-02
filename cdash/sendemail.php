@@ -445,7 +445,11 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
       }
 
     // New error format
-    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid)." AND type=0 LIMIT $maxitems");
+    $error_query = pdo_query(
+      "SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror
+       FROM buildfailuredetails AS bfd
+       LEFT JOIN buildfailure AS bf ON (bf.detailsid = bfd.id)
+       WHERE bf.buildid=".qnum($buildid)." AND bfd.type=0 LIMIT $maxitems");
     add_last_sql_error("sendmail");
     while($error_array = pdo_fetch_array($error_query))
       {
@@ -496,8 +500,12 @@ function get_email_summary($buildid,$errors,$errorkey,$maxitems,$maxchars,$testt
       }
 
     // New error format
-    $error_query = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid=".qnum($buildid).
-                             " AND type=1 ORDER BY id LIMIT $maxitems");
+    $error_query = pdo_query(
+      "SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror
+       FROM buildfailuredetails AS bfd
+       LEFT JOIN buildfailure AS bf ON (bf.detailsid = bfd.id)
+       WHERE bf.buildid=".qnum($buildid)." AND bfd.type=1
+       ORDER BY bf.id LIMIT $maxitems");
     add_last_sql_error("sendmail");
     while($error_array = pdo_fetch_array($error_query))
       {

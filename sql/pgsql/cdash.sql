@@ -836,8 +836,22 @@ CREATE INDEX "subprojectid2" on "subproject2build" ("subprojectid");
 CREATE TABLE "buildfailure" (
   "id" bigserial NOT NULL,
   "buildid" bigint NOT NULL,
-  "type" smallint NOT NULL,
+  "detailsid" bigint NOT NULL,
   "workingdirectory" character varying(512) NOT NULL,
+  "sourcefile" character varying(512) NOT NULL,
+  "newstatus" smallint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "buildid17" on "buildfailure" ("buildid");
+CREATE INDEX "buildfailure_details" on "buildfailure" ("detailsid");
+CREATE INDEX "buildfailure_newstatus" on "buildfailure" ("newstatus");
+
+--
+-- Table: buildfailuredetails
+--
+CREATE TABLE "buildfailuredetails" (
+  "id" bigserial NOT NULL,
+  "type" smallint NOT NULL,
   "stdoutput" text NOT NULL,
   "stderror" text NOT NULL,
   "exitcondition" character varying(255) NOT NULL,
@@ -845,15 +859,11 @@ CREATE TABLE "buildfailure" (
   "targetname" character varying(255) NOT NULL,
   "outputfile" character varying(512) NOT NULL,
   "outputtype" character varying(255) NOT NULL,
-  "sourcefile" character varying(512) NOT NULL,
   "crc32" bigint DEFAULT '0' NOT NULL,
-  "newstatus" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("id")
 );
-CREATE INDEX "buildid17" on "buildfailure" ("buildid");
-CREATE INDEX "type5" on "buildfailure" ("type");
-CREATE INDEX "buildfailure_newstatus" on "buildfailure" ("newstatus");
-CREATE INDEX "buildfailure_crc32" on "buildfailure" ("crc32");
+CREATE INDEX "type5" on "buildfailuredetails" ("type");
+CREATE INDEX "buildfailuredetails_crc32" on "buildfailuredetails" ("crc32");
 
 --
 -- Table: buildfailureargument
