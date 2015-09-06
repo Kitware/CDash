@@ -1428,13 +1428,16 @@ function generate_main_dashboard_XML($project_instance, $date)
       if ($build_array["subprojectgroup"])
         {
         $groupId = $build_array["subprojectgroup"];
-        $coverageThreshold =
-          $subproject_groups[$groupId]->GetCoverageThreshold();
-        $subproject_group_coverage[$groupId]["tested"] +=
-          $coverage_array["loctested"];
-        $subproject_group_coverage[$groupId]["untested"] +=
-          $coverage_array["locuntested"];
-        $xml .= "  <group>$groupId</group>";
+        if (array_key_exists($groupId, $subproject_groups))
+          {
+          $coverageThreshold =
+            $subproject_groups[$groupId]->GetCoverageThreshold();
+          $subproject_group_coverage[$groupId]["tested"] +=
+            $coverage_array["loctested"];
+          $subproject_group_coverage[$groupId]["untested"] +=
+            $coverage_array["locuntested"];
+          $xml .= "  <group>$groupId</group>";
+          }
         }
 
       $xml .= "  <percentage>".$percent."</percentage>";
