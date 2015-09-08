@@ -17,7 +17,29 @@
 =========================================================================*/
 require_once("cdash/config.php");
 
+/**
+ * Private function for exponential back-off as detailed here:
+ *   https://cloud.google.com/storage/docs/json_api/v1/how-tos/upload#exp-backoff
+ * Pass in a function that takes no arguments to have it retried.
+ * @param $closure function a function that returns FALSE when it fails
+ * @return FALSE on failure mixed otherwise
+ */
+function _exponential_backoff($closure) {
+  global $CDASH_MAX_QUERY_RETRIES;
 
+  // Random exponential back-off. See the following for more information:
+  // https://cloud.google.com/storage/docs/json_api/v1/how-tos/upload#exp-backoff
+  for($retry_count = 0; $retry_count < $CDASH_MAX_QUERY_RETRIES; ++$retry_count) {
+    $ret = $closure();
+    if ($ret === FALSE) {
+      $wait_time = (2^$retry_count)*1000 + rand(0,1000);
+      usleep($wait_time * 1000);
+    } else {
+      return $ret; // Success
+    }
+  }
+  return $ret; // Failure after $CDASH_MAX_QUERY_RETRIES attempts
+}
 
 /** */
 function pdo_connect($server = NULL, $username = NULL, $password = NULL, $new_link = false, $client_flags = 0)
@@ -45,7 +67,9 @@ function pdo_connect($server = NULL, $username = NULL, $password = NULL, $new_li
       {
       $server .= ':'.$CDASH_DB_PORT;
       }
-    $last_link = mysql_connect($server, $username, $password, $new_link, $client_flags);
+    $last_link = _exponential_backoff(function () use ($server, $username, $password, $new_link, $client_flags) {
+      return mysql_connect($server, $username, $password, $new_link, $client_flags);
+    });
     return $last_link;
     }
 }
@@ -279,16 +303,18 @@ function pdo_affected_rows($result)
 /** */
 function pdo_query($query, $link_identifier = NULL)
 {
-  global $CDASH_DB_TYPE;
-
-  if(isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE!="mysql")
+  // Wrap the query in our exponential backoff closure
+  return _exponential_backoff(function () use ($query, $link_identifier) {
+    global $CDASH_DB_TYPE;
+    if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
     {
-    return get_link_identifier($link_identifier)->query($query);
+      return get_link_identifier($link_identifier)->query($query);
     }
-  else
+    else
     {
-    return mysql_query($query, get_link_identifier($link_identifier));
+      return mysql_query($query, get_link_identifier($link_identifier));
     }
+  });
 }
 
 /** */
