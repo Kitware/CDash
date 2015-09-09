@@ -32,8 +32,11 @@ function _exponential_backoff($closure) {
   for($retry_count = 0; $retry_count < $CDASH_MAX_QUERY_RETRIES; ++$retry_count) {
     $ret = $closure();
     if ($ret === FALSE) {
-      $wait_time = (2^$retry_count)*1000 + rand(0,1000);
-      usleep($wait_time * 1000);
+      // No need to sleep the last time through the loop.
+      if ($retry_count < $CDASH_MAX_QUERY_RETRIES -1) {
+        $wait_time = (2^$retry_count)*1000 + rand(0,1000);
+        usleep($wait_time * 1000);
+      }
     } else {
       return $ret; // Success
     }
