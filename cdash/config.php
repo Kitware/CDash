@@ -165,7 +165,7 @@ $CDASH_ENABLE_FEED = 1;
 $CDASH_SHOW_LAST_SUBMISSION = 1;
 
 // How many times to retry queries via random exponential back-off
-$CDASH_MAX_QUERY_RETRIES = 5;
+$CDASH_MAX_QUERY_RETRIES = 1;
 
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';
