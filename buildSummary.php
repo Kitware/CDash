@@ -227,7 +227,10 @@ if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
   $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
   $builderror_array = pdo_fetch_array($builderror);
   $nerrors = $builderror_array[0];
-  $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='0'");
+  $builderror = pdo_query(
+    "SELECT count(*) FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+     WHERE bf.buildid='$buildid' AND bfd.type='0'");
   $builderror_array = pdo_fetch_array($builderror);
   $nerrors += $builderror_array[0];
 
@@ -235,7 +238,10 @@ if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
   $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
   $buildwarning_array = pdo_fetch_array($buildwarning);
   $nwarnings = $buildwarning_array[0];
-  $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$buildid' AND type='1'");
+  $buildwarning = pdo_query(
+    "SELECT count(*) FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+     WHERE bf.buildid='$buildid' AND bfd.type='1'");
   $buildwarning_array = pdo_fetch_array($buildwarning);
   $nwarnings += $buildwarning_array[0];
 
@@ -257,7 +263,10 @@ if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
     }
 
   // Display the build failure error
-  $errors = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid='$buildid' and type='0'");
+  $errors = pdo_query(
+    "SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+     WHERE bf.buildid='$buildid' AND bfd.type='0'");
   while($error_array = pdo_fetch_array($errors))
     {
     $xml .= "<error>";
@@ -282,7 +291,10 @@ if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
     }
 
   // Display the build failure error
-  $errors = pdo_query("SELECT sourcefile,stdoutput,stderror FROM buildfailure WHERE buildid='$buildid' and type='1'");
+  $errors = pdo_query(
+    "SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror FROM buildfailure AS bf
+     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+     WHERE bf.buildid='$buildid' AND bfd.type='1'");
   while($error_array = pdo_fetch_array($errors))
     {
     $xml .= "<warning>";
@@ -391,7 +403,10 @@ if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
     $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
     $builderror_array = pdo_fetch_array($builderror);
     $npreviousbuilderrors = $builderror_array[0];
-    $builderror = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='0'");
+    $builderror = pdo_query(
+      "SELECT count(*) FROM buildfailure AS bf
+       LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+       WHERE bf.buildid='$previousbuildid' AND bfd.type='0'");
     $builderror_array = pdo_fetch_array($builderror);
     $npreviousbuilderrors += $builderror_array[0];
 
@@ -399,7 +414,10 @@ if(isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid']))
     $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
     $buildwarning_array = pdo_fetch_array($buildwarning);
     $npreviousbuildwarnings = $buildwarning_array[0];
-    $buildwarning = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid='$previousbuildid' AND type='1'");
+    $buildwarning = pdo_query(
+      "SELECT count(*) FROM buildfailure AS bf
+       LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+       WHERE bf.buildid='$previousbuildid' AND bfd.type='1'");
     $buildwarning_array = pdo_fetch_array($buildwarning);
     $npreviousbuildwarnings += $buildwarning_array[0];
 

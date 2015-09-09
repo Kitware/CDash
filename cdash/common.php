@@ -1137,6 +1137,32 @@ function remove_build($buildid)
     pdo_query("DELETE FROM buildfailure2argument WHERE buildfailureid IN ".$buildfailureids);
     pdo_query("DELETE FROM label2buildfailure WHERE buildfailureid IN ".$buildfailureids);
     }
+
+  // Delete buildfailuredetails that are only used by builds that are being
+  // deleted.
+  $detailsids = '(';
+  $buildfailuredetails = pdo_query(
+    "SELECT a.detailsid, count(b.detailsid) AS c
+     FROM buildfailure AS a
+     LEFT JOIN buildfailure AS b
+     ON (a.detailsid=b.detailsid AND b.buildid NOT IN ".$buildids.")
+     WHERE a.buildid IN ".$buildids."
+     GROUP BY a.detailsid HAVING count(b.detailsid)=0");
+  while($buildfailuredetails_array = pdo_fetch_array($buildfailuredetails))
+    {
+    if($detailsids != '(')
+      {
+      $detailsids .= ',';
+      }
+    $detailsids .= $buildfailuredetails_array["detailsid"];
+    }
+  $detailsids .= ')';
+  if(strlen($detailsids)>2)
+    {
+    pdo_query("DELETE FROM buildfailuredetails WHERE id IN ".$detailsids);
+    }
+
+  // Remove the buildfailure.
   pdo_query("DELETE FROM buildfailure WHERE buildid IN ".$buildids);
 
   // coverage file are kept unless they are shared

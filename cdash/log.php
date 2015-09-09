@@ -55,6 +55,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
   global $CDASH_LOG_FILE;
   global $CDASH_LOG_FILE_MAXSIZE_MB;
   global $CDASH_LOG_LEVEL;
+  global $CDASH_LOG_TO_DATABASE;
   
   // Check if we are within the log level
   if($type!= LOG_TESTING && $type>$CDASH_LOG_LEVEL)
@@ -206,7 +207,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
     }
 
   // Insert in the database
-  if($type == LOG_WARNING || $type==LOG_ERR)
+  if($CDASH_LOG_TO_DATABASE && ($type == LOG_WARNING || $type==LOG_ERR))
     {
     $ErrorLog = new ErrorLog;
     $ErrorLog->ProjectId = $projectid;

@@ -33,3 +33,19 @@ CREATE TABLE "subprojectgroup" (
 );
 CREATE INDEX "spgroupname" on "subprojectgroup" ("name");
 CREATE INDEX "spgroupprojectid" on "subprojectgroup" ("projectid");
+
+CREATE TABLE "buildfailuredetails" (
+  "id" bigserial NOT NULL,
+  "type" smallint NOT NULL,
+  "stdoutput" text NOT NULL,
+  "stderror" text NOT NULL,
+  "exitcondition" character varying(255) NOT NULL,
+  "language" character varying(64) NOT NULL,
+  "targetname" character varying(255) NOT NULL,
+  "outputfile" character varying(512) NOT NULL,
+  "outputtype" character varying(255) NOT NULL,
+  "crc32" bigint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "type5" on "buildfailuredetails" ("type");
+CREATE INDEX "buildfailuredetails_crc32" on "buildfailuredetails" ("crc32");

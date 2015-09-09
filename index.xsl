@@ -808,7 +808,9 @@
          <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
          <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
          <xsl:call-template name="headscripts"/>
-         <script src="javascript/cdashFeed.js" type="text/javascript" charset="utf-8"></script>
+         <xsl:if test="cdash/feed!=0">
+           <script src="javascript/cdashFeed.js" type="text/javascript" charset="utf-8"></script>
+         </xsl:if>
          <script src="javascript/cdashTableCollapse.js" type="text/javascript" charset="utf-8"></script>
 
        </head>
@@ -861,7 +863,9 @@
 <xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
 </a>
 </li>
-  <li><a href="" class="showfeed">Hide Feed</a></li>
+  <xsl:if test="cdash/feed!=0">
+    <li><a href="" class="showfeed">Hide Feed</a></li>
+  </xsl:if>
   <li><a href="" class="helptrigger">Help</a></li>
 </ul>
 </div>
@@ -877,7 +881,9 @@
 </xsl:if>
 </div>
 
-<div id="feed"></div>
+<xsl:if test="cdash/feed!=0">
+  <div id="feed"></div>
+</xsl:if>
 
 </xsl:if>
 
