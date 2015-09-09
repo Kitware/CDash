@@ -167,6 +167,9 @@ $CDASH_SHOW_LAST_SUBMISSION = 1;
 // How many times to retry queries via random exponential back-off
 $CDASH_MAX_QUERY_RETRIES = 1;
 
+// Log to the database. This should really default to false. Seriously.
+$CDASH_LOG_TO_DATABASE = true;
+
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';
 if ((strpos(__FILE__,'config.local.php') === FALSE) && file_exists($localConfig) )
