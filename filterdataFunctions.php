@@ -336,7 +336,9 @@ class QueryTestsPhpFilters extends DefaultFilters
 
     $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
     $xml .= getFilterDefinitionXML('buildstarttime', 'Build Time', 'date', '', '');
+    $xml .= getFilterDefinitionXML('buildtype', 'Build Type', 'string', '', 'Nightly');
     $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
+    $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
     $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
     $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
     $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
@@ -361,10 +363,22 @@ class QueryTestsPhpFilters extends DefaultFilters
       $sql_field = "b.starttime";
     }
     break;
+    
+    case 'buildtype':
+    {
+      $sql_field = 'b.type';
+    }
+    break;
 
     case 'details':
     {
       $sql_field = "test.details";
+    }
+    break;
+    
+    case 'label':
+    {
+      $sql_field = "(SELECT text FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
     }
     break;
 
@@ -515,6 +529,7 @@ class ViewTestPhpFilters extends DefaultFilters
     $xml = '';
 
     $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
+    $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
     $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
     $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
     $xml .= getFilterDefinitionXML('timestatus', 'Time Status', 'string', '', '');
@@ -531,6 +546,12 @@ class ViewTestPhpFilters extends DefaultFilters
     case 'details':
     {
       $sql_field = "t.details";
+    }
+    break;
+    
+    case 'label':
+    {
+      $sql_field = "(SELECT text FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
     }
     break;
 
