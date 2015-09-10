@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-3.3.20150717-ga541" Append="true">
+  <Site>Dash20.kitware</Site>
+  <BuildName>test_updateappend</BuildName>
+  <BuildStamp>20150823-2202-10_PM</BuildStamp>
+  <StartDateTime>Sun Aug 23 22:15:00 MDT 2015</StartDateTime>
+  <UpdateCommand>Command 3</UpdateCommand>
+  <Revision>3</Revision>
+  <PriorRevision>4</PriorRevision>
+  <Directory>
+    <Name>packages/doc</Name>
+    <Updated>
+      <File Directory="packages/doc">testfile1.C</File>
+      <Directory>packages/doc</Directory>
+      <FullName>packages/doc/testfile1.C</FullName>
+      <CheckinDate>Sun Aug 23 22:10:44 MDT 2015</CheckinDate>
+      <Author>testauthor</Author>
+      <Email>testuser@testemail></Email>
+      <Revision>33333</Revision>
+      <PriorRevision>123abc</PriorRevision>
+      <Revisions>
+        <Revision>packages/doc/testfile1.C</Revision>
+        <PreviousRevision></PreviousRevision>
+        <Author></Author>
+        <Date></Date>
+        <Comment></Comment>
+        <Email></Email>
+      </Revisions>
+      <Log>  Newest change</Log>
+    </Updated>
+  </Directory>
+  <UpdateReturnStatus></UpdateReturnStatus>
+  <ElapsedMinutes>5.5</ElapsedMinutes>
+  <EndDateTime>Sun Aug 23 22:20:30 MDT 2015</EndDateTime>
+</Update>

@@ -166,30 +166,30 @@ class BuildUpdate
       $nfiles += $this->GetNumberOfFiles();
 
       include('cdash/config.php');
-        if($CDASH_DB_TYPE == 'pgsql') // pgsql doesn't have concat...
-          {
-          $query = "UPDATE buildupdate SET
-                  endtime='$this->EndTime'," .
-                  "command=command || '$this->Command',
-                  status='$this->Status'," .
-                  "nfiles='$nfiles',warnings='$nwarnings'".
-          "WHERE id=".qnum($this->UpdateId);
-          }
-        else
-          {
-          $query = "UPDATE buildupdate SET
-                  endtime='$this->EndTime'," .
-                  "command=CONCAT(command, '$this->Command'),
-                  status='$this->Status'," .
-                  "nfiles='$nfiles',warnings='$nwarnings'".
-          "WHERE id=".qnum($this->UpdateId);
-          }
+      if($CDASH_DB_TYPE == 'pgsql') // pgsql doesn't have concat...
+        {
+        $query = "UPDATE buildupdate SET
+                endtime='$this->EndTime'," .
+                "command=command || '$this->Command',
+                status='$this->Status'," .
+                "nfiles='$nfiles',warnings='$nwarnings'".
+        "WHERE id=".qnum($this->UpdateId);
+        }
+      else
+        {
+        $query = "UPDATE buildupdate SET
+                endtime='$this->EndTime'," .
+                "command=CONCAT(command, '$this->Command'),
+                status='$this->Status'," .
+                "nfiles='$nfiles',warnings='$nwarnings'".
+        "WHERE id=".qnum($this->UpdateId);
+        }
 
-        if(!pdo_query($query))
-          {
-          add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
-          return false;
-          }
+      if(!pdo_query($query))
+        {
+        add_last_sql_error("BuildUpdate Insert",0,$this->BuildId);
+        return false;
+        }
       }
 
     foreach($this->Files as $file)

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-3.3.20150717-ga541" Append="true">
+  <Site>Dash20.kitware</Site>
+  <BuildName>test_updateappend</BuildName>
+  <BuildStamp>20150823-2202-10_PM</BuildStamp>
+  <StartDateTime>Sun Aug 23 22:05:10 MDT 2015</StartDateTime>
+  <UpdateCommand>Command 2</UpdateCommand>
+  <UpdateType>SVN</UpdateType>
+  <Directory>
+    <Name>packages/example</Name>
+    <Updated>
+      <File Directory="packages/example">testfile.C</File>
+      <Directory>packages/example</Directory>
+      <FullName>packages/example/testfile.C</FullName>
+      <CheckinDate>Sun Aug 23 21:24:44 MDT 2015</CheckinDate>
+      <Author>testauthor</Author>
+      <Email>testuser@testemail></Email>
+      <Revision>11111</Revision>
+      <PriorRevision>22222</PriorRevision>
+      <Revisions>
+        <Revision>packages/example/testfile.C</Revision>
+        <PreviousRevision></PreviousRevision>
+        <Author></Author>
+        <Date></Date>
+        <Comment></Comment>
+        <Email></Email>
+      </Revisions>
+      <Log>  Newest change</Log>
+    </Updated>
+
+    <Updated>
+      <File Directory="packages/example">messages.C</File>
+      <Directory>packages/example</Directory>
+      <FullName>packages/example/messages.C</FullName>
+      <CheckinDate>Sun Aug 23 21:24:44 MDT 2015</CheckinDate>
+      <Author>Local User</Author>
+      <Email></Email>
+      <Revision>-1</Revision>
+      <PriorRevision>packages/example/messages.C</PriorRevision>
+      <Revisions>
+        <Revision>packages/example/messages.C</Revision>
+        <PreviousRevision></PreviousRevision>
+        <Author></Author>
+        <Date></Date>
+        <Comment></Comment>
+        <Email></Email>
+      </Revisions>
+      <Log>    fix statements within assert</Log>
+    </Updated>
+
+  </Directory>
+  <UpdateReturnStatus>FAILED</UpdateReturnStatus>
+  <ElapsedMinutes>0.4</ElapsedMinutes>
+  <EndDateTime>Sun Aug 23 22:08:10 MDT 2015</EndDateTime>
+</Update>
