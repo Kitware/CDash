@@ -21,7 +21,7 @@ require_once("cdash/config.php");
  * Private function for exponential back-off as detailed here:
  *   https://cloud.google.com/storage/docs/json_api/v1/how-tos/upload#exp-backoff
  * Pass in a function that takes no arguments to have it retried.
- * @param $closure function a function that returns FALSE when it fails
+ * @param $closure Closure a function that returns FALSE when it fails
  * @return FALSE on failure mixed otherwise
  */
 function _exponential_backoff($closure) {
@@ -71,7 +71,12 @@ function pdo_connect($server = NULL, $username = NULL, $password = NULL, $new_li
       $server .= ':'.$CDASH_DB_PORT;
       }
     $last_link = _exponential_backoff(function () use ($server, $username, $password, $new_link, $client_flags) {
-      return mysql_connect($server, $username, $password, $new_link, $client_flags);
+      global $CDASH_USE_PERSISTENT_MYSQL_CONNECTION;
+      if ($CDASH_USE_PERSISTENT_MYSQL_CONNECTION) {
+        return mysql_pconnect($server, $username, $password, $client_flags);
+      } else {
+        return mysql_connect($server, $username, $password, $new_link, $client_flags);
+      }
     });
     return $last_link;
     }
