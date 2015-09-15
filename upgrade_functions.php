@@ -1,4 +1,4 @@
-<?
+<?php
 // Helper function to alter a table
 function AddTableField($table,$field,$mySQLType,$pgSqlType,$default)
 {

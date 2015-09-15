@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-3.3.20150717-ga541" Append="true">
+  <Site>Dash20.kitware</Site>
+  <BuildName>test_updateappend</BuildName>
+  <BuildStamp>20150823-2202-10_PM</BuildStamp>
+  <StartDateTime>Sun Aug 23 22:04:14 MDT 2015</StartDateTime>
+  <UpdateCommand>Command 1</UpdateCommand>
+  <UpdateType>GIT</UpdateType>
+  <UpdateReturnStatus></UpdateReturnStatus>
+  <ElapsedMinutes>1</ElapsedMinutes>
+  <Revision>3</Revision>
+  <PriorRevision>2</PriorRevision>
+  <Path>mypath</Path>
+  <EndDateTime>Sun Aug 23 22:04:15 MDT 2015</EndDateTime>
+</Update>
+
+

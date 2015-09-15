@@ -27,7 +27,7 @@ class UpdateHandler extends AbstractHandler
 {
   private $StartTimeStamp;
   private $EndTimeStamp;
-
+  private $Append;
   private $Update;
   private $UpdateFile;
 
@@ -37,6 +37,7 @@ class UpdateHandler extends AbstractHandler
     parent::__construct($projectID, $scheduleID);
     $this->Build = new Build();
     $this->Site = new Site();
+    $this->Append = false;
     $this->Feed = new Feed();
     }
 
@@ -50,7 +51,21 @@ class UpdateHandler extends AbstractHandler
         {
         $this->Build->Generator = $attributes['GENERATOR'];
         }
+
+      if (array_key_exists('APPEND', $attributes))
+        {
+        if(strtolower($attributes['APPEND']) == "true")
+          {
+          $this->Append = true;
+          }
+        }
+      else
+        {
+        $this->Append = false;
+        }
+
       $this->Update = new BuildUpdate();
+      $this->Update->Append = $this->Append;
       }
    else if($name=='UPDATED' || $name=='CONFLICTING' || $name=='MODIFIED')
      {
@@ -89,6 +104,7 @@ class UpdateHandler extends AbstractHandler
         $this->Build->StartTime = $start_time;
         $this->Build->EndTime = $end_time;
         $this->Build->SubmitTime = $submit_time;
+        $this->Build->Append = $this->Append;
         $this->Build->InsertErrors = false;
         add_build($this->Build, $this->scheduleid);
         $buildid = $this->Build->Id;
