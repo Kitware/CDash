@@ -14,7 +14,7 @@ class EmailTestCase extends KWWebTestCase
 
   function testSimple()
     {
-    $content = $this->connect($this->url.'/index.php?project=InsightExample');
+    $content = $this->connect($this->url.'/api/v1/index.php?project=InsightExample');
     if(!$content)
       {
       return;

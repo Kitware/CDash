@@ -73,8 +73,12 @@ class PubProjectTestCase extends KWWebTestCase
 
   function testIndexProjectTest()
     {
-    $content = $this->get($this->url.'/index.php?project=ProjectTest');
-    $this->assertTitle('CDash - ProjectTest');
+    $content = $this->get($this->url.'/api/v1/index.php?project=ProjectTest');
+    if(strpos($content, 'CDash - ProjectTest') === false)
+      {
+      $this->fail('"CDash - ProjectTest" not found when expected');
+      return 1;
+      }
     }
 
   function testEditProject()

@@ -23,12 +23,12 @@ class ProjectWebPageTestCase extends KWWebTestCase
     $name = 'InsightExample';
     $description = 'Project Insight test for cdash testing';
     $this->createProject($name,$description);
-    $content = $this->connect($this->url.'/index.php?project=BatchmakeExample');
+    $content = $this->connect($this->url.'/api/v1/index.php?project=BatchmakeExample');
     if(!$content)
       {
       return;
       }
-    $this->assertText('BatchmakeExample Dashboard');
+    $this->assertText('CDash - BatchmakeExample');
     }
 
   function testSubmissionBatchmakeBuild()
@@ -135,9 +135,19 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     // Testing if it actually worked
     $this->login();
-    $content = $this->connect($this->url.'/index.php?project=InsightExample&date=20090223');
-    $content = $this->analyse($this->clickLink('76.43%'));
-    $content = $this->connect($this->url.'/ajax/getviewcoverage.php?sEcho=1&iColumns=6&sColumns=&iDisplayStart=0&iDisplayLength=25&mDataProp_0=0&mDataProp_1=1&mDataProp_2=2&mDataProp_3=3&mDataProp_4=4&mDataProp_5=5&sSearch=&bRegex=false&sSearch_0=&bRegex_0=false&bSearchable_0=true&sSearch_1=&bRegex_1=false&bSearchable_1=true&sSearch_2=&bRegex_2=false&bSearchable_2=true&sSearch_3=&bRegex_3=false&bSearchable_3=true&sSearch_4=&bRegex_4=false&bSearchable_4=true&sSearch_5=&bRegex_5=false&bSearchable_5=true&iSortCol_0=2&sSortDir_0=asc&iSortingCols=1&bSortable_0=true&bSortable_1=true&bSortable_2=true&bSortable_3=true&bSortable_4=true&bSortable_5=true&buildid=8&status=4&nlow=2&nmedium=3&nsatisfactory=43&ncomplete=32&metricerror=0.49&metricpass=0.7&userid=1&displaylabels=0');
+
+    // Find buildid for coverage.
+    $content = $this->connect($this->url.'/api/v1/index.php?project=InsightExample&date=20090223');
+    $jsonobj = json_decode($content, true);
+    if (count($jsonobj['coverages']) < 1)
+      {
+      $this->fail("No coverage build found when expected");
+      return;
+      }
+    $buildid = $jsonobj['coverages'][0]['buildid'];
+
+    // Verify coverage log.
+    $content = $this->connect($this->url.'/ajax/getviewcoverage.php?sEcho=1&iColumns=6&sColumns=&iDisplayStart=0&iDisplayLength=25&mDataProp_0=0&mDataProp_1=1&mDataProp_2=2&mDataProp_3=3&mDataProp_4=4&mDataProp_5=5&sSearch=&bRegex=false&sSearch_0=&bRegex_0=false&bSearchable_0=true&sSearch_1=&bRegex_1=false&bSearchable_1=true&sSearch_2=&bRegex_2=false&bSearchable_2=true&sSearch_3=&bRegex_3=false&bSearchable_3=true&sSearch_4=&bRegex_4=false&bSearchable_4=true&sSearch_5=&bRegex_5=false&bSearchable_5=true&iSortCol_0=2&sSortDir_0=asc&iSortingCols=1&bSortable_0=true&bSortable_1=true&bSortable_2=true&bSortable_3=true&bSortable_4=true&bSortable_5=true&buildid='.$buildid.'&status=4&nlow=2&nmedium=3&nsatisfactory=43&ncomplete=32&metricerror=0.49&metricpass=0.7&userid=1&displaylabels=0');
 
     $jsonobj = json_decode($content,true);
     $url = substr($jsonobj['aaData'][6][0],9,43);
@@ -205,12 +215,16 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
   function testProjectExperimentalLinkMachineName()
     {
-    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
-    if(!$content)
+    $content = $this->connect($this->url.'/api/v1/index.php?project=BatchmakeExample&date=20090223');
+    $jsonobj = json_decode($content, true);
+    if (count($jsonobj['buildgroups']) < 1)
       {
+      $this->fail("No build found when expected");
       return;
       }
-    $content = $this->analyse($this->clickLink('Dash20.kitware'));
+    $siteid = $jsonobj['buildgroups'][0]['builds'][0]['siteid'];
+
+    $content = $this->connect($this->url."/viewSite.php?siteid=$siteid&project=4&currenttime=1235354400");
     if(!$content)
       {
       return;
@@ -225,12 +239,16 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
   function testProjectExperimentalLinkBuildSummary()
     {
-    $content = $this->connect($this->url.'?project=BatchmakeExample&date=2009-02-23');
-    if(!$content)
+    $content = $this->connect($this->url.'/api/v1/index.php?project=BatchmakeExample&date=20090223');
+    $jsonobj = json_decode($content, true);
+    if (count($jsonobj['buildgroups']) < 1)
       {
+      $this->fail("No build found when expected");
       return;
       }
-    $content = $this->analyse($this->clickLink('Win32-MSVC2009'));
+    $buildid = $jsonobj['buildgroups'][0]['builds'][0]['id'];
+    $content = $this->connect($this->url."/buildSummary.php?buildid=$buildid");
+
     $expected = 'f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma';
     if(!$content)
       {
