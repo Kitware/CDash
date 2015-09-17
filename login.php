@@ -138,7 +138,7 @@ function ldapAuthenticate($email,$password,$SessionCachePolicy,$rememberme)
       if(isset($principal))
         {
         // bind as this user
-        if(@ldap_bind($ldap, $principal, $password))
+        if(@ldap_bind($ldap, $principal, $password) and strlen(trim($password)) != 0)
           {
           $sql="SELECT id,password FROM ".qid("user")." WHERE email='".pdo_real_escape_string($email)."'";
           $result = pdo_query("$sql");
