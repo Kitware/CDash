@@ -10,7 +10,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 
 $NoXSLGenerate = 1;
-include("../index.php");
+include("old_index.php");
 
 $xml = generate_index_table();
 // Now doing the xslt transition

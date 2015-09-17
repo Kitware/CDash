@@ -9,7 +9,7 @@ $path = join(array_slice(split( $splitchar ,dirname(__FILE__)),0,-1),DIRECTORY_S
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 $NoXSLGenerate = 1;
-include("../index.php");
+include("old_index.php");
 include_once("../models/project.php");
 
 @$projectname = $_GET["project"];
