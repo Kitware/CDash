@@ -18,12 +18,8 @@ class Example extends CDashSeleniumTestCase
     $this->click("link=Show Activity Graph");
     $this->click("link=Zoom out");
     $this->click("link=Show Activity Graph");
-    $this->click("link=Dashboard");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Current");
-    $this->waitForPageToLoad("30000");
-    $this->click("//a[contains(text(),'1 file\n          changed')]");
-    $this->waitForPageToLoad("30000");
+
+    $this->open($this->webPath."/viewChanges.php?project=TestCompressionExample");
     $this->click("link=Show Activity Graph");
     $this->click("link=Zoom out");
     $this->click("link=Show Activity Graph");
