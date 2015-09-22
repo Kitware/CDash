@@ -3,10 +3,10 @@ CDash.filter("showExpectedLast", function () {
   return function (builds) {
     if (!angular.isArray(builds)) return;
     var present = builds.filter(function (build) {
-      return !('expected' in build);
+      return !('expectedandmissing' in build);
     });
     var expecteds = builds.filter(function (build) {
-      return 'expected' in build;
+      return 'expectedandmissing' in build;
     });
     return present.concat(expecteds);
   };
@@ -128,6 +128,35 @@ CDash.filter("showExpectedLast", function () {
       .replace(/\'/g, '%27');
   };
 
+  $scope.toggleAdminOptions = function(build) {
+    if (!("expected" in build) || (build.expected != 0 && build.expected != 1)) {
+      build.loadingExpected = 1;
+      // Determine whether or not this is an expected build.
+      $http({
+        url: 'api/v1/is_build_expected.php',
+        method: 'GET',
+        params: { 'buildid': build.id }
+      }).success(function(response) {
+        build.loadingExpected = 0;
+        if ("expected" in response) {
+          build.expected = response.expected;
+          if ( !("showAdminOptions" in build) || build.showAdminOptions == 0) {
+            build.showAdminOptions = 1;
+          } else {
+            build.showAdminOptions = 0;
+          }
+        }
+      });
+    } else {
+      if ( !("showAdminOptions" in build) || build.showAdminOptions == 0) {
+        build.showAdminOptions = 1;
+      } else {
+        build.showAdminOptions = 0;
+      }
+    }
+  };
+
+
   $scope.buildgroup_click = function(buildid) {
     var group = "#buildgroup_"+buildid;
     if($(group).html() != "" && $(group).is(":visible")) {
@@ -177,46 +206,62 @@ CDash.filter("showExpectedLast", function () {
     $(group).load("ajax/expectedinfo.php?siteid="+siteid+"&buildname="+buildname+"&projectid="+projectid+"&buildtype="+buildtype+"&currenttime="+currentime,{},function(){$(this).fadeIn('slow');});
   };
 
-  $scope.removebuild_click = function(buildid) {
-    if(confirm("Are you sure you want to remove this build?")) {
-      var group = "#buildgroup_"+buildid;
-      $(group).html("updating...");
-      $.post("ajax/addbuildgroup.php?buildid="+buildid,{removebuild:"1",buildid:buildid}, function(data) {
-        $(group).html("deleted.");
-        $(group).fadeOut('slow');
-        location.reload();
-        return false;
+
+  $scope.removeBuild = function(build) {
+    if (window.confirm("Are you sure you want to remove this build?")) {
+      var parameters = { buildid: build.id };
+        $http({
+          url: 'api/v1/build.php',
+          method: 'DELETE',
+          params: parameters
+        }).success(function() {
+          // Find the index of the build to remove.
+          var idx1 = -1;
+          var idx2 = -1;
+          for (var i in $scope.cdash.buildgroups) {
+            for (var j = 0, len = $scope.cdash.buildgroups[i].builds.length; j < len; j++) {
+              if ($scope.cdash.buildgroups[i].builds[j].id === build.id) {
+                idx1 = i;
+                idx2 = j;
+                break;
+              }
+            }
+            if (idx1 != -1) {
+              break;
+            }
+          }
+          if (idx1 > -1 && idx2 > -1) {
+            // Remove the build from our scope.
+            $scope.cdash.buildgroups[idx1].builds.splice(idx2, 1);
+          }
       });
     }
   };
 
-  $scope.markasexpected_click = function(buildid,groupid,expected) {
-    var group = "#buildgroup_"+buildid;
-    $(group).html("updating...");
-    $.post("ajax/addbuildgroup.php?buildid="+buildid,{markexpected:"1",groupid:groupid,expected:expected}, function(data) {
-      $(group).html("updated.");
-      $(group).fadeOut('slow');
-      location.reload();
-      return false;
+
+  $scope.toggleExpected = function(build, groupid) {
+    var newExpectedValue = 1;
+    if (build.expected == 1) {
+      newExpectedValue = 0;
+    }
+    var parameters = {
+      buildid: build.id,
+      groupid: groupid,
+      expected: newExpectedValue
+    };
+    $http.post('api/v1/build.php', parameters)
+    .success(function(data) {
+      build.expected = newExpectedValue;
     });
   };
 
-  $scope.addbuildgroup_click = function(buildid,groupid,definerule) {
-    var expected = "expected_"+buildid+"_"+groupid;
-    var t = document.getElementById(expected);
-    var expectedbuild = 0;
-    if(t.checked) {
-      expectedbuild = 1;
-    }
-
-    var group = "#buildgroup_"+buildid;
-    $(group).html("addinggroup");
-    $.post("ajax/addbuildgroup.php?buildid="+buildid,{submit:"1",groupid:groupid,expected:expectedbuild,definerule:definerule}, function(data) {
-      $(group).html("added to group.");
-      $(group).fadeOut('slow');
-      location.reload();
-      return false;
-    });
+  $scope.moveToGroup = function(build, groupid) {
+    var parameters = {
+      buildid: build.id,
+      newgroupid: groupid,
+      expected: build.expected
+    };
+    $http.post('api/v1/build.php', parameters);
   };
 
   $scope.colorblind_toggle = function() {

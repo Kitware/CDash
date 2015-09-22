@@ -404,8 +404,8 @@
                   <img src="images/Info.png" alt="info" class="icon"></img>
                 </a>
 
-                <!-- If the build is expected -->
-                <a ng-if="build.expected == 1" href="javascript:;" nc-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
+                <!-- If the build is expected and missing -->
+                <a ng-if="build.expectedandmissing == 1" href="javascript:;" nc-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
                   <img src="images/Info.png" alt="info" class="icon"></img>
                 </a>
 
@@ -420,10 +420,39 @@
                 </a>
 
                 <!-- If user is admin of the project propose to group this build -->
-                <div ng-if="cdash.user.admin == 1 && (build.numchildren == 0 || build.expected == 1)">
-                  <a ng-if="build.id" href="javascript:;" ng-click="buildgroup_click(build.id)">
+                <div ng-if="cdash.user.admin == 1 && (build.numchildren == 0 || build.expectedandmissing == 1)">
+                  <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
                     <img src="images/folder.png" class="icon"/>
                   </a>
+                  <img ng-show="build.loadingExpected == 1" src="images/loading.gif"/>
+                </div>
+                <table width="100%" border="0" ng-show="build.showAdminOptions == 1">
+                  <tr ng-repeat="group in cdash.all_buildgroups">
+                    <td width="35%">
+                      <b>{{group.name}}</b>:
+                    </td>
+                    <td ng-if="group.name == buildgroup.name" colspan="2">
+                      <a ng-show="build.expected == 0" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+                        [mark as expected]
+                      </a>
+                      <a ng-show="build.expected == 1" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+                        [mark as non expected]
+                      </a>
+                    </td>
+                    <td ng-if="group.name != buildgroup.name" colspan="2">
+                      <input type="checkbox" ng-model="build.expected" ng-true-value="'1'" ng-false-value="'0'"> expected</input>
+                    </td>
+                    <td ng-if="group.name != buildgroup.name" class="nob">
+                      <a href="javascript:;" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" class="nob">
+                      <a href="javascript:;" ng-click="removeBuild(build)"> [remove this build] </a>
+                    </td>
+                  </tr>
+                </table>
+
                   <a ng-if="!build.id" href="javascript:;" ng-click="buildnosubmission_click(build.siteid, build.buildname, build.expecteddivname, build.buildgroupid, build.buildtype)">
                     <img src="images/folder.png" class="icon"/>
                   </a>
@@ -432,7 +461,7 @@
 
               <div ng-if="build.id && build.numchildren == 0" id="buildgroup_{{build.id}}"></div>
 
-              <div ng-if="build.expecteddivname && (build.numchildren == 0 || build.expected == 1)" id="infoexpected_{{build.expecteddivname}}"></div>
+              <div ng-if="build.expecteddivname && (build.numchildren == 0 || build.expectedandmissing == 1)" id="infoexpected_{{build.expecteddivname}}"></div>
             </td>
 
             <td align="center" ng-class="{'error': build.update.errors == 1, 'warning': build.update.warning == 1, 'normal': build.update.defined == 1}">

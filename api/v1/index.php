@@ -492,7 +492,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                   b.testtimestatusfailed AS countteststimestatusfailed,
                   sp.id AS subprojectid,
                   sp.groupid AS subprojectgroup,
-                  g.name as groupname,gp.position,g.id as groupid,
+                  g.name AS groupname,gp.position,g.id AS groupid,
                   $label_sql
                   (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
@@ -771,7 +771,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
       "SELECT count(id) AS numchildren
        FROM build WHERE parentid=".qnum($buildid));
     $numchildren = $countChildrenResult['numchildren'];
-    file_put_contents("/tmp/zackdebug.txt", "num children: $numchildren\nquery:\n SELECT count(id) AS numchildren FROM build WHERE parentid=".qnum($buildid));
     $build_response['numchildren'] = $numchildren;
     $child_builds_hyperlink = "";
     if ($numchildren > 0)
@@ -1260,6 +1259,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
       }
     }
 
+  // Create a separate "all buildgroups" section of our response.
+  // This is used to allow project admins to move builds between groups.
+  $response['all_buildgroups'] = array();
+  foreach ($buildgroups_response as $group)
+    {
+    $response['all_buildgroups'][] =
+      array('id' => $group['id'], 'name' => $group['name']);
+    }
+
   // At this point it is safe to remove any empty buildgroups from our response.
   function is_buildgroup_nonempty($group)
     {
@@ -1387,7 +1395,7 @@ function add_expected_builds($groupid, $currentstarttime, $received_builds)
       $build_response['buildname'] = $buildname;
       $build_response['buildtype'] = $buildtype;
       $build_response['buildgroupid'] = $groupid;
-      $build_response['expected'] = 1;
+      $build_response['expectedandmissing'] = 1;
 
       // Compute historical average to get approximate expected time.
       // PostgreSQL doesn't have the necessary functions for this.
