@@ -129,16 +129,10 @@ describe("manageBuildGroup", function() {
 
 
   it("can verify a dynamic row", function() {
-    // index.php is non-Angular
-    browser.ignoreSynchronization = true;
-
     // Find the "latestBuildGroup" table on this page and verify that it has
     // exactly one row.
     browser.get("index.php?project=EmailProjectExample");
-    expect(element(By.partialLinkText("latestBuildGroup")).element(by.xpath('../../../../..')).element(by.tagName('tbody')).all(by.tagName('tr')).count()).toBe(1);
-
-    // resume Angular testing.
-    browser.ignoreSynchronization = false;
+    expect(element(By.partialLinkText("latestBuildGroup")).element(by.xpath('../../../../..')).all(by.repeater('build in buildgroup.builds')).count()).toBe(1);
   });
 
 
