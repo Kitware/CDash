@@ -25,10 +25,33 @@ set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
 require_once("cdash/config.php");
 require_once("cdash/pdo.php");
+include('login.php');
 require_once("cdash/common.php");
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME",$db);
+
+if (!$session_OK)
+  {
+  echo "Not a valid session";
+  return;
+  }
+
+$userid = $_SESSION['cdash']['loginid'];
+// Checks
+if(!isset($userid) || !is_numeric($userid))
+  {
+  echo "Not a valid user";
+  return;
+  }
+
+$user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
+
+if($user_array["admin"]!=1)
+  {
+  echo "You don't have permission to access this page";
+  return;
+  }
 
 $search = pdo_real_escape_string($_GET["search"]);
 
