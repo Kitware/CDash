@@ -23,6 +23,8 @@ include_once("cdash/common.php");
 require_once("models/project.php");
 require_once("models/subproject.php");
 
+set_time_limit(0);
+
 @$projectid = $_GET["projectid"];
 if ($projectid != NULL)
   {
@@ -78,7 +80,7 @@ $subprojectids = $Project->GetSubProjects();
 function get_graph_depth($a,$value)
   {
   $SubProject = new SubProject();
-  $SubProject->Id = $a;
+  $SubProject->SetId($a);
   $parents = $SubProject->GetDependencies();
   foreach($parents as $parentid)
     {
@@ -112,7 +114,7 @@ if(count($subprojectids)>0)
 foreach($subprojectids as $subprojectid) 
   {
   $SubProject = new SubProject();
-  $SubProject->Id = $subprojectid;
+  $SubProject->SetId($subprojectid);
   $ctestconfig .= $SubProject->GetName()."\n";
   }
   

@@ -33,7 +33,6 @@ include("models/feed.php");
 $projectid = pdo_real_escape_numeric($_GET["projectid"]);
 if(!isset($projectid) || !is_numeric($projectid))
   {
-  die("Not a valid projectid!");
   return;
   }
 

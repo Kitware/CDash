@@ -31,21 +31,9 @@
     <title>CDash - BuildGroups</title>
   </head>
   <body bgcolor="#ffffff" ng-controller="ManageBuildGroupController">
-    <ng-include src="'views/headeradminproject.html'"></ng-include>
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/header.html'"></ng-include>
     <br/>
-
-    <img id="spinner" src="images/loading.gif" ng-show="loading" />
-
-    <div ng-show="cdash.error">
-      <b>Error: {{cdash.error}}</b>
-    </div>
-    <div ng-show="cdash.warning">
-      <b>Warning: {{cdash.warning}}</b>
-    </div>
-
-    <div ng-if="cdash.requirelogin == 1">
-      Please <a href="user.php">login</a> to view this page.
-    </div>
 
     <div class="container" ng-if="cdash.requirelogin != 1 && !loading">
 
@@ -393,6 +381,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include src="'views/footer.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/footer.html'"></ng-include>
   </body>
 </html>

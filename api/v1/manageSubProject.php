@@ -32,10 +32,11 @@ $response = begin_JSON_response();
 $response['backurl'] = 'user.php';
 $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'SubProjects';
+$response['hidenav'] = 1;
 
 if (!$session_OK)
 {
-  $response['error'] = "You must be logged in to continue.";
+  $response['requirelogin'] = 1;
   echo json_encode($response);
   return;
 }
@@ -47,7 +48,7 @@ pdo_select_db("$CDASH_DB_NAME",$db);
 // Checks
 if(!isset($userid) || !is_numeric($userid))
   {
-  $response['error'] = "You must be logged in to continue.";
+  $response['requirelogin'] = 1;
   echo json_encode($response);
   return;
   }
@@ -100,6 +101,10 @@ if($User->IsAdmin()===FALSE && $role<=1)
   echo json_encode($response);
   return;
   }
+$user_response = array();
+$user_response['admin'] = 1;
+$user_response['projectrole'] = $role;
+$response['user'] = $user_response;
 
 $response['threshold'] = $Project->GetCoverageThreshold();
 

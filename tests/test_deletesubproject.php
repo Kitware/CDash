@@ -14,7 +14,7 @@ class DeleteSubProjectTestCase extends KWWebTestCase
 
   function testDeleteSubProject()
     {
-    $this->get($this->url."/index.php?project=Trilinos");
+    $this->get($this->url."/api/v1/viewSubProjects.php?project=Trilinos");
     $this->assertText("FEApp");
 
     echo "submitting data/DeleteSubProject/Project.xml\n";
@@ -25,7 +25,7 @@ class DeleteSubProjectTestCase extends KWWebTestCase
       return false;
       }
 
-    $this->get($this->url."/index.php?project=Trilinos");
+    $this->get($this->url."/api/v1/viewSubProjects.php?project=Trilinos");
     $this->assertNoText("FEApp");
 
     $this->deleteLog($this->logfilename);

@@ -17,12 +17,12 @@ CDash.filter('filter_groups', function() {
     return output;
   };
 })
-.controller('ManageSubProjectController', function ManageSubProjectController($scope, $http) {
+.controller('ManageSubProjectController', function ManageSubProjectController($scope, $rootScope, $http) {
   $scope.loading = true;
   $http({
     url: 'api/v1/manageSubProject.php',
     method: 'GET',
-    params: queryString
+    params: $rootScope.queryString
   }).success(function(cdash) {
     $scope.cdash = cdash;
   }).finally(function() {

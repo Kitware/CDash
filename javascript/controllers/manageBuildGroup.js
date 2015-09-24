@@ -34,12 +34,12 @@ CDash.filter('filter_builds', function() {
   };
 })
 
-.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http) {
+.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $rootScope, $http) {
   $scope.loading = true;
   $http({
     url: 'api/v1/manageBuildGroup.php',
     method: 'GET',
-    params: queryString
+    params: $rootScope.queryString
   }).success(function(cdash) {
     $scope.cdash = cdash;
 

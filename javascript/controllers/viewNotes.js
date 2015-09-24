@@ -1,9 +1,9 @@
-function ViewNotesController($scope, $http, $location, $anchorScroll) {
+function ViewNotesController($scope, $rootScope, $http, $location, $anchorScroll) {
   $scope.loading = true;
   $http({
     url: 'api/v1/viewNotes.php',
     method: 'GET',
-    params: queryString
+    params: $rootScope.queryString
   }).success(function(cdash) {
     $scope.cdash = cdash;
   }).finally(function() {
@@ -24,5 +24,5 @@ function ViewNotesController($scope, $http, $location, $anchorScroll) {
   };
 }
 
-CDash.controller('ViewNotesController', ['$scope', '$http', '$location', '$anchorScroll',
+CDash.controller('ViewNotesController', ['$scope', '$rootScope', '$http', '$location', '$anchorScroll',
                                           ViewNotesController]);

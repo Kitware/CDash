@@ -1,13 +1,6 @@
 <div id="div_showfilters" ng-controller="FiltersController">
 
-  <div id="labelshowfilters">
-    <a id="label_showfilters" ng-click="filterdata.showfilters=!filterdata.showfilters">
-      <span ng-if="filterdata.showfilters">Hide Filters</span>
-      <span ng-if="!filterdata.showfilters">Show Filters</span>
-    </a>
-  </div>
-
-  <div ng-hide="filterdata.showfilters==0">
+  <div ng-hide="showfilters==0">
     <table id="tablefilters" cellpadding="0" cellspacing="0">
       <tr class="table-heading0" >
         <td colspan="10" class="nob">

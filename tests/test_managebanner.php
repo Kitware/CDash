@@ -41,7 +41,7 @@ class ManageBannerTestCase extends KWWebTestCase
     $this->clickSubmitByName("updateMessage");
 
     //make sure the banner changed
-    $content = $this->get($this->url."/index.php?project=InsightExample");
+    $content = $this->get($this->url."/api/v1/index.php?project=InsightExample");
     if(strpos($content, "this is a new banner") === false)
       {
       $this->fail("New banner message not found on dashboard");
@@ -54,7 +54,7 @@ class ManageBannerTestCase extends KWWebTestCase
     $this->clickSubmitByName("updateMessage");
 
     //make sure it changed back
-    $content = $this->connect($this->url."/index.php");
+    $content = $this->connect($this->url."/api/v1/index.php");
     if(strpos($content, "this is a new banner") !== false)
       {
       $this->fail("New banner message still on dashboard after it should have been removed");

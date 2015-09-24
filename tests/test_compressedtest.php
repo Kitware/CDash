@@ -70,23 +70,46 @@ class CompressedTestCase extends KWWebTestCase
       return;
       }
 
-    $content = $this->connect($this->url.'?project=TestCompressionExample&date=2009-12-18');
-    if(!$content)
+    // Find the buildid that has the updates we just submitted.
+    $this->get($this->url."/api/v1/index.php?project=TestCompressionExample&date=2009-12-18");
+    $response = json_decode($this->getBrowser()->getContentAsText(), true);
+    $buildid = -1;
+    foreach($response['buildgroups'] as $buildgroup)
       {
+      if ($buildgroup['name'] != 'Experimental')
+        {
+        continue;
+        }
+      foreach($buildgroup['builds'] as $build)
+        {
+        if (!empty($build['update']['files']))
+          {
+          $buildid = $build['id'];
+          break;
+          }
+        }
+      }
+    if ($buildid == -1)
+      {
+      $this->fail('Could not find a build with update data');
       return;
       }
-    $content = $this->analyse($this->clickLink('22'));
+
+    // Verify that viewUpdate has the info we expect.
+    $this->get($this->url."/viewUpdate.php?buildid=$buildid");
+
+    $content = $this->getBrowser()->getContent();
     $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample&amp;rev=23a41258921e1cba8581ee2fa5add00f817f39fe';
-    if(!$this->findString($content,$expected))
+    if(!$this->findString($content, $expected))
        {
-       $this->fail('The webpage does not match right the content exepected: got '.$content.' instead of '.$expected);
+       $this->fail('The webpage does not match right the content expected: got '.$content.' instead of '.$expected);
        return;
        }
 
     $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample&amp;rev=0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4';
-    if(!$this->findString($content,$expected))
+    if(!$this->findString($content, $expected))
        {
-       $this->fail('The webpage does not match right the content exepected: got '.$content.' instead of '.$expected);
+       $this->fail('The webpage does not match right the content expected: got '.$content.' instead of '.$expected);
        return;
        }
 

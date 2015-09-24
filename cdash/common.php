@@ -484,13 +484,18 @@ function get_projects($onlyactive=true)
   $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
   pdo_select_db("$CDASH_DB_NAME",$db);
 
-  $projectres = pdo_query("SELECT id,name,description FROM project WHERE public='1' ORDER BY name");
+  $projectres = pdo_query(
+    "SELECT p.id, p.name, p.description,
+            (SELECT COUNT(1) FROM subproject WHERE projectid=p.id) AS nsubproj
+     FROM project AS p
+     WHERE p.public='1' ORDER BY p.name");
   while($project_array = pdo_fetch_array($projectres))
     {
     $project = array();
     $project['id'] = $project_array["id"];
     $project['name'] = $project_array["name"];
     $project['description'] = $project_array["description"];
+    $project['numsubprojects'] = $project_array["nsubproj"];
     $projectid = $project['id'];
 
     $project['last_build'] = "NA";

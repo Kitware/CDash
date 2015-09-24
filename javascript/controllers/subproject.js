@@ -1,4 +1,4 @@
-CDash.controller('SubProjectController', function SubProjectController($scope, $http) {
+CDash.controller('SubProjectController', function SubProjectController($scope, $rootScope, $http) {
   $scope.dataLoaded = false;
 
   $scope.loadData = function(id) {
@@ -7,11 +7,11 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
       return;
     }
     else {
-      queryString['subprojectid'] = id;
+      $rootScope.queryString['subprojectid'] = id;
       $http({
         url: 'api/v1/subproject.php',
         method: 'GET',
-        params: queryString
+        params: $rootScope.queryString
       }).success(function(details) {
         $scope.details = details;
 

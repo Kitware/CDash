@@ -420,7 +420,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 
@@ -473,7 +473,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 
@@ -526,7 +526,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 
@@ -580,7 +580,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 
@@ -634,7 +634,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 
@@ -688,7 +688,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 
@@ -741,7 +741,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 
@@ -794,7 +794,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 
@@ -847,7 +847,7 @@ class SubProject
     else
       {
         $project_array = pdo_fetch_array($project);
-        return $project_array[0];
+        return intval($project_array[0]);
       }
     }
 

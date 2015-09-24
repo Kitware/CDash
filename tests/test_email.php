@@ -27,12 +27,12 @@ class EmailTestCase extends KWWebTestCase
     $this->setField('emailRedundantFailures','0');
     $this->clickSubmitByName('Submit');
 
-    $content = $this->connect($this->url.'/index.php?project=EmailProjectExample');
+    $content = $this->connect($this->url.'/api/v1/index.php?project=EmailProjectExample');
     if(!$content)
       {
       return;
       }
-    $this->assertText('EmailProjectExample Dashboard');
+    $this->assertText('CDash - EmailProjectExample');
     if(!$this->checkLog($this->logfilename))
       {
       return;
