@@ -194,32 +194,35 @@ function getFiltersForPage($page_id)
   {
     case 'index.php':
     case 'project.php':
-      return ['buildduration', 'builderrors', 'buildwarnings', 'buildname',
-              'buildstamp', 'buildstarttime', 'buildtype', 'configureduration',
-              'configureerrors', 'configurewarnings', 'expected', 'groupname',
-              'hascoverage', 'hasctestnotes', 'hasdynamicanalysis',
-              'hasusernotes', 'label', 'site', 'buildgenerator', 'subproject',
-              'testsduration', 'testsfailed', 'testsnotrun', 'testspassed',
-              'testtimestatus', 'updateduration', 'updatedfiles'];
+      return array(
+        'buildduration', 'builderrors', 'buildwarnings', 'buildname',
+        'buildstamp', 'buildstarttime', 'buildtype', 'configureduration',
+        'configureerrors', 'configurewarnings', 'expected', 'groupname',
+        'hascoverage', 'hasctestnotes', 'hasdynamicanalysis',
+        'hasusernotes', 'label', 'site', 'buildgenerator', 'subproject',
+        'testsduration', 'testsfailed', 'testsnotrun', 'testspassed',
+        'testtimestatus', 'updateduration', 'updatedfiles');
       break;
 
     case 'queryTests.php':
-      return ['buildname', 'buildstarttime', 'details', 'site', 'status',
-              'testname', 'time'];
+      return array(
+        'buildname', 'buildstarttime', 'details', 'site', 'status',
+        'testname', 'time');
       break;
 
     case 'viewCoverage.php':
     case 'getviewcoverage.php':
-      return ['coveredlines', 'filename', 'labels', 'priority', 'totallines',
-              'uncoveredlines'];
+      return array(
+        'coveredlines', 'filename', 'labels', 'priority', 'totallines',
+        'uncoveredlines');
       break;
 
     case 'viewTest.php':
-      return ['details', 'status', 'testname', 'timestatus', 'time'];
+      return array('details', 'status', 'testname', 'timestatus', 'time');
       break;
 
     default:
-      return [];
+      return array();
       break;
   }
 }
