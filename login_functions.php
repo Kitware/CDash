@@ -372,10 +372,20 @@ function auth($SessionCachePolicy='private_no_expire')
         }
       }
 
-    if (session_status() != PHP_SESSION_NONE)
+    // Return early if a session has already been started.
+    if (function_exists('session_status'))
       {
-      // Session already started.
-      return;
+      if (session_status() != PHP_SESSION_NONE)
+        {
+        return;
+        }
+      }
+    else
+      {
+      if (session_id() != '')
+        {
+        return;
+        }
       }
 
     session_name("CDash");
