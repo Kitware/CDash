@@ -525,7 +525,7 @@ function UpgradeBuildFailureTable($from_table='buildfailure', $to_table='buildfa
     }
 
   // Add the detailsid field to our buildfailure table.
-  AddTableField($from_table, 'detailsid', 'bigint(20)', 'bigserial', '0');
+  AddTableField($from_table, 'detailsid', 'bigint(20)', 'BIGINT', '0');
 
   // Iterate over buildfailure rows.
   // We break this up into separate queries of 5,000 each because otherwise

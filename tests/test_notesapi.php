@@ -22,8 +22,8 @@ class NotesAPICase extends KWWebTestCase
     // This was 13 at the time this test was written, but things
     // like this have a habit of changing.
     $buildid_result = pdo_single_row_query(
-      "SELECT buildid, COUNT(1) c FROM build2note
-       GROUP BY buildid HAVING c > 1 ORDER BY buildid LIMIT 1");
+      "SELECT buildid, COUNT(1) FROM build2note
+       GROUP BY buildid HAVING COUNT(1) > 1 ORDER BY buildid LIMIT 1");
     if (empty($buildid_result))
       {
       $this->fail("No build found with multiple notes");
