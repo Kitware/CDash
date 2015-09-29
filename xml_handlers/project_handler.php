@@ -182,6 +182,8 @@ class ProjectHandler extends AbstractHandler
   public function endElement($parser, $name)
     {
     parent::endElement($parser, $name);
+    global $CDASH_DELETE_OLD_SUBPROJECTS;
+
 
     if (!$this->ProjectNameMatches)
       {
@@ -192,26 +194,28 @@ class ProjectHandler extends AbstractHandler
       {
       foreach($this->SubProjects as $subproject)
         {
-
-        // Remove dependencies that do not exist anymore, but only for those
-        // relationships where both sides are present in $this->SubProjects.
-        //
-        $dependencyids = $subproject->GetDependencies();
-        $removeids = array_diff($dependencyids, $this->Dependencies[$subproject->GetId()]);
-        foreach($removeids as $removeid)
+        if ($CDASH_DELETE_OLD_SUBPROJECTS)
           {
-          if (array_key_exists($removeid, $this->SubProjects))
+          // Remove dependencies that do not exist anymore, but only for those
+          // relationships where both sides are present in $this->SubProjects.
+          //
+          $dependencyids = $subproject->GetDependencies();
+          $removeids = array_diff($dependencyids, $this->Dependencies[$subproject->GetId()]);
+          foreach($removeids as $removeid)
             {
-            $subproject->RemoveDependency($removeid);
-            }
-          else
-            {
-            $dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$removeid'", "name", "$removeid");
-            add_log(
-              "Not removing dependency $dep($removeid) from ".
-              $subproject->GetName().
-              "because it is not a SubProject element in this Project.xml file",
-              "ProjectHandler:endElement", LOG_WARNING, $this->projectid);
+            if (array_key_exists($removeid, $this->SubProjects))
+              {
+              $subproject->RemoveDependency($removeid);
+              }
+            else
+              {
+              $dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$removeid'", "name", "$removeid");
+              add_log(
+                "Not removing dependency $dep($removeid) from ".
+                $subproject->GetName().
+                "because it is not a SubProject element in this Project.xml file",
+                "ProjectHandler:endElement", LOG_WARNING, $this->projectid);
+              }
             }
           }
 
@@ -233,24 +237,27 @@ class ProjectHandler extends AbstractHandler
           }
         }
 
-      // Delete old subprojects that weren't included in this file.
-      $previousSubProjectIds = $this->Project->GetSubProjects();
-      foreach ($previousSubProjectIds as $previousId)
+      if ($CDASH_DELETE_OLD_SUBPROJECTS)
         {
-        $found = false;
-        foreach ($this->SubProjects as $subproject)
+        // Delete old subprojects that weren't included in this file.
+        $previousSubProjectIds = $this->Project->GetSubProjects();
+        foreach ($previousSubProjectIds as $previousId)
           {
-          if ($subproject->GetId() == $previousId)
+          $found = false;
+          foreach ($this->SubProjects as $subproject)
             {
-            $found = true;
-            break;
+            if ($subproject->GetId() == $previousId)
+              {
+              $found = true;
+              break;
+              }
             }
-          }
-        if (!$found)
-          {
-          $subProjectToRemove = new SubProject();
-          $subProjectToRemove->SetId($previousId);
-          $subProjectToRemove->Delete();
+          if (!$found)
+            {
+            $subProjectToRemove = new SubProject();
+            $subProjectToRemove->SetId($previousId);
+            $subProjectToRemove->Delete();
+            }
           }
         }
       }

@@ -173,6 +173,10 @@ $CDASH_LOG_TO_DATABASE = true;
 // Whether to use persistent mysql connections (mysql_connectp)
 $CDASH_USE_PERSISTENT_MYSQL_CONNECTION = false;
 
+// Whether to delete existing subprojects and/or dependencies that aren't
+// mentioned by a newly uploaded Project.xml
+$CDASH_DELETE_OLD_SUBPROJECTS = true;
+
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';
 if ((strpos(__FILE__,'config.local.php') === FALSE) && file_exists($localConfig) )
