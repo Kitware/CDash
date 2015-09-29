@@ -222,7 +222,8 @@ class ProjectWebPageTestCase extends KWWebTestCase
       $this->fail("No build found when expected");
       return;
       }
-    $siteid = array_pop($jsonobj['buildgroups'])['builds'][0]['siteid'];
+    $buildgroup = array_pop($jsonobj['buildgroups']);
+    $siteid = $buildgroup['builds'][0]['siteid'];
 
     $content = $this->connect($this->url."/viewSite.php?siteid=$siteid&project=4&currenttime=1235354400");
     if(!$content)
@@ -246,7 +247,9 @@ class ProjectWebPageTestCase extends KWWebTestCase
       $this->fail("No build found when expected");
       return;
       }
-    $buildid = array_pop($jsonobj['buildgroups'])['builds'][0]['id'];
+
+    $buildgroup = array_pop($jsonobj['buildgroups']);
+    $buildid = $buildgroup['builds'][0]['id'];
     $content = $this->connect($this->url."/buildSummary.php?buildid=$buildid");
 
     $expected = 'f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma';
