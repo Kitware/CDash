@@ -161,6 +161,7 @@
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/home"/> </xsl:attribute>Home</a></li>
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/documentation"/> </xsl:attribute>Documentation</a></li>
         <li><a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/svn"/> </xsl:attribute>Repository</a></li>
+        <li><a><xsl:attribute name="href">graphViewer.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/> </xsl:attribute>Graph</a></li>
 
         <li>
           <xsl:if test="string-length(cdash/user/projectrole)>0">

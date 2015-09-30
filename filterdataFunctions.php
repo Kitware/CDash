@@ -580,6 +580,60 @@ class ViewTestPhpFilters extends DefaultFilters
   }
 }
 
+class graphViewerphpFilters extends DefaultFilters
+{
+  public function getDefaultFilter()
+  {
+    return array(
+      'field' => 'testname',
+      'fieldtype' => 'string',
+      'compare' => 63,
+      'value' => '',
+    );
+  }
+
+  public function getFilterDefinitionsXML()
+  {
+    $xml = '';
+    $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
+    $xml .= getFilterDefinitionXML('measurement', 'Measurement', 'string', '', '');
+    $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
+
+    return $xml;
+  }
+
+  public function getSqlField($field)
+  {
+  $sql_field = '';
+  switch (strtolower($field))
+  {
+
+    case 'testname':
+    {
+      $sql_field = "test.name";
+    }
+    break;
+
+    case 'site':
+    {
+      $sql_field = "site.name";
+    }
+    break;
+
+    case 'measurement':
+    {
+      $sql_field = "testmeasurement.name";
+    }
+    break;
+
+    default:
+      trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
+    break;
+  }
+  return $sql_field;
+  }
+}
+
 
 // Factory method to create page specific filters:
 //
@@ -611,6 +665,13 @@ function createPageSpecificFilters($page_id)
     case 'viewTest.php':
     {
       return new ViewTestPhpFilters();
+    }
+    break;
+
+    case 'graphViewer.php':
+    case 'showtestmeasurementdatagraphviewerphp.php':
+    {
+      return new graphViewerphpFilters();
     }
     break;
 
@@ -930,7 +991,7 @@ function get_filterdata_from_request($page_id = '')
     @$add = $_REQUEST['add'.$i];
     @$remove = $_REQUEST['remove'.$i];
 
-    $fieldinfo = split('/', $fieldinfo, 2);
+    $fieldinfo = explode('/', $fieldinfo, 2);
     $field = $fieldinfo[0];
     $fieldtype = $fieldinfo[1];
 
