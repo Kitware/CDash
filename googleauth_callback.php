@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("cdash/common.php");
 include("cdash/config.php");
 require_once("cdash/pdo.php");
@@ -56,6 +56,10 @@ require_once("cdash/pdo.php");
     );
 
     $redirectURI = strtok(get_server_URI(false), '?');
+    if (strpos($redirectURI, "googleauth_callback.php") === FALSE)
+      {
+      $redirectURI .= '/googleauth_callback.php';
+      }
 
     $postData = join('&', array(
       'grant_type=authorization_code',
