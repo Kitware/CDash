@@ -18,30 +18,26 @@
 // It is assumed that appropriate headers should be included before including this file
 
 /** Test Measurement */
-class TestMeasurement
+class testmeasurement
 {
-  var $Name;
-  var $Type;
-  var $Value;
-  var $TestId;
+    public $Name;
+    public $Type;
+    public $Value;
+    public $TestId;
       
   // Save in the database
-  function Insert()
-    {
-    $name = pdo_real_escape_string($this->Name);
-    $type = pdo_real_escape_string($this->Type);
-    $value = pdo_real_escape_string($this->Value);
+  public function Insert()
+  {
+      $name = pdo_real_escape_string($this->Name);
+      $type = pdo_real_escape_string($this->Type);
+      $value = pdo_real_escape_string($this->Value);
 
-    $query = "INSERT INTO testmeasurement (testid,name,type,value)
-              VALUES ('$this->TestId','$name','$type','$value')";                     
-    if(!pdo_query($query))
-      {
-      add_last_sql_error("TestMeasurement Insert");
-      return false;
-      }  
-    return true;
-    }  // end Insert  
-    
+      $query = "INSERT INTO testmeasurement (testid,name,type,value)
+              VALUES ('$this->TestId','$name','$type','$value')";
+      if (!pdo_query($query)) {
+          add_last_sql_error("TestMeasurement Insert");
+          return false;
+      }
+      return true;
+  }  // end Insert
 }
-
-?>

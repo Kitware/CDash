@@ -21,36 +21,31 @@ include_once('api.php');
 
 class RepositoryAPI extends CDashAPI
 {
-  /** return the example URL  */
+    /** return the example URL  */
   private function ExampleURL()
-    {
-    include_once('cdash/common.php');
-    include_once('cdash/repository.php');
+  {
+      include_once('cdash/common.php');
+      include_once('cdash/repository.php');
 
-    if(!isset($this->Parameters['url']))
-      {
-      echo "url parameter not set";
-      return;
+      if (!isset($this->Parameters['url'])) {
+          echo "url parameter not set";
+          return;
       }
-    if(!isset($this->Parameters['type']))
-      {
-      echo "type parameter not set";
-      return;
+      if (!isset($this->Parameters['type'])) {
+          echo "type parameter not set";
+          return;
       }
 
-    $url = $this->Parameters['url'];
-    $functionname = 'get_'.strtolower($this->Parameters['type']).'_diff_url';
-    return $functionname($url, 'DIRECTORYNAME', 'FILENAME', 'REVISION');
-    }
+      $url = $this->Parameters['url'];
+      $functionname = 'get_'.strtolower($this->Parameters['type']).'_diff_url';
+      return $functionname($url, 'DIRECTORYNAME', 'FILENAME', 'REVISION');
+  }
 
   /** Run function */
-  function Run()
-    {
-    switch($this->Parameters['task'])
-      {
+  public function Run()
+  {
+      switch ($this->Parameters['task']) {
       case 'exampleurl': return $this->ExampleURL();
       }
-    }
+  }
 }
-
-?>

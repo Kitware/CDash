@@ -7,28 +7,27 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class UserStatisticsTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testUserStatistics()
+    public function testUserStatistics()
     {
-    $this->login();
-    $this->get($this->url."/userStatistics.php?projectid=1");
+        $this->login();
+        $this->get($this->url."/userStatistics.php?projectid=1");
 
     // No project selected
     $this->get($this->url."/userStatistics.php");
 
     // Cover all date ranges
     $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"lastweek"));
-    $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"thismonth"));
-    $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"lastmonth"));
-    $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"thisyear"));
+        $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"thismonth"));
+        $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"lastmonth"));
+        $this->post($this->url."/userStatistics.php?projectid=1", array("range"=>"thisyear"));
 
     // Cover no user id case
     $this->logout();
-    $this->get($this->url."/userStatistics.php");
+        $this->get($this->url."/userStatistics.php");
     }
 }
-?>

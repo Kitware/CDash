@@ -26,76 +26,67 @@ include("cdash/version.php");
 include_once('cdash/common.php');
 include_once("cdash/ctestparser.php");
 
-if($argc != 2)
-{
-  print "Usage: php $argv[0] directory \n";
-  return -1;
+if ($argc != 2) {
+    print "Usage: php $argv[0] directory \n";
+    return -1;
 }
 
 $directory=$argv[1];
 set_time_limit(0);
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 print "checking new build files $directory \n";
 
 // Write the current time in the file
 $lastcheckfile = $directory."/lastcheck";
 @$lastcheck = file_get_contents($lastcheckfile);
-if(!empty($lastcheck))
-  {
-  print "last check was ".date("Y-m-d H:i:s",$lastcheck)."\n";
-  }
-$handle = fopen($lastcheckfile,"wb");  
-fwrite($handle,time());
+if (!empty($lastcheck)) {
+    print "last check was ".date("Y-m-d H:i:s", $lastcheck)."\n";
+}
+$handle = fopen($lastcheckfile, "wb");
+fwrite($handle, time());
 fclose($handle);
 unset($handle);
 
 $files = glob($directory.'/*.xml');
 $filelist = array();
-foreach($files as $file)
-  {
-  if(filemtime($file) > $lastcheck)
-    { 
-    $filelist[] = $file;
+foreach ($files as $file) {
+    if (filemtime($file) > $lastcheck) {
+        $filelist[] = $file;
     }
-  } // end foreach
+} // end foreach
 
-$i = 0; 
+$i = 0;
 $n = count($filelist);
-foreach($filelist as $filename)
-  {
-  ++$i;
+foreach ($filelist as $filename) {
+    ++$i;
 
   # split on path separator
   $pathParts = split("[/\\]", $filename);
   # split on cdash separator "_"
   $cdashParts = split("[_]", $pathParts[count($pathParts)-1]);
-  $projectid = get_project_id($cdashParts[0]);
+    $projectid = get_project_id($cdashParts[0]);
 
-  if($projectid != -1)
-    {
-    $name = get_project_name($projectid);
-    echo 'Project ['.$name.'] importing file ('.$i.'/'.$n.'): '.$filename."\n";
-    ob_flush();
-    flush();
+    if ($projectid != -1) {
+        $name = get_project_name($projectid);
+        echo 'Project ['.$name.'] importing file ('.$i.'/'.$n.'): '.$filename."\n";
+        ob_flush();
+        flush();
 
-    $handle = fopen($filename,"r");
-    ctest_parse($handle,$projectid);
-    fclose($handle);
-    unset($handle);
+        $handle = fopen($filename, "r");
+        ctest_parse($handle, $projectid);
+        fclose($handle);
+        unset($handle);
+    } else {
+        echo 'Project id not found - skipping file ('.$i.'/'.$n.'): '.$filename."\n";
+        ob_flush();
+        flush();
     }
-  else
-    {
-    echo 'Project id not found - skipping file ('.$i.'/'.$n.'): '.$filename."\n";
-    ob_flush();
-    flush();
-    }
-  }
+}
 
 echo 'Import backup complete. '.$i.' files processed.'."\n";
 echo "\n";
 
 return 0;
-?>

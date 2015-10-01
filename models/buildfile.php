@@ -16,95 +16,84 @@
 
 =========================================================================*/
 /** BuildError */
-class BuildFile
+class buildfile
 {
-  var $Type;
-  var $Filename;
-  var $md5;
-  var $BuildId;
+    public $Type;
+    public $Filename;
+    public $md5;
+    public $BuildId;
 
   // Insert in the database (no update possible)
-  function Insert()
-    {
-    if(!$this->BuildId)
-      {
-      echo "BuildFile::Insert(): BuildId not set<br>";
-      return false;
+  public function Insert()
+  {
+      if (!$this->BuildId) {
+          echo "BuildFile::Insert(): BuildId not set<br>";
+          return false;
       }
 
-    if(!$this->Type)
-      {
-      echo "BuildFile::Insert(): Type not set<br>";
-      return false;
+      if (!$this->Type) {
+          echo "BuildFile::Insert(): Type not set<br>";
+          return false;
       }
 
-    if(!$this->md5)
-      {
-      echo "BuildFile::Insert(): md5 not set<br>";
-      return false;
+      if (!$this->md5) {
+          echo "BuildFile::Insert(): md5 not set<br>";
+          return false;
       }
 
-    if(!$this->Filename)
-      {
-      echo "BuildFile::Insert(): Filename not set<br>";
-      return false;
+      if (!$this->Filename) {
+          echo "BuildFile::Insert(): Filename not set<br>";
+          return false;
       }
 
-    $filename = pdo_real_escape_string($this->Filename);
-    $type = pdo_real_escape_string($this->Type);
-    $md5 = pdo_real_escape_string($this->md5);
+      $filename = pdo_real_escape_string($this->Filename);
+      $type = pdo_real_escape_string($this->Type);
+      $md5 = pdo_real_escape_string($this->md5);
 
     // Check if we already have a row
     $query = "SELECT buildid FROM buildfile WHERE buildid=".qnum($this->BuildId)." AND md5='".$md5."'";
-    $query_result = pdo_query($query);
-    if(!$query_result)
-      {
-      add_last_sql_error("BuildFile Insert",0,$this->BuildId);
-      return false;
+      $query_result = pdo_query($query);
+      if (!$query_result) {
+          add_last_sql_error("BuildFile Insert", 0, $this->BuildId);
+          return false;
       }
 
-    if(pdo_num_rows($query_result)>0)
-      {
-      return false;
+      if (pdo_num_rows($query_result)>0) {
+          return false;
       }
 
-    $query = "INSERT INTO buildfile (buildid,type,filename,md5)
+      $query = "INSERT INTO buildfile (buildid,type,filename,md5)
               VALUES (".qnum($this->BuildId).",'".$type."','".$filename."','".$md5."')";
-    if(!pdo_query($query))
-      {
-      add_last_sql_error("BuildFile Insert",0,$this->BuildId);
-      return false;
+      if (!pdo_query($query)) {
+          add_last_sql_error("BuildFile Insert", 0, $this->BuildId);
+          return false;
       }
 
-    return true;
-    } // end insert
+      return true;
+  } // end insert
 
   // Returns the buildid associated with this file's MD5 if it has been
   // uploaded previously, false otherwise.
-  function MD5Exists()
-    {
-    $md5 = pdo_real_escape_string($this->md5);
+  public function MD5Exists()
+  {
+      $md5 = pdo_real_escape_string($this->md5);
 
-    $row = pdo_single_row_query(
+      $row = pdo_single_row_query(
       "SELECT buildid FROM buildfile WHERE md5='".$md5."'");
 
-    if (empty($row))
-      {
-      return false;
+      if (empty($row)) {
+          return false;
       }
 
-    return $row[0];
-    } // end MD5Exists
+      return $row[0];
+  } // end MD5Exists
 
   /** Delete this BuildFile */
-  function Delete()
-    {
-    if(!$this->BuildId || !$this->md5)
-      {
-      return false;
+  public function Delete()
+  {
+      if (!$this->BuildId || !$this->md5) {
+          return false;
       }
-    pdo_query("DELETE FROM buildfile WHERE buildid=$this->BuildId AND md5='$this->md5'");
-    }
-
+      pdo_query("DELETE FROM buildfile WHERE buildid=$this->BuildId AND md5='$this->md5'");
+  }
 }
-?>

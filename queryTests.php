@@ -23,40 +23,35 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
-include("cdash/version.php"); 
+include("cdash/version.php");
 require_once("filterdataFunctions.php");
 
 
 @$date = $_GET["date"];
-if ($date != NULL)
-  {
-  $date = htmlspecialchars(pdo_real_escape_string($date));
-  }
+if ($date != null) {
+    $date = htmlspecialchars(pdo_real_escape_string($date));
+}
 
 @$projectname = $_GET["project"];
-if ($projectname != NULL)
-  {
-  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
-  }
+if ($projectname != null) {
+    $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+}
 
 
 $start = microtime_float();
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
-if ($projectname == '')
-  {
-  $project = pdo_single_row_query("SELECT * FROM project LIMIT 1");
-  }
-else
-  {
-  $project = pdo_single_row_query("SELECT * FROM project WHERE name='$projectname'");
-  }
+if ($projectname == '') {
+    $project = pdo_single_row_query("SELECT * FROM project LIMIT 1");
+} else {
+    $project = pdo_single_row_query("SELECT * FROM project WHERE name='$projectname'");
+}
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $project['id']);
 
-list ($previousdate, $currentstarttime, $nextdate) =
+list($previousdate, $currentstarttime, $nextdate) =
   get_dates($date, $project['nightlytime']);
 
 $xml = begin_XML_for_XSLT();
@@ -68,25 +63,21 @@ $xml .= get_cdash_dashboard_xml_by_name($project['name'], $date);
 $filterdata = get_filterdata_from_request();
 $filter_sql = $filterdata['sql'];
 $limit_sql = '';
-if ($filterdata['limit']>0)
-{
-  $limit_sql = ' LIMIT '.$filterdata['limit'];
+if ($filterdata['limit']>0) {
+    $limit_sql = ' LIMIT '.$filterdata['limit'];
 }
 $xml .= $filterdata['xml'];
 
 
 $xml .= "<menu>";
 
-if ($date == '')
-  {
-  $back = "index.php?project=".urlencode($project['name']);
-  }
-else
-  {
-  $back = "index.php?project=".urlencode($project['name'])."&date=".$date;
-  }
+if ($date == '') {
+    $back = "index.php?project=".urlencode($project['name']);
+} else {
+    $back = "index.php?project=".urlencode($project['name'])."&date=".$date;
+}
 
-$xml .= add_XML_value("back",$back);
+$xml .= add_XML_value("back", $back);
 
 $limit_param = "&limit=".$filterdata['limit'];
 
@@ -96,15 +87,12 @@ $xml .= add_XML_value("previous",
 $xml .= add_XML_value("current",
   "queryTests.php?project=".urlencode($project['name']).$limit_param);
 
-if(has_next_date($date, $currentstarttime))
-  {
-  $xml .= add_XML_value("next",
+if (has_next_date($date, $currentstarttime)) {
+    $xml .= add_XML_value("next",
     "queryTests.php?project=".urlencode($project['name'])."&date=".$nextdate.$limit_param);
-  }
-else
-  {
-  $xml .= add_XML_value("nonext","1");
-  }
+} else {
+    $xml .= add_XML_value("nonext", "1");
+}
 
 $xml .= "</menu>";
 
@@ -120,20 +108,19 @@ $xml .= "<builds>\n";
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime + 3600*24;
 
-$beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-$end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
+$beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
+$end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
 // Add the date/time
-$xml .= add_XML_value("projectid",$project['id']);
-$xml .= add_XML_value("currentstarttime",$currentstarttime);
-$xml .= add_XML_value("teststarttime",date(FMT_DATETIME,$beginning_timestamp));
-$xml .= add_XML_value("testendtime",date(FMT_DATETIME,$end_timestamp));
+$xml .= add_XML_value("projectid", $project['id']);
+$xml .= add_XML_value("currentstarttime", $currentstarttime);
+$xml .= add_XML_value("teststarttime", date(FMT_DATETIME, $beginning_timestamp));
+$xml .= add_XML_value("testendtime", date(FMT_DATETIME, $end_timestamp));
 
 
 $date_clause = '';
-if (!$filterdata['hasdateclause'])
-{
-  $date_clause = "AND b.starttime>='$beginning_UTCDate' AND b.starttime<'$end_UTCDate'";
+if (!$filterdata['hasdateclause']) {
+    $date_clause = "AND b.starttime>='$beginning_UTCDate' AND b.starttime<'$end_UTCDate'";
 }
 
 
@@ -155,39 +142,37 @@ $query = "SELECT
 $result = pdo_query($query);
 
 
-while ($row = pdo_fetch_array($result))
-  {
-  $buildid = $row["id"];
-  $testid = $row["testid"];
+while ($row = pdo_fetch_array($result)) {
+    $buildid = $row["id"];
+    $testid = $row["testid"];
 
-  $xml .= "<build>\n";
+    $xml .= "<build>\n";
 
-  $xml .= add_XML_value("testname", $row["testname"]);
-  $xml .= add_XML_value("site", $row["sitename"]);
-  $xml .= add_XML_value("buildName", $row["name"]);
+    $xml .= add_XML_value("testname", $row["testname"]);
+    $xml .= add_XML_value("site", $row["sitename"]);
+    $xml .= add_XML_value("buildName", $row["name"]);
 
-  $xml .= add_XML_value("buildstarttime",
+    $xml .= add_XML_value("buildstarttime",
     date(FMT_DATETIMETZ, strtotime($row["starttime"]." UTC")));
     // use the default timezone, same as index.php
 
   $xml .= add_XML_value("time", $row["time"]);
-  $xml .= add_XML_value("details", $row["details"]) . "\n";
+    $xml .= add_XML_value("details", $row["details"]) . "\n";
 
-  $siteLink = "viewSite.php?siteid=".$row["siteid"];
-  $xml .= add_XML_value("siteLink", $siteLink);
+    $siteLink = "viewSite.php?siteid=".$row["siteid"];
+    $xml .= add_XML_value("siteLink", $siteLink);
 
-  $buildSummaryLink = "buildSummary.php?buildid=$buildid";
-  $xml .= add_XML_value("buildSummaryLink", $buildSummaryLink);
+    $buildSummaryLink = "buildSummary.php?buildid=$buildid";
+    $xml .= add_XML_value("buildSummaryLink", $buildSummaryLink);
 
-  $testDetailsLink = "testDetails.php?test=$testid&build=$buildid";
-  $xml .= add_XML_value("testDetailsLink", $testDetailsLink);
+    $testDetailsLink = "testDetails.php?test=$testid&build=$buildid";
+    $xml .= add_XML_value("testDetailsLink", $testDetailsLink);
 
-  switch($row["status"])
-    {
+    switch ($row["status"]) {
     case "passed":
       $xml .= add_XML_value("status", "Passed");
       $xml .= add_XML_value("statusclass", "normal");
-      break; 
+      break;
 
     case "failed":
       $xml .= add_XML_value("status", "Failed");
@@ -200,29 +185,24 @@ while ($row = pdo_fetch_array($result))
       break;
     }
 
-  if($project['showtesttime'])
-    {
-    if($row["timestatus"] < $project['testtimemaxstatus'])
-      {
-      $xml .= add_XML_value("timestatus", "Passed");
-      $xml .= add_XML_value("timestatusclass", "normal");
-      }
-    else
-      {
-      $xml .= add_XML_value("timestatus", "Failed");
-      $xml .= add_XML_value("timestatusclass", "error");
-      }
+    if ($project['showtesttime']) {
+        if ($row["timestatus"] < $project['testtimemaxstatus']) {
+            $xml .= add_XML_value("timestatus", "Passed");
+            $xml .= add_XML_value("timestatusclass", "normal");
+        } else {
+            $xml .= add_XML_value("timestatus", "Failed");
+            $xml .= add_XML_value("timestatusclass", "error");
+        }
     }
 
-  $xml .= "</build>\n";
-  }
+    $xml .= "</build>\n";
+}
 
 $xml .= "</builds>\n";
 
 $end = microtime_float();
-$xml .= "<generationtime>".round($end-$start,3)."</generationtime>";
+$xml .= "<generationtime>".round($end-$start, 3)."</generationtime>";
 
 $xml .= "</cdash>\n";
 
 generate_XSLT($xml, "queryTests");
-?>

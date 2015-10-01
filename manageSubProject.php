@@ -1,1 +1,1 @@
-<?php readfile("views/manageSubProject.html"); ?>
+<?php readfile("views/manageSubProject.html");

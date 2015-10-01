@@ -23,29 +23,26 @@ include_once("cdash/common.php");
 include("cdash/version.php");
 
 @$projectname = $_GET["project"];
-if ($projectname != NULL)
-  {
-  $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
-  }
+if ($projectname != null) {
+    $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+}
 
 @$date = $_GET["date"];
-if ($date != NULL)
-  {
-  $date = htmlspecialchars(pdo_real_escape_string($date));
-  }
+if ($date != null) {
+    $date = htmlspecialchars(pdo_real_escape_string($date));
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 $projectid = get_project_id($projectname);
 
-if($projectid == -1)
-  {
-  echo "Wrong project name";
-  return;
-  }
+if ($projectid == -1) {
+    echo "Wrong project name";
+    return;
+}
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],$projectid);
+checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
 $xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : Sites map for ".$projectname."</title>";
@@ -58,44 +55,40 @@ $xml .= "<title>CDash</title>";
 $xml .= "<date>".$date."</date>";
 
 // Find the correct google map key
-foreach($CDASH_GOOGLE_MAP_API_KEY as $key=>$value)
-  {
-  if(strstr($_SERVER['HTTP_HOST'],$key) !== FALSE)
-    {
-    $apikey = $value;
-    break;
+foreach ($CDASH_GOOGLE_MAP_API_KEY as $key=>$value) {
+    if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
+        $apikey = $value;
+        break;
     }
-  } 
-$xml .=  add_XML_value("googlemapkey",$apikey);
-$xml .=  add_XML_value("projectname",$projectname);
-$xml .=  add_XML_value("projectname_encoded",urlencode($projectname));
+}
+$xml .=  add_XML_value("googlemapkey", $apikey);
+$xml .=  add_XML_value("projectname", $projectname);
+$xml .=  add_XML_value("projectname_encoded", urlencode($projectname));
 $xml .= "</dashboard>";
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
 
-list ($previousdate, $currenttime, $nextdate) = get_dates($date,$project_array["nightlytime"]);
+list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
     
 $nightlytime = strtotime($project_array["nightlytime"]);
   
-$nightlyhour = gmdate("H",$nightlytime);
-$nightlyminute = gmdate("i",$nightlytime);
-$nightlysecond = gmdate("s",$nightlytime);
+$nightlyhour = gmdate("H", $nightlytime);
+$nightlyminute = gmdate("i", $nightlytime);
+$nightlysecond = gmdate("s", $nightlytime);
   
 $end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
   
-$beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp),gmdate("d",$end_timestamp),gmdate("Y",$end_timestamp));
-if($end_timestamp<$beginning_timestamp)
-  {
-  $beginning_timestamp = gmmktime($nightlyhour,$nightlyminute,$nightlysecond,gmdate("m",$end_timestamp-24*3600),gmdate("d",$end_timestamp-24*3600),gmdate("Y",$end_timestamp-24*3600));
-  }
+$beginning_timestamp = gmmktime($nightlyhour, $nightlyminute, $nightlysecond, gmdate("m", $end_timestamp), gmdate("d", $end_timestamp), gmdate("Y", $end_timestamp));
+if ($end_timestamp<$beginning_timestamp) {
+    $beginning_timestamp = gmmktime($nightlyhour, $nightlyminute, $nightlysecond, gmdate("m", $end_timestamp-24*3600), gmdate("d", $end_timestamp-24*3600), gmdate("Y", $end_timestamp-24*3600));
+}
   
-$beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-$end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);            
+$beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
+$end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-if($CDASH_DB_TYPE == "pgsql") 
-   {
-   $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
+if ($CDASH_DB_TYPE == "pgsql") {
+    $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
                      si.description,
                      si.numberphysicalcpus,s.ip,s.latitude,s.longitude, 
                      ".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id AS userid
@@ -108,10 +101,8 @@ if($CDASH_DB_TYPE == "pgsql")
                      AND b.projectid='$projectid' GROUP BY s.id,s.name,si.processorclockfrequency,
                      si.description,
                      si.numberphysicalcpus,s.ip,s.latitude,s.longitude,".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id");
-   }
-else
-  {
-  $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
+} else {
+    $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
                      si.description,
                      si.numberphysicalcpus,s.ip,s.latitude,s.longitude, 
                      ".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id AS userid
@@ -122,28 +113,26 @@ else
                      AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                      AND si.siteid=s.id
                      AND b.projectid='$projectid' GROUP BY s.id");
-  }  
+}
    
 echo pdo_error();
 
-while($site_array = pdo_fetch_array($site))
-  {
-  $xml .= "<site>";
-  $xml .= add_XML_value("name",$site_array["name"]);
-  $xml .= add_XML_value("id",$site_array["id"]);
-  $xml .= add_XML_value("description",$site_array["description"]);
-  $xml .= add_XML_value("processor_speed",getByteValueWithExtension($site_array["processorclockfrequency"]*1024*1024));
-  $xml .= add_XML_value("numberphysicalcpus",$site_array["numberphysicalcpus"]);
-  $xml .= add_XML_value("latitude",$site_array["latitude"]);
-  $xml .= add_XML_value("longitude",$site_array["longitude"]);
-  $xml .= add_XML_value("longitude",$site_array["longitude"]);
-  $xml .= add_XML_value("maintainer_name",$site_array["firstname"]." ".$site_array["lastname"]);
-  $xml .= add_XML_value("maintainer_id",$site_array["userid"]);
-  $xml .= "</site>";
-  }
+while ($site_array = pdo_fetch_array($site)) {
+    $xml .= "<site>";
+    $xml .= add_XML_value("name", $site_array["name"]);
+    $xml .= add_XML_value("id", $site_array["id"]);
+    $xml .= add_XML_value("description", $site_array["description"]);
+    $xml .= add_XML_value("processor_speed", getByteValueWithExtension($site_array["processorclockfrequency"]*1024*1024));
+    $xml .= add_XML_value("numberphysicalcpus", $site_array["numberphysicalcpus"]);
+    $xml .= add_XML_value("latitude", $site_array["latitude"]);
+    $xml .= add_XML_value("longitude", $site_array["longitude"]);
+    $xml .= add_XML_value("longitude", $site_array["longitude"]);
+    $xml .= add_XML_value("maintainer_name", $site_array["firstname"]." ".$site_array["lastname"]);
+    $xml .= add_XML_value("maintainer_id", $site_array["userid"]);
+    $xml .= "</site>";
+}
 
 $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml,"viewMap");
-?>
+generate_XSLT($xml, "viewMap");

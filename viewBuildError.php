@@ -1,1 +1,1 @@
-<?php readfile("views/viewBuildError.html"); ?>
+<?php readfile("views/viewBuildError.html");

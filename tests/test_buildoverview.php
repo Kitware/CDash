@@ -7,28 +7,24 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class BuildOverviewTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testBuildOverview()
+    public function testBuildOverview()
     {
-    $this->login();
-    $this->get($this->url."/buildOverview.php");
-    if(strpos($this->getBrowser()->getContentAsText(), "project not specified") === false)
-      {
-      $this->fail("'project not specified' not found when expected");
-      return 1;
-      }
-    $this->get($this->url."/buildOverview.php?project=InsightExample");
-    if(strpos($this->getBrowser()->getContentAsText(), "Build summary") === false)
-      {
-      $this->fail("'Build summary' not found when expected");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->login();
+        $this->get($this->url."/buildOverview.php");
+        if (strpos($this->getBrowser()->getContentAsText(), "project not specified") === false) {
+            $this->fail("'project not specified' not found when expected");
+            return 1;
+        }
+        $this->get($this->url."/buildOverview.php?project=InsightExample");
+        if (strpos($this->getBrowser()->getContentAsText(), "Build summary") === false) {
+            $this->fail("'Build summary' not found when expected");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-
-?>
