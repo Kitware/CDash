@@ -7,19 +7,17 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ViewChangesTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testViewChanges()
+    public function testViewChanges()
     {
-    $content = $this->connect($this->url . "/viewChanges.php?project=TestCompressionExample");
-    if($content == false)
-      {
-      return;
-      }
-    $this->assertText('Nightly Changes');
+        $content = $this->connect($this->url . "/viewChanges.php?project=TestCompressionExample");
+        if ($content == false) {
+            return;
+        }
+        $this->assertText('Nightly Changes');
     }
 }
-?>

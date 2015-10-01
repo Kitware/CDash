@@ -49,7 +49,6 @@
 // If you change the default setting, please make sure to also configure
 // the same directory in phpunit_coverage.php. Also note that the webserver
 // needs write access to the directory.
-if ( extension_loaded('xdebug')) 
-{
+if (extension_loaded('xdebug')) {
     xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
 }

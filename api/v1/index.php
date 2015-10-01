@@ -26,11 +26,10 @@ require("api_build.php");
 require("api_user.php");
 require("api_repository.php");
 
-if(!isset($_GET['method']))
-  {
-  echo "Method should be set: method=...";
-  return;
-  }
+if (!isset($_GET['method'])) {
+    echo "Method should be set: method=...";
+    return;
+}
 $method = htmlspecialchars(pdo_real_escape_string($_GET['method']));
 
 $classname = ucfirst($method).'API';
@@ -40,4 +39,3 @@ $results = $class->Run();
 
 // Return json by default
 echo json_encode($results);
-?>

@@ -10,22 +10,20 @@ require_once('cdash/pdo.php');
 
 class SVNInfoTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
-    $this->deleteLog($this->logfilename);
+        parent::__construct();
+        $this->deleteLog($this->logfilename);
     }
 
-  function testSVNInfo()
+    public function testSVNInfo()
     {
-    $this->login();
-    $this->get($this->url."/gitinfo.php");
-    if(strpos($this->getBrowser()->getContentAsText(), "phpinfo") === false)
-      {
-      $this->fail("'phpinfo' not found when expected.");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->login();
+        $this->get($this->url."/gitinfo.php");
+        if (strpos($this->getBrowser()->getContentAsText(), "phpinfo") === false) {
+            $this->fail("'phpinfo' not found when expected.");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-?>

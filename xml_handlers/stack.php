@@ -15,46 +15,46 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-class Stack
+class stack
 {
-  private $stack = array();
+    private $stack = array();
   
-  public function __construct(){}
+    public function __construct()
+    {
+    }
   
-  public function size()
-   { 
-   return count($this->stack); 
-   }
+    public function size()
+    {
+        return count($this->stack);
+    }
 
-  public function push($e)
+    public function push($e)
     {
-    $this->stack[] = $e;
-    return $this;
+        $this->stack[] = $e;
+        return $this;
     }
   
-  public function pop()
+    public function pop()
     {
-    array_pop($this->stack);
-    return $this;
+        array_pop($this->stack);
+        return $this;
     }
   
-  public function top()
+    public function top()
     {
-    return $this->stack[count($this->stack)-1]; 
+        return $this->stack[count($this->stack)-1];
     }
   
-  public function isEmpty()
+    public function isEmpty()
     {
-    return count($this->stack) == 0;
+        return count($this->stack) == 0;
     }
   
-  public function at($index)
+    public function at($index)
     {
-    if($index < 0 || $index >= count($this->stack))
-      {
-      return null;
-      }
-    return $this->stack[$index];
+        if ($index < 0 || $index >= count($this->stack)) {
+            return null;
+        }
+        return $this->stack[$index];
     }
 }
-?>

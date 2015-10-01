@@ -7,24 +7,22 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class LoginTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testLogin()
+    public function testLogin()
     {
-    $content = $this->login('baduser@badhost.com');
-    $this->assertText("Wrong email or password.");
+        $content = $this->login('baduser@badhost.com');
+        $this->assertText("Wrong email or password.");
 
-    $content = $this->login('simpletest@localhost', 'badpasswd');
-    $this->assertText("Wrong email or password.");
+        $content = $this->login('simpletest@localhost', 'badpasswd');
+        $this->assertText("Wrong email or password.");
 
-    $content = $this->logout();
-    $this->assertText("Login");
+        $content = $this->logout();
+        $this->assertText("Login");
 
-    $this->pass('Test passed');
+        $this->pass('Test passed');
     }
 }
-
-?>

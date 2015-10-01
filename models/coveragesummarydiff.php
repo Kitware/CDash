@@ -15,17 +15,16 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-class CoverageSummaryDiff
+class coveragesummarydiff
 {
-  var $LocTested;
-  var $LocUntested;
-  var $BuildId;
+    public $LocTested;
+    public $LocUntested;
+    public $BuildId;
   
-  function Insert()
+    public function Insert()
     {
-    pdo_query("INSERT INTO coveragesummarydiff (buildid,loctested,locuntested) 
+        pdo_query("INSERT INTO coveragesummarydiff (buildid,loctested,locuntested) 
               VALUES(".qnum($this->BuildId).",".qnum($this->LocTested).",".qnum($this->LocUntested).")");
-    add_last_sql_error("CoverageSummary:ComputeDifference");
+        add_last_sql_error("CoverageSummary:ComputeDifference");
     }
 }
-?>

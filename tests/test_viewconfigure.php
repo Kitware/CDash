@@ -7,21 +7,19 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ViewConfigureTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testViewConfigure()
+    public function testViewConfigure()
     {
-    $this->login();
-    $this->get($this->url."/viewConfigure.php?buildid=1");
-    if(strpos($this->getBrowser()->getContentAsText(), "Win32-VCExpress") === false)
-      {
-      $this->fail("'Win32-VCExpress' not found when expected.");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->login();
+        $this->get($this->url."/viewConfigure.php?buildid=1");
+        if (strpos($this->getBrowser()->getContentAsText(), "Win32-VCExpress") === false) {
+            $this->fail("'Win32-VCExpress' not found when expected.");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-?>

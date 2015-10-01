@@ -1,1 +1,1 @@
-<?php readfile("views/viewTest.html"); ?>
+<?php readfile("views/viewTest.html");

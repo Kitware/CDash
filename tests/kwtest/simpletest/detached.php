@@ -18,7 +18,8 @@ require_once(dirname(__FILE__) . '/shell_tester.php');
  *    @package SimpleTest
  *    @subpackage UnitTester
  */
-class DetachedTestCase {
+class DetachedTestCase
+{
     private $command;
     private $dry_command;
     private $size;
@@ -29,7 +30,8 @@ class DetachedTestCase {
      *    @param string $dry_command   Script for dry run.
      *    @access public
      */
-    function __construct($command, $dry_command = false) {
+    public function __construct($command, $dry_command = false)
+    {
         $this->command = $command;
         $this->dry_command = $dry_command ? $dry_command : $command;
         $this->size = false;
@@ -40,7 +42,8 @@ class DetachedTestCase {
      *    @return string       Name of the test.
      *    @access public
      */
-    function getLabel() {
+    public function getLabel()
+    {
         return $this->command;
     }
 
@@ -52,7 +55,8 @@ class DetachedTestCase {
      *    @returns boolean                   True if no failures.
      *    @access public
      */
-    function run(&$reporter) {
+    public function run(&$reporter)
+    {
         $shell = &new SimpleShell();
         $shell->execute($this->command);
         $parser = &$this->createParser($reporter);
@@ -68,7 +72,8 @@ class DetachedTestCase {
      *    @return integer       Number of test cases.
      *    @access public
      */
-    function getSize() {
+    public function getSize()
+    {
         if ($this->size === false) {
             $shell = &new SimpleShell();
             $shell->execute($this->dry_command);
@@ -89,8 +94,8 @@ class DetachedTestCase {
      *    @return SimpleTestXmlListener      XML reader.
      *    @access protected
      */
-    protected function &createParser(&$reporter) {
+    protected function &createParser(&$reporter)
+    {
         return new SimpleTestXmlParser($reporter);
     }
 }
-?>

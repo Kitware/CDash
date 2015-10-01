@@ -31,26 +31,23 @@ $noforcelogin = 1;
 include('login.php');
 
 @$userid = $_GET["userid"];
-if ($userid != NULL)
-  {
-  $userid = pdo_real_escape_numeric($userid);
-  }
+if ($userid != null) {
+    $userid = pdo_real_escape_numeric($userid);
+}
 
-if(!$userid && !isset($_SESSION['cdash']))
-  {
-  echo "Not a valid user id";
-  return;
-  }
+if (!$userid && !isset($_SESSION['cdash'])) {
+    echo "Not a valid user id";
+    return;
+}
 
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    echo "Not a valid buildid!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Find the project variables
 $build = pdo_query("SELECT name,type,siteid,projectid FROM build WHERE id='$buildid'");
@@ -64,79 +61,71 @@ $projectid = $build_array["projectid"];
 @$submit = $_POST["submit"];
 
 @$groupid = $_POST["groupid"];
-if ($groupid != NULL)
-  {
-  $groupid = pdo_real_escape_numeric($groupid);
-  }
+if ($groupid != null) {
+    $groupid = pdo_real_escape_numeric($groupid);
+}
 
 @$expected = $_POST["expected"];
-if ($expected != NULL)
-  {
-  $expected = pdo_real_escape_numeric($expected);
-  }
+if ($expected != null) {
+    $expected = pdo_real_escape_numeric($expected);
+}
 
 @$definerule = $_POST["definerule"];
 @$markexpected = $_POST["markexpected"];
 
-if($markexpected)
-{
-  // If a rule already exists we update it
+if ($markexpected) {
+    // If a rule already exists we update it
   $build2groupexpected = pdo_query("SELECT groupid FROM build2grouprule WHERE groupid='$groupid' AND buildtype='$buildtype'
                                       AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
-  if(pdo_num_rows($build2groupexpected) > 0 )
-    {
-    pdo_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
+    if (pdo_num_rows($build2groupexpected) > 0) {
+        pdo_query("UPDATE build2grouprule SET expected='$expected' WHERE groupid='$groupid' AND buildtype='$buildtype'
                                         AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
-    
-    }
-  else if($expected) // we add the grouprule
-    {
+    } elseif ($expected) {
+        // we add the grouprule
+
     $now = gmdate(FMT_DATETIME);
-    pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
+        pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
                  VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now','1980-01-01 00:00:00')");
     }
 }
 
 @$removebuild = $_POST["removebuild"];
 
-if($removebuild)
-  {
-  add_log("Build #".$buildid." removed manualy","addbuildgroup");
-  remove_build($buildid);
-  }
+if ($removebuild) {
+    add_log("Build #".$buildid." removed manualy", "addbuildgroup");
+    remove_build($buildid);
+}
 
 
-if($submit)
-{
-// Remove the group
+if ($submit) {
+    // Remove the group
 $prevgroup = pdo_fetch_array(pdo_query("SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
-$prevgroupid = $prevgroup["id"]; 
+    $prevgroupid = $prevgroup["id"];
                     
-pdo_query("DELETE FROM build2group WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+    pdo_query("DELETE FROM build2group WHERE groupid='$prevgroupid' AND buildid='$buildid'");
 
 // Insert into the group
 pdo_query("INSERT INTO build2group(groupid,buildid) VALUES ('$groupid','$buildid')");
 
-if($definerule)
-  {
-  // Mark any previous rule as done
+    if ($definerule) {
+        // Mark any previous rule as done
   $now = gmdate(FMT_DATETIME);
-  pdo_query("UPDATE build2grouprule SET endtime='$now'
+        pdo_query("UPDATE build2grouprule SET endtime='$now'
                WHERE groupid='$prevgroupid' AND buildtype='$buildtype'
                AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
 
   // Add the new rule (begin time is set by default by mysql
   pdo_query("INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime) 
                VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','$now','1980-01-01 00:00:00')");
-  }
+    }
 
-return;
+    return;
 }
 
 // Find the groups available for this project
 $group = pdo_query("SELECT name,id FROM buildgroup WHERE id NOT IN 
                      (SELECT groupid as id FROM build2group WHERE buildid='$buildid') 
-                      AND projectid='$projectid'");                    
+                      AND projectid='$projectid'");
 ?>
 
 <head>
@@ -163,33 +152,32 @@ $group = pdo_query("SELECT name,id FROM buildgroup WHERE id NOT IN
   $isexpected = 0;
   $currentgroupid = $currentgroup_array ["id"];
   
-  // This works only for the most recent dashboard (and future)  
+  // This works only for the most recent dashboard (and future)
   $build2groupexpected = pdo_query("SELECT groupid FROM build2grouprule WHERE groupid='$currentgroupid' AND buildtype='$buildtype'
                                       AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00' AND expected='1'");
-  if(pdo_num_rows($build2groupexpected) > 0 )
-    {
-    $isexpected = 1;
-    }  
+  if (pdo_num_rows($build2groupexpected) > 0) {
+      $isexpected = 1;
+  }
   ?>
   <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $currentgroup_array["name"] ?></b>:  </font></td>
   <td bgcolor="#DDDDDD" width="65%" colspan="2"><font size="2"><a href="#" onclick="javascript:markasexpected_click(<?php echo $buildid ?>,<?php echo $currentgroup_array["id"]?>,
-  <?php if($isexpected) {echo "0";} else {echo "1";} ?>)">
+  <?php if ($isexpected) {
+    echo "0";
+} else {
+    echo "1";
+} ?>)">
   [<?php 
-  if($isexpected)
-    {
-    echo "mark as non expected";
-    }
-  else
-    {
-    echo "mark as expected";
-    }
+  if ($isexpected) {
+      echo "mark as non expected";
+  } else {
+      echo "mark as expected";
+  }
   
   ?>]</a> </font></td>
   </tr>
 <?php
-while($group_array = pdo_fetch_array($group))
-  {
-?>
+while ($group_array = pdo_fetch_array($group)) {
+    ?>
   <tr>
     <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array["name"] ?></b>:  </font></td>
     <td bgcolor="#DDDDDD" width="20%"><font size="2"><input id="expected_<?php echo $buildid."_".$group_array["id"] ?>" type="checkbox"/> expected</font></td>
@@ -198,7 +186,8 @@ while($group_array = pdo_fetch_array($group))
     </font></td>
   </tr>
 <?php
-  }
+
+}
 ?>
 <tr>
     <td bgcolor="#DDDDDD" width="35%" colspan="3"><font size="2">

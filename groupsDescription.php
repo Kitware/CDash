@@ -17,10 +17,10 @@
 =========================================================================*/
 include("cdash/config.php");
 require_once("cdash/pdo.php");
-include_once("cdash/common.php"); 
+include_once("cdash/common.php");
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 ?>
 <html>
@@ -40,14 +40,13 @@ pdo_select_db("$CDASH_DB_NAME",$db);
    
    $project = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
    $projectid = get_project_id($project);
-   if($projectid<1)
-     {
-?>
+   if ($projectid<1) {
+       ?>
 </table>
 <center><a href="#" class="jqmClose">Close</a></center>
 <?php
      return;
-     }
+   }
     $group = pdo_query("SELECT buildgroup.name,buildgroup.description
                           FROM buildgroup,buildgroupposition 
                           WHERE buildgroup.projectid='$projectid' 
@@ -55,21 +54,35 @@ pdo_select_db("$CDASH_DB_NAME",$db);
                           AND buildgroup.endtime = '1980-01-01 00:00:00'
                           AND buildgroupposition.endtime = '1980-01-01 00:00:00'
                           ORDER BY buildgroupposition.position ASC");
-    while($group_array = pdo_fetch_array($group))
-    {
-   ?> 
-    <tr class="<?php if($i%2==0) {echo "treven";} else {echo "trodd";} ?>">
-       <td align="center" width="30%"><b><?php echo $group_array["name"]; ?></b></td>
-       <td align="left"><?php echo $group_array["description"]; ?></td>
+    while ($group_array = pdo_fetch_array($group)) {
+        ?> 
+    <tr class="<?php if ($i%2==0) {
+    echo "treven";
+} else {
+    echo "trodd";
+}
+        ?>">
+       <td align="center" width="30%"><b><?php echo $group_array["name"];
+        ?></b></td>
+       <td align="left"><?php echo $group_array["description"];
+        ?></td>
     </tr>
     <?php 
     $i++;
     } ?>
-     <tr class="<?php if($i%2==0) {echo "treven";} else {echo "trodd";} $i++;?>">
+     <tr class="<?php if ($i%2==0) {
+    echo "treven";
+} else {
+    echo "trodd";
+} $i++;?>">
        <td align="center" width="30%"><b>Coverage</b></td>
        <td align="left">Check how many current lines of code are currently tested</td>
     </tr>
-    <tr class="<?php if($i%2==0) {echo "treven";} else {echo "trodd";}?>">
+    <tr class="<?php if ($i%2==0) {
+    echo "treven";
+} else {
+    echo "trodd";
+}?>">
        <td align="center" width="30%"><b>Dynamic Analysis</b></td>
        <td align="left">Check if the current tests have memory defects</td>
     </tr>

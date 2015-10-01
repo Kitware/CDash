@@ -20,50 +20,46 @@ require_once("cdash/pdo.php");
 include('login.php');
 include("cdash/version.php");
 
-if($session_OK) 
-{
-include_once('cdash/common.php');
-include_once("cdash/ctestparser.php");
+if ($session_OK) {
+    include_once('cdash/common.php');
+    include_once("cdash/ctestparser.php");
 
-set_time_limit(0);
+    set_time_limit(0);
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+    pdo_select_db("$CDASH_DB_NAME", $db);
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
+    checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>CDash - Import Backups</title>";
-$xml .= "<menutitle>CDash</menutitle>";
-$xml .= "<menusubtitle>Backups</menusubtitle>";
-$xml .= "<backurl>manageBackup.php</backurl>";
-$alert = "";
+    $xml .= "<title>CDash - Import Backups</title>";
+    $xml .= "<menutitle>CDash</menutitle>";
+    $xml .= "<menusubtitle>Backups</menusubtitle>";
+    $xml .= "<backurl>manageBackup.php</backurl>";
+    $alert = "";
 
-@$Submit = $_POST["Submit"];
+    @$Submit = $_POST["Submit"];
 
-@$filemask = $_POST["filemask"];
-if ($filemask == '')
-{
-  $filemask = "*.xml";
-}
+    @$filemask = $_POST["filemask"];
+    if ($filemask == '') {
+        $filemask = "*.xml";
+    }
 
-if($Submit && $filemask)
-  {
-  $filelist = glob("$CDASH_BACKUP_DIRECTORY/$filemask");
+    if ($Submit && $filemask) {
+        $filelist = glob("$CDASH_BACKUP_DIRECTORY/$filemask");
 
-  $i = 0;
-  $n = count($filelist);
+        $i = 0;
+        $n = count($filelist);
 
-  add_log(
+        add_log(
     "before loop n=".$n,
     "importBackup.php",
     LOG_INFO);
 
-  foreach($filelist as $filename)
-    {
-    ++$i;
-    $projectid = -1;
+        foreach ($filelist as $filename) {
+            ++$i;
+            $projectid = -1;
 
-    add_log(
+            add_log(
       "looping i=".$i." filename=".$filename,
       "importBackup.php",
       LOG_INFO);
@@ -72,51 +68,42 @@ if($Submit && $filemask)
     $pathParts = split("[/\\]", $filename);
 
     # split on cdash separator "_"
-    if(count($pathParts)>=1)
-      {
-      $cdashParts = split("[_]", $pathParts[count($pathParts)-1]);
-      $projectid = get_project_id($cdashParts[0]);
-      }
+    if (count($pathParts)>=1) {
+        $cdashParts = split("[_]", $pathParts[count($pathParts)-1]);
+        $projectid = get_project_id($cdashParts[0]);
+    }
 
-    if($projectid != -1)
-      {
-      $name = get_project_name($projectid);
-      $handle = fopen($filename,"r");
-      if($handle)
-        {
-        ctest_parse($handle,$projectid);
-        fclose($handle);
-        unset($handle);
-        }
-      else
-        {
-        add_log(
+            if ($projectid != -1) {
+                $name = get_project_name($projectid);
+                $handle = fopen($filename, "r");
+                if ($handle) {
+                    ctest_parse($handle, $projectid);
+                    fclose($handle);
+                    unset($handle);
+                } else {
+                    add_log(
           "could not open file filename=".$filename,
           "importBackup.php",
           LOG_ERR);
-        }
-      }
-    else
-      {
-      add_log(
+                }
+            } else {
+                add_log(
         "could not determine projectid from filename=".$filename,
         "importBackup.php",
         LOG_ERR);
-      }
-    }
+            }
+        }
 
-  add_log(
+        add_log(
     "after loop n=".$n,
     "importBackup.php",
     LOG_INFO);
 
-  $alert = 'Import backup complete. '.$i.' files processed.';
-  $xml .= add_XML_value("alert",$alert);
-  } // end submit
+        $alert = 'Import backup complete. '.$i.' files processed.';
+        $xml .= add_XML_value("alert", $alert);
+    } // end submit
 
 // Now doing the xslt transition
 $xml .= "</cdash>";
-generate_XSLT($xml,"importBackup");
-
-} // end session
-?>
+    generate_XSLT($xml, "importBackup");
+} // end session;

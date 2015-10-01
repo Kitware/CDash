@@ -31,35 +31,31 @@ $testname = htmlspecialchars(pdo_real_escape_string($_GET["testname"]));
 $starttime = pdo_real_escape_numeric($_GET["starttime"]);
 @$zoomout = $_GET["zoomout"];
 
-if(!isset($projectid) || !is_numeric($projectid))
-  {
-  echo "Not a valid projectid!";
-  return;
-  }
-if(!isset($testname))
-  {
-  echo "Not a valid test name!";
-  return;
-  }
-if(!isset($starttime))
-  {
-  echo "Not a valid starttime!";
-  return;
-  }
+if (!isset($projectid) || !is_numeric($projectid)) {
+    echo "Not a valid projectid!";
+    return;
+}
+if (!isset($testname)) {
+    echo "Not a valid test name!";
+    return;
+}
+if (!isset($starttime)) {
+    echo "Not a valid starttime!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // We have to loop for the previous days
 $failures = array();
-for($beginning_timestamp = $starttime; $beginning_timestamp>$starttime-3600*24*7;$beginning_timestamp-=3600*24)
-  {
-  $end_timestamp = $beginning_timestamp+3600*24;
+for ($beginning_timestamp = $starttime; $beginning_timestamp>$starttime-3600*24*7;$beginning_timestamp-=3600*24) {
+    $end_timestamp = $beginning_timestamp+3600*24;
 
-  $beginning_UTCDate = gmdate(FMT_DATETIME,$beginning_timestamp);
-  $end_UTCDate = gmdate(FMT_DATETIME,$end_timestamp);
+    $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
+    $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-  $query = "SELECT min(starttime) AS starttime, count(*) AS count
+    $query = "SELECT min(starttime) AS starttime, count(*) AS count
             FROM build
             JOIN build2test ON (build.id = build2test.buildid)
             WHERE build.projectid = '$projectid'
@@ -68,11 +64,11 @@ for($beginning_timestamp = $starttime; $beginning_timestamp>$starttime-3600*24*7
             AND build2test.testid IN (SELECT id FROM test WHERE name='$testname')
             AND (build2test.status!='passed' OR build2test.timestatus!=0)
             ";
-  $result = pdo_query($query);
-  echo pdo_error();
-  $result_array = pdo_fetch_array($result);
-  $failures[$beginning_timestamp]=$result_array['count'];
-  }
+    $result = pdo_query($query);
+    echo pdo_error();
+    $result_array = pdo_fetch_array($result);
+    $failures[$beginning_timestamp]=$result_array['count'];
+}
 ?>
 
 <br>
@@ -90,23 +86,24 @@ $(function () {
 
   <?php
     $tarray = array();
-    foreach($failures as $key=>$value)
-      {
-      $t['x'] = $key*1000;
-      $t['y'] = $value;
-      $tarray[]=$t;
-    ?>
+    foreach ($failures as $key=>$value) {
+        $t['x'] = $key*1000;
+        $t['y'] = $value;
+        $tarray[]=$t;
+        ?>
     <?php
-      }
+
+    }
 
     $tarray = array_reverse($tarray);
-    foreach($tarray as $axis)
-      {
-    ?>
-      d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
+    foreach ($tarray as $axis) {
+        ?>
+      d1.push([<?php echo $axis['x'];
+        ?>,<?php echo $axis['y'];
+        ?>]);
     <?php
       $t = $axis['x'];
-      } ?>
+    } ?>
 
   var options = {
     bars: { show: true,
@@ -126,14 +123,16 @@ $(function () {
          $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
   });
 
-<?php if(isset($zoomout))
-{
-?>
+<?php if (isset($zoomout)) {
+    ?>
   $.plot($("#testfailuregrapholder"), [{label: "# builds failed",  data: d1}],options);
-<?php } else { ?>
+<?php 
+} else {
+    ?>
   $.plot($("#testfailuregrapholder"), [{label: "# builds failed",  data: d1}],
 $.extend(true,{},options,{xaxis: { min: <?php echo $t-604800000?>,max: <?php echo $t+100000000 ?>}} ));
-<?php } ?>
+<?php 
+} ?>
 });
 
 

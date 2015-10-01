@@ -23,38 +23,30 @@ require_once('PHPUnit/Extensions/SeleniumTestCase.php');
 
 class CDashSeleniumTestCase extends PHPUnit_Extensions_SeleniumTestCase
 {
-  protected function browserSetUp()
-  {
-    global $argv;
-    $this->setBrowser("*" . $argv[2]);
-    global $configure;
-    $this->setBrowserUrl($configure['webserver']);
-    $this->webPath = $configure['webpath'];
-  }
+    protected function browserSetUp()
+    {
+        global $argv;
+        $this->setBrowser("*" . $argv[2]);
+        global $configure;
+        $this->setBrowserUrl($configure['webserver']);
+        $this->webPath = $configure['webpath'];
+    }
 
-  public function sleepWaitingForElement($element)
-  {
-    for ($attempts = 0; ; $attempts++)
-      {
-      if ($attempts >= 300)
-        {
-        $this->fail("timeout waiting for '$element'");
-        }
+    public function sleepWaitingForElement($element)
+    {
+        for ($attempts = 0; ; $attempts++) {
+            if ($attempts >= 300) {
+                $this->fail("timeout waiting for '$element'");
+            }
 
-      try
-        {
-        if ($this->isElementPresent($element))
-          {
-          break;
-          }
-        }
-      catch (Exception $e)
-        {
-        }
+            try {
+                if ($this->isElementPresent($element)) {
+                    break;
+                }
+            } catch (Exception $e) {
+            }
 
-      sleep(0.033);
-      }
-  }
+            sleep(0.033);
+        }
+    }
 }
-
-?>
