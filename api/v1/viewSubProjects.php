@@ -237,7 +237,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['nbuilderror'] = $row[1];
+      $subprojProp[$row['subprojectid']]['nbuilderror'] = intval($row[1]);
       }
     }
   $result = $testSubProj->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate, True);
@@ -245,7 +245,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['nbuildwarning'] = $row[1];
+      $subprojProp[$row['subprojectid']]['nbuildwarning'] = intval($row[1]);
       }
     }
   $result = $testSubProj->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate, True);
@@ -253,7 +253,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['nbuildpass'] = $row[1];
+      $subprojProp[$row['subprojectid']]['nbuildpass'] = intval($row[1]);
       }
     }
   $result = $testSubProj->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate, True);
@@ -261,7 +261,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['nconfigureerror'] = $row[1];
+      $subprojProp[$row['subprojectid']]['nconfigureerror'] = intval($row[1]);
       }
     }
   $result = $testSubProj->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate, True);
@@ -269,7 +269,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['nconfigurewarning'] = $row[1];
+      $subprojProp[$row['subprojectid']]['nconfigurewarning'] = intval($row[1]);
       }
     }
   $result = $testSubProj->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate, True);
@@ -277,7 +277,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['nconfigurepass'] = $row[1];
+      $subprojProp[$row['subprojectid']]['nconfigurepass'] = intval($row[1]);
       }
     }
   $result = $testSubProj->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate, True);
@@ -285,7 +285,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['ntestpass'] = $row[1];
+      $subprojProp[$row['subprojectid']]['ntestpass'] = intval($row[1]);
       }
     }
   $result = $testSubProj->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate, True);
@@ -293,7 +293,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['ntestfail'] = $row[1];
+      $subprojProp[$row['subprojectid']]['ntestfail'] = intval($row[1]);
       }
     }
   $result = $testSubProj->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate, True);
@@ -301,7 +301,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     {
     foreach ($result as $row)
       {
-      $subprojProp[$row['subprojectid']]['ntestnotrun'] = $row[1];
+      $subprojProp[$row['subprojectid']]['ntestnotrun'] = intval($row[1]);
       }
     }
   $reportArray = array('nbuilderror', 'nbuildwarning', 'nbuildpass',
