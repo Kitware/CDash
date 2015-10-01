@@ -56,6 +56,14 @@ require_once("cdash/pdo.php");
     );
 
     $redirectURI = strtok(get_server_URI(false), '?');
+    // The return value of get_server_URI can be inconsistent.
+    // It simply returns $CDASH_BASE_URL if that variable is set, yielding a
+    // return value like http://mydomain.com/CDash.
+    // If this variable is not set, then it will return the full URI including
+    // the current script, ie
+    // http://mydomain.com/CDash/googleauth_callback.php.
+    //
+    // Make sure that redirectURI contains the path to our callback script.
     if (strpos($redirectURI, "googleauth_callback.php") === FALSE)
       {
       $redirectURI .= '/googleauth_callback.php';
