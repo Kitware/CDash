@@ -29,94 +29,75 @@ echo json_encode($response);
 //
 function get_filterdata_array_from_request($page_id = '')
 {
-  $filterdata = array();
-  $filters = array();
-  $sql = '';
-  $clauses = 0;
+    $filterdata = array();
+    $filters = array();
+    $sql = '';
+    $clauses = 0;
 
-  if (empty($page_id))
-    {
-    $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
-    $page_id = substr($_SERVER['SCRIPT_NAME'], $pos+1);
+    if (empty($page_id)) {
+        $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
+        $page_id = substr($_SERVER['SCRIPT_NAME'], $pos+1);
     }
-  $filterdata['availablefilters'] = getFiltersForPage($page_id);
+    $filterdata['availablefilters'] = getFiltersForPage($page_id);
 
-  $pageSpecificFilters = createPageSpecificFilters($page_id);
+    $pageSpecificFilters = createPageSpecificFilters($page_id);
 
-  if(isset($_GET["value1"]) && strlen($_GET["value1"])>0)
-    {
-    $filtercount = $_GET["filtercount"];
+    if (isset($_GET["value1"]) && strlen($_GET["value1"])>0) {
+        $filtercount = $_GET["filtercount"];
+    } else {
+        $filtercount = 0;
     }
-  else
-    {
-    $filtercount = 0;
-    }
-  $filterdata['filtercount'] = $filtercount;
+    $filterdata['filtercount'] = $filtercount;
 
-  $showfilters = pdo_real_escape_numeric(@$_REQUEST['showfilters']);
-  if ($showfilters)
-    {
-    $filterdata['showfilters'] = 1;
-    }
-  else
-    {
-    if($filtercount > 0)
-      {
-      $filterdata['showfilters'] = 1;
-      }
-    else
-      {
-      $filterdata['showfilters'] = 0;
-      }
+    $showfilters = pdo_real_escape_numeric(@$_REQUEST['showfilters']);
+    if ($showfilters) {
+        $filterdata['showfilters'] = 1;
+    } else {
+        if ($filtercount > 0) {
+            $filterdata['showfilters'] = 1;
+        } else {
+            $filterdata['showfilters'] = 0;
+        }
     }
 
-  $showlimit = pdo_real_escape_numeric(@$_REQUEST['showlimit']);
-  if ($showlimit)
-    {
-    $filterdata['showlimit'] = 1;
-    }
-  else
-    {
-    $filterdata['showlimit'] = 0;
+    $showlimit = pdo_real_escape_numeric(@$_REQUEST['showlimit']);
+    if ($showlimit) {
+        $filterdata['showlimit'] = 1;
+    } else {
+        $filterdata['showlimit'] = 0;
     }
 
-  $limit = intval(pdo_real_escape_numeric(@$_REQUEST['limit']));
-  if (!is_int($limit))
-  {
-    $limit = 0;
-  }
-  $filterdata['limit'] = $limit;
+    $limit = intval(pdo_real_escape_numeric(@$_REQUEST['limit']));
+    if (!is_int($limit)) {
+        $limit = 0;
+    }
+    $filterdata['limit'] = $limit;
 
-  @$filtercombine =  htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
-  $filterdata['filtercombine'] = $filtercombine;
+    @$filtercombine =  htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
+    $filterdata['filtercombine'] = $filtercombine;
 
-  if (strtolower($filtercombine) == 'or')
-  {
-    $sql_combine = 'OR';
-  }
-  else
-  {
-    $sql_combine = 'AND';
-  }
+    if (strtolower($filtercombine) == 'or') {
+        $sql_combine = 'OR';
+    } else {
+        $sql_combine = 'AND';
+    }
 
-  $sql = 'AND (';
+    $sql = 'AND (';
 
   // Check for filters passed in via the query string
-  for ($i = 1; $i <= $filtercount; ++$i)
-  {
-    if(empty($_REQUEST['field'.$i]))
-      {
-      continue;
+  for ($i = 1; $i <= $filtercount; ++$i) {
+      if (empty($_REQUEST['field'.$i])) {
+          continue;
       }
-    $field =  htmlspecialchars(pdo_real_escape_string($_REQUEST['field'.$i]));
-    $compare =  htmlspecialchars(pdo_real_escape_string($_REQUEST['compare'.$i]));
-    $value =  htmlspecialchars(pdo_real_escape_string($_REQUEST['value'.$i]));
+      $field =  htmlspecialchars(pdo_real_escape_string($_REQUEST['field'.$i]));
+      $compare =  htmlspecialchars(pdo_real_escape_string($_REQUEST['compare'.$i]));
+      $value =  htmlspecialchars(pdo_real_escape_string($_REQUEST['value'.$i]));
 
-    $cv = get_sql_compare_and_value($compare, $value);
-    $sql_compare = $cv[0];
-    $sql_value = $cv[1];
+      $cv = get_sql_compare_and_value($compare, $value);
+      $sql_compare = $cv[0];
+      $sql_value = $cv[1];
 
-    $sql_field = $pageSpecificFilters->getSqlField($field);
+      $sql_field = $pageSpecificFilters->getSqlField($field);
 
     /* TODO: handle fieldtype.  currently defined in JS.
        Here's how its done the old way:
@@ -135,53 +116,46 @@ function get_filterdata_array_from_request($page_id = '')
     // Treat the buildstamp field as if it were a date clause so that the
     // default date clause of "builds from today only" is not used...
     //
-    if ($field == 'buildstamp')
-    {
-      $filterdata['hasdateclause'] = 1;
+    if ($field == 'buildstamp') {
+        $filterdata['hasdateclause'] = 1;
     }
 
-    if ($sql_field != '' && $sql_compare != '')
-    {
-      if ($clauses > 0)
-      {
-        $sql .= ' ' . $sql_combine . ' ';
+      if ($sql_field != '' && $sql_compare != '') {
+          if ($clauses > 0) {
+              $sql .= ' ' . $sql_combine . ' ';
+          }
+
+          $sql .= $sql_field . ' ' . $sql_compare . ' ' . $sql_value;
+
+          ++$clauses;
       }
 
-      $sql .= $sql_field . ' ' . $sql_compare . ' ' . $sql_value;
-
-      ++$clauses;
-    }
-
-    $filters[] = array(
+      $filters[] = array(
       'key' => $field,
       'value' => $value,
       'compare' => $compare
     );
   }
 
-  if ($clauses == 0)
-  {
-    $sql = '';
-  }
-  else
-  {
-    $sql .= ')';
-  }
+    if ($clauses == 0) {
+        $sql = '';
+    } else {
+        $sql .= ')';
+    }
 
-  $filterdata['sql'] = $sql;
+    $filterdata['sql'] = $sql;
 
 
   // If no filters were passed in as parameters,
   // then add one default filter so that the user sees
   // somewhere to enter filter queries in the GUI:
   //
-  if (count($filters) === 0)
-  {
-    $filters[] = getDefaultFilter($page_id);
+  if (count($filters) === 0) {
+      $filters[] = getDefaultFilter($page_id);
   }
-  $filterdata['filters'] = $filters;
+    $filterdata['filters'] = $filters;
 
-  return $filterdata;
+    return $filterdata;
 }
 
 /**
@@ -190,8 +164,7 @@ function get_filterdata_array_from_request($page_id = '')
  **/
 function getFiltersForPage($page_id)
 {
-  switch ($page_id)
-  {
+    switch ($page_id) {
     case 'index.php':
     case 'project.php':
       return array(
@@ -230,8 +203,7 @@ function getFiltersForPage($page_id)
 // Get the default filter for a given page.
 function getDefaultFilter($page_id)
 {
-  switch ($page_id)
-  {
+    switch ($page_id) {
     case 'index.php':
     case 'project.php':
     {
@@ -256,5 +228,3 @@ function getDefaultFilter($page_id)
     }
   }
 }
-
-?>

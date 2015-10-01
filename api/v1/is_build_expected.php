@@ -8,14 +8,13 @@ require_once("cdash/common.php");
 $response = array();
 
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  $response['error'] = "Not a valid buildid!";
-  echo json_encode($response);
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    $response['error'] = "Not a valid buildid!";
+    echo json_encode($response);
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Get details about this build.
@@ -41,11 +40,8 @@ $build2groupexpected = pdo_query(
    WHERE groupid='$currentgroupid' AND buildtype='$buildtype' AND
          buildname='$buildname' AND siteid='$siteid' AND
          endtime='1980-01-01 00:00:00' AND expected='1'");
-if(pdo_num_rows($build2groupexpected) > 0 )
-  {
-  $response['expected'] = 1;
-  }
+if (pdo_num_rows($build2groupexpected) > 0) {
+    $response['expected'] = 1;
+}
 
 echo json_encode($response);
-
-?>

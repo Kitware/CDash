@@ -1,8 +1,8 @@
 <?php
 
 function get_dynamic_builds($projectid)
-  {
-  $builds = array();
+{
+    $builds = array();
 
   // Get the build rules for each dynamic group belonging to this project.
   $rules = pdo_query("
@@ -14,39 +14,32 @@ function get_dynamic_builds($projectid)
     WHERE bg.projectid='$projectid' AND bg.endtime='1980-01-01 00:00:00' AND
           bg.type != 'Daily'");
 
-    if (!$rules)
-      {
-      echo pdo_error();
-      return;
-      }
+    if (!$rules) {
+        echo pdo_error();
+        return;
+    }
 
-  while ($rule = pdo_fetch_array($rules))
-    {
-    $buildgroup_name = $rule['name'];
-    $buildgroup_id = $rule['id'];
-    $buildgroup_position = $rule['position'];
-    if ($rule['type'] == 'Latest')
-      {
-      // optional fields: parentgroupid, site, and build name match.
+    while ($rule = pdo_fetch_array($rules)) {
+        $buildgroup_name = $rule['name'];
+        $buildgroup_id = $rule['id'];
+        $buildgroup_position = $rule['position'];
+        if ($rule['type'] == 'Latest') {
+            // optional fields: parentgroupid, site, and build name match.
       // Use these to construct a WHERE clause for our query.
       $where = "";
-      $whereClauses = array();
-      if (!empty($rule['parentgroupid']))
-        {
-        $whereClauses[] = "b2g.groupid='" . $rule['parentgroupid'] . "'";
-        }
-      if (!empty($rule['siteid']))
-        {
-        $whereClauses[] = "s.id='" . $rule['siteid'] . "'";
-        }
-      if (!empty($rule['buildname']))
-        {
-        $whereClauses[] = "b.name LIKE '" . $rule['buildname'] . "'";
-        }
-      if (!empty($whereClauses))
-        {
-        $where = "WHERE " . implode($whereClauses, " AND ");
-        }
+            $whereClauses = array();
+            if (!empty($rule['parentgroupid'])) {
+                $whereClauses[] = "b2g.groupid='" . $rule['parentgroupid'] . "'";
+            }
+            if (!empty($rule['siteid'])) {
+                $whereClauses[] = "s.id='" . $rule['siteid'] . "'";
+            }
+            if (!empty($rule['buildname'])) {
+                $whereClauses[] = "b.name LIKE '" . $rule['buildname'] . "'";
+            }
+            if (!empty($whereClauses)) {
+                $where = "WHERE " . implode($whereClauses, " AND ");
+            }
 
       // We only want the most recent build.
       $order = "ORDER BY b.submittime DESC LIMIT 1";
@@ -113,18 +106,15 @@ function get_dynamic_builds($projectid)
               LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
               LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
               LEFT JOIN label AS l ON (l.id = l2b.labelid) $where $order";
-      $build = pdo_single_row_query($sql);
-      if (empty($build))
-        {
-        continue;
+            $build = pdo_single_row_query($sql);
+            if (empty($build)) {
+                continue;
+            }
+            $build['groupname'] = $buildgroup_name;
+            $build['groupid'] = $buildgroup_id;
+            $build['position'] = $buildgroup_position;
+            $builds[] = $build;
         }
-      $build['groupname'] = $buildgroup_name;
-      $build['groupid'] = $buildgroup_id;
-      $build['position'] = $buildgroup_position;
-      $builds[] = $build;
-      }
     }
-  return $builds;
-  }
-
-?>
+    return $builds;
+}

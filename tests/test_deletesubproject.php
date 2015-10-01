@@ -7,28 +7,26 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class DeleteSubProjectTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testDeleteSubProject()
+    public function testDeleteSubProject()
     {
-    $this->get($this->url."/api/v1/viewSubProjects.php?project=Trilinos");
-    $this->assertText("FEApp");
+        $this->get($this->url."/api/v1/viewSubProjects.php?project=Trilinos");
+        $this->assertText("FEApp");
 
-    echo "submitting data/DeleteSubProject/Project.xml\n";
-    $file = dirname(__FILE__)."/data/DeleteSubProject/Project.xml";
+        echo "submitting data/DeleteSubProject/Project.xml\n";
+        $file = dirname(__FILE__)."/data/DeleteSubProject/Project.xml";
 
-    if(!$this->submission('Trilinos', $file))
-      {
-      return false;
-      }
+        if (!$this->submission('Trilinos', $file)) {
+            return false;
+        }
 
-    $this->get($this->url."/api/v1/viewSubProjects.php?project=Trilinos");
-    $this->assertNoText("FEApp");
+        $this->get($this->url."/api/v1/viewSubProjects.php?project=Trilinos");
+        $this->assertNoText("FEApp");
 
-    $this->deleteLog($this->logfilename);
+        $this->deleteLog($this->logfilename);
     }
 }
-?>

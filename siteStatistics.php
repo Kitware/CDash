@@ -20,26 +20,24 @@ require_once("cdash/pdo.php");
 include('login.php');
 include("cdash/version.php");
 
-if($session_OK)
-  {
-  include_once('cdash/common.php');
-  include_once("cdash/ctestparser.php");
+if ($session_OK) {
+    include_once('cdash/common.php');
+    include_once("cdash/ctestparser.php");
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+    pdo_select_db("$CDASH_DB_NAME", $db);
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
+    checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<backurl>user.php</backurl>";
-$xml .= "<title>CDash - Sites Statistics</title>";
-$xml .= "<menutitle>CDash</menutitle>";
-$xml .= "<menusubtitle>Site Statistics</menusubtitle>";
+    $xml .= "<backurl>user.php</backurl>";
+    $xml .= "<title>CDash - Sites Statistics</title>";
+    $xml .= "<menutitle>CDash</menutitle>";
+    $xml .= "<menusubtitle>Site Statistics</menusubtitle>";
 
 
-if($CDASH_DB_TYPE == "pgsql")
-  {
-  $query = pdo_query("SELECT siteid,sitename, SUM(elapsed) AS busytime FROM
+    if ($CDASH_DB_TYPE == "pgsql") {
+        $query = pdo_query("SELECT siteid,sitename, SUM(elapsed) AS busytime FROM
   (
   SELECT site.id AS siteid,site.name AS sitename, project.name AS projectname, build.name AS buildname, build.type,
   AVG(submittime - buildupdate.starttime) AS elapsed
@@ -57,10 +55,8 @@ if($CDASH_DB_TYPE == "pgsql")
   GROUP BY sitename,summary.siteid
   ORDER BY busytime DESC
   ");
-  }
-else
-  {
-  $query = pdo_query("SELECT siteid,sitename, SEC_TO_TIME(SUM(elapsed)) AS busytime FROM
+    } else {
+        $query = pdo_query("SELECT siteid,sitename, SEC_TO_TIME(SUM(elapsed)) AS busytime FROM
   (
   SELECT site.id AS siteid,site.name AS sitename, project.name AS projectname, build.name AS buildname, build.type,
   AVG(TIME_TO_SEC(TIMEDIFF(submittime, buildupdate.starttime))) AS elapsed
@@ -78,21 +74,18 @@ else
   GROUP BY sitename
   ORDER BY busytime DESC
   ");
-  }
-echo pdo_error();
-while($query_array = pdo_fetch_array($query))
-{
-  $xml .= "<site>";
-  $xml .= add_XML_value("id",$query_array["siteid"]);
-  $xml .= add_XML_value("name",$query_array["sitename"]);
-  $xml .= add_XML_value("busytime",$query_array["busytime"]);
-  $xml .= "</site>";
-}
+    }
+    echo pdo_error();
+    while ($query_array = pdo_fetch_array($query)) {
+        $xml .= "<site>";
+        $xml .= add_XML_value("id", $query_array["siteid"]);
+        $xml .= add_XML_value("name", $query_array["sitename"]);
+        $xml .= add_XML_value("busytime", $query_array["busytime"]);
+        $xml .= "</site>";
+    }
 
-$xml .= "</cdash>";
+    $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml,"siteStatistics");
-
-} // end session
-?>
+generate_XSLT($xml, "siteStatistics");
+} // end session;

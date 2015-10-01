@@ -7,21 +7,19 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ViewSubProjectDependenciesTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testViewSubProjectDependencies()
+    public function testViewSubProjectDependencies()
     {
-    $this->login();
-    $this->get($this->url."/viewSubProjectDependencies.php?project=SubProjectExample");
-    if(strpos($this->getBrowser()->getContentAsText(), "Komplex") === false)
-      {
-      $this->fail("'Komplex' not found when expected");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->login();
+        $this->get($this->url."/viewSubProjectDependencies.php?project=SubProjectExample");
+        if (strpos($this->getBrowser()->getContentAsText(), "Komplex") === false) {
+            $this->fail("'Komplex' not found when expected");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-?>

@@ -30,41 +30,33 @@ require_once("cdash/do_submit.php");
 //
 function ProcessFile($projectid, $filename, $md5)
 {
-  unset($fp);
+    unset($fp);
 
-  if(!file_exists($filename))
-    {
-    // check in parent dir also
+    if (!file_exists($filename)) {
+        // check in parent dir also
     $filename = "../$filename";
     }
 
-  if(file_exists($filename))
-    {
-    $fp = fopen($filename, 'r');
+    if (file_exists($filename)) {
+        $fp = fopen($filename, 'r');
     }
 
-  if(@$fp)
-    {
-    global $PHP_ERROR_SUBMISSION_ID;
-    do_submit($fp, $projectid, $md5, false, $PHP_ERROR_SUBMISSION_ID);
-    $PHP_ERROR_SUBMISSION_ID = 0;
+    if (@$fp) {
+        global $PHP_ERROR_SUBMISSION_ID;
+        do_submit($fp, $projectid, $md5, false, $PHP_ERROR_SUBMISSION_ID);
+        $PHP_ERROR_SUBMISSION_ID = 0;
 
-    @fclose($fp);
-    unset($fp);
+        @fclose($fp);
+        unset($fp);
 
     // delete the temporary backup file since we now have a better-named one
     cdash_unlink($filename);
-    $new_status = 2; // done, did call do_submit, finished normally
-    }
-  else
-    {
-    add_log("Cannot open file '".$filename."'", "ProcessFile",
+        $new_status = 2; // done, did call do_submit, finished normally
+    } else {
+        add_log("Cannot open file '".$filename."'", "ProcessFile",
       LOG_ERR, $projectid);
-    $new_status = 3; // done, did *NOT* call do_submit
+        $new_status = 3; // done, did *NOT* call do_submit
     }
 
-  return $new_status;
+    return $new_status;
 }
-
-
-?>

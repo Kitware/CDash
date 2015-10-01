@@ -13,44 +13,42 @@ require_once('models/testmeasurement.php');
 
 class TestModelTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testTestModel()
+    public function testTestModel()
     {
-    $this->startCodeCoverage();
+        $this->startCodeCoverage();
 
-    $test = new Test();
-    $test->Id = "8967";
-    $test->Name = "dummytest";
-    $test->ProjectId = 2;
+        $test = new Test();
+        $test->Id = "8967";
+        $test->Name = "dummytest";
+        $test->ProjectId = 2;
 
-    // Cover error condition 
+    // Cover error condition
     $test->InsertLabelAssociations('');
 
-    $testmeasurement = new TestMeasurement();
-    $testmeasurement->Name = "Label";
-    $testmeasurement->Value = "Some_Label";
-    $test->AddMeasurement($testmeasurement);
+        $testmeasurement = new TestMeasurement();
+        $testmeasurement->Name = "Label";
+        $testmeasurement->Value = "Some_Label";
+        $test->AddMeasurement($testmeasurement);
 
-    $image = new Image();
-    $image->Filename = dirname(__FILE__)."/data/smile.gif";
-    $image->Data = base64_encode(file_get_contents($image->Filename));
-    $image->Checksum = 100;
-    $image->Extension = "image/gif";
+        $image = new Image();
+        $image->Filename = dirname(__FILE__)."/data/smile.gif";
+        $image->Data = base64_encode(file_get_contents($image->Filename));
+        $image->Checksum = 100;
+        $image->Extension = "image/gif";
 
-    $test->AddImage($image);
+        $test->AddImage($image);
 
-    $test->Insert();
+        $test->Insert();
 
-    $test->GetCrc32();
+        $test->GetCrc32();
 
-    $this->stopCodeCoverage();
+        $this->stopCodeCoverage();
 
-    return 0;
+        return 0;
     }
 }
-
-?>

@@ -11,73 +11,66 @@ require_once('models/user.php');
 
 class UserTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testUser()
+    public function testUser()
     {
-    $this->startCodeCoverage();
+        $this->startCodeCoverage();
 
-    $user = new User();
-    $user->Id = "non_numeric";
+        $user = new User();
+        $user->Id = "non_numeric";
 
-    if(!($user->SetPassword("blah") === false))
-      {
-      $this->fail("User::SetPassword didn't return false for non-numeric user id");
-      return 1;
-      }
+        if (!($user->SetPassword("blah") === false)) {
+            $this->fail("User::SetPassword didn't return false for non-numeric user id");
+            return 1;
+        }
 
-    if(!($user->IsAdmin() === false))
-      {
-      $this->fail("User::IsAdmin didn't return false for non-numeric user id");
-      return 1;
-      }
+        if (!($user->IsAdmin() === false)) {
+            $this->fail("User::IsAdmin didn't return false for non-numeric user id");
+            return 1;
+        }
 
-    $user->Id = "";
-    $user->Email = "";
+        $user->Id = "";
+        $user->Email = "";
 
-    if(!($user->GetName() === false))
-      {
-      $this->fail("User::GetName didn't return false when given no user id");
-      return 1;
-      }
+        if (!($user->GetName() === false)) {
+            $this->fail("User::GetName didn't return false when given no user id");
+            return 1;
+        }
 
-    if(!($user->IsAdmin() === false))
-      {
-      $this->fail("User::Exists didn't return false for no user id and no email");
-      return 1;
-      }
+        if (!($user->IsAdmin() === false)) {
+            $this->fail("User::Exists didn't return false for no user id and no email");
+            return 1;
+        }
 
-    $user->Email = "simpletest@localhost";
+        $user->Email = "simpletest@localhost";
 
-    if($user->Exists() === false)
-      {
-      $this->fail("User::Exists returned false even though user exists");
-      return 1;
-      }
+        if ($user->Exists() === false) {
+            $this->fail("User::Exists returned false even though user exists");
+            return 1;
+        }
 
-    $id = $user->GetIdFromEmail("simpletest@localhost");
+        $id = $user->GetIdFromEmail("simpletest@localhost");
 
-    if($id === false)
-      {
-      $this->fail("User::GetIdFromEmail returned false for a valid user");
-      return 1;
-      }
+        if ($id === false) {
+            $this->fail("User::GetIdFromEmail returned false for a valid user");
+            return 1;
+        }
 
-    $user->Id = $id;
-    $user->Admin = "1";
-    $user->FirstName = "administrator";
-    $user->Institution = "Kitware Inc.";
+        $user->Id = $id;
+        $user->Admin = "1";
+        $user->FirstName = "administrator";
+        $user->Institution = "Kitware Inc.";
 
-    if($user->Exists() != true)
-      {
-      $this->fail("User::Exists failed given a valid user id");
-      return 1;
-      }
+        if ($user->Exists() != true) {
+            $this->fail("User::Exists failed given a valid user id");
+            return 1;
+        }
 
-    $user->Password = md5("simpletest");
+        $user->Password = md5("simpletest");
 
     // Coverage for update save
     $user->Save();
@@ -85,10 +78,8 @@ class UserTestCase extends KWWebTestCase
     // Coverage for SetPassword
     $user->SetPassword(md5("simpletest"));
 
-    $this->stopCodeCoverage();
+        $this->stopCodeCoverage();
 
-    return 0;
+        return 0;
     }
 }
-
-?>
