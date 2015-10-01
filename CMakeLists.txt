@@ -78,7 +78,7 @@ endif()
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
 if(CDASH_USE_SELENIUM)
-  find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php)
+  find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
 
 option(CDASH_TESTING_RENAME_LOGS
