@@ -28,24 +28,21 @@ $buildid = pdo_real_escape_numeric($_GET["buildid"]);
 $measurement = preg_replace('/[^\da-z]/i', "", $_GET["measurement"]);
 $measurementname = htmlspecialchars(pdo_real_escape_string(stripslashes($measurement)));
 
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
-if(!isset($testid) || !is_numeric($testid))
-  {
-  echo "Not a valid testid!";
-  return;
-  }
-if(!isset($measurementname) || !is_string($measurementname))
-  {
-  echo "Not a valid measurementname!";
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    echo "Not a valid buildid!";
+    return;
+}
+if (!isset($testid) || !is_numeric($testid)) {
+    echo "Not a valid testid!";
+    return;
+}
+if (!isset($measurementname) || !is_string($measurementname)) {
+    echo "Not a valid measurementname!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Find the project variables
 $test = pdo_query("SELECT name FROM test WHERE id='$testid'");
@@ -80,28 +77,30 @@ ORDER BY build.starttime DESC
 ");
 
 $tarray = array();
-while($build_array = pdo_fetch_array($previousbuilds))
-  {
-  $t['x'] = strtotime($build_array["starttime"])*1000;
-  $time[] = date("Y-m-d H:i:s",strtotime($build_array["starttime"]));
-  $t['y'] = $build_array["value"];
-  $t['builid'] = $build_array["id"];
-  $t['testid'] = $build_array["testid"];
+while ($build_array = pdo_fetch_array($previousbuilds)) {
+    $t['x'] = strtotime($build_array["starttime"])*1000;
+    $time[] = date("Y-m-d H:i:s", strtotime($build_array["starttime"]));
+    $t['y'] = $build_array["value"];
+    $t['builid'] = $build_array["id"];
+    $t['testid'] = $build_array["testid"];
 
-  $tarray[]=$t;
-  }
-if(@$_GET['export']=="csv") // If user wants to export as CSV file
-  {
+    $tarray[]=$t;
+}
+if (@$_GET['export']=="csv") {
+    // If user wants to export as CSV file
+
   header("Cache-Control: public");
-  header("Content-Description: File Transfer");
-  header("Content-Disposition: attachment; filename=".$testname."_".$measurementname.".csv"); // Prepare some headers to download
-  header("Content-Type: application/octet-stream;"); 
-  header("Content-Transfer-Encoding: binary");
-  $filecontent = "Date;$measurementname\n"; // Standard columns
-  for($c=0;$c<count($tarray);$c++) $filecontent .= "{$time[$c]};{$tarray[$c]['y']}\n";
-  echo ($filecontent); // Start file download
-  die; // to suppress unwanted output
+    header("Content-Description: File Transfer");
+    header("Content-Disposition: attachment; filename=".$testname."_".$measurementname.".csv"); // Prepare some headers to download
+  header("Content-Type: application/octet-stream;");
+    header("Content-Transfer-Encoding: binary");
+    $filecontent = "Date;$measurementname\n"; // Standard columns
+  for ($c=0;$c<count($tarray);$c++) {
+      $filecontent .= "{$time[$c]};{$tarray[$c]['y']}\n";
   }
+    echo($filecontent); // Start file download
+  die; // to suppress unwanted output
+}
 ?>
 &nbsp;
 <script language="javascript" type="text/javascript">
@@ -111,15 +110,20 @@ $(function () {
     var testids = [];
     <?php
     $tarray = array_reverse($tarray);
-    foreach($tarray as $axis)
-  {
-  ?>
-      buildids[<?php echo $axis['x']; ?>]=<?php echo $axis['builid']; ?>;
-      testids[<?php echo $axis['x']; ?>]=<?php echo $axis['testid']; ?>;
-      d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
+    foreach ($tarray as $axis) {
+        ?>
+      buildids[<?php echo $axis['x'];
+        ?>]=<?php echo $axis['builid'];
+        ?>;
+      testids[<?php echo $axis['x'];
+        ?>]=<?php echo $axis['testid'];
+        ?>;
+      d1.push([<?php echo $axis['x'];
+        ?>,<?php echo $axis['y'];
+        ?>]);
     <?php
       $t = $axis['x'];
-      } ?>
+    } ?>
 
   var options = {
     //bars: { show: true,  barWidth: 35000000, lineWidth:0.9  },
@@ -153,18 +157,24 @@ $(function () {
             }
      });
 
-<?php if(isset($zoomout))
-{
-?>
+<?php if (isset($zoomout)) {
+    ?>
     plot = $.plot($(divnplot = $.plot($(divname),
-                  [{label: <?php echo("\"$measurementname\""); ?> ,data: d1}], options,{xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}, yaxis: { min: 0}}))
+                  [{label: <?php echo("\"$measurementname\"");
+    ?> ,data: d1}], options,{xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000;
+    ?>}, yaxis: { min: 0}}))
           );
-<?php } else { ?>
+<?php 
+} else {
+    ?>
     plot = $.plot($(divname),
-                  [{label: <?php echo("\"$measurementname\""); ?> ,data: d1}],
-                  $.extend(true,{}, options, {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}, yaxis: { min: 0}})
+                  [{label: <?php echo("\"$measurementname\"");
+    ?> ,data: d1}],
+                  $.extend(true,{}, options, {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000;
+    ?>}, yaxis: { min: 0}})
                  );
-<?php }
+<?php 
+}
 ?>
 });
 </script>

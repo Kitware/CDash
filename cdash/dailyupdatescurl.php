@@ -9,4 +9,3 @@ require_once("cdash/dailyupdates.php");
 
 $projectid = pdo_real_escape_numeric($_GET['projectid']);
 addDailyChanges($projectid);
-?>

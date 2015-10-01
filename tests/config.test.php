@@ -47,16 +47,14 @@ $inBrowser = false;
 if (array_key_exists('SERVER_ADDR', $_SERVER) &&
     array_key_exists('SERVER_NAME', $_SERVER) &&
     array_key_exists('SERVER_PORT', $_SERVER)
-   )
-  {
-  if (($_SERVER['SERVER_ADDR'] != '') &&
+   ) {
+    if (($_SERVER['SERVER_ADDR'] != '') &&
       ($_SERVER['SERVER_NAME'] != '') &&
       ($_SERVER['SERVER_PORT'] != '')
-     )
-    {
-    $inBrowser = true;
+     ) {
+        $inBrowser = true;
     }
-  }
+}
 
 
 // Either:
@@ -83,20 +81,15 @@ $isWindows = false;
 global $isMacOSX;
 $isMacOSX = false;
 
-if (PHP_OS == 'WINNT')
-  {
-  $isWindows = true;
-  }
-else if (PHP_OS == 'Darwin')
-  {
-  $isMacOSX = true;
-  }
+if (PHP_OS == 'WINNT') {
+    $isWindows = true;
+} elseif (PHP_OS == 'Darwin') {
+    $isMacOSX = true;
+}
 
 
 // DO NOT EDIT AFTER THIS LINE
 $localConfig = dirname(__FILE__).'/config.test.local.php';
-if ( file_exists($localConfig) )
-  {
-  include($localConfig);
-  }
-?>
+if (file_exists($localConfig)) {
+    include($localConfig);
+}

@@ -19,12 +19,12 @@ include("cdash/config.php");
 require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
-include("cdash/version.php"); 
+include("cdash/version.php");
 
-@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'],0); // only admin
+checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
 $xml = begin_XML_for_XSLT();
 
@@ -37,15 +37,13 @@ $xml .= "<log>";
 $xml .= htmlentities(file_get_contents($CDASH_LOG_FILE));
 $xml .= "</log>";
 // List of the file in the directory that have other*.xml
-foreach (glob($CDASH_BACKUP_DIRECTORY."/*_Other*.xml") as $filename) 
-  {
-  $xml .= "<file>";
-  $xml .= "<name>".substr($filename,strrpos($filename,"/")+1)."</name>";
-  $xml .= "<fullpath>".$filename."</fullpath>";
-  $xml .= "</file>";
-  }
+foreach (glob($CDASH_BACKUP_DIRECTORY."/*_Other*.xml") as $filename) {
+    $xml .= "<file>";
+    $xml .= "<name>".substr($filename, strrpos($filename, "/")+1)."</name>";
+    $xml .= "<fullpath>".$filename."</fullpath>";
+    $xml .= "</file>";
+}
 $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml,"loggingAdministration");
-?>
+generate_XSLT($xml, "loggingAdministration");

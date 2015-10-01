@@ -31,19 +31,17 @@ $buildid = pdo_real_escape_numeric($_GET["buildid"]);
 @$zoomout = $_GET["zoomout"];
 
 
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
-if(!isset($testid) || !is_numeric($testid))
-  {
-  echo "Not a valid testid!";
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    echo "Not a valid buildid!";
+    return;
+}
+if (!isset($testid) || !is_numeric($testid)) {
+    echo "Not a valid testid!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Find the project variables
 $test = pdo_query("SELECT name FROM test WHERE id='$testid'");
@@ -83,27 +81,32 @@ $(function () {
     var testids = [];
     <?php
     $tarray = array();
-    while($build_array = pdo_fetch_array($previousbuilds))
-      {
-      $t['x'] = strtotime($build_array["starttime"])*1000;
-      $t['y'] = $build_array["time"];
-      $t['builid'] = $build_array["id"];
-      $t['testid'] = $build_array["testid"];
-      $tarray[]=$t;
-    ?>
+    while ($build_array = pdo_fetch_array($previousbuilds)) {
+        $t['x'] = strtotime($build_array["starttime"])*1000;
+        $t['y'] = $build_array["time"];
+        $t['builid'] = $build_array["id"];
+        $t['testid'] = $build_array["testid"];
+        $tarray[]=$t;
+        ?>
     <?php
-      }
+
+    }
 
     $tarray = array_reverse($tarray);
-    foreach($tarray as $axis)
-      {
-    ?>
-      buildids[<?php echo $axis['x']; ?>]=<?php echo $axis['builid']; ?>;
-      testids[<?php echo $axis['x']; ?>]=<?php echo $axis['testid']; ?>;
-      d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
+    foreach ($tarray as $axis) {
+        ?>
+      buildids[<?php echo $axis['x'];
+        ?>]=<?php echo $axis['builid'];
+        ?>;
+      testids[<?php echo $axis['x'];
+        ?>]=<?php echo $axis['testid'];
+        ?>;
+      d1.push([<?php echo $axis['x'];
+        ?>,<?php echo $axis['y'];
+        ?>]);
     <?php
       $t = $axis['x'];
-      } ?>
+    } ?>
 
   var options = {
     //bars: { show: true,  barWidth: 35000000, lineWidth:0.9  },
@@ -135,19 +138,22 @@ $(function () {
             }
      });
 
-<?php if(isset($zoomout))
-{
-?>
+<?php if (isset($zoomout)) {
+    ?>
     plot = $.plot($("#graph_holder"), [{label: "Execution Time (seconds)",data: d1}],options);
-<?php } else { ?>
+<?php 
+} else {
+    ?>
 
     plot = $.plot($("#graph_holder"), [{label: "Execution Time (seconds)",
                                             data: d1}],
           $.extend(true,{}, options,
-                                    {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000; ?>}}
+                                    {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000;
+    ?>}}
 ));
 
-<?php }
+<?php 
+}
 ?>
 });
 

@@ -27,14 +27,13 @@ require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    echo "Not a valid buildid!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Find the project variables
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime
@@ -67,18 +66,24 @@ $(function () {
     var buildids = [];
     <?php
     $i=0;
-    while($build_array = pdo_fetch_array($previousbuilds))
-      {
-      $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
+    while ($build_array = pdo_fetch_array($previousbuilds)) {
+        $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
     ?>
-      buildtime.push([<?php echo $t; ?>,<?php echo (strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60; ?>]);
-      builderrors.push([<?php echo $t; ?>,<?php echo $build_array["builderrors"] ?>]);
-      buildwarnings.push([<?php echo $t; ?>,<?php echo $build_array["buildwarnings"] ?>]);
-      testfailed.push([<?php echo $t; ?>,<?php echo $build_array["testfailed"] ?>]);
-      buildids[<?php echo $t; ?>] = <?php echo $build_array["id"]; ?>;
+      buildtime.push([<?php echo $t;
+        ?>,<?php echo(strtotime($build_array["endtime"])-strtotime($build_array["starttime"]))/60;
+        ?>]);
+      builderrors.push([<?php echo $t;
+        ?>,<?php echo $build_array["builderrors"] ?>]);
+      buildwarnings.push([<?php echo $t;
+        ?>,<?php echo $build_array["buildwarnings"] ?>]);
+      testfailed.push([<?php echo $t;
+        ?>,<?php echo $build_array["testfailed"] ?>]);
+      buildids[<?php echo $t;
+        ?>] = <?php echo $build_array["id"];
+        ?>;
     <?php
     $i++;
-      }
+    }
     ?>
 
     var options = {

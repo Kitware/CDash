@@ -7,20 +7,18 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ViewIssuesTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testViewIssues()
+    public function testViewIssues()
     {
-    $this->get($this->url."/viewIssues.php");
-    if(strpos($this->getBrowser()->getContentAsText(), "Dashboards") === false)
-      {
-      $this->fail("'Dashboards' not found when expected.");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->get($this->url."/viewIssues.php");
+        if (strpos($this->getBrowser()->getContentAsText(), "Dashboards") === false) {
+            $this->fail("'Dashboards' not found when expected.");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-?>

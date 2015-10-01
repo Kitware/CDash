@@ -27,21 +27,20 @@ require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
 $projectid = pdo_real_escape_numeric($_GET["projectid"]);
-if(!isset($projectid) || !is_numeric($projectid))
-  {
-  echo "Not a valid projectid!";
-  return;
-  }
+if (!isset($projectid) || !is_numeric($projectid)) {
+    echo "Not a valid projectid!";
+    return;
+}
 $timestamp = pdo_real_escape_numeric($_GET["timestamp"]);
   
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Find the project variables
 $files = pdo_query("SELECT d.date,count(df.dailyupdateid) FROM dailyupdate as d 
                     LEFT JOIN dailyupdatefile AS df ON (df.dailyupdateid=d.id)
                     WHERE d.projectid=".$projectid." 
-                    AND date<='".date("Y-m-d",$timestamp)."'
+                    AND date<='".date("Y-m-d", $timestamp)."'
                     GROUP BY d.date ORDER BY d.date");
 ?>
 
@@ -53,15 +52,18 @@ $(function () {
     var dates = [];
     <?php
     $i=0;
-    while($files_array = pdo_fetch_array($files))
-      {
-      $t = strtotime($files_array[0])*1000; //flot expects milliseconds
+    while ($files_array = pdo_fetch_array($files)) {
+        $t = strtotime($files_array[0])*1000; //flot expects milliseconds
     ?>
-      d1.push([<?php echo $t; ?>,<?php echo $files_array[1]; ?>]);
-      dates[<?php echo $t; ?>] = '<?php echo $files_array[0]; ?>';
+      d1.push([<?php echo $t;
+        ?>,<?php echo $files_array[1];
+        ?>]);
+      dates[<?php echo $t;
+        ?>] = '<?php echo $files_array[0];
+        ?>';
     <?php
     $i++;
-      }
+    }
     ?>
     
     var options = {

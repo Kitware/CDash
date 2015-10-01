@@ -16,49 +16,48 @@
 
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
-class SiteInformation
+class siteinformation
 {
-  var $TimeStamp;
-  var $ProcessorIs64Bits;
-  var $ProcessorVendor;
-  var $ProcessorVendorId;
-  var $ProcessorFamilyId;
-  var $ProcessorModelId;
-  var $ProcessorCacheSize;
-  var $NumberLogicalCpus;
-  var $NumberPhysicalCpus;
-  var $TotalVirtualMemory;
-  var $TotalPhysicalMemory;
-  var $LogicalProcessorsPerPhysical;
-  var $ProcessorClockFrequency;
-  var $Description;
-  var $SiteId;
+    public $TimeStamp;
+    public $ProcessorIs64Bits;
+    public $ProcessorVendor;
+    public $ProcessorVendorId;
+    public $ProcessorFamilyId;
+    public $ProcessorModelId;
+    public $ProcessorCacheSize;
+    public $NumberLogicalCpus;
+    public $NumberPhysicalCpus;
+    public $TotalVirtualMemory;
+    public $TotalPhysicalMemory;
+    public $LogicalProcessorsPerPhysical;
+    public $ProcessorClockFrequency;
+    public $Description;
+    public $SiteId;
   
   /** Constructor */
-  function __construct()
-    {
-    $this->TimeStamp = '1980-01-01 00:00:00';    
-    $this->ProcessorIs64Bits = -1;
-    $this->ProcessorVendor = -1;
-    $this->ProcessorVendorId = -1;
-    $this->ProcessorFamilyId = -1;
-    $this->ProcessorModelId = -1;
-    $this->ProcessorCacheSize = -1;
-    $this->NumberLogicalCpus = -1;
-    $this->NumberPhysicalCpus = -1;
-    $this->TotalVirtualMemory = -1;
-    $this->TotalPhysicalMemory = -1;
-    $this->LogicalProcessorsPerPhysical = -1;
-    $this->ProcessorClockFrequency = -1;
-    $this->Description = '';
-    $this->SiteId = 0;
-    }
+  public function __construct()
+  {
+      $this->TimeStamp = '1980-01-01 00:00:00';
+      $this->ProcessorIs64Bits = -1;
+      $this->ProcessorVendor = -1;
+      $this->ProcessorVendorId = -1;
+      $this->ProcessorFamilyId = -1;
+      $this->ProcessorModelId = -1;
+      $this->ProcessorCacheSize = -1;
+      $this->NumberLogicalCpus = -1;
+      $this->NumberPhysicalCpus = -1;
+      $this->TotalVirtualMemory = -1;
+      $this->TotalPhysicalMemory = -1;
+      $this->LogicalProcessorsPerPhysical = -1;
+      $this->ProcessorClockFrequency = -1;
+      $this->Description = '';
+      $this->SiteId = 0;
+  }
   
   
-  function SetValue($tag,$value)  
+    public function SetValue($tag, $value)
     {
-    switch($tag)
-      {
+        switch ($tag) {
       case "DESCRIPTION": $this->Description = $value;break;
       case "IS64BITS": $this->ProcessorIs64Bits = $value;break;
       case "VENDORSTRING": $this->ProcessorVendor = $value;break;
@@ -75,56 +74,50 @@ class SiteInformation
       }
     }
     
-  /** Check if the site already exists */  
-  function Exists()
-    {
-    // If no id specify return false
-    if(!$this->SiteId)
-      {
-      return false;    
-      }
-    
-    $query = pdo_query("SELECT count(*) FROM siteinformation WHERE siteid='".$this->SiteId."'");
-    $query_array = pdo_fetch_array($query);
-    if($query_array[0]==0)
-      {
-      return false;
-      }
-    return true;
+  /** Check if the site already exists */
+  public function Exists()
+  {
+      // If no id specify return false
+    if (!$this->SiteId) {
+        return false;
     }
     
-  /** Save the site information */
-  function Save()
-    {
-    if($this->Exists())
-      {
-      // Update the project
-      $query = "UPDATE siteinformation SET";
-      $query .= " timestamp='".$this->TimeStamp."'";
-      $query .= ",processoris64bits='".$this->ProcessorIs64Bits."'";
-      $query .= ",processorvendor='".$this->ProcessorVendor."'";
-      $query .= ",processorvendorid='".$this->ProcessorVendorId."'";
-      $query .= ",processorfamilyid='".$this->ProcessorFamilyId."'";
-      $query .= ",processormodelid='".$this->ProcessorModelId."'";
-      $query .= ",processorcachesize='".round($this->ProcessorCacheSize)."'";
-      $query .= ",numberlogicalcpus='".round($this->NumberLogicalCpus)."'";
-      $query .= ",numberphysicalcpus='".round($this->NumberPhysicalCpus)."'";
-      $query .= ",totalvirtualmemory='".round($this->TotalVirtualMemory)."'";
-      $query .= ",totalphysicalmemory='".round($this->TotalPhysicalMemory)."'";
-      $query .= ",logicalprocessorsperphysical='".round($this->LogicalProcessorsPerPhysical)."'";
-      $query .= ",processorclockfrequency='".round($this->ProcessorClockFrequency)."'";
-      $query .= ",description='".$this->Description."'";
-      $query .= " WHERE siteid='".$this->SiteId."'";
-      
-      if(!pdo_query($query))
-        {
-        add_last_sql_error("SiteInformation Update");
-        return false;
-        }
+      $query = pdo_query("SELECT count(*) FROM siteinformation WHERE siteid='".$this->SiteId."'");
+      $query_array = pdo_fetch_array($query);
+      if ($query_array[0]==0) {
+          return false;
       }
-    else
-      {                   
-      if(!pdo_query("INSERT INTO siteinformation (siteid,timestamp,
+      return true;
+  }
+    
+  /** Save the site information */
+  public function Save()
+  {
+      if ($this->Exists()) {
+          // Update the project
+      $query = "UPDATE siteinformation SET";
+          $query .= " timestamp='".$this->TimeStamp."'";
+          $query .= ",processoris64bits='".$this->ProcessorIs64Bits."'";
+          $query .= ",processorvendor='".$this->ProcessorVendor."'";
+          $query .= ",processorvendorid='".$this->ProcessorVendorId."'";
+          $query .= ",processorfamilyid='".$this->ProcessorFamilyId."'";
+          $query .= ",processormodelid='".$this->ProcessorModelId."'";
+          $query .= ",processorcachesize='".round($this->ProcessorCacheSize)."'";
+          $query .= ",numberlogicalcpus='".round($this->NumberLogicalCpus)."'";
+          $query .= ",numberphysicalcpus='".round($this->NumberPhysicalCpus)."'";
+          $query .= ",totalvirtualmemory='".round($this->TotalVirtualMemory)."'";
+          $query .= ",totalphysicalmemory='".round($this->TotalPhysicalMemory)."'";
+          $query .= ",logicalprocessorsperphysical='".round($this->LogicalProcessorsPerPhysical)."'";
+          $query .= ",processorclockfrequency='".round($this->ProcessorClockFrequency)."'";
+          $query .= ",description='".$this->Description."'";
+          $query .= " WHERE siteid='".$this->SiteId."'";
+      
+          if (!pdo_query($query)) {
+              add_last_sql_error("SiteInformation Update");
+              return false;
+          }
+      } else {
+          if (!pdo_query("INSERT INTO siteinformation (siteid,timestamp,
                      processoris64bits,processorvendor,processorvendorid,
                      processorfamilyid,processormodelid,processorcachesize,
                      numberlogicalcpus,numberphysicalcpus,totalvirtualmemory,
@@ -138,12 +131,10 @@ class SiteInformation
                      ".qnum(round($this->NumberPhysicalCpus)).",".qnum(round($this->TotalVirtualMemory)).",
                      ".qnum(round($this->TotalPhysicalMemory)).",".qnum(round($this->LogicalProcessorsPerPhysical)).",
                       ".qnum(round($this->ProcessorClockFrequency)).",'$this->Description'
-                     )"))
-         {
-         add_last_sql_error("SiteInformation Insert");
-         return false;
-         }
-      }  
-    } // end function save  
+                     )")) {
+              add_last_sql_error("SiteInformation Insert");
+              return false;
+          }
+      }
+  } // end function save
 }
-?>

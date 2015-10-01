@@ -19,13 +19,9 @@
 
 function cdashmail($to, $subject, $body, $headers)
 {
-  if(!empty($to))
-    {
-    return mail("$to", "$subject", "$body", "$headers");
+    if (!empty($to)) {
+        return mail("$to", "$subject", "$body", "$headers");
     }
-  add_log("Cannot send email. Receipient is not set");     
-  return false;
+    add_log("Cannot send email. Receipient is not set");
+    return false;
 }
-
-
-?>

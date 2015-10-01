@@ -32,40 +32,35 @@ require('login.php');
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
 $userid = pdo_real_escape_numeric($_GET["userid"]);
 
-if(!$userid || !$buildid || !isset($_SESSION['cdash']))
-  {
-  echo "Not valid id";
-  return;
-  }
+if (!$userid || !$buildid || !isset($_SESSION['cdash'])) {
+    echo "Not valid id";
+    return;
+}
 // Checks
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
-if(!isset($userid) || !is_numeric($userid))
-  {
-  echo "Not a valid userid!";
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    echo "Not a valid buildid!";
+    return;
+}
+if (!isset($userid) || !is_numeric($userid)) {
+    echo "Not a valid userid!";
+    return;
+}
    
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 @$AddNote = $_POST["AddNote"];
-if($AddNote)
-  {
-  $TextNote = htmlspecialchars(pdo_real_escape_string($_POST["TextNote"]));
-  $Status = pdo_real_escape_numeric($_POST["Status"]);
-  if(strlen($TextNote)>0)
-    {
-    $now = gmdate(FMT_DATETIME);
-    pdo_query("INSERT INTO buildnote (buildid,userid,note,timestamp,status) 
+if ($AddNote) {
+    $TextNote = htmlspecialchars(pdo_real_escape_string($_POST["TextNote"]));
+    $Status = pdo_real_escape_numeric($_POST["Status"]);
+    if (strlen($TextNote)>0) {
+        $now = gmdate(FMT_DATETIME);
+        pdo_query("INSERT INTO buildnote (buildid,userid,note,timestamp,status) 
                    VALUES ('$buildid','$userid','$TextNote','$now','$Status')");
     }
-  $url = "../buildSummary.php?buildid=".$buildid."&message=noteaddded";
-  header("location: ".$url);
-  }
+    $url = "../buildSummary.php?buildid=".$buildid."&message=noteaddded";
+    header("location: ".$url);
+}
 ?><head>
 <style type="text/css">
   .submitLink {

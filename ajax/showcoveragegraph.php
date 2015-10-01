@@ -27,14 +27,13 @@ require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    echo "Not a valid buildid!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Find the project variables
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
@@ -61,19 +60,26 @@ $(function () {
     var buildids = [];
     <?php
     $i=0;
-    while($build_array = pdo_fetch_array($previousbuilds))
-      {
-      $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
-      @$percent = round($build_array["loctested"]/($build_array["loctested"]+$build_array["locuntested"])*100,2);
+    while ($build_array = pdo_fetch_array($previousbuilds)) {
+        $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
+      @$percent = round($build_array["loctested"]/($build_array["loctested"]+$build_array["locuntested"])*100, 2);
 
-    ?>
-    percent_array.push([<?php echo $t; ?>,<?php echo $percent; ?>]);
-    loctested_array.push([<?php echo $t; ?>,<?php echo $build_array["loctested"]; ?>]);
-    locuntested_array.push([<?php echo $t; ?>,<?php echo $build_array["locuntested"]; ?>]);
-    buildids[<?php echo $t; ?>] = <?php echo $build_array["id"]; ?>;
+        ?>
+    percent_array.push([<?php echo $t;
+        ?>,<?php echo $percent;
+        ?>]);
+    loctested_array.push([<?php echo $t;
+        ?>,<?php echo $build_array["loctested"];
+        ?>]);
+    locuntested_array.push([<?php echo $t;
+        ?>,<?php echo $build_array["locuntested"];
+        ?>]);
+    buildids[<?php echo $t;
+        ?>] = <?php echo $build_array["id"];
+        ?>;
     <?php
     $i++;
-      }
+    }
     ?>
 
     var options = {

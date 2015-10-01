@@ -23,73 +23,81 @@ require_once('models/site.php');
 
 abstract class AbstractHandler implements SaxHandler
 {
-  protected $stack;
-  protected $projectid;
-  protected $scheduleid;
-  protected $Build;
-  protected $Site;
-  protected $SubProjectName;
+    protected $stack;
+    protected $projectid;
+    protected $scheduleid;
+    protected $Build;
+    protected $Site;
+    protected $SubProjectName;
 
-  public function __construct($projectid, $scheduleid)
+    public function __construct($projectid, $scheduleid)
     {
-    $this->projectid = $projectid;
-    $this->scheduleid = $scheduleid;
-    $this->stack = new Stack();  
+        $this->projectid = $projectid;
+        $this->scheduleid = $scheduleid;
+        $this->stack = new Stack();
     }
   
-  protected function getParent()
+    protected function getParent()
     {
-    return $this->stack->at($this->stack->size()-2);
+        return $this->stack->at($this->stack->size()-2);
     }
   
-  protected function getElement()
+    protected function getElement()
     {
-    return $this->stack->top();
+        return $this->stack->top();
     }
   
-  public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes)
     {
-    $this->stack->push($name);
+        $this->stack->push($name);
 
-    if($name == 'SUBPROJECT')
-      {
-      $this->SubProjectName = $attributes['NAME'];
-      }
+        if ($name == 'SUBPROJECT') {
+            $this->SubProjectName = $attributes['NAME'];
+        }
     }
 
-  public function endElement($parser, $name)
+    public function endElement($parser, $name)
     {
-    $this->stack->pop();
+        $this->stack->pop();
     }
 
-  public function processingInstruction($parser, $target, $data){}
+    public function processingInstruction($parser, $target, $data)
+    {
+    }
   
-  public function externalEntity($parser, $open_entity_name, $base, $system_id, $public_id){}
-  
-  public function skippedEntity($parser, $open_entity_name, $base, $system_id, $public_id){}
-  
-  public function startPrefixMapping($parser, $user_data, $prefix, $uri){}
-  
-  public function endPrefixMapping($parser, $user_data, $prefix){}
-
-  public function getSiteName()
+    public function externalEntity($parser, $open_entity_name, $base, $system_id, $public_id)
     {
-    return $this->Site->Name;
+    }
+  
+    public function skippedEntity($parser, $open_entity_name, $base, $system_id, $public_id)
+    {
+    }
+  
+    public function startPrefixMapping($parser, $user_data, $prefix, $uri)
+    {
+    }
+  
+    public function endPrefixMapping($parser, $user_data, $prefix)
+    {
     }
 
-  public function getSiteId()
+    public function getSiteName()
     {
-    return $this->Site->Id;
+        return $this->Site->Name;
     }
 
-  public function getBuildStamp()
+    public function getSiteId()
     {
-    return $this->Build->GetStamp();
+        return $this->Site->Id;
     }
 
-  public function getBuildName()
+    public function getBuildStamp()
     {
-    return $this->Build->Name;
-    }      
+        return $this->Build->GetStamp();
+    }
+
+    public function getBuildName()
+    {
+        return $this->Build->Name;
+    }
 }
-?>

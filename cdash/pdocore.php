@@ -24,257 +24,232 @@ require_once("cdash/config.php");
  * @param $closure Closure a function that returns FALSE when it fails
  * @return FALSE on failure mixed otherwise
  */
-function _exponential_backoff($closure) {
-  global $CDASH_MAX_QUERY_RETRIES;
+function _exponential_backoff($closure)
+{
+    global $CDASH_MAX_QUERY_RETRIES;
 
   // Random exponential back-off. See the following for more information:
   // https://cloud.google.com/storage/docs/json_api/v1/how-tos/upload#exp-backoff
-  for($retry_count = 0; $retry_count < $CDASH_MAX_QUERY_RETRIES; ++$retry_count) {
-    $ret = $closure();
-    if ($ret === FALSE) {
-      // No need to sleep the last time through the loop.
+  for ($retry_count = 0; $retry_count < $CDASH_MAX_QUERY_RETRIES; ++$retry_count) {
+      $ret = $closure();
+      if ($ret === false) {
+          // No need to sleep the last time through the loop.
       if ($retry_count < $CDASH_MAX_QUERY_RETRIES -1) {
-        $wait_time = (2^$retry_count)*1000 + rand(0,1000);
-        usleep($wait_time * 1000);
+          $wait_time = (2^$retry_count)*1000 + rand(0, 1000);
+          usleep($wait_time * 1000);
       }
-    } else {
-      return $ret; // Success
-    }
+      } else {
+          return $ret; // Success
+      }
   }
-  return $ret; // Failure after $CDASH_MAX_QUERY_RETRIES attempts
+    return $ret; // Failure after $CDASH_MAX_QUERY_RETRIES attempts
 }
 
 /** */
-function pdo_connect($server = NULL, $username = NULL, $password = NULL, $new_link = false, $client_flags = 0)
+function pdo_connect($server = null, $username = null, $password = null, $new_link = false, $client_flags = 0)
 {
-  global $CDASH_DB_TYPE, $CDASH_DB_PORT;
+    global $CDASH_DB_TYPE, $CDASH_DB_PORT;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    global $db_server, $db_username, $db_password, $db_port;
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        global $db_server, $db_username, $db_password, $db_port;
     // using PDO, we cannot connect without a database name,
     // so store the information for later use:
     $db_server = $server;
-    $db_username = $username;
-    $db_password = $password;
-    $db_port = $CDASH_DB_PORT;
-    return true;
-    }
-  else
-    {
-    global $last_link;
-    if(!isset($server)) $server = ini_get("mysql.default_host");
-    if(!isset($username)) $username = ini_get("mysql.default_user");
-    if(!isset($password)) $password = ini_get("mysql.default_password");
-    if(!empty($CDASH_DB_PORT))
-      {
-      $server .= ':'.$CDASH_DB_PORT;
-      }
-    $last_link = _exponential_backoff(function () use ($server, $username, $password, $new_link, $client_flags) {
+        $db_username = $username;
+        $db_password = $password;
+        $db_port = $CDASH_DB_PORT;
+        return true;
+    } else {
+        global $last_link;
+        if (!isset($server)) {
+            $server = ini_get("mysql.default_host");
+        }
+        if (!isset($username)) {
+            $username = ini_get("mysql.default_user");
+        }
+        if (!isset($password)) {
+            $password = ini_get("mysql.default_password");
+        }
+        if (!empty($CDASH_DB_PORT)) {
+            $server .= ':'.$CDASH_DB_PORT;
+        }
+        $last_link = _exponential_backoff(function () use ($server, $username, $password, $new_link, $client_flags) {
       global $CDASH_USE_PERSISTENT_MYSQL_CONNECTION;
       if ($CDASH_USE_PERSISTENT_MYSQL_CONNECTION) {
-        return mysql_pconnect($server, $username, $password, $client_flags);
+          return mysql_pconnect($server, $username, $password, $client_flags);
       } else {
-        return mysql_connect($server, $username, $password, $new_link, $client_flags);
+          return mysql_connect($server, $username, $password, $new_link, $client_flags);
       }
     });
-    return $last_link;
+        return $last_link;
     }
 }
 
 /** */
-function get_link_identifier($link_identifier=NULL)
+function get_link_identifier($link_identifier=null)
 {
-  global $CDASH_DB_TYPE;
-  global $last_link;
+    global $CDASH_DB_TYPE;
+    global $last_link;
 
-  if(isset($link_identifier))
-    return $link_identifier;
+    if (isset($link_identifier)) {
+        return $link_identifier;
+    }
 
-  if(isset($last_link))
+    if (isset($last_link)) {
+        return $last_link;
+    }
+
+    $last_link = pdo_connect();
     return $last_link;
-
-  $last_link = pdo_connect();
-  return $last_link;
 }
 
 /** */
-function pdo_error($link_identifier = NULL)
+function pdo_error($link_identifier = null)
 {
-  global $CDASH_DB_TYPE, $CDASH_PRODUCTION_MODE;
+    global $CDASH_DB_TYPE, $CDASH_PRODUCTION_MODE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    $error_info = get_link_identifier($link_identifier)->errorInfo();
-    if(isset($error_info[2]) && $error_info[0] != '00000')
-      {
-      if($CDASH_PRODUCTION_MODE)
-        {
-        return "SQL error encountered, query hidden.";
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        $error_info = get_link_identifier($link_identifier)->errorInfo();
+        if (isset($error_info[2]) && $error_info[0] != '00000') {
+            if ($CDASH_PRODUCTION_MODE) {
+                return "SQL error encountered, query hidden.";
+            }
+            return $error_info[2];
+        } else {
+            return ""; // no error;
         }
-      return $error_info[2];
-      }
-    else
-      {
-      return ""; // no error;
-      }
-    }
-  else
-    {
-    $error = mysql_error(get_link_identifier($link_identifier));
-    if(!$error)
-      {
-      return $error;
-      }
-    if($CDASH_PRODUCTION_MODE)
-      {
-      return "SQL error encountered, query hidden.";
-      }
-    return $error;
+    } else {
+        $error = mysql_error(get_link_identifier($link_identifier));
+        if (!$error) {
+            return $error;
+        }
+        if ($CDASH_PRODUCTION_MODE) {
+            return "SQL error encountered, query hidden.";
+        }
+        return $error;
     }
 }
 
 /** Return true if the given index exists for the column */
-function pdo_check_index_exists($tablename,$columnname)
+function pdo_check_index_exists($tablename, $columnname)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
    
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    echo "NOT IMPLEMENTED";
-    return false;
-    }
-  else
-    {
-    $query = pdo_query("SHOW INDEX FROM ".$tablename." WHERE Seq_in_index=1");
-    if($query)
-      {
-      while($index_array = pdo_fetch_array($query))
-        {
-        if($index_array['Column_name'] == $columnname)
-          {
-          return true;
-          }
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        echo "NOT IMPLEMENTED";
+        return false;
+    } else {
+        $query = pdo_query("SHOW INDEX FROM ".$tablename." WHERE Seq_in_index=1");
+        if ($query) {
+            while ($index_array = pdo_fetch_array($query)) {
+                if ($index_array['Column_name'] == $columnname) {
+                    return true;
+                }
+            }
         }
-      }
     }
-  return false;
+    return false;
 }
 
 
 /** */
 function pdo_fetch_array($result, $result_type = PDO::FETCH_BOTH)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if($result === false) return false;
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    return $result->fetch($result_type);
+    if ($result === false) {
+        return false;
     }
-  else
-    {
-    if    ($result_type == PDO::FETCH_BOTH)  $result_type = MYSQL_BOTH;
-    elseif($result_type == PDO::FETCH_NUM)   $result_type = MYSQL_NUM;
-    elseif($result_type == PDO::FETCH_ASSOC) $result_type = MYSQL_ASSOC;
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        return $result->fetch($result_type);
+    } else {
+        if ($result_type == PDO::FETCH_BOTH) {
+            $result_type = MYSQL_BOTH;
+        } elseif ($result_type == PDO::FETCH_NUM) {
+            $result_type = MYSQL_NUM;
+        } elseif ($result_type == PDO::FETCH_ASSOC) {
+            $result_type = MYSQL_ASSOC;
+        }
 
-    return mysql_fetch_array($result, $result_type);
+        return mysql_fetch_array($result, $result_type);
     }
 }
 
 /** */
 function pdo_fetch_row($result)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    return pdo_fetch_array($result, PDO::FETCH_NUM);
-    }
-  else
-    {
-    return mysql_fetch_row($result);
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        return pdo_fetch_array($result, PDO::FETCH_NUM);
+    } else {
+        return mysql_fetch_row($result);
     }
 }
 
 /** */
 function pdo_field_type($result, $field_offset)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    // TODO...
-    }
-  else
-    {
-    return mysql_field_type($result, $field_offset);
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        // TODO...
+    } else {
+        return mysql_field_type($result, $field_offset);
     }
 }
 
 /** */
 function pdo_field_len($result, $field_offset)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    // TODO...
-    }
-  else
-    {
-    return mysql_field_len($result, $field_offset);
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        // TODO...
+    } else {
+        return mysql_field_len($result, $field_offset);
     }
 }
 
 /** */
 function pdo_free_result($result)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    // TODO...
-    }
-  else
-    {
-    return mysql_free_result($result);
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        // TODO...
+    } else {
+        return mysql_free_result($result);
     }
 }
 
 /** */
 function pdo_insert_id($tablename)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    $seq  = "";
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        $seq  = "";
     // pgsql requires the sequence name
-    if($CDASH_DB_TYPE == "pgsql")
-      {
-      $seq = $tablename."_id_seq";
-      }
-    return get_link_identifier(NULL)->lastInsertId($seq);
+    if ($CDASH_DB_TYPE == "pgsql") {
+        $seq = $tablename."_id_seq";
     }
-  else
-    {
-    return mysql_insert_id(get_link_identifier());
+        return get_link_identifier(null)->lastInsertId($seq);
+    } else {
+        return mysql_insert_id(get_link_identifier());
     }
 }
 
 /** */
 function pdo_num_rows($result)
 {
-  if(!$result)
-    {
-    return false;
+    if (!$result) {
+        return false;
     }
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    // The documentation here: http://us.php.net/manual/en/pdostatement.rowcount.php
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        // The documentation here: http://us.php.net/manual/en/pdostatement.rowcount.php
     // suggests that rowCount may be inappropriate for using on SELECT queries.
     // It is the corollary to the mysql_affected_rows or pg_affected_rows functions,
     // not the mysql_num_rows function...
@@ -282,45 +257,36 @@ function pdo_num_rows($result)
     // This seems like it might be a bug waiting to be reported...
     //
     return $result->rowCount();
-    }
-  else
-    {
-    return mysql_num_rows($result);
+    } else {
+        return mysql_num_rows($result);
     }
 }
 
 /** */
 function pdo_affected_rows($result)
 {
-  if(!$result)
-    {
-    return false;
+    if (!$result) {
+        return false;
     }
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    return $result->rowCount();
-    }
-  else
-    {
-    return mysql_affected_rows(get_link_identifier());
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        return $result->rowCount();
+    } else {
+        return mysql_affected_rows(get_link_identifier());
     }
 }
 
 /** */
-function pdo_query($query, $link_identifier = NULL)
+function pdo_query($query, $link_identifier = null)
 {
-  // Wrap the query in our exponential backoff closure
+    // Wrap the query in our exponential backoff closure
   return _exponential_backoff(function () use ($query, $link_identifier) {
     global $CDASH_DB_TYPE;
-    if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-      return get_link_identifier($link_identifier)->query($query);
-    }
-    else
-    {
-      return mysql_query($query, get_link_identifier($link_identifier));
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        return get_link_identifier($link_identifier)->query($query);
+    } else {
+        return mysql_query($query, get_link_identifier($link_identifier));
     }
   });
 }
@@ -328,37 +294,32 @@ function pdo_query($query, $link_identifier = NULL)
 /** */
 function pdo_lock_tables($table)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
   // Table is an array of table names. Construct a comma separated string:
   //
   $table_str = $table[0];
 
-  $n = count($table);
-  for ($i = 1; $i < $n; ++$i)
-    {
-    $table_str .= ", " . $table[$i];
+    $n = count($table);
+    for ($i = 1; $i < $n; ++$i) {
+        $table_str .= ", " . $table[$i];
     }
 
-  if(isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE!="mysql")
-    {
-    // PgSql table locking syntax:
+    if (isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE!="mysql") {
+        // PgSql table locking syntax:
     // http://www.postgresql.org/docs/8.1/static/sql-lock.html
     //
     pdo_query("BEGIN WORK");
 
-    $locked = pdo_query("LOCK TABLE ".$table_str);
+        $locked = pdo_query("LOCK TABLE ".$table_str);
 
-    if (!$locked)
-      {
-      pdo_query("COMMIT WORK");
-      }
+        if (!$locked) {
+            pdo_query("COMMIT WORK");
+        }
 
-    return $locked;
-    }
-  else
-    {
-    // MySQL table locking:
+        return $locked;
+    } else {
+        // MySQL table locking:
     // http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html
     //
     return pdo_query("LOCK TABLES ".$table_str." WRITE");
@@ -368,98 +329,82 @@ function pdo_lock_tables($table)
 /** */
 function pdo_unlock_tables($table)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE!="mysql")
-    {
-    // Unlock occurs automatically at transaction end for PgSql, according to:
+    if (isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE!="mysql") {
+        // Unlock occurs automatically at transaction end for PgSql, according to:
     // http://www.postgresql.org/docs/8.1/static/sql-lock.html
     //
     pdo_query("COMMIT WORK");
-    return true;
-    }
-  else
-    {
-    return pdo_query("UNLOCK TABLES");
+        return true;
+    } else {
+        return pdo_query("UNLOCK TABLES");
     }
 }
 
 /** */
-function pdo_real_escape_string($unescaped_string, $link_identifier = NULL)
+function pdo_real_escape_string($unescaped_string, $link_identifier = null)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    $str = get_link_identifier($link_identifier)->quote($unescaped_string);
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        $str = get_link_identifier($link_identifier)->quote($unescaped_string);
     // in contrast to mysql_real_escape_string(),
     // PDO::quote() also adds the enclosing quotes,
     // which need to be removed:
     return substr($str, 1, strlen($str) - 2);
-    }
-  else
-    {
-    return mysql_real_escape_string($unescaped_string, get_link_identifier($link_identifier));
+    } else {
+        return mysql_real_escape_string($unescaped_string, get_link_identifier($link_identifier));
     }
 }
 
 /** */
-function pdo_real_escape_numeric($unescaped_string, $link_identifier = NULL)
+function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE=="pgsql" && $unescaped_string=="") {
-    // MySQL interprets an empty string as zero when assigned to a numeric field,
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE=="pgsql" && $unescaped_string=="") {
+        // MySQL interprets an empty string as zero when assigned to a numeric field,
     // for PostgreSQL this must be done explicitly:
     $unescaped_string = "0";
-  }
+    }
 
-  return pdo_real_escape_string($unescaped_string, $link_identifier);
+    return pdo_real_escape_string($unescaped_string, $link_identifier);
 }
 
 /** */
 function pdo_select_db($database_name, &$link_identifier)
 {
-  global $CDASH_DB_TYPE;
+    global $CDASH_DB_TYPE;
 
-  if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql")
-    {
-    global $db_server, $db_username, $db_password, $last_link, $db_port;
-    $dsn = "$CDASH_DB_TYPE:host=$db_server;dbname=$database_name";
-    if(!empty($db_port))
-      {
-      $dsn .= ';port='.$db_port;
-      }
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        global $db_server, $db_username, $db_password, $last_link, $db_port;
+        $dsn = "$CDASH_DB_TYPE:host=$db_server;dbname=$database_name";
+        if (!empty($db_port)) {
+            $dsn .= ';port='.$db_port;
+        }
 
-    try
-      {
-      $last_link = $link_identifier = new PDO($dsn, $db_username, $db_password);
+        try {
+            $last_link = $link_identifier = new PDO($dsn, $db_username, $db_password);
       /*if($CDASH_DB_TYPE == "mysql") // necessary for looping through rows
         {
         $link_identifier->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         }*/
       pdo_query("SET client_encoding to 'UTF8'");
-      return true;
-      }
-    catch(PDOException $e)
-      {
-      //print_r($e); // Add debug information
+            return true;
+        } catch (PDOException $e) {
+            //print_r($e); // Add debug information
       return false;
-      }
-    }
-  else
-    {
-    $ln = get_link_identifier($link_identifier);
-    $db = mysql_select_db($database_name, $ln);
-    if (PHP_VERSION >= 5.3)
-      {
-      mysql_set_charset('utf8', $ln);
-      }
-    else
-      {
-      mysql_query("SET NAMES 'utf8'");
-      }
-    return $db;
+        }
+    } else {
+        $ln = get_link_identifier($link_identifier);
+        $db = mysql_select_db($database_name, $ln);
+        if (PHP_VERSION >= 5.3) {
+            mysql_set_charset('utf8', $ln);
+        } else {
+            mysql_query("SET NAMES 'utf8'");
+        }
+        return $db;
     }
 }
 
@@ -471,11 +416,7 @@ global $CDASH_DB_PASS;
 global $CDASH_DB_NAME;
 global $CDASH_DB_PORT;
 
-if (!isset($cdash_pdo_connect_result))
-{
-  $cdash_pdo_connect_result = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-  pdo_select_db("$CDASH_DB_NAME", $cdash_pdo_connect_result);
+if (!isset($cdash_pdo_connect_result)) {
+    $cdash_pdo_connect_result = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+    pdo_select_db("$CDASH_DB_NAME", $cdash_pdo_connect_result);
 }
-
-
-?>

@@ -22,122 +22,96 @@ include_once('cdash/common.php');
 include('cdash/version.php');
 include('models/user.php');
 
-if ($session_OK) 
-  {
-  $userid = $_SESSION['cdash']['loginid'];
+if ($session_OK) {
+    $userid = $_SESSION['cdash']['loginid'];
   // Checks
-  if(!isset($userid) || !is_numeric($userid))
-    {
-    echo "Not a valid usersessionid!";
-    return;
+  if (!isset($userid) || !is_numeric($userid)) {
+      echo "Not a valid usersessionid!";
+      return;
+  }
+
+    $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
+
+    if ($user_array["admin"]!=1) {
+        echo "You don't have the permissions to access this page!";
+        return;
     }
 
-  $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
+    $xml = begin_XML_for_XSLT();
+    $xml .= "<backurl>user.php</backurl>";
+    $xml .= "<title>CDash - Manage Users</title>";
+    $xml .= "<menutitle>CDash</menutitle>";
+    $xml .= "<menusubtitle>Manage Users</menusubtitle>";
 
-  if($user_array["admin"]!=1)
-    {
-    echo "You don't have the permissions to access this page!";
-    return;
+    @$postuserid = $_POST["userid"];
+    if ($postuserid != null) {
+        $postuserid = pdo_real_escape_numeric($postuserid);
     }
 
-  $xml = begin_XML_for_XSLT();
-  $xml .= "<backurl>user.php</backurl>";
-  $xml .= "<title>CDash - Manage Users</title>";
-  $xml .= "<menutitle>CDash</menutitle>";
-  $xml .= "<menusubtitle>Manage Users</menusubtitle>";
+    if (isset($_POST["adduser"])) {
+        // arrive from register form
 
-  @$postuserid = $_POST["userid"];
-  if ($postuserid != NULL)
-    {
-    $postuserid = pdo_real_escape_numeric($postuserid);
-    }
-
-  if(isset($_POST["adduser"])) // arrive from register form 
-    {
     $email = $_POST["email"];
-    $passwd = $_POST["passwd"];
-    $passwd2 = $_POST["passwd2"];
-    if(!($passwd == $passwd2))
-      {
-      $xml .= add_XML_value("error","Passwords do not match!");
-      }
-    else
-      {
-      $fname = $_POST["fname"];
-      $lname = $_POST["lname"];
-      $institution = $_POST["institution"];
-      if ($email && $passwd && $passwd2 && $fname && $lname && $institution)
-        {
-        $User = new User();
-        if($User->GetIdFromEmail($email))
-          {
-          $xml .= add_XML_value("error","Email already registered!");
-          }
-        else
-          {
-          $passwdencryted = md5($passwd);
-          $User->Email = $email;
-          $User->Password = $passwdencryted;
-          $User->FirstName = $fname;
-          $User->LastName = $lname;
-          $User->Institution = $institution;        
-          if($User->Save())
-            {
-            $xml .= add_XML_value("warning","User ".$email." added successfully with password:".$passwd);
+        $passwd = $_POST["passwd"];
+        $passwd2 = $_POST["passwd2"];
+        if (!($passwd == $passwd2)) {
+            $xml .= add_XML_value("error", "Passwords do not match!");
+        } else {
+            $fname = $_POST["fname"];
+            $lname = $_POST["lname"];
+            $institution = $_POST["institution"];
+            if ($email && $passwd && $passwd2 && $fname && $lname && $institution) {
+                $User = new User();
+                if ($User->GetIdFromEmail($email)) {
+                    $xml .= add_XML_value("error", "Email already registered!");
+                } else {
+                    $passwdencryted = md5($passwd);
+                    $User->Email = $email;
+                    $User->Password = $passwdencryted;
+                    $User->FirstName = $fname;
+                    $User->LastName = $lname;
+                    $User->Institution = $institution;
+                    if ($User->Save()) {
+                        $xml .= add_XML_value("warning", "User ".$email." added successfully with password:".$passwd);
+                    } else {
+                        $xml .= add_XML_value("error", "Cannot add user");
+                    }
+                }
+            } else {
+                $xml .= add_XML_value("error", "Please fill in all of the required fields");
             }
-          else
-            {
-            $xml .= add_XML_value("error","Cannot add user");
-            }
-          }
         }
-      else
-        {
-        $xml .= add_XML_value("error","Please fill in all of the required fields");
+    } elseif (isset($_POST["makenormaluser"])) {
+        if ($postuserid > 1) {
+            $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
+            pdo_query("UPDATE ".qid("user")." SET admin=0 WHERE id='".$postuserid."'");
+            $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." is not administrator anymore.</warning>";
+        } else {
+            $xml .= "<error>Administrator should remain admin.</error>";
         }
-      }
-    }
-  else if(isset($_POST["makenormaluser"]))
-    {
-    if($postuserid > 1)
-      {
-      $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
-      pdo_query("UPDATE ".qid("user")." SET admin=0 WHERE id='".$postuserid."'");
-      $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." is not administrator anymore.</warning>";
-      }
-    else
-      {
-      $xml .= "<error>Administrator should remain admin.</error>";
-      }
-    }
-  else if(isset($_POST["makeadmin"]))
-    {
-    $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
-    pdo_query("UPDATE ".qid("user")." SET admin=1 WHERE id='".$postuserid."'");
-    $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." is now an administrator.</warning>";
-    }
-  else if(isset($_POST["removeuser"]))
-    {
-    $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
-    pdo_query("DELETE FROM ".qid("user")." WHERE id='".$postuserid."'");
-    $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." has been removed.</warning>";
+    } elseif (isset($_POST["makeadmin"])) {
+        $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
+        pdo_query("UPDATE ".qid("user")." SET admin=1 WHERE id='".$postuserid."'");
+        $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." is now an administrator.</warning>";
+    } elseif (isset($_POST["removeuser"])) {
+        $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
+        pdo_query("DELETE FROM ".qid("user")." WHERE id='".$postuserid."'");
+        $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." has been removed.</warning>";
     }
     
-  if(isset($_POST["search"]))
-    {
-    $xml .= "<search>".$_POST["search"]."</search>";
+    if (isset($_POST["search"])) {
+        $xml .= "<search>".$_POST["search"]."</search>";
     }
 
-if(isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1)
-  {
-  $xml .= add_XML_value("fullemail","1");
-  }
+    if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1) {
+        $xml .= add_XML_value("fullemail", "1");
+    }
   
   
-$xml .= "</cdash>";
+    $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml,"manageUsers");
-  } // end session
+generate_XSLT($xml, "manageUsers");
+} // end session
 ?>
 

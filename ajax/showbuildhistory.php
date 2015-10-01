@@ -27,14 +27,13 @@ require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    echo "Not a valid buildid!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Find the project variables
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime
@@ -77,51 +76,108 @@ $previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build
 </tr>
 <?php
 $i=0;
-while($build_array = pdo_fetch_array($previousbuilds))
-  {
-  $updateerrors = $build_array["updatestatus"];
-  if($updateerrors == 0) {$updateerrors = 0;}
-  $updatewarnings = $build_array["updatewarnings"];
-  if($updatewarnings == 0) {$updatewarnings = 0;}
-  $configureerrors = $build_array["configurestatus"];
-  if($configureerrors == 0) {$configureerrors = 0;}
-  $configurewarnings = $build_array["configurewarnings"];
-  if($configurewarnings == 0) {$configurewarnings = 0;}
+while ($build_array = pdo_fetch_array($previousbuilds)) {
+    $updateerrors = $build_array["updatestatus"];
+    if ($updateerrors == 0) {
+        $updateerrors = 0;
+    }
+    $updatewarnings = $build_array["updatewarnings"];
+    if ($updatewarnings == 0) {
+        $updatewarnings = 0;
+    }
+    $configureerrors = $build_array["configurestatus"];
+    if ($configureerrors == 0) {
+        $configureerrors = 0;
+    }
+    $configurewarnings = $build_array["configurewarnings"];
+    if ($configurewarnings == 0) {
+        $configurewarnings = 0;
+    }
 
-  $builderrors = $build_array["builderrors"];
-  if($builderrors == 0) {$builderrors = 0;}
-  $buildwarnings = $build_array["buildwarnings"];
-  if($buildwarnings == 0) {$buildwarnings = 0;}
-  $testfailed = $build_array["testfailed"];
-  if($testfailed == 0) {$testfailed = 0;}
-?>
+    $builderrors = $build_array["builderrors"];
+    if ($builderrors == 0) {
+        $builderrors = 0;
+    }
+    $buildwarnings = $build_array["buildwarnings"];
+    if ($buildwarnings == 0) {
+        $buildwarnings = 0;
+    }
+    $testfailed = $build_array["testfailed"];
+    if ($testfailed == 0) {
+        $testfailed = 0;
+    }
+    ?>
   <tr>
   <td><center>
   <?php
-  if($i > 0) // Don't link the current build
-    {
+  if ($i > 0) {
+      // Don't link the current build
+
   ?>
     <a href="buildSummary.php?buildid=<?php echo $build_array["id"]?>">
   <?php
+
+  }
+    echo date("Y-m-d H:i:d", strtotime($build_array["starttime"]));
+    if ($i > 0) {
+        echo "</a>";
     }
-  echo date("Y-m-d H:i:d",strtotime($build_array["starttime"]));
-  if($i > 0)
-    {
-    echo "</a>";
-    }
-   ?>
+    ?>
   </center></td>
-  <td><center><?php echo $build_array["nfiles"]; ?></center></td>
-  <td class=<?php if($updateerrors>0) echo "error"; else echo "normal" ?>><center><?php echo $updateerrors; ?></center></td>
-  <td class=<?php if($updatewarnings>0) echo "warning"; else echo "normal" ?>><center><?php echo $updatewarnings; ?></center></td>
-  <td class=<?php if($configureerrors>0) echo "error"; else echo "normal" ?>><center><?php echo $configureerrors; ?></center></td>
-  <td class=<?php if($configurewarnings>0) echo "warning"; else echo "normal" ?>><center><?php echo $configurewarnings; ?></center></td>
-  <td class=<?php if($builderrors>0) echo "error"; else echo "normal" ?>><center><?php echo $builderrors; ?></center></td>
-  <td class=<?php if($buildwarnings>0) echo "warning"; else echo "normal" ?>><center><?php echo $buildwarnings; ?></center></td>
-  <td class=<?php if($testfailed>0) echo "error"; else echo "normal" ?>><center><?php echo $testfailed; ?></center></td>
+  <td><center><?php echo $build_array["nfiles"];
+    ?></center></td>
+  <td class=<?php if ($updateerrors>0) {
+    echo "error";
+} else {
+    echo "normal";
+}
+    ?>><center><?php echo $updateerrors;
+    ?></center></td>
+  <td class=<?php if ($updatewarnings>0) {
+    echo "warning";
+} else {
+    echo "normal";
+}
+    ?>><center><?php echo $updatewarnings;
+    ?></center></td>
+  <td class=<?php if ($configureerrors>0) {
+    echo "error";
+} else {
+    echo "normal";
+}
+    ?>><center><?php echo $configureerrors;
+    ?></center></td>
+  <td class=<?php if ($configurewarnings>0) {
+    echo "warning";
+} else {
+    echo "normal";
+}
+    ?>><center><?php echo $configurewarnings;
+    ?></center></td>
+  <td class=<?php if ($builderrors>0) {
+    echo "error";
+} else {
+    echo "normal";
+}
+    ?>><center><?php echo $builderrors;
+    ?></center></td>
+  <td class=<?php if ($buildwarnings>0) {
+    echo "warning";
+} else {
+    echo "normal";
+}
+    ?>><center><?php echo $buildwarnings;
+    ?></center></td>
+  <td class=<?php if ($testfailed>0) {
+    echo "error";
+} else {
+    echo "normal";
+}
+    ?>><center><?php echo $testfailed;
+    ?></center></td>
   </tr>
 <?php
   $i++;
-  }
+}
 ?>
 </table>

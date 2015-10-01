@@ -179,8 +179,6 @@ $CDASH_DELETE_OLD_SUBPROJECTS = true;
 
 /** DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__).'/config.local.php';
-if ((strpos(__FILE__,'config.local.php') === FALSE) && file_exists($localConfig) )
-  {
-  include($localConfig);
-  }
-?>
+if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {
+    include($localConfig);
+}
