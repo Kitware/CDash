@@ -14,27 +14,20 @@
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
      PURPOSE.  See the above copyright notices for more information.
 
-=========================================================================*/ 
+=========================================================================*/
   include("cdash/config.php");
   require_once("cdash/pdo.php");
   include_once("cdash/common.php");
   include_once('cdash/version.php');
 
-if(!empty($_GET['page']))
-  {
-  $localphpfile = $_GET['page'].".php";
+if (!empty($_GET['page'])) {
+    $localphpfile = $_GET['page'].".php";
   
-  if(file_exists($_GET['page'].".php"))
-    {
-    include($localphpfile );
+    if (file_exists($_GET['page'].".php")) {
+        include($localphpfile);
+    } else {
+        include('local/'.$localphpfile);
     }
-  else 
-    {
-    include( 'local/'.$localphpfile );
-    }        
-  }
-else  
-  {
-  header( 'location: index.php' );
-  }  
-?>
+} else {
+    header('location: index.php');
+}

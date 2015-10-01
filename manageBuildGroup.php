@@ -1,1 +1,1 @@
-<?php readfile("views/manageBuildGroup.html"); ?>
+<?php readfile("views/manageBuildGroup.html");

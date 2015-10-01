@@ -36,28 +36,26 @@ require_once("cdash/log.php");
 //
 function pdo_single_row_query($qry)
 {
-  $result = pdo_query($qry);
-  if (FALSE === $result)
-  {
-    add_log('error: pdo_query failed: ' . pdo_error(),
+    $result = pdo_query($qry);
+    if (false === $result) {
+        add_log('error: pdo_query failed: ' . pdo_error(),
       'pdo_single_row_query', LOG_ERR);
-    return array();
-  }
+        return array();
+    }
 
-  $num_rows = pdo_num_rows($result);
-  if (0 !== $num_rows && 1 !== $num_rows)
-  {
-    add_log('error: at most 1 row should be returned, not ' . $num_rows,
+    $num_rows = pdo_num_rows($result);
+    if (0 !== $num_rows && 1 !== $num_rows) {
+        add_log('error: at most 1 row should be returned, not ' . $num_rows,
       'pdo_single_row_query', LOG_ERR);
-    add_log('warning: returning the first row anyway even though result ' .
+        add_log('warning: returning the first row anyway even though result ' .
       'contains ' . $num_rows . ' rows',
       'pdo_single_row_query', LOG_WARNING);
-  }
+    }
 
-  $row = pdo_fetch_array($result);
-  pdo_free_result($result);
+    $row = pdo_fetch_array($result);
+    pdo_free_result($result);
 
-  return $row;
+    return $row;
 }
 
 
@@ -68,22 +66,20 @@ function pdo_single_row_query($qry)
 //
 function pdo_all_rows_query($qry)
 {
-  $result = pdo_query($qry);
-  if (FALSE === $result)
-  {
-    add_log('error: pdo_query failed: ' . pdo_error(),
+    $result = pdo_query($qry);
+    if (false === $result) {
+        add_log('error: pdo_query failed: ' . pdo_error(),
       'pdo_all_rows_query', LOG_ERR);
-    return array();
-  }
-
-  $all_rows = array();
-  while ($row = pdo_fetch_array($result))
-    {
-    $all_rows[] = $row;
+        return array();
     }
-  pdo_free_result($result);
 
-  return $all_rows;
+    $all_rows = array();
+    while ($row = pdo_fetch_array($result)) {
+        $all_rows[] = $row;
+    }
+    pdo_free_result($result);
+
+    return $all_rows;
 }
 
 
@@ -93,18 +89,15 @@ function pdo_all_rows_query($qry)
 //
 function pdo_get_field_value($qry, $fieldname, $default)
 {
-  $row = pdo_single_row_query($qry);
+    $row = pdo_single_row_query($qry);
 
-  if (!empty($row))
-  {
-    $f = $row["$fieldname"];
-  }
-  else
-  {
-    $f = $default;
-  }
+    if (!empty($row)) {
+        $f = $row["$fieldname"];
+    } else {
+        $f = $default;
+    }
 
-  return $f;
+    return $f;
 }
 
 
@@ -115,29 +108,25 @@ function pdo_get_field_value($qry, $fieldname, $default)
 //
 function pdo_query_and_log_if_failed($qry, $caller)
 {
-  $result = pdo_query($qry);
+    $result = pdo_query($qry);
 
-  if (FALSE === $result)
-  {
-    add_log('error: pdo_query failed: ' . pdo_error(),
+    if (false === $result) {
+        add_log('error: pdo_query failed: ' . pdo_error(),
       $caller, LOG_ERR);
 
     // Also log a bit of the query so we can tell where it came from:
-    if (strlen($qry) > 100)
-    {
-      $log_qry = substr($qry, 0, 100) . '...';
+    if (strlen($qry) > 100) {
+        $log_qry = substr($qry, 0, 100) . '...';
+    } else {
+        $log_qry = $qry;
     }
-    else
-    {
-      $log_qry = $qry;
-    }
-    add_log('query: '.$log_qry,
+        add_log('query: '.$log_qry,
       $caller, LOG_INFO);
 
-    return FALSE;
-  }
+        return false;
+    }
 
-  return TRUE;
+    return true;
 }
 
 
@@ -148,7 +137,7 @@ function pdo_query_and_log_if_failed($qry, $caller)
 //
 function pdo_insert_query($qry)
 {
-  return pdo_query_and_log_if_failed($qry, 'pdo_insert_query');
+    return pdo_query_and_log_if_failed($qry, 'pdo_insert_query');
 }
 
 
@@ -159,8 +148,5 @@ function pdo_insert_query($qry)
 //
 function pdo_delete_query($qry)
 {
-  return pdo_query_and_log_if_failed($qry, 'pdo_delete_query');
+    return pdo_query_and_log_if_failed($qry, 'pdo_delete_query');
 }
-
-
-?>

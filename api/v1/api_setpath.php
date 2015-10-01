@@ -4,4 +4,3 @@
 //
 $cdashpath = str_replace('\\', '/', dirname(dirname(dirname(__FILE__))));
 set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
-?>

@@ -19,7 +19,8 @@ require_once(dirname(__FILE__) . '/scorer.php');
  *  @package    SimpleTest
  *  @subpackage Extensions
  */
-abstract class SimpleResult {
+abstract class SimpleResult
+{
     public $time;
     public $breadcrumb;
     public $message;
@@ -29,7 +30,8 @@ abstract class SimpleResult {
      * @param array $breadcrumb     Test stack at the time of the event.
      * @param string $message       The messsage to the human.
      */
-    function __construct($breadcrumb, $message) {
+    public function __construct($breadcrumb, $message)
+    {
         list($this->time, $this->breadcrumb, $this->message) =
                 array(time(), $breadcrumb, $message);
     }
@@ -40,21 +42,27 @@ abstract class SimpleResult {
  *    @package    SimpleTest
  *    @subpackage Extensions
  */
-class SimpleResultOfPass extends SimpleResult { }
+class SimpleResultOfPass extends SimpleResult
+{
+}
 
 /**
  *    A single failure captured for later.
  *    @package    SimpleTest
  *    @subpackage Extensions
  */
-class SimpleResultOfFail extends SimpleResult { }
+class SimpleResultOfFail extends SimpleResult
+{
+}
 
 /**
  *    A single exception captured for later.
  *    @package    SimpleTest
  *    @subpackage Extensions
  */
-class SimpleResultOfException extends SimpleResult { }
+class SimpleResultOfException extends SimpleResult
+{
+}
 
 /**
  *    Array-based test recorder. Returns an array
@@ -62,7 +70,8 @@ class SimpleResultOfException extends SimpleResult { }
  *    @package    SimpleTest
  *    @subpackage Extensions
  */
-class Recorder extends SimpleReporterDecorator {
+class Recorder extends SimpleReporterDecorator
+{
     public $results = array();
 
     /**
@@ -71,7 +80,8 @@ class Recorder extends SimpleReporterDecorator {
      *    @param string $message    Pass message to be displayed
      *                              eventually.
      */
-    function paintPass($message) {
+    public function paintPass($message)
+    {
         parent::paintPass($message);
         $this->results[] = new SimpleResultOfPass(parent::getTestList(), $message);
     }
@@ -82,7 +92,8 @@ class Recorder extends SimpleReporterDecorator {
      *    @param string $message    Failure message to be displayed
      *                              eventually.
      */
-    function paintFail($message) {
+    public function paintFail($message)
+    {
         parent::paintFail($message);
         $this->results[] = new SimpleResultOfFail(parent::getTestList(), $message);
     }
@@ -93,9 +104,9 @@ class Recorder extends SimpleReporterDecorator {
      *    @param string $message    Exception message to be displayed
      *                              eventually.
      */
-    function paintException($message) {
+    public function paintException($message)
+    {
         parent::paintException($message);
         $this->results[] = new SimpleResultOfException(parent::getTestList(), $message);
     }
 }
-?>

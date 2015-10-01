@@ -20,6 +20,5 @@ require_once("api_setpath.php");
 
 class CDashAPI
 {
-  var $Parameters;
+    public $Parameters;
 }
-?>

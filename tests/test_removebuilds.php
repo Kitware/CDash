@@ -7,22 +7,20 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class RemoveBuildsTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testRemoveBuilds()
+    public function testRemoveBuilds()
     {
-    $this->login();
-    $this->get($this->url."/removeBuilds.php?projectid=5");
-    $this->clickSubmitByName("Submit");
-    if(strpos($this->getBrowser()->getContentAsText(), "Removed") === false)
-      {
-      $this->fail("'Removed' not found when expected");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->login();
+        $this->get($this->url."/removeBuilds.php?projectid=5");
+        $this->clickSubmitByName("Submit");
+        if (strpos($this->getBrowser()->getContentAsText(), "Removed") === false) {
+            $this->fail("'Removed' not found when expected");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-?>

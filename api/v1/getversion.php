@@ -20,4 +20,3 @@ include_once("api_setpath.php");
 require_once("cdash/version.php");
 
 echo $CDASH_VERSION;
-?>

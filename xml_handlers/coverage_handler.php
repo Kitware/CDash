@@ -21,139 +21,119 @@ require_once('models/label.php');
 
 class CoverageHandler extends AbstractHandler
 {
-  private $StartTimeStamp;
-  private $EndTimeStamp;
+    private $StartTimeStamp;
+    private $EndTimeStamp;
 
-  private $Coverage;
-  private $CoverageFile;
-  private $CoverageSummary;
-  private $Label;
+    private $Coverage;
+    private $CoverageFile;
+    private $CoverageSummary;
+    private $Label;
 
 
   /** Constructor */
   public function __construct($projectID, $scheduleID)
-    {
-    parent::__construct($projectID, $scheduleID);
-    $this->Build = new Build();
-    $this->Site = new Site();
-    $this->CoverageSummary = new CoverageSummary();
-    }
+  {
+      parent::__construct($projectID, $scheduleID);
+      $this->Build = new Build();
+      $this->Site = new Site();
+      $this->CoverageSummary = new CoverageSummary();
+  }
 
 
   /** startElement */
   public function startElement($parser, $name, $attributes)
-    {
-    parent::startElement($parser, $name, $attributes);
-    if($name=='SITE')
-      {
-      $this->Site->Name = $attributes['NAME'];
-      if(empty($this->Site->Name))
-        {
-        $this->Site->Name = "(empty)";
-        }
-      $this->Site->Insert();
+  {
+      parent::startElement($parser, $name, $attributes);
+      if ($name=='SITE') {
+          $this->Site->Name = $attributes['NAME'];
+          if (empty($this->Site->Name)) {
+              $this->Site->Name = "(empty)";
+          }
+          $this->Site->Insert();
 
-      $siteInformation = new SiteInformation();
-       $buildInformation =  new BuildInformation();
+          $siteInformation = new SiteInformation();
+          $buildInformation =  new BuildInformation();
 
       // Fill in the attribute
-      foreach($attributes as $key=>$value)
-        {
-        $siteInformation->SetValue($key,$value);
-        $buildInformation->SetValue($key,$value);
-        }
+      foreach ($attributes as $key=>$value) {
+          $siteInformation->SetValue($key, $value);
+          $buildInformation->SetValue($key, $value);
+      }
 
-      $this->Site->SetInformation($siteInformation);
+          $this->Site->SetInformation($siteInformation);
 
-      $this->Build->SiteId = $this->Site->Id;
-      $this->Build->Name = $attributes['BUILDNAME'];
-      if(empty($this->Build->Name))
-        {
-        $this->Build->Name = "(empty)";
-        }
-      $this->Build->SetStamp($attributes['BUILDSTAMP']);
-      $this->Build->Generator = $attributes['GENERATOR'];
-      $this->Build->Information = $buildInformation;
+          $this->Build->SiteId = $this->Site->Id;
+          $this->Build->Name = $attributes['BUILDNAME'];
+          if (empty($this->Build->Name)) {
+              $this->Build->Name = "(empty)";
+          }
+          $this->Build->SetStamp($attributes['BUILDSTAMP']);
+          $this->Build->Generator = $attributes['GENERATOR'];
+          $this->Build->Information = $buildInformation;
+      } elseif ($name=='FILE') {
+          $this->CoverageFile = new CoverageFile();
+          $this->Coverage = new Coverage();
+          $this->CoverageFile->FullPath = $attributes['FULLPATH'];
+          if ($attributes['COVERED'] == 1 || $attributes['COVERED']=="true") {
+              $this->Coverage->Covered = 1;
+          } else {
+              $this->Coverage->Covered = 0;
+          }
+          $this->Coverage->CoverageFile = $this->CoverageFile;
+      } elseif ($name == 'LABEL') {
+          $this->Label = new Label();
       }
-    else if($name=='FILE')
-      {
-      $this->CoverageFile = new CoverageFile();
-      $this->Coverage = new Coverage();
-      $this->CoverageFile->FullPath = $attributes['FULLPATH'];
-      if($attributes['COVERED'] == 1 || $attributes['COVERED']=="true")
-        {
-        $this->Coverage->Covered = 1;
-        }
-      else
-        {
-        $this->Coverage->Covered = 0;
-        }
-      $this->Coverage->CoverageFile = $this->CoverageFile;
-      }
-    else if($name == 'LABEL')
-      {
-      $this->Label = new Label();
-      }
-    } // start element
+  } // start element
 
 
   /** End element */
   public function endElement($parser, $name)
-    {
-    parent::endElement($parser, $name);
-    if($name == 'SITE')
-      {
-      $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-      $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
+  {
+      parent::endElement($parser, $name);
+      if ($name == 'SITE') {
+          $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
+          $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
-      $this->Build->ProjectId = $this->projectid;
-      $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+          $this->Build->ProjectId = $this->projectid;
+          $buildid = $this->Build->GetIdFromName($this->SubProjectName);
 
       // If the build doesn't exist we add it
-      if($buildid==0)
-        {
-        $this->Build->ProjectId = $this->projectid;
-        $this->Build->StartTime = $start_time;
-        $this->Build->EndTime = $end_time;
-        $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-        $this->Build->InsertErrors = false;
-        add_build($this->Build, $this->scheduleid);
-        $buildid = $this->Build->Id;
-        }
+      if ($buildid==0) {
+          $this->Build->ProjectId = $this->projectid;
+          $this->Build->StartTime = $start_time;
+          $this->Build->EndTime = $end_time;
+          $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+          $this->Build->InsertErrors = false;
+          add_build($this->Build, $this->scheduleid);
+          $buildid = $this->Build->Id;
+      }
 
       // Remove any previous coverage information
       $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-      $this->CoverageSummary->BuildId=$buildid;
-      $this->CoverageSummary->RemoveAll();
+          $this->CoverageSummary->BuildId=$buildid;
+          $this->CoverageSummary->RemoveAll();
 
       // Insert coverage summary
       $this->CoverageSummary->Insert();
-      $this->CoverageSummary->ComputeDifference();
+          $this->CoverageSummary->ComputeDifference();
+      } elseif ($name=='FILE') {
+          $this->CoverageSummary->AddCoverage($this->Coverage);
+      } elseif ($name == 'LABEL') {
+          if (isset($this->Coverage)) {
+              $this->Coverage->AddLabel($this->Label);
+          }
       }
-    else if($name=='FILE')
-      {
-      $this->CoverageSummary->AddCoverage($this->Coverage);
-      }
-    else if($name == 'LABEL')
-      {
-      if(isset($this->Coverage))
-        {
-        $this->Coverage->AddLabel($this->Label);
-        }
-      }
-    } // end element
+  } // end element
 
 
   /** Text function */
   public function text($parser, $data)
-    {
-    $parent = $this->getParent();
-    $element = $this->getElement();
+  {
+      $parent = $this->getParent();
+      $element = $this->getElement();
 
-    if($parent == 'COVERAGE')
-      {
-      switch($element)
-        {
+      if ($parent == 'COVERAGE') {
+          switch ($element) {
         case 'STARTBUILDTIME':
           $this->StartTimeStamp .= $data;
           break;
@@ -170,11 +150,8 @@ class CoverageHandler extends AbstractHandler
           $this->CoverageSummary->LocUntested .= $data;
           break;
         }
-      }
-    else if($parent == 'FILE')
-      {
-      switch ($element)
-        {
+      } elseif ($parent == 'FILE') {
+          switch ($element) {
         case 'LOCTESTED':
           $this->Coverage->LocTested .= $data;
           break;
@@ -194,11 +171,8 @@ class CoverageHandler extends AbstractHandler
           $this->Coverage->FunctionsUntested .= $data;
           break;
         }
+      } elseif ($element == 'LABEL') {
+          $this->Label->SetText($data);
       }
-    else if($element == 'LABEL')
-      {
-      $this->Label->SetText($data);
-      }
-    } // end text function
+  } // end text function
 }
-?>

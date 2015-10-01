@@ -16,21 +16,19 @@ include_once('cdash/common.php');
 include("cdash/version.php");
 
 include_once('models/project.php');
-include_once ("models/clientjobschedule.php");
+include_once("models/clientjobschedule.php");
 
-if(!$CDASH_MANAGE_CLIENTS)
-  {
-  echo "CDash has not been setup to allow client management";
-  return;
-  }
+if (!$CDASH_MANAGE_CLIENTS) {
+    echo "CDash has not been setup to allow client management";
+    return;
+}
 
 $userid = $_SESSION['cdash']['loginid'];
 
-if(!isset($_GET['scheduleid']))
-  {
-  echo "Schedule id not set";
-  return;
-  }
+if (!isset($_GET['scheduleid'])) {
+    echo "Schedule id not set";
+    return;
+}
 
 $scheduleid = $_GET['scheduleid'];
 $ClientJobSchedule = new ClientJobSchedule();
@@ -38,29 +36,27 @@ $ClientJobSchedule->Id = $scheduleid;
 $projectid = $ClientJobSchedule->GetProjectId();
 
 $xml = begin_XML_for_XSLT();
-$xml .= add_XML_value("manageclient",$CDASH_MANAGE_CLIENTS);
+$xml .= add_XML_value("manageclient", $CDASH_MANAGE_CLIENTS);
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
-$xml .= add_XML_value("title","CDash - Scheduled Build Submissions");
-$xml .= add_XML_value("menutitle","CDash");
-$xml .= add_XML_value("menusubtitle","Submitted Builds");
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
+$xml .= add_XML_value("title", "CDash - Scheduled Build Submissions");
+$xml .= add_XML_value("menutitle", "CDash");
+$xml .= add_XML_value("menusubtitle", "Submitted Builds");
 
 $xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
 $xml .= "<date>".date("r")."</date>";
 $xml .= "<backurl>user.php</backurl>";
 
 $builds = $ClientJobSchedule->GetAssociatedBuilds();
-foreach($builds as $buildid)
-  {
-  $xml .= '<build>';
-  $xml .= add_XML_value("id", $buildid);
-  $xml .= '</build>';
-  }
+foreach ($builds as $buildid) {
+    $xml .= '<build>';
+    $xml .= add_XML_value("id", $buildid);
+    $xml .= '</build>';
+}
 
 $status = $ClientJobSchedule->GetStatus();
-switch($status)
-  {
+switch ($status) {
   case CDASH_JOB_SCHEDULED:
     $statusText = "Scheduled";
     break;
@@ -84,4 +80,3 @@ $xml .= '<status>'.$statusText.'</status>';
 
 $xml .= "</cdash>";
 generate_XSLT($xml, "scheduleSummary", true);
-?>

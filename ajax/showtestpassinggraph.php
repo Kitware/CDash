@@ -30,19 +30,17 @@ $testid = pdo_real_escape_numeric($_GET["testid"]);
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
 @$zoomout = $_GET["zoomout"];
 
-if(!isset($buildid) || !is_numeric($buildid))
-  {
-  echo "Not a valid buildid!";
-  return;
-  }
-if(!isset($testid) || !is_numeric($testid))
-  {
-  echo "Not a valid testid!";
-  return;
-  }
+if (!isset($buildid) || !is_numeric($buildid)) {
+    echo "Not a valid buildid!";
+    return;
+}
+if (!isset($testid) || !is_numeric($testid)) {
+    echo "Not a valid testid!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Find the project variables
 $test = pdo_query("SELECT name FROM test WHERE id='$testid'");
@@ -84,30 +82,28 @@ $(function () {
 
   <?php
     $tarray = array();
-    while($build_array = pdo_fetch_array($previousbuilds))
-      {
-      $t['x'] = strtotime($build_array["starttime"])*1000;
-      if(strtolower($build_array["status"]) == "passed")
-        {
-        $t['y'] = 1;
+    while ($build_array = pdo_fetch_array($previousbuilds)) {
+        $t['x'] = strtotime($build_array["starttime"])*1000;
+        if (strtolower($build_array["status"]) == "passed") {
+            $t['y'] = 1;
+        } else {
+            $t['y'] = -1;
         }
-      else
-        {
-        $t['y'] = -1;
-        }
-      $tarray[]=$t;
-    ?>
+        $tarray[]=$t;
+        ?>
     <?php
-      }
+
+    }
 
     $tarray = array_reverse($tarray);
-    foreach($tarray as $axis)
-      {
-    ?>
-      d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
+    foreach ($tarray as $axis) {
+        ?>
+      d1.push([<?php echo $axis['x'];
+        ?>,<?php echo $axis['y'];
+        ?>]);
     <?php
       $t = $axis['x'];
-      } ?>
+    } ?>
 
   var options = {
     bars: { show: true,
@@ -127,14 +123,16 @@ $(function () {
          $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
   });
 
-<?php if(isset($zoomout))
-{
-?>
+<?php if (isset($zoomout)) {
+    ?>
   $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],options);
-<?php } else { ?>
+<?php 
+} else {
+    ?>
   $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],
 $.extend(true,{},options,{xaxis: { min: <?php echo $t-2000000000?>,max: <?php echo $t+50000000 ?>}} ));
-<?php } ?>
+<?php 
+} ?>
 });
 
 

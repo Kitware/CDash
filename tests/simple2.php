@@ -7,22 +7,18 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class EmailTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testSimple()
+    public function testSimple()
     {
-    $this->login();
-    $content = $this->connect($this->url.'/index.php?project=InsightExample');
-    if(!$content)
-      {
-      return;
-      }
-    $this->assertText('CDash-CTest-simple');
+        $this->login();
+        $content = $this->connect($this->url.'/index.php?project=InsightExample');
+        if (!$content) {
+            return;
+        }
+        $this->assertText('CDash-CTest-simple');
     }
-
 }
-
-?>

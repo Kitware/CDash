@@ -7,20 +7,18 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class ViewDynamicAnalysisTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testViewDynamicAnalysis()
+    public function testViewDynamicAnalysis()
     {
-    $this->get($this->url."/viewDynamicAnalysis.php?buildid=1");
-    if(strpos($this->getBrowser()->getContentAsText(), "Win32-VCExpress") === false)
-      {
-      $this->fail("'Win32-VCExpress' not found when expected");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->get($this->url."/viewDynamicAnalysis.php?buildid=1");
+        if (strpos($this->getBrowser()->getContentAsText(), "Win32-VCExpress") === false) {
+            $this->fail("'Win32-VCExpress' not found when expected");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-?>

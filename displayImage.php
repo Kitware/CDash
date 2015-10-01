@@ -18,25 +18,22 @@
 include("cdash/config.php");
 require_once("cdash/pdo.php");
 
-if (array_key_exists("imgid", $_GET))
-  {
-  $imgid = pdo_real_escape_numeric($_GET["imgid"]);
-  }
+if (array_key_exists("imgid", $_GET)) {
+    $imgid = pdo_real_escape_numeric($_GET["imgid"]);
+}
 // Checks
-if(empty($imgid) || !is_numeric($imgid))
-  {
-  echo "Not a valid imgid!";
-  return;
-  }
+if (empty($imgid) || !is_numeric($imgid)) {
+    echo "Not a valid imgid!";
+    return;
+}
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 $result = pdo_query("SELECT * FROM image WHERE id=$imgid");
 $img_array = pdo_fetch_array($result);
 
-switch($img_array["extension"])
-  {
+switch ($img_array["extension"]) {
   case "image/jpg":
     header("Content-type: image/jpeg");
     break;
@@ -55,19 +52,14 @@ switch($img_array["extension"])
     return;
   }
 
-if($CDASH_DB_TYPE == "pgsql")
-  {
-  $buf = "";
-  while(!feof($img_array["img"]))
-    {
-    $buf .= fread($img_array["img"], 2048);
+if ($CDASH_DB_TYPE == "pgsql") {
+    $buf = "";
+    while (!feof($img_array["img"])) {
+        $buf .= fread($img_array["img"], 2048);
     }
-  $buf = stripslashes($buf);
-  }
-else
-  {
-  $buf = $img_array["img"];
-  }
+    $buf = stripslashes($buf);
+} else {
+    $buf = $img_array["img"];
+}
 echo $buf;
 return;
-?>

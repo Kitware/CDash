@@ -27,26 +27,22 @@ require_once("cdash/config.php");
 require_once("cdash/pdo.php");
 require_once("cdash/common.php");
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN","$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME",$db);
+$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+pdo_select_db("$CDASH_DB_NAME", $db);
 
 $projectid = pdo_real_escape_numeric($_GET["projectid"]);
-if(!isset($projectid) || !is_numeric($projectid))
-  {
-  echo "Not a valid projectid!";
-  return;
-  }
+if (!isset($projectid) || !is_numeric($projectid)) {
+    echo "Not a valid projectid!";
+    return;
+}
   
 $search = pdo_real_escape_string($_GET["search"]);
 
-if(isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1)
-  {
-  $sql = "email='$search'";
-  }
-else
-  {
-  $sql = "(email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')";
-  }
+if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1) {
+    $sql = "email='$search'";
+} else {
+    $sql = "(email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')";
+}
 $user = pdo_query("SELECT id,email,firstname,lastname FROM ".qid("user")." WHERE ".$sql." AND 
                    id NOT IN (SELECT userid as id FROM user2project WHERE projectid='$projectid')");
 echo pdo_error();
@@ -55,15 +51,14 @@ echo pdo_error();
    
   <table width="100%"  border="0">
   <?php
-  if(pdo_num_rows($user)==0)
-    {
-    echo "<tr><td>[none]</tr></td>";
-    }
-  while($user_array = pdo_fetch_array($user))
-  {
-  ?>
+  if (pdo_num_rows($user)==0) {
+      echo "<tr><td>[none]</tr></td>";
+  }
+  while ($user_array = pdo_fetch_array($user)) {
+      ?>
   <tr>
-  <td width="20%" bgcolor="#EEEEEE"><font size="2"><?php echo $user_array["firstname"]." ".$user_array["lastname"]." (".$user_array["email"].")"; ?></font></td>
+  <td width="20%" bgcolor="#EEEEEE"><font size="2"><?php echo $user_array["firstname"]." ".$user_array["lastname"]." (".$user_array["email"].")";
+      ?></font></td>
   <td bgcolor="#EEEEEE"><font size="2"><form method="post" action="" name="formuser_<?php echo $user_array["id"]?>">
   <input name="userid" type="hidden" value="<?php echo $user_array["id"]?>">
   role: <select name="role">
@@ -77,6 +72,7 @@ echo pdo_error();
   </tr>
 
   <?php
+
   }
   ?>
 
