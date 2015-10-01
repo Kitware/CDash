@@ -1,5 +1,7 @@
 # CDash
 
+[![Build Status](https://travis-ci.org/Kitware/CDash.svg)](https://travis-ci.org/Kitware/CDash)
+
 ## About CDash
 
 CDash is an open source, web-based software testing server. CDash aggregates, analyzes and displays the results of
