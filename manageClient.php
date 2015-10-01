@@ -369,3 +369,4 @@ if ($session_OK) {
   }
     generate_XSLT($xml, "manageClient", true);
 } // end session is OK;
+

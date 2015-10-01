@@ -127,3 +127,4 @@ if (($User->IsAdmin() || $role>1) && isset($_POST["deletelogs"])) {
 // Now doing the xslt transition
 generate_XSLT($xml, "viewErrorLog");
 } //endif session OK;
+

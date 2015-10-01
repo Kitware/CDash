@@ -128,3 +128,4 @@ $xml .= "<measurements>";
 // Now doing the xslt transition
 generate_XSLT($xml, "manageMeasurements");
 } // end if session;
+

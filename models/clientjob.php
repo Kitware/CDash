@@ -134,3 +134,4 @@ class clientjob
       add_last_sql_error("ClientJob::Remove");
   }   // end Remove
 } // end class proJob
+

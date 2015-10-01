@@ -302,3 +302,4 @@ class GCovTarHandler
       }
   }
 } // end class;
+

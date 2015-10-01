@@ -104,3 +104,4 @@ class CoverageLogHandler extends AbstractHandler
       }
   } // end text()
 } // end class;
+

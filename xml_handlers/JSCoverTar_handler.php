@@ -191,3 +191,4 @@ class JSCoverTarHandler
       }
   }
 } // end class;
+

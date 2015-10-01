@@ -268,3 +268,4 @@ if ($session_OK) {
   // Now doing the xslt transition
   generate_XSLT($xml, "editSite");
 } // end session OK;
+
