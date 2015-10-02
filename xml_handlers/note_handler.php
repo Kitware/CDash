@@ -109,4 +109,3 @@ class NoteHandler extends AbstractHandler
       }
   } // end function text
 } // end class;
-

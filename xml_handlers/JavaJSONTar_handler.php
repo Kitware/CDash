@@ -214,4 +214,3 @@ class JavaJSONTarHandler
     $coverageSummary->AddCoverage($coverage);
   }
 } // end class;
-

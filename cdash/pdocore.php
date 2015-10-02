@@ -43,7 +43,8 @@ function pdo_connect($server = null, $username = null, $password = null, $databa
 }
 
 
-function get_link_identifier($link_identifier = null) {
+function get_link_identifier($link_identifier = null)
+{
     global $CDASH_DB_HOST,
            $CDASH_DB_LOGIN,
            $CDASH_DB_PASS,
@@ -51,18 +52,17 @@ function get_link_identifier($link_identifier = null) {
            $cdash_database_connection;
     if (!is_null($link_identifier) and $link_identifier instanceof CDash\Database) {
         $cdash_database_connection = $link_identifier;
-    } else if (isset($cdash_database_connection) and $cdash_database_connection instanceof CDash\Database) {
+    } elseif (isset($cdash_database_connection) and $cdash_database_connection instanceof CDash\Database) {
         // $cdash_database_connection is good to go
     } else {
         $cdash_database_connection = pdo_connect(
             $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $CDASH_DB_NAME);
     }
     return $cdash_database_connection;
-
 }
 
-function pdo_select_db($database, $link_identifier = null) {
-
+function pdo_select_db($database, $link_identifier = null)
+{
     global $CDASH_DB_HOST,
            $CDASH_DB_LOGIN,
            $CDASH_DB_PASS,
@@ -75,7 +75,6 @@ function pdo_select_db($database, $link_identifier = null) {
         $cdash_database_connection = pdo_connect($CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $database);
     }
     return true;
-
 }
 
 /**
@@ -191,7 +190,7 @@ function pdo_affected_rows($result)
 function pdo_query($query, $link_identifier = null)
 {
     $cur_pdo = get_link_identifier($link_identifier)->getPdo();
-    if($cur_pdo === false) {
+    if ($cur_pdo === false) {
         return false;
     } else {
         return $cur_pdo->query($query);

@@ -545,4 +545,3 @@ $xml .= "</cdash>";
 // Now doing the xslt transition
 generate_XSLT($xml, "createProject");
 } // end session;
-
