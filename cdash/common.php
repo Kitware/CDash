@@ -2067,7 +2067,7 @@ function begin_JSON_response()
     $response['version'] = $CDASH_VERSION;
 
     $userid = 0;
-    if (isset($_SESSION['cdash'])) {
+    if (isset($_SESSION['cdash']) and isset($_SESSION['cdash']['loginid'])) {
         $userid = $_SESSION['cdash']['loginid'];
     }
     $response['userid'] = $userid;

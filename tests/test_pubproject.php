@@ -60,9 +60,11 @@ class PubProjectTestCase extends KWWebTestCase
         $nameexpected = "ProjectTest";
         $descriptionexpected = "This is a project test for cdash";
         $publicexpected = 1;
-        $expected = array('name'        =>  $nameexpected,
-                      'description' =>  $descriptionexpected,
-                      'public'      =>  $publicexpected);
+        $expected = array(
+            'name' => $nameexpected,
+            'description' => $descriptionexpected,
+            'public' => $publicexpected);
+
         $this->assertEqual($result[0], $expected);
     }
 

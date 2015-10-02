@@ -16,8 +16,8 @@ class CompressedTestCase extends KWWebTestCase
     {
         echo "1. testSubmissionCompressedTest\n";
         $this->login();
-    // first project necessary for testing
-    $name = 'TestCompressionExample';
+        // first project necessary for testing
+        $name = 'TestCompressionExample';
         $description = 'Project compression example';
         $svnviewerurl = 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample';
         $bugtrackerfileurl = 'http://public.kitware.com/Bug/view.php?id=';
@@ -32,9 +32,10 @@ class CompressedTestCase extends KWWebTestCase
             return;
         }
 
-    // Test the robot submission
-    $query  = "SELECT id FROM project WHERE name = '".$name."'";
+        // Test the robot submission
+        $query  = "SELECT id FROM project WHERE name = '".$name."'";
         $result = $this->db->query($query);
+        var_dump($result);
         $projectid = $result[0]['id'];
 
         $content = $this->connect($this->url.'/createProject.php?edit=1&projectid='.$projectid);

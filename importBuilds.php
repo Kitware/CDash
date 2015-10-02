@@ -63,10 +63,10 @@ $n = count($filelist);
 foreach ($filelist as $filename) {
     ++$i;
 
-  # split on path separator
-  $pathParts = split("[/\\]", $filename);
-  # split on cdash separator "_"
-  $cdashParts = split("[_]", $pathParts[count($pathParts)-1]);
+    // split on path separator
+    $pathParts = preg_split('_[\\\\/]_', $filename);
+    // split on cdash separator "_"
+    $cdashParts = explode("_", $pathParts[count($pathParts)-1]);
     $projectid = get_project_id($cdashParts[0]);
 
     if ($projectid != -1) {

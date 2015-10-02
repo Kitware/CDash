@@ -59,6 +59,27 @@ function RenameTableField($table, $field, $newfield, $mySQLType, $pgSqlType, $de
     }
 }
 
+/** Return true if the given index exists for the column */
+function pdo_check_index_exists($tablename, $columnname)
+{
+    global $CDASH_DB_TYPE;
+
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
+        echo "NOT IMPLEMENTED";
+        return false;
+    } else {
+        $query = pdo_query("SHOW INDEX FROM ".$tablename." WHERE Seq_in_index=1");
+        if ($query) {
+            while ($index_array = pdo_fetch_array($query)) {
+                if ($index_array['Column_name'] == $columnname) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 // Helper function to add an index to a table
 function AddTableIndex($table, $field)
 {
