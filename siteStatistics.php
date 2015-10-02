@@ -89,4 +89,3 @@ $xml = begin_XML_for_XSLT();
 // Now doing the xslt transition
 generate_XSLT($xml, "siteStatistics");
 } // end session;
-

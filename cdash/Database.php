@@ -106,12 +106,13 @@ class Database
      * Get the underlying PDO object or false if it cannot be created.
      * @return bool|\PDO
      */
-    public function getPdo() {
+    public function getPdo()
+    {
         if (is_null($this->pdo)) {
             try {
                 $this->pdo = new \PDO($this->dsn, $this->username, $this->password,
                     $this->attributes);
-            } catch( \PDOException $e) {
+            } catch (\PDOException $e) {
                 error_log($e->getMessage()."\n".$e->getTraceAsString());
                 return false;
             }
@@ -123,7 +124,8 @@ class Database
      * Return the name of the database.
      * @return string
      */
-    public function getDatabaseName() {
+    public function getDatabaseName()
+    {
         return $this->database_name;
     }
 
@@ -134,13 +136,13 @@ class Database
      */
     public function query($sql)
     {
-        $this->_exponential_backoff(function() use ($sql) {
+        $this->_exponential_backoff(function () use ($sql) {
             if ($this->getPdo() === false) {
                 return false;
             }
             try {
                 return $this->pdo->query($sql);
-            } catch(\PDOException $e) {
+            } catch (\PDOException $e) {
                 error_log($e->getMessage()."\n".$e->getTraceAsString());
                 return false;
             }

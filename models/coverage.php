@@ -96,4 +96,3 @@ class coverage
       return $fileids;
   } // end function GetFiles()
 } // end class Coverage;
-

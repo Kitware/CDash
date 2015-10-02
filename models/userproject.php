@@ -302,4 +302,3 @@ class userproject
       return $projectids;
   }
 } // end class UserProject;
-

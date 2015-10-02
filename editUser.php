@@ -126,4 +126,3 @@ if ($session_OK) {
   
     generate_XSLT($xml, "editUser");
 } // end session OK;
-

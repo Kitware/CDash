@@ -94,4 +94,3 @@ class banner
       return true;
   }  // end SetText
 } // end class Banner;
-
