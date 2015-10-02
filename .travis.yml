@@ -37,6 +37,9 @@ before_install:
 
 install:
   - travis_retry composer install -n --prefer-dist
+  - header Starting webserver
+  - php -S localhost:80 > /dev/null 2>&1 &
+  - wait_for_port 80
 
 script:
   - gulp
