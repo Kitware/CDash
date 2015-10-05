@@ -917,7 +917,6 @@ function get_filterdata_from_request($page_id = '')
 
         $fieldinfo = split('/', $fieldinfo, 2);
         $field = $fieldinfo[0];
-        $fieldtype = $fieldinfo[1];
 
         if ($add == '+') {
             $add_filter = $i;
@@ -931,7 +930,7 @@ function get_filterdata_from_request($page_id = '')
 
         $sql_field = $pageSpecificFilters->getSqlField($field);
 
-        if ($fieldtype == 'date') {
+        if ($field == 'buildstarttime') {
             $filterdata['hasdateclause'] = 1;
         }
 
@@ -954,7 +953,6 @@ function get_filterdata_from_request($page_id = '')
 
         $filters[] = array(
       'field' => $field,
-      'fieldtype' => $fieldtype,
       'compare' => $compare,
       'value' => $value,
     );
