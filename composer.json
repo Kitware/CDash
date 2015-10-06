@@ -1,5 +1,5 @@
 {
-  "name": "Kitware/CDash",
+  "name": "kitware/cdash",
   "description": "An open source, web-based software testing server",
   "type": "project",
   "homepage": "http://www.cdash.org",
