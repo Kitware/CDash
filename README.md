@@ -1,6 +1,9 @@
 # CDash
 
-[![Build Status](https://travis-ci.org/Kitware/CDash.svg)](https://travis-ci.org/Kitware/CDash)
+[![Build Status](https://img.shields.io/travis/Kitware/CDash/master.svg?style=flat-square)](https://travis-ci.org/Kitware/CDash)
+[![Packagist Version](https://img.shields.io/packagist/v/kitware/cdash.svg?style=flat-square)](https://packagist.org/packages/kitware/cdash)
+[![Packagist License](https://img.shields.io/packagist/l/kitware/cdash.svg?style=flat-square)](https://packagist.org/packages/kitware/cdash)
+[![StyleCI](https://styleci.io/repos/25169249/shield)](https://styleci.io/repos/25169249)
 
 ## About CDash
 
@@ -14,7 +17,43 @@ maintain large-scale software systems. Good examples of a CDash are the
 
 ## Installation
 
-TODO
+### Linux and OS X
+
+```bash
+curl -sS https://getcomposer.org/installer | php
+git clone https://github.com/Kitware/CDash.git CDash
+cd CDash
+```
+
+For development:
+```bash
+php composer.phar install
+```
+
+For production:
+```bash
+php composer.phar install --no-dev --optimize-autoloader
+```
+
+### Windows
+
+Download and run [Composer-Setup.exe](https://getcomposer.org/Composer-Setup.exe).
+
+```cmd
+git clone https://github.com/Kitware/CDash.git CDash
+cd CDash
+```
+
+For development:
+
+```cmd
+composer install
+```
+
+For production:
+```cmd
+composer install --no-dev --optimize-autoloader
+```
 
 ## Development
 
