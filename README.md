@@ -20,9 +20,9 @@ maintain large-scale software systems. Good examples of a CDash are the
 ### Linux and OS X
 
 ```bash
-curl -sS https://getcomposer.org/installer | php
 git clone https://github.com/Kitware/CDash.git CDash
 cd CDash
+curl -sS https://getcomposer.org/installer | php
 ```
 
 For development:
@@ -45,7 +45,6 @@ cd CDash
 ```
 
 For development:
-
 ```cmd
 composer install
 ```
