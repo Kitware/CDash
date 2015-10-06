@@ -131,7 +131,7 @@ class coveragefile
       $coverage_array = pdo_fetch_array($coverage);
       return $coverage_array['fullpath'];
   }  // GetPath
-  
+
   /** Return the metric */
   public function GetMetric()
   {
@@ -182,7 +182,7 @@ class coveragefile
     
       return $coveragemetric;
   } // end function GetMetric
-    
+
   // Get the percent coverage
   public function GetLastPercentCoverage()
   {

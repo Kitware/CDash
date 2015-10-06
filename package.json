@@ -1,7 +1,17 @@
 {
   "name": "CDash",
   "version": "2.3.0",
+  "description": "Continuous integration dashboard.",
+  "repository": "https://github.com/Kitware/CDash",
+  "license": "Apache-2.0",
   "dependencies": {
     "protractor": "^2.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^1.5.1",
+    "eslint-config-angular": "^0.4.0",
+    "eslint-plugin-angular": "^0.12.0",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.0.0"
   }
 }

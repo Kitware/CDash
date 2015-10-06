@@ -32,7 +32,7 @@ class KWWebTestCase extends WebTestCase
         }
 
         global $db;
-        $this->db =& new database($db['type']);
+        $this->db = new database($db['type']);
         $this->db->setDb($db['name']);
         $this->db->setHost($db['host']);
         $this->db->setPort($db['port']);

@@ -113,7 +113,7 @@ class clientos
           $this->Id = $query_array['id'];
       }
   }   // end Save
-  
+
   /** Get all the OS */
   public function GetAll()
   {
@@ -162,7 +162,7 @@ class clientos
       }
       return $ids;
   } // end GetOS
-    
+
   /** Get the platform name */
   public function GetPlatformFromName($name)
   {

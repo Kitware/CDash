@@ -57,20 +57,9 @@ if (!$db) {
     $xml .= "<connectiondb>0</connectiondb>";
 } else {
     // If we are installing a database other than mysql we need to
-  // have the database already created
-  if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE!="mysql") {
-      if (!pdo_select_db($CDASH_DB_NAME, $link)) {
-          $xml .= "<connectiondb>0</connectiondb>";
-      } else {
-          $xml .= "<connectiondb>1</connectiondb>";
-      }
-  }
-    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE=="mysql") {
-        if (@!mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS")) {
-            $xml .= "<connectiondb>0</connectiondb>";
-        } else {
-            $xml .= "<connectiondb>1</connectiondb>";
-        }
+    // have the database already created
+    if (!pdo_select_db($CDASH_DB_NAME, null)) {
+        $xml .= "<connectiondb>0</connectiondb>";
     } else {
         $xml .= "<connectiondb>1</connectiondb>";
     }
@@ -111,7 +100,7 @@ if (!is_writable("rss")) {
 }
 
 // If the database already exists and we have all the tables
-if (@pdo_select_db("$CDASH_DB_NAME", $db) === true
+if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
    && pdo_query("SELECT id FROM ".qid("user")." LIMIT 1", $db)) {
     $xml .= "<database>1</database>";
 } else {
@@ -122,6 +111,7 @@ if (@pdo_select_db("$CDASH_DB_NAME", $db) === true
 // If we should create the tables
 @$Submit = $_POST["Submit"];
     if ($Submit) {
+        pdo_select_db("");
         $admin_email = htmlspecialchars(pdo_real_escape_string($_POST["admin_email"]));
         $admin_password = htmlspecialchars(pdo_real_escape_string($_POST["admin_password"]));
 
@@ -143,10 +133,10 @@ if (@pdo_select_db("$CDASH_DB_NAME", $db) === true
             $db_created = true;
     // If this is MySQL we try to create the database
     if ($db_type=='mysql') {
-        mysql_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-        if (!mysql_query("CREATE DATABASE IF NOT EXISTS `$CDASH_DB_NAME`")) {
+        pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+        if (!pdo_query("CREATE DATABASE IF NOT EXISTS `$CDASH_DB_NAME`")) {
             $xml .= "<db_created>0</db_created>";
-            $xml .= "<alert>".mysql_error()."</alert>";
+            $xml .= "<alert>".pdo_error()."</alert>";
             $db_created = false;
         }
     }
@@ -170,7 +160,7 @@ if (@pdo_select_db("$CDASH_DB_NAME", $db) === true
 
                    $result = pdo_query($query);
                    if (!$result) {
-                       $xml .= "<db_created>0</db_created>";
+                       $xml = "<db_created>0</db_created>";
                        die(pdo_error());
                    }
                    $query = "";

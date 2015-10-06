@@ -87,7 +87,7 @@ class CoverageAPI extends CDashAPI
       }
       return $coveragearray;
   } // end function CoveragePerDirectory
-  
+
   /** Run function */
   public function Run()
   {

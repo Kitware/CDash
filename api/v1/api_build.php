@@ -178,7 +178,7 @@ class BuildAPI extends CDashAPI
       }
       return $builds;
   } // end function ListDefects
-    
+
     
   /** Return the number of defects per number of checkins */
   private function ListCheckinsDefects()

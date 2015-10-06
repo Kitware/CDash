@@ -78,7 +78,7 @@ $nightlyminute = gmdate("i", $nightlytime);
 $nightlysecond = gmdate("s", $nightlytime);
   
 $end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
-  
+
 $beginning_timestamp = gmmktime($nightlyhour, $nightlyminute, $nightlysecond, gmdate("m", $end_timestamp), gmdate("d", $end_timestamp), gmdate("Y", $end_timestamp));
 if ($end_timestamp<$beginning_timestamp) {
     $beginning_timestamp = gmmktime($nightlyhour, $nightlyminute, $nightlysecond, gmdate("m", $end_timestamp-24*3600), gmdate("d", $end_timestamp-24*3600), gmdate("Y", $end_timestamp-24*3600));

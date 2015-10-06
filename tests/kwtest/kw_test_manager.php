@@ -54,7 +54,7 @@ class TestManager
   }
     public function runFileTest(&$reporter, $file)
     {
-        $test = &new TestSuite('All Tests');
+        $test = new TestSuite('All Tests');
         if ($this->testDir !== null) {
             $path = $this->testDir.  "/" . $file;
         } else {
@@ -72,7 +72,7 @@ class TestManager
   public function runAllTests(&$reporter)
   {
       $testsFile = $this->getTestCaseList();
-      $test = &new TestSuite('All Tests');
+      $test = new TestSuite('All Tests');
       foreach ($testsFile as $path=>$file) {
           $test->addFile($path);
       }
