@@ -330,6 +330,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $buildgroup_response['numtestfail'] = 0;
         $buildgroup_response['numtestpass'] = 0;
         $buildgroup_response['testduration'] = 0;
+        $buildgroup_response['hasupdatedata'] = false;
+        $buildgroup_response['hasconfiguredata'] = false;
+        $buildgroup_response['hascompilationdata'] = false;
+        $buildgroup_response['hastestdata'] = false;
 
         $buildgroup_response['builds'] = array();
         $received_builds[$groupname] = array();
@@ -784,8 +788,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $update_response['time'] =  time_difference($duration*60.0, true);
             $update_response['timefull'] = $duration;
             $buildgroups_response[$i]['updateduration'] += $duration;
+            $buildgroups_response[$i]['hasupdatedata'] = true;
+            $build_response['update'] = $update_response;
         } // end if we have an update
-        $build_response['update'] = $update_response;
 
         $compilation_response = array();
 
@@ -820,7 +825,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 $compilation_response['nwarningdiffn'] =  $diff;
             }
         }
-        $build_response['compilation'] = $compilation_response;
+        if (!empty($compilation_response)) {
+            $build_response['compilation'] = $compilation_response;
+            $buildgroups_response[$i]['hascompilationdata'] = true;
+        }
 
         $configure_response = array();
 
@@ -842,10 +850,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $configure_response['time'] = time_difference($duration*60.0, true);
             $configure_response['timefull'] = $duration;
             $buildgroups_response[$i]['configureduration'] += $duration;
+            $buildgroups_response[$i]['hasconfiguredata'] = true;
+            $build_response['configure'] = $configure_response;
         }
-        $build_response['configure'] = $configure_response;
 
         if ($build_array['hastest'] != 0) {
+            $buildgroups_response[$i]['hastestdata'] = true;
             $test_response = array();
 
             $nnotrun = $build_array['counttestsnotrun'];
