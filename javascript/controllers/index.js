@@ -80,6 +80,11 @@ CDash.filter("showExpectedLast", function () {
       }
     }
 
+    // Check if we should display filters.
+    if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
+      $scope.showfilters = true;
+    }
+
     $scope.cdash = cdash;
 
     $rootScope.setupCalendar($scope.cdash.date);

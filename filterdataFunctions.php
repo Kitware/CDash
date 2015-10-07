@@ -133,7 +133,7 @@ class IndexPhpFilters extends DefaultFilters
 
     case 'builderrors':
     {
-      $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='0'), IF((SELECT COUNT(buildid) FROM buildfailure AS bf LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) WHERE bf.buildid=b.id AND bfd.type='0')>0, (SELECT COUNT(buildid) FROM buildfailure AS bf LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) WHERE bf.buildid=b.id AND bfd.type='0'), 0))";
+      $sql_field = "b.builderrors";
     }
     break;
 
@@ -169,7 +169,7 @@ class IndexPhpFilters extends DefaultFilters
 
     case 'buildwarnings':
     {
-      $sql_field = "IF((SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1')>0, (SELECT COUNT(buildid) FROM builderror WHERE buildid=b.id AND type='1'), IF((SELECT COUNT(buildid) FROM buildfailure AS bf LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) WHERE bf.buildid=b.id AND bfd.type='1')>0, (SELECT COUNT(buildid) FROM buildfailure AS bf LEFT JOIN buildfailuredetails ON (bfd.id=bf.detailsid) WHERE bf.buildid=b.id AND bfd.type='1'), 0))";
+      $sql_field = "b.buildwarnings";
     }
     break;
 
@@ -917,7 +917,6 @@ function get_filterdata_from_request($page_id = '')
 
         $fieldinfo = split('/', $fieldinfo, 2);
         $field = $fieldinfo[0];
-        $fieldtype = $fieldinfo[1];
 
         if ($add == '+') {
             $add_filter = $i;
@@ -931,7 +930,7 @@ function get_filterdata_from_request($page_id = '')
 
         $sql_field = $pageSpecificFilters->getSqlField($field);
 
-        if ($fieldtype == 'date') {
+        if ($field == 'buildstarttime') {
             $filterdata['hasdateclause'] = 1;
         }
 
@@ -954,7 +953,6 @@ function get_filterdata_from_request($page_id = '')
 
         $filters[] = array(
       'field' => $field,
-      'fieldtype' => $fieldtype,
       'compare' => $compare,
       'value' => $value,
     );
