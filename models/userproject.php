@@ -150,7 +150,7 @@ class userproject
       add_last_sql_error("UserProject UpdateCredentials");
       return true;
   } // End UpdateCredentials
-    
+
   /** Add a credential for a given project */
   public function AddCredential($credential)
   {
@@ -180,7 +180,7 @@ class userproject
 
       return false;
   } // End AddCredential
-      
+
     
   /** Fill in the information given a projectid and a repository credential. 
    *  This function expects the emailtype>0 */

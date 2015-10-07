@@ -75,7 +75,7 @@ class labelemail
       
         return true;
     } // end insert() function
-  
+
   /** Update the labels given a projectid and userid */
   public function UpdateLabels($labels)
   {

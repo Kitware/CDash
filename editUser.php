@@ -82,7 +82,7 @@ if ($session_OK) {
             add_last_sql_error("editUser.php");
         }
     } // end update password
- 
+
   $xml .= "<user>";
     $user = pdo_query("SELECT * FROM ".qid("user")." WHERE id='$userid'");
     $user_array = pdo_fetch_array($user);

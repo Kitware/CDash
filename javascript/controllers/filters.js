@@ -1,4 +1,8 @@
-CDash.controller('FiltersController', function FiltersController($scope, $rootScope, $http, $timeout) {
+angular
+    .module('CDash')
+    .controller('FiltersController', FiltersController);
+
+function FiltersController($scope, $rootScope, $http, $timeout) {
 
   // The different type of data filters that we support.
   $scope.filterdefinitions = {
@@ -314,4 +318,4 @@ CDash.controller('FiltersController', function FiltersController($scope, $rootSc
     $scope.filterdata = filterdata;
   });
 
-});
+}

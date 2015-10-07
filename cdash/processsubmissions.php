@@ -135,7 +135,7 @@ function AcquireProcessingLock($projectid, $force)
                 $locked = true;
             }
 
-            $table_unlocked = pdo_unlock_tables($tables);
+            $table_unlocked = pdo_unlock_tables();
             if (!$table_unlocked) {
                 add_log("could not unlock database tables", "AcquireProcessingLock",
           LOG_ERR, $projectid);
@@ -183,7 +183,7 @@ function ReleaseProcessingLock($projectid)
         LOG_ERR, $projectid);
         }
 
-        $table_unlocked = pdo_unlock_tables($tables);
+        $table_unlocked = pdo_unlock_tables();
         if (!$table_unlocked) {
             add_log("could not unlock database tables", "ReleaseProcessingLock",
         LOG_ERR, $projectid);

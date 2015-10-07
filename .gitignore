@@ -6,3 +6,8 @@ tests/config.test.local.php
 /nbproject/private/
 node_modules
 local/
+build/
+.php_cs.cache
+composer.phar
+.idea/
+vendor/

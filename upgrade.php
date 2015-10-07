@@ -138,15 +138,17 @@ if (isset($_GET['upgrade-1-0'])) {
 
 if (isset($_GET['upgrade-1-2'])) {
     // Replace the field 'output' in the table test from 'text' to 'mediumtext'
-  $result = pdo_query("SELECT output FROM test LIMIT 1");
-    $type  = pdo_field_type($result, 0);
+    $result = pdo_query("SELECT output FROM test LIMIT 1");
+    $column_meta = $result->getColumnMeta(0);
+
+    $type = isset($column_meta['driver:decl_type']) ? $column_meta['driver:decl_type'] : 'unknown';
     if ($type == "blob" || $type == "text") {
         $result = pdo_query("ALTER TABLE test CHANGE output output MEDIUMTEXT");
     }
 
-  // Change the file from blob to longblob
-  $result = pdo_query("SELECT file FROM coveragefile LIMIT 1");
-    $length = mysql_field_len($result, 0);
+    // Change the file from blob to longblob
+    $result = pdo_query("SELECT file FROM coveragefile LIMIT 1");
+    $length = $result->getColumnMeta(0)['len'];
     if ($length == 65535) {
         $result = pdo_query("ALTER TABLE coveragefile CHANGE file file LONGBLOB");
     }

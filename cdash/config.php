@@ -35,7 +35,7 @@ $CDASH_DB_PORT = '';
 $CDASH_DB_PASS = '';
 // Name of the database
 $CDASH_DB_NAME = 'cdash';
-// Database type (empty means mysql)
+// Database type
 $CDASH_DB_TYPE = 'mysql';
 // Turn this variable ON when CDash has been installed
 // Prevents from running the install.php again

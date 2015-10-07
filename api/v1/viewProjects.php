@@ -20,6 +20,7 @@ $response['hostname'] = $_SERVER['SERVER_NAME'];
 $response['date'] = date("r");
 
 // Check if the database is up to date
+error_log($CDASH_DB_NAME);
 $query = "SELECT * FROM information_schema.COLUMNS
           WHERE TABLE_SCHEMA = '$CDASH_DB_NAME'
           AND TABLE_NAME = 'buildfailuredetails'
