@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
 
     <script src="javascript/angular.min.js"></script>
     <script src="javascript/angular-animate.min.js"></script>
@@ -137,102 +138,9 @@
         </tr>
       </table>
 
+
       <!-- SubProjects table -->
-      <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="subproject">
-        <thead>
-          <tr class="table-heading1">
-            <td colspan="11" align="left" class="nob"><h3>SubProjects</h3></td>
-          </tr>
-          <tr class="table-heading">
-            <th align="center" rowspan="2" width="20%" id="sort_0"><b>Project</b></th>
-            <td align="center" colspan="3" width="20%"><b>Configure</b></td>
-            <td align="center" colspan="3" width="20%"><b>Build</b></td>
-            <td align="center" colspan="3" width="20%"><b>Test</b></td>
-            <th ng-if="cdash.showlastsubmission" align="center" rowspan="2" width="20%" class="nob" id="sort_10">
-              <b>Last submission</b>
-            </th>
-          </tr>
-          <tr class="table-heading">
-            <th align="center" id="sort_1"><b>Error</b></th>
-            <th align="center" id="sort_2"><b>Warning</b></th>
-            <th align="center" id="sort_3"><b>Pass</b></th>
-            <th align="center" id="sort_4"><b>Error</b></th>
-            <th align="center" id="sort_5"><b>Warning</b></th>
-            <th align="center" id="sort_6"><b>Pass</b></th>
-            <th align="center" id="sort_7"><b>Not Run</b></th>
-            <th align="center" id="sort_8"><b>Fail</b></th>
-            <th align="center" id="sort_9"><b>Pass</b></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr ng-repeat="subproject in cdash.subprojects" ng-class-odd="'odd'" ng-class-even="'even'">
-            <td align="center" >
-              <a ng-href="index.php?subproject={{subproject.name_encoded}}&{{cdash.linkparams}}">
-                {{subproject.name}}
-              </a>
-            </td>
-
-            <td align="center" ng-class="{'error': subproject.nconfigureerror > 0, 'normal': subproject.nconfigureerror == 0 && !(subproject.nconfigurewarning == 0 && subproject.nconfigurepass == 0)}">
-              <span ng-show="subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0">
-                {{subproject.nconfigureerror}}
-              </span>
-            </td>
-
-            <td align="center" ng-class="{'warning': subproject.nconfigurewarning > 0, 'normal': subproject.nconfigurewarning == 0 && !(subproject.nconfigureerror == 0 && subproject.nconfigurepass == 0)}">
-              <span ng-show="subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0">
-                {{subproject.nconfigurewarning}}
-              </span>
-            </td>
-
-            <td align="center" ng-class="{'normal': subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0}">
-              <span ng-show="subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0">
-                {{subproject.nconfigurepass}}
-              </span>
-            </td>
-
-            <td align="center" ng-class="{'error': subproject.nbuilderror > 0, 'normal': subproject.nbuilderror == 0 && !(subproject.nbuildwarning == 0 && subproject.nbuildpass == 0)}">
-              <span ng-show="subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0">
-                {{subproject.nbuilderror}}
-              </span>
-            </td>
-
-            <td align="center" ng-class="{'warning': subproject.nbuildwarning > 0, 'normal': subproject.nbuildwarning == 0 && !(subproject.nbuilderror == 0 && subproject.nbuildpass == 0)}">
-              <span ng-show="subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0">
-                {{subproject.nbuildwarning}}
-              </span>
-            </td>
-
-            <td align="center" ng-class="{'normal': subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0}">
-              <span ng-show="subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0">
-                {{subproject.nbuildpass}}
-              </span>
-            </td>
-
-            <td align="center" ng-class="{'warning': subproject.ntestnotrun > 0, 'normal': subproject.ntestnotrun == 0 && (subproject.ntestfail != 0 || subproject.ntestpass != 0)}">
-              <span ng-show="subproject.ntestfail != 0 || subproject.ntestpass != 0 || subproject.ntestnotrun != 0">
-                {{subproject.ntestnotrun}}
-              </span>
-            </td>
-
-            <td align="center" ng-class="{'error': subproject.ntestfail > 0, 'normal': subproject.ntestfail == 0 && (subproject.ntestpass != 0 || subproject.ntestnotrun != 0)}">
-              <span ng-show="subproject.ntestfail != 0 || subproject.ntestpass != 0 || subproject.ntestnotrun != 0">
-                {{subproject.ntestfail}}
-              </span>
-            </td>
-
-            <td align="center" ng-class="{'normal': subproject.ntestpass}">
-              <span ng-show="subproject.ntestfail != 0 || subproject.ntestpass != 0 || subproject.ntestnotrun != 0">
-                {{subproject.ntestpass}}
-              </span>
-            </td>
-
-            <td ng-if="cdash.showlastsubmission" align="center" class="nob">
-              {{subproject.lastsubmission}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <ng-include ng-init="cdash.tableName = 'SubProjects'" src="'views/partials/subProjectTable.html'"></ng-include>
 
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
