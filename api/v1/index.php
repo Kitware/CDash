@@ -337,9 +337,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $buildgroups_response[] = $buildgroup_response;
     }
 
-  // Filters:
-  //
-  $filterdata = get_filterdata_from_request("index.php");
+    // Filters:
+    //
+    $filterdata = get_filterdata_from_request("index.php");
     $filter_sql = $filterdata['sql'];
     $limit_sql = '';
     if ($filterdata['limit'] > 0) {
@@ -348,17 +348,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
     unset($filterdata['xml']);
     $response['filterdata'] = $filterdata;
 
-  // add a request for the subproject
-  $subprojectsql = "";
+    // add a request for the subproject
+    $subprojectsql = "";
     $subprojecttablesql = "";
     if ($subproject_name && is_numeric($subprojectid)) {
         $subprojectsql = " AND sp2b.subprojectid=".$subprojectid;
     }
 
-  // Use this as the default date clause, but if $filterdata has a date clause,
-  // then cancel this one out:
-  //
-  $date_clause = "AND b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' ";
+    // Use this as the default date clause, but if $filterdata has a date clause,
+    // then cancel this one out:
+    //
+    $date_clause = "AND b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' ";
 
     if ($filterdata['hasdateclause']) {
         $date_clause = '';
@@ -367,18 +367,18 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $parent_clause = "";
     if (isset($_GET["parentid"])) {
         // If we have a parentid, then we should only show children of that build.
-    // Date becomes irrelevant in this case.
-    $parent_clause ="AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
+        // Date becomes irrelevant in this case.
+        $parent_clause ="AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
         $date_clause = "";
     } elseif (empty($subprojectsql)) {
         // Only show builds that are not children.
-    $parent_clause ="AND (b.parentid = -1 OR b.parentid = 0) ";
+        $parent_clause ="AND (b.parentid = -1 OR b.parentid = 0) ";
     }
 
     $build_rows = array();
 
-  // If the user is logged in we display if the build has some changes for him
-  $userupdatesql = "";
+    // If the user is logged in we display if the build has some changes for him
+    $userupdatesql = "";
     if (isset($_SESSION['cdash'])) {
         $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
                       user2repository
@@ -392,9 +392,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
 
 
-  // Postgres differs from MySQL on how to aggregate results
-  // into a single column.
-  $label_sql = "";
+    // Postgres differs from MySQL on how to aggregate results
+    // into a single column.
+    $label_sql = "";
     $groupby_sql = "";
     if ($CDASH_DB_TYPE != 'pgsql') {
         $label_sql = "GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,";
@@ -1145,12 +1145,28 @@ function get_child_builds_hyperlink($parentid, $filterdata)
   // Strip /api/v#/ off of our URL to get the human-viewable version.
   $baseurl = preg_replace("#/api/v[0-9]+#", "", $baseurl);
 
-  // If the current REQUEST_URI already has a &filtercount=... (and other
-  // filter stuff), trim it off and just use part that comes before that.
-  $idx = strpos($baseurl, "&filtercount=");
-    if ($idx !== false) {
-        $baseurl = substr($baseurl, 0, $idx);
+  // Trim off any filter parameters.  Previously we did this step with a simple
+  // strpos check, but since the change to AngularJS query parameters are no
+  // longer guaranteed to appear in any particular order.
+  $accepted_parameters = array("project", "date", "parentid", "subproject");
+
+    $parsed_url = parse_url($baseurl);
+    $query = $parsed_url['query'];
+
+    parse_str($query, $params);
+    $query_modified = false;
+    foreach ($params as $key => $val) {
+        if (!in_array($key, $accepted_parameters)) {
+            unset($params[$key]);
+            $query_modified = true;
+        }
     }
+    if ($query_modified) {
+        $trimmed_query = http_build_query($params);
+        $baseurl = str_replace($query, '', $baseurl);
+        $baseurl .= $trimmed_query;
+    }
+
 
   // Preserve any filters the user had specified.
   $existing_filter_params = '';
@@ -1160,20 +1176,24 @@ function get_child_builds_hyperlink($parentid, $filterdata)
         $filter = $filterdata['filters'][$i];
 
         if ($filter['field'] != 'buildname' &&
-        $filter['field'] != 'site' &&
-        $filter['field'] != 'stamp' &&
-        $filter['compare'] != 0 &&
-        $filter['compare'] != 20 &&
-        $filter['compare'] != 40 &&
-        $filter['compare'] != 60 &&
-        $filter['compare'] != 80) {
+      $filter['field'] != 'site' &&
+      $filter['field'] != 'stamp' &&
+      $filter['compare'] != 0 &&
+      $filter['compare'] != 20 &&
+      $filter['compare'] != 40 &&
+      $filter['compare'] != 60 &&
+      $filter['compare'] != 80) {
             $n++;
 
             $existing_filter_params .=
-        '&field' . $n . '=' . $filter['field'] . '/' . $filter['fieldtype'] .
-        '&compare' . $n . '=' . $filter['compare'] .
-        '&value' . $n . '=' . htmlspecialchars($filter['value']);
+      '&field' . $n . '=' . $filter['field'] .
+      '&compare' . $n . '=' . $filter['compare'] .
+      '&value' . $n . '=' . htmlspecialchars($filter['value']);
         }
+    }
+    if ($count > 0) {
+        $existing_filter_params .= "&filtercount=$count";
+        $existing_filter_params .= "&showfilters=1";
     }
 
   // Construct & return our URL.
