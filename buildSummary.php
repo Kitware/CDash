@@ -21,9 +21,10 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+require_once('models/build.php');
 
-@$buildid = $_GET["buildid"];
 // Checks
+@$buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo "Not a valid buildid!";
     return;
@@ -33,12 +34,16 @@ if (!isset($buildid) || !is_numeric($buildid)) {
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array["projectid"];
-if (!isset($projectid) || $projectid==0) {
+$build = new Build();
+$build->Id = $buildid;
+$build->FillFromId($build->Id);
+
+$projectid = $build->ProjectId;
+if (!isset($projectid) || $projectid < 1) {
     echo "This build doesn't exist. Maybe it has been deleted.";
     exit();
 }
+$siteid = $build->SiteId;
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
@@ -57,40 +62,35 @@ $xml = begin_XML_for_XSLT();
 $projectname = get_project_name($projectid);
 $xml .= "<title>CDash : ".$projectname."</title>";
 
-// Find the last submit date
-$siteid = $build_array["siteid"];
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$starttime = $build_array["starttime"];
-$previousbuild = pdo_query("SELECT id,starttime FROM build
-                            WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                             AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT 1");
-
-if (pdo_num_rows($previousbuild)>0) {
-    $previousbuild_array = pdo_fetch_array($previousbuild);
-    $lastsubmitbuild = $previousbuild_array["id"];
-    $lastsubmitdate = date(FMT_DATETIMETZ, strtotime($previousbuild_array["starttime"]." UTC"));
-} else {
-    $lastsubmitbuild = 0;
-    $lastsubmitdate = 0;
-}
+$previous_buildid = $build->GetPreviousBuildId();
+$current_buildid = $build->GetCurrentBuildId();
+$next_buildid = $build->GetNextBuildId();
 
 $xml .= "<menu>";
 $nightlytime = get_project_property($projectname, "nightlytime");
-$xml .= add_XML_value("back", "index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime));
-if (isset($previousbuild_array)) {
-    $xml .= add_XML_value("previous", "buildSummary.php?buildid=".$previousbuild_array["id"]);
+$xml .= add_XML_value("back", "index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build->StartTime, $nightlytime));
+
+if ($previous_buildid > 0) {
+    $xml .= add_XML_value("previous", "buildSummary.php?buildid=$previous_buildid");
+
+    // Find the last submit date.
+    $previous_build = new Build();
+    $previous_build->Id = $previous_buildid;
+    $previous_build->FillFromId($previous_build->Id);
+    $lastsubmitdate = date(FMT_DATETIMETZ, strtotime($previous_build->StartTime." UTC"));
 } else {
     $xml .= add_XML_value("noprevious", "1");
+    $lastsubmitdate = 0;
 }
 
-$xml .= add_XML_value("current", "buildSummary.php?buildid=".get_last_buildid($projectid, $siteid, $buildtype, $buildname, $starttime));
-$nextbuildid = get_next_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($nextbuildid>0) {
-    $xml .= add_XML_value("next", "buildSummary.php?buildid=".$nextbuildid);
+$xml .= add_XML_value("current", "buildSummary.php?buildid=$current_buildid");
+
+if ($next_buildid > 0) {
+    $xml .= add_XML_value("next", "buildSummary.php?buildid=$next_buildid");
 } else {
     $xml .= add_XML_value("nonext", "1");
 }
+
 $xml .= "</menu>";
 
 $xml .= get_cdash_dashboard_xml($projectname, $date);
@@ -292,7 +292,7 @@ if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
     $updatelocal = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($buildid)
       ." AND author='Local User'");
       $nerrors = pdo_num_rows($updatelocal);
-    
+
     // Check also if the status is not zero
     if (strlen($update_array["status"]) > 0 && $update_array["status"]!="0") {
         $nerrors += 1;
@@ -305,7 +305,7 @@ if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
       $update = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($buildid));
       $nupdates = pdo_num_rows($update);
       $xml .= add_XML_value("nupdates", $nupdates);
-    
+
       $xml .= add_XML_value("command", $update_array["command"]);
       $xml .= add_XML_value("type", $update_array["type"]);
       $xml .= add_XML_value("starttime", date(FMT_DATETIMETZ, strtotime($update_array["starttime"]." UTC")));
@@ -365,47 +365,46 @@ if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
 
   // Previous build
   // Find the previous build
-  if ($lastsubmitbuild > 0) {
+  if ($previous_buildid > 0) {
       $xml .= "<previousbuild>";
-      $previousbuildid = $lastsubmitbuild;
-      $xml .= add_XML_value("buildid", $previousbuildid);
+      $xml .= add_XML_value("buildid", $previous_buildid);
 
     // Find if the build has any errors
-    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='0'");
+    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previous_buildid' AND type='0'");
       $builderror_array = pdo_fetch_array($builderror);
       $npreviousbuilderrors = $builderror_array[0];
       $builderror = pdo_query(
       "SELECT count(*) FROM buildfailure AS bf
        LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-       WHERE bf.buildid='$previousbuildid' AND bfd.type='0'");
+       WHERE bf.buildid='$previous_buildid' AND bfd.type='0'");
       $builderror_array = pdo_fetch_array($builderror);
       $npreviousbuilderrors += $builderror_array[0];
 
     // Find if the build has any warnings
-    $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previousbuildid' AND type='1'");
+    $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previous_buildid' AND type='1'");
       $buildwarning_array = pdo_fetch_array($buildwarning);
       $npreviousbuildwarnings = $buildwarning_array[0];
       $buildwarning = pdo_query(
       "SELECT count(*) FROM buildfailure AS bf
        LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-       WHERE bf.buildid='$previousbuildid' AND bfd.type='1'");
+       WHERE bf.buildid='$previous_buildid' AND bfd.type='1'");
       $buildwarning_array = pdo_fetch_array($buildwarning);
       $npreviousbuildwarnings += $buildwarning_array[0];
 
     // Find if the build has any test failings
-    $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='failed'"));
+    $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previous_buildid' AND status='failed'"));
       $npreviousfailingtests = $nfail_array[0];
-      $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previousbuildid' AND status='notrun'"));
+      $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previous_buildid' AND status='notrun'"));
       $npreviousnotruntests = $nfail_array[0];
 
-      $updatelocal = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($previousbuildid).
+      $updatelocal = pdo_query("SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=".qnum($previous_buildid).
       " AND author='Local User'");
       $nupdateerrors = pdo_num_rows($updatelocal);
       $nupdatewarnings = 0;
       $xml .= add_XML_value("nupdateerrors", $nupdateerrors);
       $xml .= add_XML_value("nupdatewarnings", $nupdatewarnings);
 
-      $configure = pdo_query("SELECT * FROM configure WHERE buildid='$previousbuildid'");
+      $configure = pdo_query("SELECT * FROM configure WHERE buildid='$previous_buildid'");
       $configure_array = pdo_fetch_array($configure);
 
       $nconfigureerrors = 0;

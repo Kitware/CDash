@@ -477,7 +477,7 @@ function get_projects($onlyactive=true)
             $dayssincelastsubmission = (time()-strtotime($project['last_build']))/86400;
         }
         $project['dayssincelastsubmission'] = $dayssincelastsubmission;
-            
+
         if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission']<=$CDASH_ACTIVE_PROJECT_DAYS) {
             // Get the number of builds in the past 7 days
       $submittime_UTCDate = gmdate(FMT_DATETIME, time()-604800);
@@ -486,7 +486,7 @@ function get_projects($onlyactive=true)
             $buildquery_array = pdo_fetch_array($buildquery);
             $project['nbuilds'] = $buildquery_array[0];
         }
-    
+
     /** Not showing the upload size for now for performance reasons */
     //$Project = new Project;
     //$Project->Id = $project['id'];
@@ -575,7 +575,7 @@ function get_server_URI($localhost=false)
     if (!$CDASH_CURL_REQUEST_LOCALHOST && $CDASH_BASE_URL != '') {
         return $CDASH_BASE_URL;
     }
-      
+
     $currentPort="";
     $httpprefix="http://";
     if ($_SERVER['SERVER_PORT']!=80 && $_SERVER['SERVER_PORT']!=443) {
@@ -1505,59 +1505,6 @@ function get_author_email($projectname, $author)
     }
 
     return $email;
-}
-
-/** Get the N previous buildids.  N defaults to 1. */
-function get_previous_buildid($projectid, $siteid, $buildtype, $buildname, $starttime, $n=1)
-{
-    $previousbuild = pdo_query("SELECT id FROM build
-                              WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                              AND projectid='$projectid' AND starttime<'$starttime' ORDER BY starttime DESC LIMIT $n");
-
-    if (pdo_num_rows($previousbuild) < 1) {
-        return 0;
-    }
-
-    if ($n ===  1) {
-        $previousbuild_array = pdo_fetch_array($previousbuild);
-        return $previousbuild_array["id"];
-    } else {
-        $previous_buildids = array();
-        while ($previousbuild_array = pdo_fetch_array($previousbuild)) {
-            $previous_buildids[] = $previousbuild_array["id"];
-        }
-        return $previous_buildids;
-    }
-
-    return 0;
-}
-
-/** Get the next build id */
-function get_next_buildid($projectid, $siteid, $buildtype, $buildname, $starttime)
-{
-    $nextbuild = pdo_query("SELECT id FROM build
-                          WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                          AND projectid='$projectid' AND starttime>'$starttime' ORDER BY starttime ASC LIMIT 1");
-
-    if (pdo_num_rows($nextbuild)>0) {
-        $nextbuild_array = pdo_fetch_array($nextbuild);
-        return $nextbuild_array["id"];
-    }
-    return 0;
-}
-
-/** Get the last build id */
-function get_last_buildid($projectid, $siteid, $buildtype, $buildname, $starttime)
-{
-    $nextbuild = pdo_query("SELECT id FROM build
-                          WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                          AND projectid='$projectid' ORDER BY starttime DESC LIMIT 1");
-
-    if (pdo_num_rows($nextbuild)>0) {
-        $nextbuild_array = pdo_fetch_array($nextbuild);
-        return $nextbuild_array["id"];
-    }
-    return 0;
 }
 
 /** Get the previous build id dynamicanalysis*/

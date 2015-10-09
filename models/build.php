@@ -64,6 +64,9 @@ class build
     // with this build.
     private $PullRequest;
 
+    // Used to mark whether this object already has its fields set.
+    public $Filled;
+
     public function __construct()
     {
         $this->ProjectId = 0;
@@ -71,6 +74,7 @@ class build
         $this->ErrorDiffs = array();
         $this->Append = false;
         $this->InsertErrors = true;
+        $this->Filled = false;
     }
 
     public function AddError($error)
@@ -242,6 +246,11 @@ class build
     /** Fill the current build information from the buildid */
     public function FillFromId($buildid)
     {
+        if ($this->Filled) {
+            // Already filled, no need to do it again.
+            return false;
+        }
+
         $query = pdo_query("SELECT projectid,starttime,siteid,name,type,parentid FROM build WHERE id=".qnum($buildid));
         if (!$query) {
             add_last_sql_error("Build:FillFromId()", $this->ProjectId, $this->Id);
@@ -264,48 +273,55 @@ class build
         $result = pdo_fetch_array(pdo_query(
                     "SELECT groupid FROM build2group WHERE buildid='$buildid'"));
         $this->GroupId = $result["groupid"];
+        $this->Filled = true;
     }
 
 
-    /** Get the previous build id */
+    /** Get the previous build id. */
     public function GetPreviousBuildId()
     {
         if (!$this->Id) {
             return 0;
         }
+        $this->FillFromId($this->Id);
 
-        // If StartTime is not set or if we are appending we set it
-        if ($this->StartTime=='' || $this->Append) {
-            $query = pdo_query("SELECT starttime FROM build WHERE id=".qnum($this->Id));
-            if (!$query) {
-                add_last_sql_error("Build:GetPreviousBuildId", $this->ProjectId, $this->Id);
-                return 0;
-            }
-            $query_array = pdo_fetch_array($query);
-            $this->StartTime = $query_array['starttime'];
+        $previous_clause =
+            "AND starttime<'$this->StartTime' ORDER BY starttime DESC";
+        return $this->GetRelatedBuildId($previous_clause);
+    }
 
-            // If the build has been deleted by the automatic build removal
-            // This happens usual when testing CDash
-            if ($this->StartTime=='') {
-                return 0;
-            }
+
+    /** Get the next build id. */
+    public function GetNextBuildId()
+    {
+        if (!$this->Id) {
+            return 0;
         }
+        $this->FillFromId($this->Id);
 
-        // Necessary for code paths that call into ComputeUpdateStatistics,
-        // where there is no subproject information passed via Update.xml,
-        // but there is already a buildid associated with a subproject from
-        // earlier Configure, Build or Test.xml files... If we don't have a
-        // subproject id already stored in $this->SubProjectId, query for it;
-        // and if there's a value there, store it in $this->SubProjectId so we
-        // don't have to do the query again.
-        //
-        if (!$this->SubProjectId) {
-            $subprojectid = $this->QuerySubProjectId($this->Id);
-            if ($subprojectid) {
-                $this->SubProjectId = $subprojectid;
-            }
+        $next_clause = "AND starttime>'$this->StartTime' ORDER BY starttime";
+        return $this->GetRelatedBuildId($next_clause);
+    }
+
+
+    /** Get the most recent build id. */
+    public function GetCurrentBuildId()
+    {
+        if (!$this->Id) {
+            return 0;
         }
+        $this->FillFromId($this->Id);
 
+        $current_clause = "ORDER BY starttime DESC";
+        return $this->GetRelatedBuildId($current_clause);
+    }
+
+
+    /** Private helper function to encapsulate the common parts of
+     * Get{Previous,Next,Current}BuildId()
+     **/
+    private function GetRelatedBuildId($which_build_criteria)
+    {
         // Take subproject into account, such that if there is one, then the
         // previous build must be associated with the same subproject...
         //
@@ -319,29 +335,31 @@ class build
                 "AND subproject2build.subprojectid=".qnum($this->SubProjectId)." ";
         }
 
-        $query = pdo_query("SELECT id FROM build".$subproj_table." ".
-                "WHERE siteid=".qnum($this->SiteId)." ".
-                "AND type='$this->Type' ".
-                "AND name='$this->Name' ".
-                "AND projectid=".qnum($this->ProjectId)." ".
-                $subproj_criteria.
-                "AND starttime<'$this->StartTime' ".
-                "ORDER BY starttime DESC LIMIT 1");
+        $query = pdo_query("
+                SELECT id FROM build$subproj_table
+                WHERE siteid=".qnum($this->SiteId)."
+                AND type='$this->Type'
+                AND name='$this->Name'
+                AND projectid=".qnum($this->ProjectId)."
+                $subproj_criteria
+                $which_build_criteria
+                LIMIT 1");
         if (!$query) {
-            add_last_sql_error("Build:GetPreviousBuildId", $this->ProjectId, $this->Id);
+            add_last_sql_error(
+                    "Build:GetRelatedBuildId", $this->ProjectId, $this->Id);
             return 0;
         }
 
         if (pdo_num_rows($query)>0) {
-            $previousbuild_array = pdo_fetch_array($query);
-            return $previousbuild_array['id'];
+            $relatedbuild_array = pdo_fetch_array($query);
+            return $relatedbuild_array['id'];
         }
 
         return 0;
     }
 
 
-    /** Get the build id from it's name */
+    /** Get the build id from its name */
     public function GetIdFromName($subproject)
     {
         $buildid = 0;
