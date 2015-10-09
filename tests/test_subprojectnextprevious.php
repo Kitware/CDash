@@ -28,7 +28,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                     "Build_2.xml", "Configure_2.xml", "Notes_2.xml", "Test_2.xml",
                     "Build_3.xml");
         $dir  = dirname(__FILE__)."/data/SubProjectNextPrevious";
-        foreach($filesToSubmit as $file) {
+        foreach ($filesToSubmit as $file) {
             if (!$this->submission('Trilinos', "$dir/$file")) {
                 $this->fail("Failed to submit $file");
                 return 1;
@@ -66,7 +66,6 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $new_style_pages = array("viewBuildError", "viewNotes");
 
         foreach ($old_style_pages as $page) {
-
             $this->get($this->url . "/$page.php?buildid=" . $first_buildid);
             $content = $this->getBrowser()->getContent();
             if ($content == false) {
@@ -146,14 +145,14 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
 
             // Verify 'Next' from build #1 points to build #2
-            if(strpos($jsonobj['menu']['next'], "buildid=$second_buildid") === FALSE) {
+            if (strpos($jsonobj['menu']['next'], "buildid=$second_buildid") === false) {
                 $error_msg = "Expected 'Next' link not found on $page for $first_buildid";
                 $success = false;
                 break;
             }
 
             // Verify 'Current' from build #1 points to build #3
-            if(strpos($jsonobj['menu']['current'], "buildid=$third_buildid") === FALSE) {
+            if (strpos($jsonobj['menu']['current'], "buildid=$third_buildid") === false) {
                 $error_msg = "Expected 'Current' link not found on $page for $first_buildid";
                 $success = false;
                 break;
@@ -164,21 +163,21 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
 
             // Verify 'Previous' from build #2 points to build #1
-            if(strpos($jsonobj['menu']['previous'], "buildid=$first_buildid") === FALSE) {
+            if (strpos($jsonobj['menu']['previous'], "buildid=$first_buildid") === false) {
                 $error_msg = "Expected 'Previous' link not found on $page for $second_buildid";
                 $success = false;
                 break;
             }
 
             // Verify 'Next' from build #2 points to build #3
-            if(strpos($jsonobj['menu']['next'], "buildid=$third_buildid") === FALSE) {
+            if (strpos($jsonobj['menu']['next'], "buildid=$third_buildid") === false) {
                 $error_msg = "Expected 'Next' link not found on $page for $second_buildid";
                 $success = false;
                 break;
             }
 
             // Verify 'Current' from build #2 points to build #3
-            if(strpos($jsonobj['menu']['current'], "buildid=$third_buildid") === FALSE) {
+            if (strpos($jsonobj['menu']['current'], "buildid=$third_buildid") === false) {
                 $error_msg = "Expected 'Current' link not found on $page for $second_buildid";
                 $success = false;
                 break;
@@ -189,7 +188,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
 
             // Verify 'Previous' from build #3 points to build #2
-            if(strpos($jsonobj['menu']['previous'], "buildid=$second_buildid") === FALSE) {
+            if (strpos($jsonobj['menu']['previous'], "buildid=$second_buildid") === false) {
                 $error_msg = "Expected 'Previous' link not found on $page for $third_buildid";
                 $success = false;
                 break;
