@@ -477,7 +477,7 @@ function get_projects($onlyactive=true)
             $dayssincelastsubmission = (time()-strtotime($project['last_build']))/86400;
         }
         $project['dayssincelastsubmission'] = $dayssincelastsubmission;
-            
+
         if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission']<=$CDASH_ACTIVE_PROJECT_DAYS) {
             // Get the number of builds in the past 7 days
       $submittime_UTCDate = gmdate(FMT_DATETIME, time()-604800);
@@ -486,7 +486,7 @@ function get_projects($onlyactive=true)
             $buildquery_array = pdo_fetch_array($buildquery);
             $project['nbuilds'] = $buildquery_array[0];
         }
-    
+
     /** Not showing the upload size for now for performance reasons */
     //$Project = new Project;
     //$Project->Id = $project['id'];
@@ -575,7 +575,7 @@ function get_server_URI($localhost=false)
     if (!$CDASH_CURL_REQUEST_LOCALHOST && $CDASH_BASE_URL != '') {
         return $CDASH_BASE_URL;
     }
-      
+
     $currentPort="";
     $httpprefix="http://";
     if ($_SERVER['SERVER_PORT']!=80 && $_SERVER['SERVER_PORT']!=443) {
@@ -2061,7 +2061,7 @@ function __json_encode($data)
 
 function begin_JSON_response()
 {
-    global $CDASH_VERSION;
+    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY;
 
     $response = array();
     $response['version'] = $CDASH_VERSION;
@@ -2071,6 +2071,19 @@ function begin_JSON_response()
         $userid = $_SESSION['cdash']['loginid'];
     }
     $response['userid'] = $userid;
+
+    // Check for local overrides of common view partials.
+    $files_to_check = array("header", "footer");
+    $base_dir = str_replace('\\', '/', dirname(dirname(__FILE__)));
+    foreach ($files_to_check as $file_to_check) {
+        $local_file = "local/views/$file_to_check.html";
+        if ($CDASH_USE_LOCAL_DIRECTORY == '1' &&
+                file_exists("$base_dir/$local_file")) {
+            $response[$file_to_check] = $local_file;
+        } else {
+            $response[$file_to_check] = "views/partials/$file_to_check.html";
+        }
+    }
 
     return $response;
 }

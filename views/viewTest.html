@@ -26,10 +26,11 @@
   </head>
 
   <body bgcolor="#ffffff" ng-controller="ViewTestController">
-    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/header.html'"></ng-include>
-    <br/>
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header"></ng-include>
+    <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading">
       <h3>Testing started on {{cdash.build.testtime}}</h3>
@@ -238,6 +239,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/footer.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer"></ng-include>
   </body>
 </html>

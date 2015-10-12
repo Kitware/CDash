@@ -31,8 +31,7 @@
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <!-- TODO: use local header if it exists. -->
-    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/header.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header"></ng-include>
 
     <div ng-if="cdash.future == 1">
       CDash cannot predict the future (yet)...
@@ -371,7 +370,7 @@
 
             <td ng-if="buildgroup.hasupdatedata" align="center" ng-class="{'error': build.update.errors == 1, 'warning': build.update.warning == 1, 'normal': build.update.defined == 1}">
               <div ng-if="build.numchildren == 0">
-                <img ng-if="build.userupdates > 0" src="images/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/> 
+                <img ng-if="build.userupdates > 0" src="images/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/>
                 <a ng-href="viewUpdate.php?buildid={{build.id}}">
                   {{build.update.files}}
                 </a>
@@ -756,7 +755,6 @@
       </table>
     </div> <!-- end index content -->
 
-    <!-- FOOTER TODO: local override -->
-    <ng-include ng-if="cdash.requirelogin != 1" src="'views/partials/footer.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer"></ng-include>
   </body>
 </html>
