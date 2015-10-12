@@ -157,7 +157,7 @@ function rest_post()
     // Insert it into the new group.
     pdo_query(
       "INSERT INTO build2group(groupid,buildid)
-       VALUES ('$groupid','$buildid')");
+       VALUES ('$newgroupid','$buildid')");
 
     // Mark any previous buildgroup rule as finished as of this time.
     $now = gmdate(FMT_DATETIME);
@@ -172,7 +172,7 @@ function rest_post()
     pdo_query(
       "INSERT INTO build2grouprule(groupid, buildtype, buildname, siteid,
                                    expected, starttime, endtime)
-       VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected',
+       VALUES ('$newgroupid','$buildtype','$buildname','$siteid','$expected',
                '$now','1980-01-01 00:00:00')");
   }
 }
