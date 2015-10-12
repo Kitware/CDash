@@ -27,6 +27,7 @@ include('login.php');
 include_once("cdash/common.php");
 include_once("cdash/repository.php");
 include('cdash/version.php');
+require_once('models/build.php');
 
 
 $testid = pdo_real_escape_numeric($_GET["test"]);
@@ -124,38 +125,34 @@ function findTest($buildid, $testName)
 
 $xml .= "<menu>";
 $xml .= add_XML_value("back", "viewTest.php?buildid=".$buildid);
-$previousbuildid = get_previous_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-$gotprevious = false;
-if ($previousbuildid>0) {
-    $previoustestid = findTest($previousbuildid, $testName);
-    if ($previoustestid) {
-        $xml .= add_XML_value("previous", "testDetails.php?test=".$previoustestid."&build=".$previousbuildid);
-        $gotprevious = true;
-    }
-}
 
-if (!$gotprevious) {
+$build = new Build();
+$build->Id = $buildid;
+$previous_buildid = $build->GetPreviousBuildId();
+$current_buildid = $build->GetCurrentBuildId();
+$next_buildid = $build->GetNextBuildId();
+
+// Previous build
+if ($previous_buildid > 0) {
+    $previous_testid = findTest($previous_buildid, $testName);
+    if ($previous_testid) {
+        $xml .= add_XML_value("previous", "testDetails.php?test=".$previous_testid."&build=".$previous_buildid);
+    }
+} else {
     $xml .= add_XML_value("noprevious", "1");
 }
 
-// Find the last build
-$lastbuildid  = get_last_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($lasttestid = findTest($lastbuildid, $testName)) {
-    $xml .= add_XML_value("current", "testDetails.php?test=".$lasttestid."&build=".$lastbuildid);
-    $gotprevious = true;
+// Current build
+if ($current_testid = findTest($current_buildid, $testName)) {
+    $xml .= add_XML_value("current", "testDetails.php?test=".$current_testid."&build=".$current_buildid);
 }
 
 // Next build
-$nextbuildid = get_next_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-$gotnext = false;
-if ($nextbuildid>0) {
-    if ($nexttestid = findTest($nextbuildid, $testName)) {
-        $xml .= add_XML_value("next", "testDetails.php?test=".$nexttestid."&build=".$nextbuildid);
-        $gotnext = true;
+if ($next_buildid > 0) {
+    if ($next_testid = findTest($next_buildid, $testName)) {
+        $xml .= add_XML_value("next", "testDetails.php?test=".$next_testid."&build=".$next_buildid);
     }
-}
-
-if (!$gotnext) {
+} else {
     $xml .= add_XML_value("nonext", "1");
 }
 
@@ -262,7 +259,7 @@ if (pdo_num_rows($result)>0) {
     }
     $xml .= "</compareimages>";
 }
-  
+
 $xml .= "<images>";
 $query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' "
         . "AND role!='ValidImage' AND role!='BaselineImage' AND role!='DifferenceImage2' ORDER BY id";

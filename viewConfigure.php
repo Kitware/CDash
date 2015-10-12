@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -21,6 +21,7 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+require_once('models/build.php');
 
 @$buildid = $_GET["buildid"];
 if ($buildid != null) {
@@ -37,10 +38,10 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     echo "Not a valid buildid!";
     return;
 }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
-  
+
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 if (!isset($projectid) || $projectid==0) {
@@ -70,16 +71,23 @@ $starttime = $build_array["starttime"];
 // Menu
 $xml .= "<menu>";
 $xml .= add_XML_value("back", "index.php?project=".urlencode($projectname)."&date=".$date);
-$previousbuildid = get_previous_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($previousbuildid>0) {
-    $xml .= add_XML_value("previous", "viewConfigure.php?buildid=".$previousbuildid);
+
+$build = new Build();
+$build->Id = $buildid;
+$previous_buildid = $build->GetPreviousBuildId();
+$next_buildid = $build->GetNextBuildId();
+$current_buildid = $build->GetCurrentBuildId();
+
+if ($previous_buildid > 0) {
+    $xml .= add_XML_value("previous", "viewConfigure.php?buildid=$previous_buildid");
 } else {
     $xml .= add_XML_value("noprevious", "1");
 }
-$xml .= add_XML_value("current", "viewConfigure.php?buildid=".get_last_buildid($projectid, $siteid, $buildtype, $buildname, $starttime));
-$nextbuildid = get_next_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($nextbuildid>0) {
-    $xml .= add_XML_value("next", "viewConfigure.php?buildid=".$nextbuildid);
+
+$xml .= add_XML_value("current", "viewConfigure.php?buildid=$current_buildid");
+
+if ($next_buildid > 0) {
+    $xml .= add_XML_value("next", "viewConfigure.php?buildid=$next_buildid");
 } else {
     $xml .= add_XML_value("nonext", "1");
 }
@@ -93,12 +101,12 @@ $xml .= "</menu>";
   $xml .= add_XML_value("buildname", $build_array["name"]);
   $xml .= add_XML_value("buildid", $build_array["id"]);
   $xml .= "</build>";
-  
+
   $xml .= "<configure>";
-  
+
   $configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
   $configure_array = pdo_fetch_array($configure);
-  
+
   $xml .= add_XML_value("status", $configure_array["status"]);
   $xml .= add_XML_value("command", $configure_array["command"]);
   $xml .= add_XML_value("output", $configure_array["log"]);

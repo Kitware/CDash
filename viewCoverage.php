@@ -21,6 +21,7 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+include("models/build.php");
 include("models/coveragefile2user.php");
 include("models/user.php");
 require_once("filterdataFunctions.php");
@@ -118,16 +119,23 @@ if ($build_array["groupid"] > 0) {
 
 $xml .= "<menu>";
 $xml .= add_XML_value("back", "index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"], $project_array["nightlytime"]));
-$previousbuildid = get_previous_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($previousbuildid>0) {
-    $xml .= add_XML_value("previous", "viewCoverage.php?buildid=".$previousbuildid);
+
+$build = new Build();
+$build->Id = $buildid;
+$previous_buildid = $build->GetPreviousBuildId();
+$current_buildid = $build->GetCurrentBuildId();
+$next_buildid = $build->GetNextBuildId();
+
+if ($previous_buildid > 0) {
+    $xml .= add_XML_value("previous", "viewCoverage.php?buildid=".$previous_buildid);
 } else {
     $xml .= add_XML_value("noprevious", "1");
 }
-$xml .= add_XML_value("current", "viewCoverage.php?buildid=".get_last_buildid($projectid, $siteid, $buildtype, $buildname, $starttime));
-$nextbuildid = get_next_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($nextbuildid>0) {
-    $xml .= add_XML_value("next", "viewCoverage.php?buildid=".$nextbuildid);
+
+$xml .= add_XML_value("current", "viewCoverage.php?buildid=$current_buildid");
+
+if ($next_buildid > 0) {
+    $xml .= add_XML_value("next", "viewCoverage.php?buildid=$next_buildid");
 } else {
     $xml .= add_XML_value("nonext", "1");
 }
@@ -232,7 +240,7 @@ if ($filtercount>0) {
   $coveragefile = pdo_query("SELECT c.locuntested,c.loctested,
                                     c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested,
                                     cf.fullpath
-                            FROM coverage AS c, coveragefile AS cf 
+                            FROM coverage AS c, coveragefile AS cf
                             WHERE c.buildid='$buildid' AND c.covered=1 AND c.fileid=cf.id");
 
 
@@ -268,7 +276,7 @@ if ($filtercount>0) {
     if ($covfile["coveragemetric"]>=$metricpass) {
         $nsatisfactorycoveredfiles++;
     }
-    
+
     // Store the directories path only for non-complete (100% coverage) files
     if ($covfile["coveragemetric"] != 1.0) {
         $fullpath = $coveragefile_array["fullpath"];
@@ -291,7 +299,7 @@ if ($filtercount>0) {
   if (isset($_GET['dir'])) {
       $xml .= add_XML_value("dir", $_GET['dir']);
   }
-    
+
   $xml .= add_XML_value("totalsatisfactorilycovered", $nsatisfactorycoveredfiles);
   $xml .= add_XML_value("totalunsatisfactorilycovered", $nfiles-$nsatisfactorycoveredfiles);
 
@@ -315,7 +323,7 @@ if ($filtercount>0) {
   $ncoveragefiles[5] = 0;
   $ncoveragefiles[6] = 0;
   $ncoveragefiles[7] = 0;
-    
+
   foreach ($covfile_array as $covfile) {
       if ($covfile["covered"]==0) {
           $ncoveragefiles[1]++; // no coverage

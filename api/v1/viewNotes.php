@@ -22,6 +22,7 @@ require_once("cdash/pdo.php");
 include('login.php');
 include_once("cdash/common.php");
 include("cdash/version.php");
+require_once('models/build.php');
 
 @$buildid = $_GET["buildid"];
 if ($buildid != null) {
@@ -75,30 +76,38 @@ get_dashboard_JSON_by_name($projectname, $date, $response);
 // Menu
 $menu = array();
 $menu['back'] = "index.php?project=".urlencode($projectname)."&date=".$date;
-$previousbuildid = get_previous_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($previousbuildid>0) {
-    $menu['previous'] = "viewNotes.php?buildid=".$previousbuildid;
+
+$build = new Build();
+$build->Id = $buildid;
+$previous_buildid = $build->GetPreviousBuildId();
+$current_buildid = $build->GetCurrentBuildId();
+$next_buildid = $build->GetNextBuildId();
+
+if ($previous_buildid > 0) {
+    $menu['previous'] = "viewNotes.php?buildid=$previous_buildid";
 } else {
     $menu['noprevious'] = "1";
 }
-$menu['current'] = "viewNotes.php?buildid=".get_last_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-$nextbuildid = get_next_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($nextbuildid>0) {
-    $menu['next'] = "viewNotes.php?buildid=".$nextbuildid;
+
+$menu['current'] = "viewNotes.php?buildid=$current_buildid";
+
+if ($next_buildid > 0) {
+    $menu['next'] = "viewNotes.php?buildid=$next_buildid";
 } else {
     $menu['nonext'] = "1";
 }
+
 $response['menu'] = $menu;
 
 // Build
-$build = array();
+$build_response = array();
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-$build['site'] = $site_array["name"];
-$build['siteid'] = $siteid;
-$build['buildname'] = $build_array['name'];
-$build['buildid'] = $build_array['id'];
-$build['stamp'] = $build_array['stamp'];
-$response['build'] = $build;
+$build_response['site'] = $site_array["name"];
+$build_response['siteid'] = $siteid;
+$build_response['buildname'] = $build_array['name'];
+$build_response['buildid'] = $build_array['id'];
+$build_response['stamp'] = $build_array['stamp'];
+$response['build'] = $build_response;
 
 // Notes
 $notes = array();

@@ -122,26 +122,48 @@ if (isset($_GET["onlypassed"])) {
 $nightlytime = get_project_property($projectname, "nightlytime");
 $menu['back'] = "index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime);
 
+// Get the IDs of the four previous builds.
+// These are used to check the recent history of this test.
+$build = new Build();
+$previous_buildids = array();
 $n = 4;
-$previousbuildids = get_previous_buildid($projectid, $siteid, $buildtype, $buildname, $starttime, $n);
-$previous_buildids_str = "";
-if (count($previousbuildids) > 0) {
-    @$previousbuildid = end(array_values($previousbuildids));
-    $menu['previous'] = "viewTest.php?buildid=$previousbuildid$extraquery";
+$id = $buildid;
+for ($i = 0; $i < $n; $i++) {
+    $build->Id = $id;
+    $build->Filled = false;
 
-    if (count($previousbuildids) > 1) {
-        $previous_buildids_str = implode(", ", $previousbuildids);
+    if ($i == 0) {
+        $current_buildid = $build->GetCurrentBuildId();
+        $next_buildid = $build->GetNextBuildId();
+    }
+
+    $id = $build->GetPreviousBuildId();
+    if ($id == 0) {
+        break;
+    }
+    $previous_buildids[] = $id;
+}
+
+$previous_buildids_str = "";
+if (!empty($previous_buildids)) {
+    @$previous_buildid = end(array_values($previous_buildids));
+    $menu['previous'] = "viewTest.php?buildid=$previous_buildid$extraquery";
+
+    if (count($previous_buildids) > 1) {
+        $previous_buildids_str = implode(", ", $previous_buildids);
     }
 } else {
     $menu['noprevious'] = "1";
 }
-$menu['current'] = "viewTest.php?buildid=".get_last_buildid($projectid, $siteid, $buildtype, $buildname, $starttime).$extraquery;
-$nextbuildid = get_next_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($nextbuildid>0) {
-    $menu['next'] = "viewTest.php?buildid=".$nextbuildid.$extraquery;
+
+$menu['current'] = "viewTest.php?buildid=$current_buildid";
+
+if ($next_buildid > 0) {
+    $menu['next'] = "viewTest.php?buildid=".$next_buildid.$extraquery;
 } else {
     $menu['nonext'] = "1";
 }
+
 $response['menu'] = $menu;
 
 $build = array();

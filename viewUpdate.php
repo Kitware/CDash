@@ -23,6 +23,7 @@ include_once("cdash/common.php");
 include_once("cdash/repository.php");
 include("cdash/version.php");
 require_once("cdash/bugurl.php");
+require_once('models/build.php');
 
 @$buildid = $_GET["buildid"];
 if ($buildid != null) {
@@ -56,7 +57,7 @@ if (pdo_num_rows($project)>0) {
     echo "This build doesn't exist. Maybe it has been deleted.";
     return;
 }
-  
+
 $xml = begin_XML_for_XSLT();
 $xml .= "<title>CDash : ".$projectname."</title>";
 
@@ -70,16 +71,23 @@ $date = get_dashboard_date_from_build_starttime($build_array["starttime"], $proj
 // Menu
 $xml .= "<menu>";
 $xml .= add_XML_value("back", "index.php?project=".urlencode($projectname)."&date=".$date);
-$previousbuildid = get_previous_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($previousbuildid>0) {
-    $xml .= add_XML_value("previous", "viewUpdate.php?buildid=".$previousbuildid);
+
+$build = new Build();
+$build->Id = $buildid;
+$previous_buildid = $build->GetPreviousBuildId();
+$current_buildid = $build->GetCurrentBuildId();
+$next_buildid = $build->GetNextBuildId();
+
+if ($previous_buildid > 0) {
+    $xml .= add_XML_value("previous", "viewUpdate.php?buildid=$previous_buildid");
 } else {
     $xml .= add_XML_value("noprevious", "1");
 }
-$xml .= add_XML_value("current", "viewUpdate.php?buildid=".get_last_buildid($projectid, $siteid, $buildtype, $buildname, $starttime));
-$nextbuildid = get_next_buildid($projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($nextbuildid>0) {
-    $xml .= add_XML_value("next", "viewUpdate.php?buildid=".$nextbuildid);
+
+$xml .= add_XML_value("current", "viewUpdate.php?buildid=$current_buildid");
+
+if ($next_buildid > 0) {
+    $xml .= add_XML_value("next", "viewUpdate.php?buildid=$next_buildid");
 } else {
     $xml .= add_XML_value("nonext", "1");
 }

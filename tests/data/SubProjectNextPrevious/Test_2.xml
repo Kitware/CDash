@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110724-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="Didasko">
+</Subproject>
+<Labels>
+  <Label>Didasko</Label>
+</Labels>
+<Testing>
+	<StartDateTime>Jul 24 11:35 Eastern Daylight Time</StartDateTime>
+	<StartTestTime>1311521721</StartTestTime>
+	<TestList>
+		<Test>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex1</Test>
+		<Test>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex2</Test>
+		<Test>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex3</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex1</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex2</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex3</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex4</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex5</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex6</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex7</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex8</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex9</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex10</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex11</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex12</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex13</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex14</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex15</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex16</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex17</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex18</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex19</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex20</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex21</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex22</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex23</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex24</Test>
+		<Test>./packages/didasko/examples/epetra/Didasko_Epetra_ex25</Test>
+		<Test>./packages/didasko/examples/ml/Didasko_ML_ex1</Test>
+		<Test>./packages/didasko/examples/ml/Didasko_ML_ex2</Test>
+	</TestList>
+	<Test Status="notrun">
+		<Name>Didasko_AztecOO_ex1</Name>
+		<Path>./packages/didasko/examples/aztecoo</Path>
+		<FullName>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex1</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/aztecoo/Didasko_AztecOO_ex1.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_AztecOO_ex2</Name>
+		<Path>./packages/didasko/examples/aztecoo</Path>
+		<FullName>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex2</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/aztecoo/Didasko_AztecOO_ex2.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_AztecOO_ex3</Name>
+		<Path>./packages/didasko/examples/aztecoo</Path>
+		<FullName>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex3</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/aztecoo/Didasko_AztecOO_ex3.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex1</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex1</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex1.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex2</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex2</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex2.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex3</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex3</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex3.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex4</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex4</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex4.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex5</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex5</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex5.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex6</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex6</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex6.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex7</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex7</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex7.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex8</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex8</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex8.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex9</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex9</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex9.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex10</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex10</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex10.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex11</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex11</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex11.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex12</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex12</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex12.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex13</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex13</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex13.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex14</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex14</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex14.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex15</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex15</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex15.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex16</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex16</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex16.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex17</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex17</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex17.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex18</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex18</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex18.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex19</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex19</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex19.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex20</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex20</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex20.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex21</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex21</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex21.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex22</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex22</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex22.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex23</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex23</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex23.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex24</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex24</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex24.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_Epetra_ex25</Name>
+		<Path>./packages/didasko/examples/epetra</Path>
+		<FullName>./packages/didasko/examples/epetra/Didasko_Epetra_ex25</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/epetra/Didasko_Epetra_ex25.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_ML_ex1</Name>
+		<Path>./packages/didasko/examples/ml</Path>
+		<FullName>./packages/didasko/examples/ml/Didasko_ML_ex1</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/ml/Didasko_ML_ex1.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<Test Status="notrun">
+		<Name>Didasko_ML_ex2</Name>
+		<Path>./packages/didasko/examples/ml</Path>
+		<FullName>./packages/didasko/examples/ml/Didasko_ML_ex2</FullName>
+		<FullCommandLine></FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+			<Measurement>
+				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/ml/Didasko_ML_ex2.exe</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Test>
+	<EndDateTime>Jul 24 11:35 Eastern Daylight Time</EndDateTime>
+	<EndTestTime>1311521721</EndTestTime>
+<ElapsedMinutes>0</ElapsedMinutes></Testing>
+</Site>
