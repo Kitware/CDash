@@ -266,7 +266,10 @@ CDash.filter("showExpectedLast", function () {
       newgroupid: groupid,
       expected: build.expected
     };
-    $http.post('api/v1/build.php', parameters);
+    $http.post('api/v1/build.php', parameters)
+    .success(function(data) {
+      window.location.reload();
+    });
   };
 
   $scope.colorblind_toggle = function() {

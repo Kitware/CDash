@@ -1117,6 +1117,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $buildgroups_response =
         array_filter($buildgroups_response, "is_buildgroup_nonempty");
 
+    // Report buildgroups as a list, not an associative array.
+    // Otherwise any missing buildgroups will cause our view to
+    // not honor the order specified by the project admins.
+    $buildgroups_response = array_values($buildgroups_response);
+
     // Generate coverage by group here.
     if (!empty($coverage_groups)) {
         $response['coveragegroups'] = array();
