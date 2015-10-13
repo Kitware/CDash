@@ -90,9 +90,8 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $googletracker = htmlentities($Project->GoogleTracker);
     $docurl = make_cdash_url(htmlentities($Project->DocumentationUrl));
 
-  // Main dashboard section
-  $projectname_encoded = urlencode($Project->Name);
-    $response = array();
+    // Main dashboard section
+    $projectname_encoded = urlencode($Project->Name);
     $response['datetime'] = date("l, F d Y H:i:s T", time());
     $response['date'] = $date;
     $response['unixtimestamp'] = $currentstarttime;
