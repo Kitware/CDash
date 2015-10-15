@@ -1,0 +1,11 @@
+Listen 8080
+
+<VirtualHost *:8080>
+  LoadModule php5_module /home/ubuntu/.phpenv/versions/5.3.10/libexec/apache2/libphp5.so
+
+  DocumentRoot /home/ubuntu/CDash
+  ServerName host.example.com
+  <FilesMatch \.php$>
+    SetHandler application/x-httpd-php
+  </FilesMatch>
+</VirtualHost>

@@ -1,0 +1,24 @@
+machine:
+  php:
+    version: 5.3.10
+general:
+  build_dir: _build
+dependencies:
+  pre:
+    - mkdir $HOME/CDash/_build
+    - sudo chmod a+rw $HOME/CDash/backup $HOME/CDash/rss $HOME/CDash/upload
+    - sudo apt-get install cmake
+    - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
+    - cd .. && cp utils/apache.circle /etc/apache2/sites-available
+    - a2ensite apache.circle
+    - sudo service apache2 restart
+    - sudo ln -s $HOME/CDash /var/www/CDash
+    - ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
+  override:
+    - cd .. && composer install --prefer-source --no-interaction
+    - cd .. && npm install
+test:
+  pre:
+    - cmake -DCDASH_DIR_NAME=CDash -DCDASH_DB_LOGIN=ubuntu ..
+  override:
+    - ctest -VV
