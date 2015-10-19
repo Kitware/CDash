@@ -244,11 +244,27 @@ if ($onlydelta) {
     $onlydelta_extra = " AND build2test.newstatus=1 ";
 }
 
-$sql = "SELECT bt.status,bt.newstatus,bt.timestatus,t.id,bt.time,t.details,t.name " .
-       "FROM test as t,build2test as bt " .
-       "WHERE bt.buildid='$buildid' AND t.id=bt.testid " . $status . " " .
-       $filter_sql . " " .$limitnew.
-       "ORDER BY t.id" . $limit_sql;
+// Postgres differs from MySQL on how to aggregate results
+// into a single column.
+$labeljoin_sql = "";
+$label_sql = "";
+$groupby_sql = "";
+if ($CDASH_DB_TYPE != 'pgsql') {
+    $labeljoin_sql = "
+        LEFT JOIN label2test AS l2t ON (l2t.testid=t.id)
+        LEFT JOIN label AS l ON (l.id=l2t.labelid)";
+    $label_sql = ", GROUP_CONCAT(DISTINCT l.text SEPARATOR ', ') AS labels";
+    $groupby_sql = " GROUP BY t.id";
+}
+
+$sql = "
+    SELECT bt.status, bt.newstatus, bt.timestatus, t.id, bt.time, t.details,
+           t.name $label_sql
+    FROM build2test AS bt
+    LEFT JOIN test AS t ON (t.id=bt.testid)
+    $labeljoin_sql
+    WHERE bt.buildid='$buildid' $status $filter_sql $limitnew $groupby_sql
+          $limit_sql";
 
 $result = pdo_query($sql);
 
@@ -464,14 +480,20 @@ while ($row = pdo_fetch_array($result)) {
 
     $testid = $row['id'];
 
-    get_labels_JSON_from_query_results(
-    "SELECT text FROM label, label2test WHERE ".
-    "label.id=label2test.labelid AND ".
-    "label2test.testid='$testid' AND ".
-    "label2test.buildid='$buildid' ".
-    "ORDER BY text ASC",
-    $test);
-
+    if ($CDASH_DB_TYPE == 'pgsql') {
+        get_labels_JSON_from_query_results(
+        "SELECT text FROM label, label2test WHERE ".
+        "label.id=label2test.labelid AND ".
+        "label2test.testid='$testid' AND ".
+        "label2test.buildid='$buildid' ".
+        "ORDER BY text ASC",
+        $test);
+    } else {
+        if (!empty($row['labels'])) {
+            $labels = explode(",", $row['labels']);
+            $test['labels'] = $labels;
+        }
+    }
 
   // Search for recent test history
   if ($previous_buildids_str != "") {
