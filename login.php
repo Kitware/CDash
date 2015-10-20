@@ -34,12 +34,11 @@ $session_OK = 0;
 if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     // authentication failed
 
-
-  // Create a session with a random "state" value.
-  // This is used by Google OAuth2 to prevent forged logins.
-  if (session_id() != '') {
-      session_destroy();
-  }
+    // Create a session with a random "state" value.
+    // This is used by Google OAuth2 to prevent forged logins.
+    if (session_id() != '') {
+        session_destroy();
+    }
     session_name("CDash");
     session_cache_limiter(@$SessionCachePolicy);
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
@@ -48,12 +47,11 @@ if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     $sessionArray = array("state" => md5(rand()));
     $_SESSION['cdash'] = $sessionArray;
     LoginForm($loginerror); // display login form
-  $session_OK=0;
+    $session_OK=0;
 } else {
     // authentication was successful
-
-  $tmp = session_id();       // session is already started
-  $session_OK = 1;
+    $tmp = session_id();       // session is already started
+    $session_OK = 1;
 }
 
 if ($CDASH_USER_CREATE_PROJECTS && isset($_SESSION['cdash'])) {
