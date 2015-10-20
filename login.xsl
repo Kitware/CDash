@@ -68,7 +68,7 @@
         <div id="message" style="color: green;"><xsl:value-of select="cdash/message" /></div>
         <br/>
         <!-- Main -->
-        <form method="post" action="" name="loginform">
+        <form method="post" action="#" name="loginform">
           <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
             <tbody>
               <tr class="table-heading">

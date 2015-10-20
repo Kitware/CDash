@@ -241,9 +241,6 @@ function auth($SessionCachePolicy='private_no_expire')
     include "cdash/config.php";
     $loginid= 1231564132;
 
-
-
-
     if (isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH
      && isset($_SERVER['REMOTE_USER'])) {
         $login = $_SERVER['REMOTE_USER'];
@@ -251,25 +248,25 @@ function auth($SessionCachePolicy='private_no_expire')
     }
 
     if (@$_GET["logout"]) {                             // user requested logout
-    session_name("CDash");
+        session_name("CDash");
         session_cache_limiter('nocache');
         @session_start();
         unset($_SESSION['cdash']);
         session_destroy();
 
-    // Remove the cookie if we have one
-    $cookienames = array("CDash", str_replace('.', '_', "CDash-".$_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
-    foreach ($cookienames as $cookiename) {
-        if (isset($_COOKIE[$cookiename])) {
-            $cookievalue = $_COOKIE[$cookiename];
-            $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue)-33);
-            $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-            pdo_select_db("$CDASH_DB_NAME", $db);
+        // Remove the cookie if we have one
+        $cookienames = array("CDash", str_replace('.', '_', "CDash-".$_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
+        foreach ($cookienames as $cookiename) {
+            if (isset($_COOKIE[$cookiename])) {
+                $cookievalue = $_COOKIE[$cookiename];
+                $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue)-33);
+                $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+                pdo_select_db("$CDASH_DB_NAME", $db);
 
-            pdo_query("UPDATE ".qid("user")." SET cookiekey='' WHERE id=".qnum($cookieuseridkey));
-            setcookie("CDash-".$_SERVER['SERVER_NAME'], "", time() - 3600);
+                pdo_query("UPDATE ".qid("user")." SET cookiekey='' WHERE id=".qnum($cookieuseridkey));
+                setcookie("CDash-".$_SERVER['SERVER_NAME'], "", time() - 3600);
+            }
         }
-    }
         echo "<script language=\"javascript\">window.location='index.php'</script>";
         return 0;
     }
@@ -277,7 +274,7 @@ function auth($SessionCachePolicy='private_no_expire')
     if (isset($_POST["sent"])) {
         // arrive from login form
 
-    @$login = $_POST["login"];
+        @$login = $_POST["login"];
         if ($login != null) {
             $login = htmlspecialchars(pdo_real_escape_string($login));
         }
@@ -294,45 +291,45 @@ function auth($SessionCachePolicy='private_no_expire')
 
         return authenticate($login, $passwd, $SessionCachePolicy, $rememberme);
     } else {                                         // arrive from session var
-    $cookiename = str_replace('.', '_', "CDash-".$_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
-    if (isset($_COOKIE[$cookiename])) {
-        $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-        pdo_select_db("$CDASH_DB_NAME", $db);
+        $cookiename = str_replace('.', '_', "CDash-".$_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
+        if (isset($_COOKIE[$cookiename])) {
+            $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
+            pdo_select_db("$CDASH_DB_NAME", $db);
 
-        $cookievalue = $_COOKIE[$cookiename];
-        $cookiekey = substr($cookievalue, strlen($cookievalue)-33);
-        $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue)-33);
-        $sql =
-        "SELECT email,password,id FROM ".qid("user")."
-         WHERE cookiekey='".pdo_real_escape_string($cookiekey)."'";
-        if (!empty($cookieuseridkey)) {
-            $sql .= " AND id='".pdo_real_escape_string($cookieuseridkey)."'";
-        }
-        $result = pdo_query("$sql");
-        if (pdo_num_rows($result) == 1) {
-            $user_array = pdo_fetch_array($result);
-            session_name("CDash");
-            session_cache_limiter($SessionCachePolicy);
-            session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
-            @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
-            session_start();
+            $cookievalue = $_COOKIE[$cookiename];
+            $cookiekey = substr($cookievalue, strlen($cookievalue)-33);
+            $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue)-33);
+            $sql =
+                "SELECT email,password,id FROM ".qid("user")."
+                WHERE cookiekey='".pdo_real_escape_string($cookiekey)."'";
+            if (!empty($cookieuseridkey)) {
+                $sql .= " AND id='".pdo_real_escape_string($cookieuseridkey)."'";
+            }
+            $result = pdo_query("$sql");
+            if (pdo_num_rows($result) == 1) {
+                $user_array = pdo_fetch_array($result);
+                session_name("CDash");
+                session_cache_limiter($SessionCachePolicy);
+                session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
+                @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME+600);
+                session_start();
 
-            $sessionArray = array("login" => $user_array['email'], "passwd" => $user_array['password'], "ID" => session_id(), "valid" => 1, "loginid" => $user_array['id']);
-            $_SESSION['cdash'] = $sessionArray;
-            return true;
+                $sessionArray = array("login" => $user_array['email'], "passwd" => $user_array['password'], "ID" => session_id(), "valid" => 1, "loginid" => $user_array['id']);
+                $_SESSION['cdash'] = $sessionArray;
+                return true;
+            }
         }
-    }
 
-    // Return early if a session has already been started.
-    if (function_exists('session_status')) {
-        if (session_status() != PHP_SESSION_NONE) {
-            return;
+        // Return early if a session has already been started.
+        if (function_exists('session_status')) {
+            if (session_status() != PHP_SESSION_NONE) {
+                return;
+            }
+        } else {
+            if (session_id() != '') {
+                return;
+            }
         }
-    } else {
-        if (session_id() != '') {
-            return;
-        }
-    }
 
         session_name("CDash");
         session_cache_limiter($SessionCachePolicy);

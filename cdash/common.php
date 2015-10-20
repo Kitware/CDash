@@ -2174,9 +2174,19 @@ function DeleteDirectory($dirName)
 
 function load_view($viewName)
 {
+    angular_login();
+
     if (file_exists("local/views/$viewName.html")) {
         readfile("local/views/$viewName.html");
     } else {
         readfile("views/$viewName.html");
+    }
+}
+
+function angular_login()
+{
+    if (array_key_exists('sent', $_POST) && $_POST['sent'] === "Login >>") {
+        require_once('login_functions.php');
+        auth();
     }
 }
