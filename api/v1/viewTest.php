@@ -425,6 +425,9 @@ $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE 
 $time = $time_array[0];
 $response['totaltime'] = time_difference($time, true, '', true);
 
+$testdate = get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime);
+$num_tests = pdo_num_rows($result);
+
 while ($row = pdo_fetch_array($result)) {
     $currentStatus = $row["status"];
     $previousStatus;
@@ -438,7 +441,6 @@ while ($row = pdo_fetch_array($result)) {
     $test['execTimeFull'] = $row["time"];
     $test['execTime'] = time_difference($row["time"], true, '', true);
     $test['details'] = $row["details"];
-    $testdate = get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime);
     $summaryLink = "testSummary.php?project=$projectid&name=".urlencode($testName)."&date=$testdate";
     $test['summaryLink'] = $summaryLink;
     $testid = $row["id"];
@@ -456,22 +458,22 @@ while ($row = pdo_fetch_array($result)) {
         }
     } // end projectshowtesttime
 
-  switch ($currentStatus) {
-    case "passed":
-      $test['status'] = "Passed";
-      $test['statusclass'] = "normal";
-      $numPassed++;
-      break;
-    case "failed":
-      $test['status'] = "Failed";
-      $test['statusclass'] = "error";
-      $numFailed++;
-      break;
-    case "notrun":
-      $test['status'] = "Not Run";
-      $test['statusclass'] = "warning";
-      $numNotRun++;
-      break;
+    switch ($currentStatus) {
+        case "passed":
+            $test['status'] = "Passed";
+            $test['statusclass'] = "normal";
+            $numPassed++;
+            break;
+        case "failed":
+            $test['status'] = "Failed";
+            $test['statusclass'] = "error";
+            $numFailed++;
+            break;
+        case "notrun":
+            $test['status'] = "Not Run";
+            $test['statusclass'] = "warning";
+            $numNotRun++;
+            break;
     }
 
     if ($row["timestatus"] >= $testtimemaxstatus) {
@@ -495,88 +497,93 @@ while ($row = pdo_fetch_array($result)) {
         }
     }
 
-  // Search for recent test history
-  if ($previous_buildids_str != "") {
-      $history_query = "
-      SELECT DISTINCT status FROM build2test
-      WHERE testid=$testid AND buildid IN ($previous_buildids_str)";
-      $history_results = pdo_query($history_query);
-      $num_statuses = pdo_num_rows($history_results);
-      if ($num_statuses > 0) {
-          $response['displayhistory'] = 1;
-          if ($num_statuses > 1) {
-              $test['history'] = "Unstable";
-              $test['historyclass'] = "warning";
-          } else {
-              $row = pdo_fetch_array($history_results);
+    // Search for recent test history.
+    // Don't perform this step if we have 100+ tests,
+    // as it degrades performance too much.
+    if ($num_tests < 100 && $previous_buildids_str != "") {
+        $history_query = "
+            SELECT DISTINCT status FROM build2test
+            WHERE testid=$testid AND buildid IN ($previous_buildids_str)";
+        $history_results = pdo_query($history_query);
+        $num_statuses = pdo_num_rows($history_results);
+        if ($num_statuses > 0) {
+            $response['displayhistory'] = 1;
+            if ($num_statuses > 1) {
+                $test['history'] = "Unstable";
+                $test['historyclass'] = "warning";
+            } else {
+                $row = pdo_fetch_array($history_results);
 
-              $test['history'] = ucfirst($row['status']);
+                $test['history'] = ucfirst($row['status']);
 
-              switch ($row['status']) {
-          case "passed":
-            $test['historyclass'] = "normal";
-            $test['history'] = "Stable";
-            break;
-          case "failed":
-            $test['historyclass'] = "error";
-            $test['history'] = "Broken";
-            break;
-          case "notrun":
-            $test['historyclass'] = "warning";
-            $test['history'] = "Inactive";
-            break;
-          }
-          }
-      }
-  }
-
-  // Check the status of this test on other current builds.
-  list($previousdate, $currentstarttime, $nextdate, $today) =
-    get_dates($date, $nightlytime);
-
-    $beginning_timestamp = $currentstarttime;
-    $end_timestamp = $currentstarttime+3600*24;
-
-    $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-    $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-
-    $summary_query = "
-    SELECT DISTINCT status FROM build2test AS b2t
-    LEFT JOIN build AS b ON (b2t.buildid=b.id)
-    WHERE b2t.testid=$testid
-    AND b.starttime>='$beginning_UTCDate'
-    AND b.starttime<'$end_UTCDate'";
-    $summary_results = pdo_query($summary_query);
-    $num_statuses = pdo_num_rows($summary_results);
-    if ($num_statuses > 0) {
-        $response['displaysummary'] = 1;
-        if ($num_statuses > 1) {
-            $test['summary'] = "Unstable";
-            $test['summaryclass'] = "warning";
-        } else {
-            $row = pdo_fetch_array($summary_results);
-
-            $test['summary'] = ucfirst($row['status']);
-
-            switch ($row['status']) {
-        case "passed":
-          $test['summaryclass'] = "normal";
-          $test['summary'] = "Stable";
-          break;
-        case "failed":
-          $test['summaryclass'] = "error";
-          $test['summary'] = "Broken";
-          break;
-        case "notrun":
-          $test['summaryclass'] = "warning";
-          $test['summary'] = "Inactive";
-          break;
+                switch ($row['status']) {
+                    case "passed":
+                        $test['historyclass'] = "normal";
+                        $test['history'] = "Stable";
+                        break;
+                    case "failed":
+                        $test['historyclass'] = "error";
+                        $test['history'] = "Broken";
+                        break;
+                    case "notrun":
+                        $test['historyclass'] = "warning";
+                        $test['history'] = "Inactive";
+                        break;
+                }
+            }
         }
+    }
+
+    // Check the status of this test on other current builds.
+    if ($num_tests < 100) {
+        list($previousdate, $currentstarttime, $nextdate, $today) =
+            get_dates($date, $nightlytime);
+
+        $beginning_timestamp = $currentstarttime;
+        $end_timestamp = $currentstarttime+3600*24;
+
+        $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
+        $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
+
+        $summary_query = "
+            SELECT DISTINCT status FROM build2test AS b2t
+            LEFT JOIN build AS b ON (b2t.buildid=b.id)
+            WHERE b2t.testid=$testid
+            AND b.starttime>='$beginning_UTCDate'
+            AND b.starttime<'$end_UTCDate'";
+        $summary_results = pdo_query($summary_query);
+        $num_statuses = pdo_num_rows($summary_results);
+        if ($num_statuses > 0) {
+            $response['displaysummary'] = 1;
+            if ($num_statuses > 1) {
+                $test['summary'] = "Unstable";
+                $test['summaryclass'] = "warning";
+            } else {
+                $row = pdo_fetch_array($summary_results);
+
+                $test['summary'] = ucfirst($row['status']);
+
+                switch ($row['status']) {
+                    case "passed":
+                        $test['summaryclass'] = "normal";
+                        $test['summary'] = "Stable";
+                        break;
+                    case "failed":
+                        $test['summaryclass'] = "error";
+                        $test['summary'] = "Broken";
+                        break;
+                    case "notrun":
+                        $test['summaryclass'] = "warning";
+                        $test['summary'] = "Inactive";
+                        break;
+                }
+            }
         }
     }
 
     $tests[] = $test;
 }
+
 $response['tests'] = $tests;
 $response['numPassed'] = $numPassed;
 $response['numFailed'] = $numFailed;
