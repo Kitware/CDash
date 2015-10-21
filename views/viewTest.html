@@ -150,42 +150,42 @@
         <thead>
           <tr class="table-heading1">
 
-            <th style="cursor: pointer" ng-click="updateOrderByFields('name', $event)">
+            <th width="43%" style="cursor: pointer" ng-click="updateOrderByFields('name', $event)">
               Name
               <span class="glyphicon" ng-class="orderByFields.indexOf('-name') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('name') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
-            <th style="cursor: pointer" ng-click="updateOrderByFields('status', $event)">
+            <th width="5%" style="cursor: pointer" ng-click="updateOrderByFields('status', $event)">
               Status
               <span class="glyphicon" ng-class="orderByFields.indexOf('-status') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('status') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
-            <th ng-if="cdash.project.showtesttime == 1"  style="cursor: pointer" ng-click="updateOrderByFields('timestatus', $event)">
+            <th ng-if="cdash.project.showtesttime == 1" width="5%" style="cursor: pointer" ng-click="updateOrderByFields('timestatus', $event)">
               Time Status
               <span class="glyphicon" ng-class="orderByFields.indexOf('-timestatus') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('timestatus') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
             </th>
 
-            <th style="cursor: pointer" ng-click="updateOrderByFields('execTimeFull', $event)">
+            <th width="9%" style="cursor: pointer" ng-click="updateOrderByFields('execTimeFull', $event)">
               Time
               <span class="glyphicon" ng-class="orderByFields.indexOf('-execTimeFull') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('execTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
-            <th ng-if="cdash.displaydetails == 1" style="cursor: pointer" ng-click="updateOrderByFields('details', $event)">
+            <th ng-if="cdash.displaydetails == 1" width="13%" style="cursor: pointer" ng-click="updateOrderByFields('details', $event)">
               Details
               <span class="glyphicon" ng-class="orderByFields.indexOf('-details') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('details') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
             <!-- currently unsortable -->
-            <th ng-if="cdash.build.displaylabels == 1">
+            <th ng-if="cdash.build.displaylabels == 1" width="13%">
               Labels
             </th>
 
-            <th ng-if="cdash.displayhistory == 1" style="cursor: pointer" ng-click="updateOrderByFields('history', $event)">
+            <th ng-if="cdash.displayhistory == 1" width="6%" style="cursor: pointer" ng-click="updateOrderByFields('history', $event)">
               History
               <span class="glyphicon" ng-class="orderByFields.indexOf('-history') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('history') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
-            <th ng-if="cdash.displaysummary == 1" style="cursor: pointer" ng-click="updateOrderByFields('summary', $event)">
+            <th ng-if="cdash.displaysummary == 1" width="6%" style="cursor: pointer" ng-click="updateOrderByFields('summary', $event)">
               Summary
               <span class="glyphicon" ng-class="orderByFields.indexOf('-summary') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('summary') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
