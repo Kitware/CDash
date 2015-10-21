@@ -34,7 +34,8 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
-$response = array();
+$response = begin_JSON_response();
+$response['title'] = "CDash : View Tests";
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -69,16 +70,13 @@ if (pdo_num_rows($project)>0) {
     $testtimemaxstatus = $project_array["testtimemaxstatus"];
 }
 
+$response['title'] = "CDash : $projectname";
 $siteid = $build_array["siteid"];
 $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
 $starttime = $build_array["starttime"];
 
 $date = get_dashboard_date_from_build_starttime($starttime, $project_array["nightlytime"]);
-
-
-$response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
 get_dashboard_JSON_by_name($projectname, $date, $response);
 
 // Menu

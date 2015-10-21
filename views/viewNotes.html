@@ -31,7 +31,7 @@
 
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
 
-    <div ng-if="cdash.requirelogin != 1">
+    <div ng-if="cdash.requirelogin != 1 && !cdash.error">
       <br/>
 
       <table border="0">
