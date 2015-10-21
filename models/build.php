@@ -1714,5 +1714,4 @@ class build
                 $message, $url);
         pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
     }
-
 } // end class Build;
