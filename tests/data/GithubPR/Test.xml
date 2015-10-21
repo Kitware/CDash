@@ -23,6 +23,10 @@
 	ProcessorClockFrequency="3201"
 	ChangeId="80"
 	>
+    <Subproject name="SubProject1"/>
+    <Labels>
+      <Label>SubProject1</Label>
+    </Labels>
 	<Testing>
 		<StartDateTime>Aug 11 16:45 EDT</StartDateTime>
 		<StartTestTime>1439325930</StartTestTime>
@@ -33,7 +37,7 @@
 			<Name>foo</Name>
 			<Path>.</Path>
 			<FullName>./foo</FullName>
-			<FullCommandLine>/projects/tmp_for_tango/bin/foo</FullCommandLine>
+			<FullCommandLine>/projects/tmp/bin/foo</FullCommandLine>
 			<Results>
 				<NamedMeasurement type="text/string" name="Exit Code">
 					<Value>Failed</Value>
@@ -48,7 +52,7 @@
 					<Value>Completed</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>/projects/tmp_for_tango/bin/foo</Value>
+					<Value>/projects/tmp/bin/foo</Value>
 				</NamedMeasurement>
 				<Measurement>
 					<Value></Value>

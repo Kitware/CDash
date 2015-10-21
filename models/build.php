@@ -643,7 +643,7 @@ class build
         //
         $this->InsertLabelAssociations();
 
-        // Check if we should post errors to a pull request.
+        // Should we post build errors to a pull request?
         if (isset($this->PullRequest)) {
             $hasErrors = false;
             foreach ($this->Errors as $error) {
@@ -654,25 +654,10 @@ class build
             }
 
             if ($hasErrors) {
-                $idToNotify = $this->Id;
-                if ($this->ParentId > 0) {
-                    $idToNotify = $this->ParentId;
-                }
-
-                $notified = true;
-                $row = pdo_single_row_query(
-                        "SELECT notified FROM build WHERE id=".qnum($idToNotify));
-                if ($row && array_key_exists('notified', $row)) {
-                    $notified = $row['notified'];
-                }
-
-                if (!$notified) {
-                    $url = get_server_URI(false);
-                    $url .= "/viewBuildError.php?buildid=$this->Id";
-                    post_pull_request_comment($this->ProjectId, $this->PullRequest,
-                            "This build experienced errors.", $url);
-                    pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
-                }
+                $message = "This build experienced errors";
+                $url = get_server_URI(false) .
+                    "/viewBuildError.php?buildid=$this->Id";
+                $this->NotifyPullRequest($message, $url);
             }
         }
 
@@ -748,26 +733,12 @@ class build
 
         add_last_sql_error("Build:UpdateTestNumbers", $this->ProjectId, $this->Id);
 
-        // Check if we should post test failures to a pull request.
+        // Should we should post test failures to a pull request?
         if (isset($this->PullRequest) && $numberTestsFailed > 0) {
-            $idToNotify = $this->Id;
-            if ($this->ParentId > 0) {
-                $idToNotify = $this->ParentId;
-            }
-
-            $notified = true;
-            $row = pdo_single_row_query(
-                    "SELECT notified FROM build WHERE id=".qnum($idToNotify));
-            if ($row && array_key_exists('notified', $row)) {
-                $notified = $row['notified'];
-            }
-            if (!$notified) {
-                $url = get_server_URI(false);
-                $url .= "/viewTest.php?onlyfailed&buildid=$this->Id";
-                post_pull_request_comment($this->ProjectId, $this->PullRequest,
-                        "This build experienced failing tests.", $url);
-                pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
-            }
+            $message = "This build experienced failing tests";
+            $url = get_server_URI(false) .
+                "/viewTest.php?onlyfailed&buildid=$this->Id";
+            $this->NotifyPullRequest($message, $url);
         }
     }
 
@@ -1654,6 +1625,14 @@ class build
 
         add_last_sql_error("Build:SetNumberOfConfigureErrors",
                 $this->ProjectId, $this->Id);
+
+        // Should we post configure errors to a pull request?
+        if (isset($this->PullRequest) && $numErrors > 0) {
+            $message = "This build failed to configure";
+            $url = get_server_URI(false) .
+                "/viewConfigure.php?buildid=$this->Id";
+            $this->NotifyPullRequest($message, $url);
+        }
     }
 
     /**
@@ -1704,4 +1683,36 @@ class build
     {
         $this->PullRequest = $pr;
     }
+
+    private function NotifyPullRequest($message, $url)
+    {
+        // Figure out if we should notify this build or its parent.
+        $idToNotify = $this->Id;
+        if ($this->ParentId > 0) {
+            $idToNotify = $this->ParentId;
+        }
+
+        // Return early if this build already posted a comment on this PR.
+        $notified = true;
+        $row = pdo_single_row_query(
+                "SELECT notified FROM build WHERE id=".qnum($idToNotify));
+        if ($row && array_key_exists('notified', $row)) {
+            $notified = $row['notified'];
+        }
+        if ($notified) {
+            return;
+        }
+
+        // Mention which SubProject caused this error (if any).
+        if ($this->GetSubProjectName()) {
+            $message .= " during $this->SubProjectName";
+        }
+        $message .= ".";
+
+        // Post the PR comment & mark this build as 'notified'.
+        post_pull_request_comment($this->ProjectId, $this->PullRequest,
+                $message, $url);
+        pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
+    }
+
 } // end class Build;

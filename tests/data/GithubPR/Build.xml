@@ -23,6 +23,10 @@
 	ProcessorClockFrequency="1200"
 	ChangeId="80"
 	>
+    <Subproject name="SubProject1"/>
+    <Labels>
+        <Label>SubProject1</Label>
+    </Labels>
 	<Build>
 		<StartDateTime>Aug 12 10:48 EDT</StartDateTime>
 		<StartBuildTime>1439390906</StartBuildTime>
