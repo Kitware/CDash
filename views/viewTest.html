@@ -194,7 +194,7 @@
           </tr>
         </thead>
 
-        <tr ng-repeat="test in cdash.tests |orderBy:orderByFields:reverseSort" ng-class-odd="'odd'" ng-class-even="'even'">
+        <tr ng-repeat="test in filteredTests" ng-class-odd="'odd'" ng-class-even="'even'">
           <td>
             <img ng-if="test.new == 1 && test.timestatus == 'Passed' && test.status == 'Passed'" src="images/flaggreen.gif" title="flag"/>
             <img ng-if="test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')" src="images/flag.png" title="flag"/>
@@ -232,6 +232,25 @@
 
         </tr>
       </table>
+
+      <uib-pagination
+        ng-model="$parent.currentPage"
+        total-items="cdash.tests.length"
+        max-size="maxSize"
+        items-per-page="numPerPage"
+        ng-change="pageChanged()"
+        boundary-links="true">
+      </uib-pagination>
+
+      <div>
+        <label>Items per page</label>
+        <select ng-model="$parent.numPerPage" convert-to-number ng-change="pageChanged()">
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="-1">All</option>
+        </select>
+      </div>
 
       <br/>
       <a href="{{cdash.csvlink}}">Download Table as CSV File</a>
