@@ -142,7 +142,6 @@ class GithubCommentTestCase extends KWWebTestCase
         $commentID = $matches[1];
 
         // Delete the comment from Github.
-        /*
         $delete_url =
             "https://api.github.com/repos/Kitware/CDash/issues/comments/$commentID";
         $userpwd =
@@ -161,7 +160,6 @@ class GithubCommentTestCase extends KWWebTestCase
             $this->fail("Failed to delete comment #$commentID");
             return false;
         }
-        */
 
         // Clear the log.
         $this->deleteLog($this->logfilename);
