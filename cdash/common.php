@@ -145,6 +145,9 @@ function generate_XSLT($xml, $pageName, $only_in_local=false)
 /** used to escape special XML characters */
 function XMLStrFormat($str)
 {
+    if (mb_detect_encoding($str, 'UTF-8', true) === false) {
+        $str = utf8_encode($str);
+    }
     $str = str_replace("&", "&amp;", $str);
     $str = str_replace("<", "&lt;", $str);
     $str = str_replace(">", "&gt;", $str);
@@ -1923,7 +1926,7 @@ function begin_XML_for_XSLT()
       }
   }
 
-    $xml = '<?xml version="1.0" encoding="ISO-8859-1"?><cdash>';
+    $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
     $xml .= add_XML_value("cssfile", $CDASH_CSS_FILE);
     $xml .= add_XML_value("version", $CDASH_VERSION);
     return $xml;
