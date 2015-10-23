@@ -436,7 +436,7 @@ while ($row = pdo_fetch_array($result)) {
     if ($row["newstatus"]) {
         $test['new'] = "1";
     }
-    $test['execTimeFull'] = $row["time"];
+    $test['execTimeFull'] = floatval($row["time"]);
     $test['execTime'] = time_difference($row["time"], true, '', true);
     $test['details'] = $row["details"];
     $summaryLink = "testSummary.php?project=$projectid&name=".urlencode($testName)."&date=$testdate";
