@@ -161,19 +161,20 @@
 
           <tr class="table-heading">
 
-            <th ng-if="cdash.childview == 1" align="center" rowspan="2" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='label'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="cdash.childview == 1" align="center" rowspan="2" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
               SubProject
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'label', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'label'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="cdash.childview != 1" align="center" rowspan="2" width="20%" style="cursor: pointer" ng-click="buildgroup.orderByField='site'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="cdash.childview != 1" align="center" rowspan="2" width="20%" style="cursor: pointer"
+                ng-click="updateOrderByFields(buildgroup, 'site', $event)">
               Site
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'site', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'site'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="cdash.childview != 1" align="center" rowspan="2" width="25%" style="cursor: pointer" ng-click="buildgroup.orderByField='buildname'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="cdash.childview != 1" align="center" rowspan="2" width="25%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'buildname', $event)">
               Build Name
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'buildname', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'buildname'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
             <td ng-if="buildgroup.hasupdatedata" align="center" colspan="{{1 + cdash.advancedview}}" width="5%" class="timeheader botl">Update</td>
@@ -185,80 +186,80 @@
           </tr>
 
           <tr class="table-heading">
-            <th ng-if="buildgroup.hasupdatedata" align="center" width="3%" style="cursor: pointer" ng-click="buildgroup.orderByField='update.files'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hasupdatedata" align="center" width="3%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'update.files', $event)">
               Files
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'update.files', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'update.files'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hasupdatedata" ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='update.timefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hasupdatedata" ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'update.timefull', $event)">
               Time
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'update.timefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'update.timefull'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hasconfiguredata" align="center" style="cursor: pointer" ng-click="buildgroup.orderByField='configure.error'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hasconfiguredata" align="center" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'configure.error', $event)">
               Error
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'configure.error', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'configure.error'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hasconfiguredata" align="center" style="cursor: pointer" ng-click="buildgroup.orderByField='configure.warning'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hasconfiguredata" align="center" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'configure.warning', $event)">
               Warn
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'configure.warning', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'configure.warning'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hasconfiguredata" ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='configure.timefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hasconfiguredata" ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'configure.timefull', $event)">
               Time
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'configure.timefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'configure.timefull'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hascompilationdata" align="center" style="cursor: pointer" ng-click="buildgroup.orderByField='compilation.error'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hascompilationdata" align="center" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'compilation.error', $event)">
               Error
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'compilation.error', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'compilation.error'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hascompilationdata" align="center" style="cursor: pointer" ng-click="buildgroup.orderByField='compilation.warning'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hascompilationdata" align="center" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'compilation.warning', $event)">
               Warn
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'compilation.warning', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'compilation.warning'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hascompilationdata" ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='compilation.timefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hascompilationdata" ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'compilation.timefull', $event)">
               Time
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'compilation.timefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'compilation.timefull'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='test.notrun'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.notrun', $event)">
               Not Run
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'test.notrun', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'test.notrun'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='test.fail'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.fail', $event)">
               Fail
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'test.fail', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'test.fail'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='test.pass'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.pass', $event)">
               Pass
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'test.pass', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'test.pass'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-if="buildgroup.hastestdata" ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="buildgroup.orderByField='test.timefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-if="buildgroup.hastestdata" ng-show="cdash.advancedview != 0" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.timefull', $event)">
               Time
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'test.timefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'test.timefull'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th align="center" width="20%" style="cursor: pointer" ng-click="buildgroup.orderByField='builddatefull'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th align="center" width="20%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'builddatefull', $event)">
               Build Time
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'builddatefull', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'builddatefull'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
 
-            <th ng-show="cdash.childview != 1 && cdash.displaylabels == 1" align="center" rowspan="2" width="5%" class="nob" style="cursor: pointer" ng-click="buildgroup.orderByField='Labels'; buildgroup.reverseSort = !buildgroup.reverseSort">
+            <th ng-show="cdash.childview != 1 && cdash.displaylabels == 1" align="center" rowspan="2" width="5%" class="nob" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'Labels', $event)">
               Labels
-              <span class="glyphicon" ng-class="{'glyphicon-none': buildgroup.orderByField != 'Labels', 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField(buildgroup, 'Labels'), 'glyphicon-chevron-down': !buildgroup.reverseSort, 'glyphicon-chevron-up': buildgroup.reverseSort}"></span>
             </th>
          </tr>
         </thead>
 
         <tbody ng-if="buildgroup.builds.length > 0">
-          <tr ng-repeat="build in buildgroup.builds |orderBy:buildgroup.orderByField:buildgroup.reverseSort|showExpectedLast" ng-class-odd="'odd'" ng-class-even="'even'" valign="middle">
+          <tr ng-repeat="build in buildgroup.builds |orderBy:buildgroup.orderByFields:buildgroup.reverseSort|showExpectedLast" ng-class-odd="'odd'" ng-class-even="'even'" valign="middle">
 
             <!-- For child view, display the label(s) as a link to the build summary -->
             <td ng-if="cdash.childview == 1" align="left" class="paddt">
@@ -561,41 +562,41 @@
 
           <tr class="table-heading">
             <!-- Site & Build Name for non-grouped coverage -->
-            <th ng-if="cdash.coverages.length > 0" align="center" width="20%" style="cursor: pointer" ng-click="$parent.coverageOrderByField='site'; $parent.coverageReverseSort = !$parent.coverageReverseSort">
+            <th ng-if="cdash.coverages.length > 0" align="center" width="20%" style="cursor: pointer" ng-click="updateOrderByFields(coverage,'site', $event)">
               Site
-              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.coverageOrderByField != 'site', 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('site'), 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
             </th>
 
-            <th ng-if="cdash.coverages.length > 0" align="center" width="25%" style="cursor: pointer" ng-click="$parent.coverageOrderByField='buildname'; $parent.coverageReverseSort = !$parent.coverageReverseSort">
+            <th ng-if="cdash.coverages.length > 0" align="center" width="25%" style="cursor: pointer" ng-click="updateOrderByFields(coverage,'buildname', $event)">
               Build Name
-              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.coverageOrderByField != 'buildname', 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('buildname'), 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
             </th>
 
             <!-- SubProject name for grouped coverage -->
-            <th ng-if="cdash.coveragegroups.length > 0" align="center" width="20%" style="cursor: pointer" ng-click="$parent.coverageOrderByField='label'; $parent.coverageReverseSort = !$parent.coverageReverseSort">
+            <th ng-if="cdash.coveragegroups.length > 0" align="center" width="20%" style="cursor: pointer" ng-click="updateOrderByFields(coverage,'label', $event)">
               SubProject
-              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.coverageOrderByField != 'label', 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('label'), 'glyphicon-chevron-down': !$parent.coverageReverseSort, 'glyphicon-chevron-up': $parent.coverageReverseSort}"></span>
             </th>
 
             <!-- Fields common to both modes -->
-            <th align="center" width="10%" style="cursor: pointer" ng-click="coverageOrderByField='percentage'; coverageReverseSort = !coverageReverseSort">
+            <th align="center" width="10%" style="cursor: pointer" ng-click="updateOrderByFields(coverage,'percentage', $event)">
               Percentage
-              <span class="glyphicon" ng-class="{'glyphicon-none': coverageOrderByField != 'percentage', 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('percentage'), 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
             </th>
 
-            <th align="center" width="10%" style="cursor: pointer" ng-click="coverageOrderByField='loctested'; coverageReverseSort = !coverageReverseSort">
+            <th align="center" width="10%" style="cursor: pointer" ng-click="updateOrderByFields(coverage,'loctested', $event)">
               LOC Tested
-              <span class="glyphicon" ng-class="{'glyphicon-none': coverageOrderByField != 'loctested', 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('loctested'), 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
             </th>
 
-            <th align="center" width="10%" style="cursor: pointer" ng-click="coverageOrderByField='locuntested'; coverageReverseSort = !coverageReverseSort">
+            <th align="center" width="10%" style="cursor: pointer" ng-click="updateOrderByFields(coverage,'locuntested', $event)">
               LOC Untested
-              <span class="glyphicon" ng-class="{'glyphicon-none': coverageOrderByField != 'locuntested', 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('locuntested'), 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
             </th>
 
-            <th align="center" width="15%" ng-class="{'nob': cdash.displaylabels == 0 && cdash.coveragegroups.length == 0}" style="cursor: pointer" ng-click="coverageOrderByField='datefull'; coverageReverseSort = !coverageReverseSort">
+            <th align="center" width="15%" ng-class="{'nob': cdash.displaylabels == 0 && cdash.coveragegroups.length == 0}" style="cursor: pointer" ng-click="updateOrderByFields(coverage,'datefull', $event)">
               Date
-              <span class="glyphicon" ng-class="{'glyphicon-none': coverageOrderByField != 'datefull', 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('datefull'), 'glyphicon-chevron-down': !coverageReverseSort, 'glyphicon-chevron-up': coverageReverseSort}"></span>
             </th>
 
             <!-- Conditionally display the labels -->
@@ -604,7 +605,7 @@
         </thead>
 
         <!-- Coverage groups -->
-        <tbody ng-repeat="group in cdash.coveragegroups |orderBy:coverageOrderByField:coverageReverseSort" id="coveragebody">
+        <tbody ng-repeat="group in cdash.coveragegroups |orderBy:coverage.orderByFields:coverage.reverseSort" id="coveragebody">
           <tr class="parent_row">
             <td class="paddt" align="left">
               <b>{{group.label}}</b>

@@ -19,6 +19,8 @@ CDash.filter("showExpectedLast", function () {
   $scope.showfilters = false;
   $scope.showsettings = false;
 
+  $scope.coverage = { orderByFields = []; reverseSort = true; }
+
   // Show/hide feed based on cookie settings.
   var feed_cookie = $.cookie('cdash_hidefeed');
   if(feed_cookie) {
@@ -40,42 +42,45 @@ CDash.filter("showExpectedLast", function () {
       if (!cdash.buildgroups.hasOwnProperty(i)) {
         continue;
       }
+
+      cdash.buildgroups[i].orderByFields = [];
       cdash.buildgroups[i].reverseSort = true;
+
       // For groups that "seem" nightly, sort by errors & such in the
       // following priority order:
       if (cdash.buildgroups[i].name.toLowerCase().indexOf("nightly") != -1) {
         // configure errors
         if (cdash.buildgroups[i].numconfigureerror > 0) {
-          cdash.buildgroups[i].orderByField = 'configure.error';
+          cdash.buildgroups[i].orderByFields.push('configure.error');
         }
         // build errors
         else if (cdash.buildgroups[i].numbuilderror > 0) {
-          cdash.buildgroups[i].orderByField = 'compilation.error';
+          cdash.buildgroups[i].orderByFields.push('compilation.error');
         }
         // tests failed
         else if (cdash.buildgroups[i].numtestfail > 0) {
-          cdash.buildgroups[i].orderByField = 'test.fail';
+          cdash.buildgroups[i].orderByFields.push('test.fail');
         }
         // tests not run
         else if (cdash.buildgroups[i].numtestnotrun > 0) {
-          cdash.buildgroups[i].orderByField = 'test.notrun';
+          cdash.buildgroups[i].orderByFields.push('test.notrun');
         }
         // configure warnings
         else if (cdash.buildgroups[i].numconfigurewarning > 0) {
-          cdash.buildgroups[i].orderByField = 'configure.warning';
+          cdash.buildgroups[i].orderByFields.push('configure.warning');
         }
         // build warnings
         else if (cdash.buildgroups[i].numbuildwarning > 0) {
-          cdash.buildgroups[i].orderByField = 'compilation.warning';
+          cdash.buildgroups[i].orderByFields.push('compilation.warning');
         }
         // build time
         else {
-          cdash.buildgroups[i].orderByField = 'builddatefull';
+          cdash.buildgroups[i].orderByFields.push('builddatefull');
         }
       }
       // Otherwise, sort by build time.
       else {
-        cdash.buildgroups[i].orderByField = 'builddatefull';
+        cdash.buildgroups[i].orderByFields.push('builddatefull');
         cdash.buildgroups[i].reverseSort = true;
       }
     }
@@ -160,7 +165,6 @@ CDash.filter("showExpectedLast", function () {
       }
     }
   };
-
 
   $scope.buildgroup_click = function(buildid) {
     var group = "#buildgroup_"+buildid;
@@ -283,4 +287,20 @@ CDash.filter("showExpectedLast", function () {
     }
   };
 
+  $scope.updateOrderByFields = function(obj, field, $event) {
+    if ($event.shiftKey) {
+      if (obj.orderByFields.indexOf(field) < 0) {
+        obj.orderByFields.push(field);
+      }
+      // Don't reverse the sort order when adding fields
+    }
+    else {
+      obj.orderByFields = [field];
+      obj.reverseSort = !obj.reverseSort;
+    }
+  };
+
+  $scope.orderByField = function(obj, field) {
+    return obj.orderByFields.indexOf(field) >= 0;
+  };
 });

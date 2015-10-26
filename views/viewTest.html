@@ -149,29 +149,29 @@
         <thead>
           <tr class="table-heading1">
 
-            <th style="cursor: pointer" ng-click="orderByField='name'; reverseSort = !reverseSort">
+            <th style="cursor: pointer" ng-click="updateOrderByFields('name', $event)">
               Name
-              <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'name', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('name'), 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
-            <th style="cursor: pointer" ng-click="orderByField='status'; reverseSort = !reverseSort">
+            <th style="cursor: pointer" ng-click="updateOrderByFields('status', $event)">
               Status
-              <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'status', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('status'), 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
-            <th ng-if="cdash.project.showtesttime == 1"  style="cursor: pointer" ng-click="orderByField='timestatus'; reverseSort = !reverseSort">
+            <th ng-if="cdash.project.showtesttime == 1"  style="cursor: pointer" ng-click="updateOrderByFields('timestatus', $event)">
               Time Status
-              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'timeExecFull', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('timeExecFull'), 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
-            <th style="cursor: pointer" ng-click="orderByField='execTimeFull'; reverseSort = !reverseSort">
+            <th style="cursor: pointer" ng-click="updateOrderByFields('execTimeFull', $event)">
               Time
-              <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'execTimeFull', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('execTimeFull'), 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
-            <th ng-if="cdash.displaydetails == 1" style="cursor: pointer" ng-click="$parent.orderByField='details'; $parent.reverseSort = !$parent.reverseSort">
+            <th ng-if="cdash.displaydetails == 1" style="cursor: pointer" ng-click="updateOrderByFields('details', $event)">
               Details
-              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'details', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('details'), 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
             <!-- currently unsortable -->
@@ -179,21 +179,21 @@
               Labels
             </th>
 
-            <th ng-if="cdash.displayhistory == 1" style="cursor: pointer" ng-click="$parent.orderByField='history'; $parent.reverseSort = !$parent.reverseSort">
+            <th ng-if="cdash.displayhistory == 1" style="cursor: pointer" ng-click="updateOrderByFields('history', $event)">
               History
-              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'history', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('history'), 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
-            <th ng-if="cdash.displaysummary == 1" style="cursor: pointer" ng-click="$parent.orderByField='summary'; $parent.reverseSort = !$parent.reverseSort">
+            <th ng-if="cdash.displaysummary == 1" style="cursor: pointer" ng-click="updateOrderByFields('summary', $event)">
               Summary
-              <span class="glyphicon" ng-class="{'glyphicon-none': $parent.orderByField != 'summary', 'glyphicon-chevron-down': !$parent.reverseSort, 'glyphicon-chevron-up': $parent.reverseSort}"></span>
+              <span class="glyphicon" ng-class="{'glyphicon-none': !orderByField('summary'), 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
             </th>
 
             <!-- TODO: test measurements -->
           </tr>
         </thead>
 
-        <tr ng-repeat="test in cdash.tests |orderBy:orderByField:reverseSort" ng-class-odd="'odd'" ng-class-even="'even'">
+        <tr ng-repeat="test in cdash.tests |orderBy:orderByFields:reverseSort" ng-class-odd="'odd'" ng-class-even="'even'">
           <td>
             <img ng-if="test.new == 1 && test.timestatus == 'Passed' && test.status == 'Passed'" src="images/flaggreen.gif" title="flag"/>
             <img ng-if="test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')" src="images/flag.png" title="flag"/>
