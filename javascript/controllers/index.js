@@ -11,7 +11,7 @@ CDash.filter("showExpectedLast", function () {
     return present.concat(expecteds);
   };
 })
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, multisort) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -19,7 +19,7 @@ CDash.filter("showExpectedLast", function () {
   $scope.showfilters = false;
   $scope.showsettings = false;
 
-  $scope.coverage = { orderByFields = []; reverseSort = true; }
+  $scope.sortCoverage = { orderByFields: [] };
 
   // Show/hide feed based on cookie settings.
   var feed_cookie = $.cookie('cdash_hidefeed');
@@ -44,45 +44,37 @@ CDash.filter("showExpectedLast", function () {
       }
 
       cdash.buildgroups[i].orderByFields = [];
-      cdash.buildgroups[i].reverseSort = true;
 
       // For groups that "seem" nightly, sort by errors & such in the
       // following priority order:
       if (cdash.buildgroups[i].name.toLowerCase().indexOf("nightly") != -1) {
         // configure errors
         if (cdash.buildgroups[i].numconfigureerror > 0) {
-          cdash.buildgroups[i].orderByFields.push('configure.error');
+          cdash.buildgroups[i].orderByFields.push('-configure.error');
         }
         // build errors
-        else if (cdash.buildgroups[i].numbuilderror > 0) {
-          cdash.buildgroups[i].orderByFields.push('compilation.error');
+        if (cdash.buildgroups[i].numbuilderror > 0) {
+          cdash.buildgroups[i].orderByFields.push('-compilation.error');
         }
         // tests failed
-        else if (cdash.buildgroups[i].numtestfail > 0) {
-          cdash.buildgroups[i].orderByFields.push('test.fail');
+        if (cdash.buildgroups[i].numtestfail > 0) {
+          cdash.buildgroups[i].orderByFields.push('-test.fail');
         }
         // tests not run
-        else if (cdash.buildgroups[i].numtestnotrun > 0) {
-          cdash.buildgroups[i].orderByFields.push('test.notrun');
+        if (cdash.buildgroups[i].numtestnotrun > 0) {
+          cdash.buildgroups[i].orderByFields.push('-test.notrun');
         }
         // configure warnings
-        else if (cdash.buildgroups[i].numconfigurewarning > 0) {
-          cdash.buildgroups[i].orderByFields.push('configure.warning');
+        if (cdash.buildgroups[i].numconfigurewarning > 0) {
+          cdash.buildgroups[i].orderByFields.push('-configure.warning');
         }
         // build warnings
-        else if (cdash.buildgroups[i].numbuildwarning > 0) {
-          cdash.buildgroups[i].orderByFields.push('compilation.warning');
-        }
-        // build time
-        else {
-          cdash.buildgroups[i].orderByFields.push('builddatefull');
+        if (cdash.buildgroups[i].numbuildwarning > 0) {
+          cdash.buildgroups[i].orderByFields.push('-compilation.warning');
         }
       }
-      // Otherwise, sort by build time.
-      else {
-        cdash.buildgroups[i].orderByFields.push('builddatefull');
-        cdash.buildgroups[i].reverseSort = true;
-      }
+      // For all groups, sort by build time.
+      cdash.buildgroups[i].orderByFields.push('-builddatefull');
     }
 
     // Check if we should display filters.
@@ -288,19 +280,7 @@ CDash.filter("showExpectedLast", function () {
   };
 
   $scope.updateOrderByFields = function(obj, field, $event) {
-    if ($event.shiftKey) {
-      if (obj.orderByFields.indexOf(field) < 0) {
-        obj.orderByFields.push(field);
-      }
-      // Don't reverse the sort order when adding fields
-    }
-    else {
-      obj.orderByFields = [field];
-      obj.reverseSort = !obj.reverseSort;
-    }
+    multisort.updateOrderByFields(obj, field, $event);
   };
 
-  $scope.orderByField = function(obj, field) {
-    return obj.orderByFields.indexOf(field) >= 0;
-  };
 });

@@ -1,12 +1,11 @@
 CDash.controller('ViewTestController',
-  function ViewTestController($scope, $rootScope, $http) {
+  function ViewTestController($scope, $rootScope, $http, multisort) {
     $scope.loading = true;
 
     // Hide filters by default.
     $scope.showfilters = false;
 
-    $scope.orderByFields = [];
-    $scope.reverseSort = true;
+    $scope.orderByFields = ['status', 'name'];
 
     $http({
       url: 'api/v1/viewTest.php',
@@ -21,19 +20,6 @@ CDash.controller('ViewTestController',
     });
 
     $scope.updateOrderByFields = function(field, $event) {
-      if ($event.shiftKey) {
-        if ($scope.orderByFields.indexOf(field) < 0) {
-          $scope.orderByFields.push(field);
-        }
-        // Don't reverse the sort order when adding fields
-      }
-      else {
-        $scope.orderByFields = [field];
-        $scope.reverseSort = !$scope.reverseSort;
-      }
-    };
-
-    $scope.orderByField = function(field) {
-      return $scope.orderByFields.indexOf(field) >= 0;
+      multisort.updateOrderByFields($scope, field, $event);
     };
 });
