@@ -135,6 +135,10 @@
           <b>Build Name</b>: {{cdash.buildname}}
           <img ng-if="cdash.buildplatform" class="icon" alt="platform" ng-src="images/platform_{{cdash.buildplatform}}.png"/>
         </div>
+
+        <div id="numbuilds" align="left">
+          <b>Number of SubProjects Built</b>: {{cdash.buildgroups[0].builds.length}}
+        </div>
         <br/>
       </div>
 
