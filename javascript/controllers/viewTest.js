@@ -1,8 +1,12 @@
 CDash.controller('ViewTestController',
-  function ViewTestController($scope, $rootScope, $http) {
+  function ViewTestController($scope, $rootScope, $http, multisort) {
     $scope.loading = true;
+
     // Hide filters by default.
     $scope.showfilters = false;
+
+    $scope.orderByFields = ['status', 'name'];
+
     $http({
       url: 'api/v1/viewTest.php',
       method: 'GET',
@@ -14,4 +18,8 @@ CDash.controller('ViewTestController',
     }).finally(function() {
       $scope.loading = false;
     });
+
+    $scope.updateOrderByFields = function(field, $event) {
+      multisort.updateOrderByFields($scope, field, $event);
+    };
 });

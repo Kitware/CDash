@@ -11,13 +11,15 @@ CDash.filter("showExpectedLast", function () {
     return present.concat(expecteds);
   };
 })
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, multisort) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
   // Hide filters & settings dropdown menu by default.
   $scope.showfilters = false;
   $scope.showsettings = false;
+
+  $scope.sortCoverage = { orderByFields: [] };
 
   // Show/hide feed based on cookie settings.
   var feed_cookie = $.cookie('cdash_hidefeed');
@@ -40,44 +42,39 @@ CDash.filter("showExpectedLast", function () {
       if (!cdash.buildgroups.hasOwnProperty(i)) {
         continue;
       }
-      cdash.buildgroups[i].reverseSort = true;
+
+      cdash.buildgroups[i].orderByFields = [];
+
       // For groups that "seem" nightly, sort by errors & such in the
       // following priority order:
       if (cdash.buildgroups[i].name.toLowerCase().indexOf("nightly") != -1) {
         // configure errors
         if (cdash.buildgroups[i].numconfigureerror > 0) {
-          cdash.buildgroups[i].orderByField = 'configure.error';
+          cdash.buildgroups[i].orderByFields.push('-configure.error');
         }
         // build errors
-        else if (cdash.buildgroups[i].numbuilderror > 0) {
-          cdash.buildgroups[i].orderByField = 'compilation.error';
+        if (cdash.buildgroups[i].numbuilderror > 0) {
+          cdash.buildgroups[i].orderByFields.push('-compilation.error');
         }
         // tests failed
-        else if (cdash.buildgroups[i].numtestfail > 0) {
-          cdash.buildgroups[i].orderByField = 'test.fail';
+        if (cdash.buildgroups[i].numtestfail > 0) {
+          cdash.buildgroups[i].orderByFields.push('-test.fail');
         }
         // tests not run
-        else if (cdash.buildgroups[i].numtestnotrun > 0) {
-          cdash.buildgroups[i].orderByField = 'test.notrun';
+        if (cdash.buildgroups[i].numtestnotrun > 0) {
+          cdash.buildgroups[i].orderByFields.push('-test.notrun');
         }
         // configure warnings
-        else if (cdash.buildgroups[i].numconfigurewarning > 0) {
-          cdash.buildgroups[i].orderByField = 'configure.warning';
+        if (cdash.buildgroups[i].numconfigurewarning > 0) {
+          cdash.buildgroups[i].orderByFields.push('-configure.warning');
         }
         // build warnings
-        else if (cdash.buildgroups[i].numbuildwarning > 0) {
-          cdash.buildgroups[i].orderByField = 'compilation.warning';
-        }
-        // build time
-        else {
-          cdash.buildgroups[i].orderByField = 'builddatefull';
+        if (cdash.buildgroups[i].numbuildwarning > 0) {
+          cdash.buildgroups[i].orderByFields.push('-compilation.warning');
         }
       }
-      // Otherwise, sort by build time.
-      else {
-        cdash.buildgroups[i].orderByField = 'builddatefull';
-        cdash.buildgroups[i].reverseSort = true;
-      }
+      // For all groups, sort by build time.
+      cdash.buildgroups[i].orderByFields.push('-builddatefull');
     }
 
     // Check if we should display filters.
@@ -160,7 +157,6 @@ CDash.filter("showExpectedLast", function () {
       }
     }
   };
-
 
   $scope.buildgroup_click = function(buildid) {
     var group = "#buildgroup_"+buildid;
@@ -281,6 +277,10 @@ CDash.filter("showExpectedLast", function () {
       $rootScope.cssfile = "cdash.css";
       $.cookie("colorblind", 0, { expires: 365 } );
     }
+  };
+
+  $scope.updateOrderByFields = function(obj, field, $event) {
+    multisort.updateOrderByFields(obj, field, $event);
   };
 
 });
