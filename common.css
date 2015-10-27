@@ -1200,17 +1200,18 @@ textarea {
 .repeat-item.ng-enter.ng-enter-active {
   opacity:1;
 }
+
 .animate-show {
   -moz-transition:all linear 0.3s;
   -o-transition:all linear 0.3s;
   transition:all linear 0.3s;
-  display:inline!important;
+  display:block!important;
   -webkit-transition:all linear 0.3s;
   transition:all linear 0.3s;
   opacity:1;
 }
 .animate-show.ng-hide {
-  opacity: 0;
+  opacity:0;
 }
 
 /* used for angular table sorting */

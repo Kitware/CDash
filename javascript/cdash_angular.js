@@ -1,7 +1,8 @@
 var CDash = angular
 .module('CDash', [
     'ui.sortable',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngAnimate'
     ]);
 
 // Keep subprojects with missing fields at the bottom of the list.
