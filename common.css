@@ -1219,3 +1219,8 @@ textarea {
   content: "\e113";
   color: transparent !important;
 }
+
+/* padding for viewTest table cells */
+table#viewTestTable td{
+  padding: 4px;
+}
