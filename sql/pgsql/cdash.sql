@@ -303,7 +303,7 @@ CREATE TABLE "project" (
   "emailtesttimingchanged" smallint DEFAULT '0' NOT NULL,
   "emailbrokensubmission" smallint DEFAULT '1' NOT NULL,
   "emailredundantfailures" smallint DEFAULT '0' NOT NULL,
-  "emailadministrator" smallint DEFAULT '1' NOT NULL, 
+  "emailadministrator" smallint DEFAULT '1' NOT NULL,
   "showipaddresses" smallint DEFAULT '1' NOT NULL,
   "cvsviewertype" character varying(10) DEFAULT NULL,
   "testtimestd" numeric(3,1) DEFAULT '4.0',
@@ -767,6 +767,7 @@ CREATE TABLE "label2test" (
   "testid" bigint NOT NULL,
   PRIMARY KEY ("labelid", "buildid", "testid")
 );
+CREATE INDEX "label2test_testid" on "label2test" ("testid");
 
 --
 -- Table: label2update
@@ -1280,7 +1281,7 @@ CREATE TABLE "apitoken" (
 );
 CREATE INDEX "apitoken_token" on "apitoken" ("token");
 
--- 
+--
 -- Table: uploadfile
 --
 CREATE TABLE "uploadfile" (
@@ -1293,7 +1294,7 @@ CREATE TABLE "uploadfile" (
 );
 CREATE INDEX "uploadfile_sha1sum" on "uploadfile" ("sha1sum");
 
--- 
+--
 -- Table: build2uploadfile
 --
 CREATE TABLE "build2uploadfile" (
