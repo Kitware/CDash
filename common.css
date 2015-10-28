@@ -1224,3 +1224,9 @@ textarea {
 table#viewTestTable td{
   padding: 4px;
 }
+
+/* test failure trend graph */
+#testfailuregrapholder {
+  width:800px;
+  height:400px;
+}
