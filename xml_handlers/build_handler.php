@@ -131,20 +131,25 @@ class BuildHandler extends AbstractHandler
             $threshold = $CDASH_LARGE_TEXT_LIMIT;
 
             if ($threshold > 0 && isset($this->Error->StdOutput)) {
+                $chunk_size = $threshold / 2;
                 $outlen = strlen($this->Error->StdOutput);
                 if ($outlen > $threshold) {
-                    $tmp = substr($this->Error->StdOutput, 0, $threshold);
+                    $beginning = substr($this->Error->StdOutput, 0, $chunk_size);
+                    $end = substr($this->Error->StdOutput, -$chunk_size);
                     unset($this->Error->StdOutput);
-                    $this->Error->StdOutput = $tmp .
-                        "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
+                    $this->Error->StdOutput =
+                        "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
+                    $outlen = strlen($this->Error->StdOutput);
                 }
 
                 $errlen = strlen($this->Error->StdError);
                 if ($errlen > $threshold) {
-                    $tmp = substr($this->Error->StdError, 0, $threshold);
+                    $beginning = substr($this->Error->StdError, 0, $chunk_size);
+                    $end = substr($this->Error->StdError, -$chunk_size);
                     unset($this->Error->StdError);
-                    $this->Error->StdError = $tmp .
-                        "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
+                    $this->Error->StdError =
+                        "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
+                    $errlen = strlen($this->Error->StdError);
                 }
             }
 
