@@ -302,7 +302,7 @@ function post_submit()
           copy_build_data($old_buildid, $buildid, $type);
       }
   }
-    echo json_encode($response_array);
+    echo json_encode(cast_data_for_JSON($response_array));
 }
 
 /** Function to deal with the external tool mechanism */

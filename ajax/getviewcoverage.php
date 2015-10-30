@@ -651,7 +651,7 @@ if ($userid) {
     }
 
   if (function_exists('json_encode')) {
-      echo(json_encode($output));
+      echo(json_encode(cast_data_for_JSON($output)));
   } else {
       echo(__json_encode($output));
   }
