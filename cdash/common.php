@@ -2193,3 +2193,25 @@ function angular_login()
         auth();
     }
 }
+
+/* Change data-type from string to integar or float if required.
+ * If a string is detected make sure it is utf8 encoded. */
+function cast_data_for_JSON ($value) {
+    if (is_array($value)) {
+        $value = array_map('cast_data_for_JSON', $value);
+        return $value;
+    }
+    if (is_numeric($value)) {
+        if(strpos('.', $value) !== false) {
+            return (float) $value;
+        }
+        return (int) $value;
+    }
+    if (is_string($value)) {
+        $value = (string) $value;
+        if (mb_detect_encoding($value, 'UTF-8', true) === false) {
+            $value = utf8_encode($value);
+        }
+    }
+    return $value;
+}

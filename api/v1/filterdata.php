@@ -22,7 +22,7 @@ include_once("cdash/common.php");
 include_once("filterdataFunctions.php");
 
 $response = get_filterdata_array_from_request($_GET["page_id"]);
-echo json_encode($response);
+echo json_encode(cast_data_for_JSON($response));
 
 
 // Parse filter data from the request into an array.

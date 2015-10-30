@@ -1154,7 +1154,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response = array_merge($response, $site_response);
     }
 
-    echo json_encode($response);
+    echo json_encode(cast_data_for_JSON($response));
 } // end echo_main_dashboard_JSON
 
 

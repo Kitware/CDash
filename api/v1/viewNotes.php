@@ -123,4 +123,4 @@ while ($build2note_array = pdo_fetch_array($build2note)) {
 }
 $response['notes'] = $notes;
 
-echo json_encode($response);
+echo json_encode(cast_data_for_JSON($response));

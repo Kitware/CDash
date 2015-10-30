@@ -411,4 +411,4 @@ $response['errors'] = $errors_response;
 $end = microtime_float();
 $response['generationtime'] = round($end-$start, 3);
 
-echo json_encode($response);
+echo json_encode(cast_data_for_JSON($response));

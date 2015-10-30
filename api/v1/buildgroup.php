@@ -141,7 +141,7 @@ function rest_get()
 
     $end = microtime_float();
     $response['generationtime'] = round($end - $start, 3);
-    echo json_encode($response);
+    echo json_encode(cast_data_for_JSON($response));
 }
 
 
@@ -230,7 +230,8 @@ function rest_post()
         $response['id'] = $BuildGroup->GetId();
         $response['name'] = $BuildGroup->GetName();
         $response['autoremovetimeframe'] = $BuildGroup->GetAutoRemoveTimeFrame();
-        echo json_encode($response);
+        echo json_encode(cast_data_for_JSON($response));
+
         return;
     }
 
@@ -387,7 +388,7 @@ function rest_post()
             } else {
                 $response['parentgroupname'] = 'Any';
             }
-            echo json_encode($response);
+            echo json_encode(cast_data_for_JSON($response));
             return;
         }
     }
