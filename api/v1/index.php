@@ -624,11 +624,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['countbuildwarningdiffn'] = 0;
         }
 
-        $hasconfiguredata = false;
-        if ($build_row['countconfigureerrors'] != -1 ||
-                $build_row['countconfigurewarnings'] != -1) {
-            $hasconfiguredata = true;
-        }
+        $hasconfiguredata = $build_row['countconfigureerrors'] != -1 ||
+            $build_row['countconfigurewarnings'] != -1;
 
         if ($build_row['countconfigureerrors'] < 0) {
             $build_row['countconfigureerrors'] = 0;
