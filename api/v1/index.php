@@ -624,6 +624,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['countbuildwarningdiffn'] = 0;
         }
 
+        $hasconfiguredata = false;
+        if ($build_row['countconfigureerrors'] != -1 ||
+                $build_row['countconfigurewarnings'] != -1) {
+            $hasconfiguredata = true;
+        }
+
         if ($build_row['countconfigureerrors'] < 0) {
             $build_row['countconfigureerrors'] = 0;
         }
@@ -850,8 +856,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $configure_response['time'] = time_difference($duration*60.0, true);
             $configure_response['timefull'] = $duration;
             $buildgroups_response[$i]['configureduration'] += $duration;
-            $buildgroups_response[$i]['hasconfiguredata'] = true;
+            $hasconfiguredata = true;
+        }
+        if ($hasconfiguredata) {
             $build_response['configure'] = $configure_response;
+            $buildgroups_response[$i]['hasconfiguredata'] = true;
         }
 
         if ($build_array['hastest'] != 0) {
