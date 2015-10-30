@@ -844,7 +844,7 @@ CREATE TABLE `label2test` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
   `testid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`buildid`,`testid`)
+  PRIMARY KEY (`labelid`,`buildid`,`testid`),
   KEY `testid` (`testid`)
 );
 
