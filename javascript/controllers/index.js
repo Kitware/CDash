@@ -45,9 +45,9 @@ CDash.filter("showExpectedLast", function () {
 
       cdash.buildgroups[i].orderByFields = [];
 
-      // For groups that "seem" nightly, sort by errors & such in the
-      // following priority order:
-      if (cdash.buildgroups[i].name.toLowerCase().indexOf("nightly") != -1) {
+      // For child view and groups that "seem" nightly, sort by errors & such
+      // in the following priority order:
+      if (cdash.childview == 1 || cdash.buildgroups[i].name.toLowerCase().indexOf("nightly") != -1) {
         // configure errors
         if (cdash.buildgroups[i].numconfigureerror > 0) {
           cdash.buildgroups[i].orderByFields.push('-configure.error');
