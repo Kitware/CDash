@@ -643,43 +643,47 @@ if (isset($_GET['upgrade-2-2'])) {
 // 2.4 Upgrade
 if (isset($_GET['upgrade-2-4'])) {
     // Support for subproject groups
-  AddTableField('subproject', 'groupid', 'int(11)', 'bigint', '0');
+    AddTableField('subproject', 'groupid', 'int(11)', 'bigint', '0');
     AddTableIndex('subproject', 'groupid');
     RemoveTableField("subproject", "core");
     RemoveTableField('project', 'coveragethreshold2');
 
-  // Support for larger types
-  ModifyTableField("buildfailure", "workingdirectory", "VARCHAR( 512)", "VARCHAR( 512 )", "", true, false);
+    // Support for larger types
+    ModifyTableField("buildfailure", "workingdirectory", "VARCHAR( 512)", "VARCHAR( 512 )", "", true, false);
     ModifyTableField("buildfailure", "outputfile", "VARCHAR( 512)", "VARCHAR( 512 )", "", true, false);
 
-  // Support for parent builds
-  AddTableField('build', 'parentid', 'int(11)', 'int', '0');
+    // Support for parent builds
+    AddTableField('build', 'parentid', 'int(11)', 'int', '0');
     AddTableIndex('build', 'parentid');
 
-  // Cache configure results similar to build & test
-  AddTableField('build', 'configureerrors', 'smallint(6)', 'smallint', '-1');
+    // Cache configure results similar to build & test
+    AddTableField('build', 'configureerrors', 'smallint(6)', 'smallint', '-1');
     AddTableField('build', 'configurewarnings', 'smallint(6)', 'smallint', '-1');
 
-  // Add new multi-column index to build table.
-  // This improves the rendering speed of overview.php.
-  $multi_index = array("projectid", "parentid", "starttime");
+    // Add new multi-column index to build table.
+    // This improves the rendering speed of overview.php.
+    $multi_index = array("projectid", "parentid", "starttime");
     AddTableIndex("build", $multi_index);
 
-  // Support for dynamic BuildGroups.
-  AddTableField('buildgroup', 'type', 'varchar(20)', 'character varying(20)', 'Daily');
+    // Support for dynamic BuildGroups.
+    AddTableField('buildgroup', 'type', 'varchar(20)', 'character varying(20)', 'Daily');
     AddTableField('build2grouprule', 'parentgroupid', 'int(11)', 'bigint', '0');
 
-  // Support for pull request notifications.
-  AddTableField('build', 'notified', 'tinyint(1)', 'smallint', '0');
+    // Support for pull request notifications.
+    AddTableField('build', 'notified', 'tinyint(1)', 'smallint', '0');
 
-  // Better caching of buildfailures.
-  UpgradeBuildFailureTable('buildfailure', 'buildfailuredetails');
+    // Better caching of buildfailures.
+    UpgradeBuildFailureTable('buildfailure', 'buildfailuredetails');
 
-  // Set the database version
-  setVersion();
+    // Add key to label2test.
+    // This speeds up viewTest API for builds with lots of tests & labels.
+    AddTableIndex('label2test', 'testid');
 
-  // Put that the upgrade is done in the log
-  add_log("Upgrade done.", "upgrade-2-4");
+    // Set the database version
+    setVersion();
+
+    // Put that the upgrade is done in the log
+    add_log("Upgrade done.", "upgrade-2-4");
     return;
 }
 
