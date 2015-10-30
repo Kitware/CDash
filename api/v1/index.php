@@ -1206,7 +1206,7 @@ function get_child_builds_hyperlink($parentid, $filterdata)
                 '&value' . $n . '=' . htmlspecialchars($filter['value']);
         }
     }
-    if ($count > 0) {
+    if ($n > 0) {
         $existing_filter_params .= "&filtercount=$count";
         $existing_filter_params .= "&showfilters=1";
     }
