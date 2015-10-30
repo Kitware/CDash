@@ -2196,13 +2196,14 @@ function angular_login()
 
 /* Change data-type from string to integar or float if required.
  * If a string is detected make sure it is utf8 encoded. */
-function cast_data_for_JSON ($value) {
+function cast_data_for_JSON($value)
+{
     if (is_array($value)) {
         $value = array_map('cast_data_for_JSON', $value);
         return $value;
     }
     if (is_numeric($value)) {
-        if(strpos('.', $value) !== false) {
+        if (strpos('.', $value) !== false) {
             return (float) $value;
         }
         return (int) $value;
