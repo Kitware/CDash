@@ -11,7 +11,7 @@ CDash.filter("showExpectedLast", function () {
     return present.concat(expecteds);
   };
 })
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, multisort) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, $filter, multisort) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -37,12 +37,19 @@ CDash.filter("showExpectedLast", function () {
     // Set title in root scope so the head controller can see it.
     $rootScope['title'] = cdash.title;
 
-    // Setup default sorting based on group name.
     for (var i in cdash.buildgroups) {
       if (!cdash.buildgroups.hasOwnProperty(i)) {
         continue;
       }
 
+      // Initialize pagination settings.
+      cdash.buildgroups[i].pagination = [];
+      cdash.buildgroups[i].pagination.filteredBuilds = [];
+      cdash.buildgroups[i].pagination.currentPage = 1;
+      cdash.buildgroups[i].pagination.numPerPage = 25;
+      cdash.buildgroups[i].pagination.maxSize = 5;
+
+      // Setup default sorting based on group name.
       cdash.buildgroups[i].orderByFields = [];
 
       // For groups that "seem" nightly, sort by errors & such in the
@@ -75,6 +82,11 @@ CDash.filter("showExpectedLast", function () {
       }
       // For all groups, sort by build time.
       cdash.buildgroups[i].orderByFields.push('-builddatefull');
+
+      // Initialize paginated results.
+      cdash.buildgroups[i].builds = $filter('orderBy')(cdash.buildgroups[i].builds, cdash.buildgroups[i].orderByFields);
+      cdash.buildgroups[i].builds = $filter('showExpectedLast')(cdash.buildgroups[i].builds);
+      $scope.pageChanged(cdash.buildgroups[i]);
     }
 
     // Check if we should display filters.
@@ -279,8 +291,19 @@ CDash.filter("showExpectedLast", function () {
     }
   };
 
+  $scope.pageChanged = function(obj) {
+    var begin = ((obj.pagination.currentPage - 1) * obj.pagination.numPerPage)
+    , end = begin + obj.pagination.numPerPage;
+    obj.pagination.filteredBuilds = obj.builds.slice(begin, end);
+  };
+
   $scope.updateOrderByFields = function(obj, field, $event) {
     multisort.updateOrderByFields(obj, field, $event);
+    if ('pagination' in obj && 'builds' in obj) {
+      obj.builds = $filter('orderBy')(obj.builds, obj.orderByFields);
+      obj.builds = $filter('showExpectedLast')(obj.builds);
+      $scope.pageChanged(obj);
+    }
   };
 
 });
