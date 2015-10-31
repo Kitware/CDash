@@ -412,7 +412,7 @@
               {{build.configure.time}}
             </td>
 
-            <td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'error': build.compilation.error > 0, 'normal': build.compilation.error}">
+            <td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'error': build.compilation.error > 0, 'normal': build.compilation.error == 0}">
               <div ng-class="{'valuewithsub': build.compilation.nerrordiffp > 0 || build.compilation.nerrordiffn > 0}">
                 <a ng-if="build.numchildren == 0" ng-href="viewBuildError.php?buildid={{build.id}}">
                   {{build.compilation.error}}
@@ -430,7 +430,7 @@
               </div>
             </td>
 
-            <td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning}">
+            <td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning == 0}">
               <div ng-class="{'valuewithsub': build.compilation.nwarningdiffp > 0 || build.compilation.nwarningdiffn > 0}">
                 <a ng-if="build.numchildren == 0" ng-href="viewBuildError.php?type=1&buildid={{build.id}}">
                   {{build.compilation.warning}}
@@ -480,7 +480,7 @@
               </div>
             </td>
 
-            <td ng-if="buildgroup.hastestdata" align="center" ng-class="{'normal': build.test.pass}">
+            <td ng-if="buildgroup.hastestdata" align="center" ng-class="{'normal': build.test.pass > -1}">
               <div ng-class="{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
                 <a ng-if="build.numchildren == 0" ng-href="viewTest.php?onlypassed&buildid={{build.id}}">
                   {{build.test.pass}}
