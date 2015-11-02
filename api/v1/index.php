@@ -676,11 +676,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
             }
         }
         if ($i == -1) {
-            add_log("BuildGroup '$groupname' not found for build #" . $build_array['id'],
+            add_log("BuildGroup '$groupid' not found for build #" . $build_array['id'],
                     __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
                     LOG_WARNING);
             continue;
         }
+
+        $groupname = $buildgroups_response[$i]['name'];
 
         $build_response = array();
 
@@ -688,7 +690,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_array["sitename"]."_".$build_array["name"];
 
         $buildid = $build_array["id"];
-        $groupid = $build_array["groupid"];
         $siteid = $build_array["siteid"];
 
         $countChildrenResult = pdo_single_row_query(
