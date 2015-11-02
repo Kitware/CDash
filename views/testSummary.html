@@ -21,7 +21,7 @@
     <script src="javascript/angular.min.js"></script>
     <script src="javascript/angular-animate.min.js"></script>
     <script src="javascript/angular-ui-sortable.min.js"></script>
-    <!-- <script src="javascript/ui-bootstrap-tpls-0.14.2.min.js"></script> -->
+    <script src="javascript/ui-bootstrap-tpls-0.14.2.min.js"></script>
     <script src="javascript/cdash_angular.js"></script>
     <script src="javascript/controllers/head.js"></script>
     <script src="javascript/controllers/testSummary.js"></script>
@@ -38,6 +38,9 @@
       <h3>
         Testing summary for <u>{{cdash.testName}}</u> performed between {{cdash.teststarttime}} and {{cdash.testendtime}}
       </h3>
+      <h4>
+        {{cdash.percentagepassed}}% passed, {{cdash.numfailed}} failed out of {{cdash.numtotal}}.
+      </h4>
 
       <!-- Failure Graph -->
       <a ng-click="showgraph = !showgraph">

@@ -336,7 +336,11 @@ if (isset($_GET['export']) && $_GET['export'] == "csv") {
     die; // to suppress unwanted output
 }
 
-//now that we have the data we need, generate some XML
+//now that we have the data we need, generate our response.
+$numpassed = 0;
+$numfailed = 0;
+$numtotal = 0;
+
 while ($row = pdo_fetch_array($result)) {
     $buildid = $row['buildid'];
     $build_response = array();
@@ -377,22 +381,28 @@ while ($row = pdo_fetch_array($result)) {
         case 'passed':
             $build_response['status'] = 'Passed';
             $build_response['statusclass'] = 'normal';
+            $numpassed += 1;
             break;
         case 'failed':
             $build_response['status'] = 'Failed';
             $build_response['statusclass'] = 'error';
+            $numfailed += 1;
             break;
         case 'notrun':
             $build_response['status'] = 'Not Run';
             $build_response['statusclass'] = 'warning';
             break;
     }
+    $numtotal += 1;
     $builds_response[] = $build_response;
 }
 
 $response['builds'] = $builds_response;
 $response['csvlink'] = htmlspecialchars($_SERVER["REQUEST_URI"])."&amp;export=csv";
 $response['columncount'] = count($columns);
+$response['numfailed'] = $numfailed;
+$response['numtotal'] = $numtotal;
+$response['percentagepassed'] = round($numpassed / $numtotal, 2) * 100;
 
 $end = microtime_float();
 $response['generationtime'] = round($end-$start, 3);
