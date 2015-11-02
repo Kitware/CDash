@@ -186,7 +186,7 @@ function rest_delete()
 
         $sql =
       "DELETE FROM build2grouprule
-       WHERE groupid='$buildgroupid' AND buildname = '$match'";
+       WHERE groupid='$buildgroupid' AND buildname = '%$match%'";
         if ($siteid > 0) {
             $sql .= " AND siteid = '$siteid'";
         }
