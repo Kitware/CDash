@@ -1220,9 +1220,9 @@ textarea {
   color: transparent !important;
 }
 
-/* padding for viewTest table cells */
-table#viewTestTable td{
-  padding: 4px;
+/* padding for test table cells */
+table#viewTestTable td, th, table#testSummaryTable td, th{
+  padding: 4px !important;
 }
 
 /* test failure trend graph */
