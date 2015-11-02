@@ -1,0 +1,35 @@
+---
+application: cdash-playground
+version: 2
+runtime: php55
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /(.*\.(xsl|html))$
+  static_files: \1
+  upload: .*\.(xsl|html)$
+  application_readable: true
+  secure: always
+
+- url: /(.*\.(css|gif|ico|jpeg|jpg|js|map|png|html))$
+  static_files: \1
+  upload: .*\.(css|gif|ico|jpeg|jpg|js|map|png|html)$
+  secure: always
+
+- url: /
+  script: index.php
+
+# Serve php scripts.
+- url: /(.+\.php)$
+  script: \1
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^(.*/)?#.*$
+- ^(.*/)?.*/node_modules/.*$
+- ^(.*/)?.*/build/.*$
