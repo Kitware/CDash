@@ -302,7 +302,9 @@
                     <img src="images/document.png" alt="Notes" class="icon"/>
                   </a>
 
-                  <a ng-if="build.upload-file-count > 0 && numchildren == 0" ng-href="viewFiles.php?buildid={{build.id}}" title="{{upload-file-count}} files uploaded with this build">
+                  <a ng-if="build.uploadfilecount > 0 && build.numchildren == 0"
+                     ng-href="viewFiles.php?buildid={{build.id}}"
+                     title="{{upload-file-count}} files uploaded with this build">
                     <img src="images/package.png" alt="Files" class="icon"/>
                   </a>
 

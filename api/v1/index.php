@@ -742,7 +742,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['userupdates'] =  $build_array["userupdates"];
         }
         $build_response['id'] = $build_array["id"];
-        $build_response['upload-file-count'] = $build_array["builduploadfiles"];
+        $build_response['uploadfilecount'] = $build_array["builduploadfiles"];
 
         if ($build_array['countbuildnotes']>0) {
             $build_response['buildnote'] = 1;
