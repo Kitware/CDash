@@ -2203,7 +2203,7 @@ function cast_data_for_JSON($value)
         return $value;
     }
     if (is_numeric($value)) {
-        if (strpos('.', $value) !== false) {
+        if (strpos($value, '.') !== false) {
             return (float) $value;
         }
         return (int) $value;
