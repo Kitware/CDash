@@ -20,6 +20,7 @@ CDash.filter("showExpectedLast", function () {
   $scope.showsettings = false;
 
   $scope.sortCoverage = { orderByFields: [] };
+  $scope.sortDA = { orderByFields: [] };
 
   // Show/hide feed based on cookie settings.
   var feed_cookie = $.cookie('cdash_hidefeed');
