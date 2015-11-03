@@ -751,17 +751,27 @@
           </tr>
 
           <tr class="table-heading">
-            <th align="center" width="20%" id="sortdynanalysissort_0">SubProject</th>
-            <th align="center" width="20%" id="sortdynanalysissort_1">Checker</th>
-            <th align="center" width="10%" id="sortdynanalysissort_2">Defect Count</th>
-            <th align="center" class="nob" width="15%" id="sortdynanalysissort_3">Date</th>
+            <th ng-if="cdash.childview == 1" align="center" width="20%">SubProject</th>
+            <th ng-if="cdash.childview != 1" align="center" width="20%">Site</th>
+            <th ng-if="cdash.childview != 1" align="center" width="25%">Build Name</th>
+            <th align="center" width="20%">Checker</th>
+            <th align="center" width="10%">Defect Count</th>
+            <th align="center" class="nob" width="15%">Date</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr ng-repeat="da in cdash.dynamicanalyses">
-            <td align="left">
+          <tr ng-repeat="da in cdash.dynamicanalyses" ng-class-odd="'odd'" ng-class-even="'even'">
+            <td ng-if="cdash.childview == 1" align="left">
               {{da.label}}
+            </td>
+
+            <td ng-if="cdash.childview != 1" align="left">
+              {{da.site}}
+            </td>
+
+            <td ng-if="cdash.childview != 1" align="left">
+              {{da.buildname}}
             </td>
 
             <td align="center">{{da.checker}}</td>
