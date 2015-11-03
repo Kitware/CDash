@@ -111,7 +111,11 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
 // If we should create the tables
 @$Submit = $_POST["Submit"];
     if ($Submit) {
-        pdo_select_db("");
+        if ($db_type=='mysql') {
+            pdo_select_db("");
+        } else {
+            pdo_select_db("$CDASH_DB_NAME");
+        }
         $admin_email = htmlspecialchars(pdo_real_escape_string($_POST["admin_email"]));
         $admin_password = htmlspecialchars(pdo_real_escape_string($_POST["admin_password"]));
 
