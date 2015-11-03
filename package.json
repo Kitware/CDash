@@ -5,7 +5,8 @@
   "repository": "https://github.com/Kitware/CDash",
   "license": "Apache-2.0",
   "dependencies": {
-    "protractor": "^2.0.0"
+    "protractor": "^2.0.0",
+    "paragonie/random_compat": "^1.0.10"
   },
   "devDependencies": {
     "eslint": "^1.5.1",

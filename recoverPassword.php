@@ -40,21 +40,15 @@ if ($recover) {
         $xml .= "<warning>This email is not registered.</warning>";
     } else {
         // Create a new password
-    $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&";
+        $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&";
         $length = 10;
-
-    // seed with microseconds
-    function make_seed_recoverpass()
-    {
-        list($usec, $sec) = explode(' ', microtime());
-        return (float) $sec + ((float) $usec * 100000);
-    }
-        srand(make_seed_recoverpass());
 
         $password = "";
         $max=strlen($keychars)-1;
         for ($i=0;$i<=$length;$i++) {
-            $password .= substr($keychars, rand(0, $max), 1);
+            // random_int is available in PHP 7 and the random_compat PHP 5.x
+            // polyfill included in the Composer package.json dependencies.
+            $password .= substr($keychars, random_int(0, $max), 1);
         }
 
         $currentURI = get_server_URI();
