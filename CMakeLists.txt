@@ -77,6 +77,20 @@ endif()
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
+# Update composer during configure time.
+find_program(COMPOSER
+  NAMES composer composer.phar
+  PATHS ${CMAKE_CURRENT_SOURCE_DIR}
+)
+if(NOT COMPOSER)
+  file(DOWNLOAD "http://getcomposer.org/composer.phar" "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
+  set(COMPOSER "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
+endif()
+execute_process(
+  COMMAND ${PHP_EXE} ${COMPOSER} install
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
@@ -90,10 +104,10 @@ else()
   set(rename_logs "false")
 endif()
 
-SET(CDASH_USE_LOCAL_DIRECTORY 0)
-IF(${CDASH_PRO})
-  SET(CDASH_USE_LOCAL_DIRECTORY 1)
-ENDIF(${CDASH_PRO})
+set(CDASH_USE_LOCAL_DIRECTORY 0)
+if(${CDASH_PRO})
+  set(CDASH_USE_LOCAL_DIRECTORY 1)
+endif(${CDASH_PRO})
 
 file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
 "<?php
