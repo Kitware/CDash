@@ -82,6 +82,10 @@ find_program(COMPOSER
   NAMES composer composer.phar
   PATHS ${CMAKE_CURRENT_SOURCE_DIR}
 )
+if(NOT COMPOSER)
+  file(DOWNLOAD "http://getcomposer.org/composer.phar" "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
+  set(COMPOSER "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
+endif()
 execute_process(
   COMMAND ${PHP_EXE} ${COMPOSER} update
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
