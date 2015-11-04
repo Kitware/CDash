@@ -334,6 +334,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $buildgroup_response['hasconfiguredata'] = false;
         $buildgroup_response['hascompilationdata'] = false;
         $buildgroup_response['hastestdata'] = false;
+        $buildgroup_response['hasnormalbuilds'] = false;
+        $buildgroup_response['hasparentbuilds'] = false;
 
         $buildgroup_response['builds'] = array();
         $received_builds[$groupname] = array();
@@ -701,6 +703,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $child_builds_hyperlink =
                 get_child_builds_hyperlink($build_array["id"], $filterdata);
             $build_response['multiplebuildshyperlink'] = $child_builds_hyperlink;
+            $buildgroups_response[$i]['hasparentbuilds'] = true;
+        } else {
+            $buildgroups_response[$i]['hasnormalbuilds'] = true;
         }
 
         $build_reponse['type'] = strtolower($build_array["type"]);

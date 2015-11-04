@@ -1,0 +1,256 @@
+<!-- For child view, display the label(s) as a link to the build summary -->
+<td ng-if="cdash.childview == 1" align="left" class="paddt">
+  <a ng-href="buildSummary.php?buildid={{build.id}}">
+    {{build.label}}
+  </a>
+  <!-- Icon for build errors / test failing -->
+  <a ng-if="build.compilation.error > 0 || build.test.fail > 0" href="javascript:;" ng-click="buildinfo_click(build.id)">
+    <img src="images/Info.png" alt="info" class="icon"></img>
+  </a>
+  <div ng-if="build.id" id="buildgroup_{{build.id}}"></div>
+</td>
+
+<!-- Otherwise, show build name & site on the row. -->
+<td ng-if="cdash.childview != 1" align="left" class="paddt">
+  <a ng-href="viewSite.php?siteid={{build.siteid}}&project={{cdash.projectid}}&currenttime={{cdash.unixtimestamp}}">{{build.site}}</a>
+  <img ng-if="build.siteoutoforder == 1" border="0" src="images/flag.png" title="flag"></img>
+</td>
+
+<td ng-if="cdash.childview != 1" align="left">
+  <div ng-if="build.id && build.buildplatform.length > 0" style="float:left;">
+    <img class="icon" alt="platform" ng-src="images/platform_{{build.buildplatform}}.png"/>
+  </div>
+
+  <div ng-if="build.id" style="float: left; margin: 0px 4px;">
+    <a class="buildinfo" alt="generator" ng-href="buildSummary.php?buildid={{build.id}}">
+      {{build.buildname}}
+    </a>
+  </div>
+
+  <div ng-if="!build.id" style="float: left; margin: 0px 4px;">{{build.buildname}}</div>
+
+  <div style="float:left;">
+    <a ng-if="build.note.length > 0" ng-show="cdash.advancedview != 0" title="View notes" ng-href="viewNotes.php?buildid={{build.id}}">
+      <img src="images/document.png" alt="Notes" class="icon"/>
+    </a>
+
+    <a ng-if="build.uploadfilecount > 0"
+       ng-href="viewFiles.php?buildid={{build.id}}"
+       title="{{upload-file-count}} files uploaded with this build">
+      <img src="images/package.png" alt="Files" class="icon"/>
+    </a>
+
+    <!-- If the build has errors or test failing -->
+    <a ng-if="build.compilation.error > 0 || build.test.fail > 0" href="javascript:;" ng-click="buildinfo_click(build.id)">
+      <img src="images/Info.png" alt="info" class="icon"></img>
+    </a>
+
+    <!-- If the build is expected and missing -->
+    <a ng-if="build.expectedandmissing == 1" href="javascript:;" nc-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
+      <img src="images/Info.png" alt="info" class="icon"></img>
+    </a>
+
+    <!-- Display the note icon -->
+    <a ng-if="build.buildnote > 0" name="Build Notes" class="jTip" id="buildnote_{{build.id}}" ng-href="ajax/buildnote.php?buildid={{build.id}}&width=350&link=buildSummary.php%3Fbuildid%3D{{build.id}}">
+      <img src="images/note.png" alt="note" class="icon"></img>
+    </a>
+
+    <!-- If we have error logs -->
+    <a ng-if="build.nerrorlog > 0" class="tooltip" title="{{build.nerrorlog}} errors in the CDash log" ng-href="viewErrorLog.php?buildid={{build.id}}&projectid={{cdash.projectid}}&date={{cdash.date}}">
+      <img src="images/warningsmall.png" alt="errorlogs" class="icon"/>
+    </a>
+
+    <!-- If user is admin of the project propose to group this build -->
+    <div ng-if="cdash.user.admin == 1">
+      <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
+        <img src="images/folder.png" class="icon"/>
+      </a>
+      <img ng-show="build.loadingExpected == 1" src="images/loading.gif"/>
+    </div>
+    <table width="100%" border="0" ng-show="build.showAdminOptions == 1">
+      <tr ng-repeat="group in cdash.all_buildgroups">
+        <td width="35%">
+          <b>{{group.name}}</b>:
+        </td>
+        <td ng-if="group.name == buildgroup.name" colspan="2">
+          <a ng-show="build.expected == 0" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+            [mark as expected]
+          </a>
+          <a ng-show="build.expected == 1" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+            [mark as non expected]
+          </a>
+        </td>
+        <td ng-if="group.name != buildgroup.name" colspan="2">
+          <input type="checkbox" ng-model="build.expected" ng-true-value="'1'" ng-false-value="'0'"> expected</input>
+        </td>
+        <td ng-if="group.name != buildgroup.name" class="nob">
+          <a href="javascript:;" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" class="nob">
+          <a href="javascript:;" ng-click="removeBuild(build)"> [remove this build] </a>
+        </td>
+      </tr>
+    </table>
+
+      <a ng-if="!build.id" href="javascript:;" ng-click="buildnosubmission_click(build.siteid, build.buildname, build.expecteddivname, build.buildgroupid, build.buildtype)">
+        <img src="images/folder.png" class="icon"/>
+      </a>
+    </div> <!-- end admin -->
+  </div>
+</td>
+
+<td ng-if="buildgroup.hasupdatedata" align="center" ng-class="{'error': build.update.errors == 1, 'warning': build.update.warning == 1, 'normal': build.update.defined == 1}">
+  <div>
+    <img ng-if="build.userupdates > 0" src="images/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/>
+    <a ng-href="viewUpdate.php?buildid={{build.id}}">
+      {{build.update.files}}
+    </a>
+  </div>
+
+</td>
+
+<td ng-if="buildgroup.hasupdatedata" align="right" ng-show="cdash.advancedview != 0" ng-show="cdash.advancedview != 0">
+  {{build.update.time}}
+</td>
+
+<td ng-if="buildgroup.hasconfiguredata" align="center" ng-class="{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
+  <a ng-href="viewConfigure.php?buildid={{build.id}}">
+    {{build.configure.error}}
+  </a>
+</td>
+
+<td ng-if="buildgroup.hasconfiguredata" align="center" ng-class="{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
+  <a ng-href="viewConfigure.php?buildid={{build.id}}">
+    {{build.configure.warning}}
+  </a>
+  <sub ng-if="build.configure.nwarningdiff > 0">+{{build.configure.nwarningdiff}}</sub>
+  <sub ng-if="build.configure.nwarningdiff < 0">{{build.configure.nwarningdiff}}</sub>
+</td>
+
+<td ng-if="buildgroup.hasconfiguredata" align="center" ng-show="cdash.advancedview != 0">
+  {{build.configure.time}}
+</td>
+
+<td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'error': build.compilation.error > 0, 'normal': build.compilation.error == 0}">
+  <div ng-class="{'valuewithsub': build.compilation.nerrordiffp > 0 || build.compilation.nerrordiffn > 0}">
+    <a ng-href="viewBuildError.php?buildid={{build.id}}">
+      {{build.compilation.error}}
+    </a>
+    <a ng-if="build.compilation.nerrordiffp > 0" class="sup" ng-href="viewBuildError.php?onlydeltap&buildid={{build.id}}">
+      +{{build.compilation.nerrordiffp}}
+    </a>
+
+    <a ng-if="build.compilation.nerrordiffn > 0" ng-href="viewBuildError.php?onlydeltan&buildid={{build.id}}">
+      <span class="sub">-{{build.compilation.nerrordiffn}}</span>
+    </a>
+  </div>
+</td>
+
+<td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning == 0}">
+  <div ng-class="{'valuewithsub': build.compilation.nwarningdiffp > 0 || build.compilation.nwarningdiffn > 0}">
+    <a ng-href="viewBuildError.php?type=1&buildid={{build.id}}">
+      {{build.compilation.warning}}
+    </a>
+
+    <a ng-if="build.compilation.nwarningdiffp > 0" class="sup" ng-href="viewBuildError.php?type=1&onlydeltap&buildid={{build.id}}">
+      +{{build.compilation.nwarningdiffp}}
+    </a>
+    <a ng-if="build.compilation.nwarningdiffn > 0" ng-href="viewBuildError.php?type=1&onlydeltan&buildid={{build.id}}">
+      <span class="sub">-{{build.compilation.nwarningdiffn}}</span>
+    </a>
+  </div>
+</td>
+
+<td ng-if="buildgroup.hascompilationdata" align="center" ng-show="cdash.advancedview != 0">
+  {{build.compilation.time}}
+</td>
+
+<td ng-if="buildgroup.hastestdata" align="center" ng-class="{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
+  <div ng-class="{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
+    <a ng-href="viewTest.php?onlynotrun&buildid={{build.id}}">
+      {{build.test.notrun}}
+    </a>
+    <a ng-if="build.test.nnotrundiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+      +{{build.test.nnotrundiffp}}
+    </a>
+    <span ng-if="build.test.nnotrundiffn > 0" class="sub">-{{build.test.nnotrundiffn}}</span>
+  </div>
+</td>
+
+<td ng-if="buildgroup.hastestdata" align="center" ng-class="{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
+  <div ng-class="{'valuewithsub': build.test.nfaildiffp > 0 || build.test.nfaildiffn > 0}">
+    <a ng-href="viewTest.php?onlyfailed&buildid={{build.id}}">
+      {{build.test.fail}}
+    </a>
+    <a ng-if="build.test.nfaildiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+      +{{build.test.nfaildiffp}}
+    </a>
+    <span ng-if="build.test.nfaildiffn > 0" class="sub">
+      -{{build.test.nfaildiffn}}
+    </span>
+  </div>
+</td>
+
+<td ng-if="buildgroup.hastestdata" align="center" ng-class="{'normal': build.test.pass > -1}">
+  <div ng-class="{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
+    <a ng-href="viewTest.php?onlypassed&buildid={{build.id}}">
+      {{build.test.pass}}
+    </a>
+    <a ng-if="build.test.npassdiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+      +{{build.test.npassdiffp}}
+    </a>
+
+    <span ng-if="build.test.npassdiffn > 0" class="sub">
+      -{{build.test.npassdiffn}}
+    </span>
+  </div>
+</td>
+
+<td ng-if="buildgroup.hastestdata" align="center" ng-show="cdash.advancedview != 0" ng-class="{'error': build.test.timestatus > 0, 'normal': build.test.timestatus}">
+  <div ng-class="{'valuewithsub': build.build.test.ntimediffp > 0 || build.test.ntimediffn > 0}">
+    <div ng-if="build.test.timestatus > 0">
+      <a ng-href="viewTest.php?onlytimestatus&buildid={{build.id}}">
+        {{build.test.timestatus}}
+      </a>
+      <a ng-if="build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+        +{{build.test.ntimediffp}}
+      </a>
+      <span ng-if="build.test.ntimediffn > 0" class="sub">
+        -{{build.test.ntimediffn}}
+      </span>
+    </div>
+
+    <span ng-if="build.test.timestatus">
+      {{build.test.time}}
+      <a ng-if="build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{buildid}}">
+        +{{build.test.ntimediffp}}
+      </a>
+      <span ng-if="build.test.ntimediffn > 0" class="sub">
+        -{{build.test.ntimediffn}}
+      </span>
+    </span>
+
+    <span ng-if="!build.test.timestatus">
+      {{build.test.time}}
+    </span>
+  </div>
+</td>
+
+<td align="center">
+  <span ng-if="!build.builddate" class="builddateelapsed" alt="Expected submit time: {{build.expectedstarttime}}">
+    Expected build
+  </span>
+
+  <div ng-if="build.builddate">
+    <span class="builddateelapsed" title="{{build.builddate}}, Update time: {{build.update.time}}, Configure time: {{build.configure.time}}, Compilation time: {{build.compilation.time}}, Test time: {{build.test.time}}">
+      {{build.builddateelapsed}}
+    </span>
+  </div>
+</td>
+
+<!-- display the labels -->
+<td ng-if="cdash.childview != 1 && cdash.displaylabels == 1" class="nob" align="left">
+  {{build.label}}
+</td>

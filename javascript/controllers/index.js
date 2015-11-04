@@ -47,7 +47,7 @@ CDash.filter("showExpectedLast", function () {
       cdash.buildgroups[i].pagination = [];
       cdash.buildgroups[i].pagination.filteredBuilds = [];
       cdash.buildgroups[i].pagination.currentPage = 1;
-      cdash.buildgroups[i].pagination.numPerPage = 25;
+      cdash.buildgroups[i].pagination.numPerPage = 10;
       cdash.buildgroups[i].pagination.maxSize = 5;
 
       // Setup default sorting based on group name.
@@ -307,4 +307,21 @@ CDash.filter("showExpectedLast", function () {
     }
   };
 
+  $scope.normalBuild = function(build) {
+    return build.numchildren == 0;
+  };
+
+  $scope.parentBuild = function(build) {
+    return build.numchildren > 0;
+  };
+})
+.directive('normalBuild', function() {
+  return {
+    templateUrl: 'views/partials/build.html'
+  }
+})
+.directive('parentBuild', function() {
+  return {
+    templateUrl: 'views/partials/parentbuild.html'
+  }
 });
