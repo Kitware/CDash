@@ -70,7 +70,7 @@
   </thead>
 
   <tbody>
-    <tr ng-repeat="subproject in cdash.subprojects |orderBy:orderByFields|showEmptyLast:orderByField" ng-class-odd="'odd'" ng-class-even="'even'">
+    <tr ng-repeat="subproject in cdash.subprojects |orderBy:orderByFields|showEmptySubProjectsLast:orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
       <td align="center" >
         <a ng-href="index.php?subproject={{subproject.name_encoded}}&{{cdash.linkparams}}">
           {{subproject.name}}
