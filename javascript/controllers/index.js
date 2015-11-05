@@ -85,12 +85,22 @@ CDash.filter("showEmptyBuildsLast", function () {
       cdash.buildgroups[i].pagination.numPerPage = 10;
       cdash.buildgroups[i].pagination.maxSize = 5;
 
-      // Setup default sorting based on group name.
+      // Setup default sorting.
       cdash.buildgroups[i].orderByFields = [];
 
-      // For groups that "seem" nightly, sort by errors & such in the
-      // following priority order:
-      if (cdash.buildgroups[i].name.toLowerCase().indexOf("nightly") != -1) {
+      // When viewing the children of a single build, show problematic
+      // SubProjects sorted oldest to newest.
+      if (cdash.childview == 1) {
+        if (cdash.buildgroups[i].numbuilderror > 0) {
+          cdash.buildgroups[i].orderByFields.push('-compilation.error');
+        } else if (cdash.buildgroups[i].numconfigureerror > 0) {
+          cdash.buildgroups[i].orderByFields.push('-configure.error');
+        } if (cdash.buildgroups[i].numtestfail > 0) {
+          cdash.buildgroups[i].orderByFields.push('-test.fail');
+        }
+        cdash.buildgroups[i].orderByFields.push('builddatefull');
+      } else if (!('sorttype' in cdash.buildgroups[i])) {
+        // By default, sort by errors & such in the following priority order:
         // configure errors
         if (cdash.buildgroups[i].numconfigureerror > 0) {
           cdash.buildgroups[i].orderByFields.push('-configure.error');
@@ -115,9 +125,12 @@ CDash.filter("showEmptyBuildsLast", function () {
         if (cdash.buildgroups[i].numbuildwarning > 0) {
           cdash.buildgroups[i].orderByFields.push('-compilation.warning');
         }
+        cdash.buildgroups[i].orderByFields.push('-builddatefull');
+      } else if (cdash.buildgroups[i]['sorttype'] == 'time') {
+        // For continuous integration groups, the most recent builds
+        // should be at the top of the list.
+        cdash.buildgroups[i].orderByFields.push('-builddatefull');
       }
-      // For all groups, sort by build time.
-      cdash.buildgroups[i].orderByFields.push('-builddatefull');
 
       // Initialize paginated results.
       cdash.buildgroups[i].builds = $filter('orderBy')(cdash.buildgroups[i].builds, cdash.buildgroups[i].orderByFields);

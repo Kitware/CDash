@@ -708,7 +708,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['hasnormalbuilds'] = true;
         }
 
-        $build_reponse['type'] = strtolower($build_array["type"]);
+        if (strtolower($build_array["type"]) == 'continuous') {
+            $buildgroups_response[$i]['sorttype'] = 'time';
+        }
 
         // Attempt to determine the platform based on the OSName and the buildname
         $buildplatform = '';
