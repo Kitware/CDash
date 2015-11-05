@@ -1,13 +1,48 @@
-CDash.filter("showExpectedLast", function () {
-  // Keep 'expected' builds at the bottom of the build group.
-  return function (builds) {
+CDash.filter("showEmptyBuildsLast", function () {
+  // Move missing expected builds and those missing data to the bottom of the table.
+  return function (builds, sortField) {
     if (!angular.isArray(builds)) return;
-    var present = builds.filter(function (build) {
+
+    // Expected builds that haven't submitted yet will appear
+    // at the bottom of the table.
+    var nonempty = builds.filter(function (build) {
       return !('expectedandmissing' in build);
     });
     var expecteds = builds.filter(function (build) {
       return 'expectedandmissing' in build;
     });
+
+    // Get the primary (first) field that we're sorting by.
+    if (angular.isArray(sortField)) {
+      if (sortField.length < 1) {
+        return nonempty.concat(expecteds);
+      }
+      sortField = sortField[0];
+    }
+    if (sortField.charAt(0) == '-') {
+      sortField = sortField.substring(1);
+    }
+
+    // The only sort fields that could have missing data have
+    // a '.' in their name (update.files, compilation.errors, etc.)
+    // So if we're not sorting by one of them, we can return early.
+    var idx = sortField.indexOf('.');
+    if (idx === -1) {
+      return nonempty.concat(expecteds);
+    }
+
+    // Put builds that don't have any data for our sortField
+    // at the bottom of the table, but above the expected-and-missing
+    // builds.
+    var dataField = sortField.substr(0, idx);
+    var present = nonempty.filter(function (build) {
+      return dataField in build;
+    });
+    var missing = nonempty.filter(function (build) {
+      return !(dataField in build);
+    });
+
+    present = present.concat(missing);
     return present.concat(expecteds);
   };
 })
@@ -86,7 +121,7 @@ CDash.filter("showExpectedLast", function () {
 
       // Initialize paginated results.
       cdash.buildgroups[i].builds = $filter('orderBy')(cdash.buildgroups[i].builds, cdash.buildgroups[i].orderByFields);
-      cdash.buildgroups[i].builds = $filter('showExpectedLast')(cdash.buildgroups[i].builds);
+      cdash.buildgroups[i].builds = $filter('showEmptyBuildsLast')(cdash.buildgroups[i].builds, cdash.buildgroups[i].orderByFields);
       $scope.pageChanged(cdash.buildgroups[i]);
     }
 
@@ -302,7 +337,7 @@ CDash.filter("showExpectedLast", function () {
     multisort.updateOrderByFields(obj, field, $event);
     if ('pagination' in obj && 'builds' in obj) {
       obj.builds = $filter('orderBy')(obj.builds, obj.orderByFields);
-      obj.builds = $filter('showExpectedLast')(obj.builds);
+      obj.builds = $filter('showEmptyBuildsLast')(obj.builds, obj.orderByFields);
       $scope.pageChanged(obj);
     }
   };
