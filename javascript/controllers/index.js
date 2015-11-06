@@ -85,7 +85,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       cdash.buildgroups[i].pagination.maxSize = 5;
       var num_per_page_cookie = $.cookie('num_builds_per_page');
       if(num_per_page_cookie) {
-        cdash.buildgroups[i].pagination.numPerPage = num_per_page_cookie;
+        cdash.buildgroups[i].pagination.numPerPage = parseInt(num_per_page_cookie);
       } else {
         cdash.buildgroups[i].pagination.numPerPage = 10;
       }
@@ -366,7 +366,7 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.normalBuild = function(build) {
-    return build.numchildren == 0;
+    return build.numchildren == 0 || build.expectedandmissing == 1;
   };
 
   $scope.parentBuild = function(build) {
