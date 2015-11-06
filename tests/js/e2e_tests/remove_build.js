@@ -6,7 +6,7 @@ describe("remove_build", function() {
     browser.get('index.php?project=InsightExample');
 
     // Locate the folder icon for the 2nd build.
-    var folderIcon = element(by.repeater('build in buildgroup.builds').row(1)).all(by.tagName('img')).get(1);
+    var folderIcon = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(1)).all(by.tagName('img')).get(1);
 
     // Make sure that we located the right img.
     expect(folderIcon.getAttribute('src')).toContain('images/folder.png');
@@ -35,6 +35,6 @@ describe("remove_build", function() {
 
     // Refresh the page to make sure this build is gone now.
     browser.get('index.php?project=InsightExample');
-    expect(element.all(by.repeater('build in buildgroup.builds')).count()).toBe(5);
+    expect(element.all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(5);
   });
 });
