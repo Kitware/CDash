@@ -82,8 +82,13 @@ CDash.filter("showEmptyBuildsLast", function () {
       cdash.buildgroups[i].pagination = [];
       cdash.buildgroups[i].pagination.filteredBuilds = [];
       cdash.buildgroups[i].pagination.currentPage = 1;
-      cdash.buildgroups[i].pagination.numPerPage = 10;
       cdash.buildgroups[i].pagination.maxSize = 5;
+      var num_per_page_cookie = $.cookie('num_builds_per_page');
+      if(num_per_page_cookie) {
+        cdash.buildgroups[i].pagination.numPerPage = num_per_page_cookie;
+      } else {
+        cdash.buildgroups[i].pagination.numPerPage = 10;
+      }
 
       // Setup default sorting.
       cdash.buildgroups[i].orderByFields = [];
@@ -338,6 +343,11 @@ CDash.filter("showEmptyBuildsLast", function () {
       $rootScope.cssfile = "cdash.css";
       $.cookie("colorblind", 0, { expires: 365 } );
     }
+  };
+
+  $scope.numBuildsPerPageChanged = function(obj) {
+    $.cookie("num_builds_per_page", obj.pagination.numPerPage, { expires: 365 });
+    $scope.pageChanged(obj);
   };
 
   $scope.pageChanged = function(obj) {
