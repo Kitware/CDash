@@ -132,7 +132,7 @@ describe("manageBuildGroup", function() {
     // Find the "latestBuildGroup" table on this page and verify that it has
     // exactly one row.
     browser.get("index.php?project=EmailProjectExample");
-    expect(element(By.partialLinkText("latestBuildGroup")).element(by.xpath('../../../../..')).all(by.repeater('build in buildgroup.builds')).count()).toBe(1);
+    expect(element(By.partialLinkText("latestBuildGroup")).element(by.xpath('../../../../..')).all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(1);
   });
 
 

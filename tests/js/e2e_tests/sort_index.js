@@ -22,7 +22,7 @@ describe("sort_index", function() {
     expect(header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
 
     // Filter out the table cells that aren't currently displayed.
-    var visible_tds = element(by.repeater('build in buildgroup.builds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    var visible_tds = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
 
     // Check that the expected value is at the top of the list.
     expect(visible_tds.get(column_index).getText()).toBe(first_value);
@@ -97,7 +97,7 @@ describe("sort_index", function() {
     expect(pass_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
 
     // Filter out the table cells that aren't currently displayed.
-    var visible_tds = element(by.repeater('build in buildgroup.builds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    var visible_tds = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
 
     // Check that the expected build is at the top of the list.
     expect(visible_tds.get(0).getText()).toBe('dash13.kitware');
