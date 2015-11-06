@@ -16,7 +16,7 @@
     <script src="javascript/cdashmenu.js"></script>
 
     <script src="javascript/tabNavigation.js"></script>
-    <script src="javascript/angular.min.js"></script>
+    <script src="javascript/angular-1.4.7.min.js"></script>
     <script src="javascript/angular-animate.min.js"></script>
     <script src="javascript/angular-ui-sortable.min.js"></script>
     <script src="javascript/ui-bootstrap-tpls-0.14.2.min.js"></script>
@@ -151,42 +151,58 @@
           <thead>
             <tr class="table-heading1">
 
-              <th width="43%" style="cursor: pointer" ng-click="updateOrderByFields('name', $event)">
+              <th width="43%" class="header" ng-click="updateOrderByFields('name', $event)">
                 Name
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-name') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('name') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th width="5%" style="cursor: pointer" ng-click="updateOrderByFields('status', $event)">
+              <th width="5%" class="header"
+                ng-click="updateOrderByFields('status', $event)"
+                tooltip-popup-delay="1500"
+                tooltip-append-to-body="true"
+                uib-tooltip="Whether the test passed or failed">
                 Status
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-status') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('status') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th ng-if="cdash.project.showtesttime == 1" width="5%" style="cursor: pointer" ng-click="updateOrderByFields('timestatus', $event)">
+              <th ng-if="cdash.project.showtesttime == 1" width="5%" class="header"
+                ng-click="updateOrderByFields('timestatus', $event)"
+                tooltip-popup-delay="1500"
+                tooltip-append-to-body="true"
+                uib-tooltip="Whether or not the test timed out">
                 Time Status
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-timestatus') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('timestatus') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
               </th>
 
-              <th width="9%" style="cursor: pointer" ng-click="updateOrderByFields('execTimeFull', $event)">
+              <th width="9%" class="header" ng-click="updateOrderByFields('execTimeFull', $event)">
                 Time
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-execTimeFull') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('execTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th ng-if="cdash.displaydetails == 1" width="13%" style="cursor: pointer" ng-click="updateOrderByFields('details', $event)">
+              <th ng-if="cdash.displaydetails == 1" width="13%" class="header" ng-click="updateOrderByFields('details', $event)">
                 Details
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-details') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('details') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <!-- currently unsortable -->
-              <th ng-if="cdash.build.displaylabels == 1" width="13%">
+              <th ng-if="cdash.build.displaylabels == 1" width="13%" class="header" ng-click="updateOrderByFields('label', $event)">
                 Labels
+                <span class="glyphicon" ng-class="orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th ng-if="cdash.displayhistory == 1" width="6%" style="cursor: pointer" ng-click="updateOrderByFields('history', $event)">
+              <th ng-if="cdash.displayhistory == 1" width="6%" class="header"
+                ng-click="updateOrderByFields('history', $event)"
+                tooltip-popup-delay='1500'
+                tooltip-append-to-body="true"
+                uib-tooltip='Test status over the past four days'>
                 History
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-history') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('history') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th ng-if="cdash.displaysummary == 1" width="6%" style="cursor: pointer" ng-click="updateOrderByFields('summary', $event)">
+              <th ng-if="cdash.displaysummary == 1" width="6%" class="header"
+                ng-click="updateOrderByFields('summary', $event)"
+                tooltip-popup-delay='1500'
+                tooltip-append-to-body="true"
+                uib-tooltip='Test status across the BuildGroup'>
                 Summary
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-summary') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('summary') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>

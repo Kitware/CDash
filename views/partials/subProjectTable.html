@@ -5,72 +5,72 @@
     </tr>
     <tr class="table-heading">
 
-      <th align="center" rowspan="2" width="20%" style="cursor: pointer" ng-click="orderByField='name'; reverseSort = !reverseSort">
+      <th align="center" rowspan="2" width="20%" style="cursor: pointer" ng-click="updateOrderByFields('name', $event)">
         <b>SubProject</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'name', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-name') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('name') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
       <td align="center" colspan="3" width="20%"><b>Configure</b></td>
       <td align="center" colspan="3" width="20%"><b>Build</b></td>
       <td align="center" colspan="3" width="20%"><b>Test</b></td>
 
-      <th ng-if="cdash.showlastsubmission" align="center" rowspan="2" width="20%" class="nob" style="cursor: pointer" ng-click="orderByField='lastsubmission'; reverseSort = !reverseSort">
+      <th ng-if="cdash.showlastsubmission" align="center" rowspan="2" width="20%" class="nob" style="cursor: pointer" ng-click="updateOrderByFields('lastsubmission', $event)">
         <b>Last submission</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'lastsubmission', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-lastsubmission') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('lastsubmission') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
     </tr>
     <tr class="table-heading">
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='nconfigureerror'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('nconfigureerror', $event)">
         <b>Error</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'nconfigureerror', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-nconfigureerror') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('nconfigureerror') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='nconfigurewarning'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('nconfigurewarning', $event)">
         <b>Warning</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'nconfigurewarning', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-nconfigurewarning') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('nconfigurewarning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='nconfigurepass'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('nconfigurepass', $event)">
         <b>Pass</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'nconfigurepass', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-nconfigurepass') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('nconfigurepass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='nbuilderror'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('nbuilderror', $event)">
         <b>Error</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'nbuilderror', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-nbuilderror') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('nbuilderror') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='nbuildwarning'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('nbuildwarning', $event)">
         <b>Warning</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'nbuildwarning', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-nbuildwarning') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('nbuildwarning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='nbuildpass'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('nbuildpass', $event)">
         <b>Pass</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'nbuildpass', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-nbuildpass') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('nbuildpass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='ntestnotrun'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('ntestnotrun', $event)">
         <b>Not Run</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'ntestnotrun', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-ntestnotrun') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('ntestnotrun') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='ntestfail'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('ntestfail', $event)">
         <b>Fail</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'ntestfail', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-ntestfail') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('ntestfail') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" style="cursor: pointer" ng-click="orderByField='ntestpass'; reverseSort = !reverseSort">
+      <th align="center" style="cursor: pointer" ng-click="updateOrderByFields('ntestpass', $event)">
         <b>Pass</b>
-        <span class="glyphicon" ng-class="{'glyphicon-none': orderByField != 'ntestpass', 'glyphicon-chevron-down': !reverseSort, 'glyphicon-chevron-up': reverseSort}"></span>
+        <span class="glyphicon" ng-class="orderByFields.indexOf ('-ntestpass') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('ntestpass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
     </tr>
   </thead>
 
   <tbody>
-    <tr ng-repeat="subproject in cdash.subprojects |orderBy:orderByField:reverseSort|showEmptyLast:orderByField" ng-class-odd="'odd'" ng-class-even="'even'">
+    <tr ng-repeat="subproject in cdash.subprojects |orderBy:orderByFields|showEmptySubProjectsLast:orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
       <td align="center" >
         <a ng-href="index.php?subproject={{subproject.name_encoded}}&{{cdash.linkparams}}">
           {{subproject.name}}

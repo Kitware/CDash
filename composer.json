@@ -14,7 +14,8 @@
     "php": ">=5.3.3",
     "ext-curl": "*",
     "ext-xsl": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "paragonie/random_compat": "~1.0.10"
   },
   "require-dev": {
     "ext-gd": "*",
