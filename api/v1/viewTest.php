@@ -35,9 +35,9 @@ if ($date != null) {
 }
 
 if (isset($_GET['tests'])) {
-  // AJAX call to load history & summary data for currently visible tests.
+    // AJAX call to load history & summary data for currently visible tests.
   load_test_details();
-  exit(0);
+    exit(0);
 }
 
 $response = begin_JSON_response();
@@ -645,64 +645,64 @@ function get_test_summary($testname, $projectid, $begin, $end)
 
 function load_test_details()
 {
-  // Parse input arguments.
+    // Parse input arguments.
   $tests = array();
-  foreach ($_GET['tests'] as $test) {
-    $tests[] = pdo_real_escape_string($test);
-  }
-  if (empty($tests)) {
-    return;
-  }
-
-  $previous_builds = "";
-  if (array_key_exists('previous_builds', $_GET)) {
-    $previous_builds = pdo_real_escape_string($_GET['previous_builds']);
-  }
-  $time_begin = "";
-  if (array_key_exists('time_begin', $_GET)) {
-    $time_begin = pdo_real_escape_string($_GET['time_begin']);
-  }
-  $time_end = "";
-  if (array_key_exists('time_end', $_GET)) {
-    $time_end = pdo_real_escape_string($_GET['time_end']);
-  }
-  $projectid = pdo_real_escape_numeric($_GET['projectid']);
-
-  $response = array();
-  $tests_response = array();
-
-  foreach ($tests as $test) {
-    $test_response = array();
-    $test_response['name'] = $test;
-    $data_found = false;
-
-    if ($time_begin && $time_end) {
-      $summary_response = get_test_summary($test, $projectid, $time_begin, $time_end);
-      if (!empty($summary_response)) {
-        $test_response = array_merge($test_response, $summary_response);
-        $response['displaysummary'] = true;
-        $data_found = true;
-      }
+    foreach ($_GET['tests'] as $test) {
+        $tests[] = pdo_real_escape_string($test);
+    }
+    if (empty($tests)) {
+        return;
     }
 
-    if ($previous_builds) {
-      $history_response = get_test_history($test, $previous_builds);
-      if (!empty($history_response)) {
-        $test_response = array_merge($test_response, $history_response);
-        $response['displayhistory'] = true;
-        $data_found = true;
-      }
+    $previous_builds = "";
+    if (array_key_exists('previous_builds', $_GET)) {
+        $previous_builds = pdo_real_escape_string($_GET['previous_builds']);
+    }
+    $time_begin = "";
+    if (array_key_exists('time_begin', $_GET)) {
+        $time_begin = pdo_real_escape_string($_GET['time_begin']);
+    }
+    $time_end = "";
+    if (array_key_exists('time_end', $_GET)) {
+        $time_end = pdo_real_escape_string($_GET['time_end']);
+    }
+    $projectid = pdo_real_escape_numeric($_GET['projectid']);
+
+    $response = array();
+    $tests_response = array();
+
+    foreach ($tests as $test) {
+        $test_response = array();
+        $test_response['name'] = $test;
+        $data_found = false;
+
+        if ($time_begin && $time_end) {
+            $summary_response = get_test_summary($test, $projectid, $time_begin, $time_end);
+            if (!empty($summary_response)) {
+                $test_response = array_merge($test_response, $summary_response);
+                $response['displaysummary'] = true;
+                $data_found = true;
+            }
+        }
+
+        if ($previous_builds) {
+            $history_response = get_test_history($test, $previous_builds);
+            if (!empty($history_response)) {
+                $test_response = array_merge($test_response, $history_response);
+                $response['displayhistory'] = true;
+                $data_found = true;
+            }
+        }
+
+
+        if ($data_found) {
+            $tests_response[] = $test_response;
+        }
     }
 
-
-    if ($data_found) {
-      $tests_response[] = $test_response;
+    if (!empty($tests_response)) {
+        $response['tests'] = $tests_response;
     }
-  }
 
-  if (!empty($tests_response)) {
-    $response['tests'] = $tests_response;
-  }
-
-  echo json_encode($response);
+    echo json_encode($response);
 }
