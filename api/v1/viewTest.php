@@ -34,6 +34,12 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
+if (isset($_GET['tests'])) {
+  // AJAX call to load history & summary data for currently visible tests.
+  load_test_details();
+  exit(0);
+}
+
 $response = begin_JSON_response();
 $response['title'] = "CDash : View Tests";
 
@@ -124,18 +130,21 @@ $menu['back'] = "index.php?project=".urlencode($projectname)."&date=".get_dashbo
 // These are used to check the recent history of this test.
 $build = new Build();
 $previous_buildids = array();
-$n = 4;
+$n = 3;
 $id = $buildid;
+$previous_buildid = 0;
 for ($i = 0; $i < $n; $i++) {
     $build->Id = $id;
     $build->Filled = false;
 
+    $id = $build->GetPreviousBuildId();
+
     if ($i == 0) {
+        $previous_buildid = $id;
         $current_buildid = $build->GetCurrentBuildId();
         $next_buildid = $build->GetNextBuildId();
     }
 
-    $id = $build->GetPreviousBuildId();
     if ($id == 0) {
         break;
     }
@@ -143,16 +152,15 @@ for ($i = 0; $i < $n; $i++) {
 }
 
 $previous_buildids_str = "";
-if (!empty($previous_buildids)) {
-    @$previous_buildid = end(array_values($previous_buildids));
+if ($previous_buildid > 0) {
     $menu['previous'] = "viewTest.php?buildid=$previous_buildid$extraquery";
-
     if (count($previous_buildids) > 1) {
         $previous_buildids_str = implode(", ", $previous_buildids);
     }
 } else {
     $menu['noprevious'] = "1";
 }
+$response['previous_builds'] = $previous_buildids_str;
 
 $menu['current'] = "viewTest.php?buildid=$current_buildid";
 
@@ -423,9 +431,20 @@ $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE 
 $time = $time_array[0];
 $response['totaltime'] = time_difference($time, true, '', true);
 
-$testdate = get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime);
 $num_tests = pdo_num_rows($result);
 
+// Gather date information.
+$testdate = get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime);
+list($previousdate, $currentstarttime, $nextdate, $today) =
+    get_dates($date, $nightlytime);
+$beginning_timestamp = $currentstarttime;
+$end_timestamp = $currentstarttime+3600*24;
+$beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
+$end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
+$response['time_begin'] = $beginning_UTCDate;
+$response['time_end'] = $end_UTCDate;
+
+// Generate a response for each test found.
 while ($row = pdo_fetch_array($result)) {
     $currentStatus = $row["status"];
     $previousStatus;
@@ -479,6 +498,7 @@ while ($row = pdo_fetch_array($result)) {
     }
 
     $testid = $row['id'];
+    $testname = $row['name'];
 
     if ($CDASH_DB_TYPE == 'pgsql') {
         get_labels_JSON_from_query_results(
@@ -495,88 +515,27 @@ while ($row = pdo_fetch_array($result)) {
         }
     }
 
-    // Search for recent test history.
-    // Don't perform this step if we have 100+ tests,
-    // as it degrades performance too much.
-    if ($num_tests < 100 && $previous_buildids_str != "") {
-        $history_query = "
-            SELECT DISTINCT status FROM build2test
-            WHERE testid=$testid AND buildid IN ($previous_buildids_str)";
-        $history_results = pdo_query($history_query);
-        $num_statuses = pdo_num_rows($history_results);
-        if ($num_statuses > 0) {
-            $response['displayhistory'] = 1;
-            if ($num_statuses > 1) {
-                $test['history'] = "Unstable";
-                $test['historyclass'] = "warning";
-            } else {
-                $row = pdo_fetch_array($history_results);
-
-                $test['history'] = ucfirst($row['status']);
-
-                switch ($row['status']) {
-                    case "passed":
-                        $test['historyclass'] = "normal";
-                        $test['history'] = "Stable";
-                        break;
-                    case "failed":
-                        $test['historyclass'] = "error";
-                        $test['history'] = "Broken";
-                        break;
-                    case "notrun":
-                        $test['historyclass'] = "warning";
-                        $test['history'] = "Inactive";
-                        break;
-                }
+    // Summary & history queries are somewhat expensive.
+    // If we have more than 25 tests we lookup this data on-the-fly
+    // using AJAX rather than loading it all right now.
+    if ($num_tests < 26) {
+        if ($previous_buildids_str != "") {
+            // Get the recent history for this test.
+            $history = get_test_history($testname, $previous_buildids_str);
+            if (!empty($history)) {
+                $test = array_merge($test, $history);
+                $response['displayhistory'] = true;
             }
         }
-    }
 
-    // Check the status of this test on other current builds.
-    if ($num_tests < 100) {
-        list($previousdate, $currentstarttime, $nextdate, $today) =
-            get_dates($date, $nightlytime);
-
-        $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime+3600*24;
-
-        $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-        $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-
-        $summary_query = "
-            SELECT DISTINCT status FROM build2test AS b2t
-            LEFT JOIN build AS b ON (b2t.buildid=b.id)
-            WHERE b2t.testid=$testid
-            AND b.starttime>='$beginning_UTCDate'
-            AND b.starttime<'$end_UTCDate'";
-        $summary_results = pdo_query($summary_query);
-        $num_statuses = pdo_num_rows($summary_results);
-        if ($num_statuses > 0) {
-            $response['displaysummary'] = 1;
-            if ($num_statuses > 1) {
-                $test['summary'] = "Unstable";
-                $test['summaryclass'] = "warning";
-            } else {
-                $row = pdo_fetch_array($summary_results);
-
-                $test['summary'] = ucfirst($row['status']);
-
-                switch ($row['status']) {
-                    case "passed":
-                        $test['summaryclass'] = "normal";
-                        $test['summary'] = "Stable";
-                        break;
-                    case "failed":
-                        $test['summaryclass'] = "error";
-                        $test['summary'] = "Broken";
-                        break;
-                    case "notrun":
-                        $test['summaryclass'] = "warning";
-                        $test['summary'] = "Inactive";
-                        break;
-                }
-            }
+        // Check the status of this test on other current builds.
+        $summary = get_test_summary($testname, $beginning_UTCDate, $end_UTCDate);
+        if (!empty($summary)) {
+            $test = array_merge($test, $summary);
+            $response['displaysummary'] = true;
         }
+
+        $test['detailsloaded'] = true;
     }
 
     $tests[] = $test;
@@ -589,7 +548,161 @@ $response['numNotRun'] = $numNotRun;
 $response['numTimeFailed'] = $numTimeFailed;
 
 $end = microtime_float();
-$response['generationtime'] = round($end-$start, 3);
+$generation_time = round($end-$start, 3);
+$response['generationtime'] = $generation_time;
 $response['columncount'] = $columncount;
 
 echo json_encode(cast_data_for_JSON($response));
+
+
+function get_test_history($testname, $previous_buildids)
+{
+    $retval = array();
+
+    $history_query = "
+        SELECT DISTINCT status FROM build2test AS b2t
+        INNER JOIN test AS t ON (t.id = b2t.testid)
+        WHERE b2t.buildid IN ($previous_buildids) AND t.name = '$testname'";
+    $history_results = pdo_query($history_query);
+
+    $num_statuses = pdo_num_rows($history_results);
+    if ($num_statuses > 0) {
+        if ($num_statuses > 1) {
+            $retval['history'] = "Unstable";
+            $retval['historyclass'] = "warning";
+        } else {
+            $row = pdo_fetch_array($history_results);
+
+            $retval['history'] = ucfirst($row['status']);
+
+            switch ($row['status']) {
+                case "passed":
+                    $retval['historyclass'] = "normal";
+                    $retval['history'] = "Stable";
+                    break;
+                case "failed":
+                    $retval['historyclass'] = "error";
+                    $retval['history'] = "Broken";
+                    break;
+                case "notrun":
+                    $retval['historyclass'] = "warning";
+                    $retval['history'] = "Inactive";
+                    break;
+            }
+        }
+    }
+
+    return $retval;
+}
+
+
+function get_test_summary($testname, $projectid, $begin, $end)
+{
+    $retval = array();
+
+    $summary_query = "
+        SELECT DISTINCT b2t.status FROM build AS b
+        STRAIGHT_JOIN build2test AS b2t ON (b.id = b2t.buildid)
+        STRAIGHT_JOIN test AS t ON (b2t.testid = t.id)
+        WHERE b.projectid = $projectid
+        AND b.starttime>='$begin'
+        AND b.starttime<'$end'
+        AND t.name = '$testname'";
+
+    $summary_results = pdo_query($summary_query);
+
+    $num_statuses = pdo_num_rows($summary_results);
+    if ($num_statuses > 0) {
+        $response['displaysummary'] = 1;
+        if ($num_statuses > 1) {
+            $retval['summary'] = "Unstable";
+            $retval['summaryclass'] = "warning";
+        } else {
+            $row = pdo_fetch_array($summary_results);
+
+            $retval['summary'] = ucfirst($row['status']);
+
+            switch ($row['status']) {
+                case "passed":
+                    $retval['summaryclass'] = "normal";
+                    $retval['summary'] = "Stable";
+                    break;
+                case "failed":
+                    $retval['summaryclass'] = "error";
+                    $retval['summary'] = "Broken";
+                    break;
+                case "notrun":
+                    $retval['summaryclass'] = "warning";
+                    $retval['summary'] = "Inactive";
+                    break;
+            }
+        }
+    }
+
+    return $retval;
+}
+
+
+function load_test_details()
+{
+  // Parse input arguments.
+  $tests = array();
+  foreach ($_GET['tests'] as $test) {
+    $tests[] = pdo_real_escape_string($test);
+  }
+  if (empty($tests)) {
+    return;
+  }
+
+  $previous_builds = "";
+  if (array_key_exists('previous_builds', $_GET)) {
+    $previous_builds = pdo_real_escape_string($_GET['previous_builds']);
+  }
+  $time_begin = "";
+  if (array_key_exists('time_begin', $_GET)) {
+    $time_begin = pdo_real_escape_string($_GET['time_begin']);
+  }
+  $time_end = "";
+  if (array_key_exists('time_end', $_GET)) {
+    $time_end = pdo_real_escape_string($_GET['time_end']);
+  }
+  $projectid = pdo_real_escape_numeric($_GET['projectid']);
+
+  $response = array();
+  $tests_response = array();
+
+  foreach ($tests as $test) {
+    $test_response = array();
+    $test_response['name'] = $test;
+    $data_found = false;
+
+    if ($time_begin && $time_end) {
+      $summary_response = get_test_summary($test, $projectid, $time_begin, $time_end);
+      if (!empty($summary_response)) {
+        $test_response = array_merge($test_response, $summary_response);
+        $response['displaysummary'] = true;
+        $data_found = true;
+      }
+    }
+
+    if ($previous_builds) {
+      $history_response = get_test_history($test, $previous_builds);
+      if (!empty($history_response)) {
+        $test_response = array_merge($test_response, $history_response);
+        $response['displayhistory'] = true;
+        $data_found = true;
+      }
+    }
+
+
+    if ($data_found) {
+      $tests_response[] = $test_response;
+    }
+  }
+
+  if (!empty($tests_response)) {
+    $response['tests'] = $tests_response;
+  }
+
+  echo json_encode($response);
+}
