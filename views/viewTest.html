@@ -193,7 +193,7 @@
                 ng-click="updateOrderByFields('history', $event)"
                 tooltip-popup-delay='1500'
                 tooltip-append-to-body="true"
-                uib-tooltip='Test status over the past four days'>
+                uib-tooltip='Test status for this build over the past four runs'>
                 History
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-history') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('history') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
@@ -202,7 +202,7 @@
                 ng-click="updateOrderByFields('summary', $event)"
                 tooltip-popup-delay='1500'
                 tooltip-append-to-body="true"
-                uib-tooltip='Test status across the BuildGroup'>
+                uib-tooltip='Current test status across the BuildGroup'>
                 Summary
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-summary') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('summary') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
