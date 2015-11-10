@@ -36,7 +36,7 @@ if ($date != null) {
 
 if (isset($_GET['tests'])) {
     // AJAX call to load history & summary data for currently visible tests.
-  load_test_details();
+    load_test_details();
     exit(0);
 }
 
@@ -54,7 +54,9 @@ $start = microtime_float();
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
+$build_array = pdo_fetch_array(pdo_query(
+    "SELECT projectid, siteid, type, name, starttime, endtime
+     FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 if (!isset($projectid) || $projectid==0) {
     $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
@@ -77,10 +79,11 @@ if (pdo_num_rows($project)>0) {
 }
 
 $response['title'] = "CDash : $projectname";
-$siteid = $build_array["siteid"];
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$starttime = $build_array["starttime"];
+$siteid = $build_array['siteid'];
+$buildtype = $build_array['type'];
+$buildname = $build_array['name'];
+$starttime = $build_array['starttime'];
+$endtime = $build_array['endtime'];
 
 $date = get_dashboard_date_from_build_starttime($starttime, $project_array["nightlytime"]);
 get_dashboard_JSON_by_name($projectname, $date, $response);
@@ -124,7 +127,7 @@ if (isset($_GET["onlypassed"])) {
 
 
 $nightlytime = get_project_property($projectname, "nightlytime");
-$menu['back'] = "index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime);
+$menu['back'] = "index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_build_starttime($starttime, $nightlytime);
 
 // Get the IDs of the four previous builds.
 // These are used to check the recent history of this test.
@@ -177,9 +180,9 @@ $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid
 $build['displaylabels'] = $project_array['displaylabels'];
 $build['site'] = $site_array['name'];
 $build['siteid'] = $siteid;
-$build['buildname'] = $build_array['name'];
-$build['buildid'] = $build_array['id'];
-$build['testtime'] = $build_array['endtime'];
+$build['buildname'] = $buildname;
+$build['buildid'] = $buildid;
+$build['testtime'] = $endtime;
 
 // Find the OS and compiler information
 $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
@@ -434,7 +437,7 @@ $response['totaltime'] = time_difference($time, true, '', true);
 $num_tests = pdo_num_rows($result);
 
 // Gather date information.
-$testdate = get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime);
+$testdate = get_dashboard_date_from_build_starttime($starttime, $nightlytime);
 list($previousdate, $currentstarttime, $nextdate, $today) =
     get_dates($date, $nightlytime);
 $beginning_timestamp = $currentstarttime;
