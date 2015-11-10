@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <title ng-bind="title">CDash</title>
+
+    <script src="javascript/jquery-1.10.2.js"></script>
+    <script src="javascript/jquery-ui-1.10.4.min.js"></script>
+    <script src="javascript/bootstrap.min.js"></script>
+    <script src="javascript/tooltip.js"></script>
+    <script src="javascript/cdashmenu.js"></script>
+
+    <script src="javascript/tabNavigation.js"></script>
+    <script src="javascript/angular-1.4.7.min.js"></script>
+    <script src="javascript/angular-animate.min.js"></script>
+    <script src="javascript/angular-ui-sortable.min.js"></script>
+    <script src="javascript/ui-bootstrap-tpls-0.14.2.min.js"></script>
+    <script src="javascript/cdash_angular.js"></script>
+    <script src="javascript/controllers/head.js"></script>
+    <script src="javascript/controllers/queryTests.js"></script>
+    <script src="javascript/controllers/filters.js"></script>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="QueryTestsController">
+
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header"></ng-include>
+    <br/>
+
+    <div ng-if="cdash.requirelogin != 1 && !loading">
+      <h3>Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches</h3>
+
+<!-- Filters -->
+<div id="labelshowfilters">
+  <a id="label_showfilters" ng-click="showfilters=!showfilters">
+    <span ng-show="showfilters == 0">Show Filters</span>
+    <span ng-show="showfilters != 0">Hide Filters</span>
+  </a>
+</div>
+<ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
+
+<!-- Hide a div for javascript to know if time status is on -->
+<div ng-if="cdash.project.showtesttime == 1" id="showtesttimediv" style="display:none"></div>
+
+<!-- Results -->
+<table id="queryTestsTable" cellspacing="0" cellpadding="3" class="tabb">
+<thead>
+  <tr class="table-heading1">
+    <th id="sort_0">Site</th>
+    <th id="sort_1">Build Name</th>
+    <th id="sort_2">Test Name</th>
+    <th id="sort_3">Status</th>
+
+    <th ng-if="cdash.project.showtesttime == 1" id="sort_4">Time Status</th>
+    <th ng-if="cdash.project.showtesttime == 1" id="sort_5">Time</th>
+    <th ng-if="cdash.project.showtesttime == 1" id="sort_6">Details</th>
+    <th ng-if="cdash.project.showtesttime == 1" id="sort_7" class="nob">Build Time</th>
+
+    <th ng-if="cdash.project.showtesttime != 1" id="sort_4">Time</th>
+    <th ng-if="cdash.project.showtesttime != 1" id="sort_5">Details</th>
+    <th ng-if="cdash.project.showtesttime != 1" id="sort_6" class="nob">Build Time</th>
+  </tr>
+</thead>
+
+  <tr ng-repeat="build in cdash.builds">
+    <td>
+      <a href="{{build.siteLink}}">{{build.site}}</a>
+    </td>
+
+    <td>
+      <a href="{{build.buildSummaryLink}}">{{build.buildName}}</a>
+    </td>
+
+    <td>
+      {{build.testname}}
+    </td>
+
+    <td align="center" ng-class="build.statusclass">
+      <a href="{{build.testDetailsLink}}">{{build.status}}</a>
+    </td>
+
+    <td ng-if="cdash.project.showtesttime == 1" align="center" ng-class="build.timestatusclass">
+      <a href="{{build.testDetailsLink}}">{{build.timestatus}}</a>
+    </td>
+
+    <td>
+      {{build.time}}
+    </td>
+
+    <td>
+      {{build.details}}
+    </td>
+
+    <td ng-class="build.nob">
+      {{build.buildstarttime}}
+    </td>
+  </tr>
+
+</table>
+
+<br/>
+
+    <!-- FOOTER -->
+    <br/>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer"></ng-include>
+  </body>
+</html>
