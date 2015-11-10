@@ -72,6 +72,7 @@ $limit_sql = '';
 if ($filterdata['limit']>0) {
     $limit_sql = ' LIMIT '.$filterdata['limit'];
 }
+$response['filterurl'] = @$_GET["filterstring"];
 
 // Menu
 $menu = array();

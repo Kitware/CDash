@@ -46,7 +46,9 @@ CDash.filter("showEmptyBuildsLast", function () {
     return present.concat(expecteds);
   };
 })
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, $filter, multisort) {
+
+
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, $filter, multisort, filters) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -64,6 +66,9 @@ CDash.filter("showEmptyBuildsLast", function () {
   } else {
     $scope.showFeed = true;
   }
+
+  // Check for filters
+  $rootScope.queryString['filterstring'] = filters.getString();
 
   $http({
     url: 'api/v1/index.php',
@@ -343,6 +348,11 @@ CDash.filter("showEmptyBuildsLast", function () {
       $rootScope.cssfile = "cdash.css";
       $.cookie("colorblind", 0, { expires: 365 } );
     }
+  };
+
+  $scope.showfilters_toggle = function() {
+    $scope.showfilters = !$scope.showfilters;
+    filters.toggle($scope.showfilters);
   };
 
   $scope.numBuildsPerPageChanged = function(obj) {

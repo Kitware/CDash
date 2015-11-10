@@ -353,6 +353,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
     unset($filterdata['xml']);
     $response['filterdata'] = $filterdata;
+    $response['filterurl'] = @$_GET['filterstring'];
 
     // add a request for the subproject
     $subprojectsql = "";

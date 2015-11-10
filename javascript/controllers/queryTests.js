@@ -1,9 +1,12 @@
 CDash.controller('QueryTestsController',
-  function QueryTestsController($scope, $rootScope, $http) {
+  function QueryTestsController($scope, $rootScope, $http, filters) {
     $scope.loading = true;
 
     // Hide filters by default.
     $scope.showfilters = false;
+
+    // Check for filters
+    $rootScope.queryString['filterstring'] = filters.getString();
 
     $http({
       url: 'api/v1/queryTests.php',
@@ -22,4 +25,9 @@ CDash.controller('QueryTestsController',
     }).finally(function() {
       $scope.loading = false;
     });
+
+    $scope.showfilters_toggle = function() {
+      $scope.showfilters = !$scope.showfilters;
+      filters.toggle($scope.showfilters);
+    };
 });

@@ -1,5 +1,5 @@
 CDash.controller('ViewTestController',
-  function ViewTestController($scope, $rootScope, $http, $filter, multisort) {
+  function ViewTestController($scope, $rootScope, $http, $filter, multisort, filters) {
     $scope.loading = true;
 
     // Pagination settings.
@@ -12,6 +12,9 @@ CDash.controller('ViewTestController',
     // Hide filters by default.
     $scope.showfilters = false;
 
+    // Check for filters
+    $rootScope.queryString['filterstring'] = filters.getString();
+
     // Default sorting : failed tests in alphabetical order.
     $scope.orderByFields = ['status', 'name'];
 
@@ -20,6 +23,12 @@ CDash.controller('ViewTestController',
       method: 'GET',
       params: $rootScope.queryString
     }).success(function(cdash) {
+
+      // Check if we should display filters.
+      if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
+        $scope.showfilters = true;
+      }
+
       $scope.cdash = cdash;
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
@@ -28,6 +37,11 @@ CDash.controller('ViewTestController',
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.setPage(1);
     });
+
+    $scope.showfilters_toggle = function() {
+      $scope.showfilters = !$scope.showfilters;
+      filters.toggle($scope.showfilters);
+    };
 
     $scope.setPage = function (pageNo) {
       var begin = ((pageNo - 1) * $scope.pagination.numPerPage)
