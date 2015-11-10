@@ -450,6 +450,7 @@ $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 $response['time_begin'] = $beginning_UTCDate;
 $response['time_end'] = $end_UTCDate;
+$labels_found = false;
 
 // Generate a response for each test found.
 while ($row = pdo_fetch_array($result)) {
@@ -519,6 +520,7 @@ while ($row = pdo_fetch_array($result)) {
         if (!empty($row['labels'])) {
             $labels = explode(",", $row['labels']);
             $test['labels'] = $labels;
+            $labels_found = true;
         }
     }
 
@@ -554,6 +556,9 @@ $response['numPassed'] = $numPassed;
 $response['numFailed'] = $numFailed;
 $response['numNotRun'] = $numNotRun;
 $response['numTimeFailed'] = $numTimeFailed;
+
+// Only show the labels column if some were found.
+$response['build']['displaylabels'] &= $labels_found;
 
 $end = microtime_float();
 $generation_time = round($end-$start, 3);
