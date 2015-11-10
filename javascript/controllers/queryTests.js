@@ -1,5 +1,5 @@
 CDash.controller('QueryTestsController',
-  function QueryTestsController($scope, $rootScope, $http, filters) {
+  function QueryTestsController($scope, $rootScope, $http, filters, multisort) {
     $scope.loading = true;
 
     // Hide filters by default.
@@ -7,6 +7,8 @@ CDash.controller('QueryTestsController',
 
     // Check for filters
     $rootScope.queryString['filterstring'] = filters.getString();
+
+    $scope.orderByFields = [];
 
     $http({
       url: 'api/v1/queryTests.php',
@@ -29,5 +31,9 @@ CDash.controller('QueryTestsController',
     $scope.showfilters_toggle = function() {
       $scope.showfilters = !$scope.showfilters;
       filters.toggle($scope.showfilters);
+    };
+
+    $scope.updateOrderByFields = function(field, $event) {
+      multisort.updateOrderByFields($scope, field, $event);
     };
 });

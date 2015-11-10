@@ -52,23 +52,58 @@
 <table id="queryTestsTable" cellspacing="0" cellpadding="3" class="tabb">
 <thead>
   <tr class="table-heading1">
-    <th id="sort_0">Site</th>
-    <th id="sort_1">Build Name</th>
-    <th id="sort_2">Test Name</th>
-    <th id="sort_3">Status</th>
+    <th class="header"
+        ng-click="updateOrderByFields('site', $event)">
+      Site
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
 
-    <th ng-if="cdash.project.showtesttime == 1" id="sort_4">Time Status</th>
-    <th ng-if="cdash.project.showtesttime == 1" id="sort_5">Time</th>
-    <th ng-if="cdash.project.showtesttime == 1" id="sort_6">Details</th>
-    <th ng-if="cdash.project.showtesttime == 1" id="sort_7" class="nob">Build Time</th>
+    <th class="header"
+        ng-click="updateOrderByFields('buildName', $event)">
+      Build Name
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-buildName') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('buildName') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
 
-    <th ng-if="cdash.project.showtesttime != 1" id="sort_4">Time</th>
-    <th ng-if="cdash.project.showtesttime != 1" id="sort_5">Details</th>
-    <th ng-if="cdash.project.showtesttime != 1" id="sort_6" class="nob">Build Time</th>
+    <th class="header"
+        ng-click="updateOrderByFields('testname', $event)">
+      Test Name
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-testname') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('testname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-click="updateOrderByFields('status', $event)">
+      Status
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-status') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('status') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-if="cdash.project.showtesttime == 1"
+        ng-click="updateOrderByFields('timestatus', $event)">
+      Time Status
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-timestatus') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('timestatus') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-click="updateOrderByFields('time', $event)">
+      Time
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-time') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('time') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-click="updateOrderByFields('details', $event)">
+      Details
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-details') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('details') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header nob"
+        ng-click="updateOrderByFields('buildstarttime', $event)">
+      Build Time
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-buildstarttime') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('buildstarttime') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
   </tr>
 </thead>
 
-  <tr ng-repeat="build in cdash.builds"
+  <tr ng-repeat="build in cdash.builds | orderBy:orderByFields"
       ng-class-odd="'odd'"
       ng-class-even="'even'">
     <td>
