@@ -567,9 +567,16 @@ function get_test_history($testname, $previous_buildids)
 {
     $retval = array();
 
+    // STRAIGHT_JOIN is a MySQL specific enhancement.
+    $join_type = "INNER JOIN";
+    global $CDASH_DB_TYPE;
+    if ($CDASH_DB_TYPE === 'mysql') {
+        $join_type = "STRAIGHT_JOIN";
+    }
+
     $history_query = "
         SELECT DISTINCT status FROM build2test AS b2t
-        STRAIGHT_JOIN test AS t ON (t.id = b2t.testid)
+        $join_type test AS t ON (t.id = b2t.testid)
         WHERE b2t.buildid IN ($previous_buildids) AND t.name = '$testname'";
     $history_results = pdo_query($history_query);
 
@@ -608,11 +615,18 @@ function get_test_summary($testname, $projectid, $groupid, $begin, $end)
 {
     $retval = array();
 
+    // STRAIGHT_JOIN is a MySQL specific enhancement.
+    $join_type = "INNER JOIN";
+    global $CDASH_DB_TYPE;
+    if ($CDASH_DB_TYPE === 'mysql') {
+        $join_type = "STRAIGHT_JOIN";
+    }
+
     $summary_query = "
         SELECT DISTINCT b2t.status FROM build AS b
-        STRAIGHT_JOIN build2group AS b2g ON (b.id = b2g.buildid)
-        STRAIGHT_JOIN build2test AS b2t ON (b.id = b2t.buildid)
-        STRAIGHT_JOIN test AS t ON (b2t.testid = t.id)
+        $join_type build2group AS b2g ON (b.id = b2g.buildid)
+        $join_type build2test AS b2t ON (b.id = b2t.buildid)
+        $join_type test AS t ON (b2t.testid = t.id)
         WHERE b2g.groupid = $groupid
         AND b.projectid = $projectid
         AND b.starttime>='$begin'
