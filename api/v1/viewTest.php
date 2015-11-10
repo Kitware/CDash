@@ -569,7 +569,7 @@ function get_test_history($testname, $previous_buildids)
 
     $history_query = "
         SELECT DISTINCT status FROM build2test AS b2t
-        INNER JOIN test AS t ON (t.id = b2t.testid)
+        STRAIGHT_JOIN test AS t ON (t.id = b2t.testid)
         WHERE b2t.buildid IN ($previous_buildids) AND t.name = '$testname'";
     $history_results = pdo_query($history_query);
 
