@@ -55,8 +55,10 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 $build_array = pdo_fetch_array(pdo_query(
-    "SELECT projectid, siteid, type, name, starttime, endtime
-     FROM build WHERE id='$buildid'"));
+    "SELECT projectid, siteid, type, name, starttime, endtime, groupid
+     FROM build AS b
+     LEFT JOIN build2group AS b2g ON (b.id = b2g.buildid)
+     WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 if (!isset($projectid) || $projectid==0) {
     $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
@@ -84,6 +86,7 @@ $buildtype = $build_array['type'];
 $buildname = $build_array['name'];
 $starttime = $build_array['starttime'];
 $endtime = $build_array['endtime'];
+$groupid = $build_array['groupid'];
 
 $date = get_dashboard_date_from_build_starttime($starttime, $project_array["nightlytime"]);
 get_dashboard_JSON_by_name($projectname, $date, $response);
