@@ -315,6 +315,11 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     method: 'GET',
     params: $rootScope.queryString
   }).success(function(filterdata) {
+
+    filterdata.filters.forEach(function(filter) {
+      filter.compare = filter.compare.toString();
+    });
+
     $scope.filterdata = filterdata;
   });
 

@@ -85,24 +85,24 @@
           <span id="date_now" style="display:none;">{{cdash.date}}</span>
         </li>
         <li ng-if="!cdash.hidenav">
-          <a ng-if="cdash.menu.previous" href="{{cdash.menu.previous}}">Previous</a>
-          <a ng-if="!cdash.menu.previous && !cdash.menu.noprevious" href="index.php?project={{cdash.projectname_encoded}}&date={{cdash.previousdate}}{{cdash.extraurl}}">
+          <a ng-if="cdash.menu.previous" href="{{cdash.menu.previous}}{{cdash.filterurl}}">Previous</a>
+          <a ng-if="!cdash.menu.previous && !cdash.menu.noprevious" href="index.php?project={{cdash.projectname_encoded}}&date={{cdash.previousdate}}{{cdash.extraurl}}{{cdash.filterurl}}">
             Previous
           </a>
         </li>
         <li ng-if="!cdash.hidenav">
-          <a ng-if="cdash.menu.current" href="{{cdash.menu.current}}">
+          <a ng-if="cdash.menu.current" href="{{cdash.menu.current}}{{cdash.filterurl}}">
             Current
           </a>
-          <a ng-if="!cdash.menu.current" href="index.php?project={{cdash.projectname_encoded}}{{cdash.extraurl}}">
+          <a ng-if="!cdash.menu.current" href="index.php?project={{cdash.projectname_encoded}}{{cdash.extraurl}}{{cdash.filterurl}}">
             Current
           </a>
         </li>
         <li ng-if="!cdash.menu.nonext && !cdash.hidenav">
-          <a ng-if="cdash.menu.next" href="{{cdash.menu.next}}">
+          <a ng-if="cdash.menu.next" href="{{cdash.menu.next}}{{cdash.filterurl}}">
             Next
           </a>
-          <a ng-if="!cdash.menu.next" href="index.php?project={{cdash.projectname_encoded}}&date={{cdash.nextdate}}{{cdash.extraurl}}">
+          <a ng-if="!cdash.menu.next" href="index.php?project={{cdash.projectname_encoded}}&date={{cdash.nextdate}}{{cdash.filterurl}}">
             Next
           </a>
         </li>

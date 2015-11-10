@@ -121,8 +121,7 @@ if (isset($_GET["onlypassed"])) {
     $display = "onlynotrun";
 } elseif (isset($_GET["onlydelta"])) {
     // new test that are showing up for this category
-
-  $onlydelta = 1;
+    $onlydelta = 1;
     $extraquery = "&onlydelta";
     $display = "onlydelta";
 } else {
@@ -249,6 +248,7 @@ $limit_sql = '';
 if ($filterdata['limit']>0) {
     $limit_sql = ' LIMIT '.$filterdata['limit'];
 }
+$response['filterurl'] = @$_GET["filterstring"];
 
 $limitnew = "";
 $onlydelta_extra = "";

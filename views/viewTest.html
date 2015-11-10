@@ -65,7 +65,7 @@
         </tr>
 
         <!-- Display Operating System information  -->
-        <tr xsl:if="cdash.build.osname">
+        <tr ng-if="cdash.build.osname">
           <td align="right">
             <b>OS Name:</b>
           </td>
@@ -123,9 +123,9 @@
 
       <!-- Filters -->
       <div id="labelshowfilters">
-        <a id="label_showfilters" ng-click="showfilters=!showfilters">
-          <span ng-if="showfilters">Hide Filters</span>
-          <span ng-if="!showfilters">Show Filters</span>
+        <a id="label_showfilters" ng-click="showfilters_toggle()">
+          <span ng-show="showfilters == 0">Show Filters</span>
+          <span ng-show="showfilters != 0">Hide Filters</span>
         </a>
       </div>
       <ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
@@ -147,7 +147,7 @@
         <!-- Hide a div for javascript to know if time status is on -->
         <div ng-if="cdash.project.showtesttime == 1" id="showtesttimediv" style="display:none"></div>
 
-        <table id="viewTestTable" cellspacing="0" class="tabb">
+        <table id="viewTestTable" cellspacing="0" class="tabb test-table">
           <thead>
             <tr class="table-heading1">
 

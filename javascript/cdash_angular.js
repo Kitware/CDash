@@ -116,6 +116,36 @@ CDash.factory('multisort', function () {
   };
 });
 
+// Toggle showfilters.
+CDash.factory('filters', function () {
+  var filters = {};
+
+  filters.toggle = function (show) {
+    var str = new String(window.location);
+    var idx = str.indexOf("&showfilters=", 0);
+    if (idx > 0) {
+      if (show) {
+        window.location.href = str.replace("&showfilters=0", "&showfilters=1");
+      } else {
+        window.location.href = str.replace("&showfilters=1", "&showfilters=0");
+      }
+    }
+  }
+
+  filters.getString = function() {
+    var str = new String(window.location);
+    var idx = str.indexOf("&filtercount=", 0);
+    if (idx > 0) {
+      return str.substr(idx);
+    }
+    else {
+      return "";
+    }
+  }
+
+  return filters;
+});
+
 CDash.directive('convertToNumber', function() {
   return {
     require: 'ngModel',
