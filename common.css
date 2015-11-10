@@ -1221,7 +1221,7 @@ textarea {
 }
 
 /* padding for test table cells */
-table#viewTestTable td, th, table#testSummaryTable td, th{
+.test-table td, .test-table th{
   padding: 4px !important;
 }
 
