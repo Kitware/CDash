@@ -68,7 +68,9 @@
   </tr>
 </thead>
 
-  <tr ng-repeat="build in cdash.builds">
+  <tr ng-repeat="build in cdash.builds"
+      ng-class-odd="'odd'"
+      ng-class-even="'even'">
     <td>
       <a href="{{build.siteLink}}">{{build.site}}</a>
     </td>
