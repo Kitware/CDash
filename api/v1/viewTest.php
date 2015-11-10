@@ -87,6 +87,7 @@ $buildname = $build_array['name'];
 $starttime = $build_array['starttime'];
 $endtime = $build_array['endtime'];
 $groupid = $build_array['groupid'];
+$response['groupid'] = $groupid;
 
 $date = get_dashboard_date_from_build_starttime($starttime, $project_array["nightlytime"]);
 get_dashboard_JSON_by_name($projectname, $date, $response);
@@ -535,7 +536,8 @@ while ($row = pdo_fetch_array($result)) {
         }
 
         // Check the status of this test on other current builds.
-        $summary = get_test_summary($testname, $beginning_UTCDate, $end_UTCDate);
+        $summary = get_test_summary($testname, $projectid, $groupid,
+                $beginning_UTCDate, $end_UTCDate);
         if (!empty($summary)) {
             $test = array_merge($test, $summary);
             $response['displaysummary'] = true;
@@ -602,15 +604,17 @@ function get_test_history($testname, $previous_buildids)
 }
 
 
-function get_test_summary($testname, $projectid, $begin, $end)
+function get_test_summary($testname, $projectid, $groupid, $begin, $end)
 {
     $retval = array();
 
     $summary_query = "
         SELECT DISTINCT b2t.status FROM build AS b
+        STRAIGHT_JOIN build2group AS b2g ON (b.id = b2g.buildid)
         STRAIGHT_JOIN build2test AS b2t ON (b.id = b2t.buildid)
         STRAIGHT_JOIN test AS t ON (b2t.testid = t.id)
-        WHERE b.projectid = $projectid
+        WHERE b2g.groupid = $groupid
+        AND b.projectid = $projectid
         AND b.starttime>='$begin'
         AND b.starttime<'$end'
         AND t.name = '$testname'";
@@ -673,6 +677,7 @@ function load_test_details()
         $time_end = pdo_real_escape_string($_GET['time_end']);
     }
     $projectid = pdo_real_escape_numeric($_GET['projectid']);
+    $groupid = pdo_real_escape_numeric($_GET['groupid']);
 
     $response = array();
     $tests_response = array();
@@ -683,7 +688,8 @@ function load_test_details()
         $data_found = false;
 
         if ($time_begin && $time_end) {
-            $summary_response = get_test_summary($test, $projectid, $time_begin, $time_end);
+            $summary_response = get_test_summary($test, $projectid, $groupid,
+                    $time_begin, $time_end);
             if (!empty($summary_response)) {
                 $test_response = array_merge($test_response, $summary_response);
                 $response['displaysummary'] = true;

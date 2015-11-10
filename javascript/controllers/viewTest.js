@@ -51,7 +51,8 @@ CDash.controller('ViewTestController',
             'previous_builds': $scope.cdash.previous_builds,
             'time_begin': $scope.cdash.time_begin,
             'time_end': $scope.cdash.time_end,
-            'projectid': $scope.cdash.projectid
+            'projectid': $scope.cdash.projectid,
+            'groupid': $scope.cdash.groupid
           }
         }).success(function(response) {
           $scope.cdash.displayhistory = $scope.cdash.displayhistory || response.displayhistory;
