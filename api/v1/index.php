@@ -334,6 +334,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $buildgroup_response['hasconfiguredata'] = false;
         $buildgroup_response['hascompilationdata'] = false;
         $buildgroup_response['hastestdata'] = false;
+        $buildgroup_response['hasnormalbuilds'] = false;
+        $buildgroup_response['hasparentbuilds'] = false;
 
         $buildgroup_response['builds'] = array();
         $received_builds[$groupname] = array();
@@ -624,6 +626,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['countbuildwarningdiffn'] = 0;
         }
 
+        $hasconfiguredata = $build_row['countconfigureerrors'] != -1 ||
+            $build_row['countconfigurewarnings'] != -1;
+
         if ($build_row['countconfigureerrors'] < 0) {
             $build_row['countconfigureerrors'] = 0;
         }
@@ -673,11 +678,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
             }
         }
         if ($i == -1) {
-            add_log("BuildGroup '$groupname' not found for build #" . $build_array['id'],
+            add_log("BuildGroup '$groupid' not found for build #" . $build_array['id'],
                     __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
                     LOG_WARNING);
             continue;
         }
+
+        $groupname = $buildgroups_response[$i]['name'];
 
         $build_response = array();
 
@@ -685,7 +692,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_array["sitename"]."_".$build_array["name"];
 
         $buildid = $build_array["id"];
-        $groupid = $build_array["groupid"];
         $siteid = $build_array["siteid"];
 
         $countChildrenResult = pdo_single_row_query(
@@ -698,9 +704,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $child_builds_hyperlink =
                 get_child_builds_hyperlink($build_array["id"], $filterdata);
             $build_response['multiplebuildshyperlink'] = $child_builds_hyperlink;
+            $buildgroups_response[$i]['hasparentbuilds'] = true;
+        } else {
+            $buildgroups_response[$i]['hasnormalbuilds'] = true;
         }
 
-        $build_reponse['type'] = strtolower($build_array["type"]);
+        if (strtolower($build_array["type"]) == 'continuous') {
+            $buildgroups_response[$i]['sorttype'] = 'time';
+        }
 
         // Attempt to determine the platform based on the OSName and the buildname
         $buildplatform = '';
@@ -739,7 +750,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['userupdates'] =  $build_array["userupdates"];
         }
         $build_response['id'] = $build_array["id"];
-        $build_response['upload-file-count'] = $build_array["builduploadfiles"];
+        $build_response['uploadfilecount'] = $build_array["builduploadfiles"];
 
         if ($build_array['countbuildnotes']>0) {
             $build_response['buildnote'] = 1;
@@ -850,8 +861,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $configure_response['time'] = time_difference($duration*60.0, true);
             $configure_response['timefull'] = $duration;
             $buildgroups_response[$i]['configureduration'] += $duration;
-            $buildgroups_response[$i]['hasconfiguredata'] = true;
+            $hasconfiguredata = true;
+        }
+        if ($hasconfiguredata) {
             $build_response['configure'] = $configure_response;
+            $buildgroups_response[$i]['hasconfiguredata'] = true;
         }
 
         if ($build_array['hastest'] != 0) {
@@ -1148,7 +1162,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response = array_merge($response, $site_response);
     }
 
-    echo json_encode($response);
+    echo json_encode(cast_data_for_JSON($response));
 } // end echo_main_dashboard_JSON
 
 

@@ -24,7 +24,7 @@ class Example extends CDashSeleniumTestCase
         $this->click("link=curl");
         $this->waitForPageToLoad("30000");
         $this->click("link=Show Test Failure Trend");
-        $this->click("link=Zoom out");
-        $this->click("link=Show Test Failure Trend");
+        $this->click("link=Reset zoom");
+        $this->click("link=Hide Test Failure Trend");
     }
 }

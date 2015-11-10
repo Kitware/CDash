@@ -86,4 +86,4 @@ foreach ($subprojectids as $subprojectid) {
     }
     $result[] = $subarray;
 } // end foreach subprojects
-echo json_encode($result);
+echo json_encode(cast_data_for_JSON($result));

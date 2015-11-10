@@ -48,7 +48,7 @@ class APITestCase extends KWWebTestCase
         }
 
         $userdefects = $this->get($this->url."/api/v1/?method=user&task=defects&project=EmailProjectExample");
-        if ($userdefects != '{"user1kw":{"buildfixes":"6","buildfixesfiles":"1","testfixes":"2","testfixesfiles":"1"},"Test Author":{"testerrors":"1","testerrorsfiles":"1"}}') {
+        if ($userdefects != '{"user1kw":{"buildfixes":6,"buildfixesfiles":1,"testfixes":2,"testfixesfiles":1},"Test Author":{"testerrors":1,"testerrorsfiles":1}}') {
             $this->fail("Expected output not found when querying API for userdefects: $userdefects");
             return 1;
         }

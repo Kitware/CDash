@@ -141,7 +141,7 @@ function rest_get()
 
     $end = microtime_float();
     $response['generationtime'] = round($end - $start, 3);
-    echo json_encode($response);
+    echo json_encode(cast_data_for_JSON($response));
 }
 
 
@@ -203,7 +203,7 @@ function rest_post()
         $response['id'] = $SubProject->GetId();
         $response['name'] = $SubProject->GetName();
         $response['group'] = $SubProject->GetGroupId();
-        echo json_encode($response);
+        echo json_encode(cast_data_for_JSON($response));
         return;
     }
 
@@ -227,7 +227,7 @@ function rest_post()
         $response['name'] = $Group->GetName();
         $response['is_default'] = $Group->GetIsDefault();
         $response['coverage_threshold'] = $Group->GetCoverageThreshold();
-        echo json_encode($response);
+        echo json_encode(cast_data_for_JSON($response));
     }
 }
 

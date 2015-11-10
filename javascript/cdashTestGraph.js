@@ -2,31 +2,6 @@ $(function () {
   $('.je_compare').je_compare({caption: true});
 });
 
-function showtestfailuregraph_click(projectid,testname,starttime,zoomout)
-{
-   if(zoomout)
-    {
-    $("#testfailuregraph").load("ajax/showtestfailuregraph.php?testname="+testname+"&starttime="+starttime+"&projectid="+projectid+"&zoomout=1");
-    return;
-    }
-  else if($("#testfailuregraph").html() != "" && $("#testfailuregrapholder").is(":visible"))
-    {
-    $("#testfailuregrapholder").hide(); //fadeOut('medium');
-    $("#testfailuregraphoptions").html("");
-    return;
-    }
-
-  $("#testfailuregraph").fadeIn('slow');
-  $("#testfailuregraph").html("fetching...<img src=images/loading.gif></img>");
-  $("#testfailuregrapholder").attr("style","width:800px;height:400px;");
-
-  $("#testfailuregraphoptions").html("<a href=javascript:showtestfailuregraph_click('"+projectid+"','"+testname+"','"+starttime+"',true)>Zoom out</a>");
-  $("#testfailuregraph").load("ajax/showtestfailuregraph.php?testname="+testname+"&projectid="+projectid+"&starttime="+starttime,{},function(){
-  $("#testfailuregrapholder").fadeIn('slow');
-  $("#testfailuregraphoptions").show();
-  });
-}
-
 function showcommandline_click()
 {
   if($('#commandline').is(":visible"))

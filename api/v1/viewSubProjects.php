@@ -289,5 +289,5 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $end = microtime_float();
     $response['generationtime'] = round($end-$start, 3);
 
-    echo json_encode($response);
+    echo json_encode(cast_data_for_JSON($response));
 }

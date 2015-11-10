@@ -7,10 +7,19 @@ var CDash = angular
 
 // Keep subprojects with missing fields at the bottom of the list.
 // Shared between index.html & viewSubProjects.html
-CDash.filter("showEmptyLast", function () {
+CDash.filter("showEmptySubProjectsLast", function () {
   return function (subprojects, sortField) {
     if (!angular.isArray(subprojects)) return;
     if (!sortField) return subprojects;
+    if (angular.isArray(sortField)) {
+      if (sortField.length < 1) {
+        return subprojects;
+      }
+      sortField = sortField[0];
+    }
+    if (sortField.charAt(0) == '-') {
+      sortField = sortField.substring(1);
+    }
 
     // First weed out the subprojects that are completely empty.
     // These will stay at the bottom of the table.
