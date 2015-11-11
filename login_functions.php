@@ -298,6 +298,9 @@ function auth($SessionCachePolicy='private_no_expire')
 
             $cookievalue = $_COOKIE[$cookiename];
             $cookiekey = substr($cookievalue, strlen($cookievalue)-33);
+            if (strlen($cookiekey) < 1) {
+                return false;
+            }
             $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue)-33);
             $sql =
                 "SELECT email,password,id FROM ".qid("user")."
