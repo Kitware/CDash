@@ -37,6 +37,12 @@ $CDASH_DB_PASS = '';
 $CDASH_DB_NAME = 'cdash';
 // Database type
 $CDASH_DB_TYPE = 'mysql';
+
+// Support for SSL database connections.
+$CDASH_SSL_KEY = null;
+$CDASH_SSL_CERT = null;
+$CDASH_SSL_CA = null;
+
 // Turn this variable ON when CDash has been installed
 // Prevents from running the install.php again
 $CDASH_PRODUCTION_MODE = false;
