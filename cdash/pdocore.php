@@ -33,12 +33,14 @@ require_once("cdash/config.php");
 function pdo_connect($server = null, $username = null, $password = null, $database = null)
 {
     global $CDASH_DB_PORT, $CDASH_DB_TYPE, $CDASH_MAX_QUERY_RETRIES,
-           $CDASH_USE_PERSISTENT_MYSQL_CONNECTION, $CDASH_DB_NAME;
+           $CDASH_USE_PERSISTENT_MYSQL_CONNECTION, $CDASH_DB_NAME,
+           $CDASH_SSL_KEY, $CDASH_SSL_CERT, $CDASH_SSL_CA;
     $db_name = is_null($database) ? $CDASH_DB_NAME : $database;
     return new CDash\Database(
         $CDASH_DB_TYPE, $server, $username, $password, $CDASH_DB_PORT,
         $db_name, $CDASH_USE_PERSISTENT_MYSQL_CONNECTION,
-        $CDASH_MAX_QUERY_RETRIES
+        $CDASH_MAX_QUERY_RETRIES, $CDASH_SSL_KEY, $CDASH_SSL_CERT,
+        $CDASH_SSL_CA
     );
 }
 
