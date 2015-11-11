@@ -83,7 +83,7 @@ class Database
      */
     public function __construct($database_type, $hostname, $username, $password,
                                 $database_port = null, $database_name = null,
-                                $use_persistent_connections = false, $retries=1,
+                                $use_persistent_connections = false, $retries = 1,
                                 $ssl_key = null, $ssl_cert = null, $ssl_ca = null)
     {
         $dsn = $database_type.":host=".$hostname;
