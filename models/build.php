@@ -136,6 +136,19 @@ class build
 
         $this->SubProjectName = $subproject;
 
+        // Add this subproject as a label on the parent build.
+        $this->ParentId = $this->GetParentBuildId();
+        if ($this->ParentId > 0) {
+            $parent = new Build();
+            $parent->Id = $this->ParentId;
+
+            $label = new Label;
+            $label->Text = $subproject;
+
+            $parent->AddLabel($label);
+            $parent->InsertLabelAssociations();
+        }
+
         if (pdo_num_rows($query)>0) {
             $query_array = pdo_fetch_array($query);
             $this->SubProjectId = $query_array['id'];

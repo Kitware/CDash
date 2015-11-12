@@ -357,7 +357,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     // add a request for the subproject
     $subprojectsql = "";
-    $subprojecttablesql = "";
     if ($subproject_name && is_numeric($subprojectid)) {
         $subprojectsql = " AND sp2b.subprojectid=".$subprojectid;
     }
@@ -580,19 +579,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['labels'] = array();
         } else {
             $build_row['labels'] = explode(",", $build_row['labels']);
-        }
-
-        // If this is a parent build get the labels from all the children too.
-        if ($parentid == -1) {
-            $query = "SELECT l.text FROM build AS b
-                INNER JOIN label2build AS l2b ON l2b.buildid = b.id
-                INNER JOIN label AS l ON l.id = l2b.labelid
-                WHERE b.parentid='$buildid'";
-
-            $childLabelsResult = pdo_query($query);
-            while ($childLabelsArray = pdo_fetch_array($childLabelsResult)) {
-                $build_row['labels'][] = $childLabelsArray['text'];
-            }
         }
 
         // Updates
