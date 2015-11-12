@@ -363,7 +363,11 @@ CDash.filter("showEmptyBuildsLast", function () {
   $scope.pageChanged = function(obj) {
     var begin = ((obj.pagination.currentPage - 1) * obj.pagination.numPerPage)
     , end = begin + obj.pagination.numPerPage;
-    obj.pagination.filteredBuilds = obj.builds.slice(begin, end);
+    if (end > 0) {
+      obj.pagination.filteredBuilds = obj.builds.slice(begin, end);
+    } else {
+      obj.pagination.filteredBuilds = obj.builds;
+    }
   };
 
   $scope.updateOrderByFields = function(obj, field, $event) {
