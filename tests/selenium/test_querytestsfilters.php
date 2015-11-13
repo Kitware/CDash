@@ -57,9 +57,9 @@ class Example extends CDashSeleniumTestCase
         $this->click("apply");
         $this->waitForPageToLoad("30000");
         $this->click("remove1");
-        $this->select("id_field2", "label=Test Name");
-        $this->select("id_compare2", "label=is not");
-        $this->type("id_value2", "blah");
+        $this->select("id_field1", "label=Test Name");
+        $this->select("id_compare1", "label=is not");
+        $this->type("id_value1", "blah");
         $this->click("apply");
         $this->waitForPageToLoad("30000");
         $this->select("id_field1", "label=Time");
