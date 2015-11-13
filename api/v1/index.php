@@ -167,10 +167,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['home'] = $homeurl;
     }
 
+    $page_id = 'index.php';
+    $response['childview'] = 0;
     if (isset($_GET["parentid"])) {
+        $page_id = 'indexchildren.php';
         $response['childview'] = 1;
-    } else {
-        $response['childview'] = 0;
     }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
@@ -345,7 +346,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     // Filters:
     //
-    $filterdata = get_filterdata_from_request("index.php");
+    $filterdata = get_filterdata_from_request($page_id);
     $filter_sql = $filterdata['sql'];
     $limit_sql = '';
     if ($filterdata['limit'] > 0) {
@@ -354,6 +355,36 @@ function echo_main_dashboard_JSON($project_instance, $date)
     unset($filterdata['xml']);
     $response['filterdata'] = $filterdata;
     $response['filterurl'] = @$_GET['filterstring'];
+
+    // Check if we should be excluding some SubProjects from our
+    // build results.
+    $include_subprojects = false;
+    $exclude_subprojects = false;
+    $included_subprojects = array();
+    $excluded_subprojects = array();
+    $selected_subprojects = "";
+    $num_selected_subprojects = 0;
+    foreach ($filterdata['filters'] as $filter) {
+        if ($filter['field'] == 'subprojects') {
+            if ($filter['compare'] == 92) {
+                $excluded_subprojects[] = $filter['value'];
+            } else if ($filter['compare'] == 93) {
+                $included_subprojects[] = $filter['value'];
+            }
+        }
+    }
+    // Include takes precedence over exclude.
+    if (!empty($included_subprojects)) {
+        $num_selected_subprojects = count($included_subprojects);
+        $selected_subprojects = implode("','", $included_subprojects);
+        $selected_subprojects = "('".$selected_subprojects."')";
+        $include_subprojects = true;
+    } else if (!empty($excluded_subprojects)) {
+        $num_selected_subprojects = count($excluded_subprojects);
+        $selected_subprojects = implode("','", $excluded_subprojects);
+        $selected_subprojects = "('".$selected_subprojects."')";
+        $exclude_subprojects = true;
+    }
 
     // add a request for the subproject
     $subprojectsql = "";
@@ -687,11 +718,50 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $numchildren = $countChildrenResult['numchildren'];
         $build_response['numchildren'] = $numchildren;
         $child_builds_hyperlink = "";
+
+        $selected_configure_errors = 0;
+        $selected_configure_warnings = 0;
+        $selected_build_errors = 0;
+        $selected_build_warnings = 0;
+        $selected_tests_not_run = 0;
+        $selected_tests_failed = 0;
+        $selected_tests_passed = 0;
+
         if ($numchildren > 0) {
             $child_builds_hyperlink =
                 get_child_builds_hyperlink($build_array["id"], $filterdata);
             $build_response['multiplebuildshyperlink'] = $child_builds_hyperlink;
             $buildgroups_response[$i]['hasparentbuilds'] = true;
+
+            // Compute selected (excluded or included) SubProject results.
+            if ($selected_subprojects) {
+                $select_query = "
+                    SELECT configureerrors, configurewarnings, builderrors,
+                           buildwarnings, testnotrun, testfailed, testpassed,
+                           sb.name
+                    FROM build AS b
+                    INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
+                    INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
+                    WHERE b.parentid=$buildid
+                    AND sb.name IN $selected_subprojects";
+                $select_results = pdo_query($select_query);
+                while ($select_array = pdo_fetch_array($select_results)) {
+                    $selected_configure_errors +=
+                        max(0, $select_array['configureerrors']);
+                    $selected_configure_warnings +=
+                        max(0, $select_array['configurewarnings']);
+                    $selected_build_errors +=
+                        max(0, $select_array['builderrors']);
+                    $selected_build_warnings +=
+                        max(0, $select_array['buildwarnings']);
+                    $selected_tests_not_run +=
+                        max(0, $select_array['testnotrun']);
+                    $selected_tests_failed +=
+                        max(0, $select_array['testfailed']);
+                    $selected_tests_passed +=
+                        max(0, $select_array['testpassed']);
+                }
+            }
         } else {
             $buildgroups_response[$i]['hasnormalbuilds'] = true;
         }
@@ -753,9 +823,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
         if (empty($labels_array)) {
             $build_response['label'] = "(none)";
         } else {
-            $num_labels = count($labels_array);
+            if ($include_subprojects) {
+                $num_labels = $num_selected_subprojects;
+            } else {
+                $num_labels = count($labels_array) - $num_selected_subprojects;
+            }
             if ($num_labels == 1) {
-                $build_response['label'] = $labels_array[0];
+                if ($include_subprojects) {
+                    $build_response['label'] = $included_subprojects[0];
+                } else {
+                    $build_response['label'] = $labels_array[0];
+                }
             } else {
                 $build_response['label'] = "($num_labels labels)";
             }
@@ -793,11 +871,21 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $compilation_response = array();
 
         if ($build_array['countbuilderrors']>=0) {
-            $nerrors = $build_array['countbuilderrors'];
+            if ($include_subprojects) {
+                $nerrors = $selected_build_errors;
+            } else {
+                $nerrors =
+                    $build_array['countbuilderrors'] - $selected_build_errors;
+            }
             $compilation_response['error'] =  $nerrors;
             $buildgroups_response[$i]['numbuilderror'] += $nerrors;
 
-            $nwarnings = $build_array['countbuildwarnings'];
+            if ($include_subprojects) {
+                $nwarnings = $selected_build_warnings;
+            } else {
+                $nwarnings = $build_array['countbuildwarnings'] -
+                    $selected_build_warnings;
+            }
             $compilation_response['warning'] = $nwarnings;
             $buildgroups_response[$i]['numbuildwarning'] += $nwarnings;
 
@@ -830,11 +918,21 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         $configure_response = array();
 
-        $configure_response['error'] = $build_array['countconfigureerrors'];
-        $buildgroups_response[$i]['numconfigureerror'] +=
-            $build_array['countconfigureerrors'];
+        if ($include_subprojects) {
+            $nconfigureerrors = $selected_configure_errors;
+        } else {
+            $nconfigureerrors = $build_array['countconfigureerrors'] -
+                $selected_configure_errors;
+        }
+        $configure_response['error'] = $nconfigureerrors;
+        $buildgroups_response[$i]['numconfigureerror'] += $nconfigureerrors;
 
-        $nconfigurewarnings = $build_array['countconfigurewarnings'];
+        if ($include_subprojects) {
+            $nconfigurewarnings = $selected_configure_warnings;
+        } else {
+            $nconfigurewarnings = $build_array['countconfigurewarnings'] -
+                $selected_configure_warnings;
+        }
         $configure_response['warning'] = $nconfigurewarnings;
         $buildgroups_response[$i]['numconfigurewarning'] += $nconfigurewarnings;
 
@@ -859,7 +957,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['hastestdata'] = true;
             $test_response = array();
 
-            $nnotrun = $build_array['counttestsnotrun'];
+            if ($include_subprojects) {
+                $nnotrun = $selected_tests_not_run;
+            } else {
+                $nnotrun = $build_array['counttestsnotrun'] -
+                    $selected_tests_not_run;
+            }
 
             if ($build_array['counttestsnotrundiffp']!=0) {
                 $test_response['nnotrundiffp'] = $build_array['counttestsnotrundiffp'];
@@ -868,7 +971,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 $test_response['nnotrundiffn'] = $build_array['counttestsnotrundiffn'];
             }
 
-            $nfail = $build_array['counttestsfailed'];
+            if ($include_subprojects) {
+                $nfail = $selected_tests_failed;
+            } else {
+                $nfail = $build_array['counttestsfailed'] -
+                    $selected_tests_failed;
+            }
 
             if ($build_array['counttestsfaileddiffp']!=0) {
                 $test_response['nfaildiffp'] = $build_array['counttestsfaileddiffp'];
@@ -877,7 +985,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 $test_response['nfaildiffn'] = $build_array['counttestsfaileddiffn'];
             }
 
-            $npass = $build_array['counttestspassed'];
+            if ($include_subprojects) {
+                $npass = $selected_tests_passed;
+            } else {
+                $npass = $build_array['counttestspassed'] -
+                    $selected_tests_passed;
+            }
 
             if ($build_array['counttestspasseddiffp']!=0) {
                 $test_response['npassdiffp'] = $build_array['counttestspasseddiffp'];
@@ -1194,6 +1307,7 @@ function get_child_builds_hyperlink($parentid, $filterdata)
         if ($filter['field'] != 'buildname' &&
                 $filter['field'] != 'site' &&
                 $filter['field'] != 'stamp' &&
+                $filter['field'] != 'subprojects' &&
                 $filter['compare'] != 0 &&
                 $filter['compare'] != 20 &&
                 $filter['compare'] != 40 &&

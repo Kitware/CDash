@@ -114,8 +114,6 @@ class IndexPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('testspassed', 'Tests Passed', 'number', '', '0');
         $xml .= getFilterDefinitionXML('testtimestatus', 'Tests Timing Failed', 'number', '', '0');
         $xml .= getFilterDefinitionXML('updateduration', 'Update Duration', 'number', '', '0');
-        //$xml .= getFilterDefinitionXML('updateerrors', 'Update Errors', 'number', '', '0');
-        //$xml .= getFilterDefinitionXML('updatewarnings', 'Update Warnings', 'number', '', '0');
         $xml .= getFilterDefinitionXML('updatedfiles', 'Updated Files', 'number', '', '0');
 
         return $xml;
@@ -305,6 +303,13 @@ class IndexPhpFilters extends DefaultFilters
                     add_log(
                             'warning: updatewarnings field not implemented yet...',
                             'get_sql_field');
+                }
+                break;
+
+            case 'subprojects':
+                {
+                    // Handle via custom logic rather than a modified SQL query.
+                    $sql_field = '';
                 }
                 break;
 
@@ -836,6 +841,17 @@ function get_sql_compare_and_value($compare, $value)
                 // date is before
                 $sql_compare = '<';
                 $sql_value = get_sql_date_value($value);
+            }
+            break;
+
+        case 92:
+        case 93:
+            {
+                // Include or exclude a SubProject from the parent summary.
+                // This has to be handled via custom logic,
+                // not just by tweaking the SQL query.
+                $sql_compare = '';
+                $sql_value = '';
             }
             break;
 

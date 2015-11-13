@@ -42,7 +42,7 @@
           &nbsp;
 
           <select id="id_compare{{$index+1}}" name="compare{{$index+1}}" ng-model="filter.compare">
-            <option value=0>-- choose comparison --</option>
+            <option value="0">-- choose comparison --</option>
             <option ng-repeat="comparison in comparisons[filterdefinitions[filter.key].type]" value="{{comparison.value}}" ng-selected="filter.compare == comparison.value">
               {{comparison.text}}
             </option>
