@@ -145,6 +145,12 @@ CDash.filter("showEmptyBuildsLast", function () {
       // Initialize paginated results.
       cdash.buildgroups[i].builds = $filter('orderBy')(cdash.buildgroups[i].builds, cdash.buildgroups[i].orderByFields);
       cdash.buildgroups[i].builds = $filter('showEmptyBuildsLast')(cdash.buildgroups[i].builds, cdash.buildgroups[i].orderByFields);
+
+      // Mark this group has having "normal" builds if it only contains missing & expected builds.
+      if (!cdash.buildgroups[i].hasnormalbuilds && !cdash.buildgroups[i].hasparentbuilds && cdash.buildgroups[i].builds.length > 0) {
+        cdash.buildgroups[i].hasnormalbuilds = true;
+      }
+
       $scope.pageChanged(cdash.buildgroups[i]);
     }
 
@@ -380,7 +386,7 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.parentBuild = function(build) {
-    return build.numchildren > 0;
+    return build.numchildren > 0 || build.expectedandmissing == 1;
   };
 })
 .directive('normalBuild', function() {
