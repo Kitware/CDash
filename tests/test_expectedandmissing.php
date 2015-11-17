@@ -73,5 +73,4 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
         $this->pass("Passed");
         return 0;
     }
-
 }
