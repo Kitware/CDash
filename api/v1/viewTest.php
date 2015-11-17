@@ -135,10 +135,15 @@ $menu['back'] = "index.php?project=".urlencode($projectname)."&date=".get_dashbo
 // Get the IDs of the four previous builds.
 // These are used to check the recent history of this test.
 $build = new Build();
-$previous_buildids = array();
 $n = 3;
 $id = $buildid;
 $previous_buildid = 0;
+$previous_buildids = array();
+
+// Include the current buildid in this list so the current status will
+// be reflected in the history column.
+$previous_buildids[] = $id;
+
 for ($i = 0; $i < $n; $i++) {
     $build->Id = $id;
     $build->Filled = false;
