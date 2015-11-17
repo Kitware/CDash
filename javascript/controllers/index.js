@@ -380,7 +380,7 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.parentBuild = function(build) {
-    return build.numchildren > 0;
+    return build.numchildren > 0 || build.expectedandmissing == 1;
   };
 })
 .directive('normalBuild', function() {
