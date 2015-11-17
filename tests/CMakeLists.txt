@@ -92,6 +92,7 @@ add_php_test(notesapi)
 add_php_test(hidecolumns)
 add_php_test(subprojectnextprevious)
 add_php_test(testhistory)
+add_php_test(expectedandmissing)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
