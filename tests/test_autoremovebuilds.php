@@ -5,7 +5,7 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
-require_once('cdash/pdo.php');
+require_once('include/pdo.php');
 
 class AutoRemoveBuildsTestCase extends KWWebTestCase
 {
@@ -18,7 +18,7 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
     {
         global $cdashpath;
         global $PHP_EXE;
-        $cmd = "\"$PHP_EXE\" \"$cdashpath/autoRemoveBuilds.php\"";
+        $cmd = "\"$PHP_EXE\" \"$cdashpath/scripts/autoRemoveBuilds.php\"";
         if ($arg1) {
             $cmd = $cmd." \"$arg1\"";
         }

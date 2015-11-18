@@ -1,7 +1,7 @@
 <?php
 
 require_once('models/coverage.php');
-require_once('cdash/config.php');
+require_once('config/config.php');
 require_once('models/build.php');
 
 class JavaJSONTarHandler

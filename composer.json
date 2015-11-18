@@ -30,6 +30,6 @@
     "ext-pdo_pgsql": "*"
   },
   "autoload": {
-    "psr-4": {"CDash\\": "cdash/"}
+    "psr-4": {"CDash\\": "include/CDash/"}
   }
 }

@@ -16,8 +16,8 @@
 
   =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
-include_once('cdash/ctestparserutils.php');
-include_once("cdash/repository.php");
+include_once('include/ctestparserutils.php');
+include_once("include/repository.php");
 include_once('models/builderror.php');
 include_once('models/builderrordiff.php');
 include_once('models/buildinformation.php');
@@ -612,7 +612,7 @@ class build
                     $this->UpdateParentBuild($newErrors, $newWarnings);
                 }
 
-                include('cdash/config.php');
+                include('config/config.php');
                 if ($CDASH_DB_TYPE == 'pgsql') {
                     // pgsql doesn't have concat...
 

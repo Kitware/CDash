@@ -20,7 +20,7 @@ include_once('models/dailyupdatefile.php');
 include_once('models/buildgroup.php');
 include_once('models/buildgrouprule.php');
 include_once('models/buildgroupposition.php');
-require_once("cdash/cdashmail.php");
+require_once("include/cdashmail.php");
 
 /** Main project class */
 class project
@@ -443,7 +443,7 @@ class project
           $this->WebApiKey = $project_array['webapikey'];
           if ($this->WebApiKey == '') {
               // If no web API key exists, we add one
-        include_once('cdash/common.php');
+        include_once('include/common.php');
               $newKey = generate_web_api_key();
               pdo_query("UPDATE project SET webapikey='$newKey' WHERE id=".$this->Id);
               $this->WebApiKey = $newKey;
@@ -492,7 +492,7 @@ class project
       pdo_query("UPDATE project SET imageid=".qnum($imgid)." WHERE id=".$this->Id);
           add_last_sql_error("Project AddLogo", $this->Id);
       } elseif ($imgid==0) {
-          include("cdash/config.php");
+          include("config/config.php");
           if ($CDASH_DB_TYPE == "pgsql") {
               $contents = pg_escape_bytea($contents);
           }
@@ -507,7 +507,7 @@ class project
       } else {
           // update the current image
 
-       include("cdash/config.php");
+       include("config/config.php");
           if ($CDASH_DB_TYPE == "pgsql") {
               $contents = pg_escape_bytea($contents);
           }
@@ -1098,7 +1098,7 @@ class project
       $todaytime -= 3600*24*$days;
       $today = date(FMT_DATETIMESTD, $todaytime);
 
-      include("cdash/config.php");
+      include("config/config.php");
       $straighthjoin = "";
       if ($CDASH_DB_TYPE != "pgsql") {
           $straighthjoin = 'STRAIGHT_JOIN';
@@ -1140,7 +1140,7 @@ class project
           return false;
       }
 
-      include('cdash/config.php');
+      include('config/config.php');
 
     // Check if we should send emails
     $project = pdo_query("SELECT emailadministrator,name FROM project WHERE id =".qnum($this->Id));
@@ -1379,7 +1379,7 @@ class project
       $totalUploadSize = $this->GetUploadsTotalSize();
 
       if ($totalUploadSize > $this->UploadQuota) {
-          require_once('cdash/common.php');
+          require_once('include/common.php');
           add_log('Upload quota exceeded, removing old files', 'Project::CullUploadedFiles',
               LOG_INFO, $this->Id);
 

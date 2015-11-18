@@ -15,7 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-require_once('cdash/config.php');
+require_once('config/config.php');
 require_once('xml_handlers/abstract_handler.php');
 require_once('models/build.php');
 require_once('models/uploadfile.php');

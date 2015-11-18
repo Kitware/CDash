@@ -14,7 +14,7 @@ class EnableAsynchronousTestCase extends KWWebTestCase
 
     public function testEnableAsynchronous()
     {
-        $filename = dirname(__FILE__)."/../cdash/config.local.php";
+        $filename = dirname(__FILE__)."/../config/config.local.php";
         $handle = fopen($filename, "r");
         $contents = fread($handle, filesize($filename));
         fclose($handle);

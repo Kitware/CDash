@@ -5,7 +5,7 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
-require_once('cdash/pdo.php');
+require_once('include/pdo.php');
 
 class ProcessSubmissionsTestCase extends KWWebTestCase
 {
@@ -127,7 +127,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     {
         global $cdashpath;
         global $PHP_EXE;
-        $cmd = "\"$PHP_EXE\" \"$cdashpath/cdash/processsubmissions.php\" $projectid --force";
+        $cmd = "\"$PHP_EXE\" \"$cdashpath/web/ajax/processsubmissions.php\" $projectid --force";
         echo "Running command line:\n";
         echo "  cmd='${cmd}'\n";
         $result = system($cmd);
@@ -144,14 +144,14 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         echo "this->logfilename='$this->logfilename'\n";
         echo "this->url='$this->url'\n";
 
-        $content = $this->get($this->url."/cdash/processsubmissions.php");
+        $content = $this->get($this->url."/ajax/processsubmissions.php");
         if (strpos($content, "projectid/argv[1] should be a number") === false) {
             $this->fail("'projectid/argv[1] should be a number' not found when expected");
             echo "content (1):\n$content\n";
             return 1;
         }
 
-        $content = $this->get($this->url."/cdash/processsubmissions.php?projectid=1");
+        $content = $this->get($this->url."/ajax/processsubmissions.php?projectid=1");
         if (strpos($content, "Done with ProcessSubmissions") === false) {
             $this->fail("'Done with ProcessSubmissions' not found when expected");
             echo "content (2):\n$content\n";
@@ -174,7 +174,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     // (With 6 fake records just added, it'll sleep for about 6 seconds,
     // 1 second for each time through its loop...)
     //
-    $this->launchViaCurl("/cdash/processsubmissions.php?projectid=1&sleep_in_loop=1", 1);
+    $this->launchViaCurl("/ajax/processsubmissions.php?projectid=1&sleep_in_loop=1", 1);
 
     // Sleep for 2 seconds, and then try to process submissions synchronously
     // and simultaneously... (This one should go through the "can't acquire
@@ -183,7 +183,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     echo "sleep(2)\n";
         sleep(2);
 
-        $content = $this->get($this->url."/cdash/processsubmissions.php?projectid=1");
+        $content = $this->get($this->url."/ajax/processsubmissions.php?projectid=1");
         if (strpos($content, "Another process is already processing") === false) {
             $this->fail("'Another process is already processing' not found when expected");
             echo "content (3):\n$content\n";
@@ -214,7 +214,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     //
     $this->addFakeSubmissionRecords("1");
         $this->addFakeStaleProcessingLock("1");
-        $content = $this->get($this->url."/cdash/processsubmissions.php?projectid=1");
+        $content = $this->get($this->url."/ajax/processsubmissions.php?projectid=1");
 
         if (!$this->allRecordsProcessed("1")) {
             // projectid 1 is tested in this test...

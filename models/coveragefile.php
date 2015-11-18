@@ -32,7 +32,7 @@ class coveragefile
           return;
       }
       
-      include("cdash/config.php");
+      include("config/config.php");
     
     // Compute the crc32 of the file (before compression for backward compatibility)
     $this->Crc32 = crc32($this->FullPath.$this->File);

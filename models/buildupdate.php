@@ -148,7 +148,7 @@ class buildupdate
           $nwarnings += $this->GetNumberOfWarnings();
           $nfiles += $this->GetNumberOfFiles();
 
-          include('cdash/config.php');
+          include('config/config.php');
           if ($CDASH_DB_TYPE == 'pgsql') {
               // pgsql doesn't have concat...
 

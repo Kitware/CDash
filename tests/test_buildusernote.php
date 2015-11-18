@@ -5,8 +5,8 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
-require_once('cdash/common.php');
-require_once('cdash/pdo.php');
+require_once('include/common.php');
+require_once('include/pdo.php');
 require_once('models/buildusernote.php');
 
 class BuildUserNoteTestCase extends KWWebTestCase
