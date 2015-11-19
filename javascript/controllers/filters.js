@@ -131,6 +131,11 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       "type": "string",
       "defaultvalue": ""
     },
+    "subprojects": {
+      "text": "SubProjects",
+      "type": "list",
+      "defaultvalue": ""
+    },
     "testname": {
       "text": "Test Name",
       "type": "string",
@@ -218,6 +223,10 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       {"value": 62, text: "is not"},
       {"value": 65, text: "starts with"},
       {"value": 66, text: "ends with"}
+    ],
+    "list": [
+      {"value": 92, text: "exclude"},
+      {"value": 93, text: "include"},
     ]
   };
 
@@ -252,7 +261,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       }
     }
     if (!found) {
-      filter.compare = 0;
+      filter.compare = "0";
     }
   };
 
@@ -307,6 +316,9 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
 
   var url = window.location.pathname;
   var filename = url.substring(url.lastIndexOf('/')+1);
+  if (filename === 'index.php' && 'parentid' in $rootScope.queryString) {
+    filename = 'indexchildren.php';
+  }
   $rootScope.queryString['page_id'] = filename;
   $rootScope.queryString['showlimit'] = 0;
 

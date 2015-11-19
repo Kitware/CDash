@@ -274,7 +274,7 @@
 
         </table>
 
-        <div ng-if="buildgroup.builds.length > buildgroup.pagination.numPerPage">
+        <div ng-if="buildgroup.builds.length > buildgroup.pagination.numPerPage && buildgroup.pagination.numPerPage != -1">
           <uib-pagination
             ng-model="buildgroup.pagination.currentPage"
             total-items="buildgroup.builds.length"

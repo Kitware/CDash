@@ -91,6 +91,7 @@ add_php_test(updateappend)
 add_php_test(notesapi)
 add_php_test(hidecolumns)
 add_php_test(subprojectnextprevious)
+add_php_test(excludesubprojects)
 add_php_test(testhistory)
 add_php_test(expectedandmissing)
 
