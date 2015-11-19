@@ -242,7 +242,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       return;
     }
     $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=images/loading.gif></img>");
+    $(group).html("fetching...<img src=img/loading.gif></img>");
     $(group).load("ajax/addbuildgroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
   };
 
@@ -257,7 +257,7 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
 
     $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=images/loading.gif></img>");
+    $(group).html("fetching...<img src=img/loading.gif></img>");
     $(group).load("ajax/expectedbuildgroup.php?siteid="+siteid+"&buildname="+buildname+"&buildtype="+buildtype+"&buildgroup="+buildgroupid+"&divname="+divname,{},function(){$(this).fadeIn('slow');});
   };
 
@@ -268,7 +268,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       return;
     }
     $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=images/loading.gif></img>");
+    $(group).html("fetching...<img src=img/loading.gif></img>");
     $(group).load("ajax/buildinfogroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
   };
 
@@ -280,7 +280,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       return;
     }
     $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=images/loading.gif></img>");
+    $(group).html("fetching...<img src=img/loading.gif></img>");
     $(group).load("ajax/expectedinfo.php?siteid="+siteid+"&buildname="+buildname+"&projectid="+projectid+"&buildtype="+buildtype+"&currenttime="+currentime,{},function(){$(this).fadeIn('slow');});
   };
 

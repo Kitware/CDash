@@ -14,7 +14,7 @@ function showbuildgraph_click(buildid,zoomout)
     }
 
   $("#graph").fadeIn('slow');
-  $("#graph").html("fetching...<img src=images/loading.gif></img>");
+  $("#graph").html("fetching...<img src=img/loading.gif></img>");
   $("#grapholder").attr("style","width:800px;height:400px;");
   $("#graphoptions").html("<a href=javascript:showbuildgraph_click("+buildid+",true)>Zoom out</a>");
 
@@ -39,7 +39,7 @@ function showprojectgraph_click(projectid,timestamp,zoomout)
     }
 
   $("#graph").fadeIn('slow');
-  $("#graph").html("fetching...<img src=images/loading.gif></img>");
+  $("#graph").html("fetching...<img src=img/loading.gif></img>");
   $("#grapholder").attr("style","width:800px;height:400px;");
   $("#graphoptions").html("<a href=javascript:showprojectgraph_click("+projectid+","+timestamp+",true)>Zoom out</a>");
 

@@ -19,12 +19,12 @@ function sendAjax(divname,ajaxurl,text,nextstep)
 
     if(prefix != "ERROR" && prefix != "WARNING")
       {
-      $(divname).html(text+": <img src=\"images/check.gif\"/>");
+      $(divname).html(text+": <img src=\"img/check.gif\"/>");
       nextstep();
       }
     else if(prefix == "WARNING")
       {
-      $(divname).html(text+": "+error+" <img src=\"images/check.gif\"/>");
+      $(divname).html(text+": "+error+" <img src=\"img/check.gif\"/>");
       nextstep();
       }
     else
@@ -83,7 +83,7 @@ function upgrade_tables()
   if(nextstep != '')
     {
     var text = "Upgrading tables";
-    $("#Upgrade-Tables-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+    $("#Upgrade-Tables-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
     sendAjax("#Upgrade-Tables-Status","upgrade.php?upgrade-tables=1",text,nextstep);
     }
   else
@@ -95,63 +95,63 @@ function upgrade_tables()
 function upgrade_0_8()
 {
   var text = "Applying 0.8 patches";
-  $("#Upgrade-0-8-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-0-8-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-0-8-Status","upgrade.php?upgrade-0-8=1",text,upgrade_1_0);
 }
 
 function upgrade_1_0()
 {
   var text = "Applying 1.0 patches";
-  $("#Upgrade-1-0-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-1-0-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-1-0-Status","upgrade.php?upgrade-1-0=1",text,upgrade_1_2);
 }
 
 function upgrade_1_2()
 {
   var text = "Applying 1.2 patches";
-  $("#Upgrade-1-2-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-1-2-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-1-2-Status","upgrade.php?upgrade-1-2=1",text,upgrade_1_4);
 }
 
 function upgrade_1_4()
 {
   var text = "Applying 1.4 patches";
-  $("#Upgrade-1-4-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-1-4-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-1-4-Status","upgrade.php?upgrade-1-4=1",text,upgrade_1_6);
 }
 
 function upgrade_1_6()
 {
   var text = "Applying 1.6 patches";
-  $("#Upgrade-1-6-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-1-6-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-1-6-Status","upgrade.php?upgrade-1-6=1",text,upgrade_1_8);
 }
 
 function upgrade_1_8()
 {
   var text = "Applying 1.8 patches";
-  $("#Upgrade-1-8-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-1-8-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-1-8-Status","upgrade.php?upgrade-1-8=1",text,upgrade_2_0);
 }
 
 function upgrade_2_0()
 {
   var text = "Applying 2.0 patches";
-  $("#Upgrade-2-0-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-2-0-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-2-0-Status","upgrade.php?upgrade-2-0=1",text,upgrade_2_2);
 }
 
 function upgrade_2_2()
 {
   var text = "Applying 2.2 patches";
-  $("#Upgrade-2-2-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-2-2-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-2-2-Status","upgrade.php?upgrade-2-2=1",text,done);
 }
 
 function upgrade_2_4()
 {
   var text = "Applying 2.4 patches";
-  $("#Upgrade-2-4-Status").html("<img src=\"images/loading.gif\"/> "+text+"...");
+  $("#Upgrade-2-4-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-2-4-Status","upgrade.php?upgrade-2-4=1",text,done);
 }
 

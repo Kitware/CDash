@@ -338,7 +338,7 @@
                           <a
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
-                            <img onmouseover="showHelp('public_help');" src="images/help.gif"
+                            <img onmouseover="showHelp('public_help');" src="img/help.gif"
                               border="0" />
                           </a>
                           <span class="help_content" id="public_help">
@@ -359,7 +359,7 @@
                         </td>
                         <td align="right">
                           <xsl:if test="cdash/edit=0">
-                            <img src="images/next.png" style="cursor:pointer;"
+                            <img src="img/next.png" style="cursor:pointer;"
                               onclick="nextTab(1);" alt="next" class="tooltip" title="Next Step" />
                           </xsl:if>
                         </td>
@@ -392,7 +392,7 @@
                           <a
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             onmouseover="showHelp('logo_help');" target="blank">
-                            <img src="images/help.gif" border="0" />
+                            <img src="img/help.gif" border="0" />
                           </a>
                         </td>
                       </tr>
@@ -430,10 +430,10 @@
                           <br />
                           <br />
                           <xsl:if test="cdash/edit=0">
-                            <img src="images/previous.png" style="cursor:pointer;"
+                            <img src="img/previous.png" style="cursor:pointer;"
                               onclick="previousTab(2);" alt="previous" class="tooltip"
                               title="Previous Step" />
-                            <img src="images/next.png" style="cursor:pointer;"
+                            <img src="img/next.png" style="cursor:pointer;"
                               onclick="nextTab(2);" alt="next" class="tooltip" title="Next Step" />
                           </xsl:if>
                         </td>
@@ -461,7 +461,7 @@
                           <a
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
-                            <img onmouseover="showHelp('svnViewer_help');" src="images/help.gif"
+                            <img onmouseover="showHelp('svnViewer_help');" src="img/help.gif"
                               border="0" />
                           </a>
                           <span class="help_content" id="svnViewer_help">
@@ -510,7 +510,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('svnViewerType_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="svnViewerType_help">
                             <b>Repository View Type</b>
@@ -573,7 +573,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('cvsrobot_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="cvsrobot_help">
                             <b>Repository Robot</b>
@@ -604,7 +604,7 @@
                               href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                               target="blank">
                               <img onmouseover="showHelp('svnRepository_help');"
-                                src="images/help.gif" border="0" />
+                                src="img/help.gif" border="0" />
                             </a>
                           </td>
                         </tr>
@@ -636,7 +636,7 @@
                             </input>
                             <xsl:text disable-output-escaping="yes"> </xsl:text>
                             <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project" target="blank">
-                            <img onmouseover="showHelp('svnUsername_help');" src="images/help.gif" border="0"/></a>
+                            <img onmouseover="showHelp('svnUsername_help');" src="img/help.gif" border="0"/></a>
                           </td>
                         </tr>
                         <tr>
@@ -653,7 +653,7 @@
                             </input>
                             <xsl:text disable-output-escaping="yes"> </xsl:text>
                             <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project" target="blank">
-                            <img onmouseover="showHelp('svnPassword_help');" src="images/help.gif" border="0"/></a>
+                            <img onmouseover="showHelp('svnPassword_help');" src="img/help.gif" border="0"/></a>
                           </td>
                         </tr>
                       </xsl:for-each>
@@ -684,10 +684,10 @@
                           <br />
                           <br />
                           <xsl:if test="cdash/edit=0">
-                            <img src="images/previous.png" style="cursor:pointer;"
+                            <img src="img/previous.png" style="cursor:pointer;"
                               onclick="previousTab(3);" alt="previous" class="tooltip"
                               title="Previous Step" />
-                            <img src="images/next.png" style="cursor:pointer;"
+                            <img src="img/next.png" style="cursor:pointer;"
                               onclick="nextTab(3);" alt="next" class="tooltip" title="Next Step" />
                           </xsl:if>
                         </td>
@@ -716,7 +716,7 @@
                           <a
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
-                            <img onmouseover="showHelp('TestingDataUrl_help');" src="images/help.gif"
+                            <img onmouseover="showHelp('TestingDataUrl_help');" src="img/help.gif"
                               border="0" />
                           </a>
                           <span class="help_content" id="TestingDataUrl_help">
@@ -746,7 +746,7 @@
                           <a
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
-                            <img onmouseover="showHelp('NightlyStart_help');" src="images/help.gif"
+                            <img onmouseover="showHelp('NightlyStart_help');" src="img/help.gif"
                               border="0" />
                           </a>
                           <span class="help_content" id="NightlyStart_help">
@@ -781,7 +781,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('CoverageThres_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="CoverageThres_help">
                             <b>Coverage threshold</b>
@@ -812,7 +812,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('EnableTestTiming_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="EnableTestTiming_help">
                             <b>Enable test timing</b>
@@ -848,7 +848,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('TimeDeviation_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="TimeDeviation_help">
                             <b>Test time standard deviation multiplier</b>
@@ -891,7 +891,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('TimeDeviationThreshold_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="TimeDeviationThreshold_help">
                             <b>Test time standard deviation threshold</b>
@@ -941,10 +941,10 @@
                         </td>
                         <td align="right">
                           <xsl:if test="cdash/edit=0">
-                            <img src="images/previous.png" style="cursor:pointer;"
+                            <img src="img/previous.png" style="cursor:pointer;"
                               onclick="previousTab(4);" alt="previous" class="tooltip"
                               title="Previous Step" />
-                            <img src="images/next.png" style="cursor:pointer;"
+                            <img src="img/next.png" style="cursor:pointer;"
                               onclick="nextTab(4);" alt="next" class="tooltip" title="Next Step" />
                           </xsl:if>
                         </td>
@@ -972,7 +972,7 @@
                           <a
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
-                            <img onmouseover="showHelp('emailBroken_help');" src="images/help.gif"
+                            <img onmouseover="showHelp('emailBroken_help');" src="img/help.gif"
                               border="0" />
                           </a>
                           <span class="help_content" id="emailBroken_help">
@@ -1001,7 +1001,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('emailRedundant_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="emailRedundant_help">
                             <b>Email redundant failures</b>
@@ -1031,7 +1031,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('emailAdministrator_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="emailAdministrator_help">
                             <b>Email administator</b>
@@ -1059,7 +1059,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('emailCoverage_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="emailCoverage_help">
                             <b>Email low coverage</b>
@@ -1087,7 +1087,7 @@
                           <a
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
-                            <img onmouseover="showHelp('emailTiming_help');" src="images/help.gif"
+                            <img onmouseover="showHelp('emailTiming_help');" src="img/help.gif"
                               border="0" />
                           </a>
                           <span class="help_content" id="emailTiming_help">
@@ -1143,10 +1143,10 @@
                         </td>
                         <td align="right">
                           <xsl:if test="cdash/edit=0">
-                            <img src="images/previous.png" style="cursor:pointer;"
+                            <img src="img/previous.png" style="cursor:pointer;"
                               onclick="previousTab(5);" alt="previous" class="tooltip"
                               title="Previous Step" />
-                            <img src="images/next.png" style="cursor:pointer;"
+                            <img src="img/next.png" style="cursor:pointer;"
                               onclick="nextTab(5);" alt="next" class="tooltip" title="Next Step" />
                           </xsl:if>
                         </td>
@@ -1168,7 +1168,7 @@
                                 href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                                 target="blank">
                                 <img onmouseover="showHelp('blockList_help');"
-                                  src="images/help.gif" border="0" />
+                                  src="img/help.gif" border="0" />
                               </a>
                             </strong>
                           </div>
@@ -1261,10 +1261,10 @@
                         </td>
                         <td align="right">
                         <xsl:if test="cdash/edit=0">
-                            <img src="images/previous.png" style="cursor:pointer;"
+                            <img src="img/previous.png" style="cursor:pointer;"
                               onclick="previousTab(6);" alt="previous" class="tooltip"
                               title="Previous Step" />
-                            <img src="images/next.png" style="cursor:pointer;"
+                            <img src="img/next.png" style="cursor:pointer;"
                               onclick="nextTab(6);" alt="next" class="tooltip" title="Next Step" />
                         </xsl:if>
                         </td>
@@ -1294,10 +1294,10 @@
                         </td>
                         <td align="right">
                         <xsl:if test="cdash/edit=0">
-                            <img src="images/previous.png" style="cursor:pointer;"
+                            <img src="img/previous.png" style="cursor:pointer;"
                               onclick="previousTab(7);" alt="previous" class="tooltip"
                               title="Previous Step" />
-                            <img src="images/next.png" style="cursor:pointer;"
+                            <img src="img/next.png" style="cursor:pointer;"
                               onclick="nextTab(7);" alt="next" class="tooltip" title="Next Step" />
                         </xsl:if>
                         </td>
@@ -1335,7 +1335,7 @@
                             <a
                               href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                               target="blank">
-                              <img onmouseover="showHelp('ctestConfig_help');" src="images/help.gif"
+                              <img onmouseover="showHelp('ctestConfig_help');" src="img/help.gif"
                                 border="0" />
                             </a>
                           </td>
@@ -1367,7 +1367,7 @@
                           <a
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
-                            <img onmouseover="showHelp('google_help');" src="images/help.gif"
+                            <img onmouseover="showHelp('google_help');" src="img/help.gif"
                               border="0" />
                           </a>
                           <span class="help_content" id="google_help">
@@ -1397,7 +1397,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('showSiteIPAddresses_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="showSiteIPAddresses_help">
                             <b>Show Site IP Addresses</b>
@@ -1425,7 +1425,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('displayLabels_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="displayLabels_help">
                             <b>Display Labels</b>
@@ -1454,7 +1454,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('showCoverageCode_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="showCoverageCode_help">
                             <b>Display Source Code in Coverage</b>
@@ -1483,7 +1483,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('autoremoveTimeframe_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="autoremoveTimeframe_help">
                             <b>AutoRemove Timeframe</b>
@@ -1513,7 +1513,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('autoremoveMaxBuilds_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="autoremoveMaxBuilds_help">
                             <b>AutoRemove max builds</b>
@@ -1543,7 +1543,7 @@
                             href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                             target="blank">
                             <img onmouseover="showHelp('uploadQuota_help');"
-                              src="images/help.gif" border="0" />
+                              src="img/help.gif" border="0" />
                           </a>
                           <span class="help_content" id="uploadQuota_help">
                             <b>File upload quota</b>
@@ -1583,7 +1583,7 @@
                         <td align="right">
 
                           <xsl:if test="cdash/edit=0">
-                            <img src="images/previous.png" style="cursor:pointer;"
+                            <img src="img/previous.png" style="cursor:pointer;"
                               onclick="previousTab(6);" alt="previous" class="tooltip"
                               title="Previous Step" />
                             <input type="submit" name="Submit" value="Create Project >> ">

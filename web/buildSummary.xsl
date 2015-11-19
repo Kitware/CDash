@@ -380,7 +380,7 @@ Add a Note to this Build</a>
 
 <!-- Graph -->
 <div class="title-divider">Graph</div>
-<img src="images/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
+<img src="img/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
 Show Build Graphs</a>
 <div id="graphoptions"></div>
 <div id="graph"></div>

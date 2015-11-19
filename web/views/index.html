@@ -67,7 +67,7 @@
 
         <div id="settings" ng-click="showsettings = ! showsettings">
 
-          <img src="images/settings.png"/>
+          <img src="img/settings.png"/>
           <ul ng-show="showsettings">
             <li>
               <a id="label_advancedview" ng-click="cdash.advancedview=!cdash.advancedview">
@@ -128,12 +128,12 @@
           <a ng-href="viewSite.php?siteid={{cdash.siteid}}&project={{cdash.projectid}}&currenttime={{cdash.unixtimestamp}}">
             {{cdash.site}}
           </a>
-          <img ng-if="cdash.siteoutoforder == 1" src="images/flag.png" title="flag"/>
+          <img ng-if="cdash.siteoutoforder == 1" src="img/flag.png" title="flag"/>
         </div>
 
         <div id="buildname" align="left">
           <b>Build Name</b>: {{cdash.buildname}}
-          <img ng-if="cdash.buildplatform" class="icon" alt="platform" ng-src="images/platform_{{cdash.buildplatform}}.png"/>
+          <img ng-if="cdash.buildplatform" class="icon" alt="platform" ng-src="img/platform_{{cdash.buildplatform}}.png"/>
         </div>
 
         <div id="numbuilds" align="left">

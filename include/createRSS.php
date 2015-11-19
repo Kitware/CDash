@@ -58,7 +58,7 @@ function CreateRSSFeed($projectid)
     fputs($fp, "<image>\n");
     fputs($fp, " <title>Recent CDash submissions for $projectname</title>\n");
     fputs($fp, " <link>$currentURI/index.php?project=$projectname</link>\n");
-    fputs($fp, " <url>$currentURI/images/cdash.gif</url>\n");
+    fputs($fp, " <url>$currentURI/img/cdash.gif</url>\n");
     fputs($fp, "</image>\n");
     $date = date('r');
     fputs($fp, "<lastBuildDate>$date</lastBuildDate>\n");

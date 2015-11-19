@@ -85,13 +85,13 @@ Last Year</option>
        <xsl:choose><xsl:when test="score &lt; 0">error</xsl:when></xsl:choose>
        <xsl:choose><xsl:when test="score >= 0">normal</xsl:when></xsl:choose>
      </xsl:attribute>
-     <xsl:choose><xsl:when test="score >= 0"><image src="images/smiley-good.png"/></xsl:when></xsl:choose>
-     <xsl:choose><xsl:when test="score >= 0.5"><image src="images/smiley-good.png"/></xsl:when></xsl:choose>
-     <xsl:choose><xsl:when test="score >= 0.8"><image src="images/smiley-good.png"/></xsl:when></xsl:choose>
-     <xsl:choose><xsl:when test="score &lt; 0"><image src="images/smiley-bad.png"/></xsl:when></xsl:choose>
-     <xsl:choose><xsl:when test="score &lt; -0.3"><image src="images/smiley-bad.png"/></xsl:when></xsl:choose>
-     <xsl:choose><xsl:when test="score &lt; -0.4"><image src="images/smiley-bad.png"/></xsl:when></xsl:choose>
-     <xsl:choose><xsl:when test="score &lt; -0.7"><image src="images/smiley-bad.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score >= 0"><image src="img/smiley-good.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score >= 0.5"><image src="img/smiley-good.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score >= 0.8"><image src="img/smiley-good.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score &lt; 0"><image src="img/smiley-bad.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score &lt; -0.3"><image src="img/smiley-bad.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score &lt; -0.4"><image src="img/smiley-bad.png"/></xsl:when></xsl:choose>
+     <xsl:choose><xsl:when test="score &lt; -0.7"><image src="img/smiley-bad.png"/></xsl:when></xsl:choose>
      <a href="" style="display:none"><xsl:value-of select="score"/></a>
    </td>
    <td align="center"><xsl:value-of select="totalupdatedfiles"/></td>

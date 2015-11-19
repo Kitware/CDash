@@ -172,14 +172,14 @@
      <xsl:text>&#x20;</xsl:text>
 
       <xsl:if test="string-length(note)>0 and countbuildids=1">
-      <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="images/document.png" alt="Notes" border="0"/></a>
+      <a><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="img/document.png" alt="Notes" border="0"/></a>
       </xsl:if>
 
       <!-- If the build has errors or test failing -->
       <xsl:if test="(compilation/error > 0 or test/fail > 0) and countbuildids=1">
       <a href="javascript:;">
       <xsl:attribute name="onclick">javascript:buildinfo_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
-      <img src="images/Info.png" alt="info" border="0"></img>
+      <img src="img/Info.png" alt="info" border="0"></img>
       </a>
       </xsl:if>
 
@@ -187,7 +187,7 @@
       <xsl:if test="expected=1">
       <a>
       <xsl:attribute name="href">javascript:expectedinfo_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="expecteddivname"/>','<xsl:value-of select="/cdash/dashboard/projectid"/>','<xsl:value-of select="buildtype"/>','<xsl:value-of select="/cdash/dashboard/unixtimestamp"/>')</xsl:attribute>
-      <img src="images/Info.png" border="0" alt="info"></img>
+      <img src="img/Info.png" border="0" alt="info"></img>
       </a>
       </xsl:if>
 
@@ -196,7 +196,7 @@
       <a name="Build Notes" class="jTip">
       <xsl:attribute name="id">buildnote_<xsl:value-of select="buildid"/></xsl:attribute>
       <xsl:attribute name="href">ajax/buildnote.php?buildid=<xsl:value-of select="buildid"/>&amp;width=350&amp;link=buildSummary.php%3Fbuildid%3D<xsl:value-of select="buildid"/></xsl:attribute>
-      <img src="images/note.png" border="0"></img>
+      <img src="img/note.png" border="0"></img>
       </a>
       </xsl:if>
 
@@ -205,13 +205,13 @@
         <xsl:if test="string-length(buildid)>0">
         <a>
         <xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
-        <img src="images/folder.png" border="0"></img>
+        <img src="img/folder.png" border="0"></img>
         </a>
         </xsl:if>
         <xsl:if test="string-length(buildid)=0">
         <a>
         <xsl:attribute name="href">javascript:buildnosubmission_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="expecteddivname"/>','<xsl:value-of select="buildgroupid"/>','<xsl:value-of select="buildtype"/>')</xsl:attribute>
-        <img src="images/folder.png" border="0"></img>
+        <img src="img/folder.png" border="0"></img>
         </a>
         </xsl:if>
       </xsl:if> <!-- end admin -->

@@ -149,7 +149,7 @@
 </table>
 
 <!-- Graph -->
-<img src="images/graph.png" title="graph"/>
+<img src="img/graph.png" title="graph"/>
 <a>
 <xsl:attribute name="href">javascript:showcoveragegraph_click(<xsl:value-of select="cdash/buildid"/>)</xsl:attribute>
 Show coverage over time

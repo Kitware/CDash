@@ -12,7 +12,7 @@
     <div id="datetime"> {{cdash.datetime}} </div>
     <div ng-if="cdash.public==1" id="feedicon" alt="RSS Feed" title="RSS Feed">
       <a href="rss/SubmissionRSS{{cdash.projectname}}.xml">
-        <img src="images/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
+        <img src="img/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
       </a>
     </div>
   </div>
@@ -21,7 +21,7 @@
     <div id="headerlogo">
       <a href="{{cdash.home}}">
         <img ng-if="cdash.logoid>0" id="projectlogo" border="0" height="50px" ng-src="displayImage.php?imgid={{cdash.logoid}}"/>
-        <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="images/cdash.gif"/>
+        <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="img/cdash.gif"/>
       </a>
     </div>
     <div id="headername">
@@ -178,7 +178,7 @@
 
 <div id="calendar" class="ui-datepicker-calendar" ></div>
 
-<img id="spinner" src="images/loading.gif" ng-show="loading" />
+<img id="spinner" src="img/loading.gif" ng-show="loading" />
 
 <div ng-show="cdash.error">
   <b>Error: {{cdash.error}}</b>

@@ -7,10 +7,10 @@
 
 <div id="footer">
   <div id="kitwarelogo">
-      <a href="http://www.kitware.com"><img src="images/blogo.gif" border="0" height="30" alt="logo" /></a>
+      <a href="http://www.kitware.com"><img src="img/blogo.gif" border="0" height="30" alt="logo" /></a>
   </div>
   <div id="footerlogo">
-    <a href="http://www.cdash.org"><img src="images/logo2.gif" border="0" height="40" alt="CDash logo"/></a>
+    <a href="http://www.cdash.org"><img src="img/logo2.gif" border="0" height="40" alt="CDash logo"/></a>
     <span id="footertext">
     CDash
    <xsl:choose>

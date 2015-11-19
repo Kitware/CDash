@@ -279,7 +279,7 @@ Visit <a href="http://public.kitware.com/Wiki/CDash:Build_Management">the wiki p
 </xsl:if>
 
 <div id="result" style="display:none;">
-<img src="images/loading.gif" /></div>
+<img src="img/loading.gif" /></div>
 
 <!--
 <xsl:if test="/cdash/edit=1">

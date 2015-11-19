@@ -65,7 +65,7 @@
           <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
          </xsl:when>
         <xsl:otherwise>
-         <xsl:attribute name="src">images/cdash.gif</xsl:attribute>
+         <xsl:attribute name="src">img/cdash.gif</xsl:attribute>
         </xsl:otherwise>
         </xsl:choose>
         </img>
@@ -118,7 +118,7 @@
       <xsl:value-of select="lastbuild_elapsed"/>
     </a>
 
-    <img src="images/cleardot.gif">
+    <img src="img/cleardot.gif">
        <xsl:attribute name="class">activity-level-<xsl:value-of select="activity"/></xsl:attribute>
     </img>
     </td>

@@ -44,7 +44,7 @@
           <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
          </xsl:when>
         <xsl:otherwise>
-         <xsl:attribute name="src">images/cdash.gif</xsl:attribute>
+         <xsl:attribute name="src">img/cdash.gif</xsl:attribute>
         </xsl:otherwise>
         </xsl:choose>
         </img>
@@ -96,40 +96,40 @@
         <xsl:value-of select="name"/></a> </td>
        <td align="center"  bgcolor="#DDDDDD" ><a class="tooltip" title="Edit subscription" >
         <xsl:attribute name="href">subscribeProject.php?projectid=<xsl:value-of select="id"/>&amp;edit=1</xsl:attribute>
-        <img src="images/edit.png" border="0" alt="subscribe" />
+        <img src="img/edit.png" border="0" alt="subscribe" />
         </a>
         <xsl:if test="role>0">
           <a class="tooltip" title="Claim sites" >
           <xsl:attribute name="href">editSite.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-          <img src="images/systemtray.png" border="0" alt="claimsite" /></a>
+          <img src="img/systemtray.png" border="0" alt="claimsite" /></a>
         </xsl:if>
         <xsl:if test="role>1">
           <xsl:if test="/cdash/manageclient=1">
           <a class="tooltip" title="Schedule Build" >
             <xsl:attribute name="href">manageClient.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-            <img src="images/manageclient.png" border="0" alt="manageclient" /></a>
+            <img src="img/manageclient.png" border="0" alt="manageclient" /></a>
           </xsl:if>
           <a class="tooltip" title="Edit project" >
           <xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>
-          <img  src="images/edit2.png" border="0" alt="editproject" /></a>
+          <img  src="img/edit2.png" border="0" alt="editproject" /></a>
           <a class="tooltip" title="Manage subprojects" >
           <xsl:attribute name="href">manageSubProject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-          <img  src="images/subproject.png" border="0" alt="subproject" /></a>
+          <img  src="img/subproject.png" border="0" alt="subproject" /></a>
           <a class="tooltip" title="Manage project groups" >
           <xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-            <img src="images/edit_group.png" border="0" alt="managegroups" /></a>
+            <img src="img/edit_group.png" border="0" alt="managegroups" /></a>
           <a class="tooltip" title="Manage project users" >
           <xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-           <img src="images/users.png" border="0" alt="manageusers" /></a>
+           <img src="img/users.png" border="0" alt="manageusers" /></a>
           <a class="tooltip" title="Manage project coverage" >
           <xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-           <img src="images/filecoverage.png" border="0" alt="managecoverage" /></a>
+           <img src="img/filecoverage.png" border="0" alt="managecoverage" /></a>
 
           <xsl:if test="nerrorlogs>0">
           <a class="tooltip">
           <xsl:attribute name="title"><xsl:value-of select="nerrorlogs"/> errors in the CDash log</xsl:attribute>
           <xsl:attribute name="href">viewErrorLog.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-           <img src="images/warning.png" border="0" alt="erro logs" height="16" /></a>
+           <img src="img/warning.png" border="0" alt="erro logs" height="16" /></a>
           </xsl:if>
         </xsl:if>
       </td>
@@ -201,9 +201,9 @@
 
        <td align="center" >
         <a><xsl:attribute name="href">manageClient.php?scheduleid=<xsl:value-of select="id"/>
-        </xsl:attribute><img src="images/advanced.png" border="0" alt="edit schedule" /></a>
+        </xsl:attribute><img src="img/advanced.png" border="0" alt="edit schedule" /></a>
         <a onclick="return VerifyDeleteSchedule()"><xsl:attribute name="href">manageClient.php?removeschedule=<xsl:value-of select="id"/>
-        </xsl:attribute><img src="images/delete.png" border="0" alt="remove schedule" /></a>
+        </xsl:attribute><img src="img/delete.png" border="0" alt="remove schedule" /></a>
         </td>
     </tr>
   </xsl:for-each>
@@ -237,7 +237,7 @@
       <td align="center" >
         <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute><xsl:value-of select="name"/></a>
          <xsl:if test="outoforder=1">
-           <img border="0" src="images/flag.png" title="flag"></img>
+           <img border="0" src="img/flag.png" title="flag"></img>
         </xsl:if>
       </td>
 
@@ -343,7 +343,7 @@
        <a class="tooltip">
        <xsl:attribute name="title"><xsl:value-of select="cdash/nerrorlogs"/> errors in the CDash log</xsl:attribute>
        <xsl:attribute name="href">viewErrorLog.php</xsl:attribute>
-       <img src="images/warning.png" border="0" alt="erro logs" height="16" /></a>
+       <img src="img/warning.png" border="0" alt="erro logs" height="16" /></a>
        </xsl:if>
     </td></tr>
     <tr class="trodd"><td id="nob"><a href="monitor.php">Monitor / Processing Statistics</a></td></tr>

@@ -14,7 +14,7 @@ function showgraph_click(buildid,zoomout)
     }
 
   $("#graph").fadeIn('slow');
-  $("#graph").html("fetching...<img src=images/loading.gif></img>");
+  $("#graph").html("fetching...<img src=img/loading.gif></img>");
   $("#grapholder").attr("style","width:800px;height:400px;");
   $("#graphoptions").html("<a href=javascript:showgraph_click("+buildid+",true)>Zoom out</a>");
 

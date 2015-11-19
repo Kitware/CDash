@@ -213,8 +213,8 @@
 
           <tr ng-repeat="test in pagination.filteredTests" ng-class-odd="'odd'" ng-class-even="'even'">
             <td>
-              <img ng-if="test.new == 1 && test.timestatus == 'Passed' && test.status == 'Passed'" src="images/flaggreen.gif" title="flag"/>
-              <img ng-if="test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')" src="images/flag.png" title="flag"/>
+              <img ng-if="test.new == 1 && test.timestatus == 'Passed' && test.status == 'Passed'" src="img/flaggreen.gif" title="flag"/>
+              <img ng-if="test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')" src="img/flag.png" title="flag"/>
               <a href="{{test.detailsLink}}">{{test.name}}</a>
             </td>
 

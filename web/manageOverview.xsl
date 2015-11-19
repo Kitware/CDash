@@ -93,7 +93,7 @@
               // then concatenate them together and convert the list to JSON
               var newLayout = JSON.stringify(buildElements.concat(staticElements));
 
-              $("#loading").attr("src", "images/loading.gif");
+              $("#loading").attr("src", "img/loading.gif");
               $.ajax(
                 {
                 url: "manageOverview.php?projectid=<xsl:value-of select="cdash/project/id"/>",
@@ -101,7 +101,7 @@
                 data: {saveLayout : newLayout},
                 success: function(data)
                   {
-                  $("#loading").attr("src", "images/check.gif");
+                  $("#loading").attr("src", "img/check.gif");
                   },
                 error: function(e, s, t)
                   {

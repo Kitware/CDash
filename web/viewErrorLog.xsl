@@ -36,10 +36,10 @@
 <h3 style="background: #b0c4de">Error Log</h3>
 <xsl:for-each select="cdash/error">
   <xsl:if test="type=4">
-  <img src="images/error.png"/> <b> Error </b>
+  <img src="img/error.png"/> <b> Error </b>
   </xsl:if>
   <xsl:if test="type=5">
-  <img src="images/warning.png"/> <b> Warning </b>
+  <img src="img/warning.png"/> <b> Warning </b>
   </xsl:if>
 
   reported on <xsl:value-of select="date"/>

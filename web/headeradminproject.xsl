@@ -17,7 +17,7 @@
  <div id="feedicon" alt="RSS Feed" title="RSS Feed">
    <xsl:if test="cdash/dashboard/projectpublic=1">
       <a>
-      <xsl:attribute name="href">rss/SubmissionRSS<xsl:value-of select="cdash/dashboard/projectname"/>.xml</xsl:attribute><img src="images/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
+      <xsl:attribute name="href">rss/SubmissionRSS<xsl:value-of select="cdash/dashboard/projectname"/>.xml</xsl:attribute><img src="img/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
       </a>
    </xsl:if>
    </div>
@@ -35,7 +35,7 @@
           <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
          </xsl:when>
         <xsl:otherwise>
-         <xsl:attribute name="src">images/cdash.gif</xsl:attribute>
+         <xsl:attribute name="src">img/cdash.gif</xsl:attribute>
         </xsl:otherwise>
         </xsl:choose>
         </img>

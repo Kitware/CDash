@@ -57,7 +57,7 @@
 </xsl:choose>
 
 <div id="executiontime">
-<img src="images/clock.png" alt="Execution Time" title="Execution Time" />
+<img src="img/clock.png" alt="Execution Time" title="Execution Time" />
 <span class="builddateelapsed">
 <xsl:attribute name="alt">
   Mean time:<xsl:value-of select="cdash/test/timemean"/>s
@@ -125,7 +125,7 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
 <th class="measurement">Interactive Image</th>
 <td>
 <div class="je_compare">
-<xsl:for-each select="cdash/test/compareimages/image">
+<xsl:for-each select="cdash/test/compareimg/image">
 <img>
   <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="imgid"/></xsl:attribute>
   <xsl:attribute name="alt"><xsl:value-of select="role"/></xsl:attribute>
@@ -136,7 +136,7 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
    </tr>
 </xsl:if>
 
-<xsl:for-each select="cdash/test/images/image">
+<xsl:for-each select="cdash/test/img/image">
 <tr>
 <th class="measurement"><xsl:value-of select="role"/></th>
 <td>
@@ -159,7 +159,7 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
         <xsl:if test="type='file'">
            <a><xsl:attribute name="href">testDetails.php?test=<xsl:value-of select="/cdash/test/id"/>&#38;build=<xsl:value-of select="/cdash/test/buildid"/>&#38;fileid=<xsl:value-of select="fileid"/>
               </xsl:attribute>
-             <image src="images/package.png"/>
+             <image src="img/package.png"/>
            </a>
         </xsl:if>
       </td>
@@ -172,7 +172,7 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
 
 
 <!-- Show command line -->
-<img src="images/console.png"/>
+<img src="img/console.png"/>
 <a id="commandlinelink" href="javascript:showcommandline_click()">Show Command Line</a>
 <div id="commandline" style="display:none">
   <xsl:call-template name="nl2br">
@@ -182,7 +182,7 @@ on <xsl:value-of select="cdash/test/buildstarttime"/>
 <br/>
 
 <!-- Pull down menu to see the graphs -->
-<img src="images/graph.png"/> Display graphs: <select id="GraphSelection">
+<img src="img/graph.png"/> Display graphs: <select id="GraphSelection">
   <xsl:attribute name="onchange">javascript:displaygraph_selected(<xsl:value-of select="/cdash/test/buildid"/>,<xsl:value-of select="/cdash/test/id"/>,false)</xsl:attribute>
   <option value="0">Select...</option>
   <option value="TestTimeGraph">Test Time</option>

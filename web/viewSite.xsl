@@ -90,7 +90,7 @@
   <xsl:if test="email">
   <a>
   <xsl:attribute name="href">mailto:<xsl:value-of select="email"/></xsl:attribute>
-  <img src="images/mail.png" border="0"/>
+  <img src="img/mail.png" border="0"/>
   </a>
   </xsl:if>
 </xsl:for-each>

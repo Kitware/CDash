@@ -94,7 +94,7 @@ Show Activity Graph
 </xsl:if></font>
 </h3>
 
-<xsl:text disable-output-escaping="yes">&lt;script type="text/javascript">var Icons = "images/";&lt;/script&gt;</xsl:text>
+<xsl:text disable-output-escaping="yes">&lt;script type="text/javascript">var Icons = "img/";&lt;/script&gt;</xsl:text>
 <script type="text/javascript" src="js/tree.js"></script>
 
 <a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Expand all';return true;" onclick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Collapse all';return true;" onclick="contract()">Collapse all</a>

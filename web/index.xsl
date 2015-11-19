@@ -149,7 +149,7 @@
       <a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="siteid"/>&#38;project=<xsl:value-of select="/cdash/dashboard/projectid"/>&#38;currenttime=<xsl:value-of select="/cdash/dashboard/unixtimestamp"/></xsl:attribute><xsl:value-of select="site"/></a>
 
       <xsl:if test="siteoutoforder=1">
-         <img border="0" src="images/flag.png" title="flag"></img>
+         <img border="0" src="img/flag.png" title="flag"></img>
       </xsl:if>
 
       </td>
@@ -158,7 +158,7 @@
       <xsl:if test="string-length(buildplatform)>0">
         <div style="float:left;">
         <img class="icon" alt="platform">
-            <xsl:attribute name="src">images/platform_<xsl:value-of select="buildplatform"/>.png</xsl:attribute>
+            <xsl:attribute name="src">img/platform_<xsl:value-of select="buildplatform"/>.png</xsl:attribute>
         </img>
         </div>
       </xsl:if>
@@ -188,20 +188,20 @@
 
       <div style="float:left;">
       <xsl:if test="string-length(note)>0 and countchildren=0">
-        <a class="advancedviewitem" title="View notes"><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="images/document.png" alt="Notes" class="icon"/></a>
+        <a class="advancedviewitem" title="View notes"><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="img/document.png" alt="Notes" class="icon"/></a>
       </xsl:if>
 
       <xsl:if test="upload-file-count>0 and countchildren=0">
       <a><xsl:attribute name="href">viewFiles.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute>
          <xsl:attribute name="title"><xsl:value-of select="upload-file-count" /> files uploaded with this build</xsl:attribute>
-      <img src="images/package.png" alt="Files" class="icon"/></a>
+      <img src="img/package.png" alt="Files" class="icon"/></a>
       </xsl:if>
 
       <!-- If the build has errors or test failing -->
       <xsl:if test="(compilation/error > 0 or test/fail > 0) and countchildren=0">
       <a href="javascript:;">
       <xsl:attribute name="onclick">javascript:buildinfo_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
-      <img src="images/Info.png" alt="info" class="icon"></img>
+      <img src="img/Info.png" alt="info" class="icon"></img>
       </a>
       </xsl:if>
 
@@ -209,7 +209,7 @@
       <xsl:if test="expected=1">
       <a>
       <xsl:attribute name="href">javascript:expectedinfo_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="expecteddivname"/>','<xsl:value-of select="/cdash/dashboard/projectid"/>','<xsl:value-of select="buildtype"/>','<xsl:value-of select="/cdash/dashboard/unixtimestamp"/>')</xsl:attribute>
-      <img src="images/Info.png" alt="info" class="icon"></img>
+      <img src="img/Info.png" alt="info" class="icon"></img>
       </a>
       </xsl:if>
 
@@ -218,7 +218,7 @@
       <a name="Build Notes" class="jTip">
       <xsl:attribute name="id">buildnote_<xsl:value-of select="buildid"/></xsl:attribute>
       <xsl:attribute name="href">ajax/buildnote.php?buildid=<xsl:value-of select="buildid"/>&amp;width=350&amp;link=buildSummary.php%3Fbuildid%3D<xsl:value-of select="buildid"/></xsl:attribute>
-      <img src="images/note.png" alt="note" class="icon"></img>
+      <img src="img/note.png" alt="note" class="icon"></img>
       </a>
       </xsl:if>
 
@@ -226,7 +226,7 @@
       <xsl:if test="nerrorlog>0 and countchildren=0">
       <a class="tooltip">
       <xsl:attribute name="title"><xsl:value-of select="nerrorlog"/> errors in the CDash log</xsl:attribute>
-      <xsl:attribute name="href">viewErrorLog.php?buildid=<xsl:value-of select="buildid"/>&amp;projectid=<xsl:value-of select="/cdash/dashboard/projectid"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute><img src="images/warningsmall.png" alt="errorlogs" class="icon"/></a>
+      <xsl:attribute name="href">viewErrorLog.php?buildid=<xsl:value-of select="buildid"/>&amp;projectid=<xsl:value-of select="/cdash/dashboard/projectid"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute><img src="img/warningsmall.png" alt="errorlogs" class="icon"/></a>
       </xsl:if>
 
       <!-- If user is admin of the project propose to group this build -->
@@ -234,13 +234,13 @@
         <xsl:if test="string-length(buildid)>0">
         <a>
         <xsl:attribute name="href">javascript:buildgroup_click(<xsl:value-of select="buildid"/>)</xsl:attribute>
-        <img src="images/folder.png" class="icon"></img>
+        <img src="img/folder.png" class="icon"></img>
         </a>
         </xsl:if>
         <xsl:if test="string-length(buildid)=0">
         <a>
         <xsl:attribute name="href">javascript:buildnosubmission_click('<xsl:value-of select="siteid"/>','<xsl:value-of select="buildname"/>','<xsl:value-of select="expecteddivname"/>','<xsl:value-of select="buildgroupid"/>','<xsl:value-of select="buildtype"/>')</xsl:attribute>
-        <img src="images/folder.png" class="icon"></img>
+        <img src="img/folder.png" class="icon"></img>
         </a>
         </xsl:if>
       </xsl:if> <!-- end admin -->
@@ -282,7 +282,7 @@
         </xsl:choose>
       </xsl:attribute>
         <xsl:if test="countchildren=0">
-        <xsl:if test="userupdates>0"><img src="images/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if><a>
+        <xsl:if test="userupdates>0"><img src="img/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:if><a>
         <xsl:attribute name="href">viewUpdate.php?buildid=<xsl:value-of select="buildid"/>
         </xsl:attribute>
           <xsl:value-of select="update/files"/>
@@ -849,7 +849,7 @@
   </div>
 
 <div id="settings">
-<img src="images/settings.png"/>
+<img src="img/settings.png"/>
 <ul>
   <li><a href="" class="advancedview">Advanced View</a></li>
   <li><a href="" class="autorefresh">Auto-refresh</a></li>

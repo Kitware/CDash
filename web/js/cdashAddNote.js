@@ -15,7 +15,7 @@ function addnote_click(buildid,userid)
     }
     
   $("#addnote").fadeIn('slow');
-  $("#addnote").html("fetching...<img src=images/loading.gif></img>");
+  $("#addnote").html("fetching...<img src=img/loading.gif></img>");
   $("#addnote").load("ajax/addnote.php?buildid="+buildid+"&userid="+userid,{},function(){$(this).fadeIn('slow');});
   return;
 }

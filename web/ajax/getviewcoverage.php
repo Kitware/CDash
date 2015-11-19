@@ -455,7 +455,7 @@ if ($userid) {
     // Third column (Percentage)
     $thirdcolumn = '<div style="position:relative; width: 190px;">
        <div style="position:relative; float:left;
-       width: 123px; height: 12px; background: #bdbdbd url(\'images/progressbar.gif\') top left no-repeat;">
+       width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">
        <div class=';
       switch ($status) {
       case 0: $thirdcolumn .= '"error" '; break;
