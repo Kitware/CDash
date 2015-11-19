@@ -167,7 +167,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
          
     <h1 id="pageTitle">CDash</h1>
-    <a href="http://cdash.org/iphone" class="home"></a>
+    <a href="http://cdash.org/mobile" class="home"></a>
     <a class="showPage button" href="#loginForm">Login</a>
     <a class="showPage title">CDash by Kitware Inc.</a>
     

@@ -190,7 +190,7 @@ li.pagination strong {
  text-decoration: none;
  font-size: 18px;
  padding: 7px 0;
- background: #629b00 url(/img/iphone/previous.gif);
+ background: #629b00 url(/img/mobile/previous.gif);
  color: #fff;
  margin: 8px 12px;
  width: 110px;
@@ -201,7 +201,7 @@ li.pagination strong {
 
 .next {
  float: right;
- background: #629b00 url(/img/iphone/next.gif);
+ background: #629b00 url(/img/mobile/next.gif);
 }
 
 .previous {
@@ -285,12 +285,12 @@ body > h1 {
     display: none;
     left: 6px;
     right: auto;
-    -webkit-border-image: url(/img/iphone/iPhoneBackButton.png) 0 8 0 14;
+    -webkit-border-image: url(/img/mobile/iPhoneBackButton.png) 0 8 0 14;
     border-width: 0 8px 0 14px;
 }
 
 .goButton {
-    -webkit-border-image: url(/img/iphone/iPhoneGoButton.png) 0 5 0 5;
+    -webkit-border-image: url(/img/mobile/iPhoneGoButton.png) 0 5 0 5;
     border-width: 0 5px;
 }
 
@@ -333,7 +333,7 @@ body > ul > li > a.link {
 .panel {
     box-sizing: border-box;
     padding: 10px;
-    background: #c8c8c8 url(/img/iphone/pinstripes.png);
+    background: #c8c8c8 url(/img/mobile/pinstripes.png);
 }
 
 /************************************************************************************************/
@@ -354,7 +354,7 @@ fieldset {
     margin: 0;
     border: none;
     padding: 10px 6px;
-    background: url(/img/iphone/iPhoneToolbar.png) #7388a5 repeat-x;
+    background: url(/img/mobile/iPhoneToolbar.png) #7388a5 repeat-x;
 }
 
 fieldset > h1 {
