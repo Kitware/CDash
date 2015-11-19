@@ -1920,9 +1920,9 @@ function begin_XML_for_XSLT()
   // check if user has specified a preference for color scheme
   if (array_key_exists("colorblind", $_COOKIE)) {
       if ($_COOKIE["colorblind"] == 1) {
-          $CDASH_CSS_FILE = "colorblind.css";
+          $CDASH_CSS_FILE = "css/colorblind.css";
       } else {
-          $CDASH_CSS_FILE = "cdash.css";
+          $CDASH_CSS_FILE = "css/cdash.css";
       }
   }
 

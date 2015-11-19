@@ -29,7 +29,7 @@
         </xsl:if>
 
         <xsl:comment><![CDATA[[if IE]>
-          <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
+          <link rel="stylesheet" href="css/tabs_ie.css" type="text/css" media="projection, screen" />
           <![endif]]]></xsl:comment>
         <script type="text/javascript" src="js/jquery-1.6.2.js"></script>
         <script type="text/javascript" src="js/ui.tabs.js"></script>

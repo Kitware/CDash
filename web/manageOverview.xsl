@@ -23,7 +23,7 @@
         </link>
 
         <link rel="stylesheet" href="css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="css/jquery-ui.css"/>
+        <link rel="stylesheet" href="css/jquery-ui-1.10.4.css"/>
         <style>
           #buildSortable
             {

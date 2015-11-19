@@ -19,7 +19,7 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
         <script src="js/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
-        <link type="text/css" rel="stylesheet" href="js/jquery.qtip.min.css" />
+        <link type="text/css" rel="stylesheet" href="css/jquery.qtip.min.css" />
         <script src="js/jquery.qtip.min.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Include the sorting -->
@@ -28,7 +28,7 @@
 
         <!-- include jqModal -->
         <script src="js/jqModal.js" type="text/javascript" charset="utf-8"></script>
-        <link type="text/css" rel="stylesheet" media="all" href="js/jqModal.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="css/jqModal.css" />
 
         <script src="js/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/cdashIndexTable.js" type="text/javascript" charset="utf-8"></script>

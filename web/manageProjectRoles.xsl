@@ -22,7 +22,7 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
          <xsl:comment><![CDATA[[if IE]>
-          <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
+          <link rel="stylesheet" href="css/tabs_ie.css" type="text/css" media="projection, screen" />
           <![endif]]]></xsl:comment>
           <!-- Include project roles -->
           <script src="js/jquery-1.6.2.js" type="text/javascript"></script>
