@@ -136,6 +136,7 @@ $(function () {
     ?>
     plot = $.plot($("#graph_holder"), [{label: "Execution Time (seconds)",data: d1}],options);
 <?php
+
 } else {
     ?>
 
@@ -147,6 +148,7 @@ $(function () {
 ));
 
 <?php
+
 }
 ?>
 });

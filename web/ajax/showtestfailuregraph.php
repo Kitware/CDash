@@ -121,11 +121,13 @@ $(function () {
     ?>
   $.plot($("#testfailuregrapholder"), [{label: "# builds failed",  data: d1}],options);
 <?php
+
 } else {
     ?>
   $.plot($("#testfailuregrapholder"), [{label: "# builds failed",  data: d1}],
 $.extend(true,{},options,{xaxis: { min: <?php echo $t-604800000?>,max: <?php echo $t+100000000 ?>}} ));
 <?php
+
 } ?>
 });
 

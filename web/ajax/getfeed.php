@@ -112,12 +112,14 @@ foreach ($feeds as $f) {
     ?>
 <br/>
 <?php
+
 } // End looping through feed ?>
 <?php if (count($feeds)>0) {
     ?>
 <div id="feedmore"><a href="viewFeed.php?projectid=<?php echo $projectid;
     ?>">See full feed</a></div>
 <?php
+
 } ?>
 
 

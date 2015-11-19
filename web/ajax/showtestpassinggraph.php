@@ -121,11 +121,13 @@ $(function () {
     ?>
   $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],options);
 <?php
+
 } else {
     ?>
   $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],
 $.extend(true,{},options,{xaxis: { min: <?php echo $t-2000000000?>,max: <?php echo $t+50000000 ?>}} ));
 <?php
+
 } ?>
 });
 

@@ -163,6 +163,7 @@ $(function () {
     ?>}, yaxis: { min: 0}}))
           );
 <?php
+
 } else {
     ?>
     plot = $.plot($(divname),
@@ -172,6 +173,7 @@ $(function () {
     ?>}, yaxis: { min: 0}})
                  );
 <?php
+
 }
 ?>
 });

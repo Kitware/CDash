@@ -121,6 +121,7 @@ $cleanbuild = pdo_query("SELECT starttime FROM build
   </b></font></td>
   </tr>
   <?php
+
 } // end buildfailing ?>
 
   <?php if ($testfailing) {
@@ -140,6 +141,7 @@ $cleanbuild = pdo_query("SELECT starttime FROM build
   </b></font></td>
   </tr>
   <?php
+
 } // end buildfailing ?>
 
 
