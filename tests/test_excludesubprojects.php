@@ -133,5 +133,4 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
         $this->pass('Tests passed');
         return 0;
     }
-
 }

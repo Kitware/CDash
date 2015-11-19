@@ -368,7 +368,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         if ($filter['field'] == 'subprojects') {
             if ($filter['compare'] == 92) {
                 $excluded_subprojects[] = $filter['value'];
-            } else if ($filter['compare'] == 93) {
+            } elseif ($filter['compare'] == 93) {
                 $included_subprojects[] = $filter['value'];
             }
         }
@@ -379,7 +379,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $selected_subprojects = implode("','", $included_subprojects);
         $selected_subprojects = "('".$selected_subprojects."')";
         $include_subprojects = true;
-    } else if (!empty($excluded_subprojects)) {
+    } elseif (!empty($excluded_subprojects)) {
         $num_selected_subprojects = count($excluded_subprojects);
         $selected_subprojects = implode("','", $excluded_subprojects);
         $selected_subprojects = "('".$selected_subprojects."')";
