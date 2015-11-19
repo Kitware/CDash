@@ -62,9 +62,9 @@
             }
         </style>
 
-        <script src="javascript/jquery-1.10.2.js"/>
-        <script src="javascript/jquery-ui-1.10.4.min.js"/>
-        <script src="javascript/cdashSortable.js"></script>
+        <script src="js/jquery-1.10.2.js"/>
+        <script src="js/jquery-ui-1.10.4.min.js"/>
+        <script src="js/cdashSortable.js"></script>
         <script>
           $(function() {
             // setup sortable element

@@ -20,7 +20,7 @@
           <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
         </link>
         <xsl:call-template name="headscripts"/>
-        <script src="javascript/cdashClient.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/cdashClient.js" type="text/javascript" charset="utf-8"></script>
       </head>
 
  <body>

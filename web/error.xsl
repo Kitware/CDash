@@ -18,20 +18,20 @@
            <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-        <script src="javascript/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
-        <link type="text/css" rel="stylesheet" href="javascript/jquery.qtip.min.css" />
-        <script src="javascript/jquery.qtip.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
+        <link type="text/css" rel="stylesheet" href="js/jquery.qtip.min.css" />
+        <script src="js/jquery.qtip.min.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Include the sorting -->
-        <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- include jqModal -->
-        <script src="javascript/jqModal.js" type="text/javascript" charset="utf-8"></script>
-        <link type="text/css" rel="stylesheet" media="all" href="javascript/jqModal.css" />
+        <script src="js/jqModal.js" type="text/javascript" charset="utf-8"></script>
+        <link type="text/css" rel="stylesheet" media="all" href="js/jqModal.css" />
 
-        <script src="javascript/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/cdashIndexTable.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/cdashIndexTable.js" type="text/javascript" charset="utf-8"></script>
         <xsl:if test="/cdash/uselocaldirectory=1">
             <link type="text/css" rel="stylesheet" href="local/cdash.local.css" />
         </xsl:if>

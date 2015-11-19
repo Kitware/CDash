@@ -20,8 +20,8 @@
          <xsl:call-template name="headscripts"/>
 
          <!-- Include JavaScript -->
-         <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script>
-         <script src="javascript/cdashAddNote.js" type="text/javascript" charset="utf-8"></script>
+         <script src="js/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script>
+         <script src="js/cdashAddNote.js" type="text/javascript" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
 

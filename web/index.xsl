@@ -805,13 +805,13 @@
         <link rel="stylesheet" href="css/bootstrap.min.css"/>
 
          <!-- Include JavaScript -->
-         <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
-         <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
+         <script src="js/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
+         <script src="js/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
          <xsl:call-template name="headscripts"/>
          <xsl:if test="cdash/feed!=0">
-           <script src="javascript/cdashFeed.js" type="text/javascript" charset="utf-8"></script>
+           <script src="js/cdashFeed.js" type="text/javascript" charset="utf-8"></script>
          </xsl:if>
-         <script src="javascript/cdashTableCollapse.js" type="text/javascript" charset="utf-8"></script>
+         <script src="js/cdashTableCollapse.js" type="text/javascript" charset="utf-8"></script>
 
        </head>
        <body bgcolor="#ffffff">

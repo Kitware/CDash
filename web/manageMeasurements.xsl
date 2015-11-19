@@ -23,7 +23,7 @@
       <xsl:value-of select="cdash/cssfile"/>
     </xsl:attribute>
   </link>
-  <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" charset="utf-8">
     function Ask()
     {

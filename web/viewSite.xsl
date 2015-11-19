@@ -20,13 +20,13 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
        <xsl:comment><![CDATA[[if IE]>
-       <script language="javascript" type="text/javascript" src="javascript/excanvas.js">
+       <script language="javascript" type="text/javascript" src="js/excanvas.js">
        </script>
        <![endif]]]></xsl:comment>
-       <script language="javascript" type="text/javascript" src="javascript/jquery-1.6.2.js" charset="utf-8"></script>
-       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.min.js" charset="utf-8"></script>
-       <script src="javascript/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
-       <script language="javascript" type="text/javascript" src="javascript/jquery.flot.pie.min.js" charset="utf-8"></script>
+       <script language="javascript" type="text/javascript" src="js/jquery-1.6.2.js" charset="utf-8"></script>
+       <script language="javascript" type="text/javascript" src="js/jquery.flot.min.js" charset="utf-8"></script>
+       <script src="js/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
+       <script language="javascript" type="text/javascript" src="js/jquery.flot.pie.min.js" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
 

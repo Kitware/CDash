@@ -23,8 +23,8 @@
          </link>
 
         <!-- Include project roles -->
-        <script src="javascript/jquery-1.6.2.js" type="text/javascript"></script>
-        <script src="javascript/cdashManageUsers.js" type="text/javascript"></script>
+        <script src="js/jquery-1.6.2.js" type="text/javascript"></script>
+        <script src="js/cdashManageUsers.js" type="text/javascript"></script>
         <!-- Functions to confirm the email -->
         <xsl:text disable-output-escaping="yes">
               &lt;script language="JavaScript" type="text/javascript"&gt;

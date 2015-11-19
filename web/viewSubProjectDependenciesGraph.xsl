@@ -22,8 +22,8 @@
         <link href='css/d3.dependencyedgebundling.css' rel='stylesheet' type='text/css'/>
        <xsl:call-template name="headscripts"/>
 
-        <script type="text/javascript" src="javascript/d3.min.js"></script>
-        <script type="text/javascript" src="javascript/d3.dependencyedgebundling.js"></script>
+        <script type="text/javascript" src="js/d3.min.js"></script>
+        <script type="text/javascript" src="js/d3.dependencyedgebundling.js"></script>
         <script>
           var projname = "<xsl:value-of select="cdash/dashboard/projectname"/>";
         </script>

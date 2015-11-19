@@ -1215,7 +1215,7 @@
          </link>
 
          <!-- Include JavaScript -->
-         <script src="javascript/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
+         <script src="js/cdashBuildGroup.js" type="text/javascript" charset="utf-8"></script>
          <xsl:call-template name="headscripts"/>
        </head>
        <body bgcolor="#ffffff">

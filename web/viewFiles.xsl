@@ -20,8 +20,8 @@
          </link>
        <xsl:call-template name="headscripts"/>
 
-       <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
-       <script language="javascript" type="text/javascript" src="javascript/cdashUploadFilesSorter.js"></script>
+       <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+       <script language="javascript" type="text/javascript" src="js/cdashUploadFilesSorter.js"></script>
 
        </head>
        <body bgcolor="#ffffff">

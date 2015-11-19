@@ -21,7 +21,7 @@
          </link>
        <xsl:call-template name="headscripts"/>
          <!-- Include JavaScript -->
-         <script src="javascript/cdashUpdateGraph.js" type="text/javascript" charset="utf-8"></script>
+         <script src="js/cdashUpdateGraph.js" type="text/javascript" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
 
@@ -95,7 +95,7 @@ Show Activity Graph
 </h3>
 
 <xsl:text disable-output-escaping="yes">&lt;script type="text/javascript">var Icons = "images/";&lt;/script&gt;</xsl:text>
-<script type="text/javascript" src="javascript/tree.js"></script>
+<script type="text/javascript" src="js/tree.js"></script>
 
 <a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Expand all';return true;" onclick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Collapse all';return true;" onclick="contract()">Collapse all</a>
 
@@ -106,7 +106,7 @@ Show Activity Graph
 &lt;/script&gt;
 </xsl:text>
 
-<script type="text/javascript" src="javascript/tree_init.js"></script>
+<script type="text/javascript" src="js/tree_init.js"></script>
 <br/>
 <a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Expand all';return true;" onclick="explode()">Expand all</a> <xsl:text>&#x20;</xsl:text>|<xsl:text>&#x20;</xsl:text><a xmlns:lxslt="http://xml.apache.org/xslt" href="javascript:reload()" onmouseover="window.parent.status='Collapse all';return true;" onclick="contract()">Collapse all</a>
 <br/>

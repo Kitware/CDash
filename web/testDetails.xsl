@@ -41,9 +41,9 @@
 
   <xsl:call-template name="headscripts"/>
   <!-- Include JavaScript -->
-  <script src="javascript/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script>
-  <script src="javascript/je_compare.js" type="text/javascript" charset="utf-8"></script>
-  <link type="text/css" rel="stylesheet" href="javascript/je_compare_style-1.0.0.css" />
+  <script src="js/cdashTestGraph.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/je_compare.js" type="text/javascript" charset="utf-8"></script>
+  <link type="text/css" rel="stylesheet" href="js/je_compare_style-1.0.0.css" />
 </head>
 <body bgcolor="#ffffff">
 

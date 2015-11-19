@@ -27,15 +27,15 @@
         </link>
 
         <!-- Include JavaScript -->
-        <script src="javascript/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/cdashAddNote.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/d3.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/nv.d3.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/linechart.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/bulletchart.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/jquery.jqplot.min.js" type="text/javascript"></script>
-        <script src="javascript/plugins/jqplot.dateAxisRenderer.min.js" type="text/javascript"></script>
-        <script src="javascript/plugins/jqplot.highlighter.min.js" type="text/javascript"></script>
+        <script src="js/cdashBuildGraph.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/cdashAddNote.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/d3.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/nv.d3.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/linechart.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/bulletchart.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery.jqplot.min.js" type="text/javascript"></script>
+        <script src="js/plugins/jqplot.dateAxisRenderer.min.js" type="text/javascript"></script>
+        <script src="js/plugins/jqplot.highlighter.min.js" type="text/javascript"></script>
 
         <!-- Generate line charts -->
         <script type="text/javascript">

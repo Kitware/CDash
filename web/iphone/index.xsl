@@ -12,7 +12,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
          <script type="application/x-javascript" src="jquery-1.1.4.js"></script>
          <script type="application/x-javascript" src="jquery-iphone.js"></script>
          <script type="application/x-javascript" src="iphone.js"></script>
-         <script src="../javascript/jquery.mobile-1.4.0.min.js" type="text/javascript" charset="utf-8"></script>
+         <script src="../js/jquery.mobile-1.4.0.min.js" type="text/javascript" charset="utf-8"></script>
          </head><body orient="landscape">
 
     <h1 id="pageTitle">CDash</h1>

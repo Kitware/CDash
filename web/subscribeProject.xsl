@@ -29,9 +29,9 @@
               $("#changesmade").show();
             }
          </script>
-         <script type="text/javascript" src="javascript/OptionTransfer.js"></script>
-         <script type="text/javascript" src="javascript/cdashUserLabels.js"></script>
-         <script type="text/javascript" src="javascript/ui.tabs.js"></script>
+         <script type="text/javascript" src="js/OptionTransfer.js"></script>
+         <script type="text/javascript" src="js/cdashUserLabels.js"></script>
+         <script type="text/javascript" src="js/ui.tabs.js"></script>
        </head>
        <body bgcolor="#ffffff" onload="opt.init(document.forms[1])">
 

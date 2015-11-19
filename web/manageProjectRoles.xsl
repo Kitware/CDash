@@ -25,9 +25,9 @@
           <link rel="stylesheet" href="tabs_ie.css" type="text/css" media="projection, screen" />
           <![endif]]]></xsl:comment>
           <!-- Include project roles -->
-          <script src="javascript/jquery-1.6.2.js" type="text/javascript"></script>
-          <script src="javascript/cdashProjectRole.js" type="text/javascript"></script>
-          <script src="javascript/ui.tabs.js" type="text/javascript"></script>
+          <script src="js/jquery-1.6.2.js" type="text/javascript"></script>
+          <script src="js/cdashProjectRole.js" type="text/javascript"></script>
+          <script src="js/ui.tabs.js" type="text/javascript"></script>
 
 
         <!-- Functions to confirm the email -->

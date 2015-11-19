@@ -19,9 +19,9 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
        <xsl:call-template name="headscripts"/>
-       <script src="javascript/cdashCoverageGraph.js" type="text/javascript" charset="utf-8"></script>
-       <script src="javascript/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
-       <script src="javascript/cdashViewCoverage.js" type="text/javascript" charset="utf-8"></script>
+       <script src="js/cdashCoverageGraph.js" type="text/javascript" charset="utf-8"></script>
+       <script src="js/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
+       <script src="js/cdashViewCoverage.js" type="text/javascript" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
 

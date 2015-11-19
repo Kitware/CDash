@@ -24,7 +24,7 @@
           <script>
             var CLIENTID = '<xsl:value-of select="cdash/oauth2/client"/>';
           </script>
-          <script src="javascript/cdashOauth2.js"></script>
+          <script src="js/cdashOauth2.js"></script>
         </xsl:if>
 
       </head>

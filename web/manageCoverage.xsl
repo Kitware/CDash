@@ -23,10 +23,10 @@
          </link>
 
         <!-- Include JQuery -->
-        <script src="javascript/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
-        <script src="javascript/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
 
        </head>
        <body bgcolor="#ffffff">
