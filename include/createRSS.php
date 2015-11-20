@@ -36,7 +36,7 @@ function CreateRSSFeed($projectid)
   }
 
     global $CDASH_ROOT_DIR;
-    $filename = $CDASH_ROOT_DIR."/web/rss/SubmissionRSS".$projectname.".xml";
+    $filename = $CDASH_ROOT_DIR."/public/rss/SubmissionRSS".$projectname.".xml";
 
     if (!($fp = fopen($filename, 'w'))) {
         add_log("CreateRSSFeed", "Cannot write file ".$filename,

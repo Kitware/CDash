@@ -127,7 +127,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     {
         global $cdashpath;
         global $PHP_EXE;
-        $cmd = "\"$PHP_EXE\" \"$cdashpath/web/ajax/processsubmissions.php\" $projectid --force";
+        $cmd = "\"$PHP_EXE\" \"$cdashpath/public/ajax/processsubmissions.php\" $projectid --force";
         echo "Running command line:\n";
         echo "  cmd='${cmd}'\n";
         $result = system($cmd);

@@ -35,7 +35,7 @@ class ImportBuildsTestCase extends KWWebTestCase
 
         $argc = 1;
         ob_start();
-        include('web/importBuilds.php');
+        include('public/importBuilds.php');
         $output = ob_get_contents();
         ob_end_clean();
         if (strpos($output, "Usage: php") === false) {
@@ -45,7 +45,7 @@ class ImportBuildsTestCase extends KWWebTestCase
 
         $argc = 2;
         ob_start();
-        include('web/importBuilds.php');
+        include('public/importBuilds.php');
         $output = ob_get_contents();
         ob_end_clean();
         if (strpos($output, "Import backup complete. 3 files processed.") === false) {
@@ -54,7 +54,7 @@ class ImportBuildsTestCase extends KWWebTestCase
         }
 
         ob_start();
-        include('web/importBuilds.php');
+        include('public/importBuilds.php');
         $output = ob_get_contents();
         ob_end_clean();
         if (strpos($output, "Import backup complete. 0 files processed.") === false) {
