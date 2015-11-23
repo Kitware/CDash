@@ -69,8 +69,8 @@ configure_file(${CDash_SOURCE_DIR}/tests/prepend_coverage.php.in
 option(CDASH_CONFIGURE_HTACCESS_FILE "Create .htaccess file for coverage testing?" OFF)
 if(CDASH_CONFIGURE_HTACCESS_FILE)
   configure_file(
-    ${CDash_SOURCE_DIR}/htaccess.in
-    ${CDash_SOURCE_DIR}/.htaccess)
+    ${CDash_SOURCE_DIR}/tests/htaccess.in
+    ${CDash_SOURCE_DIR}/public/.htaccess)
     # Yes, the output of this configure_file is intentionally in the
     # source directory
 endif()
