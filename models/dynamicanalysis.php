@@ -67,7 +67,7 @@ class dynamicanalysis
   /** Remove all the dynamic analysis associated with a buildid */
   public function RemoveAll()
   {
-      include("cdash/config.php");
+      include("config/config.php");
 
       if (strlen($this->BuildId)==0) {
           echo "DynamicAnalysis::RemoveAll BuildId not set";

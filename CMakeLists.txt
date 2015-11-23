@@ -109,7 +109,7 @@ if(${CDASH_PRO})
   set(CDASH_USE_LOCAL_DIRECTORY 1)
 endif(${CDASH_PRO})
 
-file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
+file(WRITE "${CDash_SOURCE_DIR}/config/config.local.php"
 "<?php
 // WARNING: This file is unconditionally overwritten by the CMake configure
 // step: [${CMAKE_CURRENT_LIST_FILE}]

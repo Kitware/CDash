@@ -713,7 +713,7 @@ class clientjobschedule
           return;
       }
 
-      include('cdash/config.php');
+      include('config/config.php');
 
     // Update the current run
     pdo_query("UPDATE client_jobschedule SET lastrun='".date(FMT_DATETIMESTD)."' WHERE id=".qnum($this->Id));

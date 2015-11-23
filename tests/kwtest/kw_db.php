@@ -1,6 +1,6 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . '/config.test.php');
-require_once(dirname(dirname(dirname(__FILE__))) . '/cdash/pdocore.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/include/pdocore.php');
 /**
   *    db object to allow the user to interact with
   *    a database

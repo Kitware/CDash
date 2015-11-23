@@ -136,7 +136,7 @@ class test
           return true;
       }
 
-      include("cdash/config.php");
+      include("config/config.php");
       $command = pdo_real_escape_string($this->Command);
 
       $name = pdo_real_escape_string($this->Name);

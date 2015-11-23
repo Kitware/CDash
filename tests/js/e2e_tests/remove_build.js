@@ -9,7 +9,7 @@ describe("remove_build", function() {
     var folderIcon = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(1)).all(by.tagName('img')).get(1);
 
     // Make sure that we located the right img.
-    expect(folderIcon.getAttribute('src')).toContain('images/folder.png');
+    expect(folderIcon.getAttribute('src')).toContain('img/folder.png');
 
     // Click the icon to expand the menu.
     folderIcon.click();

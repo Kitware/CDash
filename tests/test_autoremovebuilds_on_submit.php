@@ -5,7 +5,7 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
-require_once('cdash/common.php');
+require_once('include/common.php');
 
 class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 {
@@ -17,7 +17,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 
     public function enableAutoRemoveConfigSetting()
     {
-        $filename = dirname(__FILE__)."/../cdash/config.local.php";
+        $filename = dirname(__FILE__)."/../config/config.local.php";
         $handle = fopen($filename, "r");
         $contents = fread($handle, filesize($filename));
         fclose($handle);
