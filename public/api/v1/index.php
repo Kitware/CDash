@@ -220,8 +220,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         } else {
             $response['menu']['nonext'] = "1";
         }
-    }
-    else if (!has_next_date($date, $currentstarttime)) {
+    } elseif (!has_next_date($date, $currentstarttime)) {
         $response['menu']['nonext'] = 1;
     }
 
