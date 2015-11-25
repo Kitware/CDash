@@ -195,13 +195,68 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             }
         }
 
-        // Delete the builds that we created during this test.
+        // Make sure that the parent builds link to each other correctly.
+        $result = pdo_single_row_query(
+            "SELECT parentid FROM build WHERE id=$first_buildid");
+        $first_parentid = $result['parentid'];
         $result = pdo_single_row_query(
             "SELECT parentid FROM build WHERE id=$second_buildid");
-        remove_build($result['parentid']);
+        $second_parentid = $result['parentid'];
         $result = pdo_single_row_query(
             "SELECT parentid FROM build WHERE id=$third_buildid");
-        remove_build($result['parentid']);
+        $third_parentid = $result['parentid'];
+
+        $this->get($this->url . "/api/v1/index.php?project=Trilinos&parentid=$first_parentid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+
+        // Verify 'Next' from parent #1 points to parent #2
+        if (strpos($jsonobj['menu']['next'], "parentid=$second_parentid") === false) {
+            $error_msg = "Expected 'Next' link not found for first parent build";
+            $success = false;
+        }
+
+        // Verify 'Current' from parent #1 points to parent #3
+        if (strpos($jsonobj['menu']['current'], "parentid=$third_parentid") === false) {
+            $error_msg = "Expected 'Current' link not found for first parent build";
+            $success = false;
+        }
+
+        $this->get($this->url . "/api/v1/index.php?project=Trilinos&parentid=$second_parentid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+
+        // Verify 'Previous' from parent #2 points to parent #1
+        if (strpos($jsonobj['menu']['previous'], "parentid=$first_parentid") === false) {
+            $error_msg = "Expected 'Previous' link not found for second parent build";
+            $success = false;
+        }
+
+        // Verify 'Next' from parent #2 points to parent #3
+        if (strpos($jsonobj['menu']['next'], "parentid=$third_parentid") === false) {
+            $error_msg = "Expected 'Next' link not found for second parent build";
+            $success = false;
+        }
+
+        // Verify 'Current' from parent #2 points to parent #3
+        if (strpos($jsonobj['menu']['current'], "parentid=$third_parentid") === false) {
+            $error_msg = "Expected 'Current' link not found for second parent build";
+            $success = false;
+        }
+
+        $this->get($this->url . "/api/v1/index.php?project=Trilinos&parentid=$third_parentid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+
+        // Verify 'Previous' from parent #3 points to parent #2
+        if (strpos($jsonobj['menu']['previous'], "parentid=$second_parentid") === false) {
+            $error_msg = "Expected 'Previous' link not found for third parent build";
+            $success = false;
+        }
+
+        // Delete the builds that we created during this test.
+        remove_build($second_parentid);
+        remove_build($third_parentid);
 
         if (!$success) {
             $this->fail($error_msg);

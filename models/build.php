@@ -265,6 +265,7 @@ class build
         }
 
         $query = pdo_query("SELECT projectid,starttime,siteid,name,type,parentid FROM build WHERE id=".qnum($buildid));
+
         if (!$query) {
             add_last_sql_error("Build:FillFromId()", $this->ProjectId, $this->Id);
             return false;
@@ -340,12 +341,17 @@ class build
         //
         $subproj_table = "";
         $subproj_criteria = "";
+        $parent_criteria = "";
 
         if ($this->SubProjectId) {
             $subproj_table = ", subproject2build";
             $subproj_criteria =
                 "AND build.id=subproject2build.buildid ".
                 "AND subproject2build.subprojectid=".qnum($this->SubProjectId)." ";
+        }
+        if ($this->ParentId == -1) {
+            // Only search for other parents.
+            $parent_criteria = "AND build.parentid=-1";
         }
 
         $query = pdo_query("
@@ -355,8 +361,10 @@ class build
                 AND name='$this->Name'
                 AND projectid=".qnum($this->ProjectId)."
                 $subproj_criteria
+                $parent_criteria
                 $which_build_criteria
                 LIMIT 1");
+
         if (!$query) {
             add_last_sql_error(
                     "Build:GetRelatedBuildId", $this->ProjectId, $this->Id);
