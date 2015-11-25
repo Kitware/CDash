@@ -168,10 +168,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     $page_id = 'index.php';
     $response['childview'] = 0;
-    if (isset($_GET["parentid"])) {
-        $page_id = 'indexchildren.php';
-        $response['childview'] = 1;
-    }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
         include_once("local/models/proProject.php");
@@ -195,7 +191,36 @@ function echo_main_dashboard_JSON($project_instance, $date)
     if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
         $response['menu']['subprojects'] = 1;
     }
-    if (!has_next_date($date, $currentstarttime)) {
+
+    if (isset($_GET['parentid'])) {
+        $parentid = pdo_real_escape_numeric($_GET['parentid']);
+        $page_id = 'indexchildren.php';
+        $response['childview'] = 1;
+
+        // When a parentid is specified, we should link to the next build,
+        // not the next day.
+        include_once("models/build.php");
+        $build = new Build();
+        $build->Id = $parentid;
+        $previous_buildid = $build->GetPreviousBuildId();
+        $current_buildid = $build->GetCurrentBuildId();
+        $next_buildid = $build->GetNextBuildId();
+
+        $base_url = "index.php?project=".urlencode($projectname);
+        if ($previous_buildid > 0) {
+            $response['menu']['previous'] = "$base_url&parentid=$previous_buildid";
+        } else {
+            $response['menu']['noprevious'] = "1";
+        }
+
+        $response['menu']['current'] = "$base_url&parentid=$current_buildid";
+
+        if ($next_buildid > 0) {
+            $response['menu']['next'] = "$base_url&parentid=$next_buildid";
+        } else {
+            $response['menu']['nonext'] = "1";
+        }
+    } elseif (!has_next_date($date, $currentstarttime)) {
         $response['menu']['nonext'] = 1;
     }
 

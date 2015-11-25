@@ -589,7 +589,7 @@ function createPageSpecificFilters($page_id)
     switch ($page_id) {
         case 'index.php':
         case 'project.php':
-        case 'viewChildren.php':
+        case 'indexchildren.php':
             {
                 return new IndexPhpFilters();
             }
