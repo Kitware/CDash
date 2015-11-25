@@ -163,8 +163,13 @@ CDash.filter("showEmptyBuildsLast", function () {
 
     $rootScope.setupCalendar($scope.cdash.date);
 
-    // TODO: read from cookie
-    $scope.cdash.advancedview = 0;
+    // Read simple/advanced view cookie setting.
+    var advanced_cookie = $.cookie('cdash_'+ $scope.cdash.projectname+'_advancedview');
+    if(advanced_cookie == 1) {
+      $scope.cdash.advancedview = 1;
+    } else {
+      $scope.cdash.advancedview = 0;
+    }
 
     var projectid = $scope.cdash.projectid;
     if (projectid > 0 && $scope.cdash.feed) {
@@ -187,6 +192,7 @@ CDash.filter("showEmptyBuildsLast", function () {
     $scope.loading = false; // hide the "loading" spinner
   });
 
+
   $scope.toggleFeed = function() {
     if ($scope.loading) { return; }
     $scope.showFeed = !$scope.showFeed;
@@ -198,6 +204,17 @@ CDash.filter("showEmptyBuildsLast", function () {
       $.cookie('cdash_hidefeed',1);
     }
   };
+
+
+  $scope.toggleAdvancedView = function() {
+    if ($scope.cdash.advancedview == 1) {
+      $scope.cdash.advancedview = 0;
+    } else {
+      $scope.cdash.advancedview = 1;
+    }
+    $.cookie('cdash_'+$scope.cdash.projectname+'_advancedview', $scope.cdash.advancedview);
+  };
+
 
   // The following functions were moved here from cdashBuildGroup.js
   $scope.URLencode = function(sStr) {
