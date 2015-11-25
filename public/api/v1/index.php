@@ -1325,13 +1325,28 @@ function get_child_builds_hyperlink($parentid, $filterdata)
     $existing_filter_params = '';
     $n = 0;
     $count = count($filterdata['filters']);
+    $num_includes = 0;
     for ($i = 0; $i<$count; $i++) {
         $filter = $filterdata['filters'][$i];
 
-        if ($filter['field'] != 'buildname' &&
+        if ($filter['field'] == 'subprojects') {
+            // If we're filtering subprojects at the parent-level
+            // convert that to the appropriate filter for the child-level.
+            $n++;
+            $compare = 0;
+            if ($filter['compare'] == 92) {
+                $compare = 62;
+            } elseif ($filter['compare'] == 93) {
+                $num_includes++;
+                $compare = 61;
+            }
+            $existing_filter_params .=
+                '&field' . $n . '=' . 'subproject' .
+                '&compare' . $n . '=' . $compare .
+                '&value' . $n . '=' . htmlspecialchars($filter['value']);
+        } elseif ($filter['field'] != 'buildname' &&
                 $filter['field'] != 'site' &&
                 $filter['field'] != 'stamp' &&
-                $filter['field'] != 'subprojects' &&
                 $filter['compare'] != 0 &&
                 $filter['compare'] != 20 &&
                 $filter['compare'] != 40 &&
@@ -1348,6 +1363,15 @@ function get_child_builds_hyperlink($parentid, $filterdata)
     if ($n > 0) {
         $existing_filter_params .= "&filtercount=$count";
         $existing_filter_params .= "&showfilters=1";
+
+        // Multiple subproject includes need to be combined with 'or' (not 'and')
+        // at the child level.
+        if ($num_includes > 1) {
+            $existing_filter_params .= '&filtercombine=or';
+        } else if (array_key_exists('filtercombine', $filterdata)) {
+            $existing_filter_params .=
+                '&filtercombine=' . $filterdata['filtercombine'];
+        }
     }
 
     // Construct & return our URL.
