@@ -1368,7 +1368,7 @@ function get_child_builds_hyperlink($parentid, $filterdata)
         // at the child level.
         if ($num_includes > 1) {
             $existing_filter_params .= '&filtercombine=or';
-        } else if (array_key_exists('filtercombine', $filterdata)) {
+        } elseif (array_key_exists('filtercombine', $filterdata)) {
             $existing_filter_params .=
                 '&filtercombine=' . $filterdata['filtercombine'];
         }
