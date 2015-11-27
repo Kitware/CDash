@@ -35,6 +35,8 @@ class ConfigureHandler extends AbstractHandler
         $this->Build = new Build();
         $this->Site = new Site();
         $this->Configure = new BuildConfigure();
+        $this->StartTimeStamp = 0;
+        $this->EndTimeStamp = 0;
     }
 
     public function startElement($parser, $name, $attributes)
@@ -146,8 +148,13 @@ class ConfigureHandler extends AbstractHandler
                 case 'STARTCONFIGURETIME':
                     $this->StartTimeStamp = $data;
                     break;
+                case 'ENDCONFIGURETIME':
+                    $this->EndTimeStamp = $data;
+                    break;
                 case 'ELAPSEDMINUTES':
-                    $this->EndTimeStamp = $this->StartTimeStamp+$data*60;
+                    if ($this->EndTimeStamp === 0) {
+                        $this->EndTimeStamp = $this->StartTimeStamp+$data*60;
+                    }
                     break;
                 case 'BUILDCOMMAND':
                     $this->Configure->Command .= $data;
