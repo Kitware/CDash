@@ -477,7 +477,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         bw_diff.difference_positive AS countbuildwarningdiffp,
         bw_diff.difference_negative AS countbuildwarningdiffn,
         ce_diff.difference AS countconfigurewarningdiff,
-        btt.time AS testsduration,
+        btt.time AS testduration,
         tnotrun_diff.difference_positive AS counttestsnotrundiffp,
         tnotrun_diff.difference_negative AS counttestsnotrundiffn,
         tfailed_diff.difference_positive AS counttestsfaileddiffp,
@@ -607,7 +607,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         //  counttestspasseddiff
         //  countteststimestatusfailed
         //  countteststimestatusfaileddiff
-        //  testsduration
+        //  testduration
         //
         // Fields that we add within this loop:
         //  maxstarttime
@@ -695,11 +695,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['hastest'] = 1;
         }
 
-        if (empty($build_row['testsduration'])) {
+        if (empty($build_row['testduration'])) {
             $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-            $build_row['testsduration'] = round($time_array[0]/60, 1);
+            $build_row['testduration'] = round($time_array[0], 1);
         } else {
-            $build_row['testsduration'] = round($build_row['testsduration'], 1); //already in minutes
+            $build_row['testduration'] = round($build_row['testduration'], 1);
         }
 
         $build_rows[] = $build_row;
@@ -1042,8 +1042,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['numtestfail'] += $nfail;
             $buildgroups_response[$i]['numtestpass'] += $npass;
 
-            $duration = $build_array['testsduration'];
-            $test_response['time'] = time_difference($duration*60.0, true);
+            $duration = $build_array['testduration'];
+            $test_response['time'] = time_difference($duration, true);
             $test_response['timefull'] = $duration;
             $buildgroups_response[$i]['testduration'] += $duration;
 
@@ -1225,7 +1225,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         empty($filter_sql) && (pdo_num_rows($builds) + count($dynamic_builds) > 0);
     for ($i = 0; $i < count($buildgroups_response); $i++) {
         $buildgroups_response[$i]['testduration'] = time_difference(
-                $buildgroups_response[$i]['testduration'] * 60.0, true);
+                $buildgroups_response[$i]['testduration'], true);
 
         if (!$filter_sql) {
             $groupname = $buildgroups_response[$i]['name'];
