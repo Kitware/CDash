@@ -110,7 +110,7 @@
           </td>
         </tr>
 
-        <tr ng-repeat="measurement in cdash.test.measurements">
+        <tr ng-repeat="measurement in cdash.test.measurements | filter:{ type: '!text/link'}">
           <th class="measurement">{{measurement.name}}</th>
 
           <td ng-if="measurement.type != 'file'">
@@ -121,6 +121,11 @@
             <a href="testDetails.php?test={{cdash.test.id}}&build={{cdash.test.buildid}}&fileid={{measurement.fileid}}">
               <image src="img/package.png"/>
             </a>
+          </td>
+        </tr>
+        <tr ng-repeat="measurement in cdash.test.measurements | filter:{ type: 'text/link'}">
+          <td>
+            <a ng-href="{{measurement.value}}">{{measurement.name}}</a>
           </td>
         </tr>
       </table>
