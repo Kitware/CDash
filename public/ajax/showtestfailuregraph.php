@@ -21,6 +21,12 @@ require_once("include/pdo.php");
 require_once("include/common.php");
 
 $projectid = pdo_real_escape_numeric($_GET["projectid"]);
+
+if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    echo "You are not authorized to view this page.";
+    return;
+}
+
 $testname = htmlspecialchars(pdo_real_escape_string($_GET["testname"]));
 $starttime = pdo_real_escape_numeric($_GET["starttime"]);
 @$zoomout = $_GET["zoomout"];

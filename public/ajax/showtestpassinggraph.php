@@ -22,7 +22,6 @@ require_once("include/common.php");
 
 $testid = pdo_real_escape_numeric($_GET["testid"]);
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-@$zoomout = $_GET["zoomout"];
 
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo "Not a valid buildid!";
@@ -50,6 +49,10 @@ $buildtype = $build_array["type"];
 $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
+if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    echo "You are not authorized to view this page.";
+    return;
+}
 
 // Find the other builds
 $previousbuilds = pdo_query("SELECT build.id, build.starttime, build2test.status
