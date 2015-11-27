@@ -200,30 +200,43 @@ class build
         return false;
     }
 
-    /** Save the total tests time */
-    public function SaveTotalTestsTime($time)
+    /** Update the total testing duration */
+    public function SaveTotalTestsTime($duration)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
         }
 
-        // Check if already exists
-        $query = pdo_query("SELECT buildid FROM buildtesttime WHERE buildid=".qnum($this->Id));
+        // Check if an entry already exists for this build.
+        $query = pdo_query(
+                "SELECT buildid FROM buildtesttime
+                WHERE buildid=".qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("SaveTotalTestsTime", $this->ProjectId, $this->Id);
+            add_last_sql_error("SaveTotalTestsTime",
+                    $this->ProjectId, $this->Id);
             return false;
         }
 
-        $time = pdo_real_escape_string($time);
-        if (pdo_num_rows($query)>0) {
-            $query = "UPDATE buildtesttime SET time='".$time."' WHERE buildid=".qnum($this->Id);
+        if (pdo_num_rows($query) > 0) {
+            $query =
+                "UPDATE buildtesttime SET time = time + $duration
+                WHERE buildid=".qnum($this->Id);
         } else {
-            $query = "INSERT INTO buildtesttime (buildid, time) VALUES ('".$this->Id."','".$time."')";
+            $query = "INSERT INTO buildtesttime (buildid, time)
+                VALUES ('".$this->Id."','".$duration."')";
         }
-
         if (!pdo_query($query)) {
             add_last_sql_error("Build:SaveTotalTestsTime", $this->ProjectId, $this->Id);
             return false;
+        }
+
+        // If this is a child build, add this duration
+        // to the parent's test duration sum.
+        $this->ParentId = $this->GetParentBuildId();
+        if ($this->ParentId > 0) {
+            $parent = new Build();
+            $parent->Id = $this->ParentId;
+            $parent->SaveTotalTestsTime($duration);
         }
     }
 

@@ -51,9 +51,11 @@ class TestingHandler extends AbstractHandler
         $this->Build = new Build();
         $this->Site = new Site();
         $this->UpdateEndTime = false;
-        $this->NumberTestsFailed=0;
-        $this->NumberTestsNotRun=0;
-        $this->NumberTestsPassed=0;
+        $this->NumberTestsFailed = 0;
+        $this->NumberTestsNotRun = 0;
+        $this->NumberTestsPassed = 0;
+        $this->StartTimeStamp = 0;
+        $this->EndTimeStamp = 0;
         $this->Feed = new Feed();
     }
 
@@ -232,6 +234,12 @@ class TestingHandler extends AbstractHandler
                     $this->NumberTestsNotRun);
             $this->Build->ComputeTestTiming();
 
+            if ($this->StartTimeStamp > 0 && $this->EndTimeStamp > 0) {
+                // Update test duration in the Build table.
+                $this->Build->SaveTotalTestsTime(
+                        $this->EndTimeStamp - $this->StartTimeStamp);
+            }
+
             global $CDASH_ENABLE_FEED;
             if ($CDASH_ENABLE_FEED) {
                 // Insert the build into the feed
@@ -254,8 +262,6 @@ class TestingHandler extends AbstractHandler
             $this->EndTimeStamp = str_to_time($data, $this->Build->GetStamp());
         } elseif ($parent == 'TESTING' && $element == 'ENDTESTTIME') {
             $this->EndTimeStamp = $data;
-        } elseif ($parent == 'TESTING' && $element == 'ELAPSEDMINUTES') {
-            $this->Build->SaveTotalTestsTime($data);
         } elseif ($parent == "TEST") {
             switch ($element) {
                 case "NAME":
