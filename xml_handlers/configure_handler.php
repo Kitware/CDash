@@ -124,6 +124,10 @@ class ConfigureHandler extends AbstractHandler
             $this->Build->SetNumberOfConfigureErrors(
                     $this->Configure->NumberOfErrors);
 
+            // Record configure duration with the build.
+            $this->Build->SetConfigureDuration(
+                    $this->EndTimeStamp - $this->StartTimeStamp);
+
             // Update the tally of warnings & errors in the parent build,
             // if applicable.
             $this->Build->UpdateParentConfigureNumbers(

@@ -1735,4 +1735,32 @@ class build
                 $message, $url);
         pdo_query("UPDATE build SET notified='1' WHERE id=".qnum($idToNotify));
     }
+
+    public function SetConfigureDuration($duration)
+    {
+        if (!$this->Id || !is_numeric($this->Id)) {
+            return;
+        }
+
+        // Set configure duration for this build.
+        pdo_query(
+                "UPDATE build SET configureduration=$duration
+                WHERE id=".qnum($this->Id));
+
+        add_last_sql_error("Build:SetConfigureDuration",
+                $this->ProjectId, $this->Id);
+
+        // If this is a child build, add this duration
+        // to the parent's configure duration sum.
+        $this->ParentId = $this->GetParentBuildId();
+        if ($this->ParentId > 0) {
+            pdo_query(
+                    "UPDATE build
+                    SET configureduration = configureduration + $duration
+                    WHERE id=".qnum($this->ParentId));
+
+            add_last_sql_error("Build:SetConfigureDuration",
+                    $this->ProjectId, $this->ParentId);
+        }
+    }
 } // end class Build;
