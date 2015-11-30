@@ -560,6 +560,94 @@ function UpgradeBuildFailureTable($from_table='buildfailure', $to_table='buildfa
 }
 
 
+/**
+ * Make sure each build has a correct value set for the
+ * build.configureduration field.
+ **/
+function UpgradeConfigureDuration()
+{
+    // Do non-parent builds first.
+    $query = "
+        SELECT b.id, c.starttime, c.endtime
+        FROM build AS b
+        LEFT JOIN configure AS c ON b.id=c.buildid
+        WHERE b.configureduration = 0 AND b.parentid != -1";
+    $result = pdo_query($query);
+
+    while ($row = pdo_fetch_array($result)) {
+        $id = $row['id'];
+        $duration = strtotime($row['endtime']) - strtotime($row['starttime']);
+        if ($duration === 0) {
+            continue;
+        }
+        $update_query =
+            "UPDATE build SET configureduration=" . qnum($duration) .
+            " WHERE id=" . qnum($id);
+        if (!pdo_query($update_query)) {
+            add_last_sql_error("UpgradeConfigureDuration", 0, $id);
+        }
+    }
+
+    // Now handle the parent builds.
+    $query = "
+        SELECT id FROM build
+        WHERE configureduration = 0 AND parentid = -1";
+    $result = pdo_query($query);
+
+    while ($row = pdo_fetch_array($result)) {
+        $id = $row['id'];
+        $subquery =
+            "SELECT sum(configureduration) AS configureduration
+            FROM build WHERE parentid=" .  qnum($id);
+        $subrow = pdo_single_row_query($subquery);
+
+        $duration = $subrow['configureduration'];
+        if ($duration === 0) {
+            continue;
+        }
+
+        $update_query =
+            "UPDATE build SET configureduration=" . qnum($duration) .
+            " WHERE id=" . qnum($id);
+        if (!pdo_query($update_query)) {
+            add_last_sql_error("UpgradeConfigureDuration", 0, $id);
+        }
+    }
+}
+
+
+/**
+ * Make sure each parent build has test timing set.
+ **/
+function UpgradeTestDuration()
+{
+    // Find parent builds that don't have test duration set.
+    $query =
+        "SELECT b.id FROM build AS b
+        WHERE b.parentid=-1 AND NOT EXISTS
+        (SELECT null FROM buildtesttime AS btt WHERE btt.buildid = b.id)";
+    $result = pdo_query($query);
+
+    while ($row = pdo_fetch_array($result)) {
+        $id = qnum($row['id']);
+
+        // Set the parent's test duration to be the sum of its children.
+        $query =
+            "SELECT sum(time) AS duration FROM buildtesttime AS btt
+            INNER JOIN build AS b on (btt.buildid = b.id)
+            WHERE b.parentid=$id";
+        $subrow = pdo_single_row_query($query);
+        $duration = qnum($subrow['duration']);
+
+        $update_query =
+            "INSERT INTO buildtesttime (buildid, time) VALUES ($id, $duration)";
+        if (!pdo_query($update_query)) {
+            add_last_sql_error("UpgradeTestDuration", 0, $id);
+        }
+    }
+}
+
+
 /** Support for compressed coverage.
  *  This is done in two steps.
  *  First step: Reducing the size of the coverage file by computing the crc32 in coveragefile

@@ -265,6 +265,60 @@ class UpgradeTestCase extends KWWebTestCase
         return $retval;
     }
 
+    public function testUpgradeDurations()
+    {
+        require_once(dirname(__FILE__).'/cdash_test_case.php');
+        require_once('include/common.php');
+        require_once('include/pdo.php');
+
+        $retval = 0;
+
+        // Get the ID of the parent Trilinos build that we will use to verify
+        // that this upgrade was successful.
+        $query =
+            "SELECT id FROM build
+            WHERE name = 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV' AND parentid=-1";
+        $row = pdo_single_row_query($query);
+        $id = qnum($row['id']);
+
+        // Set build.configureduration to 0 for all builds.
+        // This will force the upgrade function to recompute these values
+        // based on configure start & end time.
+        pdo_query("UPDATE build SET configureduration = 0");
+
+        // Run the configure duration upgrade function.
+        UpgradeConfigureDuration();
+
+        // Make sure that our exemplar build has the value that we expect.
+        $query = "SELECT configureduration FROM build WHERE id = $id";
+        $row = pdo_single_row_query($query);
+        if ($row['configureduration'] != 309.00) {
+            $this->fail(
+                    "Expected configure duration to be 309.00, found " . $row['configureduration']);
+            $retval = 1;
+        }
+
+        // Remove the buildtesttime entry for our parent build.
+        pdo_query("DELETE FROM buildtesttime WHERE buildid = $id");
+
+        // Run the test duration upgrade function.
+        UpgradeTestDuration();
+
+        // Verify that it worked as expected.
+        $query = "SELECT time FROM buildtesttime WHERE buildid = $id";
+        $row = pdo_single_row_query($query);
+        if ($row['time'] != 48.00) {
+            $this->fail(
+                    "Expected test duration to be 48.00, found " . $row['time']);
+            $retval = 1;
+        }
+
+        if ($retval == 0) {
+            $this->pass("Passed");
+        }
+        return $retval;
+    }
+
     public function getMaintenancePage()
     {
         $this->login();
