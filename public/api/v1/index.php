@@ -469,9 +469,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         bu.endtime AS updateendtime,
         bu.nfiles AS countupdatefiles,
         bu.warnings AS countupdatewarnings,
-        c.status AS configurestatus,
-        c.starttime AS configurestarttime,
-        c.endtime AS configureendtime,
+        b.configureduration,
         be_diff.difference_positive AS countbuilderrordiffp,
         be_diff.difference_negative AS countbuilderrordiffn,
         bw_diff.difference_positive AS countbuildwarningdiffp,
@@ -513,7 +511,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             LEFT JOIN site AS s ON (s.id=b.siteid)
             LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
             LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
-            LEFT JOIN configure AS c ON (c.buildid=b.id)
             LEFT JOIN buildinformation AS i ON (i.buildid=b.id)
             LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
             LEFT JOIN builderrordiff AS bw_diff ON (bw_diff.buildid=b.id AND bw_diff.type=1)
@@ -595,7 +592,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         //  countbuilderrors
         //  countbuilderrordiff
         //  countbuildwarningdiff
-        //  configurestatus
+        //  configureduration
         //  countconfigureerrors
         //  countconfigurewarnings
         //  countconfigurewarningdiff
@@ -616,8 +613,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         //  labels
         //  updateduration
         //  countupdateerrors
-        //  hasconfigurestatus
-        //  configureduration
         //  test
         //
 
@@ -676,14 +671,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         if ($build_row['countconfigurewarnings'] < 0) {
             $build_row['countconfigurewarnings'] = 0;
-        }
-
-        $build_row['hasconfigurestatus'] = 0;
-        $build_row['configureduration'] = 0;
-
-        if (strlen($build_row['configurestatus'])>0) {
-            $build_row['hasconfigurestatus'] = 1;
-            $build_row['configureduration'] = round((strtotime($build_row["configureendtime"])-strtotime($build_row["configurestarttime"]))/60, 1);
         }
 
         if (empty($build_row['countconfigurewarningdiff'])) {
@@ -965,9 +952,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $configure_response['warningdiff'] = $diff;
         }
 
-        if ($build_array['hasconfigurestatus'] != 0) {
+        if ($build_array['configureduration'] != 0) {
             $duration = $build_array['configureduration'];
-            $configure_response['time'] = time_difference($duration*60.0, true);
+            $configure_response['time'] = time_difference($duration, true);
             $configure_response['timefull'] = $duration;
             $buildgroups_response[$i]['configureduration'] += $duration;
             $hasconfiguredata = true;
