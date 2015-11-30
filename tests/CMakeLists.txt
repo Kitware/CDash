@@ -94,6 +94,7 @@ add_php_test(subprojectnextprevious)
 add_php_test(excludesubprojects)
 add_php_test(testhistory)
 add_php_test(expectedandmissing)
+add_php_test(timesummary)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
