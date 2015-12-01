@@ -478,12 +478,10 @@ function delete_unused_rows($table, $field, $targettable, $selectfield='id')
  **/
 function UpgradeBuildFailureTable($from_table='buildfailure', $to_table='buildfailuredetails')
 {
-    // Check if the buildfailure table has a column named 'stdout'. If not,
-    // we should return early because this upgrade has already been performed.
-    $result = pdo_query(
-            "SELECT column_name FROM information_schema.columns
-            WHERE table_name='$from_table' and column_name='stdoutput'");
-    if (pdo_num_rows($result) == 0) {
+    // Check if the buildfailure table has a column named 'stdoutput'.
+    // If not, we return early because this upgrade has already been performed.
+    $result = pdo_query("SELECT stdoutput FROM $from_table LIMIT 1");
+    if ($result === false) {
         return;
     }
 
