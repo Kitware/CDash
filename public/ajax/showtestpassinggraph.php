@@ -22,7 +22,6 @@ require_once("include/common.php");
 
 $testid = pdo_real_escape_numeric($_GET["testid"]);
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-@$zoomout = $_GET["zoomout"];
 
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo "Not a valid buildid!";
@@ -50,6 +49,10 @@ $buildtype = $build_array["type"];
 $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
+if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    echo "You are not authorized to view this page.";
+    return;
+}
 
 // Find the other builds
 $previousbuilds = pdo_query("SELECT build.id, build.starttime, build2test.status
@@ -63,73 +66,18 @@ AND build.name = '$buildname'
 AND build2test.testid IN (SELECT id FROM test WHERE name = '$testname')
 ORDER BY build.starttime DESC
 ");
-?>
 
-
-<br>
-<script language="javascript" type="text/javascript">
-$(function () {
-  var d1 = [];
-  var ty = [];
-  ty.push([-1,"Failed"]);
-  ty.push([1,"Passed"]);
-
-  <?php
-    $tarray = array();
-    while ($build_array = pdo_fetch_array($previousbuilds)) {
-        $t['x'] = strtotime($build_array["starttime"])*1000;
-        if (strtolower($build_array["status"]) == "passed") {
-            $t['y'] = 1;
-        } else {
-            $t['y'] = -1;
-        }
-        $tarray[]=$t;
-        ?>
-    <?php
-
+$tarray = array();
+while ($build_array = pdo_fetch_array($previousbuilds)) {
+    $t = array();
+    $t['x'] = strtotime($build_array["starttime"])*1000;
+    if (strtolower($build_array["status"]) == "passed") {
+        $t['y'] = 1;
+    } else {
+        $t['y'] = -1;
     }
+    $tarray[]=$t;
+}
 
-    $tarray = array_reverse($tarray);
-    foreach ($tarray as $axis) {
-        ?>
-      d1.push([<?php echo $axis['x'];
-        ?>,<?php echo $axis['y'];
-        ?>]);
-    <?php
-      $t = $axis['x'];
-    } ?>
-
-  var options = {
-    bars: { show: true,
-      barWidth: 35000000,
-      lineWidth: 0.9
-      },
-    //points: { show: true },
-    yaxis: { ticks: ty, min: -1.2, max: 1.2 },
-    xaxis: { mode: "time" },
-    grid: {backgroundColor: "#fffaff"},
-    selection: { mode: "x" },
-    colors: ["#0000FF", "#dba255", "#919733"]
-  };
-
-  $("#graph_holder").bind("selected", function (event, area) {
-  $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],
-         $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
-  });
-
-<?php if (isset($zoomout)) {
-    ?>
-  $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],options);
-<?php
-
-} else {
-    ?>
-  $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}],
-$.extend(true,{},options,{xaxis: { min: <?php echo $t-2000000000?>,max: <?php echo $t+50000000 ?>}} ));
-<?php
-
-} ?>
-});
-
-
-</script>
+$tarray = array_reverse($tarray);
+echo json_encode($tarray);
