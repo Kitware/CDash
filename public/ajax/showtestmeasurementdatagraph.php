@@ -22,7 +22,6 @@ require_once("include/common.php");
 
 $testid = pdo_real_escape_numeric($_GET["testid"]);
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
-@$zoomout = $_GET["zoomout"];
 $measurement = preg_replace('/[^\da-z]/i', "", $_GET["measurement"]);
 $measurementname = htmlspecialchars(pdo_real_escape_string(stripslashes($measurement)));
 
@@ -58,6 +57,12 @@ $buildtype = $build_array["type"];
 $starttime = $build_array["starttime"];
 $projectid = $build_array["projectid"];
 
+if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    echo "You are not authorized to view this page.";
+    return;
+}
+
+
 // Find the other builds
 $previousbuilds = pdo_query("SELECT
 build.id,build.starttime,build2test.testid,testmeasurement.value
@@ -84,97 +89,25 @@ while ($build_array = pdo_fetch_array($previousbuilds)) {
 
     $tarray[]=$t;
 }
-if (@$_GET['export']=="csv") {
+
+if (@$_GET['export'] == "csv") {
     // If user wants to export as CSV file
-
-  header("Cache-Control: public");
+    header("Cache-Control: public");
     header("Content-Description: File Transfer");
-    header("Content-Disposition: attachment; filename=".$testname."_".$measurementname.".csv"); // Prepare some headers to download
-  header("Content-Type: application/octet-stream;");
+
+    // Prepare some headers to download
+    header("Content-Disposition: attachment; filename=".$testname."_".$measurementname.".csv");
+    header("Content-Type: application/octet-stream;");
     header("Content-Transfer-Encoding: binary");
-    $filecontent = "Date;$measurementname\n"; // Standard columns
-  for ($c=0;$c<count($tarray);$c++) {
-      $filecontent .= "{$time[$c]};{$tarray[$c]['y']}\n";
-  }
+
+    // Standard columns
+    $filecontent = "Date,$measurementname\n";
+    for ($c=0;$c<count($tarray);$c++) {
+        $filecontent .= "{$time[$c]},{$tarray[$c]['y']}\n";
+    }
     echo($filecontent); // Start file download
-  die; // to suppress unwanted output
+    die; // to suppress unwanted output
 }
-?>
-&nbsp;
-<script language="javascript" type="text/javascript">
-$(function () {
-    var d1 = [];
-    var buildids = [];
-    var testids = [];
-    <?php
-    $tarray = array_reverse($tarray);
-    foreach ($tarray as $axis) {
-        ?>
-      buildids[<?php echo $axis['x'];
-        ?>]=<?php echo $axis['builid'];
-        ?>;
-      testids[<?php echo $axis['x'];
-        ?>]=<?php echo $axis['testid'];
-        ?>;
-      d1.push([<?php echo $axis['x'];
-        ?>,<?php echo $axis['y'];
-        ?>]);
-    <?php
-      $t = $axis['x'];
-    } ?>
 
-  var options = {
-    //bars: { show: true,  barWidth: 35000000, lineWidth:0.9  },
-    lines: { show: true },
-    points: { show: true },
-    xaxis: { mode: "time"},
-    grid: {backgroundColor: "#fffaff",
-      clickable: true,
-      hoverable: true,
-      hoverFill: '#444',
-      hoverRadius: 4
-    },
-    selection: { mode: "xy" },
-    colors: ["#0000FF", "#dba255", "#919733"]
-  };
-
-    var divname = '#graph_holder';
-
-    $(divname).bind("selected", function (event, area) {
-    plot = $.plot($(divname), [{label: <?php echo("\"$measurementname <a href='ajax/showtestmeasurementdatagraph.php?testid=$testid&buildid=$buildid&measurement=".urlencode($measurementname)."&export=csv'>Export as CSV</a>\""); ?>, data: d1}],
-           $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }, yaxis: { min: 0}}));
-
-    });
-
-    $(divname).bind("plotclick", function (e, pos, item) {
-        if (item) {
-            plot.highlight(item.series, item.datapoint);
-            buildid = buildids[item.datapoint[0]];
-            testid = testids[item.datapoint[0]];
-            window.location = "testDetails.php?test="+testid+"&build="+buildid;
-            }
-     });
-
-<?php if (isset($zoomout)) {
-    ?>
-    plot = $.plot($(divnplot = $.plot($(divname),
-                  [{label: <?php echo("\"$measurementname\"");
-    ?> ,data: d1}], options,{xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000;
-    ?>}, yaxis: { min: 0}}))
-          );
-<?php
-
-} else {
-    ?>
-    plot = $.plot($(divname),
-                  [{label: <?php echo("\"$measurementname\"");
-    ?> ,data: d1}],
-                  $.extend(true,{}, options, {xaxis: { min: <?php echo $t-2000000000?>, max: <?php echo $t+50000000;
-    ?>}, yaxis: { min: 0}})
-                 );
-<?php
-
-}
-?>
-});
-</script>
+$tarray = array_reverse($tarray);
+echo json_encode($tarray);

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_output_link"
+	BuildStamp="20151127-1608-Experimental"
+	Name="localhost"
+	Generator="ctest-3.4"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-66-generic"
+	OSVersion="#108-Ubuntu SMP Wed Oct 7 15:20:27 UTC 2015"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<Testing>
+		<StartDateTime>Nov 27 11:08 EST</StartDateTime>
+		<StartTestTime>1448640532</StartTestTime>
+		<TestList>
+			<Test>./foo</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>foo</Name>
+			<Path>.</Path>
+			<FullName>./foo</FullName>
+			<FullCommandLine>/tmp/bin/foo</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/link" name="Interesting website">
+					<Value>http://www.google.com</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.0022831</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/foo</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value>
+</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Nov 27 11:08 EST</EndDateTime>
+		<EndTestTime>1448640532</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
