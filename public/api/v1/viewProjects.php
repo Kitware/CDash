@@ -19,12 +19,9 @@ $response['hostname'] = $_SERVER['SERVER_NAME'];
 $response['date'] = date("r");
 
 // Check if the database is up to date
-$query = "SELECT * FROM information_schema.COLUMNS
-          WHERE TABLE_SCHEMA = '$CDASH_DB_NAME'
-          AND TABLE_NAME = 'buildfailuredetails'
-          AND COLUMN_NAME = 'id'";
-$dbTest = pdo_single_row_query($query);
-if (empty($dbTest)) {
+$query = "SELECT configureduration FROM build LIMIT 1";
+$dbTest = pdo_query($query);
+if ($dbTest === false) {
     $response['upgradewarning'] = 1;
 }
 

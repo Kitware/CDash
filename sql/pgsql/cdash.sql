@@ -17,6 +17,7 @@ CREATE TABLE "build" (
   "log" text DEFAULT '' NOT NULL,
   "configureerrors" smallint DEFAULT '-1',
   "configurewarnings" smallint DEFAULT '-1',
+  "configureduration" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "builderrors" smallint DEFAULT '-1',
   "buildwarnings" smallint DEFAULT '-1',
   "testnotrun" smallint DEFAULT '-1',

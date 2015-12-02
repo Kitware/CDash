@@ -469,15 +469,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
         bu.endtime AS updateendtime,
         bu.nfiles AS countupdatefiles,
         bu.warnings AS countupdatewarnings,
-        c.status AS configurestatus,
-        c.starttime AS configurestarttime,
-        c.endtime AS configureendtime,
+        b.configureduration,
         be_diff.difference_positive AS countbuilderrordiffp,
         be_diff.difference_negative AS countbuilderrordiffn,
         bw_diff.difference_positive AS countbuildwarningdiffp,
         bw_diff.difference_negative AS countbuildwarningdiffn,
         ce_diff.difference AS countconfigurewarningdiff,
-        btt.time AS testsduration,
+        btt.time AS testduration,
         tnotrun_diff.difference_positive AS counttestsnotrundiffp,
         tnotrun_diff.difference_negative AS counttestsnotrundiffn,
         tfailed_diff.difference_positive AS counttestsfaileddiffp,
@@ -513,7 +511,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             LEFT JOIN site AS s ON (s.id=b.siteid)
             LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
             LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
-            LEFT JOIN configure AS c ON (c.buildid=b.id)
             LEFT JOIN buildinformation AS i ON (i.buildid=b.id)
             LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
             LEFT JOIN builderrordiff AS bw_diff ON (bw_diff.buildid=b.id AND bw_diff.type=1)
@@ -595,7 +592,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         //  countbuilderrors
         //  countbuilderrordiff
         //  countbuildwarningdiff
-        //  configurestatus
+        //  configureduration
         //  countconfigureerrors
         //  countconfigurewarnings
         //  countconfigurewarningdiff
@@ -607,7 +604,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         //  counttestspasseddiff
         //  countteststimestatusfailed
         //  countteststimestatusfaileddiff
-        //  testsduration
+        //  testduration
         //
         // Fields that we add within this loop:
         //  maxstarttime
@@ -616,8 +613,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         //  labels
         //  updateduration
         //  countupdateerrors
-        //  hasconfigurestatus
-        //  configureduration
         //  test
         //
 
@@ -678,14 +673,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['countconfigurewarnings'] = 0;
         }
 
-        $build_row['hasconfigurestatus'] = 0;
-        $build_row['configureduration'] = 0;
-
-        if (strlen($build_row['configurestatus'])>0) {
-            $build_row['hasconfigurestatus'] = 1;
-            $build_row['configureduration'] = round((strtotime($build_row["configureendtime"])-strtotime($build_row["configurestarttime"]))/60, 1);
-        }
-
         if (empty($build_row['countconfigurewarningdiff'])) {
             $build_row['countconfigurewarningdiff'] = 0;
         }
@@ -695,11 +682,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['hastest'] = 1;
         }
 
-        if (empty($build_row['testsduration'])) {
+        if (empty($build_row['testduration'])) {
             $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-            $build_row['testsduration'] = round($time_array[0]/60, 1);
+            $build_row['testduration'] = round($time_array[0], 1);
         } else {
-            $build_row['testsduration'] = round($build_row['testsduration'], 1); //already in minutes
+            $build_row['testduration'] = round($build_row['testduration'], 1);
         }
 
         $build_rows[] = $build_row;
@@ -965,9 +952,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $configure_response['warningdiff'] = $diff;
         }
 
-        if ($build_array['hasconfigurestatus'] != 0) {
+        if ($build_array['configureduration'] != 0) {
             $duration = $build_array['configureduration'];
-            $configure_response['time'] = time_difference($duration*60.0, true);
+            $configure_response['time'] = time_difference($duration, true);
             $configure_response['timefull'] = $duration;
             $buildgroups_response[$i]['configureduration'] += $duration;
             $hasconfiguredata = true;
@@ -1042,8 +1029,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['numtestfail'] += $nfail;
             $buildgroups_response[$i]['numtestpass'] += $npass;
 
-            $duration = $build_array['testsduration'];
-            $test_response['time'] = time_difference($duration*60.0, true);
+            $duration = $build_array['testduration'];
+            $test_response['time'] = time_difference($duration, true);
             $test_response['timefull'] = $duration;
             $buildgroups_response[$i]['testduration'] += $duration;
 
@@ -1225,7 +1212,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         empty($filter_sql) && (pdo_num_rows($builds) + count($dynamic_builds) > 0);
     for ($i = 0; $i < count($buildgroups_response); $i++) {
         $buildgroups_response[$i]['testduration'] = time_difference(
-                $buildgroups_response[$i]['testduration'] * 60.0, true);
+                $buildgroups_response[$i]['testduration'], true);
 
         if (!$filter_sql) {
             $groupname = $buildgroups_response[$i]['name'];
