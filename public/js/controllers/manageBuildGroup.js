@@ -18,7 +18,7 @@ CDash.filter('filter_builds', function() {
   };
 })
 
-.filter('filter_groups', function() {
+.filter('filter_buildgroups', function() {
   // Filter BuildGroups based on their type
   return function(input, type) {
     if (typeof type === 'undefined' || type === null) {

@@ -68,7 +68,7 @@
             </div>
 
             <!-- List the subprojects -->
-            <div ng-controller="SubProjectController" ng-repeat="subproject in cdash.subprojects | orderBy:'name' | filter_groups:cdash.filteredGroup" class="repeat-item">
+            <div ng-controller="SubProjectController" ng-repeat="subproject in cdash.subprojects | orderBy:'name' | filter_subproject_groups:cdash.filteredGroup" class="repeat-item">
               <div class="row">
                 <div class="col-md-4">
                   <!-- The subproject's name & an icon to fetch more info -->
