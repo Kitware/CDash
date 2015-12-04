@@ -6,7 +6,8 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
-      js: ["public/js/<%= pkg.name %>_*.min.js*"]
+      js: ["public/js/<%= pkg.name %>_*.min.js*"],
+      build: ["public/build/*"]
     },
     uglify: {
       options: {
@@ -32,6 +33,22 @@ module.exports = function(grunt) {
               'public/js/cdash_angular.js',
               'public/js/controllers/*.js'],
         dest: 'public/js/<%= pkg.name %>_' + timestamp + '.min.js',
+
+      }
+    },
+    replace: {
+      dist: {
+        options: {
+          patterns: [
+            {
+              match: 'timestamp',
+              replacement: timestamp
+            }
+          ]
+        },
+        files: [
+          {expand: true, flatten: true, src: ['public/views/*.html'], dest: 'public/build/views/'}
+        ]
       }
     }
   });
@@ -39,8 +56,9 @@ module.exports = function(grunt) {
   // Load plugins.
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-replace');
 
   // Tasks to run by default.
-  grunt.registerTask('default', ['clean', 'uglify']);
+  grunt.registerTask('default', ['clean', 'uglify', 'replace']);
 
 };
