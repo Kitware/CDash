@@ -21,11 +21,19 @@ module.exports = function(grunt) {
         src: ['public/js/jquery-1.10.2.js',
               'public/js/jquery-ui-1.10.4.min.js',
               'public/js/jquery.cookie.js',
+              'public/js/jquery.flot.min.js',
+              'public/js/jquery.flot.time.min.js',
+              'public/js/jquery.flot.navigate.min.js',
+              'public/js/jquery.flot.selection.min.js',
+              'public/js/jquery.qtip.min.js',
               'public/js/jqModal.js',
               'public/js/bootstrap.min.js',
               'public/js/tooltip.js',
               'public/js/cdashmenu.js',
+              'public/js/cdashIndexTable.js',
+              'public/js/cdashSortable.js',
               'public/js/tabNavigation.js',
+              'public/js/je_compare.js',
               'public/js/angular-1.4.7.min.js',
               'public/js/angular-animate.min.js',
               'public/js/angular-ui-sortable.min.js',
@@ -47,7 +55,18 @@ module.exports = function(grunt) {
           ]
         },
         files: [
-          {expand: true, flatten: true, src: ['public/views/*.html'], dest: 'public/build/views/'}
+          {
+            expand: true,
+            flatten: true,
+            src: ['public/views/*.html'],
+            dest: 'public/build/views/'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['public/local/views/*.html'],
+            dest: 'public/build/local/views/'
+          }
         ]
       }
     }

@@ -2177,12 +2177,15 @@ function DeleteDirectory($dirName)
 
 function load_view($viewName)
 {
+    global $CDASH_USE_LOCAL_DIRECTORY;
+
     angular_login();
 
-    if (file_exists("local/views/$viewName.html")) {
-        readfile("local/views/$viewName.html");
+    if ($CDASH_USE_LOCAL_DIRECTORY &&
+            file_exists("build/local/views/$viewName.html")) {
+        readfile("build/local/views/$viewName.html");
     } else {
-        readfile("views/$viewName.html");
+        readfile("build/views/$viewName.html");
     }
 }
 
