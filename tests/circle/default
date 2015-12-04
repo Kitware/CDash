@@ -1,0 +1,23 @@
+<VirtualHost *:80>
+	LoadModule php5_module /home/ubuntu/.phpenv/versions/5.3.10/libexec/apache2/libphp5.so
+
+	<FilesMatch \.php$>
+	    SetHandler application/x-httpd-php
+	</FilesMatch>
+
+    ServerName localhost
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www
+
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+	<Directory /var/www/>
+		Options FollowSymLinks
+		AllowOverride None
+		Order allow,deny
+		allow from all
+	</Directory>
+</VirtualHost>
