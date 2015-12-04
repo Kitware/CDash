@@ -191,8 +191,8 @@ function getFiltersForPage($page_id)
 
         case 'queryTests.php':
             return array(
-                    'buildname', 'buildstarttime', 'details', 'site', 'status',
-                    'testname', 'time');
+                    'buildname', 'buildstarttime', 'details', 'label', 'site',
+                    'status', 'testname', 'time');
             break;
 
         case 'viewCoverage.php':
@@ -203,7 +203,8 @@ function getFiltersForPage($page_id)
             break;
 
         case 'viewTest.php':
-            return array('details', 'status', 'testname', 'timestatus', 'time');
+            return array('details', 'label', 'status', 'testname',
+                    'timestatus', 'time');
             break;
 
         default:

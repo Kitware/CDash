@@ -21,6 +21,9 @@ CDash.controller('QueryTestsController',
         $scope.showfilters = true;
       }
 
+      // Check for label filters
+      cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
+
       $scope.cdash = cdash;
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;

@@ -531,7 +531,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
     $builds = pdo_query($sql);
-    echo pdo_error();
+
+    // Log any errors
+    $pdo_error = pdo_error();
+    if (strlen($pdo_error)>0) {
+        add_log("SQL error: ".$pdo_error, "Index.php", LOG_ERR);
+    }
 
     // Gather up results from this query.
     $build_data = array();
