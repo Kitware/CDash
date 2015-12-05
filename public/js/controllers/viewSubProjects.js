@@ -5,7 +5,7 @@ CDash.controller('ViewSubProjectsController',
     // Hide filters by default.
     $scope.showfilters = false;
 
-    $scope.orderByFields = [];
+    $scope.sortSubProjectDependencies = { orderByFields: [] };
 
     $http({
       url: 'api/v1/viewSubProjects.php',
@@ -17,7 +17,7 @@ CDash.controller('ViewSubProjectsController',
       $scope.loading = false;
     });
 
-    $scope.updateOrderByFields = function(field, $event) {
-      multisort.updateOrderByFields($scope, field, $event);
+    $scope.updateOrderByFields = function(obj, field, $event) {
+      multisort.updateOrderByFields(obj, field, $event);
     };
 });

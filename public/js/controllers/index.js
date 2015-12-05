@@ -58,6 +58,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 
   $scope.sortCoverage = { orderByFields: [] };
   $scope.sortDA = { orderByFields: [] };
+  $scope.sortSubProjectDependencies = { orderByFields: [] };
 
   // Show/hide feed based on cookie settings.
   var feed_cookie = $.cookie('cdash_hidefeed');
