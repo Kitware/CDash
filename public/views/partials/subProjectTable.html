@@ -16,7 +16,7 @@
 
       <th ng-if="cdash.showlastsubmission" align="center" rowspan="2" width="20%" class="nob" style="cursor: pointer" ng-click="updateOrderByFields(sortSubProjectDependencies, 'lastsubmission', $event)">
         <b>Last submission</b>
-        <span class="glyphicon" ng-class="sortSubProjectDependencies.orderByFields.indexOf ('-lastsubmission') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf ('lastsubmission') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjectDependencies.orderByFields.indexOf ('-lastsubmission') != -1 ? 'glyphicon-chevron-down' : (sortSubProjectDependencies.orderByFields.indexOf ('lastsubmission') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
     </tr>
