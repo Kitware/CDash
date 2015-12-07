@@ -86,5 +86,4 @@ class OverrideHeaderTestCase extends KWWebTestCase
         unlink("$CDASH_ROOT_DIR/public/local/views/header.html");
         unlink("$CDASH_ROOT_DIR/public/local/views/footer.html");
     }
-
 }
