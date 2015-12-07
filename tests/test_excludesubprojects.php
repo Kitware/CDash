@@ -59,13 +59,13 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
 
         // Verify 33 tests passed (normally 303).
         if ($build['test']['pass'] !== 33) {
-            $this->pass("Expected 33 tests passed, found " . $build['compilation']['pass']);
+            $this->fail("Expected 33 tests passed, found " . $build['compilation']['pass']);
             return 1;
         }
 
         // Verify 32 labels (normally 36).
         if ($build['label'] !== '(32 labels)') {
-            $this->pass("Expected (32 labels), found " . $build['label']);
+            $this->fail("Expected (32 labels), found " . $build['label']);
             return 1;
         }
 
