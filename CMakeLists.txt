@@ -91,13 +91,13 @@ execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# Run grunt too.
-find_program(GRUNT
-  NAMES grunt
+# Run gulp too.
+find_program(GULP
+  NAMES gulp
   PATHS ${CMAKE_CURRENT_SOURCE_DIR}/node_modules/.bin
 )
 execute_process(
-  COMMAND ${GRUNT}
+  COMMAND ${GULP}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
