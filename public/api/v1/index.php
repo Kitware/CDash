@@ -1288,7 +1288,7 @@ function get_child_builds_hyperlink($parentid, $filterdata)
     // Trim off any filter parameters.  Previously we did this step with a simple
     // strpos check, but since the change to AngularJS query parameters are no
     // longer guaranteed to appear in any particular order.
-    $accepted_parameters = array("project", "date", "parentid", "subproject");
+    $accepted_parameters = array("project", "parentid", "subproject");
 
     $parsed_url = parse_url($baseurl);
     $query = $parsed_url['query'];
