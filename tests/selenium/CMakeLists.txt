@@ -30,7 +30,7 @@ if(TEST_CLIENT_MANAGEMENT)
     registerclient PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Nothing to do.*"
   )
-  add_test(requestwork_1 
+  add_test(requestwork_1
     ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
   )
   set_tests_properties(
@@ -42,7 +42,7 @@ if(TEST_CLIENT_MANAGEMENT)
     client_pass PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
-  add_test(requestwork_2 
+  add_test(requestwork_2
     ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
   )
   set_tests_properties(
@@ -54,7 +54,7 @@ if(TEST_CLIENT_MANAGEMENT)
     client_fail PROPERTIES
     PASS_REGULAR_EXPRESSION ".*Test passed.*"
   )
-  add_test(requestwork_3 
+  add_test(requestwork_3
     ${PHPUNIT_EXE} ${testing_dir}/selenium/test_requestwork.php ${BROWSER}
   )
   set_tests_properties(
@@ -75,7 +75,6 @@ if(TEST_CLIENT_MANAGEMENT)
 endif()
 
 add_selenium_test(buildinfogroup)
-add_selenium_test(showtestgraphs)
 add_selenium_test(buildsummary)
 
 if(COVERAGE_COMMAND)
