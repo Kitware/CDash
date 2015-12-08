@@ -16,7 +16,7 @@ describe("queryTests", function() {
 
     // Apply our filter parameters.
     element(by.id('id_field1')).$('[value="' + field + '"]').click();
-    element(by.id('id_compare1')).$('[value="' + value + '"]').click();
+    element(by.id('id_compare1')).$('[value="' + compare + '"]').click();
     element(by.id('id_value1')).sendKeys(value);
     element(by.name('apply')).click();
 
