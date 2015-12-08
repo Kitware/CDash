@@ -457,8 +457,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // into a single column.
     $label_sql = "";
     $groupby_sql = "";
+    $label_joins = "";
     if ($CDASH_DB_TYPE != 'pgsql') {
         $label_sql = "GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,";
+        $label_joins = "
+            LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
+            LEFT JOIN label AS l ON (l.id = l2b.labelid)";
         $groupby_sql = " GROUP BY b.id";
     }
 
@@ -522,8 +526,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
             LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
             LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
-            LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
-            LEFT JOIN label AS l ON (l.id = l2b.labelid)
+            $label_joins
             WHERE b.projectid='$projectid' AND g.type='Daily'
             $parent_clause $date_clause
             ".$subprojectsql." ".$filter_sql." ".$groupby_sql
@@ -830,6 +833,21 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         // Are there labels for this build?
         //
+        // If we're using a PostgreSQL database, we look them up here.
+        // (Otherwise labels were fetched as part of the main query above.)
+
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            $label_query =
+                "SELECT l.text FROM label AS l
+                INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
+                INNER JOIN build AS b ON (l2b.buildid=b.id)
+                WHERE b.id=" . qnum($buildid);
+            $label_result = pdo_query($label_query);
+            while ($label_array = pdo_fetch_array($label_result)) {
+                $build_array['labels'][] = $label_array['text'];
+            }
+        }
+
         $labels_array = $build_array['labels'];
         if (empty($labels_array)) {
             $build_response['label'] = "(none)";
