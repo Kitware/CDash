@@ -5,57 +5,50 @@ describe("queryTests", function() {
     link.click();
   });
 
+  function filter_test(field, compare, value, num_builds) {
+    // Click clear and wait for the page to reload.
+    element(by.name('clear')).click();
+    return browser.driver.wait(function() {
+      return browser.driver.getCurrentUrl().then(function(url) {
+        return /filtercount=0/.test(url);
+      });
+    }, 10000);
+
+    // Apply our filter parameters.
+    element(by.id('id_field1')).$('[value="' + field + '"]').click();
+    element(by.id('id_compare1')).$('[value="' + value + '"]').click();
+    element(by.id('id_value1')).sendKeys(value);
+    element(by.name('apply')).click();
+
+    // Wait for the page to load.
+    var regexp = new RegExp(field);
+    return browser.driver.wait(function() {
+      return browser.driver.getCurrentUrl().then(function(url) {
+        return regexp.test(url);
+      });
+    }, 10000);
+
+    // Make sure the expected number of rows are displayed.
+    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(num_builds);
+  }
 
   it("filter on build name", function() {
-    element(by.id('id_field1')).$('[value="buildname"]').click();
-    element(by.id('id_compare1')).$('[value="63"]').click();
-    element(by.id('id_value1')).sendKeys('simple');
-    element(by.name('apply')).click();
-    browser.waitForAngular();
-    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(3);
+    filter_test("buildname", "63", "simple", 3);
   });
 
   it("filter on build time", function() {
-    element(by.name('clear')).click();
-    browser.waitForAngular();
-    element(by.id('id_field1')).$('[value="buildstarttime"]').click();
-    element(by.id('id_compare1')).$('[value="83"]').click();
-    element(by.id('id_value1')).sendKeys('yesterday');
-    element(by.name('apply')).click();
-    browser.waitForAngular();
-    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(5);
+    filter_test("buildstarttime", "83", "yesterday", 5);
   });
 
   it("filter on details", function() {
-    element(by.name('clear')).click();
-    browser.waitForAngular();
-    element(by.id('id_field1')).$('[value="details"]').click();
-    element(by.id('id_compare1')).$('[value="61"]').click();
-    element(by.id('id_value1')).sendKeys('Completed');
-    element(by.name('apply')).click();
-    browser.waitForAngular();
-    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(5);
+    filter_test("details", "61", "Completed", 5);
   });
 
   it("filter on site", function() {
-    element(by.name('clear')).click();
-    browser.waitForAngular();
-    element(by.id('id_field1')).$('[value="site"]').click();
-    element(by.id('id_compare1')).$('[value="61"]').click();
-    element(by.id('id_value1')).sendKeys('CDashTestingSite');
-    element(by.name('apply')).click();
-    browser.waitForAngular();
-    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(5);
+    filter_test("site", "61", "CDashTestingSite", 5);
   });
 
   it("filter on time", function() {
-    element(by.name('clear')).click();
-    browser.waitForAngular();
-    element(by.id('id_field1')).$('[value="time"]').click();
-    element(by.id('id_compare1')).$('[value="41"]').click();
-    element(by.id('id_value1')).sendKeys('0');
-    element(by.name('apply')).click();
-    browser.waitForAngular();
-    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(5);
+    filter_test("site", "41", "0", 5);
   });
 });
