@@ -89,5 +89,4 @@ add_selenium_test(findusers)
 # add_selenium_test(buildnote)
 
 add_selenium_test(editsite)
-add_selenium_test(querytestsfilters)
 add_selenium_test(emailsubscription)
