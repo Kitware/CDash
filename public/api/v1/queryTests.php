@@ -92,7 +92,7 @@ $menu['current'] =
   "queryTests.php?project=".urlencode($project_array['name']).$limit_param;
 
 if (has_next_date($date, $currentstarttime)) {
-    $response['next'] =
+    $menu['next'] =
       "queryTests.php?project=".urlencode($project_array['name'])."&date=".$nextdate.$limit_param;
 } else {
     $menu['nonext'] = "1";
