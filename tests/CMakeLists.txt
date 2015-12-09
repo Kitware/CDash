@@ -96,7 +96,6 @@ add_php_test(testhistory)
 add_php_test(expectedandmissing)
 add_php_test(externallinksfromtests)
 add_php_test(timesummary)
-add_php_test(preservefilters)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
