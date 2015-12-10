@@ -61,7 +61,7 @@
               </a>
             </li>
             <li>
-              <a href="queryTests.php?project={{cdash.projectname_encoded}}&date={{cdash.date}}&limit=200{{cdash.extraurl}}">
+              <a href="queryTests.php?project={{cdash.projectname_encoded}}&date={{cdash.date}}&limit=200{{cdash.extraurl}}{{cdash.extrafilterurl}}">
                 Tests Query
               </a>
             </li>
@@ -78,7 +78,7 @@
           </ul>
         </li>
         <li id="Back" ng-if="cdash.menu.back">
-          <a href="{{cdash.menu.back}}">Back</a>
+          <a href="{{cdash.menu.back}}{{cdash.extrafilterurl}}">Back</a>
         </li>
         <li ng-if="!cdash.hidenav">
           <a id="cal" href="javascript:;" ng-click="toggleCalendar()">Calendar</a>
