@@ -864,7 +864,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['label'] = "(none)";
         } else {
             if ($include_subprojects) {
-                $num_labels = $num_selected_subprojects;
+                $num_labels = 0;
+                foreach ($included_subprojects as $included_subproject) {
+                    if (in_array($included_subproject, $labels_array)) {
+                        $num_labels++;
+                    }
+                }
+                if ($num_labels === 0) {
+                    // Skip this build entirely if it doesn't contain
+                    // any of the whitelisted SubProjects.
+                    continue;
+                }
             } else {
                 $num_labels = count($labels_array) - $num_selected_subprojects;
             }

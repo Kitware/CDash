@@ -254,6 +254,17 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $success = false;
         }
 
+        // Make sure that a build is not displayed when it does not
+        // contain any of the whitelisted SubProjects.
+        $this->get($this->url . "/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=93&value1=Teuchos");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $num_buildgroups = count($jsonobj['buildgroups']);
+        if ($num_buildgroups !== 0) {
+            $error_msg = "Expected 0 BuildGroups while whitelisting, found $num_buildgroups";
+            $success = false;
+        }
+
         // Delete the builds that we created during this test.
         remove_build($second_parentid);
         remove_build($third_parentid);
