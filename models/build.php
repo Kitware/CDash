@@ -1776,4 +1776,33 @@ class build
                     $this->ProjectId, $this->ParentId);
         }
     }
+
+    // Return the dashboard date (in Y-m-d format) for this build.
+    public function GetDate()
+    {
+        if (!$this->Id || !is_numeric($this->Id)) {
+            return date(FMT_DATE);
+        }
+        $this->FillFromId($this->Id);
+
+        $query =
+            "SELECT nightlytime FROM project WHERE id = " .
+            qnum($this->ProjectId);
+        $row = pdo_single_row_query($query);
+        $nightly_start_time = strtotime($row['nightlytime']);
+
+        // If the build was started after the nightly start time
+        // then it should appear on the dashboard results for the
+        // subsequent day.
+        $build_start_time = strtotime($this->StartTime);
+
+        if (date(FMT_TIME, $build_start_time) >
+                date(FMT_TIME, $nightly_start_time)) {
+            $build_start_time += (3600*24);
+        }
+
+        $build_date = date(FMT_DATE, $build_start_time);
+        return $build_date;
+    }
+
 } // end class Build;

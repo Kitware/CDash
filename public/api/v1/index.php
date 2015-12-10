@@ -75,6 +75,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     require_once("include/pdo.php");
     include('public/login.php');
     include_once("models/banner.php");
+    include_once("models/build.php");
     include_once("models/subproject.php");
 
     $response = array();
@@ -140,6 +141,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $response['banners'] = $banners;
     $site_response = array();
 
+    // If parentid is set we need to lookup the date for this build
+    // because it is not specified as a query string parameter.
+    if (isset($_GET['parentid'])) {
+        $parentid = pdo_real_escape_numeric($_GET['parentid']);
+        $parent_build = new Build();
+        $parent_build->Id = $parentid;
+        $date = $parent_build->GetDate();
+    }
+
     list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
     $logoid = getLogoID($projectid);
 
@@ -193,18 +203,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
 
     if (isset($_GET['parentid'])) {
-        $parentid = pdo_real_escape_numeric($_GET['parentid']);
         $page_id = 'indexchildren.php';
         $response['childview'] = 1;
 
         // When a parentid is specified, we should link to the next build,
         // not the next day.
-        include_once("models/build.php");
-        $build = new Build();
-        $build->Id = $parentid;
-        $previous_buildid = $build->GetPreviousBuildId();
-        $current_buildid = $build->GetCurrentBuildId();
-        $next_buildid = $build->GetNextBuildId();
+        $previous_buildid = $parent_build->GetPreviousBuildId();
+        $current_buildid = $parent_build->GetCurrentBuildId();
+        $next_buildid = $parent_build->GetNextBuildId();
 
         $base_url = "index.php?project=".urlencode($projectname);
         if ($previous_buildid > 0) {
