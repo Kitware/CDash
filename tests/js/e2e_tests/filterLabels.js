@@ -1,7 +1,7 @@
 describe("filterLabels", function() {
 
   it("pass filters to viewTest", function() {
-    browser.get('index.php?project=Trilinos&date=20110722&parentid=12');
+    browser.get('index.php?project=Trilinos&parentid=12');
 
     // First, verify the expected number of builds
     expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects Built: 36');
@@ -40,7 +40,7 @@ describe("filterLabels", function() {
   });
 
   it("pass filters to queryTests", function() {
-    browser.get('index.php?project=Trilinos&date=20110722&parentid=12');
+    browser.get('index.php?project=Trilinos&parentid=12');
 
     // First, verify the expected number of builds
     expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects Built: 36');
