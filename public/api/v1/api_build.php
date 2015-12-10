@@ -24,6 +24,7 @@ class BuildAPI extends CDashAPI
   private function ListDefects()
   {
       include_once('include/common.php');
+      global $CDASH_DB_TYPE;
 
       if (!isset($this->Parameters['project'])) {
           echo "Project not set";

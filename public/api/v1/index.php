@@ -75,6 +75,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     require_once("include/pdo.php");
     include('public/login.php');
     include_once("models/banner.php");
+    include_once("models/build.php");
     include_once("models/subproject.php");
 
     $response = array();
@@ -140,6 +141,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $response['banners'] = $banners;
     $site_response = array();
 
+    // If parentid is set we need to lookup the date for this build
+    // because it is not specified as a query string parameter.
+    if (isset($_GET['parentid'])) {
+        $parentid = pdo_real_escape_numeric($_GET['parentid']);
+        $parent_build = new Build();
+        $parent_build->Id = $parentid;
+        $date = $parent_build->GetDate();
+    }
+
     list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
     $logoid = getLogoID($projectid);
 
@@ -193,18 +203,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
 
     if (isset($_GET['parentid'])) {
-        $parentid = pdo_real_escape_numeric($_GET['parentid']);
         $page_id = 'indexchildren.php';
         $response['childview'] = 1;
 
         // When a parentid is specified, we should link to the next build,
         // not the next day.
-        include_once("models/build.php");
-        $build = new Build();
-        $build->Id = $parentid;
-        $previous_buildid = $build->GetPreviousBuildId();
-        $current_buildid = $build->GetCurrentBuildId();
-        $next_buildid = $build->GetNextBuildId();
+        $previous_buildid = $parent_build->GetPreviousBuildId();
+        $current_buildid = $parent_build->GetCurrentBuildId();
+        $next_buildid = $parent_build->GetNextBuildId();
 
         $base_url = "index.php?project=".urlencode($projectname);
         if ($previous_buildid > 0) {
@@ -457,8 +463,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // into a single column.
     $label_sql = "";
     $groupby_sql = "";
+    $label_joins = "";
     if ($CDASH_DB_TYPE != 'pgsql') {
         $label_sql = "GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,";
+        $label_joins = "
+            LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
+            LEFT JOIN label AS l ON (l.id = l2b.labelid)";
         $groupby_sql = " GROUP BY b.id";
     }
 
@@ -522,8 +532,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
             LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
             LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
-            LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
-            LEFT JOIN label AS l ON (l.id = l2b.labelid)
+            $label_joins
             WHERE b.projectid='$projectid' AND g.type='Daily'
             $parent_clause $date_clause
             ".$subprojectsql." ".$filter_sql." ".$groupby_sql
@@ -531,7 +540,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
     $builds = pdo_query($sql);
-    echo pdo_error();
+
+    // Log any errors
+    $pdo_error = pdo_error();
+    if (strlen($pdo_error)>0) {
+        add_log("SQL error: ".$pdo_error, "Index.php", LOG_ERR);
+    }
 
     // Gather up results from this query.
     $build_data = array();
@@ -830,6 +844,21 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         // Are there labels for this build?
         //
+        // If we're using a PostgreSQL database, we look them up here.
+        // (Otherwise labels were fetched as part of the main query above.)
+
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            $label_query =
+                "SELECT l.text FROM label AS l
+                INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
+                INNER JOIN build AS b ON (l2b.buildid=b.id)
+                WHERE b.id=" . qnum($buildid);
+            $label_result = pdo_query($label_query);
+            while ($label_array = pdo_fetch_array($label_result)) {
+                $build_array['labels'][] = $label_array['text'];
+            }
+        }
+
         $labels_array = $build_array['labels'];
         if (empty($labels_array)) {
             $build_response['label'] = "(none)";
@@ -1288,7 +1317,7 @@ function get_child_builds_hyperlink($parentid, $filterdata)
     // Trim off any filter parameters.  Previously we did this step with a simple
     // strpos check, but since the change to AngularJS query parameters are no
     // longer guaranteed to appear in any particular order.
-    $accepted_parameters = array("project", "date", "parentid", "subproject");
+    $accepted_parameters = array("project", "parentid", "subproject");
 
     $parsed_url = parse_url($baseurl);
     $query = $parsed_url['query'];

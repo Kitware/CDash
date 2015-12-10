@@ -531,6 +531,7 @@ class ViewTestPhpFilters extends DefaultFilters
         $xml = '';
 
         $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
+        $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
         $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
         $xml .= getFilterDefinitionXML('timestatus', 'Time Status', 'string', '', '');
@@ -546,6 +547,12 @@ class ViewTestPhpFilters extends DefaultFilters
             case 'details':
                 {
                     $sql_field = "t.details";
+                }
+                break;
+
+            case 'label':
+                {
+                  $sql_field = "(SELECT text FROM label, label2test WHERE label.id=label2test.labelid AND label2test.testid=t.id)";
                 }
                 break;
 
