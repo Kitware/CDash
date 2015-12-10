@@ -1804,5 +1804,4 @@ class build
         $build_date = date(FMT_DATE, $build_start_time);
         return $build_date;
     }
-
 } // end class Build;
