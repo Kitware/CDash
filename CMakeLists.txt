@@ -91,6 +91,16 @@ execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# Run gulp too.
+find_program(GULP
+  NAMES gulp
+  PATHS ${CMAKE_CURRENT_SOURCE_DIR}/node_modules/.bin
+)
+execute_process(
+  COMMAND ${GULP}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
