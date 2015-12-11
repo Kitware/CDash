@@ -22,20 +22,18 @@ class BuildGetDateTestCase extends KWWebTestCase
         $build->ProjectId = 1;
         $build->Filled = true;
 
-        $datetime = new DateTime('2009-02-23 00:59:59', new DateTimeZone("UTC"));
-        $build->StartTime = date("Y-m-d H:i:s", $datetime->format('U'));
+        $build->StartTime = date("Y-m-d H:i:s", strtotime('2009-02-23 19:59:59'));
 
-        $expected_date = '2009-02-22';
+        $expected_date = '2009-02-23';
         $date = $build->GetDate();
         if ($build->GetDate() !== $expected_date) {
             $this->fail("Expected $expected_date, found $date");
             return 1;
         }
 
-        $datetime = new DateTime('2009-02-23 01:00:01', new DateTimeZone("UTC"));
-        $build->StartTime = date("Y-m-d H:i:s", $datetime->format('U'));
+        $build->StartTime = date("Y-m-d H:i:s", strtotime('2009-02-23 20:00:00'));
 
-        $expected_date = '2009-02-23';
+        $expected_date = '2009-02-24';
         $date = $build->GetDate();
         if ($build->GetDate() !== $expected_date) {
             $this->fail("Expected $expected_date, found $date");

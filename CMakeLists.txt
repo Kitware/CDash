@@ -116,6 +116,7 @@ file(WRITE "${CDash_SOURCE_DIR}/config/config.local.php"
 //
 // Some of the CDash tests also inject config settings below as tests run...
 //
+date_default_timezone_set('America/New_York');
 $CDASH_DB_NAME = 'cdash4simpletest';
 $CDASH_TESTING_MODE = true;
 $CDASH_REGISTRATION_EMAIL_VERIFY = false;

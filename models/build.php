@@ -1796,7 +1796,7 @@ class build
         // subsequent day.
         $build_start_time = strtotime($this->StartTime);
 
-        if (date(FMT_TIME, $build_start_time) >
+        if (date(FMT_TIME, $build_start_time) >=
                 date(FMT_TIME, $nightly_start_time)) {
             $build_start_time += (3600*24);
         }
