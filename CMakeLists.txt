@@ -91,6 +91,13 @@ execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# Also run "npm install" during configure time.
+find_program(NPM NAMES npm)
+execute_process(
+  COMMAND ${NPM} install
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 # Run gulp too.
 find_program(GULP
   NAMES gulp
