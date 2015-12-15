@@ -981,7 +981,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $configure_response['warningdiff'] = $diff;
         }
 
-        if ($build_array['configureduration'] != 0) {
+        if (array_key_exists('configureduration', $build_array) &&
+                $build_array['configureduration'] != 0) {
             $duration = $build_array['configureduration'];
             $configure_response['time'] = time_difference($duration, true);
             $configure_response['timefull'] = $duration;
