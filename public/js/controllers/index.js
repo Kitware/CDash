@@ -160,6 +160,9 @@ CDash.filter("showEmptyBuildsLast", function () {
       $scope.showfilters = true;
     }
 
+    // Check for label filters
+    cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
+
     $scope.cdash = cdash;
 
     $rootScope.setupCalendar($scope.cdash.date);

@@ -7,30 +7,15 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_@@timestamp.min.js"></script>
     <title ng-bind="title">CDash</title>
-
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/jquery-ui-1.10.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/tooltip.js"></script>
-    <script src="js/cdashmenu.js"></script>
-
-    <script src="js/tabNavigation.js"></script>
-    <script src="js/angular-1.4.7.min.js"></script>
-    <script src="js/angular-animate.min.js"></script>
-    <script src="js/angular-ui-sortable.min.js"></script>
-    <script src="js/ui-bootstrap-tpls-0.14.2.min.js"></script>
-    <script src="js/cdash_angular.js"></script>
-    <script src="js/controllers/head.js"></script>
-    <script src="js/controllers/queryTests.js"></script>
-    <script src="js/controllers/filters.js"></script>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="QueryTestsController">
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading">

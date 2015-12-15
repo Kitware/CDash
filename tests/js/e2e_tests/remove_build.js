@@ -17,20 +17,13 @@ describe("remove_build", function() {
     // Find the 'remove this build' link and click it.
     var link = element(by.partialLinkText('remove this build'));
     link.click();
-    browser.waitForAngular();
 
     // This generates a confirmation dialog which we have to accept.
     // Wait for it to appear.
-    browser.wait(function() {
-      return browser.switchTo().alert().then(
-        function() { return true; },
-        function() { return false; }
-      );
-    }, opt_timeout=1000);
+    browser.wait(protractor.ExpectedConditions.alertIsPresent(), 10000);
 
     // Then switch to it & click on it.
-    var alertDialog = browser.switchTo().alert();
-    alertDialog.accept();
+    browser.switchTo().alert().accept();
     browser.waitForAngular();
 
     // Refresh the page to make sure this build is gone now.

@@ -91,6 +91,23 @@ execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# Also run "npm install" during configure time.
+find_program(NPM NAMES npm)
+execute_process(
+  COMMAND ${NPM} install
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Run gulp too.
+find_program(GULP
+  NAMES gulp
+  PATHS ${CMAKE_CURRENT_SOURCE_DIR}/node_modules/.bin
+)
+execute_process(
+  COMMAND ${GULP}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
@@ -116,6 +133,7 @@ file(WRITE "${CDash_SOURCE_DIR}/config/config.local.php"
 //
 // Some of the CDash tests also inject config settings below as tests run...
 //
+date_default_timezone_set('America/New_York');
 $CDASH_DB_NAME = 'cdash4simpletest';
 $CDASH_TESTING_MODE = true;
 $CDASH_REGISTRATION_EMAIL_VERIFY = false;

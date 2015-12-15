@@ -2011,7 +2011,7 @@ function __json_encode($data)
 
 function begin_JSON_response()
 {
-    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY;
+    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY, $CDASH_ROOT_DIR;
 
     $response = array();
     $response['version'] = $CDASH_VERSION;
@@ -2024,11 +2024,10 @@ function begin_JSON_response()
 
     // Check for local overrides of common view partials.
     $files_to_check = array("header", "footer");
-    $base_dir = str_replace('\\', '/', dirname(dirname(__FILE__)));
     foreach ($files_to_check as $file_to_check) {
         $local_file = "local/views/$file_to_check.html";
         if ($CDASH_USE_LOCAL_DIRECTORY == '1' &&
-                file_exists("$base_dir/$local_file")) {
+                file_exists("$CDASH_ROOT_DIR/public/$local_file")) {
             $response[$file_to_check] = $local_file;
         } else {
             $response[$file_to_check] = "views/partials/$file_to_check.html";
@@ -2177,12 +2176,15 @@ function DeleteDirectory($dirName)
 
 function load_view($viewName)
 {
+    global $CDASH_USE_LOCAL_DIRECTORY;
+
     angular_login();
 
-    if (file_exists("local/views/$viewName.html")) {
-        readfile("local/views/$viewName.html");
+    if ($CDASH_USE_LOCAL_DIRECTORY &&
+            file_exists("build/local/views/$viewName.html")) {
+        readfile("build/local/views/$viewName.html");
     } else {
-        readfile("views/$viewName.html");
+        readfile("build/views/$viewName.html");
     }
 }
 

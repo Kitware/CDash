@@ -1,4 +1,4 @@
-CDash.filter('filter_groups', function() {
+CDash.filter('filter_subproject_groups', function() {
   // Filter the subprojects based on group.
   return function(input, group) {
     if (typeof group === 'undefined' || group === null) {
