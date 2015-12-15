@@ -33,7 +33,6 @@ if ($date != null) {
 }
 
 $response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -66,6 +65,7 @@ $starttime = $build_array["starttime"];
 
 $project_array = pdo_fetch_array(pdo_query("SELECT * FROM project WHERE id='$projectid'"));
 $projectname = $project_array["name"];
+$response['title'] = "CDash : $projectname";
 
 $date = get_dashboard_date_from_build_starttime($build_array["starttime"], $project_array["nightlytime"]);
 get_dashboard_JSON_by_name($projectname, $date, $response);

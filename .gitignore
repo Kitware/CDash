@@ -11,3 +11,4 @@ build/
 composer.phar
 .idea/
 vendor/
+public/js/CDash_*.min.js*

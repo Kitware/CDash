@@ -938,7 +938,7 @@ function get_filterdata_from_request($page_id = '')
         @$add = $_REQUEST['add'.$i];
         @$remove = $_REQUEST['remove'.$i];
 
-        $fieldinfo = split('/', $fieldinfo, 2);
+        $fieldinfo = explode('/', $fieldinfo, 2);
         $field = $fieldinfo[0];
 
         if ($add == '+') {
