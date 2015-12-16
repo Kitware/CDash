@@ -1796,9 +1796,20 @@ class build
         // subsequent day.
         $build_start_time = strtotime($this->StartTime);
 
-        if (date(FMT_TIME, $build_start_time) >=
-                date(FMT_TIME, $nightly_start_time)) {
-            $build_start_time += (3600*24);
+        if (date(FMT_TIME, $nightly_start_time)<'12:00:00') {
+            // If the "nightly" start time is in the morning then any build
+            // that occurs before it is part of the previous testing day.
+            if (date(FMT_TIME, $build_start_time) <
+                    date(FMT_TIME, $nightly_start_time)) {
+                $build_start_time -= (3600*24);
+            }
+        } else {
+            // If the nightly start time is NOT in the morning then any build
+            // that occurs after it is part of the next testing day.
+            if (date(FMT_TIME, $build_start_time) >=
+                    date(FMT_TIME, $nightly_start_time)) {
+                $build_start_time += (3600*24);
+            }
         }
 
         $build_date = date(FMT_DATE, $build_start_time);
