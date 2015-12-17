@@ -63,6 +63,7 @@ if (isset($argc) && $argc>1) {
     }
 
     @$force = $_GET['force'];
+    @$pid = $_GET['pid'];
 }
 
 if (!is_numeric($projectid)) {
@@ -74,28 +75,43 @@ if (!is_numeric($projectid)) {
     return;
 }
 
+$multi = false;
+if (!$pid) {
+    $pid = getmypid();
+} else {
+    // if pid was specified then this is a parallel request.
+    $multi = true;
+}
 
 // Catch any fatal errors during processing
 //
-register_shutdown_function('ProcessSubmissionsErrorHandler', $projectid);
+register_shutdown_function('ProcessSubmissionsErrorHandler', $projectid, $pid);
 
 
 echo "projectid='$projectid'\n";
+echo "pid='$pid'\n";
 echo "force='$force'\n";
 
-if (AcquireProcessingLock($projectid, $force)) {
+if ($multi) {
+    // multi processing, so lock was acquired in do_submit.php
+    $lockAcquired = true;
+} else {
+    $lockAcquired = AcquireProcessingLock($projectid, $force, $pid);
+}
+
+if ($lockAcquired) {
     echo "AcquireProcessingLock returned true\n";
 
     ResetApparentlyStalledSubmissions($projectid);
     echo "Done with ResetApparentlyStalledSubmissions\n";
 
-    ProcessSubmissions($projectid);
+    ProcessSubmissions($projectid, $pid);
     echo "Done with ProcessSubmissions\n";
 
     DeleteOldSubmissionRecords($projectid);
     echo "Done with DeleteOldSubmissionRecords\n";
 
-    if (ReleaseProcessingLock($projectid)) {
+    if (ReleaseProcessingLock($projectid, $pid, $multi)) {
         echo "ReleasedProcessingLock returned true\n";
     } else {
         echo "ReleasedProcessingLock returned false\n";
