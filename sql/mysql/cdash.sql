@@ -40,6 +40,7 @@ CREATE TABLE `build` (
   `testtimestatusfailed` smallint(6) DEFAULT '-1',
   `notified` tinyint(1) default '0',
   `done` tinyint(1) default '0',
+  `uuid` varchar(36) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),
@@ -49,7 +50,8 @@ CREATE TABLE `build` (
   KEY `type` (`type`),
   KEY `name` (`name`),
   KEY `parentid` (`parentid`),
-  KEY `projectid_parentid_starttime` (`projectid`,`parentid`,`starttime`)
+  KEY `projectid_parentid_starttime` (`projectid`,`parentid`,`starttime`),
+  UNIQUE KEY uuid (uuid)
 );
 
 

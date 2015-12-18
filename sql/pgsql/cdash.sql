@@ -26,7 +26,9 @@ CREATE TABLE "build" (
   "testtimestatusfailed" smallint DEFAULT '-1',
   "notified" smallint DEFAULT '0' NOT NULL,
   "done" smallint DEFAULT '0' NOT NULL,
-  PRIMARY KEY ("id")
+  "uuid" character varying(36) NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "uuid" UNIQUE ("uuid")
 );
 CREATE INDEX "projectid" on "build" ("projectid");
 CREATE INDEX "starttime" on "build" ("starttime");
@@ -37,6 +39,7 @@ CREATE INDEX "type" on "build" ("type");
 CREATE INDEX "name" on "build" ("name");
 CREATE INDEX "parentid" on "build" ("parentid");
 CREATE INDEX "projectid_parentid_starttime" ON "build" (projectid,parentid,starttime);
+CREATE INDEX "uuid" on "build" ("uuid");
 
 --
 -- Table: buildgroup
