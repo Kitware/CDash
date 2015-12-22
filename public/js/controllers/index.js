@@ -175,6 +175,10 @@ CDash.filter("showEmptyBuildsLast", function () {
       $scope.cdash.advancedview = 0;
     }
 
+    if (!$scope.cdash.feed) {
+      $scope.showFeed = false;
+    }
+
     var projectid = $scope.cdash.projectid;
     if (projectid > 0 && $scope.cdash.feed) {
       // Setup the feed.  This functionality used to live in cdashFeed.js.
