@@ -51,7 +51,8 @@ $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;
-// How long to keep finished async submissions in the DB
+// How long to keep finished async submissions in the DB.
+// Set to 0 to delete them right away.
 $CDASH_ASYNC_EXPIRATION_TIME = 691200; // 8 days.
 // Main title and subtitle for the index page
 $CDASH_MAININDEX_TITLE = 'CDash';

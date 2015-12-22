@@ -340,13 +340,23 @@ function ProcessSubmissions($projectid)
 
         $PHP_ERROR_SUBMISSION_ID = 0;
 
-    // Mark it as done with $new_status and record finished time:
-    //
-    $now_utc = gmdate(FMT_DATETIMESTD);
+        global $CDASH_ASYNC_EXPIRATION_TIME;
+        if ($CDASH_ASYNC_EXPIRATION_TIME === 0 &&
+            ($new_status > 1 && $new_status < 6)) {
+            // If our expiration time is set to 0 we delete finished
+        // submissions rather than marking them as done in the database.
         pdo_query(
-      "UPDATE submission SET status=$new_status, finished='$now_utc', ".
-      "lastupdated='$now_utc' WHERE id='".$submission_id."'");
-        add_last_sql_error("ProcessSubmissions-3");
+                "DELETE FROM submission WHERE id='$submission_id'");
+            add_last_sql_error("ProcessSubmissions-3");
+        } else {
+            // Mark it as done with $new_status and record finished time:
+        //
+        $now_utc = gmdate(FMT_DATETIMESTD);
+            pdo_query(
+          "UPDATE submission SET status=$new_status, finished='$now_utc', ".
+          "lastupdated='$now_utc' WHERE id='".$submission_id."'");
+            add_last_sql_error("ProcessSubmissions-3");
+        }
 
     // Query for more... Continue processing while there are records to
     // process:
