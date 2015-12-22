@@ -1,6 +1,6 @@
 <?php
-include_once("include/common.php");
 include(dirname(__DIR__)."/config/config.php");
+include_once("include/common.php");
 require_once("include/pdo.php");
 
   /** Google authentication */
