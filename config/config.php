@@ -98,7 +98,8 @@ $CDASH_LOG_FILE_MAXSIZE_MB = 50;
 $CDASH_LOG_LEVEL = LOG_WARNING;
 // Using external authentication
 $CDASH_EXTERNAL_AUTH = '0';
-// Backup timeframe
+// Backup timeframe.
+// Set to '0' if you do not wish to backup parsed .xml files.
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Request full email address to add new users
 // instead of displaying a list

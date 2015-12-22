@@ -368,6 +368,13 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
         $parsingerror = $localParser->EndParsingFile();
     }
 
+    // Delete this file as soon as its been parsed if
+    // CDASH_BACKUP_TIMEFRAME is set to '0'.
+    global $CDASH_BACKUP_TIMEFRAME;
+    if ($CDASH_BACKUP_TIMEFRAME === '0') {
+        unlink($filename);
+    }
+
     displayReturnStatus($statusarray);
     return $handler;
 }
