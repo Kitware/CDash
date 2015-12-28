@@ -458,19 +458,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 AND user2repository.credential=updatefile.author) AS userupdates,";
     }
 
-
-    // Postgres differs from MySQL on how to aggregate results
-    // into a single column.
-    $label_sql = "";
-    $groupby_sql = "";
-    $label_joins = "";
-    if ($CDASH_DB_TYPE != 'pgsql') {
-        $label_sql = "GROUP_CONCAT(l.text SEPARATOR ', ') AS labels,";
-        $label_joins = "
-            LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
-            LEFT JOIN label AS l ON (l.id = l2b.labelid)";
-        $groupby_sql = " GROUP BY b.id";
-    }
+    $groupby_sql = " GROUP BY b.id";
 
     $sql =  "SELECT b.id,b.siteid,b.parentid,
         bu.status AS updatestatus,
@@ -511,8 +499,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         sp.id AS subprojectid,
         sp.groupid AS subprojectgroup,
         g.name AS groupname,gp.position,g.id AS groupid,
-        $label_sql
-            (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
+        COUNT(l.text) AS numlabels,
+        (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
         (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
             FROM build AS b
             LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
@@ -532,7 +520,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
             LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
             LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
             LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
-            $label_joins
+            LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
+            LEFT JOIN label AS l ON (l.id = l2b.labelid)
             WHERE b.projectid='$projectid' AND g.type='Daily'
             $parent_clause $date_clause
             ".$subprojectsql." ".$filter_sql." ".$groupby_sql
@@ -637,13 +626,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         $build_row['buildids'][] = $buildid;
         $build_row['maxstarttime'] = $build_row['starttime'];
-
-        // Split out labels
-        if (empty($build_row['labels'])) {
-            $build_row['labels'] = array();
-        } else {
-            $build_row['labels'] = explode(",", $build_row['labels']);
-        }
 
         // Updates
         if (!empty($build_row['updatestarttime'])) {
@@ -842,42 +824,28 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['note'] = 1;
         }
 
-        // Are there labels for this build?
-        //
-        // If we're using a PostgreSQL database, we look them up here.
-        // (Otherwise labels were fetched as part of the main query above.)
-
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        // Handle whether or not this build has labels.
+        if ($build_array['numlabels'] == 0) {
+            $build_label = "(none)";
+        } elseif ($build_array['numlabels'] == 1) {
+            // If exactly one label for this build, look it up here.
             $label_query =
                 "SELECT l.text FROM label AS l
                 INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
                 INNER JOIN build AS b ON (l2b.buildid=b.id)
                 WHERE b.id=" . qnum($buildid);
-            $label_result = pdo_query($label_query);
-            while ($label_array = pdo_fetch_array($label_result)) {
-                $build_array['labels'][] = $label_array['text'];
-            }
-        }
-
-        $labels_array = $build_array['labels'];
-        if (empty($labels_array)) {
-            $build_response['label'] = "(none)";
+            $label_result = pdo_single_row_query($label_query);
+            $build_label = $label_result['text'];
         } else {
+            // More than one label, just report the number.
             if ($include_subprojects) {
                 $num_labels = $num_selected_subprojects;
             } else {
-                $num_labels = count($labels_array) - $num_selected_subprojects;
+                $num_labels = $build_array['numlabels'] - $num_selected_subprojects;
             }
-            if ($num_labels == 1) {
-                if ($include_subprojects) {
-                    $build_response['label'] = $included_subprojects[0];
-                } else {
-                    $build_response['label'] = $labels_array[0];
-                }
-            } else {
-                $build_response['label'] = "($num_labels labels)";
-            }
+            $build_label = "($num_labels labels)";
         }
+        $build_response['label'] = $build_label;
 
         $update_response = array();
 
@@ -1160,16 +1128,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
             // Are there labels for this build?
             //
-            if (empty($labels_array)) {
-                $coverage_response['label'] = "(none)";
-            } else {
-                $num_labels = count($labels_array);
-                if ($num_labels == 1) {
-                    $coverage_response['label'] = $labels_array[0];
-                } else {
-                    $coverage_response['label'] = "($num_labels labels)";
-                }
-            }
+            $coverage_response['label'] = $build_label;
 
             if ($coverageIsGrouped) {
                 $coverage_groups[$groupId]['coverages'][] = $coverage_response;
@@ -1221,16 +1180,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
             // Are there labels for this build?
             //
-            if (empty($labels_array)) {
-                $DA_response['label'] = "(none)";
-            } else {
-                $num_labels = count($labels_array);
-                if ($num_labels == 1) {
-                    $DA_response['label'] = $labels_array[0];
-                } else {
-                    $DA_response['label'] = "($num_labels labels)";
-                }
-            }
+            $DA_response['label'] = $build_label;
 
             $response['dynamicanalyses'][] = $DA_response;
         }  // end dynamicanalysis
