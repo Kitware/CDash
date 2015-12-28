@@ -119,8 +119,8 @@ function generate_XSLT($xml, $pageName, $only_in_local=false)
   );
 
     if (!empty($CDASH_DEBUG_XML)) {
-        $tmp=eregi_replace("(\<)([A-Za-z0-9\-_.]{1,250})(\>)", "\\0\n", $xml);
-        $tmp=eregi_replace("(\</)([A-Za-z0-9\-_.]{1,250})(\>)", "\n\\0\n", $tmp);
+        $tmp=preg_replace("#<[A-Za-z0-9\-_.]{1,250}>#", "\\0\n", $xml);
+        $tmp=preg_replace("#</[A-Za-z0-9\-_.]{1,250}>#", "\n\\0\n", $tmp);
         $inF=fopen($CDASH_DEBUG_XML, "w");
         fwrite($inF, $tmp);
         fclose($inF);

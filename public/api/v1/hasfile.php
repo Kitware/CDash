@@ -26,7 +26,7 @@ if ($md5sums_get == '') {
     return;
 }
 
-$md5sums = split('[|\\.:,;]+', $md5sums_get);
+$md5sums = preg_split('#[|.:,;]+#', $md5sums_get);
 
 foreach ($md5sums as $md5sum) {
     if ($md5sum == '') {

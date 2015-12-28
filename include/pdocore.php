@@ -187,11 +187,12 @@ function pdo_affected_rows($result)
  * Emulate mysql_query with PDO.
  * @param string $query
  * @param PDO|null $link_identifier
+ * @param bool $log_error
  * @return PDOStatement|false
  */
-function pdo_query($query, $link_identifier = null)
+function pdo_query($query, $link_identifier = null, $log_error = true)
 {
-    $cur_pdo = get_link_identifier($link_identifier)->getPdo();
+    $cur_pdo = get_link_identifier($link_identifier)->getPdo($log_error);
     if ($cur_pdo === false) {
         return false;
     } else {

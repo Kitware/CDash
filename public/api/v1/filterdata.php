@@ -101,7 +101,7 @@ function get_filterdata_array_from_request($page_id = '')
         /* TODO: handle fieldtype.  currently defined in JS.
            Here's how its done the old way:
            $fieldinfo =  htmlspecialchars(pdo_real_escape_string($_REQUEST['field'.$i]));
-           $fieldinfo = split('/', $fieldinfo, 2);
+           $fieldinfo = preg_split('#/#', $fieldinfo, 2);
            $field = $fieldinfo[0];
            $fieldtype = $fieldinfo[1];
            (end old way)

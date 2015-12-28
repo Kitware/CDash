@@ -387,18 +387,18 @@ class CDashTestManager extends TestManager
       if (empty($content)) {
           return false;
       }
-    // For midas cake: the log time looks like this: if it is not
-    // a cake midas application that you're testing, comment the following line
-    // and implement your own regex
-    //$regex = "([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})";
+      // For midas cake: the log time looks like this: if it is not
+      // a cake midas application that you're testing, comment the following line
+      // and implement your own regex
+      //$regex = "#[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}#";
 
-    // the regex to catch the date for cdash: model: [2009-02-25T18:24:56]
-    $regex = "([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{2}):([0-9]{2}):([0-9]{2})\]";
+      // the regex to catch the date for cdash: model: [2009-02-25T18:24:56]
+      $regex = "#[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\]#";
       $fp = fopen($filename, 'r');
       $content = fread($fp, filesize($filename));
       fclose($fp);
       unset($fp);
-      $output = split($regex, $content);
+      $output = preg_split($regex, $content);
       foreach ($output as $message) {
           $reporter->paintServerFail($message);
       }

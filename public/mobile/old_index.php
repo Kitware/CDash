@@ -455,7 +455,7 @@ function generate_main_dashboard_XML($project_instance, $date)
     $xml .= "</updates>";
 
   // User
-  if (isset($_SESSION['cdash'])) {
+  if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
       $xml .= "<user>";
       $userid = $_SESSION['cdash']['loginid'];
       $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
@@ -595,7 +595,7 @@ function generate_main_dashboard_XML($project_instance, $date)
 
   // If the user is logged in we display if the build has some changes for him
   $userupdatesql = "";
-    if (isset($_SESSION['cdash'])) {
+    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
         $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
                       user2repository
                       WHERE build2update.buildid=b.id
@@ -1565,7 +1565,7 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
 
 
   // User
-  if (isset($_SESSION['cdash'])) {
+  if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
       $xml .= "<user>";
       $userid = $_SESSION['cdash']['loginid'];
       $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
