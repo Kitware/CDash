@@ -429,4 +429,3 @@ function ProcessSubmissionsErrorHandler($projectid)
     //
     PHPErrorHandler($projectid);
 }
-?>
