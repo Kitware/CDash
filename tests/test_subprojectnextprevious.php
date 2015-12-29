@@ -265,6 +265,29 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $success = false;
         }
 
+        // Make sure that a build is not displayed when all of its
+        // SubProjects have been blacklisted away.
+        $this->get($this->url . "/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=92&value1=Didasko");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $num_buildgroups = count($jsonobj['buildgroups']);
+        if ($num_buildgroups !== 0) {
+            $error_msg = "Expected 0 BuildGroups while blacklisting, found $num_buildgroups";
+            $success = false;
+        }
+
+        // Make sure that the reported number of labels does not
+        // change when an irrelevant blacklist criterion is added.
+        $this->get($this->url . "/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=92&value1=Teuchos");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $label = $buildgroup['builds'][0]['label'];
+        if ($label !== 'Didasko') {
+            $error_msg = "Expected label 'Didasko', found $label";
+            $success = false;
+        }
+
         // Delete the builds that we created during this test.
         remove_build($second_parentid);
         remove_build($third_parentid);
