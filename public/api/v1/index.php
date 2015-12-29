@@ -824,36 +824,55 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['note'] = 1;
         }
 
-        // Handle whether or not this build has labels.
+        // Figure out how many labels to report for this build.
         if (!array_key_exists('numlabels', $build_array) ||
                 $build_array['numlabels'] == 0) {
+            $num_labels = 0;
+        } else {
+            $num_labels = $build_array['numlabels'];
+        }
+
+        $label_query =
+            "SELECT l.text FROM label AS l
+            INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
+            INNER JOIN build AS b ON (l2b.buildid=b.id)
+            WHERE b.id=" . qnum($buildid);
+
+        if ($num_selected_subprojects > 0) {
+            // Special handling for whitelisting/blacklisting SubProjects.
+            if ($include_subprojects) {
+                $num_labels = 0;
+            }
+            $labels_result = pdo_query($label_query);
+            while ($label_row = pdo_fetch_array($labels_result)) {
+                // Whitelist case
+                if ($include_subprojects &&
+                        in_array($label_row['text'], $included_subprojects)) {
+                    $num_labels++;
+                }
+                // Blacklist case
+                if ($exclude_subprojects &&
+                        in_array($label_row['text'], $excluded_subprojects)) {
+                    $num_labels--;
+                }
+            }
+
+            if ($num_labels === 0) {
+                // Skip this build entirely if none of its SubProjects
+                // survived filtering.
+                continue;
+            }
+        }
+
+        // Assign a label to this build based on how many labels it has.
+        if ($num_labels == 0) {
             $build_label = "(none)";
-        } elseif ($build_array['numlabels'] == 1) {
+        } elseif ($num_labels == 1) {
             // If exactly one label for this build, look it up here.
-            $label_query =
-                "SELECT l.text FROM label AS l
-                INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
-                INNER JOIN build AS b ON (l2b.buildid=b.id)
-                WHERE b.id=" . qnum($buildid);
             $label_result = pdo_single_row_query($label_query);
             $build_label = $label_result['text'];
         } else {
             // More than one label, just report the number.
-            if ($include_subprojects) {
-                $num_labels = 0;
-                foreach ($included_subprojects as $included_subproject) {
-                    if (in_array($included_subproject, $labels_array)) {
-                        $num_labels++;
-                    }
-                }
-                if ($num_labels === 0) {
-                    // Skip this build entirely if it doesn't contain
-                    // any of the whitelisted SubProjects.
-                    continue;
-                }
-            } else {
-                $num_labels = $build_array['numlabels'] - $num_selected_subprojects;
-            }
             $build_label = "($num_labels labels)";
         }
         $build_response['label'] = $build_label;
