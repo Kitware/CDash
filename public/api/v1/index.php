@@ -825,7 +825,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
 
         // Handle whether or not this build has labels.
-        if ($build_array['numlabels'] == 0) {
+        if (!array_key_exists('numlabels', $build_array) ||
+                $build_array['numlabels'] == 0) {
             $build_label = "(none)";
         } elseif ($build_array['numlabels'] == 1) {
             // If exactly one label for this build, look it up here.
