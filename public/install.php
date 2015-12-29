@@ -101,7 +101,7 @@ if (!is_writable("rss")) {
 
 // If the database already exists and we have all the tables
 if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
-   && pdo_query("SELECT id FROM ".qid("user")." LIMIT 1", $db)) {
+   && pdo_query("SELECT id FROM ".qid("user")." LIMIT 1", $db, false)) {
     $xml .= "<database>1</database>";
 } else {
     $xml .= "<database>0</database>";

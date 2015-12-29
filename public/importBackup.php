@@ -65,11 +65,11 @@ $xml = begin_XML_for_XSLT();
       LOG_INFO);
 
     # split on path separator
-    $pathParts = split("[/\\]", $filename);
+    $pathParts = preg_split("#[/\\]#", $filename);
 
     # split on cdash separator "_"
     if (count($pathParts)>=1) {
-        $cdashParts = split("[_]", $pathParts[count($pathParts)-1]);
+        $cdashParts = preg_split("#_#", $pathParts[count($pathParts)-1]);
         $projectid = get_project_id($cdashParts[0]);
     }
 

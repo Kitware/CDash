@@ -110,16 +110,19 @@ class Database
 
     /**
      * Get the underlying PDO object or false if it cannot be created.
+     * @param bool $log_error
      * @return bool|\PDO
      */
-    public function getPdo()
+    public function getPdo($log_error = true)
     {
         if (is_null($this->pdo)) {
             try {
                 $this->pdo = new \PDO($this->dsn, $this->username, $this->password,
                     $this->attributes);
             } catch (\PDOException $e) {
-                error_log($e->getMessage()."\n".$e->getTraceAsString());
+                if ($log_error) {
+                    error_log($e->getMessage()."\n".$e->getTraceAsString());
+                }
                 return false;
             }
         }
