@@ -1378,14 +1378,14 @@ function get_child_builds_hyperlink($parentid, $filterdata)
         }
     }
     if ($n > 0) {
-        $existing_filter_params .= "&filtercount=$count";
-        $existing_filter_params .= "&showfilters=1";
+        $existing_filter_params =
+            "&filtercount=$count&showfilters=1$existing_filter_params";
 
         // Multiple subproject includes need to be combined with 'or' (not 'and')
         // at the child level.
         if ($num_includes > 1) {
             $existing_filter_params .= '&filtercombine=or';
-        } elseif (array_key_exists('filtercombine', $filterdata)) {
+        } elseif (!empty($filterdata['filtercombine'])) {
             $existing_filter_params .=
                 '&filtercombine=' . $filterdata['filtercombine'];
         }
