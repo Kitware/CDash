@@ -50,7 +50,7 @@ if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     $session_OK=0;
 } else {
     // authentication was successful
-    $tmp = session_id();       // session is already started
+    session_regenerate_id();
     $session_OK = 1;
 }
 
