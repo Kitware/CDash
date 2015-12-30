@@ -16,15 +16,17 @@
 
 =========================================================================*/
 
-$noforcelogin = 1;
 require_once(dirname(dirname(dirname(__DIR__)))."/config/config.php");
 require_once("include/common.php");
 require_once("include/pdo.php");
+
+// Don't display the login form.
+$noforcelogin = 1;
 include('public/login.php');
 
 // Check for authenticated user.
-@$userid = $_SESSION['cdash']['loginid'];
-if (!isset($userid) || !is_numeric($userid)) {
+if (!isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid']) ||
+        !is_numeric($_SESSION['cdash']['loginid'])) {
     return;
 }
 
