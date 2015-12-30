@@ -16,9 +16,17 @@
 
 =========================================================================*/
 
+$noforcelogin = 1;
 require_once(dirname(dirname(dirname(__DIR__)))."/config/config.php");
 require_once("include/common.php");
 require_once("include/pdo.php");
+include('public/login.php');
+
+// Check for authenticated user.
+@$userid = $_SESSION['cdash']['loginid'];
+if (!isset($userid) || !is_numeric($userid)) {
+    return;
+}
 
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 echo "<userid>";
