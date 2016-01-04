@@ -37,7 +37,8 @@ if ($recover) {
     add_last_sql_error("recoverPassword");
 
     if (pdo_num_rows($emailResult) == 0) {
-        $xml .= "<warning>This email is not registered.</warning>";
+        // Don't reveal whether or not this is a valid account.
+        $xml .= "<message>A confirmation message has been sent to your inbox.</message>";
     } else {
         // Create a new password
         $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&";

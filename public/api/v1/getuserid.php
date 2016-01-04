@@ -20,6 +20,16 @@ require_once(dirname(dirname(dirname(__DIR__)))."/config/config.php");
 require_once("include/common.php");
 require_once("include/pdo.php");
 
+// Don't display the login form.
+$noforcelogin = 1;
+include('public/login.php');
+
+// Check for authenticated user.
+if (!isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid']) ||
+        !is_numeric($_SESSION['cdash']['loginid'])) {
+    return;
+}
+
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 echo "<userid>";
 
