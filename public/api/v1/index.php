@@ -458,8 +458,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 AND user2repository.credential=updatefile.author) AS userupdates,";
     }
 
-    $groupby_sql = " GROUP BY b.id";
-
     $sql =  "SELECT b.id,b.siteid,b.parentid,
         bu.status AS updatestatus,
         i.osname AS osname,
@@ -499,7 +497,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         sp.id AS subprojectid,
         sp.groupid AS subprojectgroup,
         g.name AS groupname,gp.position,g.id AS groupid,
-        COUNT(l.text) AS numlabels,
+        (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
         (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
         (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
             FROM build AS b
@@ -520,12 +518,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
             LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
             LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
-            LEFT JOIN label2build AS l2b ON (l2b.buildid = b.id)
-            LEFT JOIN label AS l ON (l.id = l2b.labelid)
             WHERE b.projectid='$projectid' AND g.type='Daily'
             $parent_clause $date_clause
-            ".$subprojectsql." ".$filter_sql." ".$groupby_sql
-            .$limit_sql;
+            ".$subprojectsql." ".$filter_sql." ".$limit_sql;
 
     // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
     $builds = pdo_query($sql);
