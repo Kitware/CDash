@@ -145,7 +145,8 @@ function generate_XSLT($xml, $pageName, $only_in_local=false)
 /** used to escape special XML characters */
 function XMLStrFormat($str)
 {
-    if (mb_detect_encoding($str, 'UTF-8', true) === false) {
+    if (function_exists("mb_detect_encoding") &&
+                mb_detect_encoding($str, 'UTF-8', true) === false) {
         $str = utf8_encode($str);
     }
     $str = str_replace("&", "&amp;", $str);
@@ -2212,7 +2213,8 @@ function cast_data_for_JSON($value)
     }
     if (is_string($value)) {
         $value = (string) $value;
-        if (mb_detect_encoding($value, 'UTF-8', true) === false) {
+        if (function_exists("mb_detect_encoding") &&
+                    mb_detect_encoding($str, 'UTF-8', true) === false) {
             $value = utf8_encode($value);
         }
     }
