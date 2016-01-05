@@ -95,14 +95,21 @@ class label
                 "SELECT id FROM label WHERE text='$text'", 'id', 0);
 
         // Or, if necessary, insert a new row, then get the id of the inserted row:
-        if (0 == $this->Id) {
+        if ($this->Id === 0) {
             $query = "INSERT INTO label (text) VALUES ('$text')";
             if (!pdo_query($query)) {
-                add_last_sql_error('Label::Insert');
-                return false;
+                // This insert might have failed due to a race condition
+                // during parallel processing.
+                // Query again to see if it exists before throwing an error.
+                $this->Id = pdo_get_field_value(
+                        "SELECT id FROM label WHERE text='$text'", 'id', 0);
+                if ($this->Id === 0) {
+                    add_last_sql_error('Label::Insert');
+                    return false;
+                }
+            } else {
+                $this->Id = pdo_insert_id('label');
             }
-
-            $this->Id = pdo_insert_id('label');
         }
 
         // Insert relationship records, too, but only for those relationships
