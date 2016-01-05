@@ -329,4 +329,216 @@ class UpgradeTestCase extends KWWebTestCase
         }
         return true;
     }
+
+    public function testSiteConstraintUpgrade()
+    {
+        require_once(dirname(__FILE__).'/cdash_test_case.php');
+        require_once('include/common.php');
+        require_once('include/pdo.php');
+
+        $retval = 0;
+        $table_name = "testsite";
+
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            $create_query = '
+                CREATE TABLE "'. $table_name . '" (
+                        "id" serial NOT NULL,
+                        "name" character varying(255) DEFAULT \'\' NOT NULL,
+                        "ip" character varying(255) DEFAULT \'\' NOT NULL,
+                        "latitude" character varying(10) DEFAULT \'\' NOT NULL,
+                        "longitude" character varying(10) DEFAULT \'\' NOT NULL,
+                        "outoforder" smallint DEFAULT \'0\' NOT NULL,
+                        PRIMARY KEY ("id")
+                        )';
+        } else {
+            // MySQL
+            $create_query = "
+                CREATE TABLE `$table_name` (
+                        `id` int(11) NOT NULL auto_increment,
+                        `name` varchar(255) NOT NULL default '',
+                        `ip` varchar(255) NOT NULL default '',
+                        `latitude` varchar(10) NOT NULL default '',
+                        `longitude` varchar(10) NOT NULL default '',
+                        `outoforder` tinyint(4) NOT NULL default '0',
+                        PRIMARY KEY  (`id`)
+                        )";
+        }
+
+        // Create testing table.
+        if (!pdo_query($create_query)) {
+            $this->fail("pdo_query returned false");
+            $retval = 1;
+        }
+
+        // Find the largest siteid from the real site table.
+        $row = pdo_single_row_query(
+                "SELECT id FROM site ORDER BY id DESC LIMIT 1");
+        $i = $row['id'];
+        $dupes = array();
+        $keepers = array();
+
+        // Insert sites into our testing table that will violate
+        // the (name, ip) unique constraint.
+        //
+        // Case 1: No lat/lon info, so the lowest number siteid will be kept.
+        $nolatlon_keeper = ++$i;
+        $keepers[] = $nolatlon_keeper;
+        $insert_query = "
+            INSERT INTO $table_name
+            (id, name, ip)
+            VALUES
+            ($nolatlon_keeper, 'case1_site', '128.4.4.1')";
+        if (!pdo_query($insert_query)) {
+            $this->fail("pdo_query returned false");
+            $retval = 1;
+        }
+        $nolatlon_dupe = ++$i;
+        $dupes[] = $nolatlon_dupe;
+        $insert_query = "
+            INSERT INTO $table_name
+            (id, name, ip)
+            VALUES
+            ($nolatlon_dupe, 'case1_site', '128.4.4.1')";
+        if (!pdo_query($insert_query)) {
+            $this->fail("pdo_query returned false");
+            $retval = 1;
+        }
+
+        // Case 2: Lat/lon info is present, so the newest build with this data
+        // will be kept.
+        $latlon_dupe1 = ++$i; // Has lat/lon, but not the newest.
+        $dupes[] = $latlon_dupe1;
+        $insert_query = "
+            INSERT INTO $table_name
+            (id, name, ip, latitude, longitude)
+            VALUES
+            ($latlon_dupe1, 'case2_site', '129.5.5.2', '40.70', '-74.00')";
+        if (!pdo_query($insert_query)) {
+            $this->fail("pdo_query returned false");
+            $retval = 1;
+        }
+        $latlon_keeper = ++$i; // Has newest lat/lon, will be kept.
+        $keepers[] = $latlon_keeper;
+        $insert_query = "
+            INSERT INTO $table_name
+            (id, name, ip, latitude, longitude)
+            VALUES
+            ($latlon_keeper, 'case2_site', '129.5.5.2', '40.71', '-73.97')";
+        if (!pdo_query($insert_query)) {
+            $this->fail("pdo_query returned false");
+            $retval = 1;
+        }
+        $latlon_dupe2 = ++$i; // Does not have lat/lon.
+        $dupes[] = $latlon_dupe2;
+        $insert_query = "
+            INSERT INTO $table_name
+            (id, name, ip)
+            VALUES
+            ($latlon_dupe2, 'case2_site', '129.5.5.2')";
+        if (!pdo_query($insert_query)) {
+            $this->fail("pdo_query returned false");
+            $retval = 1;
+        }
+
+        // We also need to verify that siteids in other tables get updated
+        // properly as duplicates are removed.
+        $tables_to_update = array('build', 'build2grouprule', 'site2user',
+                'client_job', 'client_site2cmake', 'client_site2compiler',
+                'client_site2library', 'client_site2program',
+                'client_site2project');
+        foreach ($tables_to_update as $table_to_update) {
+            foreach ($dupes as $dupe) {
+                if ($table_to_update === "build") {
+                    // Handle unique constraint here.
+                    $insert_query =
+                        "INSERT INTO $table_to_update (siteid, uuid)
+                        VALUES ($dupe, '$dupe')";
+                } else {
+                    $insert_query =
+                        "INSERT INTO $table_to_update (siteid) VALUES ($dupe)";
+                }
+                if (!pdo_query($insert_query)) {
+                    $this->fail("pdo_query returned false");
+                    $retval = 1;
+                }
+            }
+        }
+
+        // Run the upgrade function.
+        AddUniqueConstraintToSiteTable($table_name);
+
+        // Verify that all of the keepers still exist.
+        foreach ($keepers as $keeper) {
+            $count_query = "
+                SELECT COUNT(id) AS numsites FROM $table_name WHERE id=$keeper";
+            $count_results = pdo_single_row_query($count_query);
+            if ($count_results['numsites'] != 1) {
+                $this->fail(
+                        "Expected 1 site, found " . $count_results['numsites']);
+                $retval = 1;
+            }
+        }
+
+        // Verify that none of the duplicates still exist.
+        foreach ($dupes as $dupe) {
+            $count_query = "
+                SELECT COUNT(id) AS numsites FROM $table_name WHERE id=$dupe";
+            $count_results = pdo_single_row_query($count_query);
+            if ($count_results['numsites'] != 0) {
+                $this->fail(
+                        "Expected 0 site, found " . $count_results['numsites']);
+                $retval = 1;
+            }
+        }
+
+        // Verify that the other references were also updated properly.
+        foreach ($tables_to_update as $table_to_update) {
+            foreach ($keepers as $keeper) {
+                $expected_matches = 1;
+                if ($keeper === $latlon_keeper) {
+                    $expected_matches = 2;
+                }
+                $count_query = "SELECT COUNT(siteid) AS numsites
+                    FROM $table_to_update WHERE siteid=$keeper";
+                $count_results = pdo_single_row_query($count_query);
+                if ($count_results['numsites'] != $expected_matches) {
+                    $this->fail(
+                            "Expected $expected_matches match for siteid $keeper
+                            in $table_to_update, found " .
+                            $count_results['numsites']);
+                    $retval = 1;
+                }
+            }
+            foreach ($dupes as $dupe) {
+                $count_query = "SELECT COUNT(siteid) AS numsites
+                    FROM $table_to_update WHERE siteid=$dupe";
+                $count_results = pdo_single_row_query($count_query);
+                if ($count_results['numsites'] != 0) {
+                    $this->fail("Expected 0 matches for siteid $dupe
+                            in $table_to_update, found " .
+                            $count_results['numsites']);
+                    $retval = 1;
+                }
+            }
+        }
+
+        // Remove any testing data that we inserted in the existing tables.
+        foreach ($tables_to_update as $table_to_update) {
+            foreach ($keepers as $keeper) {
+                pdo_query("DELETE FROM $table_to_update WHERE siteid=$keeper");
+            }
+            foreach ($dupes as $dupe) {
+                pdo_query("DELETE FROM $table_to_update WHERE siteid=$dupe");
+            }
+        }
+
+        // Drop the testing table.
+        pdo_query("DROP TABLE $table_name");
+
+        if ($retval == 0) {
+            $this->pass("Passed");
+        }
+        return $retval;
+    }
 }
