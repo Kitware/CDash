@@ -794,10 +794,12 @@ CREATE TABLE "subproject" (
   "groupid" bigint NOT NULL,
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  PRIMARY KEY ("id")
+  PRIMARY KEY ("id"),
+  CONSTRAINT "subproject_unique1" UNIQUE ("name", "projectid", "endtime")
 );
 CREATE INDEX "projectid5" on "subproject" ("projectid");
 CREATE INDEX "subprojectgroupid" on "subproject" ("groupid");
+CREATE INDEX "subproject_unique2" on "subproject" ("name", "projectid", "endtime");
 
 --
 -- Table: subprojectgroup

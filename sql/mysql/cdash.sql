@@ -874,7 +874,8 @@ CREATE TABLE `subproject` (
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   PRIMARY KEY  (`id`),
   KEY `groupid` (`groupid`),
-  KEY `projectid` (`projectid`)
+  KEY `projectid` (`projectid`),
+  UNIQUE KEY `unique_key` (`name`, `projectid`, `endtime`)
 );
 
 

@@ -700,6 +700,14 @@ if (isset($_GET['upgrade-2-4'])) {
 
         // Also add a new unique constraint to the site table.
         AddUniqueConstraintToSiteTable('site');
+
+        // Also add a new unique constraint to the subproject table.
+        if ($db_type === "pgsql") {
+            pdo_query("ALTER TABLE subproject ADD UNIQUE (name, projectid, endtime)");
+            pdo_query('CREATE INDEX "subproject_unique2" ON "subproject" ("name", "projectid", "endtime")');
+        } else {
+            pdo_query("ALTER TABLE subproject ADD UNIQUE KEY (name, projectid, endtime)");
+        }
     }
 
     // Set the database version
