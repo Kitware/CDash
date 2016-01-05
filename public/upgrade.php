@@ -697,6 +697,9 @@ if (isset($_GET['upgrade-2-4'])) {
         } else {
             pdo_query("ALTER TABLE build ADD UNIQUE KEY (uuid)");
         }
+
+        // Also add a new unique constraint to the site table.
+        AddUniqueConstraintToSiteTable('site');
     }
 
     // Set the database version

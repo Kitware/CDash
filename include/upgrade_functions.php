@@ -726,3 +726,72 @@ function CompressCoverage()
 
     /** SECOND STEP */
 }
+
+
+/** Carefully add a unique constraint (name & IP address) to the site table.
+ *  This function is parameterized to make it easier to test.
+ **/
+function AddUniqueConstraintToSiteTable($site_table)
+{
+    global $CDASH_DB_TYPE;
+    // Tables with a siteid field that will need to be updated as we prune
+    // out duplicate sites.
+    $tables_to_update = array('build', 'build2grouprule', 'site2user',
+            'client_job', 'client_site2cmake', 'client_site2compiler',
+            'client_site2library', 'client_site2program',
+            'client_site2project');
+
+    // Find all the rows that will violate this new unique constraint.
+    $query = "SELECT name, ip, COUNT(*) AS c FROM $site_table
+        GROUP BY name, ip HAVING c > 1";
+    $result = pdo_query($query);
+    while ($row = pdo_fetch_array($result)) {
+        $name = $row['name'];
+        $ip = $row['ip'];
+
+        // We keep the most recent, non-null value for lat & lon (if any)
+        $lat_result = pdo_single_row_query(
+                "SELECT id FROM $site_table
+                WHERE name = '$name' AND ip = '$ip' AND latitude != '' AND
+                longitude != '' ORDER BY id DESC LIMIT 1");
+        if ($lat_result && array_key_exists('id', $lat_result)) {
+            $id_to_keep = $lat_result['id'];
+        } else {
+            // Otherwise just use the row with the lowest ID.
+            $id_result = pdo_single_row_query(
+                    "SELECT id FROM $site_table
+                    WHERE name = '$name' AND ip = '$ip' ORDER BY id LIMIT 1");
+            if (!$id_result || !array_key_exists('id', $id_result)) {
+                continue;
+            }
+            $id_to_keep = $id_result['id'];
+        }
+
+        // Now that we've identified which row to keep, let's find all its
+        // duplicates to remove.
+        $ids_to_remove = array();
+        $dupe_query =
+            "SELECT id FROM $site_table
+            WHERE id != $id_to_keep && name = '$name' AND ip = '$ip'";
+        $dupe_result = pdo_query($dupe_query);
+        while ($dupe_row = pdo_fetch_array($dupe_result)) {
+            $id_to_remove = $dupe_row['id'];
+            // Update any references to this duplicate site.
+            foreach ($tables_to_update as $table) {
+                pdo_query("UPDATE $table SET siteid=$id_to_keep
+                        WHERE siteid=$id_to_remove");
+            }
+            // Remove the duplicate.
+            pdo_query("DELETE FROM siteinformation WHERE siteid=$id_to_remove");
+            pdo_query("DELETE FROM client_jobschedule2site WHERE siteid=$id_to_remove");
+            pdo_query("DELETE FROM $site_table WHERE id=$id_to_remove");
+        }
+    }
+    // It should be safe to add the constraint now.
+    if ($CDASH_DB_TYPE == "pgsql") {
+        pdo_query("ALTER TABLE $site_table ADD UNIQUE (name,ip)");
+        pdo_query('CREATE INDEX "name_ip" ON "'.$site_table.'" ("name,ip")');
+    } else {
+        pdo_query("ALTER TABLE $site_table ADD UNIQUE KEY (name,ip)");
+    }
+}
