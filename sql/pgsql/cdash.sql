@@ -339,9 +339,10 @@ CREATE TABLE "site" (
   "latitude" character varying(10) DEFAULT '' NOT NULL,
   "longitude" character varying(10) DEFAULT '' NOT NULL,
   "outoforder" smallint DEFAULT '0' NOT NULL,
-  PRIMARY KEY ("id")
+  PRIMARY KEY ("id"),
+  CONSTRAINT "name_ip1" UNIQUE ("name", "ip")
 );
-CREATE INDEX "name3" on "site" ("name");
+CREATE INDEX "name_ip2" on "site" ("name", "ip");
 
 --
 -- Table: siteinformation
