@@ -66,7 +66,8 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
         $scheduleid = pdo_real_escape_numeric($_GET["clientscheduleid"]);
     }
 
-    if ($CDASH_DB_TYPE != 'pgsql') {
+    global $CDASH_ASYNC_WORKERS;
+    if ($CDASH_DB_TYPE != 'pgsql' && $CDASH_ASYNC_WORKERS < 2) {
         pdo_query("START TRANSACTION");
     }
   // Parse the XML file
@@ -76,7 +77,7 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
       //no need to log an error since ctest_parse already did
     return;
   }
-    if ($CDASH_DB_TYPE != 'pgsql') {
+    if ($CDASH_DB_TYPE != 'pgsql' && $CDASH_ASYNC_WORKERS < 2) {
         pdo_query("COMMIT");
     }
 
