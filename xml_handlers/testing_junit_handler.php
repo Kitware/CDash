@@ -112,10 +112,10 @@ class TestingJUnitHandler extends AbstractHandler
         $this->TestProperties .= $attributes['NAME'].'='.$attributes['VALUE']."\n";
         if ($this->HasSiteTag == false) {
             switch ($attributes['NAME']) {
-          case 'os.name' : $this->Build->Information->OSName = $attributes['VALUE']; break;
-          case 'os.version' : $this->Build->Information->OSVersion = $attributes['VALUE']; break;
-          case 'java.vm.name' : $this->Build->Information->CompilerName = $attributes['VALUE']; break;
-          case 'java.vm.version' : $this->Build->Information->CompilerVersion = $attributes['VALUE']; break;
+          case 'os.name': $this->Build->Information->OSName = $attributes['VALUE']; break;
+          case 'os.version': $this->Build->Information->OSVersion = $attributes['VALUE']; break;
+          case 'java.vm.name': $this->Build->Information->CompilerName = $attributes['VALUE']; break;
+          case 'java.vm.version': $this->Build->Information->CompilerVersion = $attributes['VALUE']; break;
           case 'hostname':
             if (empty($this->Site->Name)) {
                 $this->Site->Name = $attributes['VALUE'];

@@ -10,11 +10,11 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.  See the above copyright notices for more information.
 
-=========================================================================*/
+  =========================================================================*/
 require_once 'include/ctestparserutils.php';
 require_once 'xml_handlers/sax_handler.php';
 require_once 'xml_handlers/stack.php';
@@ -36,17 +36,17 @@ abstract class AbstractHandler implements SaxHandler
         $this->scheduleid = $scheduleid;
         $this->stack = new Stack();
     }
-  
+
     protected function getParent()
     {
         return $this->stack->at($this->stack->size()-2);
     }
-  
+
     protected function getElement()
     {
         return $this->stack->top();
     }
-  
+
     public function startElement($parser, $name, $attributes)
     {
         $this->stack->push($name);
@@ -64,19 +64,19 @@ abstract class AbstractHandler implements SaxHandler
     public function processingInstruction($parser, $target, $data)
     {
     }
-  
+
     public function externalEntity($parser, $open_entity_name, $base, $system_id, $public_id)
     {
     }
-  
+
     public function skippedEntity($parser, $open_entity_name, $base, $system_id, $public_id)
     {
     }
-  
+
     public function startPrefixMapping($parser, $user_data, $prefix, $uri)
     {
     }
-  
+
     public function endPrefixMapping($parser, $user_data, $prefix)
     {
     }

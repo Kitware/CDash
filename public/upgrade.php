@@ -56,7 +56,7 @@ if (!isset($CDASH_DB_TYPE)) {
 
 if (isset($_GET['upgrade-tables'])) {
     // Apply all the patches
-  foreach (glob("sql/".$db_type."/cdash-upgrade-*.sql") as $filename) {
+  foreach (glob("$CDASH_ROOT_DIR/sql/$db_type/cdash-upgrade-*.sql") as $filename) {
       $file_content = file($filename);
       $query = "";
       foreach ($file_content as $sql_line) {
