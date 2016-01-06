@@ -45,22 +45,23 @@ class buildnote
     public function Insert()
     {
         if (!$this->BuildId) {
-            echo "BuildNote::Insert(): BuildId is not set<br>";
+            add_log('BuildId not set', 'BuildNote::Insert()',
+                    LOG_ERR, 0, $this->Id);
             return false;
         }
-
         if (!$this->Time) {
-            echo "BuildNote::Insert(): Time is not set<br>";
+            add_log('Time not set', 'BuildNote::Insert()',
+                    LOG_ERR, 0, $this->Id);
             return false;
         }
-
         if (!$this->Name) {
-            echo "BuildNote::Insert(): Name is not set<br>";
+            add_log('Name not set', 'BuildNote::Insert()',
+                    LOG_ERR, 0, $this->Id);
             return false;
         }
-
         if (!$this->Text) {
-            echo "BuildNote::Insert(): Text is not set<br>";
+            add_log('Text not set', 'BuildNote::Insert()',
+                    LOG_ERR, 0, $this->Id);
             return false;
         }
 
