@@ -12,8 +12,9 @@
       version;
 
   if (release) {
-      // Change this to a specific version (x.y.z) when cutting a release.
-      version = 'snapshot_' + new Date().getTime();
+      // Update the version in package.json before cutting a new release.
+      var config = require('./package.json')
+      version = config.version;
   } else {
       version = new Date().getTime();
   }
