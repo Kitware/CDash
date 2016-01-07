@@ -589,7 +589,7 @@ class build
 
             // Update parent's tally of total build errors & warnings.
             if (!$justCreatedParent) {
-                $this->UpdateParentBuild($nbuilderrors, $nbuildwarnings);
+                $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
             }
         } else {
             if ($this->Append) {
@@ -618,9 +618,10 @@ class build
                     $newErrors = 0;
                     $newWarnings = 0;
                     if ($nbuilderrors > 0 || $nbuildwarnings > 0) {
-                        // If we are adding errors or warnings to this build we need to know
-                        // how many builderrors & buildwarnings it had previously so we can
-                        // update the parent's tally properly.
+                        // If we are adding errors or warnings to this build
+                        // we need to know how many builderrors & buildwarnings
+                        // it had previously so we can update the parent's
+                        // tally properly.
                         $priorResult = pdo_single_row_query(
                                 "SELECT builderrors, buildwarnings FROM build
                                 WHERE id=".qnum($this->Id));
@@ -634,7 +635,7 @@ class build
                         $newWarnings = $nbuildwarnings - $priorResult['buildwarnings'];
                     }
                     $this->ParentId = $this->GetParentBuildId();
-                    $this->UpdateParentBuild($newErrors, $newWarnings);
+                    $this->UpdateBuild($this->ParentId, $newErrors, $newWarnings);
                 }
 
                 include('config/config.php');
@@ -1502,7 +1503,7 @@ class build
             // Mark it as a parent (parentid of -1) and update its tally of
             // build errors & warnings.
             pdo_query("UPDATE build SET parentid = -1 WHERE id = $parentId");
-            $this->UpdateParentBuild($numErrors, $numWarnings);
+            $this->UpdateBuild($this->ParentId, $numErrors, $numWarnings);
         } else {
             // Create the parent build here.  Note how parent builds
             // are indicated by parentid == -1.
@@ -1540,43 +1541,73 @@ class build
     }
 
     /**
-     * Update our parent build so that it is an accurate summary
-     * of all of its subprojects.
+     * Update our database record of a build so that it accurately reflects
+     * this object and the specified number of new warnings & errors.
      **/
-    public function UpdateParentBuild($newErrors, $newWarnings)
+    public function UpdateBuild($buildid, $newErrors, $newWarnings)
     {
-        if ($this->ParentId < 1) {
+        if ($buildid < 1) {
             return;
         }
 
         $clauses = array();
 
-        $parent = pdo_single_row_query(
-                "SELECT builderrors, buildwarnings, starttime, endtime
-                FROM build WHERE id='$this->ParentId'");
+        $build = pdo_single_row_query(
+                "SELECT builderrors, buildwarnings, starttime, endtime,
+                submittime, log, command
+                FROM build WHERE id='$buildid'");
 
-        // Check if we need to modify builderrors or buildwarnings.
-        if ($parent['builderrors'] == -1) {
-            $parent['builderrors'] = 0;
+
+        // Special case: check if we should move from -1 to 0 errors/warnings.
+        $errorsHandled = false;
+        $warningsHandled = false;
+        if ($this->InsertErrors) {
+            if ($build['builderrors'] == -1 && $newErrors == 0) {
+                $clauses[] = "builderrors = 0";
+                $errorsHandled = true;
+            }
+            if ($build['buildwarnings'] == -1 && $newWarnings == 0) {
+                $clauses[] = "buildwarnings = 0";
+                $warningsHandled = true;
+            }
         }
-        if ($parent['buildwarnings'] == -1) {
-            $parent['buildwarnings'] = 0;
+
+        // Check if we still need to modify builderrors or buildwarnings.
+        if (!$errorsHandled) {
+            if ($build['builderrors'] == -1) {
+                $build['builderrors'] = 0;
+            }
+            if ($newErrors > -1) {
+                $numErrors = $build['builderrors'] + $newErrors;
+                $clauses[] = "builderrors = $numErrors";
+            }
         }
-        if ($newErrors > -1) {
-            $numErrors = $parent['builderrors'] + $newErrors;
-            $clauses[] = "builderrors = $numErrors";
-        }
-        if ($newWarnings > -1) {
-            $numWarnings = $parent['buildwarnings'] + $newWarnings;
-            $clauses[] = "buildwarnings = $numWarnings";
+        if (!$warningsHandled) {
+            if ($build['buildwarnings'] == -1) {
+                $build['buildwarnings'] = 0;
+            }
+            if ($newWarnings > -1) {
+                $numWarnings = $build['buildwarnings'] + $newWarnings;
+                $clauses[] = "buildwarnings = $numWarnings";
+            }
         }
 
         // Check if we need to modify starttime or endtime.
-        if (strtotime($parent['starttime']) > strtotime($this->StartTime)) {
+        if (strtotime($build['starttime']) > strtotime($this->StartTime)) {
             $clauses[] = "starttime = '$this->StartTime'";
         }
-        if (strtotime($parent['endtime']) < strtotime($this->EndTime)) {
+        if (strtotime($build['endtime']) < strtotime($this->EndTime)) {
             $clauses[] = "endtime = '$this->EndTime'";
+        }
+
+        // Check if log or command has changed.
+        if ($this->Log && $this->Log != $build['log']) {
+            $log = $build['log'] . $this->Log;
+            $clauses[] = "log = '$log'";
+        }
+        if ($this->Command && $this->Command != $build['command']) {
+            $command = $build['command'] . $this->Command;
+            $clauses[] = "command = '$command'";
         }
 
         $num_clauses = count($clauses);
@@ -1585,9 +1616,9 @@ class build
             for ($i = 1; $i < $num_clauses; $i++) {
                 $query .= ", " . $clauses[$i];
             }
-            $query .= " WHERE id = '$this->ParentId'";
+            $query .= " WHERE id = '$buildid'";
             if (!pdo_query($query)) {
-                add_last_sql_error("UpdateParentBuild", $this->ProjectId, $this->ParentId);
+                add_last_sql_error("UpdateBuild", $this->ProjectId, $buildid);
                 return false;
             }
         }
