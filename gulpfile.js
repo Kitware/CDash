@@ -8,7 +8,16 @@
       uglify = require('gulp-uglify'),
       rename = require("gulp-rename"),
       replace = require('gulp-replace'),
-      timestamp = new Date().getTime();
+      release = false, // Change to true when cutting a release.
+      version;
+
+  if (release) {
+      // Update the version in package.json before cutting a new release.
+      var config = require('./package.json')
+      version = config.version;
+  } else {
+      version = new Date().getTime();
+  }
 
 
   gulp.task('quality', function() {
@@ -54,7 +63,7 @@
        .pipe(sourcemaps.init())
        .pipe(concat('CDash.concat.js'))
        .pipe(uglify({mangle: false}))
-       .pipe(rename('CDash_' + timestamp + '.min.js'))
+       .pipe(rename('CDash_' + version + '.min.js'))
        .pipe(sourcemaps.write('./'))
        .pipe(gulp.dest('public/js'));
  });
@@ -62,11 +71,11 @@
 
   gulp.task('replace', function(){
     gulp.src(['public/views/*.html'])
-        .pipe(replace('@@timestamp', timestamp))
+        .pipe(replace('@@version', version))
         .pipe(gulp.dest('public/build/views/'));
 
     gulp.src(['public/local/views/*.html'])
-        .pipe(replace('@@timestamp', timestamp))
+        .pipe(replace('@@version', version))
         .pipe(gulp.dest('public/build/local/views/'));
   });
 
