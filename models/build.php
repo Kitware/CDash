@@ -543,6 +543,7 @@ class build
                  '$this->Uuid')";
 
             if (!pdo_query($query)) {
+                $error = pdo_error();
                 // This error might be due to a unique constraint violation
                 // for this UUID.  Query for such a previously existing build.
                 $existing_id_result = pdo_single_row_query(
@@ -554,7 +555,7 @@ class build
                     // with this UUID was found.
                     return true;
                 }
-                add_last_sql_error("Build Insert", $this->ProjectId, $this->Id);
+                add_log("SQL error: $error", "Build Insert", LOG_ERR, $this->ProjectId, $this->Id);
                 return false;
             }
 
