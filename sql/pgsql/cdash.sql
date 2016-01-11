@@ -25,6 +25,7 @@ CREATE TABLE "build" (
   "testpassed" smallint DEFAULT '-1',
   "testtimestatusfailed" smallint DEFAULT '-1',
   "notified" smallint DEFAULT '0' NOT NULL,
+  "done" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "projectid" on "build" ("projectid");

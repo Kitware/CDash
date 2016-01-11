@@ -39,6 +39,7 @@ CREATE TABLE `build` (
   `testpassed` smallint(6) DEFAULT '-1',
   `testtimestatusfailed` smallint(6) DEFAULT '-1',
   `notified` tinyint(1) default '0',
+  `done` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),

@@ -684,6 +684,9 @@ if (isset($_GET['upgrade-2-4'])) {
     UpgradeConfigureDuration();
     UpgradeTestDuration();
 
+    // Support for marking a build as "done".
+    AddTableField('build', 'done', 'tinyint(1)', 'smallint', '0');
+
     // Set the database version
     setVersion();
 
