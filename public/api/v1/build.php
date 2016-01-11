@@ -29,7 +29,7 @@ if (!isset($buildid)) {
 
 // Make sure this build actually exists.
 $build_array = pdo_fetch_array(pdo_query(
-  "SELECT * FROM build WHERE id='$buildid'"));
+            "SELECT * FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 if (!isset($projectid) || $projectid == 0) {
     $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
@@ -74,20 +74,20 @@ if ($method != 'GET') {
 
 // Route based on what type of request this is.
 switch ($method) {
-  case 'DELETE':
-    rest_delete();
-    break;
-  case 'POST':
-    rest_post();
-    break;
-  case 'PUT':
-    rest_put();
-    break;
-  case 'GET':
-  default:
-    rest_get();
-    break;
-  }
+    case 'DELETE':
+        rest_delete();
+        break;
+    case 'POST':
+        rest_post();
+        break;
+    case 'PUT':
+        rest_put();
+        break;
+    case 'GET':
+    default:
+        rest_get();
+        break;
+}
 
 /* Handle DELETE requests */
 function rest_delete()
@@ -102,78 +102,80 @@ function rest_post()
 {
     global $buildid;
 
-  // Lookup some details about this build.
-  $build = pdo_query(
-    "SELECT name, type, siteid, projectid FROM build WHERE id='$buildid'");
+    // Lookup some details about this build.
+    $build = pdo_query(
+            "SELECT name, type, siteid, projectid FROM build WHERE id='$buildid'");
     $build_array = pdo_fetch_array($build);
     $buildtype = $build_array["type"];
     $buildname = $build_array["name"];
     $siteid = $build_array["siteid"];
     $projectid = $build_array["projectid"];
 
-  // Should we change whether or not this build is expected?
-  if (isset($_POST['expected']) && isset($_POST['groupid'])) {
-      $expected = pdo_real_escape_numeric($_POST['expected']);
-      $groupid = pdo_real_escape_numeric($_POST['groupid']);
+    // Should we change whether or not this build is expected?
+    if (isset($_POST['expected']) && isset($_POST['groupid'])) {
+        $expected = pdo_real_escape_numeric($_POST['expected']);
+        $groupid = pdo_real_escape_numeric($_POST['groupid']);
 
-    // If a rule already exists we update it.
-    $build2groupexpected = pdo_query(
-      "SELECT groupid FROM build2grouprule
-       WHERE groupid='$groupid' AND buildtype='$buildtype' AND
-             buildname='$buildname' AND siteid='$siteid' AND
-             endtime='1980-01-01 00:00:00'");
-      if (pdo_num_rows($build2groupexpected) > 0) {
-          pdo_query(
-        "UPDATE build2grouprule SET expected='$expected'
-         WHERE groupid='$groupid' AND buildtype='$buildtype' AND
-               buildname='$buildname' AND siteid='$siteid' AND
-               endtime='1980-01-01 00:00:00'");
-      } elseif ($expected) {
-          // we add the grouprule
+        // If a rule already exists we update it.
+        $build2groupexpected = pdo_query(
+                "SELECT groupid FROM build2grouprule
+                WHERE groupid='$groupid' AND buildtype='$buildtype' AND
+                buildname='$buildname' AND siteid='$siteid' AND
+                endtime='1980-01-01 00:00:00'");
+        if (pdo_num_rows($build2groupexpected) > 0) {
+            pdo_query(
+                    "UPDATE build2grouprule SET expected='$expected'
+                    WHERE groupid='$groupid' AND buildtype='$buildtype' AND
+                    buildname='$buildname' AND siteid='$siteid' AND
+                    endtime='1980-01-01 00:00:00'");
+        } elseif ($expected) {
+            // we add the grouprule
 
-      $now = gmdate(FMT_DATETIME);
-          pdo_query(
-        "INSERT INTO build2grouprule(groupid, buildtype, buildname, siteid,
-                                     expected, starttime, endtime)
-         VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected',
-                 '$now','1980-01-01 00:00:00')");
-      }
-  }
+            $now = gmdate(FMT_DATETIME);
+            pdo_query(
+                    "INSERT INTO build2grouprule
+                    (groupid, buildtype, buildname, siteid, expected,
+                     starttime, endtime)
+                    VALUES
+                    ('$groupid','$buildtype','$buildname','$siteid','$expected',
+                     '$now','1980-01-01 00:00:00')");
+        }
+    }
 
-  // Should we move this build to a different group?
-  if (isset($_POST['expected']) && isset($_POST['newgroupid'])) {
-      $expected = pdo_real_escape_numeric($_POST['expected']);
-      $newgroupid = pdo_real_escape_numeric($_POST['newgroupid']);
+    // Should we move this build to a different group?
+    if (isset($_POST['expected']) && isset($_POST['newgroupid'])) {
+        $expected = pdo_real_escape_numeric($_POST['expected']);
+        $newgroupid = pdo_real_escape_numeric($_POST['newgroupid']);
 
-    // Remove the build from its previous group.
-    $prevgroup = pdo_fetch_array(pdo_query(
-      "SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
-      $prevgroupid = $prevgroup["id"];
-      pdo_query(
-      "DELETE FROM build2group
-       WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+        // Remove the build from its previous group.
+        $prevgroup = pdo_fetch_array(pdo_query(
+                    "SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
+        $prevgroupid = $prevgroup["id"];
+        pdo_query(
+                "DELETE FROM build2group
+                WHERE groupid='$prevgroupid' AND buildid='$buildid'");
 
-    // Insert it into the new group.
-    pdo_query(
-      "INSERT INTO build2group(groupid,buildid)
-       VALUES ('$newgroupid','$buildid')");
+        // Insert it into the new group.
+        pdo_query(
+                "INSERT INTO build2group(groupid,buildid)
+                VALUES ('$newgroupid','$buildid')");
 
-    // Mark any previous buildgroup rule as finished as of this time.
-    $now = gmdate(FMT_DATETIME);
-      pdo_query(
-      "UPDATE build2grouprule SET endtime='$now'
-       WHERE groupid='$prevgroupid' AND buildtype='$buildtype' AND
-             buildname='$buildname' AND siteid='$siteid' AND
-             endtime='1980-01-01 00:00:00'");
+        // Mark any previous buildgroup rule as finished as of this time.
+        $now = gmdate(FMT_DATETIME);
+        pdo_query(
+                "UPDATE build2grouprule SET endtime='$now'
+                WHERE groupid='$prevgroupid' AND buildtype='$buildtype' AND
+                buildname='$buildname' AND siteid='$siteid' AND
+                endtime='1980-01-01 00:00:00'");
 
-    // Create the rule for the new buildgroup.
-    // (begin time is set by default by mysql)
-    pdo_query(
-      "INSERT INTO build2grouprule(groupid, buildtype, buildname, siteid,
-                                   expected, starttime, endtime)
-       VALUES ('$newgroupid','$buildtype','$buildname','$siteid','$expected',
-               '$now','1980-01-01 00:00:00')");
-  }
+        // Create the rule for the new buildgroup.
+        // (begin time is set by default by mysql)
+        pdo_query(
+                "INSERT INTO build2grouprule(groupid, buildtype, buildname, siteid,
+            expected, starttime, endtime)
+                VALUES ('$newgroupid','$buildtype','$buildname','$siteid','$expected',
+                    '$now','1980-01-01 00:00:00')");
+    }
 }
 
 
