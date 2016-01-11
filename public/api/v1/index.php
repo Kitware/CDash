@@ -458,7 +458,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 AND user2repository.credential=updatefile.author) AS userupdates,";
     }
 
-    $sql =  "SELECT b.id,b.siteid,b.parentid,
+    $sql =  "SELECT b.id,b.siteid,b.parentid,b.done,
         bu.status AS updatestatus,
         i.osname AS osname,
         bu.starttime AS updatestarttime,
@@ -809,6 +809,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['userupdates'] =  $build_array["userupdates"];
         }
         $build_response['id'] = $build_array["id"];
+        $build_response['done'] = $build_array['done'];
         $build_response['uploadfilecount'] = $build_array["builduploadfiles"];
 
         if ($build_array['countbuildnotes']>0) {

@@ -45,7 +45,7 @@ function get_dynamic_builds($projectid)
       $order = "ORDER BY b.submittime DESC LIMIT 1";
 
       // Copied from index.php.
-      $sql = "SELECT b.id,b.siteid,b.parentid,
+      $sql = "SELECT b.id,b.siteid,b.parentid,b.done,
               bu.status AS updatestatus,
               i.osname AS osname,
               bu.starttime AS updatestarttime,
