@@ -54,7 +54,7 @@ class APITestCase extends KWWebTestCase
         }
 
         $buildid = $this->get($this->url."/api/v1/getbuildid.php?project=EmailProjectExample&siteid=3&name=Win32-MSVC2009&stamp=20090223-0100-Nightly");
-        if ($buildid !== '<?xml version="1.0" encoding="UTF-8"?><buildid>4</buildid>') {
+        if ($buildid !== '<?xml version="1.0" encoding="UTF-8"?><buildid>3</buildid>') {
             $this->fail("Expected output not found when querying API for buildid: $buildid");
             return 1;
         }
