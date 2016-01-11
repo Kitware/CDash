@@ -176,6 +176,12 @@ function rest_post()
                 VALUES ('$newgroupid','$buildtype','$buildname','$siteid','$expected',
                     '$now','1980-01-01 00:00:00')");
     }
+
+    // Should we change the 'done' setting for this build?
+    if (isset($_POST['done'])) {
+        $done = pdo_real_escape_numeric($_POST['done']);
+        pdo_query("UPDATE build SET done='$done' WHERE id='$buildid'");
+    }
 }
 
 
