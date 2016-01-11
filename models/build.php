@@ -54,6 +54,7 @@ class build
     public $SubProjectId;
     public $SubProjectName;
     public $Append;
+    public $Done;
     public $Labels;
 
     // Only the build.xml has information about errors and warnings
@@ -277,7 +278,9 @@ class build
             return false;
         }
 
-        $query = pdo_query("SELECT projectid,starttime,siteid,name,type,parentid FROM build WHERE id=".qnum($buildid));
+        $query = pdo_query(
+                "SELECT projectid,starttime,siteid,name,type,parentid,done
+                FROM build WHERE id=".qnum($buildid));
 
         if (!$query) {
             add_last_sql_error("Build:FillFromId()", $this->ProjectId, $this->Id);
@@ -285,12 +288,13 @@ class build
         }
 
         $build_array = pdo_fetch_array($query);
-        $this->Name = $build_array["name"];
-        $this->Type = $build_array["type"];
-        $this->StartTime = $build_array["starttime"];
-        $this->SiteId = $build_array["siteid"];
-        $this->ProjectId = $build_array["projectid"];
-        $this->ParentId = $build_array["parentid"];
+        $this->Name = $build_array['name'];
+        $this->Type = $build_array['type'];
+        $this->StartTime = $build_array['starttime'];
+        $this->SiteId = $build_array['siteid'];
+        $this->ProjectId = $build_array['projectid'];
+        $this->ParentId = $build_array['parentid'];
+        $this->Done = $build_array['done'];
 
         $subprojectid = $this->QuerySubProjectId($buildid);
         if ($subprojectid) {
@@ -1814,5 +1818,32 @@ class build
 
         $build_date = date(FMT_DATE, $build_start_time);
         return $build_date;
+    }
+
+    /** Return whether or not this build has been marked as done. */
+    public function GetDone()
+    {
+        if (empty($this->Id)) {
+            return false;
+        }
+
+        if (!empty($this->Done)) {
+            return $this->Done;
+        }
+
+        $query = pdo_query(
+                "SELECT done FROM build WHERE build.id=".qnum($this->Id));
+        if (!$query) {
+            add_last_sql_error("Build:GetDone()", $this->ProjectId, $this->Id);
+            return false;
+        }
+
+        if (pdo_num_rows($query)>0) {
+            $query_array = pdo_fetch_array($query);
+            $this->Done = $query_array['done'];
+            return $this->Done;
+        }
+
+        return false;
     }
 } // end class Build;

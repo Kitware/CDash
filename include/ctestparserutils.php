@@ -7,10 +7,13 @@ function add_build($build, $clientscheduleid=0)
         return;
     }
 
-    //add_log('subprojectname: '.$build->SubProjectName, 'add_build');
     $buildid = $build->GetIdFromName($build->SubProjectName);
     if ($buildid > 0 && !$build->Append) {
-        remove_build($buildid);
+        $build->Id = $buildid;
+        if ($build->GetDone()) {
+            remove_build($buildid);
+            $build->Id = null;
+        }
     }
 
     // Move this into a Build::SetAppend($append, $buildid) method:
