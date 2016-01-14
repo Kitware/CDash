@@ -222,25 +222,11 @@ class GCovTarHandler
       }
     }
 
-
-    // Get the ID for this coverage file, or create a new empty one
-    //if it doesn't already exist.
-    $sql = pdo_query(
-      "SELECT id FROM coveragefile WHERE fullpath='$path' AND file IS NULL");
-      if (pdo_num_rows($sql)==0) {
-          pdo_query("INSERT INTO coveragefile (fullpath) VALUES ('$path')");
-          $fileid = pdo_insert_id("coveragefile");
-      } else {
-          $coveragefile_array = pdo_fetch_array($sql);
-          $fileid = $coveragefile_array["id"];
-      }
-      $coverageFile->Id = $fileid;
-
     // Save these models to the database.
     $coverageFile->Update($this->BuildId);
-      $coverageFileLog->BuildId = $this->BuildId;
-      $coverageFileLog->FileId = $coverageFile->Id;
-      $coverageFileLog->Insert();
+    $coverageFileLog->BuildId = $this->BuildId;
+    $coverageFileLog->FileId = $coverageFile->Id;
+    $coverageFileLog->Insert();
 
     // Add any labels.
     if (array_key_exists($path, $this->Labels)) {

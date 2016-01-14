@@ -23,8 +23,9 @@ class CoverageLogHandler extends AbstractHandler
     private $StartTimeStamp;
     private $EndTimeStamp;
 
-    private $CoverageFile;
-    private $CoverageFileLog;
+    private $CurrentCoverageFile;
+    private $CurrentCoverageFileLog;
+    private $CoverageFiles;
     private $BuildId;
 
     /** Constructor */
@@ -35,6 +36,7 @@ class CoverageLogHandler extends AbstractHandler
         $this->Site = new Site();
         $this->BuildId = 0;
         $this->UpdateEndTime = false;
+        $this->CoverageFiles = array();
     }
 
     /** Start element */
@@ -55,12 +57,12 @@ class CoverageLogHandler extends AbstractHandler
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
         } elseif ($name=='FILE') {
-            $this->CoverageFile = new CoverageFile();
-            $this->CoverageFileLog = new CoverageFileLog();
-            $this->CoverageFile->FullPath = $attributes['FULLPATH'];
+            $this->CurrentCoverageFile = new CoverageFile();
+            $this->CurrentCoverageFileLog = new CoverageFileLog();
+            $this->CurrentCoverageFile->FullPath = $attributes['FULLPATH'];
         } elseif ($name=='LINE') {
             if ($attributes['COUNT']>=0) {
-                $this->CoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
+                $this->CurrentCoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
             }
         }
     } // end startElement()
@@ -71,26 +73,38 @@ class CoverageLogHandler extends AbstractHandler
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
 
-        if ($name == "STARTDATETIME" && $parent == 'COVERAGELOG') {
+        if ($name === 'SITE') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
+            $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $this->Build->ProjectId = $this->projectid;
             $this->BuildId = $this->Build->GetIdFromName($this->SubProjectName);
             if ($this->BuildId == 0) {
-                $t = 'Cannot add a coverage log to a build that does not exist';
-                $f = 'CoverageLogHandler::endElement';
-                add_log($t, $f, LOG_ERR, $this->projectid);
+                // If the build doesn't exist we add it.
+                $this->Build->StartTime = $start_time;
+                $this->Build->EndTime = $end_time;
+                $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+                $this->Build->SetSubProject($this->SubProjectName);
+                $this->Build->InsertErrors = false;
+                add_build($this->Build, $this->scheduleid);
+                $this->BuildId  = $this->Build->Id;
+            }
+            // Record the coverage data that we parsed from this file.
+            foreach ($this->CoverageFiles as $coverageInfo) {
+                $coverageFile = $coverageInfo[0];
+                $coverageFileLog = $coverageInfo[1];
+                $coverageFile->Update($this->BuildId);
+                $coverageFileLog->BuildId = $this->BuildId;
+                $coverageFileLog->FileId = $coverageFile->Id;
+                $coverageFileLog->Insert();
             }
         } elseif ($name == 'LINE') {
-            $this->CoverageFile->File .= '<br>'; // cannot be <br/> for backward compatibility
+            // Cannot be <br/> for backward compatibility.
+            $this->CurrentCoverageFile->File .= '<br>';
         } elseif ($name == 'FILE') {
-            if ($this->BuildId != 0) {
-                $this->CoverageFile->Update($this->BuildId);
-                $this->CoverageFileLog->BuildId = $this->BuildId;
-                $this->CoverageFileLog->FileId = $this->CoverageFile->Id;
-                $this->CoverageFileLog->Insert();
-            }
-            unset($this->CoverageFile);
-            unset($this->CoverageFileLog);
+            // Store these objects to be inserted after we're guaranteed
+            // to have a valid buildid.
+            $this->CoverageFiles[] = array($this->CurrentCoverageFile,
+                    $this->CurrentCoverageFileLog);
         }
     } // end endElement()
 
@@ -99,8 +113,18 @@ class CoverageLogHandler extends AbstractHandler
     {
         $parent = $this->getParent();
         $element = $this->getElement();
-        if ($element == 'LINE') {
-            $this->CoverageFile->File .= $data;
+        switch ($element) {
+            case 'LINE':
+                $this->CurrentCoverageFile->File .= $data;
+                break;
+            case 'STARTDATETIME':
+                $this->StartTimeStamp =
+                    str_to_time($data, $this->Build->GetStamp());
+                break;
+            case 'ENDDATETIME':
+                $this->EndTimeStamp =
+                    str_to_time($data, $this->Build->GetStamp());
+                break;
         }
     } // end text()
 } // end class;
