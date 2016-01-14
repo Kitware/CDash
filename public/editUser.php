@@ -66,8 +66,9 @@ if ($session_OK) {
         $passwd = htmlspecialchars(pdo_real_escape_string($_POST["passwd"]));
         $passwd2 = htmlspecialchars(pdo_real_escape_string($_POST["passwd2"]));
 
-        if (strlen($passwd)<5) {
-            $xml .= "<error>Password should be at least 5 characters.</error>";
+        global $CDASH_MINIMUM_PASSWORD_LENGTH;
+        if (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
+            $xml .= "<error>Password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.</error>";
         } elseif ($passwd != $passwd2) {
             $xml .= "<error>Passwords don't match.</error>";
         } else {
