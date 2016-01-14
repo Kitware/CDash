@@ -24,14 +24,15 @@
       <img src="img/Info.png" alt="info" class="icon"></img>
     </a>
 
-    <!-- If user is admin of the project propose to group this build -->
-    <div ng-if="cdash.user.admin == 1">
+    <div ng-if="cdash.userid > 0">
+      <!-- Display folder icon for logged in users -->
       <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
         <img src="img/folder.png" class="icon"/>
       </a>
       <img ng-show="build.loadingExpected == 1" src="img/loading.gif"/>
     </div>
-    <table width="100%" border="0" ng-show="build.showAdminOptions == 1">
+    <table width="100%" border="0" ng-show="build.showAdminOptions == 1 && cdash.user.admin == 1">
+      <!-- If user is admin of the project propose to group this build -->
       <tr ng-repeat="group in cdash.all_buildgroups">
         <td width="35%">
           <b>{{group.name}}</b>:
@@ -56,12 +57,23 @@
           <a href="javascript:;" ng-click="removeBuild(build)"> [remove this build] </a>
         </td>
       </tr>
-    </table>
-
-      <a ng-if="!build.id" href="javascript:;" ng-click="buildnosubmission_click(build.siteid, build.buildname, build.expecteddivname, build.buildgroupid, build.buildtype)">
-        <img src="img/folder.png" class="icon"/>
+    </table> <!-- end admin -->
+    <div ng-show="build.showAdminOptions == 1"
+         tooltip-popup-delay="1500"
+         tooltip-append-to-body="true"
+         uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
+    >
+      <a ng-show="build.done == 0" href="javascript:;" ng-click="toggleDone(build)">
+        [mark as done]
       </a>
-    </div> <!-- end admin -->
+      <a ng-show="build.done == 1" href="javascript:;" ng-click="toggleDone(build)">
+        [mark as not done]
+      </a>
+    </div>
+
+    <a ng-if="!build.id" href="javascript:;" ng-click="buildnosubmission_click(build.siteid, build.buildname, build.expecteddivname, build.buildgroupid, build.buildtype)">
+      <img src="img/folder.png" class="icon"/>
+    </a>
   </div>
 </td>
 

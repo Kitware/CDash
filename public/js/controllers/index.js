@@ -341,6 +341,20 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
   };
 
+  $scope.toggleDone = function(build) {
+    var newDoneValue = 1;
+    if (build.done == 1) {
+      newDoneValue = 0;
+    }
+    var parameters = {
+      buildid: build.id,
+      done: newDoneValue
+    };
+    $http.post('api/v1/build.php', parameters)
+    .success(function(data) {
+      build.done = newDoneValue;
+    });
+  };
 
   $scope.toggleExpected = function(build, groupid) {
     var newExpectedValue = 1;

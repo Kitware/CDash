@@ -186,9 +186,9 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInDb()
     {
-        $query  = "SELECT id, stamp, name, type, generator,command FROM build WHERE id=7";
+        $query  = "SELECT id, stamp, name, type, generator,command FROM build WHERE id=6";
         $result = $this->db->query($query);
-        $expected = array('id'        => '7',
+        $expected = array('id'        => '6',
                       'stamp'     => '20090223-0100-Nightly',
                       'name'      => 'Win32-MSVC2009',
                       'type'      => 'Nightly',
