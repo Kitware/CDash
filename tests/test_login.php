@@ -32,7 +32,7 @@ class LoginTestCase extends KWWebTestCase
             return;
         }
         $this->analyse($this->clickLink('Register'));
-        $this->fillOutRegisterForm();
+        $this->fillOutRegisterForm('test@kw', 'kitware');
         $this->setField('url', 'catchbot');
         $this->clickSubmitByName('sent');
         $this->assertText('Bots are not allowed to obtain CDash accounts!', 'Bots detected in test_login.php.42');
@@ -45,17 +45,27 @@ class LoginTestCase extends KWWebTestCase
         if ($content == false) {
             return;
         }
-        $this->fillOutRegisterForm();
+        $this->fillOutRegisterForm('test@kw', 'kitware');
         $this->clickSubmitByName('sent', array('url' => 'catchbot'));
         $this->assertText('Registration Complete. Please login with your email and password.');
     }
 
-    public function fillOutRegisterForm()
+    public function testPasswordTooShort()
+    {
+        $url = $this->url.'/register.php';
+        $content = $this->connect($url);
+        if ($content == false) {
+            return;
+        }
+        $this->fillOutRegisterForm('too@short', '1234');
+        $this->clickSubmitByName('sent', array('url' => 'catchbot'));
+        $this->assertText('Your password must be at least 5 characters.');
+    }
+
+    public function fillOutRegisterForm($email, $passwd)
     {
         $fname        = 'test';
         $lname        = 'kw';
-        $email        = 'test@kw';
-        $passwd       = 'kitware';
         $institution  = 'developer';
         $this->setField('fname', $fname);
         $this->setField('lname', $lname);

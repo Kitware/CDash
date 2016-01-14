@@ -10,11 +10,11 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.  See the above copyright notices for more information.
 
-=========================================================================*/
+  =========================================================================*/
 
 include_once(dirname(__DIR__)."/config/config.php");
 include_once("include/common.php");
@@ -49,9 +49,9 @@ function register()
         $lname = $query_array['lastname'];
         $institution = $query_array['institution'];
 
-    // We copy the data from usertemp to user
-    $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution)
-          VALUES ('$email','$passwd','$fname','$lname','$institution')";
+        // We copy the data from usertemp to user
+        $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution)
+            VALUES ('$email','$passwd','$fname','$lname','$institution')";
 
         if (pdo_query($sql)) {
             pdo_query("DELETE FROM usertemp WHERE email='".$email."'");
@@ -63,7 +63,7 @@ function register()
     } elseif (isset($_POST["sent"])) {
         // arrive from register form
 
-    $url   = $_POST["url"];
+        $url   = $_POST["url"];
         if ($url != "catchbot") {
             $reg = "Bots are not allowed to obtain CDash accounts!";
             return 0;
@@ -75,6 +75,13 @@ function register()
             $reg = "Passwords do not match!";
             return 0;
         }
+
+        global $CDASH_MINIMUM_PASSWORD_LENGTH;
+        if (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
+            $reg = "Your password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
+            return 0;
+        }
+
         $fname = $_POST["fname"];
         $lname = $_POST["lname"];
         $institution = $_POST["institution"];
@@ -102,7 +109,7 @@ function register()
 
             if ($CDASH_REGISTRATION_EMAIL_VERIFY) {
                 // Create a key
-        srand(microtime_float());
+                srand(microtime_float());
 
                 $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
                 $length = 40;
@@ -115,17 +122,17 @@ function register()
 
                 $date = date(FMT_DATETIME);
                 $sql="INSERT INTO ".qid("usertemp")." (email,password,firstname,lastname,institution,registrationkey,registrationdate)
-              VALUES ('$email','$passwd','$fname','$lname','$institution','$key','$date')";
+                    VALUES ('$email','$passwd','$fname','$lname','$institution','$key','$date')";
             } else {
                 $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution)
-              VALUES ('$email','$passwd','$fname','$lname','$institution')";
+                    VALUES ('$email','$passwd','$fname','$lname','$institution')";
             }
             if (pdo_query($sql)) {
                 if ($CDASH_REGISTRATION_EMAIL_VERIFY) {
                     $currentURI = get_server_URI();
 
-          // Send the email
-          $emailtitle = "Welcome to CDash!";
+                    // Send the email
+                    $emailtitle = "Welcome to CDash!";
                     $emailbody = "Hello ".$fname.",\n\n";
                     $emailbody .= "Welcome to CDash! In order to validate your registration please follow this link: \n";
                     $emailbody .= $currentURI."/register.php?key=".$key."\n";
@@ -137,7 +144,7 @@ function register()
                     $emailbody .= "\n-CDash on ".$serverName."\n";
 
                     if (cdashmail("$email", $emailtitle, $emailbody,
-          "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
+                                "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
                         add_log("email sent to: ".$email, "Registration");
                     } else {
                         add_log("cannot send email to: ".$email, "Registration", LOG_ERR);
@@ -158,7 +165,7 @@ function register()
         }
     } // end register
 
-  return 0;
+    return 0;
 }
 
 /** Login Form function */
@@ -199,7 +206,7 @@ function RegisterForm($regerror)
 // main
 // --------------------------------------------------------------------------------------
 if (!register()) {                 // registration failed
-  RegisterForm($reg);
+    RegisterForm($reg);
 }    // display register form
 else {
     header('location: user.php?note=register');

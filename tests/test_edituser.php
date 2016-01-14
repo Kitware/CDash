@@ -53,16 +53,31 @@ class EditUserTestCase extends KWWebTestCase
             return 1;
         }
 
-    //log in with new email address
-    $this->logout();
+        //log in with new email address
+        $this->logout();
         $this->login('simpletest2@localhost', 'simpletest');
         $content = $this->get($this->url."/editUser.php");
 
-    //change password
-    if (!$this->SetFieldByName("passwd", "12345")) {
-        $this->fail("SetFieldByName on password returned false");
-        return 1;
-    }
+        // test minimum password length.
+        if (!$this->SetFieldByName("passwd", "1234")) {
+            $this->fail("SetFieldByName on password returned false");
+            return 1;
+        }
+        if (!$this->SetFieldByName("passwd2", "1234")) {
+            $this->fail("SetFieldByName on password returned false");
+            return 1;
+        }
+        $content = $this->clickSubmitByName("updatepassword");
+        if (strpos($content, "Password must be at least 5 characters") === false) {
+            $this->fail("'Password must be at least 5 characters' not found in output.  Here's what we got instead:\n$content");
+            return 1;
+        }
+
+        //change password
+        if (!$this->SetFieldByName("passwd", "12345")) {
+            $this->fail("SetFieldByName on password returned false");
+            return 1;
+        }
         if (!$this->SetFieldByName("passwd2", "12345")) {
             $this->fail("SetFieldByName on password returned false");
             return 1;
