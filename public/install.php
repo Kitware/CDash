@@ -127,9 +127,10 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
             $valid_email = false;
         }
 
-        if ($valid_email && strlen($admin_password)<5) {
+        global $CDASH_MINIMUM_PASSWORD_LENGTH;
+        if ($valid_email && strlen($admin_password) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
             $xml .= "<db_created>0</db_created>";
-            $xml .= "<alert>* Administrator's password should be at least 5 characters</alert>";
+            $xml .= "<alert>* Administrator's password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters</alert>";
             $valid_email = false;
         }
 
