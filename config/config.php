@@ -65,6 +65,9 @@ $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
 $CDASH_REGISTRATION_EMAIL_VERIFY = true;
 // Duration of the cookie session (in seconds)
 $CDASH_COOKIE_EXPIRATION_TIME='3600';
+// Minimum password length for CDash accounts.
+$CDASH_MINIMUM_PASSWORD_LENGTH = 5;
+
 // Using HTTPS protocol to access CDash
 $CDASH_USE_HTTPS ='0';
 // Name of the server running CDash.

@@ -75,6 +75,13 @@ function register()
             $reg = "Passwords do not match!";
             return 0;
         }
+
+        global $CDASH_MINIMUM_PASSWORD_LENGTH;
+        if (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
+            $reg = "Your password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
+            return 0;
+        }
+
         $fname = $_POST["fname"];
         $lname = $_POST["lname"];
         $institution = $_POST["institution"];
