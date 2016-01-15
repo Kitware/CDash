@@ -77,19 +77,20 @@ class NoteHandler extends AbstractHandler
         parent::endElement($parser, $name);
         if ($name=='NOTE') {
             $this->Build->ProjectId = $this->projectid;
-            $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->RemoveIfDone();
 
             // If the build doesn't exist we add it.
-            if ($buildid == 0) {
+            if ($this->Build->Id == 0) {
+                $this->Build->Append = $this->Append;
                 $this->Build->SetSubProject($this->SubProjectName);
                 $this->Build->InsertErrors = false;
                 add_build($this->Build, $this->scheduleid);
-                $buildid = $this->Build->Id;
             }
 
-            if ($buildid > 0) {
+            if ($this->Build->Id > 0) {
                 // Insert the note
-                $this->Note->BuildId = $buildid;
+                $this->Note->BuildId = $this->Build->Id;
                 $this->Note->Insert();
             } else {
                 add_log("Trying to add a note to a nonexistent build", "note_handler.php", LOG_ERR);

@@ -16,6 +16,7 @@
 
   =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
+include_once("include/common.php");
 include_once('include/ctestparserutils.php');
 include_once("include/repository.php");
 include_once('models/builderror.php');
@@ -424,8 +425,8 @@ class build
 
         if (pdo_num_rows($build)>0) {
             $build_array = pdo_fetch_array($build);
-            $buildid = $build_array["id"];
-            return $buildid;
+            $this->Id = $build_array['id'];
+            return $this->Id;
         }
 
         add_last_sql_error("GetIdFromName", $this->ProjectId);
@@ -1815,4 +1816,20 @@ class build
 
         return false;
     }
+
+    /** Remove this build if it exists and has been marked as done.
+      * This is called by XML handlers when a new replacement
+      * submission is received.
+      **/
+    public function RemoveIfDone()
+    {
+        if (!$this->Exists() || !$this->GetDone()) {
+            return false;
+        }
+
+        remove_build($this->Id);
+        $this->Id = 0;
+        return true;
+    }
+
 } // end class Build;

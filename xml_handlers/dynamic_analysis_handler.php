@@ -27,7 +27,6 @@ class DynamicAnalysisHandler extends AbstractHandler
     private $EndTimeStamp;
     private $Checker;
     private $UpdateEndTime;
-    private $BuildId;
 
     private $DynamicAnalysis;
     private $DynamicAnalysisDefect;
@@ -101,10 +100,11 @@ class DynamicAnalysisHandler extends AbstractHandler
       if ($name == "STARTTESTTIME" && $parent == 'DYNAMICANALYSIS') {
           $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
           $this->Build->ProjectId = $this->projectid;
-          $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+          $this->Build->GetIdFromName($this->SubProjectName);
+          $this->Build->RemoveIfDone();
 
       // If the build doesn't exist we add it
-      if ($buildid==0) {
+      if ($this->Build->Id == 0) {
           $this->Build->ProjectId = $this->projectid;
           $this->Build->StartTime = $start_time;
           $this->Build->EndTime = $start_time;
@@ -113,18 +113,16 @@ class DynamicAnalysisHandler extends AbstractHandler
           $this->Build->InsertErrors = false;
           add_build($this->Build, $this->scheduleid);
           $this->UpdateEndTime = true;
-          $buildid = $this->Build->Id;
       } else {
           // Remove all the previous analysis
         $this->DynamicAnalysis = new DynamicAnalysis();
-          $this->DynamicAnalysis->BuildId = $buildid;
+          $this->DynamicAnalysis->BuildId = $this->Build->Id;
           $this->DynamicAnalysis->RemoveAll();
           unset($this->DynamicAnalysis);
       }
-          $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-          $this->BuildId = $buildid;
+          $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
       } elseif ($name == "TEST" && $parent == 'DYNAMICANALYSIS') {
-          $this->DynamicAnalysis->BuildId = $this->BuildId;
+          $this->DynamicAnalysis->BuildId = $this->Build->Id;
           $this->DynamicAnalysis->Insert();
       } elseif ($name=='DEFECT') {
           $this->DynamicAnalysis->AddDefect($this->DynamicAnalysisDefect);
@@ -143,7 +141,7 @@ class DynamicAnalysisHandler extends AbstractHandler
       // But we still want a line showing the current dynamic analysis
       if (!isset($this->DynamicAnalysis)) {
           $this->DynamicAnalysis = new DynamicAnalysis();
-          $this->DynamicAnalysis->BuildId = $this->BuildId;
+          $this->DynamicAnalysis->BuildId = $this->Build->Id;
           $this->DynamicAnalysis->Status='passed';
           $this->DynamicAnalysis->Checker = $this->Checker;
           $this->DynamicAnalysis->Insert();

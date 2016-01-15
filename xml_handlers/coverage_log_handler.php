@@ -26,7 +26,6 @@ class CoverageLogHandler extends AbstractHandler
     private $CurrentCoverageFile;
     private $CurrentCoverageFileLog;
     private $CoverageFiles;
-    private $BuildId;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)
@@ -34,7 +33,6 @@ class CoverageLogHandler extends AbstractHandler
         parent::__construct($projectID, $scheduleID);
         $this->Build = new Build();
         $this->Site = new Site();
-        $this->BuildId = 0;
         $this->UpdateEndTime = false;
         $this->CoverageFiles = array();
     }
@@ -77,8 +75,9 @@ class CoverageLogHandler extends AbstractHandler
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $this->Build->ProjectId = $this->projectid;
-            $this->BuildId = $this->Build->GetIdFromName($this->SubProjectName);
-            if ($this->BuildId == 0) {
+            $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->RemoveIfDone();
+            if ($this->Build->Id == 0) {
                 // If the build doesn't exist we add it.
                 $this->Build->StartTime = $start_time;
                 $this->Build->EndTime = $end_time;
@@ -86,14 +85,13 @@ class CoverageLogHandler extends AbstractHandler
                 $this->Build->SetSubProject($this->SubProjectName);
                 $this->Build->InsertErrors = false;
                 add_build($this->Build, $this->scheduleid);
-                $this->BuildId  = $this->Build->Id;
             }
             // Record the coverage data that we parsed from this file.
             foreach ($this->CoverageFiles as $coverageInfo) {
                 $coverageFile = $coverageInfo[0];
                 $coverageFileLog = $coverageInfo[1];
-                $coverageFile->Update($this->BuildId);
-                $coverageFileLog->BuildId = $this->BuildId;
+                $coverageFile->Update($this->Build->Id);
+                $coverageFileLog->BuildId = $this->Build->Id;
                 $coverageFileLog->FileId = $coverageFile->Id;
                 $coverageFileLog->Insert();
             }

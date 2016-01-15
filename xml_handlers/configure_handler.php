@@ -94,18 +94,17 @@ class ConfigureHandler extends AbstractHandler
             $this->Build->SetSubProject($this->SubProjectName);
             $this->Build->InsertErrors = false;
 
-            $buildid = $this->Build->GetIdFromName($this->SubProjectName);
-            if ($buildid == 0) {
+            $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->RemoveIfDone();
+            if ($this->Build->Id == 0) {
                 // If the build doesn't exist we add it
                 add_build($this->Build, $this->scheduleid);
-                $buildid = $this->Build->Id;
             } else {
                 // Otherwise we make sure that it's up-to-date.
-                $this->Build->Id = $buildid;
-                $this->Build->UpdateBuild($buildid, -1, -1);
+                $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
-            $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-            $this->Configure->BuildId = $buildid;
+            $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
+            $this->Configure->BuildId = $this->Build->Id;
             $this->Configure->StartTime = $start_time;
             $this->Configure->EndTime = $end_time;
 
@@ -119,7 +118,6 @@ class ConfigureHandler extends AbstractHandler
             $this->Configure->ComputeWarnings();
             $this->Configure->ComputeErrors();
 
-            $this->Build->Id = $buildid;
             $this->Build->ComputeConfigureDifferences();
 
             // Record the number of warnings & errors with the build.

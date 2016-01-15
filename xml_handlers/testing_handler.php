@@ -29,7 +29,6 @@ class TestingHandler extends AbstractHandler
     private $EndTimeStamp;
     private $UpdateEndTime; // should we update the end time of the build
 
-    private $BuildId;
     private $Test;
     private $BuildTest;
     private $BuildTestDiff;
@@ -137,10 +136,11 @@ class TestingHandler extends AbstractHandler
         } elseif ($name == "TESTLIST" && $parent == 'TESTING') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $this->Build->ProjectId = $this->projectid;
-            $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->RemoveIfDone();
 
             // If the build doesn't exist we add it
-            if ($buildid==0) {
+            if ($this->Build->Id == 0) {
                 $this->Build->ProjectId = $this->projectid;
                 $this->Build->StartTime = $start_time;
                 $this->Build->EndTime = $start_time;
@@ -151,9 +151,7 @@ class TestingHandler extends AbstractHandler
                 add_build($this->Build, $this->scheduleid);
 
                 $this->UpdateEndTime = true;
-                $buildid = $this->Build->Id;
             } else {
-                $this->Build->Id = $buildid;
                 //if the build already exists factor the number of tests that have
                 //already been run into our running total
                 $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
@@ -161,8 +159,7 @@ class TestingHandler extends AbstractHandler
                 $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();
             }
 
-            $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-            $this->BuildId = $buildid;
+            $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
         }
     } // end startElement
 
@@ -177,13 +174,13 @@ class TestingHandler extends AbstractHandler
             $this->Test->Insert();
             if ($this->Test->Id>0) {
                 $this->BuildTest->TestId = $this->Test->Id;
-                $this->BuildTest->BuildId = $this->BuildId;
+                $this->BuildTest->BuildId = $this->Build->Id;
                 $this->BuildTest->Insert();
 
-                $this->Test->InsertLabelAssociations($this->BuildId);
+                $this->Test->InsertLabelAssociations($this->Build->Id);
             } else {
                 add_log("Cannot insert test", "Test XML parser", LOG_ERR,
-                        $this->projectid, $this->BuildId);
+                        $this->projectid, $this->Build->Id);
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (isset($this->Test)) {
