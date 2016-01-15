@@ -142,10 +142,12 @@ class CoverageJUnitHandler extends AbstractHandler
               $this->Build->UpdateBuild($this->Build->Id, -1, -1);
           }
 
-          // Remove any previous coverage information
           $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
           $this->CoverageSummary->BuildId = $this->Build->Id;
-          $this->CoverageSummary->RemoveAll();
+          if ($this->CoverageSummary->Exists()) {
+              // Remove any previous coverage information.
+              $this->CoverageSummary->RemoveAll();
+          }
 
           // Insert coverage summary
           $this->CoverageSummary->Insert();

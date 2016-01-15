@@ -281,4 +281,24 @@ class coveragesummary
       }
       return $buildids;
   }
+
+  /** Return whether or not a CoverageSummary exists for this build. */
+  public function Exists()
+  {
+      if (!$this->BuildId) {
+          return false;
+      }
+
+      $exists_result = pdo_single_row_query(
+              "SELECT COUNT(1) AS numrows FROM coveragesummary
+              WHERE buildid=".qnum($this->BuildId));
+
+      if ($exists_result && array_key_exists('numrows', $exists_result)) {
+          $numrows = $exists_result['numrows'];
+          if ($numrows > 0) {
+              return true;
+          }
+      }
+      return false;
+  }
 } // end CoverageSummary class;
