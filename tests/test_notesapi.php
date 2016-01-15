@@ -41,22 +41,22 @@ class NotesAPICase extends KWWebTestCase
             return 1;
         }
 
-        $cacheFound = false;
-        $serialFound = false;
+        $driverFound = false;
+        $cronFound = false;
         foreach ($response['notes'] as $note) {
-            if (strpos($note['name'], 'CMakeCache.clean.txt') !== false) {
-                $cacheFound = true;
+            if (strpos($note['name'], 'TrilinosDriverDashboard.cmake') !== false) {
+                $driverFound = true;
             }
-            if (strpos($note['name'], 'serial_debug.cmake') !== false) {
-                $serialFound = true;
+            if (strpos($note['name'], 'cron_driver.bat') !== false) {
+                $cronFound = true;
             }
         }
-        if ($cacheFound === false) {
-            $this->fail("Expected to find a note named CMakeCache.clean.txt");
+        if ($driverFound === false) {
+            $this->fail("Expected to find a note named TrilinosDriverDashboard.cmake");
             return 1;
         }
-        if ($serialFound === false) {
-            $this->fail("Expected to find a note named serial_debug.cmake");
+        if ($cronFound === false) {
+            $this->fail("Expected to find a note named cron_driver.bat");
             return 1;
         }
 
