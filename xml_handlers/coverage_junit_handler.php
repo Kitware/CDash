@@ -137,6 +137,9 @@ class CoverageJUnitHandler extends AbstractHandler
               $this->Build->SetSubProject($this->SubProjectName);
               $this->Build->InsertErrors = false;
               add_build($this->Build, $this->scheduleid);
+          } else {
+              // Otherwise make sure that it's up-to-date.
+              $this->Build->UpdateBuild($this->Build->Id, -1, -1);
           }
 
           // Remove any previous coverage information

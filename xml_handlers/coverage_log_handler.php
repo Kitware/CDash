@@ -75,16 +75,19 @@ class CoverageLogHandler extends AbstractHandler
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $this->Build->ProjectId = $this->projectid;
+            $this->Build->StartTime = $start_time;
+            $this->Build->EndTime = $end_time;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+            $this->Build->SetSubProject($this->SubProjectName);
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->RemoveIfDone();
             if ($this->Build->Id == 0) {
                 // If the build doesn't exist we add it.
-                $this->Build->StartTime = $start_time;
-                $this->Build->EndTime = $end_time;
-                $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-                $this->Build->SetSubProject($this->SubProjectName);
                 $this->Build->InsertErrors = false;
                 add_build($this->Build, $this->scheduleid);
+            } else {
+                // Otherwise make sure that it's up-to-date.
+                $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
             // Record the coverage data that we parsed from this file.
             foreach ($this->CoverageFiles as $coverageInfo) {

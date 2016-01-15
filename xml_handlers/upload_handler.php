@@ -113,6 +113,9 @@ class UploadHandler extends AbstractHandler
               add_build($this->Build, $this->scheduleid);
 
               $this->UpdateEndTime = true;
+          } else {
+              // Otherwise make sure that the build is up-to-date.
+              $this->Build->UpdateBuild($this->Build->Id, -1, -1);
           }
           $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
       } elseif ($name == 'FILE') {

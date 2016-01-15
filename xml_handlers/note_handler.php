@@ -78,14 +78,19 @@ class NoteHandler extends AbstractHandler
         if ($name=='NOTE') {
             $this->Build->ProjectId = $this->projectid;
             $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->SetSubProject($this->SubProjectName);
+            $this->Build->StartTime = $this->Note->Time;
+            $this->Build->EndTime = $this->Note->Time;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
             $this->Build->RemoveIfDone();
 
             // If the build doesn't exist we add it.
             if ($this->Build->Id == 0) {
-                $this->Build->Append = $this->Append;
-                $this->Build->SetSubProject($this->SubProjectName);
                 $this->Build->InsertErrors = false;
                 add_build($this->Build, $this->scheduleid);
+            } else {
+                // Otherwise make sure that the build is up-to-date.
+                $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
 
             if ($this->Build->Id > 0) {

@@ -95,17 +95,20 @@ class CoverageHandler extends AbstractHandler
           $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
           $this->Build->ProjectId = $this->projectid;
+          $this->Build->StartTime = $start_time;
+          $this->Build->EndTime = $end_time;
+          $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+          $this->Build->SetSubProject($this->SubProjectName);
           $this->Build->GetIdFromName($this->SubProjectName);
           $this->Build->RemoveIfDone();
 
           // If the build doesn't exist we add it
           if ($this->Build->Id == 0) {
-              $this->Build->StartTime = $start_time;
-              $this->Build->EndTime = $end_time;
-              $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-              $this->Build->SetSubProject($this->SubProjectName);
               $this->Build->InsertErrors = false;
               add_build($this->Build, $this->scheduleid);
+          } else {
+            // Otherwise make sure that it's up-to-date.
+            $this->Build->UpdateBuild($this->Build->Id, -1, -1);
           }
 
           // Remove any previous coverage information

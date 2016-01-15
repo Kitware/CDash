@@ -146,9 +146,12 @@ class TestingJUnitHandler extends AbstractHandler
 
             $this->UpdateEndTime = true;
         } else {
-          //if the build already exists factor the number of tests that have
-          //already been run into our running total
-          $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
+            // Otherwise make sure that the build is up-to-date.
+            $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+
+            //if the build already exists factor the number of tests that have
+            //already been run into our running total
+            $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
             $this->NumberTestsNotRun += $this->Build->GetNumberOfNotRunTests();
             $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();
         }

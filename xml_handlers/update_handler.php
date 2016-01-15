@@ -95,6 +95,9 @@ class UpdateHandler extends AbstractHandler
               $this->Build->Append = $this->Append;
               $this->Build->InsertErrors = false;
               add_build($this->Build, $this->scheduleid);
+          } else {
+              // Otherwise make sure that it's up-to-date.
+              $this->Build->UpdateBuild($this->Build->Id, -1, -1);
           }
 
           $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
