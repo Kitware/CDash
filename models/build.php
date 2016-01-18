@@ -473,6 +473,28 @@ class build
     // Save in the database
     public function Save()
     {
+        $this->StartTime = pdo_real_escape_string($this->StartTime);
+        $this->EndTime = pdo_real_escape_string($this->EndTime);
+        $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
+        $this->Command = pdo_real_escape_string($this->Command);
+        $this->Log = pdo_real_escape_string($this->Log);
+
+        // Compute the number of errors and warnings.
+        // This speeds up the display of the main table.
+        $nbuilderrors = -1;
+        $nbuildwarnings = -1;
+        if ($this->InsertErrors) {
+            $nbuilderrors = 0;
+            $nbuildwarnings = 0;
+            foreach ($this->Errors as $error) {
+                if ($error->Type == 0) {
+                    $nbuilderrors++;
+                } else {
+                    $nbuildwarnings++;
+                }
+            }
+        }
+
         if (!$this->Exists()) {
             $id = "";
             $idvalue = "";
@@ -489,27 +511,6 @@ class build
             $this->Stamp = pdo_real_escape_string($this->Stamp);
             $this->Type = pdo_real_escape_string($this->Type);
             $this->Generator = pdo_real_escape_string($this->Generator);
-            $this->StartTime = pdo_real_escape_string($this->StartTime);
-            $this->EndTime = pdo_real_escape_string($this->EndTime);
-            $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
-            $this->Command = pdo_real_escape_string($this->Command);
-            $this->Log = pdo_real_escape_string($this->Log);
-
-            // Compute the number of errors and warnings (this speeds up the display of the main table)
-            if ($this->InsertErrors) {
-                $nbuilderrors = 0;
-                $nbuildwarnings = 0;
-                foreach ($this->Errors as $error) {
-                    if ($error->Type == 0) {
-                        $nbuilderrors++;
-                    } else {
-                        $nbuildwarnings++;
-                    }
-                }
-            } else {
-                $nbuilderrors = -1;
-                $nbuildwarnings = -1;
-            }
 
             $parentId = 0;
             $justCreatedParent = false;
@@ -524,10 +525,18 @@ class build
             }
             $this->ParentId = $parentId;
 
-            $query = "INSERT INTO build (".$id."siteid,projectid,stamp,name,type,generator,starttime,endtime,submittime,command,log,builderrors,buildwarnings,parentid)
-                VALUES (".$idvalue."'$this->SiteId','$this->ProjectId','$this->Stamp','$this->Name',
-                        '$this->Type','$this->Generator','$this->StartTime',
-                        '$this->EndTime','$this->SubmitTime','$this->Command','$this->Log',$nbuilderrors,$nbuildwarnings, $this->ParentId)";
+            $query =
+                "INSERT INTO build
+                (".$id."siteid, projectid, stamp, name, type, generator,
+                 starttime, endtime, submittime, command, log, builderrors,
+                 buildwarnings, parentid)
+                VALUES
+                (".$idvalue."'$this->SiteId', '$this->ProjectId',
+                 '$this->Stamp', '$this->Name', '$this->Type',
+                 '$this->Generator', '$this->StartTime', '$this->EndTime',
+                 '$this->SubmitTime', '$this->Command', '$this->Log',
+                 $nbuilderrors, $nbuildwarnings, $this->ParentId)";
+
             if (!pdo_query($query)) {
                 add_last_sql_error("Build Insert", $this->ProjectId, $this->Id);
                 return false;
@@ -569,18 +578,6 @@ class build
                 }
             }
 
-            // Add errors/warnings
-            foreach ($this->Errors as $error) {
-                $error->BuildId = $this->Id;
-                $error->Insert();
-            }
-
-            // Add ErrorDiff
-            foreach ($this->ErrorDiffs as $diff) {
-                $diff->BuildId = $this->Id;
-                $diff->Insert();
-            }
-
             // Save the information
             if (!empty($this->Information)) {
                 $this->Information->BuildId = $this->Id;
@@ -592,90 +589,30 @@ class build
                 $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
             }
         } else {
-            if ($this->Append) {
-                $this->EndTime = pdo_real_escape_string($this->EndTime);
-                $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
-                $this->Command = pdo_real_escape_string(' '.$this->Command);
-                $this->Log = pdo_real_escape_string(' '.$this->Log);
+            // Build already exists.
+            $this->Command = ' ' . $this->Command;
+            $this->Log = ' ' . $this->Log;
 
-                // Compute the number of errors and warnings (this speeds up the display of the main table)
-                if ($this->InsertErrors) {
-                    $nbuilderrors = $this->GetNumberOfErrors();
-                    $nbuildwarnings = $this->GetNumberOfWarnings();
-                    foreach ($this->Errors as $error) {
-                        if ($error->Type == 0) {
-                            $nbuilderrors++;
-                        } else {
-                            $nbuildwarnings++;
-                        }
-                    }
-                } else {
-                    $nbuilderrors = -1;
-                    $nbuildwarnings = -1;
-                }
-
-                if ($this->SubProjectName) {
-                    $newErrors = 0;
-                    $newWarnings = 0;
-                    if ($nbuilderrors > 0 || $nbuildwarnings > 0) {
-                        // If we are adding errors or warnings to this build
-                        // we need to know how many builderrors & buildwarnings
-                        // it had previously so we can update the parent's
-                        // tally properly.
-                        $priorResult = pdo_single_row_query(
-                                "SELECT builderrors, buildwarnings FROM build
-                                WHERE id=".qnum($this->Id));
-                        if ($priorResult['builderrors'] == -1) {
-                            $priorResult['builderrors'] = 0;
-                        }
-                        if ($priorResult['buildwarnings'] == -1) {
-                            $priorResult['buildwarnings'] = 0;
-                        }
-                        $newErrors = $nbuilderrors - $priorResult['builderrors'];
-                        $newWarnings = $nbuildwarnings - $priorResult['buildwarnings'];
-                    }
-                    $this->ParentId = $this->GetParentBuildId();
-                    $this->UpdateBuild($this->ParentId, $newErrors, $newWarnings);
-                }
-
-                include('config/config.php');
-                if ($CDASH_DB_TYPE == 'pgsql') {
-                    // pgsql doesn't have concat...
-
-                    $query = "UPDATE build SET
-                        endtime='$this->EndTime',submittime='$this->SubmitTime',
-                        builderrors='$nbuilderrors',buildwarnings='$nbuildwarnings'," .
-                            "command=command || '$this->Command',
-                        log=log || '$this->Log'" .
-                            "WHERE id=".qnum($this->Id);
-                } else {
-                    $query = "UPDATE build SET
-                        endtime='$this->EndTime',submittime='$this->SubmitTime',
-                        builderrors='$nbuilderrors',buildwarnings='$nbuildwarnings'," .
-                            "command=CONCAT(command, '$this->Command'),
-                        log=CONCAT(log, '$this->Log')" .
-                            "WHERE id=".qnum($this->Id);
-                }
-
-                if (!pdo_query($query)) {
-                    add_last_sql_error("Build Insert (Append)", $this->ProjectId, $this->Id);
-                    return false;
-                }
-
-                // Add errors/warnings
-                foreach ($this->Errors as $error) {
-                    $error->BuildId = $this->Id;
-                    $error->Insert();
-                }
-
-                // Add ErrorDiff
-                foreach ($this->ErrorDiffs as $diff) {
-                    $diff->BuildId = $this->Id;
-                    $diff->Insert();
-                }
-            } else {
-                //echo "info: nothing<br/>";
+            if ($this->SubProjectName) {
+                // Update the parent build if necessary.
+                $this->ParentId = $this->GetParentBuildId();
+                $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
             }
+
+            // Now update this build.
+            $this->UpdateBuild($this->Id, $nbuilderrors, $nbuildwarnings);
+        }
+
+        // Add errors/warnings
+        foreach ($this->Errors as $error) {
+            $error->BuildId = $this->Id;
+            $error->Insert();
+        }
+
+        // Add ErrorDiff
+        foreach ($this->ErrorDiffs as $diff) {
+            $diff->BuildId = $this->Id;
+            $diff->Insert();
         }
 
         // Add label associations regardless of how Build::Save gets called:
@@ -1511,10 +1448,11 @@ class build
                 (parentid, siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, builderrors, buildwarnings)
                 VALUES
-                ('-1','$this->SiteId','$this->ProjectId','$this->Stamp',
-                 '$this->Name','$this->Type','$this->Generator',
-                 '$this->StartTime','$this->EndTime','$this->SubmitTime',
-                 $numErrors,$numWarnings)";
+                ('-1', '$this->SiteId', '$this->ProjectId', '$this->Stamp',
+                 '$this->Name', '$this->Type', '$this->Generator',
+                 '$this->StartTime', '$this->EndTime', '$this->SubmitTime',
+                 $numErrors, $numWarnings)";
+
             if (!pdo_query($query)) {
                 add_last_sql_error("Build Insert Parent", $this->ProjectId, $this->Id);
                 return false;
