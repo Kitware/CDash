@@ -224,9 +224,9 @@ class GCovTarHandler
 
     // Save these models to the database.
     $coverageFile->Update($this->BuildId);
-    $coverageFileLog->BuildId = $this->BuildId;
-    $coverageFileLog->FileId = $coverageFile->Id;
-    $coverageFileLog->Insert();
+      $coverageFileLog->BuildId = $this->BuildId;
+      $coverageFileLog->FileId = $coverageFile->Id;
+      $coverageFileLog->Insert();
 
     // Add any labels.
     if (array_key_exists($path, $this->Labels)) {

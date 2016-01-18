@@ -149,7 +149,6 @@ class TestingHandler extends AbstractHandler
                 $this->Build->Append = $this->Append;
                 $this->Build->InsertErrors = false;
                 add_build($this->Build, $this->scheduleid);
-
             } else {
                 // Otherwise make sure that the build is up-to-date.
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
@@ -222,7 +221,7 @@ class TestingHandler extends AbstractHandler
             }
         } // end named measurement
         elseif ($name == "SITE") {
-                        // Update the number of tests in the Build table
+            // Update the number of tests in the Build table
             $this->Build->UpdateTestNumbers($this->NumberTestsPassed,
                     $this->NumberTestsFailed,
                     $this->NumberTestsNotRun);

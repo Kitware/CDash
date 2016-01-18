@@ -96,16 +96,16 @@ class DynamicAnalysisHandler extends AbstractHandler
       $parent = $this->getParent(); // should be before endElement
     parent::endElement($parser, $name);
 
-    if ($name == "STARTTESTTIME" && $parent == 'DYNAMICANALYSIS') {
-        $this->Build->ProjectId = $this->projectid;
-        $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-        $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
-        $this->Build->StartTime = $start_time;
-        $this->Build->EndTime = $start_time;
-        $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-        $this->Build->SetSubProject($this->SubProjectName);
-        $this->Build->GetIdFromName($this->SubProjectName);
-        $this->Build->RemoveIfDone();
+      if ($name == "STARTTESTTIME" && $parent == 'DYNAMICANALYSIS') {
+          $this->Build->ProjectId = $this->projectid;
+          $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
+          $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
+          $this->Build->StartTime = $start_time;
+          $this->Build->EndTime = $start_time;
+          $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+          $this->Build->SetSubProject($this->SubProjectName);
+          $this->Build->GetIdFromName($this->SubProjectName);
+          $this->Build->RemoveIfDone();
         // If the build doesn't exist we add it
         if ($this->Build->Id == 0) {
             $this->Build->InsertErrors = false;
@@ -120,19 +120,19 @@ class DynamicAnalysisHandler extends AbstractHandler
             $this->DynamicAnalysis->RemoveAll();
             unset($this->DynamicAnalysis);
         }
-        $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
-    } elseif ($name == "TEST" && $parent == 'DYNAMICANALYSIS') {
-        $this->DynamicAnalysis->BuildId = $this->Build->Id;
-        $this->DynamicAnalysis->Insert();
-    } elseif ($name=='DEFECT') {
-        $this->DynamicAnalysis->AddDefect($this->DynamicAnalysisDefect);
-        unset($this->DynamicAnalysisDefect);
-    } elseif ($name == 'LABEL') {
-        if (isset($this->DynamicAnalysis)) {
-            $this->DynamicAnalysis->AddLabel($this->Label);
-        }
-    } elseif ($name == 'DYNAMICANALYSIS') {
-        // If everything is perfect CTest doesn't send any <test>
+          $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
+      } elseif ($name == "TEST" && $parent == 'DYNAMICANALYSIS') {
+          $this->DynamicAnalysis->BuildId = $this->Build->Id;
+          $this->DynamicAnalysis->Insert();
+      } elseif ($name=='DEFECT') {
+          $this->DynamicAnalysis->AddDefect($this->DynamicAnalysisDefect);
+          unset($this->DynamicAnalysisDefect);
+      } elseif ($name == 'LABEL') {
+          if (isset($this->DynamicAnalysis)) {
+              $this->DynamicAnalysis->AddLabel($this->Label);
+          }
+      } elseif ($name == 'DYNAMICANALYSIS') {
+          // If everything is perfect CTest doesn't send any <test>
         // But we still want a line showing the current dynamic analysis
         if (!isset($this->DynamicAnalysis)) {
             $this->DynamicAnalysis = new DynamicAnalysis();
@@ -141,7 +141,7 @@ class DynamicAnalysisHandler extends AbstractHandler
             $this->DynamicAnalysis->Checker = $this->Checker;
             $this->DynamicAnalysis->Insert();
         }
-    }
+      }
   } // end endElement
 
 
