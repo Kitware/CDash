@@ -87,18 +87,22 @@ class ConfigureHandler extends AbstractHandler
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
             $this->Build->ProjectId = $this->projectid;
-            $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->ProjectId = $this->projectid;
+            $this->Build->StartTime = $start_time;
+            $this->Build->EndTime = $end_time;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+            $this->Build->SetSubProject($this->SubProjectName);
+            $this->Build->InsertErrors = false;
 
-            // If the build doesn't exist we add it
-            if ($buildid==0) {
-                $this->Build->ProjectId = $this->projectid;
-                $this->Build->StartTime = $start_time;
-                $this->Build->EndTime = $end_time;
-                $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-                $this->Build->SetSubProject($this->SubProjectName);
-                $this->Build->InsertErrors = false;
+            $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+            if ($buildid == 0) {
+                // If the build doesn't exist we add it
                 add_build($this->Build, $this->scheduleid);
                 $buildid = $this->Build->Id;
+            } else {
+                // Otherwise we make sure that it's up-to-date.
+                $this->Build->Id = $buildid;
+                $this->Build->UpdateBuild($buildid, -1, -1);
             }
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
             $this->Configure->BuildId = $buildid;
