@@ -97,17 +97,19 @@ class UploadHandler extends AbstractHandler
           $this->Build->Generator = $attributes['GENERATOR'];
           $this->Build->Information = $buildInformation;
       } elseif ($name=='UPLOAD') {
+          $extracted_time =
+              extract_date_from_buildstamp($this->Build->GetStamp());
+          $build_time = gmdate(FMT_DATETIME, strtotime($extracted_time));
+          $this->Build->StartTime = $build_time;
+          $this->Build->EndTime = $build_time;
+          $this->Build->SubmitTime = gmdate(FMT_DATETIME);
           $this->Build->ProjectId = $this->projectid;
+          $this->Build->SetSubProject($this->SubProjectName);
           $this->Build->GetIdFromName($this->SubProjectName);
           $this->Build->RemoveIfDone();
 
           // If the build doesn't exist we add it
           if ($this->Build->Id == 0) {
-              $this->Build->ProjectId = $this->projectid;
-              $this->Build->StartTime =  gmdate(FMT_DATETIME);
-              $this->Build->EndTime =  gmdate(FMT_DATETIME);
-              $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-              $this->Build->SetSubProject($this->SubProjectName);
               $this->Build->Append = false;
               $this->Build->InsertErrors = false;
               add_build($this->Build, $this->scheduleid);
