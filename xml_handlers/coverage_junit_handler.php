@@ -126,26 +126,31 @@ class CoverageJUnitHandler extends AbstractHandler
           $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
           $this->Build->ProjectId = $this->projectid;
-          $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+          $this->Build->GetIdFromName($this->SubProjectName);
+          $this->Build->RemoveIfDone();
 
-      // If the build doesn't exist we add it
-      if ($buildid==0) {
-          $this->Build->ProjectId = $this->projectid;
-          $this->Build->StartTime = $start_time;
-          $this->Build->EndTime = $end_time;
-          $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-          $this->Build->InsertErrors = false;
-          add_build($this->Build, $this->scheduleid);
-          $buildid = $this->Build->Id;
-      }
+          // If the build doesn't exist we add it
+          if ($this->Build->Id == 0) {
+              $this->Build->StartTime = $start_time;
+              $this->Build->EndTime = $end_time;
+              $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+              $this->Build->SetSubProject($this->SubProjectName);
+              $this->Build->InsertErrors = false;
+              add_build($this->Build, $this->scheduleid);
+          } else {
+              // Otherwise make sure that it's up-to-date.
+              $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+          }
 
-      // Remove any previous coverage information
-      $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-          $this->CoverageSummary->BuildId=$buildid;
-          $this->CoverageSummary->RemoveAll();
+          $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
+          $this->CoverageSummary->BuildId = $this->Build->Id;
+          if ($this->CoverageSummary->Exists()) {
+              // Remove any previous coverage information.
+              $this->CoverageSummary->RemoveAll();
+          }
 
-      // Insert coverage summary
-      $this->CoverageSummary->Insert();
+          // Insert coverage summary
+          $this->CoverageSummary->Insert();
           $this->CoverageSummary->ComputeDifference();
       } elseif ($name=='SOURCEFILE') {
           $this->CoverageSummary->AddCoverage($this->Coverage);

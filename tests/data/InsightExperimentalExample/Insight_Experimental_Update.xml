@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest2.7-20080827">
+  <Site>camelot.kitware</Site>
+  <BuildName>Linux-g++-4.1-LesionSizingSandbox_Debug</BuildName>
+  <BuildStamp>20090223-0710-Experimental</BuildStamp>
+  <StartDateTime>Feb 23 02:10 EST</StartDateTime>
+  <StartTime>1235373037</StartTime>
+  <UpdateCommand>cvs update -d -A -P -D "2009-02-23 01:00:00 UTC"</UpdateCommand>
+  <UpdateType>CVS</UpdateType>
+  <EndDateTime>Feb 23 02:10 EST</EndDateTime>
+  <EndTime>1235373043</EndTime>
+<ElapsedMinutes>0.1</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>

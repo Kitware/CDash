@@ -67,7 +67,7 @@ class coveragefile
             // we have the same crc32
 
             $coveragefile_array = pdo_fetch_array($coveragefile);
-            $this->Id = $coveragefile_array["id"];
+            $this->Id = $coveragefile_array['id'];
 
             // Update the current coverage.fileid
             $coverage = pdo_query("SELECT c.fileid FROM coverage AS c,coveragefile AS cf
@@ -99,15 +99,26 @@ class coveragefile
 
             // The GcovTarHandler creates coveragefiles before coverages
             // so we need a simpler query in this case.
-            if (empty($coveragefile_array)) {
+            if (!empty($coveragefile_array)) {
+                $this->Id = $coveragefile_array['id'];
+            } else {
                 $coveragefile = pdo_query(
                         "SELECT id, file FROM coveragefile
                         WHERE fullpath='$this->FullPath' AND file IS NULL
                         ORDER BY id ASC");
                 $coveragefile_array = pdo_fetch_array($coveragefile);
             }
+            if (!empty($coveragefile_array)) {
+                $this->Id = $coveragefile_array['id'];
+            } else {
+                // If we still haven't found an existing fileid
+                // we insert one here.
+                pdo_query(
+                        "INSERT INTO coveragefile (fullpath)
+                        VALUES ('$this->FullPath')");
+                $this->Id = pdo_insert_id("coveragefile");
+            }
 
-            $this->Id = $coveragefile_array["id"];
             pdo_query("UPDATE coveragefile SET file='$file',crc32='$this->Crc32' WHERE id=".qnum($this->Id));
             add_last_sql_error("CoverageFile:Update");
         }

@@ -66,13 +66,8 @@ class NoteHandler extends AbstractHandler
             $this->Build->Information = $buildInformation;
         } elseif ($name=='NOTE') {
             $this->Note = new BuildNote();
-            $this->Note->Name = isset($attributes['NAME'])?$attributes['NAME']:'';
-        } elseif ($name=='NOTES') {
-            // begin notes
-            // We need a build to add notes (and cannot create one from the information)
-            $this->Build->ProjectId = $this->projectid;
-            $buildid = $this->Build->GetIdFromName($this->SubProjectName);
-            $this->BuildId = $buildid;
+            $this->Note->Name =
+                isset($attributes['NAME']) ? $attributes['NAME'] : '';
         }
     } // end startElement
 
@@ -81,12 +76,29 @@ class NoteHandler extends AbstractHandler
     {
         parent::endElement($parser, $name);
         if ($name=='NOTE') {
-            if ($this->BuildId>0) {
+            $this->Build->ProjectId = $this->projectid;
+            $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->SetSubProject($this->SubProjectName);
+            $this->Build->StartTime = $this->Note->Time;
+            $this->Build->EndTime = $this->Note->Time;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+            $this->Build->RemoveIfDone();
+
+            // If the build doesn't exist we add it.
+            if ($this->Build->Id == 0) {
+                $this->Build->InsertErrors = false;
+                add_build($this->Build, $this->scheduleid);
+            } else {
+                // Otherwise make sure that the build is up-to-date.
+                $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+            }
+
+            if ($this->Build->Id > 0) {
                 // Insert the note
-                $this->Note->BuildId = $this->BuildId;
+                $this->Note->BuildId = $this->Build->Id;
                 $this->Note->Insert();
             } else {
-                add_log("note_handler.php", "Trying to add a note to an unexisting build");
+                add_log("Trying to add a note to a nonexistent build", "note_handler.php", LOG_ERR);
             }
         }
     } // end endElement
