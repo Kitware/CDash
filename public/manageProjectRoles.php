@@ -97,12 +97,6 @@ if ($session_OK) {
 
     @$registerUser = $_POST["registerUser"];
 
-    function make_seed_recoverpass()
-    {
-        list($usec, $sec) = explode(' ', microtime());
-        return (float) $sec + ((float) $usec * 100000);
-    }
-
 // Register a user and send the email
 function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
 {
@@ -142,17 +136,17 @@ function register_user($projectid, $email, $firstName, $lastName, $repositoryCre
         return "<error>".$repositoryCredential." was already registered for this project under a different email address</error>";
     }
 
-  // Register the user
-  // Create a new password
-  $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    // Register the user
+    // Create a new password
+    $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     $length = 10;
-
-    srand(make_seed_recoverpass());
 
     $pass = "";
     $max=strlen($keychars)-1;
     for ($i=0;$i<=$length;$i++) {
-        $pass .= substr($keychars, rand(0, $max), 1);
+        // random_int is available in PHP 7 and the random_compat PHP 5.x
+        // polyfill included in the Composer package.json dependencies.
+        $pass .= substr($keychars, random_int(0, $max), 1);
     }
     $encrypted = md5($pass);
 

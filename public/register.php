@@ -108,16 +108,15 @@ function register()
             $institution = pdo_real_escape_string($institution);
 
             if ($CDASH_REGISTRATION_EMAIL_VERIFY) {
-                // Create a key
-                srand(microtime_float());
-
                 $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
                 $length = 40;
 
                 $key = "";
                 $max=strlen($keychars)-1;
                 for ($i=0;$i<$length;$i++) {
-                    $key .= substr($keychars, rand(0, $max), 1);
+                    // random_int is available in PHP 7 and the random_compat PHP 5.x
+                    // polyfill included in the Composer package.json dependencies.
+                    $key .= substr($keychars, random_int(0, $max), 1);
                 }
 
                 $date = date(FMT_DATETIME);

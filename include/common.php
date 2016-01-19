@@ -1750,18 +1750,12 @@ function generate_web_api_key()
     $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     $length = 40;
 
-  // seed with microseconds
-  function make_seed_recoverpass()
-  {
-      list($usec, $sec) = explode(' ', microtime());
-      return (float) $sec + ((float) $usec * 100000);
-  }
-    srand(make_seed_recoverpass());
-
     $key = "";
     $max=strlen($keychars)-1;
     for ($i=0;$i<$length;$i++) {
-        $key .= substr($keychars, rand(0, $max), 1);
+        // random_int is available in PHP 7 and the random_compat PHP 5.x
+        // polyfill included in the Composer package.json dependencies.
+        $key .= substr($keychars, random_int(0, $max), 1);
     }
     return $key;
 }
