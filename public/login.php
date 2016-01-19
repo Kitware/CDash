@@ -28,7 +28,7 @@ $loginerror = "";
 // --------------------------------------------------------------------------------------
 $mysession = array("login"=>false, "passwd"=>false, "ID"=>false, "valid"=>false, "langage"=>false);
 $uri = basename($_SERVER['PHP_SELF']);
-$stamp = md5(srand(5));
+$stamp = md5(random_bytes(8)); // Use 8 bytes of randomness, unsure if $stamp is used?
 $session_OK = 0;
 
 if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
