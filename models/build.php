@@ -606,7 +606,13 @@ class build
             // Update parent's tally of total build errors & warnings.
             if (!$justCreatedParent) {
                 $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
+            } elseif ($this->ParentId > 0) {
+                // If we just created a child build, associate it with
+                // the parent's updates (if any).
+                require_once('models/buildupdate.php');
+                BuildUpdate::AssignUpdateToChild($this->Id, $this->ParentId);
             }
+
         } else {
             // Build already exists.
             $this->Command = ' ' . $this->Command;

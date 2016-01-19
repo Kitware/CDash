@@ -349,4 +349,37 @@ class buildupdate
 
       return true;
   } // end AssociateBuild()
+
+  /** Update a child build so that it shares the parent's updates.
+   *  This function does not change he data model unless the parent
+   * has an update and the child does not. **/
+  public static function AssignUpdateToChild($childid, $parentid)
+  {
+      $childid = qnum($childid);
+      $parentid = qnum($parentid);
+
+      // Make sure the child does not already have an update.
+      $result = pdo_query(
+              "SELECT updateid FROM build2update WHERE buildid=$childid");
+      if (pdo_num_rows($result) > 0) {
+          return;
+      }
+
+      // Get the parent's update.
+      $result = pdo_query(
+              "SELECT updateid FROM build2update WHERE buildid=$parentid");
+      if (pdo_num_rows($result) < 1) {
+          return;
+      }
+      $row = pdo_fetch_array($result);
+      $updateid = qnum($row['updateid']);
+
+      // Assign the parent's update to the child.
+      $query = "INSERT INTO build2update (buildid, updateid)
+          VALUES ($childid, $updateid)";
+      if (!pdo_query($query)) {
+          add_last_sql_error("AssignUpdateToChild", 0, $childid);
+      }
+  }
+
 }
