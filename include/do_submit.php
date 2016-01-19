@@ -67,8 +67,8 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
     }
 
     global $CDASH_ASYNC_WORKERS;
-    if ($CDASH_DB_TYPE != 'pgsql' && $CDASH_ASYNC_WORKERS < 2) {
-        pdo_query("START TRANSACTION");
+    if ($CDASH_ASYNC_WORKERS < 2) {
+        pdo_begin_transaction();
     }
   // Parse the XML file
   $handler = ctest_parse($filehandle, $projectid, $expected_md5, $do_checksum, $scheduleid);
@@ -77,8 +77,8 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
       //no need to log an error since ctest_parse already did
     return;
   }
-    if ($CDASH_DB_TYPE != 'pgsql' && $CDASH_ASYNC_WORKERS < 2) {
-        pdo_query("COMMIT");
+    if ($CDASH_ASYNC_WORKERS < 2) {
+        pdo_commit();
     }
 
   // Send the emails if necessary
