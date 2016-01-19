@@ -1522,12 +1522,20 @@ class build
             return;
         }
 
+        // Avoid a race condition when parallel processing.
+        $for_update = "";
+        global $CDASH_ASYNC_WORKERS;
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_begin_transaction();
+            $for_update = "FOR UPDATE";
+        }
+
         $clauses = array();
 
         $build = pdo_single_row_query(
                 "SELECT builderrors, buildwarnings, starttime, endtime,
                 submittime, log, command
-                FROM build WHERE id='$buildid'");
+                FROM build WHERE id='$buildid' $for_update");
 
 
         // Special case: check if we should move from -1 to 0 errors/warnings.
@@ -1591,8 +1599,15 @@ class build
             $query .= " WHERE id = '$buildid'";
             if (!pdo_query($query)) {
                 add_last_sql_error("UpdateBuild", $this->ProjectId, $buildid);
+                if ($CDASH_ASYNC_WORKERS > 1) {
+                    pdo_rollback();
+                }
                 return false;
             }
+        }
+
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_commit();
         }
     }
 
