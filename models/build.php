@@ -569,8 +569,7 @@ class build
             if ($this->GroupId) {
                 $query = "INSERT INTO build2group (groupid,buildid) VALUES ('$this->GroupId','$this->Id')";
                 if (!pdo_query($query)) {
-                    add_last_sql_error("Build Insert", $this->ProjectId, $this->Id);
-                    return false;
+                    add_last_sql_error("Build2Group Insert", $this->ProjectId, $this->Id);
                 }
                 // Associate the parent with this group too.
                 if ($this->ParentId > 0) {
@@ -581,8 +580,7 @@ class build
                             "INSERT INTO build2group (groupid,buildid)
                             VALUES ('$this->GroupId','$this->ParentId')";
                         if (!pdo_query($query)) {
-                            add_last_sql_error("Build Insert", $this->ProjectId, $this->ParentId);
-                            return false;
+                            add_last_sql_error("Parent Build2Group Insert", $this->ProjectId, $this->ParentId);
                         }
                     }
                 }
@@ -592,8 +590,7 @@ class build
             if ($this->SubProjectId) {
                 $query = "INSERT INTO subproject2build (subprojectid,buildid) VALUES ('$this->SubProjectId','$this->Id')";
                 if (!pdo_query($query)) {
-                    add_last_sql_error("Build Insert", $this->ProjectId, $this->Id);
-                    return false;
+                    add_last_sql_error("SubProject2Build Insert", $this->ProjectId, $this->Id);
                 }
             }
 
