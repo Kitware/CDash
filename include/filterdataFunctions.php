@@ -597,6 +597,7 @@ function createPageSpecificFilters($page_id)
         case 'index.php':
         case 'project.php':
         case 'indexchildren.php':
+        case 'compareCoverage.php':
             {
                 return new IndexPhpFilters();
             }

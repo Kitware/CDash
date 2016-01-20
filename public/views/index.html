@@ -291,7 +291,8 @@
         <thead>
           <tr class="table-heading2">
             <td colspan="1" class="nob">
-              <h3><a href="#" class="grouptrigger">Coverage</a></h3>
+              <h3><a href="#" class="grouptrigger">Coverage</a>
+              <a ng-if="cdash.coverages.length > 0" href="compareCoverage.php?project={{cdash.projectname}}&date={{cdash.date}}">Compare Coverage</a></h3>
             </td>
             <td colspan="6" align="right" class="nob">
             </td>
@@ -338,6 +339,7 @@
 
             <!-- Conditionally display the labels -->
             <th ng-if = "cdash.displaylabels == 1 && !cdash.coveragegroups" align="center" class="nob" width="10%">Labels</th>
+
           </tr>
         </thead>
 
