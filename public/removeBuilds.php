@@ -104,7 +104,9 @@ $xml .= "<yearTo>".$yearTo."</yearTo>";
 if (isset($submit)) {
     $begin = $yearFrom."-".$monthFrom."-".$dayFrom." 00:00:00";
     $end = $yearTo."-".$monthTo."-".$dayTo." 00:00:00";
-    $sql = "SELECT id FROM build WHERE projectid=".qnum($projectid)." AND starttime<='$end' AND starttime>='$begin' ORDER BY starttime ASC";
+    $sql = "SELECT id FROM build WHERE projectid=".qnum($projectid)." AND
+        parentid IN (0, -1) AND starttime<='$end' AND starttime>='$begin'
+        ORDER BY starttime ASC";
 
     $build = pdo_query($sql);
 

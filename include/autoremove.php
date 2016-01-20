@@ -26,7 +26,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force=false)
     if (!$force && !isset($CDASH_AUTOREMOVE_BUILDS)) {
         return;
     }
-    
+
     set_time_limit(0);
 
     $buildgroups = pdo_query('SELECT id,autoremovetimeframe FROM buildgroup WHERE projectid='.qnum($projectid));
@@ -43,9 +43,13 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force=false)
         $cutoff = time()-3600*24*$days;
         $cutoffdate = date(FMT_DATETIME, $cutoff);
 
-        $builds = pdo_query("SELECT build.id AS id FROM build,build2group WHERE build.starttime<'".$cutoffdate."'
-      AND build2group.buildid=build.id AND build2group.groupid=".qnum($groupid).
-      "ORDER BY build.starttime ASC LIMIT $maxbuilds");
+        $builds = pdo_query(
+                "SELECT build.id AS id FROM build, build2group
+                WHERE build.parentid IN (0, -1) AND
+                build.starttime<'".$cutoffdate."' AND
+                build2group.buildid=build.id AND
+                build2group.groupid=".qnum($groupid).
+                "ORDER BY build.starttime ASC LIMIT $maxbuilds");
         add_last_sql_error("autoremove::removeBuildsGroupwise");
 
         while ($build = pdo_fetch_array($builds)) {
@@ -85,7 +89,12 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force=false)
     $startdate = date(FMT_DATETIME, $currentdate);
 
     add_log('about to query for builds to remove', 'removeFirstBuilds');
-    $builds = pdo_query("SELECT id FROM build WHERE starttime<'".$startdate."' AND projectid=".qnum($projectid)." ORDER BY starttime ASC LIMIT ".$maxbuilds);
+    $builds = pdo_query(
+            "SELECT id FROM build
+            WHERE parentid IN (0, -1) AND
+            starttime<'$startdate' AND
+            projectid=".qnum($projectid)."
+            ORDER BY starttime ASC LIMIT $maxbuilds");
     add_last_sql_error("dailyupdates::removeFirstBuilds");
 
     $buildids = array();
