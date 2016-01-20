@@ -1107,7 +1107,7 @@ function remove_build($buildid)
   if (is_array($buildid)) {
       // In order to avoid making the list of builds to delete too large
       // we delete them in batches (one batch per parent).
-      foreach($buildid as $parentid) {
+      foreach ($buildid as $parentid) {
           remove_children($parentid);
       }
   } else {
