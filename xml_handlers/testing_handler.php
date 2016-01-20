@@ -27,9 +27,7 @@ class TestingHandler extends AbstractHandler
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
-    private $UpdateEndTime; // should we update the end time of the build
 
-    private $BuildId;
     private $Test;
     private $BuildTest;
     private $BuildTestDiff;
@@ -50,7 +48,6 @@ class TestingHandler extends AbstractHandler
         parent::__construct($projectID, $scheduleID);
         $this->Build = new Build();
         $this->Site = new Site();
-        $this->UpdateEndTime = false;
         $this->NumberTestsFailed = 0;
         $this->NumberTestsNotRun = 0;
         $this->NumberTestsPassed = 0;
@@ -136,33 +133,34 @@ class TestingHandler extends AbstractHandler
             $this->Label = new Label();
         } elseif ($name == "TESTLIST" && $parent == 'TESTING') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
+            $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
+
             $this->Build->ProjectId = $this->projectid;
-            $buildid = $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->StartTime = $start_time;
+            $this->Build->EndTime = $start_time;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+            $this->Build->SetSubProject($this->SubProjectName);
+
+            $this->Build->GetIdFromName($this->SubProjectName);
+            $this->Build->RemoveIfDone();
 
             // If the build doesn't exist we add it
-            if ($buildid==0) {
-                $this->Build->ProjectId = $this->projectid;
-                $this->Build->StartTime = $start_time;
-                $this->Build->EndTime = $start_time;
-                $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-                $this->Build->SetSubProject($this->SubProjectName);
+            if ($this->Build->Id == 0) {
                 $this->Build->Append = $this->Append;
                 $this->Build->InsertErrors = false;
                 add_build($this->Build, $this->scheduleid);
-
-                $this->UpdateEndTime = true;
-                $buildid = $this->Build->Id;
             } else {
-                $this->Build->Id = $buildid;
-                //if the build already exists factor the number of tests that have
-                //already been run into our running total
+                // Otherwise make sure that the build is up-to-date.
+                $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+
+                // If the build already exists factor the number of tests
+                // that have already been run into our running total.
                 $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
                 $this->NumberTestsNotRun += $this->Build->GetNumberOfNotRunTests();
                 $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();
             }
 
-            $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-            $this->BuildId = $buildid;
+            $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
         }
     } // end startElement
 
@@ -177,13 +175,13 @@ class TestingHandler extends AbstractHandler
             $this->Test->Insert();
             if ($this->Test->Id>0) {
                 $this->BuildTest->TestId = $this->Test->Id;
-                $this->BuildTest->BuildId = $this->BuildId;
+                $this->BuildTest->BuildId = $this->Build->Id;
                 $this->BuildTest->Insert();
 
-                $this->Test->InsertLabelAssociations($this->BuildId);
+                $this->Test->InsertLabelAssociations($this->Build->Id);
             } else {
                 add_log("Cannot insert test", "Test XML parser", LOG_ERR,
-                        $this->projectid, $this->BuildId);
+                        $this->projectid, $this->Build->Id);
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (isset($this->Test)) {
@@ -223,11 +221,6 @@ class TestingHandler extends AbstractHandler
             }
         } // end named measurement
         elseif ($name == "SITE") {
-            if (strlen($this->EndTimeStamp)>0 && $this->UpdateEndTime) {
-                $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
-                $this->Build->UpdateEndTime($end_time);
-            }
-
             // Update the number of tests in the Build table
             $this->Build->UpdateTestNumbers($this->NumberTestsPassed,
                     $this->NumberTestsFailed,

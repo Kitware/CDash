@@ -27,31 +27,6 @@ $(document).ready(function() {
       }
     }
 
-  // Check if we have a cookie for refreshing the page
-  var refresh_cookie = $.cookie('cdash_refresh');
-  if(refresh_cookie)
-    {
-    $('.autorefresh').css('font-weight','bold');
-    setTimeout( function(){if($.cookie('cdash_refresh')) location.reload()},refresh_cookie); // do the refresh
-    }
-
-  /** Enable the autorefresh */
-  $('.autorefresh').click(function() {
-     var refresh_cookie = $.cookie('cdash_refresh');
-
-    if(refresh_cookie)
-      {
-      $.cookie('cdash_refresh', null);
-      $(this).css('font-weight','normal');
-      return false;
-      }
-    else
-      {
-      $.cookie('cdash_refresh',60000); // 60 seconds refresh
-      location.reload();
-      }
-  });
-
   /** qtip on the build time elapsed */
   $('.builddateelapsed').qtip({
      content: {attr: 'alt'},

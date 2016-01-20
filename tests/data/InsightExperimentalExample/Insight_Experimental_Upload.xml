@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="Linux-g++-4.1-LesionSizingSandbox_Debug" BuildStamp="20090223-0710-Experimental" Name="camelot.kitware" Generator="ctest2.7-20080827">
+	<Upload>
+		<File filename="/tmp/tmp.txt">
+			<Content encoding="base64">VGhpcyBpcyBteSB1cGxvYWRlZCBmaWxlCg==</Content>
+		</File>
+	</Upload>
+</Site>

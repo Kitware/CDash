@@ -60,7 +60,12 @@
                 <span ng-show="cdash.advancedview != 0">Simple View</span>
               </a>
             </li>
-            <li><a href="" class="autorefresh">Auto-refresh</a></li>
+            <li>
+              <a class="autorefresh" ng-click="toggleAutoRefresh()">
+                <span ng-show="!autoRefresh">Auto-refresh</span>
+                <span ng-show="autoRefresh">Stop auto-refresh</span>
+              </a>
+            </li>
             <li>
               <a id="label_colorblind" href="javascript:;" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
                 <span ng-show="cdash.filterdata.colorblind == 0">Colorblind palette</span>

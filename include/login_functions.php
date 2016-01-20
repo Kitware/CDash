@@ -34,22 +34,16 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
           $cookiename = "CDash-".$_SERVER['SERVER_NAME'];
           $time = time()+60*60*24*30; // 30 days;
 
-      // Create a new password
-      $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+          // Create a new password
+          $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
           $length = 32;
-
-      // seed with microseconds
-      function make_seed_recoverpass()
-      {
-          list($usec, $sec) = explode(' ', microtime());
-          return (float) $sec + ((float) $usec * 100000);
-      }
-          srand(make_seed_recoverpass());
 
           $key = "";
           $max=strlen($keychars)-1;
           for ($i=0;$i<=$length;$i++) {
-              $key .= substr($keychars, rand(0, $max), 1);
+              // random_int is available in PHP 7 and the random_compat PHP 5.x
+              // polyfill included in the Composer package.json dependencies.
+              $key .= substr($keychars, random_int(0, $max), 1);
           }
 
           $value = $user_array['id'].$key;
@@ -153,29 +147,23 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                 $cookiename = "CDash-".$_SERVER['SERVER_NAME'];
                 $time = time()+60*60*24*30; // 30 days;
 
-            // Create a new password
-            $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                // Create a new password
+                $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
                 $length = 32;
-
-            // seed with microseconds
-            function make_seed_recoverpass()
-            {
-                list($usec, $sec) = explode(' ', microtime());
-                return (float) $sec + ((float) $usec * 100000);
-            }
-                srand(make_seed_recoverpass());
 
                 $key = "";
                 $max=strlen($keychars)-1;
                 for ($i=0;$i<=$length;$i++) {
-                    $key .= substr($keychars, rand(0, $max), 1);
+                    // random_int is available in PHP 7 and the random_compat PHP 5.x
+                    // polyfill included in the Composer package.json dependencies.
+                    $key .= substr($keychars, random_int(0, $max), 1);
                 }
 
                 $value = $userid.$key;
                 setcookie($cookiename, $value, $time);
 
-            // Update the user key
-            pdo_query("UPDATE ".qid("user")." SET cookiekey='".$key."' WHERE id=".qnum($userid));
+                // Update the user key
+                pdo_query("UPDATE ".qid("user")." SET cookiekey='".$key."' WHERE id=".qnum($userid));
             }
 
             session_name("CDash");

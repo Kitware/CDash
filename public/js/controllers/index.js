@@ -48,7 +48,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 })
 
 
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, $filter, multisort, filters) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, $filter, $timeout, multisort, filters) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -66,6 +66,17 @@ CDash.filter("showEmptyBuildsLast", function () {
     $scope.showFeed = false;
   } else {
     $scope.showFeed = true;
+  }
+
+  // Check if we have a cookie for auto-refresh.
+  var timer, refresh_cookie = $.cookie('cdash_refresh');
+  if(refresh_cookie) {
+    $scope.autoRefresh = true;
+    timer = $timeout(function () {
+      window.location.reload(true);
+    }, 5000);
+  } else {
+    $scope.autoRefresh = false;
   }
 
   // Check for filters
@@ -370,6 +381,19 @@ CDash.filter("showEmptyBuildsLast", function () {
     .success(function(data) {
       build.expected = newExpectedValue;
     });
+  };
+
+  $scope.toggleAutoRefresh = function() {
+    var refresh_cookie = $.cookie('cdash_refresh');
+    if(refresh_cookie) {
+      // Disable autorefresh and remove the cookie.
+      $timeout.cancel(timer);
+      $scope.autoRefresh = false;
+      $.cookie('cdash_refresh', null);
+    } else {
+      $.cookie('cdash_refresh', 1);
+      window.location.reload(true);
+    }
   };
 
   $scope.moveToGroup = function(build, groupid) {

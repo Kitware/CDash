@@ -97,28 +97,29 @@ class UploadHandler extends AbstractHandler
           $this->Build->Generator = $attributes['GENERATOR'];
           $this->Build->Information = $buildInformation;
       } elseif ($name=='UPLOAD') {
-          $this->Build->ProjectId = $this->projectid;
-          $buildid = $this->Build->GetIdFromName($this->SubProjectName);
-
-      // If the build doesn't exist we add it
-      if ($buildid==0) {
-          $this->Build->ProjectId = $this->projectid;
-          $this->Build->StartTime =  gmdate(FMT_DATETIME);
-          $this->Build->EndTime =  gmdate(FMT_DATETIME);
+          $extracted_time =
+              extract_date_from_buildstamp($this->Build->GetStamp());
+          $build_time = gmdate(FMT_DATETIME, strtotime($extracted_time));
+          $this->Build->StartTime = $build_time;
+          $this->Build->EndTime = $build_time;
           $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+          $this->Build->ProjectId = $this->projectid;
           $this->Build->SetSubProject($this->SubProjectName);
-          $this->Build->Append = false;
-          $this->Build->InsertErrors = false;
-          add_build($this->Build, $this->scheduleid);
+          $this->Build->GetIdFromName($this->SubProjectName);
+          $this->Build->RemoveIfDone();
 
-          $this->UpdateEndTime = true;
-          $buildid = $this->Build->Id;
-      } else {
-          $this->Build->Id = $buildid;
-      }
+          // If the build doesn't exist we add it
+          if ($this->Build->Id == 0) {
+              $this->Build->Append = false;
+              $this->Build->InsertErrors = false;
+              add_build($this->Build, $this->scheduleid);
 
-          $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-          $this->BuildId = $buildid;
+              $this->UpdateEndTime = true;
+          } else {
+              // Otherwise make sure that the build is up-to-date.
+              $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+          }
+          $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
       } elseif ($name == 'FILE') {
           $this->UploadFile = new UploadFile();
           $this->UploadFile->Filename = $attributes['FILENAME'];
@@ -163,7 +164,7 @@ class UploadHandler extends AbstractHandler
       }
 
       if ($name == 'FILE' && $parent == 'UPLOAD') {
-          $this->UploadFile->BuildId = $this->BuildId;
+          $this->UploadFile->BuildId = $this->Build->Id;
 
       // Close base64 temporary file writing handler
       fclose($this->Base64TmpFileWriteHandle);

@@ -27,7 +27,6 @@ class DynamicAnalysisHandler extends AbstractHandler
     private $EndTimeStamp;
     private $Checker;
     private $UpdateEndTime;
-    private $BuildId;
 
     private $DynamicAnalysis;
     private $DynamicAnalysisDefect;
@@ -39,7 +38,6 @@ class DynamicAnalysisHandler extends AbstractHandler
       parent::__construct($projectID, $scheduleID);
       $this->Build = new Build();
       $this->Site = new Site();
-      $this->UpdateEndTime = false;
   }
 
 
@@ -99,54 +97,50 @@ class DynamicAnalysisHandler extends AbstractHandler
     parent::endElement($parser, $name);
 
       if ($name == "STARTTESTTIME" && $parent == 'DYNAMICANALYSIS') {
+          $this->Build->ProjectId = $this->projectid;
           $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-          $this->Build->ProjectId = $this->projectid;
-          $buildid = $this->Build->GetIdFromName($this->SubProjectName);
-
-      // If the build doesn't exist we add it
-      if ($buildid==0) {
-          $this->Build->ProjectId = $this->projectid;
+          $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
           $this->Build->StartTime = $start_time;
           $this->Build->EndTime = $start_time;
           $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-          $this->Build->InsertErrors = false;
-          add_build($this->Build, $this->scheduleid);
-          $this->UpdateEndTime = true;
-          $buildid = $this->Build->Id;
-      } else {
-          // Remove all the previous analysis
-        $this->DynamicAnalysis = new DynamicAnalysis();
-          $this->DynamicAnalysis->BuildId = $buildid;
-          $this->DynamicAnalysis->RemoveAll();
-          unset($this->DynamicAnalysis);
-      }
-          $GLOBALS['PHP_ERROR_BUILD_ID'] = $buildid;
-          $this->BuildId = $buildid;
+          $this->Build->SetSubProject($this->SubProjectName);
+          $this->Build->GetIdFromName($this->SubProjectName);
+          $this->Build->RemoveIfDone();
+        // If the build doesn't exist we add it
+        if ($this->Build->Id == 0) {
+            $this->Build->InsertErrors = false;
+            add_build($this->Build, $this->scheduleid);
+        } else {
+            // Otherwise make sure that the build is up-to-date.
+            $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+
+            // Remove all the previous analysis
+            $this->DynamicAnalysis = new DynamicAnalysis();
+            $this->DynamicAnalysis->BuildId = $this->Build->Id;
+            $this->DynamicAnalysis->RemoveAll();
+            unset($this->DynamicAnalysis);
+        }
+          $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
       } elseif ($name == "TEST" && $parent == 'DYNAMICANALYSIS') {
-          $this->DynamicAnalysis->BuildId = $this->BuildId;
+          $this->DynamicAnalysis->BuildId = $this->Build->Id;
           $this->DynamicAnalysis->Insert();
       } elseif ($name=='DEFECT') {
           $this->DynamicAnalysis->AddDefect($this->DynamicAnalysisDefect);
           unset($this->DynamicAnalysisDefect);
-      } elseif ($name == "SITE") {
-          if ($this->UpdateEndTime) {
-              $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
-        $this->Build->UpdateEndTime($end_time);
-          }
       } elseif ($name == 'LABEL') {
           if (isset($this->DynamicAnalysis)) {
               $this->DynamicAnalysis->AddLabel($this->Label);
           }
       } elseif ($name == 'DYNAMICANALYSIS') {
           // If everything is perfect CTest doesn't send any <test>
-      // But we still want a line showing the current dynamic analysis
-      if (!isset($this->DynamicAnalysis)) {
-          $this->DynamicAnalysis = new DynamicAnalysis();
-          $this->DynamicAnalysis->BuildId = $this->BuildId;
-          $this->DynamicAnalysis->Status='passed';
-          $this->DynamicAnalysis->Checker = $this->Checker;
-          $this->DynamicAnalysis->Insert();
-      }
+        // But we still want a line showing the current dynamic analysis
+        if (!isset($this->DynamicAnalysis)) {
+            $this->DynamicAnalysis = new DynamicAnalysis();
+            $this->DynamicAnalysis->BuildId = $this->Build->Id;
+            $this->DynamicAnalysis->Status='passed';
+            $this->DynamicAnalysis->Checker = $this->Checker;
+            $this->DynamicAnalysis->Insert();
+        }
       }
   } // end endElement
 
