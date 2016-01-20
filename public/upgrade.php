@@ -841,7 +841,9 @@ if ($DeleteBuildsWrongDate) {
     $currentdate = time()+3600*24*3; // or 3 days away from now
   $forwarddate = date(FMT_DATETIME, $currentdate);
 
-    $builds = pdo_query("SELECT id FROM build WHERE starttime<'1975-12-31 23:59:59' OR starttime>'$forwarddate'");
+  $builds = pdo_query(
+          "SELECT id FROM build WHERE parentid IN (0, -1) AND
+          starttime<'1975-12-31 23:59:59' OR starttime>'$forwarddate'");
     while ($builds_array = pdo_fetch_array($builds)) {
         $buildid = $builds_array["id"];
     //echo $buildid."<br>";
