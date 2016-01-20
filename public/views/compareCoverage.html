@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
+    <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_@@version.min.js"></script>
+    <title ng-bind="title">CDash : Compare Coverage</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="CompareCoverageController">
+
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
+
+    <br/>
+
+    <div id="compare_coverage_content" ng-if="!loading && cdash.requirelogin != 1 && cdash.future != 1 && !cdash.error">
+
+      <!-- Coverage -->
+      <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
+        <thead>
+          <tr class="table-heading2">
+            <td colspan="1" class="nob">
+              <h3>Coverage</h3>
+            </td>
+            <td colspan="{{cdash.numberbuilds}} + 1" align="right" class="nob"></td>
+          </tr>
+
+          <tr class="table-heading">
+            <th align="center" width="20%" style="cursor: pointer" rowspan="2" ng-click="updateOrderByFields(sortCoverage,'label', $event)">
+              SubProject
+              <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+            </th>
+
+            <th class="timeheader botl" align="center" colspan="{{cdash.numberbuilds}}" >
+              Percentage              
+            </th>
+          </tr>
+
+          <tr class="table-heading">
+            <th align="center" ng-repeat="coverage in cdash.coverages" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'percentage', $event)">
+            {{coverage.buildname}}
+            </th>
+
+             <th align="center" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'percentage', $event)">
+             Aggregate
+             </th>
+          </tr>
+
+      </thead>
+
+        <!-- Coverage groups -->
+        <tbody ng-repeat="group in cdash.coveragegroups |orderBy:sortCoverage.orderByFields" id="coveragebody">
+          <tr class="parent_row">
+            <td class="paddt" align="left">
+              <b>{{group.label}}</b>
+              <div class="glyphicon"  ng-click="group.hidden = ! group.hidden" ng-class="{'glyphicon-chevron-down': !group.hidden, 'glyphicon-chevron-right': group.hidden}"></div>
+            </td>
+
+            <td align="center" ng-repeat="buildname in cdash.buildnames" ng-class="{'normal': group[buildname] >= group.thresholdgreen, 'warning': group[buildname] < group.thresholdgreen && group[buildname] >= group.thresholdyellow, 'error': group[buildname] < group.thresholdyellow}">
+              <a ng-if="group[buildname] >= 0"> {{group[buildname]}}% </a>
+            </td>
+
+          </tr>
+
+          <tr class="child_row" ng-show="!group.hidden" ng-repeat="coverage in group.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
+            <td align="left" class="paddt">
+              {{coverage.label}}
+            </td>
+
+            <td align="center" ng-repeat="buildname in cdash.buildnames" ng-class="{'normal': coverage[buildname] >= group.thresholdgreen, 'warning': coverage[buildname] < group.thresholdgreen && coverage[buildname] >= group.thresholdyellow, 'error': coverage[buildname] < group.thresholdyellow}">
+              <a ng-if="coverage[buildname] >= 0" ng-href="viewCoverage.php?buildid={{coverage[buildname+'id']}}">
+                {{coverage[buildname]}}%
+              </a>
+              <sub ng-if="coverage[buildname+'percentagediff'] > 0">+{{coverage[buildname+'percentagediff']}}%</sub>
+              <sub ng-if="coverage[buildname+'percentagediff'] < 0">{{coverage[buildname+'percentagediff']}}%</sub>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- FOOTER -->
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'views/partials/footer.html'"></ng-include>
+  </body>
+</html>
