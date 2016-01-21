@@ -17,6 +17,7 @@
   =========================================================================*/
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
+require_once("include/login_functions.php");
 include('public/login.php');
 include("include/version.php");
 include_once("models/userproject.php");
@@ -66,8 +67,17 @@ if ($session_OK) {
         $passwd = htmlspecialchars(pdo_real_escape_string($_POST["passwd"]));
         $passwd2 = htmlspecialchars(pdo_real_escape_string($_POST["passwd2"]));
 
-        global $CDASH_MINIMUM_PASSWORD_LENGTH;
-        if (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
+        global $CDASH_MINIMUM_PASSWORD_LENGTH,
+               $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
+               $CDASH_PASSWORD_COMPLEXITY_COUNT;
+        $complexity = getPasswordComplexity($passwd);
+        if ($complexity < $CDASH_MINIMUM_PASSWORD_COMPLEXITY) {
+            if ($CDASH_PASSWORD_COMPLEXITY_COUNT > 1) {
+                $xml .= "<error>Your password must contain at least $CDASH_PASSWORD_COMPLEXITY_COUNT characters from $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following types: uppercase, lowercase, numbers, and symbols.</error>";
+            } else {
+                $xml .= "<error>Your password must contain at least $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following: uppercase, lowercase, numbers, and symbols.</error>";
+            }
+        } elseif (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
             $xml .= "<error>Password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.</error>";
         } elseif ($passwd != $passwd2) {
             $xml .= "<error>Passwords don't match.</error>";

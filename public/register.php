@@ -18,6 +18,7 @@
 
 include_once(dirname(__DIR__)."/config/config.php");
 include_once("include/common.php");
+include_once("include/login_functions.php");
 include_once('include/version.php');
 redirect_to_https();
 
@@ -76,7 +77,19 @@ function register()
             return 0;
         }
 
-        global $CDASH_MINIMUM_PASSWORD_LENGTH;
+        global $CDASH_MINIMUM_PASSWORD_LENGTH,
+               $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
+               $CDASH_PASSWORD_COMPLEXITY_COUNT;
+        $complexity = getPasswordComplexity($passwd);
+        if ($complexity < $CDASH_MINIMUM_PASSWORD_COMPLEXITY) {
+            if ($CDASH_PASSWORD_COMPLEXITY_COUNT > 1) {
+                $reg = "Your password must contain at least $CDASH_PASSWORD_COMPLEXITY_COUNT characters from $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following types: uppercase, lowercase, numbers, and symbols.";
+            } else {
+                $reg = "Your password must contain at least $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following: uppercase, lowercase, numbers, and symbols.";
+            }
+            return 0;
+        }
+
         if (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
             $reg = "Your password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
             return 0;
