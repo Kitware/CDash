@@ -101,10 +101,12 @@ class Database
         $this->username = $username;
         $this->password = $password;
         $this->retries = $retries;
-        if (!is_null($ssl_ca) && !is_null($ssl_cert) && !is_null($ssl_key)) {
-            $this->attributes[\PDO::MYSQL_ATTR_SSL_KEY] = $ssl_key;
-            $this->attributes[\PDO::MYSQL_ATTR_SSL_CERT] = $ssl_cert;
+        if (!is_null($ssl_ca)) {
             $this->attributes[\PDO::MYSQL_ATTR_SSL_CA] = $ssl_ca;
+            if (!is_null($ssl_cert) && !is_null($ssl_key)) {
+                $this->attributes[\PDO::MYSQL_ATTR_SSL_KEY] = $ssl_key;
+                $this->attributes[\PDO::MYSQL_ATTR_SSL_CERT] = $ssl_cert;
+            }
         }
     }
 
