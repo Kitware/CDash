@@ -26,7 +26,9 @@ class LoggingAdministrationTestCase extends KWWebTestCase
         $this->login();
 
         $this->get($this->url."/loggingAdministration.php");
-        if (strpos($this->getBrowser()->getContentAsText(), "test log file") === false) {
+
+        global $CDASH_LOG_FILE;
+        if ($CDASH_LOG_FILE !== false && strpos($this->getBrowser()->getContentAsText(), "test log file") === false) {
             $this->fail("'test log file' not found when expected.");
             return 1;
         }
