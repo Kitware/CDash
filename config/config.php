@@ -67,6 +67,14 @@ $CDASH_REGISTRATION_EMAIL_VERIFY = true;
 $CDASH_COOKIE_EXPIRATION_TIME='3600';
 // Minimum password length for CDash accounts.
 $CDASH_MINIMUM_PASSWORD_LENGTH = 5;
+// Of these four kinds of characters: (uppercase, lowercase, numbers, symbols)
+// How many must be present in a password for it to be considered valid?
+$CDASH_MINIMUM_PASSWORD_COMPLEXITY = 1;
+// For a given character type (defined above), how many characters in the
+// password must match this type for the password to get credit for it?
+// For example, if you set this value to 2, then a password would need at least
+// two numbers to get a +1 to its complexity score for containing numbers.
+$CDASH_PASSWORD_COMPLEXITY_COUNT = 1;
 
 // Using HTTPS protocol to access CDash
 $CDASH_USE_HTTPS ='0';

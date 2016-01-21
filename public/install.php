@@ -32,6 +32,7 @@ if (function_exists('imagecreatefromstring') == false) {
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
 require_once("include/common.php");
+require_once("include/login_functions.php");
 require_once("include/version.php");
 
 if ($CDASH_PRODUCTION_MODE) {
@@ -127,11 +128,26 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
             $valid_email = false;
         }
 
-        global $CDASH_MINIMUM_PASSWORD_LENGTH;
+        global $CDASH_MINIMUM_PASSWORD_LENGTH,
+               $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
+               $CDASH_PASSWORD_COMPLEXITY_COUNT;
         if ($valid_email && strlen($admin_password) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
             $xml .= "<db_created>0</db_created>";
             $xml .= "<alert>* Administrator's password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters</alert>";
             $valid_email = false;
+        }
+        if ($valid_email) {
+            $complexity = getPasswordComplexity($admin_password);
+            if ($complexity < $CDASH_MINIMUM_PASSWORD_COMPLEXITY) {
+                $xml .= "<alert>* Administrator's password is not complex enough. ";
+                if ($CDASH_PASSWORD_COMPLEXITY_COUNT > 1) {
+                    $xml .= "It must contain at least $CDASH_PASSWORD_COMPLEXITY_COUNT characters from $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following types: uppercase, lowercase, numbers, and symbols.";
+                } else {
+                    $xml .= "It must contain at least $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following: uppercase, lowercase, numbers, and symbols.";
+                }
+                $xml .= "</alert>";
+                $valid_email = false;
+            }
         }
 
         if ($valid_email) {
