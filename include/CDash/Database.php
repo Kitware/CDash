@@ -122,8 +122,9 @@ class Database
                 $this->pdo = new \PDO($this->dsn, $this->username, $this->password,
                     $this->attributes);
             } catch (\PDOException $e) {
-                if ($log_error) {
-                    error_log($e->getMessage()."\n".$e->getTraceAsString());
+                if ($log_error && openlog('cdash', LOG_PID, LOG_USER)) {
+                    syslog(LOG_ERR, $e->getMessage().PHP_EOL.$e->getTraceAsString());
+                    closelog();
                 }
                 return false;
             }
@@ -154,7 +155,10 @@ class Database
             try {
                 return $this->pdo->query($sql);
             } catch (\PDOException $e) {
-                error_log($e->getMessage()."\n".$e->getTraceAsString());
+                if (openlog('cdash', LOG_PID, LOG_USER)) {
+                    syslog(LOG_ERR, $e->getMessage().PHP_EOL.$e->getTraceAsString());
+                    closelog();
+                }
                 return false;
             }
         });

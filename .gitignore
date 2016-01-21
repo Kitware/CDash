@@ -1,6 +1,6 @@
 *~
 .svn
-backup
+/backup/
 config/config.local.php
 tests/config.test.local.php
 /nbproject/private/
@@ -12,3 +12,5 @@ composer.phar
 .idea/
 vendor/
 public/js/CDash_*.min.js*
+/_build/
+/upload/
