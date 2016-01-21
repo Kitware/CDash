@@ -27,7 +27,6 @@ use \Monolog\Handler\StreamHandler;
 use \Monolog\Handler\SyslogHandler;
 use \Psr\Log\LogLevel;
 
-
 function cdash_unlink($filename)
 {
     $success = unlink($filename);
