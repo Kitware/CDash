@@ -396,27 +396,28 @@ function getPasswordComplexity($password)
 {
     global $CDASH_PASSWORD_COMPLEXITY_COUNT;
     $complexity = 0;
+    $matches = array();
 
     // Uppercase letters
-    $num_uppercase = preg_match_all("/[A-Z]/", $password);
+    $num_uppercase = preg_match_all("/[A-Z]/", $password, $matches);
     if ($num_uppercase >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
         $complexity++;
     }
 
     // Lowercase letters
-    $num_lowercase = preg_match_all("/[a-z]/", $password);
+    $num_lowercase = preg_match_all("/[a-z]/", $password, $matches);
     if ($num_lowercase >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
         $complexity++;
     }
 
     // Numbers
-    $num_numbers = preg_match_all("/[0-9]/", $password);
+    $num_numbers = preg_match_all("/[0-9]/", $password, $matches);
     if ($num_numbers >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
         $complexity++;
     }
 
     // Symbols
-    $num_symbols = preg_match_all("/\W/", $password);
+    $num_symbols = preg_match_all("/\W/", $password, $matches);
     // Underscore is not matched by \W but we consider it a symbol.
     $num_symbols += substr_count($password, "_");
     if ($num_symbols >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
