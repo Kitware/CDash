@@ -99,7 +99,7 @@ $CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR.'/upload';
 // http://<CDASH_URL>/<CDASH_DIR>/$CDASH_DOWNLOAD_RELATIVE_URL/<SHA-1>/<FILENAME>
 // Note that this must be a relative path to the same directory specified by $CDASH_UPLOAD_DIRECTORY
 $CDASH_DOWNLOAD_RELATIVE_URL = 'upload';
-// Log file location
+// Log file location. Set to false to log to the syslog.
 $CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
 // Should normal user allowed to create projects
 $CDASH_USER_CREATE_PROJECTS = false;

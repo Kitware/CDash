@@ -15,6 +15,7 @@
     "ext-curl": "*",
     "ext-xsl": "*",
     "ext-pdo": "*",
+    "monolog/monolog": "~1.17.2",
     "paragonie/random_compat": "~1.0.10"
   },
   "require-dev": {

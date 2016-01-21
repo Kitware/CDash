@@ -737,6 +737,8 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
 
 function post_github_pull_request_comment($projectid, $pull_request, $comment, $cdash_url)
 {
+    global $CDASH_TESTING_MODE;
+
     $row = pdo_single_row_query(
     "SELECT url, username, password FROM repositories
     LEFT JOIN project2repositories AS p2r ON (p2r.repositoryid=repositories.id)
@@ -788,13 +790,13 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
       "cURL error: ". curl_error($ch),
       "post_github_pull_request_comment",
       LOG_ERR, $projectid);
-    } else {
+    } elseif ($CDASH_TESTING_MODE) {
         $matches = array();
         preg_match("#/comments/(\d+)#", $retval, $matches);
         add_log(
       "Just posted comment #" . $matches[1],
       "post_github_pull_request_comment",
-      LOG_TESTING, $projectid);
+      LOG_DEBUG, $projectid);
     }
 
     curl_close($ch);
