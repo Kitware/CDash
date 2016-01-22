@@ -108,10 +108,6 @@ endif()
 
 add_subdirectory(ctest)
 
-# enable_async is in the ctest directory, so the parallel test must
-# come after that.
-add_php_test(parallelsubmissions)
-
 add_subdirectory(js/e2e_tests)
 
 if(CDASH_USE_SELENIUM)
