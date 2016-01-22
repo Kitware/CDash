@@ -444,7 +444,7 @@ function curl_request_async($url, $params, $type='POST')
     $fp = fsockopen($scheme . $parts['host'], $port, $errno, $errstr, 30);
 
     // Data goes in the path for a GET request
-    if('GET' == $type) {
+    if ('GET' == $type) {
         $parts['path'] .= '?'.$post_string;
     }
 

@@ -381,5 +381,4 @@ class buildupdate
           add_last_sql_error("AssignUpdateToChild", 0, $childid);
       }
   }
-
 }

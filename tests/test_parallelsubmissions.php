@@ -48,7 +48,6 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         $todo = 999;
         $begin = time();
         while ($todo > 0) {
-
             $row = pdo_single_row_query("SELECT count(1) AS todo
                     FROM submission WHERE status=0 OR status=1");
             $todo = $row['todo'];

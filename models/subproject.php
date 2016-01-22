@@ -224,7 +224,7 @@ class subproject
         }
     }
 
-    return true;
+      return true;
   }
 
   /** Get the Name of the subproject */

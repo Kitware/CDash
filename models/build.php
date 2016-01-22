@@ -609,7 +609,6 @@ class build
                 require_once('models/buildupdate.php');
                 BuildUpdate::AssignUpdateToChild($this->Id, $this->ParentId);
             }
-
         } else {
             // Build already exists.
             $this->Command = ' ' . $this->Command;
@@ -1486,7 +1485,6 @@ class build
                         array_key_exists('id', $existing_id_result)) {
                     $this->ParentId = $existing_id_result['id'];
                 } else {
-
                     add_last_sql_error("Build Insert Parent", $this->ProjectId, $this->Id);
                     return false;
                 }
