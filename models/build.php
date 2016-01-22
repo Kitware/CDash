@@ -1625,13 +1625,21 @@ class build
             return;
         }
 
+        // Avoid a race condition when parallel processing.
+        $for_update = "";
+        global $CDASH_ASYNC_WORKERS;
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_begin_transaction();
+            $for_update = "FOR UPDATE";
+        }
+
         $numFailed = 0;
         $numNotRun = 0;
         $numPassed = 0;
 
         $parent = pdo_single_row_query(
                 "SELECT testfailed, testnotrun, testpassed
-                FROM build WHERE id=".qnum($this->ParentId));
+                FROM build WHERE id=".qnum($this->ParentId) . $for_update);
 
         // Don't let the -1 default value screw up our math.
         if ($parent['testfailed'] == -1) {
@@ -1655,6 +1663,10 @@ class build
                 WHERE id=".qnum($this->ParentId));
 
         add_last_sql_error("Build:UpdateParentTestNumbers", $this->ProjectId, $this->Id);
+
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_commit();
+        }
 
         // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
         // so for now it isn't being updated for parent builds.
@@ -1708,13 +1720,20 @@ class build
         if ($this->ParentId < 1) {
             return;
         }
+        // Avoid a race condition when parallel processing.
+        $for_update = "";
+        global $CDASH_ASYNC_WORKERS;
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_begin_transaction();
+            $for_update = "FOR UPDATE";
+        }
 
         $numErrors = 0;
         $numWarnings = 0;
 
         $parent = pdo_single_row_query(
                 "SELECT configureerrors, configurewarnings
-                FROM build WHERE id=".qnum($this->ParentId));
+                FROM build WHERE id=".qnum($this->ParentId) . $for_update);
 
         // Don't let the -1 default value screw up our math.
         if ($parent['configureerrors'] == -1) {
@@ -1734,6 +1753,10 @@ class build
 
         add_last_sql_error("Build:UpdateParentConfigureNumbers",
                 $this->ProjectId, $this->Id);
+
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_commit();
+        }
     }
 
     /** Get/set pull request for this build. */
