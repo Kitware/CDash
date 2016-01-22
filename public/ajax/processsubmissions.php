@@ -17,6 +17,13 @@
 =========================================================================*/
 
 require_once(dirname(dirname(__DIR__))."/config/config.php");
+
+// Only used to setup the parallel submissions test case.
+global $CDASH_DO_NOT_PROCESS_SUBMISSIONS;
+if ($CDASH_DO_NOT_PROCESS_SUBMISSIONS) {
+    exit(0);
+}
+
 require_once("include/common.php");
 require_once("include/do_submit.php");
 require_once("include/fnProcessFile.php");
