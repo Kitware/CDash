@@ -308,7 +308,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $response['updates'] = $updates_response;
 
     // User
-    if (isset($_SESSION['cdash'])) {
+    if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
         $user_response = array();
         $userid = $_SESSION['cdash']['loginid'];
         $user2project = pdo_query(
@@ -446,7 +446,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     // If the user is logged in we display if the build has some changes for him
     $userupdatesql = "";
-    if (isset($_SESSION['cdash'])) {
+    if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
         $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
             user2repository
                 WHERE build2update.buildid=b.id
