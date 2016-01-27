@@ -59,8 +59,9 @@ class label
 
                 // Only do the INSERT if it's not already there:
                 if (0 == $v) {
-                    $query = "INSERT INTO $table (labelid, $field1, $field2) ".
-                        "VALUES ('$this->Id', '$value1', '$value2')";
+                    $query = "INSERT INTO $table (labelid, $field1, $field2)
+                        VALUES ('$this->Id', '$value1', '$value2')
+                        ON DUPLICATE KEY UPDATE labelid=labelid";
 
                     if (!pdo_query($query)) {
                         add_last_sql_error("Label::InsertAssociation");
@@ -73,8 +74,9 @@ class label
 
                 // Only do the INSERT if it's not already there:
                 if (0 == $v) {
-                    $query = "INSERT INTO $table (labelid, $field1) ".
-                        "VALUES ('$this->Id', '$value1')";
+                    $query = "INSERT INTO $table (labelid, $field1)
+                        VALUES ('$this->Id', '$value1')
+                        ON DUPLICATE KEY UPDATE labelid=labelid";
 
                     if (!pdo_query($query)) {
                         add_last_sql_error("Label::InsertAssociation");

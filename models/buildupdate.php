@@ -90,7 +90,7 @@ class buildupdate
         if (pdo_num_rows($query)==1) {
             $query = "DELETE FROM buildupdate WHERE id=$updateid";
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+                add_last_sql_error("BuildUpdate Delete", 0, $this->BuildId);
                 if ($CDASH_ASYNC_WORKERS > 1) {
                     pdo_rollback();
                 }
@@ -99,7 +99,7 @@ class buildupdate
 
             $query = "DELETE FROM updatefile WHERE updateid=$updateid";
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+                add_last_sql_error("BuildUpdate Delete updatefil", 0, $this->BuildId);
                 if ($CDASH_ASYNC_WORKERS > 1) {
                     pdo_rollback();
                 }
@@ -108,7 +108,7 @@ class buildupdate
         }
         $query = "DELETE FROM build2update WHERE buildid=$buildid";
         if (!pdo_query($query)) {
-            add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+            add_last_sql_error("Build2Update Delete", 0, $this->BuildId);
             if ($CDASH_ASYNC_WORKERS > 1) {
                 pdo_rollback();
             }
@@ -163,10 +163,11 @@ class buildupdate
           $this->UpdateId = pdo_insert_id("buildupdate");
           $updateid = qnum($this->UpdateId);
           $query = "INSERT INTO build2update (buildid,updateid)
-              VALUES ($buildid,$updateid)";
+              VALUES ($buildid,$updateid)
+              ON DUPLICATE KEY UPDATE buildid=buildid";
 
           if (!pdo_query($query)) {
-              add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+              add_last_sql_error("Build2Update Insert", 0, $this->BuildId);
               if ($CDASH_ASYNC_WORKERS > 1) {
                   pdo_rollback();
               }
@@ -213,7 +214,7 @@ class buildupdate
           }
 
           if (!pdo_query($query)) {
-              add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+              add_last_sql_error("BuildUpdate Update", 0, $this->BuildId);
               if ($CDASH_ASYNC_WORKERS > 1) {
                   pdo_rollback();
               }
@@ -322,7 +323,8 @@ class buildupdate
           $this->updateId = $query_array['updateid'];
 
           pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
-                   (".qnum($this->BuildId).",".qnum($this->updateId).")");
+                  (".qnum($this->BuildId).",".qnum($this->updateId).")
+                  ON DUPLICATE KEY UPDATE buildid=buildid");
           add_last_sql_error("BuildUpdate AssociateBuild", 0, $this->BuildId);
 
       // check if this build's parent also needs to be associated with
@@ -342,7 +344,8 @@ class buildupdate
               }
 
               pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
-                     (".qnum($parentid).",".qnum($this->updateId).")");
+                      (".qnum($parentid).",".qnum($this->updateId).")
+                      ON DUPLICATE KEY UPDATE buildid=buildid");
               add_last_sql_error("BuildUpdate AssociateBuild", 0, $parentid);
           }
       }
