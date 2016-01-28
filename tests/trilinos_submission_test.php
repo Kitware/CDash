@@ -90,7 +90,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '5m 9s',
                 'builderror' => 8,
                 'buildwarning' => 296,
-                'buildtime' => '23m',
+                'buildtime' => '23m 6s',
                 'testnotrun' => 95,
                 'testfail' => 11,
                 'testpass' => 303,
