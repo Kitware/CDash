@@ -545,27 +545,29 @@ class build
                 // This error might be due to a unique constraint violation
                 // for this UUID.  Query for such a previously existing build.
                 $existing_id_result = pdo_single_row_query(
-                        "SELECT id, parentid FROM build WHERE uuid = '$this->Uuid'");
+                        "SELECT id FROM build WHERE uuid = '$this->Uuid'");
                 if ($existing_id_result &&
                         array_key_exists('id', $existing_id_result)) {
                     $this->Id = $existing_id_result['id'];
                     // If a previously existing build with this UUID was found
-                    // update it and return early.
+                    // call UpdateBuild() on it.  This also sets ParentId
+                    // if an existing parent was found.
                     $this->UpdateBuild($this->Id,
                             $nbuilderrors, $nbuildwarnings);
-                    if ($this->SubProjectName) {
-                        // Does the parent still need to be created?
-                        if ($existing_id_result['parentid'] < 1) {
-                            if (!$this->CreateParentBuild($nbuilderrors, $nbuildwarnings)) {
-                                $this->UpdateBuild($this->ParentId,
-                                        $nbuilderrors, $nbuildwarnings);
-                            }
-                        } else {
-                            // Update the existing parent.
-                            $this->UpdateBuild($existing_id_result['parentid'],
+                    // Does the parent still need to be created?
+                    if ($this->SubProjectName && $this->ParentId < 1) {
+                        if (!$this->CreateParentBuild(
+                                    $nbuilderrors, $nbuildwarnings)) {
+                            // Someone else created the parent after we called
+                            // UpdateBuild(this->Id,...).
+                            // In this case we also need to manually update
+                            // the parent as well.
+                            $this->UpdateBuild($this->ParentId,
                                     $nbuilderrors, $nbuildwarnings);
                         }
                     }
+                    // Now that the existing build and its parent (if any) have
+                    // been updated we can return early.
                     return true;
                 }
                 add_log("SQL error: $error", "Build Insert", LOG_ERR, $this->ProjectId, $this->Id);
@@ -626,13 +628,7 @@ class build
             $this->Command = ' ' . $this->Command;
             $this->Log = ' ' . $this->Log;
 
-            if ($this->SubProjectName) {
-                // Update the parent build if necessary.
-                $this->ParentId = $this->GetParentBuildId();
-                $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
-            }
-
-            // Now update this build.
+            // Update this build and its parent (if necessary).
             $this->UpdateBuild($this->Id, $nbuilderrors, $nbuildwarnings);
         }
 
@@ -1623,6 +1619,16 @@ class build
 
         if ($CDASH_ASYNC_WORKERS > 1) {
             pdo_commit();
+        }
+
+        // Also update the parent if necessary.
+        $row = pdo_single_row_query(
+                "SELECT parentid FROM build WHERE id='$buildid'");
+        if ($row && array_key_exists('parentid', $row) && $row['parentid'] > 0) {
+            $this->UpdateBuild($row['parentid'], $newErrors, $newWarnings);
+            if ($buildid == $this->Id) {
+                $this->ParentId = $row['parentid'];
+            }
         }
     }
 
