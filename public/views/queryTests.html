@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_@@version.min.js"></script>
+    <title ng-bind="title">CDash</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="QueryTestsController">
+
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
+    <br/>
+
+    <div ng-if="cdash.requirelogin != 1 && !loading">
+      <h3>Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches</h3>
+
+<!-- Filters -->
+<div id="labelshowfilters">
+  <a id="label_showfilters" ng-click="showfilters_toggle()">
+    <span ng-show="showfilters == 0">Show Filters</span>
+    <span ng-show="showfilters != 0">Hide Filters</span>
+  </a>
+</div>
+<ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
+
+<!-- Hide a div for javascript to know if time status is on -->
+<div ng-if="cdash.project.showtesttime == 1" id="showtesttimediv" style="display:none"></div>
+
+<!-- Results -->
+<table id="queryTestsTable" cellspacing="0" cellpadding="3" class="tabb test-table">
+<thead>
+  <tr class="table-heading1">
+    <th class="header"
+        ng-click="updateOrderByFields('site', $event)">
+      Site
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-click="updateOrderByFields('buildName', $event)">
+      Build Name
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-buildName') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('buildName') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-click="updateOrderByFields('testname', $event)">
+      Test Name
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-testname') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('testname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-click="updateOrderByFields('status', $event)">
+      Status
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-status') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('status') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-if="cdash.project.showtesttime == 1"
+        ng-click="updateOrderByFields('timestatus', $event)">
+      Time Status
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-timestatus') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('timestatus') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-click="updateOrderByFields('time', $event)">
+      Time
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-time') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('time') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header"
+        ng-click="updateOrderByFields('details', $event)">
+      Details
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-details') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('details') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th class="header nob"
+        ng-click="updateOrderByFields('buildstarttime', $event)">
+      Build Time
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-buildstarttime') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('buildstarttime') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+  </tr>
+</thead>
+
+  <tr ng-repeat="build in cdash.builds | orderBy:orderByFields"
+      ng-class-odd="'odd'"
+      ng-class-even="'even'">
+    <td>
+      <a href="{{build.siteLink}}">{{build.site}}</a>
+    </td>
+
+    <td>
+      <a href="{{build.buildSummaryLink}}">{{build.buildName}}</a>
+    </td>
+
+    <td>
+      {{build.testname}}
+    </td>
+
+    <td align="center" ng-class="build.statusclass">
+      <a href="{{build.testDetailsLink}}">{{build.status}}</a>
+    </td>
+
+    <td ng-if="cdash.project.showtesttime == 1" align="center" ng-class="build.timestatusclass">
+      <a href="{{build.testDetailsLink}}">{{build.timestatus}}</a>
+    </td>
+
+    <td>
+      {{build.time}}
+    </td>
+
+    <td>
+      {{build.details}}
+    </td>
+
+    <td ng-class="build.nob">
+      {{build.buildstarttime}}
+    </td>
+  </tr>
+
+</table>
+
+<br/>
+
+    <!-- FOOTER -->
+    <br/>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer"></ng-include>
+  </body>
+</html>

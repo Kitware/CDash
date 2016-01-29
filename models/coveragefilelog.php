@@ -15,54 +15,63 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-class CoverageFileLog
-{  
-  var $BuildId;
-  var $FileId;
-  var $Lines;
-  
-  
-  function __construct()
+class coveragefilelog
+{
+    public $BuildId;
+    public $FileId;
+    public $Lines;
+    public $Branches;
+
+
+    public function __construct()
     {
-    $this->Lines = array();
+        $this->Lines = array();
+        $this->Branches = array();
     }
-    
-  function AddLine($number,$code)
+
+    public function AddLine($number, $code)
     {
-    $this->Lines[$number] = $code;
+        if (array_key_exists($number, $this->Lines)) {
+            $this->Lines[$number] += $code;
+        } else {
+            $this->Lines[$number] = $code;
+        }
     }
-  
+
+    public function AddBranch($number, $covered, $total)
+    {
+        $this->Branches[$number] = "$covered/$total";
+    }
+
   /** Update the content of the file */
-  function Insert()
-    {
-    if(!$this->BuildId || !is_numeric($this->BuildId))
-      {
-      add_log("BuildId not set","CoverageFileLog::Insert()",LOG_ERR,
-               0,$this->BuildId,CDASH_OBJECT_COVERAGE,$this->FileId); 
-      return false;    
+  public function Insert()
+  {
+      if (!$this->BuildId || !is_numeric($this->BuildId)) {
+          add_log("BuildId not set", "CoverageFileLog::Insert()", LOG_ERR,
+               0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
+          return false;
       }
-   
-    if(!$this->FileId || !is_numeric($this->FileId))
-      {
-      add_log("FileId not set","CoverageFileLog::Insert()",LOG_ERR,
-               0,$this->BuildId,CDASH_OBJECT_COVERAGE,$this->FileId);
-      return false;    
+
+      if (!$this->FileId || !is_numeric($this->FileId)) {
+          add_log("FileId not set", "CoverageFileLog::Insert()", LOG_ERR,
+               0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
+          return false;
       }
-      
-    $log = '';
-    foreach($this->Lines as $lineNumber=>$code)
-      {
-      $log .= $lineNumber.':'.$code.';';
+
+      $log = '';
+      foreach ($this->Lines as $lineNumber=>$code) {
+          $log .= $lineNumber.':'.$code.';';
       }
-    
-    if($log != '')
-      { 
-      $sql = "INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ";
-      $sql.= "(".qnum($this->BuildId).",".qnum($this->FileId).",'".$log."')";  
-      pdo_query($sql);
-      add_last_sql_error("CoverageFileLog::Insert()");
+      foreach ($this->Branches as $lineNumber => $code) {
+          $log .= 'b' . $lineNumber . ':' . $code . ';';
       }
-    return true;
-    }
+
+      if ($log != '') {
+          $sql = "INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ";
+          $sql.= "(".qnum($this->BuildId).",".qnum($this->FileId).",'".$log."')";
+          pdo_query($sql);
+          add_last_sql_error("CoverageFileLog::Insert()");
+      }
+      return true;
+  }
 }
-?>

@@ -15,10 +15,7 @@ global $cdashpath;
 $cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
-//echo "cdashpath='".$cdashpath."'\n";
-//echo "get_include_path()='".get_include_path()."'\n";
 
 require_once('tests/config.test.php');
 require_once('tests/kwtest/kw_web_tester.php'); // KWWebTestCase
 require_once('tests/kwtest/kw_db.php');
-?>

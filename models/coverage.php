@@ -23,87 +23,76 @@ include_once('models/coveragefilelog.php');
 include_once('models/label.php');
 
 /** Coverage class. Used by CoverageSummary */
-class Coverage
-{  
-  var $BuildId;
-  var $Covered;
-  var $LocTested;
-  var $LocUntested;
-  var $BranchesTested;
-  var $BranchesUntested;
-  var $FunctionsTested;
-  var $FunctionsUntested;
-  var $CoverageFile;
-  var $Labels;
+class coverage
+{
+    public $BuildId;
+    public $Covered;
+    public $LocTested = 0;
+    public $LocUntested = 0;
+    public $BranchesTested = 0;
+    public $BranchesUntested = 0;
+    public $FunctionsTested = 0;
+    public $FunctionsUntested = 0;
+    public $CoverageFile;
+    public $Labels;
 
 
   // Purposely no Insert function. Everything is done from the coverage summary
-  function AddLabel($label)
-    {
-    if(!isset($this->Labels))
-      {
-      $this->Labels = array();
+  public function AddLabel($label)
+  {
+      if (!isset($this->Labels)) {
+          $this->Labels = array();
       }
 
-    $label->CoverageFileId = $this->CoverageFile->Id;
-    $label->CoverageFileBuildId = $this->BuildId;
-    $this->Labels[] = $label;
-    }
+      $label->CoverageFileId = $this->CoverageFile->Id;
+      $label->CoverageFileBuildId = $this->BuildId;
+      $this->Labels[] = $label;
+  }
 
   /** Put labels for coverage */
-  function InsertLabelAssociations($buildid)
-    {
-    if($buildid &&
+  public function InsertLabelAssociations($buildid)
+  {
+      if ($buildid &&
        isset($this->CoverageFile) &&
-       $this->CoverageFile->Id)
-      {
-      if(empty($this->Labels))
-        {
-        return;
-        }
+       $this->CoverageFile->Id) {
+          if (empty($this->Labels)) {
+              return;
+          }
       
-      foreach($this->Labels as $label)
-        {
-        $label->CoverageFileId = $this->CoverageFile->Id;
-        $label->CoverageFileBuildId = $buildid;
-        $label->Insert();
-        }
+          foreach ($this->Labels as $label) {
+              $label->CoverageFileId = $this->CoverageFile->Id;
+              $label->CoverageFileBuildId = $buildid;
+              $label->Insert();
+          }
+      } else {
+          add_log('No buildid or coveragefile',
+              'Coverage::InsertLabelAssociations', LOG_ERR,
+              0, $buildid,
+              CDASH_OBJECT_COVERAGE, $this->CoverageFile->Id);
       }
-    else
-      {
-      add_log('No buildid or coveragefile',
-              'Coverage::InsertLabelAssociations',LOG_ERR,
-              0,$buildid,
-              CDASH_OBJECT_COVERAGE,$this->CoverageFile->Id);   
-      }
-    }
+  }
 
 
   /** Return the name of a build */
-  function GetFiles()
-    {
-    if(!$this->BuildId)
-      {
-      echo "Coverage GetFiles(): BuildId not set";
-      return false;
+  public function GetFiles()
+  {
+      if (!$this->BuildId) {
+          echo "Coverage GetFiles(): BuildId not set";
+          return false;
       }
 
-    $fileids = array();
+      $fileids = array();
 
-    $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid=".qnum($this->BuildId));
-    if(!$coverage)
-      {
-      add_last_sql_error("Coverage GetFiles");
-      return false;
+      $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid=".qnum($this->BuildId));
+      if (!$coverage) {
+          add_last_sql_error("Coverage GetFiles");
+          return false;
       }
 
-    while($coverage_array = pdo_fetch_array($coverage))
-      {
-      $fileids[] = $coverage_array['fileid'];
+      while ($coverage_array = pdo_fetch_array($coverage)) {
+          $fileids[] = $coverage_array['fileid'];
       }
 
-    return $fileids;
-    } // end function GetFiles()
-
-} // end class Coverage
-?>
+      return $fileids;
+  } // end function GetFiles()
+} // end class Coverage;

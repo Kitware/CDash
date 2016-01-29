@@ -5,86 +5,77 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
-require_once('cdash/common.php');
-require_once('cdash/pdo.php');
+require_once('include/common.php');
+require_once('include/pdo.php');
 require_once('models/image.php');
 require_once('models/testimage.php');
 
 class ImageTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testImage()
+    public function testImage()
     {
-    $this->startCodeCoverage();
+        $this->startCodeCoverage();
 
-    $image = new Image();
+        $image = new Image();
 
     //no id, no matching checksum
     $image->Id = 0;
-    if($image->Exists())
-      {
-      $this->fail("Exists() should return false when Id is 0");
-      return 1;
-      }
+        if ($image->Exists()) {
+            $this->fail("Exists() should return false when Id is 0");
+            return 1;
+        }
 
     //id, no matching checksum
     $image->Id = 1;
-    if($image->Exists())
-      {
-      $this->fail("Exists() should return false with no matching checksum\n");
-      }
+        if ($image->Exists()) {
+            $this->fail("Exists() should return false with no matching checksum\n");
+        }
 
-    $pathToImage = dirname(__FILE__)."/data/smile.gif";
+        $pathToImage = dirname(__FILE__)."/data/smile.gif";
 
     //dummy checksum so we don't break the test on pgSQL
     $image->Checksum=100;
 
     //call save twice to cover different execution paths
-    if(!$image->Save())
-      {
-      $this->fail("Save() call #1 returned false when it should be true.\n");
-      return 1;
-      }
-    if(!$image->Save())
-      {
-      $this->fail("Save() call #2 returned false when it should be true.\n");
-      return 1;
-      }
+    if (!$image->Save()) {
+        $this->fail("Save() call #1 returned false when it should be true.\n");
+        return 1;
+    }
+        if (!$image->Save()) {
+            $this->fail("Save() call #2 returned false when it should be true.\n");
+            return 1;
+        }
 
     //exercise the TestImage class as well
     $testimage = new TestImage();
 
-    $testimage->Id = 1;
-    $testimage->TestId = 1;
+        $testimage->Id = 1;
+        $testimage->TestId = 1;
 
-    if($testimage->Exists())
-      {
-      $this->fail("testimage shouldn't exist yet.\n");
-      return 1;
-      }
+        if ($testimage->Exists()) {
+            $this->fail("testimage shouldn't exist yet.\n");
+            return 1;
+        }
 
-    if(!$testimage->Insert())
-      {
-      $this->fail("testimage::Insert() shouldn't have returned false.\n");
-      return 1;
-      }
+        if (!$testimage->Insert()) {
+            $this->fail("testimage::Insert() shouldn't have returned false.\n");
+            return 1;
+        }
 
-    if(!$testimage->Exists())
-      {
-      $this->fail("testimage should exist at this point.\n");
-      return 1;
-      }
+        if (!$testimage->Exists()) {
+            $this->fail("testimage should exist at this point.\n");
+            return 1;
+        }
 
-    $this->pass("Passed");
+        $this->pass("Passed");
 
-    $this->stopCodeCoverage();
+        $this->stopCodeCoverage();
 
-    return 0;
+        return 0;
     }
 }
-
-?>

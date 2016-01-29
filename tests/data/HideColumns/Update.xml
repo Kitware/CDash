@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-3.3.20150717-ga5412">
+	<Site>localhost</Site>
+	<BuildName>HideColumns</BuildName>
+	<BuildStamp>20151006-1437-Experimental</BuildStamp>
+	<StartDateTime>Oct 06 10:37 EDT</StartDateTime>
+	<StartTime>1444142250</StartTime>
+	<UpdateCommand>"git" "fetch"</UpdateCommand>
+	<UpdateType>GIT</UpdateType>
+	<Revision>35790ef33933cbace670cb89588766e695f1a000</Revision>
+	<EndDateTime>Oct 06 10:37 EDT</EndDateTime>
+	<EndTime>1444142250</EndTime>
+	<ElapsedMinutes>0</ElapsedMinutes>
+	<UpdateReturnStatus/>
+</Update>

@@ -7,20 +7,18 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class SiteStatisticsTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testSiteStatistics()
+    public function testSiteStatistics()
     {
-    $this->login();
-    $content = $this->get($this->url."/siteStatistics.php");
-    if(strpos($content, "Busy time") === false)
-      {
-      $this->fail("'Busy time' not found on siteStatistics.php");
-      }
-    $this->pass("Passed");
+        $this->login();
+        $content = $this->get($this->url."/siteStatistics.php");
+        if (strpos($content, "Busy time") === false) {
+            $this->fail("'Busy time' not found on siteStatistics.php");
+        }
+        $this->pass("Passed");
     }
 }
-?>

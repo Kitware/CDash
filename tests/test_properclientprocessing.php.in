@@ -5,7 +5,7 @@
 //
 require_once('${testing_dir}/cdash_test_case.php');
 
-require_once('cdash/pdo.php');
+require_once('include/pdo.php');
 
 class ProcessSubmissionsTestCase extends KWWebTestCase
 {
@@ -35,7 +35,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
 
     return 0;
     }
-  
+
   function launchViaCurl($path, $timeout)
     {
     $request = $this->url . $path;
@@ -72,7 +72,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
           }
         }
       }
-   
+
     // Queue up six fake submissions to process
     $this->addFakeSubmissionRecords("5");
 
@@ -80,7 +80,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     // by sleeping each time through its loop.
     // (With 6 fake records just added, it'll sleep for about 6 seconds,
     // 1 second for each time through its loop...)
-    $this->launchViaCurl("/cdash/processsubmissions.php?projectid=5&sleep_in_loop=1", 1);
+    $this->launchViaCurl("/ajax/processsubmissions.php?projectid=5&sleep_in_loop=1", 1);
 
     // Sleep for 2 seconds, and then try to process a client submission.
     echo "sleeping... (1)\n";

@@ -15,6 +15,8 @@ set(CTEST_DROP_LOCATION "/@CDASH_DIR_NAME@/submit.php?project=@ProjectName@")
 set(CTEST_CMAKE_GENERATOR "@CMAKE_GENERATOR@")
 set(CTEST_PROJECT_NAME "@Directory@")
 
+ctest_empty_binary_directory("${CTEST_BINARY_DIRECTORY}")
+
 ctest_start(Experimental)
 ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
@@ -32,12 +34,12 @@ string(REGEX REPLACE ".*Passes: ([0-9]+).*" "\\1"
 if("${PASSED}" STREQUAL "${OUTDATA}")
   set(PASSED 0)
 endif()
-string(REGEX REPLACE ".*Failures: ([0-9]+).*" "\\1" 
+string(REGEX REPLACE ".*Failures: ([0-9]+).*" "\\1"
   FAILED "${OUTDATA}")
 if("${FAILED}" STREQUAL "${OUTDATA}")
   set(FAILED 0)
 endif()
-string(REGEX REPLACE ".*Exceptions: ([0-9]+).*" "\\1" 
+string(REGEX REPLACE ".*Exceptions: ([0-9]+).*" "\\1"
   EXCEPTIONS "${OUTDATA}")
 if("${EXCEPTIONS}" STREQUAL $"{OUTDATA}")
   set(EXCEPTIONS 0)
@@ -49,7 +51,7 @@ if(${FAILED} GREATER 0  OR ${EXCEPTIONS} GREATER 0)
   message(FATAL_ERROR "Test failures found: ${OUTDATA}")
 endif()
 if(${PASSED} LESS ${EXPECTED_PASSED})
-  message(FATAL_ERROR 
+  message(FATAL_ERROR
     "Not enough passed tests found: ${PASSED},"
     " expected ${EXPECTED_PASSED}):\n"
     "Output from tests:\n${OUTDATA}")

@@ -7,26 +7,21 @@ require_once(dirname(__FILE__).'/cdash_selenium_test_case.php');
 
 class Example extends CDashSeleniumTestCase
 {
-  protected function setUp()
-  {
-    $this->browserSetUp();
-  }
+    protected function setUp()
+    {
+        $this->browserSetUp();
+    }
 
-  public function testShowUpdateGraph()
-  {
-    $this->open($this->webPath."/viewUpdate.php?buildid=1");
-    $this->click("link=Show Activity Graph");
-    $this->click("link=Zoom out");
-    $this->click("link=Show Activity Graph");
-    $this->click("link=Dashboard");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Current");
-    $this->waitForPageToLoad("30000");
-    $this->click("//a[contains(text(),'1 file\n          changed')]");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Show Activity Graph");
-    $this->click("link=Zoom out");
-    $this->click("link=Show Activity Graph");
-  }
+    public function testShowUpdateGraph()
+    {
+        $this->open($this->webPath."/viewUpdate.php?buildid=1");
+        $this->click("link=Show Activity Graph");
+        $this->click("link=Zoom out");
+        $this->click("link=Show Activity Graph");
+
+        $this->open($this->webPath."/viewChanges.php?project=TestCompressionExample");
+        $this->click("link=Show Activity Graph");
+        $this->click("link=Zoom out");
+        $this->click("link=Show Activity Graph");
+    }
 }
-?>

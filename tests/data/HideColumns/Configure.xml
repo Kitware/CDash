@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="HideColumns"
+	BuildStamp="20151006-1441-Experimental"
+	Name="localhost"
+	Generator="ctest-3.3.20150717-ga5412"
+	CompilerName=""
+	OSName="Linux"
+	Hostname="localhost"
+	OSRelease="3.13.0-63-generic"
+	OSVersion="#103-Ubuntu SMP Fri Aug 14 21:42:59 UTC 2015"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="3201"
+	>
+	<Configure>
+		<StartDateTime>Oct 06 10:41 EDT</StartDateTime>
+		<StartConfigureTime>1444142477</StartConfigureTime>
+		<ConfigureCommand>"/opt/cmake/bin/cmake" "-GUnix Makefiles" "/projects/tmp_for_cdash/src"</ConfigureCommand>
+		<Log>-- The C compiler identification is GNU 4.8.4
+-- The CXX compiler identification is GNU 4.8.4
+-- Check for working C compiler: /usr/local/bin/cc
+-- Check for working C compiler: /usr/local/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/local/bin/c++
+-- Check for working CXX compiler: /usr/local/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /projects/tmp_for_cdash/bin
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Oct 06 10:41 EDT</EndDateTime>
+		<EndConfigureTime>1444142478</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>

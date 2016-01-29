@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_NT-MSVC10-SERIAL_DEBUG_DEV"
+	BuildStamp="20110724-1515-Experimental"
+	Name="hut11.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	Append="true"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="Mesquite">
+</Subproject>
+<Labels>
+  <Label>Mesquite</Label>
+</Labels>
+<Build>
+	<StartDateTime>Jul 24 11:35 Eastern Daylight Time</StartDateTime>
+	<StartBuildTime>1311521745</StartBuildTime>
+<BuildCommand>nmake /NOLOGO  -i &quot;Mesquite_libs&quot;</BuildCommand>
+	<Failure type="Error">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>mesquite</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/mesquite/src/Mesh/MeshImpl.cpp</SourceFile>
+			<OutputFile>CMakeFiles\mesquite.dir\Mesh\MeshImpl.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/mesquite/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\testSuite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Control</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Linear</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Lagrange</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\ObjectiveFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityAssessor</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\OptSolvers</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\Relaxation</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Debug</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Smoothness</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Volume</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\TMP</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetCalculator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSize</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSizeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Size</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Wrappers</Argument>
+			<Argument>-DMSQ_TRAP_FPE</Argument>
+			<Argument>-DNDEBUG</Argument>
+			<Argument>-DHAVE_CLOCK</Argument>
+			<Argument>-DHAVE_VSNPRINTF</Argument>
+			<Argument>-DHAVE_VSPRINTF</Argument>
+			<Argument>-DHAVE_FCNTL_H</Argument>
+			<Argument>-DMESQUITE_STATIC_LIB</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\mesquite.dir\Mesh\MeshImpl.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\mesquite.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\MeshImpl.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>MeshImpl.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\MeshImpl.cpp(1283) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\MeshImpl.cpp(1283) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\MeshImpl.cpp(1309) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\MeshImpl.cpp(1309) : error C3861: 'back_inserter': identifier not found</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>2</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Mesquite</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>mesquite</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/mesquite/src/Mesh/TopologyInfo.cpp</SourceFile>
+			<OutputFile>CMakeFiles\mesquite.dir\Mesh\TopologyInfo.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/mesquite/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\testSuite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Control</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Linear</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Lagrange</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\ObjectiveFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityAssessor</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\OptSolvers</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\Relaxation</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Debug</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Smoothness</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Volume</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\TMP</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetCalculator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSize</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSizeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Size</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Wrappers</Argument>
+			<Argument>-DMSQ_TRAP_FPE</Argument>
+			<Argument>-DNDEBUG</Argument>
+			<Argument>-DHAVE_CLOCK</Argument>
+			<Argument>-DHAVE_VSNPRINTF</Argument>
+			<Argument>-DHAVE_VSPRINTF</Argument>
+			<Argument>-DHAVE_FCNTL_H</Argument>
+			<Argument>-DMESQUITE_STATIC_LIB</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\mesquite.dir\Mesh\TopologyInfo.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\mesquite.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\TopologyInfo.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>TopologyInfo.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\TopologyInfo.cpp(360) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\TopologyInfo.cpp(361) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh\TopologyInfo.cpp(362) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Mesquite</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Error">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>mesquite</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/mesquite/src/QualityMetric/AddQualityMetric.cpp</SourceFile>
+			<OutputFile>CMakeFiles\mesquite.dir\QualityMetric\AddQualityMetric.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/mesquite/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\testSuite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Control</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Linear</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Lagrange</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\ObjectiveFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityAssessor</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\OptSolvers</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\Relaxation</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Debug</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Smoothness</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Volume</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\TMP</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetCalculator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSize</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSizeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Size</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Wrappers</Argument>
+			<Argument>-DMSQ_TRAP_FPE</Argument>
+			<Argument>-DNDEBUG</Argument>
+			<Argument>-DHAVE_CLOCK</Argument>
+			<Argument>-DHAVE_VSNPRINTF</Argument>
+			<Argument>-DHAVE_VSPRINTF</Argument>
+			<Argument>-DHAVE_FCNTL_H</Argument>
+			<Argument>-DMESQUITE_STATIC_LIB</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\mesquite.dir\QualityMetric\AddQualityMetric.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\mesquite.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\AddQualityMetric.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>AddQualityMetric.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\AddQualityMetric.cpp(114) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\AddQualityMetric.cpp(114) : error C3861: 'back_inserter': identifier not found</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>2</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Mesquite</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Error">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>mesquite</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/mesquite/src/QualityMetric/MultiplyQualityMetric.cpp</SourceFile>
+			<OutputFile>CMakeFiles\mesquite.dir\QualityMetric\MultiplyQualityMetric.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/mesquite/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\testSuite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Control</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Linear</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Lagrange</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\ObjectiveFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityAssessor</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\OptSolvers</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\Relaxation</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Debug</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Smoothness</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Volume</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\TMP</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetCalculator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSize</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSizeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Size</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Wrappers</Argument>
+			<Argument>-DMSQ_TRAP_FPE</Argument>
+			<Argument>-DNDEBUG</Argument>
+			<Argument>-DHAVE_CLOCK</Argument>
+			<Argument>-DHAVE_VSNPRINTF</Argument>
+			<Argument>-DHAVE_VSPRINTF</Argument>
+			<Argument>-DHAVE_FCNTL_H</Argument>
+			<Argument>-DMESQUITE_STATIC_LIB</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\mesquite.dir\QualityMetric\MultiplyQualityMetric.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\mesquite.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\MultiplyQualityMetric.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>MultiplyQualityMetric.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\MultiplyQualityMetric.cpp(112) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\MultiplyQualityMetric.cpp(112) : error C3861: 'back_inserter': identifier not found</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>2</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Mesquite</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Error">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>mesquite</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/mesquite/src/QualityMetric/PMeanPMetric.cpp</SourceFile>
+			<OutputFile>CMakeFiles\mesquite.dir\QualityMetric\PMeanPMetric.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/mesquite/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\testSuite</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\itaps</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Control</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Linear</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\MappingFunction\Lagrange</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Mesh</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\ObjectiveFunction</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityAssessor</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\OptSolvers</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityImprover\Relaxation</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Debug</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Smoothness</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Volume</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\TMP</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetCalculator</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Misc</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Shape</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSize</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\ShapeSizeOrient</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Size</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\TargetMetric\Untangle</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\Wrappers</Argument>
+			<Argument>-DMSQ_TRAP_FPE</Argument>
+			<Argument>-DNDEBUG</Argument>
+			<Argument>-DHAVE_CLOCK</Argument>
+			<Argument>-DHAVE_VSNPRINTF</Argument>
+			<Argument>-DHAVE_VSPRINTF</Argument>
+			<Argument>-DHAVE_FCNTL_H</Argument>
+			<Argument>-DMESQUITE_STATIC_LIB</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\mesquite.dir\QualityMetric\PMeanPMetric.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\mesquite\src\mesquite.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>PMeanPMetric.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(85) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(85) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(178) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(178) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(179) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(179) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(180) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(180) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(278) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(278) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(279) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(279) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(280) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\mesquite\src\QualityMetric\PMeanPMetric.cpp(280) : error C3861: 'back_inserter': identifier not found</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>2</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Mesquite</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Error">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>mesquite</TargetName>
+			<Language>C++</Language>
+			<OutputFile>mesquite.lib</OutputFile>
+			<OutputType>static library</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/mesquite/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\link.exe</Argument>
+			<Argument>/lib</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/out:mesquite.lib</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/ArrayMesh.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/ElementPatches.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/ExtraData.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/GlobalPatch.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/IdealElements.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/MeshDecorator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/MeshImpl.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/MeshImplData.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/MeshImplTags.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/MeshUtil.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/MeshWriter.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/MsqMeshEntity.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/MsqVertex.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/ParallelMeshImpl.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/PatchData.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/PatchIterator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/PatchSet.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/TagVertexMesh.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/TopologyInfo.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Mesh/VertexPatches.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Control/Instruction.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Control/InstructionQueue.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Control/IQInterface.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Control/TerminationCriterion.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Control/Settings.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Control/SlaveBoundaryVertices.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/DeformingDomainWrapper.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/LaplaceWrapper.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/ShapeImprovementWrapper.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/ShapeImprover.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/SizeAdaptShapeWrapper.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/PaverMinEdgeLengthWrapper.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/UntangleWrapper.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/ViscousCFDTetShapeWrapper.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Wrappers/Wrapper.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/MappingFunction.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/NodeSet.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Sample.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Lagrange/HexLagrangeShape.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Lagrange/QuadLagrangeShape.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Lagrange/TetLagrangeShape.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Lagrange/TriLagrangeShape.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Linear/LinearHexahedron.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Linear/LinearPrism.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Linear/LinearPyramid.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Linear/LinearQuadrilateral.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Linear/LinearTetrahedron.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/MappingFunction/Linear/LinearTriangle.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/BoundedCylinderDomain.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/ConicDomain.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/CylinderDomain.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/DomainClassifier.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/DomainUtil.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/EdgeIterator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/Exponent.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/FileTokenizer.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MeshDomain1D.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MeshTransform.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MesquiteVersion.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MsqDebug.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MsqError.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MsqFPE.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MsqGeomPrim.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MsqHessian.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MsqInterrupt.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/MsqTimer.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/PlanarDomain.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/SimpleStats.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/SphericalDomain.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/Vector3D.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/VtkTypeInfo.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/Misc/XYRectangle.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/CompositeOFAdd.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/CompositeOFMultiply.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/CompositeOFScalarAdd.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/CompositeOFScalarMultiply.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/LInfTemplate.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/LPtoPTemplate.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/MaxTemplate.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/OFEvaluator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/ObjectiveFunction.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/ObjectiveFunctionTemplate.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/PatchPowerMeanP.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/PMeanPTemplate.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/StdDevTemplate.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/ObjectiveFunction/VarianceTemplate.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityAssessor/QualityAssessor.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/PatchSetUser.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/QualityImprover.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/VertexMover.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/OptSolvers/ConjugateGradient.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/OptSolvers/FeasibleNewton.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/OptSolvers/NonSmoothDescent.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/OptSolvers/SteepestDescent.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/OptSolvers/QuasiNewton.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/OptSolvers/TrustRegion.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/Relaxation/Randomize.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/Relaxation/RelaxationSmoother.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/Relaxation/LaplacianSmoother.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityImprover/Relaxation/SmartLaplacianSmoother.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/AddQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/AveragingQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/EdgeQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/ElemSampleQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/ElementMaxQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/ElementPMeanP.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/ElementQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/MultiplyQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Debug/NumericalQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Debug/CompareQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/PMeanPMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/PowerQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/QualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/ScalarAddQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/ScalarMultiplyQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/VertexMaxQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/VertexPMeanP.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/VertexQM.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Shape/AspectRatioGammaQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Shape/ConditionNumberQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Shape/IdealWeightInverseMeanRatio.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Shape/IdealWeightMeanRatio.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Shape/VertexConditionNumberQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Smoothness/EdgeLengthQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Smoothness/EdgeLengthRangeQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/TMP/AffineMapMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/TMP/TargetMetricUtil.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/TMP/TMPQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/TMP/AWQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/TMP/TQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Untangle/UntangleBetaQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Volume/EdgeLengthMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Volume/LocalSizeQualityMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/QualityMetric/Volume/SizeMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/AWMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/TMetric.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Misc/InvTransBarrier.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Misc/TMixed.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Misc/TOffset.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Misc/TPower2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Misc/TScale.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Misc/TSquared.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Misc/TSum.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Shape/AWShape2DB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Shape/AWShape2DNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Shape/AWShape2DNB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Shape/TInverseMeanRatio.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Shape/TShape2DNB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Shape/TShape3DB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Shape/TShapeB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Shape/TShapeNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeOrient/AWShapeOrientNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeOrient/TShapeOrientB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeOrient/TShapeOrientB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeOrient/TShapeOrientNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeOrient/TShapeOrientNB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/AWShapeSizeB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSize2DB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSize2DNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSize2DNB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSize3DB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSize3DB4.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSize3DNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSizeB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSizeB3.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSize/TShapeSizeNB3.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSizeOrient/AWShapeSizeOrientNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSizeOrient/TShapeSizeOrientB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSizeOrient/TShapeSizeOrientB2.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/ShapeSizeOrient/TShapeSizeOrientNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Size/AWSizeB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Size/AWSizeNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Size/TSizeB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Size/TSizeNB1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Size/TTau.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Untangle/AWUntangleBeta.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Untangle/TUntangle1.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Untangle/TUntangleBeta.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetMetric/Untangle/TUntangleMu.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/CachingTargetCalculator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/IdealShapeTarget.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/InverseMetricWeight.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/JacobianCalculator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/LambdaTarget.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/LambdaConstant.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/LVQDTargetCalculator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/MetricWeight.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/RefMeshTargetCalculator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/ReferenceMesh.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/RefSizeTargetCalculator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/RemainingWeight.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/TargetCalculator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/TargetReader.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/TargetWriter.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/TetDihedralWeight.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/WeightCalculator.cpp.obj</Argument>
+			<Argument>CMakeFiles/mesquite.dir/TargetCalculator/WeightReader.cpp.obj</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>LINK : fatal error LNK1181: cannot open input file 'CMakeFiles/mesquite.dir/Mesh/MeshImpl.cpp.obj'</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>1181</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Mesquite</Label>
+		</Labels>
+	</Failure>
+	<Log Encoding="base64" Compression="/bin/gzip">
+	</Log>
+	<EndDateTime>Jul 24 11:37 Eastern Daylight Time</EndDateTime>
+	<EndBuildTime>1311521876</EndBuildTime>
+<ElapsedMinutes>2.1</ElapsedMinutes></Build>
+</Site>

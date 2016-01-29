@@ -16,6 +16,8 @@ option(CDASH_PRO "Are we testing CDashPro?" OFF)
 set(CMake_SOURCE_DIR CACHE FILEPATH "Path to CMake source dir.  Set this to import tests from CMake")
 set(CLIENT_TEST_SCRIPT1 CACHE FILEPATH "Path to client management test script")
 set(CLIENT_TEST_SCRIPT2 CACHE FILEPATH "Path to client management test script")
+set(CDASH_GITHUB_USERNAME "" CACHE STRING "Github user for testing")
+set(CDASH_GITHUB_PASSWORD "" CACHE STRING "Github user's password")
 
 get_filename_component(CDASH_DIR_NAME_DEFAULT ${CDash_SOURCE_DIR} NAME)
 set(CDASH_DIR_NAME "${CDASH_DIR_NAME_DEFAULT}" CACHE STRING "URL suffix. Ie 'http://<CDASH_SERVER>/<CDASH_DIR_NAME>'")
@@ -47,6 +49,8 @@ $configure = array(
   'cdash'            => 'http://www.cdash.org/CDash',
   'svnroot'          => '${CDash_SOURCE_DIR}',
   'cdashpro'         => '${CDASH_PRO}',
+  'github_username'  => '${CDASH_GITHUB_USERNAME}',
+  'github_password'  => '${CDASH_GITHUB_PASSWORD}'
   );
 ?>
 ")
@@ -57,23 +61,55 @@ endif(NOT CDASH_DB_TYPE)
 
 set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
 make_directory("${CDASH_COVERAGE_DIR}")
-configure_file(${CDash_SOURCE_DIR}/tests/append_coverage.php.in
-               ${CDash_BINARY_DIR}/append_coverage.php)
+configure_file(${CDash_SOURCE_DIR}/tests/prepend_coverage.php.in
+               ${CDash_BINARY_DIR}/prepend_coverage.php)
 
 # For coverage builds on apache web servers, provide a default
 # .htaccess file, but only if explicitly asked to:
+option(CDASH_CONFIGURE_HTACCESS_FILE "Create .htaccess file for coverage testing?" OFF)
 if(CDASH_CONFIGURE_HTACCESS_FILE)
   configure_file(
-    ${CDash_SOURCE_DIR}/htaccess.in
-    ${CDash_SOURCE_DIR}/.htaccess)
+    ${CDash_SOURCE_DIR}/tests/htaccess.in
+    ${CDash_SOURCE_DIR}/public/.htaccess)
     # Yes, the output of this configure_file is intentionally in the
     # source directory
 endif()
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
+# Update composer during configure time.
+find_program(COMPOSER
+  NAMES composer composer.phar
+  PATHS ${CMAKE_CURRENT_SOURCE_DIR}
+)
+if(NOT COMPOSER)
+  file(DOWNLOAD "http://getcomposer.org/composer.phar" "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
+  set(COMPOSER "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
+endif()
+execute_process(
+  COMMAND ${PHP_EXE} ${COMPOSER} install
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Also run "npm install" during configure time.
+find_program(NPM NAMES npm)
+execute_process(
+  COMMAND ${NPM} install
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Run gulp too.
+find_program(GULP
+  NAMES gulp
+  PATHS ${CMAKE_CURRENT_SOURCE_DIR}/node_modules/.bin
+)
+execute_process(
+  COMMAND ${GULP}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 if(CDASH_USE_SELENIUM)
-  find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php)
+  find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
 
 option(CDASH_TESTING_RENAME_LOGS
@@ -85,18 +121,19 @@ else()
   set(rename_logs "false")
 endif()
 
-SET(CDASH_USE_LOCAL_DIRECTORY 0)
-IF(${CDASH_PRO})
-  SET(CDASH_USE_LOCAL_DIRECTORY 1)
-ENDIF(${CDASH_PRO})
+set(CDASH_USE_LOCAL_DIRECTORY 0)
+if(${CDASH_PRO})
+  set(CDASH_USE_LOCAL_DIRECTORY 1)
+endif(${CDASH_PRO})
 
-file(WRITE "${CDash_SOURCE_DIR}/cdash/config.local.php"
+file(WRITE "${CDash_SOURCE_DIR}/config/config.local.php"
 "<?php
 // WARNING: This file is unconditionally overwritten by the CMake configure
 // step: [${CMAKE_CURRENT_LIST_FILE}]
 //
 // Some of the CDash tests also inject config settings below as tests run...
 //
+date_default_timezone_set('America/New_York');
 $CDASH_DB_NAME = 'cdash4simpletest';
 $CDASH_TESTING_MODE = true;
 $CDASH_REGISTRATION_EMAIL_VERIFY = false;

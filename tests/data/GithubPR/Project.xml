@@ -1,0 +1,6 @@
+<Project name="CDash">
+  <SubProject name="SubProject1">
+  </SubProject>
+  <SubProject name="SubProject2">
+  </SubProject>
+</Project>

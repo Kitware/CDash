@@ -17,86 +17,73 @@
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
 
-class DailyUpdateFile
-{ 
-  var $Filename;
-  var $CheckinDate;
-  var $Author;
-  var $Log;
-  var $Revision;
-  var $PriorRevision;
-  var $DailyUpdateId;
+class dailyupdatefile
+{
+    public $Filename;
+    public $CheckinDate;
+    public $Author;
+    public $Log;
+    public $Revision;
+    public $PriorRevision;
+    public $DailyUpdateId;
 
-  /** Check if exists */  
-  function Exists()
-    {
-    // If no id specify return false
-    if(!$this->DailyUpdateId || !$this->Filename)
-      {
-      return false;    
-      }
-    
-    $query = pdo_query("SELECT count(*) AS c FROM dailyupdatefile WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'");
-    $query_array = pdo_fetch_array($query);
-    if($query_array['c']==0)
-      {
-      return false;
-      }
-    
-    return true;  
+  /** Check if exists */
+  public function Exists()
+  {
+      // If no id specify return false
+    if (!$this->DailyUpdateId || !$this->Filename) {
+        return false;
     }
     
-  /** Save the group */
-  function Save()
-    {
-    if(!$this->DailyUpdateId)
-      {
-      echo "DailyUpdateFile::Save(): DailyUpdateId not set!";
-      return false;
+      $query = pdo_query("SELECT count(*) AS c FROM dailyupdatefile WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'");
+      $query_array = pdo_fetch_array($query);
+      if ($query_array['c']==0) {
+          return false;
       }
     
-    if(!$this->Filename)
-      {
-      echo "DailyUpdateFile::Save(): Filename not set!";
-      return false;
+      return true;
+  }
+    
+  /** Save the group */
+  public function Save()
+  {
+      if (!$this->DailyUpdateId) {
+          echo "DailyUpdateFile::Save(): DailyUpdateId not set!";
+          return false;
+      }
+    
+      if (!$this->Filename) {
+          echo "DailyUpdateFile::Save(): Filename not set!";
+          return false;
       }
 
-    if(!$this->CheckinDate)
-      {
-      echo "DailyUpdateFile::Save(): CheckinDate not set!";
-      return false;
+      if (!$this->CheckinDate) {
+          echo "DailyUpdateFile::Save(): CheckinDate not set!";
+          return false;
       }
       
-    if($this->Exists())
-      {
-      // Update the project
+      if ($this->Exists()) {
+          // Update the project
       $query = "UPDATE dailyupdatefile SET";
-      $query .= " checkindate='".$this->CheckinDate."'";
-      $query .= ",author='".$this->Author."'";
-      $query .= ",log='".$this->Log."'";
-      $query .= ",revision='".$this->Revision."'";
-      $query .= ",priorrevision='".$this->PriorRevision."'";
-      $query .= " WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'";
+          $query .= " checkindate='".$this->CheckinDate."'";
+          $query .= ",author='".$this->Author."'";
+          $query .= ",log='".$this->Log."'";
+          $query .= ",revision='".$this->Revision."'";
+          $query .= ",priorrevision='".$this->PriorRevision."'";
+          $query .= " WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'";
       
-      if(!pdo_query($query))
-        {
-        add_last_sql_error("DailyUpdateFile Update");
-        return false;
-        }
-      }
-    else
-      {                                              
-      if(!pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
+          if (!pdo_query($query)) {
+              add_last_sql_error("DailyUpdateFile Update");
+              return false;
+          }
+      } else {
+          if (!pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,log,revision,priorrevision)
                      VALUES ('$this->DailyUpdateId','$this->Filename','$this->CheckinDate','$this->Author','$this->Log',
-                     '$this->Revision','$this->PriorRevision')"))
-         {
-         add_last_sql_error("DailyUpdateFile Insert");
-         return false;
-         }
+                     '$this->Revision','$this->PriorRevision')")) {
+              add_last_sql_error("DailyUpdateFile Insert");
+              return false;
+          }
       }
-    return true;
-    } // end function save    
+      return true;
+  } // end function save
 }
-
-
-?>

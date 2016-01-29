@@ -1,24 +1,25 @@
--- 
+--
 -- Host: localhost
 -- Server version: 4.1.15
 -- PHP Version: 5.2.3-1+b1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
--- 
+--
 -- Database: `cdash`
--- 
+--
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `build`
--- 
+--
 
 CREATE TABLE `build` (
   `id` int(11) NOT NULL auto_increment,
   `siteid` int(11) NOT NULL default '0',
   `projectid` int(11) NOT NULL default '0',
+  `parentid` int(11) NOT NULL default '0',
   `stamp` varchar(255) NOT NULL default '',
   `name` varchar(255) NOT NULL default '',
   `type` varchar(255) NOT NULL default '',
@@ -26,14 +27,19 @@ CREATE TABLE `build` (
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `submittime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `command` text NOT NULL,
-  `log` text NOT NULL,
+  `command` text NOT NULL DEFAULT '',
+  `log` text NOT NULL DEFAULT '',
+  `configureerrors` smallint(6) DEFAULT '-1',
+  `configurewarnings` smallint(6) DEFAULT '-1',
+  `configureduration` float(7,2) NOT NULL default '0.00',
   `builderrors` smallint(6) DEFAULT '-1',
   `buildwarnings` smallint(6) DEFAULT '-1',
   `testnotrun` smallint(6) DEFAULT '-1',
   `testfailed` smallint(6) DEFAULT '-1',
   `testpassed` smallint(6) DEFAULT '-1',
   `testtimestatusfailed` smallint(6) DEFAULT '-1',
+  `notified` tinyint(1) default '0',
+  `done` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),
@@ -41,7 +47,9 @@ CREATE TABLE `build` (
   KEY `siteid` (`siteid`),
   KEY `stamp` (`stamp`),
   KEY `type` (`type`),
-  KEY `name` (`name`)
+  KEY `name` (`name`),
+  KEY `parentid` (`parentid`),
+  KEY `projectid_parentid_starttime` (`projectid`,`parentid`,`starttime`)
 );
 
 
@@ -56,17 +64,19 @@ CREATE TABLE `buildgroup` (
   `summaryemail` tinyint(4) default '0',
   `includesubprojectotal` tinyint(4) default '1',
   `emailcommitters` tinyint(4) default '0',
+  `type` varchar(20) NOT NULL default 'Daily',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),
-  KEY `endtime` (`endtime`) 
+  KEY `endtime` (`endtime`),
+  KEY `type` (`type`)
 );
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `buildgroupposition`
--- 
+--
 
 CREATE TABLE `buildgroupposition` (
   `buildgroupid` int(11) NOT NULL default '0',
@@ -78,14 +88,14 @@ CREATE TABLE `buildgroupposition` (
   KEY `starttime` (`starttime`),
   KEY `position` (`position`)
 );
-        
+
 
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `build2group`
--- 
+--
 
 CREATE TABLE `build2group` (
   `groupid` int(11) NOT NULL default '0',
@@ -96,12 +106,13 @@ CREATE TABLE `build2group` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `build2grouprule`
--- 
+--
 
 CREATE TABLE `build2grouprule` (
   `groupid` int(11) NOT NULL default '0',
+  `parentgroupid` int(11) NOT NULL default '0',
   `buildtype` varchar(20) NOT NULL default '',
   `buildname` varchar(255) NOT NULL default '',
   `siteid` int(11) NOT NULL default '0',
@@ -109,6 +120,7 @@ CREATE TABLE `build2grouprule` (
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   KEY `groupid` (`groupid`),
+  KEY `parentgroupid` (`parentgroupid`),
   KEY `buildtype` (`buildtype`),
   KEY `buildname` (`buildname`),
   KEY `siteid` (`siteid`),
@@ -119,9 +131,9 @@ CREATE TABLE `build2grouprule` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `builderror`
--- 
+--
 
 CREATE TABLE `builderror` (
   `buildid` int(11) NOT NULL default '0',
@@ -143,9 +155,9 @@ CREATE TABLE `builderror` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `buildupdate`
--- 
+--
 
 CREATE TABLE `buildupdate` (
   `id` int(11) NOT NULL auto_increment,
@@ -173,9 +185,9 @@ CREATE TABLE IF NOT EXISTS `build2update` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `configure`
--- 
+--
 
 CREATE TABLE `configure` (
   `buildid` int(11) NOT NULL default '0',
@@ -190,9 +202,9 @@ CREATE TABLE `configure` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `coverage`
--- 
+--
 
 CREATE TABLE `coverage` (
   `buildid` int(11) NOT NULL default '0',
@@ -211,9 +223,9 @@ CREATE TABLE `coverage` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `coveragefile`
--- 
+--
 
 CREATE TABLE `coveragefile` (
   `id` int(11) NOT NULL auto_increment,
@@ -222,14 +234,14 @@ CREATE TABLE `coveragefile` (
   `crc32` bigint(20) default NULL,
   PRIMARY KEY  (`id`),
   KEY `fullpath` (`fullpath`),
-  KEY `crc32` (`crc32`) 
+  KEY `crc32` (`crc32`)
 );
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `coveragefilelog`
--- 
+--
 
 CREATE TABLE `coveragefilelog` (
   `buildid` int(11) NOT NULL default '0',
@@ -241,9 +253,9 @@ CREATE TABLE `coveragefilelog` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `coveragesummary`
--- 
+--
 
 CREATE TABLE `coveragesummary` (
   `buildid` int(11) NOT NULL default '0',
@@ -254,9 +266,9 @@ CREATE TABLE `coveragesummary` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `dynamicanalysis`
--- 
+--
 
 CREATE TABLE `dynamicanalysis` (
   `id` int(11) NOT NULL auto_increment,
@@ -273,9 +285,9 @@ CREATE TABLE `dynamicanalysis` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `dynamicanalysisdefect`
--- 
+--
 
 CREATE TABLE `dynamicanalysisdefect` (
   `dynamicanalysisid` int(11) NOT NULL default '0',
@@ -284,13 +296,13 @@ CREATE TABLE `dynamicanalysisdefect` (
   KEY `buildid` (`dynamicanalysisid`)
 );
 
-  
+
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `image`
--- 
+--
 
 CREATE TABLE `image` (
   `id` int(11) NOT NULL auto_increment,
@@ -304,9 +316,9 @@ CREATE TABLE `image` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `test2image`
--- 
+--
 CREATE TABLE `test2image` (
   `id` bigint(20) NOT NULL auto_increment,
   `imgid` int(11) NOT NULL,
@@ -318,9 +330,9 @@ CREATE TABLE `test2image` (
 );
 
 -- --------------------------------------------------------
--- 
+--
 -- Table structure for table `note`
--- 
+--
 CREATE TABLE `note` (
   `id` bigint(20) NOT NULL auto_increment,
   `text` mediumtext NOT NULL,
@@ -331,7 +343,7 @@ CREATE TABLE `note` (
 ) ;
 
 -- --------------------------------------------------------
--- 
+--
 -- Table structure for table `uploadfile`
 --
 CREATE TABLE IF NOT EXISTS `uploadfile` (
@@ -345,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `uploadfile` (
 );
 
 -- --------------------------------------------------------
--- 
+--
 -- Table structure for table `build2uploadfile`
 --
 CREATE TABLE IF NOT EXISTS `build2uploadfile` (
@@ -357,9 +369,9 @@ CREATE TABLE IF NOT EXISTS `build2uploadfile` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `project`
--- 
+--
 
 CREATE TABLE `project` (
   `id` int(11) NOT NULL auto_increment,
@@ -403,9 +415,9 @@ CREATE TABLE `project` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `site`
--- 
+--
 
 CREATE TABLE `site` (
   `id` int(11) NOT NULL auto_increment,
@@ -418,9 +430,9 @@ CREATE TABLE `site` (
   KEY `name` (`name`)
 ) ;
 
--- 
+--
 -- Table structure for table `siteinformation`
--- 
+--
 
 CREATE TABLE `siteinformation` (
   `siteid` int(11) NOT NULL,
@@ -456,9 +468,9 @@ CREATE TABLE `buildinformation` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `site2user`
--- 
+--
 
 CREATE TABLE `site2user` (
   `siteid` int(11) NOT NULL default '0',
@@ -469,9 +481,9 @@ CREATE TABLE `site2user` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `test`
--- 
+--
 CREATE TABLE `test` (
   `id` int(11) NOT NULL auto_increment,
   `projectid` int(11) NOT NULL,
@@ -487,7 +499,7 @@ CREATE TABLE `test` (
   KEY `name` (`name`)
 );
 
--- 
+--
 -- Table structure for table `build2test`
 --
 CREATE TABLE `build2test` (
@@ -518,9 +530,9 @@ CREATE TABLE `buildtesttime` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `updatefile`
--- 
+--
 
 CREATE TABLE `updatefile` (
   `updateid` int(11) NOT NULL default '0',
@@ -540,9 +552,9 @@ CREATE TABLE `updatefile` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `user`
--- 
+--
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL auto_increment,
@@ -573,9 +585,9 @@ CREATE TABLE `usertemp` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `user2project`
--- 
+--
 
 CREATE TABLE `user2project` (
   `userid` int(11) NOT NULL default '0',
@@ -593,9 +605,9 @@ CREATE TABLE `user2project` (
   KEY `emailmissingsites` (`emailmissingsites`)
 );
 
--- 
+--
 -- Table structure for table `buildnote`
--- 
+--
 CREATE TABLE `buildnote` (
   `buildid` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
@@ -787,27 +799,29 @@ CREATE TABLE IF NOT EXISTS `label` (
   UNIQUE KEY `text` (`text`)
 );
 
--- 
+--
 -- Table structure for table `label2build`
--- 
+--
 CREATE TABLE `label2build` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`buildid`)
+  PRIMARY KEY (`labelid`,`buildid`),
+  KEY `labelid` (`labelid`),
+  KEY `buildid` (`buildid`)
 );
 
--- 
+--
 -- Table structure for table `label2buildfailure`
--- 
+--
 CREATE TABLE `label2buildfailure` (
   `labelid` bigint(20) NOT NULL,
   `buildfailureid` bigint(20) NOT NULL,
   PRIMARY KEY (`labelid`,`buildfailureid`)
 );
 
--- 
+--
 -- Table structure for table `label2coveragefile`
--- 
+--
 CREATE TABLE `label2coveragefile` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
@@ -815,9 +829,9 @@ CREATE TABLE `label2coveragefile` (
   PRIMARY KEY (`labelid`,`buildid`,`coveragefileid`)
 );
 
--- 
+--
 -- Table structure for table `label2dynamicanalysis`
--- 
+--
 CREATE TABLE `label2dynamicanalysis` (
   `labelid` bigint(20) NOT NULL,
   `dynamicanalysisid` bigint(20) NOT NULL,
@@ -825,19 +839,20 @@ CREATE TABLE `label2dynamicanalysis` (
 );
 
 
--- 
+--
 -- Table structure for table `label2test`
--- 
+--
 CREATE TABLE `label2test` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
   `testid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`buildid`,`testid`)
+  PRIMARY KEY (`labelid`,`buildid`,`testid`),
+  KEY `testid` (`testid`)
 );
 
--- 
+--
 -- Table structure for table `label2update`
--- 
+--
 CREATE TABLE `label2update` (
   `labelid` bigint(20) NOT NULL,
   `updateid` bigint(20) NOT NULL,
@@ -845,16 +860,35 @@ CREATE TABLE `label2update` (
 );
 
 
--- 
+--
 -- Table structure for table `subproject`
--- 
+--
 CREATE TABLE `subproject` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `projectid` int(11) NOT NULL,
+  `groupid` int(11) NOT NULL,
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   PRIMARY KEY  (`id`),
+  KEY `groupid` (`groupid`),
+  KEY `projectid` (`projectid`)
+);
+
+
+--
+-- Table structure for table `subprojectgroup`
+--
+CREATE TABLE `subprojectgroup` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `projectid` int(11) NOT NULL,
+  `coveragethreshold` smallint(6) NOT NULL default '70',
+  `is_default` tinyint(1) NOT NULL,
+  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  PRIMARY KEY  (`id`),
+  KEY `name` (`name`),
   KEY `projectid` (`projectid`)
 );
 
@@ -881,23 +915,31 @@ CREATE TABLE `subproject2build` (
 CREATE TABLE `buildfailure` (
   `id` bigint(20) NOT NULL auto_increment,
   `buildid` bigint(20) NOT NULL,
+  `detailsid` bigint(20) NOT NULL,
+  `workingdirectory` varchar(512) NOT NULL,
+  `sourcefile` varchar(512) NOT NULL,
+  `newstatus` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `buildid` (`buildid`),
+  KEY `detailsid` (`detailsid`),
+  KEY `newstatus` (`newstatus`)
+);
+
+
+CREATE TABLE `buildfailuredetails` (
+  `id` bigint(20) NOT NULL auto_increment,
   `type` tinyint(4) NOT NULL,
-  `workingdirectory` varchar(255) NOT NULL,
   `stdoutput` mediumtext NOT NULL,
   `stderror` mediumtext NOT NULL,
   `exitcondition` varchar(255) NOT NULL,
   `language` varchar(64) NOT NULL,
   `targetname` varchar(255) NOT NULL,
-  `outputfile` varchar(255) NOT NULL,
+  `outputfile` varchar(512) NOT NULL,
   `outputtype` varchar(255) NOT NULL,
-  `sourcefile` varchar(512) NOT NULL,
   `crc32` bigint(20) NOT NULL default '0',
-  `newstatus` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  KEY `buildid` (`buildid`),
   KEY `type` (`type`),
-  KEY `crc32` (`crc32`),
-  KEY `newstatus` (`newstatus`)
+  KEY `crc32` (`crc32`)
 );
 
 
@@ -1299,7 +1341,7 @@ CREATE TABLE IF NOT EXISTS `errorlog` (
   `type` tinyint(4) NOT NULL,
   `description` mediumtext NOT NULL,
   `resourcetype` tinyint(4) NOT NULL DEFAULT '0',
-  `resourceid` bigint(20) NOT NULL, 
+  `resourceid` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `resourceid` (`resourceid`),
   KEY `date` (`date`),
@@ -1362,9 +1404,29 @@ CREATE TABLE IF NOT EXISTS `feed` (
   KEY `date` (`date`)
 );
 
+CREATE TABLE IF NOT EXISTS `overview_components` (
+  `projectid` int(11) NOT NULL DEFAULT 1,
+  `buildgroupid` int(11) NOT NULL DEFAULT 0,
+  `position` int(11) NOT NULL DEFAULT 0,
+  `type` varchar(32) NOT NULL DEFAULT "build",
+  KEY (`projectid`),
+  KEY (`buildgroupid`)
+);
+
+CREATE TABLE IF NOT EXISTS `buildfile` (
+  `buildid` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `md5` varchar(40) NOT NULL,
+  `type` varchar(32) NOT NULL DEFAULT "",
+  KEY (`buildid`),
+  KEY (`filename`),
+  KEY (`type`),
+  KEY (`md5`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
--- 
+--
 alter table test max_rows = 200000000000 avg_row_length = 3458;
 alter table builderror max_rows = 200000000000 avg_row_length = 3458;
 alter table coverage max_rows = 200000000000 avg_row_length = 3458;

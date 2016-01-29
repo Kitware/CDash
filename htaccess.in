@@ -1,2 +1,0 @@
-php_value auto_prepend_file "@CDash_SOURCE_DIR@/prepend_coverage.php"
-php_value auto_append_file "@CDash_BINARY_DIR@/append_coverage.php"

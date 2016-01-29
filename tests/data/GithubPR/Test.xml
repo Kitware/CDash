@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_PR_comment"
+	BuildStamp="20150811-2045-Experimental"
+	Name="elysium"
+	Generator="ctest-3.3.20150717-ga5412"
+	CompilerName=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-61-generic"
+	OSVersion="#100-Ubuntu SMP Wed Jul 29 11:21:34 UTC 2015"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="3201"
+	ChangeId="80"
+	>
+    <Subproject name="SubProject1"/>
+    <Labels>
+      <Label>SubProject1</Label>
+    </Labels>
+	<Testing>
+		<StartDateTime>Aug 11 16:45 EDT</StartDateTime>
+		<StartTestTime>1439325930</StartTestTime>
+		<TestList>
+			<Test>./foo</Test>
+		</TestList>
+		<Test Status="failed">
+			<Name>foo</Name>
+			<Path>.</Path>
+			<FullName>./foo</FullName>
+			<FullCommandLine>/projects/tmp/bin/foo</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Exit Code">
+					<Value>Failed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Exit Value">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.00110006</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/projects/tmp/bin/foo</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Aug 11 16:45 EDT</EndDateTime>
+		<EndTestTime>1439325930</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

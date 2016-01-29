@@ -7,57 +7,50 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class InstallTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
 
-    global $db;
-    $this->databaseName = $db['name'];
+        global $db;
+        $this->databaseName = $db['name'];
     }
 
-  function testInstall()
+    public function testInstall()
     {
-    //double check that it's the testing database before doing anything hasty...
-    if($this->databaseName !== "cdash4simpletest")
-      {
-      $this->fail("can only test on a database named 'cdash4simpletest'");
-      return 1;
-      }
+        //double check that it's the testing database before doing anything hasty...
+    if ($this->databaseName !== "cdash4simpletest") {
+        $this->fail("can only test on a database named 'cdash4simpletest'");
+        return 1;
+    }
 
     //drop any old testing database before testing install
     $this->db->drop($this->databaseName);
 
     // Create the database
-    if($this->db->type == 'pgsql')
-      {
-      if(!$this->db->create($this->databaseName))
-        {
-        $dbcreated = false;
-        $msg = 'error query(CREATE DATABASE)';
-        die("Error" . " File: " . __FILE__ . " on line: " . __LINE__.": $msg");
-        return false;
+    if ($this->db->type == 'pgsql') {
+        if (!$this->db->create($this->databaseName)) {
+            $dbcreated = false;
+            $msg = 'error query(CREATE DATABASE)';
+            die("Error" . " File: " . __FILE__ . " on line: " . __LINE__.": $msg");
+            return false;
         }
-      }
+    }
 
-    $this->setConnectionTimeout(99999);
-    $this->get($this->url."/install.php");
-    if(!$this->setFieldByName("admin_email", "simpletest@localhost"))
-      {
-      $this->fail("Set admin email returned false");
-      return 1;
-      }
-    if(!$this->setFieldByName("admin_password", "simpletest"))
-      {
-      $this->fail("Set admin password returned false");
-      return 1;
-      }
-    $this->clickSubmitByName("Submit");
-    if(strpos($this->getBrowser()->getContentAsText(), "sucessfully created") === false)
-      {
-      $this->fail("'sucessfully created' not found when expected");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->setConnectionTimeout(99999);
+        $this->get($this->url."/install.php");
+        if (!$this->setFieldByName("admin_email", "simpletest@localhost")) {
+            $this->fail("Set admin email returned false");
+            return 1;
+        }
+        if (!$this->setFieldByName("admin_password", "simpletest")) {
+            $this->fail("Set admin password returned false");
+            return 1;
+        }
+        $this->clickSubmitByName("Submit");
+        if (strpos($this->getBrowser()->getContentAsText(), "successfully created") === false) {
+            $this->fail("'successfully created' not found when expected\nHere's what I see instead:\n");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-?>

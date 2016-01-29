@@ -7,20 +7,18 @@ require_once(dirname(__FILE__).'/cdash_test_case.php');
 
 class QueryTestsTestCase extends KWWebTestCase
 {
-  function __construct()
+    public function __construct()
     {
-    parent::__construct();
+        parent::__construct();
     }
 
-  function testQueryTests()
+    public function testQueryTests()
     {
-    $this->get($this->url."/queryTests.php");
-    if(strpos($this->getBrowser()->getContentAsText(), "matches") === false)
-      {
-      $this->fail("'matches' not found when expected");
-      return 1;
-      }
-    $this->pass("Passed");
+        $this->get($this->url."/queryTests.php");
+        if (strpos($this->getBrowser()->getContentAsText(), "matches") === false) {
+            $this->fail("'matches' not found when expected");
+            return 1;
+        }
+        $this->pass("Passed");
     }
 }
-?>

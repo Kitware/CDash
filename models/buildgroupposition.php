@@ -16,57 +16,51 @@
 
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
-class BuildGroupPosition
+class buildgroupposition
 {
-  var $Position;
-  var $StartTime;
-  var $EndTime;
-  var $GroupId;
+    public $Position;
+    public $StartTime;
+    public $EndTime;
+    public $GroupId;
   
-  function __construct()
+    public function __construct()
     {
-    $this->StartTime = '1980-01-01 00:00:00';
-    $this->EndTime = '1980-01-01 00:00:00';
-    $this->Position = 1;
+        $this->StartTime = '1980-01-01 00:00:00';
+        $this->EndTime = '1980-01-01 00:00:00';
+        $this->Position = 1;
     }
 
-  /** Check if the position already exists */  
-  function Exists()
-    {
-    // If no id specify return false
-    if(!$this->GroupId)
-      {
-      return false;    
-      }
+  /** Check if the position already exists */
+  public function Exists()
+  {
+      // If no id specify return false
+    if (!$this->GroupId) {
+        return false;
+    }
     
-    $query = pdo_query("SELECT count(*) AS c FROM buildgroupposition WHERE 
+      $query = pdo_query("SELECT count(*) AS c FROM buildgroupposition WHERE 
                         buildgroupid='".$this->GroupId."' AND position='".$this->Position."'
                         AND starttime='".$this->StartTime."'
                         AND endtime='".$this->EndTime."'"
                         );
-    $query_array = pdo_fetch_array($query);
-    if($query_array['c']==0)
-      {
-      return false;
+      $query_array = pdo_fetch_array($query);
+      if ($query_array['c']==0) {
+          return false;
       }
-    return true;  
-    }  
+      return true;
+  }
     
   /** Save the goup position */
-  function Add()
-    {
-    if(!$this->Exists())
-      {
-      if(!pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime)
-                     VALUES ('$this->GroupId','$this->Position','$this->StartTime','$this->EndTime')"))
-        {
-        add_last_sql_error("BuildGroupPosition Insert()");
-        return false;
-        }
-      return true;
-      }  
-    return false;
-    } // end function save
+  public function Add()
+  {
+      if (!$this->Exists()) {
+          if (!pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime)
+                     VALUES ('$this->GroupId','$this->Position','$this->StartTime','$this->EndTime')")) {
+              add_last_sql_error("BuildGroupPosition Insert()");
+              return false;
+          }
+          return true;
+      }
+      return false;
+  } // end function save
 }
-
-?>
