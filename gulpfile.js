@@ -8,7 +8,7 @@
       uglify = require('gulp-uglify'),
       rename = require("gulp-rename"),
       replace = require('gulp-replace'),
-      release = false, // Change to true when cutting a release.
+      release = true, // Change to true when cutting a release.
       version;
 
   if (release) {
