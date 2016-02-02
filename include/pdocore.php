@@ -275,7 +275,13 @@ function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
         $unescaped_string = "0";
     }
 
-    return pdo_real_escape_string($unescaped_string, $link_identifier);
+    // Return zero if we don't end up with a numeric value.
+    $escaped_string =
+        pdo_real_escape_string($unescaped_string, $link_identifier);
+    if (!is_numeric($escaped_string)) {
+        return 0;
+    }
+    return $escaped_string;
 }
 
 
