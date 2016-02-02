@@ -680,9 +680,14 @@ if (isset($_GET['upgrade-2-4'])) {
     AddTableIndex('label2test', 'testid');
 
     // Better caching of build & test time, particularly for parent builds.
-    AddTableField('build', 'configureduration', 'float(7,2)', 'numeric(7,2)', '0.00');
-    UpgradeConfigureDuration();
-    UpgradeTestDuration();
+    $query = "SELECT configureduration FROM build LIMIT 1";
+    $dbTest = pdo_query($query);
+    if ($dbTest === false) {
+        AddTableField('build', 'configureduration', 'float(7,2)',
+                'numeric(7,2)', '0.00');
+        UpgradeConfigureDuration();
+        UpgradeTestDuration();
+    }
 
     // Support for marking a build as "done".
     AddTableField('build', 'done', 'tinyint(1)', 'smallint', '0');
