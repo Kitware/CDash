@@ -71,7 +71,8 @@ $limit_sql = '';
 if ($filterdata['limit']>0) {
     $limit_sql = ' LIMIT '.$filterdata['limit'];
 }
-$response['filterurl'] = @$_GET["filterstring"];
+// htmlentities used here to prevent XSS injection from filterstring content
+$response['filterurl'] = htmlentities(@$_GET['filterstring'], ENT_QUOTES | ENT_HTML5);
 
 // Menu
 $menu = array();
