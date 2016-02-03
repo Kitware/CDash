@@ -330,14 +330,12 @@ function GetNextSubmission($projectid)
 {
     $now_utc = gmdate(FMT_DATETIMESTD);
 
-    // Lock the table to avoid a race condition between multiple processes
-    // fighting over the same submission.
-    $tables = array();
-    $tables[] = 'submission';
-    if (!pdo_lock_tables($tables)) {
-        add_log("could not lock submission table", "GetNextSubmission",
-                LOG_ERR, $projectid);
-        return false;
+    // Avoid a race condition when parallel processing.
+    $for_update = "";
+    global $CDASH_ASYNC_WORKERS;
+    if ($CDASH_ASYNC_WORKERS > 1) {
+        pdo_begin_transaction();
+        $for_update = "FOR UPDATE";
     }
 
     // Get the next submission to process.
@@ -345,7 +343,7 @@ function GetNextSubmission($projectid)
             "SELECT id, filename, filesize, filemd5sum, attempts
             FROM submission
             WHERE projectid='$projectid' AND status=0
-            ORDER BY id LIMIT 1");
+            ORDER BY id LIMIT 1 $for_update");
     add_last_sql_error("GetNextSubmission-1");
 
     $submission_id = $query_array['id'];
@@ -357,11 +355,8 @@ function GetNextSubmission($projectid)
             "WHERE id='".$submission_id."'");
     add_last_sql_error("GetNextSubmission-2");
 
-    // Unlock the submission table.
-    if (!pdo_unlock_tables($tables)) {
-        add_log("could not unlock submission table", "GetNextSubmission",
-                LOG_ERR, $projectid);
-        return false;
+    if ($CDASH_ASYNC_WORKERS > 1) {
+        pdo_commit();
     }
 
     return $query_array;
