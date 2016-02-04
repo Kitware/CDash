@@ -82,38 +82,38 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
 
   // If the file exists we append a number until we get a nonexistent file.
   $got_lock = false;
-  $i = 1;
-  while (!$got_lock) {
-      $lockfilename = $filename . ".lock";
-      $lockfp = fopen($lockfilename, "w");
-      flock($lockfp, LOCK_EX | LOCK_NB, $wouldblock);
-      if ($wouldblock) {
-          $filename = $backupDir."/".$projectname_escaped."_".$sitename_escaped."_".$buildname_escaped."_".$stamp.'_'.$currenttimestamp."_".$file."_".$i.$ext;
-          $i++;
-      } else {
-          $got_lock = true;
+    $i = 1;
+    while (!$got_lock) {
+        $lockfilename = $filename . ".lock";
+        $lockfp = fopen($lockfilename, "w");
+        flock($lockfp, LOCK_EX | LOCK_NB, $wouldblock);
+        if ($wouldblock) {
+            $filename = $backupDir."/".$projectname_escaped."_".$sitename_escaped."_".$buildname_escaped."_".$stamp.'_'.$currenttimestamp."_".$file."_".$i.$ext;
+            $i++;
+        } else {
+            $got_lock = true;
 
           // Make sure the file is in the right directory.
           $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
-          if ($pos === false || $pos!=0) {
-              echo "File cannot be stored in backup directory: $filename";
-              add_log("File cannot be stored in backup directory: $filename (realpath = ".realpath($backupDir).")", "writeBackupFile", LOG_ERR);
-              flock($lockfp, LOCK_UN);
-              unlink($lockfilename);
-              return false;
-          }
+            if ($pos === false || $pos!=0) {
+                echo "File cannot be stored in backup directory: $filename";
+                add_log("File cannot be stored in backup directory: $filename (realpath = ".realpath($backupDir).")", "writeBackupFile", LOG_ERR);
+                flock($lockfp, LOCK_UN);
+                unlink($lockfilename);
+                return false;
+            }
 
-          if (!$handle = fopen($filename, 'w')) {
-              echo "Cannot open file ($filename)";
-              add_log("Cannot open file ($filename)", "writeBackupFile", LOG_ERR);
-              flock($lockfp, LOCK_UN);
-              unlink($lockfilename);
-              return false;
-          }
-      }
-      flock($lockfp, LOCK_UN);
-      unlink($lockfilename);
-  }
+            if (!$handle = fopen($filename, 'w')) {
+                echo "Cannot open file ($filename)";
+                add_log("Cannot open file ($filename)", "writeBackupFile", LOG_ERR);
+                flock($lockfp, LOCK_UN);
+                unlink($lockfilename);
+                return false;
+            }
+        }
+        flock($lockfp, LOCK_UN);
+        unlink($lockfilename);
+    }
 
   // Write the file.
   if (fwrite($handle, $content) === false) {
