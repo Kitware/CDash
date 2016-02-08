@@ -21,6 +21,7 @@ require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
 include("include/version.php");
+require_once("models/coveragefilelog.php");
 
 @$buildid = $_GET["buildid"];
 if ($buildid != null) {
@@ -127,34 +128,16 @@ if ($CDASH_USE_COMPRESSION) {
 $file_array = explode("<br>", $file);
 $i = 0;
 
-// Get the codes in an array
-$linecodes = array();
-$coveragefilelog = pdo_query("SELECT log FROM coveragefilelog WHERE fileid=".qnum($fileid)." AND buildid=".qnum($buildid));
-if (pdo_num_rows($coveragefilelog)>0) {
-    $coveragefilelog_array = pdo_fetch_array($coveragefilelog);
-    if ($CDASH_DB_TYPE == "pgsql") {
-        $log = stream_get_contents($coveragefilelog_array['log']);
-    } else {
-        $log = $coveragefilelog_array['log'];
-    }
-    $linecode = explode(';', $log);
-    foreach ($linecode as $value) {
-        if (!empty($value)) {
-            $code = explode(':', $value);
-            $linecodes[$code[0]] = $code[1];
-        }
-    }
-}
+// Load the coverage info.
+$log = new CoverageFileLog();
+$log->BuildId = $buildid;
+$log->FileId = $fileid;
+$log->Load();
 
 // Detect if we have branch coverage or not.
 $hasBranchCoverage = false;
-foreach (array_keys($linecodes) as $key) {
-    if ($key[0] == 'b') {
-        $hasBranchCoverage = true;
-        break;
-    }
-}
-if ($hasBranchCoverage) {
+if (!empty($log->Branches)) {
+    $hasBranchCoverage = true;
 }
 
 foreach ($file_array as $line) {
@@ -164,8 +147,8 @@ foreach ($file_array as $line) {
     $file_array[$i] = '<span class="warning">'.str_pad($linenumber, 5, ' ', STR_PAD_LEFT).'</span>';
 
     if ($hasBranchCoverage) {
-        if (array_key_exists("b$i", $linecodes)) {
-            $code = $linecodes["b$i"];
+        if (array_key_exists("$i", $log->Branches)) {
+            $code = $log->Branches["$i"];
 
             // Branch coverage data is stored as <# covered> / <total branches>.
             $branchCoverageData = explode('/', $code);
@@ -180,8 +163,8 @@ foreach ($file_array as $line) {
         }
     }
 
-    if (array_key_exists($i, $linecodes)) {
-        $code = $linecodes[$i];
+    if (array_key_exists($i, $log->Lines)) {
+        $code = $log->Lines[$i];
         if ($code==0) {
             $file_array[$i] .= '<span class="error">';
         } else {

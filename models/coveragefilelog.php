@@ -44,7 +44,7 @@ class coveragefilelog
     }
 
     /** Update the content of the file */
-    public function Insert()
+    public function Insert($append=false)
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
             add_log("BuildId not set", "CoverageFileLog::Insert()", LOG_ERR,
@@ -56,6 +56,11 @@ class coveragefilelog
             add_log("FileId not set", "CoverageFileLog::Insert()", LOG_ERR,
                     0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
             return false;
+        }
+
+        if ($append) {
+            // Load any previously existing results for this file & build.
+            $this->Load();
         }
 
         $log = '';
@@ -73,5 +78,43 @@ class coveragefilelog
             add_last_sql_error("CoverageFileLog::Insert()");
         }
         return true;
+    }
+
+    public function Load()
+    {
+        global $CDASH_DB_TYPE;
+
+        $query = "SELECT log FROM coveragefilelog
+            WHERE fileid=".qnum($this->FileId)."
+            AND buildid=".qnum($this->BuildId);
+
+        $result = pdo_query($query);
+        if (pdo_num_rows($result) < 1) {
+            return;
+        }
+
+        $row = pdo_fetch_array($result);
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            $log = stream_get_contents($row['log']);
+        } else {
+            $log = $row['log'];
+        }
+
+        $log_entries = explode(';', $log);
+        foreach ($log_entries as $log_entry) {
+            if (empty($log_entry)) {
+                continue;
+            }
+            list ($line, $value) = explode(':', $log_entry);
+            if ($line[0] === 'b') {
+                // Branch coverage
+                $line = ltrim($line, 'b');
+                list ($covered, $total) = explode('/', $value);
+                $this->AddBranch($line, $covered, $total);
+            } else {
+                // Line coverage
+                $this->AddLine($line, $value);
+            }
+        }
     }
 }
