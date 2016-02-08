@@ -738,8 +738,7 @@ function sendsummaryemail($projectid, $groupid, $errors, $buildid)
         add_log($messagePlainText, "TESTING: EMAILBODY", LOG_TESTING);
     } else {
         // Send the email
-      if (cdashmail("$summaryEmail", $title, $messagePlainText,
-           "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
+      if (cdashmail("$summaryEmail", $title, $messagePlainText)) {
           add_log("summary email sent to: ".$summaryEmail, "sendemail ".$Project->Name, LOG_INFO);
           return;
       } else {
@@ -908,8 +907,7 @@ function send_email_fix_to_user($userid, $emailtext, $Build, $Project)
     set_email_sent($userid, $Build->Id, $emailtext);
   } else {
       // Send the email
-    if (cdashmail("$email", $title, $messagePlainText,
-     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
+    if (cdashmail("$email", $title, $messagePlainText)) {
         add_log("email sent to: ".$email." with fixes ".$titleerrors." for build ".$Build->Id, "sendemail ".$Project->Name, LOG_INFO);
 
       // Record that we have send the email
@@ -1037,8 +1035,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
       $sent = true;
   } else {
       // Send the email
-    if (cdashmail("$emailaddress", $title, $messagePlainText,
-     "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
+    if (cdashmail("$emailaddress", $title, $messagePlainText)) {
         add_log("email sent to: ".$emailaddress." with errors ".$titleerrors." for build ".$Build->Id, "sendemail ".$Project->Name, LOG_INFO);
         $sent = true;
     } else {
@@ -1266,15 +1263,12 @@ function send_update_email($handler, $projectid)
             $body .= "*Update Errors*\n";
             $body .= "Status: ".$update_array["status"]." (".$serverURI."/viewUpdate.php?buildid=".$buildid.")\n";
 
-            $header =
-        "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0";
-
             if ($CDASH_TESTING_MODE) {
                 add_log($to_address, "TESTING: EMAIL", LOG_TESTING);
                 add_log($subject, "TESTING: EMAILTITLE", LOG_TESTING);
                 add_log($body, "TESTING: EMAILBODY", LOG_TESTING);
             } else {
-                if (cdashmail("$to_address", $subject, $body, $header)) {
+                if (cdashmail("$to_address", $subject, $body)) {
                     add_log("email sent to: ".$to_address, "sendEmailExpectedBuilds");
                     return;
                 } else {
