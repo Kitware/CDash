@@ -1,0 +1,858 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_TEST_BUILD"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut12.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut11"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="TrilinosFramework">
+</Subproject>
+<Labels>
+  <Label>TrilinosFramework</Label>
+</Labels>
+<Testing>
+	<StartDateTime>Jul 22 11:15 Eastern Daylight Time</StartDateTime>
+	<StartTestTime>1311347756</StartTestTime>
+	<TestList>
+		<Test>./cmake/python/TrilinosFramework_TrilinosPackageFilePathUtils_UnitTests</Test>
+		<Test>./cmake/python/TrilinosFramework_GeneralScriptSupport_UnitTests</Test>
+		<Test>./cmake/python/TrilinosFramework_InstallProgramDriver_UnitTests</Test>
+		<Test>./cmake/python/UnitTests/TrilinosFramework_XmlHtmlCDashOutputTest</Test>
+		<Test>./cmake/package_arch/UnitTests/TrilinosFramework_TestingFunctionMacro_UnitTests</Test>
+		<Test>./cmake/package_arch/UnitTests/TrilinosFramework_CompilerOptions_UnitTests</Test>
+		<Test>./cmake/python/TrilinosFramework_CheckinTest_UnitTests</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_BasePackagesTpls</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinos</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinosExtraTrilinosRepo</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableTests</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_DisableEpetra_EnableAllPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetra_DisableTeuchos_EnableAllForwardPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_DisableEpetra_DisableTeuchos_EnableAllPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableTeuchos_EnableAllForwardPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_EnableAllForwardPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_EnableAllOptionalPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_DisableAztecOO_EnableAllForwardPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAmesos_DisableZoltan_EnableAllForwardPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetra_DisableThyraCoreLibs_EnableAllForwardPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_DefaultTPLs</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableBoost</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableBoostParMETIS</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS_TplDisableParMETIS</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableThyra_ThyraEnableEpetraExt</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableTpetra_EnableAllForwardPackages</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem1</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableSecondaryStableCode_EnableAllOptionalPackges</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem2</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableIfpack_EnableAllOptionalPackages_BadSystem2</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_EnableStalix</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_EnableTeko</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_ShowInvalidPackageNameError</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack_EnableExtraTPL1</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_CI_EnableTeko</Test>
+		<Test>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_Nightly_EnableExtraPack</Test>
+	</TestList>
+	<Test Status="passed">
+		<Name>TrilinosFramework_TrilinosPackageFilePathUtils_UnitTests</Name>
+		<Path>./cmake/python</Path>
+		<FullName>./cmake/python/TrilinosFramework_TrilinosPackageFilePathUtils_UnitTests</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/TrilinosFramework_TrilinosPackageFilePathUtils_UnitTests.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.39</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/TrilinosFramework_TrilinosPackageFilePathUtils_UnitTests.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJy1lk2P2jAQhu/+FRaXbQ+bUPoppD0ESBAiC2kCq71Z3mQWLBKH2g4LqvrfaycEtYjuYWt8QOCP550ZJs6LHi0PhLxsR3kKGV6AVH28ECxnvJSBoAW8lGJD2pmIphu6goDlEFG1XiqWS7LkTJmDEqGhAKoYX2EOL9icNN8zJiBVpTjgm2HfnbqJH0+8kIz8wXKsPx/cwXISjty0oBtwtwe1Lrn71hBuEIorzo2s0r9xWhYF5ZnUSfnJgnQRurM8EGrJR+E+7ug0ozqP3pdjQg7soVMvXMi/Te1yCV5P2NkeNPd210EI4zZ1xi8U/x/iFouvY7i1PBAyfyOBvRI0VUZXhkyqe6rStU5PB6FAcNL9gN8RUlDGCXHMidcCfo8dx8HlpkGvQB03DdeQ6pr5GpN7WSZAykYtEGXREuoJO3ozXV2DNhuvQexZJ360TvxknfjZNpGXdbdZwF6lmYg67ibbowp51hLk2TwrJP9PgeG9vhdMlJKovTrDECbHeflE80HF8sxQYvhRMaEfzGY+hiez8jdyBFvgGfD0cLo4rHADxrNFFA5CL7HJG1VFcbAJDL3IG05tEu+jiRVcAmpWqqCseGaF17ZZ3UTfK5ZupKJCWeukszaWpH6LWUXr6l4DS3YgJCs5Ob9W3oaF/RYEK4ArmpN6ndTzVgK39E5HMeW416ttmTQOpev0vn3VnnE+vYZtaExZH8egKsG1D8wA3+HuaT6iUuJUMG0fGNUrzR0f+2P/Ef+cT3/9AZBVrvSOyEsSf3QNAzl/8GMvDHEwmXmhjiFZhovGsJ5E7Xv+3zRyJzA=</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_GeneralScriptSupport_UnitTests</Name>
+		<Path>./cmake/python</Path>
+		<FullName>./cmake/python/TrilinosFramework_GeneralScriptSupport_UnitTests</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/TrilinosFramework_GeneralScriptSupport_UnitTests.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.583</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/TrilinosFramework_GeneralScriptSupport_UnitTests.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJzdWd9v4jgQfvdf4etLW6mblOwtu4fUB7aECi17rYCu9gHJMsm0WE2cnO10y532f99xgMLtUY7kzFUiD4jB8eeZ+Tw/bMhXxw8h7fiRywhiOgJtWnSkRCJkpruKp/AtUw/sCiQongwjJXIzLPI8U4bdSmHsBE3IpQJuhLynEr5RO8N+j4WCyGRqRo8vW/4nfxgOeu0+64Qfb6/w84v/8bbX7/hRyh/Az2dmmkm/6tLHhAwKKe1yBmUaZWnKZazRiHA4YueEXDh+CFkiLxZu0SM076bUP2guDPHgCY7KgQ12L438u+nbDfXyGeK9eTwihNKlyUJucPYLizpwNq79xvFDiKWNDWf6MpVxTxpQEeRoBxO6y5NkNFVZcT+1g/SEsZQLyZhn52xS9ZR6nkezhxdBJTyZZxliOzw0qoiMC3CMgRKxKxJg543KkFwpPhtl3Uyl3KB2qJlltioMPOUYAR2hdEfUMAw9pHhk+kKCbt+hdQO4h6fKMPdgrC+uC5MXhomlm+r45UWooA7UABJMVY9ww820q7K0YbKAycwaHiWFxpGdUbvtXn87bo5Cg8EfBU90Keyu8q7gCFUCswaLAfL94Qf7wA+W+LtvixWw0MNioo3qyc9FYoTdsvOYqbPLtoBV32dbwN5WBpM2ISTiz9J7rI6jVCHX8tUdj4DdcZFU1mQDTs61doGjjFwEuCvNVogOdFQLpyUJM/OS5ARwlcyywtStG9uB0Q2XWbwf4IV//xN07drgqLMjNkxa1G15cNQnkRGWYpjw6IGepBm2t9jjgcQuF/chTbg2py3sBu2+cd1qnlGcBvRd88w2mbs7B9WhVENy52HMgTKhLX0nChI7xb5+RtcE26tg1wrxKWmXr4tMhkplqkWPPc/3vPE48uNj+svFQvat+H8yX6+AHwr9vwX/Tv8/PeRwD4zH3oL9V2C9Rmd1KMS//3VX4n9yksv4X5GPof+a/O/e+R4K/813lfkPXPO/nvtfJe9XO5scCvUf3u5G/co7zmu+t17x9xP5Nc5Uh0JwsJbbf3LDZiYtydjpn9HFl20Mcs7H48lkMmcQJd8Kru4NyYBLGjRL3bU14twL3n/QpGQ27NATe3YsFOiL5uk+7irnN78tOgBTKEkjPFfRC9p4/v3GHjSRADzQCI4jn7mJpnQQXoVf6V/Xn76vAegiMfjGXPF93FJffwkH7X6fdnu/t/uow/C2P5rfij8v6v6PhB9wRf6+====</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_InstallProgramDriver_UnitTests</Name>
+		<Path>./cmake/python</Path>
+		<FullName>./cmake/python/TrilinosFramework_InstallProgramDriver_UnitTests</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/TrilinosFramework_InstallProgramDriver_UnitTests.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0570002</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/TrilinosFramework_InstallProgramDriver_UnitTests.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJy1VUuP2jAQvvtXjLhkqZTH9tADEgceYYWgBRFYrdRWkTcxYJHYqe1A0ar/veMEUFvRlpWyc4iS8cx838x4JuSpYSGkl+6pSFgKS6ZNB5aKZ1xIPVI0ZwepdvFYaEOzbK7kBnVDxfdMxSvBjXXQhAwUo4aLDQh2AOth31OuWGKkOoIz6PgTPwoX4940Hob91QM+H/3+ajwd+klOd8wvjmYrhf9aaIeQRSmEhTP4DYnMcypSjUmE0TIOCOk2LIScI5+AO9DC9OYV//cfTol47DtrVQdX8j4n+Xvq/07UK44Yz923CAE4p8zFlWL/BbSBYiO227AQYtsWp2xNy8zAXRznlIs49ir1NTpt8DwP3jUqJC3z/OjyGg5LDV+wyu5Z4WJxu45fauVnMqGZczq2tXRlYbgUuus4tTLZsmQnS+MmuUi7zobjpcykYKDl2hyoYp7GC8qpt5H7jq8LmjAfjS7NWEqZaWb8oaUE1dN7pprVCguN89qGwQkGzJaBoeoZed7pNqylqp3cwLu3pSIk2vGisHdEClDsW2nnpDrot2El0PfPGMgPkAKUBdrT9AhG4mCJNd+Uiv0n5gCpXUxvJTJsQ7/kWXqzQ9iG0914DcaIC5qBbaoqk6prVblKbe1vjfM5FOlXIndNzQJZUAH39fbCeQ68IAhwo84mbzFs9erqwIKZUglsasqgC8FFP6daQ6K4YYpTPPlITbKFRfgQPsHLbPLjlwDazmsX5r0oCodvsWZnj+GiN53CaPypN0UO0Wq6rNf6BbT5P+FPvgQs2w==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_XmlHtmlCDashOutputTest</Name>
+		<Path>./cmake/python/UnitTests</Path>
+		<FullName>./cmake/python/UnitTests/TrilinosFramework_XmlHtmlCDashOutputTest</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/UnitTests/TrilinosFramework_XmlHtmlCDashOutputTest.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.193</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/UnitTests/TrilinosFramework_XmlHtmlCDashOutputTest.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_TestingFunctionMacro_UnitTests</Name>
+		<Path>./cmake/package_arch/UnitTests</Path>
+		<FullName>./cmake/package_arch/UnitTests/TrilinosFramework_TestingFunctionMacro_UnitTests</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/package_arch/UnitTests/TrilinosFramework_TestingFunctionMacro_UnitTests.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.802</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/package_arch/UnitTests/TrilinosFramework_TestingFunctionMacro_UnitTests.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_CompilerOptions_UnitTests</Name>
+		<Path>./cmake/package_arch/UnitTests</Path>
+		<FullName>./cmake/package_arch/UnitTests/TrilinosFramework_CompilerOptions_UnitTests</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/package_arch/UnitTests/TrilinosFramework_CompilerOptions_UnitTests.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.262</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/package_arch/UnitTests/TrilinosFramework_CompilerOptions_UnitTests.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_CheckinTest_UnitTests</Name>
+		<Path>./cmake/python</Path>
+		<FullName>./cmake/python/TrilinosFramework_CheckinTest_UnitTests</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/TrilinosFramework_CheckinTest_UnitTests.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>5.515</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/python/TrilinosFramework_CheckinTest_UnitTests.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_DepXmlDumpTests_BasePackagesTpls</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_BasePackagesTpls</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_BasePackagesTpls.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.135</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_BasePackagesTpls.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJzdV1uPmkAUfp9fMfXFl66s7VNNfGBldOkCEi67Nk0zYWFUIgyGwb2k6X/vAYTqLla3lTQpDwrMuXznnG/OGdDszBdCcvDgcZ8F2GEiG2AnDaOQJ2KcejF7TNIVVdh6FkfKJl7nEoJeeYKZnr/yFkw460ggNEqZl4V8gTl7xLlOfh+EKfOzJH3G3dFAupFsYqmyRhVy5U7g91a6clVNkfzYWzEJfDAeMO4/uzzMCj/S25F0EbI2nOfeMxDAfhLHHg8EREVsh16+L//7CA3PfCFUeqgBDHCniDpLkkiUQV4E7EG6D3n51GNPrIM7F4ppTT+TkUMNWSfDKuZipXqgI12+IVRRrWFzJivB0vK+rkJMm15P9UJ/YMrO9UlGGiuiJ/6qGeHUdUzXoWNXy02axFCIMfpCx6pGbKoav8F+jAXHap7jMDvbbB8Lal0qUi/1l9LWigz3uXlwJMCT7afhOuuVmUQI44pRIW+g9gG356c2QLk484XQLvXwsN766DXxYPWUBKNm2p2ofZRzv8yTmWPJ1CLm1FadqaUSG3ygt9DxIKa/JSS0AOYFRQ9aMhyF0IeSOd4yT+B5msTnycZWrHqsMJTUzelSF5Qark5NeXQjT4g97H742G0G6ZhaiwBz64fAwRoA638CYGaa+EyIHFvtIKzCwvMwgiRCU8f3mygMyo2ZsZR7EQ52xPEi9dZLhO5ky1CNyQDrYWFzmyUcCnzPCu0FT1KYfrDow+tM7OxuEIpLtcLjvgkqa9r0juqqbYODnJHEMiBd2zzn+8lyybtXodpktxR5xDmXqlLMdG0/jjzglpj6kjp76X6KI9zr9dpoO+WoHGCLZZuUw5QOGGTrsn5vekJgaMNQ1tCDFd3L/CW2yITM8PfDnP6Bv5qybRPl2x9YqgnYYMViYhNloF4utHZ66L/99EDgB045ay9ltNgaBydh22Q5eQQ/Z8uES69nYZPdRRIFhfH/fBCPi672zyqXJa0WDwM7oVTzOUsZz9prKf2XLaVfv3/ZCHbkdnS323wswzmhlW0+vSUWjA08VmFSQB+yXc0pP05qp+f/wPsJlyiADw==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinos</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinos</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinos.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>3.113</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinos.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJzlWN9v2jAQfvdf4fWlLyspm/YwJB4yYrqsCUT5sTJNk+UmBqwmDnLM1mra/75LAhm0oaUVbA/LAySx7+67u+/OB2hy4AshM/nOZMwTHPJC93CoRCpkXgwVy/iPXN1Qiy8mWWots0W5o6BXQs89xQf54k6J2VyvJRAaKM60kDMs+Q9cypb3iVA81rm6w6eDnnFpBMS3TYda5EN0AZ+fjQ+R7VhGnLEbboAtLhMu47tICl3ZM16O6BQhfylliULDRhznWcZkUoCXJAjp+ev6u4tQ/8AXQrWFBkAPn1Te6zxPi9rZs4R/N66FrJ86/Jaf4JMzy/PHn8ggpCPTJf21J9XK+oEOXPOSUMv2++0RXW+sNW/LWsQL6MexW8n3PDP8uJeS1sy4eXzTjnAchV4U0mHklCo9MrLIaPCFDm2HBNQePYL9KTbsm/ttPGQS+ib1iTcO7HDs2yToL3YIeSerVD0VkQWLb9iMU6biueHVDybcl9gAZQEwg1iJhe7UaUAI4zUdhWypjx1mj1cfAOnswBdCm/zF/aafoIfshdV9Ao3aubun9JPERY+QBGy00QQ9h+c7cR6K6dBjOEuqJjfnOBXQ6PIpXrGzwFOVZ4eJ1Grb+nFF+aKmd0mlJtl0FLnUMweX5gVU2umbt6ftIEPPOSLAUvsucLAGwLrvAZin8pgXRYmtMSDWbuGpSCGIcGrg62Uqkrp4NVeSpTjZ2I5nii3mCF2Z/sgeXfSwKyqdqyhhUeBrXknPZK7guIXFGF7rYqMDwKasFqssbqugpuOMr6hrBwEYKNlK/BGEaxXnstb8iLx64GpANlPxfiMVrEkEv9WKHYUzbfVjkNJcO49wp9PBj5Lp3SMeHJpQT6P/Q7IdyGumvTn/35j2tgsel91rXfQT19n2o3T4yL3xfrPaCvttlpY5O8YhWE9/PexzvVQSBs+EQ9TOm/ceKwoMwwGkVzBYcZmO59gnF2SCf+4m/i/81TODgFjfXqCpIWKLFp8Xy1SDeL1wtIG4+/yBmMAHDO4LpjitSmTnfPa3SLP3gHin57k0Hk5qbXrbOk1nlqdJZfE/mR2HVQv85+nV+d/PMAZ+Qz6nU6641MdrSt37TanbvL/fSjb2bciuGsXQhBn3KI1i/Jn4cADhoQ1nDnSyIHLC+hd7Y/Tw/4L8BiHDoKc=</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinosExtraTrilinosRepo</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinosExtraTrilinosRepo</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinosExtraTrilinosRepo.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>3.254</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinosExtraTrilinosRepo.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJzlWN9v2jAQfvdf4fWlLyspnTZpSDxkxHRZE4jyY2WaJitNDERNnMgxXatp//suCcmghMI26CYtD4Bj3913d9+dbdDkwA9Canjn84CF2GW57GFXRHHE03wo/IR9TcUt1Vg2SWJtkWTFipxeR3JuCTZIswcRzeayliD3Uvj1wGZZitBAMF9GfIY5+4oLZcXvMBIskKl4wKeDnnKlOMTWVYNq5J13CZ8flXeebmhKkPi3TAHjjIeMBw8ej2QJQDkgxFOE7AXnBSwJkjhIk8TnYQ5xII5Lz19W312E+gd+EKosNAB6+KQMh0zTOK+8PwvZnXIT8WrUYffsBJ+caZY9/kAGLh2pJunX3pQz9YAOTPWKUE23++0hrhdWmtdlNWI59P3YLOV7luq+30tJa6rMNLhtRzj2XMtz6dAzCpUWGWlkNPhEh7pBHKqPnsC+ix6/TYZ1gGTi2iq1iTV2dHds68TpZy1aXrI2NdbJMpu7gpb5wa0/Y9QXwVyxqoEKvwv44EgOnjiBiDLZqTKFEMY1YyPeUlNbzD5jTQHGswM/CK1yHvebLoU2GQ+z+0QetfN9T+mdZEdP8Ahs7Mck9CvVshX50eoFWhfzw7J3zhmOI+if6RQvGZ3jqUiTwwRzuaweLsskr0qiYFvDBzryTGqpgyv1Eur19OLVaTtI1zKOCLDQvg0czAGw7lsAZok0YHleYGsMRLVbeBrFEETYjPDNIo7CquAlE9yPcbiyHM+En80RulbtkT667GEzKnUuo4SjHN+wUnrGUwH7PEwG8FrmK10DFiWVWGlxXQVVDWN8TU3dccBAQWhijyBcyzgX5Wh75MWGqw5ZTcXblVT4TSJKzh+FM20lpqxxeJ1HuNPp4CfJ9PoJDw5NqN3of5JsC/KKaRfnzxz3jS72Z0F/84xB3wF934hf/G+1/arwuNhA6jY7MY11PwqHn3t7erxfrOXhPomLJB7jqFKd63vYZnIhOFwpQgZhPG/eW36eYzjTQb4jH2ZMXwZzbJNLMsHftpfBd/zZUh2HaF9+Q1PDzBYtNssXsQTxauJoV53ur191CHzAlSzzBaNlzWw9Vv81Fu190H+Q85QrmyfuNr1t3b+z0Z06szQOSwz/661gWPbRf48SMv0XWIGhbIAD0ykTjMvj9bru417Xbd4/7lAr61Zkl/1nqMJ15ij9Z/yR2LDR4aEOexs0SMcz3Oovnsbo4f9Y+wHyEHss====</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableAllPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.069</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableAllPackages_EnableTests</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableTests</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableTests.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.101</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableTests.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_DisableEpetra_EnableAllPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_DisableEpetra_EnableAllPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_DisableEpetra_EnableAllPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.001</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_DisableEpetra_EnableAllPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableEpetra_DisableTeuchos_EnableAllForwardPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetra_DisableTeuchos_EnableAllForwardPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetra_DisableTeuchos_EnableAllForwardPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.979</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetra_DisableTeuchos_EnableAllForwardPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_DisableEpetra_DisableTeuchos_EnableAllPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_DisableEpetra_DisableTeuchos_EnableAllPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_DisableEpetra_DisableTeuchos_EnableAllPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.881</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_DisableEpetra_DisableTeuchos_EnableAllPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableTeuchos_EnableAllForwardPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableTeuchos_EnableAllForwardPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableTeuchos_EnableAllForwardPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.29</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableTeuchos_EnableAllForwardPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableEpetraExt_EnableAllForwardPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_EnableAllForwardPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_EnableAllForwardPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.189</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_EnableAllForwardPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableEpetraExt</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.727</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableEpetraExt_EnableAllOptionalPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_EnableAllOptionalPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_EnableAllOptionalPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.722</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_EnableAllOptionalPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableEpetraExt_DisableAztecOO_EnableAllForwardPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_DisableAztecOO_EnableAllForwardPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_DisableAztecOO_EnableAllForwardPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.186</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetraExt_DisableAztecOO_EnableAllForwardPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableAmesos_DisableZoltan_EnableAllForwardPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAmesos_DisableZoltan_EnableAllForwardPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAmesos_DisableZoltan_EnableAllForwardPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.037</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAmesos_DisableZoltan_EnableAllForwardPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableEpetra_DisableThyraCoreLibs_EnableAllForwardPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetra_DisableThyraCoreLibs_EnableAllForwardPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetra_DisableThyraCoreLibs_EnableAllForwardPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.136</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableEpetra_DisableThyraCoreLibs_EnableAllForwardPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableAllPackages_DefaultTPLs</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_DefaultTPLs</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_DefaultTPLs.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.036</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_DefaultTPLs.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableAllPackages_EnableBoost</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableBoost</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableBoost.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.136</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableBoost.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableAllPackages_EnableBoostParMETIS</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableBoostParMETIS</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableBoostParMETIS.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.028</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableBoostParMETIS.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.699</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS_TplDisableParMETIS</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS_TplDisableParMETIS</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS_TplDisableParMETIS.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.699</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableZoltan_ZoltanEnableParMETIS_TplDisableParMETIS.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableThyra_ThyraEnableEpetraExt</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableThyra_ThyraEnableEpetraExt</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableThyra_ThyraEnableEpetraExt.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.79</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableThyra_ThyraEnableEpetraExt.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableTpetra_EnableAllForwardPackages</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableTpetra_EnableAllForwardPackages</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableTpetra_EnableAllForwardPackages.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.912</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableTpetra_EnableAllForwardPackages.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem1</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem1</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem1.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.85</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem1.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableAllPackages_EnableSecondaryStableCode_EnableAllOptionalPackges</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableSecondaryStableCode_EnableAllOptionalPackges</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableSecondaryStableCode_EnableAllOptionalPackges.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.177</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableAllPackages_EnableSecondaryStableCode_EnableAllOptionalPackges.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem2</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem2</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem2.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.913</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableAllOptionalPackages_BadSystem2.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_EnableStratimikos_EnableIfpack_EnableAllOptionalPackages_BadSystem2</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableIfpack_EnableAllOptionalPackages_BadSystem2</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableIfpack_EnableAllOptionalPackages_BadSystem2.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.946</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_EnableStratimikos_EnableIfpack_EnableAllOptionalPackages_BadSystem2.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_DepTests_preCopyrightTrilinos_EnableStalix</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_EnableStalix</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_EnableStalix.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>3.013</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_EnableStalix.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_preCopyrightTrilinos_EnableTeko</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_EnableTeko</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_EnableTeko.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>3.192</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_EnableTeko.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_preCopyrightTrilinos_ShowInvalidPackageNameError</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_ShowInvalidPackageNameError</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_ShowInvalidPackageNameError.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.082</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_preCopyrightTrilinos_ShowInvalidPackageNameError.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">eJzdWF1zmzgUfedXqHlxMtP4a9Mm9UweCJYTphg8gNN0dnYYBWRbDZZYIdJmd/a/7xUY20ltN9k6fVgePBjpnnt07ocExs2eL8Mwk3vCY5qgkOaqh0LJUsZFPpBkTr8KeRf1aaaH8iiT1BLZg2TTmaqnRcFMfLX5PUlZMiLxHZlSFwyxlEIahiUpUYxPEadfkQbT9wmTNFZCPqCG1Wt9bAXYt00n6uOL8SX8XrcuxrbTb8Vzckdb4JzyhPL4YcyZKnm09kixYRh+wbmmpQAAxWI+JzzJQQcchFHbMM73fBlGjbxw3EMHpQxKiDSvVn2c0PvWLePVvyb9Rg/QwXF/uaA+HgXRlTfEUd/2eyMzvDrfrGRtsUPMoYjv6mmPvQRXnh9atm+N7TAyByH2tWPs9rFrfY6uTLfv2O5l78LznHPP3cDwZuhE3jgcjcNoYDu4F4Q+GJxvWkv4nKnYNS8cHFkLl4PB5uGbm90TBkIqSfi2STehb0Y+HnmBHXq+jYOazKbcKm1BqE+R7V6bjt2PRqb10bzEkWtCeLDve/534pgBBCqMhnYQAG5tEVTzdgfywDAQqjOW8Q01tQXgF9YUcDze86UR0UXB0kQvdiJkD12zvCApClSRMIE6UE+W4BM2LaSeUvNEt9poJU8JBOGEzPVWJYTO0W7ZH1mVUu40+4Via2bW0PyIo2vsB7bnAqlu86x50uy2O532afv0eNqmNJ7oiQNR8ASNHtRMcJsrKrOeXkH1oPu+lZU3ut+gQ5/+WYBqCWI5IgqllEB7vKcyZ4Kjg27z5ODIGH0OrzwXSgZb41DXVqXIBjzDCKgqd4IiQ3PyRUhU5FQikSnAy1Gz2TSgI1JSBljNKEoZ+BMTRL9BsSJJM5EziCCjOZpIMf9BwJ7Z8BbTsPYBP1Rykvprrprl+BZmWRWKV+BT/10Ee0lDZ2GdE+54uOocje5vjc0kw5HzigQ1+jZyMAbEOh+A2EiKmOa55rZ0sFQXTVgKIsKuC8UKGV51tioWKFmbjqaSZDPD+GT6rt540JCVmAuVdKLe0tJ6yoXOXBiM4bHK19ojTJpXZqXHxxCR6TjQyuvGDFsB9l2Qa6EzZHfoj/Gb75Ya4PVQfFgLBXmSx6+RM5taRpXSm/NIFxvamUzvdqxg3wn1Y/arJNvCvMq0bvt/mGnWUPMuO73uwpWmiySKiIxnrQWgCfdm8qXI1eIB5uQ2rVfe656hwyEOAsA+6sERokR8W3aKBRpqmJzk5C/W0Mx1zGFdBNRaKfOgs2DNBHAaIb0TpQUcRpZ9p7HauVaV0QDR1VaPgEUZDErEhQKXE8bBP6x6RSYlEKraT40hZEJlEyFrRuM7PQJAeUbTVOsOdFc+ACunFMFWCoFag2UcTJaEa7YRHG/1Hl/dWA6c2eyBbZkhbLGBJiEp8NF714xlSImFEk3DIqk+lQA9dDgXIAbkA+UQOv18wmSuygD850iefECH9RnT9K2ryLyAY3oE2/CT8+TRz3jpnLWfuAlwqM/qS4F+Cv7k/bsn8CPfsyA/l8fn5ZsGHMAjxw7Cn3R49lQ2H5v9jd5+7OcyFbckHZJYihr/VBfY9/hQ5Vt9lKXtQA7mTfVN9Tq/ne5gGCwFeiTMJ98OsX7POjLKtrh+BIaWJOZZShV9i6gu9xyJOC4k9Ks3r3FCr15re8inqpAc3qQTCm2ss3w+InmOYsmgiBmBkSFR8Qz5+BLfoL/30o/+Qb+P9LtV/4/nOd1b83qp4/10upd6fWFXfCn8vlroS/0+M+c3wPo0L1IFeNXAa3zr8eCtDJoAGtiwuwPjYOyE1belpdP9f9H7F8ValjA=</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>3.077</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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==</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack_EnableExtraTPL1</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack_EnableExtraTPL1</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack_EnableExtraTPL1.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.983</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack_EnableExtraTPL1.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="passed">
+		<Name>TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_CI_EnableTeko</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_CI_EnableTeko</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_CI_EnableTeko.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>3.281</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Pass Reason"><Value>Required regular expression found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_CI_EnableTeko.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<Test Status="failed">
+		<Name>TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_Nightly_EnableExtraPack</Name>
+		<Path>./cmake/DependencyUnitTests</Path>
+		<FullName>./cmake/DependencyUnitTests/TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_Nightly_EnableExtraPack</FullName>
+		<FullCommandLine>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_Nightly_EnableExtraPack.cmake&quot;</FullCommandLine>
+		<Results>
+			<NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Exit Value"><Value>0</Value></NamedMeasurement>
+			<NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.941</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Fail Reason"><Value>Required regular expression not found.Regex=[OVERALL FINAL RESULT: TEST PASSED
+]</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+			<NamedMeasurement type="text/string" name="Command Line"><Value>C:\K\tools\cmake-dev\bin\cmake.exe &quot;-DTEST_CONFIG=&quot; &quot;-P&quot; &quot;C:/K/SERIAL_DEBUG_DEV/BUILD/cmake/DependencyUnitTests/TrilinosFramework_DepTests_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE_Nightly_EnableExtraPack.cmake&quot;</Value></NamedMeasurement>
+			<Measurement>
+				<Value encoding="base64" compression="gzip">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</Value>
+			</Measurement>
+		</Results>
+		<Labels>
+			<Label>TrilinosFramework</Label>
+		</Labels>
+	</Test>
+	<EndDateTime>Jul 22 11:16 Eastern Daylight Time</EndDateTime>
+	<EndTestTime>1311347800</EndTestTime>
+<ElapsedMinutes>0.7</ElapsedMinutes></Testing>
+</Site>

@@ -64,10 +64,10 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
     }
 
 
-    public function submitFiles()
+    public function submitFiles($test)
     {
         $dir = str_replace("\\", '/',
-      dirname(__FILE__).'/data/ActualTrilinosSubmission');
+      dirname(__FILE__).'/data/'.$test);
 
         $listfilename = $dir."/orderedFileList.txt";
 
@@ -109,7 +109,8 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
     {
         $this->createProjects();
         $this->setEmailCommitters("Trilinos", 1);
-        $this->submitFiles();
+        $this->submitFiles('ActualTrilinosSubmission');
+        $this->submitFiles('ActualTrilinosSubmissionTestData');
         $this->setEmailCommitters("Trilinos", 0);
         $this->deleteLog($this->logfilename);
     }
