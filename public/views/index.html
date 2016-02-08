@@ -239,9 +239,9 @@
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-builddatefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('builddatefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th ng-show="cdash.childview != 1 && cdash.displaylabels == 1" align="center" rowspan="2" width="5%" class="nob" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'Labels', $event)">
+              <th ng-show="cdash.childview != 1 && cdash.displaylabels == 1" align="center" rowspan="2" width="5%" class="nob" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
                 Labels
-                <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-Labels') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('Labels') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
            </tr>
           </thead>
