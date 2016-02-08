@@ -76,7 +76,10 @@
             </td>
 
             <td align="center" ng-repeat="buildname in cdash.buildnames" ng-class="{'normal': coverage[buildname] >= group.thresholdgreen, 'warning': coverage[buildname] < group.thresholdgreen && coverage[buildname] >= group.thresholdyellow, 'error': coverage[buildname] < group.thresholdyellow}">
-              <a ng-if="coverage[buildname] >= 0" ng-href="viewCoverage.php?buildid={{coverage[buildname+'id']}}">
+              <a ng-if="coverage[buildname] >= 0 && buildname != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[buildname+'id']}}">
+                {{coverage[buildname]}}%
+              </a>
+               <a ng-if="coverage[buildname] >= 0 && buildname == 'aggregate'">
                 {{coverage[buildname]}}%
               </a>
               <sub ng-if="coverage[buildname+'percentagediff'] > 0">+{{coverage[buildname+'percentagediff']}}%</sub>
