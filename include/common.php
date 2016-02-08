@@ -1103,10 +1103,34 @@ function remove_build($buildid)
   // Delete the labels
   pdo_query("DELETE FROM label2build WHERE buildid IN ".$buildids);
 
+  // Remove any children of these builds.
+  if (is_array($buildid)) {
+      // In order to avoid making the list of builds to delete too large
+      // we delete them in batches (one batch per parent).
+      foreach ($buildid as $parentid) {
+          remove_children($parentid);
+      }
+  } else {
+      remove_children($buildid);
+  }
+
   // Only delete the buildid at the end so that no other build can get it in the meantime
   pdo_query("DELETE FROM build WHERE id IN ".$buildids);
 
     add_last_sql_error("remove_build");
+}
+
+/** Remove any children of the given build. */
+function remove_children($parentid)
+{
+    $childids = array();
+    $child_result = pdo_query("SELECT id FROM build WHERE parentid=$parentid");
+    while ($child_array = pdo_fetch_array($child_result)) {
+        $childids[] = $child_array['id'];
+    }
+    if (!empty($childids)) {
+        remove_build($childids);
+    }
 }
 
 /**
