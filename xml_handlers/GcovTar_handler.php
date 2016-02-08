@@ -1,25 +1,46 @@
 <?php
 
+require_once('models/build.php');
 require_once('models/coverage.php');
 require_once('config/config.php');
 require_once('models/label.php');
 
 class GCovTarHandler
 {
-    private $BuildId;
+    private $Build;
+    private $ProjectId;
     private $CoverageSummary;
     private $SourceDirectory;
     private $BinaryDirectory;
     private $Labels;
+    private $SubProjectPath;
+    private $SubProjectSummaries;
 
     public function __construct($buildid)
     {
-        $this->BuildId = $buildid;
+        $this->Build = new Build();
+        $this->Build->Id = $buildid;
+        $this->Build->FillFromId($this->Build->Id);
+        $this->ProjectId = $this->Build->ProjectId;
+
         $this->CoverageSummary = new CoverageSummary();
-        $this->CoverageSummary->BuildId = $this->BuildId;
+        $this->CoverageSummary->BuildId = $this->Build->Id;
         $this->SourceDirectory = '';
         $this->BinaryDirectory = '';
         $this->Labels = array();
+
+        $this->SubProjectPath = '';
+
+        // Check if we should support cross-SubProject coverage.
+        if ($this->Build->SubProjectId > 0) {
+            $subproject = new SubProject();
+            $subproject->SetId($this->Build->SubProjectId);
+            $path = $subproject->GetPath();
+            if ($path != '') {
+                $this->SubProjectPath = $path;
+            }
+        }
+        $this->SubProjectSummaries = array();
     }
 
     /**
@@ -84,10 +105,13 @@ class GCovTarHandler
             }
         }
 
-        // Insert coverage summary (removing any old results first)
-        //$this->CoverageSummary->RemoveAll();
+        // Insert coverage summary
         $this->CoverageSummary->Insert();
         $this->CoverageSummary->ComputeDifference();
+        foreach ($this->SubProjectSummaries as $buildid => $subprojectSummary) {
+            $subprojectSummary->Insert();
+            $subprojectSummary->ComputeDifference();
+        }
 
         // Delete the directory when we're done.
         DeleteDirectory($dirName);
@@ -131,6 +155,50 @@ class GCovTarHandler
             $path = str_replace($this->BinaryDirectory, ".", trim($path));
         } else {
             return;
+        }
+
+        // Check if this file belongs to a different SubProject.
+        $buildid = $this->Build->Id;
+        if (!empty($this->SubProjectPath) &&
+                strpos($path, $this->SubProjectPath) === false) {
+            // Find the SubProject that corresponds to this path.
+            $query =
+                "SELECT id, name FROM subproject
+                WHERE projectid = $this->ProjectId AND
+                endtime = '1980-01-01 00:00:00' AND
+                path != '' AND
+                '$path' LIKE CONCAT('%',path,'%')";
+            $row = pdo_single_row_query($query);
+            if (!$row || !array_key_exists('name', $row)) {
+                add_log(
+                        "No SubProject found for '$path'",
+                        LOG_WARNING, $this->ProjectId, $this->Build->Id);
+                return;
+            }
+            $subprojectname = $row['id'];
+            $subprojectid = $row['id'];
+
+            // Find the sibling build that performed this SubProject.
+            $query =
+                "SELECT b.id FROM build AS b
+                INNER JOIN subproject2build AS sp2b ON (sp2b.buildid=b.id)
+                WHERE b.parentid=
+                (SELECT parentid FROM build WHERE id=" . $this->Build->Id . ")
+                AND sp2b.subprojectid=$subprojectid";
+            $row = pdo_single_row_query($query);
+            if ($row && array_key_exists('id', $row)) {
+                $buildid = $row['id'];
+            } else {
+                // Build doesn't exist yet, add it here.
+                $siblingBuild = new Build();
+                $siblingBuild->SiteId = $this->Build->SiteId;
+                $siblingBuild->Name = $this->Build->Name;
+                $siblingBuild->SetStamp($this->Build->GetStamp());
+                $siblingBuild->ParentId = $this->Build->ParentId;
+                $siblingBuild->SetSubProject($subprojectname);
+                add_build($siblingBuild, 0);
+                $buildid = $siblingBuild->Id;
+            }
         }
 
         $coverageFile->FullPath = $path;
@@ -223,8 +291,8 @@ class GCovTarHandler
         }
 
         // Save these models to the database.
-        $coverageFile->Update($this->BuildId);
-        $coverageFileLog->BuildId = $this->BuildId;
+        $coverageFile->Update($buildid);
+        $coverageFileLog->BuildId = $buildid;
         $coverageFileLog->FileId = $coverageFile->Id;
         $coverageFileLog->Insert();
 
@@ -238,7 +306,18 @@ class GCovTarHandler
         }
 
         // Add this Coverage to our summary.
-        $this->CoverageSummary->AddCoverage($coverage);
+        if ($buildid === $this->Build->Id) {
+            $this->CoverageSummary->AddCoverage($coverage);
+        } else {
+            if (!array_key_exists($buildid, $this->SubProjectSummaries)) {
+                $subprojectSummary = new CoverageSummary();
+                $subprojectSummary->BuildId = $buildid;
+            } else {
+                $subprojectSummary = $this->SubProjectSummaries[$buildid];
+            }
+            $subprojectSummary->AddCoverage($coverage);
+            $this->SubProjectSummaries[$buildid] = $subprojectSummary;
+        }
     }
 
     /**
