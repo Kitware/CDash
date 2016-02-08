@@ -870,12 +870,14 @@ CREATE TABLE `subproject` (
   `name` varchar(255) NOT NULL,
   `projectid` int(11) NOT NULL,
   `groupid` int(11) NOT NULL,
+  `path` varchar(512) NOT NULL default '',
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   PRIMARY KEY  (`id`),
   KEY `groupid` (`groupid`),
   KEY `projectid` (`projectid`),
-  UNIQUE KEY `unique_key` (`name`, `projectid`, `endtime`)
+  UNIQUE KEY `unique_key` (`name`, `projectid`, `endtime`),
+  KEY `path` (`path`)
 );
 
 
