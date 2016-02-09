@@ -40,17 +40,19 @@
             </th>
 
             <th class="timeheader botl" align="center" colspan="{{cdash.numberbuilds}}" >
-              Percentage              
+              Percentage
             </th>
           </tr>
 
           <tr class="table-heading">
-            <th align="center" ng-repeat="coverage in cdash.coverages" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'percentage', $event)">
+            <th align="center" ng-repeat="coverage in cdash.coverages" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'build'+coverage.buildid, $event)">
             {{coverage.buildname}}
+            <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-build'+coverage.buildid) != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('build'+coverage.buildid) != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
-             <th align="center" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'percentage', $event)">
+             <th align="center" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'aggregate', $event)">
              Aggregate
+             <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-aggregate') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('aggregate') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
              </th>
           </tr>
 
