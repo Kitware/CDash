@@ -106,10 +106,10 @@ class GCovTarHandler
         }
 
         // Insert coverage summary
-        $this->CoverageSummary->Insert();
+        $this->CoverageSummary->Insert(true);
         $this->CoverageSummary->ComputeDifference();
         foreach ($this->SubProjectSummaries as $buildid => $subprojectSummary) {
-            $subprojectSummary->Insert();
+            $subprojectSummary->Insert(true);
             $subprojectSummary->ComputeDifference();
         }
 
