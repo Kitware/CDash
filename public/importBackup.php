@@ -65,7 +65,7 @@ $xml = begin_XML_for_XSLT();
       LOG_INFO);
 
     # split on path separator
-    $pathParts = preg_split("#[/\\]#", $filename);
+    $pathParts = explode(PATH_SEPARATOR, $filename);
 
     # split on cdash separator "_"
     if (count($pathParts)>=1) {
