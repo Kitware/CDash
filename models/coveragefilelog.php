@@ -58,9 +58,10 @@ class coveragefilelog
             return false;
         }
 
+        $update = false;
         if ($append) {
             // Load any previously existing results for this file & build.
-            $this->Load();
+            $update = $this->Load();
         }
 
         $log = '';
@@ -72,10 +73,18 @@ class coveragefilelog
         }
 
         if ($log != '') {
-            $sql = "INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ";
-            $sql.= "(".qnum($this->BuildId).",".qnum($this->FileId).",'".$log."')";
+            if ($update) {
+                $sql_command = "UPDATE";
+                $sql = "UPDATE coveragefilelog SET log='$log'
+                WHERE buildid=".qnum($this->BuildId)." AND
+                fileid=".qnum($this->FileId);
+            } else {
+                $sql_command = "INSERT";
+                $sql = "INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ";
+                $sql.= "(".qnum($this->BuildId).",".qnum($this->FileId).",'".$log."')";
+            }
             pdo_query($sql);
-            add_last_sql_error("CoverageFileLog::Insert()");
+            add_last_sql_error("CoverageFileLog::$sql_command()");
         }
         return true;
     }
@@ -89,8 +98,8 @@ class coveragefilelog
             AND buildid=".qnum($this->BuildId);
 
         $result = pdo_query($query);
-        if (pdo_num_rows($result) < 1) {
-            return;
+        if (!$result || pdo_num_rows($result) < 1) {
+            return false;
         }
 
         $row = pdo_fetch_array($result);
@@ -116,6 +125,7 @@ class coveragefilelog
                 $this->AddLine($line, $value);
             }
         }
+        return true;
     }
 
     public function GetStats()
