@@ -61,6 +61,18 @@ $CDASH_MAININDEX_SUBTITLE = 'Projects';
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
 $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
+// Hostname of the SMTP server or null to use the PHP mail() function.
+$CDASH_EMAIL_SMTP_HOST = null;
+// Port for the SMTP server.
+$CDASH_EMAIL_SMTP_PORT = 25;
+// Either 'ssl' for SSL encryption, 'tls' for TLS encryption, or null for no
+// encryption. For 'ssl' or 'tls', PHP must have the appropriate OpenSSL
+// transport wrappers installed.
+$CDASH_EMAIL_SMTP_ENCRYPTION = null;
+// Login for the SMTP server or null for anonymous.
+$CDASH_EMAIL_SMTP_LOGIN = null;
+// Password for the SMTP server.
+$CDASH_EMAIL_SMTP_PASS = null;
 // Should CDash only register valid emails
 $CDASH_REGISTRATION_EMAIL_VERIFY = true;
 // Duration of the cookie session (in seconds)
