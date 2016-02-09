@@ -14,7 +14,7 @@ dependencies:
     - cp ~/CDash/tests/circle/default /etc/apache2/sites-available
     - sudo ln -s ~/CDash/public /var/www/cdash
     - sudo service apache2 restart
-    - chmod a+rwx backup public/rss upload
+    - chmod a+rwx backup log public/rss upload
     - sudo composer self-update --no-interaction
     - composer config --global --no-interaction github-oauth.github.com $GITHUB_OAUTH_TOKEN
     - composer install --no-interaction --no-progress --prefer-dist

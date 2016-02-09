@@ -11,7 +11,7 @@ if (strcmp($CDASH_DB_NAME, 'cdash4simpletest') != 0) {
     die("We cannot test cdash because test database is not cdash4simpletest\n");
 }
 
-$logfilename = $cdashpath."/backup/cdash.log";
+$logfilename = $CDASH_LOG_FILE;
 
 $manager = new HtmlTestManager();
 $manager->removeLogAndBackupFiles($logfilename);

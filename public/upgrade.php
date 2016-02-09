@@ -710,6 +710,13 @@ if ($Upgrade) {
       $xml .= "<backupwritable>1</backupwritable>";
   }
 
+  // check if the log directory is writable
+  if ($CDASH_LOG_FILE !== false && !is_writable($CDASH_LOG_DIRECTORY)) {
+      $xml .= "<logwritable>0</logwritable>";
+  } else {
+      $xml .= "<logwritable>1</logwritable>";
+  }
+
   // check if the upload directory is writable
   if (!is_writable($CDASH_UPLOAD_DIRECTORY)) {
       $xml .= "<uploadwritable>0</uploadwritable>";
