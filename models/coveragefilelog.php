@@ -117,4 +117,31 @@ class coveragefilelog
             }
         }
     }
+
+    public function GetStats()
+    {
+        $stats = array();
+        $stats['loctested'] = 0;
+        $stats['locuntested'] = 0;
+        $stats['branchestested'] = 0;
+        $stats['branchesuntested'] = 0;
+        foreach ($this->Lines as $line => $timesHit) {
+            if ($timesHit > 0) {
+                $stats['loctested'] += 1;
+            } else {
+                $stats['locuntested'] += 1;
+            }
+        }
+
+        foreach ($this->Branches as $line => $value) {
+            list ($timesHit, $total) = explode('/', $value);
+            if ($timesHit > 0) {
+                $stats['branchestested'] += 1;
+            } else {
+                $stats['branchesuntested'] += 1;
+            }
+        }
+
+        return $stats;
+    }
 }

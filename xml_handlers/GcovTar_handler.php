@@ -201,6 +201,19 @@ class GCovTarHandler
             }
         }
 
+        // Get a reference to the coverage summary for this build.
+        if ($buildid === $this->Build->Id) {
+            $coverageSummary = $this->CoverageSummary;
+        } else {
+            if (!array_key_exists($buildid, $this->SubProjectSummaries)) {
+                $coverageSummary = new CoverageSummary();
+                $coverageSummary->BuildId = $buildid;
+                $this->SubProjectSummaries[$buildid] = $coverageSummary;
+            } else {
+                $coverageSummary = $this->SubProjectSummaries[$buildid];
+            }
+        }
+
         $coverageFile->FullPath = $path;
         $lineNumber = 0;
 
@@ -235,12 +248,6 @@ class GCovTarHandler
                 // This is how gcov indicates an uncovered line.
                 if ($timesHit === '#####') {
                     $timesHit = 0;
-                    $coverage->LocUntested += 1;
-                    $this->CoverageSummary->LocUntested += 1;
-                } else {
-                    $coverage->Covered = 1;
-                    $coverage->LocTested += 1;
-                    $this->CoverageSummary->LocTested += 1;
                 }
 
                 $coverageFileLog->AddLine($lineNumber - 1, $timesHit);
@@ -296,6 +303,22 @@ class GCovTarHandler
         $coverageFileLog->FileId = $coverageFile->Id;
         $coverageFileLog->Insert(true);
 
+        // Query the filelog to get how many lines & branches were covered.
+        // We do this after inserting the filelog because we want to accurately
+        // reflect the union of the current and previously existing results
+        // (if any).
+        $stats = $coverageFileLog->GetStats();
+        $coverage->LocUntested = $stats['locuntested'];
+        $coverage->LocTested = $stats['loctested'];
+        if ($coverage->LocTested > 0) {
+            $coverage->Covered = 1;
+        }
+        $coverage->BranchesUntested = $stats['branchesuntested'];
+        $coverage->BranchesTested = $stats['branchestested'];
+
+        $coverageSummary->LocUntested += $stats['locuntested'];
+        $coverageSummary->LocTested += $stats['loctested'];
+
         // Add any labels.
         if (array_key_exists($path, $this->Labels)) {
             foreach ($this->Labels[$path] as $labelText) {
@@ -306,18 +329,7 @@ class GCovTarHandler
         }
 
         // Add this Coverage to our summary.
-        if ($buildid === $this->Build->Id) {
-            $this->CoverageSummary->AddCoverage($coverage);
-        } else {
-            if (!array_key_exists($buildid, $this->SubProjectSummaries)) {
-                $subprojectSummary = new CoverageSummary();
-                $subprojectSummary->BuildId = $buildid;
-            } else {
-                $subprojectSummary = $this->SubProjectSummaries[$buildid];
-            }
-            $subprojectSummary->AddCoverage($coverage);
-            $this->SubProjectSummaries[$buildid] = $subprojectSummary;
-        }
+        $coverageSummary->AddCoverage($coverage);
     }
 
     /**
