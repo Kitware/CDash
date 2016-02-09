@@ -85,10 +85,6 @@ class CoverageJUnitHandler extends AbstractHandler
           $this->EndTimeStamp = substr($attributes['DUMP'], 0, -3);
       } elseif ($parent == 'REPORT' && $name == 'COUNTER') {
           switch ($attributes['TYPE']) {
-        case 'LINE':
-          $this->CoverageSummary->LocTested = intval($attributes['COVERED']);
-          $this->CoverageSummary->LocUntested = intval($attributes['MISSED']);
-          break;
         case 'COMPLEXITY':
           $this->CoverageSummary->BranchesTested = intval($attributes['COVERED']);
           $this->CoverageSummary->BranchesUntested = intval($attributes['MISSED']);

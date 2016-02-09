@@ -316,9 +316,6 @@ class GCovTarHandler
         $coverage->BranchesUntested = $stats['branchesuntested'];
         $coverage->BranchesTested = $stats['branchestested'];
 
-        $coverageSummary->LocUntested += $stats['locuntested'];
-        $coverageSummary->LocTested += $stats['loctested'];
-
         // Add any labels.
         if (array_key_exists($path, $this->Labels)) {
             foreach ($this->Labels[$path] as $labelText) {

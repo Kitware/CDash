@@ -17,8 +17,8 @@
   =========================================================================*/
 class coveragesummary
 {
-    public $LocTested = 0;
-    public $LocUntested = 0;
+    private $LocTested = 0;
+    private $LocUntested = 0;
     public $BuildId;
     private $Coverages;
 
@@ -86,21 +86,9 @@ class coveragesummary
     /** Insert a new summary */
     public function Insert($append=false)
     {
-        if (!$this->BuildId) {
+        if (!$this->BuildId || !is_numeric($this->BuildId)) {
             echo "CoverageSummary::Insert(): BuildId not set";
             return false;
-        }
-
-        if (!is_numeric($this->BuildId) || !is_numeric($this->LocTested) || !is_numeric($this->LocUntested)) {
-            return;
-        }
-
-        if (empty($this->LocTested)) {
-            $this->LocTested = 0;
-        }
-
-        if (empty($this->LocUntested)) {
-            $this->LocUntested = 0;
         }
 
         // Add the coverages
@@ -171,6 +159,9 @@ class coveragesummary
                     $functionsuntested = 0;
                 }
 
+                $this->LocTested += $loctested;
+                $this->LocUntested += $locuntested;
+
                 $sql .= "(".qnum($this->BuildId).",".qnum($fileid).",".qnum($covered).",".qnum($loctested).",".qnum($locuntested).",
                     ".qnum($branchstested).",".qnum($branchsuntested).
                         ",".qnum($functionstested).",".qnum($functionsuntested).")";
@@ -193,11 +184,10 @@ class coveragesummary
             $row = pdo_single_row_query("SELECT 1 FROM coveragesummary
                     WHERE buildid=".qnum($this->BuildId));
             if ($row && array_key_exists('1', $row)) {
-                // Recompute loc tested & untested based on all files
-                // covered by this build.
+                // Recompute how many lines were tested & untested
+                // based on all files covered by this build.
                 $this->LocTested = 0;
                 $this->LocUntested = 0;
-
                 $query = "SELECT loctested, locuntested FROM coverage
                     WHERE buildid=".qnum($this->BuildId);
                 $results = pdo_query($query);
@@ -210,8 +200,7 @@ class coveragesummary
                     $this->LocUntested += $row['locuntested'];
                 }
 
-                // Update the existing record with this new information.
-
+                // Update the existing record with this information.
                 $query = "UPDATE coveragesummary SET
                     loctested=".qnum($this->LocTested).",
                     locuntested=".qnum($this->LocUntested)."
