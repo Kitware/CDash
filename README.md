@@ -1,6 +1,6 @@
 # CDash
 
-[![Build Status](https://img.shields.io/travis/Kitware/CDash/master.svg?style=flat-square)](https://travis-ci.org/Kitware/CDash)
+[![Build Status](https://img.shields.io/circleci/project/Kitware/CDash/master.svg?style=flat-square)](https://circleci.com/gh/Kitware/CDash)
 [![Packagist Version](https://img.shields.io/packagist/v/kitware/cdash.svg?style=flat-square)](https://packagist.org/packages/kitware/cdash)
 [![Packagist License](https://img.shields.io/packagist/l/kitware/cdash.svg?style=flat-square)](https://packagist.org/packages/kitware/cdash)
 [![StyleCI](https://styleci.io/repos/25169249/shield)](https://styleci.io/repos/25169249)
