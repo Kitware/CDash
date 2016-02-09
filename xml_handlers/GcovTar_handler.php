@@ -294,7 +294,7 @@ class GCovTarHandler
         $coverageFile->Update($buildid);
         $coverageFileLog->BuildId = $buildid;
         $coverageFileLog->FileId = $coverageFile->Id;
-        $coverageFileLog->Insert();
+        $coverageFileLog->Insert(true);
 
         // Add any labels.
         if (array_key_exists($path, $this->Labels)) {
